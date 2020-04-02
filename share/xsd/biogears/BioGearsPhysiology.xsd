@@ -140,12 +140,13 @@ specific language governing permissions and limitations under the License.
         <xs:sequence>
           <xs:element name="AfferentChemoreceptor_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="AfferentPulmonaryStrechReceptor_Hz" type="xs:double" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="AfferentStrain" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="AorticBaroreceptorStrain" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ArterialOxygenBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="ArterialCarbonDioxideBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BaroreceptorOperatingPoint_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="CardiopulmonaryInputBaseline_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="CardiopulmonaryInput_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="CarotidBaroreceptorStrain" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="CerebralArteriesEffectors_Large" type="xs:double" minOccurs="3" maxOccurs="3"/><!--@brief Effect of CBF, CO2, and O2 (hence 3 components) on large cerebral arteries-->
 		  <xs:element name="CerebralArteriesEffectors_Small" type="xs:double" minOccurs="3" maxOccurs="3"/><!--@brief Effect of CBF, CO2, and O2 (hence 3 components) on small cerebral arteries-->
 		  <xs:element name="CerebralBloodFlowBaseline_mL_Per_s" type="xs:double" minOccurs="1" maxOccurs="1"/>
@@ -165,7 +166,6 @@ specific language governing permissions and limitations under the License.
 		  <xs:element name="HypocapniaThresholdPeripheral" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="HypoxiaThresholdHeart" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="HypoxiaThresholdPeripheral" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="IntrinsicHeartPeriod_s" type="xs:double" minOccurs="1" maxOccurs="1"/><!--@brief Heart rate w/ no sympathetic or parasympathetic signals-->
 		  <xs:element name="MeanLungVolume_L" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="MeanPleuralPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="MuscleOxygenBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
@@ -176,7 +176,10 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ResistanceModifierExtrasplanchnic" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ResistanceModifierMuscle" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="ResistanceModifierSplanchnic" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="SympatheticPeripheralSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="SympatheticSinoatrialSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="SympatheticPeripheralSignalFatigue" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="VagalSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

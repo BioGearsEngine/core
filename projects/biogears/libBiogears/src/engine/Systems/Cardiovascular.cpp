@@ -229,7 +229,7 @@ void Cardiovascular::Initialize()
   m_LeftHeartElastanceMax_mmHg_Per_mL = m_data.GetConfiguration().GetLeftHeartElastanceMaximum(FlowElastanceUnit::mmHg_Per_mL);
   m_RightHeartElastanceMax_mmHg_Per_mL = m_data.GetConfiguration().GetRightHeartElastanceMaximum(FlowElastanceUnit::mmHg_Per_mL);
   m_patient->GetBloodVolumeBaseline().Set(GetBloodVolume());
-  
+
   m_OverrideLHEMin_Conformant_mmHg = m_data.GetConfiguration().GetLeftHeartElastanceMinimum(FlowElastanceUnit::mmHg_Per_mL); //m_patient->GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
   m_OverrideRHEMin_Conformant_mmHg = m_data.GetConfiguration().GetRightHeartElastanceMinimum(FlowElastanceUnit::mmHg_Per_mL); //m_patient->GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
   m_OverrideLHEMax_Conformant_mmHg = m_LeftHeartElastanceMax_mmHg_Per_mL;
@@ -720,7 +720,7 @@ void Cardiovascular::PostProcess()
       && m_data.GetState() == EngineState::Active) {
     SEOverride* override = m_data.GetActions().GetPatientActions().GetOverride();
     if (override->HasCardiovascularOverride()
-      && override->GetOverrideConformance() == CDM::enumOnOff::Off) {
+        && override->GetOverrideConformance() == CDM::enumOnOff::Off) {
       ProcessOverride();
     }
   }
@@ -1131,12 +1131,7 @@ void Cardiovascular::Hemorrhage()
     }
 
     if (!targetHemorrhage->HasBleedResistance()) {
-      //Aorta needs to be scaled down a bit to match user specified bleed rate
-      if (targetHemorrhage->GetCompartment() == "Aorta") {
-        targetHemorrhage->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s) * 1.25, FlowResistanceUnit::mmHg_s_Per_mL);
-      } else {
-        targetHemorrhage->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
-      }
+      targetHemorrhage->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
     }
 
     resistance = targetHemorrhage->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1542,8 +1537,7 @@ void Cardiovascular::BeginCardiacCycle()
       override->GetSystolicArterialPressureOverride().SetValue(systolicOverride_mmHg, PressureUnit::mmHg);
       override->GetDiastolicArterialPressureOverride().SetValue(diastolicOverride_mmHg, PressureUnit::mmHg);
     }
-    if (systolicOverride_mmHg < diastolicOverride_mmHg)
-    {
+    if (systolicOverride_mmHg < diastolicOverride_mmHg) {
       Fatal("Systolic and Diastolic Pressure Override Values Do Not Make Sense!");
     }
 
@@ -1570,10 +1564,10 @@ void Cardiovascular::BeginCardiacCycle()
 
   if (m_OverrideOnOffCheck == true && !m_data.GetActions().GetPatientActions().HasOverride()) {
     if (m_overrideTime_s > 0.0) {
-      m_LeftHeartElastanceMin_mmHg_Per_mL = ((m_LeftHeartElastanceMin_mmHg_Per_mL) + m_OverrideLHEMin_Conformant_mmHg) /2.;
-      m_RightHeartElastanceMin_mmHg_Per_mL = ((m_RightHeartElastanceMin_mmHg_Per_mL) + m_OverrideRHEMin_Conformant_mmHg)/2.;
-      m_LeftHeartElastanceMax_mmHg_Per_mL = ((m_LeftHeartElastanceMax_mmHg_Per_mL) + m_OverrideLHEMax_Conformant_mmHg)/2.;
-      m_RightHeartElastanceMax_mmHg_Per_mL = ((m_RightHeartElastanceMax_mmHg_Per_mL) + m_OverrideRHEMax_Conformant_mmHg)/2.;
+      m_LeftHeartElastanceMin_mmHg_Per_mL = ((m_LeftHeartElastanceMin_mmHg_Per_mL) + m_OverrideLHEMin_Conformant_mmHg) / 2.;
+      m_RightHeartElastanceMin_mmHg_Per_mL = ((m_RightHeartElastanceMin_mmHg_Per_mL) + m_OverrideRHEMin_Conformant_mmHg) / 2.;
+      m_LeftHeartElastanceMax_mmHg_Per_mL = ((m_LeftHeartElastanceMax_mmHg_Per_mL) + m_OverrideLHEMax_Conformant_mmHg) / 2.;
+      m_RightHeartElastanceMax_mmHg_Per_mL = ((m_RightHeartElastanceMax_mmHg_Per_mL) + m_OverrideRHEMax_Conformant_mmHg) / 2.;
       m_overrideTime_s -= m_data.GetTimeStep().GetValue(TimeUnit::s);
     } else {
       m_OverrideOnOffCheck == false;
@@ -2042,13 +2036,16 @@ void Cardiovascular::AdjustVascularTone()
     if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
       UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
     }
-    heartUpstreamResistance.GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    m_data.GetDataTrack().Probe("HeartUpdatedResistance1", UpdatedResistance_mmHg_s_Per_mL);
-    //Update downstream path
-    UpdatedResistance_mmHg_s_Per_mL = heartDownstreamResistance.GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-    UpdatedResistance_mmHg_s_Per_mL *= EfferentResistanceScale;
-    if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
-      UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
+  }
+  if (m_data.GetNervous().HasResistanceScaleMyocardium()) {
+    ResistanceScale = m_data.GetNervous().GetResistanceScaleMyocardium().GetValue();
+    for (SEFluidCircuitPath* mPath : m_myocardiumResistancePaths) {
+      UpdatedResistance_mmHg_s_Per_mL = mPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+      UpdatedResistance_mmHg_s_Per_mL *= ResistanceScale;
+      if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
+        UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
+      }
+      mPath->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     }
     heartDownstreamResistance.GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     m_data.GetDataTrack().Probe("HeartUpdatedResistance2", UpdatedResistance_mmHg_s_Per_mL);
@@ -2076,9 +2073,10 @@ void Cardiovascular::AdjustVascularTone()
     m_data.GetDataTrack().Probe("MuscleUpdatedResistance2", UpdatedResistance_mmHg_s_Per_mL);
   }
 
-  if (m_data.GetNervous().HasEfferentComplianceScale()) {
+  if (m_data.GetNervous().HasComplianceScale()) {
     for (SEFluidCircuitPath* Path : m_systemicCompliancePaths) {
-      UpdatedCompliance_mL_Per_mmHg = m_data.GetNervous().GetEfferentComplianceScale().GetValue() * Path->GetComplianceBaseline(FlowComplianceUnit::mL_Per_mmHg);
+      SEFluidCircuitPath* Path = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToGround);
+      UpdatedCompliance_mL_Per_mmHg = m_data.GetNervous().GetComplianceScale().GetValue() * Path->GetComplianceBaseline(FlowComplianceUnit::mL_Per_mmHg);
       Path->GetNextCompliance().SetValue(UpdatedCompliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
     }
   }

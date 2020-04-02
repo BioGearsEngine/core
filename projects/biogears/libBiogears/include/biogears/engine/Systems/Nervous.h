@@ -76,19 +76,16 @@ protected:
   void EfferentResponse();
   void LocalAutoregulation();
 
-  //Test
-  double m_AorticStrain;
-  double m_AfferentAorticBaroreceptor_Hz; 
-
   // Serializable member variables (Set in Initialize and in schema)
   double m_AfferentChemoreceptor_Hz; //*AC
   double m_AfferentPulmonaryStretchReceptor_Hz; //*AP
-  double m_AfferentStrain;
+  double m_AorticBaroreceptorStrain;
   double m_ArterialOxygenBaseline_mmHg;
   double m_ArterialCarbonDioxideBaseline_mmHg;
   double m_BaroreceptorOperatingPoint_mmHg;
   double m_CardiopulmonaryInputBaseline_mmHg;
   double m_CardiopulmonaryInput_mmHg;
+  double m_CarotidBaroreceptorStrain;
   double m_CentralFrequencyDelta_Per_min;
   double m_CentralPressureDelta_cmH2O;
   std::vector<double> m_CerebralArteriesEffectors_Large;
@@ -107,7 +104,6 @@ protected:
   double m_HypocapniaThresholdPeripheral;
   double m_HypoxiaThresholdHeart;
   double m_HypoxiaThresholdPeripheral;
-  double m_IntrinsicHeartPeriod_s;
   double m_MeanLungVolume_L;
   double m_MeanPleuralPressure_mmHg;
   double m_MuscleOxygenBaseline;
@@ -119,11 +115,15 @@ protected:
   double m_ResistanceModifierExtrasplanchnic;
   double m_ResistanceModifierMuscle;
   double m_ResistanceModifierSplanchnic;
+  double m_SympatheticPeripheralSignalBaseline_Hz;
+  double m_SympatheticSinoatrialSignalBaseline_Hz;
   double m_SympatheticPeripheralSignalFatigue;
+  double m_VagalSignalBaseline_Hz;
 
   // Stateless member variable (Set in SetUp())
-  double m_AfferentBaroreceptor_Hz; //*AB
-  double m_AfferentCardiopulmonary_Hz;
+  double m_AfferentBaroreceptorAortic_Hz; //*ABA
+  double m_AfferentBaroreceptorCarotid_Hz; //*ABC
+  double m_AfferentCardiopulmonary_Hz;  //*ACP
   double m_AfferentThermal_Hz; //*AT
   double m_DrugRespirationEffects;
   bool m_FeedbackActive;
@@ -136,7 +136,7 @@ protected:
   double m_painVASDuration_s;
   double m_painVAS;
   double m_painStimulus;
-  double m_SympatheticHeartSignal_Hz;
+  double m_SympatheticSinoatrialSignal_Hz;
   double m_SympatheticPeripheralSignal_Hz;
   double m_VagalSignal_Hz;
 
