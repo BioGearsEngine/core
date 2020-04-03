@@ -493,9 +493,9 @@ void Nervous::CentralSignalProcess()
   const double kV = 7.06;
   const double fVInf = 6.3;
   const double fV0 = 1.2;
-  const double wV_AC = 0.2; //0.03; //Was 0.2
+  const double wV_AC = 0.1; //0.03; //Was 0.2
   const double wV_AP = -0.103;
-  const double hypoxiaThresholdV = -0.9 + 0.17 * 3.6;
+  const double hypoxiaThresholdV = -0.9 + 0.07 * 3.6;
   const double baroreceptorBaseline_Hz = 25.15; //This value is the average of the fBaroMin and fBaroMax parameters in BaroreceptorFeedback (NOT reset AtSteadyState because we want continuous signals)
 
   const double hypoxiaThresholdBase = hypoxiaThresholdV;
@@ -852,7 +852,7 @@ void Nervous::ChemoreceptorFeedback()
   const double gain_p_P = 1.0;
   const double gain_p_F = 3.0; //1.25;
   double gain_c_P = 0.65;
-  double gain_c_F = 2.0; //0.70;
+  double gain_c_F = 0.70;
   //Afferent peripheral constants
   const double firingRateMin_Hz = 0.835;
   const double firingRateMax_Hz = 12.3;

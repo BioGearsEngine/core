@@ -999,7 +999,10 @@ void Respiratory::ProcessDriverActions()
       infectionModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.5);
     }
     if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Hemorrhage)) {
-      hemorrhageModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.3);
+      double volumeEffect = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL) / m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::mL);
+      volumeEffect = std::min(volumeEffect, 1.0);
+      sigmoidInput = 1.0 - volumeEffect;
+      hemorrhageModifier = 1.2 * baselineRR_Per_min * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2) + 0.25);
     }
   }
 
@@ -1890,7 +1893,7 @@ void Respiratory::UpdateObstructiveResistance()
   if (m_PatientActions->HasAsthmaAttack()) {
     double dSeverity = m_PatientActions->GetAsthmaAttack()->GetSeverity().GetValue();
     // Resistance function: Base = 10, Min = 10, Max = 5000 (increasing with severity)
-    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10.0, 5000, 10.0, dSeverity);
+    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10.0, 1000, 10.0, dSeverity);
     combinedResistanceScalingFactor = dResistanceScalingFactor;
   }
   //COPD on
