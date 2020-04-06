@@ -635,6 +635,7 @@ void Nervous::BaroreceptorFeedback()
   double co2Input = bloodCO2 > m_ArterialCarbonDioxideBaseline_mmHg ? bloodCO2 : m_ArterialCarbonDioxideBaseline_mmHg;
 
   double peripheralChemoreceptorEffect = k1 + k2 * co2Input + k3 / o2Input;
+  peripheralChemoreceptorEffect *= std::exp(-3.5 * m_DrugRespirationEffects);
 
   m_data.GetDataTrack().Probe("Test_PeripheralDeltaMAP", peripheralChemoreceptorEffect);
   const double baroreceptorOperatingPoint_mmHg = m_BaroreceptorOperatingPoint_mmHg + painEffect + peripheralChemoreceptorEffect;
@@ -824,7 +825,7 @@ void Nervous::LocalAutoregulation()
 
   m_data.GetDataTrack().Probe("MuscleAutoregulation", m_OxygenAutoregulatorMuscle);
 
-  if (m_FeedbackActive) {
+  if (m_FeedbackActive && m_DrugRespirationEffects < ZERO_APPROX) {
     GetResistanceScaleMyocardium().SetValue(1.0 / (1.0 + m_OxygenAutoregulatorHeart));
     GetResistanceScaleMuscle().SetValue(nextMuscleResistance);
   }
