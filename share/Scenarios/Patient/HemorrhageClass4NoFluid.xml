@@ -23,6 +23,7 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="HemoglobinContent"                 Unit="g"           Precision="0"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralVenousPressure"             Unit="mmHg"        Precision="2"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryCapillariesWedgePressure" Unit="mmHg"        Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystemicVascularResistance" Unit="mmHg s/mL" Precision="3"/>
   
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                       Unit="mL"          Precision="3"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"                   Unit="L"          Precision="2"/>
@@ -120,7 +121,7 @@
         <Time value="30" unit="s"/>       
     </Action>
 	<Action xsi:type="HemorrhageData" Compartment="Aorta">
-		<InitialRate value="200" unit="mL/min"/>
+		<InitialRate value="150" unit="mL/min"/>
 	</Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1800" unit="s"/>       

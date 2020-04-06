@@ -581,7 +581,7 @@ void Cardiovascular::ChronicAnemia()
 void Cardiovascular::ChronicHeartFailure()
 {
   //Decrease left heart contractility
-  m_LeftHeartElastanceModifier = 0.27;
+  m_LeftHeartElastanceModifier = 0.2;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1131,354 +1131,282 @@ void Cardiovascular::Hemorrhage()
     }
 
     if (!targetHemorrhage->HasBleedResistance()) {
-      targetHemorrhage->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
+      if (targetHemorrhage->GetCompartment() == "Aorta") {
+        targetHemorrhage->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s) * 1.1, FlowResistanceUnit::mmHg_s_Per_mL);
+      } else {
+        targetHemorrhage->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
+      }
+    }
+      resistance = targetHemorrhage->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
+
+      // Use hemorrhage flow modifier to affect hemorrhage resistance path, negative modifier INCREASES resistance thus DECREASES flow out of body
+      // Then set to resistance path AND next resistance to ensure stacked effect over time
+      drugFlowResistance = resistance * (1 - m_data.GetDrugs().GetHemorrhageChange().GetValue());
+      targetHemorrhage->GetBleedResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+      targetPath->GetNextResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+
+      TotalLossRate_mL_Per_s += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s);
+      TotalLoss_mL += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
+      bleedoutTime = (bloodVolume_mL - (0.5 * baselineBloodVolume_mL)) / TotalLossRate_mL_Per_s * (1.0 / 60.0);
     }
 
-    resistance = targetHemorrhage->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
-
-    // Use hemorrhage flow modifier to affect hemorrhage resistance path, negative modifier INCREASES resistance thus DECREASES flow out of body
-    // Then set to resistance path AND next resistance to ensure stacked effect over time
-    drugFlowResistance = resistance * (1 - m_data.GetDrugs().GetHemorrhageChange().GetValue());
-    targetHemorrhage->GetBleedResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
-    targetPath->GetNextResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
-
-    TotalLossRate_mL_Per_s += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s);
-    TotalLoss_mL += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
-    bleedoutTime = (bloodVolume_mL - (0.5 * baselineBloodVolume_mL)) / TotalLossRate_mL_Per_s * (1.0 / 60.0);
-  }
-
-  //We already filtered tourniquet actions during Action Loading to make sure that we do not have a tourniquet that A) Aligns with a non-existent hemorrhage
-  //or B) refers to an incompatible compartments.  We are therefore safe to loop through this map without further checks.
-  for (auto tPair : tourniquets) {
-    tournCmpt = tPair.first;
-    tourniquet = tPair.second;
-    CDM::enumTourniquetApplicationLevel::value tLevel = tourniquet->GetTourniquetLevel();
-    //Take advantage of the fact that extremities are all named as Aorta1ToLeftArm1 and LeftArm1ToLeftArm2
-    std::string supplyPathName = "Aorta1To" + tournCmpt + "1";
-    std::string returnPathName = tournCmpt + "1To" + tournCmpt + "2";
-    SEFluidCircuitPath* supplyPath = m_CirculatoryCircuit->GetPath(supplyPathName);
-    const double supplyBaseResistance = supplyPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-    SEFluidCircuitPath* returnPath = m_CirculatoryCircuit->GetPath(returnPathName);
-    const double returnBaseResistance = returnPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-    double tResModifier;
-    switch (tLevel) {
-    case CDM::enumTourniquetApplicationLevel::Applied:
-      tResModifier = 100.0;
-      break;
-    case CDM::enumTourniquetApplicationLevel::Misapplied:
-      tResModifier = 3.0; //Slow blood flow, but don't stop entirely
-      break;
-    case CDM::enumTourniquetApplicationLevel::None:
-      //This case shouldn't get hit because "None" deactivates tourniquet, but account for it just in case
-    default:
-      tResModifier = 1.0;
+    //We already filtered tourniquet actions during Action Loading to make sure that we do not have a tourniquet that A) Aligns with a non-existent hemorrhage
+    //or B) refers to an incompatible compartments.  We are therefore safe to loop through this map without further checks.
+    for (auto tPair : tourniquets) {
+      tournCmpt = tPair.first;
+      tourniquet = tPair.second;
+      CDM::enumTourniquetApplicationLevel::value tLevel = tourniquet->GetTourniquetLevel();
+      //Take advantage of the fact that extremities are all named as Aorta1ToLeftArm1 and LeftArm1ToLeftArm2
+      std::string supplyPathName = "Aorta1To" + tournCmpt + "1";
+      std::string returnPathName = tournCmpt + "1To" + tournCmpt + "2";
+      SEFluidCircuitPath* supplyPath = m_CirculatoryCircuit->GetPath(supplyPathName);
+      const double supplyBaseResistance = supplyPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+      SEFluidCircuitPath* returnPath = m_CirculatoryCircuit->GetPath(returnPathName);
+      const double returnBaseResistance = returnPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+      double tResModifier;
+      switch (tLevel) {
+      case CDM::enumTourniquetApplicationLevel::Applied:
+        tResModifier = 100.0;
+        break;
+      case CDM::enumTourniquetApplicationLevel::Misapplied:
+        tResModifier = 3.0; //Slow blood flow, but don't stop entirely
+        break;
+      case CDM::enumTourniquetApplicationLevel::None:
+        //This case shouldn't get hit because "None" deactivates tourniquet, but account for it just in case
+      default:
+        tResModifier = 1.0;
+      }
+      supplyPath->GetNextResistance().SetValue(tResModifier * supplyBaseResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+      returnPath->GetNextResistance().SetValue(tResModifier * returnBaseResistance, FlowResistanceUnit::mmHg_s_Per_mL);
     }
-    supplyPath->GetNextResistance().SetValue(tResModifier * supplyBaseResistance, FlowResistanceUnit::mmHg_s_Per_mL);
-    returnPath->GetNextResistance().SetValue(tResModifier * returnBaseResistance, FlowResistanceUnit::mmHg_s_Per_mL);
-  }
 
-  /*
+    /*
   Stub to try to calculate a probability of survival based on the bleeding rate and approximate time to bleed out.
   if (bleedoutTime!=0)
   probabilitySurvival = 100.0-100.0*(0.9127*exp(-0.008*bleedoutTime));  //relationship from Table 5 in champion2003profile
   */
 
-  double bloodDensity_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
-  double massLost_kg = TotalLossRate_mL_Per_s * bloodDensity_kg_Per_mL * m_dT_s;
-  double patientMass_kg = m_patient->GetWeight(MassUnit::kg);
-  patientMass_kg -= massLost_kg;
+    double bloodDensity_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
+    double massLost_kg = TotalLossRate_mL_Per_s * bloodDensity_kg_Per_mL * m_dT_s;
+    double patientMass_kg = m_patient->GetWeight(MassUnit::kg);
+    patientMass_kg -= massLost_kg;
 
-  m_patient->GetWeight().SetValue(patientMass_kg, MassUnit::kg);
-}
+    m_patient->GetWeight().SetValue(patientMass_kg, MassUnit::kg);
+  }
 
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// The function initiates a flow source on the pericardium. It is used by both the action and condition.
-///
-/// \details
-/// The pericardial effusion action may be called during run time. It initiates a flow source on the pericardium
-/// which leads to increased pericardium volume. As the volume increases, a pressure source is applied to
-/// the left and right heart nodes, simulating the restriction of the swelling pericardium.
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::PericardialEffusion()
-{
-  //We need to do this here because the circuit needs to be processed to modify the compliance pressure based on the volume change
-  if (m_data.GetConditions().HasChronicPericardialEffusion() && !m_data.GetActions().GetPatientActions().HasPericardialEffusion()) {
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// The function initiates a flow source on the pericardium. It is used by both the action and condition.
+  ///
+  /// \details
+  /// The pericardial effusion action may be called during run time. It initiates a flow source on the pericardium
+  /// which leads to increased pericardium volume. As the volume increases, a pressure source is applied to
+  /// the left and right heart nodes, simulating the restriction of the swelling pericardium.
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::PericardialEffusion()
+  {
+    //We need to do this here because the circuit needs to be processed to modify the compliance pressure based on the volume change
+    if (m_data.GetConditions().HasChronicPericardialEffusion() && !m_data.GetActions().GetPatientActions().HasPericardialEffusion()) {
+      PericardialEffusionPressureApplication();
+    }
+
+    if (!m_data.GetActions().GetPatientActions().HasPericardialEffusion())
+      return;
+
+    double complianceSlopeParameter = 0.0;
+    double complianceCurveParameter = 0.0;
+    double flowToPericardium_mL_per_s = 0.0;
+    double flowCubed_mL3_Per_s3 = 0.0;
+    double compliance_mL_Per_mmHg = 0.0;
+    double intrapericardialVolume_mL = m_Pericardium->GetVolume(VolumeUnit::mL);
+    double intrapericardialPressure_mmHg = m_Pericardium->GetPressure(PressureUnit::mmHg);
+
+    double effusionRate_mL_Per_s = m_data.GetActions().GetPatientActions().GetPericardialEffusion()->GetEffusionRate().GetValue(VolumePerTimeUnit::mL_Per_s);
+    if (effusionRate_mL_Per_s <= 0.1 && effusionRate_mL_Per_s > 0.0) {
+      //Slow effusion
+      complianceSlopeParameter = 0.4;
+      complianceCurveParameter = 0.55;
+    } else if (effusionRate_mL_Per_s > 0.1 && effusionRate_mL_Per_s < 1.0) {
+      complianceSlopeParameter = 50;
+      complianceCurveParameter = 0.1;
+    } else if (effusionRate_mL_Per_s > 1.0) {
+      Error("Effusion rate is out of physiologic bounds. Effusion rate is reset to 1.0 milliliters per second.");
+      /// \error Effusion rate is out of physiologic bounds. Effusion rate is reset to 1.0 milliliters per second.
+      effusionRate_mL_Per_s = 1.0;
+      complianceSlopeParameter = 50;
+      complianceCurveParameter = 0.1;
+    } else if (effusionRate_mL_Per_s < 0.0) {
+      Error("Cannot specify effusion rate less than zero. Effusion rate is now set to 0.0.");
+      /// \error Cannot specify effusion rate less than zero. Effusion rate is now set to 0.0.
+      effusionRate_mL_Per_s = 0.0;
+      complianceSlopeParameter = 0.4;
+      complianceCurveParameter = 0.55;
+    }
+
+    m_pGndToPericardium->GetNextFlowSource().SetValue(effusionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
+    flowToPericardium_mL_per_s = m_pGndToPericardium->GetNextFlow(VolumePerTimeUnit::mL_Per_s);
+    flowCubed_mL3_Per_s3 = flowToPericardium_mL_per_s * flowToPericardium_mL_per_s * flowToPericardium_mL_per_s;
+
+    //Variable compliance calculation
+    if (flowCubed_mL3_Per_s3 < 0.0001) {
+      compliance_mL_Per_mmHg = m_pPericardiumToGnd->GetNextCompliance().GetValue(FlowComplianceUnit::mL_Per_mmHg);
+    } else {
+      compliance_mL_Per_mmHg = complianceSlopeParameter / flowCubed_mL3_Per_s3 - complianceCurveParameter * intrapericardialVolume_mL;
+    }
+
+    m_pPericardiumToGnd->GetNextCompliance().SetValue(compliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
+
     PericardialEffusionPressureApplication();
   }
 
-  if (!m_data.GetActions().GetPatientActions().HasPericardialEffusion())
-    return;
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// The CPR function controls the force applied during a chest compression action.
+  ///
+  /// \details
+  /// The user may apply a chest compression to continue blood circulation if the heart no longer has an effective rhythm.
+  /// The compression can either be defined by an explicit force or by a fraction of the maximum allowable force.
+  /// If the compression input is a force scale then the method controls the shape of the force pulse and converts the force
+  /// pressure for application to the heart.
+  /// If the compression input is force, then the raw force is converted to pressure and applied to
+  /// the heart. The pressure is applied at the pressure source on the LeftHeart3ToGround and
+  /// RightHeart3ToGround paths in the cardiovascular circuit.
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::CPR()
+  {
+    // If a compression has started, finish it.
+    if (m_CompressionRatio > 0.0) {
+      if (m_data.GetActions().GetPatientActions().HasChestCompressionForceScale()) {
+        Warning("Attempt to start a new compression during a previous compression. Allow more time between compressions or shorten the compression period.");
+        m_data.GetActions().GetPatientActions().RemoveChestCompression();
+        return;
+      }
 
-  double complianceSlopeParameter = 0.0;
-  double complianceCurveParameter = 0.0;
-  double flowToPericardium_mL_per_s = 0.0;
-  double flowCubed_mL3_Per_s3 = 0.0;
-  double compliance_mL_Per_mmHg = 0.0;
-  double intrapericardialVolume_mL = m_Pericardium->GetVolume(VolumeUnit::mL);
-  double intrapericardialPressure_mmHg = m_Pericardium->GetPressure(PressureUnit::mmHg);
+      if (m_data.GetActions().GetPatientActions().HasChestCompressionForce()) {
+        Warning("Attempt to switch to explicit force from force scale during CPR compression. CPR actions will be ignored until current compression ends.");
+        m_data.GetActions().GetPatientActions().RemoveChestCompression();
+        return;
+      }
 
-  double effusionRate_mL_Per_s = m_data.GetActions().GetPatientActions().GetPericardialEffusion()->GetEffusionRate().GetValue(VolumePerTimeUnit::mL_Per_s);
-  if (effusionRate_mL_Per_s <= 0.1 && effusionRate_mL_Per_s > 0.0) {
-    //Slow effusion
-    complianceSlopeParameter = 0.4;
-    complianceCurveParameter = 0.55;
-  } else if (effusionRate_mL_Per_s > 0.1 && effusionRate_mL_Per_s < 1.0) {
-    complianceSlopeParameter = 50;
-    complianceCurveParameter = 0.1;
-  } else if (effusionRate_mL_Per_s > 1.0) {
-    Error("Effusion rate is out of physiologic bounds. Effusion rate is reset to 1.0 milliliters per second.");
-    /// \error Effusion rate is out of physiologic bounds. Effusion rate is reset to 1.0 milliliters per second.
-    effusionRate_mL_Per_s = 1.0;
-    complianceSlopeParameter = 50;
-    complianceCurveParameter = 0.1;
-  } else if (effusionRate_mL_Per_s < 0.0) {
-    Error("Cannot specify effusion rate less than zero. Effusion rate is now set to 0.0.");
-    /// \error Cannot specify effusion rate less than zero. Effusion rate is now set to 0.0.
-    effusionRate_mL_Per_s = 0.0;
-    complianceSlopeParameter = 0.4;
-    complianceCurveParameter = 0.55;
-  }
+      CalculateAndSetCPRcompressionForce();
+      return;
+    }
+    // If there is no chest compression action and we are not currently compressing, return to ProcessActions
+    if (!m_data.GetActions().GetPatientActions().HasChestCompression())
+      return;
 
-  m_pGndToPericardium->GetNextFlowSource().SetValue(effusionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
-  flowToPericardium_mL_per_s = m_pGndToPericardium->GetNextFlow(VolumePerTimeUnit::mL_Per_s);
-  flowCubed_mL3_Per_s3 = flowToPericardium_mL_per_s * flowToPericardium_mL_per_s * flowToPericardium_mL_per_s;
-
-  //Variable compliance calculation
-  if (flowCubed_mL3_Per_s3 < 0.0001) {
-    compliance_mL_Per_mmHg = m_pPericardiumToGnd->GetNextCompliance().GetValue(FlowComplianceUnit::mL_Per_mmHg);
-  } else {
-    compliance_mL_Per_mmHg = complianceSlopeParameter / flowCubed_mL3_Per_s3 - complianceCurveParameter * intrapericardialVolume_mL;
-  }
-
-  m_pPericardiumToGnd->GetNextCompliance().SetValue(compliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
-
-  PericardialEffusionPressureApplication();
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// The CPR function controls the force applied during a chest compression action.
-///
-/// \details
-/// The user may apply a chest compression to continue blood circulation if the heart no longer has an effective rhythm.
-/// The compression can either be defined by an explicit force or by a fraction of the maximum allowable force.
-/// If the compression input is a force scale then the method controls the shape of the force pulse and converts the force
-/// pressure for application to the heart.
-/// If the compression input is force, then the raw force is converted to pressure and applied to
-/// the heart. The pressure is applied at the pressure source on the LeftHeart3ToGround and
-/// RightHeart3ToGround paths in the cardiovascular circuit.
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::CPR()
-{
-  // If a compression has started, finish it.
-  if (m_CompressionRatio > 0.0) {
-    if (m_data.GetActions().GetPatientActions().HasChestCompressionForceScale()) {
-      Warning("Attempt to start a new compression during a previous compression. Allow more time between compressions or shorten the compression period.");
+    // Call for chest compression with an effective heart rhythm
+    // In the future we may allow compressions on a beating heart, but that will require extensive testing
+    // to evaluate the hemodynamic stability.
+    if (!m_patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
+      Warning("CPR attempted on beating heart. Action ignored.");
       m_data.GetActions().GetPatientActions().RemoveChestCompression();
       return;
     }
 
-    if (m_data.GetActions().GetPatientActions().HasChestCompressionForce()) {
-      Warning("Attempt to switch to explicit force from force scale during CPR compression. CPR actions will be ignored until current compression ends.");
+    // Have a new call for a chest compression
+    if (m_data.GetActions().GetPatientActions().HasChestCompressionForceScale()) {
+      m_CompressionRatio = m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->GetForceScale().GetValue();
+      /// \error Warning: CPR compression ratio must be a positive value between 0 and 1 inclusive.
+      if (m_CompressionRatio < 0.0)
+        Warning("CPR compression ratio must be a positive value between 0 and 1 inclusive.");
+      if (m_CompressionRatio > 1.0)
+        Warning("CPR compression ratio must be a positive value between 0 and 1 inclusive.");
+
+      BLIM(m_CompressionRatio, 0., 1.);
+      // If no period was assigned by the user, then use the default - 0.4s
+      if (m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->HasForcePeriod()) {
+        m_CompressionPeriod_s = m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->GetForcePeriod().GetValue(TimeUnit::s);
+      } else {
+        m_CompressionPeriod_s = 0.4;
+      }
+
       m_data.GetActions().GetPatientActions().RemoveChestCompression();
-      return;
     }
 
     CalculateAndSetCPRcompressionForce();
-    return;
-  }
-  // If there is no chest compression action and we are not currently compressing, return to ProcessActions
-  if (!m_data.GetActions().GetPatientActions().HasChestCompression())
-    return;
-
-  // Call for chest compression with an effective heart rhythm
-  // In the future we may allow compressions on a beating heart, but that will require extensive testing
-  // to evaluate the hemodynamic stability.
-  if (!m_patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
-    Warning("CPR attempted on beating heart. Action ignored.");
-    m_data.GetActions().GetPatientActions().RemoveChestCompression();
-    return;
   }
 
-  // Have a new call for a chest compression
-  if (m_data.GetActions().GetPatientActions().HasChestCompressionForceScale()) {
-    m_CompressionRatio = m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->GetForceScale().GetValue();
-    /// \error Warning: CPR compression ratio must be a positive value between 0 and 1 inclusive.
-    if (m_CompressionRatio < 0.0)
-      Warning("CPR compression ratio must be a positive value between 0 and 1 inclusive.");
-    if (m_CompressionRatio > 1.0)
-      Warning("CPR compression ratio must be a positive value between 0 and 1 inclusive.");
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// Calculates and sets the pressure on the heart pressure sources when a CPR compression is applied.
+  ///
+  /// \details
+  /// Calculates and sets the pressure on the heart pressure sources when a CPR compression is applied.
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::CalculateAndSetCPRcompressionForce()
+  {
 
-    BLIM(m_CompressionRatio, 0., 1.);
-    // If no period was assigned by the user, then use the default - 0.4s
-    if (m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->HasForcePeriod()) {
-      m_CompressionPeriod_s = m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->GetForcePeriod().GetValue(TimeUnit::s);
-    } else {
-      m_CompressionPeriod_s = 0.4;
+    double compressionForce_N = 0.0;
+    double compressionForceMax_N = 500.0; // The maximum allowed compression force (corresponds to 1.0 when force scale is used)
+    double compressionForceMin_N = 0.0; // The minimum allowed compression force
+
+    if (m_CompressionRatio > 0.0) //Force scale
+    {
+      // Bell curve shaping parameters
+      double c = -10; // Defines the start and stop of the force bell curve given the period
+      double a = 4 * c / (m_CompressionPeriod_s * m_CompressionPeriod_s);
+      double b = -a * m_CompressionPeriod_s;
+
+      compressionForce_N = std::pow(2, a * m_CompressionTime_s * m_CompressionTime_s + b * m_CompressionTime_s + c) * m_CompressionRatio * compressionForceMax_N;
+
+      // 2 second max compression time is arbitrary. I just put it in to make sure it doesn't get stuck if
+      // we accidentally make a really wide bell curve. Note that the bell curve parameters are currently hardcoded above.
+      // If compression force has decayed to less than some amount or the time is above some amount, end the compression
+      if (m_CompressionTime_s > m_CompressionPeriod_s) {
+        compressionForce_N = 0.0;
+        m_CompressionTime_s = 0.0;
+        m_CompressionRatio = 0.0;
+        m_CompressionPeriod_s = 0.0;
+      }
+    } else //Explicit force
+    {
+      compressionForce_N = m_data.GetActions().GetPatientActions().GetChestCompressionForce()->GetForce().GetValue(ForceUnit::N);
     }
 
-    m_data.GetActions().GetPatientActions().RemoveChestCompression();
-  }
+    m_CompressionTime_s += m_dT_s;
 
-  CalculateAndSetCPRcompressionForce();
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Calculates and sets the pressure on the heart pressure sources when a CPR compression is applied.
-///
-/// \details
-/// Calculates and sets the pressure on the heart pressure sources when a CPR compression is applied.
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::CalculateAndSetCPRcompressionForce()
-{
-
-  double compressionForce_N = 0.0;
-  double compressionForceMax_N = 500.0; // The maximum allowed compression force (corresponds to 1.0 when force scale is used)
-  double compressionForceMin_N = 0.0; // The minimum allowed compression force
-
-  if (m_CompressionRatio > 0.0) //Force scale
-  {
-    // Bell curve shaping parameters
-    double c = -10; // Defines the start and stop of the force bell curve given the period
-    double a = 4 * c / (m_CompressionPeriod_s * m_CompressionPeriod_s);
-    double b = -a * m_CompressionPeriod_s;
-
-    compressionForce_N = std::pow(2, a * m_CompressionTime_s * m_CompressionTime_s + b * m_CompressionTime_s + c) * m_CompressionRatio * compressionForceMax_N;
-
-    // 2 second max compression time is arbitrary. I just put it in to make sure it doesn't get stuck if
-    // we accidentally make a really wide bell curve. Note that the bell curve parameters are currently hardcoded above.
-    // If compression force has decayed to less than some amount or the time is above some amount, end the compression
-    if (m_CompressionTime_s > m_CompressionPeriod_s) {
-      compressionForce_N = 0.0;
-      m_CompressionTime_s = 0.0;
-      m_CompressionRatio = 0.0;
-      m_CompressionPeriod_s = 0.0;
+    if (compressionForce_N > compressionForceMax_N) {
+      compressionForce_N = compressionForceMax_N;
+      Warning("The compression force exceeded the maximum compression force. Compression force limited to 500N.");
     }
-  } else //Explicit force
+
+    if (compressionForce_N < compressionForceMin_N) {
+      compressionForce_N = compressionForceMin_N;
+      Warning("The compression force was less than the required minimum. Compression force limited to 0N.");
+    }
+
+    double leftHeartForceToPressureFactor = 0.1; // Tuning parameter to translate compression force in N to left heart pressure in mmHg
+    double rightHeartForceToPressureFactor = 0.1; // Tuning parameter to translate compression force in N to right heart pressure in mmHg
+    double nextLeftPressure_mmHg = leftHeartForceToPressureFactor * compressionForce_N;
+    double nextRightPressure_mmHg = rightHeartForceToPressureFactor * compressionForce_N;
+
+    m_pRightHeartToGnd->GetNextPressureSource().SetValue(nextRightPressure_mmHg, PressureUnit::mmHg);
+    m_pLeftHeartToGnd->GetNextPressureSource().SetValue(nextLeftPressure_mmHg, PressureUnit::mmHg);
+
+    // The action is removed when the force is set to 0.
+    if (compressionForce_N == 0)
+      m_data.GetActions().GetPatientActions().RemoveChestCompression();
+  }
+
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// The cardiac arrest action causes the sudden loss of heart function and breathing.
+  ///
+  /// \details
+  /// Cardiac arrest is the sudden loss of effective blood circulation. When the cardiac arrest
+  /// action is active, the heart will not beat effectively and breathing will not occur.
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::CardiacArrest()
   {
-    compressionForce_N = m_data.GetActions().GetPatientActions().GetChestCompressionForce()->GetForce().GetValue(ForceUnit::N);
-  }
-
-  m_CompressionTime_s += m_dT_s;
-
-  if (compressionForce_N > compressionForceMax_N) {
-    compressionForce_N = compressionForceMax_N;
-    Warning("The compression force exceeded the maximum compression force. Compression force limited to 500N.");
-  }
-
-  if (compressionForce_N < compressionForceMin_N) {
-    compressionForce_N = compressionForceMin_N;
-    Warning("The compression force was less than the required minimum. Compression force limited to 0N.");
-  }
-
-  double leftHeartForceToPressureFactor = 0.1; // Tuning parameter to translate compression force in N to left heart pressure in mmHg
-  double rightHeartForceToPressureFactor = 0.1; // Tuning parameter to translate compression force in N to right heart pressure in mmHg
-  double nextLeftPressure_mmHg = leftHeartForceToPressureFactor * compressionForce_N;
-  double nextRightPressure_mmHg = rightHeartForceToPressureFactor * compressionForce_N;
-
-  m_pRightHeartToGnd->GetNextPressureSource().SetValue(nextRightPressure_mmHg, PressureUnit::mmHg);
-  m_pLeftHeartToGnd->GetNextPressureSource().SetValue(nextLeftPressure_mmHg, PressureUnit::mmHg);
-
-  // The action is removed when the force is set to 0.
-  if (compressionForce_N == 0)
-    m_data.GetActions().GetPatientActions().RemoveChestCompression();
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// The cardiac arrest action causes the sudden loss of heart function and breathing.
-///
-/// \details
-/// Cardiac arrest is the sudden loss of effective blood circulation. When the cardiac arrest
-/// action is active, the heart will not beat effectively and breathing will not occur.
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::CardiacArrest()
-{
-  // If there is no call for a cardiac arrest, return to ProcessActions
-  if (!m_data.GetActions().GetPatientActions().HasCardiacArrest())
-    return;
-  // Flip the cardiac arrest switch
-  // This tells the CV system that a cardiac arrest has been initiated.
-  // The cardiac arrest event will be triggered by CardiacCycleCalculations() at the end of the cardiac cycle.
-  m_EnterCardiacArrest = true;
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// The pericardial effusion pressure application function calculates the pressure applied to the heart due to a pericardial effusion.
-///
-/// \details
-/// The pressure applied to the left and right heart is dictated by the pericardium pressure. The response is tuned to 40% of this value
-/// to achieve the correct physiologic response.
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::PericardialEffusionPressureApplication()
-{
-  double intrapericardialPressure_mmHg = m_Pericardium->GetPressure(PressureUnit::mmHg);
-
-  double pressureResponseFraction = 0.4; //Tuning the pressure applied to the heart
-
-  //Set the pressure on the right and left heart from the pericardium pressure
-  m_pRightHeartToGnd->GetPressureSourceBaseline().SetValue(pressureResponseFraction * intrapericardialPressure_mmHg, PressureUnit::mmHg);
-  m_pLeftHeartToGnd->GetPressureSourceBaseline().SetValue(pressureResponseFraction * intrapericardialPressure_mmHg, PressureUnit::mmHg);
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Calculates the contraction and relaxation of the left and right heart during the cardiac cycle
-///
-/// \details
-/// This function tracks the progress of the current cardiac cycle, and modifies the compliance of the left
-/// and right heart to drive the cardiovascular circuit. The reduced compliance at the beginning of the cycle
-/// acts to increase the pressure, driving flow out of the heart. The compliance is then reduced allowing flow into
-/// the heart. This represents the systolic and diastolic portion of the cardiac cycle. The compliance is
-/// driven by an elastance equation.
-/// This function also keeps track of the cardiac cycle time and calls BeginCardiacCycle() at the start of
-/// systole portion of each cycle. Modifications to heart rate and heart compliance are calculated by
-/// BeginCardiacCycle() and applied for the remained of the current cardiac cycle. Changes to things like
-/// heart rate and heart contractility can only occur at the top of the current cardiac cycle, after the last cardiac
-/// cycle has completed. This helps to avoid discontinuous behavior such as the complete cessation of heart function
-/// mid contraction.
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::HeartDriver()
-{
-  // Reset start cardiac cycle event if it was activated by BeginCardiacCycle() last time step
-  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-    m_patient->SetEvent(CDM::enumPatientEvent::StartOfCardiacCycle, false, m_data.GetSimulationTime());
-
-  // m_StartSystole is set to true at the end of a cardiac cycle in order to setup the next cardiac cycle.
-  // After the next cycle is prepared in BeginCardiacCycle, m_StartSystole is seet back to false.
-  if (m_StartSystole)
-    BeginCardiacCycle();
-
-  // If any system set the rhythm to asystole (or other rhythms in the future) then trip the cardiac arrest flag so that we can deal with it at the top of the next cardiac cycle
-  // This prevents the heart from stopping in the middle of a contraction.
-  if (GetHeartRhythm() == CDM::enumHeartRhythm::Asystole)
+    // If there is no call for a cardiac arrest, return to ProcessActions
+    if (!m_data.GetActions().GetPatientActions().HasCardiacArrest())
+      return;
+    // Flip the cardiac arrest switch
+    // This tells the CV system that a cardiac arrest has been initiated.
+    // The cardiac arrest event will be triggered by CardiacCycleCalculations() at the end of the cardiac cycle.
     m_EnterCardiacArrest = true;
-
-  if (!m_patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
-    if (m_CurrentCardiacCycleTime_s + m_dT_s > m_CardiacCyclePeriod_s) {
-      m_StartSystole = true; // A new cardiac cycle will begin next time step
-      m_CurrentCardiacCycleDuration_s += (m_CardiacCyclePeriod_s - m_CurrentCardiacCycleTime_s); //Add leftover time to current duration so Calc Heart Rate has an accuracte notion of how long this cycle lasted
-    }
-
-    AdjustVascularTone();
-    CalculateHeartElastance();
   }
-
-  m_pRightHeart->GetNextCompliance().SetValue(1.0 / m_RightHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-  m_pLeftHeart->GetNextCompliance().SetValue(1.0 / m_LeftHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-
-  // Now that the math is done we can increment the cardiac cycle time
-  // Note that the cardiac cycle time (m_CurrentCardiacCycleTime_s) continues to increment until a cardiac cycle begins (a beat happens)
-  // So for a normal sinus rhythm, the maximum cardiac cycle time is equal to the cardiac cycle period (m_CardiacCyclePeriod_s).
-  // For any ineffective rhythm (no heart beat) the cardiac cycle time will be as long as it has been since the last time there was an effective beat.
-  // The variable m_CurrentCardiacCycleDuratoin_s tracks the time between beats and is used in CalculateHeartRate.  We use a separate counter
-  // for heart rate because the conditions that trigger CalcHeartRate are different than those that trigger BeginCardiacCycle
-  m_CurrentCardiacCycleTime_s += m_dT_s;
-  m_CurrentCardiacCycleDuration_s += m_dT_s;
-}
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -1573,701 +1501,781 @@ void Cardiovascular::BeginCardiacCycle()
       m_OverrideOnOffCheck == false;
     }
   }
+}
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// The pericardial effusion pressure application function calculates the pressure applied to the heart due to a pericardial effusion.
+  ///
+  /// \details
+  /// The pressure applied to the left and right heart is dictated by the pericardium pressure. The response is tuned to 40% of this value
+  /// to achieve the correct physiologic response.
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::PericardialEffusionPressureApplication()
+  {
+    double intrapericardialPressure_mmHg = m_Pericardium->GetPressure(PressureUnit::mmHg);
 
-  double HeartDriverFrequency_Per_Min = m_patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
+    double pressureResponseFraction = 0.4; //Tuning the pressure applied to the heart
 
-  // In the event of a conformant HR override, the member variable is used to keep track of the changing baseline, but will reset to the patient's true baseline after being turned off
-  // Conformant changes are driven towards a new value using a moving average concept to allow other values in BG physiology to catch up in the event of extreme changes
-  // Still bound by patient min and max
-  if (m_data.GetActions().GetPatientActions().HasOverride()) {
-    if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-      HeartDriverFrequency_Per_Min = m_OverrideHR_Conformant_Per_min;
-      const double HRoverride_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
-      const double HeartDriverIncrease_Per_min = std::abs((HRoverride_Per_min - HeartDriverFrequency_Per_Min) / HeartDriverFrequency_Per_Min) * (HRoverride_Per_min - HeartDriverFrequency_Per_Min);
-      HeartDriverFrequency_Per_Min += HeartDriverIncrease_Per_min;
-    }
-  } else {
-
-    if (m_data.GetNervous().HasEfferentHeartRateScale()) {
-      HeartDriverFrequency_Per_Min *= (m_data.GetNervous().GetEfferentHeartRateScale().GetValue());
-    }
-  }
-  // Apply drug effects
-  if (m_data.GetDrugs().HasHeartRateChange()) {
-    HeartDriverFrequency_Per_Min += m_data.GetDrugs().GetHeartRateChange(FrequencyUnit::Per_min);
+    //Set the pressure on the right and left heart from the pericardium pressure
+    m_pRightHeartToGnd->GetPressureSourceBaseline().SetValue(pressureResponseFraction * intrapericardialPressure_mmHg, PressureUnit::mmHg);
+    m_pLeftHeartToGnd->GetPressureSourceBaseline().SetValue(pressureResponseFraction * intrapericardialPressure_mmHg, PressureUnit::mmHg);
   }
 
-  BLIM(HeartDriverFrequency_Per_Min, m_data.GetPatient().GetHeartRateMinimum(FrequencyUnit::Per_min), m_data.GetPatient().GetHeartRateMaximum(FrequencyUnit::Per_min));
-  m_OverrideHR_Conformant_Per_min = HeartDriverFrequency_Per_Min;
-  //Apply heart failure effects
-  m_LeftHeartElastanceMax_mmHg_Per_mL *= m_LeftHeartElastanceModifier;
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// Calculates the contraction and relaxation of the left and right heart during the cardiac cycle
+  ///
+  /// \details
+  /// This function tracks the progress of the current cardiac cycle, and modifies the compliance of the left
+  /// and right heart to drive the cardiovascular circuit. The reduced compliance at the beginning of the cycle
+  /// acts to increase the pressure, driving flow out of the heart. The compliance is then reduced allowing flow into
+  /// the heart. This represents the systolic and diastolic portion of the cardiac cycle. The compliance is
+  /// driven by an elastance equation.
+  /// This function also keeps track of the cardiac cycle time and calls BeginCardiacCycle() at the start of
+  /// systole portion of each cycle. Modifications to heart rate and heart compliance are calculated by
+  /// BeginCardiacCycle() and applied for the remained of the current cardiac cycle. Changes to things like
+  /// heart rate and heart contractility can only occur at the top of the current cardiac cycle, after the last cardiac
+  /// cycle has completed. This helps to avoid discontinuous behavior such as the complete cessation of heart function
+  /// mid contraction.
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::HeartDriver()
+  {
+    // Reset start cardiac cycle event if it was activated by BeginCardiacCycle() last time step
+    if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
+      m_patient->SetEvent(CDM::enumPatientEvent::StartOfCardiacCycle, false, m_data.GetSimulationTime());
 
-  // Now set the cardiac cycle period and the cardiac arrest event if applicable
-  if (m_EnterCardiacArrest) {
-    m_patient->SetEvent(CDM::enumPatientEvent::CardiacArrest, true, m_data.GetSimulationTime());
-    m_CardiacCyclePeriod_s = 1.0e9;
-    RecordAndResetCardiacCycle();
-    GetHeartRate().SetValue(0.0, FrequencyUnit::Per_min);
-  } else {
-    if (HeartDriverFrequency_Per_Min == 0) {
-      m_CardiacCyclePeriod_s = 1.0e9; // Cannot divide by zero so set the period to a large number (1.0e9 sec = 31.7 years)
+    // m_StartSystole is set to true at the end of a cardiac cycle in order to setup the next cardiac cycle.
+    // After the next cycle is prepared in BeginCardiacCycle, m_StartSystole is seet back to false.
+    if (m_StartSystole)
+      BeginCardiacCycle();
+
+    // If any system set the rhythm to asystole (or other rhythms in the future) then trip the cardiac arrest flag so that we can deal with it at the top of the next cardiac cycle
+    // This prevents the heart from stopping in the middle of a contraction.
+    if (GetHeartRhythm() == CDM::enumHeartRhythm::Asystole)
+      m_EnterCardiacArrest = true;
+
+    if (!m_patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
+      if (m_CurrentCardiacCycleTime_s + m_dT_s > m_CardiacCyclePeriod_s) {
+        m_StartSystole = true; // A new cardiac cycle will begin next time step
+        m_CurrentCardiacCycleDuration_s += (m_CardiacCyclePeriod_s - m_CurrentCardiacCycleTime_s); //Add leftover time to current duration so Calc Heart Rate has an accuracte notion of how long this cycle lasted
+      }
+
+      AdjustVascularTone();
+      CalculateHeartElastance();
+    }
+
+    m_pRightHeart->GetNextCompliance().SetValue(1.0 / m_RightHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+    m_pLeftHeart->GetNextCompliance().SetValue(1.0 / m_LeftHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+
+    // Now that the math is done we can increment the cardiac cycle time
+    // Note that the cardiac cycle time (m_CurrentCardiacCycleTime_s) continues to increment until a cardiac cycle begins (a beat happens)
+    // So for a normal sinus rhythm, the maximum cardiac cycle time is equal to the cardiac cycle period (m_CardiacCyclePeriod_s).
+    // For any ineffective rhythm (no heart beat) the cardiac cycle time will be as long as it has been since the last time there was an effective beat.
+    // The variable m_CurrentCardiacCycleDuratoin_s tracks the time between beats and is used in CalculateHeartRate.  We use a separate counter
+    // for heart rate because the conditions that trigger CalcHeartRate are different than those that trigger BeginCardiacCycle
+    m_CurrentCardiacCycleTime_s += m_dT_s;
+    m_CurrentCardiacCycleDuration_s += m_dT_s;
+  }
+
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// Sets up the evolution of the next cardiac cycle.
+  ///
+  /// \details
+  /// This function is directed from Cardiovascular::HeartDriver. It set's up the evolution of the proceeding cardiac
+  /// cycle. It is used to apply the effects of drugs or exercise on the cardiovascular system.
+  /// These effects will persist for the remainder of the cardiac cycle, at which point this function
+  /// is called again if a new heart beat is warranted (i.e. not in cardiac arrest).
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::BeginCardiacCycle()
+  {
+    m_patient->SetEvent(CDM::enumPatientEvent::StartOfCardiacCycle, true, m_data.GetSimulationTime());
+
+    // Changes to the heart rate and other hemodynamic parameters are applied at the top of the cardiac cycle.
+    // Parameters cannot change during the cardiac cycle because the heart beat is modeled as a changing compliance.
+
+    // Apply Efferent reflex effects
+    /// \todo need to reset the heart elastance min and max at the end of each stabiliation period in AtSteadyState()
+    m_LeftHeartElastanceMax_mmHg_Per_mL = m_data.GetConfiguration().GetLeftHeartElastanceMaximum(FlowElastanceUnit::mmHg_Per_mL);
+    if (m_data.GetNervous().HasHeartElastanceScale())
+      m_LeftHeartElastanceMax_mmHg_Per_mL *= m_data.GetNervous().GetHeartElastanceScale().GetValue();
+
+    m_RightHeartElastanceMax_mmHg_Per_mL = m_data.GetConfiguration().GetRightHeartElastanceMaximum(FlowElastanceUnit::mmHg_Per_mL);
+    if (m_data.GetNervous().HasHeartElastanceScale())
+      m_RightHeartElastanceMax_mmHg_Per_mL *= m_data.GetNervous().GetHeartElastanceScale().GetValue();
+
+    double HeartDriverFrequency_Per_Min = m_patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
+
+    // In the event of a conformant HR override, the member variable is used to keep track of the changing baseline, but will reset to the patient's true baseline after being turned off
+    // Conformant changes are driven towards a new value using a moving average concept to allow other values in BG physiology to catch up in the event of extreme changes
+    // Still bound by patient min and max
+    if (m_data.GetActions().GetPatientActions().HasOverride()) {
+      if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+        HeartDriverFrequency_Per_Min = m_OverrideHR_Conformant_Per_min;
+        const double HRoverride_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
+        const double HeartDriverIncrease_Per_min = std::abs((HRoverride_Per_min - HeartDriverFrequency_Per_Min) / HeartDriverFrequency_Per_Min) * (HRoverride_Per_min - HeartDriverFrequency_Per_Min);
+        HeartDriverFrequency_Per_Min += HeartDriverIncrease_Per_min;
+      }
     } else {
-      m_CardiacCyclePeriod_s = 60.0 / HeartDriverFrequency_Per_Min;
-      if ((m_CardiacCyclePeriod_s < (1.0 / m_patient->GetHeartRateBaseline(FrequencyUnit::Per_s)) + m_dT_s) && (m_data.GetState() <= EngineState::AtSecondaryStableState)) {
-        // A deviation of < 1 time step in cycle period can introduce undamped oscillations in HR during stabilization.  Make sure that any changes to HeartDriverFrequency
-        // are greater than 1 time step during stabilization -- this will still allow conditions to affect change
-        m_CardiacCyclePeriod_s = 1.0 / m_patient->GetHeartRateBaseline(FrequencyUnit::Per_s);
+      if (m_data.GetNervous().HasHeartRateScale()) {
+        HeartDriverFrequency_Per_Min *= (m_data.GetNervous().GetHeartRateScale().GetValue());
+      }
+    }
+
+    // Apply drug effects
+    if (m_data.GetDrugs().HasHeartRateChange()) {
+      HeartDriverFrequency_Per_Min += m_data.GetDrugs().GetHeartRateChange(FrequencyUnit::Per_min);
+    }
+
+    BLIM(HeartDriverFrequency_Per_Min, m_data.GetPatient().GetHeartRateMinimum(FrequencyUnit::Per_min), m_data.GetPatient().GetHeartRateMaximum(FrequencyUnit::Per_min));
+    m_OverrideHR_Conformant_Per_min = HeartDriverFrequency_Per_Min;
+    //Apply heart failure effects
+    m_LeftHeartElastanceMax_mmHg_Per_mL *= m_LeftHeartElastanceModifier;
+
+    // Now set the cardiac cycle period and the cardiac arrest event if applicable
+    if (m_EnterCardiacArrest) {
+      m_patient->SetEvent(CDM::enumPatientEvent::CardiacArrest, true, m_data.GetSimulationTime());
+      m_CardiacCyclePeriod_s = 1.0e9;
+      RecordAndResetCardiacCycle();
+      GetHeartRate().SetValue(0.0, FrequencyUnit::Per_min);
+    } else {
+      if (HeartDriverFrequency_Per_Min == 0) {
+        m_CardiacCyclePeriod_s = 1.0e9; // Cannot divide by zero so set the period to a large number (1.0e9 sec = 31.7 years)
+      } else {
+        m_CardiacCyclePeriod_s = 60.0 / HeartDriverFrequency_Per_Min;
+        if ((m_CardiacCyclePeriod_s < (1.0 / m_patient->GetHeartRateBaseline(FrequencyUnit::Per_s)) + m_dT_s) && (m_data.GetState() <= EngineState::AtSecondaryStableState)) {
+          // A deviation of < 1 time step in cycle period can introduce undamped oscillations in HR during stabilization.  Make sure that any changes to HeartDriverFrequency
+          // are greater than 1 time step during stabilization -- this will still allow conditions to affect change
+          m_CardiacCyclePeriod_s = 1.0 / m_patient->GetHeartRateBaseline(FrequencyUnit::Per_s);
+        }
+      }
+    }
+
+    // Reset the systole flag and the cardiac cycle time
+    m_StartSystole = false;
+    m_CurrentCardiacCycleTime_s = 0.0;
+  }
+
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// Calculation of the left and right ventricular elastance
+  ///
+  /// \details
+  /// This function calculates the left and right ventricular elastance at the current time in the cardiac cycle.
+  /// The elastance takes the form of a double hill function with a period equivalent to the cardiac cycle length.
+  /// \cite stergiopulos1996elastance
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::CalculateHeartElastance()
+  {
+    //Shape parameters, used to define double hill functional form of the elastance
+    double alpha1 = 0.303;
+    double alpha2 = 0.508;
+    double n1 = 1.32;
+    double n2 = 21.9;
+    double maxShape = 0.598;
+
+    double normalizedCardiacTime = m_CurrentCardiacCycleTime_s / m_CardiacCyclePeriod_s;
+    double elastanceShapeFunction = (std::pow(normalizedCardiacTime / alpha1, n1) / (1.0 + std::pow(normalizedCardiacTime / alpha1, n1))) * (1.0 / (1.0 + std::pow(normalizedCardiacTime / alpha2, n2))) / maxShape;
+
+    m_LeftHeartElastance_mmHg_Per_mL = (m_LeftHeartElastanceMax_mmHg_Per_mL - m_LeftHeartElastanceMin_mmHg_Per_mL) * elastanceShapeFunction + m_LeftHeartElastanceMin_mmHg_Per_mL;
+    m_RightHeartElastance_mmHg_Per_mL = (m_RightHeartElastanceMax_mmHg_Per_mL - m_RightHeartElastanceMin_mmHg_Per_mL) * elastanceShapeFunction + m_RightHeartElastanceMin_mmHg_Per_mL;
+  }
+
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// Calculates metabolic and thermal feedback on the systemic vascular tone
+  ///
+  /// \details
+  /// This method controls the vascular tone response to metabolic changes. As the metabolic rate increases,
+  /// the resistances to non-vital organs is increased while the resistance to the muscle and skin is reduced,
+  /// thus increasing heat convective rejection (see Energy::UpdateHeatResistance()). In the case of decreasing core temperature
+  /// the resistance to the skin is increased to shunt blood flow and reduce heat transfer from the core to skin.
+  //--------------------------------------------------------------------------------------------------
+  /// \todo Possibly add a thermoreception model to nervous and move the computation there.
+  void Cardiovascular::MetabolicToneResponse()
+  {
+    double metabolicFraction = 1.0;
+    if (m_data.GetEnergy().HasTotalMetabolicRate()) {
+      double TMR_kcal_Per_day = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::kcal_Per_day);
+      metabolicFraction = TMR_kcal_Per_day / m_patient->GetBasalMetabolicRate(PowerUnit::kcal_Per_day);
+    }
+
+    if (metabolicFraction == 1.0)
+      return;
+
+    double coreTemp_degC = m_data.GetEnergy().GetCoreTemperature(TemperatureUnit::C); //Resting: 37.0 degC
+    double coreTempSet_degC = m_data.GetConfiguration().GetCoreTemperatureHigh(TemperatureUnit::C); //37.1 degC
+    double coreTempDelta_degC = std::max(coreTemp_degC - coreTempSet_degC, 0.0);
+    coreTempDelta_degC = std::min(coreTempDelta_degC, 1.0); //A 1 degree increase in core temperature is the where the cardiovascular response on resistances is capped
+    //The skin multiplier is used to increase the skin blood flow resistance, effectively reducing the skin blood flow leading to less heat transfered from core to skin.
+    double skinMultiplier = 1.0 / std::max((coreTemp_degC - 35.0), 0.001);
+    double coreTempLow_degC = m_data.GetConfiguration().GetCoreTemperatureLow(TemperatureUnit::C); //36.8 degC
+    /// \cite talebipour2006sauna
+    double tempMultiplier = 1.0 - 0.4 * std::min(coreTempDelta_degC, 1.0); //Approximate 40% reduction in peripheral resistance due to core temperature rise of 1 degree.
+    double metabolicModifier = 1.0;
+    //The metabolic multiplier is used as a tuned response to represent cardiovascular resistance effects during exercise
+    double sp0 = 1.5;
+    double divisor = 7.0;
+    double metabolicMultiplier = 1.0;
+    if (m_data.GetActions().GetPatientActions().HasExercise()) {
+      //Only change this value if exercise is active (per comment above) -- otherwise this modifier can increase during hypothermia, causing incorrect decease in peripheral resistance
+      metabolicModifier = (sp0 * metabolicFraction + (divisor - sp0)) / divisor;
+    }
+
+    // Max delta approx. 20% of baseline \cite christie1997cardiac \cite foster1999left
+    double metabolicRateMeanArterialPressureDelta_mmHg = (0.05 * metabolicFraction - 0.05) * m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
+    m_data.GetEnergy().GetExerciseMeanArterialPressureDelta().SetValue(metabolicRateMeanArterialPressureDelta_mmHg, PressureUnit::mmHg);
+
+    //Reducing resistances scaling with metabolic rate increase and changes in core temperature
+    double resistanceNew__mmHg_s_Per_mL = 0.0;
+    double complianceNew_mL_Per_mmHg = 0.0;
+
+    for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
+      if (Path->HasResistanceBaseline()) {
+        if (Path == m_pAortaToMuscle || Path == m_pMuscleToVenaCava) { // Biggest change in muscle
+          resistanceNew__mmHg_s_Per_mL = (1.0 / metabolicModifier) * (1.0 / metabolicModifier) * Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+        } else if (Path == m_pAortaToBrain || Path == m_pAortaToMyocardium || Path == m_pBrainToVenaCava || Path == m_pMyocardiumToVenaCava) { // No Change in the brain or myocardium
+          resistanceNew__mmHg_s_Per_mL = Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+        } else { // Smaller change in the rest of the tissue paths
+          resistanceNew__mmHg_s_Per_mL = (1.0 / metabolicModifier) * Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+        }
+
+        // Overall reduction in flow resistance in all paths to allow for increased cardiac output with a metabolic rate increase
+        /// \todo Skip over Brain and Myocardium and add arms and legs
+        resistanceNew__mmHg_s_Per_mL *= (1.0 / metabolicMultiplier);
+        if (resistanceNew__mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
+          resistanceNew__mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
+        }
+        Path->GetNextResistance().SetValue(resistanceNew__mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
       }
     }
   }
 
-  // Reset the systole flag and the cardiac cycle time
-  m_StartSystole = false;
-  m_CurrentCardiacCycleTime_s = 0.0;
-}
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// Tune the cardiovascular circuit during stabilization
+  ///
+  /// \details
+  /// Tunes the resistors and capacitors associated with tissue compartments during stabilization to achieve the requested patient parameters
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::TuneCircuit()
+  {
+    DataTrack circuitTrk;
+    std::ofstream circuitFile;
 
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Calculation of the left and right ventricular elastance
-///
-/// \details
-/// This function calculates the left and right ventricular elastance at the current time in the cardiac cycle.
-/// The elastance takes the form of a double hill function with a period equivalent to the cardiac cycle length.
-/// \cite stergiopulos1996elastance
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::CalculateHeartElastance()
-{
-  //Shape parameters, used to define double hill functional form of the elastance
-  double alpha1 = 0.303;
-  double alpha2 = 0.508;
-  double n1 = 1.32;
-  double n2 = 21.9;
-  double maxShape = 0.598;
+    DataTrack cerebralTrk;
+    std::ofstream cerebralFile;
 
-  double normalizedCardiacTime = m_CurrentCardiacCycleTime_s / m_CardiacCyclePeriod_s;
-  double elastanceShapeFunction = (std::pow(normalizedCardiacTime / alpha1, n1) / (1.0 + std::pow(normalizedCardiacTime / alpha1, n1))) * (1.0 / (1.0 + std::pow(normalizedCardiacTime / alpha2, n2))) / maxShape;
+    bool success = false;
+    double systolicTarget_mmHg = m_patient->GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
+    double diastolicTarget_mmHg = m_patient->GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
+    double heartRateTarget_bpm = m_patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
 
-  m_LeftHeartElastance_mmHg_Per_mL = (m_LeftHeartElastanceMax_mmHg_Per_mL - m_LeftHeartElastanceMin_mmHg_Per_mL) * elastanceShapeFunction + m_LeftHeartElastanceMin_mmHg_Per_mL;
-  m_RightHeartElastance_mmHg_Per_mL = (m_RightHeartElastanceMax_mmHg_Per_mL - m_RightHeartElastanceMin_mmHg_Per_mL) * elastanceShapeFunction + m_RightHeartElastanceMin_mmHg_Per_mL;
-}
+    m_ss << "Tuning to patient parameters : HeartRate(bpm):" << heartRateTarget_bpm << " Systolic(mmHg):" << systolicTarget_mmHg << " Diastolic(mmHg):" << diastolicTarget_mmHg;
+    Info(m_ss);
 
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Calculates metabolic and thermal feedback on the systemic vascular tone
-///
-/// \details
-/// This method controls the vascular tone response to metabolic changes. As the metabolic rate increases,
-/// the resistances to non-vital organs is increased while the resistance to the muscle and skin is reduced,
-/// thus increasing heat convective rejection (see Energy::UpdateHeatResistance()). In the case of decreasing core temperature
-/// the resistance to the skin is increased to shunt blood flow and reduce heat transfer from the core to skin.
-//--------------------------------------------------------------------------------------------------
-/// \todo Possibly add a thermoreception model to nervous and move the computation there.
-void Cardiovascular::MetabolicToneResponse()
-{
-  double metabolicFraction = 1.0;
-  if (m_data.GetEnergy().HasTotalMetabolicRate()) {
-    double TMR_kcal_Per_day = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::kcal_Per_day);
-    metabolicFraction = TMR_kcal_Per_day / m_patient->GetBasalMetabolicRate(PowerUnit::kcal_Per_day);
-  }
+    // Tuning variables
+    double pressuretolerance = 0.01;
+    double stabPercentTolerance = 0.25;
+    double stabCheckTime_s = 15.0;
+    double srGain = 0.01; //Systemic is sensitive
+    double acGain1 = 0.06; //Gains are empirical
+    double acGain2 = 0.02; //Gains are empirical
+    double vrGain = 0.06; //Gains are empirical
 
-  if (metabolicFraction == 1.0)
-    return;
+    bool stable;
+    double map_mmHg = 0, tgt_map_mmHg = 0;
+    double systolic_mmHg = 0, tgt_systolic_mmHg = 0;
+    double diastolic_mmHg = 0, tgt_diastolic_mmHg = 0;
+    double cardiacOutput_mL_Per_min = 0, tgt_cardiacOutput_mL_Per_min = 0;
+    double meanCVP_mmHg = 0, tgt_meanCVP_mmHg = 0;
+    double blood_mL = 0, tgt_blood_mL = 0;
 
-  double coreTemp_degC = m_data.GetEnergy().GetCoreTemperature(TemperatureUnit::C); //Resting: 37.0 degC
-  double coreTempSet_degC = m_data.GetConfiguration().GetCoreTemperatureHigh(TemperatureUnit::C); //37.1 degC
-  double coreTempDelta_degC = std::max(coreTemp_degC - coreTempSet_degC, 0.0);
-  coreTempDelta_degC = std::min(coreTempDelta_degC, 1.0); //A 1 degree increase in core temperature is the where the cardiovascular response on resistances is capped
-  //The skin multiplier is used to increase the skin blood flow resistance, effectively reducing the skin blood flow leading to less heat transfered from core to skin.
-  double skinMultiplier = 1.0 / std::max((coreTemp_degC - 35.0), 0.001);
-  double coreTempLow_degC = m_data.GetConfiguration().GetCoreTemperatureLow(TemperatureUnit::C); //36.8 degC
-  /// \cite talebipour2006sauna
-  double tempMultiplier = 1.0 - 0.4 * std::min(coreTempDelta_degC, 1.0); //Approximate 40% reduction in peripheral resistance due to core temperature rise of 1 degree.
-  double metabolicModifier = 1.0;
-  //The metabolic multiplier is used as a tuned response to represent cardiovascular resistance effects during exercise
-  double sp0 = 1.5;
-  double divisor = 7.0;
-  double metabolicMultiplier = 1.0;
-  if (m_data.GetActions().GetPatientActions().HasExercise()) {
-    //Only change this value if exercise is active (per comment above) -- otherwise this modifier can increase during hypothermia, causing incorrect decease in peripheral resistance
-    metabolicModifier = (sp0 * metabolicFraction + (divisor - sp0)) / divisor;
-  }
+    double time_s = 0;
+    double timeStep_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
+    double stableTime_s;
+    double maxTime_s = 2000;
+    double maxConfigurations = 50;
+    for (int i = 0; i < maxConfigurations; i++) {
+      stable = false;
+      stableTime_s = 0;
+      while (!stable) {
+        HeartDriver();
+        m_circuitCalculator.Process(*m_CirculatoryCircuit, m_dT_s);
+        CalculateVitalSigns();
+        m_circuitCalculator.PostProcess(*m_CirculatoryCircuit);
+        //return; //Skip stabelization for debugging
 
-  // Max delta approx. 20% of baseline \cite christie1997cardiac \cite foster1999left
-  double metabolicRateMeanArterialPressureDelta_mmHg = (0.05 * metabolicFraction - 0.05) * m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
-  m_data.GetEnergy().GetExerciseMeanArterialPressureDelta().SetValue(metabolicRateMeanArterialPressureDelta_mmHg, PressureUnit::mmHg);
+        map_mmHg = GetMeanArterialPressure(PressureUnit::mmHg);
+        systolic_mmHg = GetSystolicArterialPressure(PressureUnit::mmHg);
+        diastolic_mmHg = GetDiastolicArterialPressure(PressureUnit::mmHg);
+        cardiacOutput_mL_Per_min = GetCardiacOutput(VolumePerTimeUnit::mL_Per_min);
+        meanCVP_mmHg = GetMeanCentralVenousPressure(PressureUnit::mmHg);
+        blood_mL = GetBloodVolume(VolumeUnit::mL);
 
-  //Reducing resistances scaling with metabolic rate increase and changes in core temperature
-  double resistanceNew__mmHg_s_Per_mL = 0.0;
-  double complianceNew_mL_Per_mmHg = 0.0;
+        stableTime_s += timeStep_s;
+        bool stableMAP = true;
+        if (GeneralMath::PercentDifference(tgt_map_mmHg, map_mmHg) > stabPercentTolerance) {
+          stableTime_s = 0;
+          tgt_map_mmHg = map_mmHg;
+          stableMAP = false;
+        }
+        bool stableSystolic = true;
+        if (GeneralMath::PercentDifference(tgt_systolic_mmHg, systolic_mmHg) > stabPercentTolerance) {
+          stableTime_s = 0;
+          tgt_systolic_mmHg = systolic_mmHg;
+          stableSystolic = false;
+        }
+        bool stableDiastolic = true;
+        if (GeneralMath::PercentDifference(tgt_diastolic_mmHg, diastolic_mmHg) > stabPercentTolerance) {
+          stableTime_s = 0;
+          tgt_diastolic_mmHg = diastolic_mmHg;
+          stableDiastolic = false;
+        }
+        bool stableCO = true;
+        if (GeneralMath::PercentDifference(tgt_cardiacOutput_mL_Per_min, cardiacOutput_mL_Per_min) > stabPercentTolerance) {
+          stableTime_s = 0;
+          tgt_cardiacOutput_mL_Per_min = cardiacOutput_mL_Per_min;
+          stableCO = false;
+        }
+        //bool stableMeanCVP = true;
+        //if (GeneralMath::PercentDifference(tgt_meanCVP_mmHg, meanCVP_mmHg) > 0.25)
+        //  { stableTime_s = 0; tgt_meanCVP_mmHg = meanCVP_mmHg; stableMeanCVP = false; }
+        bool stableBloodVol = true;
+        if (GeneralMath::PercentDifference(tgt_blood_mL, blood_mL) > stabPercentTolerance) {
+          stableTime_s = 0;
+          tgt_blood_mL = blood_mL;
+          stableBloodVol = false;
+        }
 
-  for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
-    if (Path->HasResistanceBaseline()) {
-      if (Path == m_pAortaToMuscle || Path == m_pMuscleToVenaCava) { // Biggest change in muscle
-        resistanceNew__mmHg_s_Per_mL = (1.0 / metabolicModifier) * (1.0 / metabolicModifier) * Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-      } else if (Path == m_pAortaToBrain || Path == m_pAortaToMyocardium || Path == m_pBrainToVenaCava || Path == m_pMyocardiumToVenaCava) { // No Change in the brain or myocardium
-        resistanceNew__mmHg_s_Per_mL = Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-      } else { // Smaller change in the rest of the tissue paths
-        resistanceNew__mmHg_s_Per_mL = (1.0 / metabolicModifier) * Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+        if (stableTime_s > stabCheckTime_s) {
+          stable = true;
+          m_ss << "We are stable at " << time_s;
+          Info(m_ss);
+        }
+        if (time_s > maxTime_s) {
+          Error("Could not stabilize this configuration");
+          break;
+        }
+
+        if (!m_TuningFile.empty()) {
+          circuitTrk.Track(time_s, *m_CirculatoryCircuit);
+          circuitTrk.Track("MAP_mmHg", time_s, map_mmHg);
+          circuitTrk.Track("Systolic_mmHg", time_s, systolic_mmHg);
+          circuitTrk.Track("Diastolilc_mmHg", time_s, diastolic_mmHg);
+          circuitTrk.Track("MeanCVP_mmHg", time_s, meanCVP_mmHg);
+          circuitTrk.Track("CardiacOutput_mL_per_s", time_s, cardiacOutput_mL_Per_min);
+          circuitTrk.Track("BloodVolume_mL", time_s, blood_mL);
+
+          if (time_s == 0) {
+            circuitTrk.CreateFile(m_TuningFile.c_str(), circuitFile);
+          }
+
+          circuitTrk.StreamTrackToFile(circuitFile);
+        }
+        time_s += m_dT_s;
       }
-
-      // Overall reduction in flow resistance in all paths to allow for increased cardiac output with a metabolic rate increase
-      /// \todo Skip over Brain and Myocardium and add arms and legs
-      resistanceNew__mmHg_s_Per_mL *= (1.0 / metabolicMultiplier);
-      if (resistanceNew__mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
-        resistanceNew__mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
-      }
-      Path->GetNextResistance().SetValue(resistanceNew__mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    }
-  }
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Tune the cardiovascular circuit during stabilization
-///
-/// \details
-/// Tunes the resistors and capacitors associated with tissue compartments during stabilization to achieve the requested patient parameters
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::TuneCircuit()
-{
-  DataTrack circuitTrk;
-  std::ofstream circuitFile;
-
-  DataTrack cerebralTrk;
-  std::ofstream cerebralFile;
-
-  bool success = false;
-  double systolicTarget_mmHg = m_patient->GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
-  double diastolicTarget_mmHg = m_patient->GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
-  double heartRateTarget_bpm = m_patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
-
-  m_ss << "Tuning to patient parameters : HeartRate(bpm):" << heartRateTarget_bpm << " Systolic(mmHg):" << systolicTarget_mmHg << " Diastolic(mmHg):" << diastolicTarget_mmHg;
-  Info(m_ss);
-
-  // Tuning variables
-  double pressuretolerance = 0.01;
-  double stabPercentTolerance = 0.25;
-  double stabCheckTime_s = 15.0;
-  double srGain = 0.01; //Systemic is sensitive
-  double acGain1 = 0.06; //Gains are empirical
-  double acGain2 = 0.02; //Gains are empirical
-  double vrGain = 0.06; //Gains are empirical
-
-  bool stable;
-  double map_mmHg = 0, tgt_map_mmHg = 0;
-  double systolic_mmHg = 0, tgt_systolic_mmHg = 0;
-  double diastolic_mmHg = 0, tgt_diastolic_mmHg = 0;
-  double cardiacOutput_mL_Per_min = 0, tgt_cardiacOutput_mL_Per_min = 0;
-  double meanCVP_mmHg = 0, tgt_meanCVP_mmHg = 0;
-  double blood_mL = 0, tgt_blood_mL = 0;
-
-  double time_s = 0;
-  double timeStep_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
-  double stableTime_s;
-  double maxTime_s = 2000;
-  double maxConfigurations = 50;
-  for (int i = 0; i < maxConfigurations; i++) {
-    stable = false;
-    stableTime_s = 0;
-    while (!stable) {
-      HeartDriver();
-      m_circuitCalculator.Process(*m_CirculatoryCircuit, m_dT_s);
-      CalculateVitalSigns();
-      m_circuitCalculator.PostProcess(*m_CirculatoryCircuit);
-      //return; //Skip stabelization for debugging
-
-      map_mmHg = GetMeanArterialPressure(PressureUnit::mmHg);
-      systolic_mmHg = GetSystolicArterialPressure(PressureUnit::mmHg);
-      diastolic_mmHg = GetDiastolicArterialPressure(PressureUnit::mmHg);
-      cardiacOutput_mL_Per_min = GetCardiacOutput(VolumePerTimeUnit::mL_Per_min);
-      meanCVP_mmHg = GetMeanCentralVenousPressure(PressureUnit::mmHg);
-      blood_mL = GetBloodVolume(VolumeUnit::mL);
-
-      stableTime_s += timeStep_s;
-      bool stableMAP = true;
-      if (GeneralMath::PercentDifference(tgt_map_mmHg, map_mmHg) > stabPercentTolerance) {
-        stableTime_s = 0;
-        tgt_map_mmHg = map_mmHg;
-        stableMAP = false;
-      }
-      bool stableSystolic = true;
-      if (GeneralMath::PercentDifference(tgt_systolic_mmHg, systolic_mmHg) > stabPercentTolerance) {
-        stableTime_s = 0;
-        tgt_systolic_mmHg = systolic_mmHg;
-        stableSystolic = false;
-      }
-      bool stableDiastolic = true;
-      if (GeneralMath::PercentDifference(tgt_diastolic_mmHg, diastolic_mmHg) > stabPercentTolerance) {
-        stableTime_s = 0;
-        tgt_diastolic_mmHg = diastolic_mmHg;
-        stableDiastolic = false;
-      }
-      bool stableCO = true;
-      if (GeneralMath::PercentDifference(tgt_cardiacOutput_mL_Per_min, cardiacOutput_mL_Per_min) > stabPercentTolerance) {
-        stableTime_s = 0;
-        tgt_cardiacOutput_mL_Per_min = cardiacOutput_mL_Per_min;
-        stableCO = false;
-      }
-      //bool stableMeanCVP = true;
-      //if (GeneralMath::PercentDifference(tgt_meanCVP_mmHg, meanCVP_mmHg) > 0.25)
-      //  { stableTime_s = 0; tgt_meanCVP_mmHg = meanCVP_mmHg; stableMeanCVP = false; }
-      bool stableBloodVol = true;
-      if (GeneralMath::PercentDifference(tgt_blood_mL, blood_mL) > stabPercentTolerance) {
-        stableTime_s = 0;
-        tgt_blood_mL = blood_mL;
-        stableBloodVol = false;
-      }
-
-      if (stableTime_s > stabCheckTime_s) {
-        stable = true;
-        m_ss << "We are stable at " << time_s;
-        Info(m_ss);
-      }
-      if (time_s > maxTime_s) {
-        Error("Could not stabilize this configuration");
+      if (!m_TuneCircuit) {
+        Info("Not tuning circuit");
+        success = true; // Assume this is what you want
         break;
       }
 
-      if (!m_TuningFile.empty()) {
-        circuitTrk.Track(time_s, *m_CirculatoryCircuit);
-        circuitTrk.Track("MAP_mmHg", time_s, map_mmHg);
-        circuitTrk.Track("Systolic_mmHg", time_s, systolic_mmHg);
-        circuitTrk.Track("Diastolilc_mmHg", time_s, diastolic_mmHg);
-        circuitTrk.Track("MeanCVP_mmHg", time_s, meanCVP_mmHg);
-        circuitTrk.Track("CardiacOutput_mL_per_s", time_s, cardiacOutput_mL_Per_min);
-        circuitTrk.Track("BloodVolume_mL", time_s, blood_mL);
-
-        if (time_s == 0) {
-          circuitTrk.CreateFile(m_TuningFile.c_str(), circuitFile);
+      double systolicError_mmHg = systolicTarget_mmHg - systolic_mmHg;
+      double diastolicError_mmHg = diastolicTarget_mmHg - diastolic_mmHg;
+      if (stable) {
+        // Compute the pressure errors
+        if (std::abs(systolicError_mmHg / systolicTarget_mmHg) < pressuretolerance && std::abs(diastolicError_mmHg / diastolicTarget_mmHg) < pressuretolerance) //relative error check
+        {
+          success = true;
+          break; // We met our patient parameters
         }
-
-        circuitTrk.StreamTrackToFile(circuitFile);
       }
-      time_s += m_dT_s;
-    }
-    if (!m_TuneCircuit) {
-      Info("Not tuning circuit");
-      success = true; // Assume this is what you want
-      break;
-    }
 
-    double systolicError_mmHg = systolicTarget_mmHg - systolic_mmHg;
-    double diastolicError_mmHg = diastolicTarget_mmHg - diastolic_mmHg;
-    if (stable) {
-      // Compute the pressure errors
-      if (std::abs(systolicError_mmHg / systolicTarget_mmHg) < pressuretolerance && std::abs(diastolicError_mmHg / diastolicTarget_mmHg) < pressuretolerance) //relative error check
+      // This configuration did not meet the requests patient baselines, Tune the paths
+      double systemicResistanceScale = 1;
+      double systemicComplianceScale = 1;
+      double aortaResistanceScale = 1;
+      double aortaComplianceScale = 1;
+      double rightHeartResistanceScale = 1;
+      double venaCavaComplianceScale = 1;
+      if ((systolicError_mmHg > 0 && diastolicError_mmHg > 0) || (systolicError_mmHg < 0 && diastolicError_mmHg < 0)) // Same direction
       {
-        success = true;
-        break; // We met our patient parameters
-      }
-    }
-
-    // This configuration did not meet the requests patient baselines, Tune the paths
-    double systemicResistanceScale = 1;
-    double systemicComplianceScale = 1;
-    double aortaResistanceScale = 1;
-    double aortaComplianceScale = 1;
-    double rightHeartResistanceScale = 1;
-    double venaCavaComplianceScale = 1;
-    if ((systolicError_mmHg > 0 && diastolicError_mmHg > 0) || (systolicError_mmHg < 0 && diastolicError_mmHg < 0)) // Same direction
-    {
-      if (cardiacOutput_mL_Per_min > 4000.0) {
-        systemicResistanceScale += srGain * (systolicError_mmHg + diastolicError_mmHg);
-        BLIM(systemicResistanceScale, 0.5, 1.5);
+        if (cardiacOutput_mL_Per_min > 4000.0) {
+          systemicResistanceScale += srGain * (systolicError_mmHg + diastolicError_mmHg);
+          BLIM(systemicResistanceScale, 0.5, 1.5);
+        } else {
+          rightHeartResistanceScale -= vrGain * (systolicError_mmHg + diastolicError_mmHg);
+          systemicResistanceScale += srGain * (systolicError_mmHg + diastolicError_mmHg);
+          BLIM(rightHeartResistanceScale, 0.5, 1.5);
+          BLIM(systemicResistanceScale, 0.5, 1.5);
+          Info("Using vena cava resistance gain.");
+        }
+      } else if ((systolicError_mmHg > 0 && diastolicError_mmHg < 0) || (systolicError_mmHg < 0 && diastolicError_mmHg > 0)) // Opposite directions
+      {
+        // Widen or narrow based on both errors
+        if (meanCVP_mmHg < 2.0 || meanCVP_mmHg > 6.0) // Go ahead and do it but warn the user that CVP is out of normal range.
+          Warning("We're out of CVP range");
+        aortaComplianceScale -= acGain1 * systolicError_mmHg - acGain2 * diastolicError_mmHg;
+        BLIM(aortaComplianceScale, 0.5, 1.5);
       } else {
-        rightHeartResistanceScale -= vrGain * (systolicError_mmHg + diastolicError_mmHg);
-        systemicResistanceScale += srGain * (systolicError_mmHg + diastolicError_mmHg);
-        BLIM(rightHeartResistanceScale, 0.5, 1.5);
-        BLIM(systemicResistanceScale, 0.5, 1.5);
-        Info("Using vena cava resistance gain.");
+        // This means that both errors are zero, which means you shouldn't have called me
+        Error("Something is wrong with tuning logic");
       }
-    } else if ((systolicError_mmHg > 0 && diastolicError_mmHg < 0) || (systolicError_mmHg < 0 && diastolicError_mmHg > 0)) // Opposite directions
-    {
-      // Widen or narrow based on both errors
-      if (meanCVP_mmHg < 2.0 || meanCVP_mmHg > 6.0) // Go ahead and do it but warn the user that CVP is out of normal range.
-        Warning("We're out of CVP range");
-      aortaComplianceScale -= acGain1 * systolicError_mmHg - acGain2 * diastolicError_mmHg;
-      BLIM(aortaComplianceScale, 0.5, 1.5);
+      m_ss << "Tuning paths, Current values : HeartRate(bpm):" << GetHeartRate(FrequencyUnit::Per_min) << " Systolic(mmHg):" << systolic_mmHg << " Diastolic(mmHg):" << diastolic_mmHg << " Cardiac Output(mL/min):" << cardiacOutput_mL_Per_min << " Mean CVP(mmHg):" << meanCVP_mmHg << " MAP(mmHg):" << GetMeanArterialPressure(PressureUnit::mmHg) << " BloodVolume(mL): " << blood_mL;
+      Info(m_ss);
+      TunePaths(systemicResistanceScale, systemicComplianceScale, aortaResistanceScale, aortaComplianceScale, rightHeartResistanceScale, venaCavaComplianceScale);
+    }
+
+    if (!success) {
+      m_ss << "Unable to tune circuit to desired patient parameters. Final values : HeartRate(bpm):" << GetHeartRate(FrequencyUnit::Per_min) << " Systolic(mmHg):" << GetSystolicArterialPressure(PressureUnit::mmHg) << " Diastolic(mmHg):" << GetDiastolicArterialPressure(PressureUnit::mmHg) << " Cardiac Output(mL/min):" << GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << " Mean CVP(mmHg):" << GetMeanCentralVenousPressure(PressureUnit::mmHg) << " MAP(mmHg):" << GetMeanArterialPressure(PressureUnit::mmHg) << " BloodVolume(mL): " << blood_mL;
+      Fatal(m_ss);
     } else {
-      // This means that both errors are zero, which means you shouldn't have called me
-      Error("Something is wrong with tuning logic");
-    }
-    m_ss << "Tuning paths, Current values : HeartRate(bpm):" << GetHeartRate(FrequencyUnit::Per_min) << " Systolic(mmHg):" << systolic_mmHg << " Diastolic(mmHg):" << diastolic_mmHg << " Cardiac Output(mL/min):" << cardiacOutput_mL_Per_min << " Mean CVP(mmHg):" << meanCVP_mmHg << " MAP(mmHg):" << GetMeanArterialPressure(PressureUnit::mmHg) << " BloodVolume(mL): " << blood_mL;
-    Info(m_ss);
-    TunePaths(systemicResistanceScale, systemicComplianceScale, aortaResistanceScale, aortaComplianceScale, rightHeartResistanceScale, venaCavaComplianceScale);
-  }
-
-  if (!success) {
-    m_ss << "Unable to tune circuit to desired patient parameters. Final values : HeartRate(bpm):" << GetHeartRate(FrequencyUnit::Per_min) << " Systolic(mmHg):" << GetSystolicArterialPressure(PressureUnit::mmHg) << " Diastolic(mmHg):" << GetDiastolicArterialPressure(PressureUnit::mmHg) << " Cardiac Output(mL/min):" << GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << " Mean CVP(mmHg):" << GetMeanCentralVenousPressure(PressureUnit::mmHg) << " MAP(mmHg):" << GetMeanArterialPressure(PressureUnit::mmHg) << " BloodVolume(mL): " << blood_mL;
-    Fatal(m_ss);
-  } else {
-    m_ss << "Successfully tuned circuit. Final values : HeartRate(bpm):" << GetHeartRate(FrequencyUnit::Per_min) << " Systolic(mmHg):" << GetSystolicArterialPressure(PressureUnit::mmHg) << " Diastolic(mmHg):" << GetDiastolicArterialPressure(PressureUnit::mmHg) << " Cardiac Output(mL/min):" << GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << " Mean CVP(mmHg):" << GetMeanCentralVenousPressure(PressureUnit::mmHg) << " MAP(mmHg):" << GetMeanArterialPressure(PressureUnit::mmHg) << " BloodVolume(mL): " << blood_mL;
-    Info(m_ss);
-    // Reset our substance masses to the new volumes
-    double bloodVolumeBaseline_mL = 0.0;
-    for (SELiquidCompartment* c : m_data.GetCompartments().GetVascularLeafCompartments()) {
-      if (!c->HasVolume())
-        continue;
-      bloodVolumeBaseline_mL += c->GetVolume(VolumeUnit::mL);
-      c->Balance(BalanceLiquidBy::Concentration);
-      if (m_CirculatoryGraph->GetCompartment(c->GetName()) == nullptr)
-        Info(std::string { "Cardiovascular Graph does not have cmpt " } + c->GetName());
-      if (c->HasSubstanceQuantity(m_data.GetSubstances().GetHb())) // Unit testing does not have any Hb
-        m_data.GetSaturationCalculator().CalculateBloodGasDistribution(*c); //so don't do this if we don't have Hb
-    }
-    //We need to reset the blood volume baseline because it might have changed during circuit stabilization
-    m_data.GetPatient().GetBloodVolumeBaseline().SetValue(bloodVolumeBaseline_mL, VolumeUnit::mL);
-    for (SELiquidCompartment* c : m_data.GetCompartments().GetUrineLeafCompartments()) {
-      if (!c->HasVolume())
-        continue;
-      c->Balance(BalanceLiquidBy::Concentration);
-    }
-    SELiquidCompartment* extra;
-    for (SETissueCompartment* c : m_data.GetCompartments().GetTissueCompartments()) {
-      extra = &m_data.GetCompartments().GetExtracellularFluid(*c);
-      if (!extra->HasVolume())
-        continue;
-      extra->Balance(BalanceLiquidBy::Concentration);
-    }
-    m_patient->GetHeartRateBaseline().Set(GetHeartRate());
-    m_patient->GetDiastolicArterialPressureBaseline().Set(GetDiastolicArterialPressure());
-    m_patient->GetSystolicArterialPressureBaseline().Set(GetSystolicArterialPressure());
-    m_patient->GetMeanArterialPressureBaseline().Set(GetMeanArterialPressure());
-  }
-}
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Method that changes path parameters during circuit tuning.
-///
-/// \details
-/// Method that changes path parameters during circuit tuning.
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::TunePaths(double systemicResistanceScale, double systemicComplianceScale, double aortaResistanceScale, double aortaComplianceScale, double rightHeartResistanceScale, double venaCavaComplianceScale)
-{
-  double sp1_mmHg_s_Per_mL;
-  if (systemicComplianceScale != 1.0) {
-    for (SEFluidCircuitPath* p : m_systemicCompliancePaths) {
-      sp1_mmHg_s_Per_mL = p->GetCapacitanceBaseline().GetValue(FlowComplianceUnit::mL_Per_mmHg) * systemicComplianceScale;
-      p->GetCapacitanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-      p->GetCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-      p->GetNextCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-    }
-  }
-  if (systemicResistanceScale != 1.0) {
-    for (SEFluidCircuitPath* p : m_systemicResistancePaths) {
-      sp1_mmHg_s_Per_mL = p->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_s_Per_mL) * systemicResistanceScale;
-
-      p->GetResistanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-      p->GetResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-      p->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    }
-  }
-  if (systemicResistanceScale != 1.0) {
-    for (SEFluidCircuitPath* p : m_tissueResistancePaths) {
-      sp1_mmHg_s_Per_mL = p->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_min_Per_mL) / systemicResistanceScale;
-
-      p->GetResistanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
-      p->GetResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
-      p->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
-    }
-  }
-
-  if (aortaComplianceScale != 1) {
-    sp1_mmHg_s_Per_mL = m_AortaCompliance->GetCapacitanceBaseline().GetValue(FlowComplianceUnit::mL_Per_mmHg) * aortaComplianceScale;
-    m_AortaCompliance->GetCapacitanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-    m_AortaCompliance->GetCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-    m_AortaCompliance->GetNextCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-  }
-  if (aortaResistanceScale != 1) {
-    sp1_mmHg_s_Per_mL = m_AortaResistance->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_s_Per_mL) * aortaResistanceScale;
-    m_AortaResistance->GetResistanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    m_AortaResistance->GetResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    m_AortaResistance->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-  }
-  if (venaCavaComplianceScale != 1) {
-    sp1_mmHg_s_Per_mL = m_VenaCavaCompliance->GetCapacitanceBaseline().GetValue(FlowComplianceUnit::mL_Per_mmHg) * venaCavaComplianceScale;
-    m_VenaCavaCompliance->GetCapacitanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-    m_VenaCavaCompliance->GetCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-    m_VenaCavaCompliance->GetNextCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-  }
-  if (rightHeartResistanceScale != 1) {
-    sp1_mmHg_s_Per_mL = m_RightHeartResistance->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_s_Per_mL) * rightHeartResistanceScale;
-    m_RightHeartResistance->GetResistanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    m_RightHeartResistance->GetResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    m_RightHeartResistance->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-  }
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Adjusts vascular tone due to Efferent reflex, drug, and other effects
-///
-/// \details
-/// Adjusts vascular tone due to Efferent reflex, drug, and other effects
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::AdjustVascularTone()
-{
-  /// \todo Add dilation (decreased resistance) to myocardium supply path if myocardium oxygen deficit event is active.
-
-  //The Efferent response adjusts the systemic resistances and compliances according to the multiplier calculated in Nervous.cpp
-  double UpdatedResistance_mmHg_s_Per_mL = 0.0;
-  double UpdatedCompliance_mL_Per_mmHg = 0.0;
-  double totalComplianceChange_mL_Per_mmHg = 0.0;
-  double EfferentResistanceScale = 0.0;
-
-  if (m_data.GetNervous().HasEfferentResistanceScale()) {
-    for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
-      //todo We are treating all systemic resistance paths equally, including the brain.
-      UpdatedResistance_mmHg_s_Per_mL = m_data.GetNervous().GetEfferentResistanceScale().GetValue() * Path->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-      if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
-        UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
+      m_ss << "Successfully tuned circuit. Final values : HeartRate(bpm):" << GetHeartRate(FrequencyUnit::Per_min) << " Systolic(mmHg):" << GetSystolicArterialPressure(PressureUnit::mmHg) << " Diastolic(mmHg):" << GetDiastolicArterialPressure(PressureUnit::mmHg) << " Cardiac Output(mL/min):" << GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << " Mean CVP(mmHg):" << GetMeanCentralVenousPressure(PressureUnit::mmHg) << " MAP(mmHg):" << GetMeanArterialPressure(PressureUnit::mmHg) << " BloodVolume(mL): " << blood_mL;
+      Info(m_ss);
+      // Reset our substance masses to the new volumes
+      double bloodVolumeBaseline_mL = 0.0;
+      for (SELiquidCompartment* c : m_data.GetCompartments().GetVascularLeafCompartments()) {
+        if (!c->HasVolume())
+          continue;
+        bloodVolumeBaseline_mL += c->GetVolume(VolumeUnit::mL);
+        c->Balance(BalanceLiquidBy::Concentration);
+        if (m_CirculatoryGraph->GetCompartment(c->GetName()) == nullptr)
+          Info(std::string { "Cardiovascular Graph does not have cmpt " } + c->GetName());
+        if (c->HasSubstanceQuantity(m_data.GetSubstances().GetHb())) // Unit testing does not have any Hb
+          m_data.GetSaturationCalculator().CalculateBloodGasDistribution(*c); //so don't do this if we don't have Hb
       }
-      Path->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    }
-  }
-
-  if (m_data.GetNervous().HasAutoregulatedHeartResistanceScale()) {
-    EfferentResistanceScale = m_data.GetNervous().GetAutoregulatedHeartResistanceScale().GetValue();
-    SEFluidCircuitPath& heartUpstreamResistance = *m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Aorta1ToMyocardium1);
-    SEFluidCircuitPath& heartDownstreamResistance = *m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Myocardium1ToMyocardium2);
-    //Update upstream path
-    UpdatedResistance_mmHg_s_Per_mL = heartUpstreamResistance.GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-    UpdatedResistance_mmHg_s_Per_mL *= EfferentResistanceScale;
-    if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
-      UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
-    }
-  }
-  if (m_data.GetNervous().HasResistanceScaleMyocardium()) {
-    ResistanceScale = m_data.GetNervous().GetResistanceScaleMyocardium().GetValue();
-    for (SEFluidCircuitPath* mPath : m_myocardiumResistancePaths) {
-      UpdatedResistance_mmHg_s_Per_mL = mPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-      UpdatedResistance_mmHg_s_Per_mL *= ResistanceScale;
-      if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
-        UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
+      //We need to reset the blood volume baseline because it might have changed during circuit stabilization
+      m_data.GetPatient().GetBloodVolumeBaseline().SetValue(bloodVolumeBaseline_mL, VolumeUnit::mL);
+      for (SELiquidCompartment* c : m_data.GetCompartments().GetUrineLeafCompartments()) {
+        if (!c->HasVolume())
+          continue;
+        c->Balance(BalanceLiquidBy::Concentration);
       }
-      mPath->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      SELiquidCompartment* extra;
+      for (SETissueCompartment* c : m_data.GetCompartments().GetTissueCompartments()) {
+        extra = &m_data.GetCompartments().GetExtracellularFluid(*c);
+        if (!extra->HasVolume())
+          continue;
+        extra->Balance(BalanceLiquidBy::Concentration);
+      }
+      m_patient->GetHeartRateBaseline().Set(GetHeartRate());
+      m_patient->GetDiastolicArterialPressureBaseline().Set(GetDiastolicArterialPressure());
+      m_patient->GetSystolicArterialPressureBaseline().Set(GetSystolicArterialPressure());
+      m_patient->GetMeanArterialPressureBaseline().Set(GetMeanArterialPressure());
     }
-    heartDownstreamResistance.GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    m_data.GetDataTrack().Probe("HeartUpdatedResistance2", UpdatedResistance_mmHg_s_Per_mL);
+  }
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// Method that changes path parameters during circuit tuning.
+  ///
+  /// \details
+  /// Method that changes path parameters during circuit tuning.
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::TunePaths(double systemicResistanceScale, double systemicComplianceScale, double aortaResistanceScale, double aortaComplianceScale, double rightHeartResistanceScale, double venaCavaComplianceScale)
+  {
+    double sp1_mmHg_s_Per_mL;
+    if (systemicComplianceScale != 1.0) {
+      for (SEFluidCircuitPath* p : m_systemicCompliancePaths) {
+        sp1_mmHg_s_Per_mL = p->GetCapacitanceBaseline().GetValue(FlowComplianceUnit::mL_Per_mmHg) * systemicComplianceScale;
+        p->GetCapacitanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+        p->GetCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+        p->GetNextCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+      }
+    }
+    if (systemicResistanceScale != 1.0) {
+      for (SEFluidCircuitPath* p : m_systemicResistancePaths) {
+        sp1_mmHg_s_Per_mL = p->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_s_Per_mL) * systemicResistanceScale;
+
+        p->GetResistanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+        p->GetResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+        p->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      }
+    }
+    if (systemicResistanceScale != 1.0) {
+      for (SEFluidCircuitPath* p : m_tissueResistancePaths) {
+        sp1_mmHg_s_Per_mL = p->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_min_Per_mL) / systemicResistanceScale;
+
+        p->GetResistanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+        p->GetResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+        p->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_min_Per_mL);
+      }
+    }
+
+    if (aortaComplianceScale != 1) {
+      sp1_mmHg_s_Per_mL = m_AortaCompliance->GetCapacitanceBaseline().GetValue(FlowComplianceUnit::mL_Per_mmHg) * aortaComplianceScale;
+      m_AortaCompliance->GetCapacitanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+      m_AortaCompliance->GetCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+      m_AortaCompliance->GetNextCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+    }
+    if (aortaResistanceScale != 1) {
+      sp1_mmHg_s_Per_mL = m_AortaResistance->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_s_Per_mL) * aortaResistanceScale;
+      m_AortaResistance->GetResistanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      m_AortaResistance->GetResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      m_AortaResistance->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+    }
+    if (venaCavaComplianceScale != 1) {
+      sp1_mmHg_s_Per_mL = m_VenaCavaCompliance->GetCapacitanceBaseline().GetValue(FlowComplianceUnit::mL_Per_mmHg) * venaCavaComplianceScale;
+      m_VenaCavaCompliance->GetCapacitanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+      m_VenaCavaCompliance->GetCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+      m_VenaCavaCompliance->GetNextCapacitance().SetValue(sp1_mmHg_s_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+    }
+    if (rightHeartResistanceScale != 1) {
+      sp1_mmHg_s_Per_mL = m_RightHeartResistance->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_s_Per_mL) * rightHeartResistanceScale;
+      m_RightHeartResistance->GetResistanceBaseline().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      m_RightHeartResistance->GetResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      m_RightHeartResistance->GetNextResistance().SetValue(sp1_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+    }
   }
 
-  if (m_data.GetNervous().HasAutoregulatedMuscleResistanceScale()) {
-    EfferentResistanceScale = m_data.GetNervous().GetAutoregulatedMuscleResistanceScale().GetValue();
-    SEFluidCircuitPath& muscleUpstreamResistance = *m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Aorta1ToMuscle1);
-    SEFluidCircuitPath& muscleDownstreamResistance = *m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Muscle1ToMuscle2);
-    //Update upstream path
-    UpdatedResistance_mmHg_s_Per_mL = muscleUpstreamResistance.GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-    UpdatedResistance_mmHg_s_Per_mL *= EfferentResistanceScale;
-    if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
-      UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
-    }
-    muscleUpstreamResistance.GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    m_data.GetDataTrack().Probe("MuscleUpdatedResistance1", UpdatedResistance_mmHg_s_Per_mL);
-    //Update downstream path
-    UpdatedResistance_mmHg_s_Per_mL = muscleDownstreamResistance.GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-    UpdatedResistance_mmHg_s_Per_mL *= EfferentResistanceScale;
-    if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
-      UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
-    }
-    muscleDownstreamResistance.GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    m_data.GetDataTrack().Probe("MuscleUpdatedResistance2", UpdatedResistance_mmHg_s_Per_mL);
-  }
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// Adjusts vascular tone due to Efferent reflex, drug, and other effects
+  ///
+  /// \details
+  /// Adjusts vascular tone due to Efferent reflex, drug, and other effects
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::AdjustVascularTone()
+  {
+    /// \todo Add dilation (decreased resistance) to myocardium supply path if myocardium oxygen deficit event is active.
 
-  if (m_data.GetNervous().HasComplianceScale()) {
-    for (SEFluidCircuitPath* Path : m_systemicCompliancePaths) {
+    //The Efferent response adjusts the systemic resistances and compliances according to the multiplier calculated in Nervous.cpp
+    double UpdatedResistance_mmHg_s_Per_mL = 0.0;
+    double UpdatedCompliance_mL_Per_mmHg = 0.0;
+    double totalComplianceChange_mL_Per_mmHg = 0.0;
+    double ResistanceScale = 0.0;
+
+    if (m_data.GetNervous().HasResistanceScaleExtrasplanchnic()) {
+      ResistanceScale = m_data.GetNervous().GetResistanceScaleExtrasplanchnic().GetValue();
+      for (SEFluidCircuitPath* ePath : m_extrasplanchnicResistancePaths) {
+        UpdatedResistance_mmHg_s_Per_mL = ePath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+        UpdatedResistance_mmHg_s_Per_mL *= ResistanceScale;
+        if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
+          UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
+        }
+        ePath->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      }
+    }
+    if (m_data.GetNervous().HasResistanceScaleMuscle()) {
+      ResistanceScale = m_data.GetNervous().GetResistanceScaleMuscle().GetValue();
+      for (SEFluidCircuitPath* mPath : m_muscleResistancePaths) {
+        UpdatedResistance_mmHg_s_Per_mL = mPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+        UpdatedResistance_mmHg_s_Per_mL *= ResistanceScale;
+        if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
+          UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
+        }
+        mPath->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      }
+    }
+    if (m_data.GetNervous().HasResistanceScaleMyocardium()) {
+      ResistanceScale = m_data.GetNervous().GetResistanceScaleMyocardium().GetValue();
+      for (SEFluidCircuitPath* mPath : m_myocardiumResistancePaths) {
+        UpdatedResistance_mmHg_s_Per_mL = mPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+        UpdatedResistance_mmHg_s_Per_mL *= ResistanceScale;
+        if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
+          UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
+        }
+        mPath->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      }
+    }
+
+    if (m_data.GetNervous().HasResistanceScaleSplanchnic()) {
+      ResistanceScale = m_data.GetNervous().GetResistanceScaleSplanchnic().GetValue();
+      for (SEFluidCircuitPath* sPath : m_splanchnicResistancePaths) {
+        UpdatedResistance_mmHg_s_Per_mL = sPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+        UpdatedResistance_mmHg_s_Per_mL *= ResistanceScale;
+        if (UpdatedResistance_mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
+          UpdatedResistance_mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
+        }
+        sPath->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      }
+    }
+
+    if (m_data.GetNervous().HasComplianceScale()) {
+      //for (SEFluidCircuitPath* Path : m_systemicCompliancePaths) {
       SEFluidCircuitPath* Path = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToGround);
       UpdatedCompliance_mL_Per_mmHg = m_data.GetNervous().GetComplianceScale().GetValue() * Path->GetComplianceBaseline(FlowComplianceUnit::mL_Per_mmHg);
       Path->GetNextCompliance().SetValue(UpdatedCompliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
+      //}
     }
-  }
 
-  //The drug response adjusts the systemic resistances according to the mean arterial pressure change calculated in Drugs.cpp
-  double ResistanceChange = 0.0;
-  if (m_data.GetDrugs().HasMeanBloodPressureChange()) {
-    double TuningParameter = 3.0;
-    double CardiacOutput_mL_Per_s = GetCardiacOutput(VolumePerTimeUnit::mL_Per_s);
-    if (CardiacOutput_mL_Per_s != 0.0)
-      ResistanceChange = m_data.GetDrugs().GetMeanBloodPressureChange(PressureUnit::mmHg) / GetCardiacOutput(VolumePerTimeUnit::mL_Per_s);
-    if (ResistanceChange < 0.0)
-      TuningParameter = 0.8; //1.2;
-    ResistanceChange *= TuningParameter;
-  }
+    //The drug response adjusts the systemic resistances according to the mean arterial pressure change calculated in Drugs.cpp
+    double ResistanceChange = 0.0;
+    if (m_data.GetDrugs().HasMeanBloodPressureChange()) {
+      double TuningParameter = 3.0;
+      double CardiacOutput_mL_Per_s = GetCardiacOutput(VolumePerTimeUnit::mL_Per_s);
+      if (CardiacOutput_mL_Per_s != 0.0)
+        ResistanceChange = m_data.GetDrugs().GetMeanBloodPressureChange(PressureUnit::mmHg) / GetCardiacOutput(VolumePerTimeUnit::mL_Per_s);
+      if (ResistanceChange < 0.0)
+        TuningParameter = 0.8; //1.2;
+      ResistanceChange *= TuningParameter;
+    }
 
-  //Drug effects on arterial pressure occur by increasing the systemic vascular resistance. This occurs every time step by updating the next flow resistance.
-  //These effects are applied in HeartDriver() since its functionality is called every time step.
-  if (std::abs(ResistanceChange) > ZERO_APPROX) {
-    for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
-      if (!Path->HasNextResistance())
-        continue;
-      if (Path->GetName() == BGE::CardiovascularPath::Aorta1ToBrain1 || Path->GetName() == BGE::CardiovascularPath::Brain1ToBrain2) {
-        continue;
+    //Drug effects on arterial pressure occur by increasing the systemic vascular resistance. This occurs every time step by updating the next flow resistance.
+    //These effects are applied in HeartDriver() since its functionality is called every time step.
+    if (std::abs(ResistanceChange) > ZERO_APPROX) {
+      for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
+        if (!Path->HasNextResistance())
+          continue;
+        UpdatedResistance_mmHg_s_Per_mL = Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+        UpdatedResistance_mmHg_s_Per_mL += ResistanceChange * UpdatedResistance_mmHg_s_Per_mL / GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+        LLIM(UpdatedResistance_mmHg_s_Per_mL, m_minIndividialSystemicResistance__mmHg_s_Per_mL);
+        Path->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
       }
-      UpdatedResistance_mmHg_s_Per_mL = Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-      UpdatedResistance_mmHg_s_Per_mL += ResistanceChange * UpdatedResistance_mmHg_s_Per_mL / GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-      LLIM(UpdatedResistance_mmHg_s_Per_mL, m_minIndividialSystemicResistance__mmHg_s_Per_mL);
-      Path->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     }
+    MetabolicToneResponse();
   }
-  MetabolicToneResponse();
-}
 
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// Calculates the heart rate from the period.
-///
-/// \details
-/// When flow is detected, the heart rate is computed from the cardiac cycle duration. Because a
-/// time step is added right before the flow detection (in case the cardiac cycle is continuing)
-/// we must peel off the time step here.
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::CalculateHeartRate()
-{
-  // The time that the flow actually decreased below the threshold was last time slice (when m_HeartFlowDetected
-  // was set back to false), so we need to subtract one time step from the interval.
-  double HeartRate_Per_s = 0.0;
-  if (m_data.GetActions().GetPatientActions().HasOverride()
-      && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()
-      && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
-    HeartRate_Per_s = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_s);
-  } else {
-    HeartRate_Per_s = 1.0 / (m_CurrentCardiacCycleDuration_s - m_dT_s);
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// Calculates the heart rate from the period.
+  ///
+  /// \details
+  /// When flow is detected, the heart rate is computed from the cardiac cycle duration. Because a
+  /// time step is added right before the flow detection (in case the cardiac cycle is continuing)
+  /// we must peel off the time step here.
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::CalculateHeartRate()
+  {
+    // The time that the flow actually decreased below the threshold was last time slice (when m_HeartFlowDetected
+    // was set back to false), so we need to subtract one time step from the interval.
+    double HeartRate_Per_s = 0.0;
+    if (m_data.GetActions().GetPatientActions().HasOverride()
+        && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()
+        && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
+      HeartRate_Per_s = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_s);
+    } else {
+      HeartRate_Per_s = 1.0 / (m_CurrentCardiacCycleDuration_s - m_dT_s);
+    }
+    GetHeartRate().SetValue(HeartRate_Per_s * 60.0, FrequencyUnit::Per_min);
+    m_CurrentCardiacCycleDuration_s = 0.0; //Incremented each time step in HeartDriver
   }
-  GetHeartRate().SetValue(HeartRate_Per_s * 60.0, FrequencyUnit::Per_min);
-  m_CurrentCardiacCycleDuration_s = 0.0; //Incremented each time step in HeartDriver
-}
 
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// determine override requirements from user defined inputs
-///
-/// \details
-/// User specified override outputs that are specific to the cardiovascular system are implemented here.
-/// If overrides aren't present for this system then this function will not be called during preprocess.
-//--------------------------------------------------------------------------------------------------
-void Cardiovascular::ProcessOverride()
-{
-  auto override = m_data.GetActions().GetPatientActions().GetOverride();
+  //--------------------------------------------------------------------------------------------------
+  /// \brief
+  /// determine override requirements from user defined inputs
+  ///
+  /// \details
+  /// User specified override outputs that are specific to the cardiovascular system are implemented here.
+  /// If overrides aren't present for this system then this function will not be called during preprocess.
+  //--------------------------------------------------------------------------------------------------
+  void Cardiovascular::ProcessOverride()
+  {
+    auto override = m_data.GetActions().GetPatientActions().GetOverride();
 
 #ifdef BIOGEARS_USE_OVERRIDE_CONTROL
-  OverrideControlLoop();
+    OverrideControlLoop();
 #endif
 
-  if (override->HasBloodVolumeOverride()) {
-    GetBloodVolume().SetValue(override->GetBloodVolumeOverride(VolumeUnit::L), VolumeUnit::L);
-  }
-  if (override->HasCardiacOutputOverride()) {
-    GetCardiacOutput().SetValue(override->GetCardiacOutputOverride(VolumePerTimeUnit::L_Per_min), VolumePerTimeUnit::L_Per_min);
-  }
-  if (override->HasDiastolicArterialPressureOverride()) {
-    if (override->GetOverrideConformance() == CDM::enumOnOff::Off) {
+    if (override->HasBloodVolumeOverride()) {
+      GetBloodVolume().SetValue(override->GetBloodVolumeOverride(VolumeUnit::L), VolumeUnit::L);
+    }
+    if (override->HasCardiacOutputOverride()) {
+      GetCardiacOutput().SetValue(override->GetCardiacOutputOverride(VolumePerTimeUnit::L_Per_min), VolumePerTimeUnit::L_Per_min);
+    }
+    if (override->HasDiastolicArterialPressureOverride()) {
       GetDiastolicArterialPressure().SetValue(override->GetDiastolicArterialPressureOverride(PressureUnit::mmHg), PressureUnit::mmHg);
     }
-  }
-  if (override->HasMAPOverride()) {
-    if (override->GetOverrideConformance() == CDM::enumOnOff::Off) {
+    if (override->HasMAPOverride()) {
       GetMeanArterialPressure().SetValue(override->GetMAPOverride(PressureUnit::mmHg), PressureUnit::mmHg);
     }
-  }
-  if (override->HasHeartRateOverride()) {
-    if (override->GetOverrideConformance() == CDM::enumOnOff::Off) {
-      GetHeartRate().SetValue(override->GetHeartRateOverride(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
+    if (override->HasHeartRateOverride()) {
+      if (override->GetOverrideConformance() == CDM::enumOnOff::Off) {
+        GetHeartRate().SetValue(override->GetHeartRateOverride(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
+      }
     }
-  }
-  if (override->HasHeartStrokeVolumeOverride()) {
-    GetHeartStrokeVolume().SetValue(override->GetHeartStrokeVolumeOverride(VolumeUnit::mL), VolumeUnit::mL);
-  }
-  if (override->HasSystolicArterialPressureOverride()) {
-    if (override->GetOverrideConformance() == CDM::enumOnOff::Off) {
+    if (override->HasHeartStrokeVolumeOverride()) {
+      GetHeartStrokeVolume().SetValue(override->GetHeartStrokeVolumeOverride(VolumeUnit::mL), VolumeUnit::mL);
+    }
+    if (override->HasSystolicArterialPressureOverride()) {
       GetSystolicArterialPressure().SetValue(override->GetSystolicArterialPressureOverride(PressureUnit::mmHg), PressureUnit::mmHg);
     }
   }
-}
+  //// Can be turned on or off (for debugging purposes) using the Biogears_USE_OVERRIDE_CONTROL external in CMake
+  void Cardiovascular::OverrideControlLoop()
+  {
+    auto override = m_data.GetActions().GetPatientActions().GetOverride();
 
-//// Can be turned on or off (for debugging purposes) using the Biogears_USE_OVERRIDE_CONTROL external in CMake
-void Cardiovascular::OverrideControlLoop()
-{
-  auto override = m_data.GetActions().GetPatientActions().GetOverride();
+    constexpr double maxBloodVolumeOverride = 25.0; //L
+    constexpr double minBloodVolumeOverride = 0.0; //L
+    constexpr double maxCardiacOutput = 100.0; //L/min
+    constexpr double minCardiacOutput = 0.0; //L/min
+    constexpr double maxDiastolicArtPressureOverride = 200.0; //mmHg
+    constexpr double minDiastolicArtPressureOverride = 0.0; //mmHg
+    constexpr double maxMAPOverride = 105.0; //mmHg
+    constexpr double minMAPOverride = 60.0; //mmHg
+    const double maxHROverride = m_data.GetPatient().GetHeartRateMaximum(FrequencyUnit::Per_min); //bpm, max estimate of patient's max age related heart is [220-age_yr] so override provides a huge buffer above this estimate
+    const double minHROverride = m_data.GetPatient().GetHeartRateMinimum(FrequencyUnit::Per_min); //bpm
+    constexpr double maxHeartStrokeVolumeOverride = 5000.0; //mL
+    constexpr double minHeartStrokeVolumeOverride = 0.0; //mL
+    constexpr double maxSystolicArtPressureOverride = 300.0; //mmHg
+    constexpr double minSystolicArtPressureOverride = 0.0; //mmHg
 
-  constexpr double maxBloodVolumeOverride = 25.0; //L
-  constexpr double minBloodVolumeOverride = 0.0; //L
-  constexpr double maxCardiacOutput = 100.0; //L/min
-  constexpr double minCardiacOutput = 0.0; //L/min
-  constexpr double maxDiastolicArtPressureOverride = 200.0; //mmHg
-  constexpr double minDiastolicArtPressureOverride = 0.0; //mmHg
-  constexpr double maxMAPOverride = 105.0; //mmHg
-  constexpr double minMAPOverride = 60.0; //mmHg
-  const double maxHROverride = m_data.GetPatient().GetHeartRateMaximum(FrequencyUnit::Per_min); //bpm, max estimate of patient's max age related heart is [220-age_yr] so override provides a huge buffer above this estimate
-  const double minHROverride = m_data.GetPatient().GetHeartRateMinimum(FrequencyUnit::Per_min); //bpm
-  constexpr double maxHeartStrokeVolumeOverride = 5000.0; //mL
-  constexpr double minHeartStrokeVolumeOverride = 0.0; //mL
-  constexpr double maxSystolicArtPressureOverride = 300.0; //mmHg
-  constexpr double minSystolicArtPressureOverride = 0.0; //mmHg
+    double currentBloodVolumeOverride = 0.0; //value gets changed in next check
+    double currentCardiacOutput = 0.0; //value gets changed in next check
+    double currentDiastolicArtPressureOverride = 0.0; //value gets changed in next check
+    double currentMAPOverride = 85.0; //Average MAP, value gets changed in next check
+    double currentHROverride = 80.0; //Average HR, value gets changed in next check
+    double currentHeartStrokeVolumeOverride = 0.0; //value gets changed in next check
+    double currentSystolicArtPressureOverride = 0.0; //value gets changed in next check
 
-  double currentBloodVolumeOverride = 0.0; //value gets changed in next check
-  double currentCardiacOutput = 0.0; //value gets changed in next check
-  double currentDiastolicArtPressureOverride = 0.0; //value gets changed in next check
-  double currentMAPOverride = 85.0; //Average MAP, value gets changed in next check
-  double currentHROverride = 80.0; //Average HR, value gets changed in next check
-  double currentHeartStrokeVolumeOverride = 0.0; //value gets changed in next check
-  double currentSystolicArtPressureOverride = 0.0; //value gets changed in next check
+    if (override->HasBloodVolumeOverride()) {
+      currentBloodVolumeOverride = override->GetBloodVolumeOverride(VolumeUnit::L);
+    }
+    if (override->HasCardiacOutputOverride()) {
+      currentCardiacOutput = override->GetCardiacOutputOverride(VolumePerTimeUnit::L_Per_min);
+    }
+    if (override->HasDiastolicArterialPressureOverride()) {
+      currentDiastolicArtPressureOverride = override->GetDiastolicArterialPressureOverride(PressureUnit::mmHg);
+    }
+    if (override->HasMAPOverride()) {
+      currentMAPOverride = override->GetMAPOverride(PressureUnit::mmHg);
+    }
+    if (override->HasHeartRateOverride()) {
+      currentHROverride = override->GetHeartRateOverride(FrequencyUnit::Per_min);
+    }
+    if (override->HasHeartStrokeVolumeOverride()) {
+      currentHeartStrokeVolumeOverride = override->GetHeartStrokeVolumeOverride(VolumeUnit::mL);
+    }
+    if (override->HasSystolicArterialPressureOverride()) {
+      currentSystolicArtPressureOverride = override->GetSystolicArterialPressureOverride(PressureUnit::mmHg);
+    }
 
-  if (override->HasBloodVolumeOverride()) {
-    currentBloodVolumeOverride = override->GetBloodVolumeOverride(VolumeUnit::L);
+    if ((currentBloodVolumeOverride < minBloodVolumeOverride || currentBloodVolumeOverride > maxBloodVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Blood Volume Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentCardiacOutput < minCardiacOutput || currentCardiacOutput > maxCardiacOutput) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Cardiac Output Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentDiastolicArtPressureOverride < minDiastolicArtPressureOverride || currentDiastolicArtPressureOverride > maxDiastolicArtPressureOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Diastolic Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentMAPOverride < minMAPOverride || currentMAPOverride > maxMAPOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Mean Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentHROverride < minHROverride || currentHROverride > maxHROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Heart Rate (Cardiovascular) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentHeartStrokeVolumeOverride < minHeartStrokeVolumeOverride || currentHeartStrokeVolumeOverride > maxHeartStrokeVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Heart Stroke Volume Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    if ((currentSystolicArtPressureOverride < minSystolicArtPressureOverride || currentSystolicArtPressureOverride > maxSystolicArtPressureOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      m_ss << "Systolic Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
+      Info(m_ss);
+      override->SetOverrideConformance(CDM::enumOnOff::Off);
+    }
+    return;
   }
-  if (override->HasCardiacOutputOverride()) {
-    currentCardiacOutput = override->GetCardiacOutputOverride(VolumePerTimeUnit::L_Per_min);
-  }
-  if (override->HasDiastolicArterialPressureOverride()) {
-    currentDiastolicArtPressureOverride = override->GetDiastolicArterialPressureOverride(PressureUnit::mmHg);
-  }
-  if (override->HasMAPOverride()) {
-    currentMAPOverride = override->GetMAPOverride(PressureUnit::mmHg);
-  }
-  if (override->HasHeartRateOverride()) {
-    currentHROverride = override->GetHeartRateOverride(FrequencyUnit::Per_min);
-  }
-  if (override->HasHeartStrokeVolumeOverride()) {
-    currentHeartStrokeVolumeOverride = override->GetHeartStrokeVolumeOverride(VolumeUnit::mL);
-  }
-  if (override->HasSystolicArterialPressureOverride()) {
-    currentSystolicArtPressureOverride = override->GetSystolicArterialPressureOverride(PressureUnit::mmHg);
-  }
-
-  if ((currentBloodVolumeOverride < minBloodVolumeOverride || currentBloodVolumeOverride > maxBloodVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Blood Volume Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentCardiacOutput < minCardiacOutput || currentCardiacOutput > maxCardiacOutput) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Cardiac Output Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentDiastolicArtPressureOverride < minDiastolicArtPressureOverride || currentDiastolicArtPressureOverride > maxDiastolicArtPressureOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Diastolic Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentMAPOverride < minMAPOverride || currentMAPOverride > maxMAPOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Mean Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentHROverride < minHROverride || currentHROverride > maxHROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Heart Rate (Cardiovascular) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentHeartStrokeVolumeOverride < minHeartStrokeVolumeOverride || currentHeartStrokeVolumeOverride > maxHeartStrokeVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Heart Stroke Volume Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  if ((currentSystolicArtPressureOverride < minSystolicArtPressureOverride || currentSystolicArtPressureOverride > maxSystolicArtPressureOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
-    m_ss << "Systolic Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
-    Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
-  }
-  return;
-}
 }
