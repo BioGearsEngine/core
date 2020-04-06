@@ -1900,7 +1900,7 @@ void Respiratory::UpdateObstructiveResistance()
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) {
     double dSeverity = m_data.GetConditions().GetChronicObstructivePulmonaryDisease()->GetBronchitisSeverity().GetValue();
     // Resistance function: Base = 10, Min = 10, Max = 500 (increasing with severity)
-    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10.0, 500.0, 10.0, dSeverity);
+    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10.0, 1000.0, 10.0, dSeverity);
     combinedResistanceScalingFactor = std::max(combinedResistanceScalingFactor, dResistanceScalingFactor);
   }
 

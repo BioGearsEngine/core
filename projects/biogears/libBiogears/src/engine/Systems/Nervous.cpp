@@ -449,7 +449,7 @@ void Nervous::CentralSignalProcess()
 
   //Weights of sympathetic signal to heart (i.e. sino-atrial node)--AB = Afferent baroreceptor, AC = Afferent chemoreceptor, AA = Afferent atrial (cardiopulmonary), AT = Afferent thermal
   const double wSH_AB = -1.0;
-  const double wSH_AC = 1.0; // 2.8
+  const double wSH_AC = 1.0;
   const double wSH_AT = -1.0;
   const double wSH_AL = -1.38;
   const double afferentCardiopulmonaryBaseline_Hz = 10.0;
@@ -460,7 +460,7 @@ void Nervous::CentralSignalProcess()
 
   //Weights of sympathetic signal to peripheral vascular beds--AB, AC, AT as before, AP = Afferent pulmonary stretch receptors, AA = Afferent atrial stretch receptors
   const double wSP_AB = -1.13;
-  const double wSP_AC = 1.716; //4.0
+  const double wSP_AC = 1.716;
   const double wSP_AP = -0.34;
   const double wSP_AL = -1.38;
   const double wSP_AT = 1.0;
@@ -806,7 +806,7 @@ void Nervous::LocalAutoregulation()
 
   //---------------------Muscle and heart autoregulation---------------------------------------------------------------------------------
   const double gainHeart_L_Blood_Per_L_O2 = 35.0;
-  const double gainMuscle_L_Blood_Per_L_O2 = 240.0;
+  const double gainMuscle_L_Blood_Per_L_O2 = 750.0;
   const double tauAutoregulator = 10.0;
   const double conversion_L_O2_Per_mmol_O2 = 0.227;
   const double heartOxygenMolarity = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
