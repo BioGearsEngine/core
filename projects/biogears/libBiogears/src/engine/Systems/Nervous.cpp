@@ -456,7 +456,6 @@ void Nervous::CentralSignalProcess()
 
   const double exponentSH = kS * (0.4 * wSH_AB * m_AfferentBaroreceptorCarotid_Hz + 0.6 * wSH_AB * m_AfferentBaroreceptorAortic_Hz + wSH_AC * m_AfferentChemoreceptor_Hz + wSH_AL * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSH);
   m_SympatheticSinoatrialSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSH);
-  m_SympatheticSinoatrialSignal_Hz = std::min(m_SympatheticSinoatrialSignal_Hz, fSMax);
 
   //Weights of sympathetic signal to peripheral vascular beds--AB, AC, AT as before, AP = Afferent pulmonary stretch receptors, AA = Afferent atrial stretch receptors
   const double wSP_AB = -1.13;
@@ -467,7 +466,6 @@ void Nervous::CentralSignalProcess()
 
   const double exponentSP = kS * (0.6 * wSP_AB * m_AfferentBaroreceptorCarotid_Hz + 0.4 * wSP_AB * m_AfferentBaroreceptorAortic_Hz + wSP_AC * m_AfferentChemoreceptor_Hz + wSP_AP * m_AfferentPulmonaryStretchReceptor_Hz + wSP_AL * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSP);
   m_SympatheticPeripheralSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSP);
-  m_SympatheticPeripheralSignal_Hz = std::min(m_SympatheticPeripheralSignal_Hz, fSMax);
 
   //Model fatigue of sympathetic peripheral response during sepsis -- Future work should investigate relevance of fatigue in other scenarios
   //Currently applying only to the peripheral signal because the literature notes that vascular smooth muscle shows depressed responsiveness to sympathetic activiy,
@@ -626,20 +624,7 @@ void Nervous::BaroreceptorFeedback()
     }
   }
 
-  double k2 = 0.182;
-  double k3 = 828.0;
-  double k1 = -k2 * m_ArterialCarbonDioxideBaseline_mmHg - k3 / m_ArterialOxygenBaseline_mmHg; //-13.8;
-  double bloodO2 = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
-  double bloodCO2 = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
-  double o2Input = bloodO2 < m_ArterialOxygenBaseline_mmHg ? bloodO2 : m_ArterialOxygenBaseline_mmHg;
-  double co2Input = bloodCO2 > m_ArterialCarbonDioxideBaseline_mmHg ? bloodCO2 : m_ArterialCarbonDioxideBaseline_mmHg;
-
-  double peripheralChemoreceptorEffect = k1 + k2 * co2Input + k3 / o2Input;
-  peripheralChemoreceptorEffect *= std::exp(-3.5 * m_DrugRespirationEffects);
-
-  m_data.GetDataTrack().Probe("Test_PeripheralDeltaMAP", peripheralChemoreceptorEffect);
-  const double baroreceptorOperatingPoint_mmHg = m_BaroreceptorOperatingPoint_mmHg + painEffect + peripheralChemoreceptorEffect;
-  m_data.GetDataTrack().Probe("Test_BaroreceptorOperatingPoint", baroreceptorOperatingPoint_mmHg);
+  const double baroreceptorOperatingPoint_mmHg = m_BaroreceptorOperatingPoint_mmHg + painEffect + drugEffect;
   const double systolicPressure_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
   const double strainExp = std::exp(-slopeStrain * (systolicPressure_mmHg - baroreceptorOperatingPoint_mmHg));
   const double wallStrain = 1.0 - std::sqrt((1.0 + strainExp) / (A + strainExp));

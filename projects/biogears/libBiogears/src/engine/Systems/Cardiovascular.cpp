@@ -1137,277 +1137,351 @@ void Cardiovascular::Hemorrhage()
         targetHemorrhage->GetBleedResistance().SetValue((locationPressure_mmHg / bleedRate_mL_Per_s), FlowResistanceUnit::mmHg_s_Per_mL);
       }
     }
-      resistance = targetHemorrhage->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
+    resistance = targetHemorrhage->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
 
-      // Use hemorrhage flow modifier to affect hemorrhage resistance path, negative modifier INCREASES resistance thus DECREASES flow out of body
-      // Then set to resistance path AND next resistance to ensure stacked effect over time
-      drugFlowResistance = resistance * (1 - m_data.GetDrugs().GetHemorrhageChange().GetValue());
-      targetHemorrhage->GetBleedResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
-      targetPath->GetNextResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+    // Use hemorrhage flow modifier to affect hemorrhage resistance path, negative modifier INCREASES resistance thus DECREASES flow out of body
+    // Then set to resistance path AND next resistance to ensure stacked effect over time
+    drugFlowResistance = resistance * (1 - m_data.GetDrugs().GetHemorrhageChange().GetValue());
+    targetHemorrhage->GetBleedResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+    targetPath->GetNextResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
 
-      TotalLossRate_mL_Per_s += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s);
-      TotalLoss_mL += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
-      bleedoutTime = (bloodVolume_mL - (0.5 * baselineBloodVolume_mL)) / TotalLossRate_mL_Per_s * (1.0 / 60.0);
+    TotalLossRate_mL_Per_s += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s);
+    TotalLoss_mL += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
+    bleedoutTime = (bloodVolume_mL - (0.5 * baselineBloodVolume_mL)) / TotalLossRate_mL_Per_s * (1.0 / 60.0);
+  }
+
+  //We already filtered tourniquet actions during Action Loading to make sure that we do not have a tourniquet that A) Aligns with a non-existent hemorrhage
+  //or B) refers to an incompatible compartments.  We are therefore safe to loop through this map without further checks.
+  for (auto tPair : tourniquets) {
+    tournCmpt = tPair.first;
+    tourniquet = tPair.second;
+    CDM::enumTourniquetApplicationLevel::value tLevel = tourniquet->GetTourniquetLevel();
+    //Take advantage of the fact that extremities are all named as Aorta1ToLeftArm1 and LeftArm1ToLeftArm2
+    std::string supplyPathName = "Aorta1To" + tournCmpt + "1";
+    std::string returnPathName = tournCmpt + "1To" + tournCmpt + "2";
+    SEFluidCircuitPath* supplyPath = m_CirculatoryCircuit->GetPath(supplyPathName);
+    const double supplyBaseResistance = supplyPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+    SEFluidCircuitPath* returnPath = m_CirculatoryCircuit->GetPath(returnPathName);
+    const double returnBaseResistance = returnPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+    double tResModifier;
+    switch (tLevel) {
+    case CDM::enumTourniquetApplicationLevel::Applied:
+      tResModifier = 100.0;
+      break;
+    case CDM::enumTourniquetApplicationLevel::Misapplied:
+      tResModifier = 3.0; //Slow blood flow, but don't stop entirely
+      break;
+    case CDM::enumTourniquetApplicationLevel::None:
+      //This case shouldn't get hit because "None" deactivates tourniquet, but account for it just in case
+    default:
+      tResModifier = 1.0;
     }
+    supplyPath->GetNextResistance().SetValue(tResModifier * supplyBaseResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+    returnPath->GetNextResistance().SetValue(tResModifier * returnBaseResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+  }
 
-    //We already filtered tourniquet actions during Action Loading to make sure that we do not have a tourniquet that A) Aligns with a non-existent hemorrhage
-    //or B) refers to an incompatible compartments.  We are therefore safe to loop through this map without further checks.
-    for (auto tPair : tourniquets) {
-      tournCmpt = tPair.first;
-      tourniquet = tPair.second;
-      CDM::enumTourniquetApplicationLevel::value tLevel = tourniquet->GetTourniquetLevel();
-      //Take advantage of the fact that extremities are all named as Aorta1ToLeftArm1 and LeftArm1ToLeftArm2
-      std::string supplyPathName = "Aorta1To" + tournCmpt + "1";
-      std::string returnPathName = tournCmpt + "1To" + tournCmpt + "2";
-      SEFluidCircuitPath* supplyPath = m_CirculatoryCircuit->GetPath(supplyPathName);
-      const double supplyBaseResistance = supplyPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-      SEFluidCircuitPath* returnPath = m_CirculatoryCircuit->GetPath(returnPathName);
-      const double returnBaseResistance = returnPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-      double tResModifier;
-      switch (tLevel) {
-      case CDM::enumTourniquetApplicationLevel::Applied:
-        tResModifier = 100.0;
-        break;
-      case CDM::enumTourniquetApplicationLevel::Misapplied:
-        tResModifier = 3.0; //Slow blood flow, but don't stop entirely
-        break;
-      case CDM::enumTourniquetApplicationLevel::None:
-        //This case shouldn't get hit because "None" deactivates tourniquet, but account for it just in case
-      default:
-        tResModifier = 1.0;
-      }
-      supplyPath->GetNextResistance().SetValue(tResModifier * supplyBaseResistance, FlowResistanceUnit::mmHg_s_Per_mL);
-      returnPath->GetNextResistance().SetValue(tResModifier * returnBaseResistance, FlowResistanceUnit::mmHg_s_Per_mL);
-    }
-
-    /*
+  /*
   Stub to try to calculate a probability of survival based on the bleeding rate and approximate time to bleed out.
   if (bleedoutTime!=0)
   probabilitySurvival = 100.0-100.0*(0.9127*exp(-0.008*bleedoutTime));  //relationship from Table 5 in champion2003profile
   */
 
-    double bloodDensity_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
-    double massLost_kg = TotalLossRate_mL_Per_s * bloodDensity_kg_Per_mL * m_dT_s;
-    double patientMass_kg = m_patient->GetWeight(MassUnit::kg);
-    patientMass_kg -= massLost_kg;
+  double bloodDensity_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
+  double massLost_kg = TotalLossRate_mL_Per_s * bloodDensity_kg_Per_mL * m_dT_s;
+  double patientMass_kg = m_patient->GetWeight(MassUnit::kg);
+  patientMass_kg -= massLost_kg;
 
-    m_patient->GetWeight().SetValue(patientMass_kg, MassUnit::kg);
-  }
+  m_patient->GetWeight().SetValue(patientMass_kg, MassUnit::kg);
+}
 
-  //--------------------------------------------------------------------------------------------------
-  /// \brief
-  /// The function initiates a flow source on the pericardium. It is used by both the action and condition.
-  ///
-  /// \details
-  /// The pericardial effusion action may be called during run time. It initiates a flow source on the pericardium
-  /// which leads to increased pericardium volume. As the volume increases, a pressure source is applied to
-  /// the left and right heart nodes, simulating the restriction of the swelling pericardium.
-  //--------------------------------------------------------------------------------------------------
-  void Cardiovascular::PericardialEffusion()
-  {
-    //We need to do this here because the circuit needs to be processed to modify the compliance pressure based on the volume change
-    if (m_data.GetConditions().HasChronicPericardialEffusion() && !m_data.GetActions().GetPatientActions().HasPericardialEffusion()) {
-      PericardialEffusionPressureApplication();
-    }
-
-    if (!m_data.GetActions().GetPatientActions().HasPericardialEffusion())
-      return;
-
-    double complianceSlopeParameter = 0.0;
-    double complianceCurveParameter = 0.0;
-    double flowToPericardium_mL_per_s = 0.0;
-    double flowCubed_mL3_Per_s3 = 0.0;
-    double compliance_mL_Per_mmHg = 0.0;
-    double intrapericardialVolume_mL = m_Pericardium->GetVolume(VolumeUnit::mL);
-    double intrapericardialPressure_mmHg = m_Pericardium->GetPressure(PressureUnit::mmHg);
-
-    double effusionRate_mL_Per_s = m_data.GetActions().GetPatientActions().GetPericardialEffusion()->GetEffusionRate().GetValue(VolumePerTimeUnit::mL_Per_s);
-    if (effusionRate_mL_Per_s <= 0.1 && effusionRate_mL_Per_s > 0.0) {
-      //Slow effusion
-      complianceSlopeParameter = 0.4;
-      complianceCurveParameter = 0.55;
-    } else if (effusionRate_mL_Per_s > 0.1 && effusionRate_mL_Per_s < 1.0) {
-      complianceSlopeParameter = 50;
-      complianceCurveParameter = 0.1;
-    } else if (effusionRate_mL_Per_s > 1.0) {
-      Error("Effusion rate is out of physiologic bounds. Effusion rate is reset to 1.0 milliliters per second.");
-      /// \error Effusion rate is out of physiologic bounds. Effusion rate is reset to 1.0 milliliters per second.
-      effusionRate_mL_Per_s = 1.0;
-      complianceSlopeParameter = 50;
-      complianceCurveParameter = 0.1;
-    } else if (effusionRate_mL_Per_s < 0.0) {
-      Error("Cannot specify effusion rate less than zero. Effusion rate is now set to 0.0.");
-      /// \error Cannot specify effusion rate less than zero. Effusion rate is now set to 0.0.
-      effusionRate_mL_Per_s = 0.0;
-      complianceSlopeParameter = 0.4;
-      complianceCurveParameter = 0.55;
-    }
-
-    m_pGndToPericardium->GetNextFlowSource().SetValue(effusionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
-    flowToPericardium_mL_per_s = m_pGndToPericardium->GetNextFlow(VolumePerTimeUnit::mL_Per_s);
-    flowCubed_mL3_Per_s3 = flowToPericardium_mL_per_s * flowToPericardium_mL_per_s * flowToPericardium_mL_per_s;
-
-    //Variable compliance calculation
-    if (flowCubed_mL3_Per_s3 < 0.0001) {
-      compliance_mL_Per_mmHg = m_pPericardiumToGnd->GetNextCompliance().GetValue(FlowComplianceUnit::mL_Per_mmHg);
-    } else {
-      compliance_mL_Per_mmHg = complianceSlopeParameter / flowCubed_mL3_Per_s3 - complianceCurveParameter * intrapericardialVolume_mL;
-    }
-
-    m_pPericardiumToGnd->GetNextCompliance().SetValue(compliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
-
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// The function initiates a flow source on the pericardium. It is used by both the action and condition.
+///
+/// \details
+/// The pericardial effusion action may be called during run time. It initiates a flow source on the pericardium
+/// which leads to increased pericardium volume. As the volume increases, a pressure source is applied to
+/// the left and right heart nodes, simulating the restriction of the swelling pericardium.
+//--------------------------------------------------------------------------------------------------
+void Cardiovascular::PericardialEffusion()
+{
+  //We need to do this here because the circuit needs to be processed to modify the compliance pressure based on the volume change
+  if (m_data.GetConditions().HasChronicPericardialEffusion() && !m_data.GetActions().GetPatientActions().HasPericardialEffusion()) {
     PericardialEffusionPressureApplication();
   }
 
-  //--------------------------------------------------------------------------------------------------
-  /// \brief
-  /// The CPR function controls the force applied during a chest compression action.
-  ///
-  /// \details
-  /// The user may apply a chest compression to continue blood circulation if the heart no longer has an effective rhythm.
-  /// The compression can either be defined by an explicit force or by a fraction of the maximum allowable force.
-  /// If the compression input is a force scale then the method controls the shape of the force pulse and converts the force
-  /// pressure for application to the heart.
-  /// If the compression input is force, then the raw force is converted to pressure and applied to
-  /// the heart. The pressure is applied at the pressure source on the LeftHeart3ToGround and
-  /// RightHeart3ToGround paths in the cardiovascular circuit.
-  //--------------------------------------------------------------------------------------------------
-  void Cardiovascular::CPR()
-  {
-    // If a compression has started, finish it.
-    if (m_CompressionRatio > 0.0) {
-      if (m_data.GetActions().GetPatientActions().HasChestCompressionForceScale()) {
-        Warning("Attempt to start a new compression during a previous compression. Allow more time between compressions or shorten the compression period.");
-        m_data.GetActions().GetPatientActions().RemoveChestCompression();
-        return;
-      }
+  if (!m_data.GetActions().GetPatientActions().HasPericardialEffusion())
+    return;
 
-      if (m_data.GetActions().GetPatientActions().HasChestCompressionForce()) {
-        Warning("Attempt to switch to explicit force from force scale during CPR compression. CPR actions will be ignored until current compression ends.");
-        m_data.GetActions().GetPatientActions().RemoveChestCompression();
-        return;
-      }
+  double complianceSlopeParameter = 0.0;
+  double complianceCurveParameter = 0.0;
+  double flowToPericardium_mL_per_s = 0.0;
+  double flowCubed_mL3_Per_s3 = 0.0;
+  double compliance_mL_Per_mmHg = 0.0;
+  double intrapericardialVolume_mL = m_Pericardium->GetVolume(VolumeUnit::mL);
+  double intrapericardialPressure_mmHg = m_Pericardium->GetPressure(PressureUnit::mmHg);
 
-      CalculateAndSetCPRcompressionForce();
-      return;
-    }
-    // If there is no chest compression action and we are not currently compressing, return to ProcessActions
-    if (!m_data.GetActions().GetPatientActions().HasChestCompression())
-      return;
+  double effusionRate_mL_Per_s = m_data.GetActions().GetPatientActions().GetPericardialEffusion()->GetEffusionRate().GetValue(VolumePerTimeUnit::mL_Per_s);
+  if (effusionRate_mL_Per_s <= 0.1 && effusionRate_mL_Per_s > 0.0) {
+    //Slow effusion
+    complianceSlopeParameter = 0.4;
+    complianceCurveParameter = 0.55;
+  } else if (effusionRate_mL_Per_s > 0.1 && effusionRate_mL_Per_s < 1.0) {
+    complianceSlopeParameter = 50;
+    complianceCurveParameter = 0.1;
+  } else if (effusionRate_mL_Per_s > 1.0) {
+    Error("Effusion rate is out of physiologic bounds. Effusion rate is reset to 1.0 milliliters per second.");
+    /// \error Effusion rate is out of physiologic bounds. Effusion rate is reset to 1.0 milliliters per second.
+    effusionRate_mL_Per_s = 1.0;
+    complianceSlopeParameter = 50;
+    complianceCurveParameter = 0.1;
+  } else if (effusionRate_mL_Per_s < 0.0) {
+    Error("Cannot specify effusion rate less than zero. Effusion rate is now set to 0.0.");
+    /// \error Cannot specify effusion rate less than zero. Effusion rate is now set to 0.0.
+    effusionRate_mL_Per_s = 0.0;
+    complianceSlopeParameter = 0.4;
+    complianceCurveParameter = 0.55;
+  }
 
-    // Call for chest compression with an effective heart rhythm
-    // In the future we may allow compressions on a beating heart, but that will require extensive testing
-    // to evaluate the hemodynamic stability.
-    if (!m_patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
-      Warning("CPR attempted on beating heart. Action ignored.");
-      m_data.GetActions().GetPatientActions().RemoveChestCompression();
-      return;
-    }
+  m_pGndToPericardium->GetNextFlowSource().SetValue(effusionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
+  flowToPericardium_mL_per_s = m_pGndToPericardium->GetNextFlow(VolumePerTimeUnit::mL_Per_s);
+  flowCubed_mL3_Per_s3 = flowToPericardium_mL_per_s * flowToPericardium_mL_per_s * flowToPericardium_mL_per_s;
 
-    // Have a new call for a chest compression
+  //Variable compliance calculation
+  if (flowCubed_mL3_Per_s3 < 0.0001) {
+    compliance_mL_Per_mmHg = m_pPericardiumToGnd->GetNextCompliance().GetValue(FlowComplianceUnit::mL_Per_mmHg);
+  } else {
+    compliance_mL_Per_mmHg = complianceSlopeParameter / flowCubed_mL3_Per_s3 - complianceCurveParameter * intrapericardialVolume_mL;
+  }
+
+  m_pPericardiumToGnd->GetNextCompliance().SetValue(compliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
+
+  PericardialEffusionPressureApplication();
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// The CPR function controls the force applied during a chest compression action.
+///
+/// \details
+/// The user may apply a chest compression to continue blood circulation if the heart no longer has an effective rhythm.
+/// The compression can either be defined by an explicit force or by a fraction of the maximum allowable force.
+/// If the compression input is a force scale then the method controls the shape of the force pulse and converts the force
+/// pressure for application to the heart.
+/// If the compression input is force, then the raw force is converted to pressure and applied to
+/// the heart. The pressure is applied at the pressure source on the LeftHeart3ToGround and
+/// RightHeart3ToGround paths in the cardiovascular circuit.
+//--------------------------------------------------------------------------------------------------
+void Cardiovascular::CPR()
+{
+  // If a compression has started, finish it.
+  if (m_CompressionRatio > 0.0) {
     if (m_data.GetActions().GetPatientActions().HasChestCompressionForceScale()) {
-      m_CompressionRatio = m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->GetForceScale().GetValue();
-      /// \error Warning: CPR compression ratio must be a positive value between 0 and 1 inclusive.
-      if (m_CompressionRatio < 0.0)
-        Warning("CPR compression ratio must be a positive value between 0 and 1 inclusive.");
-      if (m_CompressionRatio > 1.0)
-        Warning("CPR compression ratio must be a positive value between 0 and 1 inclusive.");
-
-      BLIM(m_CompressionRatio, 0., 1.);
-      // If no period was assigned by the user, then use the default - 0.4s
-      if (m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->HasForcePeriod()) {
-        m_CompressionPeriod_s = m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->GetForcePeriod().GetValue(TimeUnit::s);
-      } else {
-        m_CompressionPeriod_s = 0.4;
-      }
-
+      Warning("Attempt to start a new compression during a previous compression. Allow more time between compressions or shorten the compression period.");
       m_data.GetActions().GetPatientActions().RemoveChestCompression();
+      return;
+    }
+
+    if (m_data.GetActions().GetPatientActions().HasChestCompressionForce()) {
+      Warning("Attempt to switch to explicit force from force scale during CPR compression. CPR actions will be ignored until current compression ends.");
+      m_data.GetActions().GetPatientActions().RemoveChestCompression();
+      return;
     }
 
     CalculateAndSetCPRcompressionForce();
+    return;
+  }
+  // If there is no chest compression action and we are not currently compressing, return to ProcessActions
+  if (!m_data.GetActions().GetPatientActions().HasChestCompression())
+    return;
+
+  // Call for chest compression with an effective heart rhythm
+  // In the future we may allow compressions on a beating heart, but that will require extensive testing
+  // to evaluate the hemodynamic stability.
+  if (!m_patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
+    Warning("CPR attempted on beating heart. Action ignored.");
+    m_data.GetActions().GetPatientActions().RemoveChestCompression();
+    return;
   }
 
-  //--------------------------------------------------------------------------------------------------
-  /// \brief
-  /// Calculates and sets the pressure on the heart pressure sources when a CPR compression is applied.
-  ///
-  /// \details
-  /// Calculates and sets the pressure on the heart pressure sources when a CPR compression is applied.
-  //--------------------------------------------------------------------------------------------------
-  void Cardiovascular::CalculateAndSetCPRcompressionForce()
-  {
+  // Have a new call for a chest compression
+  if (m_data.GetActions().GetPatientActions().HasChestCompressionForceScale()) {
+    m_CompressionRatio = m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->GetForceScale().GetValue();
+    /// \error Warning: CPR compression ratio must be a positive value between 0 and 1 inclusive.
+    if (m_CompressionRatio < 0.0)
+      Warning("CPR compression ratio must be a positive value between 0 and 1 inclusive.");
+    if (m_CompressionRatio > 1.0)
+      Warning("CPR compression ratio must be a positive value between 0 and 1 inclusive.");
 
-    double compressionForce_N = 0.0;
-    double compressionForceMax_N = 500.0; // The maximum allowed compression force (corresponds to 1.0 when force scale is used)
-    double compressionForceMin_N = 0.0; // The minimum allowed compression force
-
-    if (m_CompressionRatio > 0.0) //Force scale
-    {
-      // Bell curve shaping parameters
-      double c = -10; // Defines the start and stop of the force bell curve given the period
-      double a = 4 * c / (m_CompressionPeriod_s * m_CompressionPeriod_s);
-      double b = -a * m_CompressionPeriod_s;
-
-      compressionForce_N = std::pow(2, a * m_CompressionTime_s * m_CompressionTime_s + b * m_CompressionTime_s + c) * m_CompressionRatio * compressionForceMax_N;
-
-      // 2 second max compression time is arbitrary. I just put it in to make sure it doesn't get stuck if
-      // we accidentally make a really wide bell curve. Note that the bell curve parameters are currently hardcoded above.
-      // If compression force has decayed to less than some amount or the time is above some amount, end the compression
-      if (m_CompressionTime_s > m_CompressionPeriod_s) {
-        compressionForce_N = 0.0;
-        m_CompressionTime_s = 0.0;
-        m_CompressionRatio = 0.0;
-        m_CompressionPeriod_s = 0.0;
-      }
-    } else //Explicit force
-    {
-      compressionForce_N = m_data.GetActions().GetPatientActions().GetChestCompressionForce()->GetForce().GetValue(ForceUnit::N);
+    BLIM(m_CompressionRatio, 0., 1.);
+    // If no period was assigned by the user, then use the default - 0.4s
+    if (m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->HasForcePeriod()) {
+      m_CompressionPeriod_s = m_data.GetActions().GetPatientActions().GetChestCompressionForceScale()->GetForcePeriod().GetValue(TimeUnit::s);
+    } else {
+      m_CompressionPeriod_s = 0.4;
     }
 
-    m_CompressionTime_s += m_dT_s;
-
-    if (compressionForce_N > compressionForceMax_N) {
-      compressionForce_N = compressionForceMax_N;
-      Warning("The compression force exceeded the maximum compression force. Compression force limited to 500N.");
-    }
-
-    if (compressionForce_N < compressionForceMin_N) {
-      compressionForce_N = compressionForceMin_N;
-      Warning("The compression force was less than the required minimum. Compression force limited to 0N.");
-    }
-
-    double leftHeartForceToPressureFactor = 0.1; // Tuning parameter to translate compression force in N to left heart pressure in mmHg
-    double rightHeartForceToPressureFactor = 0.1; // Tuning parameter to translate compression force in N to right heart pressure in mmHg
-    double nextLeftPressure_mmHg = leftHeartForceToPressureFactor * compressionForce_N;
-    double nextRightPressure_mmHg = rightHeartForceToPressureFactor * compressionForce_N;
-
-    m_pRightHeartToGnd->GetNextPressureSource().SetValue(nextRightPressure_mmHg, PressureUnit::mmHg);
-    m_pLeftHeartToGnd->GetNextPressureSource().SetValue(nextLeftPressure_mmHg, PressureUnit::mmHg);
-
-    // The action is removed when the force is set to 0.
-    if (compressionForce_N == 0)
-      m_data.GetActions().GetPatientActions().RemoveChestCompression();
+    m_data.GetActions().GetPatientActions().RemoveChestCompression();
   }
 
-  //--------------------------------------------------------------------------------------------------
-  /// \brief
-  /// The cardiac arrest action causes the sudden loss of heart function and breathing.
-  ///
-  /// \details
-  /// Cardiac arrest is the sudden loss of effective blood circulation. When the cardiac arrest
-  /// action is active, the heart will not beat effectively and breathing will not occur.
-  //--------------------------------------------------------------------------------------------------
-  void Cardiovascular::CardiacArrest()
+  CalculateAndSetCPRcompressionForce();
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Calculates and sets the pressure on the heart pressure sources when a CPR compression is applied.
+///
+/// \details
+/// Calculates and sets the pressure on the heart pressure sources when a CPR compression is applied.
+//--------------------------------------------------------------------------------------------------
+void Cardiovascular::CalculateAndSetCPRcompressionForce()
+{
+
+  double compressionForce_N = 0.0;
+  double compressionForceMax_N = 500.0; // The maximum allowed compression force (corresponds to 1.0 when force scale is used)
+  double compressionForceMin_N = 0.0; // The minimum allowed compression force
+
+  if (m_CompressionRatio > 0.0) //Force scale
   {
-    // If there is no call for a cardiac arrest, return to ProcessActions
-    if (!m_data.GetActions().GetPatientActions().HasCardiacArrest())
-      return;
-    // Flip the cardiac arrest switch
-    // This tells the CV system that a cardiac arrest has been initiated.
-    // The cardiac arrest event will be triggered by CardiacCycleCalculations() at the end of the cardiac cycle.
+    // Bell curve shaping parameters
+    double c = -10; // Defines the start and stop of the force bell curve given the period
+    double a = 4 * c / (m_CompressionPeriod_s * m_CompressionPeriod_s);
+    double b = -a * m_CompressionPeriod_s;
+
+    compressionForce_N = std::pow(2, a * m_CompressionTime_s * m_CompressionTime_s + b * m_CompressionTime_s + c) * m_CompressionRatio * compressionForceMax_N;
+
+    // 2 second max compression time is arbitrary. I just put it in to make sure it doesn't get stuck if
+    // we accidentally make a really wide bell curve. Note that the bell curve parameters are currently hardcoded above.
+    // If compression force has decayed to less than some amount or the time is above some amount, end the compression
+    if (m_CompressionTime_s > m_CompressionPeriod_s) {
+      compressionForce_N = 0.0;
+      m_CompressionTime_s = 0.0;
+      m_CompressionRatio = 0.0;
+      m_CompressionPeriod_s = 0.0;
+    }
+  } else //Explicit force
+  {
+    compressionForce_N = m_data.GetActions().GetPatientActions().GetChestCompressionForce()->GetForce().GetValue(ForceUnit::N);
+  }
+
+  m_CompressionTime_s += m_dT_s;
+
+  if (compressionForce_N > compressionForceMax_N) {
+    compressionForce_N = compressionForceMax_N;
+    Warning("The compression force exceeded the maximum compression force. Compression force limited to 500N.");
+  }
+
+  if (compressionForce_N < compressionForceMin_N) {
+    compressionForce_N = compressionForceMin_N;
+    Warning("The compression force was less than the required minimum. Compression force limited to 0N.");
+  }
+
+  double leftHeartForceToPressureFactor = 0.1; // Tuning parameter to translate compression force in N to left heart pressure in mmHg
+  double rightHeartForceToPressureFactor = 0.1; // Tuning parameter to translate compression force in N to right heart pressure in mmHg
+  double nextLeftPressure_mmHg = leftHeartForceToPressureFactor * compressionForce_N;
+  double nextRightPressure_mmHg = rightHeartForceToPressureFactor * compressionForce_N;
+
+  m_pRightHeartToGnd->GetNextPressureSource().SetValue(nextRightPressure_mmHg, PressureUnit::mmHg);
+  m_pLeftHeartToGnd->GetNextPressureSource().SetValue(nextLeftPressure_mmHg, PressureUnit::mmHg);
+
+  // The action is removed when the force is set to 0.
+  if (compressionForce_N == 0)
+    m_data.GetActions().GetPatientActions().RemoveChestCompression();
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// The cardiac arrest action causes the sudden loss of heart function and breathing.
+///
+/// \details
+/// Cardiac arrest is the sudden loss of effective blood circulation. When the cardiac arrest
+/// action is active, the heart will not beat effectively and breathing will not occur.
+//--------------------------------------------------------------------------------------------------
+void Cardiovascular::CardiacArrest()
+{
+  // If there is no call for a cardiac arrest, return to ProcessActions
+  if (!m_data.GetActions().GetPatientActions().HasCardiacArrest())
+    return;
+  // Flip the cardiac arrest switch
+  // This tells the CV system that a cardiac arrest has been initiated.
+  // The cardiac arrest event will be triggered by CardiacCycleCalculations() at the end of the cardiac cycle.
+  m_EnterCardiacArrest = true;
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// The pericardial effusion pressure application function calculates the pressure applied to the heart due to a pericardial effusion.
+///
+/// \details
+/// The pressure applied to the left and right heart is dictated by the pericardium pressure. The response is tuned to 40% of this value
+/// to achieve the correct physiologic response.
+//--------------------------------------------------------------------------------------------------
+void Cardiovascular::PericardialEffusionPressureApplication()
+{
+  double intrapericardialPressure_mmHg = m_Pericardium->GetPressure(PressureUnit::mmHg);
+
+  double pressureResponseFraction = 0.4; //Tuning the pressure applied to the heart
+
+  //Set the pressure on the right and left heart from the pericardium pressure
+  m_pRightHeartToGnd->GetPressureSourceBaseline().SetValue(pressureResponseFraction * intrapericardialPressure_mmHg, PressureUnit::mmHg);
+  m_pLeftHeartToGnd->GetPressureSourceBaseline().SetValue(pressureResponseFraction * intrapericardialPressure_mmHg, PressureUnit::mmHg);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Calculates the contraction and relaxation of the left and right heart during the cardiac cycle
+///
+/// \details
+/// This function tracks the progress of the current cardiac cycle, and modifies the compliance of the left
+/// and right heart to drive the cardiovascular circuit. The reduced compliance at the beginning of the cycle
+/// acts to increase the pressure, driving flow out of the heart. The compliance is then reduced allowing flow into
+/// the heart. This represents the systolic and diastolic portion of the cardiac cycle. The compliance is
+/// driven by an elastance equation.
+/// This function also keeps track of the cardiac cycle time and calls BeginCardiacCycle() at the start of
+/// systole portion of each cycle. Modifications to heart rate and heart compliance are calculated by
+/// BeginCardiacCycle() and applied for the remained of the current cardiac cycle. Changes to things like
+/// heart rate and heart contractility can only occur at the top of the current cardiac cycle, after the last cardiac
+/// cycle has completed. This helps to avoid discontinuous behavior such as the complete cessation of heart function
+/// mid contraction.
+//--------------------------------------------------------------------------------------------------
+void Cardiovascular::HeartDriver()
+{
+  // Reset start cardiac cycle event if it was activated by BeginCardiacCycle() last time step
+  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
+    m_patient->SetEvent(CDM::enumPatientEvent::StartOfCardiacCycle, false, m_data.GetSimulationTime());
+
+  // m_StartSystole is set to true at the end of a cardiac cycle in order to setup the next cardiac cycle.
+  // After the next cycle is prepared in BeginCardiacCycle, m_StartSystole is seet back to false.
+  if (m_StartSystole)
+    BeginCardiacCycle();
+
+  // If any system set the rhythm to asystole (or other rhythms in the future) then trip the cardiac arrest flag so that we can deal with it at the top of the next cardiac cycle
+  // This prevents the heart from stopping in the middle of a contraction.
+  if (GetHeartRhythm() == CDM::enumHeartRhythm::Asystole)
     m_EnterCardiacArrest = true;
+
+  if (!m_patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
+    if (m_CurrentCardiacCycleTime_s + m_dT_s > m_CardiacCyclePeriod_s) {
+      m_StartSystole = true; // A new cardiac cycle will begin next time step
+      m_CurrentCardiacCycleDuration_s += (m_CardiacCyclePeriod_s - m_CurrentCardiacCycleTime_s); //Add leftover time to current duration so Calc Heart Rate has an accuracte notion of how long this cycle lasted
+    }
+
+    AdjustVascularTone();
+    CalculateHeartElastance();
   }
 
+  m_pRightHeart->GetNextCompliance().SetValue(1.0 / m_RightHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+  m_pLeftHeart->GetNextCompliance().SetValue(1.0 / m_LeftHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+
+  // Now that the math is done we can increment the cardiac cycle time
+  // Note that the cardiac cycle time (m_CurrentCardiacCycleTime_s) continues to increment until a cardiac cycle begins (a beat happens)
+  // So for a normal sinus rhythm, the maximum cardiac cycle time is equal to the cardiac cycle period (m_CardiacCyclePeriod_s).
+  // For any ineffective rhythm (no heart beat) the cardiac cycle time will be as long as it has been since the last time there was an effective beat.
+  // The variable m_CurrentCardiacCycleDuratoin_s tracks the time between beats and is used in CalculateHeartRate.  We use a separate counter
+  // for heart rate because the conditions that trigger CalcHeartRate are different than those that trigger BeginCardiacCycle
+  m_CurrentCardiacCycleTime_s += m_dT_s;
+  m_CurrentCardiacCycleDuration_s += m_dT_s;
+}
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Sets up the evolution of the next cardiac cycle.
@@ -1502,101 +1576,106 @@ void Cardiovascular::BeginCardiacCycle()
     }
   }
 }
-  //--------------------------------------------------------------------------------------------------
-  /// \brief
-  /// The pericardial effusion pressure application function calculates the pressure applied to the heart due to a pericardial effusion.
-  ///
-  /// \details
-  /// The pressure applied to the left and right heart is dictated by the pericardium pressure. The response is tuned to 40% of this value
-  /// to achieve the correct physiologic response.
-  //--------------------------------------------------------------------------------------------------
-  void Cardiovascular::PericardialEffusionPressureApplication()
-  {
-    double intrapericardialPressure_mmHg = m_Pericardium->GetPressure(PressureUnit::mmHg);
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// The pericardial effusion pressure application function calculates the pressure applied to the heart due to a pericardial effusion.
+///
+/// \details
+/// The pressure applied to the left and right heart is dictated by the pericardium pressure. The response is tuned to 40% of this value
+/// to achieve the correct physiologic response.
+//--------------------------------------------------------------------------------------------------
+void Cardiovascular::PericardialEffusionPressureApplication()
+{
+  double intrapericardialPressure_mmHg = m_Pericardium->GetPressure(PressureUnit::mmHg);
 
-    double pressureResponseFraction = 0.4; //Tuning the pressure applied to the heart
+  double pressureResponseFraction = 0.4; //Tuning the pressure applied to the heart
 
-    //Set the pressure on the right and left heart from the pericardium pressure
-    m_pRightHeartToGnd->GetPressureSourceBaseline().SetValue(pressureResponseFraction * intrapericardialPressure_mmHg, PressureUnit::mmHg);
-    m_pLeftHeartToGnd->GetPressureSourceBaseline().SetValue(pressureResponseFraction * intrapericardialPressure_mmHg, PressureUnit::mmHg);
-  }
+  //Set the pressure on the right and left heart from the pericardium pressure
+  m_pRightHeartToGnd->GetPressureSourceBaseline().SetValue(pressureResponseFraction * intrapericardialPressure_mmHg, PressureUnit::mmHg);
+  m_pLeftHeartToGnd->GetPressureSourceBaseline().SetValue(pressureResponseFraction * intrapericardialPressure_mmHg, PressureUnit::mmHg);
+}
 
-  //--------------------------------------------------------------------------------------------------
-  /// \brief
-  /// Calculates the contraction and relaxation of the left and right heart during the cardiac cycle
-  ///
-  /// \details
-  /// This function tracks the progress of the current cardiac cycle, and modifies the compliance of the left
-  /// and right heart to drive the cardiovascular circuit. The reduced compliance at the beginning of the cycle
-  /// acts to increase the pressure, driving flow out of the heart. The compliance is then reduced allowing flow into
-  /// the heart. This represents the systolic and diastolic portion of the cardiac cycle. The compliance is
-  /// driven by an elastance equation.
-  /// This function also keeps track of the cardiac cycle time and calls BeginCardiacCycle() at the start of
-  /// systole portion of each cycle. Modifications to heart rate and heart compliance are calculated by
-  /// BeginCardiacCycle() and applied for the remained of the current cardiac cycle. Changes to things like
-  /// heart rate and heart contractility can only occur at the top of the current cardiac cycle, after the last cardiac
-  /// cycle has completed. This helps to avoid discontinuous behavior such as the complete cessation of heart function
-  /// mid contraction.
-  //--------------------------------------------------------------------------------------------------
-  void Cardiovascular::HeartDriver()
-  {
-    // Reset start cardiac cycle event if it was activated by BeginCardiacCycle() last time step
-    if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-      m_patient->SetEvent(CDM::enumPatientEvent::StartOfCardiacCycle, false, m_data.GetSimulationTime());
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Sets up the evolution of the next cardiac cycle.
+///
+/// \details
+/// This function is directed from Cardiovascular::HeartDriver. It set's up the evolution of the proceeding cardiac
+/// cycle. It is used to apply the effects of drugs or exercise on the cardiovascular system.
+/// These effects will persist for the remainder of the cardiac cycle, at which point this function
+/// is called again if a new heart beat is warranted (i.e. not in cardiac arrest).
+//--------------------------------------------------------------------------------------------------
+void Cardiovascular::BeginCardiacCycle()
+{
+  m_patient->SetEvent(CDM::enumPatientEvent::StartOfCardiacCycle, true, m_data.GetSimulationTime());
 
-    // m_StartSystole is set to true at the end of a cardiac cycle in order to setup the next cardiac cycle.
-    // After the next cycle is prepared in BeginCardiacCycle, m_StartSystole is seet back to false.
-    if (m_StartSystole)
-      BeginCardiacCycle();
+  m_pRightHeart->GetNextCompliance().SetValue(1.0 / m_RightHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
+  m_pLeftHeart->GetNextCompliance().SetValue(1.0 / m_LeftHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
 
-    // If any system set the rhythm to asystole (or other rhythms in the future) then trip the cardiac arrest flag so that we can deal with it at the top of the next cardiac cycle
-    // This prevents the heart from stopping in the middle of a contraction.
-    if (GetHeartRhythm() == CDM::enumHeartRhythm::Asystole)
-      m_EnterCardiacArrest = true;
+  // Now that the math is done we can increment the cardiac cycle time
+  // Note that the cardiac cycle time (m_CurrentCardiacCycleTime_s) continues to increment until a cardiac cycle begins (a beat happens)
+  // So for a normal sinus rhythm, the maximum cardiac cycle time is equal to the cardiac cycle period (m_CardiacCyclePeriod_s).
+  // For any ineffective rhythm (no heart beat) the cardiac cycle time will be as long as it has been since the last time there was an effective beat.
+  // The variable m_CurrentCardiacCycleDuratoin_s tracks the time between beats and is used in CalculateHeartRate.  We use a separate counter
+  // for heart rate because the conditions that trigger CalcHeartRate are different than those that trigger BeginCardiacCycle
+  m_CurrentCardiacCycleTime_s += m_dT_s;
+  m_CurrentCardiacCycleDuration_s += m_dT_s;
+}
 
-    if (!m_patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
-      if (m_CurrentCardiacCycleTime_s + m_dT_s > m_CardiacCyclePeriod_s) {
-        m_StartSystole = true; // A new cardiac cycle will begin next time step
-        m_CurrentCardiacCycleDuration_s += (m_CardiacCyclePeriod_s - m_CurrentCardiacCycleTime_s); //Add leftover time to current duration so Calc Heart Rate has an accuracte notion of how long this cycle lasted
-      }
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Sets up the evolution of the next cardiac cycle.
+///
+/// \details
+/// This function is directed from Cardiovascular::HeartDriver. It set's up the evolution of the proceeding cardiac
+/// cycle. It is used to apply the effects of drugs or exercise on the cardiovascular system.
+/// These effects will persist for the remainder of the cardiac cycle, at which point this function
+/// is called again if a new heart beat is warranted (i.e. not in cardiac arrest).
+//--------------------------------------------------------------------------------------------------
+void Cardiovascular::BeginCardiacCycle()
+{
+  m_patient->SetEvent(CDM::enumPatientEvent::StartOfCardiacCycle, true, m_data.GetSimulationTime());
 
-      AdjustVascularTone();
-      CalculateHeartElastance();
+  // Changes to the heart rate and other hemodynamic parameters are applied at the top of the cardiac cycle.
+  // Parameters cannot change during the cardiac cycle because the heart beat is modeled as a changing compliance.
+
+  // Apply Efferent reflex effects
+  /// \todo need to reset the heart elastance min and max at the end of each stabiliation period in AtSteadyState()
+  m_LeftHeartElastanceMax_mmHg_Per_mL = m_data.GetConfiguration().GetLeftHeartElastanceMaximum(FlowElastanceUnit::mmHg_Per_mL);
+  if (m_data.GetNervous().HasHeartElastanceScale())
+    m_LeftHeartElastanceMax_mmHg_Per_mL *= m_data.GetNervous().GetHeartElastanceScale().GetValue();
+
+  m_RightHeartElastanceMax_mmHg_Per_mL = m_data.GetConfiguration().GetRightHeartElastanceMaximum(FlowElastanceUnit::mmHg_Per_mL);
+  if (m_data.GetNervous().HasHeartElastanceScale())
+    m_RightHeartElastanceMax_mmHg_Per_mL *= m_data.GetNervous().GetHeartElastanceScale().GetValue();
+
+  double HeartDriverFrequency_Per_Min = m_patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
+
+  // In the event of a conformant HR override, the member variable is used to keep track of the changing baseline, but will reset to the patient's true baseline after being turned off
+  // Conformant changes are driven towards a new value using a moving average concept to allow other values in BG physiology to catch up in the event of extreme changes
+  // Still bound by patient min and max
+  if (m_data.GetActions().GetPatientActions().HasOverride()) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+      HeartDriverFrequency_Per_Min = m_OverrideHR_Conformant_Per_min;
+      const double HRoverride_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_min);
+      const double HeartDriverIncrease_Per_min = std::abs((HRoverride_Per_min - HeartDriverFrequency_Per_Min) / HeartDriverFrequency_Per_Min) * (HRoverride_Per_min - HeartDriverFrequency_Per_Min);
+      HeartDriverFrequency_Per_Min += HeartDriverIncrease_Per_min;
     }
-
-    m_pRightHeart->GetNextCompliance().SetValue(1.0 / m_RightHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-    m_pLeftHeart->GetNextCompliance().SetValue(1.0 / m_LeftHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
-
-    // Now that the math is done we can increment the cardiac cycle time
-    // Note that the cardiac cycle time (m_CurrentCardiacCycleTime_s) continues to increment until a cardiac cycle begins (a beat happens)
-    // So for a normal sinus rhythm, the maximum cardiac cycle time is equal to the cardiac cycle period (m_CardiacCyclePeriod_s).
-    // For any ineffective rhythm (no heart beat) the cardiac cycle time will be as long as it has been since the last time there was an effective beat.
-    // The variable m_CurrentCardiacCycleDuratoin_s tracks the time between beats and is used in CalculateHeartRate.  We use a separate counter
-    // for heart rate because the conditions that trigger CalcHeartRate are different than those that trigger BeginCardiacCycle
-    m_CurrentCardiacCycleTime_s += m_dT_s;
-    m_CurrentCardiacCycleDuration_s += m_dT_s;
+  } else {
+    if (m_data.GetNervous().HasHeartRateScale()) {
+      HeartDriverFrequency_Per_Min *= (m_data.GetNervous().GetHeartRateScale().GetValue());
+    }
   }
 
-  //--------------------------------------------------------------------------------------------------
-  /// \brief
-  /// Sets up the evolution of the next cardiac cycle.
-  ///
-  /// \details
-  /// This function is directed from Cardiovascular::HeartDriver. It set's up the evolution of the proceeding cardiac
-  /// cycle. It is used to apply the effects of drugs or exercise on the cardiovascular system.
-  /// These effects will persist for the remainder of the cardiac cycle, at which point this function
-  /// is called again if a new heart beat is warranted (i.e. not in cardiac arrest).
-  //--------------------------------------------------------------------------------------------------
-  void Cardiovascular::BeginCardiacCycle()
-  {
-    m_patient->SetEvent(CDM::enumPatientEvent::StartOfCardiacCycle, true, m_data.GetSimulationTime());
+  // Apply drug effects
+  if (m_data.GetDrugs().HasHeartRateChange()) {
+    HeartDriverFrequency_Per_Min += m_data.GetDrugs().GetHeartRateChange(FrequencyUnit::Per_min);
+      // Changes to the heart rate and other hemodynamic parameters are applied at the top of the cardiac cycle.
+      // Parameters cannot change during the cardiac cycle because the heart beat is modeled as a changing compliance.
 
-    // Changes to the heart rate and other hemodynamic parameters are applied at the top of the cardiac cycle.
-    // Parameters cannot change during the cardiac cycle because the heart beat is modeled as a changing compliance.
-
-    // Apply Efferent reflex effects
-    /// \todo need to reset the heart elastance min and max at the end of each stabiliation period in AtSteadyState()
-    m_LeftHeartElastanceMax_mmHg_Per_mL = m_data.GetConfiguration().GetLeftHeartElastanceMaximum(FlowElastanceUnit::mmHg_Per_mL);
+      // Apply Efferent reflex effects
+      /// \todo need to reset the heart elastance min and max at the end of each stabiliation period in AtSteadyState()
+      m_LeftHeartElastanceMax_mmHg_Per_mL = m_data.GetConfiguration().GetLeftHeartElastanceMaximum(FlowElastanceUnit::mmHg_Per_mL);
     if (m_data.GetNervous().HasHeartElastanceScale())
       m_LeftHeartElastanceMax_mmHg_Per_mL *= m_data.GetNervous().GetHeartElastanceScale().GetValue();
 
@@ -1617,11 +1696,10 @@ void Cardiovascular::BeginCardiacCycle()
         HeartDriverFrequency_Per_Min += HeartDriverIncrease_Per_min;
       }
     } else {
-      if (m_data.GetNervous().HasHeartRateScale()) {
-        HeartDriverFrequency_Per_Min *= (m_data.GetNervous().GetHeartRateScale().GetValue());
-      }
-    }
 
+      if (m_data.GetNervous().HasHeartRateScale()) {
+        HeartDriverFrequency_Per_Min *= (m_data.GetNervous().GetHeartRateScale().GetValue());      }
+    }
     // Apply drug effects
     if (m_data.GetDrugs().HasHeartRateChange()) {
       HeartDriverFrequency_Per_Min += m_data.GetDrugs().GetHeartRateChange(FrequencyUnit::Per_min);
@@ -2078,7 +2156,6 @@ void Cardiovascular::BeginCardiacCycle()
         mPath->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
       }
     }
-
     if (m_data.GetNervous().HasResistanceScaleSplanchnic()) {
       ResistanceScale = m_data.GetNervous().GetResistanceScaleSplanchnic().GetValue();
       for (SEFluidCircuitPath* sPath : m_splanchnicResistancePaths) {
@@ -2092,11 +2169,10 @@ void Cardiovascular::BeginCardiacCycle()
     }
 
     if (m_data.GetNervous().HasComplianceScale()) {
-      //for (SEFluidCircuitPath* Path : m_systemicCompliancePaths) {
-      SEFluidCircuitPath* Path = m_CirculatoryCircuit->GetPath(BGE::CardiovascularPath::VenaCavaToGround);
-      UpdatedCompliance_mL_Per_mmHg = m_data.GetNervous().GetComplianceScale().GetValue() * Path->GetComplianceBaseline(FlowComplianceUnit::mL_Per_mmHg);
-      Path->GetNextCompliance().SetValue(UpdatedCompliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
-      //}
+      for (SEFluidCircuitPath* Path : m_systemicCompliancePaths) {
+        UpdatedCompliance_mL_Per_mmHg = m_data.GetNervous().GetComplianceScale().GetValue() * Path->GetComplianceBaseline(FlowComplianceUnit::mL_Per_mmHg);
+        Path->GetNextCompliance().SetValue(UpdatedCompliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
+      }
     }
 
     //The drug response adjusts the systemic resistances according to the mean arterial pressure change calculated in Drugs.cpp
@@ -2191,6 +2267,7 @@ void Cardiovascular::BeginCardiacCycle()
       GetSystolicArterialPressure().SetValue(override->GetSystolicArterialPressureOverride(PressureUnit::mmHg), PressureUnit::mmHg);
     }
   }
+
   //// Can be turned on or off (for debugging purposes) using the Biogears_USE_OVERRIDE_CONTROL external in CMake
   void Cardiovascular::OverrideControlLoop()
   {
