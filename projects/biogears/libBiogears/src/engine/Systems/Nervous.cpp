@@ -95,8 +95,8 @@ void Nervous::Initialize()
   m_HeartElastanceModifier = 0.206;
   m_HeartRateModifierSympathetic = -0.233;
   m_HeartRateModifierVagal = 0.582;
-  m_HypocapniaThresholdHeart = 0.0;
-  m_HypocapniaThresholdPeripheral = 0.0;
+  m_HypercapniaThresholdHeart = 0.0;
+  m_HypercapniaThresholdPeripheral = 0.0;
   m_HypoxiaThresholdHeart = 0.0;
   m_HypoxiaThresholdPeripheral = 0.0;
   m_HeartOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
@@ -167,8 +167,8 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_HeartOxygenBaseline = in.HeartOxygenBaseline();
   m_HeartRateModifierSympathetic = in.HeartRateModifierSympathetic();
   m_HeartRateModifierVagal = in.HeartRateModifierVagal();
-  m_HypocapniaThresholdHeart = in.HypocapniaThresholdHeart();
-  m_HypocapniaThresholdPeripheral = in.HypocapniaThresholdPeripheral();
+  m_HypercapniaThresholdHeart = in.HypercapniaThresholdHeart();
+  m_HypercapniaThresholdPeripheral = in.HypercapniaThresholdPeripheral();
   m_HypoxiaThresholdHeart = in.HypoxiaThresholdHeart();
   m_HypoxiaThresholdPeripheral = in.HypoxiaThresholdPeripheral();
   m_MeanLungVolume_L = in.MeanLungVolume_L();
@@ -227,8 +227,8 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   data.HeartOxygenBaseline(m_HeartOxygenBaseline);
   data.HeartRateModifierSympathetic(m_HeartRateModifierSympathetic);
   data.HeartRateModifierVagal(m_HeartRateModifierVagal);
-  data.HypocapniaThresholdHeart(m_HypocapniaThresholdHeart);
-  data.HypocapniaThresholdPeripheral(m_HypocapniaThresholdPeripheral);
+  data.HypercapniaThresholdHeart(m_HypercapniaThresholdHeart);
+  data.HypercapniaThresholdPeripheral(m_HypercapniaThresholdPeripheral);
   data.HypoxiaThresholdHeart(m_HypoxiaThresholdHeart);
   data.HypoxiaThresholdPeripheral(m_HypoxiaThresholdPeripheral);
   data.MeanLungVolume_L(m_MeanLungVolume_L);
@@ -352,8 +352,8 @@ void Nervous::Process()
   m_data.GetDataTrack().Probe("Ursino_Parasympathetic", m_VagalSignal_Hz);
   m_data.GetDataTrack().Probe("HypoxiaThreshold_Heart", m_HypoxiaThresholdHeart);
   m_data.GetDataTrack().Probe("HypoxiaThreshold_Peripheral", m_HypoxiaThresholdPeripheral);
-  m_data.GetDataTrack().Probe("HypocapniaThreshold_Heart", m_HypocapniaThresholdHeart);
-  m_data.GetDataTrack().Probe("HypocapniaThreshold_Peripheral", m_HypocapniaThresholdPeripheral);
+  m_data.GetDataTrack().Probe("HypocapniaThreshold_Heart", m_HypercapniaThresholdHeart);
+  m_data.GetDataTrack().Probe("HypocapniaThreshold_Peripheral", m_HypercapniaThresholdPeripheral);
   m_data.GetDataTrack().Probe("BaroreceptorOperatingPoint", m_BaroreceptorOperatingPoint_mmHg);
   m_data.GetDataTrack().Probe("SympatheticFatigue", m_SympatheticPeripheralSignalFatigue);
   m_data.GetDataTrack().Probe("HeartRateMod_Sympathetic", m_HeartRateModifierSympathetic);
@@ -388,19 +388,19 @@ void Nervous::AfferentResponse()
   //Generate afferent chemoreceptor signal -- combined respiration drug effects modifier calculated in this function since it primarily affects chemoreceptors
   ChemoreceptorFeedback();
 
-  //Generate afferent lung stretch receptor signal (*ap = afferent pulmonary) -- note that signal only deviates from baselines at supra-normal tidal volumes (i.e. stretching)
+  //Generate afferent lung stretch receptor signal (*ap = afferent pulmonary), based on Ursino2000Acute
+  //We assume that the input is a running average of the total lung volume rather than the tidal volume (as source model does).
+  //We make this choice because the tidal volume in BioGears can change drastically and be set to 0, causing model 
+  //instabilities.  The total lung volume is therefore a better reflection of the state of the lungs.
   const double tauAP_s = 2.0;
   const double gainAP_Hz_Per_L = 4.4;
   const double totalLungVolume = m_data.GetRespiratory().GetTotalLungVolume(VolumeUnit::L);
   const double dVolume = 0.5 * (-m_MeanLungVolume_L + totalLungVolume);
   m_MeanLungVolume_L += (dVolume * m_dt_s);
   const double dFrequencyAP_Hz = (1.0 / tauAP_s) * (-m_AfferentPulmonaryStretchReceptor_Hz + gainAP_Hz_Per_L * m_MeanLungVolume_L);
-
   m_AfferentPulmonaryStretchReceptor_Hz += dFrequencyAP_Hz * m_dt_s;
   m_data.GetDataTrack().Probe("MeanLungVolume", m_MeanLungVolume_L);
-  //Afferent thermal receptors (*AT)--may do these later, but for now leave at baseline so as to not disrupt model
-  const double AfferentThermal_Hz = 5.0;
-  m_AfferentThermal_Hz = AfferentThermal_Hz;
+
 }
 
 void Nervous::CentralSignalProcess()
@@ -424,7 +424,11 @@ void Nervous::CentralSignalProcess()
   const double tauIschemia = 30.0;
   const double tauCO2 = 20.0;
 
-  //Update hypoxia thresholds for sympathetic signals -- inactive during initial stabilization and when there is a drug disrupting CNS (opioids)
+  //As hypoxia or hypercapnia deepens, the ischemic CNS response leads to increased sympathetic outflow.
+  //This is modeled as a reduction on the threshold required to cause sympathetic firing.
+  //See Magosso2001Mathematical for more detail
+
+  //Hypoxia thresholds
   const double arterialO2 = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
   const double expHypoxiaSH = std::exp((arterialO2 - oxygenHalfMaxSH) / kOxygenSH);
   const double expHypoxiaSP = std::exp((arterialO2 - oxygenHalfMaxSP) / kOxygenSP);
@@ -432,39 +436,45 @@ void Nervous::CentralSignalProcess()
   const double hypoxiaSP = xSatSP / (1.0 + expHypoxiaSP);
   const double dHypoxiaThresholdSH = (1.0 / tauIschemia) * (-m_HypoxiaThresholdHeart + hypoxiaSH);
   const double dHypoxiaThresholdSP = (1.0 / tauIschemia) * (-m_HypoxiaThresholdPeripheral + hypoxiaSP);
-  //Update hypocapnia thresholds
+  //Hypercapnia thresholds
   const double arterialCO2 = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
-  const double dHypocapaniaThresholdSH = (1.0 / tauCO2) * (-m_HypocapniaThresholdHeart + xCO2SH * (arterialCO2 - m_ArterialCarbonDioxideBaseline_mmHg));
-  const double dHypocapniaThresholdSP = (1.0 / tauCO2) * (-m_HypocapniaThresholdPeripheral + xCO2SP * (arterialCO2 - m_ArterialCarbonDioxideBaseline_mmHg));
+  const double dHypercapaniaThresholdSH = (1.0 / tauCO2) * (-m_HypercapniaThresholdHeart + xCO2SH * (arterialCO2 - m_ArterialCarbonDioxideBaseline_mmHg));
+  const double dHypercapniaThresholdSP = (1.0 / tauCO2) * (-m_HypercapniaThresholdPeripheral + xCO2SP * (arterialCO2 - m_ArterialCarbonDioxideBaseline_mmHg));
 
+  //Inactive during initial stabilization and when there is a drug disrupting CNS(opioids)
   if (m_FeedbackActive && m_DrugRespirationEffects < ZERO_APPROX) {
     m_HypoxiaThresholdHeart += (dHypoxiaThresholdSH * m_dt_s);
     m_HypoxiaThresholdPeripheral += (dHypoxiaThresholdSP * m_dt_s);
-    m_HypocapniaThresholdHeart += (dHypocapaniaThresholdSH * m_dt_s);
-    m_HypocapniaThresholdPeripheral += (dHypocapniaThresholdSP * m_dt_s);
+    m_HypercapniaThresholdHeart += (dHypercapaniaThresholdSH * m_dt_s);
+    m_HypercapniaThresholdPeripheral += (dHypercapniaThresholdSP * m_dt_s);
   }
 
-  const double firingThresholdSH = xBasalSH - m_HypoxiaThresholdHeart - m_HypocapniaThresholdHeart;
-  const double firingThresholdSP = xBasalSP - m_HypoxiaThresholdPeripheral - m_HypocapniaThresholdPeripheral;
+  //Determine final values of sympathetic firing thresholds
+  const double firingThresholdSH = xBasalSH - m_HypoxiaThresholdHeart - m_HypercapniaThresholdHeart;
+  const double firingThresholdSP = xBasalSP - m_HypoxiaThresholdPeripheral - m_HypercapniaThresholdPeripheral;
 
-  //Weights of sympathetic signal to heart (i.e. sino-atrial node)--AB = Afferent baroreceptor, AC = Afferent chemoreceptor, AA = Afferent atrial (cardiopulmonary), AT = Afferent thermal
-  const double wSH_AB = -1.0;
+  //The equations for sinoatrial and peripheral sympathetic firing are outlined in Ursino2000Acute and further refined
+  //in Magosso2001Theoretical and Lim2013Cardiovascular.  Relative weights assigned to carotid and aortic baroreceptors
+  //(no distinction between the two in Ursino) were obtained from Liang2006Simulation.
+
+  //Weights of sympathetic signal to heart (i.e. sino-atrial node)--ABA = Afferent baroreceptors (aortic), ABC = Afferent baroreceptors (carotid), AC = Afferent chemoreceptors, ACP = Afferent cardiopulmonary
+  const double wSH_ABA = -0.6;
+  const double wSH_ABC = -0.4;
   const double wSH_AC = 1.0;
-  const double wSH_AT = -1.0;
-  const double wSH_AL = -1.38;
+  const double wSH_ACP = -1.38;
   const double afferentCardiopulmonaryBaseline_Hz = 10.0;
 
-  const double exponentSH = kS * (0.4 * wSH_AB * m_AfferentBaroreceptorCarotid_Hz + 0.6 * wSH_AB * m_AfferentBaroreceptorAortic_Hz + wSH_AC * m_AfferentChemoreceptor_Hz + wSH_AL * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSH);
+  const double exponentSH = kS * (wSH_ABC * m_AfferentBaroreceptorCarotid_Hz + wSH_ABA * m_AfferentBaroreceptorAortic_Hz + wSH_AC * m_AfferentChemoreceptor_Hz + wSH_ACP * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSH);
   m_SympatheticSinoatrialSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSH);
 
   //Weights of sympathetic signal to peripheral vascular beds--AB, AC, AT as before, AP = Afferent pulmonary stretch receptors, AA = Afferent atrial stretch receptors
-  const double wSP_AB = -1.13;
+  const double wSP_ABA = -0.452;
+  const double wSP_ABC = -0.678;
   const double wSP_AC = 1.716;
   const double wSP_AP = -0.34;
-  const double wSP_AL = -1.38;
-  const double wSP_AT = 1.0;
+  const double wSP_ACP = -1.38;
 
-  const double exponentSP = kS * (0.6 * wSP_AB * m_AfferentBaroreceptorCarotid_Hz + 0.4 * wSP_AB * m_AfferentBaroreceptorAortic_Hz + wSP_AC * m_AfferentChemoreceptor_Hz + wSP_AP * m_AfferentPulmonaryStretchReceptor_Hz + wSP_AL * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSP);
+  const double exponentSP = kS * (wSP_ABC * m_AfferentBaroreceptorCarotid_Hz + wSP_ABA * m_AfferentBaroreceptorAortic_Hz + wSP_AC * m_AfferentChemoreceptor_Hz + wSP_AP * m_AfferentPulmonaryStretchReceptor_Hz + wSP_ACP * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSP);
   m_SympatheticPeripheralSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSP);
 
   //Model fatigue of sympathetic peripheral response during sepsis -- Future work should investigate relevance of fatigue in other scenarios
@@ -488,23 +498,17 @@ void Nervous::CentralSignalProcess()
   }
 
   //-------Determine vagal (parasympathetic) signal to heart------------------------------------------------------------------
+
+  //Vagal model as developed in Ursino2000Acute.  Assumed that carotid and aortic baroreceptors have equal weight
+  //The minimum firing rate and chemoreceptor weight have been lowered from there nominal values to increase
+  //parasympathetic withdrawal during hemorrhage.
   const double kV = 7.06;
   const double fVInf = 6.3;
   const double fV0 = 1.2;
-  const double wV_AC = 0.1; //0.03; //Was 0.2
+  const double wV_AC = 0.1;
   const double wV_AP = -0.103;
-  const double hypoxiaThresholdV = -0.9 + 0.07 * 3.6;
+  const double hypoxiaThresholdV = -0.648;
   const double baroreceptorBaseline_Hz = 25.15; //This value is the average of the fBaroMin and fBaroMax parameters in BaroreceptorFeedback (NOT reset AtSteadyState because we want continuous signals)
-
-  const double hypoxiaThresholdBase = hypoxiaThresholdV;
-  const double fVmin = 0.0;
-  const double fVmax = 2.66;
-  const double pO2C = 45.0;
-  const double kO2 = 29.27;
-
-  const double hypoxiaExp = std::exp((arterialO2 - pO2C) / kO2);
-
-  const double hypoxiaThreshold = (fVmin + fVmax * hypoxiaExp) / (1 + hypoxiaExp) - hypoxiaThresholdBase;
 
   const double exponentCarotid = (m_AfferentBaroreceptorCarotid_Hz - baroreceptorBaseline_Hz) / kV;
   const double exponentAortic = (m_AfferentBaroreceptorAortic_Hz - baroreceptorBaseline_Hz) / kV;
@@ -519,6 +523,31 @@ void Nervous::EfferentResponse()
   const double fSympatheticMin_Hz = 2.66;
   const double basePeripheralInput = std::log(m_SympatheticPeripheralSignalBaseline_Hz - fSympatheticMin_Hz + 1.0);
   const double baseSinoatrialInput = std::log(m_SympatheticSinoatrialSignalBaseline_Hz - fSympatheticMin_Hz + 1.0);
+
+  //NOTE: Effector equations based on Ursino2000Acute and Ursino1998Interaction.  These equations are written:
+  //            Effect(t) = del + EffectBase
+  //      where del is the output of a low pass, first order filter and EffectBase is the baseline effector value
+  //      when signal is at it's minimum.
+  //      All del based on sympthetic signals are of the form :  
+  //            d(del)/dt = (1/tau)*(-del + G * ln(signal - signalMin + 1))
+  //      where signal is either the sinoatrial or peripheral signal, signalMin is the minimum signal output, and
+  //      G is the gain.
+  //      For parasympathetic, the relationship is linear rather than logarithmic (only applies to HR vagal input)
+  //            d(del)dt = (1/tau) * (-del + G * vagalSignal)
+  //      We cannot use the Effect equations as written because the BioGears initial values (Effect0) are not identical
+  //      to those in the cited papers.  We solve this problem by normalizing the equations.
+  //      Observe first that, at baseline, each sympathetic effector will have a value:
+  //            Effect(0) = G*ln(signal0 - signalMin + 1) + EffectBase    (1)
+  //      Effect(0) will be different than EffectBase because the initial steady state signal0 is greater than signalMin
+  //      Perturbing system to a new steady state will eventually satisfy:
+  //            Effect(T) = G*ln(signalT - signalMin + 1) + EffectBase    (2)
+  //      The fractional change from baseline will be (2) / (1).  We can multiply both numerator and denominator by
+  //      (1 / EffectBase), leading to:
+  //            FractionalChange = (G' * ln(signalT - signalMin + 1) + 1) / (G' * ln(signal0 - signalMin + 1) + 1)
+  //      in which G' is a normalized gain equal to G / EffectBase.  An example of such a G' is below in "gainHRSympathetic.
+  //      The reported gain in Ursino is -0.13 and the EffectBase (heart period, in this case) is 0.58.  The normalized
+  //      gain is thus -0.13 / 0.58.
+
 
   //Heart Rate
   const double gainHRSympathetic = -0.13 / 0.58;
@@ -546,7 +575,6 @@ void Nervous::EfferentResponse()
   const double nextHeartElastanceNorm = (m_HeartElastanceModifier + 1.0) / elastance0;
 
   //Resistance -- Note that gain is suppressed (bounded at 0) when patient accumulates sympathetic fatigue (only occurs during sepsis currently)
-  //Might need to consider baseline sympathetic signal here to get right initial gains
   const double tauResistance = 6.0;
   const double gainResistanceExtrasplanchnic = 1.94 / 1.655;
   const double gainResistanceMuscle = 2.47 / 2.106;
@@ -602,7 +630,8 @@ void Nervous::EfferentResponse()
 /// \todo Add decompensation. Perhaps a reduction in the effect that is a function of blood volume below a threshold... and maybe time.
 void Nervous::BaroreceptorFeedback()
 {
-  //Determine strain on arterial wall caused by pressure changes -- uses Voigt body (spring-dashpot system) to estimate
+  //Determine strain on carotid and aortic arterial wall caused by pressure changes -- uses Voigt body (spring-dashpot system) to estimate
+  //See Randall2019ModelBased for details about Voght body model 
   const double A = 5.0;
   const double kVoigt = 0.1;
   const double tauVoigt = 0.9;
@@ -624,23 +653,63 @@ void Nervous::BaroreceptorFeedback()
     }
   }
 
-  const double baroreceptorOperatingPoint_mmHg = m_BaroreceptorOperatingPoint_mmHg + painEffect + drugEffect;
+  //Carotid baroreceptors are sensitive to arterial pressure changes. Future work could consider the effects of gravitational
+  //force, as the pressure at these receptors is technically a function of height above the heart.  Thus, in a lying down
+  //position, carotid receptors would "sense" a different pressure than when standing.  See Lim2013Cardiovascular for such
+  //an application
+  const double baroreceptorOperatingPoint_mmHg = m_BaroreceptorOperatingPoint_mmHg + painEffect;
   const double systolicPressure_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
-  const double strainExp = std::exp(-slopeStrain * (systolicPressure_mmHg - baroreceptorOperatingPoint_mmHg));
-  const double wallStrain = 1.0 - std::sqrt((1.0 + strainExp) / (A + strainExp));
-  const double dStrain = (1.0 / tauVoigt) * (-m_CarotidBaroreceptorStrain + kVoigt * wallStrain);
-  m_CarotidBaroreceptorStrain += (dStrain * m_dt_s);
-  const double strainSignal = wallStrain - m_CarotidBaroreceptorStrain;
+  const double carotidStrainExp = std::exp(-slopeStrain * (systolicPressure_mmHg - baroreceptorOperatingPoint_mmHg));
+  const double carotidWallStrain = 1.0 - std::sqrt((1.0 + carotidStrainExp) / (A + carotidStrainExp));
+  const double dCarotidStrain = (1.0 / tauVoigt) * (-m_CarotidBaroreceptorStrain + kVoigt * carotidWallStrain);
+  m_CarotidBaroreceptorStrain += (dCarotidStrain * m_dt_s);
+  const double carotidStrainSignal = carotidWallStrain - m_CarotidBaroreceptorStrain;
 
-  //Convert strain signal to be on same basis as Ursino model--this puts deviations in wall strain on same basis as other signals
+  //Aortic baroreceptors detect transmural pressure between aorta and thoracic (pleural) space.
+  //Thus, the pressure input is the difference between the sytolic pressure and mean pleural pressure.
+  //This means that the aortic baroreceptors will have different sensitivities to events that effect the pleural
+  //space (like tension pneumothorax).  Thus, we first calculate a running average for pleural pressure (less noisy)
+  //and then determine the aortic wall strain
+  const double environmentPressure = m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient)->GetPressure(PressureUnit::mmHg);
+  const double absolutePleuralPressure = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg);
+  const double pleuralPressure = absolutePleuralPressure - environmentPressure;
+  const double dPleuralPressure = 0.1 * (-m_MeanPleuralPressure_mmHg + pleuralPressure);
+  m_MeanPleuralPressure_mmHg += (dPleuralPressure * m_dt_s);
+  const double aorticPressureInput = systolicPressure_mmHg - m_MeanPleuralPressure_mmHg;
+  const double aorticStrainExp = std::exp(-slopeStrain * (aorticPressureInput - baroreceptorOperatingPoint_mmHg));
+  const double aorticWallStrain = 1.0 - std::sqrt((1.0 + aorticStrainExp) / (A + aorticStrainExp));
+  const double dAorticStrain = (1.0 / tauVoigt) * (-m_AorticBaroreceptorStrain + kVoigt * aorticWallStrain);
+  m_AorticBaroreceptorStrain += (dAorticStrain * m_dt_s);
+  const double aorticStrainSignal = aorticWallStrain - m_AorticBaroreceptorStrain;
+
+  //Convert strain signals to be on same basis as Ursino2000Acute--this puts deviations in wall strain on same basis as other signals
   const double fBaroMax = 47.78;
   const double fBaroMin = 2.52;
   const double kBaro = 0.075 * (1.0 - 2.0 * drugEffect);
   const double baselineStrainSignal = 0.9 * (1.0 - std::sqrt(1.0 / 3.0)); //Derived by calculating wallStrain when systolic pressure = operating pressure and setting m_AfferentStrain = kVoigt * wallStrain (steady state)
-  const double baroExponent = std::exp((strainSignal - baselineStrainSignal) / kBaro);
-  m_AfferentBaroreceptorCarotid_Hz = (fBaroMin + fBaroMax * baroExponent) / (1.0 + baroExponent);
+  const double carotidExponent = std::exp((carotidStrainSignal - baselineStrainSignal) / kBaro);
+  m_AfferentBaroreceptorCarotid_Hz = (fBaroMin + fBaroMax * carotidExponent) / (1.0 + carotidExponent);
+  const double aorticExponent = std::exp((aorticStrainSignal - baselineStrainSignal) / kBaro);
+  m_AfferentBaroreceptorAortic_Hz = (fBaroMin + fBaroMax * aorticExponent) / (1.0 + aorticExponent);
+  
+  //Cardiopulmonary (or low pressure) receptors are sensitive to the volume of blood being return to heart
+  //Since they are located by the heart, they are also effected by changes in transmural pressure.
+  //This model for cardiopulmonary receptors is based on Lim2013Cardiovascular
+  const double tZ = 6.0;
+  const double cvp = m_data.GetCardiovascular().GetCentralVenousPressure(PressureUnit::mmHg);
+  const double kAff = 3.429;
+  const double fmax2 = 20.0;
 
-  //Update setpoint
+  const double dFilterCVP = (1.0 / tZ) * (-m_CardiopulmonaryInput_mmHg + (cvp - m_MeanPleuralPressure_mmHg));
+  m_CardiopulmonaryInput_mmHg += (dFilterCVP * m_dt_s);
+  const double centralExp = std::exp((m_CardiopulmonaryInputBaseline_mmHg - m_CardiopulmonaryInput_mmHg) / kAff);
+  m_AfferentCardiopulmonary_Hz = fmax2 / (1.0 + centralExp);
+
+  if (!m_FeedbackActive) {
+    m_CardiopulmonaryInputBaseline_mmHg = m_CardiopulmonaryInput_mmHg;
+  }
+
+  //Update baroreceptor setpoint
   if (m_data.GetState() > EngineState::SecondaryStabilization) {
     //Pruett2013Population (cardiovascular hemorrhage model) assumes ~16 hr half-time for baroreceptor adaptation to new setpoint (They varied this parameter up to 1-2 days half-time)
     const double kAdapt_Per_hr = 0.042;
@@ -648,56 +717,24 @@ void Nervous::BaroreceptorFeedback()
     m_BaroreceptorOperatingPoint_mmHg += (dSetpointAdjust_mmHg_Per_hr * m_data.GetTimeStep().GetValue(TimeUnit::hr));
   }
 
-  //Aortic baroreceptors
-  const double pressureInput = systolicPressure_mmHg - m_MeanPleuralPressure_mmHg;
-  const double aorticStrainExp = std::exp(-slopeStrain * (pressureInput - baroreceptorOperatingPoint_mmHg));
-  const double aorticWallStrain = 1.0 - std::sqrt((1.0 + aorticStrainExp) / (A + aorticStrainExp));
-  const double dAorticStrain = (1.0 / tauVoigt) * (-m_AorticBaroreceptorStrain + kVoigt * aorticWallStrain);
-  m_AorticBaroreceptorStrain += (dAorticStrain * m_dt_s);
-  const double aorticStrainSignal = aorticWallStrain - m_AorticBaroreceptorStrain;
-  const double aorticExp = std::exp((aorticStrainSignal - baselineStrainSignal) / kBaro);
-  m_AfferentBaroreceptorAortic_Hz = (fBaroMin + fBaroMax * aorticExp) / (1.0 + aorticExp);
   m_data.GetDataTrack().Probe("AorticWallStrain", m_AorticBaroreceptorStrain);
   m_data.GetDataTrack().Probe("Afferent_AorticBaroreceptor", m_AfferentBaroreceptorAortic_Hz);
-
-  double environmentPressure = m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient)->GetPressure(PressureUnit::mmHg);
-  double absolutePleuralPressure = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg);
-  double pleuralPressure = absolutePleuralPressure - environmentPressure;
-  double dPleuralPressure = 0.1 * (-m_MeanPleuralPressure_mmHg + pleuralPressure);
-  m_MeanPleuralPressure_mmHg += (dPleuralPressure * m_dt_s);
-
   m_data.GetDataTrack().Probe("PleuralPressure", m_MeanPleuralPressure_mmHg);
-
-  //Cardiopulmonary Receptors
-  double tZ = 6.0;
-  double cvp = m_data.GetCardiovascular().GetCentralVenousPressure(PressureUnit::mmHg);
-  double kAff = 3.429;
-  double fmax2 = 20.0;
-
-  double dFilterCVP = (1.0 / tZ) * (-m_CardiopulmonaryInput_mmHg + (cvp - m_MeanPleuralPressure_mmHg));
-  m_CardiopulmonaryInput_mmHg += (dFilterCVP * m_dt_s);
-  double centralExp = std::exp((m_CardiopulmonaryInputBaseline_mmHg - m_CardiopulmonaryInput_mmHg) / kAff);
-  m_AfferentCardiopulmonary_Hz = fmax2 / (1.0 + centralExp);
-
-  if (!m_FeedbackActive) {
-    m_CardiopulmonaryInputBaseline_mmHg = m_CardiopulmonaryInput_mmHg;
-  }
-
   m_data.GetDataTrack().Probe("Test_FilteredCVP", m_CardiopulmonaryInput_mmHg);
   m_data.GetDataTrack().Probe("Test_CentralSignal", m_AfferentCardiopulmonary_Hz);
 }
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
-/// Calculates the cerebral autoregulation
+/// Calculates the cerebral autoregulation and local autoregulation of muscle and myocardium
 ///
 /// \details
 
 //--------------------------------------------------------------------------------------------------
 void Nervous::LocalAutoregulation()
 {
-  //-------------Do cerebral autoregulation first -- this is the most complex one--------------------------------------------------------------------
-
+  //-------------Cerebral autoregulation:  Based on Ursino1998Interaction and Urinso2001Role ---------
+  //This model is based on Ursino1998CInteraction and 
   //Feedback constants -- order is CBF auto, CO2, O2
   const std::vector<double> gainsLargeArteries { 0.0159, 1.958, 1.12 };
   const std::vector<double> tausLargeArteries { 10.0, 20.0, 20.0 };
@@ -727,7 +764,6 @@ void Nervous::LocalAutoregulation()
   //Current physiological values
   const double cerebralPerfusionPressure = m_data.GetCardiovascular().GetCerebralPerfusionPressure(PressureUnit::mmHg);
   const double arterialCO2Pressure = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
-  //const double arterialCO2Pressure = m_ArterialCarbonDioxideBaseline_mmHg;
   const double arterialO2Pressure = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
   const double largePialArteriesResistanceBaseline = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::NeckArteriesToCerebralArteries1)->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
   const double smallPialArteriesResistanceBaseline = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralArteries2ToCapillaries)->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
@@ -836,7 +872,7 @@ void Nervous::ChemoreceptorFeedback()
   const double tau_c_F = 180.0;
   //Chemoreceptor gains--Tuned to data from Reynold, 1972 and Reynolds, 1973 (cited in Cheng, 2016)
   const double gain_p_P = 1.0;
-  const double gain_p_F = 3.0; //1.25;
+  const double gain_p_F = 3.0;
   double gain_c_P = 0.65;
   double gain_c_F = 0.70;
   //Afferent peripheral constants

@@ -100,8 +100,8 @@ protected:
   double m_HeartOxygenBaseline;
   double m_HeartRateModifierSympathetic;
   double m_HeartRateModifierVagal;
-  double m_HypocapniaThresholdHeart;
-  double m_HypocapniaThresholdPeripheral;
+  double m_HypercapniaThresholdHeart;
+  double m_HypercapniaThresholdPeripheral;
   double m_HypoxiaThresholdHeart;
   double m_HypoxiaThresholdPeripheral;
   double m_MeanLungVolume_L;
@@ -124,7 +124,6 @@ protected:
   double m_AfferentBaroreceptorAortic_Hz; //*ABA
   double m_AfferentBaroreceptorCarotid_Hz; //*ABC
   double m_AfferentCardiopulmonary_Hz;  //*ACP
-  double m_AfferentThermal_Hz; //*AT
   double m_DrugRespirationEffects;
   bool m_FeedbackActive;
   double m_dt_s;

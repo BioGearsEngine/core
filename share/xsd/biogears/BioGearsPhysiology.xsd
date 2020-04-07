@@ -162,8 +162,8 @@ specific language governing permissions and limitations under the License.
 		  <xs:element name="HeartOxygenBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="HeartRateModifierSympathetic" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="HeartRateModifierVagal" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="HypocapniaThresholdHeart" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="HypocapniaThresholdPeripheral" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="HypercapniaThresholdHeart" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="HypercapniaThresholdPeripheral" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="HypoxiaThresholdHeart" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="HypoxiaThresholdPeripheral" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="MeanLungVolume_L" type="xs:double" minOccurs="1" maxOccurs="1"/>
