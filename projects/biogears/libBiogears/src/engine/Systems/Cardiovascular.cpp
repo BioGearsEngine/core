@@ -1467,11 +1467,6 @@ void Cardiovascular::HeartDriver()
   m_pRightHeart->GetNextCompliance().SetValue(1.0 / m_RightHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
   m_pLeftHeart->GetNextCompliance().SetValue(1.0 / m_LeftHeartElastance_mmHg_Per_mL, FlowComplianceUnit::mL_Per_mmHg);
 
-  /*double checkAortaPressure1 = 0.;
-  if (m_Aorta->HasPressure())
-    checkAortaPressure1 = m_Aorta->GetPressure().GetValue(PressureUnit::mmHg);
-  m_data.GetDataTrack().Probe("TestingAortaPressure", checkAortaPressure1);*/
-
   // Now that the math is done we can increment the cardiac cycle time
   // Note that the cardiac cycle time (m_CurrentCardiacCycleTime_s) continues to increment until a cardiac cycle begins (a beat happens)
   // So for a normal sinus rhythm, the maximum cardiac cycle time is equal to the cardiac cycle period (m_CardiacCyclePeriod_s).
