@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>Energy Validation</Name>
-    <Description>Validation of Endocrine data</Description>
+    <Description>Validation of nervous data</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 	
   <DataRequests>
-    <DataRequest xsi:type="PhysiologyDataRequestData" Name="BaroreceptorHeartRateScale" Precision="9"/>
-    <DataRequest xsi:type="PhysiologyDataRequestData" Name="BaroreceptorHeartElastanceScale" Precision="9"/>
-    <DataRequest xsi:type="PhysiologyDataRequestData" Name="BaroreceptorResistanceScale" Precision="9"/>
-    <DataRequest xsi:type="PhysiologyDataRequestData" Name="BaroreceptorComplianceScale" Precision="9"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRateScale" Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartElastanceScale" Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="ResistanceScaleExtrasplanchnic" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ResistanceScaleMuscle" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ResistanceScaleMyocardium" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ResistanceScaleSplanchnic" Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="ComplianceScale" Precision="2"/>
   </DataRequests>
 	
     <Action xsi:type="AdvanceTimeData">
