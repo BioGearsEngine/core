@@ -481,19 +481,8 @@ void Nervous::CentralSignalProcess()
   //Currently applying only to the peripheral signal because the literature notes that vascular smooth muscle shows depressed responsiveness to sympathetic activiy,
   //(Sayk et al., 2008 and Brassard et al., 2016) which would inhibit ability to increase peripheral resistance
   if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
-    //Baseline sympathetic signal is 4.0 -- don't begin accumulating fatigue until we pass theshold of 6 (determined empirically)
-    const double thresholdFatigue = 6.0;
-    const double tauFatigue_hr = 2.0;
-    const double peripheralGain = 1.0;
-    const double inputFatigue = m_SympatheticPeripheralSignal_Hz - thresholdFatigue;
-    double dFatigueScale = 0.0;
-    if (inputFatigue > 0.0) {
-      //If we are above the threshold, accumulate fatigue up to a maximum of the peripheral resitance gain (defined as 0.6 in Nervous::EfferentResponse)
-      dFatigueScale = (1.0 / tauFatigue_hr) * inputFatigue * (peripheralGain - m_SympatheticPeripheralSignalFatigue);
-    } else if (m_SympatheticPeripheralSignalFatigue > ZERO_APPROX) {
-      //If we have fatigue signal but have dropped below threshold, lower the fatigue signal exponentially towards 0
-      dFatigueScale = (-2.0 * m_SympatheticPeripheralSignalFatigue / tauFatigue_hr);
-    }
+    double kFatigue = 3.0e-5;
+    double dFatigueScale = kFatigue * (m_SympatheticPeripheralSignal_Hz - m_SympatheticPeripheralSignalBaseline_Hz);
     m_SympatheticPeripheralSignalFatigue += (dFatigueScale * m_data.GetTimeStep().GetValue(TimeUnit::hr));
   }
 
@@ -584,9 +573,9 @@ void Nervous::EfferentResponse()
   const double splanchnicScale0 = gainResistanceSplanchnic * basePeripheralInput + 1.0;
 
   double resistanceScaleInput = m_SympatheticPeripheralSignal_Hz > fSympatheticMin_Hz ? std::log(m_SympatheticPeripheralSignal_Hz - fSympatheticMin_Hz + 1.0) : 0.0;
-  const double dResistanceScaleExtrasplanchnic = (1.0 / tauResistance) * (-m_ResistanceModifierExtrasplanchnic + gainResistanceExtrasplanchnic * resistanceScaleInput * (1.0 - m_SympatheticPeripheralSignalFatigue));
-  const double dResistanceScaleMuscle = (1.0 / tauResistance) * (-m_ResistanceModifierMuscle + gainResistanceMuscle * resistanceScaleInput * (1.0 - m_SympatheticPeripheralSignalFatigue));
-  const double dResistanceScaleSplanchnic = (1.0 / tauResistance) * (-m_ResistanceModifierSplanchnic + gainResistanceSplanchnic * resistanceScaleInput * (1.0 - m_SympatheticPeripheralSignalFatigue));
+  const double dResistanceScaleExtrasplanchnic = (1.0 / tauResistance) * (-m_ResistanceModifierExtrasplanchnic + gainResistanceExtrasplanchnic * resistanceScaleInput / (1.0 + m_SympatheticPeripheralSignalFatigue));
+  const double dResistanceScaleMuscle = (1.0 / tauResistance) * (-m_ResistanceModifierMuscle + gainResistanceMuscle * resistanceScaleInput / (1.0 + m_SympatheticPeripheralSignalFatigue));
+  const double dResistanceScaleSplanchnic = (1.0 / tauResistance) * (-m_ResistanceModifierSplanchnic + gainResistanceSplanchnic * resistanceScaleInput / (1.0 + m_SympatheticPeripheralSignalFatigue));
 
   m_ResistanceModifierExtrasplanchnic += (dResistanceScaleExtrasplanchnic * m_dt_s);
   m_ResistanceModifierMuscle += (dResistanceScaleMuscle * m_dt_s);

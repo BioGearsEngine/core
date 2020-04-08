@@ -1159,8 +1159,8 @@ void BloodChemistry::InflammatoryResponse()
   if (burnTotalBodySurfaceArea != 0) {
     //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
     kDTR = 10.0 * burnTotalBodySurfaceArea; //We assume that larger burns inflict damage more rapidly
-    kTr = -0.5 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
-    tiMin = 0.05; //Promotes faster damage accumulation
+    kTr = 0.5 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
+    tiMin = 0.005; //Promotes faster damage accumulation
     kD6 = 0.3, xD6 = 0.25, kD = 0.05, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
   }
@@ -1173,7 +1173,7 @@ void BloodChemistry::InflammatoryResponse()
     if (volumeEffect < 1.0) {
       fB = std::pow(1.0 - volumeEffect, 2.0) / (std::pow(0.25, 2.0) + std::pow(1.0 - volumeEffect, 2.0));
     }
-    //kTr = -2.0 * iTime / xTr;
+    //kTr = 2.0 * iTime / xTr;
     //kDTR = 0.05;
     kAuto = -2.0 * iTime / 1.35;
   }
@@ -1206,7 +1206,7 @@ void BloodChemistry::InflammatoryResponse()
   dNT = alpha * R * Nv / ((1.0 + epsNB * B) * (1.0 + epsNM * MT)) - delN * NT;
   dB = kapB / (1.0 + epsBP * R) * B * (1.0 - B) - psiBP * R * B - psiBN * NT * B;
   dPB = (kapP - antibacterialEffect) * PB + thetaP * PT / (1.0 + epsPB * B) - kPS * PB / (xPS + PB) - kPN * NA * GeneralMath::HillActivation(PB, xPN, 2.0);
-  dTR = kTr * TR; //This is assumed to be the driving force for burn
+  dTR = -kTr * TR; //This is assumed to be the driving force for burn
   dMR = -((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR + kMB * fB) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMR * (MR - sM);
   dMA = ((kML * GeneralMath::HillActivation(PB, xML, 2.0) + kMD * GeneralMath::HillActivation(1.0 - TI, xMD, 4.0)) * (GeneralMath::HillActivation(TNF, xMTNF, 2.0) + kM6 * GeneralMath::HillActivation(I6, xM6, 2.0)) + kMTR * TR + kMB * fB) * MR * GeneralMath::HillInhibition(I10, xM10, 2.0) - kMA * MA;
   dNR = -(kNL * GeneralMath::HillActivation(PB, xNL, 2.0) + kNTNF * xNTNF * GeneralMath::HillActivation(TNF, xNTNF, 1.0) + kN6 * std::pow(xN6, 2.0) * GeneralMath::HillActivation(I6, xN6, 2.0) + kND * std::pow(xND, 2.0) * GeneralMath::HillActivation(1.0 - TI, xND, 2.0) + kNTR * TR + kNB * fB) * GeneralMath::HillInhibition(I10, xN10, 2.0) * NR - kNR * (NR - sN);
