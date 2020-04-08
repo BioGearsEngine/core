@@ -481,8 +481,8 @@ void Nervous::CentralSignalProcess()
   //Currently applying only to the peripheral signal because the literature notes that vascular smooth muscle shows depressed responsiveness to sympathetic activiy,
   //(Sayk et al., 2008 and Brassard et al., 2016) which would inhibit ability to increase peripheral resistance
   if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
-    //Baseline sympathetic signal is 0.2 -- don't begin accumulating fatigue until we pass this threshold (determined empirically)
-    const double thresholdFatigue = 8.0;
+    //Baseline sympathetic signal is 4.0 -- don't begin accumulating fatigue until we pass theshold of 6 (determined empirically)
+    const double thresholdFatigue = 6.0;
     const double tauFatigue_hr = 2.0;
     const double peripheralGain = 1.0;
     const double inputFatigue = m_SympatheticPeripheralSignal_Hz - thresholdFatigue;
@@ -640,6 +640,8 @@ void Nervous::BaroreceptorFeedback()
   //Pain effect changes the operating point of the baroreceptors.  Anesthetics, sedatives, and opioids blunt the sensivitiy of the baroreflex (reflected in kBaro)
   double painEffect = 0.0;
   double drugEffect = 0.0;
+  const double exerciseEffect = m_data.GetEnergy().GetExerciseMeanArterialPressureDelta(PressureUnit::mmHg);
+
   if (m_data.GetActions().GetPatientActions().HasPainStimulus()) {
     const double painVAS = 0.1 * GetPainVisualAnalogueScale().GetValue();
     painEffect = 0.5 * painVAS * m_BaroreceptorOperatingPoint_mmHg;
@@ -657,7 +659,7 @@ void Nervous::BaroreceptorFeedback()
   //force, as the pressure at these receptors is technically a function of height above the heart.  Thus, in a lying down
   //position, carotid receptors would "sense" a different pressure than when standing.  See Lim2013Cardiovascular for such
   //an application
-  const double baroreceptorOperatingPoint_mmHg = m_BaroreceptorOperatingPoint_mmHg + painEffect;
+  const double baroreceptorOperatingPoint_mmHg = m_BaroreceptorOperatingPoint_mmHg + painEffect + exerciseEffect;
   const double systolicPressure_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
   const double carotidStrainExp = std::exp(-slopeStrain * (systolicPressure_mmHg - baroreceptorOperatingPoint_mmHg));
   const double carotidWallStrain = 1.0 - std::sqrt((1.0 + carotidStrainExp) / (A + carotidStrainExp));
@@ -712,11 +714,11 @@ void Nervous::BaroreceptorFeedback()
   //Update baroreceptor setpoint
   if (m_data.GetState() > EngineState::SecondaryStabilization) {
     //Pruett2013Population (cardiovascular hemorrhage model) assumes ~16 hr half-time for baroreceptor adaptation to new setpoint (They varied this parameter up to 1-2 days half-time)
-    const double kAdapt_Per_hr = 0.042;
+    const double kAdapt_Per_hr = 0.19;  //0.042;
     const double dSetpointAdjust_mmHg_Per_hr = kAdapt_Per_hr * (systolicPressure_mmHg - m_BaroreceptorOperatingPoint_mmHg);
     m_BaroreceptorOperatingPoint_mmHg += (dSetpointAdjust_mmHg_Per_hr * m_data.GetTimeStep().GetValue(TimeUnit::hr));
   }
-
+  m_data.GetDataTrack().Probe("Baroreceptor_EffectiveOperatingPoint", baroreceptorOperatingPoint_mmHg);
   m_data.GetDataTrack().Probe("AorticWallStrain", m_AorticBaroreceptorStrain);
   m_data.GetDataTrack().Probe("Afferent_AorticBaroreceptor", m_AfferentBaroreceptorAortic_Hz);
   m_data.GetDataTrack().Probe("PleuralPressure", m_MeanPleuralPressure_mmHg);
@@ -734,7 +736,6 @@ void Nervous::BaroreceptorFeedback()
 void Nervous::LocalAutoregulation()
 {
   //-------------Cerebral autoregulation:  Based on Ursino1998Interaction and Urinso2001Role ---------
-  //This model is based on Ursino1998CInteraction and 
   //Feedback constants -- order is CBF auto, CO2, O2
   const std::vector<double> gainsLargeArteries { 0.0159, 1.958, 1.12 };
   const std::vector<double> tausLargeArteries { 10.0, 20.0, 20.0 };
@@ -826,7 +827,7 @@ void Nervous::LocalAutoregulation()
     m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralArteries2ToCapillaries)->GetNextResistance().SetValue(smallPialResistanceMultiplier * smallPialArteriesResistanceBaseline, FlowResistanceUnit::mmHg_s_Per_mL);
   }
 
-  //---------------------Muscle and heart autoregulation---------------------------------------------------------------------------------
+  //------Muscle and heart autoregulation:  Based on Ursino2000Acute-----------------------------------------
   const double gainHeart_L_Blood_Per_L_O2 = 35.0;
   const double gainMuscle_L_Blood_Per_L_O2 = 750.0;
   const double tauAutoregulator = 10.0;
@@ -845,10 +846,22 @@ void Nervous::LocalAutoregulation()
   nextMuscleResistance *= (1.0 / (1.0 + m_OxygenAutoregulatorMuscle));
 
   m_data.GetDataTrack().Probe("MuscleAutoregulation", m_OxygenAutoregulatorMuscle);
-
-  if (m_FeedbackActive && m_DrugRespirationEffects < ZERO_APPROX) {
+  m_data.GetDataTrack().Probe("MusleOxygenMolarity", muscleOxygenMolarity);
+  const double metabolicFraction = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W) / m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::W);
+  
+  //Avoid applying modifiers when drugs affecting respiration are present. If respiration rate --> 0 (like with succinylcholine),
+  //  then we get outputs from this function that overwhelm all other modifiers.  This technically isn't unreasonable if you
+  //  weren't breathing for a long time.  But some of our PD test scenarios apply neuromuscular blockers without respiratory
+  //  support and we want to make sure we can still run those tests.
+  //We are also not applying the muscle autoregulatory modifier when total metabolic rate is elevated.  This is because
+  //  when metabolicFraction > 1, the function Cardiovascular::MetabolicToneResponse handles muscle vasodilation.  Future
+  //  work should try to combine these functions (perhaps move MetabolicToneResponse to Nervous).  Putting cutoff at 2.5% above
+  //  baseline metabolic fraction so that small perturbations don't cause deactivation.
+  if (m_FeedbackActive && m_DrugRespirationEffects) {
     GetResistanceScaleMyocardium().SetValue(1.0 / (1.0 + m_OxygenAutoregulatorHeart));
-    GetResistanceScaleMuscle().SetValue(nextMuscleResistance);
+    if (metabolicFraction < 1.025) {
+      GetResistanceScaleMuscle().SetValue(nextMuscleResistance);
+    }
   }
 }
 
@@ -934,6 +947,7 @@ void Nervous::ChemoreceptorFeedback()
 
   m_AfferentChemoreceptor_Hz += dFiringRate_Hz * m_dt_s;
   m_AfferentChemoreceptor_Hz = std::max(0.0, m_AfferentChemoreceptor_Hz);
+  m_AfferentChemoreceptor_Hz = std::min(m_AfferentChemoreceptor_Hz, firingRateMax_Hz);
   m_CentralFrequencyDelta_Per_min += dFrequencyCentral_Per_min;
   m_CentralPressureDelta_cmH2O += dPressureCentral_cmH2O;
   m_PeripheralFrequencyDelta_Per_min += dFrequencyPeripheral_Per_min;
