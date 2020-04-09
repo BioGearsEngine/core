@@ -1159,9 +1159,9 @@ void BloodChemistry::InflammatoryResponse()
   if (burnTotalBodySurfaceArea != 0) {
     //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
     kDTR = 10.0 * burnTotalBodySurfaceArea; //We assume that larger burns inflict damage more rapidly
-    kTr = 0.25 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
+    kTr = 0.35 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
     tiMin = 0.005; //Promotes faster damage accumulation
-    kD6 = 0.3, xD6 = 0.25, kD = 0.05, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
+    kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
   }
   if (PB > ZERO_APPROX) {
