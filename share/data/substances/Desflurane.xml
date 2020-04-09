@@ -33,11 +33,11 @@
   </Pharmacokinetics>
   <Pharmacodynamics>
     <Bronchodilation readOnly="false" value="0"/>
-    <DiastolicPressureModifier readOnly="false" value="-0.35"/>
+    <DiastolicPressureModifier readOnly="false" value="-0.45"/>
     <EC50 readOnly="false" unit="ug/mL" value="100"/>
     <EMaxShapeParameter readOnly="false" value="10"/>
 	<FeverModifier readOnly="false" value="0"/>
-    <HeartRateModifier readOnly="false" value="0.8"/>
+    <HeartRateModifier readOnly="false" value="0.4"/>
     <HemorrhageModifier readOnly="false" value="0"/>
     <NeuromuscularBlock readOnly="false" value="0"/>
 	<PainModifier readOnly="false" value="0"/>
@@ -45,10 +45,10 @@
       <ReactivityModifier readOnly="false" value="0"/>
       <SizeModifier readOnly="false" value="0"/>
     </PupillaryResponse>
-    <RespirationRateModifier readOnly="false" value="0"/>
+    <RespirationRateModifier readOnly="false" value="0.3"/>
     <Sedation readOnly="false" value="0"/>
-    <SystolicPressureModifier readOnly="false" value="-0.35"/>
-    <TidalVolumeModifier readOnly="false" value="-0.75"/>
+    <SystolicPressureModifier readOnly="false" value="-0.5"/>
+    <TidalVolumeModifier readOnly="false" value="-0.85"/>
     <TubularPermeabilityModifier readOnly="false" value="0"/>
     <CentralNervousModifier readOnly="false" value="0"/>
     <AntibacterialEffect readOnly="false" unit="1/hr" value="0"/>
