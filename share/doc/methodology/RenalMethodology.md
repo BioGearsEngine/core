@@ -589,14 +589,15 @@ scenarios indicating a very good agreement with the validation data.
 </center>
 |	Scenario 	|	Description	|	Good	|	Decent	|	Bad	|
 |	---	|	---	|	---	|	---	|	---	|
-|	SalineIngestion	|	Patient ingests 1L of hypertonic saline	|<span class="success">	1	</span>|<span class="warning">	1	</span>|<span class="danger">	0	</span>|
-|	RenalStenosisModerateUnilateral	|	60% occlusion of left kidney	|<span class="success">	7	</span>|<span class="warning">	1	</span>|<span class="danger">	0	</span>|
-|	RenalStenosisSevereBilateral	|	90 % occlusion of both kidneys	|<span class="success">	7	</span>|<span class="warning">	1	</span>|<span class="danger">	0	</span>|
+|	SalineIngestion	|	Patient ingests 1L of hypertonic saline	|<span class="success">	2	</span>|<span class="warning">	0	</span>|<span class="danger">	0	</span>|
+|	RenalStenosisModerateUnilateral	|	60% occlusion of left kidney	|<span class="success">	6	</span>|<span class="warning">	2	</span>|<span class="danger">	0	</span>|
+|	RenalStenosisSevereBilateral	|	90 % occlusion of both kidneys	|<span class="success">	6	</span>|<span class="warning">	2	</span>|<span class="danger">	0	</span>|
 |	HemorrhageClass2NoFluid	|	250 mL/min hemorrhage for 240 seconds	|<span class="success">	8	</span>|<span class="warning">	0	</span>|<span class="danger">	0	</span>|
-|	HemorrhageClass4NoFluid	|	250 mL/min hemorrhage for 490 seconds	|<span class="success">	8	</span>|<span class="warning">	0	</span>|<span class="danger">	0	</span>|
-|	HighAltitudeEnvironmentChange	|	High altitude environment change for 900s 	|<span class="success">	3	</span>|<span class="warning">	0	</span>|<span class="danger">	0	</span>|
-|	WaterIngestion	|	Patient ingests 1 L of fluid	|<span class="success">	1	</span>|<span class="warning">	3	</span>|<span class="danger">	0	</span>|
-|		|	Total	|<span class="success">	35	</span>|<span class="warning">	6	</span>|<span class="danger">	0	</span>|
+|	HemorrhageClass4NoFluid	|	250 mL/min hemorrhage for 490seconds	|<span class="success">	8	</span>|<span class="warning">	0	</span>|<span class="danger">	0	</span>|
+|	HighAltitudeEnvironmentChange	|	High altitude environment change for 900s 	|<span class="success">	1	</span>|<span class="warning">	2	</span>|<span class="danger">	0	</span>|
+|	WaterIngestion	|	Patient ingests 1 L of fluid	|<span class="success">	3	</span>|<span class="warning">	1	</span>|<span class="danger">	0	</span>|
+|	Starvation	|	Patient has not eaten for 72 hrs	|<span class="success">	1	</span>|<span class="warning">	3	</span>|<span class="danger">	0	</span>|
+|		|	Total	|<span class="success">	35	</span>|<span class="warning">	10	</span>|<span class="danger">	0	</span>|
 
 
 ### Hemorrhage - Action
@@ -613,8 +614,8 @@ Quantification of the renal system during and after the bleed ends are displayed
 </center>
 |	Action	|	Notes	|	Action Occurrence Time (s)	|	Sampled Scenario Time (s)	|	Glomerular Filtration Rate (mL/min)	|	Mean Arterial Pressure (mmHg)	|	%Renal Blood Flow(mL/min)	|	Urine Production Rate (mL/min)	|
 |	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|
-|	Initiate 250 mL/min Hemorrhage	|		|	30	|	270	|<span class="success">	Decrease @cite corcoran1943effects	</span>|<span class="success">	Decrease @cite corcoran1943effects	</span>|<span class="success">	decrease @cite corcoran1943effects	</span>|<span class="success">	Decrease @cite corcoran1943effects	</span>|
-|	Stop Hemorrhage	|		|	270	|	670	|<span class="success">	Slight Increase @cite corcoran1943effects	</span>|<span class="success">	Steady @cite corcoran1943effects	</span>|<span class="success">	Slight Increase @cite corcoran1943effects	</span>|<span class="success">	Steady @cite corcoran1943effects	</span>|
+|	Initiate 100 mL/min Hemorrhage	|		|	30	|	930	|<span class="success">	Decrease @cite corcoran1943effects	</span>|<span class="success">	Decrease @cite corcoran1943effects	</span>|<span class="success">	decrease @cite corcoran1943effects	</span>|<span class="success">	Decrease @cite corcoran1943effects	</span>|
+|	Stop Hemorrhage	|		|	930	|	1230	|<span class="success">	Slight Increase @cite corcoran1943effects	</span>|<span class="success">	Steady @cite corcoran1943effects	</span>|<span class="success">	Slight Increase @cite corcoran1943effects	</span>|<span class="success">	Steady @cite corcoran1943effects	</span>|
 
 
 The class 4 hemorrhage as the same bleed rate but the bleeding persists for a longer duration: 490 seconds. %Renal function displays the same trends but with a further reduction in glomerular filtration and renal blood flow due to the duration of the bleed action. 
@@ -627,8 +628,8 @@ Quantification of the renal system during and after the bleed ends are displayed
 </center>
 |	Action	|	Notes	|	Action Occurrence Time (s)	|	Sampled Scenario Time (s)	|	Glomerular Filtration Rate (mL/min)	|	Mean Arterial Pressure (mmHg)	|	%Renal Blood Flow(mL/min)	|	Urine Production Rate (mL/min)	|
 |	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|
-|	Initiate 250 mL/min Hemorrhage	|		|	30	|	520	|<span class="success">	Decrease @cite corcoran1943effects	</span>|<span class="success">	Decrease @cite corcoran1943effects	</span>|<span class="success">	decrease @cite corcoran1943effects	</span>|<span class="success">	Decrease @cite corcoran1943effects	</span>|
-|	Stop Hemorrhage	|		|	520	|	500	|<span class="success">	Slight Increase @cite corcoran1943effects	</span>|<span class="success">	Steady @cite corcoran1943effects	</span>|<span class="success">	Slight Increase @cite corcoran1943effects	</span>|<span class="success">	Steady @cite corcoran1943effects	</span>|
+|	Initiate 150 mL/min Hemorrhage	|		|	30	|	1830	|<span class="success">	Decrease @cite corcoran1943effects	</span>|<span class="success">	Decrease @cite corcoran1943effects	</span>|<span class="success">	decrease @cite corcoran1943effects	</span>|<span class="success">	Decrease @cite corcoran1943effects	</span>|
+|	Stop Hemorrhage	|		|	1830	|	2130	|<span class="success">	Slight Increase @cite corcoran1943effects	</span>|<span class="success">	Steady @cite corcoran1943effects	</span>|<span class="success">	Slight Increase @cite corcoran1943effects	</span>|<span class="success">	Steady @cite corcoran1943effects</span>	</span>|
 
 
 <center>
@@ -670,7 +671,7 @@ are attenuated as the afferent arteriole resistance increases.
 </center>
 |	Action	|	Notes	|	Action Occurrence Time (s)	|	Sampled Scenario Time (s)	|	Glomerular Filtration Rate (mL/min)	|	%Renal Blood Flow(mL/min)	|	Urine Production Rate (mL/min)	|
 |	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|
-|	Initiate %Environment Change	|		|	50	|	900	|<span class="success">	Slight Increase @cite guyton2006medical	</span>|<span class="success">	Slight Increase @cite guyton2006medical	</span>|<span class="success">	Increase @cite guyton2006medical	</span>|
+|	Initiate %Environment Change	|		|	50	|	900	|<span class="warning">	Slight Increase @cite guyton2006medical	</span>|<span class="warning">	Slight Increase @cite guyton2006medical	</span>|<span class="success">	Increase @cite guyton2006medical	</span>|
 
 
 <center>
@@ -710,7 +711,7 @@ Table 12. Urine production rate stays steady. Kidney doesn't quite respond accor
 </center>
 |	Actions	|	Notes	|	Occurrence Time (s)	|	Urine Production Rate (mL/min)	|	Mean Arterial Pressure (mmHg)	|	Urine Chloride Concentration (g/L)	|	Urine Urea Concentration (g/L)	|
 |	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|
-|	After stabilization patient given 1L of water with 100g NaCl 	|		|	0	|<span class="warning">	Slight Decrease @cite dean1949renal	</span>|<span class="success">	No Change @cite dean1949renal	</span>|<span class="Warning">	Increased Then Normal @cite dean1949renal	</span>|<span class="Warning">	Increase @cite dean1949renal	</span>|
+|	After stabilization patient given 1L of water with 100g NaCl 	|		|	0	|<span class="success">	Slight Increase @cite dean1949renal	</span>|<span class="success">	No Change @cite dean1949renal	</span>|<span class="Warning">	Increased Then Normal @cite dean1949renal	</span>|<span class="Warning">	Increase @cite dean1949renal	</span>|
 
 ### Water Ingestion - Action
 
@@ -762,7 +763,7 @@ Figure 15. There is inconsistent agreement with the validation detail in the %re
 calcium, and creatinine are due to an unvalidated drop in urine production rate, which skews the concentration values.
 </i>
 </center>
-|	Action	|	Notes	|	Action Occurrence Time (s)	|	Sampled Scenario Time (days)	|	Urine Sodium Concentration (mmol/L)	|	Urine Calcium Concentration (mmol/L)	|	Creatinine Concentration (mmol/L)	|	Urine Creatinine Clearance (mL/min)	|
+|	Action	|	Notes	|	Action Occurrence Time (s)	|	Sampled Scenario Time (days)	|	Urine Sodium Concentration (mmol/L)	|	Urine Calcium Concentration (mmol/L)	|	Creatine Concentration (mmol/L)	|	Urine Creatine Clearance (mL/min)	|
 |	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|
 |	Patient is experiencing starvation	|		|	0	|	4	|<span class="warning">	Decrease @cite sapir1975ketones	</span>|<span class="warning">	Decrease @cite sapir1975ketones	</span>|<span class="success">	Increase @cite sapir1975ketones	</span>|<span class="success">	Decrease @cite sapir1975ketones	</span>|
 
@@ -777,7 +778,7 @@ Table 16. Direct affects of blood flow and glomerular filtration are seen in the
 </center>
 |	Condition	|	Notes	|	Sampled Scenario Time (s)	|	Blood Volume (mL)	|	Systemic Vascular Resistance (mmHg/mL/s)	|	Cardiac Output (mL/min)	|	Mean Arterial Pressure (mmHg)	|	Systolic Pressure (mmHg)	|	Diastolic Pressure (mmHg)	|	%Renal Blood Flow (mL/min)	|	GFR (mL/min)	|
 |	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|
-|	%Renal Stenosis 	|	60% unilateral occlusion of kidneys 	|	120	|<span class="warning">	Increase @cite klabunde2011cardiovascular	</span>|<span class="success">	Increase @cite klabunde2011cardiovascular	</span>|<span class="success">	Mild decrease @cite anderson1990development	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Decrease @cite textor2011atherosclerotic	</span>|<span class="success">	Decrease @cite textor2011atherosclerotic	</span>|
+|	%Renal Stenosis 	|	60% unilateral occlusion of kidneys 	|	120	|<span class="warning">	Increase @cite klabunde2011cardiovascular	</span>|<span class="success">	Increase @cite klabunde2011cardiovascular	</span>|<span class="warning">	Mild decrease @cite anderson1990development	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Decrease @cite textor2011atherosclerotic	</span>|<span class="success">	Decrease @cite textor2011atherosclerotic	</span>|
 
 
 The severe bilateral stenosis condition tests the effects of kidney function due to a 90 percent increase in renal artery resistance on both kidneys. Like the unilateral condition, the kidney and cardiovascular function meet validation. A more pronounced decrease in renal blood flow and glomerular filtration rate can be seen due to the increased severity of the stenosis. 
@@ -791,7 +792,7 @@ decrease in cardiac output. The renal blood flow and GFR each decrease as expect
 </center>
 |	Condition	|	Notes	|	Sampled Scenario Time (s)	|	Blood Volume (mL)	|	Systemic Vascular Resistance (mmHg/mL/s)	|	Cardiac Output (mL/min)	|	Mean Arterial Pressure (mmHg)	|	Systolic Pressure (mmHg)	|	Diastolic Pressure (mmHg)	|	%Renal Blood Flow (mL/min)	|	GFR (mL/min)	|
 |	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|	------------------------	|
-|	%Renal Stenosis 	|	90% bilateral occlusion of kidneys 	|	120	|<span class="warning">	Increase @cite klabunde2011cardiovascular	</span>|<span class="success">	Increase @cite klabunde2011cardiovascular	</span>|<span class="success">	Mild decrease @cite anderson1990development	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Decrease @cite textor2011atherosclerotic	</span>|<span class="success">	Decrease @cite textor2011atherosclerotic	</span>|
+|	%Renal Stenosis 	|	90% bilateral occlusion of kidneys 	|	120	|<span class="warning">	Increase @cite klabunde2011cardiovascular	</span>|<span class="success">	Increase @cite klabunde2011cardiovascular	</span>|<span class="warning">	Mild decrease @cite anderson1990development	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Increase @cite debrunye2006assessment	</span>|<span class="success">	Decrease @cite textor2011atherosclerotic	</span>|<span class="success">	Decrease @cite textor2011atherosclerotic	</span>|
 
 @anchor renal-conclusions
 Conclusions
