@@ -703,7 +703,7 @@ void Nervous::BaroreceptorFeedback()
   //Update baroreceptor setpoint
   if (m_data.GetState() > EngineState::SecondaryStabilization) {
     //Pruett2013Population (cardiovascular hemorrhage model) assumes ~16 hr half-time for baroreceptor adaptation to new setpoint (They varied this parameter up to 1-2 days half-time)
-    const double kAdapt_Per_hr = 0.19;  //0.042;
+    const double kAdapt_Per_hr = 0.019;  //0.042;
     const double dSetpointAdjust_mmHg_Per_hr = kAdapt_Per_hr * (systolicPressure_mmHg - m_BaroreceptorOperatingPoint_mmHg);
     m_BaroreceptorOperatingPoint_mmHg += (dSetpointAdjust_mmHg_Per_hr * m_data.GetTimeStep().GetValue(TimeUnit::hr));
   }
