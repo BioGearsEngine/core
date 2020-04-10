@@ -6,7 +6,7 @@ Overview
 ========
 Abstract
 --------
-The %BioGears %Nervous System is a preliminary system representing the central %nervous system (CNS) and peripheral %nervous system (PNS). Currently, the system includes baroreceptor and chemoreceptor feedback models that are used to regulate arterial pressure and blood-gas levels.  Additionally, the %Nervous System provides for tracking of parameters related to traumatic brain injury events, pain stimulus response, and drug effects.  In the future, other feedback mechanisms will be added for improved modeling of homeostatic and crisis states.
+The %BioGears %Nervous System models the central %nervous system (CNS) and peripheral %nervous system (PNS). Currently, the system models afferent signal generation as a result of baroreceptor, chemoreceptor, lung-strech receptor activity.  These signal are processed by a rudimentary central nervous system (CNS) that relays commands to efferent effectors.  Additionally, the %Nervous System provides tracks parameters related to traumatic brain injury events, pain stimulus response, and drug effects.  In the future, other feedback mechanisms will be added for improved modeling of homeostatic and crisis states.
 
 @anchor nervous-introduction
 Introduction
@@ -14,8 +14,9 @@ Introduction
 The %Nervous System in the human body is comprised of the central nervous system (CNS) and the the peripheral %nervous system (PNS). The CNS contains the brain and the spinal cord, while the PNS is subdivided into the somatic, autonomic, and enteric nervous systems. The somatic system controls voluntary movement. The autonomic nervous system is further subdivided into the parasympathetic and sympathetic nervous system. The sympathetic nervous system is activated in times of stress and crisis, commonly referred to as the "flight or fight" behaviors. The parasympathetic nervous system controls homeostasis functions during the relaxed state. The enteric nervous system controls the gastrointestinal system. Many of these behaviors are tightly connected to the %Endocrine System. In many cases, the %Nervous System receptors trigger hormone releases that cause systemic changes, such as dilation and constriction of vessels, heart contractility changes, and respiration changes @cite guyton2006medical. 
 
 %BioGears will focus on a select few mechanisms within the %Nervous System to provide feedback for both homeostasis and crisis behavior in the body. The list is shown below:
- - Baroreceptors
+ - Baroreceptors (aortic, carotid, and low-pressure)
  - Chemoreceptors
+ - Pulmonary stretch receptors
  - Local autoregulation
  - Temperature Effects
  - Generic parasympathetic and sympathetic effects
@@ -31,21 +32,35 @@ System Design
 =============
 Background and Scope
 --------------------
-The %BioGears Nervous System began as a low-fidelity model that tracked metrics associated with brain injury.  Over time, feedback models local to other %BioGears systems (i.e. baroreceptors, chemoreceptors) were relocated to the %Nervous System with the goal of moving towards a centralized %Nervous model that serves as a global controller.  The primary difficulty with such a model is that most detailed %Nervous models rely on differential equations that output nerve firing rates.  If the frequencies of these firing rates are too high compared to the time-step used to model the equations, the solution will be unstable.  Fortunately, as %BioGears stability has been improved, the simulation time-step has been decreased to its current value of 0.02 s.  This step size allowed us to recently implement a new chemoreceptor model that generates firing rates on a scale of 10 Hz.  Future work will seek to implement a similar update to the Baroreceptor model and to create more synergy between the existing models.
+The %BioGears Nervous System began as a low-fidelity model that tracked metrics associated with brain injury.  Over time, feedback models local to other %BioGears systems (i.e. baroreceptors, chemoreceptors) were relocated to the %Nervous System with the goal of moving towards a centralized %Nervous model that serves as a global controller.  The primary difficulty with such a model is that most detailed %Nervous models rely on differential equations that output nerve firing rates.  If the frequencies of these firing rates are too high compared to the time-step used to model the equations, the solution will be unstable.  Fortunately, as %BioGears stability has been improved, the simulation time-step has been decreased to its current value of 0.02 s.  This step size allowed us to work toward strengthenging the interactions between the existing models.
 
 Data Flow
 ---------
 An overview of the data flow in the %BioGears %Nervous system is shown in Figure 1.
 
 ### Initialization and Stabilization
-The %BioGears initialization and stabilization is described in detail in the [stabilization section](@ref system-stabilization) of the @ref SystemMethodology report. The mean arterial pressure set-point is updated after the %Cardiovascular system reaches a homeostatic state.
+The %BioGears initialization and stabilization is described in detail in the [stabilization section](@ref system-stabilization) of the @ref SystemMethodology report. Setpoints related to Nervous model are reset once the %Cardiovascular system reaches a homeostatic state.  These include the baseline baroreceptor operating pressure, the baseline oxygen and carbon dioxide blood gas levels, the baseline sympathetic and parasympathetic firing rates, and the baseline cerebral blood flow.
 
 ### Preprocess
-#### Baroreceptor Feedback
-The baroreceptor mechanism provides rapid negative feedback control of arterial pressure. A drop in arterial pressure is sensed by the baroreceptors and leads to an increase in heart rate, heart elastance, and vessel distensibility. These changes operate with the goal of maintaining arterial pressure at its healthy resting level. The baroreceptor mechanism may be divided into three parts: afferent, CNS, and efferent. The afferent part contains the receptors, which detect changes in the MAP. After that, the CNS portions the response into either sympathetic or parasympathetic. Lastly, the efferent part is used to provide feedback to the vasculature and organs within the %Cardiovascular System @cite ottesen2004applied. The model chosen for %BioGears only models the CNS and efferent portion of the baroreceptors. The fidelity of the model does require the modeling of the actual stretch receptors in the aorta or carotid arteries to provide the necessary feedback.
+#### Afferent Signal Generation
+This method surveys the current state of the patient (blood pressure, blood-gas levels, lung capacity) and relays information to the central nervous system.
+##### Baroreceptor Feedback
+The baroreceptor mechanism provides rapid negative feedback control of arterial pressure. A drop in arterial pressure is sensed by the baroreceptors and leads to an increase in sympathetic activity and vagal (parasympathetic) withdrawal. These changes operate with the goal of maintaining arterial pressure at its healthy resting level.  %BioGears distinguishes between aortic, carotid, and low-pressure (cardiopulmonary) receptors.  Aortic and carotid receptors are both sensitive to changes in systolic arterial pressure, but their relative locations in the body affect this response.  Aortic baroreceptors respond to the transmural pressure between the aorta and the intrapleural space.  The carotid baroreceptors, located a distance above the heart, are affected by pressure head (except when an individual is lying down).  Low-pressure receptors are located near the venous return to the heart and are therefore sensitive to the central venous pressure and pleural pressure. %BioGears uses a stress-strain relationship to calculate the signal generated at the aortic and carotid baroreceptors @cite randall2019model and a first-order, low-pass filter to generate the low-pressure receptors signal @cite lim2013cardiovascular.
+ 
+##### Chemoreceptor Feedback
+The chemoreceptor mechanism provides feedback control to regulate the partial pressures of oxygen and carbon dioxide in the blood.  The response is divided in to two components:  peripheral and central.  Peripheral chemoreceptors (which reside in the aortic arch and carotid arteries) are sensitive to deviations in both oxygen and carbon dioxide pressures.  The central chemoreptors, so named because of their location in the central nervous system, respond only the carbon dioxide pressure changes.  Assuming that each receptor class operates independently, the feedback from the central and peripheral chemoreceptors is summed to generate changes in respiration frequency and respiratory driver pressure to restore blood gas levels to their set points.  The peripheral chemoreceptor signal is also processed by the central nervous model to account for its contribution to cardiovascular activity.    
 
-#### Chemoreceptor Feedback
-The chemoreceptor mechanism provides feedback control to regulate the partial pressures of oxygen and carbon dioxide in the blood.  The response is divided in to two components:  peripheral and central.  Peripheral chemoreceptors (which reside in the aortic arch and carotid arteries) are sensitive to deviations in both oxygen and carbon dioxide pressures.  The central chemoreptors, so named because of their location in the central nervous system, respond only the carbon dioxide pressure changes.  Assuming that each receptor class operates independently, the feedback from the central and peripheral chemoreceptors is summed to generate a respiratory and a cardiovascular response.  The respiratory response sets the patient ventilation (which effects both the tidal volume and respiration rate) to restore blood gas levels to their set points.  Likewise, a cardiovascular response is initiated by altering the patient heart rate.
+##### Pulmonary Stretch Receptors
+Stretch receptors respond to changes in lung volume.  They tend to balance the cardiovascular effects induced by peripheral chemoreceptors @cite ursino2000acute.  
+
+#### Central Nervous (CNS) Response
+This method consolidates the signals generated by the afferent models and adjusts the relative firing rates of the sympathetic and parasympathetic arms of the nervous system.  The sympathetic signal consists of two outputs:  a sinoatrial portion that affects heart rate and elastance and a peripheral portion that affects systemic resistance and unstressed venous volume.  The parasympathetic signal only acts upon the heart rate.  The threshold for sympthetic firing is lowered under hypoxic conditions to model the ischemic response @cite ursino2000acute.
+
+#### Efferent Response
+The efferent response carries out the work of updating the state of the cardiovascular system according to the autonomic response determined by the CNS.  This model determines the normalized changes in heart rate, heart elastance, peripheral vessel resistance, and peripheral venous compliance.  The peripheral resistance response distinguishes between the splanchnic, extrasplanchnic, and skeletomuscular regions of the body to account for preferential blood-flow shunting during certain extreme responses (e.g. maintaining flow to vital organs during hemorrhage).
+
+#### Local Autoregulation
+The brain, muscle, and myocardium prioritize blood flow and oxygen delivery.  %BioGears models cerebral autoregulation in which vessels in the brain constrict or dilate to maintain constant cerebral blood flow, perfusion pressure, and oxygen saturation.  %BioGears also models local regulation in the vessels of the muscle and myocardium in which vasodilation occurs in response to oxygen depletion.
 
 #### Check Pain Stimulus
 Pain can be initiated in BioGears via a Pain Stimulus action.  The BioGears pain response takes into account both the magnitude of the pain action and the susceptibility of the virtual patient to pain (set in the Patient definition file).  The result is an output  corresponding to the pain Visual Analog Scale (VAS) on a 0-10 interval.  The VAS score dictates the patient cardiovascular and respiratory response to the pain stimulus.  Increased epinephrine production is also stimulated.  
@@ -74,83 +89,64 @@ Assessments in %BioGears are data collected and packaged to resemble a report or
 Features, Capabilities, and Dependencies
 ----------------------------------------
 ### Baroreceptors
-The baroreceptor model implemented in %BioGears is adapted from the models described by Ottesen et al @cite ottesen2004applied. The model is used to drive the current MAP towards the resting set-point of the patient. This is accomplished by calculating the sympathetic and parasympathetic response. The fraction of the baroreceptor response that corresponds to the sympathetic effects is determined from Equation 1. The parsympathetic fraction is shown in Equation 2.
+%BioGears calculates the strain exerted on the aortic and carotid baroreceptors as @cite randall2019model
 
-\f[ \eta_{s} (P_{a}) = \left[ 1+ \left( \frac{P_{a}}{P_{a,setpoint}} \right)^{ \nu} \right]^{-1} \f]
+\f[ \epsilon_{w} = 1 - \sqrt{\frac{1 + \exp(-q_w\left(P_{input} - s_w\right))}{A+\exp(-q_w\left(P_{input}-s_w\right))}} \f]
 <center>
 *Equation 1.*
 </center><br>
 
-\f[ \eta_{p} (P_{a}) = \left[ 1+ \left( \frac{P_{a}}{P_{a,setpoint}} \right)^{- \nu} \right]^{-1} \f]
+The input pressure (P<sub>input</sub>) is the systolic arterial pressure (P<sub>sys</sub>) for the carotid baroreceptors and the difference between systolic pressure and pleural pressure (P<sub>systolic</sub> - P<sub>pleural</sub>) for aortic baroreceptors.  The parameters for Equation 1 are maximum stressed to unstressed vessel cross-sectional area (A), steepness (q<sub>w</sub>), and operating point (s<sub>w</sub>) and the output is wall strain ($\epsilon_w$).  As described in the [cardiovascular](@ref cardiovascular-initialize) methodology report, the%BioGears %cardiovascular system is initialized according to patient definitions and stabilized to a homeostatic state. The baroreceptor operating pressure is the systolic pressure following the engine stabilization period. This operating point is adjusted dynamically with certain actions and insults, as shown in Equation 2.
+
+\f[ s_w = P_{sys, set} + \Delta P_{drugs} + \Delta P_{exercise} + \Delta P_{pain} \f]
 <center>
 *Equation 2.*
 </center><br>
 
-Where &nu; is a parameter that represents the response slope of the baroreceptors, <b>p</b><sub>a</sub> is the current MAP, and <b>p</b><sub>a,setpoint</sub> is the MAP set-point. An example of the sympathetic and parasympathetic responses as a function of MAP are shown in Figure 1. These were calculated with an assumed MAP set-point of 87 mmHg.
+Where &Delta;<b>p</b><sub>drugs</sub>, &Delta;<b>p</b><sub>exercise</sub>, and &Delta;<b>p</b><sub>pain</sub> are changes in apparent operating point due to certain drugs, exercise, and pain response.  It is known that aortic and carotid baroreceptors adapt to sustained changes in arterial pressure.  We model adaptation by adjusting the operating point as a function of systolic arterial pressure @cite pruett2013model
 
-<img src="./plots/Nervous/Response_Fractions.jpg" width="550">
+\f[ \frac{ds_w}{dt} = k_{adapt}\left(P_{sys} - s_w\right) \f].
 <center>
-*Figure 2. The sympathetic and parasympatheric response fractions are displayed as a function of mean arterial pressure (MAP). Both fractional forms show asymptotic behavior as divergence from the MAP set-point occurs. The response fractions are additive, always summing to a value of 1.0. At homeostasis (MAP equal to the set-point), the fractions are both equal to 0.5.*
+ *Equation 3.*
 </center><br>
 
-As described in the [cardiovascular](@ref cardiovascular-initialize) methodology report, the %BioGears %cardiovascular system is initialized according to patient definitions and the stabilized to a homeostatic state. The set-point is the resultant mean arterial pressure following the engine stabilization period. The set-point is adjusted dynamically with certain actions and insults, as shown in Equation 3.
+The value of k<sub>adapt</sub> reflects a half-time of approximately 16 hours for the baroreceptors to acclimate to a sustained step-change in systolic pressure @cite pruett2013 model. 
 
-\f[ P^{n+1}_{a,setpoint} = P^{n}_{a,setpoint} + \Delta P_{a,drugs} + \Delta P_{a,exercise} \f]
+The baroreceptors are assumed to operate as a spring-dashpot system.  The strain induced by the stress $\epsilon_w $ is determined by the differential equation @cite randall2019model
+
+\f[ \frac{d \epsilon_{b}}{dt} = \frac{-\epsilon_{b} + K_b \epsilon_{w}}{\tau_{b}} \f]
 <center>
-*Equation 3.*
+*Equation 4.*
 </center><br>
 
-Where &Delta;<b>p</b><sub>a,drugs</sub> and &Delta;<b>p</b><sub>a,exercise</sub> are changes in MAP due to drugs and exercise, respectively. 
+The strain signal $\epsilon_b$ determined for each baroreceptor class (aortic and carotid) is processed in the Central Nervous response.
 
-The sympathetic and parasympathetic fractional responses are used to determine the response of the following %cardiovascular parameters:
-- heart rate
-- heart elastance
-- systemic vascular resistance
-- systemic vascular compliance
+The low-pressure baroreceptor signal is generated by sampling the transmural pressure between the venous return (CVP) and the pleural space @cite lim2013cardiovascular.
 
-This is accomplished by tracking the time-dependent values of each parameter relative to their value at the MAP set-point. The time-dependent behavior of these parameters is presented via a set of ordinary differential equations, as shown in Equations 4-7.
-
-\f[ \frac{dx_{HR}}{dt} = \left(- \frac{1}{ \tau_{HR}} \right) \left( -x_{HR} + \alpha_{HR} \eta_{s}(P_{a}) + \beta_{HR} \eta_{p}(P_{a}) + \gamma_{HR} \right) \f]
+\f[ \frac{d\tilde{P_{cp}}}{dt} = \left(\frac{1}{\tau_{cp}}\right)\left(-\tilde{P_{cp}} + \left(CVP - P_{pleural}\right)\right) \f]
 <center>
-*Equation 4.* 
+*Equation 5*
 </center><br>
 
-\f[ \frac{dx_{E}}{dt} = \left(- \frac{1}{ \tau_{E}} \right) \left( -x_{E} + \alpha_{E} \eta_{s}(P_{a}) + \gamma_{E} \right) \f]
+\f[ f_{cp} = \frac{f_{cp,max}}{1.0 + \exp(\left(CVP_{base} - P_{pleural,base}\right) - \tilde{P_{cp}})} \f]
 <center>
-*Equation 5.*
+*Equation 6*
 </center><br>
 
-\f[ \frac{dx_{R}}{dt} = \left(- \frac{1}{ \tau_{R}} \right) \left( -x_{R} + \alpha_{R} \eta_{s}(P_{a}) + \gamma_{R} \right) \f]
-<center>
-*Equation 6.*
-</center><br>
+Equation 5 acts as a low-pass filter that reduces signal noise and Equation 6 generates a firing rate (f<sub>cp</sub>) that is processed by the CNS. &tau;<sub>cp</sub> and f<sub>cp,max</sub> are the time constant for the response and the maximum firing rate, while CVP<sub>base</sub> and P<sub>pleural,base</sub> represent the normal central venous and pleural pressures.
 
-\f[ \frac{dx_{C}}{dt} = \left(- \frac{1}{ \tau_{C}} \right) \left( -x_{C} + \alpha_{C} \eta_{p}(P_{a}) + \gamma_{C} \right) \f]
+
+### Chemoreceptors
+The chemoreceptors are cells that are sensitive to changes in blood gas concentration. Peripheral chemosensitive cells--located in the aortic arch--detect fluctuations in both arterial carbon dioxide and oxygen partial pressures.  The central chemoreceptors, which reside in the central nervous system (CNS), respond to changes in cerebral blood pH caused by irregular carbon dioxide levels.  It is assumed in this model that carbon dioxide transport across the blood-brain barrier and equilibration therein are rapid processes; that is, it assumed that the central chemoreceptor response is proportional to deviations in arterial carbon dioxide.  
+
+Control of respiration is based on the model developed by Albanese, Magosso, and Ursino in @cite ursino2000acute, @cite magosso2001mathematical, @cite ursino2002theoretical, and @cite albanese2015integrated.  It is assumed that the central (c) and peripheral (p) feedback define deviations from baseline patient respiration frequency (f) and peak respiratory driver pressure (P<sub>max</sub>), and that their contributions are independent (and thus additive).  
+
+\f[f_{target} = f_{base} + \Delta f_c + \Delta f_p \f]
 <center>
 *Equation 7.*
 </center><br>
 
-Where x<sub>HR</sub>, x<sub>E</sub>, x<sub>R</sub> and x<sub>C</sub> are the relative values of heart rate, heart elastance, vascular resistance and vascular compliance, respectively. &tau;<sub>HR</sub>, &tau;<sub>E</sub>, &tau;<sub>R</sub> and &tau;<sub>C</sub> are the time constants for heart rate, heart elastance, vascular resistance and vascular compliance, respectively. The remaining &alpha;, &beta; and &gamma; parameters are a set of tuning variables used to achieve the correct responses in the %Cardiovascular System during arterial pressure shifts. Note that the heart rate feedback is a function of both the sympathetic response and parasympathetic response, whereas the elastance feedback and vascular tone feedback depend on the sympathetic or parasympathetic responses individually. Figure 3 shows the normalized response curves.
-
-<table border="0">
-<tr>
-    <td><img src="./plots/Nervous/Normalized_HeartElastance.jpg" width="550"></td>
-    <td><img src="./plots/Nervous/Normalized_HeartRate.jpg" width="550"></td>
-</tr>
-<tr>
-    <td><img src="./plots/Nervous/Normalized_SystemicCompliance.jpg" width="550"></td>
-    <td><img src="./plots/Nervous/Normalized_SystemicResistance.jpg" width="550"></td>
-</tr>
-</table>
-<center> *Figure 3. The plot array demonstrates the normalized organ responses to sympathetic or parasympathetic activity, plotted against the normalized mean arterial pressure.* </center>
-
-### Chemoreceptors
-The chemoreceptors are cells that are sensitive to changes in blood gas concentration. Peripheral chemosensitive cells--located in the aortic arch--detect fluctuations in both arterial carbon dioxide and oxygen partial pressures.  The central chemoreceptors, which reside in the central nervous system (CNS), respond to changes in cerebral blood pH caused by irregular carbon dioxide levels.  It is assumed in this model that carbon dioxide transport across the blood-brain barrier and equilibration therein are rapid processes; that is, it assumed that the central chemoreceptor response is proportional to deviations in arterial carbon dioxide.  As sympathetic activators, the chemoreceptors also increase the heart rate and contractility.
-
-####Respiratory Control
-Control of respiration is based on the model developed by Albanese, Magosso, and Ursino in @cite ursino2000acute, @cite magosso2001mathematical, and @cite ursino2002theoretical.  It is assumed that the central and peripheral feedback define deviations from baseline patient ventilation (set in %BioGears during system stabilization) and that their contributions are independent (and thus additive).  
-
-\f[\dot{V_{target}} = \dot{V_{base}} + \delta\dot{V_{c}} + \delta\dot{V_{p}} \f]
+\f[P_{max,target} = P_{max,base} + \Delta P_{max,c} + \Delta P_{max,p} \f]
 <center>
 *Equation 8.*
 </center><br>
@@ -159,16 +155,16 @@ Clearly, the blood gas levels are normal, central V<sub>c</sub> and peripheral V
 
 The evolution of the central chemoreceptor feedback is assumed to be a function of arterial carbon dioxide partial pressure (P<sub>CO<sub>2</sub></sub>) deviation from its normal set point (P<sub>CO<sub>2,set</sub></sub> = 40 mmHg).
 
-\f[ \frac{d\delta\dot{V_{c}}}{dt} = \left(\frac{1}{ \tau_{c}} \right) \left( -\delta\dot{V_{c}} + g_{c}\left(P_{CO_{2}}(t) - P_{CO_{2,set}}\right)\right) \f]
+\f[ \frac{d\Delta E_{c}}{dt} = \left(\frac{1}{ \tau_{E,c}} \right) \left( -\Delta{E_{c}} + g_{E,c}\left(P_{CO_{2}}(t) - P_{CO_{2,set}}\right)\right) \f]
 <center>
 *Equation 9.*
 </center><br>
 
-The parameters &tau;<sub>c</sub> and &tau;g<sub>c</sub> are the time constant and control gain associated with the central response, respectively.  Equation 9 is identical to that reported in @magosso2001mathematical, except that a delay term is omitted.  This omission is a result of being currently unable to model delay differential equations in %BioGears.  
+The effects (E) are frequency (f) and driver amplitude (P) with associated time constants (&tau;<sub>c</sub>) and controller gains (&tau;g<sub>c</sub>).  Equation 9 is identical to that reported in @albenese2015integrated, except that a delay term is omitted.  This omission is a result of being currently unable to model delay differential equations in %BioGears.  
 
-The form of the peripheral feedback in Equation 10 is similar to Equation 9, but the response is dictated by a nerve firing rate that is a function of the combined action of carbon dioxide and oxygen.  Equations 11-12 show how this firing rate (f(t)) is calculated.
+The form of the peripheral feedback in Equation 10 is similar to Equation 8, but the response is dictated by the combined effects of carbon dioxide pressure and oxygen saturation.  Equations 11-12 show how this firing rate (f(t)) is calculated.  As before, this equation is applied twice per effect (E = {f, P}).
 
-\f[ \frac{d\delta\dot{V_{p}}}{dt} = \left(\frac{1}{ \tau_{p}} \right) \left( -\delta\dot{V_{p}} + g_{p}\left(f(t) - f_{set}\right)\right) \f]
+\f[ \frac{d\Delta E_{p}}{dt} = \left(\frac{1}{ \tau_{E,p}} \right) \left( -\Delta E_{p} + g_{E,p}\left(f(t) - f_{set}\right)\right) \f]
 <center>
 *Equation 10.*
 </center><br>
@@ -183,16 +179,187 @@ The form of the peripheral feedback in Equation 10 is similar to Equation 9, but
 *Equation 12.*
 </center><br>
 
-Equation 12 is a sigmoid that outputs a chemoreceptor firing rate (bounded by f<sub>min</sub> and f<sub>max</sub>) based on the current arterial oxygen pressure (P<sub>O<sub>2</sub></sub>).  The variables P<sub>O<sub>2,half</sub></sub> and k<sub>O<sub>2</sub></sub> are the half-max and slope parameters that define the shape of the sigmoid, a shape which is increasingly adjusted as the arterial carbon dioxide pressure (P<sub>CO<sub>2</sub></sub>) deviates from normal (P<sub>CO<sub>2,set</sub></sub>.  K and \gamma are tuning parameters required to maintain a steady output when oxygen and carbon dioxide pressures are at their normal values.  Values for all parameters in Equations 9-12 are available in @cite magosso2001mathematical.
+Equation 12 is a sigmoid that outputs a chemoreceptor firing rate (bounded by f<sub>min</sub> and f<sub>max</sub>) based on the current arterial oxygen pressure (P<sub>O<sub>2</sub></sub>).  The variables P<sub>O<sub>2,half</sub></sub> and k<sub>O<sub>2</sub></sub> are the half-max and slope parameters that define the shape of the sigmoid, a shape which is increasingly adjusted as the arterial carbon dioxide pressure (P<sub>CO<sub>2</sub></sub>) deviates from normal (P<sub>CO<sub>2,set</sub></sub>).  K and &gamma; are tuning parameters required to maintain a steady output when oxygen and carbon dioxide pressures are at their normal values.  Values for all parameters in Equations 9-12 are available in @cite magosso2001mathematical.
 
-####Cardiovascular Control
-Only the heart rate effects of cardiovascular control are modeled in the current chemoreceptor implementation, but contractility modification will be included in a future release.  Figure 4 shows the chemoreceptor effect on heart rate. In the figure, the abscissa represents the fractional deviation of gas concentration from baseline, while the ordinate shows the resultant change in heart rate as a fraction of patient baseline. The final heart rate modification due to chemoreceptors is the sum of the oxygen and carbon dioxide effects. For example, severe hypoxia and severe hypercapnia will result in a three-fold increase in heart rate (baseline + 2 * baseline).
+### Pulmonary Stretch Receptors
+Pulmonary stretch receptors are modeled as in @cite ursino2000acute, except that total lung volume (V<sub>lung</sub>) is used as the input rather than tidal volume.  We make this change because the total lung volume in %BioGears is a more stable output than tidal volume.
 
-<img src="./plots/Nervous/ChemoreceptorsModifiers.jpg" width="600">
+\f[ \frac{df_{ps}}{dt} = \frac{-f_{ps} + G_{ps}V_{lung}}{\tau_{ps}} \f]
 <center>
-*Figure 4. The %BioGears chemoreceptor model is a phenomenological model which elicits a tuned response to hypoxia and/or hypercapnia. A reverse effect is also present, but at a much lesser magnitude.*
+*Equation 13.*
 </center><br>
 
+### Central Nervous Response
+The CNS model outputs three signals: a sympathetic efferent signal to the sinoatrial node (f<sub>es,s</sub>), a sympathetic efferent signal to the periphery (f<sub>es,p</sub>), and an efferent vagal (parasympathetic) signal to the sinoatrial node (f<sub>ev</sub>).  These signals are determined by weighting the following inputs from the afferent arm of the nervous system: aortic baroreceptors (f<sub>ab</sub>), carotid baroreceptors (f<sub>cb</sub>), cardiopulmonary baroreceptors (f<sub>cp</sub>), peripheral chemoreceptors (f<sub>pc</sub>), and pulmonary stretch receptors (f<sub>ps</sub>).  The equations for the three efferent signals have been developed in @cite ursino2000acute, @cite magosso2001mathematical, @cite magosso2001theoretical, and @cite albenese2015integrated.  Weighting parameters (W<sub>j</sub>) were established from these sources as well as from @cite lim2013cardiovascular and @cite liang2006simulation.
+
+The sympathetic efferent firing rates are modeled as sigmoids:
+
+\f[ f_{es,s} = f_{es,\infty} + \left(f_{es,0} - f_{es,\infty}\right)exp(k_{es}\left(W_{s,ab}f_{ab} + W_{s,cb}f_{cb} + W_{s,pc}f_{pc} + W_{cp}\left(f_{cp} - f_{cp,0}\right) - \theta_{s}\right)) \f]
+<center>
+*Equation 14.*
+</center><br>
+
+\f[ f_{es,p} = f_{es,\infty} + \left(f_{es,0} - f_{es,\infty}\right)exp(k_{es}\left(W_{p,ab}f_{ab} + W_{p,cb}f_{cb} + W_{p,pc}f_{pc} + W_{p,ps}f_{ps} + W_{cp}\left(f_{cp} - f_{cp,0}\right) - \theta_{p}\right)) \f]
+<center>
+*Equation 15.*
+</center><br>
+
+The parameters &theta;<sub>s</sub> and &theta;<sub>p</sub> refer to the firing thresholds of the sinoatrial and peripheral sympathetic signals.  These thresholds are adjusted under hypoxic and hypercapnic scenarios to model the ischemic response @cite Magosso2001Mathematical.
+
+\f[ \frac{d\Delta\theta_{O_2,j}}{dt} = \frac{1}{\tau_{isc}}\left(-\Delta\theta_{O_2,j} + \frac{\chi_{j}}{1+\exp(\frac{P_{O_2}-h_{O_2,j}}{k_{isc,j}})}\right) \f]
+ <center>
+*Equation 16.*
+</center><br>
+
+\f[ \frac{d\Delta\theta_{CO_2,j}}{dt}= \frac{-\theta_{CO_2,j}+g_{c,j}\left(P_{CO_2}-P_{CO_2,n}\right)}{\tau_c} \f]
+ <center>
+*Equation 17.*
+</center><br>
+
+\f[ \theta_{j} = \theta_{j,n} - \Delta\theta_{O_2,j} - \Delta\theta_{CO_2,j} \f]
+ <center>
+*Equation 18.*
+</center><br>
+
+In Equations 16-18, the subscript "j" refers to either the sinoatrial or peripheral ischemic response.  The parameters &theta;<sub>j,n</sub> refer to the basal values the thresholds take on at normal blood-gas levels.  The maximum slope and half-saturation parameters (h<sub>O2,j</sub> and k<sub>isc</sub>, respectively) determine the overall shape of the response.
+
+The parasympathetic signal is a sigmoidal function of the baroreceptor firing rate and linear with respect to the chemoreceptor and pulmonary stretch signals.
+
+\f[ f_{ev} = \left(\frac{f_{ev,0} + f_{ev,\infty}\exp(\frac{f_{b,avg}-f_{b,avg,0}}{k_{ev}})}{1+\exp(\frac{f_{b,avg}-f_{b,avg,0}}{k_{ev}})}\right) + W_{v,pc}f_{pc}+W_{v,ps}f_{ps} - \theta_{ev} \f]
+ <center>
+*Equation 19.*
+</center><br>
+
+Unlike the sympathetic efferent pathway, the parasympathetic path assumes a constant firing theshold \(\theta_{ev}\).  The value f<sub>b,avg</sub> is the average firing rate of the carotid and aortic baroreceptors.  The low-pressure baroreceptors do not effect the parasympthetic signal.
+
+### Efferent Response    
+The three signals relayed by the CNS (f<sub>es,s</sub>, f<sub>es,p</sub>, and f<sub>ev</sub>) are used to update the cardiovascular model using effector equations outlined in @cite ursino2000acute.  These equations have been normalized so that their outputs represent a fractional change from baseline.  As in @cite ursino2000acute, the response to the sympathetic activation is assumed to involve a logarithmic transformation, whereas the vagal response is linear.  Furthermore, the sympathetic signals are bounded at the minimum signal f<sub>es,min</sub> to maintain continuity.  In each of the normalized equations, the values &sigma;<sub>0</sub> correspond to the effector input at the baseline sympathetic and parasympathetic firing rates.  
+
+#### Heart Rate
+\f[ \frac{d \sigma_{HR, s}}{dt} = \frac{-\sigma_{HR,s} + G_{HR,s}\ln(f_{es,s}-f_{es,min}+1}{\tau_{HR,s}} \f]
+ <center>
+*Equation 20.*
+</center><br>
+
+\f[ \frac{d \sigma_{HR, v}}{dt} = \frac{-\sigma_{HR,v} + G_{HR,v}f_{ev}}{\tau_{HR,v}} \f]
+ <center>
+*Equation 21.*
+</center><br>
+
+\f[ HR_{norm} = \frac{1 + \sigma_{HR,s,0} + \sigma_{HR,v,0}}{1 + \sigma_{HR,s} + \sigma_{HR,v}} \f]
+ <center>
+*Equation 22.*
+</center><br>
+
+In Equation 22, the initial state of the heart rate appears in the numerator because Equations 21-22 reflect changes in heart period.  Thus, inverting the ratio of next heart period to baseline heart period gives the normalized change in heart rate.
+
+#### Heart Elastance
+
+\f[ \frac{d \sigma_{E}}{dt} = \frac{-\sigma_{E} + G_{E}\ln(f_{es,s}-f_{es,min}+1}{\tau_{E}} \f]
+ <center>
+*Equation 23.*
+</center><br>
+
+\f[ E_{norm} = \frac{1 + \sigma_{E}}{1 + \sigma_{E,0}} \f]
+ <center>
+*Equation 24.*
+</center><br>
+
+#### Vessel Resistance
+
+\f[ \frac{d \sigma_{R,j}}{dt} = \frac{-\sigma_{R,j} + G_{R,j}\ln(f_{es,p}-f_{es,min}+1}{\tau_{R,j}} \f]
+ <center>
+*Equation 25.*
+</center><br>
+
+\f[ R_{j,norm} = \frac{1 + \sigma_{R,j}}{1 + \sigma_{R,j,0}} \f]
+ <center>
+*Equation 26.*
+</center><br>
+  
+In Equations 25-26, j = splanchnic, extrasplanchnic, or muscle.  Each region has distinct controller gains and time constants associated with it.
+
+#### Veinous Compliance
+\f[ \frac{d \sigma_{C}}{dt} = \frac{-\sigma_{C} + G_{C}\ln(f_{es,p}-f_{es,min}+1}{\tau_{C}} \f]
+ <center>
+*Equation 27.*
+</center><br>
+
+\f[ C_{norm} = \frac{1 + \sigma_{C}}{1 + \sigma_{C,0}} \f]
+ <center>
+*Equation 28.*
+</center><br>
+
+The normalized compliance is applied to each fluid capacitor in the systemic portion of the BioGears cardiovascular circuit.
+
+### Local Autoregulation
+#### Cerebral Autoregulation
+The cerebral autoregulation model is based on that of @cite ursino1998interaction and @cite ursino2001role.  The model distinguishes between changes in large arteries (upstream resistor in the BioGears cerebral circuit) and small arteries (downstream resistor).  The large arteries respond to changes in cerebral perfusion pressure (CPP), while the small arteries are sensitive to changes in cerebral blood flow (CBF).  Each response is attenuated by cerebral venous oxygen saturaton and cerebral carbon dioxide levels.  In all equations, a subscript "n" refers to the normal, basal value of the parameter.
+
+The response of large arteries to changes in CPP is governed by @cite ursino1998interaction
+
+\f[\frac{dx_{auto,l}}{dt} = \frac{-x_{auto,l} + G_{auto,l}\left(CPP - CPP_{n}\right)}{\tau_{auto,l}} \f]
+<center>
+*Equation 29.*
+</center><br>  
+
+The response of small arteries to CBF is likewise given by @cite ursino1998interaction 
+\f[\frac{dx_{auto,s}}{dt} = \frac{-x_{auto,s} + G_{auto,l}\left(\frac{CBF-CBF_n}{CBF_n}\right)}{\tau_{auto,s}} \f]
+<center>
+*Equation 30.*
+</center><br>  
+
+The effects of carbon dioxide @cite ursino1998interaction and oxygen saturation @cite ursino2001role are tracked as follows:
+
+\f[\frac{dx_{CO_2}}{dt} = \frac{-x_{CO_2} + A_{CO_2}G_{CO_2}log_{10}\left(\frac{P_{CO_2}}{P_{CO_2,n}}\right)}{\tau_{CO_2}} \f]
+<center>
+*Equation 31.*
+</center><br> 
+
+\f[ A_{CO_2} = \left(1+\exp(-K_{CO_2}\left(\frac{CBF-CBF_n}{CBF_n}\right) - b_{CO_2})\right)^{-1} \f]
+<center>
+*Equation 32.*
+</center><br> 
+
+\f[\frac{dx_{O_2}}{dt} = \frac{-x_{O_2} + G_{O_2}\left(S_{v,O_2}-S_{v,O_2,n}\right)}{\tau_{O_2}} \f]
+<center>
+*Equation 33.*
+</center><br>
+
+The total autoregulatory effects used to scale the large and small cerebral resistances are:
+
+\f[ x_{large} = x_{auto,l} + x_{CO_2} + x_{O_2} \f]
+\f[ x_{small} = x_{auto,s} + x_{CO_2} + x_{O_2} \f]
+<center>
+*Equation 34.*
+</center><br>
+
+#### Coronary and Skeletomuscular Autoregulation
+Autoregulation in the heart and muscle is modeled similarly to @cite ursino2000acute.  The autoregulatory parameter for each location is:
+
+\f[ \frac{dx_{O_2,j}}{dt} = \frac{-x_{O_2,j} + G_{O_2,j}\left(C_{v,O_2,j}-C_{v,O_2,jn}\right)}{\tau_{O_2,j}} \f]
+<center>
+*Equation 35.*
+</center><br>
+
+where j is either the muscle or heart, C<sub>v,O2</sub> is the current venous oxygen concentration, and C<sub>v,O2,n</sub> is the baseline venous oxygen concentration.
+
+The change in resistance of the circuit path providing blood flow to the heart is 
+
+\f[ R_{h} = \frac{R_{h,0}}{1 + x_{O_2,h}}\f]
+<center>
+*Equation 36.*
+</center><br>
+ 
+in which R<sub>h,0</sub> is the baseline resistance (constant).  The expression describing the change in muscle resistance is similar to Equation 36.
+
+\f[ R_{m} = \frac{R_{m,next}}{1 + x_{O_2,m}}\f]
+<center>
+*Equation 37.*
+</center><br>
+
+It should be noted, however, that because the muscle resistance is also controlled by the sympathetic response, the resitance against which the autoregulation acts is that determined by Equation 26.
+  
 ### TBI
 Traumatic brain injuries are relatively common, affecting millions annually. They are usually defined as a blunt or penetrating injury to the head that disrupts normal brain function. Furthermore, they are classified as either focal (e.g. cerebral contusions, lacerations, and hematomas) or diffuse (e.g. concussions and diffuse axonal injuries) @cite adoni2007pupillary. The scope of the %BioGears TBI model is somewhat limited by the low fidelity of the modeled brain. The brain is represented in the current %BioGears %Cardiovascular circuit with only two resistors and a compliance, all within one compartment. Because the circuit is modeled in this way, TBI is considered as an acute, non-localized, non-penetrating injury from a circuit perspective. Thus, the TBI model can account for intracranial pressure and cerebral blood flow on the basis of the whole brain, but not to specific areas of the brain. However, %BioGears does provide for three injury inputs: diffuse, right focal, and left focal.  Similarly to the @ref RenalMethodology "Renal System", the %BioGears brain circuit could be expanded to accommodate a higher-fidelity brain model.
 

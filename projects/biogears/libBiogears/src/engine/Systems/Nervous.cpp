@@ -480,14 +480,15 @@ void Nervous::CentralSignalProcess()
   //Currently applying only to the peripheral signal because the literature notes that vascular smooth muscle shows depressed responsiveness to sympathetic activiy,
   //(Sayk et al., 2008 and Brassard et al., 2016) which would inhibit ability to increase peripheral resistance
   if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
-    double fatigueThreshold = 5.5;
+    double fatigueThreshold = 6.0;
     double fatigueTimeConstant_hr = 2.0;
     double dFatigueScale_hr = 0.0;
     double fatigueInput = m_SympatheticPeripheralSignal_Hz - fatigueThreshold;
     if (fatigueInput > 0.0) {
-      dFatigueScale_hr = (1.0 / fatigueTimeConstant_hr) * (fatigueInput - fatigueThreshold);
-    } else if (m_SympatheticPeripheralSignalFatigue > ZERO_APPROX) {
-      dFatigueScale_hr = (-2.0 * m_SympatheticPeripheralSignalFatigue / fatigueTimeConstant_hr);
+      dFatigueScale_hr = (1.0 / fatigueTimeConstant_hr) * fatigueInput;
+    } else if (m_SympatheticPeripheralSignalFatigue > ZERO_APPROX && fatigueInput < -0.1) {
+      //Scale down fatigue if signal drops below threshold (0.1 buffer to make sure we don't trigger when hovering near SympatheticSignal = Threshold)
+      dFatigueScale_hr = -m_SympatheticPeripheralSignalFatigue;
     }
     m_SympatheticPeripheralSignalFatigue += (dFatigueScale_hr * m_data.GetTimeStep().GetValue(TimeUnit::hr));
   }
@@ -631,7 +632,7 @@ void Nervous::BaroreceptorFeedback()
   const double tauVoigt = 0.9;
   const double slopeStrain = 0.04;
 
-  //Pain effect changes the operating point of the baroreceptors.  Anesthetics, sedatives, and opioids blunt the sensivitiy of the baroreflex (reflected in kBaro)
+  //Pain exercise, and some drugs alter the apparent operating point of the baroreceptors
   double painEffect = 0.0;
   double drugEffect = 0.0;
   const double exerciseEffect = m_data.GetEnergy().GetExerciseMeanArterialPressureDelta(PressureUnit::mmHg);
@@ -640,20 +641,19 @@ void Nervous::BaroreceptorFeedback()
     const double painVAS = 0.1 * GetPainVisualAnalogueScale().GetValue();
     painEffect = 0.5 * painVAS * m_BaroreceptorOperatingPoint_mmHg;
   }
-  for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
-    if ((sub->GetClassification() == CDM::enumSubstanceClass::Anesthetic) || (sub->GetClassification() == CDM::enumSubstanceClass::Sedative) || (sub->GetClassification() == CDM::enumSubstanceClass::Opioid)) {
+  for (SESubstance* drug : m_data.GetSubstances().GetActiveDrugs()) {
+    if ((drug->GetClassification() == CDM::enumSubstanceClass::Anesthetic) || (drug->GetClassification() == CDM::enumSubstanceClass::Sedative) || (drug->GetClassification() == CDM::enumSubstanceClass::Opioid)) {
       drugEffect = m_data.GetDrugs().GetMeanBloodPressureChange(PressureUnit::mmHg); // / m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
       break;
       //Only want to apply the blood pressure change ONCE (In case there are multiple sedative/opioids/etc)
-      ///\TODO:  Look into a better way to implement drug classification search
     }
   }
+  const double baroreceptorOperatingPoint_mmHg = m_BaroreceptorOperatingPoint_mmHg + painEffect + exerciseEffect + drugEffect;
 
   //Carotid baroreceptors are sensitive to arterial pressure changes. Future work could consider the effects of gravitational
   //force, as the pressure at these receptors is technically a function of height above the heart.  Thus, in a lying down
   //position, carotid receptors would "sense" a different pressure than when standing.  See Lim2013Cardiovascular for such
   //an application
-  const double baroreceptorOperatingPoint_mmHg = m_BaroreceptorOperatingPoint_mmHg + painEffect + exerciseEffect + drugEffect;
   const double systolicPressure_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
   const double carotidStrainExp = std::exp(-slopeStrain * (systolicPressure_mmHg - baroreceptorOperatingPoint_mmHg));
   const double carotidWallStrain = 1.0 - std::sqrt((1.0 + carotidStrainExp) / (A + carotidStrainExp));
@@ -706,9 +706,9 @@ void Nervous::BaroreceptorFeedback()
   }
 
   //Update baroreceptor setpoint
-  if (m_data.GetState() > EngineState::SecondaryStabilization && !m_data.GetActions().GetPatientActions().HasInfection()) {
+  if (m_data.GetState() > EngineState::SecondaryStabilization && !m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
     //Pruett2013Population (cardiovascular hemorrhage model) assumes ~16 hr half-time for baroreceptor adaptation to new setpoint (They varied this parameter up to 1-2 days half-time)
-    const double kAdapt_Per_hr = 0.019; //0.042;
+    const double kAdapt_Per_hr = 0.042;
     const double dSetpointAdjust_mmHg_Per_hr = kAdapt_Per_hr * (systolicPressure_mmHg - m_BaroreceptorOperatingPoint_mmHg);
     m_BaroreceptorOperatingPoint_mmHg += (dSetpointAdjust_mmHg_Per_hr * m_data.GetTimeStep().GetValue(TimeUnit::hr));
   }
