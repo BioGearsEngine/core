@@ -309,104 +309,16 @@ controls the pressure at the airway node for positive pressure ventilation. More
 details on positive pressure ventilation can be found in the @ref AnesthesiaMachineMethodology.
 
 For a realistic muscle pressure source signal, the %BioGears %Respiratory System
-adopted the mathematical model proposed by Fresnel, et al. @cite Fresnel2014musclePressure , which is
+adopted the mathematical model proposed by Albanese, et al. @cite albanese2016integrated , which is
 based on clinical data. Accordingly, the time series of the respiratory muscle
 pressure, <i>P<sub>mus</sub></i>, is given by,
 
-\f[P_{mus} =\left\{\begin{array}{l} {P_{\max } (1-\exp (-\frac{f_{v} +4P_{0.1} }{10} *t)),0<t\le T_{I} } \\ {P_{\max } (\exp (-\frac{f_{v} +\frac{P_{0.1} }{2} }{10} *t)),T_{I} <t\le T_{tot} } \end{array}\right. \f] 
+\f[P_{mus} =\left\{\begin{array}{l} {-\frac{P_{max}}{I\cdot E}\cdot t^{2} + \frac{P_{max}\cdot T}{I\cdot E}\cdot t ,0<t\le I } \\ {\frac{P_{max}}{1-\exp(\frac{-E}{\tau})}\cdot \left(\exp(\frac{t-I}{\tau})-\exp(\frac{-E}{\tau})\right),I <t\le T } \end{array}\right. \f] 
 <center>
 <i>Equation 6.</i>
 </center><br> 
 
-Where <i>T<sub>I</sub></i> and <i>T<sub>tot</sub></i> are the inspiratory and total respiration times, respectively.  <i>f<sub>v</sub>=1/T<sub>tot</sub></i> is the ventilation frequency, <i>P<sub>0.1</sub></i> is the mouth occlusion pressure, and <i>P<sub>max</sub></i> is the maximum muscle pressure that specifies the amplitude of the pressure source signal.  <i>P<sub>max</sub></i> is estimated using a pressure/volume curve constructed from simulation data. The %BioGears %Respiratory System circuit was exercised over a range of pressures to produce a curve showing lung volume as a function of driver pressure (Figure 4). Given the desired lung volume (based on target tidal volume, see Equation 13), P<sub>max</sub> can be estimated. 
-
-<img src="./images/Respiratory/Respiratory_Figure04.png" width="550">
-<center> 
-<i>Figure 4. Maximum driver pressure, P<sub>max</sub>, as a function of lung volume.</i>
-</center><br>
-
-The curve in Figure 4 is parameterized to produce the relation 
-
-\f[P_{\max } =-0.3743V^{5} +7.4105V^{4} -57.076V^{3} +214.11V^{2} -409.97V+262.22\f] 
-<center>
-<i>Equation 7.</i>
-</center><br> 
-
-In this manner, P<sub>max</sub> is related to target tidal volume <i>V<sub>T</sub></i>. 
-In the model, <i>T<sub>I</sub></i> and <i>T<sub>tot</sub></i> are related to <i>f<sub>v</sub></i> 
-through the relation @cite Fresnel2014musclePressure 
-
-\f[\frac{T_{I} }{T_{tot} } =0.0125f_{v} +0.125\f] 
-<center>
-<i>Equation 8.</i>
-</center><br> 
-@anchor respiratory-chemoreceptors
-The Fresnel model uses pre-selected ventilation frequencies to model various physiological and pathological conditions. The %BioGears %Respiratory System extended the Fresnel, et. al. model by incorporating a chemical stimuli feedback mechanism that contributes to the overall blood gas regulation. As a chemical feedback mechanism, past works used empirical relationships between minute ventilation, <i>V<sup><b>.</b></sup><sub>E</sub></i>, or alveolar ventilation, <i>V<sup><b>.</b></sup><sub>A</sub></i>, and the blood gas partial pressures that represent the respiratory response to chemical stimuli at the peripheral and central chemoreceptors @cite Khoo1982chemicalFeedback , @cite Batzel2005chemicalFeedback . The %BioGears %Respiratory Model adopted the mathematical relation  that links the alveolar ventilation with the blood gas levels. The resulting mathematical relationship implemented in the %BioGears %Respiratory System is 
-
-\f[\dot{V}_{A} =G_{p} e^{-0.05P_{a} O_{2} } \max (0,P_{aCO_{2} } -I_{p} )+G_{c} \max (0,P_{aCO_{2} } -I_{c} )\f] 
-<center>
-<i>Equation 9.</i>
-</center><br> 
-
-<i>P<sub>aO</sub><sub>2</sub></i> and <i>P<sub>aCO</sub><sub>2</sub></i> are the arterial oxygen and carbon dioxide partial pressures, respectively. <i>I<sub>p</sub></i> and <i>I<sub>c</sub></i> are the cutoff threshold constants, and <i>G<sub>p</sub></i> and <i>G<sub>c</sub></i> are the peripheral and central controller gain constants, respectively. The value of <i>f<sub>v</sub></i> used in the pressure source corresponds to the target  respiration rate that the engine must attain to ensure accurate blood gas levels. It is related to the minute ventilation, <i>V<sup><b>.</b></sup><sub>E</sub></i>, as shown in the equation below
-
-\f[f_{v} =\dot{V}_{E} /V_{T} \f] 
-<center>
-<i>Equation 10.</i>
-</center><br> 
-
-where <i>V<sup><b>.</b></sup><sub>E</sub></i> is calculated using the relation
-
-\f[\dot{V}_{E} =\dot{V}_{A} +\dot{V}_{D} \f] 
-<center>
-<i>Equation 11.</i>
-</center><br> 
-
-<i>V<sup><b>.</b></sup><sub>D</sub></i> is the dead space ventilation and is obtained by taking the product of the dead space volume and the respiration rate. The target tidal volume <i>V<sub>T</sub></i> needed to predict <i>f<sub>v</sub></i>  using Equation 10 is calculated from the  pulmonary ventilation based on a piecewise linear relationship between the tidal volume and the minute ventilation as shown by Watson @cite watson1974tidalVolume . In the article, the author presented data that  describes the relationship between the minute ventilation and tidal volume by straight line. The data is reproduced in Figure 5 below.
-
-<img src="./images/Respiratory/Respiratory_Figure05.png" width="800">
-<center>
-<i>Figure 5. The figure shows data from literature that presents the linear relationship between the minute ventilation 
-and tidal volume. The relationship was derived from a line fit of experimental data with a wide range of varying carbon dioxide, exercise, postures, alveolar gas tensions, adrenaline, mild acidaemia, alkalosis, morphine, mederidine, mild hypoxia, and breathing through a small fixed resistance.  All test cases matched this trend of two intersecting straight lines.  The figure is reproduced from @cite watson1974tidalVolume .</i>
-</center><br> 
-
-The data in the article shows that the minute ventilation 
-can be described by two intersecting straight lines. 
-Up to about half of the vital capacity <i>V<sub>C</sub></i>, the minute ventilation,  
-<i>V<sup><b>.</b></sup><sub>E</sub></i>, and the tidal volume, <i>V<sub>T</sub></i>, are related as
-
-\f[\dot{V}_{E} =m(V_{T} -c)\f] 
-<center>
-<i>Equation 12.</i>
-</center><br> 
-
-where <i>m</i> is the slope and <i>c</i> is the x-intercept of the minute ventilation versus tidal volume plot. The data 
-shows that the minute ventilation is constant above half of the vital capacity. Based on this observation, the 
-%BioGears %Respiratory Model employs the linear relation given below to predict the target tidal 
-volume from the minute ventilation.
-
-\f[V_{T} =\left\{\begin{array}{l} {c+\dot{V}_{E} /m,V_{T} \le V_{C} } \\ {0.5*V_{C} ,V_{T} >V_{C} } \end{array}\right. \f] 
-<center>
-<i>Equation 13.</i>
-</center><br> 
-
-Where <i>m</i> and <i>c</i> are constant parameters determined during initialization. During the initial parameterization, the minute ventilation is plotted against the vital capacity to determine <i>c</i> by taking the x-intercept of <i>V<sup><b>.</b></sup><sub>E</sub></i> vs <i>V<sub>T</sub></i> plot. Then, the slope is adjusted to meet the initial baseline parameters of the patient. These parameters include the baseline respiration rate and tidal volume, where the latter is estimated from the patient's weight. 
-
-Once <i>m</i> and <i>c</i> are selected this way, they are used as patient parameters for determining the target tidal volume from the minute ventilation that is determined by the feedback mechanism. This provides the target tidal volume that must be attained to respond to the chemical stimuli feedback. This value is then communicated back to the target ventilation frequency <i>f<sub>v</sub></i>, which in turn adjusts the patient's breathing frequency through the muscle pressure given in Equation 6. The muscle pressure then drives sufficient gas into the lungs in response to the chemical stimuli, completing the feedback loop. 
-
-In the calculation of the target tidal volume, the %Respiratory Model allows the target tidal volume to increase linearly with the calculated minute ventilation as long as the target volume is below half the vital capacity. In the event that the calculated target volume is above half of the vital capacity, the target volume is set to a constant value of 0.5V<sub>C</sub> as shown in the above equation. In the model, the lung vital capacity V<sub>C</sub> is calculated from the patient's total lung capacity and residual volume as described in the sections below.
-
-The model described above is implemented in the %BioGears Engine with reference values and model parameters that are tuned to meet validation data. The reference and tuned values for the model parameters are shown in Table 1 below.  Note that our model is tuned to use the reference values without modification.
-
-<center>
-<i>Table 1: %Respiratory driver model parameters and reference values used in the chemical feedback mechanism implementations.</i>
-|Parameter (units)                        |Reference Value                           |Model Value             |
-|------------------------                 |------------------------                  |------------------------|
-|G<sub>p</sub>                   		  |30.24 @cite Batzel2005chemicalFeedback    |30.24                    |
-|G<sub>c</sub>                     		  |1.44  @cite Batzel2005chemicalFeedback    |1.44                     |
-|I<sub>p</sub>, I<sub>c</sub>(mmHg)       |35.5  @cite Batzel2005chemicalFeedback    |35.5                     |
-|P<sub>0.1</sub>(cmH<SUB>2</SUB>O)                   |0.75  @cite Budwiser2007chemicalFeedback  |0.75                    |
-</center><br>
+Where I, E, and T are the inspiratory, expiratory, and total respiration times, respectively.  The value &tau; is a time constant for the expiration period and is estimated as E / 5.  The total breathing cycle time T is obtained from the inverse of the respiration rate determined by the [chemoreceptor model](@ref nervous-features-chemoreceptors).  I and E are calculated using the inspiratory:expiratory ratio from the previous time step, which is modified by irregular physiology like asthma and COPD.  The chemoreceptor model also updates the driver amplitude, P<sub>max</sub>.  The baseline value of P<sub>max</sub> for each virtual patient is determined during engine initialization by modifing the amplitude at the requested patient respiration rate until a stable tidal volume is obtained. 
 
 Figure 6 depicts the time-dependent driver pressure source of the %BioGears %Respiratory System as obtained during simulation of the standard patient model of the engine (77 kg adult male) under normal physiological conditions. For comparison, the driver pressure is plotted with the alveolar, intrapleural, and transpulmonary pressures. The figure shows the pressures for several breathing cycles. As seen in Figure 6, the model driver pressure exhibits distinct waveforms during the inspiration and expiration phases. These patterns represent the active distension and passive relaxation behaviors of the inspiratory muscles. As a result of such input, the model distinguishes between the active inspiratory and passive expiratory phases of the breathing cycle. The time-dependent muscle pressure together with the atmospheric pressure and the compliances act in tandem to generate the pleural and alveolar pressure waveforms shown in the figure.
 
@@ -425,7 +337,7 @@ Figure 6 depicts the time-dependent driver pressure source of the %BioGears %Res
 </center>
 
 <center>
-<i>Figure 6. The driver pressure, or pressure source, that serves as an electrical analogue voltage source for the respiratory circuit is plotted along with the alveolar, intrapleural, and transpulmonary pressures.  The pressure source generates a sub-atmospheric intrapleural pressure that facilitates the inspiration and expiration phases of spontaneous breathing.</i>
+<i>Figure 4. The driver pressure, or pressure source, that serves as an electrical analogue voltage source for the respiratory circuit is plotted along with the alveolar, intrapleural, and transpulmonary pressures.  The pressure source generates a sub-atmospheric intrapleural pressure that facilitates the inspiration and expiration phases of spontaneous breathing.</i>
 </center><br>
 
 #### Standard Lung Volumes and Capacities
@@ -466,7 +378,7 @@ maximal forced expiration. ERV can be calculated as
 
 \f[ERV=FRC-RV\f] 
 <center>
-<i>Equation 14.</i>
+<i>Equation 7.</i>
 </center><br> 
 
 In this equation, both FRC and RV are input values obtained from weight-based
@@ -484,15 +396,15 @@ the trachea. The %BioGears %Respiratory Model calculates the tidal volume by
 taking the difference between the maximum and minimum total lung volumes during
 each breathing cycle.
 
-Figure 7 depicts the typical lung volume waveform for multiple breathing
+Figure 5 depicts the typical lung volume waveform for multiple breathing
 cycles. The %BioGears %Respiratory Model outputs the value of V<sub>T</sub> for each
-breathing cycle. Figure 7 presents the plot of the total lung volume and V<sub>T</sub> as a
+breathing cycle. Figure 5 presents the plot of the total lung volume and V<sub>T</sub> as a
 function of time.
 
 <center><img src="./plots/Respiratory/TidalVolume_from_TotalLungVolume.jpg" width="800"></center>
 
 <center>
-<i>Figure 7. This shows the relationship of the total lung volume with the tidal
+<i>Figure 5. This shows the relationship of the total lung volume with the tidal
 volume. The tidal volume for each cycle is determined by taking the difference between the maximum and
 minimum values of the total lung volume, and is therefore only updated at the end of each full cycle.</i>
 </center><br>
@@ -505,7 +417,7 @@ capacity (TLC) using the relation
 
 \f[IRV=TLC-FRC-V_{T} \f] 
 <center>
-<i>Equation 15.</i>
+<i>Equation 8.</i>
 </center><br> 
 
 Both TLC and FRC are weight-based inputs to the model, whereas V<sub>T</sub> is calculated
@@ -523,14 +435,14 @@ calculated as
 
 \f[V_{C} =IRV+V_{T} +ERV\f] 
 <center>
-<i>Equation 16.</i>
+<i>Equation 9.</i>
 </center><br> 
 
 V<sub>C</sub>  can also be calculated using TLC as:
 
 \f[V_{C} =TLC-RV\f] 
 <center>
-<i>Equation 17.</i>
+<i>Equation 10.</i>
 </center><br> 
 
 Again, both TLC and RV are weight-based inputs to the model, and V<sub>T</sub> is calculated
@@ -546,7 +458,7 @@ calculated from TLC and FRC as
 
 \f[IC=TLC-FRC\f] 
 <center>
-<i>Equation 18.</i>
+<i>Equation 11.</i>
 </center><br> 
 
 In the model, both TLC and FRC are weight-based input variables, and IC can be
@@ -576,7 +488,7 @@ product of tidal volume (V<sub>T</sub>) and respiration rate (RR), i.e.,
 
 \f[\dot{V}_{E} =V_{T} *RR\f] 
 <center>
-<i>Equation 19.</i>
+<i>Equation 12.</i>
 </center><br> 
 
 The %BioGears %Respiratory Model calculates both V<sub>T</sub> and RR from the simulation data. 
@@ -600,12 +512,12 @@ respiratory tract where no gas exchange takes place. In the %BioGears
 %Respiratory Model, the volume of the dead space is calculated from the values
 assigned to the right and left anatomic dead space nodes. These nodes have continuously changing volumes due the compliances that are connected to the
 nodes. The right and left anatomic dead space volumes when
-compared to the right and left alveoli volumes are shown in Figure 8. When the patient weight is factored into the 
+compared to the right and left alveoli volumes are shown in Figure 6. When the patient weight is factored into the 
 calculation, the alveolar ventilation predicted from the model is close to the expected value.
 
 <center><img src="./plots/Respiratory/Alveoli_and_Dead_Space_Volumes.jpg" width="800"></center>
 <center>
-<i>Figure 8. The right and left anatomic dead space volumes together with the right and left 
+<i>Figure 6. The right and left anatomic dead space volumes together with the right and left 
 alveoli volumes. The difference in the alveoli volumes is due to the difference in 
  the lung ratio of the right and left lungs. The right and left lung ratios of the standard patient 
  in the %BioGears %Respiratory Model are 0.525 and 0.475, respectively. The left and right dead space volumes are equivalent.</i>
@@ -620,7 +532,7 @@ resistance <i>R<sub>trachea</sub></i> as:
 
 \f[Q_{trachea} =\frac{P_{mouth} -P_{carina} }{R_{trachea} } \f] 
 <center>
-<i>Equation 20.</i>
+<i>Equation 13.</i>
 </center><br> 
 
 <i>P<sub>mouth</sub></i> and <i>P<sub>carina</sub></i> are the pressures at the mouth and the carina nodes,
@@ -628,7 +540,7 @@ respectively (see circuit diagram, Figure 3). The figure shown below presents th
 
 <center><img src="./plots/Respiratory/Total_Flow_Through_Trachea.jpg" width="800"></center>
 <center>
-<i>Figure 9. Tracheal airflow and total lung volume during one typical breathing
+<i>Figure 7. Tracheal airflow and total lung volume during one typical breathing
 cycle. At the peak of the inspiration phase, the flow rate goes to zero.</i>
 </center><br>
 
@@ -648,7 +560,7 @@ found in the literature @cite otis1947measurement .
 
 <center><img src="./plots/Respiratory/Lung_Pressure_And_Volume.jpg" width="800"></center>
 <center>
-<i>Figure 10. Typical lung pressures. The plot shows the instantaneous pressure of
+<i>Figure 8. Typical lung pressures. The plot shows the instantaneous pressure of
 the left alveoli for one breathing cycle. For comparison, the plot also
 shows the total lung volume for the same breathing cycle. As seen in this figure,
 the lung volume increases as the alveolar pressure falls below the atmospheric pressure of 1033 cm H<SUB>2</SUB>O.
@@ -683,7 +595,7 @@ Transpulmonary pressure is defined as the difference between the alveolar
 </table>
 </center>
 <center>
-<i>Figure 11. A plot showing the transpulmonary pressure obtained from the %BioGears engine with 
+<i>Figure 9. A plot showing the transpulmonary pressure obtained from the %BioGears engine with 
 that found and digitized from literature @cite guyton2006medical. The left %BioGears plots use absolute pressure, while the right Guyton plots use the pressure difference from ambient (1033 cmH2O).  For comparison, the plot also shows the lung volumes from the two sources.</i>
 </center><br>
 
@@ -691,7 +603,7 @@ that found and digitized from literature @cite guyton2006medical. The left %BioG
 One method of characterizing the lungs' elastic behavior is to use a diagram
 that relates the lung volume changes to changes in pleural pressure. The pressure-volume 
 curve of a healthy person shows hysteresis during the inspiratory and expiratory phases. 
-Figure 12 presents the pressure-volume diagram of data extracted from the %BioGears
+Figure 10 presents the pressure-volume diagram of data extracted from the %BioGears
 %Respiratory Model. For comparison, the plot also shows a P-V diagram reproduced from literature
 @cite guyton2006medical . The figures show the plot of lung volume changes versus pleural pressure
  for one breathing cycle. The pleural pressure from the model is the average of the right and left pleural 
@@ -709,7 +621,7 @@ hysteresis of the P-V curve.
 </table>
 </center>
 <center>
-<i>Figure 12. The pressure-volume curve for the standard patient of the %BioGears %Respiratory Model 
+<i>Figure 10. The pressure-volume curve for the standard patient of the %BioGears %Respiratory Model 
 under normal physiological conditions. For comparison, the figure includes plot reproduced from 
 literature @cite guyton2006medical . The plot from the model shows the expected hysteresis of the P-V 
 diagram observed in a healthy person.</i>
@@ -723,7 +635,7 @@ mixture and the fractional concentration F<sub>gas</sub> of the gas as
 
 \f[P_{gas} =F_{gas} *P_{total} \f] 
 <center>
-<i>Equation 21.</i>
+<i>Equation 14.</i>
 </center><br> 
 
 The %Respiratory Model calculates the partial pressure of a gas at any node
@@ -742,7 +654,7 @@ pressure P<sub>Lung</sub/> at the alveoli nodes as
 
 \f[P_{LungO_{2} } =VF_{LungO_{2} } *P_{Lung} \f] 
 <center>
-<i>Equation 22.</i>
+<i>Equation 15.</i>
 </center><br> 
 
 The alveolar O<SUB>2</SUB> partial pressure can thus be determined by taking the average of
@@ -757,17 +669,17 @@ calculated using the absolute lung pressure, i.e.,
 
 \f[P_{LungO_{2} } =VF_{LungO_{2} } *(P_{B} -P_{H_{2} O} +P_{Lung} )\f] 
 <center>
-<i>Equation 23.</i>
+<i>Equation 16.</i>
 </center><br> 
 
-Figure 13 depicts the plot of P<sub>LungO<SUB>2</SUB></sub>  for the left and right alveoli
+Figure 11 depicts the plot of P<sub>LungO<SUB>2</SUB></sub>  for the left and right alveoli
 of the standard patient. Typically, the average alveolar partial pressure of oxygen 
  is 104 mmHg @cite Levitzky2013pulmonary . The value from the engine is close to that of the 
  literature.
 
 <center><img src="./plots/Respiratory/Alveolar_Oxygen_Partial_Pressure.jpg" width="800"></center>
 <center>
-<i>Figure 13. Alveolar O<SUB>2</SUB> partial pressure. The partial pressure of O<SUB>2</SUB> at the two
+<i>Figure 11. Alveolar O<SUB>2</SUB> partial pressure. The partial pressure of O<SUB>2</SUB> at the two
 alveoli nodes is calculated by using the pressure and the O<SUB>2</SUB> volume fraction at
 each alveoli node. The plot shows the value of O<SUB>2</SUB> partial pressure as a function
 of time over the course of multiple breathing cycles.</i>
@@ -776,14 +688,14 @@ of time over the course of multiple breathing cycles.</i>
 ##### Alveolar CO<SUB>2</SUB> Partial Pressure
 
 The alveolar CO<SUB>2</SUB> partial pressure is calculated in the same manner as the oxygen
-partial pressure. Figure 14 depicts the plot of alveolar CO<SUB>2</SUB> partial
+partial pressure. Figure 12 depicts the plot of alveolar CO<SUB>2</SUB> partial
 pressure for the left and right alveoli nodes. Typically, the average alveolar CO<SUB>2</SUB> partial pressure is 40 mmHg @cite Levitzky2013pulmonary .
 The prediction from the engine is close to the expected
 literature value.
 
 <center><img src="./plots/Respiratory/Alveolar_Carbon_Dioxide_Partial_Pressure.jpg" width="800"></center>
 <center>
-<i>Figure 14. Alveolar CO<SUB>2</SUB> partial pressure. The partial pressure of CO<SUB>2</SUB> at the two
+<i>Figure 12. Alveolar CO<SUB>2</SUB> partial pressure. The partial pressure of CO<SUB>2</SUB> at the two
 alveoli is calculated by using the pressure and the CO<SUB>2</SUB> volume fraction at each
 alveoli node. The plot shows the value of the CO<SUB>2</SUB> partial pressure as a function
 of time over the course of multiple breathing cycles.</i>
@@ -801,7 +713,7 @@ CO<SUB>2</SUB> partial pressure appears similar to those found in normal capnogr
 
 <center><img src="./plots/Respiratory/Trachea_Carbon_Dioxide_Partial_Pressure.jpg" width="800"></center>
 <center>
-<i>Figure 15. Tracheal CO<SUB>2</SUB> partial pressure. The partial pressure of CO<SUB>2</SUB> at the
+<i>Figure 13. Tracheal CO<SUB>2</SUB> partial pressure. The partial pressure of CO<SUB>2</SUB> at the
 trachea is calculated by using the pressure and the CO<SUB>2</SUB> volume fraction at the
 carina node. The plot shows the value of tracheal CO<SUB>2</SUB> partial pressure over the course of one breathing cycle.</i>
 </center><br>
@@ -812,11 +724,11 @@ The O<SUB>2</SUB> partial pressure at the trachea is calculated in the same mann
 alveolar O<SUB>2</SUB> partial pressure. As mentioned for CO<SUB>2</SUB> partial pressure, the model
 calculates the tracheal O<SUB>2</SUB> partial pressure by making use of the pressure at the
 carina node. The output of the tracheal O<SUB>2</SUB> partial
-pressure calculation is presented in Figure 16.
+pressure calculation is presented in Figure 14.
 
 <center><img src="./plots/Respiratory/Trachea_Oxygen_Partial_Pressure.jpg" width="800"></center>
 <center>
-<i>Figure 16. Tracheal O<SUB>2</SUB> partial pressure. The partial pressure of O<SUB>2</SUB> at the
+<i>Figure 14. Tracheal O<SUB>2</SUB> partial pressure. The partial pressure of O<SUB>2</SUB> at the
 trachea is calculated by using the pressure and the O<SUB>2</SUB> volume fraction at the
 carina node. The plot shows the value of tracheal O<SUB>2</SUB> partial pressure over the course of one breathing cycle.</i>
 </center><br>
@@ -907,7 +819,7 @@ the flow across the trachea <i>Q<sub>trachea</sub></i> as
 
 \f[R_{pulm} =\frac{P_{mouth} -P_{alveoli} }{Q_{trachea} } \f] 
 <center>
-<i>Equation 24.</i>
+<i>Equation 15.</i>
 </center><br> 
 
 The %BioGears %Respiratory Model calculates the pulmonary compliance <i>C<sub>pulm</sub></i> by dividing the tidal 
@@ -915,7 +827,7 @@ volume <i>V<sub>T</sub></i> by the intrapleural pressure <i>P<sub>pleu</sub></i>
 
 \f[C_{pulm} =\frac{V_{T} }{P_{pleau(\max )} -P_{pleu(\min )} } \f] 
 <center>
-<i>Equation 25.</i>
+<i>Equation 16.</i>
 </center><br> 
  
 Here <i>P<sub>pleu(min)</sub></i> and <i>P<sub>pleu(max)</sub></i> are the minimum and maximum respective pressures at the 
@@ -992,15 +904,15 @@ Chronic Obstructive Pulmonary Disease (COPD) is an obstructive lung disease char
 
 %BioGears simulates COPD by modeling damage to the small airways and alveolar membranes. COPD severity is controlled by two severity values, a chronic bronchitis severity value and an emphysema severity value. Chronic bronchitis severity is used to scale the airflow resistance through the lower airways in the circuit model, simulating airway tissue damage and scarring. Increasing chronic bronchitis severity increases the airflow resistance through the lower airways. The function used to determine airflow resistance for COPD is the same as that used for asthma (see Figure 18) and is based on chronic bronchitis severity.
 
-Emphysema severity is used to scale destruction of the alveolar membranes. Destruction of the alveolar membranes decreases the effective surface area for gas exchange, thereby reducing alveolar gas transfer. In cases of severe emphysema, up to 80% of the alveolar membranes are destroyed, with a corresponding reduction in effective gas diffusion surface area @cite guyton2006medical. %BioGears scales the gas diffusion surface area using a multiplier based on emphysema severity.  The function used to determine the gas diffusion surface area multiplier is plotted in Figure 17. 
+Emphysema severity is used to scale destruction of the alveolar membranes. Destruction of the alveolar membranes decreases the effective surface area for gas exchange, thereby reducing alveolar gas transfer. In cases of severe emphysema, up to 80% of the alveolar membranes are destroyed, with a corresponding reduction in effective gas diffusion surface area @cite guyton2006medical. %BioGears scales the gas diffusion surface area using a multiplier based on emphysema severity.  The function used to determine the gas diffusion surface area multiplier is plotted in Figure 15. 
 
 Changes in amino acid metabolism are shifted by static percentages based on data from @cite mathur1999cerebral and @cite engelen2000enhanced. The protein breakdown rate is increased, as well as the fraction of muscle that is required to produce energy anaerobically regardless of O2 presence. These changes result in the increased protein turnover and elevated lactate concentrations observed in COPD patients.
 
-Additionally, %BioGears models destruction of lung tissue with an increase in alveolar compliance.  The function used to determine the compliance multiplier is plotted in Figure 18. 
+Additionally, %BioGears models destruction of lung tissue with an increase in alveolar compliance.  The function used to determine the compliance multiplier is plotted in Figure 16. 
 
 The destruction of the alveolar membranes also destroys the pulmonary capillaries embedded in the membranes. To model pulmonary capillary destruction, %BioGears increases the pulmonary capillary flow resistance based on severity. Although increased pulmonary capillary resistance is related to alveolar membrane destruction, and therefore associated with emphysema, %BioGears uses either emphysema severity or chronic bronchitis severity (whichever is higher) to determine the pulmonary capillary resistance multiplier - see Figure 19. This was done in an attempt to model increased blood pressure and elevated heart rate, which are symptoms of both emphysema and chronic bronchitis. Increasing the capillary resistance should increase arterial blood pressure as the heart pumps harder to overcome the increased resistance in the lungs. However, we were unable to successfully model either increased blood pressure or elevated heart rate for COPD, as the validation results show (see @ref respiratory-results "Results and Conclusions"). This will be the focus of later efforts to improve the model.  
 
-Decreased Inspiration-Expiration (IE) ratio is another pathophysiologic feature of COPD.  As with asthma, the normal IE ratio is scaled using a multiplier based on severity. Either chronic bronchitis severity or emphysema severity (whichever is higher) is used to determine the IE ratio scaling multiplier - see Figure 20. 
+Decreased Inspiration-Expiration (IE) ratio is another pathophysiologic feature of COPD.  As with asthma, the normal IE ratio is scaled using a multiplier based on severity. Either chronic bronchitis severity or emphysema severity (whichever is higher) is used to determine the IE ratio scaling multiplier - see Figure 18. 
 
 <table border="0">
 <tr>
@@ -1008,26 +920,26 @@ Decreased Inspiration-Expiration (IE) ratio is another pathophysiologic feature 
     <td><img src="./images/Respiratory/Respiratory_Figure18_AlveoliCompliance_COPD.png" width="550"></td>
 </tr>
 <tr>
-    <td><center><i>Figure 17. Gas diffusion surface area multiplier as a function of emphysema severity. Gas diffusion surface area decreases with increasing emphysema severity.</i></center></td>
-    <td><center><i>Figure 18. Alveoli compliance multiplier as a function of emphysema severity. Alveoli compliance increases with increasing emphysema severity.</i></center></td>
+    <td><center><i>Figure 15. Gas diffusion surface area multiplier as a function of emphysema severity. Gas diffusion surface area decreases with increasing emphysema severity.</i></center></td>
+    <td><center><i>Figure 16. Alveoli compliance multiplier as a function of emphysema severity. Alveoli compliance increases with increasing emphysema severity.</i></center></td>
 </tr>
 <tr>
     <td><img src="./images/Respiratory/Respiratory_Figure19_PCResistance.png" width="550"></td>
     <td><img src="./images/Respiratory/Respiratory_Figure20_IERatio_COPD.png" width="550"></td>
 </tr>
 <tr>
-    <td><center><i>Figure 19. Pulmonary capillary flow resistance multiplier as a function of COPD severity. Pulmonary capillary flow resistance increases with increasing chronic bronchitis or emphysema severity, whichever is higher.</i></center></td>
-    <td><center><i>Figure 20. IE ratio multiplier as a function of COPD severity. IE ratio decreases with increasing chronic bronchitis or emphysema severity, whichever is higher.</i></center></td>
+    <td><center><i>Figure 17. Pulmonary capillary flow resistance multiplier as a function of COPD severity. Pulmonary capillary flow resistance increases with increasing chronic bronchitis or emphysema severity, whichever is higher.</i></center></td>
+    <td><center><i>Figure 18. IE ratio multiplier as a function of COPD severity. IE ratio decreases with increasing chronic bronchitis or emphysema severity, whichever is higher.</i></center></td>
 </tr>
 </table>
 
 #### Lobar Pneumonia
 
-Lobar pneumonia is a form of pneumonia that affects one or more lobes of the lungs.  Symptoms typically include increased respiration rate, decreased  tidal volume, reduced oxygen saturation, decreased IE ratio, and increased body temperature @cite ebell2006outpatient .  As fluid fills portions of the lung, it becomes more difficult to breathe. Fluid also reduces the effective gas diffusion surface area in the alveoli, reducing alveolar transfer of oxygen and carbon dioxide into and out of the bloodstream @cite guyton2006medical . %BioGears simulates lobar pneumonia by decreasing the alveoli compliance in the respiratory circuit, which models increased breathing difficulty due to fluid congestion in the alveoli. Similarly, gas diffusion surface area is reduced using the same function as for COPD (see Figure 17). Decreased IE ratio is pathophysiologic feature of lobar pneumonia.  Like COPD, the normal IE ratio is scaled using a multiplier based on severity. %BioGears uses the same function as for COPD to determine the IE ratio multiplier (see Figure 20).   
+Lobar pneumonia is a form of pneumonia that affects one or more lobes of the lungs.  Symptoms typically include increased respiration rate, decreased  tidal volume, reduced oxygen saturation, decreased IE ratio, and increased body temperature @cite ebell2006outpatient .  As fluid fills portions of the lung, it becomes more difficult to breathe. Fluid also reduces the effective gas diffusion surface area in the alveoli, reducing alveolar transfer of oxygen and carbon dioxide into and out of the bloodstream @cite guyton2006medical . %BioGears simulates lobar pneumonia by decreasing the alveoli compliance in the respiratory circuit, which models increased breathing difficulty due to fluid congestion in the alveoli. Similarly, gas diffusion surface area is reduced using the same function as for COPD (see Figure 15). Decreased IE ratio is pathophysiologic feature of lobar pneumonia.  Like COPD, the normal IE ratio is scaled using a multiplier based on severity. %BioGears uses the same function as for COPD to determine the IE ratio multiplier (see Figure 18).   
 
 <img src="./images/Respiratory/Respiratory_Figure21_AlveoliCompliance_LP.png" width="550">
 <center>
-<i>Figure 21. Alveoli compliance multiplier as a function of lobar pneumonia severity. Alveoli compliance decreases with increasing severity.</i>
+<i>Figure 19. Alveoli compliance multiplier as a function of lobar pneumonia severity. Alveoli compliance decreases with increasing severity.</i>
 </center><br>
 
 #### Impaired Alveolar Exchange
@@ -1066,7 +978,7 @@ due to increased airway resistance.
 
 <img src="./images/Respiratory/Respiratory_Figure22.png" width="550">
 <center>
-<i>Figure 22. Logarithmically increasing resistance values used to increase the airway resistance in relation
+<i>Figure 20. Logarithmically increasing resistance values used to increase the airway resistance in relation
 to the airway obstruction severity levels.</i>
 </center><br>
 
@@ -1150,12 +1062,12 @@ intrapleural pressure and leakage in the airflow of the respiratory circuit.
 
 <img src="./images/Respiratory/PneumoCirucit.png" width="550">
 <center>
-<i>Figure 23. Both lungs in the engine have elements to mimic the effects of open and closed tension pneumothorax insults as well as chest occlusive dressing (for open) and needle decompression (for both) interventions. The red boxes denote these additional elements.</i>
+<i>Figure 21. Both lungs in the engine have elements to mimic the effects of open and closed tension pneumothorax insults as well as chest occlusive dressing (for open) and needle decompression (for both) interventions. The red boxes denote these additional elements.</i>
 </center><br>
 
 <img src="./images/Respiratory/PneumoLeakResistance.png" width="550">
 <center>
-<i>Figure 24. An exponential function is used to map pnemothorax action severity to leak resistance.  This same function is used for both the open and the closed tension pneumothorax.</i>
+<i>Figure 22. An exponential function is used to map pnemothorax action severity to leak resistance.  This same function is used for both the open and the closed tension pneumothorax.</i>
 </center><br>
 
 #### Acute Asthma
@@ -1170,8 +1082,8 @@ Additionally, the inspiratory/expiratory (IE) ratio decreases during an acute as
     <td><img src="./images/Respiratory/Respiratory_Figure26_IERatio_Asthma.png" width="550"></td>
 </tr>
 <tr>
-    <td><center><i>Figure 25. Airway flow resistance multiplier as a function of asthma severity. Airway flow resistance increases (during exhalation) with increasing asthma severity.</i></center></td>
-    <td><center><i>Figure 26. IE ratio multiplier as a function of asthma severity. IE ratio decreases with increasing asthma severity.</i></center></td>
+    <td><center><i>Figure 23. Airway flow resistance multiplier as a function of asthma severity. Airway flow resistance increases (during exhalation) with increasing asthma severity.</i></center></td>
+    <td><center><i>Figure 24. IE ratio multiplier as a function of asthma severity. IE ratio decreases with increasing asthma severity.</i></center></td>
 </tr>
 </table>
 
@@ -1195,7 +1107,7 @@ Conscious respiration consists of a set of commands that model forced exhalation
 - <b>Breath Hold</b>: The time period to hold breath is determined by the period. 
 - <b>Use %Inhaler</b>: The %Inhaler command is interpreted by the inhaler equipment (@ref InhalerMethodology).
 
-Conscious respiration has any number of potential applications and is likely to be implemented to attain proper breathing while using an inhaler, generate a spirometry curve, or simulate coughing.  Figure 27 shows the %BioGears results for a cough scenario that leverages the conscious respiration action compared to empirical data.
+Conscious respiration has any number of potential applications and is likely to be implemented to attain proper breathing while using an inhaler, generate a spirometry curve, or simulate coughing.  Figure 25 shows the %BioGears results for a cough scenario that leverages the conscious respiration action compared to empirical data.
 
 <center>
 <table border="0">
@@ -1206,7 +1118,7 @@ Conscious respiration has any number of potential applications and is likely to 
 </table>
 </center>
 <center>
-<i>Figure 27. The airflow curve of a simulated cough in %BioGears generated from a conscious respiration with quick forced inhale and exhale in series. For comparison, the figure includes a plot reproduced from 
+<i>Figure 25. The airflow curve of a simulated cough in %BioGears generated from a conscious respiration with quick forced inhale and exhale in series. For comparison, the figure includes a plot reproduced from 
 literature determined by a voluntary cough immediately following office-based vocal fold medialization injections @cite ruddy2014improved.</i>
 </center><br>
 
