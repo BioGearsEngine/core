@@ -995,7 +995,7 @@ void BloodChemistry::ManageSIRS()
   GetTotalBilirubin().SetValue(totalBilirubin_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
 
   double basalTissueEnergyDemand_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W) * 0.8; //Discounting the 20% used by brain
-  const double maxDeficitMultiplier = 0.25;
+  const double maxDeficitMultiplier = 0.35;
   double energyDeficit_W = basalTissueEnergyDemand_W * maxDeficitMultiplier * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2.0) + 0.5 * 0.5);
   m_data.GetEnergy().GetEnergyDeficit().SetValue(energyDeficit_W, PowerUnit::W);
 }

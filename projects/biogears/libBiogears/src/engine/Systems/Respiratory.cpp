@@ -996,7 +996,7 @@ void Respiratory::ProcessDriverActions()
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
     double sigmoidInput = 1.0 - m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
     if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Infection)) {
-      infectionModifier = baselineRR_Per_min * sigmoidInput / (sigmoidInput + 0.5);
+      infectionModifier = baselineRR_Per_min * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2.0) + std::pow(0.4, 2));
     }
     if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Hemorrhage)) {
       double volumeEffect = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL) / m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::mL);

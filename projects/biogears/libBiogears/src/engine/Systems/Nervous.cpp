@@ -488,7 +488,7 @@ void Nervous::CentralSignalProcess()
       dFatigueScale_hr = (1.0 / fatigueTimeConstant_hr) * fatigueInput;
     } else if (m_SympatheticPeripheralSignalFatigue > ZERO_APPROX && fatigueInput < -0.1) {
       //Scale down fatigue if signal drops below threshold (0.1 buffer to make sure we don't trigger when hovering near SympatheticSignal = Threshold)
-      dFatigueScale_hr = -m_SympatheticPeripheralSignalFatigue;
+      dFatigueScale_hr = -m_SympatheticPeripheralSignalFatigue / 100.0;
     }
     m_SympatheticPeripheralSignalFatigue += (dFatigueScale_hr * m_data.GetTimeStep().GetValue(TimeUnit::hr));
   }
