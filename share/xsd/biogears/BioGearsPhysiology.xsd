@@ -167,7 +167,6 @@ specific language governing permissions and limitations under the License.
           <xs:element name="HypoxiaThresholdHeart" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="HypoxiaThresholdPeripheral" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="MeanLungVolume_L" type="xs:double" minOccurs="1" maxOccurs="1"/>
-		  <xs:element name="MeanPleuralPressure_mmHg" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="MuscleOxygenBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="OxygenAutoregulatorHeart" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="OxygenAutoregulatorMuscle" type="xs:double" minOccurs="1" maxOccurs="1"/>
