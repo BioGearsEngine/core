@@ -105,7 +105,6 @@ protected:
   double m_HypoxiaThresholdHeart;
   double m_HypoxiaThresholdPeripheral;
   double m_MeanLungVolume_L;
-  double m_MeanPleuralPressure_mmHg;
   double m_MuscleOxygenBaseline;
   double m_OxygenAutoregulatorHeart;
   double m_OxygenAutoregulatorMuscle;

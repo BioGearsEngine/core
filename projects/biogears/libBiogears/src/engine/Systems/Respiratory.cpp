@@ -206,6 +206,8 @@ void Respiratory::Initialize()
   double TidalVolume_L = m_Patient->GetTidalVolumeBaseline(VolumeUnit::L);
   double RespirationRate_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
   double DeadSpace_L = m_LeftBronchi->GetVolumeBaseline(VolumeUnit::L) + m_RightBronchi->GetVolumeBaseline(VolumeUnit::L) + m_Trachea->GetVolume(VolumeUnit::L);
+  double EnvironmentPressure_mmHg = m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient)->GetPressure(PressureUnit::mmHg);
+  double AbsolutePleuralPressure_mmHg = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg);
   GetTotalLungVolume().SetValue(m_PreviousTotalLungVolume_L, VolumeUnit::L);
   GetTidalVolume().SetValue(TidalVolume_L, VolumeUnit::L);
   GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
@@ -213,6 +215,7 @@ void Respiratory::Initialize()
   GetRespirationDriverPressure().SetValue(m_PeakRespiratoryDrivePressure_cmH2O, PressureUnit::cmH2O);
   GetCarricoIndex().SetValue(452.0, PressureUnit::mmHg);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
+  GetMeanPleuralPressure().SetValue(AbsolutePleuralPressure_mmHg - EnvironmentPressure_mmHg, PressureUnit::mmHg);
   GetTotalAlveolarVentilation().SetValue(RespirationRate_Per_min * (TidalVolume_L - DeadSpace_L), VolumePerTimeUnit::L_Per_min);
   GetTotalPulmonaryVentilation().SetValue(RespirationRate_Per_min * TidalVolume_L, VolumePerTimeUnit::L_Per_min);
   GetTotalDeadSpaceVentilation().SetValue(DeadSpace_L * RespirationRate_Per_min, VolumePerTimeUnit::L_Per_min);
@@ -1247,6 +1250,15 @@ void Respiratory::Pneumothorax()
     double dPneumoMaxFlowResistance_cmH2O_s_Per_L = m_dDefaultOpenResistance_cmH2O_s_Per_L;
     // Flow resistance for the decompression needle, if used
     double dNeedleFlowResistance_cmH2O_s_Per_L = 15.0;
+    // Increase in pleural pressure restricts blood return to heart.  Model this by increasing vena cava->right heart resistance
+    SEFluidCircuitPath* venousReturn = m_data.GetCircuits().GetCardiovascularCircuit().GetPath(BGE::CardiovascularPath::VenaCavaToRightAtrium1);
+    double nextVenousResistance = venousReturn->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+    double normalPleuralPressure_mmHg = -4.2;
+    double venousResistanceModifier = GeneralMath::LinearInterpolator(normalPleuralPressure_mmHg, 3.0, 1.0, 4.0, GetMeanPleuralPressure(PressureUnit::mmHg));
+    venousResistanceModifier = std::max(1.0, venousResistanceModifier);
+    nextVenousResistance *= venousResistanceModifier;
+    venousReturn->GetNextResistance().SetValue(nextVenousResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+
 
     if (m_PatientActions->HasLeftOpenTensionPneumothorax()) {
       // Scale the flow resistance through the chest opening based on severity
@@ -1356,6 +1368,7 @@ void Respiratory::Pneumothorax()
       return;
     }
   }
+  
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1647,7 +1660,7 @@ void Respiratory::CalculateVitalSigns()
   std::stringstream ss;
   //Total Respiratory Volume - this should not include the Pleural Space
   GetTotalLungVolume().Set(m_Lungs->GetVolume());
-
+  m_data.GetDataTrack().Probe("PleuralTopBreath", m_TopBreathPleuralPressure_cmH2O);
   //Record values each time-step
   double tracheaFlow_L_Per_s = m_MouthToTrachea->GetNextFlow().GetValue(VolumePerTimeUnit::L_Per_s);
   GetInspiratoryFlow().SetValue(tracheaFlow_L_Per_s, VolumePerTimeUnit::L_Per_s);
@@ -1657,13 +1670,20 @@ void Respiratory::CalculateVitalSigns()
   double dAlveolarPressure = (m_LeftAlveoli->GetNextPressure().GetValue(PressureUnit::cmH2O) + m_RightAlveoli->GetNextPressure().GetValue(PressureUnit::cmH2O)) / 2.0; //Average of L and R
   GetPulmonaryResistance().SetValue((dEnvironmentPressure - dAlveolarPressure) / tracheaFlow_L_Per_s, FlowResistanceUnit::cmH2O_s_Per_L);
 
-  double dPleuralPressure_cmH2O = (m_LeftPleuralCavity->GetNextPressure().GetValue(PressureUnit::cmH2O) + m_RightPleuralCavity->GetNextPressure().GetValue(PressureUnit::cmH2O)) / 2.0; //Average of L and R
+  //double dPleuralPressure_cmH2O = (m_LeftPleuralCavity->GetNextPressure().GetValue(PressureUnit::cmH2O) + m_RightPleuralCavity->GetNextPressure().GetValue(PressureUnit::cmH2O)) / 2.0; //Average of L and R
+  double dPleuralPressure_cmH2O = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::cmH2O);
   GetTranspulmonaryPressure().SetValue(dAlveolarPressure - dPleuralPressure_cmH2O, PressureUnit::cmH2O);
 
   GetRespirationMusclePressure().SetValue(m_RespiratoryMuscle->GetNextPressure(PressureUnit::cmH2O) - 1033.23, PressureUnit::cmH2O);
 
   double avgAlveoliO2PP_mmHg = (m_LeftAlveoliO2->GetPartialPressure(PressureUnit::mmHg) + m_RightAlveoliO2->GetPartialPressure(PressureUnit::mmHg)) / 2.0;
   GetAlveolarArterialGradient().SetValue(avgAlveoliO2PP_mmHg - m_AortaO2->GetPartialPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+
+  //Track a weighted average mean pleural pressure (relative to environment).  Used in Nervous feedback and also in Tension Pneumothorax and Asthma
+  double meanPleuralPressure_cmH2O = GetMeanPleuralPressure(PressureUnit::cmH2O);
+  double dMeanPleuralPressure = 0.1 * (-meanPleuralPressure_cmH2O + (dPleuralPressure_cmH2O - dEnvironmentPressure));
+  meanPleuralPressure_cmH2O += dMeanPleuralPressure * m_dt_s;
+  GetMeanPleuralPressure().SetValue(meanPleuralPressure_cmH2O, PressureUnit::cmH2O);
 
   /// \event Patient: Start of exhale/inhale
   if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfExhale))
@@ -1892,9 +1912,17 @@ void Respiratory::UpdateObstructiveResistance()
   //Asthma attack on
   if (m_PatientActions->HasAsthmaAttack()) {
     double dSeverity = m_PatientActions->GetAsthmaAttack()->GetSeverity().GetValue();
-    // Resistance function: Base = 10, Min = 10, Max = 5000 (increasing with severity)
-    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10.0, 1000, 10.0, dSeverity);
+    // Resistance function: Base = 10, Min = 40, Max = 1000 (increasing with severity)
+    double dResistanceScalingFactor = GeneralMath::ResistanceFunction(10.0, 1000, 40.0, dSeverity);
     combinedResistanceScalingFactor = dResistanceScalingFactor;
+    // Increase in pleural pressure restricts blood return to heart.  Model this by increasing vena cava->right heart resistance
+    SEFluidCircuitPath* venousReturn = m_data.GetCircuits().GetCardiovascularCircuit().GetPath(BGE::CardiovascularPath::VenaCavaToRightAtrium1);
+    double nextVenousResistance = venousReturn->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+    double normalPleuralPressure_mmHg = -4.2;
+    double venousResistanceModifier = GeneralMath::LinearInterpolator(normalPleuralPressure_mmHg, -1.0, 1.0, 5.0, GetMeanPleuralPressure(PressureUnit::mmHg));
+    venousResistanceModifier = std::max(1.0, venousResistanceModifier);
+    nextVenousResistance *= venousResistanceModifier;
+    venousReturn->GetNextResistance().SetValue(nextVenousResistance, FlowResistanceUnit::mmHg_s_Per_mL);
   }
   //COPD on
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) {

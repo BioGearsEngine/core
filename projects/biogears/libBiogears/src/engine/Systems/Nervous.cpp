@@ -101,7 +101,6 @@ void Nervous::Initialize()
   m_HypoxiaThresholdPeripheral = 0.0;
   m_HeartOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
   m_MeanLungVolume_L = m_data.GetRespiratory().GetTotalLungVolume(VolumeUnit::L);
-  m_MeanPleuralPressure_mmHg = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg) - m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient)->GetPressure(PressureUnit::mmHg);
   m_MuscleOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
   m_OxygenAutoregulatorHeart = 0.0;
   m_OxygenAutoregulatorMuscle = 0.0;
@@ -172,7 +171,6 @@ bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
   m_HypoxiaThresholdHeart = in.HypoxiaThresholdHeart();
   m_HypoxiaThresholdPeripheral = in.HypoxiaThresholdPeripheral();
   m_MeanLungVolume_L = in.MeanLungVolume_L();
-  m_MeanPleuralPressure_mmHg = in.MeanPleuralPressure_mmHg();
   m_MuscleOxygenBaseline = in.MuscleOxygenBaseline();
   m_OxygenAutoregulatorHeart = in.OxygenAutoregulatorHeart();
   m_OxygenAutoregulatorMuscle = in.OxygenAutoregulatorMuscle();
@@ -232,7 +230,6 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   data.HypoxiaThresholdHeart(m_HypoxiaThresholdHeart);
   data.HypoxiaThresholdPeripheral(m_HypoxiaThresholdPeripheral);
   data.MeanLungVolume_L(m_MeanLungVolume_L);
-  data.MeanPleuralPressure_mmHg(m_MeanPleuralPressure_mmHg);
   data.MuscleOxygenBaseline(m_MuscleOxygenBaseline);
   data.OxygenAutoregulatorHeart(m_OxygenAutoregulatorHeart);
   data.OxygenAutoregulatorMuscle(m_OxygenAutoregulatorMuscle);
@@ -465,7 +462,7 @@ void Nervous::CentralSignalProcess()
 
   const double exponentSH = kS * (wSH_ABC * m_AfferentBaroreceptorCarotid_Hz + wSH_ABA * m_AfferentBaroreceptorAortic_Hz + wSH_AC * m_AfferentChemoreceptor_Hz + wSH_ACP * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSH);
   m_SympatheticSinoatrialSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSH);
-
+ // m_SympatheticSinoatrialSignal_Hz = std::min(60.0, m_SympatheticSinoatrialSignal_Hz);
   //Weights of sympathetic signal to peripheral vascular beds--AB, AC, AT as before, AP = Afferent pulmonary stretch receptors, AA = Afferent atrial stretch receptors
   const double wSP_ABA = -0.452;
   const double wSP_ABC = -0.678;
@@ -475,7 +472,7 @@ void Nervous::CentralSignalProcess()
 
   const double exponentSP = kS * (wSP_ABC * m_AfferentBaroreceptorCarotid_Hz + wSP_ABA * m_AfferentBaroreceptorAortic_Hz + wSP_AC * m_AfferentChemoreceptor_Hz + wSP_AP * m_AfferentPulmonaryStretchReceptor_Hz + wSP_ACP * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSP);
   m_SympatheticPeripheralSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSP);
-
+ // m_SympatheticPeripheralSignal_Hz = std::min(60.0, m_SympatheticPeripheralSignal_Hz);
   //Model fatigue of sympathetic peripheral response during sepsis -- Future work should investigate relevance of fatigue in other scenarios
   //Currently applying only to the peripheral signal because the literature notes that vascular smooth muscle shows depressed responsiveness to sympathetic activiy,
   //(Sayk et al., 2008 and Brassard et al., 2016) which would inhibit ability to increase peripheral resistance
@@ -501,8 +498,8 @@ void Nervous::CentralSignalProcess()
   const double kV = 7.06;
   const double fVInf = 6.3;
   const double fV0 = 1.2;
-  const double wV_AC = 0.1;
-  const double wV_AP = -0.103;
+  const double wV_AC = 0.15;  //0.1;
+  const double wV_AP = -0.103 + 0.05 * 3.55;
   const double hypoxiaThresholdV = -0.648;
   const double baroreceptorBaseline_Hz = 25.15; //This value is the average of the fBaroMin and fBaroMax parameters in BaroreceptorFeedback (NOT reset AtSteadyState because we want continuous signals)
 
@@ -664,14 +661,9 @@ void Nervous::BaroreceptorFeedback()
   //Aortic baroreceptors detect transmural pressure between aorta and thoracic (pleural) space.
   //Thus, the pressure input is the difference between the sytolic pressure and mean pleural pressure.
   //This means that the aortic baroreceptors will have different sensitivities to events that effect the pleural
-  //space (like tension pneumothorax).  Thus, we first calculate a running average for pleural pressure (less noisy)
-  //and then determine the aortic wall strain
-  const double environmentPressure = m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient)->GetPressure(PressureUnit::mmHg);
-  const double absolutePleuralPressure = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg);
-  const double pleuralPressure = absolutePleuralPressure - environmentPressure;
-  const double dPleuralPressure = 0.1 * (-m_MeanPleuralPressure_mmHg + pleuralPressure);
-  m_MeanPleuralPressure_mmHg += (dPleuralPressure * m_dt_s);
-  const double aorticPressureInput = systolicPressure_mmHg - m_MeanPleuralPressure_mmHg;
+  //space (like tension pneumothorax).  
+  const double meanPleuralPressure_mmHg = m_data.GetRespiratory().GetMeanPleuralPressure(PressureUnit::mmHg);
+  const double aorticPressureInput = systolicPressure_mmHg - meanPleuralPressure_mmHg;
   const double aorticStrainExp = std::exp(-slopeStrain * (aorticPressureInput - baroreceptorOperatingPoint_mmHg));
   const double aorticWallStrain = 1.0 - std::sqrt((1.0 + aorticStrainExp) / (A + aorticStrainExp));
   const double dAorticStrain = (1.0 / tauVoigt) * (-m_AorticBaroreceptorStrain + kVoigt * aorticWallStrain);
@@ -681,7 +673,7 @@ void Nervous::BaroreceptorFeedback()
   //Convert strain signals to be on same basis as Ursino2000Acute--this puts deviations in wall strain on same basis as other signals
   const double fBaroMax = 47.78;
   const double fBaroMin = 2.52;
-  const double kBaro = 0.075; //* (1.0 - 2.0 * drugEffect);
+  const double kBaro = 0.075;
   const double baselineStrainSignal = 0.9 * (1.0 - std::sqrt(1.0 / 3.0)); //Derived by calculating wallStrain when systolic pressure = operating pressure and setting m_AfferentStrain = kVoigt * wallStrain (steady state)
   const double carotidExponent = std::exp((carotidStrainSignal - baselineStrainSignal) / kBaro);
   m_AfferentBaroreceptorCarotid_Hz = (fBaroMin + fBaroMax * carotidExponent) / (1.0 + carotidExponent);
@@ -696,7 +688,7 @@ void Nervous::BaroreceptorFeedback()
   const double kAff = 3.429;
   const double fmax2 = 20.0;
 
-  const double dFilterCVP = (1.0 / tZ) * (-m_CardiopulmonaryInput_mmHg + (cvp - m_MeanPleuralPressure_mmHg));
+  const double dFilterCVP = (1.0 / tZ) * (-m_CardiopulmonaryInput_mmHg + (cvp - meanPleuralPressure_mmHg));
   m_CardiopulmonaryInput_mmHg += (dFilterCVP * m_dt_s);
   const double centralExp = std::exp((m_CardiopulmonaryInputBaseline_mmHg - m_CardiopulmonaryInput_mmHg) / kAff);
   m_AfferentCardiopulmonary_Hz = fmax2 / (1.0 + centralExp);
@@ -705,9 +697,11 @@ void Nervous::BaroreceptorFeedback()
     m_CardiopulmonaryInputBaseline_mmHg = m_CardiopulmonaryInput_mmHg;
   }
 
-  //Update baroreceptor setpoint
+  //Update baroreceptor setpoint -- the study from which this time constant was obtained focused on hemorrhagic shock.  The time scale is much different
+  //than septic shock and so it is not clear how (or if) this value would change for sepsis.  For now, we will track baroreceptor adaptation and sympathetic fatigue
+  //separately.  Future work should try to consolidate these two phenomena into a single model
   if (m_data.GetState() > EngineState::SecondaryStabilization && !m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
-    //Pruett2013Population (cardiovascular hemorrhage model) assumes ~16 hr half-time for baroreceptor adaptation to new setpoint (They varied this parameter up to 1-2 days half-time)
+    //Pruett2013Population assumes ~16 hr half-time for baroreceptor adaptation to new setpoint (They varied this parameter up to 1-2 days half-time)
     const double kAdapt_Per_hr = 0.042;
     const double dSetpointAdjust_mmHg_Per_hr = kAdapt_Per_hr * (systolicPressure_mmHg - m_BaroreceptorOperatingPoint_mmHg);
     m_BaroreceptorOperatingPoint_mmHg += (dSetpointAdjust_mmHg_Per_hr * m_data.GetTimeStep().GetValue(TimeUnit::hr));
@@ -715,7 +709,6 @@ void Nervous::BaroreceptorFeedback()
   m_data.GetDataTrack().Probe("Baroreceptor_EffectiveOperatingPoint", baroreceptorOperatingPoint_mmHg);
   m_data.GetDataTrack().Probe("AorticWallStrain", m_AorticBaroreceptorStrain);
   m_data.GetDataTrack().Probe("Afferent_AorticBaroreceptor", m_AfferentBaroreceptorAortic_Hz);
-  m_data.GetDataTrack().Probe("PleuralPressure", m_MeanPleuralPressure_mmHg);
   m_data.GetDataTrack().Probe("Test_FilteredCVP", m_CardiopulmonaryInput_mmHg);
   m_data.GetDataTrack().Probe("Test_CentralSignal", m_AfferentCardiopulmonary_Hz);
 }

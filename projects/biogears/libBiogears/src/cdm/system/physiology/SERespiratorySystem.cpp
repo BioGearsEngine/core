@@ -23,27 +23,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
-  constexpr char idAlveolarArterialGradient[] = "AlveolarArterialGradient";
-  constexpr char idCarricoIndex[] = "CarricoIndex";
-  constexpr char idEndTidalCarbonDioxideFraction[] = "EndTidalCarbonDioxideFraction";
-  constexpr char idEndTidalCarbonDioxidePressure[] = "EndTidalCarbonDioxidePressure";
-  constexpr char idExpiratoryFlow[] = "ExpiratoryFlow";
-  constexpr char idInspiratoryExpiratoryRatio[] = "InspiratoryExpiratoryRatio";
-  constexpr char idInspiratoryFlow[] = "InspiratoryFlow";
-  constexpr char idPulmonaryCompliance[] = "PulmonaryCompliance";
-  constexpr char idPulmonaryResistance[] = "PulmonaryResistance";
-  constexpr char idRespirationDriverFrequency[] = "RespirationDriverFrequency";
-  constexpr char idRespirationDriverPressure[] = "RespirationDriverPressure";
-  constexpr char idRespirationMusclePressure[] = "RespirationMusclePressure";
-  constexpr char idRespirationRate[] = "RespirationRate";
-  constexpr char idSpecificVentilation[] = "SpecificVentilation";
-  constexpr char idTargetPulmonaryVentilation[] = "TargetPulmonaryVentilation";
-  constexpr char idTidalVolume[] = "TidalVolume";
-  constexpr char idTotalAlveolarVentilation[] = "TotalAlveolarVentilation";
-  constexpr char idTotalDeadSpaceVentilation[] = "TotalDeadSpaceVentilation";
-  constexpr char idTotalLungVolume[] = "TotalLungVolume";
-  constexpr char idTotalPulmonaryVentilation[] = "TotalPulmonaryVentilation";
-  constexpr char idTranspulmonaryPressure[] = "TranspulmonaryPressure";
+constexpr char idAlveolarArterialGradient[] = "AlveolarArterialGradient";
+constexpr char idCarricoIndex[] = "CarricoIndex";
+constexpr char idEndTidalCarbonDioxideFraction[] = "EndTidalCarbonDioxideFraction";
+constexpr char idEndTidalCarbonDioxidePressure[] = "EndTidalCarbonDioxidePressure";
+constexpr char idExpiratoryFlow[] = "ExpiratoryFlow";
+constexpr char idInspiratoryExpiratoryRatio[] = "InspiratoryExpiratoryRatio";
+constexpr char idInspiratoryFlow[] = "InspiratoryFlow";
+constexpr char idPulmonaryCompliance[] = "PulmonaryCompliance";
+constexpr char idPulmonaryResistance[] = "PulmonaryResistance";
+constexpr char idMeanPleuralPressure[] = "MeanPleuralPressure";
+constexpr char idRespirationDriverFrequency[] = "RespirationDriverFrequency";
+constexpr char idRespirationDriverPressure[] = "RespirationDriverPressure";
+constexpr char idRespirationMusclePressure[] = "RespirationMusclePressure";
+constexpr char idRespirationRate[] = "RespirationRate";
+constexpr char idSpecificVentilation[] = "SpecificVentilation";
+constexpr char idTargetPulmonaryVentilation[] = "TargetPulmonaryVentilation";
+constexpr char idTidalVolume[] = "TidalVolume";
+constexpr char idTotalAlveolarVentilation[] = "TotalAlveolarVentilation";
+constexpr char idTotalDeadSpaceVentilation[] = "TotalDeadSpaceVentilation";
+constexpr char idTotalLungVolume[] = "TotalLungVolume";
+constexpr char idTotalPulmonaryVentilation[] = "TotalPulmonaryVentilation";
+constexpr char idTranspulmonaryPressure[] = "TranspulmonaryPressure";
 SERespiratorySystem::SERespiratorySystem(Logger* logger)
   : SESystem(logger)
 {
@@ -54,6 +55,7 @@ SERespiratorySystem::SERespiratorySystem(Logger* logger)
   m_ExpiratoryFlow = nullptr;
   m_InspiratoryExpiratoryRatio = nullptr;
   m_InspiratoryFlow = nullptr;
+  m_MeanPleuralPressure = nullptr;
   m_PulmonaryCompliance = nullptr;
   m_PulmonaryResistance = nullptr;
   m_RespirationDriverFrequency = nullptr;
@@ -88,6 +90,7 @@ void SERespiratorySystem::Clear()
   SAFE_DELETE(m_ExpiratoryFlow);
   SAFE_DELETE(m_InspiratoryExpiratoryRatio);
   SAFE_DELETE(m_InspiratoryFlow);
+  SAFE_DELETE(m_MeanPleuralPressure);
   SAFE_DELETE(m_PulmonaryCompliance);
   SAFE_DELETE(m_PulmonaryResistance);
   SAFE_DELETE(m_RespirationDriverFrequency);
@@ -105,7 +108,7 @@ void SERespiratorySystem::Clear()
 //-------------------------------------------------------------------------------
 const SEScalar* SERespiratorySystem::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SERespiratorySystem::GetScalar(const std::string& name)
@@ -124,6 +127,8 @@ const SEScalar* SERespiratorySystem::GetScalar(const std::string& name)
     return &GetInspiratoryExpiratoryRatio();
   if (name == idInspiratoryFlow)
     return &GetInspiratoryFlow();
+  if (name == idMeanPleuralPressure)
+    return &GetMeanPleuralPressure();
   if (name == idPulmonaryCompliance)
     return &GetPulmonaryCompliance();
   if (name == idPulmonaryResistance)
@@ -174,6 +179,8 @@ bool SERespiratorySystem::Load(const CDM::RespiratorySystemData& in)
     GetInspiratoryExpiratoryRatio().Load(in.InspiratoryExpiratoryRatio().get());
   if (in.InspiratoryFlow().present())
     GetInspiratoryFlow().Load(in.InspiratoryFlow().get());
+  if (in.MeanPleuralPressure().present())
+    GetMeanPleuralPressure().Load(in.MeanPleuralPressure().get());
   if (in.PulmonaryCompliance().present())
     GetPulmonaryCompliance().Load(in.PulmonaryCompliance().get());
   if (in.PulmonaryResistance().present())
@@ -233,8 +240,10 @@ void SERespiratorySystem::Unload(CDM::RespiratorySystemData& data) const
     data.InspiratoryExpiratoryRatio(std::unique_ptr<CDM::ScalarData>(m_InspiratoryExpiratoryRatio->Unload()));
   if (m_InspiratoryFlow != nullptr)
     data.InspiratoryFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_InspiratoryFlow->Unload()));
+  if (m_MeanPleuralPressure!=nullptr)
+    data.MeanPleuralPressure(std::unique_ptr<CDM::ScalarPressureData>(m_MeanPleuralPressure->Unload()));
   if (m_PulmonaryCompliance != nullptr)
-    data.PulmonaryCompliance(std::unique_ptr<CDM::ScalarFlowComplianceData>(m_PulmonaryCompliance->Unload()));
+      data.PulmonaryCompliance(std::unique_ptr<CDM::ScalarFlowComplianceData>(m_PulmonaryCompliance->Unload()));
   if (m_PulmonaryResistance != nullptr)
     data.PulmonaryResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_PulmonaryResistance->Unload()));
   if (m_RespirationDriverFrequency != nullptr)
@@ -401,6 +410,26 @@ double SERespiratorySystem::GetInspiratoryFlow(const VolumePerTimeUnit& unit) co
   if (m_InspiratoryFlow == nullptr)
     return SEScalar::dNaN();
   return m_InspiratoryFlow->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
+
+bool SERespiratorySystem::HasMeanPleuralPressure() const
+{
+  return m_MeanPleuralPressure == nullptr ? false : m_MeanPleuralPressure->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarPressure& SERespiratorySystem::GetMeanPleuralPressure()
+{
+  if (m_MeanPleuralPressure == nullptr)
+    m_MeanPleuralPressure = new SEScalarPressure();
+  return *m_MeanPleuralPressure;
+}
+//-------------------------------------------------------------------------------
+double SERespiratorySystem::GetMeanPleuralPressure(const PressureUnit& unit) const
+{
+  if (m_MeanPleuralPressure == nullptr)
+    return SEScalar::dNaN();
+  return m_MeanPleuralPressure->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
 
@@ -681,7 +710,7 @@ double SERespiratorySystem::GetTranspulmonaryPressure(const PressureUnit& unit) 
 //-------------------------------------------------------------------------------
 Tree<const char*> SERespiratorySystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{classname()}
+  return Tree<const char*> { classname() }
     .emplace_back(idAlveolarArterialGradient)
     .emplace_back(idCarricoIndex)
     .emplace_back(idEndTidalCarbonDioxideFraction)
@@ -689,6 +718,7 @@ Tree<const char*> SERespiratorySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idExpiratoryFlow)
     .emplace_back(idInspiratoryExpiratoryRatio)
     .emplace_back(idInspiratoryFlow)
+    .emplace_back(idMeanPleuralPressure)
     .emplace_back(idPulmonaryCompliance)
     .emplace_back(idPulmonaryResistance)
     .emplace_back(idRespirationDriverPressure)
@@ -701,7 +731,6 @@ Tree<const char*> SERespiratorySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idTotalDeadSpaceVentilation)
     .emplace_back(idTotalLungVolume)
     .emplace_back(idTotalPulmonaryVentilation)
-    .emplace_back(idTranspulmonaryPressure)
-  ;
+    .emplace_back(idTranspulmonaryPressure);
 }
 }
