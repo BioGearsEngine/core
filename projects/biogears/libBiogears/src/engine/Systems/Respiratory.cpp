@@ -1660,7 +1660,7 @@ void Respiratory::CalculateVitalSigns()
   std::stringstream ss;
   //Total Respiratory Volume - this should not include the Pleural Space
   GetTotalLungVolume().Set(m_Lungs->GetVolume());
-  m_data.GetDataTrack().Probe("PleuralTopBreath", m_TopBreathPleuralPressure_cmH2O);
+
   //Record values each time-step
   double tracheaFlow_L_Per_s = m_MouthToTrachea->GetNextFlow().GetValue(VolumePerTimeUnit::L_Per_s);
   GetInspiratoryFlow().SetValue(tracheaFlow_L_Per_s, VolumePerTimeUnit::L_Per_s);
@@ -1670,7 +1670,6 @@ void Respiratory::CalculateVitalSigns()
   double dAlveolarPressure = (m_LeftAlveoli->GetNextPressure().GetValue(PressureUnit::cmH2O) + m_RightAlveoli->GetNextPressure().GetValue(PressureUnit::cmH2O)) / 2.0; //Average of L and R
   GetPulmonaryResistance().SetValue((dEnvironmentPressure - dAlveolarPressure) / tracheaFlow_L_Per_s, FlowResistanceUnit::cmH2O_s_Per_L);
 
-  //double dPleuralPressure_cmH2O = (m_LeftPleuralCavity->GetNextPressure().GetValue(PressureUnit::cmH2O) + m_RightPleuralCavity->GetNextPressure().GetValue(PressureUnit::cmH2O)) / 2.0; //Average of L and R
   double dPleuralPressure_cmH2O = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::cmH2O);
   GetTranspulmonaryPressure().SetValue(dAlveolarPressure - dPleuralPressure_cmH2O, PressureUnit::cmH2O);
 

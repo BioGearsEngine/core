@@ -338,32 +338,6 @@ void Nervous::Process()
 {
   CheckNervousStatus();
   SetPupilEffects();
-
-  //Debug tracking
-  m_data.GetDataTrack().Probe("Afferent_Baroreceptor", m_AfferentBaroreceptorCarotid_Hz);
-  m_data.GetDataTrack().Probe("Afferent_Chemoreceptor", m_AfferentChemoreceptor_Hz);
-  m_data.GetDataTrack().Probe("Afferent_PulmonaryStretch", m_AfferentPulmonaryStretchReceptor_Hz);
-  m_data.GetDataTrack().Probe("Ursino_SympatheticNode", m_SympatheticSinoatrialSignal_Hz);
-  m_data.GetDataTrack().Probe("Ursino_SympatheticPeripheral", m_SympatheticPeripheralSignal_Hz);
-  m_data.GetDataTrack().Probe("Afferent_Strain", m_CarotidBaroreceptorStrain);
-  m_data.GetDataTrack().Probe("Ursino_Parasympathetic", m_VagalSignal_Hz);
-  m_data.GetDataTrack().Probe("HypoxiaThreshold_Heart", m_HypoxiaThresholdHeart);
-  m_data.GetDataTrack().Probe("HypoxiaThreshold_Peripheral", m_HypoxiaThresholdPeripheral);
-  m_data.GetDataTrack().Probe("HypocapniaThreshold_Heart", m_HypercapniaThresholdHeart);
-  m_data.GetDataTrack().Probe("HypocapniaThreshold_Peripheral", m_HypercapniaThresholdPeripheral);
-  m_data.GetDataTrack().Probe("BaroreceptorOperatingPoint", m_BaroreceptorOperatingPoint_mmHg);
-  m_data.GetDataTrack().Probe("SympatheticFatigue", m_SympatheticPeripheralSignalFatigue);
-  m_data.GetDataTrack().Probe("HeartRateMod_Sympathetic", m_HeartRateModifierSympathetic);
-  m_data.GetDataTrack().Probe("HeartRateMod_Vagal", m_HeartRateModifierVagal);
-  m_data.GetDataTrack().Probe("ResistanceScale_Muscle", GetResistanceScaleMuscle().GetValue());
-  m_data.GetDataTrack().Probe("ResistanceScale_Splanchnic", GetResistanceScaleSplanchnic().GetValue());
-  m_data.GetDataTrack().Probe("ResistanceScale_Extrasplanchnic", GetResistanceScaleExtrasplanchnic().GetValue());
-  m_data.GetDataTrack().Probe("ResistanceScale_Myocardium", GetResistanceScaleMyocardium().GetValue());
-  m_data.GetDataTrack().Probe("Resistance_TotalPeripheral(mmHg_s_Per_mL)", m_data.GetCardiovascular().GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL));
-  m_data.GetDataTrack().Probe("ElastanceScale", GetHeartElastanceScale().GetValue());
-  m_data.GetDataTrack().Probe("ComplianceScale", GetComplianceScale().GetValue());
-  m_data.GetDataTrack().Probe("ComplianceModifier", m_ComplianceModifier);
-  m_data.GetDataTrack().Probe("VenaCava_Volume(mL)", m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava)->GetVolume(VolumeUnit::mL));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -396,7 +370,6 @@ void Nervous::AfferentResponse()
   m_MeanLungVolume_L += (dVolume * m_dt_s);
   const double dFrequencyAP_Hz = (1.0 / tauAP_s) * (-m_AfferentPulmonaryStretchReceptor_Hz + gainAP_Hz_Per_L * m_MeanLungVolume_L);
   m_AfferentPulmonaryStretchReceptor_Hz += dFrequencyAP_Hz * m_dt_s;
-  m_data.GetDataTrack().Probe("MeanLungVolume", m_MeanLungVolume_L);
 }
 
 void Nervous::CentralSignalProcess()
@@ -498,8 +471,8 @@ void Nervous::CentralSignalProcess()
   const double kV = 7.06;
   const double fVInf = 6.3;
   const double fV0 = 1.2;
-  const double wV_AC = 0.15;  //0.1;
-  const double wV_AP = -0.103 + 0.05 * 3.55;
+  const double wV_AC = 0.15;
+  const double wV_AP = 0.0745;
   const double hypoxiaThresholdV = -0.648;
   const double baroreceptorBaseline_Hz = 25.15; //This value is the average of the fBaroMin and fBaroMax parameters in BaroreceptorFeedback (NOT reset AtSteadyState because we want continuous signals)
 
@@ -706,11 +679,7 @@ void Nervous::BaroreceptorFeedback()
     const double dSetpointAdjust_mmHg_Per_hr = kAdapt_Per_hr * (systolicPressure_mmHg - m_BaroreceptorOperatingPoint_mmHg);
     m_BaroreceptorOperatingPoint_mmHg += (dSetpointAdjust_mmHg_Per_hr * m_data.GetTimeStep().GetValue(TimeUnit::hr));
   }
-  m_data.GetDataTrack().Probe("Baroreceptor_EffectiveOperatingPoint", baroreceptorOperatingPoint_mmHg);
-  m_data.GetDataTrack().Probe("AorticWallStrain", m_AorticBaroreceptorStrain);
-  m_data.GetDataTrack().Probe("Afferent_AorticBaroreceptor", m_AfferentBaroreceptorAortic_Hz);
-  m_data.GetDataTrack().Probe("Test_FilteredCVP", m_CardiopulmonaryInput_mmHg);
-  m_data.GetDataTrack().Probe("Test_CentralSignal", m_AfferentCardiopulmonary_Hz);
+  
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -832,8 +801,6 @@ void Nervous::LocalAutoregulation()
   double nextMuscleResistance = GetResistanceScaleMuscle().GetValue();
   nextMuscleResistance *= (1.0 / (1.0 + m_OxygenAutoregulatorMuscle));
 
-  m_data.GetDataTrack().Probe("MuscleAutoregulation", m_OxygenAutoregulatorMuscle);
-  m_data.GetDataTrack().Probe("MusleOxygenMolarity", muscleOxygenMolarity);
   const double metabolicFraction = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W) / m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::W);
 
   //Avoid applying modifiers when drugs affecting respiration are present. If respiration rate --> 0 (like with succinylcholine),
