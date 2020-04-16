@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SESubstance;
+class SEPsychomotorVigilanceTask;
 class BioGears;
 class SEPatient;
 /**
@@ -63,6 +64,8 @@ public:
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;
+  bool CalculatePsychomotorVigilanceTask(SEPsychomotorVigilanceTask& pvt);
+
 
 protected:
   void BaroreceptorFeedback();
@@ -70,7 +73,8 @@ protected:
   void CheckNervousStatus();
   void ChemoreceptorFeedback();
   void SetPupilEffects();
-
+  void CalculateSleepEffects();
+  void UpdateSleepState();
   void AfferentResponse();
   void CentralSignalProcess();
   void EfferentResponse();
@@ -80,9 +84,11 @@ protected:
   double m_AfferentChemoreceptor_Hz; //*AC
   double m_AfferentPulmonaryStretchReceptor_Hz; //*AP
   double m_AorticBaroreceptorStrain;
+  double m_AttentionLapses;
   double m_ArterialOxygenBaseline_mmHg;
   double m_ArterialCarbonDioxideBaseline_mmHg;
   double m_BaroreceptorOperatingPoint_mmHg;
+  double m_BiologicalDebt;
   double m_CardiopulmonaryInputBaseline_mmHg;
   double m_CardiopulmonaryInput_mmHg;
   double m_CarotidBaroreceptorStrain;
@@ -111,13 +117,20 @@ protected:
   double m_PeripheralBloodGasInteractionBaseline_Hz;
   double m_PeripheralFrequencyDelta_Per_min;
   double m_PeripheralPressureDelta_cmH2O;
+  double m_ReactionTime_s;
   double m_ResistanceModifierExtrasplanchnic;
   double m_ResistanceModifierMuscle;
   double m_ResistanceModifierSplanchnic;
   double m_SympatheticPeripheralSignalBaseline_Hz;
   double m_SympatheticSinoatrialSignalBaseline_Hz;
   double m_SympatheticPeripheralSignalFatigue;
+  double m_TiredTime_hr;
   double m_VagalSignalBaseline_Hz;
+  double m_WakeTime_min;
+  double m_SleepTime_min;
+  CDM::enumSleepState::value m_SleepState;
+
+
 
   // Stateless member variable (Set in SetUp())
   double m_AfferentBaroreceptorAortic_Hz; //*ABA

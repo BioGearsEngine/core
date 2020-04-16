@@ -40,6 +40,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_LeftNeedleDecompression = nullptr;
   m_RightNeedleDecompression = nullptr;
   m_PericardialEffusion = nullptr;
+  m_Sleep = nullptr;
   m_LeftOpenTensionPneumothorax = nullptr;
   m_LeftClosedTensionPneumothorax = nullptr;
   m_RightOpenTensionPneumothorax = nullptr;
@@ -75,6 +76,7 @@ void SEPatientActionCollection::Clear()
   RemoveLeftNeedleDecompression();
   RemoveRightNeedleDecompression();
   RemovePericardialEffusion();
+  RemoveSleepState();
   RemoveLeftOpenTensionPneumothorax();
   RemoveLeftClosedTensionPneumothorax();
   RemoveRightOpenTensionPneumothorax();
@@ -141,7 +143,7 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   if (HasHemorrhage()) {
     for (auto itr : GetHemorrhages()) {
       to.push_back(itr.second->Unload());
-    }
+  }
   }
   if (HasInfection()) {
     to.push_back(GetInfection()->Unload());
@@ -161,12 +163,13 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   if (HasPainStimulus()) {
     for (auto itr : GetPainStimuli()) {
       to.push_back(itr.second->Unload());
-    }
+  }
   }
   if (HasPericardialEffusion()) {
     to.push_back(GetPericardialEffusion()->Unload());
-  }
-  if (HasLeftClosedTensionPneumothorax()) {
+  if (HasSleepState())
+      to.push_back(GetSleepState()->Unload());
+  if (HasLeftClosedTensionPneumothorax())
     to.push_back(GetLeftClosedTensionPneumothorax()->Unload());
   }
   if (HasLeftOpenTensionPneumothorax()) {
@@ -216,8 +219,8 @@ bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action)
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& action)
 {
-  const CDM::PatientAssessmentRequestData* patientAss = dynamic_cast<const CDM::PatientAssessmentRequestData*>(&action);
-  if (patientAss != nullptr) {
+  const CDM::PatientAssessmentRequestData* patientAssessment = dynamic_cast<const CDM::PatientAssessmentRequestData*>(&action);
+  if (patientAssessment != nullptr) {
     // TODO just add this to a list?
     // Not doing anything with this, assessment actions
     // are currently only being handled by the Engine ScenarioExec methods.
@@ -521,7 +524,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return IsValid(*m_RightNeedleDecompression);
     } else {
       return false;
-    }
+  }
   }
 
   const CDM::PainStimulusData* pain = dynamic_cast<const CDM::PainStimulusData*>(&action);
@@ -551,6 +554,18 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return true;
     }
     return IsValid(*m_PericardialEffusion);
+  }
+
+  const CDM::SleepData* sleep = dynamic_cast<const CDM::SleepData*>(&action);
+  if (sleep != nullptr) {
+      if (m_Sleep == nullptr)
+          m_Sleep = new SESleep();
+      m_Sleep->Load(*sleep);
+      if (!m_Sleep->IsActive()) {
+          RemoveSleepState();
+          return true;
+      }
+      return IsValid(*m_Sleep);
   }
 
   const CDM::SubstanceAdministrationData* admin = dynamic_cast<const CDM::SubstanceAdministrationData*>(&action);
@@ -1056,6 +1071,21 @@ SEPericardialEffusion* SEPatientActionCollection::GetPericardialEffusion() const
 void SEPatientActionCollection::RemovePericardialEffusion()
 {
   SAFE_DELETE(m_PericardialEffusion);
+}
+//-------------------------------------------------------------------------------  
+bool SEPatientActionCollection::HasSleepState() const
+{
+    return m_Sleep == nullptr ? false : true;
+}
+//-------------------------------------------------------------------------------
+SESleep* SEPatientActionCollection::GetSleepState() const
+{
+    return m_Sleep;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveSleepState()
+{
+    SAFE_DELETE(m_Sleep);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasTensionPneumothorax() const

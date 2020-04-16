@@ -13,8 +13,10 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
+#include <biogears/cdm/patient/actions/SESleep.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/patient/assessments/SEPsychomotorVigilanceTask.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 #include <biogears/cdm/properties/SEScalarFlowElastance.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
@@ -32,6 +34,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
+#include "units.h"
+#include "biogears/math/angles.h"
 namespace BGE = mil::tatrc::physiology::biogears;
 
 #pragma warning(disable : 4786)
@@ -74,11 +78,14 @@ void Nervous::Initialize()
   BioGearsSystem::Initialize();
   m_FeedbackActive = false;
   m_blockActive = false;
+  m_SleepState = CDM::enumSleepState::Awake;   //patient always starts awake
 
   m_AfferentChemoreceptor_Hz = 3.55;
   m_AfferentPulmonaryStretchReceptor_Hz = 12.0;
   m_AorticBaroreceptorStrain = 0.04226;
+  m_AttentionLapses = 3.0;   //well rested number of lapses for a given task
   m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
+  m_BiologicalDebt = 0.0;
   m_CardiopulmonaryInputBaseline_mmHg = m_data.GetCardiovascular().GetCentralVenousPressure(PressureUnit::mmHg) - (m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg) - m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient)->GetPressure(PressureUnit::mmHg));
   m_CardiopulmonaryInput_mmHg = m_CardiopulmonaryInputBaseline_mmHg;
   m_CarotidBaroreceptorStrain = 0.04226;
@@ -104,19 +111,25 @@ void Nervous::Initialize()
   m_MuscleOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
   m_OxygenAutoregulatorHeart = 0.0;
   m_OxygenAutoregulatorMuscle = 0.0;
+  m_ReactionTime_s = 0.3;
   m_ResistanceModifierExtrasplanchnic = 1.02;
   m_ResistanceModifierMuscle = 1.02;
   m_ResistanceModifierSplanchnic = 0.24;
   m_PeripheralBloodGasInteractionBaseline_Hz = 0.0;
   m_PeripheralFrequencyDelta_Per_min = 0.0;
   m_PeripheralPressureDelta_cmH2O = 0.0;
+  m_SleepTime_min = m_data.GetPatient().GetSleepAmount(TimeUnit::min);
   m_SympatheticPeripheralSignalBaseline_Hz = 4.05;
   m_SympatheticSinoatrialSignalBaseline_Hz = 4.5;
   m_SympatheticPeripheralSignalFatigue = 0.0;
+  m_TiredTime_hr = 0.0;
   m_VagalSignalBaseline_Hz = 3.75;
 
+  GetAttentionLapses().SetValue(3.0);
+  GetBiologicalDebt().SetValue(0.0);
   GetHeartRateScale().SetValue(1.0);
   GetHeartElastanceScale().SetValue(1.0);
+  GetReactionTime().SetValue(0.3, TimeUnit::s);
   GetResistanceScaleExtrasplanchnic().SetValue(1.0);
   GetResistanceScaleMuscle().SetValue(1.0);
   GetResistanceScaleMyocardium().SetValue(1.0);
@@ -127,6 +140,8 @@ void Nervous::Initialize()
   GetRightEyePupillaryResponse().GetSizeModifier().SetValue(0);
   GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(0);
   GetPainVisualAnalogueScale().SetValue(0.0);
+  GetWakeTime().SetValue(0.0, TimeUnit::min);
+  GetSleepTime().SetValue(m_SleepTime_min, TimeUnit::min);
 }
 
 bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
@@ -199,9 +214,11 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
   data.AfferentChemoreceptor_Hz(m_AfferentChemoreceptor_Hz);
   data.AfferentPulmonaryStrechReceptor_Hz(m_AfferentPulmonaryStretchReceptor_Hz);
   data.AorticBaroreceptorStrain(m_AorticBaroreceptorStrain);
+  data.AttentionLapses(m_AttentionLapses);
   data.ArterialCarbonDioxideBaseline_mmHg(m_ArterialCarbonDioxideBaseline_mmHg);
   data.ArterialOxygenBaseline_mmHg(m_ArterialOxygenBaseline_mmHg);
   data.BaroreceptorOperatingPoint_mmHg(m_BaroreceptorOperatingPoint_mmHg);
+  data.BiologicalDebt(m_BiologicalDebt);
   data.CardiopulmonaryInputBaseline_mmHg(m_CardiopulmonaryInputBaseline_mmHg);
   data.CardiopulmonaryInput_mmHg(m_CardiopulmonaryInput_mmHg);
   data.CarotidBaroreceptorStrain(m_CarotidBaroreceptorStrain);
@@ -272,9 +289,13 @@ void Nervous::SetUp()
   m_AfferentBaroreceptorAortic_Hz = 25.15;
   m_AfferentBaroreceptorCarotid_Hz = 25.15;
   m_AfferentCardiopulmonary_Hz = 10.0;
+  m_BiologicalDebt = 0.0;
   m_SympatheticSinoatrialSignal_Hz = 4.0;
   m_SympatheticPeripheralSignal_Hz = 4.8;
   m_VagalSignal_Hz = 0.80;
+ // m_WakeTime_min = 0.0;
+ // m_SleepTime_min = 420.0;   //assume patient has had 8 hours of sleep before simulation starts
+
 }
 
 void Nervous::AtSteadyState()
@@ -289,6 +310,7 @@ void Nervous::AtSteadyState()
     m_SympatheticPeripheralSignalBaseline_Hz = m_SympatheticPeripheralSignal_Hz;
     m_SympatheticSinoatrialSignalBaseline_Hz = m_SympatheticSinoatrialSignal_Hz;
     m_VagalSignalBaseline_Hz = m_VagalSignal_Hz;
+    m_SleepTime_min = m_Patient->GetSleepAmount().GetValue(TimeUnit::min);
   }
 
   // The set-points (Baselines) get reset at the end of each stabilization period.
@@ -320,11 +342,12 @@ void Nervous::AtSteadyState()
 void Nervous::PreProcess()
 {
   CheckPainStimulus();
-
+  UpdateSleepState();
   AfferentResponse();
   CentralSignalProcess();
   EfferentResponse();
   LocalAutoregulation();
+  CalculateSleepEffects();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1165,4 +1188,139 @@ void Nervous::SetPupilEffects()
   GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
   GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
 }
+
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Sets data on the PVT object.
+///
+/// \details
+/// Uses information from calculatesleepeffects routine (see @ref nervous-assessments)
+//--------------------------------------------------------------------------------------------------
+bool Nervous::CalculatePsychomotorVigilanceTask(SEPsychomotorVigilanceTask& pvt)
+{
+  pvt.Reset();
+  pvt.GetAttentionLapses().Set(GetAttentionLapses().GetValue());
+  pvt.GetReactionTime().SetValue(GetReactionTime().GetValue(TimeUnit::s), TimeUnit::s);   //reaction time is computed in ms but we don't spport that time unit);
+  return true;
+}
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Cacluates the cumulative sleep debt burden on the patient 
+///
+/// \details
+/// Models for metabolic changes and vigalence and awareness changes are computed here.
+/// These models effect physiology data requests and the tissue system
+//--------------------------------------------------------------------------------------------------
+void Nervous::CalculateSleepEffects()
+{
+  //Calculate wake/sleep ratio to determine parameter scaling
+  m_SleepState = GetSleepState();
+  m_SleepTime_min = GetSleepTime().GetValue(TimeUnit::min);   //update value from last computation
+  m_WakeTime_min = GetWakeTime().GetValue(TimeUnit::min);   //update value from last computation
+  m_BiologicalDebt = GetBiologicalDebt().GetValue();   //update value from last computation
+  m_AttentionLapses = GetAttentionLapses().GetValue();
+
+  const double L0 = .25;   //Circadian rythm parameter with "normal" sleep
+  const double L1 = 2.25;   //Circadian maximum 
+  const double k = 1.5;   //Shape of circadian response 
+  const double s = 4.3;   //x shift of the logistic respoinse curve
+
+  double sleepRatio = m_WakeTime_min / m_SleepTime_min;   //independat variable for circadian rythm equation
+  double at = 0.0;   //circadian rythm parameter
+  double ct = 0.0;   //circadian rythm value
+  double simTime_hr = m_data.GetSimulationTime().GetValue(TimeUnit::hr);
+
+  //consts involved in the ODE 
+  const double pw = 0.3;//0.13;
+  const double pb1 = 1.9;
+  double rwt = 0.05;
+  double rbt = 0.018;//0.018; //0.28
+  double rwSleepScale = 0.4;
+  double rbSleepScale = 1.1;
+
+  //alert/reactiontime constants
+  const double aSlope = 0.9;
+  const double aIntercept = 4.2;
+  const double rIntercept = 300.0;
+  const double rSlope = 16.67;
+  double count = 1.0;
+  
+
+  if (m_SleepState == CDM::enumSleepState::Asleep) {
+    rwt *= rwSleepScale;
+    rbt *= rbSleepScale;
+  }
+
+  //calculate A 
+  at = 0.7*(L1 / (1 + exp(-k * (sleepRatio - s)))) + L0;
+
+  //update circadian rythm: 
+  ct = 5.1 - at * sin((PI / 12.0)*simTime_hr*(1 / 24.0));
+  double xt = ct * (m_BiologicalDebt / (1 + std::pow(m_BiologicalDebt, 2)));
+
+ // double ct2 = 5.0 - at * sin((PI / 43200.0)*(simTime_hr + m_dt_s/3600.0));
+  double k1 = pw * rwt + pb1 * rbt*m_BiologicalDebt - rbt * xt;
+  double xt2 = ct * ((m_BiologicalDebt + m_dt_s * k1) / (1 + std::pow(m_BiologicalDebt + m_dt_s * k1, 2)));
+  double k2 = pw * rwt + pb1 * rbt*(m_BiologicalDebt + m_dt_s * k1) - rbt * xt2;
+
+  //lets try an improved scheme
+  m_BiologicalDebt = m_BiologicalDebt + m_dt_s * 0.5*(k1 +  k2);
+
+  if (m_SleepState == CDM::enumSleepState::Awake) {
+    m_WakeTime_min += (m_dt_s / 60);
+  }
+  else if (m_SleepState == CDM::enumSleepState::Asleep) {
+    m_SleepTime_min += (m_dt_s / 60);
+  }
+
+  //Calculate alertness metric 
+  if(sleepRatio > 3.0 && m_SleepState == CDM::enumSleepState::Awake) {
+    m_AttentionLapses = aSlope * m_TiredTime_hr + aIntercept;
+    m_ReactionTime_s = rSlope * m_TiredTime_hr + rIntercept;
+    m_TiredTime_hr += m_dt_s / 3600.0;
+  }
+
+  //reset if patient has had enough sleep, recovery requires 8 hours (in any combination)
+  if(m_SleepTime_min > (420.0 * count) + m_data.GetPatient().GetSleepAmount(TimeUnit::min)) {
+    m_AttentionLapses = aIntercept;
+    m_ReactionTime_s = rIntercept;
+    count += 1.0;
+  }
+
+    //Store data 
+  GetSleepTime().SetValue(m_SleepTime_min, TimeUnit::min);
+  GetWakeTime().SetValue(m_WakeTime_min, TimeUnit::min);
+  GetBiologicalDebt().SetValue(m_BiologicalDebt);
+  GetAttentionLapses().SetValue(m_AttentionLapses);
+  GetReactionTime().SetValue(m_ReactionTime_s / 1000.0, TimeUnit::s);   //reaction time is computed in ms but we don't spport that time unit
+
+
+
+}
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Update global nervous sleep state  
+///
+/// \details
+/// Models for metabolic changes and vigalence and awareness changes are computed here.
+//--------------------------------------------------------------------------------------------------
+void biogears::Nervous::UpdateSleepState()
+{
+  //Get the current sleep state
+  m_SleepState = GetSleepState();
+
+  //update state from the action
+  if (m_data.GetActions().GetPatientActions().HasSleepState() && m_data.GetActions().GetPatientActions().GetSleepState()->IsActive()) {
+    m_SleepState = CDM::enumSleepState::Asleep;
+    SetSleepState(m_SleepState);
+    return;
+  }
+  else {
+    m_SleepState = CDM::enumSleepState::Awake;
+    SetSleepState(m_SleepState);
+  }
+  return;
 }

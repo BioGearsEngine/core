@@ -54,6 +54,7 @@ SEPatient::SEPatient(Logger* logger)
   m_RespiratoryDriverAmplitudeBaseline = nullptr;
   m_RespirationRateBaseline = nullptr;
   m_RightLungRatio = nullptr;
+  m_SleepAmount = nullptr;
   m_SkinSurfaceArea = nullptr;
   m_SystolicArterialPressureBaseline = nullptr;
   m_TotalVentilationBaseline = nullptr;
@@ -142,6 +143,7 @@ void SEPatient::Clear()
   SAFE_DELETE(m_RespiratoryDriverAmplitudeBaseline);
   SAFE_DELETE(m_RightLungRatio);
   SAFE_DELETE(m_SkinSurfaceArea);
+  SAFE_DELETE(m_SleepAmount);
   SAFE_DELETE(m_SystolicArterialPressureBaseline);
   SAFE_DELETE(m_TotalVentilationBaseline);
   SAFE_DELETE(m_TidalVolumeBaseline);
@@ -162,7 +164,6 @@ const SEScalar* SEPatient::GetScalar(const std::string& name)
     return &GetWeight();
   if (name.compare("Height") == 0)
     return &GetHeight();
-
   if (name.compare("AlveoliSurfaceArea") == 0)
     return &GetAlveoliSurfaceArea();
   if (name.compare("BasalMetabolicRate") == 0)
@@ -211,6 +212,8 @@ const SEScalar* SEPatient::GetScalar(const std::string& name)
     return &GetRightLungRatio();
   if (name.compare("SkinSurfaceArea") == 0)
     return &GetSkinSurfaceArea();
+  if (name.compare("SleepAmount") == 0)
+    return &GetSleepAmount();
   if (name.compare("SystolicArterialPressureBaseline") == 0)
     return &GetSystolicArterialPressureBaseline();
   if (name.compare("TotalVentilationBaseline") == 0)
@@ -322,6 +325,9 @@ bool SEPatient::Load(const CDM::PatientData& in)
   }
   if (in.SkinSurfaceArea().present()) {
     GetSkinSurfaceArea().Load(in.SkinSurfaceArea().get());
+  }
+  if (in.SleepAmount().present()) {
+    GetSleepAmount().Load(in.SleepAmount().get());
   }
   if (in.SystolicArterialPressureBaseline().present()) {
     GetSystolicArterialPressureBaseline().Load(in.SystolicArterialPressureBaseline().get());
@@ -453,6 +459,9 @@ void SEPatient::Unload(CDM::PatientData& data) const
   }
   if (m_SkinSurfaceArea != nullptr) {
     data.SkinSurfaceArea(std::unique_ptr<CDM::ScalarAreaData>(m_SkinSurfaceArea->Unload()));
+  }
+  if (m_SleepAmount != nullptr) {
+    data.SleepAmount(std::unique_ptr<CDM::ScalarTimeData>(m_SleepAmount->Unload()));
   }
   if (m_SystolicArterialPressureBaseline != nullptr) {
     data.SystolicArterialPressureBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_SystolicArterialPressureBaseline->Unload()));
@@ -907,9 +916,9 @@ void SEPatient::InvalidateGender()
   return m_Gender;
 }
 //-----------------------------------------------------------------------------
-[[deprecated("Use SetGender instead")]] void SEPatient::SetSex(CDM::enumSex::value sex)
+[[deprecated("Use SetGender instead")]] void SEPatient::SetSex(CDM::enumSex::value gender)
 {
-  m_Gender = sex;
+  m_Gender = gender;
 }
 //-----------------------------------------------------------------------------
 [[deprecated("Use HasGender instead")]] bool SEPatient::HasSex() const
@@ -1523,6 +1532,27 @@ double SEPatient::GetSkinSurfaceArea(const AreaUnit& unit) const
     return SEScalar::dNaN();
   }
   return m_SkinSurfaceArea->GetValue(unit);
+}
+//-----------------------------------------------------------------------------
+bool SEPatient::HasSleepAmount() const
+{
+  return m_SleepAmount == nullptr ? false : m_SleepAmount->IsValid();
+}
+//-----------------------------------------------------------------------------
+SEScalarTime& SEPatient::GetSleepAmount()
+{
+  if (m_SleepAmount == nullptr) {
+    m_SleepAmount = new SEScalarTime();
+  }
+  return *m_SleepAmount;
+}
+//-----------------------------------------------------------------------------
+double SEPatient::GetSleepAmount(const TimeUnit& unit) const
+{
+  if (m_SleepAmount == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_SleepAmount->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SEPatient::HasSystolicArterialPressureBaseline() const

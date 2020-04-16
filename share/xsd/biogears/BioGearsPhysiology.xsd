@@ -181,6 +181,7 @@ specific language governing permissions and limitations under the License.
 		  <xs:element name="SympatheticSinoatrialSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="SympatheticPeripheralSignalFatigue" type="xs:double" minOccurs="1" maxOccurs="1"/>
 		  <xs:element name="VagalSignalBaseline" type="xs:double" minOccurs="1" maxOccurs="1"/>
+
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

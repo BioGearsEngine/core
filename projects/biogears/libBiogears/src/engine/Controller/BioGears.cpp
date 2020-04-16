@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
+#include <biogears/cdm/patient/assessments/SEPsychomotorVigilanceTask.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
@@ -286,6 +287,19 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasHyperhidrosis()) {
     m_Patient->GetHyperhidrosis().SetValue(sweatStandard);
     m_Logger->Info(std::stringstream() << "No patient sweat susceptibility set " << sweatStandard << " being used.");
+  }
+
+  //Sleep Amount ---------------------------------------------------------------
+  double sleepAmount_hr = 8.0;
+  if(!m_Patient->HasSleepAmount()) {
+    m_Patient->GetSleepAmount().SetValue(sleepAmount_hr, TimeUnit::hr);
+    m_Logger->Info(std::stringstream()<< "No patient sleep amount set " << sleepAmount_hr << " hr being used.");
+  }
+
+  //additional checks to ensure non-zero and negative values: 
+  if(m_Patient->GetSleepAmount().GetValue(TimeUnit::hr) < 0 || m_Patient->GetSleepAmount().GetValue(TimeUnit::hr) == 0) {
+    m_Patient->GetSleepAmount().SetValue(sleepAmount_hr, TimeUnit::hr);
+    m_Logger->Info(std::stringstream() << "Sleep amount must be a non-zero positive number, setting to default: " << sleepAmount_hr << " hr being used.");
   }
 
   //HEIGHT ---------------------------------------------------------------
@@ -950,6 +964,11 @@ bool BioGears::GetPatientAssessment(SEPatientAssessment& assessment)
     return m_RespiratorySystem->CalculatePulmonaryFunctionTest(*pft);
   }
 
+  SEPsychomotorVigilanceTask* pvt = dynamic_cast<SEPsychomotorVigilanceTask*>(&assessment);
+  if (pvt != nullptr) {
+    return m_NervousSystem->CalculatePsychomotorVigilanceTask(*pvt);
+  }
+
   SECompleteBloodCount* cbc = dynamic_cast<SECompleteBloodCount*>(&assessment);
   if (cbc != nullptr) {
     return m_BloodChemistrySystem->CalculateCompleteBloodCount(*cbc);
@@ -1073,8 +1092,8 @@ void BioGears::SetupCardiovascular()
   double VolumeFractionBone = 0.07, VascularPressureTargetBone = 0.33 * systolicPressureTarget_mmHg, VascularFlowTargetBone = 0.05 * cardiacOutputTarget_mL_Per_s;
   double VolumeFractionBrain = 0.012, VascularPressureTargetBrain = 0.08 * systolicPressureTarget_mmHg, VascularFlowTargetBrain = 0.12 * cardiacOutputTarget_mL_Per_s;
   double VolumeFractionFat = male ? 0.05 : 0.085, VascularPressureTargetFat = 0.33 * systolicPressureTarget_mmHg, VascularFlowTargetFat = male ? 0.05 * cardiacOutputTarget_mL_Per_s : 0.085 * cardiacOutputTarget_mL_Per_s;
-  double VolumeFractionHeartLeft = 0.0025, VascularPressureTargetHeartLeft = 1.06667 * systolicPressureTarget_mmHg; /*No flow targets heart right*/
-  double VolumeFractionHeartRight = 0.0025, VascularPressureTargetHeartRight = 0.16667 * systolicPressureTarget_mmHg; /*No flow targets heart left*/
+  double VolumeFractionHeartLeft = 0.0035, VascularPressureTargetHeartLeft = 1.06667 * systolicPressureTarget_mmHg; /*No flow targets heart right*/
+  double VolumeFractionHeartRight = 0.0035, VascularPressureTargetHeartRight = 0.16667 * systolicPressureTarget_mmHg; /*No flow targets heart left*/
   double VolumeFractionKidney = 0.019, VascularPressureTargetKidney = 0.33 * systolicPressureTarget_mmHg, VascularFlowTargetKidney = male ? 0.098 * cardiacOutputTarget_mL_Per_s : 0.088 * cardiacOutputTarget_mL_Per_s;
   double VolumeFractionLargeIntestine = 0.019, VascularPressureTargetLargeIntestine = 0.33 * systolicPressureTarget_mmHg, VascularFlowTargetLargeIntestine = male ? 0.04 * cardiacOutputTarget_mL_Per_s : 0.05 * cardiacOutputTarget_mL_Per_s;
   double VolumeFractionLegLeft = 0.0151, VascularPressureTargetLegLeft = 0.33 * systolicPressureTarget_mmHg, VascularFlowTargetLegLeft = male ? 0.01086 * cardiacOutputTarget_mL_Per_s : 0.01245 * cardiacOutputTarget_mL_Per_s;
@@ -2404,11 +2423,11 @@ void BioGears::SetupRenal()
   ///// Circuit Parameters//////
   double openSwitch_mmHg_s_Per_mL = m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL);
   //Resistances with some tuning multipliers
-  double urineTuningMultiplier = 1.0;
-  double arteryTuningMultiplier = 0.6;
-  double reabsorptionTuningMultiplier = 1.1;
-  double gfrTuning = 1.0;
-  double efferentTuning = 1.1;
+  double urineTuningMultiplier = 0.9;
+  double arteryTuningMultiplier = 0.8;
+  double reabsorptionTuningMultiplier = 0.5;
+  double gfrTuning = 0.5;
+  double efferentTuning = 1.15;
 
   double renalArteryResistance_mmHg_s_Per_mL = Convert(0.0250 * arteryTuningMultiplier, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   double afferentResistance_mmHg_s_Per_mL = Convert(0.0417 * arteryTuningMultiplier, FlowResistanceUnit::mmHg_min_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
@@ -2428,14 +2447,14 @@ void BioGears::SetupRenal()
   double totalCompliance = (0.5 * (0.91 * 1.7560) * 0.02);
   //The fractions here should add to 1.0;
   double renalArteryCompliance_mL_Per_mmHg = totalCompliance * 0.11;
-  double renalVeinCompliance_mL_Per_mmHg = totalCompliance * 0.78;
+  double renalVeinCompliance_mL_Per_mmHg = totalCompliance * 0.70;
   double glomerularCompliance_mL_Per_mmHg = totalCompliance * 0.11;
   ///\todo The bladder is currently not being modeled as a compliance
   //double bladderCompliance_mL_Per_mmHg = Convert(38.3, FlowComplianceUnit::mL_Per_cmH2O, FlowComplianceUnit::mL_Per_mmHg);
 
   //Large Vasculature (divide total large vasculature fluid volume three ways):
   double tubulesVolume_mL = singleKidneyLargeVasculatureFluidVolume_mL / 3.0;
-  double renalArteryVolume_mL = singleKidneyLargeVasculatureFluidVolume_mL / 3.0;
+  double renalArteryVolume_mL = singleKidneyLargeVasculatureFluidVolume_mL / 3.2;
   double renalVeinVolume_mL = singleKidneyLargeVasculatureFluidVolume_mL / 3.0;
 
   //Small vasculature (divide total small vasculature fluid volume five ways):

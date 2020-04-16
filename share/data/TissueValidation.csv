@@ -33,7 +33,7 @@ SkinTissueExtracellular-Volume,mL,1260.6,huisinga2012modeling,,TissueCompartment
 SkinTissueIntracellular-Volume,mL,960.3,huisinga2012modeling,,TissueCompartments
 SpleenTissueExtracellular-Volume,mL,31.05,huisinga2012modeling,,TissueCompartments
 SpleenTissueIntracellular-Volume,mL,86.85,huisinga2012modeling,,TissueCompartments
-MuscleTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSubstances
+MuscleTissueExtracellular-Calcium-Molarity,mmol/L,2.4,boron2012medical,,TissueSubstances
 MuscleTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 MuscleTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 MuscleTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances
@@ -49,7 +49,7 @@ BrainTissueIntracellular-Calcium-Molarity,mmol/L,0.0001,boron2012medical,,Tissue
 BrainTissueIntracellular-Chloride-Molarity,mmol/L,4.5,yi2002mathematical,,TissueSubstances
 BrainTissueIntracellular-Potassium-Molarity,mmol/L,120,boron2012medical,,TissueSubstances
 BrainTissueIntracellular-Sodium-Molarity,mmol/L,15,boron2012medical,,TissueSubstances
-BoneTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSubstances
+BoneTissueExtracellular-Calcium-Molarity,mmol/L,2.4,boron2012medical,,TissueSubstances
 BoneTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 BoneTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 BoneTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances
@@ -57,7 +57,7 @@ BoneTissueIntracellular-Calcium-Molarity,mmol/L,0.0001,boron2012medical,,TissueS
 BoneTissueIntracellular-Chloride-Molarity,mmol/L,4.5,yi2002mathematical,,TissueSubstances
 BoneTissueIntracellular-Potassium-Molarity,mmol/L,120,boron2012medical,,TissueSubstances
 BoneTissueIntracellular-Sodium-Molarity,mmol/L,15,boron2012medical,,TissueSubstances
-FatTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSubstances
+FatTissueExtracellular-Calcium-Molarity,mmol/L,2.4,boron2012medical,,TissueSubstances
 FatTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 FatTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 FatTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances
@@ -65,7 +65,7 @@ FatTissueIntracellular-Calcium-Molarity,mmol/L,0.0001,boron2012medical,,TissueSu
 FatTissueIntracellular-Chloride-Molarity,mmol/L,4.5,yi2002mathematical,,TissueSubstances
 FatTissueIntracellular-Potassium-Molarity,mmol/L,120,boron2012medical,,TissueSubstances
 FatTissueIntracellular-Sodium-Molarity,mmol/L,15,boron2012medical,,TissueSubstances
-GutTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSubstances
+GutTissueExtracellular-Calcium-Molarity,mmol/L,2.4,boron2012medical,,TissueSubstances
 GutTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 GutTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 GutTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances
@@ -73,7 +73,7 @@ GutTissueIntracellular-Calcium-Molarity,mmol/L,0.0001,boron2012medical,,TissueSu
 GutTissueIntracellular-Chloride-Molarity,mmol/L,4.5,yi2002mathematical,,TissueSubstances
 GutTissueIntracellular-Potassium-Molarity,mmol/L,120,boron2012medical,,TissueSubstances
 GutTissueIntracellular-Sodium-Molarity,mmol/L,15,boron2012medical,,TissueSubstances
-LeftKidneyTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSubstances
+LeftKidneyTissueExtracellular-Calcium-Molarity,mmol/L,2.4,boron2012medical,,TissueSubstances
 LeftKidneyTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 LeftKidneyTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 LeftKidneyTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances
@@ -81,7 +81,7 @@ LeftKidneyTissueIntracellular-Calcium-Molarity,mmol/L,0.0001,boron2012medical,,T
 LeftKidneyTissueIntracellular-Chloride-Molarity,mmol/L,4.5,yi2002mathematical,,TissueSubstances
 LeftKidneyTissueIntracellular-Potassium-Molarity,mmol/L,120,boron2012medical,,TissueSubstances
 LeftKidneyTissueIntracellular-Sodium-Molarity,mmol/L,15,boron2012medical,,TissueSubstances
-RightKidneyTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSubstances
+RightKidneyTissueExtracellular-Calcium-Molarity,mmol/L,2.4,boron2012medical,,TissueSubstances
 RightKidneyTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 RightKidneyTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 RightKidneyTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances
@@ -89,7 +89,7 @@ RightKidneyTissueIntracellular-Calcium-Molarity,mmol/L,0.0001,boron2012medical,,
 RightKidneyTissueIntracellular-Chloride-Molarity,mmol/L,4.5,yi2002mathematical,,TissueSubstances
 RightKidneyTissueIntracellular-Potassium-Molarity,mmol/L,120,boron2012medical,,TissueSubstances
 RightKidneyTissueIntracellular-Sodium-Molarity,mmol/L,15,boron2012medical,,TissueSubstances
-RightLungTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSubstances
+RightLungTissueExtracellular-Calcium-Molarity,mmol/L,2.4,boron2012medical,,TissueSubstances
 RightLungTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 RightLungTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 RightLungTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances
@@ -97,7 +97,7 @@ RightLungTissueIntracellular-Calcium-Molarity,mmol/L,0.0001,boron2012medical,,Ti
 RightLungTissueIntracellular-Chloride-Molarity,mmol/L,4.5,yi2002mathematical,,TissueSubstances
 RightLungTissueIntracellular-Potassium-Molarity,mmol/L,120,boron2012medical,,TissueSubstances
 RightLungTissueIntracellular-Sodium-Molarity,mmol/L,15,boron2012medical,,TissueSubstances
-LeftLungTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSubstances
+LeftLungTissueExtracellular-Calcium-Molarity,mmol/L,2.4,boron2012medical,,TissueSubstances
 LeftLungTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 LeftLungTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 LeftLungTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances
@@ -113,7 +113,7 @@ LiverTissueIntracellular-Calcium-Molarity,mmol/L,0.0001,boron2012medical,,Tissue
 LiverTissueIntracellular-Chloride-Molarity,mmol/L,4.5,yi2002mathematical,,TissueSubstances
 LiverTissueIntracellular-Potassium-Molarity,mmol/L,120,boron2012medical,,TissueSubstances
 LiverTissueIntracellular-Sodium-Molarity,mmol/L,15,boron2012medical,,TissueSubstances
-MyocardiumTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSubstances
+MyocardiumTissueExtracellular-Calcium-Molarity,mmol/L,2.4,boron2012medical,,TissueSubstances
 MyocardiumTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 MyocardiumTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 MyocardiumTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances
@@ -121,7 +121,7 @@ MyocardiumTissueIntracellular-Calcium-Molarity,mmol/L,0.0001,boron2012medical,,T
 MyocardiumTissueIntracellular-Chloride-Molarity,mmol/L,4.5,yi2002mathematical,,TissueSubstances
 MyocardiumTissueIntracellular-Potassium-Molarity,mmol/L,120,boron2012medical,,TissueSubstances
 MyocardiumTissueIntracellular-Sodium-Molarity,mmol/L,15,boron2012medical,,TissueSubstances
-SkinTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSubstances
+SkinTissueExtracellular-Calcium-Molarity,mmol/L,2.4,boron2012medical,,TissueSubstances
 SkinTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 SkinTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 SkinTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances
@@ -129,7 +129,7 @@ SkinTissueIntracellular-Calcium-Molarity,mmol/L,0.0001,boron2012medical,,TissueS
 SkinTissueIntracellular-Chloride-Molarity,mmol/L,4.5,yi2002mathematical,,TissueSubstances
 SkinTissueIntracellular-Potassium-Molarity,mmol/L,120,boron2012medical,,TissueSubstances
 SkinTissueIntracellular-Sodium-Molarity,mmol/L,15,boron2012medical,,TissueSubstances
-SpleenTissueExtracellular-Calcium-Molarity,mmol/L,1.2,boron2012medical,,TissueSubstances
+SpleenTissueExtracellular-Calcium-Molarity,mmol/L,2.4,boron2012medical,,TissueSubstances
 SpleenTissueExtracellular-Chloride-Molarity,mmol/L,102,yi2002mathematical,,TissueSubstances
 SpleenTissueExtracellular-Potassium-Molarity,mmol/L,4.5,boron2012medical,,TissueSubstances
 SpleenTissueExtracellular-Sodium-Molarity,mmol/L,145,boron2012medical,,TissueSubstances

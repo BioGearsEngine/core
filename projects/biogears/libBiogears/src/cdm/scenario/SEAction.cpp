@@ -34,6 +34,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
+#include <biogears/cdm/patient/actions/SESleep.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
@@ -323,6 +324,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
 		SESubstanceOralDose* od = new SESubstanceOralDose(*substance);
 		od->Load(*oralData);
 		return od;
+    }
+
+    CDM::SleepData* sleep = dynamic_cast<CDM::SleepData*>(action);
+    if (sleep != nullptr) {
+      SESleep* a = new SESleep();
+      a->Load(*sleep);
+      return a;
     }
 
     CDM::SubstanceInfusionData* subInfuzData = dynamic_cast<CDM::SubstanceInfusionData*>(action);

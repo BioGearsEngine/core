@@ -226,6 +226,10 @@ public:
   virtual SEScalarArea& GetSkinSurfaceArea();
   virtual double GetSkinSurfaceArea(const AreaUnit& unit) const;
 
+  virtual bool HasSleepAmount() const;
+  virtual SEScalarTime& GetSleepAmount();
+  virtual double GetSleepAmount(const TimeUnit& unit) const;
+
   virtual bool HasSystolicArterialPressureBaseline() const;
   virtual SEScalarPressure& GetSystolicArterialPressureBaseline();
   virtual double GetSystolicArterialPressureBaseline(const PressureUnit& unit) const;
@@ -282,6 +286,7 @@ protected:
   SEScalarNeg1To1* m_PainSusceptibility;
   SEScalarFrequency* m_RespirationRateBaseline;
   SEScalarPressure* m_RespiratoryDriverAmplitudeBaseline;
+  SEScalarTime* m_SleepAmount;
   SEScalarPressure* m_SystolicArterialPressureBaseline;
   SEScalarVolumePerTime* m_TotalVentilationBaseline;
   SEScalarVolume* m_TidalVolumeBaseline;

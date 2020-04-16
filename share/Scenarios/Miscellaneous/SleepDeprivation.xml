@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+  <Name>SleepStudy</Name>
+  <Description>48 hours no sleep. </Description>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+  <DataRequests SamplesPerSecond="0.05">
+    <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
+
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                         Unit="1/min"       Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"                 Unit="mL"          Precision="1"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="L"          Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="L"          Precision="1"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure"                  Unit="mmHg"        Precision="1"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="1"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"          Unit="mmHg"        Precision="0"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure"         Unit="mmHg"        Precision="1"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"                     Unit="L/min"      Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="HemoglobinContent"                 Unit="g"           Precision="0"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralVenousPressure"             Unit="mmHg"        Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystemicVascularResistance" Unit="mmHg s/mL" Precision="3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="SleepTime"                         Unit="s"       Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="WakeTime"                 Unit="s"          Precision="1"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="BiologicalDebt"                 Unit="unitless"          Precision="12"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="AttentionLapses"                 Unit="uniteless"          Precision="1"/>
+        <DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose" Name="MassInBody" Unit="mg" Precision="2"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose" Name="MassInBlood" Unit="mg" Precision="2"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose" Name="MassInTissue" Unit="mg" Precision="2"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose" Name="BloodConcentration" Unit="mg/L" Precision="2"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular" Substance="Glucose"          Name="Molarity"        Unit="mmol/L" Precision="2"/>
+
+
+
+
+
+    <!-- Specific to this scenario -->
+
+  </DataRequests>
+
+<!-- Patient wakes up at 5am, eats at 9 -->
+  <Action xsi:type="AdvanceTimeData">
+        <Time value="48" unit="hr"/>       
+    </Action>
+
+
+
+</Scenario>

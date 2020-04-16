@@ -21,6 +21,7 @@ The %Nervous System in the human body is comprised of the central nervous system
  - Temperature Effects
  - Generic parasympathetic and sympathetic effects
  - Pain stimulus
+ - Sleep and sleep deprivation
 
  Additionally, %BioGears will model the following features related to brain function: 
  - Simple model of traumatic brain injury (TBI)
@@ -64,6 +65,9 @@ The brain, muscle, and myocardium prioritize blood flow and oxygen delivery.  %B
 
 #### Check Pain Stimulus
 Pain can be initiated in BioGears via a Pain Stimulus action.  The BioGears pain response takes into account both the magnitude of the pain action and the susceptibility of the virtual patient to pain (set in the Patient definition file).  The result is an output  corresponding to the pain Visual Analog Scale (VAS) on a 0-10 interval.  The VAS score dictates the patient cardiovascular and respiratory response to the pain stimulus.  Increased epinephrine production is also stimulated.  
+
+### Calculate Sleep Effects
+As a patient becomes more and more sleep deprived many physiological factors begin to become manifest in the body. Notabley, control of hormone function becomes greately deminished as a function of sleep deprivation. %BioGears models this disregulation as the patient is awake for a prolonged period of time. This is of particular importance in prolonge field care scenarios where evacuation to higher levels of care may be denied for up to 72 hours. In these intances, if the patientes sleep isn't managed properly, insuluin synthesis will become greatly dimished, resulting in hyperglycemia. In addition, %BioGears now provides access to the psychomotor vigilance task patient assesment which will allow the care provider to determine sleep debt through analysis of reaction time and lapses in attention while performing a focused task.
 
 ### Process
 #### Check %Nervous Status
@@ -358,7 +362,7 @@ in which R<sub>h,0</sub> is the baseline resistance (constant).  The expression 
 *Equation 37.*
 </center><br>
 
-It should be noted, however, that because the muscle resistance is also controlled by the sympathetic response, the resitance against which the autoregulation acts is that determined by Equation 26.
+It should be noted, however, that because the muscle resistance is also controlled by the sympathetic response, the resistance against which the autoregulation acts is that determined by Equation 26.
   
 ### TBI
 Traumatic brain injuries are relatively common, affecting millions annually. They are usually defined as a blunt or penetrating injury to the head that disrupts normal brain function. Furthermore, they are classified as either focal (e.g. cerebral contusions, lacerations, and hematomas) or diffuse (e.g. concussions and diffuse axonal injuries) @cite adoni2007pupillary. The scope of the %BioGears TBI model is somewhat limited by the low fidelity of the modeled brain. The brain is represented in the current %BioGears %Cardiovascular circuit with only two resistors and a compliance, all within one compartment. Because the circuit is modeled in this way, TBI is considered as an acute, non-localized, non-penetrating injury from a circuit perspective. Thus, the TBI model can account for intracranial pressure and cerebral blood flow on the basis of the whole brain, but not to specific areas of the brain. However, %BioGears does provide for three injury inputs: diffuse, right focal, and left focal.  Similarly to the @ref RenalMethodology "Renal System", the %BioGears brain circuit could be expanded to accommodate a higher-fidelity brain model.
@@ -397,6 +401,33 @@ There are two ways to affect the pupils in %BioGears: drug pharmacodynamic effec
 </center><br>
 
 For diffuse injuries, these modifiers are applied to both eyes. For focal injuries, the modifiers are applied to the eye on the same side as the injury, as this reflects the most common observed behavior @cite kingsly2012severe.
+
+@anchor nervous-features-sleep-effects
+### Sleep Effects
+We adapt the work of @cite schmidt2017state and quantifies the effects of sleep deprivation through evolution of biological debt on the patient. We let biological debt be a function of metabolic demands that change based upon the amount of sleep the patient has had. A normal range of sleep throughout a simulation (6-9 hours a night) will show no noticable physiological signs on the patient. The evolution of the sleep debt equations are characterized by the following equations: 
+
+\f[a(t) = \left( {\frac{{{L_1}}}{{\left( {1 + {e^{ - k({S_r}(t) - s)}}} \right)}}} \right) + {L_0}\f] 
+<center>
+*Equation 11.*
+</center><br>
+
+\f[c(t) = 5.1 - a(t)\sin \left( {\left( {\frac{\pi }{{48}}} \right)t} \right) \f] 
+<center>
+*Equation 12.*
+</center><br>
+
+\f[\frac{{dB}}{{dt}} = {p_w}{r_{wt}} + {p_{b1}}{r_{bt}}B(t) - {r_{bt}}x(t) \f] 
+<center>
+*Equation 13.*
+</center><br>
+
+\f[x(t) = c(t)\left( {\frac{{B(t)}}{{1 + B{{(t)}^2}}}} \right). \f] 
+<center>
+*Equation 14.*
+</center><br>
+
+Here S<sub>r</sub>(t) is the ratio between total sleep and wake times over the simulation period. In general, a patient begins with 8 hours of sleep. The amount of sleep a patient has had over the previous 24 hours can be set in the patient xml. This allows for sleep deprived patients to be loaded into %BioGears without the need to run a simulation for a long period of time. equations 11 and 12 define the circadian rhythm burden on the patient and are scaled as a function of how much sleep the patient has had. equation 13 defines how the biological debt evolves over time. The parameters in the ODE are defined to be: pw = Price of expending energy while awake, rw= rate of energy to waking effort, rb = rates of energy to biological investment, Pb1 = come scaling factor that relates price of using energy while awake.
+
 
 @anchor nervous-variability
 ### Patient Variability
@@ -513,6 +544,26 @@ The Brain Injury action is validated through repeated application and removal of
 |	Brain Injury	|	Severity 0.75	|	920	|	1700	|<span class="success">	Increase @cite steiner2006monitoring	</span>|<span class="success">	Decrease @cite steiner2006monitoring	</span>|<span class="success">	Decrease @cite balestreri2006impact	</span>|<span class="warning">	0-15% Decrease @cite bergeronSME	</span>|<span class="warning">	0-20% Decrease @cite bergeronSME	</span>|
 |	Brain Injury	|	Severity 0	|	1720	|	2000	|<span class="success">	7-15 mmHg @cite steiner2006monitoring	</span>|<span class="success">	50-65 mL/100g/min @cite guyton2006medical	</span>|<span class="success">	60-98 mmHg	</span>|<span class="success">	72 @cite guyton2006medical	</span>|<span class="success">	[12.0, 20.0], [13.0, 19.0] @cite silverthorn2013human @cite mantoni2007reduced	</span>|
 |	Brain Injury	|	Severity 1	|	2020	|	3220	|<span class="success">	>25 mmHg @cite steiner2006monitoring	</span>|<span class="success">	<8 mL/100g/min @cite steiner2006monitoring	</span>|<span class="success">	Decrease @cite balestreri2006impact	</span>|<span class="warning">	Decrease @cite bergeronSME	</span>|<span class="warning">	Decrease @cite bergeronSME	</span>|
+
+
+###Sleep Deprivation 
+The sleep model in BioGears is validated through by running a patient through a sleep deprivation study that quantifies the patients response to meals and measures blood glucose and insulin synthesis @cite spiegel1999impact. We create a study that parallels the methods used in Speigel by creating patients who are restricted in their sleep to just 4 hours a night over a three day period. We measure different physiological markers similar to the ones used in the study, table 3. Vigilance and attention lapse data is validated from @cite mchill2018chronic. The study performed by McHill was similar enough for us to validate all metrics with a single sleep deprivation study.
+
+<img src="./plots/Nervous/SleepBiologicalDebt.jpg" width="1100">
+<img src="./plots/Nervous/SleepInsulinConcentration.jpg" width="1100">
+<img src="./plots/Nervous/SleepGlucoseConcentration.jpg" width="1100">
+<img src="./plots/Nervous/SleepBrainGlucose.jpg" width="1100">
+<center> *Figure 9. The metabolic response to sleep deprivation is quantified here through the reduction in insulin synthesis and the increase in blood glucose as the sleep debt increases. Recovery periods can be seen during sleep cycles but becuase the patient isn't receiving enough sleep, the debt is continuing to accrue.* </center>
+
+<center><br>
+*Table 3. The validation data for the sleep deprivation study shows good agreement with collected data.*
+</center>
+	Sleep																			
+|	Action	|	Notes	|	Sampled Scenario Time (min)	|	Glucose clearance (%/min)	|	Glucose effectiveness (%/min) clearance without insulin	|	Insulin response (pmol/min) 	|	Stanford sleepyness score (unitless)	|	Cerebral glucose uptake (% from baseline)	|	Reaction Time (ms)	|	Attention Lapses (% from baseline)	|
+|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|
+|	Sleep of 4hr per day for 5 days	|	sleep deprivation study taken from spiegle and McHill, given carb rich meal (62%) every 5h 	|	7200	|<span class="success">	40% lower (1.42%/min compared to 2.4%/min @cite spiegel1999impact	</span>|<span class="warning">	Decrease 30% @cite spiegel1999impact	</span>|<span class="success">	Decrease from 432 to 304 pmol/min @cite spiegel1999impact	</span>|<span class="success">	Increase from 2.1 to 4.4  @cite spiegel1999impact	</span>|<span class="success">	Decrease of 7% @cite spiegel1999impact	</span>|<span class="success">	Increase ~1000% @cite mchill2018chronic	</span>|<span class="success">	Increase of 100% @cite mchill2018chronic	</span>|
+
+
 
 @anchor nervous-conclusions
 Conclusions

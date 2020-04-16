@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 	<xs:include schemaLocation="Scenario.xsd"/>
 	<xs:include schemaLocation="PatientNutrition.xsd"/>	
 	<xs:include schemaLocation="Substance.xsd"/>
-	
+
 	<!-- @brief Base Patient Action type -->
 	<xs:complexType name="PatientActionData" abstract="true">
     <xs:annotation><xs:documentation>Base Patient Action Type</xs:documentation></xs:annotation>
@@ -428,7 +428,17 @@ specific language governing permissions and limitations under the License.
 				<xs:attribute name="Side"  type="enumSide" use="required"/><!--<< @brief -->
 			</xs:extension>
 		</xs:complexContent>
-	</xs:complexType>		
+	</xs:complexType>	
+
+
+	<!-- @brief put the patient into a sleep state. Can also be used to awaken the patient from a sleep state. -->
+    <xs:complexType name="SleepData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+                <xs:attribute name="Sleep" type="enumOnOff" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
 	<!-- @brief Various methods of substance administration. Currently unsupported methods are commented out.-->
 	<xs:simpleType name="enumBolusAdministration">

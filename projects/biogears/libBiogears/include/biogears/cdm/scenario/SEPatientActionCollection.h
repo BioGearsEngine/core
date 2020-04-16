@@ -37,6 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
+#include <biogears/cdm/patient/actions/SESleep.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
@@ -155,6 +156,10 @@ public:
   SEPericardialEffusion* GetPericardialEffusion() const;
   void RemovePericardialEffusion();
 
+  bool HasSleepState() const;
+  SESleep* GetSleepState() const;
+  void RemoveSleepState();
+
   bool HasTensionPneumothorax() const;
 
   bool HasLeftClosedTensionPneumothorax() const;
@@ -172,6 +177,7 @@ public:
   bool HasRightOpenTensionPneumothorax() const;
   SETensionPneumothorax* GetRightOpenTensionPneumothorax() const;
   void RemoveRightOpenTensionPneumothorax();
+
 
   const std::map<const SESubstance*, SESubstanceBolus*>& GetSubstanceBoluses() const;
   void RemoveSubstanceBolus(const SESubstance& sub);
@@ -221,6 +227,7 @@ protected:
   SENeedleDecompression* m_LeftNeedleDecompression;
   SENeedleDecompression* m_RightNeedleDecompression;
   SEPericardialEffusion* m_PericardialEffusion;
+  SESleep* m_Sleep;
   SETensionPneumothorax* m_LeftClosedTensionPneumothorax;
   SETensionPneumothorax* m_LeftOpenTensionPneumothorax;
   SETensionPneumothorax* m_RightClosedTensionPneumothorax;

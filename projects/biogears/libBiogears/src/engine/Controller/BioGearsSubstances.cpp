@@ -515,17 +515,17 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   // BICARBONATE IS SET IN GASES SECTION //
 
   // CALCIUM //
-  concentration.SetValue(80.0, MassPerVolumeUnit::mg_Per_L);
+  concentration.SetValue(100.0, MassPerVolumeUnit::mg_Per_L);
   SetSubstanceConcentration(*m_calcium, vascular, concentration);
   // Tissue
-  molarity1.SetValue(1.2, AmountPerVolumeUnit::mmol_Per_L);
+  molarity1.SetValue(2*(1.2), AmountPerVolumeUnit::mmol_Per_L);
   molarity2.SetValue(0.0001, AmountPerVolumeUnit::mmol_Per_L);
   SetSubstanceMolarity(*m_calcium, tissue, molarity1, molarity2);
   //Lymph
   lymph->GetSubstanceQuantity(*m_calcium)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_calcium)->Balance(BalanceLiquidBy::Molarity);
   // Set Urine
-  concentration.SetValue(80.0, MassPerVolumeUnit::mg_Per_L);
+  concentration.SetValue(100.0, MassPerVolumeUnit::mg_Per_L);
   subQ = leftBowmansCapsules->GetSubstanceQuantity(*m_calcium);
   subQ->GetConcentration().Set(concentration);
   subQ->Balance(BalanceLiquidBy::Concentration);
@@ -549,7 +549,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   subQ->Balance(BalanceLiquidBy::Concentration);
 
   // CHLORIDE //
-  concentration.SetValue(0.362, MassPerVolumeUnit::g_Per_dL);
+  concentration.SetValue(1.2*0.362, MassPerVolumeUnit::g_Per_dL);
   SetSubstanceConcentration(*m_chloride, vascular, concentration);
   SetSubstanceConcentration(*m_chloride, urine, concentration);
   // Tissue

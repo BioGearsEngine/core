@@ -10,13 +10,14 @@
 	<!-- LeanBodyMass CANNOT be set by the user. It is determined using weight and body fat fraction -->
 	<MaxWorkRate value="762.2" unit="W"/>
 	<!-- MuscleMass CANNOT be set by the user -->
-	
+	<BloodTypeABO>O</BloodTypeABO>
+  	<BloodTypeRh>true</BloodTypeRh>
 	<AlveoliSurfaceArea value="52.45" unit="m^2"/>
 	<Hyperhidrosis value="0.0"/>
 	<RightLungRatio value="0.525"/>
 	<SkinSurfaceArea value="1.618" unit="m^2"/>
+	<SleepAmount readOnly="false" unit="hr" value="8.0"/>
 	<PainSusceptibility value="0.0"/>
-	
 	<BasalMetabolicRate value="1296.4" unit="kcal/day"/>
 	<BloodVolumeBaseline value="4111.4" unit="mL"/>
 	<DiastolicArterialPressureBaseline value="73.5" unit="mmHg"/>
@@ -25,10 +26,8 @@
     <RespirationRateBaseline value="16.0" unit="1/min"/>
     <SystolicArterialPressureBaseline value="114.0" unit="mmHg"/>
 	<!-- TidalVolumeBaseline CANNOT be set by the user -->
-	
 	<HeartRateMaximum value="177.2" unit="1/min"/>
 	<HeartRateMinimum value="0.001" unit="1/min"/>
-	
 	<!-- ExpiratoryReserveVolume CANNOT be set by the user -->
 	<FunctionalResidualCapacity value="1.7337" unit="L"/>
 	<!-- InspiratoryCapacity CANNOT be set by the user -->
@@ -36,5 +35,4 @@
 	<ResidualVolume value="0.925" unit="L"/>
 	<TotalLungCapacity value="4.62" unit="L"/>
 	<!-- VitalCapacity CANNOT be set by the user -->
-
 </Patient>

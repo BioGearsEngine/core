@@ -20,7 +20,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 namespace biogears {
-class BIOGEARS_API SENervousSystem : public SESystem {
+  class TimeUnit;
+
+  class BIOGEARS_API SENervousSystem : public SESystem {
 public:
   SENervousSystem(Logger* logger);
   ~SENervousSystem() override;
@@ -90,18 +92,52 @@ public:
   const SEPupillaryResponse* GetRightEyePupillaryResponse() const;
   void RemoveRightEyePupillaryResponse();
 
+  bool IsAsleep() const;
+  SEScalarTime& GetSleepTime();
+  double GetSleepTime(const TimeUnit& unit) const;
+
+  CDM::enumSleepState::value GetSleepState() const;
+  void SetSleepState(CDM::enumSleepState::value sleep);
+  void InvalidateSleepState();
+  bool HasSleepState() const;
+
+  bool IsAwake() const;
+  SEScalarTime& GetWakeTime();
+  double GetWakeTime(const TimeUnit& unit) const;
+
+  bool HasBiologicalDebt() const;
+  SEScalar& GetBiologicalDebt();
+  double GetBiologicalDebt() const;
+
+  bool HasReactionTime() const;
+  SEScalarTime& GetReactionTime();
+  double GetReactionTime(const TimeUnit& unit) const;
+
+  bool HasAttentionLapses() const;
+  SEScalar& GetAttentionLapses();
+  double GetAttentionLapses() const;
+
 protected:
   SEScalar* m_ComplianceScale;
   SEScalar* m_HeartRateScale;
   SEScalar* m_HeartElastanceScale;
+  SEPupillaryResponse* m_LeftEyePupillaryResponse;
+  SEPupillaryResponse* m_RightEyePupillaryResponse;
+  SEScalar* m_PainVisualAnalogueScale;
   SEScalar* m_ResistanceScaleExtrasplanchnic;
   SEScalar* m_ResistanceScaleMuscle;
   SEScalar* m_ResistanceScaleMyocardium;
   SEScalar* m_ResistanceScaleSplanchnic;
+  SEScalarTime* m_SleepTime;
+  SEScalarTime* m_WakeTime;
+  CDM::enumSleepState::value m_SleepState;
+  SEScalar* m_BiologicalDebt;
+  SEScalarTime* m_ReactionTime;
+  SEScalar* m_AttentionLapses;
 
-  SEPupillaryResponse* m_LeftEyePupillaryResponse;
-  SEPupillaryResponse* m_RightEyePupillaryResponse;
-  SEScalar* m_PainVisualAnalogueScale;
+
+
+
   SEScalar* m_RichmondAgitationSedationScale;
 };
 }

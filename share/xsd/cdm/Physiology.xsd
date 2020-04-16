@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="ReactivityModifier" type="ScalarNeg1To1Data" minOccurs="0"  maxOccurs="1"/><!--<< @brief Change in pupil reaction time -1 complete reduction/no response, 0 is normal, and 1 is the fastest reaction time. -->
                     <xs:element name="ShapeModifier" type="ScalarNeg1To1Data" minOccurs="0"  maxOccurs="1"/><!--<< @brief Percentage change in pupil shape from normal. Positive is vertical ovoid. Negative is horizontal ovoid. -->
                     <xs:element name="SizeModifier" type="ScalarNeg1To1Data" minOccurs="0"  maxOccurs="1"/><!--<< @brief Pupil size change from normal. -1 is fully constricted, 0 is no change, +1 is fully dilated. -->
-				</xs:sequence>
+                </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -299,6 +299,15 @@ specific language governing permissions and limitations under the License.
     <!-- @brief 
          @details
      -->
+
+
+    <xs:simpleType name="enumSleepState">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Awake"/>
+            <xs:enumeration value="Asleep"/>
+        </xs:restriction>
+    </xs:simpleType>
+ 
     <xs:complexType name="NervousSystemData">
         <xs:complexContent>
             <xs:extension base="SystemData">
@@ -313,7 +322,14 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="LeftEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->   		
                     <xs:element name="PainVisualAnalogueScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Computed visual analogue scale due to stimulus and patient susceptibility-->
 					<xs:element name="RichmondAgitationSedationScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="RightEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->                                      
+					<xs:element name="RightEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->  
+                    <xs:element name="SleepTime" type="ScalarTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
+                    <xs:element name="SleepState" type="enumSleepState" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Current sleep state --> 
+                    <xs:element name="WakeTime" type="ScalarTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->    
+                    <xs:element name="BiologicalDebt" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief --> 
+                    <xs:element name="ReactionTime" type="ScalarTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief ms time taken to quickly react to stimulus -->    
+                    <xs:element name="AttentionLapses" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief number of times attention lapses for a given focused task -->   
+
                 </xs:sequence>  
             </xs:extension>
         </xs:complexContent>

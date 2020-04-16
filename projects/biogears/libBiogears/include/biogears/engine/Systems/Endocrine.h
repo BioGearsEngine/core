@@ -83,6 +83,7 @@ private:
   // Stateless member variable (Set in SetUp())
   double m_dt_s;
   double m_insulinMolarMass_g_Per_mol;
+  double m_averageBiologicalDebt;
   double m_glucagonMolarMass_g_Per_mol;
   SELiquidSubstanceQuantity* m_aortaGlucose = nullptr;
   SELiquidSubstanceQuantity* m_aortaEpinephrine = nullptr;
