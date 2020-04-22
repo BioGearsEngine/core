@@ -7,6 +7,8 @@
 #include <list>
 #include <regex>
 
+#include <biogears/string/manipulation.h>
+
 namespace biogears {
 
 Token::Token()

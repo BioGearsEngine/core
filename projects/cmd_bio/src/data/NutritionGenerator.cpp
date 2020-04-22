@@ -18,6 +18,8 @@
 #include <fstream>
 #include <iostream>
 
+#include <biogears/string/manipulation.h>
+
 namespace biogears {
 
 NutritionGenerator::NutritionGenerator(std::string path)

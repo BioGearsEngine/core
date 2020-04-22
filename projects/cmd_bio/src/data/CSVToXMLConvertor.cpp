@@ -12,6 +12,7 @@
 
 #include "CSVToXMLConvertor.h"
 #include <biogears/exports.h>
+#include <biogears/string/manipulation.h>
 
 #include <algorithm>
 #include <fstream>
@@ -84,7 +85,7 @@ bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std
         }
       } else {
         row.second.emplace_back(token_start, token_end);
-        trim(row.second.back());
+        biogears::trim(row.second.back());
         token_start = token_end + 1;
       }
       break;
@@ -113,7 +114,7 @@ bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std
  
   if( token_start < token_end )
   {
-    row.second.emplace_back(trim(std::string(token_start, token_end)));
+    row.second.emplace_back(biogears::trim(std::string(token_start, token_end)));
   } else if ( token_start == token_end){
     row.second.emplace_back( "" );
   }

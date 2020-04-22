@@ -16,6 +16,9 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
+
+#include <biogears/string/manipulation.h>
+
 #ifdef ANDROID
   namespace std {
     static double std::stod(const std::string& value, std::size_t* pos = 0){

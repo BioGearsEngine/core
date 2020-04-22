@@ -17,6 +17,8 @@
 #include <fstream>
 #include <iostream>
 
+#include <biogears/string/manipulation.h>
+
 namespace biogears {
 
 CompoundGenerator::CompoundGenerator(std::string path)

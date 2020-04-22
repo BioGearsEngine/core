@@ -19,6 +19,8 @@
 #include "../utils/string-helpers.h"
 #include <iostream>
 #include <string>
+#include "biogears/string/manipulation.h"
+
 //
 namespace biogears {
 int runPatientScenario(const std::string patient, std::string&& XMLString);

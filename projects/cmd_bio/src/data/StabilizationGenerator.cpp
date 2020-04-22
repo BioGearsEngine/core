@@ -16,6 +16,7 @@
 #include <fstream>
 #include <iostream>
 
+#include <biogears/string/manipulation.h>
 namespace biogears {
 //-----------------------------------------------------------------------------
 StabilizationGenerator::StabilizationGenerator(std::string path)

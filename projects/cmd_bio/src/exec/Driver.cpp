@@ -31,6 +31,7 @@
 
 #include "../utils/Config.h"
 #include "../utils/Executor.h"
+#include "biogears/string/manipulation.h"
 
 namespace biogears {
 Driver::Driver(size_t thread_count)

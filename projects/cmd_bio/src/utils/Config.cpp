@@ -8,6 +8,7 @@
 #include <map>
 #include <regex>
 #include <sstream>
+#include <biogears/string/manipulation.h>
 
 namespace biogears {
 

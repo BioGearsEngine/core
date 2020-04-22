@@ -5,6 +5,7 @@
 #include <iostream>
 #include "string-helpers.h"
 
+#include <biogears/string/manipulation.h>
 namespace biogears {
 //!
 //! Constructor for Arguments

@@ -21,6 +21,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <biogears/common-exports.h>
 
 namespace biogears {
 
@@ -48,19 +49,37 @@ namespace biogears {
   inline std::string asprintf(const char* str) { return std::string(str); }
 
   //----------------------------------------------------------------------------
-  //!
+   
   //! Creates a vector of strings by splitting `src` at every occurrence of
   //! `delimiter`
   //!
-  std::vector<std::string> string_split(const std::string& src,
+  BIOGEARS_COMMON_PUBLIC_API std::vector<std::string> string_split(const std::string& src,
                                         const std::string& delimiter);
 
   //----------------------------------------------------------------------------
-  double parse_double_or(double alt, const std::string& txt);
-  float parse_float_or(float alt, const std::string& txt);
-  int parse_int_or(int alt, const std::string& txt);
+  BIOGEARS_COMMON_PUBLIC_API double parse_double_or(double alt, const std::string& txt);
+  BIOGEARS_COMMON_PUBLIC_API float parse_float_or(float alt, const std::string& txt);
+  BIOGEARS_COMMON_PUBLIC_API int parse_int_or(int alt, const std::string& txt);
 
-  //----------------------------------------------------------------------------
+    //!
+    //! \brief Replaces all instances of the string toReplace in the string S with the string replaceWith
+    //! \param S : string to be split
+    //! \param toReplace : replacement string
+    //! \param replaceWith : string to be replaced
+    //! \return
+    //!
+    BIOGEARS_COMMON_PUBLIC_API std::string findAndReplace(std::string& S, const std::string& toReplace, const std::string& replaceWith);
+    BIOGEARS_COMMON_PUBLIC_API std::string& ltrim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
+    BIOGEARS_COMMON_PUBLIC_API std::string  ltrim(const std::string& input, const std::string& chars = "\t\n\v\f\r ");
+    BIOGEARS_COMMON_PUBLIC_API std::string& rtrim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
+    BIOGEARS_COMMON_PUBLIC_API std::string rtrim(const std::string& input, const std::string& chars = "\t\n\v\f\r ");
+    BIOGEARS_COMMON_PUBLIC_API std::string& trim(std::string&& str, const std::string&& chars = "\t\n\v\f\r ");
+    BIOGEARS_COMMON_PUBLIC_API std::string& trim(std::string& str, const std::string& chars = "\t\n\v\f\r ");
+    BIOGEARS_COMMON_PUBLIC_API std::string trim(const std::string& input, const std::string& chars = "\t\n\v\f\r ");
+    BIOGEARS_COMMON_PUBLIC_API std::vector<std::string> re_split(const std::string& input, const std::string& regex);
+    BIOGEARS_COMMON_PUBLIC_API std::vector<std::string> split(const std::string& input, const char delimiter);
+    BIOGEARS_COMMON_PUBLIC_API std::vector<double> vstod(const std::vector<std::string>& input);
+
   template<typename T>
   inline std::string to_string_or(const std::string& alt, T value) {
     std::string out = alt;
@@ -71,6 +90,7 @@ namespace biogears {
     } catch (...) {}
     return out;
   }
+
 
 } // end namespace biogears
 
