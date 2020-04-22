@@ -25,12 +25,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
-#include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+#include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
+#include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
+#include <biogears/cdm/system/physiology/SERenalSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/string/manipulation.h>
 
@@ -43,23 +45,24 @@ void PatientRun::antibiotics_regiment()
   auto current_time = _bg->GetSimulationTime(TimeUnit::min);
   if (!_first_treatment_occured) {
     if (_apply_at_m < current_time) {
-      _bg->ProcessAction(*_full_PiperacillinTazobactam_bag);
+      _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100.0, VolumeUnit::mL);
+      _bg->ProcessAction(*_PiperacillinTazobactam_bag);
       _first_treatment_occured = true;
       _applying_antibiotics = true;
     }
   }
 
   if (_applying_antibiotics) {
-    auto volume_applied = _full_PiperacillinTazobactam_bag->GetRate().GetValue(VolumePerTimeUnit::mL_Per_min) * _time_applying_antibiotics_min;
-    if (_full_PiperacillinTazobactam_bag->GetBagVolume().GetValue(VolumeUnit::mL) <= volume_applied) {
-      _bg->ProcessAction(*_empty_PiperacillinTazobactam_bag);
+    if (_PiperacillinTazobactam_bag->GetBagVolume().GetValue(VolumeUnit::mL) == 0) {
       _applying_antibiotics = false;
     }
     _time_applying_antibiotics_min += deltaT;
     _time_since_antibiotic_treatment_min = 0;
   } else {
     if (_application_interval_m < _time_since_antibiotic_treatment_min) {
-      _bg->ProcessAction(*_full_PiperacillinTazobactam_bag);
+
+      _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100.0, VolumeUnit::mL);
+      _bg->ProcessAction(*_PiperacillinTazobactam_bag);
       _applying_antibiotics = true;
     }
     _time_applying_antibiotics_min = 0;
@@ -74,13 +77,11 @@ void PatientRun::refresh_treatment()
     //Step 1: Initial Treatment 2 500ml bolus of Saline over 1 hour
     _patient_is_septic = true;
     _refresh_state = RefreshState::INITIAL_BOLUS;
-    _full_PiperacillinTazobactam_bag->GetRate().SetValue(0.75, VolumePerTimeUnit::mL_Per_min);
-    _full_PiperacillinTazobactam_bag->GetBagVolume().SetValue(100.0, VolumeUnit::mL);
-    _empty_PiperacillinTazobactam_bag->GetRate().SetValue(0, VolumePerTimeUnit::mL_Per_min);
-    _empty_PiperacillinTazobactam_bag->GetBagVolume().SetValue(0.0, VolumeUnit::mL);
+    _PiperacillinTazobactam_bag->GetRate().SetValue(0.75, VolumePerTimeUnit::mL_Per_min);
+    _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100.0, VolumeUnit::mL);
 
     SESubstanceCompound* saline = _bg->GetSubstanceManager().GetCompound("Saline");
-    SESubstanceCompoundInfusion SalineBolus{ *saline };
+    SESubstanceCompoundInfusion SalineBolus { *saline };
     SalineBolus.GetBagVolume().SetValue(100, VolumeUnit::mL);
     SalineBolus.GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
     _bg->ProcessAction(SalineBolus);
@@ -92,77 +93,232 @@ void PatientRun::refresh_treatment()
       if (0.99 <= _initial_hour_remaining_m) {
         _initial_hour_remaining_m -= 1.;
       } else {
-        _refresh_state = RefreshState::REASSESSMENT;
+        _refresh_state = RefreshState::FULL_ASSESSMENT;
       }
       break;
-    case RefreshState::MAINTINCE_FLUIDS: {
-      if (0.99 < _maintenance_fluids_remaining_m) {
-        _maintenance_fluids_remaining_m = hours(6);
+    case RefreshState::MAINTENANCE_FLUIDS: {
+      //On might concider maintenance fluids an always on condition
+      //In that case move this entire case outide the switch
+      if (_maintenance_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1) {
         double patient_wgt_kg = _bg->GetPatient().GetWeight(MassUnit::kg);
-        _full_maintenance_bag->GetBagVolume().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr)*/* 6. /*(hours)*/, VolumeUnit::mL);
-        _full_maintenance_bag->GetRate().SetValue(patient_wgt_kg * 1./* (ml/kg * hr) */, VolumePerTimeUnit::mL_Per_hr);
-        _bg->ProcessAction(*_full_maintenance_bag);
-        _time_since_norepinphrine_titrage_active_m = 0;
-      } else {
-        _maintenance_fluids_remaining_m -= 1.;
+        //maintenance fluids 1 mL/kg/h
+        _maintenance_bag->GetBagVolume().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr)*/ * 6. /*(hours)*/, VolumeUnit::mL);
+        _maintenance_bag->GetRate().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr) */, VolumePerTimeUnit::mL_Per_hr);
+        _bg->ProcessAction(*_maintenance_bag);
       }
-      if ( 0.99 < _time_to_reassessment) {
-        _time_to_reassessment -= 1.;
-      } else {
-        _refresh_state = RefreshState::REASSESSMENT;
-      }
-      //aintenance fluids and norepinephrine at respective rates of 1 mL/kg/h and 0.18 µg/kg/min.
     } break;
-    case RefreshState::NEOADRENELINE_INFUSION: {
-      if(!_Norepinphrine) {
+    case RefreshState::NEOADRENELINE_TITRATE: {
+      if (!_Norepinphrine) {
         SESubstance* norepinphrine = _bg->GetSubstanceManager().GetSubstance("Norepinphrine");
         _Norepinphrine = std::make_unique<SESubstanceInfusion>(*norepinphrine).release();
       }
       if (!_norepinphrine_titrate_active) {
         _Norepinphrine->GetRate().SetValue(1.0, VolumePerTimeUnit::mL_Per_min);
-        _Norepinphrine->GetConcentration().SetValue( 1.0 /* (ug/kg*min) */ * _bg->GetPatient().GetWeight(MassUnit::kg),MassPerVolumeUnit::ug_Per_mL);
+        _Norepinphrine->GetConcentration().SetValue(1.0 /* (ug/kg*min) */ * _bg->GetPatient().GetWeight(MassUnit::kg), MassPerVolumeUnit::ug_Per_mL);
         _bg->ProcessAction(*_Norepinphrine);
         _norepinphrine_titrate_active = true;
       } else {
-        _time_since_norepinphrine_titrage_active_m += 1.;
         if (65. <= _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) <= 70.) {
           //Condition 1: Finding correct titrate rate.
           double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
           _Norepinphrine->GetConcentration().SetValue(rate * 0.9, MassPerVolumeUnit::ug_Per_mL);
           _bg->ProcessAction(*_Norepinphrine);
-          if( 60. <= _time_since_norepinphrine_titrage_active_m ) {
-            _refresh_state = RefreshState::REASSESSMENT;
-          }
         } else if (_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) <= 65.) {
           double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
           _Norepinphrine->GetConcentration().SetValue(rate * 1.1, MassPerVolumeUnit::ug_Per_mL);
           _bg->ProcessAction(*_Norepinphrine);
-        } else /* 70. <= _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) .*/{
+        } else /* 70. <= _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) .*/ {
           //MAYBE THIS IS AN EXIT CONDITION ON TITRATE?
           double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
           _Norepinphrine->GetConcentration().SetValue(rate * 0.75, MassPerVolumeUnit::ug_Per_mL); // FASTER PULL BACK
           _bg->ProcessAction(*_Norepinphrine);
         }
       }
-    } break;
-    case RefreshState::REASSESSMENT:
-      _time_to_reassessment = hours(1);
-      if (_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) < 90. && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.) {
-        _refresh_state = RefreshState::NEOADRENELINE_INFUSION;
+      if (65 < _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg)
+          && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 70) {
+        //Check for 10 minutes of 65 < MAP < 70
+        _persistant_stable_map_m += 1;
       } else {
-        _refresh_state = RefreshState::MAINTINCE_FLUIDS;
+        _persistant_stable_map_m -= 0;
       }
-      break;
+      if (10 < _persistant_stable_map_m) {
+        _refresh_state = RefreshState::MONITORING;
+      }
+    } break;
+    case RefreshState::FULL_ASSESSMENT: {
+      _time_to_reassessment = hours(1);
+      _time_to_full_assessment = hours(3);
+      biogears::SEUrinalysis ua(_bg->GetLogger());
+      _bg->GetPatientAssessment(ua);
+      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::L_Per_day) < 1) {
+
+        _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL);
+        _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
+        _bg->ProcessAction(*_Saline_bag);
+        _refresh_state = RefreshState::NEOADRENELINE_TITRATE;
+      } else {
+        _refresh_state = RefreshState::MAINTENANCE_FLUIDS;
+      }
+    } break;
     default:
       break;
     }
+    if (_PiperacillinTazobactam_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1) {
+      _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100, VolumeUnit::mL);
+      _bg->ProcessAction(*_PiperacillinTazobactam_bag);
+    }
+
+    if (_time_to_reassessment < 1.0) {
+      _refresh_state = RefreshState::MONITORING;
+    }
+    if (_time_to_full_assessment < 1.0) {
+      _refresh_state = RefreshState::FULL_ASSESSMENT;
+    }
+    _time_to_reassessment -= 1.;
+    _time_to_full_assessment -= 1.;
   }
 }
 //-------------------------------------------------------------------------------
 void PatientRun::egdt_treatment()
 {
-  if (!_patient_is_septic && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 100.) {
+  if (!_patient_is_septic && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 100) {
+
+    //Step 1: Initial Treatment 2 500ml bolus of Saline over 1 hour
     _patient_is_septic = true;
+    _egdt_state = EGDTState::INITIAL_BOLUS;
+    _Saline_bag->GetRate().SetValue(2500.0, VolumePerTimeUnit::mL_Per_hr);
+    _Saline_bag->GetBagVolume().SetValue(2500, VolumeUnit::mL);
+
+    _bg->ProcessAction(*_Saline_bag);
+    _initial_hour_remaining_m = hours(1);
+    _time_to_full_assessment = hours(3);
+  } else {
+    switch (_egdt_state) {
+    case EGDTState::INITIAL_BOLUS:
+      if (_initial_hour_remaining_m < 1.) {
+        _egdt_state = EGDTState::FULL_ASSESSMENT;
+      }
+      _initial_hour_remaining_m -= 1.;
+      break;
+    case EGDTState::MAINTENANCE_FLUIDS: {
+
+      //On might concider maintenance fluids an always on condition
+      //In that case move this entire case outide the switch
+      if (_maintenance_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1) {
+        double patient_wgt_kg = _bg->GetPatient().GetWeight(MassUnit::kg);
+        //maintenance fluids 1 mL/kg/h
+        _maintenance_bag->GetBagVolume().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr)*/ * 6. /*(hours)*/, VolumeUnit::mL);
+        _maintenance_bag->GetRate().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr) */, VolumePerTimeUnit::mL_Per_hr);
+        _bg->ProcessAction(*_maintenance_bag);
+      }
+    } break;
+    case EGDTState::RAPID_FLUID_BOLAS: {
+      if (_Saline_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.) {
+        _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL);
+        _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
+        _bg->ProcessAction(*_Saline_bag);
+      }
+      if ((_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) < 91.
+           || _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 66.)) {
+        //Check for consistant low MAP. If it is consistant for 30 minutes move to Norepinephrine infusion
+        //I check for this by asking if MAP < 66 for 30 iterations with out seeing MAP > 66 for 5 consecutive iterations
+        _persistent_low_map_m += 1;
+        _high_map_count = (_high_map_count) ? _high_map_count - 1 : 0;
+      } else {
+        _high_map_count += 0;
+        if (5 < _high_map_count) {
+          _persistent_low_map_m = 0;
+        }
+      }
+      if (30 < _persistent_low_map_m) {
+        _egdt_state = EGDTState::NOREPHINEPRIN_INFUSION;
+      }
+
+      biogears::SEUrinalysis ua(_bg->GetLogger());
+      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::L_Per_day) < 1) {
+        _egdt_state = EGDTState::RAPID_FLUID_BOLAS;
+      } else {
+        _egdt_state = EGDTState::MONITORING;
+      }
+
+    } break;
+    case EGDTState::MONITORING:
+      _time_to_reassessment = hours(1);
+      if (_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) < 90. || _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.) {
+        _egdt_state = EGDTState::RAPID_FLUID_BOLAS;
+      } else {
+        _egdt_state = EGDTState::MAINTENANCE_FLUIDS;
+      }
+      break;
+    case EGDTState::NOREPHINEPRIN_INFUSION: {
+      if (!_Norepinphrine) {
+        SESubstance* norepinphrine = _bg->GetSubstanceManager().GetSubstance("Norepinphrine");
+        _Norepinphrine = std::make_unique<SESubstanceInfusion>(*norepinphrine).release();
+      }
+      if (!_norepinphrine_titrate_active) {
+        _Norepinphrine->GetRate().SetValue(1.0, VolumePerTimeUnit::mL_Per_min);
+        _Norepinphrine->GetConcentration().SetValue(1.0 /* (ug/kg*min) */ * _bg->GetPatient().GetWeight(MassUnit::kg), MassPerVolumeUnit::ug_Per_mL);
+        _bg->ProcessAction(*_Norepinphrine);
+        _norepinphrine_titrate_active = true;
+      } else {
+        if (65. <= _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) <= 70.) {
+          //Condition 1: Finding correct titrate rate.
+          double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
+          _Norepinphrine->GetConcentration().SetValue(rate * 0.9, MassPerVolumeUnit::ug_Per_mL);
+          _bg->ProcessAction(*_Norepinphrine);
+        } else if (_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) <= 65.) {
+          double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
+          _Norepinphrine->GetConcentration().SetValue(rate * 1.1, MassPerVolumeUnit::ug_Per_mL);
+          _bg->ProcessAction(*_Norepinphrine);
+        } else /* 70. <= _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) .*/ {
+          //MAYBE THIS IS AN EXIT CONDITION ON TITRATE?
+          double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
+          _Norepinphrine->GetConcentration().SetValue(rate * 0.75, MassPerVolumeUnit::ug_Per_mL); // FASTER PULL BACK
+          _bg->ProcessAction(*_Norepinphrine);
+        }
+      }
+      if (65 < _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg)
+          && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 70) {
+        //Check for 10 minutes of 65 < MAP < 70
+        _persistant_stable_map_m += 1;
+      } else {
+        _persistant_stable_map_m -= 0;
+      }
+      if (10 < _persistant_stable_map_m) {
+        _egdt_state = EGDTState::MONITORING;
+      }
+    } break;
+    case EGDTState::FULL_ASSESSMENT: {
+      _time_to_reassessment = hours(1);
+      _time_to_full_assessment = hours(3);
+      biogears::SEUrinalysis ua(_bg->GetLogger());
+      _bg->GetPatientAssessment(ua);
+      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::L_Per_day) < 1) {
+
+        _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL);
+        _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
+        _bg->ProcessAction(*_Saline_bag);
+        _egdt_state = EGDTState::RAPID_FLUID_BOLAS;
+      } else {
+        _egdt_state = EGDTState::MAINTENANCE_FLUIDS;
+      }
+    } break;
+    default:
+      break;
+    }
+    if (_PiperacillinTazobactam_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1) {
+      _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100, VolumeUnit::mL);
+      _bg->ProcessAction(*_PiperacillinTazobactam_bag);
+    }
+
+    if (_time_to_reassessment < 1.0) {
+      _egdt_state = EGDTState::MONITORING;
+    }
+    if (_time_to_full_assessment < 1.0) {
+      _egdt_state = EGDTState::FULL_ASSESSMENT;
+    }
+    _time_to_reassessment -= 1.;
+    _time_to_full_assessment -= 1.;
   }
 }
 //-------------------------------------------------------------------------------
@@ -249,7 +405,7 @@ void PatientRun::run()
   _bg->GetEngineTrack()->GetDataRequestManager().SetSamplesPerSecond(1. / (5. * 60.));
 
   HowToTracker tracker(*_bg);
-  SEInfection infection{};
+  SEInfection infection {};
   infection.SetSeverity(_infection_severity);
   SEScalarMassPerVolume infection_mic;
   infection_mic.SetValue(_mic_g_per_l, MassPerVolumeUnit::g_Per_L);
@@ -259,31 +415,20 @@ void PatientRun::run()
   auto& substances = _bg->GetSubstanceManager();
 
   SESubstanceCompound* PiperacillinTazobactam = _bg->GetSubstanceManager().GetCompound("PiperacillinTazobactam");
-  _full_PiperacillinTazobactam_bag = std::make_unique<SESubstanceCompoundInfusion>(*PiperacillinTazobactam).release();
-  _full_PiperacillinTazobactam_bag->GetRate().SetValue(0.75, VolumePerTimeUnit::mL_Per_min);
-  _full_PiperacillinTazobactam_bag->GetBagVolume().SetValue(100.0, VolumeUnit::mL);
-
-  _empty_PiperacillinTazobactam_bag = std::make_unique<SESubstanceCompoundInfusion>(*PiperacillinTazobactam).release();
-  _empty_PiperacillinTazobactam_bag->GetBagVolume().SetValue(0.0, VolumeUnit::mL);
-  _empty_PiperacillinTazobactam_bag->GetRate().SetValue(0, VolumePerTimeUnit::mL_Per_min);
+  _PiperacillinTazobactam_bag = std::make_unique<SESubstanceCompoundInfusion>(*PiperacillinTazobactam).release();
+  _PiperacillinTazobactam_bag->GetRate().SetValue(0.75, VolumePerTimeUnit::mL_Per_min);
+  _PiperacillinTazobactam_bag->GetBagVolume().SetValue(0, VolumeUnit::mL);
 
   SESubstanceCompound* Saline = _bg->GetSubstanceManager().GetCompound("Saline");
-  _full_Saline_bag = std::make_unique<SESubstanceCompoundInfusion>(*Saline).release();
-  _full_Saline_bag->GetBagVolume().SetValue(1000, VolumeUnit::mL);
-  _full_Saline_bag->GetRate().SetValue(10, VolumePerTimeUnit::mL_Per_min);
-
-  _empty_Saline_bag = std::make_unique<SESubstanceCompoundInfusion>(*Saline).release();
-  _empty_Saline_bag->GetRate().SetValue(0, VolumePerTimeUnit::mL_Per_min);
-  _empty_Saline_bag->GetBagVolume().SetValue(0, VolumeUnit::mL);
+  _Saline_bag = std::make_unique<SESubstanceCompoundInfusion>(*Saline).release();
+  _Saline_bag->GetRate().SetValue(10, VolumePerTimeUnit::mL_Per_min);
+  _Saline_bag->GetBagVolume().SetValue(0, VolumeUnit::mL);
 
   SESubstanceCompound* SalinelowDrip = _bg->GetSubstanceManager().GetCompound("SalineSlowDrip");
-  _full_maintenance_bag = std::make_unique<SESubstanceCompoundInfusion>(*SalinelowDrip).release();
-  _full_maintenance_bag->GetBagVolume().SetValue(1000, VolumeUnit::mL);
-  _full_maintenance_bag->GetRate().SetValue(10, VolumePerTimeUnit::mL_Per_min);
+  _maintenance_bag = std::make_unique<SESubstanceCompoundInfusion>(*SalinelowDrip).release();
+  _maintenance_bag->GetRate().SetValue(10, VolumePerTimeUnit::mL_Per_min);
+  _maintenance_bag->GetBagVolume().SetValue(0, VolumeUnit::mL);
 
-  _empty_maintenance_bag = std::make_unique<SESubstanceCompoundInfusion>(*SalinelowDrip).release();
-  _empty_maintenance_bag->GetRate().SetValue(0, VolumePerTimeUnit::mL_Per_min);
-  _empty_maintenance_bag->GetBagVolume().SetValue(0, VolumeUnit::mL);
   //Load substances we might use
 
   while (0. < _time_remaining_min) {
@@ -315,30 +460,20 @@ void PatientRun::run()
 void PatientRun::reset()
 {
   //Implementation Details
-  if (_full_PiperacillinTazobactam_bag) {
-    delete _full_PiperacillinTazobactam_bag;
-    _full_PiperacillinTazobactam_bag = nullptr;
+  if (_PiperacillinTazobactam_bag) {
+    delete _PiperacillinTazobactam_bag;
+    _PiperacillinTazobactam_bag = nullptr;
   }
-  if (_empty_PiperacillinTazobactam_bag) {
-    delete _empty_PiperacillinTazobactam_bag;
-    _empty_PiperacillinTazobactam_bag = nullptr;
+  if (_Saline_bag) {
+    delete _Saline_bag;
+    _Saline_bag = nullptr;
   }
-  if (_full_Saline_bag) {
-    delete _full_Saline_bag;
-    _full_Saline_bag = nullptr;
+
+  if (_maintenance_bag) {
+    delete _maintenance_bag;
+    _maintenance_bag = nullptr;
   }
-  if (_empty_Saline_bag) {
-    delete _empty_Saline_bag;
-    _empty_Saline_bag = nullptr;
-  }
-  if (_full_maintenance_bag) {
-    delete _full_maintenance_bag;
-    _full_maintenance_bag = nullptr;
-  }
-  if (_empty_maintenance_bag) {
-    delete _empty_maintenance_bag;
-    _empty_maintenance_bag = nullptr;
-  }
+
   if (_bg) {
     delete _bg;
     _bg = nullptr;

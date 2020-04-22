@@ -36,39 +36,41 @@ enum class TreatmentPlan {
 enum class RefreshState {
   NONE,
   INITIAL_BOLUS,
-  NEOADRENELINE_INFUSION,
-  MAINTINCE_FLUIDS,
-  REASSESSMENT,
+  MONITORING,
+  MAINTENANCE_FLUIDS,
+  NEOADRENELINE_TITRATE,
+  FULL_ASSESSMENT,
+};
+
+enum class EGDTState {
+  NONE,
+  INITIAL_BOLUS,
+  FULL_ASSESSMENT,
+  MAINTENANCE_FLUIDS,
+  RAPID_FLUID_BOLAS,
+  MONITORING,
+  NOREPHINEPRIN_INFUSION
 };
 
 class PatientRun {
 public:
   ~PatientRun()
   {
-    if (_full_PiperacillinTazobactam_bag) {
-      delete _full_PiperacillinTazobactam_bag;
-      _full_PiperacillinTazobactam_bag = nullptr;
+    if (_PiperacillinTazobactam_bag) {
+      delete _PiperacillinTazobactam_bag;
+      _PiperacillinTazobactam_bag = nullptr;
     }
-    if (_empty_PiperacillinTazobactam_bag) {
-      delete _empty_PiperacillinTazobactam_bag;
-      _empty_PiperacillinTazobactam_bag = nullptr;
+
+    if (_Saline_bag) {
+      delete _Saline_bag;
+      _Saline_bag = nullptr;
     }
-    if (_full_Saline_bag) {
-      delete _full_Saline_bag;
-      _full_Saline_bag = nullptr;
+
+    if (_maintenance_bag) {
+      delete _maintenance_bag;
+      _maintenance_bag = nullptr;
     }
-    if (_empty_Saline_bag) {
-      delete _empty_Saline_bag;
-      _empty_Saline_bag = nullptr;
-    }
-    if (_full_maintenance_bag) {
-      delete _full_maintenance_bag;
-      _full_maintenance_bag = nullptr;
-    }
-    if (_empty_maintenance_bag) {
-      delete _empty_maintenance_bag;
-      _empty_maintenance_bag = nullptr;
-    }
+
     if (_bg) {
       delete _bg;
       _bg = nullptr;
@@ -110,12 +112,9 @@ private:
   double _duration_hr;
 
   //Implementation Details
-  biogears::SESubstanceCompoundInfusion* _full_PiperacillinTazobactam_bag = nullptr;
-  biogears::SESubstanceCompoundInfusion* _empty_PiperacillinTazobactam_bag = nullptr;
-  biogears::SESubstanceCompoundInfusion* _full_Saline_bag = nullptr;
-  biogears::SESubstanceCompoundInfusion* _empty_Saline_bag = nullptr;
-  biogears::SESubstanceCompoundInfusion* _full_maintenance_bag = nullptr;
-  biogears::SESubstanceCompoundInfusion* _empty_maintenance_bag = nullptr;
+  biogears::SESubstanceCompoundInfusion* _PiperacillinTazobactam_bag = nullptr;
+  biogears::SESubstanceCompoundInfusion* _Saline_bag = nullptr;
+  biogears::SESubstanceCompoundInfusion* _maintenance_bag = nullptr;
 
   biogears::SESubstanceInfusion* _Norepinphrine = nullptr;
 
@@ -137,4 +136,11 @@ private:
   double _maintenance_fluids_remaining_m = 0.;
   bool _norepinphrine_titrate_active = false;
   double _time_since_norepinphrine_titrage_active_m = 0.0;
+
+  //EGDT Implementation Details
+  EGDTState _egdt_state = EGDTState::NONE;
+  double _persistent_low_map_m = 0.;
+  double _persistant_stable_map_m = 0.;
+  double _high_map_count = 0.;
+  double _time_to_full_assessment = 0;
 };
