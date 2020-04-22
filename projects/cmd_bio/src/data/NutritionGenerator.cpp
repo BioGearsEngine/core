@@ -12,7 +12,6 @@
 
 
 #include "NutritionGenerator.h"
-#include "../utils/string-helpers.h"
 
 #include <biogears/schema/cdm/Patient.hxx>
 #include <fstream>

@@ -1,6 +1,5 @@
 #include "Config.h"
 #include "Tokenizer.h"
-#include "string-helpers.h"
 
 #include <fstream>
 #include <iostream>
@@ -8,6 +7,8 @@
 #include <map>
 #include <regex>
 #include <sstream>
+#include <functional>
+
 #include <biogears/string/manipulation.h>
 
 namespace biogears {

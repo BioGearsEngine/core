@@ -27,8 +27,6 @@
 #include <biogears/schema/cdm/Scenario.hxx>
 #include <xsd/cxx/tree/exceptions.hxx>
 
-#include "../utils/string-helpers.h"
-
 #include "../utils/Config.h"
 #include "../utils/Executor.h"
 #include "biogears/string/manipulation.h"

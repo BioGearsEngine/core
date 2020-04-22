@@ -11,7 +11,6 @@
 //-------------------------------------------------------------------------------------------
 
 #include "PatientGenerator.h"
-#include "../utils/string-helpers.h"
 
 #include <fstream>
 #include <iostream>

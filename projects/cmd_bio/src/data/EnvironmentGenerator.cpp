@@ -10,7 +10,6 @@
 //-  specific language governing permissions and limitations under the License.
 //-------------------------------------------------------------------------------------------
 
-#include "../utils/string-helpers.h"
 #include "EnvironmentGenerator.h"
 
 #include <fstream>

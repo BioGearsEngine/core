@@ -20,7 +20,6 @@
 #include <string>
 #include <vector>
 
-#include "../utils/string-helpers.h"
 namespace biogears {
 
 CSVToXMLConvertor::CSVToXMLConvertor(std::string path, std::string filename)

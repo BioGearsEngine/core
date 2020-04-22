@@ -17,7 +17,6 @@
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 
 #include "StateGenerator.h"
-#include "../utils/string-helpers.h"
 #include <iostream>
 #include <string>
 #include "biogears/string/manipulation.h"
