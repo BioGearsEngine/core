@@ -126,7 +126,7 @@ endif()
 ########################################################################################################################################################
 list(APPEND runtime_glob_list   "${runtime_xsd_list}" "${runtime_jar_list}"   "${runtime_data_list}"  "${runtime_doc_list}"   "${runtime_scenario_list}")
 
-add_custom_target( stage_runtime 
+add_custom_target( prepare_runtime_dir
   DEPENDS 
   ${${ROOT_PROJECT_NAME}_RUNTIME_DIR}
   ${${ROOT_PROJECT_NAME}_RUNTIME_DIR}/UCEDefs.conf
