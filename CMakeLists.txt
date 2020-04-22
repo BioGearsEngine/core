@@ -62,17 +62,16 @@ if(NOT TARGET STAGE)
   # You likely need to add on project to stage for every executable you would like
   # to stage (AKA move dep DLLs to the run folder for debugging.
   ################################################################################
-
-    add_dependencies(STAGE ${ROOT_PROJECT_NAME})
-    if( TARGET EXISTS scenario_driver)
-        add_dependencies(STAGE scenario_driver)
-    elseif ( TARGET EXISTS scenario_driver)
-        add_dependencies(STAGE test_driver)
-    endif()
-    if( TARGET EXISTS unittest)
-        add_dependencies(STAGE test_driver)
-    endif()
-    endif()
+  if(TARGET  scenario_driver)
+    add_dependencies(STAGE scenario_driver)
+  endif()
+  if( TARGET scenario_driver)
+    add_dependencies(STAGE test_driver)
+  endif()
+  if(TARGET  unittest)
+    add_dependencies(STAGE test_driver)
+  endif()
+endif()
 
 ###############################################################################
 # Step 3:
