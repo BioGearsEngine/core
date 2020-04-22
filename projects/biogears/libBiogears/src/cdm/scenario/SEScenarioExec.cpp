@@ -46,7 +46,7 @@ bool SEScenarioExec::Execute(const char* scenarioFile, const char* resultsFile, 
 }
 bool SEScenarioExec::Execute(SEScenario const& scenario, const char* resultsFile, SEScenarioCustomExec* cExec)
 {
-  Execute(scenario, std::string{ resultsFile }, cExec);
+  return Execute(scenario, std::string{ resultsFile }, cExec);
 }
 //-----------------------------------------------------------------------------
 bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resultsFile, SEScenarioCustomExec* cExec)

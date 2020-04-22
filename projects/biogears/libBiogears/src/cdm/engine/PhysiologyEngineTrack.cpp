@@ -159,6 +159,7 @@ PhysiologyEngineTrack& PhysiologyEngineTrack::operator=(PhysiologyEngineTrack&& 
   m_PhysiologySystems = std::move(rhs.m_PhysiologySystems);
   m_EquipmentSystems = std::move(rhs.m_EquipmentSystems);
   m_Request2Scalar = std::move(rhs.m_Request2Scalar);
+  return *this;
 }
 PhysiologyEngineTrack::~PhysiologyEngineTrack()
 {
