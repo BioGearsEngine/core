@@ -310,7 +310,7 @@ int main(int argc, char** argv)
           trial.patient_name(patient).patient_state(patient).infection_severity(severity).treatment_plan(plan);
           trial.mic_g_Per_l(mic).apply_at_m(apply_at).apply_at_m(application_interval).duration_hr(duration);
 
-          channel->insert([=]() { return trial.run(); });
+          channel->insert([=]() mutable { return trial.run(); });
 
         } catch (std::exception) {
           std::cerr << "Error: Malformed input skipping trial " << count << " with paramaters " << trial << "invalid double conversion.\n";

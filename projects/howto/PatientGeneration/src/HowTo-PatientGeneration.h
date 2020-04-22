@@ -136,5 +136,5 @@ private:
   double _initial_hour_remaining_m = 60.;
   double _maintenance_fluids_remaining_m = 0.;
   bool _norepinphrine_titrate_active = false;
-  double _time_since_norepinphrine_titrage_active_m = 0.0
+  double _time_since_norepinphrine_titrage_active_m = 0.0;
 };
