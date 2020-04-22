@@ -148,15 +148,44 @@ if(Biogears_BUILD_WEBSITE)
         VERBATIM
         USES_TERMINAL
   )
+  if(Biogears_BUILD_WEBSITE_DEBUG)
+    add_custom_target(docs-prepare-cdm2md
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.CDM2MD #cdm
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        VERBATIM
+        USES_TERMINAL
+    )
+    add_custom_target(docs-prepare-preprocess-markdown
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/markdown doc/doxygen/processed_md
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        VERBATIM
+        USES_TERMINAL
+    )
+    add_custom_target(docs-prepare=preprocess-methodolgy
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.DoxygenPreprocessor  doc/methodology doc/doxygen/processed_md #cdm
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        VERBATIM
+        USES_TERMINAL
+    )
+    add_custom_target(docs-prepare-xsd2doxygen
+        COMMAND ${Java_JAVA_EXECUTABLE} ${allocation_args} -classpath "${java_classpath}"  mil.tatrc.physiology.datamodel.doxygen.XSDToDoxygen xsd/BioGearsDataModel.xsd doc/doxygen/processed_md/xsd.ixx #cdm
+
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        VERBATIM
+        USES_TERMINAL
+    )
+  endif()
 endif()
 
 
 
 option(Biogears_BUILD_WEBSITE "Use Java to build the website" OFF)
 if(Biogears_BUILD_WEBSITE)
-  #add_dependencies(docs-prepare ${PROJECT_NAME})
-  #add_dependencies(docs-doxygen ${PROJECT_NAME} docs-prepare)
-  #add_dependencies(docs-stage   ${PROJECT_NAME} docs-doxygen)
+  if (NOT Biogears_BUILD_WEBSITE_DEBUG)
+       add_dependencies(docs-prepare ${PROJECT_NAME})
+       add_dependencies(docs-doxygen ${PROJECT_NAME} docs-prepare)
+       add_dependencies(docs-stage   ${PROJECT_NAME} docs-doxygen)
+  endif()
   set_target_properties(docs-prepare PROPERTIES FOLDER "Java/website" EXCLUDE_FROM_ALL ON)
   set_target_properties(docs-doxygen PROPERTIES FOLDER "Java/website" EXCLUDE_FROM_ALL ON)
   set_target_properties(docs-stage PROPERTIES FOLDER "Java/website"   EXCLUDE_FROM_ALL ON)
