@@ -533,7 +533,7 @@ add_library(minizip::lib ALIAS libminizip)
 set_target_properties(libminizip PROPERTIES
                         VERSION ${VERSION}
                         SOVERSION ${SOVERSION}
-                        FOLDER "Libraries"
+                        FOLDER "Libraries/extern"
                         LINKER_LANGUAGE C
                         DEFINE_SYMBOL "MZ_EXPORTS")
 
