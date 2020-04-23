@@ -75,7 +75,7 @@ void BioGearsEngineTest::RespiratoryCircuitAndTransportTest(RespiratoryConfigura
     // Get an aerosolized substance
     SESubstance* albuterol = bg.GetSubstances().GetSubstance("Albuterol");
     if (albuterol == nullptr) {
-      bg.Error("Could not find the aerosol substance : Albuterol");
+      bg.GetLogger()->Error("Could not find the aerosol substance : Albuterol");
     } else {
       bg.GetSubstances().AddActiveSubstance(*albuterol);
       SELiquidCompartment* mouthpiece = bg.GetCompartments().GetLiquidCompartment(BGE::InhalerCompartment::Mouthpiece);
