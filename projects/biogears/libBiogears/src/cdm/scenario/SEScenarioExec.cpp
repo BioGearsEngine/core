@@ -53,7 +53,6 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
 {
   auto scenarioData =  std::unique_ptr<CDM::ScenarioData>(scenario.Unload());
   auto memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
-  memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
   if (!memory_safe_scenario->Load(*scenarioData)) {
     return false;
   }
@@ -67,7 +66,7 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
       //SEScenario is a flawed design that requires the memory state of a
       //Physiology Engine to remain constant over the scenario and makes
       //State loading a nightmare. The class needs to be depricated this entire
-      //Driver could just read from the Serial layer and standup Actions and Datarequiest
+      //Driver could just read from the Serial layer and standup Actions and DataRequest
       //When we know the physiolgoy engine is good to go and not try to cashe state.
 
       memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
