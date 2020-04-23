@@ -69,19 +69,19 @@ void Logger::ResetLogFile(const std::string& logFilename, const std::string& wor
   m_Log->removeAllAppenders();
   m_Log->setPriority(log4cpp::Priority::INFO);
 
-  std::string qulaified_path = ResolvePath((filesystem::path(working_dir) / logFilename).str());
-  if (!qulaified_path.empty()) {
-    CreateFilePath(qulaified_path);
+  std::string qualified_path = ResolvePath((filesystem::path(working_dir) / logFilename).str());
+  if (!qualified_path.empty()) {
+    CreateFilePath(qualified_path);
 
     // delete previous log contents if it exists
-    FILE* FilePointer = fopen(qulaified_path.c_str(), "wt+");
+    FILE* FilePointer = fopen(qualified_path.c_str(), "wt+");
     if (FilePointer) {
       fclose(FilePointer);
     }
 
     m_FileAppender = log4cpp::Appender::getAppender(logFilename);
     if (m_FileAppender == nullptr && !logFilename.empty()) {
-      m_FileAppender = new log4cpp::FileAppender(logFilename, qulaified_path);
+      m_FileAppender = new log4cpp::FileAppender(logFilename, qualified_path);
       log4cpp::PatternLayout* myLayout = new log4cpp::PatternLayout();
       myLayout->setConversionPattern("%d [%p] %m%n");
       m_FileAppender->setLayout(myLayout);
