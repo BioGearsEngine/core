@@ -20,6 +20,7 @@ class HowToTracker
 {
 private:
   double m_dT_s;  // Cached Engine Time Step
+  double m_dT_s_remainder = 0.0;
   biogears::PhysiologyEngine& m_Engine;
 public:
   HowToTracker(biogears::PhysiologyEngine& engine);
