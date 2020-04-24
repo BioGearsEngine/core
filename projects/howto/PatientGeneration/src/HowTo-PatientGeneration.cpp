@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include "HowTo-PatientGeneration.h"
 #include "biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h"
 #include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
@@ -34,11 +35,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SERenalSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
+#include <biogears/engine/Systems/Drugs.h>
+#include <biogears/engine/Systems/Energy.h>
 #include <biogears/string/manipulation.h>
 
 using namespace biogears;
 
-void PatientRun::antibiotics_regiment()
+void PatientRun::antibiotics_regimen()
 {
   constexpr double deltaT = 1;
 
@@ -74,37 +77,30 @@ void PatientRun::refresh_treatment()
 {
   if (!_patient_is_septic && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 100) {
 
-    //Step 1: Initial Treatment 2 500ml bolus of Saline over 1 hour
     _patient_is_septic = true;
+
+    //Step 1: Application of Antibiotics . 100ml of Piperacilli-Tazobactam at 75 ml/min
     _refresh_state = RefreshState::INITIAL_BOLUS;
     _PiperacillinTazobactam_bag->GetRate().SetValue(0.75, VolumePerTimeUnit::mL_Per_min);
     _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100.0, VolumeUnit::mL);
+    _bg->ProcessAction(*_PiperacillinTazobactam_bag);
 
-
+    //Step 2: Initial Treatment 2 - 500ml bolus of Saline over 1 hour
     //Matt et.al Frontiers Physiology 2019-10
     //"Just prior to septic shock onset, we administered two separate 500 mL boluses over the course of an hour."
     _Saline_bag->GetBagVolume().SetValue(1000, VolumeUnit::mL);
     _Saline_bag->GetRate().SetValue(500, VolumePerTimeUnit::mL_Per_hr);
     _bg->ProcessAction(*_Saline_bag);
-
   } else {
+
+    //REFRESH State graph. Refer to REFRESH.png in Source code
+
     switch (_refresh_state) {
     case RefreshState::INITIAL_BOLUS:
       if (_Saline_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.0) {
-        _refresh_state = RefreshState::FULL_ASSESSMENT;
+        _refresh_state = RefreshState::MONITORING;
       }
       break;
-    case RefreshState::MAINTENANCE_FLUIDS: {
-      //On might concider maintenance fluids an always on condition
-      //In that case move this entire case outide the switch
-      if (_maintenance_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.0) {
-        double patient_wgt_kg = _bg->GetPatient().GetWeight(MassUnit::kg);
-        //maintenance fluids 1 mL/kg/h
-        _maintenance_bag->GetBagVolume().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr)*/ * 6. /*(hours)*/, VolumeUnit::mL);
-        _maintenance_bag->GetRate().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr) */, VolumePerTimeUnit::mL_Per_hr);
-        _bg->ProcessAction(*_maintenance_bag);
-      }
-    } break;
     case RefreshState::NOREPINEPHRINE_TITRATE: {
       if (!_Norepinphrine) {
         SESubstance* norepinphrine = _bg->GetSubstanceManager().GetSubstance("Norepinphrine");
@@ -143,76 +139,131 @@ void PatientRun::refresh_treatment()
         _refresh_state = RefreshState::MONITORING;
       }
     } break;
-    case RefreshState::FULL_ASSESSMENT: {
-      _time_to_reassessment_min = hours(1);
-      _time_to_full_assessment_min = hours(3);
-      biogears::SEUrinalysis ua(_bg->GetLogger());
-      _bg->GetPatientAssessment(ua);
-      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::L_Per_day) < 1) {
-
-        _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL);
-        _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
-        _bg->ProcessAction(*_Saline_bag);
-        _refresh_state = RefreshState::NOREPINEPHRINE_TITRATE;
-      } else {
-        _refresh_state = RefreshState::MAINTENANCE_FLUIDS;
-      }
+    case RefreshState::MONITORING: {
     } break;
     default:
       break;
     }
-    if (_PiperacillinTazobactam_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1) {
-      _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100, VolumeUnit::mL);
-      _bg->ProcessAction(*_PiperacillinTazobactam_bag);
-    }
 
-    if (_time_to_reassessment_min < 1.0) {
-      _refresh_state = RefreshState::MONITORING;
+    // Maintenance fluids at 1ml/kg per Hour
+    if (_refresh_state != RefreshState::INITIAL_BOLUS
+        && _maintenance_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.0) {
+      //Apply maintenance fluids at 1 mL/kg/h
+      double patient_wgt_kg = _bg->GetPatient().GetWeight(MassUnit::kg);
+      _maintenance_bag->GetBagVolume().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr)*/ * 6. /*(hours)*/, VolumeUnit::mL);
+      _maintenance_bag->GetRate().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr) */, VolumePerTimeUnit::mL_Per_hr);
+      _bg->ProcessAction(*_maintenance_bag);
     }
-    if (_time_to_full_assessment_min < 1.0) {
-      _refresh_state = RefreshState::FULL_ASSESSMENT;
+  }
+
+  // While in REFRESH apply PiperacillianTazobactam and a constant rate
+  if (_refresh_state != RefreshState::INITIAL_BOLUS
+      && _PiperacillinTazobactam_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1) {
+    _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100, VolumeUnit::mL);
+    _bg->ProcessAction(*_PiperacillinTazobactam_bag);
+  }
+
+  // Every hour assess if  MAP <= 65mmHG | Systolic <= 90mmHG
+  // If so and UrineOutput <= 20ml/h 500ml Bolus 1000ml/h
+  if (_refresh_state != RefreshState::INITIAL_BOLUS
+      && _time_to_reassessment_min < 1.0) {
+    _time_to_reassessment_min = hours(1);
+    biogears::SEUrinalysis ua(_bg->GetLogger());
+    _bg->GetPatientAssessment(ua);
+
+    //When MAP < 65mmHg or Systolic < 90mmHg move to TITRATE.  Additionally if Urine Output is to low apply a bolus
+    if (_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.
+        || _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) <= 90.) {
+      //Apply a 250ml Bolus and Move to Titrate
+      _refresh_state = RefreshState::NOREPINEPHRINE_TITRATE;
+      _Saline_bag->GetBagVolume().SetValue(250, VolumeUnit::mL);
+      _Saline_bag->GetRate().SetValue(250, VolumePerTimeUnit::mL_Per_hr);
+      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
+          || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20) {
+        //Because body fluids are so low apply an additional 1000nl bolus over the hour
+        _Saline_bag->GetBagVolume().SetValue(1250, VolumeUnit::mL);
+        _Saline_bag->GetRate().SetValue(1250, VolumePerTimeUnit::mL_Per_hr);
+      }
+      _bg->ProcessAction(*_Saline_bag);
     }
-    _time_to_reassessment_min -= 1.;
-    _time_to_full_assessment_min -= 1.;
+  }
+
+  // Every three Hours Assess The Patient State
+  if (_refresh_state != RefreshState::INITIAL_BOLUS
+      && _time_to_full_assessment_min < 1.0) {
+    _time_to_full_assessment_min = hours(3);
+    _bg->GetLogger()->Info("");
+    _bg->GetLogger()->Info(std::stringstream() << "Patient Physiology"
+                                               << "\n\tSimulation Time  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
+                                               << "\n\tTime Since Infection Start  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
+                                               << "\n\tBlood Volume : " << _bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL
+                                               << "\n\tBlood Oxygen Saturation : " << _bg->GetBloodChemistrySystem()->GetOxygenSaturation() << "%"
+                                               << "\n\tMean Arterial Pressure : " << _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+                                               << "\n\tSystolic Pressure : " << _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+                                               << "\n\tDiastolic Pressure : " << _bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+                                               << "\n\tHeart Rate : " << _bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm"
+                                               << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
+                                               << "\n\tMean Urine Output : " << _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
+                                               << "\n\tTemperature : " << _bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << "deg C"
+                                               << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
+                                               << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()
+                                               << "\n\tAntibiotic Activity : " << _bg->GetDrugSystem()->GetAntibioticActivity());
+  }
+  _time_to_reassessment_min -= 1.;
+  _time_to_full_assessment_min -= 1.;
+  _treatment_time_remaining_min -= 1.;
+  if (_treatment_time_remaining_min < 1.) {
+    _treatment_plan = TreatmentPlan::STANDARD;
   }
 }
-//-------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------RAPID_FLUID_BOLUS
 void PatientRun::egdt_treatment()
 {
   if (!_patient_is_septic && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 100) {
 
-    //Step 1: Initial Treatment 2 500ml bolus of Saline over 1 hour
     _patient_is_septic = true;
-    _egdt_state = EGDTState::INITIAL_BOLUS;
-    _Saline_bag->GetRate().SetValue(2500.0, VolumePerTimeUnit::mL_Per_hr);
-    _Saline_bag->GetBagVolume().SetValue(2500, VolumeUnit::mL);
 
+    //Step 1: Application of Antibiotics . 100ml of Piperacilli-Tazobactam at 75 ml/min
+    _egdt_state = EGDTState::INITIAL_BOLUS;
+    _PiperacillinTazobactam_bag->GetRate().SetValue(0.75, VolumePerTimeUnit::mL_Per_min);
+    _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100.0, VolumeUnit::mL);
+    _bg->ProcessAction(*_PiperacillinTazobactam_bag);
+
+    //Step 2: Initial Treatment 2 - 500ml bolus of Saline over 1 hour
+    //Matt et.al Frontiers Physiology 2019-10
+    //"Just prior to septic shock onset, we administered two separate 500 mL boluses over the course of an hour."
+    _Saline_bag->GetBagVolume().SetValue(1000, VolumeUnit::mL);
+    _Saline_bag->GetRate().SetValue(500, VolumePerTimeUnit::mL_Per_hr);
     _bg->ProcessAction(*_Saline_bag);
-    _time_to_full_assessment_min = hours(3);
   } else {
+
+    //REFRESH State graph. Refer to REFRESH.png in Source code
+
     switch (_egdt_state) {
     case EGDTState::INITIAL_BOLUS:
-      if ( _Saline_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.) {
-        _egdt_state = EGDTState::FULL_ASSESSMENT;
-      }      
-      break;
-    case EGDTState::MAINTENANCE_FLUIDS: {
-
-      //On might concider maintenance fluids an always on condition
-      //In that case move this entire case outide the switch
-      if (_maintenance_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1) {
-        double patient_wgt_kg = _bg->GetPatient().GetWeight(MassUnit::kg);
-        //maintenance fluids 1 mL/kg/h
-        _maintenance_bag->GetBagVolume().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr)*/ * 6. /*(hours)*/, VolumeUnit::mL);
-        _maintenance_bag->GetRate().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr) */, VolumePerTimeUnit::mL_Per_hr);
-        _bg->ProcessAction(*_maintenance_bag);
+      if (_Saline_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.0) {
+        _egdt_state = EGDTState::MONITORING;
       }
-    } break;
-    case EGDTState::RAPID_FLUID_BOLAS: {
+      break;
+    case EGDTState::RAPID_FLUID_BOLUS: {
       if (_Saline_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.) {
-        _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL);
-        _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
-        _bg->ProcessAction(*_Saline_bag);
+
+        biogears::SEUrinalysis ua(_bg->GetLogger());
+        _bg->GetPatientAssessment(ua);
+
+        auto is_septic = _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.
+                        || _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) <= 90;
+        auto is_not_euvolaemic = ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
+                                 || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20;
+
+        if (is_septic && is_not_euvolaemic) {
+          _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL);
+          _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
+          _bg->ProcessAction(*_Saline_bag);
+        } else {
+          _egdt_state = EGDTState::MONITORING;
+        }
       }
       if ((_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) < 91.
            || _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 66.)) {
@@ -227,26 +278,11 @@ void PatientRun::egdt_treatment()
         }
       }
       if (30 < _persistent_low_map_min) {
-        _egdt_state = EGDTState::NOREPHINEPRIN_INFUSION;
+        _egdt_state = EGDTState::NOREPINEPHRINE_TITRATE;
       }
-
-      biogears::SEUrinalysis ua(_bg->GetLogger());
-      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::L_Per_day) < 1) {
-        _egdt_state = EGDTState::RAPID_FLUID_BOLAS;
-      } else {
-        _egdt_state = EGDTState::MONITORING;
-      }
-
     } break;
-    case EGDTState::MONITORING:
-      _time_to_reassessment_min = hours(1);
-      if (_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) < 90. || _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.) {
-        _egdt_state = EGDTState::RAPID_FLUID_BOLAS;
-      } else {
-        _egdt_state = EGDTState::MAINTENANCE_FLUIDS;
-      }
-      break;
-    case EGDTState::NOREPHINEPRIN_INFUSION: {
+
+    case EGDTState::NOREPINEPHRINE_TITRATE: {
       if (!_Norepinphrine) {
         SESubstance* norepinphrine = _bg->GetSubstanceManager().GetSubstance("Norepinphrine");
         _Norepinphrine = std::make_unique<SESubstanceInfusion>(*norepinphrine).release();
@@ -284,43 +320,83 @@ void PatientRun::egdt_treatment()
         _egdt_state = EGDTState::MONITORING;
       }
     } break;
-    case EGDTState::FULL_ASSESSMENT: {
-      _time_to_reassessment_min = hours(1);
-      _time_to_full_assessment_min = hours(3);
-      biogears::SEUrinalysis ua(_bg->GetLogger());
-      _bg->GetPatientAssessment(ua);
-      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::L_Per_day) < 1) {
-
-        _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL);
-        _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
-        _bg->ProcessAction(*_Saline_bag);
-        _egdt_state = EGDTState::RAPID_FLUID_BOLAS;
-      } else {
-        _egdt_state = EGDTState::MAINTENANCE_FLUIDS;
-      }
+    case EGDTState::MONITORING: {
     } break;
     default:
       break;
     }
 
-    if (_PiperacillinTazobactam_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1) {
-      _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100, VolumeUnit::mL);
-      _bg->ProcessAction(*_PiperacillinTazobactam_bag);
+    // Maintenance fluids at 1ml/kg per Hour
+    if (_egdt_state != EGDTState::INITIAL_BOLUS
+        && _maintenance_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.0) {
+      //Apply maintenance fluids at 1 mL/kg/h
+      double patient_wgt_kg = _bg->GetPatient().GetWeight(MassUnit::kg);
+      _maintenance_bag->GetBagVolume().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr)*/ * 6. /*(hours)*/, VolumeUnit::mL);
+      _maintenance_bag->GetRate().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr) */, VolumePerTimeUnit::mL_Per_hr);
+      _bg->ProcessAction(*_maintenance_bag);
     }
+  }
 
-    if (_time_to_reassessment_min < 1.0) {
-      _egdt_state = EGDTState::MONITORING;
+  // While in REFRESH apply PiperacillianTazobactam and a constant rate
+  if (_egdt_state != EGDTState::INITIAL_BOLUS
+      && _PiperacillinTazobactam_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1) {
+    _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100, VolumeUnit::mL);
+    _bg->ProcessAction(*_PiperacillinTazobactam_bag);
+  }
+
+  // Every hour assess if  MAP <= 65mmHG | Systolic <= 90mmHG
+  // If so and UrineOutput <= 20ml/h 500ml Bolus 1000ml/h
+  if (_egdt_state != EGDTState::INITIAL_BOLUS
+      && _time_to_reassessment_min < 1.0) {
+    _time_to_reassessment_min = hours(1);
+
+    //When MAP < 65mmHg or Systolic < 90mmHg move to TITRATE.  Additionally if Urine Output is to low apply a bolus
+    if (_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.
+        || _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) <= 90.) {
+      _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL); 
+      _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
+      _bg->ProcessAction(*_Saline_bag);
+      _egdt_state = (_egdt_state == EGDTState::NOREPINEPHRINE_TITRATE) ? EGDTState::NOREPINEPHRINE_TITRATE : EGDTState::RAPID_FLUID_BOLUS;
     }
-    if (_time_to_full_assessment_min < 1.0) {
-      _egdt_state = EGDTState::FULL_ASSESSMENT;
-    }
-    
-    _time_to_reassessment_min -= 1.;
-    _time_to_full_assessment_min -= 1.;
+  }
+
+  // Every hour assess if  MAP <= 65mmHG | Systolic <= 90mmHG
+  // If so and UrineOutput <= 20ml/h 500ml Bolus 1000ml/h
+  if (_refresh_state != RefreshState::INITIAL_BOLUS
+      && _time_to_reassessment_min < 1.0) {
+    _time_to_reassessment_min = hours(1);
+  }
+
+  // Every three Hours Assess The Patient State
+  if (_egdt_state != EGDTState::INITIAL_BOLUS
+      && _time_to_full_assessment_min < 1.0) {
+    _time_to_full_assessment_min = hours(3);
+    _bg->GetLogger()->Info("");
+    _bg->GetLogger()->Info(std::stringstream() << "Patient Physiology"
+                                               << "\n\tSimulation Time  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
+                                               << "\n\tTime Since Infection Start  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
+                                               << "\n\tBlood Volume : " << _bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL
+                                               << "\n\tBlood Oxygen Saturation : " << _bg->GetBloodChemistrySystem()->GetOxygenSaturation() << "%"
+                                               << "\n\tMean Arterial Pressure : " << _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+                                               << "\n\tSystolic Pressure : " << _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+                                               << "\n\tDiastolic Pressure : " << _bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+                                               << "\n\tHeart Rate : " << _bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm"
+                                               << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
+                                               << "\n\tMean Urine Output : " << _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
+                                               << "\n\tTemperature : " << _bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << "deg C"
+                                               << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
+                                               << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()
+                                               << "\n\tAntibiotic Activity : " << _bg->GetDrugSystem()->GetAntibioticActivity());
+  }
+  _time_to_reassessment_min -= 1.;
+  _time_to_full_assessment_min -= 1.;
+  _treatment_time_remaining_min -= 1.;
+  if (_treatment_time_remaining_min < 1.) {
+    _treatment_plan = TreatmentPlan::STANDARD;
   }
 }
 //-------------------------------------------------------------------------------
-void PatientRun::nutrition_regiment()
+void PatientRun::nutrition_regimen()
 {
   if (_time_since_feeding_min > hours(8)) {
     _time_since_feeding_min -= hours(8);
@@ -435,18 +511,18 @@ void PatientRun::run()
     case TreatmentPlan::NONE:
       break;
     case TreatmentPlan::STANDARD:
-      antibiotics_regiment();
+      antibiotics_regimen();
       break;
     case TreatmentPlan::REFRESH:
-      antibiotics_regiment();
+      antibiotics_regimen();
       refresh_treatment();
       break;
     case TreatmentPlan::EGDT:
-      antibiotics_regiment();
+      antibiotics_regimen();
       egdt_treatment();
       break;
     }
-    nutrition_regiment();
+    nutrition_regimen();
 
     tracker.AdvanceModelTime(to_seconds(1));
     _time_remaining_min = hours(_duration_hr) - _bg->GetSimulationTime(TimeUnit::min);

@@ -37,19 +37,15 @@ enum class RefreshState {
   NONE,
   INITIAL_BOLUS,
   MONITORING,
-  MAINTENANCE_FLUIDS,
   NOREPINEPHRINE_TITRATE,
-  FULL_ASSESSMENT,
 };
 
 enum class EGDTState {
   NONE,
   INITIAL_BOLUS,
-  FULL_ASSESSMENT,
-  MAINTENANCE_FLUIDS,
-  RAPID_FLUID_BOLAS,
   MONITORING,
-  NOREPHINEPRIN_INFUSION
+  RAPID_FLUID_BOLUS,
+  NOREPINEPHRINE_TITRATE
 };
 
 class PatientRun {
@@ -91,10 +87,10 @@ public:
   PatientRun& duration_hr(double);
 
 protected:
-  void antibiotics_regiment();
+  void antibiotics_regimen();
   void refresh_treatment();
   void egdt_treatment();
-  void nutrition_regiment();
+  void nutrition_regimen();
 
 private:
   //Configuration Details
@@ -135,6 +131,7 @@ private:
   double _maintenance_fluids_remaining_min = 0.;
   bool   _norepinphrine_titrate_active = false;
   double _time_since_norepinphrine_titrage_active_min = 0.0;
+  double _treatment_time_remaining_min = 360;
 
   //EGDT Implementation Details
   EGDTState _egdt_state = EGDTState::NONE;
