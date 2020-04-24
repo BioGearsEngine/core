@@ -14,7 +14,7 @@
 
 #include <fstream>
 #include <iostream>
-#include "biogears/string/manipulation.h"
+#include <biogears/string/manipulation.h>
 
 namespace biogears {
 //-----------------------------------------------------------------------------
