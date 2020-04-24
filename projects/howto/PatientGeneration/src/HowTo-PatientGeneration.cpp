@@ -278,6 +278,7 @@ void PatientRun::egdt_treatment()
         }
       }
       if (30 < _persistent_low_map_min) {
+        _persistant_stable_map_min = 0;
         _egdt_state = EGDTState::NOREPINEPHRINE_TITRATE;
       }
     } break;
@@ -317,17 +318,24 @@ void PatientRun::egdt_treatment()
         _persistant_stable_map_min -= 0;
       }
       if (10 < _persistant_stable_map_min) {
+        _persistant_stable_map_min = 0;
         _egdt_state = EGDTState::MONITORING;
       }
     } break;
     case EGDTState::MONITORING: {
+        if ( 65 < _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) &&
+             90 < _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg)) {
+          _persistant_normal_map_min += 1;
+        } else {
+          _persistant_normal_map_min -= 1;
+        }
     } break;
     default:
       break;
     }
 
     // Maintenance fluids at 1ml/kg per Hour
-    if (_egdt_state != EGDTState::INITIAL_BOLUS
+    if (_egdt_state != EGDTState::INITIAL_BOLUS && 30 < _persistant_normal_map_min
         && _maintenance_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.0) {
       //Apply maintenance fluids at 1 mL/kg/h
       double patient_wgt_kg = _bg->GetPatient().GetWeight(MassUnit::kg);

@@ -139,4 +139,5 @@ private:
   double _persistant_stable_map_min = 0.;
   double _high_map_count = 0.;
   double _time_to_full_assessment_min = 0.;
+  double _persistant_normal_map_min = 0.;
 };
