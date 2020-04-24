@@ -353,10 +353,19 @@ void PatientRun::egdt_treatment()
     //When MAP < 65mmHg or Systolic < 90mmHg move to TITRATE.  Additionally if Urine Output is to low apply a bolus
     if (_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.
         || _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) <= 90.) {
+      _egdt_state = (_egdt_state == EGDTState::NOREPINEPHRINE_TITRATE) ? EGDTState::NOREPINEPHRINE_TITRATE : EGDTState::RAPID_FLUID_BOLUS;
+
+      auto ua = SEUrinalysis(_bg->GetLogger());
+      _bg->GetPatientAssessment(ua);
+
       _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL); 
       _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
+      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
+          || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20) {
+        //Because body fluids are so low apply an additional 500ml bolus over the hour
+        _Saline_bag->GetBagVolume().SetValue(1000, VolumeUnit::mL);
+      }
       _bg->ProcessAction(*_Saline_bag);
-      _egdt_state = (_egdt_state == EGDTState::NOREPINEPHRINE_TITRATE) ? EGDTState::NOREPINEPHRINE_TITRATE : EGDTState::RAPID_FLUID_BOLUS;
     }
   }
 
