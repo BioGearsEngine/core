@@ -98,6 +98,7 @@ protected:
   virtual bool IsReady();
   virtual bool InitializeEngine(const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
 
+  double timeStep_remainder = 0.0;
   SEEventHandler* m_EventHandler;
   PhysiologyEngineTrack m_EngineTrack;
 #pragma warning(push,0)
