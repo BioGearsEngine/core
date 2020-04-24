@@ -80,26 +80,24 @@ void PatientRun::refresh_treatment()
     _PiperacillinTazobactam_bag->GetRate().SetValue(0.75, VolumePerTimeUnit::mL_Per_min);
     _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100.0, VolumeUnit::mL);
 
-    SESubstanceCompound* saline = _bg->GetSubstanceManager().GetCompound("Saline");
-    SESubstanceCompoundInfusion SalineBolus { *saline };
-    SalineBolus.GetBagVolume().SetValue(100, VolumeUnit::mL);
-    SalineBolus.GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
-    _bg->ProcessAction(SalineBolus);
-    _initial_hour_remaining_m = hours(1);
+
+    //Matt et.al Frontiers Physiology 2019-10
+    //"Just prior to septic shock onset, we administered two separate 500 mL boluses over the course of an hour."
+    _Saline_bag->GetBagVolume().SetValue(1000, VolumeUnit::mL);
+    _Saline_bag->GetRate().SetValue(500, VolumePerTimeUnit::mL_Per_hr);
+    _bg->ProcessAction(*_Saline_bag);
 
   } else {
     switch (_refresh_state) {
     case RefreshState::INITIAL_BOLUS:
-      if (0.99 <= _initial_hour_remaining_m) {
-        _initial_hour_remaining_m -= 1.;
-      } else {
+      if (_Saline_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.0) {
         _refresh_state = RefreshState::FULL_ASSESSMENT;
       }
       break;
     case RefreshState::MAINTENANCE_FLUIDS: {
       //On might concider maintenance fluids an always on condition
       //In that case move this entire case outide the switch
-      if (_maintenance_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1) {
+      if (_maintenance_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.0) {
         double patient_wgt_kg = _bg->GetPatient().GetWeight(MassUnit::kg);
         //maintenance fluids 1 mL/kg/h
         _maintenance_bag->GetBagVolume().SetValue(patient_wgt_kg * 1. /* (ml/kg * hr)*/ * 6. /*(hours)*/, VolumeUnit::mL);
@@ -107,7 +105,7 @@ void PatientRun::refresh_treatment()
         _bg->ProcessAction(*_maintenance_bag);
       }
     } break;
-    case RefreshState::NEOADRENELINE_TITRATE: {
+    case RefreshState::NOREPINEPHRINE_TITRATE: {
       if (!_Norepinphrine) {
         SESubstance* norepinphrine = _bg->GetSubstanceManager().GetSubstance("Norepinphrine");
         _Norepinphrine = std::make_unique<SESubstanceInfusion>(*norepinphrine).release();
@@ -137,17 +135,17 @@ void PatientRun::refresh_treatment()
       if (65 < _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg)
           && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 70) {
         //Check for 10 minutes of 65 < MAP < 70
-        _persistant_stable_map_m += 1;
+        _persistant_stable_map_min += 1;
       } else {
-        _persistant_stable_map_m -= 0;
+        _persistant_stable_map_min -= 0;
       }
-      if (10 < _persistant_stable_map_m) {
+      if (10 < _persistant_stable_map_min) {
         _refresh_state = RefreshState::MONITORING;
       }
     } break;
     case RefreshState::FULL_ASSESSMENT: {
-      _time_to_reassessment = hours(1);
-      _time_to_full_assessment = hours(3);
+      _time_to_reassessment_min = hours(1);
+      _time_to_full_assessment_min = hours(3);
       biogears::SEUrinalysis ua(_bg->GetLogger());
       _bg->GetPatientAssessment(ua);
       if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::L_Per_day) < 1) {
@@ -155,7 +153,7 @@ void PatientRun::refresh_treatment()
         _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL);
         _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
         _bg->ProcessAction(*_Saline_bag);
-        _refresh_state = RefreshState::NEOADRENELINE_TITRATE;
+        _refresh_state = RefreshState::NOREPINEPHRINE_TITRATE;
       } else {
         _refresh_state = RefreshState::MAINTENANCE_FLUIDS;
       }
@@ -168,14 +166,14 @@ void PatientRun::refresh_treatment()
       _bg->ProcessAction(*_PiperacillinTazobactam_bag);
     }
 
-    if (_time_to_reassessment < 1.0) {
+    if (_time_to_reassessment_min < 1.0) {
       _refresh_state = RefreshState::MONITORING;
     }
-    if (_time_to_full_assessment < 1.0) {
+    if (_time_to_full_assessment_min < 1.0) {
       _refresh_state = RefreshState::FULL_ASSESSMENT;
     }
-    _time_to_reassessment -= 1.;
-    _time_to_full_assessment -= 1.;
+    _time_to_reassessment_min -= 1.;
+    _time_to_full_assessment_min -= 1.;
   }
 }
 //-------------------------------------------------------------------------------
@@ -190,15 +188,13 @@ void PatientRun::egdt_treatment()
     _Saline_bag->GetBagVolume().SetValue(2500, VolumeUnit::mL);
 
     _bg->ProcessAction(*_Saline_bag);
-    _initial_hour_remaining_m = hours(1);
-    _time_to_full_assessment = hours(3);
+    _time_to_full_assessment_min = hours(3);
   } else {
     switch (_egdt_state) {
     case EGDTState::INITIAL_BOLUS:
-      if (_initial_hour_remaining_m < 1.) {
+      if ( _Saline_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.) {
         _egdt_state = EGDTState::FULL_ASSESSMENT;
-      }
-      _initial_hour_remaining_m -= 1.;
+      }      
       break;
     case EGDTState::MAINTENANCE_FLUIDS: {
 
@@ -222,15 +218,15 @@ void PatientRun::egdt_treatment()
            || _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 66.)) {
         //Check for consistant low MAP. If it is consistant for 30 minutes move to Norepinephrine infusion
         //I check for this by asking if MAP < 66 for 30 iterations with out seeing MAP > 66 for 5 consecutive iterations
-        _persistent_low_map_m += 1;
+        _persistent_low_map_min += 1;
         _high_map_count = (_high_map_count) ? _high_map_count - 1 : 0;
       } else {
         _high_map_count += 0;
         if (5 < _high_map_count) {
-          _persistent_low_map_m = 0;
+          _persistent_low_map_min = 0;
         }
       }
-      if (30 < _persistent_low_map_m) {
+      if (30 < _persistent_low_map_min) {
         _egdt_state = EGDTState::NOREPHINEPRIN_INFUSION;
       }
 
@@ -243,7 +239,7 @@ void PatientRun::egdt_treatment()
 
     } break;
     case EGDTState::MONITORING:
-      _time_to_reassessment = hours(1);
+      _time_to_reassessment_min = hours(1);
       if (_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) < 90. || _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.) {
         _egdt_state = EGDTState::RAPID_FLUID_BOLAS;
       } else {
@@ -280,17 +276,17 @@ void PatientRun::egdt_treatment()
       if (65 < _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg)
           && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 70) {
         //Check for 10 minutes of 65 < MAP < 70
-        _persistant_stable_map_m += 1;
+        _persistant_stable_map_min += 1;
       } else {
-        _persistant_stable_map_m -= 0;
+        _persistant_stable_map_min -= 0;
       }
-      if (10 < _persistant_stable_map_m) {
+      if (10 < _persistant_stable_map_min) {
         _egdt_state = EGDTState::MONITORING;
       }
     } break;
     case EGDTState::FULL_ASSESSMENT: {
-      _time_to_reassessment = hours(1);
-      _time_to_full_assessment = hours(3);
+      _time_to_reassessment_min = hours(1);
+      _time_to_full_assessment_min = hours(3);
       biogears::SEUrinalysis ua(_bg->GetLogger());
       _bg->GetPatientAssessment(ua);
       if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::L_Per_day) < 1) {
@@ -306,19 +302,21 @@ void PatientRun::egdt_treatment()
     default:
       break;
     }
+
     if (_PiperacillinTazobactam_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1) {
       _PiperacillinTazobactam_bag->GetBagVolume().SetValue(100, VolumeUnit::mL);
       _bg->ProcessAction(*_PiperacillinTazobactam_bag);
     }
 
-    if (_time_to_reassessment < 1.0) {
+    if (_time_to_reassessment_min < 1.0) {
       _egdt_state = EGDTState::MONITORING;
     }
-    if (_time_to_full_assessment < 1.0) {
+    if (_time_to_full_assessment_min < 1.0) {
       _egdt_state = EGDTState::FULL_ASSESSMENT;
     }
-    _time_to_reassessment -= 1.;
-    _time_to_full_assessment -= 1.;
+    
+    _time_to_reassessment_min -= 1.;
+    _time_to_full_assessment_min -= 1.;
   }
 }
 //-------------------------------------------------------------------------------

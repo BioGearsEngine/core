@@ -17,13 +17,13 @@ specific language governing permissions and limitations under the License.
 #include "biogears/cdm/patient/actions/SESubstanceInfusion.h"
 #include <biogears/filesystem/path.h>
 
-//Helper expressions to convert the input to minutes
-constexpr double weeks(double n_weeks) { return n_weeks * 7. * 24. * 60.; }
-constexpr double days(double n_days) { return n_days * 24. * 60.; }
-constexpr double hours(double n_hours) { return n_hours * 60.; }
-constexpr double minutes(double n_minutes) { return n_minutes; }
-constexpr double seconds(double n_seconds) { return n_seconds / 60.; }
-constexpr double to_seconds(double n_minutes) { return n_minutes * 60; }
+
+constexpr double weeks(double n_weeks) { return n_weeks * 7. * 24. * 60.; } //< weeks -> minutes
+constexpr double days(double n_days) { return n_days * 24. * 60.; }//< days -> minutes
+constexpr double hours(double n_hours) { return n_hours * 60.; }//< hours -> minutes
+constexpr double minutes(double n_minutes) { return n_minutes; }//< minutes -> minutes
+constexpr double seconds(double n_seconds) { return n_seconds / 60.; }//< seconds -> minutes
+constexpr double to_seconds(double n_minutes) { return n_minutes * 60; }//< minutes -> seconds
 
 enum class TreatmentPlan {
   NONE,
@@ -38,7 +38,7 @@ enum class RefreshState {
   INITIAL_BOLUS,
   MONITORING,
   MAINTENANCE_FLUIDS,
-  NEOADRENELINE_TITRATE,
+  NOREPINEPHRINE_TITRATE,
   FULL_ASSESSMENT,
 };
 
@@ -120,10 +120,10 @@ private:
 
   biogears::PhysiologyEngine* _bg = nullptr;
 
-  double _time_remaining_min = 0;
-  double _time_since_feeding_min = 0;
-  double _time_since_antibiotic_treatment_min = 0;
-  double _time_applying_antibiotics_min = 0;
+  double _time_remaining_min = 0.;
+  double _time_since_feeding_min = 0.;
+  double _time_since_antibiotic_treatment_min = 0.;
+  double _time_applying_antibiotics_min = 0.;
 
   bool _patient_is_septic = false;
   bool _first_treatment_occured = false;
@@ -131,16 +131,15 @@ private:
 
   //REFRESH Implementation Details
   RefreshState _refresh_state = RefreshState::NONE;
-  double _time_to_reassessment = 60.;
-  double _initial_hour_remaining_m = 60.;
-  double _maintenance_fluids_remaining_m = 0.;
-  bool _norepinphrine_titrate_active = false;
-  double _time_since_norepinphrine_titrage_active_m = 0.0;
+  double _time_to_reassessment_min = 60.;
+  double _maintenance_fluids_remaining_min = 0.;
+  bool   _norepinphrine_titrate_active = false;
+  double _time_since_norepinphrine_titrage_active_min = 0.0;
 
   //EGDT Implementation Details
   EGDTState _egdt_state = EGDTState::NONE;
-  double _persistent_low_map_m = 0.;
-  double _persistant_stable_map_m = 0.;
+  double _persistent_low_map_min = 0.;
+  double _persistant_stable_map_min = 0.;
   double _high_map_count = 0.;
-  double _time_to_full_assessment = 0;
+  double _time_to_full_assessment_min = 0.;
 };
