@@ -5,8 +5,6 @@ BioGears® source code is hosted here and will be developed through this public 
 
 Build Status
 -----------------
-Build Status
------------------
 | Platform | Compiler | Architecture | Status |
 |----------|----------|--------------|--------|
 | Windows  |  msvc15  | amd64        | ![Windows msvc15 Build  Status](https://biogearsengine.com/content/badges/nightly_libBioGears_windows_msvc15.png) |
