@@ -248,13 +248,61 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<!-- @brief Increase the patient's metabolic rate leading to an increase in core temperature, cardiac output, respiration rate and tidal volume. -->
-	<xs:complexType name="ExerciseData">
+	<xs:complexType name="GenericExerciseData">
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:choice minOccurs = "1" maxOccurs="1" >
 					<xs:element name="Intensity" type="Scalar0To1Data"/><!--<< @brief Fractional representation of the maximum patient exertion -->
 					<xs:element name="DesiredWorkRate" type="ScalarPowerData"/><!--<< @brief Desired achieved work rate up to the maximum patient exertion -->
+				</xs:choice>               
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="RunningExerciseData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:sequence>
+					<xs:element name="Speed" type="ScalarLengthPerTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief Speed -->
+					<xs:element name="Incline" type="ScalarFractionData" minOccurs="1" maxOccurs="1"/><!--<< @brief fractional repreentation of incline percentage -->
+					<xs:element name="AddedWeight" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief weighted pack capability -->
+				</xs:sequence>               
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="CyclingExerciseData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:sequence>
+					<xs:element name="Cadence" type="ScalarFrequencyData" minOccurs="1" maxOccurs="1"/><!--<< @brief Rotations of pedals per time -->
+					<xs:element name="Power" type="ScalarPowerData" minOccurs="1" maxOccurs="1"/><!--<< @brief Power produced -->
+					<xs:element name="AddedWeight" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief weighted pack capability -->
+				</xs:sequence>               
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="StrengthExerciseData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:sequence>
+					<xs:element name="Weight" type="ScalarMassData" minOccurs="1" maxOccurs="1"/><!--<< @brief Speed -->
+					<xs:element name="Repetitions" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief fractional repreentation of incline percentage -->
+				</xs:sequence>               
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!-- @brief Increase the patient's metabolic rate leading to an increase in core temperature, cardiac output, respiration rate and tidal volume. -->
+	<xs:complexType name="ExerciseData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:choice minOccurs = "1" maxOccurs="1" >
+					<xs:element name="GenericExercise" type="GenericExerciseData"/><!--<< @brief Fractional representation of the maximum patient exertion -->
+					<xs:element name="RunningExercise" type="RunningExerciseData"/><!--<< @brief Running with desired speed and incline -->
+					<xs:element name="CyclingExercise" type="CyclingExerciseData"/><!--<< @brief Cycling with desired cadence and power -->
+					<xs:element name="StrengthExercise" type="StrengthExerciseData"/><!--<< @brief Strength exercises with desired weight and reps -->
 				</xs:choice>               
 			</xs:extension>
 		</xs:complexContent>

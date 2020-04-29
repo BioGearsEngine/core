@@ -105,44 +105,58 @@
         <Time value="30" unit="s"/>       
     </Action>
 	<!-- Exercise at about the anaerobic threshold -->
-	<Action xsi:type="ExerciseData">
-        <Intensity value="0.1"/>
+	<<Action xsi:type="ExerciseData">
+		<GenericExercise>
+			<Intensity value="0.1"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.14"/>
+		<GenericExercise>
+			<Intensity value="0.14"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.16"/>
+		<GenericExercise>
+			<Intensity value="0.16"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.19"/>
+		<GenericExercise>
+			<Intensity value="0.19"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.23"/>
+		<GenericExercise>
+			<Intensity value="0.23"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.28"/>
+		<GenericExercise>
+			<Intensity value="0.28"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0"/>
+		<GenericExercise>
+			<Intensity value="0.0"></Intensity>
+		</GenericExercise>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>       

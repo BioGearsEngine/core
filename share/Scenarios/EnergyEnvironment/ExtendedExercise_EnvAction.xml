@@ -124,14 +124,18 @@
     </Action> 
 	
 	<!-- Stage 1 -->
-    <Action xsi:type="ExerciseData">
-        <DesiredWorkRate value="500" unit="W"/>
+	<Action xsi:type="ExerciseData">
+		<GenericExercise>
+			<DesiredWorkRate value="500" unit="W"/>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="60" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0"/>
+		<GenericExercise>
+			<Intensity value="0.0"></Intensity>
+		</GenericExercise>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>       

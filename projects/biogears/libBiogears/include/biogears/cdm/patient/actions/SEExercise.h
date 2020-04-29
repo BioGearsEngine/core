@@ -16,6 +16,11 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalar0To1;
+class SEScalar;
+class SEScalarFraction;
+class SEScalarFrequency;
+class SEScalarLengthPerTime;
+class SEScalarMass;
 class SEScalarPower;
 
 class BIOGEARS_API SEExercise : public SEPatientAction {
@@ -32,21 +37,55 @@ public:
   virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::ExerciseData& in);
+  virtual bool LoadGeneric(const CDM::GenericExerciseData& in);
+  virtual bool LoadCycling(const CDM::CyclingExerciseData& in);
+  virtual bool LoadRunning(const CDM::RunningExerciseData& in);
+  virtual bool LoadStrength(const CDM::StrengthExerciseData& in);
   virtual CDM::ExerciseData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::ExerciseData& data) const;
+  virtual void UnloadGeneric(CDM::GenericExerciseData& data) const;
+  virtual void UnloadCycling(CDM::CyclingExerciseData& data) const;
+  virtual void UnloadRunning(CDM::RunningExerciseData& data) const;
+  virtual void UnloadStrength(CDM::StrengthExerciseData& data) const;
 
 public:
+  virtual bool HasGenericExercise() const;
+  virtual bool HasCyclingExercise() const;
+  virtual bool HasRunningExercise() const;
+  virtual bool HasStrengthExercise() const;
   virtual bool HasIntensity() const;
   virtual SEScalar0To1& GetIntensity();
   virtual bool HasDesiredWorkRate() const;
   virtual SEScalarPower& GetDesiredWorkRate();
+  virtual bool HasSpeed() const;
+  virtual SEScalarLengthPerTime& GetSpeed();
+  virtual bool HasIncline() const;
+  virtual SEScalarFraction& GetIncline();
+  virtual bool HasAddedWeight() const;
+  virtual SEScalarMass& GetAddedWeight();
+  virtual bool HasCadence() const;
+  virtual SEScalarFrequency& GetCadence();
+  virtual bool HasPower() const;
+  virtual SEScalarPower& GetPower();
+  virtual bool HasWeight() const;
+  virtual SEScalarMass& GetWeight();
+  virtual bool HasRepetitions() const;
+  virtual SEScalar& GetRepetitions();
+
 
   virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_Intensity;
   SEScalarPower* m_DesiredWorkRate;
+  SEScalarLengthPerTime* m_SpeedRun;
+  SEScalarFraction* m_InclineRun;
+  SEScalarMass* m_AddedWeight;
+  SEScalarFrequency* m_CadenceCycle;
+  SEScalarPower* m_PowerCycle;
+  SEScalarMass* m_WeightStrength;
+  SEScalar* m_RepsStrength;
 };
 }

@@ -162,7 +162,9 @@
 	
 	<!-- Exercise at a moderate level for 2/3 hour -->
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.23"/>
+		<GenericExercise>
+			<Intensity value="0.23"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="40" unit="min"/>       

@@ -101,52 +101,68 @@
     </Action>
 	<!-- Stage 1 -->
     <Action xsi:type="ExerciseData">
-        <Intensity value="0.0375"/>
+		<GenericExercise>
+			<Intensity value="0.0375"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="6.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0"/>
+		<GenericExercise>
+			<Intensity value="0.0"></Intensity>
+		</GenericExercise>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>       
     </Action>
 	<!-- Stage 2 -->
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.12"/>
+		<GenericExercise>
+			<Intensity value="0.12"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="6.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0"/>
+		<GenericExercise>
+			<Intensity value="0.0"></Intensity>
+		</GenericExercise>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>       
     </Action>
 	<!-- Stage 3 -->
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.2"/>
+		<GenericExercise>
+			<Intensity value="0.2"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="6.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0"/>
+		<GenericExercise>
+			<Intensity value="0.0"></Intensity>
+		</GenericExercise>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>       
     </Action>
 	<!-- Stage 4 -->
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0.5"/>
+		<GenericExercise>
+			<Intensity value="0.5"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="6.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <Intensity value="0"/>
+		<GenericExercise>
+			<Intensity value="0.0"></Intensity>
+		</GenericExercise>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>       

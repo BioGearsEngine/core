@@ -176,7 +176,9 @@
       </Configuration>
     </Action>
     <Action xsi:type="ExerciseData">
-        <Intensity value="0.05"/>
+		<GenericExercise>
+			<Intensity value="0.05"></Intensity>
+		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1" unit="min"/>       

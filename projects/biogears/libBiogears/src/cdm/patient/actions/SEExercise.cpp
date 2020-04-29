@@ -12,6 +12,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEExercise.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarLengthPerTime.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 
 namespace biogears {
@@ -20,6 +25,13 @@ SEExercise::SEExercise()
 {
   m_Intensity = nullptr;
   m_DesiredWorkRate = nullptr;
+  m_SpeedRun = nullptr;
+  m_InclineRun = nullptr;
+  m_AddedWeight = nullptr;
+  m_CadenceCycle = nullptr;
+  m_PowerCycle = nullptr;
+  m_WeightStrength = nullptr;
+  m_RepsStrength = nullptr;
 }
 
 SEExercise::~SEExercise()
@@ -32,29 +44,89 @@ void SEExercise::Clear()
   SEPatientAction::Clear();
   SAFE_DELETE(m_Intensity);
   SAFE_DELETE(m_DesiredWorkRate)
+  SAFE_DELETE(m_SpeedRun);
+  SAFE_DELETE(m_InclineRun);
+  SAFE_DELETE(m_AddedWeight);
+  SAFE_DELETE(m_CadenceCycle);
+  SAFE_DELETE(m_PowerCycle);
+  SAFE_DELETE(m_WeightStrength);
+  SAFE_DELETE(m_RepsStrength);
 }
 
 bool SEExercise::IsValid() const
 {
-    return SEPatientAction::IsValid() && (HasDesiredWorkRate() || HasIntensity());
+    return SEPatientAction::IsValid() 
+      && (HasGenericExercise() 
+      || HasCyclingExercise() 
+      || HasRunningExercise()
+      || HasStrengthExercise());
 }
 
 bool SEExercise::IsActive() const
 {
-  if (HasIntensity()) {
-    return !m_Intensity->IsZero();
+  if (HasGenericExercise()) {
+    if (HasIntensity()) {
+      return !m_Intensity->IsZero();
+    } else {
+      return HasDesiredWorkRate();
+    }
   } else {
-    return HasDesiredWorkRate();
+    return IsValid();
   }
 }
 
 bool SEExercise::Load(const CDM::ExerciseData& in)
 {
   SEPatientAction::Load(in);
-  if (in.Intensity().present())
+  if (in.GenericExercise().present()) {
+    LoadGeneric(in.GenericExercise().get());
+  } else if (in.CyclingExercise().present()) {
+    LoadCycling(in.CyclingExercise().get());
+  } else if (in.RunningExercise().present()) {
+    LoadRunning(in.RunningExercise().get());
+  } else if (in.StrengthExercise().present()) {
+    LoadStrength(in.StrengthExercise().get());
+  }
+  return true;
+}
+
+bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in) {
+  SEPatientAction::Load(in);
+  if (in.Intensity().present()) {
     GetIntensity().Load(in.Intensity().get());
-  else if (in.DesiredWorkRate().present()) 
+  } else if (in.DesiredWorkRate().present()) {
     GetDesiredWorkRate().Load(in.DesiredWorkRate().get());
+  }
+  return true;
+}
+
+bool SEExercise::LoadCycling(const CDM::CyclingExerciseData& in)
+{
+  SEPatientAction::Load(in);
+  GetCadence().Load(in.Cadence());
+  GetPower().Load(in.Power());
+  if (in.AddedWeight().present()) {
+    GetAddedWeight().Load(in.AddedWeight().get());
+  }
+  return true;
+}
+
+bool SEExercise::LoadRunning(const CDM::RunningExerciseData& in)
+{
+  SEPatientAction::Load(in);
+  GetSpeed().Load(in.Speed());
+  GetIncline().Load(in.Incline());
+  if (in.AddedWeight().present()) {
+    GetAddedWeight().Load(in.AddedWeight().get());
+  }
+  return true;
+}
+
+bool SEExercise::LoadStrength(const CDM::StrengthExerciseData& in)
+{
+  SEPatientAction::Load(in);
+  GetWeight().Load(in.Weight());
+  GetRepetitions().Load(in.Repetitions());
   return true;
 }
 
@@ -68,12 +140,85 @@ CDM::ExerciseData* SEExercise::Unload() const
 void SEExercise::Unload(CDM::ExerciseData& data) const
 {
   SEPatientAction::Unload(data);
+  if (data.GenericExercise().present()) {
+    UnloadGeneric(data.GenericExercise().get());
+  } else if (data.CyclingExercise().present()) {
+    UnloadCycling(data.CyclingExercise().get());
+  } else if (data.RunningExercise().present()) {
+    UnloadRunning(data.RunningExercise().get());
+  } else if (data.StrengthExercise().present()) {
+    UnloadStrength(data.StrengthExercise().get());
+  }
+}
+
+void SEExercise::UnloadGeneric(CDM::GenericExerciseData& data) const
+{
+  SEPatientAction::Unload(data);
   if (m_Intensity != nullptr) {
     data.Intensity(std::unique_ptr<CDM::Scalar0To1Data>(m_Intensity->Unload()));
   }
   if (m_DesiredWorkRate != nullptr) {
     data.DesiredWorkRate(std::unique_ptr<CDM::ScalarPowerData>(m_DesiredWorkRate->Unload()));
   }
+}
+
+void SEExercise::UnloadCycling(CDM::CyclingExerciseData& data) const
+{
+  SEPatientAction::Unload(data);
+  if (m_CadenceCycle != nullptr) {
+    data.Cadence(std::unique_ptr<CDM::ScalarFrequencyData>(m_CadenceCycle->Unload()));
+  }
+  if (m_PowerCycle != nullptr) {
+    data.Power(std::unique_ptr<CDM::ScalarPowerData>(m_PowerCycle->Unload()));
+  }
+  if (m_AddedWeight != nullptr) {
+    data.AddedWeight(std::unique_ptr<CDM::ScalarMassData>(m_AddedWeight->Unload()));
+  }
+}
+
+void SEExercise::UnloadRunning(CDM::RunningExerciseData& data) const
+{
+  SEPatientAction::Unload(data);
+  if (m_SpeedRun != nullptr) {
+    data.Speed(std::unique_ptr<CDM::ScalarLengthPerTimeData>(m_SpeedRun->Unload()));
+  }
+  if (m_InclineRun != nullptr) {
+    data.Incline(std::unique_ptr<CDM::ScalarFractionData>(m_InclineRun->Unload()));
+  }
+  if (m_AddedWeight != nullptr) {
+    data.AddedWeight(std::unique_ptr<CDM::ScalarMassData>(m_AddedWeight->Unload()));
+  }
+}
+
+void SEExercise::UnloadStrength(CDM::StrengthExerciseData& data) const
+{
+  SEPatientAction::Unload(data);
+  if (m_WeightStrength != nullptr) {
+    data.Weight(std::unique_ptr<CDM::ScalarMassData>(m_WeightStrength->Unload()));
+  }
+  if (m_RepsStrength != nullptr) {
+    data.Repetitions(std::unique_ptr<CDM::ScalarData>(m_RepsStrength->Unload()));
+  }
+}
+
+bool SEExercise::HasGenericExercise() const
+{
+  return (HasIntensity() || HasDesiredWorkRate()) ? true : false;
+}
+
+bool SEExercise::HasCyclingExercise() const
+{
+  return (HasCadence() && HasPower()) ? true : false;
+}
+
+bool SEExercise::HasRunningExercise() const
+{
+  return (HasSpeed() && HasIncline()) ? true : false;
+}
+
+bool SEExercise::HasStrengthExercise() const
+{
+  return (HasWeight() && HasRepetitions()) ? true : false;
 }
 
 bool SEExercise::HasIntensity() const
@@ -98,19 +243,122 @@ SEScalarPower& SEExercise::GetDesiredWorkRate()
   return *m_DesiredWorkRate;
 }
 
+bool SEExercise::HasCadence() const
+{
+  return m_CadenceCycle == nullptr ? false : m_CadenceCycle->IsValid();
+}
+SEScalarFrequency& SEExercise::GetCadence()
+{
+  if (m_CadenceCycle == nullptr)
+    m_CadenceCycle = new SEScalarFrequency();
+  return *m_CadenceCycle;
+}
+
+bool SEExercise::HasPower() const
+{
+  return m_PowerCycle == nullptr ? false : m_PowerCycle->IsValid();
+}
+SEScalarPower& SEExercise::GetPower()
+{
+  if (m_PowerCycle == nullptr)
+    m_PowerCycle = new SEScalarPower();
+  return *m_PowerCycle;
+}
+
+bool SEExercise::HasAddedWeight() const
+{
+  return m_AddedWeight == nullptr ? false : m_AddedWeight->IsValid();
+}
+SEScalarMass& SEExercise::GetAddedWeight()
+{
+  if (m_AddedWeight == nullptr)
+    m_AddedWeight = new SEScalarMass();
+  return *m_AddedWeight;
+}
+
+bool SEExercise::HasSpeed() const
+{
+  return m_SpeedRun == nullptr ? false : m_SpeedRun->IsValid();
+}
+SEScalarLengthPerTime& SEExercise::GetSpeed()
+{
+  if (m_SpeedRun == nullptr)
+    m_SpeedRun = new SEScalarLengthPerTime();
+  return *m_SpeedRun;
+}
+
+bool SEExercise::HasIncline() const
+{
+  return m_InclineRun == nullptr ? false : m_InclineRun->IsValid();
+}
+SEScalarFraction& SEExercise::GetIncline()
+{
+  if (m_InclineRun == nullptr)
+    m_InclineRun = new SEScalarFraction();
+  return *m_InclineRun;
+}
+
+bool SEExercise::HasWeight() const
+{
+  return m_WeightStrength == nullptr ? false : m_WeightStrength->IsValid();
+}
+SEScalarMass& SEExercise::GetWeight()
+{
+  if (m_WeightStrength == nullptr)
+    m_WeightStrength = new SEScalarMass();
+  return *m_WeightStrength;
+}
+
+bool SEExercise::HasRepetitions() const
+{
+  return m_RepsStrength == nullptr ? false : m_RepsStrength->IsValid();
+}
+SEScalar& SEExercise::GetRepetitions()
+{
+  if (m_RepsStrength == nullptr)
+    m_RepsStrength = new SEScalar();
+  return *m_RepsStrength;
+}
+
 void SEExercise::ToString(std::ostream& str) const
 {
   str << "Patient Action : Exercise";
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
-  if (HasIntensity()) {
+  if (HasGenericExercise()) {
+    str << "\n\tGeneric Exercise";
     str << "\n\tIntensity: ";
     HasIntensity() ? str << *m_Intensity : str << "NaN";
-  } else if (HasDesiredWorkRate()) {
     str << "\n\tDesired Work Rate: ";
     HasDesiredWorkRate() ? str << *m_DesiredWorkRate : str << "NaN";
+  } else if (HasCyclingExercise()) {
+    str << "\n\tCycling Exercise";
+    str << "\n\tCadence: ";
+    HasCadence() ? str << *m_CadenceCycle : str << "NaN";
+    str << "\n\tPower: ";
+    HasPower() ? str << *m_PowerCycle : str << "NaN";
+    if (HasAddedWeight()) {
+      str << "\n\tAdded Weight: ";
+     str << *m_AddedWeight;
+    }
+  } else if (HasRunningExercise()) {
+    str << "\n\tRunning Exercise";
+    str << "\n\tSpeed: ";
+    HasSpeed() ? str << *m_SpeedRun : str << "NaN";
+    str << "\n\tIncline: ";
+    HasIncline() ? str << *m_InclineRun : str << "NaN";
+    if (HasAddedWeight()) {
+      str << "\n\tAdded Weight: ";
+      str << *m_AddedWeight;
+    }
+  } else if (HasStrengthExercise()) {
+    str << "\n\tStrength Exercise";
+    str << "\n\tWeight: ";
+    HasWeight() ? str << *m_WeightStrength : str << "NaN";
+    str << "\n\tRepetitions: ";
+    HasRepetitions() ? str << *m_RepsStrength : str << "NaN";
   } else {
-    str << "No input for intensity or desired work rate";
+    str << "No input for exercise";
   }
   str << std::flush;
 }
