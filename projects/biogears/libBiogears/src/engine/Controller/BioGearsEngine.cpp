@@ -672,7 +672,7 @@ void BioGearsEngine::AdvanceModelTime(double time, const TimeUnit& unit)
   double remains = time_s / m_Config->GetTimeStep(TimeUnit::s);
   remains -= static_cast<int>(remains);
   timeStep_remainder += remains;
-  int count = (int)(time_s / m_Config->GetTimeStep(TimeUnit::s));
+  int count = static_cast<int>(time_s / m_Config->GetTimeStep(TimeUnit::s));
   if (timeStep_remainder >= 1.0) {
     ++count;
     timeStep_remainder -= 1.0;
