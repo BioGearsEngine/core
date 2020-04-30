@@ -17,7 +17,7 @@
       <Regulation>
         <ChargeInBlood>Positive</ChargeInBlood>
         <FractionUnboundInPlasma readOnly="false" value="1"/>
-        <ReabsorptionRatio readOnly="false" value="0.8"/>
+        <ReabsorptionRatio readOnly="false" value="1.8"/>
         <TransportMaximum readOnly="false" unit="mg/min" value="INF"/>
       </Regulation>
     </RenalDynamics>

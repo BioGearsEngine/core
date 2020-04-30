@@ -46,7 +46,7 @@
     <Concentration readOnly="false" unit="g/dL" value="14.256"/>
   </Component>
   <Component Name="Antigen_A">
-    <Concentration readOnly="false" unit="g/L" value="0"/>
+    <Concentration readOnly="false" unit="g/dL" value="0"/>
   </Component>
   <Component Name="Antigen_B">
     <Concentration readOnly="false" unit="g/L" value="0.019"/>

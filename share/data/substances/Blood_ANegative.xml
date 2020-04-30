@@ -49,7 +49,7 @@
     <Concentration readOnly="false" unit="g/L" value="0.023"/>
   </Component>
   <Component Name="Antigen_B">
-    <Concentration readOnly="false" unit="g/L" value="0"/>
+    <Concentration readOnly="false" unit="g/dL" value="0"/>
   </Component>
   <Component Name="WhiteBloodCell">
     <Concentration readOnly="false" unit="g/dL" value="0.0189"/>

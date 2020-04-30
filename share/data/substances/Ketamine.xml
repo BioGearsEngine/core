@@ -30,14 +30,14 @@
   </Pharmacokinetics>
   <Pharmacodynamics>
     <Bronchodilation readOnly="false" value="1"/>
-    <DiastolicPressureModifier readOnly="false" value="0.0"/>
+    <DiastolicPressureModifier readOnly="false" value="0"/>
     <EC50 readOnly="false" unit="ug/mL" value="0.4319"/>
     <EMaxShapeParameter readOnly="false" value="1"/>
-	<FeverModifier readOnly="false" value="0"/>
+    <FeverModifier readOnly="false" value="0"/>
     <HeartRateModifier readOnly="false" value="0.2"/>
     <HemorrhageModifier readOnly="false" value="0"/>
     <NeuromuscularBlock readOnly="false" value="0"/>
-	<PainModifier readOnly="false" value="0.75"/>
+    <PainModifier readOnly="false" value="0.75"/>
     <PupillaryResponse>
       <ReactivityModifier readOnly="false" value="-0.5"/>
       <SizeModifier readOnly="false" value="0"/>

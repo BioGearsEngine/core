@@ -4,6 +4,7 @@
   <Classification>WholeBlood</Classification>
   <Density readOnly="false" unit="g/mL" value="1.08"/>
   <MolarMass readOnly="false" unit="g/mol" value="9.29e+16"/>
+  <State>Molecular</State>
   <Clearance>
     <CellRegulation>
       <CellDeathRate readOnly="false" unit="1/s" value="116000"/>

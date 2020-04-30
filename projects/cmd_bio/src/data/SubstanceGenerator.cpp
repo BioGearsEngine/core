@@ -128,7 +128,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
       substance.State(SubstanceData::State_type::Gas);
     } else if ("Molecular" == value) {
       substance.State(SubstanceData::State_type::Molecular);
-    } else {
+    }  else {
       rValue = false;
     }
   } else if ("Classification" == name) {
@@ -144,7 +144,10 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
       substance.Classification(SubstanceData::Classification_type::ReversalAgent);
     } else if ("Sedative" == value) {
       substance.Classification(SubstanceData::Classification_type::Sedative);
-    } else if ("" == value) {
+    } else if ("WholeBlood" == value) {
+      substance.Classification(SubstanceData::Classification_type::WholeBlood);
+    } 
+    else if ("" == value) {
       //Classification is Optional and need not be set
     } else {
       rValue = false;

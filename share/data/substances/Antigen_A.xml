@@ -3,6 +3,7 @@
   <Name>Antigen_A</Name>
   <Classification>WholeBlood</Classification>
   <MolarMass readOnly="false" unit="g/mol" value="1212.013"/>
+  <State>Molecular</State>
   <Antigen>A</Antigen>
   <Clearance>
     <CellRegulation>
