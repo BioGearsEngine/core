@@ -224,17 +224,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     } catch (std::exception e) {
       rValue = false;
     }
-  } else if ("Antigen" == name) {
-    if ("A" == value) {
-      substance.Antigen(SubstanceData::Antigen_type::A);
-    } else if ("B" == value) {
-      substance.Antigen(SubstanceData::Antigen_type::B);
-    } else if ("" == value) {
-      //Do nothing, antigen is optional
-    } else {
-      rValue = false;
-    }
-  }
+  } 
   return rValue;
 }
 //-----------------------------------------------------------------------------

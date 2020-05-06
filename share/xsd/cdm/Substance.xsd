@@ -15,15 +15,6 @@ specific language governing permissions and limitations under the License.
   <xs:include schemaLocation="Properties.xsd"/>  
   <xs:include schemaLocation="Physiology.xsd"/>
   
-  <xs:simpleType name="enumBloodTypeABO">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="A"/>
-      <xs:enumeration value="B"/>
-	  <xs:enumeration value="AB"/>
-	  <xs:enumeration value="O"/>
-    </xs:restriction>
-  </xs:simpleType>
-  
   <!-- @brief Enumeration for substance states. -->
   <xs:simpleType name="enumSubstanceState">
     <xs:restriction base="xs:string">
@@ -252,8 +243,6 @@ specific language governing permissions and limitations under the License.
           <xs:element name="EndTidalPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The pressure of gas in the trachea that consists of the substance at the end of each respiratory cycle. -->
           <xs:element name="RelativeDiffusionCoefficient" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of the substance to diffuse across a membrane. A proportionality of the solubility and the square root of the molecular weight as defined relative to oxygen.-->
           <xs:element name="SolubilityCoefficient" type="ScalarInversePressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of a substance to dissolve in a solution. -->    
-		  <!-- Blood -->
-		  <xs:element name="Antigen" type="enumBloodTypeABO" minOccurs="0"  maxOccurs="1"/><!--<< @brief The unique name of the substance. -->
           <!-- More complex Objects -->
           <xs:element name="Clearance" type="SubstanceClearanceData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstanceClearanceData --> 
           <xs:element name="Pharmacokinetics" type="SubstancePharmacokineticsData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstancePharmacokineticsData -->  

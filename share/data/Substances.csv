@@ -9,7 +9,6 @@ MembraneResistance,,,,,,248 ohm,10.5 ohm,0.248 ohm,18.7 ohm,,,,,,,,,,,,,,,,,,,,,
 MolarMass,44.01 g/mol,28.01 g/mol,28.01340 g/mol,32.00 g/mol,61.02 g/mol,40.08 g/mol,35.45 g/mol,39.10 g/mol,22.9898 g/mol,183.2 g/mol,3482.75 g/mol,5808 g/mol,89.09 g/mol,113.12 g/mol,180.1559 g/mol,102.09 g/mol,89.07 g/mol,807.339 g/mol,60.06 g/mol,151.163 g/mol,239.31 g/mol,168.038 g/mol,475.5 g/mol,336.47 g/mol,330.74 g/mol,237.73 g/mol,325.78 g/mol,285.34 g/mol,401.0 g/mol,327.37 g/mol,169.18 g/mol,517.6 g/mol,176.6 g/mol,358.43 g/mol,178.27 g/mol,529.77 g/mol,140.1 g/mol,290.4 g/mol,300.3 g/mol,157.213 g/mol,1084.24 g/mol,66500 g/mol,,64458 g/mol,64586.00 g/mol,64570.04 g/mol,64634.04 g/mol,64762.04 g/mol,,1212.013 g/mol,991.972 g/mol,2.12E15 g/mol,1.68E13 g/mol,9.29E16 g/mol
 RelativeDiffusionCoefficient,20.3,1,0.53,1,,,,,,,,,,,,,,,,,0.047,0.25,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 SolubilityCoefficient,0.57 1/atm,0.018 1/atm,0.012 1/atm,0.024 1/atm,,,,,,,,,,,,,,,,,0.46 1/atm,0.42 1/atm,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Antigen,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,A,B,,,
 Aerosolization (all or none),,,,,,,,,,,,,,,,  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 BronchioleModifier,,,,,,,,,,,,,,,,,,,,,1,,,,,,,,,,,,,,,,0,,,,,,,,,,,,0,,,,,
 InflammationCoefficient,,,,,,,,,,,,,,,,,,,,,0,,,,,,,,,,,,,,,,1,,,,,,,,,,,,0.5,,,,,
