@@ -222,27 +222,85 @@ void Energy::Exercise()
   const double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   const double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
   const double kcal_Per_day_Per_Watt = 20.6362855;
+  double cadenceCycle_Per_Min;
+  double powerCycle_W;
+  double speedRun_m_Per_s;
+  double inclineRun_percent;
+  double weightStrength_kg;
+  double repetitionsStrength_number;
+  double addedWeight_kg;
 
   // Check for exercise call and only try to get intensity/desired work rate if the exercise action is active.
   if (m_PatientActions->HasExercise()) {
-    if (m_PatientActions->GetExercise()->HasIntensity()) {
-      exerciseIntensity = m_PatientActions->GetExercise()->GetIntensity().GetValue();
-    } else if ((m_PatientActions->GetExercise()->HasDesiredWorkRate())) {
-      DesiredWorkRate_W = m_PatientActions->GetExercise()->GetDesiredWorkRate().GetValue(PowerUnit::W);
-      exerciseIntensity = DesiredWorkRate_W / maxWorkRate_W;
-      if (exerciseIntensity > 1) {
-        exerciseIntensity = 1;
-        Warning("Desired work rate over max work rate. Desired work rate can be a value between 0 and 1200 W. Proceeding with max work rate.");
+    //////////////////////////////////////////////// HasExercise
+    SEExercise* ExerciseInfo = m_PatientActions->GetExercise();
+    if (ExerciseInfo->HasGenericExercise()) {
+      if (ExerciseInfo->HasIntensity()) {
+        exerciseIntensity = ExerciseInfo->GetIntensity().GetValue();
+      } else if ((ExerciseInfo->HasDesiredWorkRate())) {
+        DesiredWorkRate_W = ExerciseInfo->GetDesiredWorkRate().GetValue(PowerUnit::W);
+        exerciseIntensity = DesiredWorkRate_W / maxWorkRate_W;
+        if (exerciseIntensity > 1) {
+          exerciseIntensity = 1;
+          Warning("Desired work rate over max work rate. Desired work rate can be a value between 0 and 1200 W. Proceeding with max work rate.");
+        }
+        m_PatientActions->GetExercise()->GetDesiredWorkRate().Clear();
+      } else {
+        Warning("Generic Exercise call with no severity. Action ignored.");
       }
-      m_PatientActions->GetExercise()->GetDesiredWorkRate().Clear();
-      m_PatientActions->GetExercise()->GetIntensity().SetValue(exerciseIntensity);
-    } else {
-      Warning("Exercise call with no severity. Action ignored.");
+    } else if (ExerciseInfo->HasCyclingExercise()) {
+      cadenceCycle_Per_Min = ExerciseInfo->GetCadence().GetValue(FrequencyUnit::Per_min);
+      powerCycle_W = ExerciseInfo->GetPower().GetValue(PowerUnit::W);
+      // Convert into intensity value
+      const double C0 = -0.62;
+      const double C1 = 0.0129;
+      const double C2 = -0.0005;
+      const double C3 = -0.00001;
+      const double C4 = 0.00008;
+      const double C5 = -0.00009;
+      exerciseIntensity = C0 + (C1 * cadenceCycle_Per_Min) + (C2 * powerCycle_W) + (C3 * std::pow(cadenceCycle_Per_Min, 2.0)) + (C4 * std::pow(powerCycle_W, 2.0)) + (C5 * cadenceCycle_Per_Min * powerCycle_W);
+      BLIM(exerciseIntensity, 0.0, 1.0);
+      if (cadenceCycle_Per_Min > 0.0) {
+        BLIM(exerciseIntensity, 0.05, 1.0);
+      } else {
+        BLIM(exerciseIntensity, 0.0, 1.0);
+      }
+      ///////////////////////////////
+    } else if (ExerciseInfo->HasRunningExercise()) {
+      speedRun_m_Per_s = ExerciseInfo->GetSpeed().GetValue(LengthPerTimeUnit::m_Per_s);
+      const double speedRun_mph = speedRun_m_Per_s * 2.23694;
+      inclineRun_percent = ExerciseInfo->GetIncline().GetValue();
+      // Convert into intensity value
+      const double C0 = 0.0;
+      const double C1 = 0.0847;
+      const double C2 = 4.34;
+      const double C3 = -0.0019;
+      const double C4 = -49;
+      const double C5 = 1.16;
+      exerciseIntensity = C0 + (C1 * speedRun_mph) + (C2 * inclineRun_percent) + (C3 * std::pow(speedRun_mph, 2.0)) + (C4 * std::pow(inclineRun_percent, 2.0)) + (C5 * speedRun_mph * inclineRun_percent);
+      if (speedRun_m_Per_s > 0.0) {
+        BLIM(exerciseIntensity, 0.1, 1.0);
+      } else {
+        BLIM(exerciseIntensity, 0.0, 1.0);
+      }
+      ///////////////////////////////
+    } else if (ExerciseInfo->HasStrengthExercise()) {
+      weightStrength_kg = ExerciseInfo->GetWeight().GetValue(MassUnit::kg);
+      repetitionsStrength_number = ExerciseInfo->GetRepetitions().GetValue();
+      // Convert into intensity value
+      exerciseIntensity = (1 + (weightStrength_kg / m_Patient->GetWeight(MassUnit::kg))) * (0.0068 * repetitionsStrength_number) - 0.029;
+      BLIM(exerciseIntensity, 0.0, 1.0);
+      ///////////////////////////////
     }
+    if (ExerciseInfo->HasAddedWeight()) {
+      addedWeight_kg = ExerciseInfo->GetAddedWeight().GetValue(MassUnit::kg);
+      m_Patient->GetWeight().IncrementValue(addedWeight_kg, MassUnit::kg);
+    }
+    //////////////////////////////////////////////// HasExercise
   } else {
     return;
   }
-
+  m_PatientActions->GetExercise()->GetIntensity().SetValue(exerciseIntensity);
   // The MetabolicRateGain is used to ramp the metabolic rate to the value specified by the user's exercise intensity.
   const double MetabolicRateGain = m_dT_s;
   const double workRateDesired_W = exerciseIntensity * maxWorkRate_W;

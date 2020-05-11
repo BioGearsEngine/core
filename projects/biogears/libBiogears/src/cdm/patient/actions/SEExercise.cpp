@@ -64,15 +64,7 @@ bool SEExercise::IsValid() const
 
 bool SEExercise::IsActive() const
 {
-  if (HasGenericExercise()) {
-    if (HasIntensity()) {
-      return !m_Intensity->IsZero();
-    } else {
-      return HasDesiredWorkRate();
-    }
-  } else {
     return IsValid();
-  }
 }
 
 bool SEExercise::Load(const CDM::ExerciseData& in)
@@ -140,64 +132,38 @@ CDM::ExerciseData* SEExercise::Unload() const
 void SEExercise::Unload(CDM::ExerciseData& data) const
 {
   SEPatientAction::Unload(data);
-  if (data.GenericExercise().present()) {
-    UnloadGeneric(data.GenericExercise().get());
-  } else if (data.CyclingExercise().present()) {
-    UnloadCycling(data.CyclingExercise().get());
-  } else if (data.RunningExercise().present()) {
-    UnloadRunning(data.RunningExercise().get());
-  } else if (data.StrengthExercise().present()) {
-    UnloadStrength(data.StrengthExercise().get());
-  }
-}
-
-void SEExercise::UnloadGeneric(CDM::GenericExerciseData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_Intensity != nullptr) {
-    data.Intensity(std::unique_ptr<CDM::Scalar0To1Data>(m_Intensity->Unload()));
-  }
-  if (m_DesiredWorkRate != nullptr) {
-    data.DesiredWorkRate(std::unique_ptr<CDM::ScalarPowerData>(m_DesiredWorkRate->Unload()));
-  }
-}
-
-void SEExercise::UnloadCycling(CDM::CyclingExerciseData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_CadenceCycle != nullptr) {
-    data.Cadence(std::unique_ptr<CDM::ScalarFrequencyData>(m_CadenceCycle->Unload()));
-  }
-  if (m_PowerCycle != nullptr) {
-    data.Power(std::unique_ptr<CDM::ScalarPowerData>(m_PowerCycle->Unload()));
-  }
-  if (m_AddedWeight != nullptr) {
-    data.AddedWeight(std::unique_ptr<CDM::ScalarMassData>(m_AddedWeight->Unload()));
-  }
-}
-
-void SEExercise::UnloadRunning(CDM::RunningExerciseData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_SpeedRun != nullptr) {
-    data.Speed(std::unique_ptr<CDM::ScalarLengthPerTimeData>(m_SpeedRun->Unload()));
-  }
-  if (m_InclineRun != nullptr) {
-    data.Incline(std::unique_ptr<CDM::ScalarFractionData>(m_InclineRun->Unload()));
-  }
-  if (m_AddedWeight != nullptr) {
-    data.AddedWeight(std::unique_ptr<CDM::ScalarMassData>(m_AddedWeight->Unload()));
-  }
-}
-
-void SEExercise::UnloadStrength(CDM::StrengthExerciseData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_WeightStrength != nullptr) {
-    data.Weight(std::unique_ptr<CDM::ScalarMassData>(m_WeightStrength->Unload()));
-  }
-  if (m_RepsStrength != nullptr) {
-    data.Repetitions(std::unique_ptr<CDM::ScalarData>(m_RepsStrength->Unload()));
+  if (HasGenericExercise()) {
+    data.GenericExercise(std::make_unique<CDM::ExerciseData::GenericExercise_type>());
+    if (m_Intensity != nullptr) {
+      data.GenericExercise()->Intensity(std::unique_ptr<CDM::Scalar0To1Data>(m_Intensity->Unload()));
+    } else if (m_DesiredWorkRate != nullptr) {
+      data.GenericExercise()->DesiredWorkRate(std::unique_ptr<CDM::ScalarPowerData>(m_DesiredWorkRate->Unload()));
+    }
+  } else if (HasCyclingExercise()) {
+    data.CyclingExercise(std::make_unique<CDM::ExerciseData::CyclingExercise_type>(
+std::unique_ptr<CDM::ExerciseData::CyclingExercise_type::Cadence_type>(),
+std::unique_ptr<CDM::ExerciseData::CyclingExercise_type::Power_type>()
+));
+    data.CyclingExercise()->Cadence(std::unique_ptr<CDM::ScalarFrequencyData>(m_CadenceCycle->Unload()));
+    data.CyclingExercise()->Power(std::unique_ptr<CDM::ScalarPowerData>(m_PowerCycle->Unload()));
+    if (m_AddedWeight != nullptr) {
+      data.CyclingExercise()->AddedWeight(std::unique_ptr<CDM::ScalarMassData>(m_AddedWeight->Unload()));
+    }
+  } else if (HasRunningExercise()) {
+    data.RunningExercise(std::make_unique<CDM::ExerciseData::RunningExercise_type>(
+      std::unique_ptr<CDM::ExerciseData::RunningExercise_type::Speed_type>(),
+      std::unique_ptr<CDM::ExerciseData::RunningExercise_type::Incline_type>()));
+    data.RunningExercise()->Speed(std::unique_ptr<CDM::ScalarLengthPerTimeData>(m_SpeedRun->Unload()));
+    data.RunningExercise()->Incline(std::unique_ptr<CDM::ScalarFractionData>(m_InclineRun->Unload()));
+    if (m_AddedWeight != nullptr) {
+      data.RunningExercise()->AddedWeight(std::unique_ptr<CDM::ScalarMassData>(m_AddedWeight->Unload()));
+    }
+  } else if (HasStrengthExercise()) {
+    data.StrengthExercise(std::make_unique<CDM::ExerciseData::StrengthExercise_type>(
+      std::unique_ptr<CDM::ExerciseData::StrengthExercise_type::Weight_type>(),
+      std::unique_ptr<CDM::ExerciseData::StrengthExercise_type::Repetitions_type>()));
+    data.StrengthExercise()->Weight(std::unique_ptr<CDM::ScalarMassData>(m_WeightStrength->Unload()));
+    data.StrengthExercise()->Repetitions(std::unique_ptr<CDM::ScalarData>(m_RepsStrength->Unload()));
   }
 }
 

@@ -45,10 +45,6 @@ public:
 
 protected:
   virtual void Unload(CDM::ExerciseData& data) const;
-  virtual void UnloadGeneric(CDM::GenericExerciseData& data) const;
-  virtual void UnloadCycling(CDM::CyclingExerciseData& data) const;
-  virtual void UnloadRunning(CDM::RunningExerciseData& data) const;
-  virtual void UnloadStrength(CDM::StrengthExerciseData& data) const;
 
 public:
   virtual bool HasGenericExercise() const;

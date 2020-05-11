@@ -1234,7 +1234,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   //GetRespiratoryExchangeRatio().SetValue(respiratoryQuotient);
   m_energy->GetLactateProductionRate().SetValue(lactateProductionRate_mol_Per_s, AmountPerTimeUnit::mol_Per_s);
   achievedWorkRate_W = (1 / m_Dt_s) * 3600 * 24 * (exerciseEnergyRequested_kcal - brainEnergyDeficit_kcal - nonbrainEnergyDeficit_kcal) / kcal_Per_day_Per_Watt;
-
+  // Achieved exercise level is a measure of how closely a subject reaches a desired metabolic demand due to limitations. Not the actual intensity. 
   if (m_PatientActions->HasExercise()) {
     m_energy->GetTotalWorkRateLevel().SetValue(achievedWorkRate_W / maxWorkRate_W);
     double intensity = m_PatientActions->GetExercise()->GetIntensity().GetValue();
