@@ -57,8 +57,7 @@ CDM::SerializeStateData* SESerializeState::Unload() const
 void SESerializeState::Unload(CDM::SerializeStateData& data) const
 {
   SEAction::Unload(data);
-  if (HasFilename())
-    data.Filename(m_Filename);
+  data.Filename(m_Filename);
   if (HasType())
     data.Type(m_Type);
 }
