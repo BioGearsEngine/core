@@ -23,32 +23,30 @@ namespace biogears {
 SEThermalApplication::SEThermalApplication()
   : SEEnvironmentAction()
 {
-  m_ClearContents = true;
+  m_AppendToPrevious = false;
   m_ActiveHeating = nullptr;
   m_ActiveCooling = nullptr;
   m_AppliedTemperature = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEThermalApplication::~SEThermalApplication()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEThermalApplication::Clear()
 {
   SEEnvironmentAction::Clear();
-  if (m_ClearContents) {
-    SAFE_DELETE(m_ActiveHeating);
-    SAFE_DELETE(m_ActiveCooling);
-    SAFE_DELETE(m_AppliedTemperature);
-  }
+  SAFE_DELETE(m_ActiveHeating);
+  SAFE_DELETE(m_ActiveCooling);
+  SAFE_DELETE(m_AppliedTemperature);
 }
-
+//-------------------------------------------------------------------------------
 bool SEThermalApplication::IsValid() const
 {
   return SEEnvironmentAction::IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SEThermalApplication::IsActive() const
 {
   if (HasActiveHeating() && m_ActiveHeating->GetPower().IsPositive())
@@ -59,74 +57,110 @@ bool SEThermalApplication::IsActive() const
     return true;
   return false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEThermalApplication::Load(const CDM::ThermalApplicationData& in)
 {
   // Set this before our super class tells us to Clear if the action wants us to keep our current data
-  m_ClearContents = !in.AppendToPrevious();
+  CDM::ActiveHeatingData* ah = HasActiveHeating() ? GetActiveHeating().Unload() : nullptr;
+  CDM::ActiveCoolingData* ac = HasActiveCooling() ? GetActiveCooling().Unload() : nullptr;
+  CDM::AppliedTemperatureData* at = HasAppliedTemperature() ? GetAppliedTemperature().Unload() : nullptr;
+
   SEEnvironmentAction::Load(in);
-  m_ClearContents = true;
-  if (in.ActiveHeating().present())
+
+  if (in.AppendToPrevious()) {
+    //NOTE: Appending does not merge with the previous action if it has overlapping components.
+    //      If a ActiveHeating and ActiveCooling had previously applied and the incoming data had a
+    //      all ActiveHeating with an AppliedTemperature component. Append would add the ApliedTemperature
+    //      and overwrite the previous ActiveHeating with the inbound. While not appending would clear ActiveCooling.
+
+    GetActiveHeating().Load(*ah);
+    GetActiveCooling().Load(*ac);
+    GetAppliedTemperature().Load(*at);
+  }
+  if (in.ActiveHeating().present()) {
     GetActiveHeating().Load(in.ActiveHeating().get());
-  if (in.ActiveCooling().present())
+  }
+  if (in.ActiveCooling().present()) {
     GetActiveCooling().Load(in.ActiveCooling().get());
-  if (in.AppliedTemperature().present())
+  }
+  if (in.AppliedTemperature().present()) {
     GetAppliedTemperature().Load(in.AppliedTemperature().get());
+  }
+
+  m_AppendToPrevious = in.AppendToPrevious();
+
+  SAFE_DELETE(ah);
+  SAFE_DELETE(ac);
+  SAFE_DELETE(at);
 
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ThermalApplicationData* SEThermalApplication::Unload() const
 {
   CDM::ThermalApplicationData* data = new CDM::ThermalApplicationData();
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 void SEThermalApplication::Unload(CDM::ThermalApplicationData& data) const
 {
   SEEnvironmentAction::Unload(data);
-  if (HasActiveHeating())
+  if (HasActiveHeating()) {
     data.ActiveHeating(std::unique_ptr<CDM::ActiveHeatingData>(m_ActiveHeating->Unload()));
-  if (HasActiveCooling())
+  }
+  if (HasActiveCooling()) {
     data.ActiveCooling(std::unique_ptr<CDM::ActiveCoolingData>(m_ActiveCooling->Unload()));
-  if (HasAppliedTemperature())
+  }
+  if (HasAppliedTemperature()) {
     data.AppliedTemperature(std::unique_ptr<CDM::AppliedTemperatureData>(m_AppliedTemperature->Unload()));
+  }
+  //NOTE: It might be better to always serialize thermal applications to false and allow users to set this in for
+  //      Load commands. The problem is we use Load/UnLoad for cloning in BioGears so if keeping this state data for
+  //      Serialization is bad then we need to patch all the ProcessAction functions which clone a AppliedTemperatureData and ensure
+  //      it is retained after the clone through caching.
+  data.AppendToPrevious(m_AppendToPrevious);
 }
-
+//-------------------------------------------------------------------------------
 bool SEThermalApplication::HasActiveHeating() const
 {
   return m_ActiveHeating != nullptr;
 }
+//-------------------------------------------------------------------------------
 SEActiveHeating& SEThermalApplication::GetActiveHeating()
 {
   if (m_ActiveHeating == nullptr)
     m_ActiveHeating = new SEActiveHeating(GetLogger());
   return *m_ActiveHeating;
 }
+//-------------------------------------------------------------------------------
 void SEThermalApplication::RemoveActiveHeating()
 {
   SAFE_DELETE(m_ActiveHeating);
 }
-
+//-------------------------------------------------------------------------------
 bool SEThermalApplication::HasActiveCooling() const
 {
   return m_ActiveCooling != nullptr;
 }
+//-------------------------------------------------------------------------------
 SEActiveCooling& SEThermalApplication::GetActiveCooling()
 {
   if (m_ActiveCooling == nullptr)
     m_ActiveCooling = new SEActiveCooling(GetLogger());
   return *m_ActiveCooling;
 }
+//-------------------------------------------------------------------------------
 void SEThermalApplication::RemoveActiveCooling()
 {
   SAFE_DELETE(m_ActiveCooling);
 }
-
+//-------------------------------------------------------------------------------
 bool SEThermalApplication::HasAppliedTemperature() const
 {
   return m_AppliedTemperature != nullptr;
 }
+//-------------------------------------------------------------------------------
 SEAppliedTemperature& SEThermalApplication::GetAppliedTemperature()
 {
   if (m_AppliedTemperature == nullptr)
@@ -137,7 +171,17 @@ void SEThermalApplication::RemoveAppliedTemperature()
 {
   SAFE_DELETE(m_AppliedTemperature);
 }
-
+//-------------------------------------------------------------------------------
+bool SEThermalApplication::GetAppendToPrevious() const 
+{
+  return m_AppendToPrevious;
+};
+//-------------------------------------------------------------------------------
+void SEThermalApplication::SetAppendToPrevious(bool toAppend) 
+{
+  m_AppendToPrevious = toAppend;
+};
+//-------------------------------------------------------------------------------
 void SEThermalApplication::ToString(std::ostream& str) const
 {
   str << "Environment Action : Thermal Application";

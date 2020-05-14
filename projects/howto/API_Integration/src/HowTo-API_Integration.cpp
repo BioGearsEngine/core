@@ -16,20 +16,23 @@ specific language governing permissions and limitations under the License.
 #include <thread>
 // Include the various types you will be using in your code
 
+#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
+#include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
+#include <biogears/cdm/system/environment/SEActiveCooling.h>
 #include <biogears/cdm/system/environment/SEActiveHeating.h>
+#include <biogears/cdm/system/environment/SEAppliedTemperature.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
-#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
-#include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 
+#include <biogears/string/manipulation.h>
 //!
 //! All action functions take in an entine and a verying number of params based on the SEAction type being applied
 //!
@@ -246,11 +249,53 @@ bool action_bloodtransfuction(std::unique_ptr<biogears::BioGearsEngine>& engine,
 //!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the heating element
 //!
 //!  You must recall this function with a 0 flowrate to terminate the transfusion
-bool action_thermal_blanket(std::unique_ptr<biogears::BioGearsEngine>& engine, double watt, double surface_area_fraction)
+bool action_active_heating(std::unique_ptr<biogears::BioGearsEngine>& engine, double watt, double surface_area_fraction)
 {
   auto thermalApplication = biogears::SEThermalApplication();
   auto& blanket = thermalApplication.GetActiveHeating();
   blanket.GetPower().SetValue(watt, biogears::PowerUnit::W);
+  blanket.GetSurfaceAreaFraction().SetValue(surface_area_fraction);
+  if (thermalApplication.IsValid()) {
+    engine->ProcessAction(thermalApplication);
+    return true;
+  } else {
+    return false;
+  }
+}
+//-------------------------------------------------------------------------------
+//!
+//!  Applies an Active cooling element to the  environment
+//!
+//!  \param wattage --  Number of watts provided to the patient by the heating element
+//!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the heating element
+//!
+//!  You must recall this function with a 0 flowrate to terminate the transfusion
+bool action_active_cooling(std::unique_ptr<biogears::BioGearsEngine>& engine, double watt, double surface_area_fraction)
+{
+  auto thermalApplication = biogears::SEThermalApplication();
+  auto& blanket = thermalApplication.GetActiveCooling();
+  blanket.GetPower().SetValue(watt, biogears::PowerUnit::W);
+  blanket.GetSurfaceAreaFraction().SetValue(surface_area_fraction);
+  if (thermalApplication.IsValid()) {
+    engine->ProcessAction(thermalApplication);
+    return true;
+  } else {
+    return false;
+  }
+}
+//-------------------------------------------------------------------------------
+//!
+//!  Applies an Acrtive heating element to the  environment
+//!
+//!  \param wattage --  Number of watts provided to the patient by the heating element
+//!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the heating element
+//!
+//!  You must recall this function with a 0 flowrate to terminate the transfusion
+bool action_applied_temperature(std::unique_ptr<biogears::BioGearsEngine>& engine, double degrees_c, double surface_area_fraction)
+{
+  auto thermalApplication = biogears::SEThermalApplication();
+  auto& blanket = thermalApplication.GetAppliedTemperature();
+  blanket.GetTemperature().SetValue(degrees_c, biogears::TemperatureUnit::C);
   blanket.GetSurfaceAreaFraction().SetValue(surface_area_fraction);
   if (thermalApplication.IsValid()) {
     engine->ProcessAction(thermalApplication);
@@ -302,35 +347,34 @@ bool action_urinate(std::unique_ptr<biogears::BioGearsEngine>& engine)
 
 bool action_get_urine_color(std::unique_ptr<biogears::BioGearsEngine>& engine)
 {
-	auto urineAnalysis = biogears::SEUrinalysis(engine->GetLogger());
-	const biogears::Renal* constRenalSystem = dynamic_cast<const biogears::Renal*>(engine->GetRenalSystem());
-	biogears::Renal* renalSystem = const_cast<biogears::Renal*>(constRenalSystem);
+  auto urineAnalysis = biogears::SEUrinalysis(engine->GetLogger());
+  const biogears::Renal* constRenalSystem = dynamic_cast<const biogears::Renal*>(engine->GetRenalSystem());
+  biogears::Renal* renalSystem = const_cast<biogears::Renal*>(constRenalSystem);
 
-	renalSystem->CalculateUrinalysis(urineAnalysis);
-    if (urineAnalysis.HasColorResult())
-	{
-	mil::tatrc::physiology::datamodel::enumUrineColor eColor = urineAnalysis.GetColorResult();
+  renalSystem->CalculateUrinalysis(urineAnalysis);
+  if (urineAnalysis.HasColorResult()) {
+    mil::tatrc::physiology::datamodel::enumUrineColor eColor = urineAnalysis.GetColorResult();
 
-	switch (eColor) {
-	case mil::tatrc::physiology::datamodel::enumUrineColor::DarkYellow:
-	std::cout << "Urine Color: Dark Yellow";
-	return true;
-	case mil::tatrc::physiology::datamodel::enumUrineColor::PaleYellow:
-	std::cout << "Urine Color: Pale Yellow";
-	return true;
-	case mil::tatrc::physiology::datamodel::enumUrineColor::Pink:
-	std::cout << "Urine Color: Pink";
-	return true;
-	case mil::tatrc::physiology::datamodel::enumUrineColor::Yellow:
-	std::cout << "Urine Color: Yellow";
-	return true;
-	default:
-	std::cout << "Urine Color: Default";
-	return true;
-	}
-	}
+    switch (eColor) {
+    case mil::tatrc::physiology::datamodel::enumUrineColor::DarkYellow:
+      std::cout << "Urine Color: Dark Yellow";
+      return true;
+    case mil::tatrc::physiology::datamodel::enumUrineColor::PaleYellow:
+      std::cout << "Urine Color: Pale Yellow";
+      return true;
+    case mil::tatrc::physiology::datamodel::enumUrineColor::Pink:
+      std::cout << "Urine Color: Pink";
+      return true;
+    case mil::tatrc::physiology::datamodel::enumUrineColor::Yellow:
+      std::cout << "Urine Color: Yellow";
+      return true;
+    default:
+      std::cout << "Urine Color: Default";
+      return true;
+    }
+  }
 
-	return false;
+  return false;
 }
 //-------------------------------------------------------------------------------
 //!
@@ -359,10 +403,10 @@ BioGearsPlugin::BioGearsPlugin(std::string name)
   _pimpl->engine->GetLogger()->Info("HowToAPI_Integration");
   if (!_pimpl->engine->LoadState("states/StandardMale@0s.xml")) {
     _pimpl->engine->GetLogger()->Warning("Could not load patient state falling back to patient file.");
-    
+
     if (!_pimpl->engine->InitializeEngine("patients/StandardMale.xml")) {
       _pimpl->engine->GetLogger()->Warning("Could not load patient falling back to manually creating a patient.");
-      biogears::SEPatient patient{_pimpl->engine->GetLogger()};
+      biogears::SEPatient patient{ _pimpl->engine->GetLogger() };
       patient.SetName("StandardMale");
       patient.SetGender(CDM::enumSex::Male);
       patient.GetAge().SetValue(44, biogears::TimeUnit::yr);
@@ -375,7 +419,7 @@ BioGearsPlugin::BioGearsPlugin(std::string name)
       patient.GetRespirationRateBaseline().SetValue(16, biogears::FrequencyUnit::Per_min);
       patient.GetDiastolicArterialPressureBaseline().SetValue(73.5, biogears::PressureUnit::mmHg);
       patient.GetSystolicArterialPressureBaseline().SetValue(114, biogears::PressureUnit::mmHg);
-    _pimpl->engine->InitializeEngine(patient);
+      _pimpl->engine->InitializeEngine(patient);
     }
     _pimpl->engine->GetLogger()->Info("Initializing Patient. This could take a moment.");
   }
@@ -405,16 +449,16 @@ void BioGearsPlugin::run()
       [&]() {
         _pimpl->simulation_started.store(true);
         while (_pimpl->simulation_running) {
-          action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
-          action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Misapplied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::None);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          //action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
+          //action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
+          //_pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          //action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
+          //action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Misapplied);
+          //_pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          //action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
+          //_pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          //action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::None);
+          //_pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
           //The effectivness of this helper-function is called in to doubt, for such a simple tutorial
           //But you could imagine creating a vector of common conditions and then pushing and poping them in to
           //This function as the patient changes locations.
@@ -448,13 +492,28 @@ void BioGearsPlugin::run()
           action_infection(_pimpl->engine, CDM::enumInfectionSeverity::Mild, "LeftLeg", 0.2);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
           action_bloodtransfuction(_pimpl->engine, 500, 100);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
-          action_thermal_blanket(_pimpl->engine, 500, 0.5);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
-          action_pain_stimulus(_pimpl->engine, "LeftLeg", 0.3);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+
+          if (_pimpl->engine->GetActions().GetEnvironmentActions().HasThermalApplication()) {
+            _pimpl->engine->GetLogger()->Info(asprintf("ActiveHeating[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveHeating() ? "true" : "false")); // false
+          }
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          action_active_heating(_pimpl->engine, 500, 0.5);
+          _pimpl->engine->GetLogger()->Info(asprintf("ActiveHeating[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveHeating() ? "true" : "false")); // true
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+
+          _pimpl->engine->GetLogger()->Info(asprintf("ActiveCooling[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveCooling() ? "true" : "false"));
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          action_active_cooling(_pimpl->engine, 500, 0.5);
+          _pimpl->engine->GetLogger()->Info(asprintf("ActiveCooling[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveCooling() ? "true" : "false"));
+
+          _pimpl->engine->GetLogger()->Info(asprintf("AppliedTempeture[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasAppliedTemperature() ? "true" : "false"));
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          action_applied_temperature(_pimpl->engine, 37, 0.5);
+          _pimpl->engine->GetLogger()->Info(asprintf("AppliedTempeture[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasAppliedTemperature() ? "true" : "false"));
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_get_urine_color(_pimpl->engine);
           action_urinate(_pimpl->engine);
+          _pimpl->engine->SaveState("HowTo-API_Integration_FinalState.xml");
           _pimpl->simulation_finished.store(true);
         }
       }

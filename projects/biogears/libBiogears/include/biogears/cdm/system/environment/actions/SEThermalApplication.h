@@ -50,10 +50,14 @@ public:
   virtual SEAppliedTemperature& GetAppliedTemperature();
   virtual void RemoveAppliedTemperature();
 
+  virtual bool GetAppendToPrevious() const;
+  virtual void SetAppendToPrevious(bool toAppend);
+
   virtual void ToString(std::ostream& str) const override;
 
+
 protected:
-  bool m_ClearContents;
+  bool m_AppendToPrevious;
   SEActiveHeating* m_ActiveHeating;
   SEActiveCooling* m_ActiveCooling;
   SEAppliedTemperature* m_AppliedTemperature;

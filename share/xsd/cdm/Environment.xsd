@@ -98,11 +98,7 @@ specific language governing permissions and limitations under the License.
                 <xs:sequence>			
                 	<xs:element name="Name" type="xs:string" minOccurs="0"  maxOccurs="1"/>
                 	<xs:element name="Conditions" type="EnvironmentalConditionsData" minOccurs="0" maxOccurs="1"/><!--<< @brief @copybrief Environment_EnvironmentalConditionsData -->
-                	<xs:element name="ActiveHeating" type="ActiveHeatingData" minOccurs="0" maxOccurs="1"/><!--<< @brief @copybrief Environment_ActiveHeatingData -->
-                	<xs:element name="ActiveCooling" type="ActiveCoolingData" minOccurs="0" maxOccurs="1"/><!--<< @brief @copybrief Environment_ActiveCoolingData -->
-                	<xs:element name="AppliedTemperature" type="AppliedTemperatureData" minOccurs="0" maxOccurs="1"/><!--<< @brief @copybrief Environment_AppliedTemperatureData -->
-					
-                	<xs:element name="ConvectiveHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total patient heat loss due to convection. -->
+                  <xs:element name="ConvectiveHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total patient heat loss due to convection. -->
                 	<xs:element name="ConvectiveHeatTranferCoefficient" type="ScalarHeatConductancePerAreaData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The proportionality coefficient between the heat flux and the thermodynamic driving force for the flow of heat due to convection. -->
                 	<xs:element name="EvaporativeHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total patient heat loss due to evaporation. -->
                 	<xs:element name="EvaporativeHeatTranferCoefficient" type="ScalarHeatConductancePerAreaData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The proportionality coefficient between the heat flux and the thermodynamic driving force for the flow of heat due to evaporation. -->

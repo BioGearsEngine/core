@@ -76,21 +76,6 @@ public:
   bool HasName() const;
   void InvalidateName();
 
-  bool HasActiveHeating() const;
-  SEActiveHeating& GetActiveHeating();
-  const SEActiveHeating* GetActiveHeating() const;
-  void RemoveActiveHeating();
-
-  bool HasActiveCooling() const;
-  SEActiveCooling& GetActiveCooling();
-  const SEActiveCooling* GetActiveCooling() const;
-  void RemoveActiveCooling();
-
-  bool HasAppliedTemperature() const;
-  SEAppliedTemperature& GetAppliedTemperature();
-  const SEAppliedTemperature* GetAppliedTemperature() const;
-  void RemoveAppliedTemperature();
-
   bool HasConditions() const;
   SEEnvironmentalConditions& GetConditions();
   const SEEnvironmentalConditions* GetConditions() const;
@@ -142,9 +127,6 @@ protected:
   SEScalarPower* m_RespirationHeatLoss;
   SEScalarPower* m_SkinHeatLoss;
 
-  SEActiveHeating* m_ActiveHeating;
-  SEActiveCooling* m_ActiveCooling;
-  SEAppliedTemperature* m_AppliedTemperature;
   SEEnvironmentalConditions* m_Conditions;
 
   SESubstanceManager& m_Substances;
