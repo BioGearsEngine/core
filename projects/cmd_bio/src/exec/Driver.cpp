@@ -188,7 +188,7 @@ void Driver::queue_Scenario(Executor exec)
 
     BioGearsScenario sce(eng->GetSubstanceManager());
     if (!sce.Load("Scenarios/" + trim(trimed_scenario_path))) {
-      //TODO::LOG ERROR Scenario File could not be loaded
+      console_logger.Error("Unable to find  " + trim(trimed_scenario_path));
     }
 
     switch (patient_type) {
