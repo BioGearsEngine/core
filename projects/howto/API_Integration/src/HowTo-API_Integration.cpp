@@ -248,7 +248,7 @@ bool action_bloodtransfuction(std::unique_ptr<biogears::BioGearsEngine>& engine,
 //!  \param wattage --  Number of watts provided to the patient by the heating element
 //!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the heating element
 //!
-//!  You must recall this function with a 0 flowrate to terminate the transfusion
+//!  Terminating this function requires applying it with 0 Wattage
 bool action_active_heating(std::unique_ptr<biogears::BioGearsEngine>& engine, double watt, double surface_area_fraction)
 {
   auto thermalApplication = biogears::SEThermalApplication();
@@ -266,16 +266,16 @@ bool action_active_heating(std::unique_ptr<biogears::BioGearsEngine>& engine, do
 //!
 //!  Applies an Active cooling element to the  environment
 //!
-//!  \param wattage --  Number of watts provided to the patient by the heating element
-//!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the heating element
+//!  \param wattage --  Number of watts provided to the patient by the cooling element
+//!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the cooling element
 //!
-//!  You must recall this function with a 0 flowrate to terminate the transfusion
+//! Terminating this function requires applying it with 0 wattage
 bool action_active_cooling(std::unique_ptr<biogears::BioGearsEngine>& engine, double watt, double surface_area_fraction)
 {
   auto thermalApplication = biogears::SEThermalApplication();
-  auto& blanket = thermalApplication.GetActiveCooling();
-  blanket.GetPower().SetValue(watt, biogears::PowerUnit::W);
-  blanket.GetSurfaceAreaFraction().SetValue(surface_area_fraction);
+  auto& icepack = thermalApplication.GetActiveCooling();
+  icepack.GetPower().SetValue(watt, biogears::PowerUnit::W);
+  icepack.GetSurfaceAreaFraction().SetValue(surface_area_fraction);
   if (thermalApplication.IsValid()) {
     engine->ProcessAction(thermalApplication);
     return true;
@@ -285,18 +285,19 @@ bool action_active_cooling(std::unique_ptr<biogears::BioGearsEngine>& engine, do
 }
 //-------------------------------------------------------------------------------
 //!
-//!  Applies an Acrtive heating element to the  environment
+//!  Applies an AppliedTemperature element to the  environment
 //!
-//!  \param wattage --  Number of watts provided to the patient by the heating element
-//!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the heating element
+//!  \param degrees --  YThe surface temperature of the temperature being applied to the bodies surface.
+//!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the applied temp
 //!
-//!  You must recall this function with a 0 flowrate to terminate the transfusion
+//!  This function can not be undone.  SEThermalApplication supports a State member which can be set to off to terminate
+//!  an active applied_temperature, you would simply need to pass the CDM::enumOnOff as an additional paramater to this function.
 bool action_applied_temperature(std::unique_ptr<biogears::BioGearsEngine>& engine, double degrees_c, double surface_area_fraction)
 {
   auto thermalApplication = biogears::SEThermalApplication();
-  auto& blanket = thermalApplication.GetAppliedTemperature();
-  blanket.GetTemperature().SetValue(degrees_c, biogears::TemperatureUnit::C);
-  blanket.GetSurfaceAreaFraction().SetValue(surface_area_fraction);
+  auto& heated_car_seat = thermalApplication.GetAppliedTemperature();
+  heated_car_seat.GetTemperature().SetValue(degrees_c, biogears::TemperatureUnit::C);
+  heated_car_seat.GetSurfaceAreaFraction().SetValue(surface_area_fraction);
   if (thermalApplication.IsValid()) {
     engine->ProcessAction(thermalApplication);
     return true;
@@ -449,16 +450,16 @@ void BioGearsPlugin::run()
       [&]() {
         _pimpl->simulation_started.store(true);
         while (_pimpl->simulation_running) {
-          //action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
-          //action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
-          //_pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
-          //action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
-          //action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Misapplied);
-          //_pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
-          //action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
-          //_pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
-          //action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::None);
-          //_pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
+          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
+          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Misapplied);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::None);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
           //The effectivness of this helper-function is called in to doubt, for such a simple tutorial
           //But you could imagine creating a vector of common conditions and then pushing and poping them in to
           //This function as the patient changes locations.
