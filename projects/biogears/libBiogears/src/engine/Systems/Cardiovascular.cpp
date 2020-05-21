@@ -1749,7 +1749,7 @@ void Cardiovascular::MetabolicToneResponse()
   double complianceNew_mL_Per_mmHg = 0.0;
 
   for (SEFluidCircuitPath* musclePath : m_muscleResistancePaths) {
-    resistanceNew__mmHg_s_Per_mL = (1.0 / exerciseModifier) * (1.0 / exerciseModifier) * musclePath->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+    resistanceNew__mmHg_s_Per_mL = (1.0 / exerciseModifier) * (1.0 / exerciseModifier) * musclePath->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL); //biggest change in muscle
     if (resistanceNew__mmHg_s_Per_mL < m_minIndividialSystemicResistance__mmHg_s_Per_mL) {
       resistanceNew__mmHg_s_Per_mL = m_minIndividialSystemicResistance__mmHg_s_Per_mL;
     }

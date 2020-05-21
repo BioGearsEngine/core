@@ -868,17 +868,20 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     //Additionally, the muscles perform all of the additional work from exercise
     double tissueNeededEnergy_kcal = nonbrainNeededEnergy_kcal * BloodFlowFraction;
     double muscleMandatoryAnaerobicNeededEnergy_kcal = 0;
+    const double muscSpike = 0.8; 
+    const double fatSpike = 0.2; 
     if (tissue == m_MuscleTissue) {
+
       muscleMandatoryAnaerobicNeededEnergy_kcal = mandatoryMuscleAnaerobicFraction * tissueNeededEnergy_kcal;
       tissueNeededEnergy_kcal -= muscleMandatoryAnaerobicNeededEnergy_kcal;
-      tissueNeededEnergy_kcal += exerciseEnergyRequested_kcal;
+      tissueNeededEnergy_kcal += (muscSpike * exerciseEnergyRequested_kcal);
       tissueNeededEnergy_kcal += (0.5 * otherEnergyDemandAboveBasal_kcal); //Splitting "extra" demand evenly between muscles and fat for now
 
       double creatinineProductionRate_mg_Per_s = 2.0e-5; /// \todo Creatinine production rate should be a function of muscle mass.
       intracellular.GetSubstanceQuantity(*m_Creatinine)->GetMass().IncrementValue(creatinineProductionRate_mg_Per_s * m_Dt_s, MassUnit::mg);
     }
     if (tissue->GetName() == BGE::TissueCompartment::Fat) {
-      tissueNeededEnergy_kcal += (0.5 * otherEnergyDemandAboveBasal_kcal); //Splitting "extra" demand evenly bewteen muscles and fat for now
+      tissueNeededEnergy_kcal += ((0.5 * otherEnergyDemandAboveBasal_kcal) + (fatSpike * exerciseEnergyRequested_kcal)); //Splitting "extra" demand evenly bewteen muscles and fat for now
     }
 
     totalEnergyRequested_kcal_Check += (tissueNeededEnergy_kcal + muscleMandatoryAnaerobicNeededEnergy_kcal);

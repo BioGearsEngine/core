@@ -288,7 +288,7 @@ void Energy::Exercise()
       weightStrength_kg = ExerciseInfo->GetWeight().GetValue(MassUnit::kg);
       repetitionsStrength_number = ExerciseInfo->GetRepetitions().GetValue();
       // Convert into intensity value
-      exerciseIntensity = (1 + (weightStrength_kg / m_Patient->GetWeight(MassUnit::kg))) * (0.0068 * repetitionsStrength_number) - 0.029;
+      exerciseIntensity = ((1 + (weightStrength_kg / m_Patient->GetWeight(MassUnit::kg))) * (0.0068 * repetitionsStrength_number) +0.9864);
       BLIM(exerciseIntensity, 0.0, 1.0);
       ///////////////////////////////
     }
@@ -306,6 +306,7 @@ void Energy::Exercise()
   const double workRateDesired_W = exerciseIntensity * maxWorkRate_W;
   const double TotalMetabolicRateSetPoint_kcal_Per_day = basalMetabolicRate_kcal_Per_day + workRateDesired_W * kcal_Per_day_Per_Watt;
   const double exerciseEnergyIncrement_kcal_Per_day = MetabolicRateGain * (TotalMetabolicRateSetPoint_kcal_Per_day - currentMetabolicRate_kcal_Per_day);
+
   GetExerciseEnergyDemand().IncrementValue(exerciseEnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
   GetTotalMetabolicRate().IncrementValue(exerciseEnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
   

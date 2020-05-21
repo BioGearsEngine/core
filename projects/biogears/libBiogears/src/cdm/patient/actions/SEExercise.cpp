@@ -64,8 +64,23 @@ bool SEExercise::IsValid() const
 
 bool SEExercise::IsActive() const
 {
+  if (HasGenericExercise()) {
+    if (HasIntensity()) {
+      return !m_Intensity->IsZero();
+    } else {
+      return !m_DesiredWorkRate->IsZero();
+    }
+  } else if (HasCyclingExercise()) {
+    return (!m_CadenceCycle->IsZero() && !m_PowerCycle->IsZero());
+  } else if (HasRunningExercise()) {
+    return (!m_SpeedRun->IsZero());
+  } else if (HasStrengthExercise()) {
+    return (!m_WeightStrength->IsZero() && !m_RepsStrength->IsZero());
+  } else {
     return IsValid();
+  }
 }
+
 
 bool SEExercise::Load(const CDM::ExerciseData& in)
 {
