@@ -82,7 +82,7 @@ void HowToExercise()
   // This leads to an increase in core temperature, cardiac output, respiration rate and tidal volume.
   // The increase in core temperature leads to an elevated sweat rate, which causes the patient’s skin temperature to drop due to evaporation.
   SEExercise ex;
-  ex.GetIntensity().SetValue(0.5);
+  ex.GetGenericExercise().m_Intensity.SetValue(0.5);
   bg->ProcessAction(ex);
   tracker.AdvanceModelTime(30);
 
@@ -102,7 +102,7 @@ void HowToExercise()
 
   // Once exercise has ended, the patient is in a recovery period where the metabolic rate begins to return to its basal value.
   // The cardiac output, respiration rate and tidal volume follow this recovery trend towards their normal values.
-  ex.GetIntensity().SetValue(0);
+  ex.GetGenericExercise().m_Intensity.SetValue(0);
   bg->ProcessAction(ex);
 
   // Advance some time while the medic gets the drugs ready

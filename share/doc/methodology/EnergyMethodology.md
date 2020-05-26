@@ -146,7 +146,20 @@ Actions
 -------
 @anchor energy-exercise
 ### Exercise
-The exercise action is initiated by specifying the exercise intensity or the desired work rate for the patient to achieve. The exercise intensity is a number between 0 and 1 that defines the requested fraction of the body's maximal work rate, which if not specified in the patient file is calculated using the patient's age and gender @cite plowman2013exercise. For instance, the average adult male has a maximal work rate of approximately 1200 Watts @cite hall2011guyton; therefore, a user-specified exercise intensity of 0.5 would request a work rate of 600 Watts from the body. Table 1 shows the approximate exercise intensity for some common activities executed by an average adult male. The approximate mechanical power produced by an adult male is also included in the table.
+The exercise action is initiated by specifying any of four exercise types for the patient to participate in: Generic Exercise, Cycling Exercise, Running Exercise, or Strength Exercise.
+
+Generic Exercise
+Generic exercise is an overarching exercise type in BioGears meant to simulate any intensity or desired work rate not achievable through other exercise types. The exercise intensity is a number between 0 and 1 that defines the requested fraction of the body's maximal work rate, which if not specified in the patient file is calculated using the patient's age and gender @cite plowman2013exercise. For instance, the average adult male has a maximal work rate of approximately 1200 Watts @cite hall2011guyton; therefore, a user-specified exercise intensity of 0.5 would request a work rate of 600 Watts from the body. Table 1 shows the approximate exercise intensity for some common activities executed by an average adult male. The approximate mechanical power produced by an adult male is also included in the table.
+
+Cycling Exercise
+Cycling exercise simulates a subject on a bicycle and calculates metabolic exertion using the input parameters of cadence and power. Cadence is a frequency value referring to the number of rotations of the pedals in a given time period. In cycling, power is a expressed as work  or energy produced from pedalling. In BioGears, a weighted pack can also be attatched to the subject for the duration of the exercise to increase intensity. 
+
+Running Exercise
+Running exercise simulates cardiovascular exercise by means of walking/running using input parameters of speed and incline. Speed is a length per unit time measurement to identify pace. Incline is a fractional representation of percent incline (whereas a 2 percent incline would be equivalent to 0.02 in BioGears). Additionally, a weighted pack can also be attatched to the subject for the duration of the exercise to increase intensity. 
+
+Strength Exercise
+Strength exercise offers a basic representation of body weight and weighted strength exercises through weight and repetitions inputs. Weight refers to the additional mass (zero for body weight exercises) being lifted per repeition while the number of repeitions is a scalar value. The current model estimates a generic maximum rep strength exercise to be approximately twice the patients body weight, though this will hopefully be an adjustable parameter in future expansions.
+
 
 <br><center>
 *Table 1. The approximate exercise intensity for some common activities and the corresponding approximate mechanical power (desired work rate). Note that the values in the table correspond to a body with a 1200 Watt maximum work rate capability.*

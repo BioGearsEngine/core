@@ -1240,7 +1240,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   // Achieved exercise level is a measure of how closely a subject reaches a desired metabolic demand due to limitations. Not the actual intensity. 
   if (m_PatientActions->HasExercise()) {
     m_energy->GetTotalWorkRateLevel().SetValue(achievedWorkRate_W / maxWorkRate_W);
-    double intensity = m_PatientActions->GetExercise()->GetIntensity().GetValue();
+    auto exercise = m_PatientActions->GetExercise();
+    double intensity = exercise->GetGenericExercise().m_Intensity.GetValue();
     if (intensity > 1e-6) { //approx. zero
       m_energy->GetAchievedExerciseLevel().SetValue(achievedWorkRate_W / maxWorkRate_W / intensity);
     } else {
