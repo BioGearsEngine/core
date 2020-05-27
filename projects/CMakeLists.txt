@@ -13,7 +13,7 @@ find_path (
         ${PROJECT_SOURCE_DIR}/../verification  
         ${PROJECT_SOURCE_DIR}/../validation 
         ${PROJECT_SOURCE_DIR}/../baselines
-  DOC "Optional directory path to hiarchial filetree of baseline archives. This will be used by Java Utilities to find Baselines"
+  DOC "Optional directory path to hiarchial filetree of baseline archives. This will be used by Python Plotters to find Baselines"
 )
 find_path (
   ${ROOT_PROJECT_NAME}_Reference_DIR
@@ -138,11 +138,7 @@ add_custom_target( prepare_runtime_dir
 #         this list
 ###############################################################################
 
-find_package(Java)
-find_package(JNI)
 verify_package(Log4cpp REQUIRED)
-option(${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development tools (requires Doxygen)" OFF )
-
 add_subdirectory(biogears-common)
 add_subdirectory(biogears)
 add_subdirectory(test_driver)
@@ -151,10 +147,7 @@ add_subdirectory(unit)
 add_subdirectory(circuit_profiler)
 add_subdirectory(zip)
 add_subdirectory(cli)
-
-if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
-  add_subdirectory(java)
-endif()
+add_subdirectory(website)
 
 ##############################################################################
 # Step 3: Global Doxygen configuration 
