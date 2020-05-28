@@ -417,7 +417,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="10.8851654790864"/>
     <MassInBody readOnly="false" unit="ug" value="494157.735070883"/>
     <MassInBlood readOnly="false" unit="ug" value="68392.2431373879"/>
-    <MassInTissue readOnly="false" unit="ug" value="425765.491933495"/>
+    <MassInTissue readOnly="false" unit="ug" value="425765.491933496"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -929,6 +929,8 @@
     <EnergyDeficit readOnly="false" unit="W" value="0"/>
     <BloodpH numSamples="1" sum="7.40568933923949"/>
     <BicarbonateMolarity_mmol_Per_L numSamples="1" sum="25.8932804125131"/>
+    <PackOn>false</PackOn>
+    <PreviousWeightPack_kg>0</PreviousWeightPack_kg>
   </System>
   <System xsi:type="BioGearsGastrointestinalSystemData">
     <ChymeAbsorptionRate readOnly="false" unit="mL/s" value="0.0123897929167371"/>
@@ -1141,15 +1143,15 @@
     <HadBronchoconstriction>false</HadBronchoconstriction>
   </System>
   <System xsi:type="BioGearsTissueSystemData">
-    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="3.47194328810506"/>
-    <DehydrationFraction readOnly="false" value="1.94612958133652e-05"/>
+    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="3.47474028384752"/>
+    <DehydrationFraction readOnly="false" value="1.94612958134573e-05"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="9258.86681130049"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="35102.2414697269"/>
     <IntracellularFluidPH readOnly="false" value="7"/>
     <IntracellularFluidVolume readOnly="false" unit="mL" value="25843.3746584264"/>
     <TotalBodyFluidVolume readOnly="false" unit="mL" value="40616.3421756996"/>
-    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="4.09152694573379"/>
-    <RespiratoryExchangeRatio readOnly="false" value="0.795377629598414"/>
+    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="4.09010705111963"/>
+    <RespiratoryExchangeRatio readOnly="false" value="0.796294946332634"/>
     <LiverInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
     <LiverGlucagonSetPoint readOnly="false" unit="ug/L" value="0.079"/>
     <MuscleInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
@@ -1162,9 +1164,9 @@
     <StoredFat readOnly="false" unit="g" value="13880.137477087"/>
     <RestingPatientMass_kg>77.1122029</RestingPatientMass_kg>
     <RestingFluidMass_kg>38.5656523892436</RestingFluidMass_kg>
-    <O2ConsumedRunningAverage_mL_Per_s numSamples="49" sum="200.664050294622"/>
-    <CO2ProducedRunningAverage_mL_Per_s numSamples="49" sum="170.511415141817"/>
-    <RespiratoryQuotientRunningAverage numSamples="49" sum="39.0268125048083"/>
+    <O2ConsumedRunningAverage_mL_Per_s numSamples="49" sum="200.452943619027"/>
+    <CO2ProducedRunningAverage_mL_Per_s numSamples="49" sum="170.60110011972"/>
+    <RespiratoryQuotientRunningAverage numSamples="49" sum="39.0886410832475"/>
     <FatigueRunningAverage numSamples="1" sum="0"/>
   </System>
   <System xsi:type="BioGearsEnvironmentData">
@@ -28550,7 +28552,7 @@
       <Name>Ambient</Name>
       <Node>Ambient</Node>
       <InFlow readOnly="true" unit="mL/s" value="1134.59045914148"/>
-      <OutFlow readOnly="true" unit="mL/s" value="2.24376146411686e-91"/>
+      <OutFlow readOnly="true" unit="mL/s" value="2.24062488388964e-91"/>
       <Pressure readOnly="false" unit="mmHg" value="760"/>
       <Volume readOnly="true" unit="L" value="INF"/>
       <SubstanceQuantity>
@@ -28866,8 +28868,8 @@
     <GasCompartment>
       <Name>Mouth</Name>
       <Node>Mouth</Node>
-      <InFlow readOnly="true" unit="mL/s" value="1134.59045912016"/>
-      <OutFlow readOnly="true" unit="mL/s" value="1134.59045916279"/>
+      <InFlow readOnly="true" unit="mL/s" value="1134.59045914147"/>
+      <OutFlow readOnly="true" unit="mL/s" value="1134.59045914148"/>
       <Pressure readOnly="true" unit="cmH2O" value="1033.22744953679"/>
       <Volume readOnly="false" unit="mL" value="20.6"/>
       <SubstanceQuantity>

@@ -356,7 +356,7 @@
     <State>Liquid</State>
     <MembraneResistance readOnly="false" unit="ohm" value="248"/>
     <BloodConcentration readOnly="false" unit="ug/mL" value="58.8573565908072"/>
-    <MassInBody readOnly="false" unit="ug" value="597976.946780437"/>
+    <MassInBody readOnly="false" unit="ug" value="597976.946780436"/>
     <MassInBlood readOnly="false" unit="ug" value="220443.733818406"/>
     <MassInTissue readOnly="false" unit="ug" value="377533.212962031"/>
     <SystemicMassCleared readOnly="false" unit="ug" value="35.3809902379362"/>
@@ -926,6 +926,8 @@
     <EnergyDeficit readOnly="false" unit="W" value="0"/>
     <BloodpH numSamples="37" sum="274.093497406106"/>
     <BicarbonateMolarity_mmol_Per_L numSamples="37" sum="957.410701590034"/>
+    <PackOn>false</PackOn>
+    <PreviousWeightPack_kg>0</PreviousWeightPack_kg>
   </System>
   <System xsi:type="BioGearsGastrointestinalSystemData">
     <ChymeAbsorptionRate readOnly="false" unit="mL/s" value="0.0123897929167371"/>
@@ -28547,7 +28549,7 @@
       <Name>Ambient</Name>
       <Node>Ambient</Node>
       <InFlow readOnly="true" unit="mL/s" value="4.33911090890516"/>
-      <OutFlow readOnly="true" unit="mL/s" value="1.98522782665499e-91"/>
+      <OutFlow readOnly="true" unit="mL/s" value="1.98209124642777e-91"/>
       <Pressure readOnly="false" unit="mmHg" value="760"/>
       <Volume readOnly="true" unit="L" value="INF"/>
       <SubstanceQuantity>
@@ -28863,8 +28865,8 @@
     <GasCompartment>
       <Name>Mouth</Name>
       <Node>Mouth</Node>
-      <InFlow readOnly="true" unit="mL/s" value="4.33911088760846"/>
-      <OutFlow readOnly="true" unit="mL/s" value="4.33911093022052"/>
+      <InFlow readOnly="true" unit="mL/s" value="4.33911090892382"/>
+      <OutFlow readOnly="true" unit="mL/s" value="4.33911090890516"/>
       <Pressure readOnly="true" unit="cmH2O" value="1033.22744953679"/>
       <Volume readOnly="false" unit="mL" value="20.6"/>
       <SubstanceQuantity>

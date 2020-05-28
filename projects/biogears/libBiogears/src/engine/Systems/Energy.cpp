@@ -136,6 +136,8 @@ bool Energy::Load(const CDM::BioGearsEnergySystemData& in)
 
   m_BloodpH.Load(in.BloodpH());
   m_BicarbonateMolarity_mmol_Per_L.Load(in.BicarbonateMolarity_mmol_Per_L());
+  m_packOn = in.PackOn();
+  m_previousWeightPack_kg = in.PreviousWeightPack_kg();
   BioGearsSystem::LoadState();
   return true;
 }
@@ -334,7 +336,7 @@ void Energy::Exercise()
       packOn = true;
     }
   } else {
-    if (packOn == true && m_previousWeightPack_kg > 0.0) {
+    if (packOn && m_previousWeightPack_kg > 0.0) {
       m_Patient->GetWeight().DecrementValue(m_previousWeightPack_kg, MassUnit::kg);
       packOn = false;
     }

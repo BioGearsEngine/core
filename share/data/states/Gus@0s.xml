@@ -49,7 +49,7 @@
     <State>Gas</State>
     <MassInBody readOnly="false" unit="ug" value="644955.983642257"/>
     <MassInBlood readOnly="false" unit="ug" value="103244.691125783"/>
-    <MassInTissue readOnly="false" unit="ug" value="541711.292516473"/>
+    <MassInTissue readOnly="false" unit="ug" value="541711.292516474"/>
     <AlveolarTransfer readOnly="false" unit="mL/s" value="-147.602773216733"/>
     <DiffusingCapacity readOnly="false" unit="mL/s mmHg" value="0.287895967596795"/>
     <EndTidalFraction readOnly="false" value="0.793005006092834"/>
@@ -359,7 +359,7 @@
     <State>Liquid</State>
     <MembraneResistance readOnly="false" unit="ohm" value="248"/>
     <BloodConcentration readOnly="false" unit="ug/mL" value="61.421160748732"/>
-    <MassInBody readOnly="false" unit="ug" value="969178.558455763"/>
+    <MassInBody readOnly="false" unit="ug" value="969178.558455764"/>
     <MassInBlood readOnly="false" unit="ug" value="380367.646204652"/>
     <MassInTissue readOnly="false" unit="ug" value="588810.912251111"/>
     <SystemicMassCleared readOnly="false" unit="ug" value="282.288009852564"/>
@@ -417,7 +417,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="11.3522659866762"/>
     <MassInBody readOnly="false" unit="ug" value="557515.387383511"/>
     <MassInBlood readOnly="false" unit="ug" value="82713.1096385561"/>
-    <MassInTissue readOnly="false" unit="ug" value="474802.277744954"/>
+    <MassInTissue readOnly="false" unit="ug" value="474802.277744955"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -929,6 +929,8 @@
     <EnergyDeficit readOnly="false" unit="W" value="0"/>
     <BloodpH numSamples="30" sum="222.537161440504"/>
     <BicarbonateMolarity_mmol_Per_L numSamples="30" sum="775.208559142577"/>
+    <PackOn>false</PackOn>
+    <PreviousWeightPack_kg>0</PreviousWeightPack_kg>
   </System>
   <System xsi:type="BioGearsGastrointestinalSystemData">
     <ChymeAbsorptionRate readOnly="false" unit="mL/s" value="0.0123897929167371"/>
@@ -1141,15 +1143,15 @@
     <HadBronchoconstriction>false</HadBronchoconstriction>
   </System>
   <System xsi:type="BioGearsTissueSystemData">
-    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="4.08514615301484"/>
+    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="4.08852363828671"/>
     <DehydrationFraction readOnly="false" value="0"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="10113.846614094"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="38925.9914248768"/>
     <IntracellularFluidPH readOnly="false" value="7"/>
     <IntracellularFluidVolume readOnly="false" unit="mL" value="28812.1448107829"/>
     <TotalBodyFluidVolume readOnly="false" unit="mL" value="45109.5686379542"/>
-    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="4.43496534198998"/>
-    <RespiratoryExchangeRatio readOnly="false" value="0.863384704467713"/>
+    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="4.43700329709905"/>
+    <RespiratoryExchangeRatio readOnly="false" value="0.863702687557753"/>
     <LiverInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
     <LiverGlucagonSetPoint readOnly="false" unit="ug/L" value="0.079"/>
     <MuscleInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
@@ -1162,9 +1164,9 @@
     <StoredFat readOnly="false" unit="g" value="15513.1126483133"/>
     <RestingPatientMass_kg>86.1840503</RestingPatientMass_kg>
     <RestingFluidMass_kg>42.8619072401532</RestingFluidMass_kg>
-    <O2ConsumedRunningAverage_mL_Per_s numSamples="48" sum="212.99280265253"/>
-    <CO2ProducedRunningAverage_mL_Per_s numSamples="48" sum="196.360372420901"/>
-    <RespiratoryQuotientRunningAverage numSamples="48" sum="41.4776457834608"/>
+    <O2ConsumedRunningAverage_mL_Per_s numSamples="48" sum="212.87535137618"/>
+    <CO2ProducedRunningAverage_mL_Per_s numSamples="48" sum="196.248906210286"/>
+    <RespiratoryQuotientRunningAverage numSamples="48" sum="41.4772253647485"/>
     <FatigueRunningAverage numSamples="30" sum="0"/>
   </System>
   <System xsi:type="BioGearsEnvironmentData">

@@ -632,7 +632,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="258.171479192554"/>
     <MassInBody readOnly="false" unit="ug" value="8094156.3210296"/>
     <MassInBlood readOnly="false" unit="ug" value="1224166.11446715"/>
-    <MassInTissue readOnly="false" unit="ug" value="6869990.20656245"/>
+    <MassInTissue readOnly="false" unit="ug" value="6869990.20656246"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -926,6 +926,8 @@
     <EnergyDeficit readOnly="false" unit="W" value="0"/>
     <BloodpH numSamples="28" sum="207.421237921879"/>
     <BicarbonateMolarity_mmol_Per_L numSamples="28" sum="724.637059065135"/>
+    <PackOn>false</PackOn>
+    <PreviousWeightPack_kg>0</PreviousWeightPack_kg>
   </System>
   <System xsi:type="BioGearsGastrointestinalSystemData">
     <ChymeAbsorptionRate readOnly="false" unit="mL/s" value="0.0123897929167371"/>
@@ -1138,15 +1140,15 @@
     <HadBronchoconstriction>false</HadBronchoconstriction>
   </System>
   <System xsi:type="BioGearsTissueSystemData">
-    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="2.59871881195961"/>
+    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="2.60549997817191"/>
     <DehydrationFraction readOnly="false" value="0"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="7201.40791059596"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="23635.4766131339"/>
     <IntracellularFluidPH readOnly="false" value="7"/>
     <IntracellularFluidVolume readOnly="false" unit="mL" value="16434.0687025379"/>
     <TotalBodyFluidVolume readOnly="false" unit="mL" value="27843.9225341244"/>
-    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="3.06101838194892"/>
-    <RespiratoryExchangeRatio readOnly="false" value="0.795755384245231"/>
+    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="3.06181897407981"/>
+    <RespiratoryExchangeRatio readOnly="false" value="0.797613251696764"/>
     <LiverInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
     <LiverGlucagonSetPoint readOnly="false" unit="ug/L" value="0.079"/>
     <MuscleInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
@@ -1159,9 +1161,9 @@
     <StoredFat readOnly="false" unit="g" value="16511.1390356827"/>
     <RestingPatientMass_kg>58.9685081</RestingPatientMass_kg>
     <RestingFluidMass_kg>26.2518909629756</RestingFluidMass_kg>
-    <O2ConsumedRunningAverage_mL_Per_s numSamples="28" sum="85.5276834143303"/>
-    <CO2ProducedRunningAverage_mL_Per_s numSamples="28" sum="72.8219013339271"/>
-    <RespiratoryQuotientRunningAverage numSamples="28" sum="22.3460854795243"/>
+    <O2ConsumedRunningAverage_mL_Per_s numSamples="28" sum="85.6810235295232"/>
+    <CO2ProducedRunningAverage_mL_Per_s numSamples="28" sum="72.9645023843206"/>
+    <RespiratoryQuotientRunningAverage numSamples="28" sum="22.3496042489664"/>
     <FatigueRunningAverage numSamples="28" sum="0"/>
   </System>
   <System xsi:type="BioGearsEnvironmentData">
@@ -28547,7 +28549,7 @@
       <Name>Ambient</Name>
       <Node>Ambient</Node>
       <InFlow readOnly="true" unit="mL/s" value="27.6773531067112"/>
-      <OutFlow readOnly="true" unit="mL/s" value="1.97973696991666e-91"/>
+      <OutFlow readOnly="true" unit="mL/s" value="1.98287355014388e-91"/>
       <Pressure readOnly="false" unit="mmHg" value="760"/>
       <Volume readOnly="true" unit="L" value="INF"/>
       <SubstanceQuantity>
@@ -28863,8 +28865,8 @@
     <GasCompartment>
       <Name>Mouth</Name>
       <Node>Mouth</Node>
-      <InFlow readOnly="true" unit="mL/s" value="27.6773531067236"/>
-      <OutFlow readOnly="true" unit="mL/s" value="27.6773531067112"/>
+      <InFlow readOnly="true" unit="mL/s" value="27.6773530854082"/>
+      <OutFlow readOnly="true" unit="mL/s" value="27.6773531280266"/>
       <Pressure readOnly="true" unit="cmH2O" value="1033.22744953679"/>
       <Volume readOnly="false" unit="mL" value="20.6"/>
       <SubstanceQuantity>

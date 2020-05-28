@@ -104,7 +104,8 @@ void HowToExercise()
   // Once exercise has ended, the patient is in a recovery period where the metabolic rate begins to return to its basal value.
   // The cardiac output, respiration rate and tidal volume follow this recovery trend towards their normal values.
   ge.Intensity.SetValue(0.0);
-  bg->ProcessAction(ex);
+  SEExercise exStop{ ge };
+  bg->ProcessAction(exStop);
 
   // Advance some time while the medic gets the drugs ready
   tracker.AdvanceModelTime(30);
