@@ -102,6 +102,7 @@ private:
   // Stateless member variable (Set in SetUp())
   double m_dT_s;
   double m_previousWeightPack_kg;
+  bool m_packOn;
   SEPatient* m_Patient;
   SEPatientActionCollection* m_PatientActions;
   // Cmpts,Substance, and nodes

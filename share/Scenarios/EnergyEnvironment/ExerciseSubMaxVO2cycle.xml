@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>ExerciseSubMaxVO2</Name>
+    <Name>ExerciseSubMaxVO2cycle</Name>
     <Description>Exercise below the anaerobic threshold.</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
     

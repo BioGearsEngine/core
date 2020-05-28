@@ -109,6 +109,8 @@ specific language governing permissions and limitations under the License.
         <xs:sequence>
           <xs:element name="BloodpH" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="BicarbonateMolarity_mmol_Per_L" type="RunningAverageData" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="PackOn" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="PreviousWeightPack_kg" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

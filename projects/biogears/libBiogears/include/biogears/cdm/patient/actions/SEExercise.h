@@ -33,22 +33,22 @@ public:
     NONE
   };
   struct SEGeneric {
-    SEScalarPower m_DesiredWorkRate;
-    SEScalar0To1 m_Intensity;
+    SEScalarPower DesiredWorkRate;
+    SEScalar0To1 Intensity;
   };
   struct SECycling {
-    SEScalarFrequency m_CadenceCycle;
-    SEScalarPower m_PowerCycle;
-    SEScalarMass m_AddedWeight;
+    SEScalarFrequency CadenceCycle;
+    SEScalarPower PowerCycle;
+    SEScalarMass AddedWeight;
   };
   struct SERunning {
-    SEScalarLengthPerTime m_SpeedRun;
-    SEScalarFraction m_InclineRun;
-    SEScalarMass m_AddedWeight;
+    SEScalarLengthPerTime SpeedRun;
+    SEScalarFraction InclineRun;
+    SEScalarMass AddedWeight;
   };
   struct SEStrengthTraining {
-    SEScalarMass m_WeightStrength;
-    SEScalar m_RepsStrength;
+    SEScalarMass WeightStrength;
+    SEScalar RepsStrength;
   };
 
   SEExercise();
@@ -94,13 +94,6 @@ public:
 
   virtual void ToString(std::ostream& str) const override;
 
-private:
-  ExerciseType m_mode;
-  SEGeneric m_genericExercise;
-  SECycling m_cyclingExercise;
-  SERunning m_runningExercise;
-  SEStrengthTraining m_strengthExercise;
-
 protected:
   virtual void Unload(CDM::ExerciseData& data) const;
   virtual bool LoadGeneric(const CDM::GenericExerciseData& in);
@@ -108,25 +101,12 @@ protected:
   virtual bool LoadRunning(const CDM::RunningExerciseData& in);
   virtual bool LoadStrength(const CDM::StrengthExerciseData& in);
 
-//public:
-//  
-//  virtual bool HasIntensity() const;
-//  virtual SEScalar0To1& GetIntensity();
-//  virtual bool HasDesiredWorkRate() const;
-//  virtual SEScalarPower& GetDesiredWorkRate();
-//  virtual bool HasSpeed() const;
-//  virtual SEScalarLengthPerTime& GetSpeed();
-//  virtual bool HasIncline() const;
-//  virtual SEScalarFraction& GetIncline();
-//  virtual bool HasAddedWeight() const;
-//  virtual SEScalarMass& GetAddedWeight();
-//  virtual bool HasCadence() const;
-//  virtual SEScalarFrequency& GetCadence();
-//  virtual bool HasPower() const;
-//  virtual SEScalarPower& GetPower();
-//  virtual bool HasWeight() const;
-//  virtual SEScalarMass& GetWeight();
-//  virtual bool HasRepetitions() const;
-//  virtual SEScalar& GetRepetitions();
+private:
+  ExerciseType m_mode;
+  SEGeneric m_genericExercise;
+  SECycling m_cyclingExercise;
+  SERunning m_runningExercise;
+  SEStrengthTraining m_strengthExercise;
+
 };
 }

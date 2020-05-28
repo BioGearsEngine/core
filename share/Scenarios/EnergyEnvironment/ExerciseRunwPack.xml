@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>ExerciseStrengthTraining</Name>
+    <Name>ExerciseRunwPack</Name>
     <Description>Exercise below the anaerobic threshold.</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
     
@@ -106,127 +106,51 @@
     </Action>
 	<!-- Exercise at less than the anaerobic threshold -->
 	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="120" unit ="kg"/>
-			<Repetitions value="7"/>
-		</StrengthExercise>
+        <RunningExercise>
+			<Speed value="0.75" unit ="m/s"/>
+			<Incline value="0.1"/>
+			<AddedWeight value="20" unit="kg"/>
+		</RunningExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="1.0" unit="min"/>       
+        <Time value="3.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="0.0" unit ="kg"/>
-			<Repetitions value="0.0"/>
-		</StrengthExercise>
+        <RunningExercise>
+			<Speed value="1.11" unit ="m/s"/>
+			<Incline value="0.12"/>
+			<AddedWeight value="20" unit="kg"/>
+		</RunningExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="0.5" unit="min"/>       
+        <Time value="3.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="120" unit ="kg"/>
-			<Repetitions value="7"/>
-		</StrengthExercise>
+        <RunningExercise>
+			<Speed value="1.53" unit ="m/s"/>
+			<Incline value="0.14"/>
+			<AddedWeight value="20" unit="kg"/>
+		</RunningExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="1.0" unit="min"/>       
+        <Time value="3.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="0.0" unit ="kg"/>
-			<Repetitions value="0.0"/>
-		</StrengthExercise>
+        <RunningExercise>
+			<Speed value="1.89" unit ="m/s"/>
+			<Incline value="0.16"/>
+			<AddedWeight value="20" unit="kg"/>
+		</RunningExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="0.5" unit="min"/>       
+        <Time value="3.0" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="120" unit ="kg"/>
-			<Repetitions value="7"/>
-		</StrengthExercise>
-    </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="1.0" unit="min"/>       
-    </Action>
-	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="0.0" unit ="kg"/>
-			<Repetitions value="0.0"/>
-		</StrengthExercise>
-    </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="0.5" unit="min"/>       
-    </Action>
-	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="120" unit ="kg"/>
-			<Repetitions value="7"/>
-		</StrengthExercise>
-    </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="1.0" unit="min"/>       
-    </Action>
-	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="0.0" unit ="kg"/>
-			<Repetitions value="0.0"/>
-		</StrengthExercise>
-    </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="0.5" unit="min"/>       
-    </Action>
-	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="120" unit ="kg"/>
-			<Repetitions value="7"/>
-		</StrengthExercise>
-    </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="1.0" unit="min"/>       
-    </Action>
-	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="0.0" unit ="kg"/>
-			<Repetitions value="0.0"/>
-		</StrengthExercise>
-    </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="0.5" unit="min"/>       
-    </Action>
-	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="120" unit ="kg"/>
-			<Repetitions value="7"/>
-		</StrengthExercise>
-    </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="1.0" unit="min"/>       
-    </Action>
-	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="0.0" unit ="kg"/>
-			<Repetitions value="0.0"/>
-		</StrengthExercise>
-    </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="0.5" unit="min"/>       
-    </Action>
-	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="120" unit ="kg"/>
-			<Repetitions value="7"/>
-		</StrengthExercise>
-    </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="1.0" unit="min"/>       
-    </Action>
-	<Action xsi:type="ExerciseData">
-        <StrengthExercise>
-			<Weight value="0.0" unit ="kg"/>
-			<Repetitions value="0.0"/>
-		</StrengthExercise>
+        <RunningExercise>
+			<Speed value="0.0" unit ="m/s"/>
+			<Incline value="0.0"/>
+			<AddedWeight value="20" unit="kg"/>
+		</RunningExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="3.0" unit="min"/>       

@@ -27,9 +27,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-#include <biogears/cdm/patient/actions/SEExercise.h>
-#include "biogears/cdm/patient/actions/SEAsthmaAttack.h"
-#include <biogears/cdm/properties/SEScalarTypes.h>
 
 namespace biogears {
 SEScenarioExec::SEScenarioExec(PhysiologyEngine& engine)
