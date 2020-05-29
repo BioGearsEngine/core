@@ -22,7 +22,6 @@ SEDataRequestManager::SEDataRequestManager(Logger* logger)
 {
   m_DefaultDecimalFormatting = nullptr;
   m_OverrideDecimalFormatting = nullptr;
-  Clear();
 }
 //-----------------------------------------------------------------------------
 SEDataRequestManager::~SEDataRequestManager()
@@ -74,7 +73,7 @@ std::string SEDataRequestManager::GetResovedFilePath() const { return m_WorkingD
 //-----------------------------------------------------------------------------
 void SEDataRequestManager::Clear()
 {
-  m_SamplesPerSecond = 0; // Sample every time step
+  m_SamplesPerSecond = 1.0; // Sample every time step
   DELETE_VECTOR(m_Requests);
   SAFE_DELETE(m_DefaultDecimalFormatting);
   SAFE_DELETE(m_OverrideDecimalFormatting);
