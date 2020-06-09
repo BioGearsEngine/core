@@ -96,8 +96,6 @@ void Drugs::Initialize()
   GetNeuromuscularBlockLevel().SetValue(0.0);
   GetPainToleranceChange().SetValue(0.0);
   GetPulsePressureChange().SetValue(0.0, PressureUnit::mmHg);
-  GetPupillaryResponse().GetSizeModifier().SetValue(0);
-  GetPupillaryResponse().GetReactivityModifier().SetValue(0);
   GetRespirationRateChange().SetValue(0.0, FrequencyUnit::Per_min);
   GetSedationLevel().SetValue(0.0);
   GetTidalVolumeChange().SetValue(0.0, VolumeUnit::mL);
@@ -300,7 +298,7 @@ void Drugs::AdministerSubstanceBolus()
       break;
     default:
       /// \error Error: Unavailable Administration Route
-      Error(std::string{ "Unavailable Bolus Administration Route for substance " } + b.first->GetName(), "Drugs::AdministerSubstanceBolus");
+      Error(std::string { "Unavailable Bolus Administration Route for substance " } + b.first->GetName(), "Drugs::AdministerSubstanceBolus");
       completedBolus.push_back(b.first); // Remove it
       continue;
     }
@@ -518,13 +516,12 @@ void Drugs::AdministerSubstanceCompoundInfusion()
            Info(ss);
         }
         */
-        
+
         //Check for HTR
         SESubstance* m_AntigenA = m_data.GetSubstances().GetSubstance("Antigen_A");
         SESubstance* m_AntigenB = m_data.GetSubstances().GetSubstance("Antigen_B");
         const double AntigenA_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
         const double AntigenB_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
-        
 
         // ABO antigen check. if O blood being given OR AB blood in patient, skip compatibility checks\
         // First check for AB type since AB is a universal acceptor
@@ -533,7 +530,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         if (patientBloodType != (CDM::enumBloodType::AB)) {
           if (patientBloodType == CDM::enumBloodType::O) {
             if (AntigenA_ct_Per_uL > 0 || AntigenB_ct_Per_uL > 0) {
-              patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());     
+              patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
             }
           } else if (AntigenA_ct_Per_uL > 0 && AntigenB_ct_Per_uL > 0) {
             patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
@@ -770,7 +767,7 @@ void Drugs::CalculateDrugEffects()
   SESubstance* m_Naloxone = m_data.GetSubstances().GetSubstance("Naloxone");
   double inhibitorConcentration_ug_Per_mL = 0.0;
   double inhibitorConstant_ug_Per_mL = 1.0; //Can't initialize to 0 lest we divide by 0.  Won't matter what it is when there is no inhibitor because this will get mulitplied by 0 anyway
-
+  /*
   //Loop over substances
   for (SESubstance* sub : m_data.GetSubstances().GetActiveDrugs()) {
     if (!sub->HasPD())
@@ -820,7 +817,7 @@ void Drugs::CalculateDrugEffects()
     // concentration which is normally zero but which gets set to a new baseline concentration at the end of feedback (see chemoreceptor
     // and the blood gas setpoint reset for example).
     deltaCoreTemp_degC -= 37.0 * pd.GetFeverModifier().GetValue() * concentrationEffects_unitless; //using 37.0 as baseline core temperature
-    
+
     deltaHeartRate_Per_min += HRBaseline_per_min * pd.GetHeartRateModifier().GetValue() * concentrationEffects_unitless;
 
     hemorrhageFlowRecoveryFraction += ((pd.GetHemorrhageModifier().GetValue() * 1.0e-4) * concentrationEffects_unitless); // If the substance affects hemorrhage blood flow, scale unitless modifier dowwn to account for resistance sensitivity
@@ -830,22 +827,19 @@ void Drugs::CalculateDrugEffects()
     deltaSystolicBP_mmHg += patient.GetSystolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetSystolicPressureModifier().GetValue() * concentrationEffects_unitless;
 
     sedationLevel += pd.GetSedation().GetValue() * concentrationEffects_unitless;
+    
     centralNervousResponseLevel += pd.GetCentralNervousModifier().GetValue() * concentrationEffects_unitless;
 
     deltaTubularPermeability += (pd.GetTubularPermeabilityModifier().GetValue()) * concentrationEffects_unitless;
 
-    /// \todo Check levels for other sedative/anesthetic drugs for carry over so not specific to propofol. Carries over to respiratory.cpp if statements in driver function as well
-    if ((sedationLevel > 0.15 && sub->GetName() != "Propofol") || (sedationLevel > 0.5)) {
-      deltaRespirationRate_Per_min += patient.GetRespirationRateBaseline(FrequencyUnit::Per_min) * pd.GetRespirationRateModifier().GetValue();
-      deltaTidalVolume_mL += patient.GetTidalVolumeBaseline(VolumeUnit::mL) * pd.GetTidalVolumeModifier().GetValue();
-    } else {
-      deltaRespirationRate_Per_min += patient.GetRespirationRateBaseline(FrequencyUnit::Per_min) * pd.GetRespirationRateModifier().GetValue() * concentrationEffects_unitless;
-      deltaTidalVolume_mL += patient.GetTidalVolumeBaseline(VolumeUnit::mL) * pd.GetTidalVolumeModifier().GetValue() * concentrationEffects_unitless;
-    }
+    deltaRespirationRate_Per_min += patient.GetRespirationRateBaseline(FrequencyUnit::Per_min) * pd.GetRespirationRateModifier().GetValue() * concentrationEffects_unitless;
+    
+    deltaTidalVolume_mL += patient.GetTidalVolumeBaseline(VolumeUnit::mL) * pd.GetTidalVolumeModifier().GetValue() * concentrationEffects_unitless;
 
     neuromuscularBlockLevel += pd.GetNeuromuscularBlock().GetValue() * concentrationEffects_unitless;
 
-    painToleranceChange += pd.GetPainModifier().GetValue() * concentrationEffects_unitless;
+    double painEffect = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(0.1 * ec50_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
+    painToleranceChange += pd.GetPainModifier().GetValue() * painEffect; //concentrationEffects_unitless;
 
     bronchodilationLevel += pd.GetBronchodilation().GetValue() * concentrationEffects_unitless;
 
@@ -853,7 +847,7 @@ void Drugs::CalculateDrugEffects()
     pupilSizeResponseLevel += pupillaryResponse.GetSizeModifier() * concentrationEffects_unitless;
     pupilReactivityResponseLevel += pupillaryResponse.GetReactivityModifier() * concentrationEffects_unitless;
 
-    //Do not evaluate antibiotic effects unless the patient has inflamamtion casued by infection
+    //Do not evaluate antibiotic effects unless the patient has inflammation casued by infection
     if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
       double minimumInhibitoryConcentration_ug_Per_mL = m_data.GetActions().GetPatientActions().GetInfection()->GetMinimumInhibitoryConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
       if (sub->GetClassification() == CDM::enumSubstanceClass::Antibiotic) {
@@ -881,7 +875,7 @@ void Drugs::CalculateDrugEffects()
       }
     }
   }
-
+  */
   //Translate Diastolic and Systolic Pressure to pulse pressure and mean pressure
   double deltaMeanPressure_mmHg = (2 * deltaDiastolicBP_mmHg + deltaSystolicBP_mmHg) / 3;
   double deltaPulsePressure_mmHg = (deltaSystolicBP_mmHg - deltaDiastolicBP_mmHg);
@@ -913,11 +907,7 @@ void Drugs::CalculateDrugEffects()
     pupilReactivityResponseLevel = pupilSizeResponseLevel;
   }
 
-  //Bound pupil modifiers
-  BLIM(pupilSizeResponseLevel, -1, 1);
-  BLIM(pupilReactivityResponseLevel, -1, 1);
-  GetPupillaryResponse().GetSizeModifier().SetValue(pupilSizeResponseLevel);
-  GetPupillaryResponse().GetReactivityModifier().SetValue(pupilReactivityResponseLevel);
+ 
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -949,12 +939,12 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
     if (sub->HasMassInBlood()) {
       massInBlood_ug = sub->GetMassInBlood(MassUnit::ug);
     }
-	//Set blood concentration for substances with PK
+    //Set blood concentration for substances with PK
     sub->GetBloodConcentration().SetValue(massInBlood_ug / bloodVolume_mL, MassPerVolumeUnit::ug_Per_mL);
     //Set plasma concentration assuming K_bp = Cb/Cp  ---> Cp = Cb/K_bp
     double plasmaConcentration_ug_Per_mL = massInBlood_ug / bloodVolume_mL / bloodPlasmaRatio;
     sub->GetPlasmaConcentration().SetValue(plasmaConcentration_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL);
-    
+
     //Increment area under curve--should be done for subs w/ PK
     double deltaT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
     sub->GetAreaUnderCurve().IncrementValue(plasmaConcentration_ug_Per_mL * deltaT_s, TimeMassPerVolumeUnit::s_ug_Per_mL);

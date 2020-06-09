@@ -1105,6 +1105,8 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
   // These metabolites will be activated in initialization
 
   // Check that drugs have what we need
+  //Put this check in SESubstancePharmacodynamics
+  /*
   for (SESubstance* sub : m_Substances) {
     if (sub->HasPD()) {
       if (sub->GetPD().GetEC50().IsZero() || sub->GetPD().GetEC50().IsNegative()) {
@@ -1114,7 +1116,7 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
       }
     }
   }
-
+  */
   return true;
 }
 

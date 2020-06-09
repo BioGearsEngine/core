@@ -91,11 +91,6 @@ public:
   SEScalarPressure& GetPulsePressureChange();
   double GetPulsePressureChange(const PressureUnit& unit) const;
 
-  bool HasPupillaryResponse() const;
-  SEPupillaryResponse& GetPupillaryResponse();
-  const SEPupillaryResponse* GetPupillaryResponse() const;
-  void RemovePupillaryResponse();
-
   bool HasRespirationRateChange() const;
   SEScalarFrequency& GetRespirationRateChange();
   double GetRespirationRateChange(const FrequencyUnit& unit) const;
@@ -126,7 +121,6 @@ protected:
   SEScalarFraction* m_NeuromuscularBlockLevel;
   SEScalarFraction* m_PainToleranceChange;
   SEScalarPressure* m_PulsePressureChange;
-  SEPupillaryResponse* m_PupillaryResponse;
   SEScalarFrequency* m_RespirationRateChange;
   SEScalarFraction* m_SedationLevel;
   SEScalarVolume* m_TidalVolumeChange;

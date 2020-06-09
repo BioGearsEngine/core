@@ -435,7 +435,7 @@ void Nervous::CentralSignalProcess()
 
   const double exponentSH = kS * (wSH_ABC * m_AfferentBaroreceptorCarotid_Hz + wSH_ABA * m_AfferentBaroreceptorAortic_Hz + wSH_AC * m_AfferentChemoreceptor_Hz + wSH_ACP * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSH);
   m_SympatheticSinoatrialSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSH);
- // m_SympatheticSinoatrialSignal_Hz = std::min(60.0, m_SympatheticSinoatrialSignal_Hz);
+  // m_SympatheticSinoatrialSignal_Hz = std::min(60.0, m_SympatheticSinoatrialSignal_Hz);
   //Weights of sympathetic signal to peripheral vascular beds--AB, AC, AT as before, AP = Afferent pulmonary stretch receptors, AA = Afferent atrial stretch receptors
   const double wSP_ABA = -0.452;
   const double wSP_ABC = -0.678;
@@ -445,7 +445,7 @@ void Nervous::CentralSignalProcess()
 
   const double exponentSP = kS * (wSP_ABC * m_AfferentBaroreceptorCarotid_Hz + wSP_ABA * m_AfferentBaroreceptorAortic_Hz + wSP_AC * m_AfferentChemoreceptor_Hz + wSP_AP * m_AfferentPulmonaryStretchReceptor_Hz + wSP_ACP * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSP);
   m_SympatheticPeripheralSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSP);
- // m_SympatheticPeripheralSignal_Hz = std::min(60.0, m_SympatheticPeripheralSignal_Hz);
+  // m_SympatheticPeripheralSignal_Hz = std::min(60.0, m_SympatheticPeripheralSignal_Hz);
   //Model fatigue of sympathetic peripheral response during sepsis -- Future work should investigate relevance of fatigue in other scenarios
   //Currently applying only to the peripheral signal because the literature notes that vascular smooth muscle shows depressed responsiveness to sympathetic activiy,
   //(Sayk et al., 2008 and Brassard et al., 2016) which would inhibit ability to increase peripheral resistance
@@ -634,7 +634,7 @@ void Nervous::BaroreceptorFeedback()
   //Aortic baroreceptors detect transmural pressure between aorta and thoracic (pleural) space.
   //Thus, the pressure input is the difference between the sytolic pressure and mean pleural pressure.
   //This means that the aortic baroreceptors will have different sensitivities to events that effect the pleural
-  //space (like tension pneumothorax).  
+  //space (like tension pneumothorax).
   const double meanPleuralPressure_mmHg = m_data.GetRespiratory().GetMeanPleuralPressure(PressureUnit::mmHg);
   const double aorticPressureInput = systolicPressure_mmHg - meanPleuralPressure_mmHg;
   const double aorticStrainExp = std::exp(-slopeStrain * (aorticPressureInput - baroreceptorOperatingPoint_mmHg));
@@ -679,7 +679,6 @@ void Nervous::BaroreceptorFeedback()
     const double dSetpointAdjust_mmHg_Per_hr = kAdapt_Per_hr * (systolicPressure_mmHg - m_BaroreceptorOperatingPoint_mmHg);
     m_BaroreceptorOperatingPoint_mmHg += (dSetpointAdjust_mmHg_Per_hr * m_data.GetTimeStep().GetValue(TimeUnit::hr));
   }
-  
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -980,7 +979,7 @@ void Nervous::CheckPainStimulus()
   if (m_data.GetDrugs().HasPainToleranceChange()) {
     double NervousScalar = 10.0;
     double PainModifier = m_data.GetDrugs().GetPainToleranceChange().GetValue();
-    PainBuffer = exp(-PainModifier * NervousScalar);
+    PainBuffer = std::exp(-PainModifier * NervousScalar);
   }
 
   //determine pain response from inflammation caused by burn trauma
@@ -1055,6 +1054,15 @@ void Nervous::CheckNervousStatus()
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, false, m_data.GetSimulationTime());
   }
 
+  //---Check Sedatation / Agitation State and output a Richmond Agitation Sedation Scale (RASS) score
+  const double painVAS = GetPainVisualAnalogueScale().GetValue();
+  const double maxSedationLevel = 0.75;
+  const double sedationLevel = std::min(m_data.GetDrugs().GetSedationLevel().GetValue(), maxSedationLevel);
+  const double sedationTerm = -std::floor(sedationLevel / 0.15);
+  const double agitationTerm = std::ceil((std::pow(5.0, painVAS / 10.0) - 1.0) * (1.0 - sedationLevel / maxSedationLevel));
+  const double rassScore = sedationTerm + agitationTerm;
+  GetRichmondAgitationSedationScale().SetValue(rassScore);
+
   //------Fasciculations:-------------------------------------------
 
   //----Fasciculations due to calcium deficiency (inactive)----------------------------------
@@ -1070,7 +1078,8 @@ void Nervous::CheckNervousStatus()
 
   //-----Fasciculations due to Sarin--------------------------------------------------
   //Occurs due to inhibition of acetylcholinesterase, the enzyme which breaks down the neurotransmitter acetylcholine
-  double RbcAche_mol_Per_L = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
+  double RbcAche_mol_Per_L
+    = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
   double RbcFractionInhibited = 1.0 - RbcAche_mol_Per_L / (8e-9); //8 nM is the baseline activity of Rbc-Ache
   if (m_data.GetSubstances().IsActive(*m_Sarin)) {
     ///\cite nambda1971cholinesterase
@@ -1116,8 +1125,10 @@ void Nervous::CheckNervousStatus()
 void Nervous::SetPupilEffects()
 {
   // Get modifiers from Drugs
-  double leftPupilSizeResponseLevel = m_data.GetDrugs().GetPupillaryResponse().GetSizeModifier().GetValue();
-  double leftPupilReactivityResponseLevel = m_data.GetDrugs().GetPupillaryResponse().GetReactivityModifier().GetValue();
+  double leftPupilSizeResponseLevel = 0.0;
+   //m_data.GetDrugs().GetPupillaryResponse().GetSizeModifier().GetValue();
+  double leftPupilReactivityResponseLevel = 0.0;
+  //m_data.GetDrugs().GetPupillaryResponse().GetReactivityModifier().GetValue();
   double rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
   double rightPupilReactivityResponseLevel = leftPupilReactivityResponseLevel;
 

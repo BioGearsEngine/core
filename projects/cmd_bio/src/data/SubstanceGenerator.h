@@ -23,6 +23,7 @@ namespace biogears {
 class SubstanceGenerator : public CSVToXMLConvertor {
 public:
   using XSD_Type = mil::tatrc::physiology::datamodel::SubstanceData;
+  using PDMOD_Type = mil::tatrc::physiology::datamodel::PharmacodynamicModifierData;
 
   SubstanceGenerator(std::string path = "");
   ~SubstanceGenerator() override;
@@ -38,6 +39,8 @@ protected:
   bool process_pharmacokinetics(CSV_RowItr);
   bool process_pharmacodynamics(CSV_RowItr);
   bool process_tissues(CSV_RowItr);
+  PDMOD_Type set_PDModifier(PDMOD_Type modifier, std::string value);
+
 private:
   std::vector<XSD_Type> _substances;
 };

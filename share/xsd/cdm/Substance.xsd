@@ -132,24 +132,24 @@ specific language governing permissions and limitations under the License.
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="Bronchodilation" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="DiastolicPressureModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="EC50" type="ScalarMassPerVolumeData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="EMaxShapeParameter" type="ScalarData" minOccurs="1"  maxOccurs="1"/><!--<< @brief This used to create a sigmoid shape response. i.e. the steepness parameter in the EMax equation. -->
-          <xs:element name="FeverModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief This is used to modify core temperature as a result of drug dosage-->
-		  <xs:element name="HeartRateModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief A modifier representing the effect of the drug on the heart rate. -->
-          <xs:element name="HemorrhageModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief A modifier representing the effect of the drug on the hemorrhage blood flow effect. -->
-		  <xs:element name="NeuromuscularBlock" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="PainModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief This is used to modify core temperature as a result of drug dosage-->
-		  <xs:element name="PupillaryResponse" type="PupillaryResponseData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="RespirationRateModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="Sedation" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="SystolicPressureModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="TidalVolumeModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->          
-          <xs:element name="TubularPermeabilityModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="CentralNervousModifier" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-		  <xs:element name="AntibacterialEffect" type="ScalarFrequencyData" minOccurs="1" maxOccurs="1"/><!--<< @brief The enhancement in bacterial death rate caused by an antibiotic-->
-          <xs:element name="EffectSiteRateConstant" type="ScalarFrequencyData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Describes speed of equilibration between plasma concentration and site of action of a drug -->
+		  <xs:element name="EffectSiteRateConstant" type="ScalarFrequencyData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Describes speed of equilibration between plasma concentration and site of action of a drug -->
+		  <xs:element name="EMaxShapeParameter" type="ScalarData" minOccurs="1"  maxOccurs="1"/><!--<< @brief This used to create a sigmoid shape response. i.e. the steepness parameter in the EMax equation. -->
+          <xs:element name="AntibacterialEffect" type="ScalarFrequencyData" minOccurs="1" maxOccurs="1"/><!--<< @brief The enhancement in bacterial death rate caused by an antibiotic-->
+		  <xs:element name="Bronchodilation" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="CentralNervousModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+		  <xs:element name="DiastolicPressureModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="FeverModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief This is used to modify core temperature as a result of drug dosage-->
+		  <xs:element name="HeartRateModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief A modifier representing the effect of the drug on the heart rate. -->
+          <xs:element name="HemorrhageModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief A modifier representing the effect of the drug on the hemorrhage blood flow effect. -->
+		  <xs:element name="NeuromuscularBlock" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="PainModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief This is used to modify core temperature as a result of drug dosage-->
+		  <xs:element name="PupilReactivityModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+		  <xs:element name="PupilSizeModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="RespirationRateModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="Sedation" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="SystolicPressureModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="TidalVolumeModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->          
+          <xs:element name="TubularPermeabilityModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief --> 
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -285,5 +285,19 @@ specific language governing permissions and limitations under the License.
     </xs:sequence>
     <xs:attribute name="Name" type="xs:string" use="required"/><!--<< @brief -->
   </xs:complexType>
+  
+  <!-- @brief Data associated with a drug pharmacodynamic modifier, e.g. heart rate-->
+  <xs:complexType name="PharmacodynamicModifierData">
+	<xs:complexContent>
+		<xs:extension base="ObjectData">
+			<xs:sequence>
+				<xs:element name="EMax" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief The maximum effect as a fraction of the modifier basline value -->
+				<xs:element name="EC50" type="ScalarMassPerVolumeData" minOccurs="1"  maxOccurs="1"/><!--<< @brief The drug concentration at which half the maximum effect is achieved -->
+			</xs:sequence>
+		</xs:extension>
+	</xs:complexContent>
+</xs:complexType>
+  
+  
 </xs:schema>
 

@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 
 CDM_BIND_DECL(SubstancePharmacodynamicsData)
+CDM_BIND_DECL(PharmacodynamicModifierData)
 
 namespace biogears {
 
@@ -24,6 +25,7 @@ class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarMassPerVolume;
 class MassPerVolumeUnit;
+class SEPharmacodynamicModifier;
 
 class BIOGEARS_API SESubstancePharmacodynamics : Loggable {
 public:
@@ -48,94 +50,120 @@ public:
   virtual double GetAntibacterialEffect(const FrequencyUnit& unit) const;
 
   virtual bool HasBronchodilation() const;
-  virtual SEScalarFraction& GetBronchodilation();
-  virtual double GetBronchodilation() const;
+  virtual SEPharmacodynamicModifier& GetBronchodilation();
+  virtual const SEPharmacodynamicModifier* GetBronchodilation() const;
 
   virtual bool HasDiastolicPressureModifier() const;
-  virtual SEScalarFraction& GetDiastolicPressureModifier();
-  virtual double GetDiastolicPressureModifier() const;
-
-  virtual bool HasEC50() const;
-  virtual SEScalarMassPerVolume& GetEC50();
-  virtual double GetEC50(const MassPerVolumeUnit& unit) const;
+  virtual SEPharmacodynamicModifier& GetDiastolicPressureModifier();
+  virtual const SEPharmacodynamicModifier* GetDiastolicPressureModifier() const;
 
   virtual bool HasEMaxShapeParameter() const;
   virtual SEScalar& GetEMaxShapeParameter();
   virtual double GetEMaxShapeParameter() const;
 
   virtual bool HasFeverModifier() const;
-  virtual SEScalarFraction& GetFeverModifier();
-  virtual double GetFeverModifier() const;
+  virtual SEPharmacodynamicModifier& GetFeverModifier();
+  virtual const SEPharmacodynamicModifier* GetFeverModifier() const;
 
   virtual bool HasHeartRateModifier() const;
-  virtual SEScalarFraction& GetHeartRateModifier();
-  virtual double GetHeartRateModifier() const;
+  virtual SEPharmacodynamicModifier& GetHeartRateModifier();
+  virtual const SEPharmacodynamicModifier* GetHeartRateModifier() const;
 
   virtual bool HasHemorrhageModifier() const;
-  virtual SEScalarFraction& GetHemorrhageModifier();
-  virtual double GetHemorrhageModifier() const;
+  virtual SEPharmacodynamicModifier& GetHemorrhageModifier();
+  virtual const SEPharmacodynamicModifier* GetHemorrhageModifier() const;
 
   virtual bool HasNeuromuscularBlock() const;
-  virtual SEScalarFraction& GetNeuromuscularBlock();
-  virtual double GetNeuromuscularBlock() const;
+  virtual SEPharmacodynamicModifier& GetNeuromuscularBlock();
+  virtual const SEPharmacodynamicModifier* GetNeuromuscularBlock() const;
 
   virtual bool HasPainModifier() const;
-  virtual SEScalarFraction& GetPainModifier();
-  virtual double GetPainModifier() const;
+  virtual SEPharmacodynamicModifier& GetPainModifier();
+  virtual const SEPharmacodynamicModifier* GetPainModifier() const;
 
-  virtual bool HasPupillaryResponse() const;
-  virtual SEPupillaryResponse& GetPupillaryResponse();
-  virtual const SEPupillaryResponse* GetPupillaryResponse() const;
-  virtual void RemovePupillaryResponse();
+  virtual bool HasPupilReactivityModifier() const;
+  virtual SEPharmacodynamicModifier& GetPupilReactivityModifier();
+  virtual const SEPharmacodynamicModifier* GetPupilReactivityModifier() const;
+
+  virtual bool HasPupilSizeModifier() const;
+  virtual SEPharmacodynamicModifier& GetPupilSizeModifier();
+  virtual const SEPharmacodynamicModifier* GetPupilSizeModifier() const;
 
   virtual bool HasRespirationRateModifier() const;
-  virtual SEScalarFraction& GetRespirationRateModifier();
-  virtual double GetRespirationRateModifier() const;
+  virtual SEPharmacodynamicModifier& GetRespirationRateModifier();
+  virtual const SEPharmacodynamicModifier* GetRespirationRateModifier() const;
 
   virtual bool HasSedation() const;
-  virtual SEScalarFraction& GetSedation();
-  virtual double GetSedation() const;
+  virtual SEPharmacodynamicModifier& GetSedation();
+  virtual const SEPharmacodynamicModifier* GetSedation() const;
 
   virtual bool HasSystolicPressureModifier() const;
-  virtual SEScalarFraction& GetSystolicPressureModifier();
-  virtual double GetSystolicPressureModifier() const;
+  virtual SEPharmacodynamicModifier& GetSystolicPressureModifier();
+  virtual const SEPharmacodynamicModifier* GetSystolicPressureModifier() const;
 
   virtual bool HasTidalVolumeModifier() const;
-  virtual SEScalarFraction& GetTidalVolumeModifier();
-  virtual double GetTidalVolumeModifier() const;
+  virtual SEPharmacodynamicModifier& GetTidalVolumeModifier();
+  virtual const SEPharmacodynamicModifier* GetTidalVolumeModifier() const;
 
   virtual bool HasTubularPermeabilityModifier() const;
-  virtual SEScalarFraction& GetTubularPermeabilityModifier();
-  virtual double GetTubularPermeabilityModifier() const;
+  virtual SEPharmacodynamicModifier& GetTubularPermeabilityModifier();
+  virtual const SEPharmacodynamicModifier* GetTubularPermeabilityModifier() const;
 
   virtual bool HasCentralNervousModifier() const;
-  virtual SEScalarFraction& GetCentralNervousModifier();
-  virtual double GetCentralNervousModifier() const;
+  virtual SEPharmacodynamicModifier& GetCentralNervousModifier();
+  virtual const SEPharmacodynamicModifier* GetCentralNervousModifier() const;
 
   virtual bool HasEffectSiteRateConstant() const;
   virtual SEScalarFrequency& GetEffectSiteRateConstant();
   virtual double GetEffectSiteRateConstant(const FrequencyUnit& unit) const;
 
-protected:
-  virtual void CalculateDerived();
-
+private:
   SEScalarFrequency* m_AntibacterialEffect;
-  SEScalarFraction* m_Bronchodilation;
-  SEScalarFraction* m_DiastolicPressureModifier;
-  SEScalarMassPerVolume* m_EC50;
+  SEPharmacodynamicModifier* m_Bronchodilation;
+  SEPharmacodynamicModifier* m_DiastolicPressureModifier;
   SEScalar* m_EMaxShapeParameter;
-  SEScalarFraction* m_FeverModifier;
-  SEScalarFraction* m_HeartRateModifier;
-  SEScalarFraction* m_HemorrhageModifier;
-  SEScalarFraction* m_NeuromuscularBlock;
-  SEScalarFraction* m_PainModifier;
-  SEPupillaryResponse* m_PupillaryResponse;
-  SEScalarFraction* m_RespirationRateModifier;
-  SEScalarFraction* m_Sedation;
-  SEScalarFraction* m_SystolicPressureModifier;
-  SEScalarFraction* m_TidalVolumeModifier;
-  SEScalarFraction* m_TubularPermeabilityModifier;
-  SEScalarFraction* m_CentralNervousModifier;
+  SEPharmacodynamicModifier* m_FeverModifier;
+  SEPharmacodynamicModifier* m_HeartRateModifier;
+  SEPharmacodynamicModifier* m_HemorrhageModifier;
+  SEPharmacodynamicModifier* m_NeuromuscularBlock;
+  SEPharmacodynamicModifier* m_PainModifier;
+  SEPharmacodynamicModifier* m_PupilReactivityModifier;
+  SEPharmacodynamicModifier* m_PupilSizeModifier;
+  SEPharmacodynamicModifier* m_RespirationRateModifier;
+  SEPharmacodynamicModifier* m_Sedation;
+  SEPharmacodynamicModifier* m_SystolicPressureModifier;
+  SEPharmacodynamicModifier* m_TidalVolumeModifier;
+  SEPharmacodynamicModifier* m_TubularPermeabilityModifier;
+  SEPharmacodynamicModifier* m_CentralNervousModifier;
   SEScalarFrequency* m_EffectSiteRateConstant;
+};
+
+class BIOGEARS_API SEPharmacodynamicModifier {
+public:
+  SEPharmacodynamicModifier();
+  virtual ~SEPharmacodynamicModifier();
+
+  virtual void Clear();
+  virtual bool IsValid() const;
+  virtual const SEScalar* GetScalar(const char* name);
+  virtual const SEScalar* GetScalar(const std::string& name);
+
+  virtual bool Load(const CDM::PharmacodynamicModifierData& in);
+  virtual CDM::PharmacodynamicModifierData* Unload() const;
+
+  virtual bool HasEMax() const;
+  virtual SEScalarFraction& GetEMax();
+  virtual double GetEMax() const;
+
+  virtual bool HasEC50() const;
+  virtual SEScalarMassPerVolume& GetEC50();
+  virtual double GetEC50(const MassPerVolumeUnit& unit) const;
+
+protected:
+  virtual void Unload(CDM::PharmacodynamicModifierData& data) const;
+
+private:
+  SEScalarFraction* m_EMax;
+  SEScalarMassPerVolume* m_EC50;
 };
 }

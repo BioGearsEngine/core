@@ -75,7 +75,7 @@ def main( args):
     _root_directory = args.root if args.root else "./"
     _output_directory = args.outdir if args.outdir else _root_directory
 
-    log( "log_levle: {0}\nroot: {1}\noutput: {2}".format(_log_verbose,_root_directory,_output_directory), LOG_LEVEL_2 )
+    log( "log_level: {0}\nroot: {1}\noutput: {2}".format(_log_verbose,_root_directory,_output_directory), LOG_LEVEL_2 )
     if args.sub_cmd is None:
         parser.print_usage()
     else:

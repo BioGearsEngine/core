@@ -81,6 +81,10 @@ public:
   SEScalar& GetPainVisualAnalogueScale();
   double GetPainVisualAnalogueScale() const;
 
+  bool HasRichmondAgitationSedationScale() const;
+  SEScalar& GetRichmondAgitationSedationScale();
+  double GetRichmondAgitationSedationScale() const;
+
   bool HasRightEyePupillaryResponse() const;
   SEPupillaryResponse& GetRightEyePupillaryResponse();
   const SEPupillaryResponse* GetRightEyePupillaryResponse() const;
@@ -98,5 +102,6 @@ protected:
   SEPupillaryResponse* m_LeftEyePupillaryResponse;
   SEPupillaryResponse* m_RightEyePupillaryResponse;
   SEScalar* m_PainVisualAnalogueScale;
+  SEScalar* m_RichmondAgitationSedationScale;
 };
 }

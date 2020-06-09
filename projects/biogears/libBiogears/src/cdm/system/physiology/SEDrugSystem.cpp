@@ -53,7 +53,6 @@ SEDrugSystem::SEDrugSystem(Logger* logger)
   m_NeuromuscularBlockLevel = nullptr;
   m_PainToleranceChange = nullptr;
   m_PulsePressureChange = nullptr;
-  m_PupillaryResponse = nullptr;
   m_RespirationRateChange = nullptr;
   m_SedationLevel = nullptr;
   m_TidalVolumeChange = nullptr;
@@ -81,7 +80,6 @@ void SEDrugSystem::Clear()
   SAFE_DELETE(m_NeuromuscularBlockLevel);
   SAFE_DELETE(m_PainToleranceChange);
   SAFE_DELETE(m_PulsePressureChange);
-  SAFE_DELETE(m_PupillaryResponse);
   SAFE_DELETE(m_RespirationRateChange);
   SAFE_DELETE(m_SedationLevel);
   SAFE_DELETE(m_TidalVolumeChange);
@@ -112,8 +110,6 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
     GetPainToleranceChange().Load(in.PainToleranceChange().get());
   if (in.PulsePressureChange().present())
     GetPulsePressureChange().Load(in.PulsePressureChange().get());
-  if (in.PupillaryResponse().present())
-    GetPupillaryResponse().Load(in.PupillaryResponse().get());
   if (in.RespirationRateChange().present())
     GetRespirationRateChange().Load(in.RespirationRateChange().get());
   if (in.SedationLevel().present())
@@ -164,14 +160,6 @@ const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
   if (name == idCentralNervousResponse)
     return &GetCentralNervousResponse();
 
-  size_t split = name.find('-');
-  if (split != name.npos) {
-    std::string child = name.substr(0, split);
-    std::string prop = name.substr(split + 1, name.npos);
-    if (child == idPupillaryResponse)
-      return GetPupillaryResponse().GetScalar(prop);
-  }
-
   return nullptr;
 }
 //-------------------------------------------------------------------------------
@@ -206,8 +194,6 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
     data.PainToleranceChange(std::unique_ptr<CDM::ScalarFractionData>(m_PainToleranceChange->Unload()));
   if (m_PulsePressureChange != nullptr)
     data.PulsePressureChange(std::unique_ptr<CDM::ScalarPressureData>(m_PulsePressureChange->Unload()));
-  if (m_PupillaryResponse != nullptr)
-    data.PupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_PupillaryResponse->Unload()));
   if (m_RespirationRateChange != nullptr)
     data.RespirationRateChange(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRateChange->Unload()));
   if (m_SedationLevel != nullptr)
@@ -395,29 +381,6 @@ double SEDrugSystem::GetPulsePressureChange(const PressureUnit& unit) const
   if (m_PulsePressureChange == nullptr)
     return SEScalar::dNaN();
   return m_PulsePressureChange->GetValue(unit);
-}
-//-------------------------------------------------------------------------------
-
-bool SEDrugSystem::HasPupillaryResponse() const
-{
-  return (m_PupillaryResponse != nullptr);
-}
-//-------------------------------------------------------------------------------
-SEPupillaryResponse& SEDrugSystem::GetPupillaryResponse()
-{
-  if (m_PupillaryResponse == nullptr)
-    m_PupillaryResponse = new SEPupillaryResponse(GetLogger());
-  return *m_PupillaryResponse;
-}
-//-------------------------------------------------------------------------------
-const SEPupillaryResponse* SEDrugSystem::GetPupillaryResponse() const
-{
-  return m_PupillaryResponse;
-}
-//-------------------------------------------------------------------------------
-void SEDrugSystem::RemovePupillaryResponse()
-{
-  SAFE_DELETE(m_PupillaryResponse);
 }
 //-------------------------------------------------------------------------------
 

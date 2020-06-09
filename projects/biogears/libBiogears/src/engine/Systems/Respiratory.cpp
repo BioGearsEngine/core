@@ -968,21 +968,12 @@ void Respiratory::ProcessDriverActions()
   double SedationModifier = 1.0;
 
   // Check drug modifiers for effect on driver actions
-  // \todo The propofol check needs to be investigated for all anethesia/sedative type drugs
   if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.135) {
     NMBModifier = 0.0;
     DrugRRChange_Per_min = 0.0;
     DrugsTVChange_L = 0.0;
   } else if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.11) {
     NMBModifier = 0.5;
-    DrugRRChange_Per_min = 0.0;
-    DrugsTVChange_L = 0.0;
-  } else if (Drugs.GetSedationLevel().GetValue() > 0.15 && std::abs(m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min) + DrugRRChange_Per_min) < 1.0 && !m_data.GetSubstances().IsActive(*m_Propofol)) {
-    SedationModifier = 0.0;
-    DrugRRChange_Per_min = 0.0;
-    DrugsTVChange_L = 0.0;
-  } else if (Drugs.GetSedationLevel().GetValue() > 0.5 && std::abs(m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min) + DrugRRChange_Per_min) < 1.0 && m_data.GetSubstances().IsActive(*m_Propofol)) {
-    SedationModifier = 0.0;
     DrugRRChange_Per_min = 0.0;
     DrugsTVChange_L = 0.0;
   }
@@ -1028,7 +1019,7 @@ void Respiratory::ProcessDriverActions()
   m_VentilationFrequency_Per_min += infectionModifier;
   m_VentilationFrequency_Per_min += hemorrhageModifier;
   m_VentilationFrequency_Per_min *= painModifier;
-  m_VentilationFrequency_Per_min *= NMBModifier * SedationModifier;
+  m_VentilationFrequency_Per_min *= NMBModifier;
   m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
 
   //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation
