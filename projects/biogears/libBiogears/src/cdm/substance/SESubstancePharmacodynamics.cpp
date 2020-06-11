@@ -39,6 +39,7 @@ SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   m_TubularPermeabilityModifier = nullptr;
   m_CentralNervousModifier = nullptr;
   m_EffectSiteRateConstant = nullptr;
+
 }
 //-----------------------------------------------------------------------------
 SESubstancePharmacodynamics::~SESubstancePharmacodynamics()
@@ -48,6 +49,7 @@ SESubstancePharmacodynamics::~SESubstancePharmacodynamics()
 //-----------------------------------------------------------------------------
 void SESubstancePharmacodynamics::Clear()
 {
+  m_Modifiers.clear();
   SAFE_DELETE(m_AntibacterialEffect);
   SAFE_DELETE(m_Bronchodilation);
   SAFE_DELETE(m_DiastolicPressureModifier);
@@ -177,6 +179,26 @@ bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData&
   GetCentralNervousModifier().Load(in.CentralNervousModifier());
   GetAntibacterialEffect().Load(in.AntibacterialEffect());
   GetEffectSiteRateConstant().Load(in.EffectSiteRateConstant());
+
+  //Set up map (Antibiotic effect not added to modifier list because it is implemented different from other modifiers)
+  m_Modifiers.clear();
+  m_Modifiers["Bronchodilation"] = m_Bronchodilation;
+  m_Modifiers["CentralNervous"] = m_CentralNervousModifier;
+  m_Modifiers["DiastolicPressure"] = m_DiastolicPressureModifier;
+  m_Modifiers["Fever"] = m_FeverModifier;
+  m_Modifiers["HeartRate"] = m_HeartRateModifier;
+  m_Modifiers["Hemorrhage"] = m_HemorrhageModifier;
+  m_Modifiers["NeuromuscularBlock"] = m_NeuromuscularBlock;
+  m_Modifiers["Pain"] = m_PainModifier;
+  m_Modifiers["PupilReactivity"] = m_PupilReactivityModifier;
+  m_Modifiers["PupilSize"] = m_PupilSizeModifier;
+  m_Modifiers["RespirationRate"] = m_RespirationRateModifier;
+  m_Modifiers["Sedation"] = m_Sedation;
+  m_Modifiers["SystolicPressure"] = m_SystolicPressureModifier;
+  m_Modifiers["TidalVolume"] = m_TidalVolumeModifier;
+  m_Modifiers["TubularPermeability"] = m_TubularPermeabilityModifier;
+
+
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -227,6 +249,7 @@ void SESubstancePharmacodynamics::Unload(CDM::SubstancePharmacodynamicsData& dat
     data.AntibacterialEffect(std::unique_ptr<CDM::ScalarFrequencyData>(m_AntibacterialEffect->Unload()));
   if (HasEffectSiteRateConstant())
     data.EffectSiteRateConstant(std::unique_ptr<CDM::ScalarFrequencyData>(m_EffectSiteRateConstant->Unload()));
+
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasAntibacterialEffect() const
@@ -579,6 +602,10 @@ double SESubstancePharmacodynamics::GetEffectSiteRateConstant(const FrequencyUni
   return m_EffectSiteRateConstant->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
+std::map<std::string, SEPharmacodynamicModifier*> SESubstancePharmacodynamics::GetPharmacodynamicModifiers() const
+{
+  return m_Modifiers;
+}
 
 SEPharmacodynamicModifier::SEPharmacodynamicModifier()
 {

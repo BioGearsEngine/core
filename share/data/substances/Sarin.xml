@@ -30,6 +30,10 @@
   </Clearance>
   <Pharmacokinetics>
     <TissueKinetics>
+      <Name>BoneTissue</Name>
+      <PartitionCoefficient readOnly="false" value="0.25"/>
+    </TissueKinetics>
+    <TissueKinetics>
       <Name>BrainTissue</Name>
       <PartitionCoefficient readOnly="false" value="0.35"/>
     </TissueKinetics>

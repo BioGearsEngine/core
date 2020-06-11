@@ -60,7 +60,7 @@ bool SubstanceGenerator::parse()
       lineItr += 7;
     } else if ("Pharmacodynamics (all or none)" == lineItr->first) {
       rValue &= process_pharmacodynamics(++lineItr);
-      lineItr += 18;
+      lineItr += 17;
     } else if (lineItr->first.find("Tissue Pharmacokinetics") != std::string::npos) {
       rValue &= process_tissues(lineItr);
       lineItr += 1;
@@ -565,7 +565,6 @@ bool SubstanceGenerator::process_pharmacodynamics(CSV_RowItr itr)
         data.TidalVolumeModifier(set_PDModifier(pdMod, value));
         value = (itr + 17)->second[index];
         data.TubularPermeabilityModifier(set_PDModifier(pdMod, value));
-        value = (itr + 18)->second[index];
         substance.Pharmacodynamics(data);
       } catch (std::exception e) {
         rValue = false;

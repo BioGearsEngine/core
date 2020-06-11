@@ -117,7 +117,10 @@ public:
   virtual SEScalarFrequency& GetEffectSiteRateConstant();
   virtual double GetEffectSiteRateConstant(const FrequencyUnit& unit) const;
 
+  virtual std::map<std::string, SEPharmacodynamicModifier*> GetPharmacodynamicModifiers() const;
+
 private:
+  std::map<std::string, SEPharmacodynamicModifier*> m_Modifiers;
   SEScalarFrequency* m_AntibacterialEffect;
   SEPharmacodynamicModifier* m_Bronchodilation;
   SEPharmacodynamicModifier* m_DiastolicPressureModifier;

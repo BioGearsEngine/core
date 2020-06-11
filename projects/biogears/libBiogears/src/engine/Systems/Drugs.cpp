@@ -737,117 +737,80 @@ void Drugs::CalculatePartitionCoefficients()
 /// If the substance is a drug with an EC50 value, the effects on heart rate, blood pressure, respiration rate,
 /// tidal volume, neuromuscular block level, sedation level, bronchodilation level, and pupillary state are
 /// calculated using the current plasma concentration, the EC50, and the maximum drug response.
+/// \todo The drug effect is being applied to the baseline, so if the baseline changes the delta heart rate changes.
+// This would be a problem for something like a continuous infusion of a drug or an environmental drug
+// where we need to establish a new homeostatic point. Once the patient stabilizes with the drug effect included, a new baseline is
+// set, and suddenly the drug effect is being computed using the new baseline. We may need to add another layer of
+// stabilization and restrict drugs to post-feedback stabilization. Alternatively, we could base the drug effect on a baseline
+// concentration which is normally zero but which gets set to a new baseline concentration at the end of feedback (see chemoreceptor
+// and the blood gas setpoint reset for example).
 //--------------------------------------------------------------------------------------------------
 void Drugs::CalculateDrugEffects()
 {
-  double deltaCoreTemp_degC = 0;
-  double deltaHeartRate_Per_min = 0;
-  double hemorrhageFlowRecoveryFraction = 0;
-  double deltaDiastolicBP_mmHg = 0;
-  double deltaSystolicBP_mmHg = 0;
-  double deltaRespirationRate_Per_min = 0;
-  double deltaTidalVolume_mL = 0;
-  double neuromuscularBlockLevel = 0;
-  double painToleranceChange = 0;
-  double sedationLevel = 0;
-  double bronchodilationLevel = 0;
-  double concentrationEffects_unitless = 0;
-  double deltaTubularPermeability = 0.0;
-  double pupilSizeResponseLevel = 0;
-  double pupilReactivityResponseLevel = 0;
-  double shapeParameter = 1.;
+  std::map<std::string, double> effects_unitless {
+    { "Bronchodilation", 0 },
+    { "CentralNervous", 0 },
+    { "DiastolicPressure", 0 },
+    { "Fever", 0 },
+    { "HeartRate", 0 },
+    { "Hemorrhage", 0 },
+    { "NeuromuscularBlock", 0 },
+    { "Pain", 0 },
+    { "PupilReactivity", 0 },
+    { "PupilSize", 0 },
+    { "RespirationRate", 0 },
+    { "Sedation", 0 },
+    { "SystolicPressure", 0 },
+    { "TidalVolume", 0 },
+    { "TubularPermeability", 0 }
+  };
+
+  double shapeParameter = 0.0;
+  double eMax = 0.0;
   double ec50_ug_Per_mL = 0.0;
   SEPatient& patient = m_data.GetPatient();
   double HRBaseline_per_min = patient.GetHeartRateBaseline(FrequencyUnit::Per_min);
   double effectSiteConcentration_ug_Per_mL = 0.0;
-  double centralNervousResponseLevel = 0.0;
+  double effect = 0.0;
   double antibioticEffect_Per_hr = 0.0;
 
-  //Naloxone reversal
+  //Naloxone reversal--we will need to get more generic with this code if we add other reversal agents
   SESubstance* m_Naloxone = m_data.GetSubstances().GetSubstance("Naloxone");
   double inhibitorConcentration_ug_Per_mL = 0.0;
   double inhibitorConstant_ug_Per_mL = 1.0; //Can't initialize to 0 lest we divide by 0.  Won't matter what it is when there is no inhibitor because this will get mulitplied by 0 anyway
-  /*
+  if (m_data.GetSubstances().IsActive(*m_Naloxone)) {
+    inhibitorConstant_ug_Per_mL = m_Naloxone->GetPD().GetCentralNervousModifier().GetEC50().GetValue(MassPerVolumeUnit::ug_Per_mL);
+    inhibitorConcentration_ug_Per_mL = m_Naloxone->GetEffectSiteConcentration(MassPerVolumeUnit::ug_Per_mL);
+  }
+
   //Loop over substances
   for (SESubstance* sub : m_data.GetSubstances().GetActiveDrugs()) {
     if (!sub->HasPD())
       continue;
 
     SESubstancePharmacodynamics& pd = sub->GetPD();
-    shapeParameter = pd.GetEMaxShapeParameter().GetValue();
-    ec50_ug_Per_mL = pd.GetEC50().GetValue(MassPerVolumeUnit::ug_Per_mL);
-
-    //Get effect site concentration and use it to calculate unitless drug effects.
     effectSiteConcentration_ug_Per_mL = sub->GetEffectSiteConcentration(MassPerVolumeUnit::ug_Per_mL);
+    shapeParameter = pd.GetEMaxShapeParameter().GetValue();
+    auto modifiers = pd.GetPharmacodynamicModifiers();
 
-    if (sub->GetClassification() == CDM::enumSubstanceClass::Opioid) {
-      if (m_data.GetSubstances().IsActive(*m_Naloxone)) {
-        inhibitorConstant_ug_Per_mL = m_Naloxone->GetPD().GetEC50().GetValue(MassPerVolumeUnit::ug_Per_mL);
-        inhibitorConcentration_ug_Per_mL = m_Naloxone->GetEffectSiteConcentration(MassPerVolumeUnit::ug_Per_mL);
+    //Loop over all pharmacodynamic modifiers for substance and add them overall effect for each property
+    for (auto mod : modifiers) {
+      eMax = mod.second->GetEMax().GetValue();
+      ec50_ug_Per_mL = mod.second->GetEC50(MassPerVolumeUnit::ug_Per_mL);
+      if (std::abs(eMax) < ZERO_APPROX) {
+        continue; //If no effect (i.e. eMax = 0), move on to next effect.  Save some time and also don't run risk of dividing by 0 somewhere since non-defined EC50s are set to 0
       }
-      concentrationEffects_unitless = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * std::pow(1 + inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
-    } else if (sub->GetName() == "Sarin") {
-      concentrationEffects_unitless = m_RbcAcetylcholinesteraseFractionInhibited;
-    } else {
-      if (shapeParameter == 1) // Avoiding using pow if we don't have to. I don't know if this is good practice or not, but seems legit.
-      {
-        concentrationEffects_unitless = effectSiteConcentration_ug_Per_mL / (ec50_ug_Per_mL + effectSiteConcentration_ug_Per_mL);
-
+      if (sub->GetClassification() == CDM::enumSubstanceClass::Opioid) {
+        effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * std::pow(1.0 + inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
+      } else if (sub->GetName() == "Sarin") {
+        effect = m_RbcAcetylcholinesteraseFractionInhibited;
       } else {
-        concentrationEffects_unitless = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
+        effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) + std::pow(ec50_ug_Per_mL, shapeParameter));
       }
+      effects_unitless[mod.first] += effect;
     }
 
-    if (m_data.GetActions().GetPatientActions().HasOverride()
-        && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
-      if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride()) {
-        pd.GetDiastolicPressureModifier().SetValue(0.0);
-        pd.GetSystolicPressureModifier().SetValue(0.0);
-      }
-      if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
-        pd.GetHeartRateModifier().SetValue(0.0);
-      }
-    }
-
-    /// \todo The drug effect is being applied to the baseline, so if the baseline changes the delta heart rate changes.
-    // This would be a problem for something like a continuous infusion of a drug or an environmental drug
-    // where we need to establish a new homeostatic point. Once the patient stabilizes with the drug effect included, a new baseline is
-    // set, and suddenly the drug effect is being computed using the new baseline. We may need to add another layer of
-    // stabilization and restrict drugs to post-feedback stabilization. Alternatively, we could base the drug effect on a baseline
-    // concentration which is normally zero but which gets set to a new baseline concentration at the end of feedback (see chemoreceptor
-    // and the blood gas setpoint reset for example).
-    deltaCoreTemp_degC -= 37.0 * pd.GetFeverModifier().GetValue() * concentrationEffects_unitless; //using 37.0 as baseline core temperature
-
-    deltaHeartRate_Per_min += HRBaseline_per_min * pd.GetHeartRateModifier().GetValue() * concentrationEffects_unitless;
-
-    hemorrhageFlowRecoveryFraction += ((pd.GetHemorrhageModifier().GetValue() * 1.0e-4) * concentrationEffects_unitless); // If the substance affects hemorrhage blood flow, scale unitless modifier dowwn to account for resistance sensitivity
-
-    deltaDiastolicBP_mmHg += patient.GetDiastolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetDiastolicPressureModifier().GetValue() * concentrationEffects_unitless;
-
-    deltaSystolicBP_mmHg += patient.GetSystolicArterialPressureBaseline(PressureUnit::mmHg) * pd.GetSystolicPressureModifier().GetValue() * concentrationEffects_unitless;
-
-    sedationLevel += pd.GetSedation().GetValue() * concentrationEffects_unitless;
-    
-    centralNervousResponseLevel += pd.GetCentralNervousModifier().GetValue() * concentrationEffects_unitless;
-
-    deltaTubularPermeability += (pd.GetTubularPermeabilityModifier().GetValue()) * concentrationEffects_unitless;
-
-    deltaRespirationRate_Per_min += patient.GetRespirationRateBaseline(FrequencyUnit::Per_min) * pd.GetRespirationRateModifier().GetValue() * concentrationEffects_unitless;
-    
-    deltaTidalVolume_mL += patient.GetTidalVolumeBaseline(VolumeUnit::mL) * pd.GetTidalVolumeModifier().GetValue() * concentrationEffects_unitless;
-
-    neuromuscularBlockLevel += pd.GetNeuromuscularBlock().GetValue() * concentrationEffects_unitless;
-
-    double painEffect = std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(0.1 * ec50_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
-    painToleranceChange += pd.GetPainModifier().GetValue() * painEffect; //concentrationEffects_unitless;
-
-    bronchodilationLevel += pd.GetBronchodilation().GetValue() * concentrationEffects_unitless;
-
-    const SEPupillaryResponse& pupillaryResponse = pd.GetPupillaryResponse();
-    pupilSizeResponseLevel += pupillaryResponse.GetSizeModifier() * concentrationEffects_unitless;
-    pupilReactivityResponseLevel += pupillaryResponse.GetReactivityModifier() * concentrationEffects_unitless;
-
-    //Do not evaluate antibiotic effects unless the patient has inflammation casued by infection
+    //Antibiotic Effects -- Do not evaluate unless the patient has inflammation casued by infection
     if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
       double minimumInhibitoryConcentration_ug_Per_mL = m_data.GetActions().GetPatientActions().GetInfection()->GetMinimumInhibitoryConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
       if (sub->GetClassification() == CDM::enumSubstanceClass::Antibiotic) {
@@ -870,44 +833,70 @@ void Drugs::CalculateDrugEffects()
           fractionUnbound = sub->GetClearance().GetFractionUnboundInPlasma().GetValue();
         }
         double concentrationToMIC = effectSiteConcentration_ug_Per_mL * fractionUnbound / minimumInhibitoryConcentration_ug_Per_mL;
-        concentrationEffects_unitless = std::pow(concentrationToMIC, shapeParameter) / (std::pow(concentrationToMIC, shapeParameter) - growthRatio);
-        antibioticEffect_Per_hr += (growthMax_Per_hr - growthMin_Per_hr) * concentrationEffects_unitless;
+        effect = std::pow(concentrationToMIC, shapeParameter) / (std::pow(concentrationToMIC, shapeParameter) - growthRatio);
+        antibioticEffect_Per_hr += (growthMax_Per_hr - growthMin_Per_hr) * effect;
       }
     }
   }
-  */
+
   //Translate Diastolic and Systolic Pressure to pulse pressure and mean pressure
-  double deltaMeanPressure_mmHg = (2 * deltaDiastolicBP_mmHg + deltaSystolicBP_mmHg) / 3;
-  double deltaPulsePressure_mmHg = (deltaSystolicBP_mmHg - deltaDiastolicBP_mmHg);
+  double deltaMeanPressure_mmHg = (2 * effects_unitless["DiastolicPressure"] + effects_unitless["SystolicPressure"]) / 3;
+  double deltaPulsePressure_mmHg = (effects_unitless["SystolicPressure"] - effects_unitless["DiastolicPressure"]);
 
   //Set values on the CDM System Values
-  GetFeverChange().SetValue(deltaCoreTemp_degC, TemperatureUnit::C);
-  GetHeartRateChange().SetValue(deltaHeartRate_Per_min, FrequencyUnit::Per_min);
-  GetHemorrhageChange().SetValue(hemorrhageFlowRecoveryFraction);
+  GetBronchodilationLevel().SetValue(effects_unitless["Bronchodilation"]);
+  GetCentralNervousResponse().SetValue(effects_unitless["CentralNervous"]);
+  GetFeverChange().SetValue(-37.0 * effects_unitless["Fever"], TemperatureUnit::C);
+  GetHeartRateChange().SetValue(patient.GetHeartRateBaseline(FrequencyUnit::Per_min) * effects_unitless["HeartRate"], FrequencyUnit::Per_min);
+  GetHemorrhageChange().SetValue(1.0e-4 * effects_unitless["Hemorrhage"]);
   GetMeanBloodPressureChange().SetValue(deltaMeanPressure_mmHg, PressureUnit::mmHg);
+  GetNeuromuscularBlockLevel().SetValue(effects_unitless["NeuromuscularBlock"]);
+  GetPainToleranceChange().SetValue(effects_unitless["Pain"]);
   GetPulsePressureChange().SetValue(deltaPulsePressure_mmHg, PressureUnit::mmHg);
-  GetRespirationRateChange().SetValue(deltaRespirationRate_Per_min, FrequencyUnit::Per_min);
-  GetTidalVolumeChange().SetValue(deltaTidalVolume_mL, VolumeUnit::mL);
-  GetNeuromuscularBlockLevel().SetValue(neuromuscularBlockLevel);
-  GetPainToleranceChange().SetValue(painToleranceChange);
-  GetSedationLevel().SetValue(sedationLevel);
-  GetBronchodilationLevel().SetValue(bronchodilationLevel);
-  GetTubularPermeabilityChange().SetValue(deltaTubularPermeability);
-  GetCentralNervousResponse().SetValue(centralNervousResponseLevel);
+  GetRespirationRateChange().SetValue(patient.GetRespirationRateBaseline(FrequencyUnit::Per_min) * effects_unitless["RespirationRate"], FrequencyUnit::Per_min);
+  GetSedationLevel().SetValue(effects_unitless["Sedation"]);
+  GetTidalVolumeChange().SetValue(patient.GetTidalVolumeBaseline(VolumeUnit::mL) * effects_unitless["TidalVolume"], VolumeUnit::mL);
+  GetTubularPermeabilityChange().SetValue(effects_unitless["TubularPermeability"]);
   GetAntibioticActivity().SetValue(antibioticEffect_Per_hr);
 
-  //Pupil effects
+  //Assume drugs affecing pupil behavior do so equally on left/right sides
+  const SEPupillaryResponse& leftPupillaryResponse = m_data.GetNervous().GetLeftEyePupillaryResponse();
+  const SEPupillaryResponse& rightPupillaryResponse = m_data.GetNervous().GetRightEyePupillaryResponse();
+  double leftPupilReactivityResponseLevel = leftPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
+  double rightPupilReactivityResponseLevel = rightPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
+  double leftPupilSizeResponseLevel = leftPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
+  double rightPupilSizeResponseLevel = rightPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
 
   //We need to handle Sarin pupil effects (if Sarin is active) separately because technically they stem from contact and not systemic levels, meaning that they
   //do not depend on the Sarin plasma concentration in the same way as other PD effects.  We still perform the calculation here because
   //we cannot "contact" the eye, but scale them differently.  Sarin pupil effects are large and fast, so it's reasonable to
   //overwrite other drug pupil effects (and we probably aren't modeling opioid addicts inhaling Sarin)
   if (m_data.GetSubstances().IsActive(*m_data.GetSubstances().GetSubstance("Sarin"))) {
-    pupilSizeResponseLevel = GeneralMath::LogisticFunction(-1, 0.0475, 250, m_data.GetSubstances().GetSubstance("Sarin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_L));
-    pupilReactivityResponseLevel = pupilSizeResponseLevel;
+    leftPupilSizeResponseLevel = GeneralMath::LogisticFunction(-1, 0.0475, 250, m_data.GetSubstances().GetSubstance("Sarin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_L));
+    rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
+  }
+  //Bound pupil modifiers
+  BLIM(leftPupilReactivityResponseLevel, -1, 1);
+  BLIM(rightPupilReactivityResponseLevel, -1, 1);
+  BLIM(leftPupilSizeResponseLevel, -1, 1);
+  BLIM(rightPupilSizeResponseLevel, -1, 1);
+
+  m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
+  m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(leftPupilSizeResponseLevel);
+  m_data.GetNervous().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
+  m_data.GetNervous().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
+
+  //Account for cardiovascular override actions
+  if (m_data.GetActions().GetPatientActions().HasOverride()
+      && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride()) {
+      GetMeanBloodPressureChange().SetValue(0.0, PressureUnit::mmHg);
+    }
+    if (m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()) {
+      GetHeartRateChange().SetValue(0.0, FrequencyUnit::Per_min);
+    }
   }
 
- 
 }
 
 //--------------------------------------------------------------------------------------------------
