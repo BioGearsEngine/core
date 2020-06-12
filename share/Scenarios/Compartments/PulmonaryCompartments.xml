@@ -4,7 +4,7 @@
     <Description>Validation scenario to make sure all compartment level data requests match up with the expected results</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
     
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
   <!-- Environment -->	
   <!-- Volumes are infinite on this compartment -->
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Ambient" Name="InFlow" Unit="mL/s" Precision="0"/>	

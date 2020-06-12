@@ -10,7 +10,7 @@
 	</InitialParameters>
     
 	<!-- Base system data required for all scenario verification -->
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
   <DataRequest xsi:type="PatientDataRequestData"          Name="Weight"                            Unit="kg"           Precision="1"/>
   
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                         Unit="1/min"       Precision="2"/>

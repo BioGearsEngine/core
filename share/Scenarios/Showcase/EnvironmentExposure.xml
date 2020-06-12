@@ -7,7 +7,7 @@
 	</InitialParameters>
 	
   <!-- Base system data required for environment exposure showcase scenario -->
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalMetabolicRate"          Unit="kcal/day" Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenConsumptionRate"       Unit="mL/min" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"        Unit="mmHg"   Precision="1"/>

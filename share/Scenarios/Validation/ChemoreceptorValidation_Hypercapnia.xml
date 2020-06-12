@@ -4,7 +4,7 @@
     <Description>Validation of chemoreceptors to various hypercapnic insults</Description>
     <InitialParameters><PatientFile>Roy.xml</PatientFile></InitialParameters> <!--Using Roy because he has baseline respiration rate of 12 like validation data-->
     
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
 	<!--Cardiovascular Data-->		
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure" Unit="mmHg" Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume" Unit="mL" Precision="0"/>

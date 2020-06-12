@@ -4,7 +4,7 @@
   <Description>Output everything from every tissue compartment for O2, CO2, and Succs</Description>
   <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
 	<!-- BoneTissue -->	
 	<DataRequest xsi:type="TissueCompartmentDataRequestData" Compartment="BoneTissue"                           Name="AcidicPhospohlipidConcentration"                    Unit="mg/g"   Precision="1"/>	
 	<DataRequest xsi:type="TissueCompartmentDataRequestData" Compartment="BoneTissue"                           Name="MatrixVolume"                                       Unit="mL"     Precision="0"/>	

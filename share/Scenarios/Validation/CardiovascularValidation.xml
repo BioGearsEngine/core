@@ -4,7 +4,7 @@
     <Description>Validation of Cardiovascular data</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
     
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
 	<!--System Data Requests-->		
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure" Unit="mmHg" Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume" Unit="mL" Precision="2"/>

@@ -7,7 +7,7 @@
 	</InitialParameters>
 
 	<!-- Base system data required for asthma attack showcase scenario -->
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"               Unit="L"          Precision="3"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                   Unit="mL"          Precision="3"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"              Unit="unitless"    Precision="3"/>

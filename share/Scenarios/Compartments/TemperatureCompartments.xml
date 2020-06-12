@@ -4,7 +4,7 @@
   <Description>Output everything from every property from these compartments</Description>
   <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
     
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
 	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="InternalCore" Name="HeatTransferRateIn"  Unit="W" Precision="3"/>
 	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="InternalCore" Name="HeatTransferRateOut" Unit="W" Precision="3"/>
 	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="InternalCore" Name="Temperature"         Unit="degC" Precision="3"/>

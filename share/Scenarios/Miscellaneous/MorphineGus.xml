@@ -5,7 +5,7 @@
   <InitialParameters><PatientFile>Gus.xml</PatientFile></InitialParameters>
     
 	<!-- Base system data required for all scenario verification -->
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                         Unit="1/min"       Precision="5"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"                 Unit="mL"          Precision="5"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="L"          Precision="5"/>	

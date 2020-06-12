@@ -4,7 +4,7 @@
     <Description>Validation of Endocrine data</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 	
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="InsulinSynthesisRate" Unit="pmol/min" Precision="0"/>
   </DataRequests>
 	

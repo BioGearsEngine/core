@@ -4,7 +4,7 @@
   <Description>Validation of Blood Chemistry data</Description>
   <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 	
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
 	<DataRequest Name="BloodDensity" xsi:type="PhysiologyDataRequestData" Unit="kg/m^3" Precision="0"/>
 	<DataRequest Name="ArterialBloodPH" xsi:type="PhysiologyDataRequestData" Precision="2"/>
 	<DataRequest Name="BloodSpecificHeat" xsi:type="PhysiologyDataRequestData" Unit="J/K kg" Precision="0"/>

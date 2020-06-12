@@ -4,7 +4,7 @@
     <Description>Validation scenario to make sure all compartment level data requests match up with the expected results</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
     
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
   <!-- AnesthesiaConnection -->
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="AnesthesiaConnection" Name="InFlow" Unit="mL/s" Precision="0"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="AnesthesiaConnection" Name="OutFlow" Unit="mL/s" Precision="0"/>

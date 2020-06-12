@@ -8,7 +8,7 @@
       <WritePatientBaselineFile>On</WritePatientBaselineFile>
     </Configuration>
     </InitialParameters>
-    <DataRequests>
+    <DataRequests SamplesPerSecond="50">
     <DataRequest xsi:type="PatientDataRequestData" Name="Age" Unit="yr" Precision="0"/>
   <DataRequest xsi:type="PatientDataRequestData" Name="Weight" Unit="kg" Precision="1"/>
     <DataRequest xsi:type="PatientDataRequestData" Name="Height" Unit="in" Precision="0"/>

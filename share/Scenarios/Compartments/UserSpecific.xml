@@ -3,7 +3,7 @@
 	<Name>UserSpecific</Name>
 	<Description>Use this to look at a specific compartment </Description>
 	<InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>	
-	<DataRequests>
+	<DataRequests SamplesPerSecond="50">
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueExtracellular" Substance="Sodium"   Name="Molarity"   Unit="mmol/L"  Precision="2"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular" Substance="Sodium"	Name="Molarity"	  Unit="mmol/L"	 Precision="2"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueExtracellular" Substance="Sodium"   Name="Molarity"   Unit="mmol/L"  Precision="2"/>

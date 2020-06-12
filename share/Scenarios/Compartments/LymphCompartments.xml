@@ -6,7 +6,7 @@
     
   <!-- Note there will be no substances in lymph compartments (Mass/Concentration of 0), only hemodynamics -->
 
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
 	<!-- BioGears only has a single Lymph Compartment -->	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Lymph" Name="InFlow"  Unit="mL/s" Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Lymph" Name="OutFlow"  Unit="mL/s" Precision="0"/>

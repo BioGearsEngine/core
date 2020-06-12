@@ -4,7 +4,7 @@
   <Description>Validation of Tissue data</Description>
   <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 	
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="CarbonDioxideProductionRate" Unit="mL/min" Precision="3"/>  
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtracellularFluidVolume" Unit="mL" Precision="0"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume" Unit="mL" Precision="0"/>

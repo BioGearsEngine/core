@@ -4,7 +4,7 @@
     <Description>Validation of Energy data</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 	
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature" Unit="degC" Precision="1"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="CreatinineProductionRate" Unit="umol/s" Precision="3"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="KetoneProductionRate" Unit="umol/min" Precision="0"/>

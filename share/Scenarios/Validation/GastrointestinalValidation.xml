@@ -4,7 +4,7 @@
     <Description>Validation of Gastrointestinal data</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 	
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="ChymeAbsorptionRate" Unit="mL/min" Precision="2"/>
   </DataRequests>
 	

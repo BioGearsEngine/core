@@ -6,7 +6,7 @@
   <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
    
   <!--System Data Requests-->	
-  <DataRequests>
+  <DataRequests SamplesPerSecond="50">
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="FiltrationFraction" Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="GlomerularFiltrationRate" Unit="L/day" Precision="0"/>	
 	

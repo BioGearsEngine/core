@@ -5,7 +5,7 @@
     <InitialParameters>
         <PatientFile>StandardMale.xml</PatientFile>
     </InitialParameters>
-    <DataRequests>
+    <DataRequests SamplesPerSecond="50">
         <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume" Unit="mL"/>
         <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume" Unit="mL"/>
         <DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralVenousPressure" Unit="mmHg"/>
