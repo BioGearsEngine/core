@@ -41,6 +41,9 @@ public:
   virtual bool HasAdminRoute() const;
   virtual void InvalidateAdminRoute();
 
+  virtual bool HasAdminTime() const;
+  virtual SEScalarTime& GetAdminTime();
+
   virtual bool HasConcentration() const;
   virtual SEScalarMassPerVolume& GetConcentration();
 
@@ -53,6 +56,7 @@ public:
 
 protected:
   CDM::enumBolusAdministration::value m_AdminRoute;
+  SEScalarTime* m_AdminTime;
   SEScalarMassPerVolume* m_Concentration;
   SEScalarVolume* m_Dose;
   const SESubstance& m_Substance;

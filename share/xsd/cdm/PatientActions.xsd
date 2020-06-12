@@ -468,7 +468,8 @@ specific language governing permissions and limitations under the License.
 				<xs:sequence>
 					<xs:element name="Substance" type="xs:string" minOccurs="1" maxOccurs="1"/>	<!--<< @brief -->
 					<xs:element name="Concentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
-					<xs:element name="Dose" type="ScalarVolumeData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->													
+					<xs:element name="Dose" type="ScalarVolumeData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
+					<xs:element name="AdminTime" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 				<xs:attribute name="AdminRoute" type="enumBolusAdministration" use="required"/><!--<< @brief -->
 			</xs:extension>

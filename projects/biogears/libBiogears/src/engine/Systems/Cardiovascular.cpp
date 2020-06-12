@@ -2127,7 +2127,7 @@ void Cardiovascular::AdjustVascularTone()
       TuningParameter = 0.8; //1.2;
     ResistanceChange *= TuningParameter;
   }
-
+  
   //Drug effects on arterial pressure occur by increasing the systemic vascular resistance. This occurs every time step by updating the next flow resistance.
   //These effects are applied in HeartDriver() since its functionality is called every time step.
   if (std::abs(ResistanceChange) > ZERO_APPROX) {
@@ -2140,18 +2140,6 @@ void Cardiovascular::AdjustVascularTone()
       Path->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     }
 
-    //Drug effects on arterial pressure occur by increasing the systemic vascular resistance. This occurs every time step by updating the next flow resistance.
-    //These effects are applied in HeartDriver() since its functionality is called every time step.
-    if (std::abs(ResistanceChange) > ZERO_APPROX) {
-      for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
-        if (!Path->HasNextResistance())
-          continue;
-        UpdatedResistance_mmHg_s_Per_mL = Path->GetNextResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-        UpdatedResistance_mmHg_s_Per_mL += ResistanceChange * UpdatedResistance_mmHg_s_Per_mL / GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-        LLIM(UpdatedResistance_mmHg_s_Per_mL, m_minIndividialSystemicResistance__mmHg_s_Per_mL);
-        Path->GetNextResistance().SetValue(UpdatedResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-      }
-    }
     MetabolicToneResponse();
   }
 }

@@ -21,6 +21,7 @@ SESubstanceBolus::SESubstanceBolus(const SESubstance& substance)
   , m_Substance(substance)
 {
   m_AdminRoute = (CDM::enumBolusAdministration::value)-1;
+  m_AdminTime = nullptr;
   m_Dose = nullptr;
   m_Concentration = nullptr;
 }
@@ -34,6 +35,7 @@ void SESubstanceBolus::Clear()
 {
   SESubstanceAdministration::Clear();
   m_AdminRoute = (CDM::enumBolusAdministration::value)-1;
+  SAFE_DELETE(m_AdminTime);
   SAFE_DELETE(m_Dose);
   SAFE_DELETE(m_Concentration);
   // m_Substance=nullptr; Keeping mapping!!
@@ -52,6 +54,9 @@ bool SESubstanceBolus::IsActive() const
 bool SESubstanceBolus::Load(const CDM::SubstanceBolusData& in)
 {
   SESubstanceAdministration::Load(in);
+  if (in.AdminTime().present()) {
+    GetAdminTime().Load(in.AdminTime().get());
+  }
   GetDose().Load(in.Dose());
   GetConcentration().Load(in.Concentration());
   m_AdminRoute = in.AdminRoute();
@@ -74,7 +79,20 @@ void SESubstanceBolus::Unload(CDM::SubstanceBolusData& data) const
     data.Concentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Concentration->Unload()));
   if (HasAdminRoute())
     data.AdminRoute(m_AdminRoute);
+  if (HasAdminTime())
+    data.AdminTime(std::unique_ptr<CDM::ScalarTimeData>(m_AdminTime->Unload()));
   data.Substance(m_Substance.GetName());
+}
+
+bool SESubstanceBolus::HasAdminTime() const
+{
+  return m_AdminTime == nullptr ? false : m_AdminTime->IsValid();
+}
+SEScalarTime& SESubstanceBolus::GetAdminTime()
+{
+  if (m_AdminTime == nullptr)
+    m_AdminTime = new SEScalarTime();
+  return *m_AdminTime;
 }
 
 CDM::enumBolusAdministration::value SESubstanceBolus::GetAdminRoute() const
@@ -133,6 +151,7 @@ void SESubstanceBolus::ToString(std::ostream& str) const
   str << "\n\tSubstance: " << m_Substance.GetName();
   str << "\n\tAdministration Route: ";
   HasAdminRoute() ? str << GetAdminRoute() : str << "Not Set";
+  HasAdminTime() ? str << "\n\tAdminTime: " << *m_AdminTime : str<<"";
   str << std::flush;
 }
 

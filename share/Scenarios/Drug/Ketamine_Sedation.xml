@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Ketamine</Name>
+    <Description>Inject standard patient with Ketamine!</Description>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+    
+	<!-- Base system data required for all scenario verification -->
+  <DataRequests SamplesPerSecond="50">
+  <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                         Unit="1/min"       Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"                 Unit="mL"          Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="L"          Precision="2"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="L"          Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure"                  Unit="mmHg"        Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"          Unit="mmHg"        Precision="0"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure"         Unit="mmHg"        Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"                     Unit="L/min"      Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HemoglobinContent"                 Unit="g"           Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralVenousPressure"             Unit="mmHg"        Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryCapillariesWedgePressure" Unit="mmHg"        Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"                   Unit="1/min"       Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"                  Unit="unitless"    Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CarbonDioxideSaturation"           Unit="unitless"    Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                       Unit="mL"          Precision="0"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"                   Unit="L"          Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxideFraction"     Unit="unitless"    Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalAlveolarVentilation"          Unit="L/min"       Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TranspulmonaryPressure"            Unit="cmH2O"       Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespiratoryExchangeRatio"          Unit="unitless"    Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperature"                   Unit="degC"        Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="GlomerularFiltrationRate"          Unit="mL/min"      Precision="0"/> 
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RenalBloodFlow"                    Unit="L/min"      Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/min"      Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftAfferentArterioleResistance"   Unit="mmHg min/mL" Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightAfferentArterioleResistance"  Unit="mmHg min/mL" Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenConsumptionRate"             Unit="mL/min"      Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CarbonDioxideProductionRate"       Unit="mL/min"      Precision="3"/>
+    
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"                            Name="Pressure"        Unit="cmH2O" Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"  Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg"  Precision="1"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli"                           Name="Pressure"        Unit="cmH2O" Precision="0"/>
+ 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg"  Precision="1"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="Oxygen"        Name="PartialPressure" Unit="cmH2O" Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="CarbonDioxide" Name="PartialPressure" Unit="cmH2O" Precision="1"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Sodium"        Name="Concentration" Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules"  Substance="Sodium"        Name="Concentration" Unit="g/L" Precision="2"/>
+	
+	<DataRequest xsi:type="SubstanceDataRequestData"  Substance="Oxygen"         Name="AlveolarTransfer" Unit="mL/s" Precision="2"/>
+	<DataRequest xsi:type="SubstanceDataRequestData"  Substance="CarbonDioxide"  Name="AlveolarTransfer" Unit="mL/s" Precision="2"/>
+	
+	<DataRequest Substance="Epinephrine" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/L" Precision="6"/>
+	  <DataRequest xsi:type="PhysiologyDataRequestData" Name="LiverGlycogen" Unit="g" Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="MuscleGlycogen" Unit="g" Precision="2"/>
+
+	<!-- Anything action specific data needed for verification of this scenario -->
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="PainVisualAnalogueScale"          Unit="unitless"    Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SedationLevel"	Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RichmondAgitationSedationScale" Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="PainToleranceChange"		Precision="2"/>
+   	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-ReactivityModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-ReactivityModifier" Precision="3"/>
+  
+  
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"                  Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"               Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneVasculature"        Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature"       Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatVasculature"         Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutVasculature"         Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyVasculature"  Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungVasculature"    Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/>
+    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverVasculature"       Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature"      Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumVasculature"  Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyVasculature" Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungVasculature"   Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinVasculature"        Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/>
+    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenVasculature"      Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/>
+
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueExtracellular"        Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueExtracellular"       Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueExtracellular"         Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueExtracellular"         Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueExtracellular"  Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueExtracellular"    Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueExtracellular"       Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular"      Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueExtracellular"  Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueExtracellular" Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueExtracellular"   Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueExtracellular"        Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueExtracellular"      Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 
+
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular"        Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular"       Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular"         Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueIntracellular"         Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular"    Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"      Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular"  Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular"   Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular"        Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular"      Substance="Ketamine" Name="Concentration" Unit="ug/L" Precision="4"/>
+	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine"	Name="EffectSiteConcentration" Unit="ug/mL" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Name="SystemicMassCleared" Unit="ug" Precision="2"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Name="MassInBody" Unit="ug" Precision="2"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="RightKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="BrainTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="RightLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="LeftLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="LiverTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="BoneTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="FatTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="SkinTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="MuscleTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="SpleenTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="GutTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Compartment="MyocardiumTissue" Name="PartitionCoefficient" Precision="4"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Ketamine" Name="MassCleared" Unit="ug" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Ketamine" Name="MassCleared" Unit="ug" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Ketamine" Name="MassCleared" Unit="ug" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Ketamine" Name="MassExcreted" Unit="ug" Precision="2"/>
+  </DataRequests>
+	
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+	<!--0.6 mg/kg induction dose over 10 minutes (77 kg standard BG patient)-->
+    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Ketamine</Substance>
+        <Concentration value="1" unit="mg/mL"/>
+        <Dose value="46.2" unit="mL"/>
+		<AdminTime value="10" unit="min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="10" unit="min"/>       
+    </Action>
+	<!--15 ug/kg/min maintenance infusion (77 kg standard BG patient)-->
+	<Action xsi:type="SubstanceInfusionData">
+		<Substance>Ketamine</Substance>
+		<Concentration value="1.0" unit="mg/mL"/>
+		<Rate value="1.15" unit="mL/min"/>
+	</Action>
+		<Action xsi:type="AdvanceTimeData">
+        <Time value="20" unit="min"/>       
+    </Action>
+	<Action xsi:type="SubstanceInfusionData">
+		<Substance>Ketamine</Substance>
+		<Concentration value="0.0" unit="mg/mL"/>
+		<Rate value="0.0" unit="mL/min"/>
+	</Action>
+</Scenario>

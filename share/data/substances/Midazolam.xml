@@ -37,20 +37,20 @@
       <EC50 readOnly="false" unit="ug/mL" value="0"/>
     </Bronchodilation>
     <CentralNervousModifier>
-      <EMax readOnly="false" value="0"/>
-      <EC50 readOnly="false" unit="ug/mL" value="0"/>
+      <EMax readOnly="false" value="0.75"/>
+      <EC50 readOnly="false" unit="ug/mL" value="0.5"/>
     </CentralNervousModifier>
     <DiastolicPressureModifier>
       <EMax readOnly="false" value="-0.25"/>
-      <EC50 readOnly="false" unit="ug/mL" value="0.0558"/>
+      <EC50 readOnly="false" unit="ug/mL" value="0.5"/>
     </DiastolicPressureModifier>
     <FeverModifier>
       <EMax readOnly="false" value="0"/>
       <EC50 readOnly="false" unit="ug/mL" value="0"/>
     </FeverModifier>
     <HeartRateModifier>
-      <EMax readOnly="false" value="0.3"/>
-      <EC50 readOnly="false" unit="ug/mL" value="0.0558"/>
+      <EMax readOnly="false" value="0.6"/>
+      <EC50 readOnly="false" unit="ug/mL" value="0.5"/>
     </HeartRateModifier>
     <HemorrhageModifier>
       <EMax readOnly="false" value="0"/>
@@ -73,20 +73,20 @@
       <EC50 readOnly="false" unit="ug/mL" value="0.0588"/>
     </PupilSizeModifier>
     <RespirationRateModifier>
-      <EMax readOnly="false" value="-1"/>
-      <EC50 readOnly="false" unit="ug/mL" value="0.0558"/>
+      <EMax readOnly="false" value="-0.4"/>
+      <EC50 readOnly="false" unit="ug/mL" value="0.3"/>
     </RespirationRateModifier>
     <Sedation>
       <EMax readOnly="false" value="1"/>
-      <EC50 readOnly="false" unit="ug/mL" value="0.0558"/>
+      <EC50 readOnly="false" unit="ug/mL" value="0.25"/>
     </Sedation>
     <SystolicPressureModifier>
       <EMax readOnly="false" value="-0.5"/>
-      <EC50 readOnly="false" unit="ug/mL" value="0.0558"/>
+      <EC50 readOnly="false" unit="ug/mL" value="0.4"/>
     </SystolicPressureModifier>
     <TidalVolumeModifier>
-      <EMax readOnly="false" value="-1"/>
-      <EC50 readOnly="false" unit="ug/mL" value="0.0558"/>
+      <EMax readOnly="false" value="-0.6"/>
+      <EC50 readOnly="false" unit="ug/mL" value="0.3"/>
     </TidalVolumeModifier>
     <TubularPermeabilityModifier>
       <EMax readOnly="false" value="0"/>

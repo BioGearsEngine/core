@@ -269,7 +269,7 @@ void Drugs::AdministerSubstanceBolus()
   double dose_mL;
   double concentration_ugPermL;
   double massIncrement_ug = 0;
-  double administrationTime_s = 2.0; //administer dose over 2 seconds for a bolus dose
+  double administrationTime_s = 10.0; //Default if not supplied by action
 
   for (auto b : boluses) {
     sub = b.first;
@@ -302,7 +302,9 @@ void Drugs::AdministerSubstanceBolus()
       completedBolus.push_back(b.first); // Remove it
       continue;
     }
-
+    if (bolus->HasAdminTime()) {
+      administrationTime_s = bolus->GetAdminTime().GetValue(TimeUnit::s);
+    }
     concentration_ugPermL = bolus->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
     massIncrement_ug = dose_mL * concentration_ugPermL * m_dt_s / administrationTime_s;
     bolusState->GetElapsedTime().IncrementValue(m_dt_s, TimeUnit::s);
@@ -840,8 +842,10 @@ void Drugs::CalculateDrugEffects()
   }
 
   //Translate Diastolic and Systolic Pressure to pulse pressure and mean pressure
-  double deltaMeanPressure_mmHg = (2 * effects_unitless["DiastolicPressure"] + effects_unitless["SystolicPressure"]) / 3;
-  double deltaPulsePressure_mmHg = (effects_unitless["SystolicPressure"] - effects_unitless["DiastolicPressure"]);
+  double systolicBaseline_mmHg = patient.GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
+  double diastolicBaseline_mmHg = patient.GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
+  double deltaMeanPressure_mmHg = (2.0 * diastolicBaseline_mmHg * effects_unitless["DiastolicPressure"] + systolicBaseline_mmHg * effects_unitless["SystolicPressure"]) / 3;
+  double deltaPulsePressure_mmHg = (systolicBaseline_mmHg * effects_unitless["SystolicPressure"] - diastolicBaseline_mmHg * effects_unitless["DiastolicPressure"]);
 
   //Set values on the CDM System Values
   GetBronchodilationLevel().SetValue(effects_unitless["Bronchodilation"]);
@@ -896,7 +900,6 @@ void Drugs::CalculateDrugEffects()
       GetHeartRateChange().SetValue(0.0, FrequencyUnit::Per_min);
     }
   }
-
 }
 
 //--------------------------------------------------------------------------------------------------
