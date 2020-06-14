@@ -6,17 +6,24 @@ class XSDToDoxygen:
     def __init__(self):
         self.name=[]
         self.files_processed=[]
-
-    def process_sc(self):
+        self.writer=""
+    
+    def process_sc(self,fout):
         for input_file in self.files_processed:
             sc=minidom.parse(input_file)
             for child in sc.childNodes:
                 if child.nodeName == "xs:schema":
-                    self.fun(child)
+                    self.parse(child,fout)
 
-    def fun(self,node):
+    def parse(self,node,fout):
         for j,i in enumerate(node.childNodes):
-            if i.nodeName == "xs:include":
+            if i.nodeType == i.COMMENT_NODE:
+                comment=i.data.strip("<<").lstrip(' ').replace("       "," * ")
+                comment=comment.rstrip("* \n \n")
+                if comment.startswith("@brief") or comment.startswith("@details") or comment.startswith("-"):
+                    self.writer+=" * "+comment+"\n"
+
+            elif i.nodeName == "xs:include":
                 files=i.getAttribute("schemaLocation")
                 if files.startswith("./"):
                     files=os.path.dirname(self.files_processed[0])+files[1:]
@@ -30,11 +37,24 @@ class XSDToDoxygen:
                 if files not in self.files_processed:
                     self.files_processed.append(files)
 
+            else:
+                self.parse(i,fout)
+
 if __name__=="__main__":
     import sys
     XSD=XSDToDoxygen()
-    XSD.files_processed.append("/opt/biogears/core/build/runtime/xsd/BioGearsDataModel.xsd")
-    XSD.process_sc()
-    print(XSD.files_processed)
-
+    XSD.files_processed.append(sys.argv[1])
+    fout=open(sys.argv[2],'w',encoding="utf-8")
+    fout.write("/**")
+    fout.write("\n")
+    fout.write("* @defgroup CDM CDM")
+    fout.write("\n")
+    fout.write("* @{")
+    fout.write("\n\n\n")
+    XSD.process_sc(fout)
+    fout.write("\n")
+    fout.write("*}")
+    fout.write("\n")
+    fout.write("*/")
+    fout.close()
 
