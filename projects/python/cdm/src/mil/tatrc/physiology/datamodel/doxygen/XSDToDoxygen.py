@@ -66,9 +66,8 @@ class XSDToDoxygen:
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Creation of xsd.ixx file after parsing all xsd files ')
     parser.add_argument('-p','--xsdpath',help='Path to BioGearsDataModel.xsd file',required=True)
-
+    parser.add_argument('-f','--filepath',help='Path and name of .ixx file',required=True)
     args=parser.parse_args()
-    print(args)
     if args.xsdpath ==None and args.filepath ==None:
         parser.print_help()
         sys.exit(0)
