@@ -1,6 +1,8 @@
 from xml.dom import minidom
 from pathlib import Path
 import os
+import argparse
+import sys
 
 class XSDToDoxygen:
     def __init__(self):
@@ -62,20 +64,28 @@ class XSDToDoxygen:
                 self.parse(i,fout)
 
 if __name__=="__main__":
-    import sys
-    XSD=XSDToDoxygen()
-    XSD.files_processed.append(sys.argv[1])
-    fout=open(sys.argv[2],'w',encoding="utf-8")
-    fout.write("/**")
-    fout.write("\n")
-    fout.write("* @defgroup CDM CDM")
-    fout.write("\n")
-    fout.write("* @{")
-    fout.write("\n\n\n")
-    XSD.process_sc(fout)
-    fout.write("\n")
-    fout.write("*}")
-    fout.write("\n")
-    fout.write("*/")
-    fout.close()
+    parser = argparse.ArgumentParser(description='Creation of xsd.ixx file after parsing all xsd files ')
+    parser.add_argument('-p','--xsdpath',help='Path to BioGearsDataModel.xsd file',required=True)
+
+    args=parser.parse_args()
+    print(args)
+    if args.xsdpath ==None and args.filepath ==None:
+        parser.print_help()
+        sys.exit(0)
+    else:
+        XSD=XSDToDoxygen()
+        XSD.files_processed.append(args.xsdpath)
+        fout=open(args.filepath,'w',encoding="utf-8")
+        fout.write("/**")
+        fout.write("\n")
+        fout.write("* @defgroup CDM CDM")
+        fout.write("\n")
+        fout.write("* @{")
+        fout.write("\n\n\n")
+        XSD.process_sc(fout)
+        fout.write("\n")
+        fout.write("*}")
+        fout.write("\n")
+        fout.write("*/")
+        fout.close()
 
