@@ -17,7 +17,18 @@ class XSDToDoxygen:
 
     def parse(self,node,fout):
         for j,i in enumerate(node.childNodes):
-            if i.nodeType == i.COMMENT_NODE:
+            
+            if i.nodeName=="xs:sequence":
+                self.parse(i,fout)
+            
+            elif i.nodeName=="xs:attribute":
+                fout.write(" * @defgroup CDM_"+self.name[-1]+"_"+i.getAttribute("name")+" "+i.getAttribute("name"))
+                fout.write("\n")
+                if len(self.writer)>0:
+                    fout.write(self.writer)
+                    self.writer=""
+
+            elif i.nodeType == i.COMMENT_NODE:
                 comment=i.data.strip("<<").lstrip(' ').replace("       "," * ")
                 comment=comment.rstrip("* \n \n")
                 if comment.startswith("@brief") or comment.startswith("@details") or comment.startswith("-"):
