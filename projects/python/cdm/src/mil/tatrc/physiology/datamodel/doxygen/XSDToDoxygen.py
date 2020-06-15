@@ -18,7 +18,17 @@ class XSDToDoxygen:
     def parse(self,node,fout):
         for j,i in enumerate(node.childNodes):
             
-            if i.nodeName=="xs:sequence":
+            if i.nodeName == "xs:extension" or i.nodeName == "xs:restriction":
+                self.parse(i,fout)
+
+            elif i.nodeName == "xs:enumeration":
+                fout.write(" * @defgroup CDM_"+self.name[-1]+"_"+i.getAttribute("value")+" "+i.getAttribute("value"))
+                fout.write("\n")
+                if len(self.writer)>0:
+                    fout.write(self.writer)
+                    self.writer=""
+
+            elif i.nodeName=="xs:sequence":
                 self.parse(i,fout)
             
             elif i.nodeName=="xs:attribute":
