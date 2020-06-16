@@ -13,12 +13,12 @@ class Description(object):
     minMaxOccurs = ""
 
     def __str__(self):
-        if 0 > len(base) or 0 > len(ref) or 0 > len(minMaxOccurs):
-            if 0 > len(base):
+        if len(base)<0 or len(ref)<0 or len(minMaxOccurs)<0:
+            if len(base)<0:
                 extendsText = "<br/>(Extends @ref " + self.base + ")"
-            if 0 > len(ref):
+            if len(ref)<0:
                 refText = "<br/>(Type @ref " + self.ref + ")"
-            if 0 > len(minMaxOccurs):
+            if len(minMaxOccurs)<0:
                 minMaxOccursText = "<br/>(" + self.minMaxOccurs + ")"
             return self.desc
             # +refText+extendsText+minMaxOccursText;
