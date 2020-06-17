@@ -975,13 +975,6 @@ void Nervous::CheckPainStimulus()
   if (m_painVAS == 0.0)
     m_painStimulusDuration_s = 0.0;
 
-  //grab drug effects if there are in the body
-  if (m_data.GetDrugs().HasPainToleranceChange()) {
-    double NervousScalar = 10.0;
-    double PainModifier = m_data.GetDrugs().GetPainToleranceChange().GetValue();
-    PainBuffer = std::exp(-PainModifier * NervousScalar);
-  }
-
   //determine pain response from inflammation caused by burn trauma
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
     double traumaPain = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
@@ -999,7 +992,14 @@ void Nervous::CheckPainStimulus()
     }
     painVASMapping = 10.0 * severity;
 
-    tempPainVAS += (painVASMapping * susceptabilityMapping * PainBuffer) / (1 + exp(-m_painStimulusDuration_s + 4.0)); //temp time will increase so long as a stimulus is present
+    tempPainVAS += (painVASMapping * susceptabilityMapping) / (1.0 + exp(-m_painStimulusDuration_s + 4.0)); //temp time will increase so long as a stimulus is present
+  }
+
+  //apply effects of pain medication
+  if (m_data.GetDrugs().HasPainToleranceChange()) {
+    double PainModifier = 10.0 * m_data.GetDrugs().GetPainToleranceChange().GetValue();
+    tempPainVAS += -PainModifier;
+    tempPainVAS = std::max(tempPainVAS, 0.0);
   }
 
   //advance time over the duration of the stimulus

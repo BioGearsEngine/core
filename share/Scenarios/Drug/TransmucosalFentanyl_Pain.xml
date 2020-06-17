@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Fentanyl_OTFC</Name>
-    <Description>Administerd fentanyl to patient via oral transmucosal route (OTFC)</Description>
+    <Name>TransmucosalFentanyl_Pain</Name>
+    <Description>Administerd fentanyl to patient via oral transmucosal route (OTFC) in response to pain stimulus</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 	<!--<EngineStateFile>./states/StandardMale@0s.xml</EngineStateFile>-->
 	<!-- Base system data required for all scenario verification -->
-  <DataRequests SamplesPerSecond="50">
- 
-	<!-- Anything action specific data needed for verification of this scenario -->
-  
-	  <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
+    <DataRequests SamplesPerSecond="50">
+  <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                         Unit="1/min"       Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"                 Unit="mL"          Precision="1"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="L"          Precision="2"/>	
@@ -29,6 +26,7 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"                   Unit="L"          Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxideFraction"     Unit="unitless"    Precision="4"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalAlveolarVentilation"          Unit="L/min"       Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalPulmonaryVentilation"          Unit="L/min"       Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TranspulmonaryPressure"            Unit="cmH2O"       Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespiratoryExchangeRatio"          Unit="unitless"    Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
@@ -66,72 +64,26 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="MuscleGlycogen" Unit="g" Precision="2"/>
 
 	<!-- Anything action specific data needed for verification of this scenario -->
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-SizeModifier" Precision="3"/>
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-ReactivityModifier" Precision="3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="PainVisualAnalogueScale"          Unit="unitless"    Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SedationLevel"	Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="PainToleranceChange"		Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RichmondAgitationSedationScale" Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="PainToleranceChange"		Precision="2"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralNervousResponse" Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRateChange" Precision="2"/>
+     	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-ReactivityModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-ReactivityModifier" Precision="3"/>
   
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"                  Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"               Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 
-	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneVasculature"        Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature"       Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatVasculature"         Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutVasculature"         Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyVasculature"  Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 		
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungVasculature"    Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>
-    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverVasculature"       Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature"      Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumVasculature"  Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyVasculature" Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungVasculature"   Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 		
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinVasculature"        Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>
-    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenVasculature"      Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>
-    	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueExtracellular"        Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueExtracellular"       Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueExtracellular"         Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 		
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueExtracellular"         Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueExtracellular"  Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueExtracellular"    Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueExtracellular"       Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular"      Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 		
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueExtracellular"  Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueExtracellular" Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 		
-    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueExtracellular"   Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 		
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueExtracellular"        Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueExtracellular"      Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 
-                                                                                                                                           
-    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular"        Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular"       Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular"         Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 		
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueIntracellular"         Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular"    Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"      Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 		
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular"  Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 		
-    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular"   Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 		
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular"        Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/> 	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular"      Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>   
+	 
 	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl"	Name="EffectSiteConcentration" Unit="ug/mL" Precision="6"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="SystemicMassCleared" Unit="ug" Precision="2"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="MassInBody" Unit="ug" Precision="2"/>	
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="RightKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="BrainTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="RightLungTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="LeftLungTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="LiverTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="BoneTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="FatTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="SkinTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="MuscleTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="SpleenTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="GutTissue" Name="PartitionCoefficient" Precision="4"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Compartment="MyocardiumTissue" Name="PartitionCoefficient" Precision="4"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="EffectSiteConcentration" Unit="ug/L" Precision="6"/>
 
 	
@@ -139,12 +91,17 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Fentanyl" Name="MassCleared" Unit="ug" Precision="2"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Fentanyl" Name="MassCleared" Unit="ug" Precision="2"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Fentanyl" Name="MassExcreted" Unit="ug" Precision="2"/>
-	
-	
   </DataRequests>
 	
     <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
+    </Action>
+	 <Action xsi:type="PainStimulusData" Location="Leg">
+		<Severity value="0.45"/>
+	</Action>
+
+  <Action xsi:type="AdvanceTimeData">
+        <Time value="5" unit="min"/>       
     </Action>
 	<!--Administer transmucosal lozenge with 200 ug of fentanyl--> 
     <Action xsi:type="SubstanceOralDoseData" AdminRoute="Transmucosal">

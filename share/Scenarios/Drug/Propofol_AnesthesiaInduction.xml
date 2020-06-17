@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Propofol</Name>
-    <Description>Inject standard patient with Propofol!</Description>
+    <Name>Propofol_AnesthesiaInduction</Name>
+    <Description>Administer loading dose of propofol for anesthesia induction and infusion to maintain unconciousness</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
     
 	<!-- Base system data required for all scenario verification -->

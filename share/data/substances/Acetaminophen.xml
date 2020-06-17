@@ -29,8 +29,8 @@
     </Physicochemicals>
   </Pharmacokinetics>
   <Pharmacodynamics>
-    <EffectSiteRateConstant readOnly="false" unit="1/min" value="0"/>
-    <EMaxShapeParameter readOnly="false" value="9.98"/>
+    <EffectSiteRateConstant readOnly="false" unit="1/hr" value="0.3"/>
+    <EMaxShapeParameter readOnly="false" value="2"/>
     <AntibacterialEffect readOnly="false" unit="1/hr" value="0"/>
     <Bronchodilation>
       <EMax readOnly="false" value="0"/>
@@ -45,8 +45,8 @@
       <EC50 readOnly="false" unit="ug/mL" value="0"/>
     </DiastolicPressureModifier>
     <FeverModifier>
-      <EMax readOnly="false" value="0.1"/>
-      <EC50 readOnly="false" unit="ug/mL" value="5.17"/>
+      <EMax readOnly="false" value="0.05"/>
+      <EC50 readOnly="false" unit="ug/mL" value="1.5"/>
     </FeverModifier>
     <HeartRateModifier>
       <EMax readOnly="false" value="0"/>
@@ -61,8 +61,8 @@
       <EC50 readOnly="false" unit="ug/mL" value="0"/>
     </NeuromuscularBlock>
     <PainModifier>
-      <EMax readOnly="false" value="0.05"/>
-      <EC50 readOnly="false" unit="ug/mL" value="5.17"/>
+      <EMax readOnly="false" value="0.55"/>
+      <EC50 readOnly="false" unit="ug/mL" value="2.75"/>
     </PainModifier>
     <PupilReactivityModifier>
       <EMax readOnly="false" value="0"/>

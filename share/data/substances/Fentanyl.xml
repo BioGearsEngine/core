@@ -62,7 +62,7 @@
     </NeuromuscularBlock>
     <PainModifier>
       <EMax readOnly="false" value="0.5"/>
-      <EC50 readOnly="false" unit="ug/L" value="0.4"/>
+      <EC50 readOnly="false" unit="ug/L" value="0.5"/>
     </PainModifier>
     <PupilReactivityModifier>
       <EMax readOnly="false" value="-0.5"/>
@@ -77,8 +77,8 @@
       <EC50 readOnly="false" unit="ug/L" value="4"/>
     </RespirationRateModifier>
     <Sedation>
-      <EMax readOnly="false" value="0"/>
-      <EC50 readOnly="false" unit="ug/mL" value="0"/>
+      <EMax readOnly="false" value="0.6"/>
+      <EC50 readOnly="false" unit="ug/L" value="0.4"/>
     </Sedation>
     <SystolicPressureModifier>
       <EMax readOnly="false" value="-0.1"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Ketamine</Name>
-    <Description>Inject standard patient with Ketamine!</Description>
+    <Name>Ketamine_Sedation</Name>
+    <Description>Administer ketamine loading dose to moderately sedate patient and infusion to maintain sedation</Description>
     <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
     
 	<!-- Base system data required for all scenario verification -->
