@@ -80,15 +80,34 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
+	<!--Propofol Induction Dose for general anesthesia and maintenance infusion-->
+	<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Propofol</Substance>
+        <Concentration value="10" unit="mg/mL"/>
+        <Dose value="14" unit="mL"/>
+		<AdminTime value="10" unit="s"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="1" unit="min"/>       
+    </Action>
+	<Action xsi:type="SubstanceInfusionData">
+		<Substance>Propofol</Substance>
+		<Concentration value="10" unit="mg/mL"/>
+		<Rate value="1.1" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="1" unit="min"/>       
+    </Action>
+	<!--Set up anesthesia machine-->
     <Action xsi:type="AnesthesiaMachineConfigurationData">
       <Configuration>
         <Connection>Mask</Connection>
 		<InletFlow value="6.0" unit="L/min"/>
         <OxygenFraction value="0.25"/>
         <OxygenSource>Wall</OxygenSource>
-        <PositiveEndExpiredPressure value="0.0" unit="cmH2O"/>
+        <PositiveEndExpiredPressure value="1.0" unit="cmH2O"/>
         <PrimaryGas>Nitrogen</PrimaryGas>
-        <VentilatorPressure value="0.0" unit="cmH2O"/>
+        <VentilatorPressure value="10.0" unit="cmH2O"/>
       </Configuration>
     </Action>
     <Action xsi:type="AdvanceTimeData">

@@ -290,6 +290,37 @@ versions will allow user-defined Anesthesia Machine settings.
 |	<b>Related Settings</b>	|		|
 |	AirwayMode (Free/Mask/Tube)	|	Used to add or remove the mask or tube via Actions	|
 |	SubstanceAdministration	|	Substances are added to the vaporizer (i.e. gas source) by specifying a substance and chamber (left or right)	|
+
+@anchor anesthesia-example
+#### Example Scenario: Standard Settings
+All BioGears anesthesia machine scenarios assume that the patient is fully unconsious and requires total ventilation support (see [Assumptions/Limitations](@ref anesthesia-assumptions).  Full patient sedation is accomplished by administering a sedative from the BioGears Drug library, such as propofol or midazolam.  A neuromuscular blocker such as succinylcholine or rocuronium can be co-administered to simulate situations in which the airway muscles must be forcibly relaxed.  Our demonstration uses an induction dose of 1.8 mg/kg of propofol followed by a maintenance propofol infusion of 140 ug/kg/min (@cite becker2012pharmacodynamic).  When the patient is deeply sedated, we intubate and configure the anesthesia machine with the following settings:
+		- Ventilator Pressure = 10 cmH2O
+		- Positive End Expired Pressure = 1 cmH2O
+		- Inspiratory:Expiratory Ratio = 0.5
+		- Respiratory Rate = 12 /min
+		- Inlet Flow = 5.0 L/min
+		- Oxygen Fraction = 0.25
+		- Primary Gas = Nitrogen
+
+We maintain the anesthesia machine for 45 minutes (to simulate some procedure), discontinue the propofol infusion, wait 15 minutes for the sedation to begin to wear off, and then take the patient off the ventilator.  Figure 5 shows the results of this simulation.
+
+<center>
+<table border="0">
+<tr>
+    <td><img src="./plots/AnesthesiaMachine/AnesthesiaDemo_RASS.jpg" width="550"></td>
+    <td><img src="./plots/AnesthesiaMachine/AnesthesiaDemo_Propofol.jpg" width="550"></td>
+</tr>
+<tr>
+    <td><img src="./plots/AnesthesiaMachine/AnesthesiaDemo_RespirationRate.jpg" width="550"></td>
+    <td><img src="./plots/AnesthesiaMachine/AnesthesiaDemo_Ventilation.jpg" width="550"></td>
+</tr>
+<tr>
+    <td colspan="2"><img src="./plots/AnesthesiaMachine/InspiratoryValveObstructionLegend.jpg" width="1100"></td>
+</tr>
+</table>
+</center>
+<center><i>Figure 12. Select outputs from the inspiratory valve obstruction scenario.</i></center>
+
 @anchor anesthesia-dependencies
 ### Dependencies
 
@@ -340,7 +371,7 @@ failures. Breathing circuit disconnection is a leading cause of critical
 incidents in anesthesia @cite roth2007anesthesia @cite morgan2006clinical .
 Disconnections, which are effectively leaks, can be complete or partial. Some of these
 failures are modeled in %BioGears by changing a resistance value based on
-the severity. Figure 5 shows the resistance value that is set based on
+the severity. Figure 6 shows the resistance value that is set based on
 the insult severity.  This mapping will be referenced with respect to the actions in this
 section. We have chosen a resistance of 1000 cmH2O-s/L to be associated with a fully open 
 switch (closed valve) and a resistance of 0.001 cmH2O-s/L to represent a fully 
@@ -352,7 +383,7 @@ reaches the patient in the same way.
 @image html AMSeverityMap.png
 
 <center>
-*Figure 5. This plot shows the resistance value that is set based on the
+*Figure 6. This plot shows the resistance value that is set based on the
 leak severity modifier. The severity is mapped logarithmically in a
 manner that allows the highest severity to allow virtually all flow through
 the path and the lowest severity to allow almost no flow through the
@@ -370,7 +401,7 @@ One of the most common equipment failures in the anesthetic delivery system
 is a mask leak. If a mask is being used on an Anesthesia Machine and is improperly
 secured or has damage, leaks can occur. The %BioGears Engine models mask
 leaks by varying a resistance based on the severity in the manner previously
-described and shown in Figure 5.
+described and shown in Figure 6.
 
 #### Tube Leak
 
@@ -384,7 +415,7 @@ in the manner previously described and shown in Figure 5.
 The most common disconnection site is at the Y-piece @cite roth2007anesthesia @cite morgan2006clinical .
 The %BioGears Engine models endotracheal tube leaks by varying a resistance based on the severity in 
 the manner previously described and shown
-in Figure 5. In the case of both a tube and Y-piece leak, the severities are combined and bounded by an upper value of one.
+in Figure 6. In the case of both a tube and Y-piece leak, the severities are combined and bounded by an upper value of one.
 
 ### Valve Leaks
 
@@ -394,7 +425,7 @@ between very high and very low resistance values to mimic a switch opening and c
 every breath cycle. This prevents rebreathing of carbon 
 dioxide during the respiration cycle. If there is a leak present, the valve closed (i.e., high resistance) 
 value is modified based on the severity
-in the manner previously described and shown in Figure 5.
+in the manner previously described and shown in Figure 6.
 
 ### Valve Obstructions
 
@@ -402,7 +433,7 @@ Anesthesia Machine tracheal tubes can become kinked, and hoses throughout the br
 mechanical forces that can impinge the flow @cite roth2007anesthesia @cite morgan2006clinical .
 %BioGears models both inspiratory and expiratory valve obstructions similarly to leaks, by modifying the valve resistance values. If there is an
 obstruction present, the valve open (i.e., low resistance) value is modified based on the severity in the manner previously described and shown
-in Figure 5.
+in Figure 6.
 
 ### Ventilator Pressure Loss
 
@@ -453,7 +484,7 @@ and a condition the alerts the user when the pressure has reached the threshold 
 @anchor anesthesia-settingsvalidation
 ## Validation - Settings
 
-The Anesthesia Machine Settings are fully dynamic and do not have any bounds enforced.  A scenario that varies these settings in several different combinations is included with the %BioGears deployment and produces the outputs shown in Figure 6.  This scenario also tests the relief valve functionality and causes the active event to be logged when the Ventilator Pressure is set too high.
+The Anesthesia Machine Settings are fully dynamic and do not have any bounds enforced.  A scenario that varies these settings in several different combinations is included with the %BioGears deployment and produces the outputs shown in Figure 7.  This scenario also tests the relief valve functionality and causes the active event to be logged when the Ventilator Pressure is set too high.
 
 <center>
 <table border="0">
@@ -470,7 +501,7 @@ The Anesthesia Machine Settings are fully dynamic and do not have any bounds enf
 </tr>
 </table>
 </center>
-<center><i>Figure 6. These plots show the successful implementation of various Anesthesia Machine settings. The first region has the machine connected and provides supplemental Oxygen only. The other three regions follw the administration of Succinylcholine provided to stop unassisted breathing. The upper plot shows compartment data from the ventilator and relief valves. The relief valve is shown to be active by the blue flow plot when the ventilator pressure is set too high. These plots exemplify the interconnectivity of the Anesthesia Machine with the %Respiratory System.</i></center><br>
+<center><i>Figure 7. These plots show the successful implementation of various Anesthesia Machine settings. The first region has the machine connected and provides supplemental Oxygen only. The other three regions follw the administration of Succinylcholine provided to stop unassisted breathing. The upper plot shows compartment data from the ventilator and relief valves. The relief valve is shown to be active by the blue flow plot when the ventilator pressure is set too high. These plots exemplify the interconnectivity of the Anesthesia Machine with the %Respiratory System.</i></center><br>
 @anchor anesthesia-actionsvalidation
 ## Validation - Actions
 
@@ -529,7 +560,7 @@ with increasing severity.
 </tr>
 </table>
 </center>
-<center><i>Figure 7. Select outputs from the Mask Leak scenario. MaskLeakVaried, EndotrachealTubeLeakVaried, and YPieceDisconnectVaried all give the same results.</i></center>
+<center><i>Figure 8. Select outputs from the Mask Leak scenario. MaskLeakVaried, EndotrachealTubeLeakVaried, and YPieceDisconnectVaried all give the same results.</i></center>
 
 <center><br>
 <i>Table 3. Validation matrix for physiological responses due to varying severities of leaks. MaskLeakVaried, EndotrachealTubeLeakVaried, and YPieceDisconnectVaried all give the same results.</i>
@@ -568,7 +599,7 @@ mask to supply the gas. The severity of the leaks are varied.
 </tr>
 </table>
 </center>
-<center><i>Figure 8. Select outputs from the expiratory valve leak scenario.</i></center>
+<center><i>Figure 9. Select outputs from the expiratory valve leak scenario.</i></center>
 
 <center><br>
 <i>Table 4. Validation matrix for physiological responses due to varying severities of an expiratory valve leak.</i>
@@ -601,7 +632,7 @@ mask to supply the gas. The severity of the leaks are varied.
 </tr>
 </table>
 </center>
-<center><i>Figure 9. Select outputs from the inspiratory valve leak scenario.</i></center>
+<center><i>Figure 10. Select outputs from the inspiratory valve leak scenario.</i></center>
 
 <center><br>
 <i>Table 5. Validation matrix for physiological responses due to varying severities of an inspiratory valve leak.</i>
@@ -644,7 +675,7 @@ cessation of respiration or tidal volume due to flow obstruction. Since the neur
 </tr>
 </table>
 </center>
-<center><i>Figure 10. Select outputs from the expiratory valve obstruction scenario.</i></center>
+<center><i>Figure 11. Select outputs from the expiratory valve obstruction scenario.</i></center>
 
 <center><br>
 <i>Table 6. Validation matrix for physiological responses due to varying severities of an expiratory valve obstruction.</i>
@@ -677,7 +708,7 @@ cessation of respiration or tidal volume due to flow obstruction. Since the neur
 </tr>
 </table>
 </center>
-<center><i>Figure 11. Select outputs from the inspiratory valve obstruction scenario.</i></center>
+<center><i>Figure 12. Select outputs from the inspiratory valve obstruction scenario.</i></center>
 
 <center><br>
 <i>Table 7. Validation matrix for physiological responses due to varying severities of an inspiratory valve obstruction.</i>
@@ -714,7 +745,7 @@ The severity of the failure was varied. At the full failure, a cessation of resp
 </tr>
 </table>
 </center>
-<center><i>Figure 12. Select outputs from the ventilator pressure loss scenario.</i></center>
+<center><i>Figure 13. Select outputs from the ventilator pressure loss scenario.</i></center>
 
 <center><br>
 <i>Table 8. Validation matrix for physiological responses due to varying severities of a ventilator pressure loss.</i>
@@ -751,7 +782,7 @@ remain stable. Carbon dioxide in the blood increases.
 </tr>
 </table>
 </center>
-<center><i>Figure 13. Select outputs from the soda lime failure scenario.</i></center>
+<center><i>Figure 14. Select outputs from the soda lime failure scenario.</i></center>
 
 <center><br>
 <i>Table 9. Validation matrix for physiological responses due to varying severities of a soda lime failure.</i>
@@ -789,7 +820,7 @@ observed for all other severity levels.
 </tr>
 </table>
 </center>
-<center><i>Figure 14. Select output from the vaporizer failure scenario.</i></center>
+<center><i>Figure 15. Select output from the vaporizer failure scenario.</i></center>
 
 <center><br>
 <i>Table 10. Validation matrix for physiological responses due to varying severities of a vaporizer failure.</i>
@@ -830,7 +861,7 @@ oxygen by turning off the failure brings the oxygen level to normal.
 </tr>
 </table>
 </center>
-<center><i>Figure 15. Select outputs from the oxygen wall pressure loss scenario.</i></center>
+<center><i>Figure 16. Select outputs from the oxygen wall pressure loss scenario.</i></center>
 
 <center><br>
 <i>Table 11. Validation matrix for physiological responses due to an oxygen wall pressure loss.</i>
@@ -875,7 +906,7 @@ a decline in oxygen saturation and arterial oxygen partial pressure.
 </tr>
 </table>
 </center>
-<center><i>Figure 16. Select outputs from the oxygen tank pressure loss scenario.</i></center>
+<center><i>Figure 17. Select outputs from the oxygen tank pressure loss scenario.</i></center>
 
 <center><br>
 <i>Table 12. Validation matrix for physiological responses due to an oxygen tank pressure loss.</i>

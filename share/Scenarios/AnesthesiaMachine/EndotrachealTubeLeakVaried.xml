@@ -2,7 +2,8 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>EndotrachealTubeLeakVaried</Name>
     <Description>Testing endotracheal tube leak severity.</Description>
-    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+    <!-- <EngineStateFile>./states/PropofolInduction.xml</EngineStateFile> -->
+	<InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 	<!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">
   <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
@@ -76,29 +77,40 @@
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="GasInlet"        Name="VolumeFraction" Substance="CarbonDioxide" Precision="4"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+	<Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
-    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
-        <Substance>Succinylcholine</Substance>
-        <Concentration value="3500" unit="ug/mL"/>
-        <Dose value="30" unit="mL"/>
+	<!--Propofol Induction Dose for general anesthesia and maintenance infusion-->
+	<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Propofol</Substance>
+        <Concentration value="10" unit="mg/mL"/>
+        <Dose value="14" unit="mL"/>
+		<AdminTime value="10" unit="s"/>
     </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="60" unit="s"/>       
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="1" unit="min"/>       
     </Action>
+	<Action xsi:type="SubstanceInfusionData">
+		<Substance>Propofol</Substance>
+		<Concentration value="10" unit="mg/mL"/>
+		<Rate value="1.1" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="1" unit="min"/>       
+    </Action>
+	<!--Set up anesthesia machine-->
     <Action xsi:type="IntubationData" Type="Tracheal"/>
     <Action xsi:type="AnesthesiaMachineConfigurationData">
       <Configuration>
         <Connection>Tube</Connection>
-        <InletFlow value="5.0" unit="L/min"/>
+        <InletFlow value="6.0" unit="L/min"/>
         <InspiratoryExpiratoryRatio value="0.5"/>
         <OxygenFraction value="0.23"/>
         <OxygenSource>Wall</OxygenSource>
         <PositiveEndExpiredPressure value="1.0" unit="cmH2O"/>
         <PrimaryGas>Nitrogen</PrimaryGas>
-        <RespiratoryRate value="16.0" unit="1/min"/>
-        <VentilatorPressure value="10.5" unit="cmH2O"/>
+        <RespiratoryRate value="12.0" unit="1/min"/>
+        <VentilatorPressure value="10.0" unit="cmH2O"/>
         <OxygenBottleOne>
           <Volume value="660" unit="L"/>
         </OxygenBottleOne>
@@ -107,7 +119,7 @@
         </OxygenBottleTwo>
       </Configuration>
     </Action>    
-    <Action xsi:type="TubeCuffLeakData">
+     <Action xsi:type="TubeCuffLeakData">
         <Severity value="0.0"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">

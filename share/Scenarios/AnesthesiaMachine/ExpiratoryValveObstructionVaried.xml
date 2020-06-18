@@ -80,14 +80,25 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
-    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
-        <Substance>Succinylcholine</Substance>
-        <Concentration value="3500" unit="ug/mL"/>
-        <Dose value="30" unit="mL"/>
+	<!--Propofol Induction Dose for general anesthesia and maintenance infusion-->
+	<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Propofol</Substance>
+        <Concentration value="10" unit="mg/mL"/>
+        <Dose value="14" unit="mL"/>
+		<AdminTime value="10" unit="s"/>
     </Action>
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="60" unit="s"/>       
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="1" unit="min"/>       
     </Action>
+	<Action xsi:type="SubstanceInfusionData">
+		<Substance>Propofol</Substance>
+		<Concentration value="10" unit="mg/mL"/>
+		<Rate value="1.1" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="1" unit="min"/>       
+    </Action>
+	<!--Set up anesthesia machine-->
     <Action xsi:type="IntubationData" Type="Tracheal"/>
     <Action xsi:type="AnesthesiaMachineConfigurationData">
       <Configuration>

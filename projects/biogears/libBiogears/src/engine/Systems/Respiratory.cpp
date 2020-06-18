@@ -935,6 +935,11 @@ void Respiratory::RespiratoryDriver()
 
     Apnea();
 
+    if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::AnesthesiaMachine || m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::MechanicalVentilator) {
+      m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
+      m_BreathingCycleTime_s = m_ElapsedBreathingCycleTime_min * 60.0;  //Set driver cycle to match elapsed cycle (dictated by ventilator) so that when we turn machine off we re-start spontaneous breathing in a good place
+    }
+
     if (m_bNotBreathing) {
       m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
     }
@@ -1250,7 +1255,6 @@ void Respiratory::Pneumothorax()
     nextVenousResistance *= venousResistanceModifier;
     venousReturn->GetNextResistance().SetValue(nextVenousResistance, FlowResistanceUnit::mmHg_s_Per_mL);
 
-
     if (m_PatientActions->HasLeftOpenTensionPneumothorax()) {
       // Scale the flow resistance through the chest opening based on severity
       double severity = m_PatientActions->GetLeftOpenTensionPneumothorax()->GetSeverity().GetValue();
@@ -1359,7 +1363,6 @@ void Respiratory::Pneumothorax()
       return;
     }
   }
-  
 }
 
 //--------------------------------------------------------------------------------------------------

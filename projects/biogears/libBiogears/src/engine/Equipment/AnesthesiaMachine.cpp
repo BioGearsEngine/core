@@ -115,7 +115,7 @@ void AnesthesiaMachine::Initialize()
 
   StateChange();
 
-  //The combined respiratory/AM circuit must be brought to a steady state before it can be used.  Otherwise, the first few patient breaths go to charging the ventilator compliance 
+  //The combined respiratory/AM circuit must be brought to a steady state before it can be used.  Otherwise, the first few patient breaths go to charging the ventilator compliance
   //element, which negatively affects the lung volume.  Run through five cycles to be safe.
   SEFluidCircuitCalculator AmCalculator(FlowComplianceUnit::L_Per_cmH2O, VolumePerTimeUnit::L_Per_s, FlowInertanceUnit::cmH2O_s2_Per_L, PressureUnit::cmH2O, VolumeUnit::L, FlowResistanceUnit::cmH2O_s_Per_L, GetLogger());
   SEFluidCircuit& RespiratoryAnesthesiaCombined = m_data.GetCircuits().GetRespiratoryAndAnesthesiaMachineCircuit();
@@ -322,13 +322,8 @@ void AnesthesiaMachine::SetConnection()
 void AnesthesiaMachine::PreProcess()
 {
   if (m_data.GetActions().GetAnesthesiaMachineActions().HasConfiguration()) {
-    //When a mask is applied, we assume that the patient continues to breath spontaneously.  We wait until the start of a new respiratory cycle to apply the mask
-    //so that the respirator circuit and respiratory/AM combined circuits are in the same state when we switch between them.  We do not need to do this during intubation
-    //because the patient will have been given a neuromuscular blocker
-    if (m_data.GetActions().GetAnesthesiaMachineActions().GetConfiguration()->GetConfiguration().GetConnection() == CDM::enumAnesthesiaMachineConnection::Mask) {
-      if (m_data.GetRespiratory().GetExpiratoryFlow(VolumePerTimeUnit::L_Per_s) > ZERO_APPROX) {
-        return;
-      }
+    if (m_data.GetRespiratory().GetExpiratoryFlow(VolumePerTimeUnit::L_Per_s) > ZERO_APPROX) {
+      return;
     }
     ProcessConfiguration(*m_data.GetActions().GetAnesthesiaMachineActions().GetConfiguration());
     m_data.GetActions().GetAnesthesiaMachineActions().RemoveConfiguration();
@@ -712,37 +707,28 @@ void AnesthesiaMachine::CalculateCyclePhase()
 {
   //Determine where we are in the cycle
   m_currentbreathingCycleTime.IncrementValue(m_dt_s, TimeUnit::s);
-  if (GetConnection() == CDM::enumAnesthesiaMachineConnection::Mask) {
-    //In the mask setting, we assume that the patient is spontaneously breathing. We therefore sync the inhale/exhale logic with the respiratory system
-    if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfInhale)) {
-      m_inhaling = true;
-    }
-    if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfExhale)) {
-      m_inhaling = false;
-    }
-  } else {
-    if (m_currentbreathingCycleTime.GetValue(TimeUnit::s) > m_totalBreathingCycleTime.GetValue(TimeUnit::s)) //End of the cycle
-    {
-      m_totalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
-      m_currentbreathingCycleTime.SetValue(0.0, TimeUnit::s);
+  if (m_currentbreathingCycleTime.GetValue(TimeUnit::s) > m_totalBreathingCycleTime.GetValue(TimeUnit::s)) //End of the cycle
+  {
+    m_totalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
+    m_currentbreathingCycleTime.SetValue(0.0, TimeUnit::s);
 
-      double dVentilationFrequency_PerMin = GetRespiratoryRate(FrequencyUnit::Per_min);
-      if (dVentilationFrequency_PerMin > 0) {
-        m_totalBreathingCycleTime.SetValue(60.0 / dVentilationFrequency_PerMin, TimeUnit::s); //Total time of one breathing cycle
-      }
-
-      double IERatio = GetInspiratoryExpiratoryRatio().GetValue();
-      m_inspirationTime.SetValue(IERatio * m_totalBreathingCycleTime.GetValue(TimeUnit::s) / (1.0 + IERatio), TimeUnit::s);
+    double dVentilationFrequency_PerMin = GetRespiratoryRate(FrequencyUnit::Per_min);
+    if (dVentilationFrequency_PerMin > 0) {
+      m_totalBreathingCycleTime.SetValue(60.0 / dVentilationFrequency_PerMin, TimeUnit::s); //Total time of one breathing cycle
     }
 
-    if (m_currentbreathingCycleTime.GetValue(TimeUnit::s) < m_inspirationTime.GetValue(TimeUnit::s)) //Inspiration
-    {
-      m_inhaling = true;
-    } else //Expiration
-    {
-      m_inhaling = false;
-    }
+    double IERatio = GetInspiratoryExpiratoryRatio().GetValue();
+    m_inspirationTime.SetValue(IERatio * m_totalBreathingCycleTime.GetValue(TimeUnit::s) / (1.0 + IERatio), TimeUnit::s);
   }
+
+  if (m_currentbreathingCycleTime.GetValue(TimeUnit::s) < m_inspirationTime.GetValue(TimeUnit::s)) //Inspiration
+  {
+    m_inhaling = true;
+  } else //Expiration
+  {
+    m_inhaling = false;
+  }
+
 }
 
 //--------------------------------------------------------------------------------------------------
