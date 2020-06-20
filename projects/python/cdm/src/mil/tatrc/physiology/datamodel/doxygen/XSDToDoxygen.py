@@ -47,7 +47,7 @@ class XSDToDoxygen:
                 if child.nodeName == "xs:schema":
                     self.parse(child,fout)
 
-    """
+        """
     Parser
     ___________
 
@@ -110,7 +110,9 @@ class XSDToDoxygen:
                             fout.write(" * @{")
                             fout.write("\n")
                             self.parse(i,fout)
-                            #fout.write(i.childNodes)
+                            if len(self.writer)>0:
+                                fout.write(self.writer)
+                                self.writer=""
                             fout.write(" * @}")
                             fout.write("\n")
                             break 
@@ -120,7 +122,9 @@ class XSDToDoxygen:
                             fout.write(" * @{")
                             fout.write("\n")
                             self.parse(i,fout)
-                            #fout.write(i.childNodes)
+                            if len(self.writer)>0:
+                                fout.write(self.writer)
+                                self.writer=""
                             fout.write(" * @}")
                             fout.write("\n")
                 fout.write(" *\n")
@@ -191,6 +195,9 @@ class XSDToDoxygen:
                             fout.write(" * @{")
                             fout.write("\n")
                             self.parse(i,fout)
+                            if len(self.writer)>0:
+                                fout.write(self.writer)
+                                self.writer=""
                             fout.write(" * @}")
                             fout.write("\n")
 
