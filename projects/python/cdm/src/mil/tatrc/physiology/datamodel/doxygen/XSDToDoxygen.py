@@ -5,6 +5,22 @@ import sys
 import argparse
 
 
+"""
+XSDToDoxygen class
+_______________________
+
+This class parses all of xsd files and extract comments and defgroups from those files and arrange them in heirarchial order
+
+Follows pattern:-
+
+@defgroup CDM_NameOfParent_NameOfChild NameOfChile
+@brief Comment
+{
+ followed by heirarchial structure
+}
+
+"""
+
 class XSDToDoxygen:
     def __init__(self):
         self.name=[]
@@ -13,6 +29,16 @@ class XSDToDoxygen:
                    "xs:element","xs:sequence","xs:attribute","xs:include","xs:complexContent"]
         self.check=[]
         self.writer=""
+    
+    
+    """
+    Process_sc
+    _____________
+
+    This function stores all of the files within the xs:schema parent node 
+    and then parses through all files and then append the file names into files_processed list
+
+    """
 
     def process_sc(self,fout):
         for input_file in self.files_processed: 
@@ -21,35 +47,65 @@ class XSDToDoxygen:
                 if child.nodeName == "xs:schema":
                     self.parse(child,fout)
 
+    """
+    Parser
+    ___________
+
+    This is the main function which is called again and again till childnodes of the heirarchy is found
+    It tries to align those heirarchial data structure according to comments and other nodes which play 
+    certain crucial role in parsing
+    Nodes are:-
+    xs:simpletype
+    xs:complextype
+    xs:extension
+    xs:restriction
+    xs:enumeration
+    xs:element
+    xs:sequence
+    xs:attribute
+    xs:include
+    and 
+    node Type namely Comment_node
+    """
+
     def parse(self,node,fout):
+        """
+        For parsing through all respective child Nodes in a XSD file
+        """
         for j,i in enumerate(node.childNodes):
             
+            """
+            Case 1: Node Name = Simple Type or Complex Type
+            Extract attribute name from the nodes
+            Then append that into list of name
+            And also write the brief related comments from the file
+            """
+
             if i.nodeName == "xs:simpleType" or i.nodeName == "xs:complexType":
-                
                 if i.getAttribute("name"):
                     self.name.append(i.getAttribute("name"))
                     fout.write(" * @defgroup CDM_"+i.getAttribute("name")+" "+i.getAttribute("name"))
                     fout.write("\n")
-                    
                     if len(self.writer)>0:
                         fout.write(self.writer)
                         self.writer=""
-                
                 else:
                     self.name.append("null")
                     fout.write(" * @defgroup CDM_"+self.name[-3]+"_"+self.name[-2]+"_"+self.name[-1]+" "+self.name[-1])
                     fout.write("\n")
-                    
                     if len(self.writer)>0:
                         fout.write(self.writer)
                         self.writer=""
+               
+                """
+                Reitrating through the process for all of the subsequent child nodes.
+                For names if name is attribute loop will only function once 
+                And only once the parse function will run
+                """
                 
                 names_1=[s.nodeName for s in i.childNodes if s.nodeName in self.tags or s.nodeType==s.COMMENT_NODE]
-                
                 if self.tags[7] in list(set(names_1)):
-                    
                     for l in i.childNodes:
-                        
                         if l.nodeName in self.tags or l.nodeType==l.COMMENT_NODE:
                             fout.write(" * @{")
                             fout.write("\n")
@@ -57,11 +113,9 @@ class XSDToDoxygen:
                             #fout.write(i.childNodes)
                             fout.write(" * @}")
                             fout.write("\n")
-                            break
+                            break 
                 else:
-                    
                     for l in i.childNodes:
-                        
                         if l.nodeName in self.tags or l.nodeType==l.COMMENT_NODE:
                             fout.write(" * @{")
                             fout.write("\n")
@@ -70,18 +124,33 @@ class XSDToDoxygen:
                             fout.write(" * @}")
                             fout.write("\n")
                 fout.write(" *\n")
-
+            
             elif i.nodeType == i.COMMENT_NODE:
-                
+                """
+                Case2:
+                    If nodeType == Comment_Node
+                    it will simply replace all of the unwanted info from tags like replacing all of the empty spaces and stripping of characters
+                """
                 comment=i.data.strip("<<").lstrip(' ').replace("       "," * ")
                 comment=comment.rstrip("* \n \n")
                 if comment.startswith("@brief") or comment.startswith("@details") or comment.startswith("-"):
                     self.writer+=" * "+comment+"\n"
-            
+
             elif i.nodeName == "xs:extension" or i.nodeName == "xs:restriction":
+                """
+                Case3:
+                    If nodeName==extension or restriction
+                    Just simply reiterate the pareser again as information will be in it's child
+                """
                 self.parse(i,fout)
 
             elif i.nodeName == "xs:enumeration":
+                """
+                Case4:
+                    if nodeName==enumeration
+                    Write the comments from the document
+                    Then write a defgroup
+                """
                 if len(self.writer)>0:
                     fout.write(self.writer)
                     self.writer=""
@@ -89,17 +158,21 @@ class XSDToDoxygen:
                 fout.write("\n")
             
             elif i.nodeName == "xs:element":
-                
+                """
+                Case5:
+                    if nodeName==element
+                    We need to check for
+                    if parentNodename ==schema if it is true then simply write attribute name to defgroup
+                    if parentNode.parentNode.parentNodeName==element then create a specific defgroup for that
+                    else write a defgroup and parse through the next chilnodes again
+                """
                 if i.parentNode.nodeName=="xs:schema":
-                    
                     if len(self.writer)>0:
                         fout.write(self.writer)
                         self.writer=""
                     fout.write(" * @defgroup CDM_"+i.getAttribute("name")+" "+i.getAttribute("name"))
                     fout.write("\n")
-                
                 elif i.parentNode.parentNode.parentNode.nodeName=="xs:element":
-                    
                     if len(self.writer)>0:
                         fout.write(self.writer)
                         self.writer=""
@@ -107,7 +180,6 @@ class XSDToDoxygen:
                     fout.write("\n")
                     
                 else:
-                    
                     if len(self.writer)>0:
                         fout.write(self.writer)
                         self.writer=""
@@ -123,18 +195,32 @@ class XSDToDoxygen:
                             fout.write("\n")
 
             elif i.nodeName=="xs:sequence":
+                """
+                Case6:
+                if nodename==sequence
+                    then simply parse again for child nodes
+                """
+
                 self.parse(i,fout)
             
             elif i.nodeName=="xs:attribute":
-                
+                """
+                Case7:
+                if nodeName==attribute
+                    Then write a specific defgroup and add comment
+                """
                 if len(self.writer)>0:
                     fout.write(self.writer)
                     self.writer=""
                 fout.write(" * @defgroup CDM_"+self.name[-1]+"_"+i.getAttribute("name")+" "+i.getAttribute("name"))     
                 fout.write("\n")
-                            
+            
             elif i.nodeName == "xs:include":
-                
+                """
+                Case8:
+                    if nodeName==include
+                    Stores all those file names into the files to be processed list
+                """
                 files=i.getAttribute("schemaLocation")
                 if files.startswith("./"):
                     files=os.path.dirname(self.files_processed[0])+files[1:]
