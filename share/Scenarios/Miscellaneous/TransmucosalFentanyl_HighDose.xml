@@ -66,8 +66,10 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="MuscleGlycogen" Unit="g" Precision="2"/>
 
 	<!-- Anything action specific data needed for verification of this scenario -->
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-SizeModifier" Precision="3"/>
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-ReactivityModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-ReactivityModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-ReactivityModifier" Precision="3"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralNervousResponse" Precision="2"/>
   
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"                  Substance="Fentanyl" Name="Concentration" Unit="ug/L" Precision="4"/>

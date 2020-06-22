@@ -75,8 +75,10 @@
 	<!-- Anything action specific data needed for verification of this scenario -->
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="NeuromuscularBlockLevel" Precision="2"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SedationLevel" Precision="2"/>
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-SizeModifier" Precision="3"/>
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-ReactivityModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-ReactivityModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-ReactivityModifier" Precision="3"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Succinylcholine" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Succinylcholine"	Name="EffectSiteConcentration" Unit="ug/mL" Precision="6"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
