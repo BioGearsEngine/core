@@ -425,6 +425,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="InspiratoryExpiratoryRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The ratio of the length of time of inspiration to the length of time of expiration.-->
                     <xs:element name="InspiratoryFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief TInstantaneous airflow into the lungs (negative value when exhaling).-->
                     <xs:element name="MeanPleuralPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Running average pleural pressure-->
+					<xs:element name="PaO2ToFiO2Ratio" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="PulmonaryCompliance" type="ScalarFlowComplianceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total compliance of the lungs.-->
                     <xs:element name="PulmonaryResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total resistance to airflow through the lungs.-->
                     <xs:element name="RespirationDriverFrequency" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief Target frequency of respiratory driver communicated by chemoreceptors-->

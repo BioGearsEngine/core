@@ -84,6 +84,10 @@ public:
   SEScalarPressure& GetMeanPleuralPressure();
   double GetMeanPleuralPressure(const PressureUnit& unit) const;
 
+  bool HasPaO2ToFiO2Ratio() const;
+  SEScalarPressure& GetPaO2ToFiO2Ratio();
+  double GetPaO2ToFiO2Ratio(const PressureUnit& unit) const;
+
   bool HasPulmonaryCompliance() const;
   SEScalarFlowCompliance& GetPulmonaryCompliance();
   double GetPulmonaryCompliance(const FlowComplianceUnit& unit) const;
@@ -149,6 +153,7 @@ protected:
   SEScalar* m_InspiratoryExpiratoryRatio;
   SEScalarVolumePerTime* m_InspiratoryFlow;
   SEScalarPressure* m_MeanPleuralPressure;
+  SEScalarPressure* m_PaO2ToFiO2Ratio;
   SEScalarFlowCompliance* m_PulmonaryCompliance;
   SEScalarFlowResistance* m_PulmonaryResistance;
   SEScalarFrequency* m_RespirationDriverFrequency;

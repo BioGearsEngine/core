@@ -598,7 +598,12 @@ void DiffusionCalculator::CalculateMacromoleculeDiffusion(DiffusionCompartmentSe
     double tissueIntegrity = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
     reflectionCoefficientSmall = reflectionCoefficientSmallBase * tissueIntegrity;
   }
-
+  int steps = m_data.GetSimulationTime().GetValue(TimeUnit::s) / m_data.GetTimeStep().GetValue(TimeUnit::s);
+  if (steps > 15000 && steps < 90000) {
+    if (fluidFluxPathName == "LeftLungE2ToE3" || fluidFluxPathName == "RightLungE2ToE3") {
+      reflectionCoefficientSmall = 0.0;
+    }
+  }
   BLIM(reflectionCoefficientSmall, 0.0, 1.0);
   BLIM(reflectionCoefficientLarge, 0.0, 1.0);
 

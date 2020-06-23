@@ -390,16 +390,16 @@ void Tissue::SetUp()
   // this will put out a warning
   for (SETissueCompartment* tissue : m_data.GetCompartments().GetTissueLeafCompartments()) {
     if (m_TissueToVascular.find(tissue) == m_TissueToVascular.end() || m_TissueToVascular[tissue] == nullptr)
-      Warning("Tissue found a tissue compartment that is not mapped to a vascular compartment  : " + std::string{ tissue->GetName() });
+      Warning("Tissue found a tissue compartment that is not mapped to a vascular compartment  : " + std::string { tissue->GetName() });
     /*if (m_VascularCopPaths.find(tissue) == m_VascularCopPaths.end() || m_VascularCopPaths[tissue] == nullptr)
       Warning("Tissue found a tissue compartment that does not have a vascular colloid oncotic pressure path  : " + tissue->GetName());*/
     if (m_InterstitialCopPaths.find(tissue) == m_InterstitialCopPaths.end() || m_InterstitialCopPaths[tissue] == nullptr)
-      Warning("Tissue found a tissue compartment that does not have an interstitial colloid oncotic pressure path  : " + std::string{ tissue->GetName() });
+      Warning("Tissue found a tissue compartment that does not have an interstitial colloid oncotic pressure path  : " + std::string { tissue->GetName() });
     if (m_ExtraToIntraPaths.find(tissue) == m_ExtraToIntraPaths.end() || m_ExtraToIntraPaths[tissue] == nullptr)
-      Warning("Tissue found a tissue compartment that does not an extracellular to intracellular path  : " + std::string{ tissue->GetName() });
+      Warning("Tissue found a tissue compartment that does not an extracellular to intracellular path  : " + std::string { tissue->GetName() });
     if (m_LeftLungTissue != tissue && m_RightLungTissue != tissue) { // We don't use the lungs in the consumption/production methodology
       if (!Contains(m_ConsumptionProdutionTissues, (*tissue)))
-        Warning("Tissue found a tissue compartment that it is not using in Consumption/Production : " + std::string{ tissue->GetName() });
+        Warning("Tissue found a tissue compartment that it is not using in Consumption/Production : " + std::string { tissue->GetName() });
     }
   }
 }
@@ -533,6 +533,12 @@ void Tissue::Process()
   CalculateDiffusion();
   ManageSubstancesAndSaturation();
   CalculateVitals();
+
+  m_data.GetDataTrack().Probe("LungEndothelialResistance", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL));
+  m_data.GetDataTrack().Probe("LungVascularCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungVToLeftLungE1)->GetPressureSource(PressureUnit::mmHg));
+  m_data.GetDataTrack().Probe("LungInterstitialCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE2ToLeftLungE3)->GetPressureSource(PressureUnit::mmHg));
+  m_data.GetDataTrack().Probe("LungFiltrationFlow", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetFlow(VolumePerTimeUnit::mL_Per_min));
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -565,7 +571,7 @@ void Tissue::PostProcess()
 //--------------------------------------------------------------------------------------------------
 void Tissue::CalculateDiffusion()
 {
- 
+
   DiffusionCalculator& diffCalculator = m_data.GetDiffusionCalculator();
   diffCalculator.SetDiffusionState();
   diffCalculator.CalculateLinearDiffusionMethods();
@@ -675,7 +681,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double O2_Per_AA = 1.875; //assuming RQ is .8 for AA, this should be 1.875
   double ATP_Per_TAG = ATP_Per_TAG = 3 * 106 + 22; // Assuming triplamitin as predominant triglyceride:  106 ATP per palmitate (3), 22 ATP from glycerol \cite Lehninger Principles of BioChem
   double CO2_Per_TAG = 51; // From complete combustion of tripalmitin (C51H98O6)
-  double O2_Per_TAG = 72.5;  // From complete combustion of tripalmitin (C51H98O6)
+  double O2_Per_TAG = 72.5; // From complete combustion of tripalmitin (C51H98O6)
   double aerobic_ATP_Per_Glycogen = ATP_Per_Glucose + 1; //Since muscle glycogen is already phosphorylated, we get more ATP from it than when we split glucose by glycolysis \cite guyton2006medical p 904
   double anaerobic_ATP_Per_Glycogen = 3;
   double lactate_Per_Glycogen = 2;
@@ -884,8 +890,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     //Additionally, the muscles perform all of the additional work from exercise
     double tissueNeededEnergy_kcal = nonbrainNeededEnergy_kcal * BloodFlowFraction;
     double muscleMandatoryAnaerobicNeededEnergy_kcal = 0;
-    const double muscleExerciseFraction = 0.8; 
-    const double fatExerciseFraction = 0.2; 
+    const double muscleExerciseFraction = 0.8;
+    const double fatExerciseFraction = 0.2;
     if (tissue == m_MuscleTissue) {
 
       muscleMandatoryAnaerobicNeededEnergy_kcal = mandatoryMuscleAnaerobicFraction * tissueNeededEnergy_kcal;
@@ -1154,7 +1160,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       tissueNeededEnergy_kcal = 0;
       lactateProductionRate_mol_Per_s += glucoseToConsume_mol * lactate_Per_Glucose / time_s;
       if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos) //for tracking only
-        m_AnaerobicTissues.append(std::string{ tissue->GetName() } + " ");
+        m_AnaerobicTissues.append(std::string { tissue->GetName() } + " ");
     }
     //If we'll use up all the glucose
     else if (tissueNeededEnergy_kcal > 0) {
@@ -1164,7 +1170,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       tissueNeededEnergy_kcal -= glucoseToConsume_mol * anaerobic_ATP_Per_Glucose * energyPerMolATP_kcal;
       lactateProductionRate_mol_Per_s += glucoseToConsume_mol * lactate_Per_Glucose / time_s;
       if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos) //for tracking only
-        m_AnaerobicTissues.append(std::string{ tissue->GetName() } + " ");
+        m_AnaerobicTissues.append(std::string { tissue->GetName() } + " ");
     }
 
     //Muscles can convert glycogen anaerobically, too
@@ -1180,7 +1186,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         TissueLactate->GetMass().IncrementValue(glycogenConsumed_mol * lactate_Per_Glycogen * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         lactateProductionRate_mol_Per_s += glycogenConsumed_mol * lactate_Per_Glycogen / time_s;
         if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos && tissueNeededEnergy_kcal != 0) //for tracking only
-          m_AnaerobicTissues.append(std::string{ tissue->GetName() } + " ");
+          m_AnaerobicTissues.append(std::string { tissue->GetName() } + " ");
         muscleMandatoryAnaerobicNeededEnergy_kcal = 0;
         tissueNeededEnergy_kcal = 0;
       }
@@ -1192,7 +1198,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         tissueNeededEnergy_kcal -= glycogenConsumed_mol * anaerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
         lactateProductionRate_mol_Per_s += glycogenConsumed_mol * lactate_Per_Glycogen / time_s;
         if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos && tissueNeededEnergy_kcal != 0) //for tracking only
-          m_AnaerobicTissues.append(std::string{ tissue->GetName() } + " ");
+          m_AnaerobicTissues.append(std::string { tissue->GetName() } + " ");
         tissueNeededEnergy_kcal += muscleMandatoryAnaerobicNeededEnergy_kcal; //add the still-needed mandatory anaerobic energy back to muscle's needed energy for tracking of the deficit
       }
     }
@@ -1253,7 +1259,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   //GetRespiratoryExchangeRatio().SetValue(respiratoryQuotient);
   m_energy->GetLactateProductionRate().SetValue(lactateProductionRate_mol_Per_s, AmountPerTimeUnit::mol_Per_s);
   achievedWorkRate_W = (1 / m_Dt_s) * 3600 * 24 * (exerciseEnergyRequested_kcal - brainEnergyDeficit_kcal - nonbrainEnergyDeficit_kcal) / kcal_Per_day_Per_Watt;
-  // Achieved exercise level is a measure of how closely a subject reaches a desired metabolic demand due to limitations. Not the actual intensity. 
+  // Achieved exercise level is a measure of how closely a subject reaches a desired metabolic demand due to limitations. Not the actual intensity.
   if (m_PatientActions->HasExercise()) {
     m_energy->GetTotalWorkRateLevel().SetValue(achievedWorkRate_W / maxWorkRate_W);
     auto exercise = m_PatientActions->GetExercise();
@@ -1686,7 +1692,7 @@ void Tissue::AlveolarPartialPressureGradientDiffusion(SEGasCompartment& pulmonar
   SEGasSubstanceQuantity* pSubQ = pulmonary.GetSubstanceQuantity(sub);
   SELiquidSubstanceQuantity* vSubQ = vascular.GetSubstanceQuantity(sub);
   if (pSubQ == nullptr || vSubQ == nullptr)
-    throw CommonDataModelException("No Substance Quantity found for substance " + std::string{ sub.GetName() });
+    throw CommonDataModelException("No Substance Quantity found for substance " + std::string { sub.GetName() });
 
   double PressureGradient_mmHg = pSubQ->GetPartialPressure(PressureUnit::mmHg) - vSubQ->GetPartialPressure(PressureUnit::mmHg);
 
@@ -1790,6 +1796,18 @@ void Tissue::CalculateTissueFluidFluxes()
       }
     }
   }
+
+  //Test lung injury
+  int steps = m_data.GetSimulationTime().GetValue(TimeUnit::s) / m_data.GetTimeStep().GetValue(TimeUnit::s);
+  if (steps > 15000 && steps < 90000) {
+    SETissueCompartment* lung = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::LeftLung);
+    SEFluidCircuitPath* lungPath = m_EndothelialResistancePaths[lung];
+    lungPath->GetNextResistance().SetValue(lungPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * 0.2, FlowResistanceUnit::mmHg_min_Per_mL);
+    lung = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::RightLung);
+    lungPath = m_EndothelialResistancePaths[lung];
+    lungPath->GetNextResistance().SetValue(lungPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * 0.2, FlowResistanceUnit::mmHg_min_Per_mL);
+  }
+
   ///\ToDo:  Use derivative of P-V relationship in Himeno2015Mechanisms to update lymph compliance as volume changes
 }
 

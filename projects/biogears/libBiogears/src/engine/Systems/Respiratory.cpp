@@ -215,6 +215,7 @@ void Respiratory::Initialize()
   GetCarricoIndex().SetValue(452.0, PressureUnit::mmHg);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
   GetMeanPleuralPressure().SetValue(AbsolutePleuralPressure_mmHg - EnvironmentPressure_mmHg, PressureUnit::mmHg);
+  GetPaO2ToFiO2Ratio().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetCompartments().GetActiveRespiratoryGraph().GetCompartment(BGE::PulmonaryCompartment::Mouth)->GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetVolumeFraction().GetValue(), PressureUnit::mmHg);
   GetTotalAlveolarVentilation().SetValue(RespirationRate_Per_min * (TidalVolume_L - DeadSpace_L), VolumePerTimeUnit::L_Per_min);
   GetTotalPulmonaryVentilation().SetValue(RespirationRate_Per_min * TidalVolume_L, VolumePerTimeUnit::L_Per_min);
   GetTotalDeadSpaceVentilation().SetValue(DeadSpace_L * RespirationRate_Per_min, VolumePerTimeUnit::L_Per_min);
@@ -1674,6 +1675,8 @@ void Respiratory::CalculateVitalSigns()
   double dMeanPleuralPressure = 0.1 * (-meanPleuralPressure_cmH2O + (dPleuralPressure_cmH2O - dEnvironmentPressure));
   meanPleuralPressure_cmH2O += dMeanPleuralPressure * m_dt_s;
   GetMeanPleuralPressure().SetValue(meanPleuralPressure_cmH2O, PressureUnit::cmH2O);
+
+  GetPaO2ToFiO2Ratio().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetCompartments().GetActiveRespiratoryGraph().GetCompartment(BGE::PulmonaryCompartment::Mouth)->GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetVolumeFraction().GetValue(), PressureUnit::mmHg);
 
   /// \event Patient: Start of exhale/inhale
   if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfExhale))
