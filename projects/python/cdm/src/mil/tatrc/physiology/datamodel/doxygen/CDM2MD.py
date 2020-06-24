@@ -94,7 +94,23 @@ class CDM2MD:
 
     def parse(self,node,fout):
         for i in node.childNodes:
-            self.GenComplexType(i,fout)
+            if i.nodeName=="xs:complexType":
+                self.GenComplexType(i,fout)
+
+            elif i.nodeName == "xs:include":
+                files=i.getAttribute("schemaLocation")
+                if files.startswith("./"):
+                    files=os.path.dirname(self.files_processed[0])+files[1:]
+                elif files.startswith(".."):
+                    files=os.path.dirname(self.files_processed[0])+files[2:]
+                else:
+                    if files=="CommonDataModel.xsd":
+                        files=os.path.dirname(self.files_processed[0])+"/"+files
+                    else:
+                        files=os.path.dirname(self.files_processed[0])+"/cdm/"+files
+                if files not in self.files_processed:
+                    self.files_processed.append(files)
+
 
 if __name__=="__main__":
     import sys
