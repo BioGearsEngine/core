@@ -212,10 +212,9 @@ void Respiratory::Initialize()
   GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverFrequency().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverPressure().SetValue(m_PeakRespiratoryDrivePressure_cmH2O, PressureUnit::cmH2O);
-  GetCarricoIndex().SetValue(452.0, PressureUnit::mmHg);
+  GetCarricoIndex().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
   GetMeanPleuralPressure().SetValue(AbsolutePleuralPressure_mmHg - EnvironmentPressure_mmHg, PressureUnit::mmHg);
-  GetPaO2ToFiO2Ratio().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetCompartments().GetActiveRespiratoryGraph().GetCompartment(BGE::PulmonaryCompartment::Mouth)->GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetVolumeFraction().GetValue(), PressureUnit::mmHg);
   GetTotalAlveolarVentilation().SetValue(RespirationRate_Per_min * (TidalVolume_L - DeadSpace_L), VolumePerTimeUnit::L_Per_min);
   GetTotalPulmonaryVentilation().SetValue(RespirationRate_Per_min * TidalVolume_L, VolumePerTimeUnit::L_Per_min);
   GetTotalDeadSpaceVentilation().SetValue(DeadSpace_L * RespirationRate_Per_min, VolumePerTimeUnit::L_Per_min);
@@ -1676,7 +1675,26 @@ void Respiratory::CalculateVitalSigns()
   meanPleuralPressure_cmH2O += dMeanPleuralPressure * m_dt_s;
   GetMeanPleuralPressure().SetValue(meanPleuralPressure_cmH2O, PressureUnit::cmH2O);
 
-  GetPaO2ToFiO2Ratio().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetCompartments().GetActiveRespiratoryGraph().GetCompartment(BGE::PulmonaryCompartment::Mouth)->GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetVolumeFraction().GetValue(), PressureUnit::mmHg);
+  //Track ratio of partial pressure of oxygen in arterial blood to fraction of inspired oxygen (Carrico Index)--clinically relevant output for acute lung injury (ALI) and acute respiratory distress syndrome (ARDS)
+  double arterialPartialPressureO2_mmHg = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
+  double fractionInspiredO2 = 0.0;
+  switch (m_data.GetAirwayMode()) {
+  case CDM::enumBioGearsAirwayMode::Free:
+    fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+    break;
+  case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
+    fractionInspiredO2 = m_data.GetAnesthesiaMachine().GetOxygenFraction().GetValue();
+    break;
+  case CDM::enumBioGearsAirwayMode::MechanicalVentilator:
+    fractionInspiredO2 = m_data.GetActions().GetPatientActions().GetMechanicalVentilation()->GetGasFraction(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+    break;
+  case CDM::enumBioGearsAirwayMode::Inhaler:
+    //Unclear what O2 fraction in an inhaler is, let this case flow into default for now.
+  default:
+    //Use environment as default
+    fractionInspiredO2 = fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+  }
+  GetCarricoIndex().SetValue(arterialPartialPressureO2_mmHg / fractionInspiredO2, PressureUnit::mmHg);
 
   /// \event Patient: Start of exhale/inhale
   if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfExhale))
@@ -1753,31 +1771,28 @@ void Respiratory::CalculateVitalSigns()
     m_TopBreathDeadSpaceVolume_L = m_RightBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_LeftBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_Trachea->GetVolume(VolumeUnit::L);
     m_TopBreathPleuralPressure_cmH2O = dPleuralPressure_cmH2O;
 
-    //We want the peak Trachea O2 value - this should be the inspired value
-    GetCarricoIndex().SetValue(m_ArterialO2PartialPressure_mmHg / m_TracheaO2->GetVolumeFraction().GetValue(), PressureUnit::mmHg);
-
     if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
-      //Check for ARDS - 3 different levels
+      //Check for acute lung injury and acute respiratory distress
       if (GetCarricoIndex().GetValue(PressureUnit::mmHg) < 100.0) {
         /// \event Patient: Severe ARDS: Carrico Index is below 100 mmHg
         m_Patient->SetEvent(CDM::enumPatientEvent::SevereAcuteRespiratoryDistress, true, m_data.GetSimulationTime()); /// \cite ranieriacute
-        m_Patient->SetEvent(CDM::enumPatientEvent::ModerateAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
-        m_Patient->SetEvent(CDM::enumPatientEvent::MildAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteRespiratoryDistress, false, m_data.GetSimulationTime()); /// \cite ranieriacute
+        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteLungInjury, false, m_data.GetSimulationTime());
       } else if (GetCarricoIndex().GetValue(PressureUnit::mmHg) < 200.0) {
-        /// \event Patient: Moderate ARDS: Carrico Index is below 200 mmHg
-        m_Patient->SetEvent(CDM::enumPatientEvent::ModerateAcuteRespiratoryDistress, true, m_data.GetSimulationTime()); /// \cite ranieriacute
+        /// \event Patient: Acute Respiratory Distress: Carrico Index is below 200 mmHg
+        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteRespiratoryDistress, true, m_data.GetSimulationTime()); /// \cite ranieriacute
         m_Patient->SetEvent(CDM::enumPatientEvent::SevereAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
-        m_Patient->SetEvent(CDM::enumPatientEvent::MildAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteLungInjury, false, m_data.GetSimulationTime());
       } else if (GetCarricoIndex().GetValue(PressureUnit::mmHg) < 300.0) {
-        /// \event Patient: Mild ARDS: Carrico Index is below 300 mmHg
-        m_Patient->SetEvent(CDM::enumPatientEvent::MildAcuteRespiratoryDistress, true, m_data.GetSimulationTime()); /// \cite ranieriacute
+        /// \event Patient: Acute Lung Injury: Carrico Index is below 300 mmHg
+        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteLungInjury, true, m_data.GetSimulationTime()); /// \cite ranieriacute
         m_Patient->SetEvent(CDM::enumPatientEvent::SevereAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
-        m_Patient->SetEvent(CDM::enumPatientEvent::ModerateAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteRespiratoryDistress, false, m_data.GetSimulationTime());
       } else {
         /// \event Patient: End ARDS: Carrico Index is above 305 mmHg
         m_Patient->SetEvent(CDM::enumPatientEvent::SevereAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
-        m_Patient->SetEvent(CDM::enumPatientEvent::ModerateAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
-        m_Patient->SetEvent(CDM::enumPatientEvent::MildAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteRespiratoryDistress, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteLungInjury, false, m_data.GetSimulationTime());
       }
     }
   }

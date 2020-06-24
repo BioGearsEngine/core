@@ -33,7 +33,6 @@ constexpr char idInspiratoryFlow[] = "InspiratoryFlow";
 constexpr char idPulmonaryCompliance[] = "PulmonaryCompliance";
 constexpr char idPulmonaryResistance[] = "PulmonaryResistance";
 constexpr char idMeanPleuralPressure[] = "MeanPleuralPressure";
-constexpr char idPaO2ToFiO2Ratio[] = "PaO2ToFiO2Ratio";
 constexpr char idRespirationDriverFrequency[] = "RespirationDriverFrequency";
 constexpr char idRespirationDriverPressure[] = "RespirationDriverPressure";
 constexpr char idRespirationMusclePressure[] = "RespirationMusclePressure";
@@ -57,7 +56,6 @@ SERespiratorySystem::SERespiratorySystem(Logger* logger)
   m_InspiratoryExpiratoryRatio = nullptr;
   m_InspiratoryFlow = nullptr;
   m_MeanPleuralPressure = nullptr;
-  m_PaO2ToFiO2Ratio = nullptr;
   m_PulmonaryCompliance = nullptr;
   m_PulmonaryResistance = nullptr;
   m_RespirationDriverFrequency = nullptr;
@@ -93,7 +91,6 @@ void SERespiratorySystem::Clear()
   SAFE_DELETE(m_InspiratoryExpiratoryRatio);
   SAFE_DELETE(m_InspiratoryFlow);
   SAFE_DELETE(m_MeanPleuralPressure);
-  SAFE_DELETE(m_PaO2ToFiO2Ratio);
   SAFE_DELETE(m_PulmonaryCompliance);
   SAFE_DELETE(m_PulmonaryResistance);
   SAFE_DELETE(m_RespirationDriverFrequency);
@@ -132,8 +129,6 @@ const SEScalar* SERespiratorySystem::GetScalar(const std::string& name)
     return &GetInspiratoryFlow();
   if (name == idMeanPleuralPressure)
     return &GetMeanPleuralPressure();
-  if (name == idPaO2ToFiO2Ratio)
-    return &GetPaO2ToFiO2Ratio();
   if (name == idPulmonaryCompliance)
     return &GetPulmonaryCompliance();
   if (name == idPulmonaryResistance)
@@ -186,8 +181,6 @@ bool SERespiratorySystem::Load(const CDM::RespiratorySystemData& in)
     GetInspiratoryFlow().Load(in.InspiratoryFlow().get());
   if (in.MeanPleuralPressure().present())
     GetMeanPleuralPressure().Load(in.MeanPleuralPressure().get());
-  if (in.PaO2ToFiO2Ratio().present())
-    GetPaO2ToFiO2Ratio().Load(in.PaO2ToFiO2Ratio().get());
   if (in.PulmonaryCompliance().present())
     GetPulmonaryCompliance().Load(in.PulmonaryCompliance().get());
   if (in.PulmonaryResistance().present())
@@ -249,8 +242,6 @@ void SERespiratorySystem::Unload(CDM::RespiratorySystemData& data) const
     data.InspiratoryFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_InspiratoryFlow->Unload()));
   if (m_MeanPleuralPressure != nullptr)
     data.MeanPleuralPressure(std::unique_ptr<CDM::ScalarPressureData>(m_MeanPleuralPressure->Unload()));
-  if (m_PaO2ToFiO2Ratio != nullptr)
-    data.PaO2ToFiO2Ratio(std::unique_ptr<CDM::ScalarPressureData>(m_PaO2ToFiO2Ratio->Unload()));
   if (m_PulmonaryCompliance != nullptr)
     data.PulmonaryCompliance(std::unique_ptr<CDM::ScalarFlowComplianceData>(m_PulmonaryCompliance->Unload()));
   if (m_PulmonaryResistance != nullptr)
@@ -441,27 +432,6 @@ double SERespiratorySystem::GetMeanPleuralPressure(const PressureUnit& unit) con
   return m_MeanPleuralPressure->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-bool SERespiratorySystem::HasPaO2ToFiO2Ratio() const
-{
-  return m_PaO2ToFiO2Ratio == nullptr ? false : m_PaO2ToFiO2Ratio->IsValid();
-}
-//-------------------------------------------------------------------------------
-SEScalarPressure& SERespiratorySystem::GetPaO2ToFiO2Ratio()
-{
-  if (m_PaO2ToFiO2Ratio == nullptr)
-    m_PaO2ToFiO2Ratio = new SEScalarPressure();
-  return *m_PaO2ToFiO2Ratio;
-}
-//-------------------------------------------------------------------------------
-double SERespiratorySystem::GetPaO2ToFiO2Ratio(const PressureUnit& unit) const
-{
-  if (m_PaO2ToFiO2Ratio == nullptr)
-    return SEScalar::dNaN();
-  return m_PaO2ToFiO2Ratio->GetValue(unit);
-}
-
-//-------------------------------------------------------------------------------
-
 bool SERespiratorySystem::HasPulmonaryCompliance() const
 {
   return m_PulmonaryCompliance == nullptr ? false : m_PulmonaryCompliance->IsValid();
@@ -748,7 +718,6 @@ Tree<const char*> SERespiratorySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idInspiratoryExpiratoryRatio)
     .emplace_back(idInspiratoryFlow)
     .emplace_back(idMeanPleuralPressure)
-    .emplace_back(idPaO2ToFiO2Ratio)
     .emplace_back(idPulmonaryCompliance)
     .emplace_back(idPulmonaryResistance)
     .emplace_back(idRespirationDriverPressure)

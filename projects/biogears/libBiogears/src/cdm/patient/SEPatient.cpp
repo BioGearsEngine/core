@@ -509,6 +509,12 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
     m_ss << "[Event] " << time << ", ";
     if (active) {
       switch (type) {
+      case CDM::enumPatientEvent::AcuteLungInjury:
+        m_ss << " Carrico Index < 300 mmHg:  Patient has Acute Lung Injury";
+        break;
+      case CDM::enumPatientEvent::AcuteRespiratoryDistress:
+        m_ss << " Carrico Index < 200 mmHg: Patient has Acute Respiratory Distress";
+        break;
       case CDM::enumPatientEvent::Antidiuresis:
         m_ss << " Patient has Antidiuresis";
         break;
@@ -602,12 +608,6 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::MetabolicAlkalosis:
         m_ss << " The patient is in a state of metabolic alkalosis";
         break;
-      case CDM::enumPatientEvent::MildAcuteRespiratoryDistress:
-        m_ss << " The patient has Mild Acute Respiratory Distress";
-        break;
-      case CDM::enumPatientEvent::ModerateAcuteRespiratoryDistress:
-        m_ss << " The patient has Moderate Acute Respiratory Distress";
-        break;
       case CDM::enumPatientEvent::MuscleCatabolism:
         m_ss << " Patient has begun muscle catabolism";
         break;
@@ -630,7 +630,7 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
         m_ss << " Patient has Renal Hypoperfusion";
         break;
       case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress:
-        m_ss << " The patient has Severe Acute Respiratory Distress";
+        m_ss << " Carrico Index < 100 : Patient has Severe Acute Respiratory Distress";
         break;
       case CDM::enumPatientEvent::SevereSepsis:
         m_ss << " The patient has severe sepsis";
@@ -654,6 +654,12 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       }
     } else {
       switch (type) {
+      case CDM::enumPatientEvent::AcuteLungInjury:
+        m_ss << " Patient no longer has Acute Lung Injury";
+        break;
+      case CDM::enumPatientEvent::AcuteRespiratoryDistress:
+        m_ss << " Patient no longer has Acute Respiratory Distress";
+        break;
       case CDM::enumPatientEvent::Antidiuresis:
         m_ss << " Patient no longer is in Antidiuresis";
         break;
@@ -746,12 +752,6 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
         break;
       case CDM::enumPatientEvent::MetabolicAlkalosis:
         m_ss << " The patient is no longer in a state of metabolic alkalosis";
-        break;
-      case CDM::enumPatientEvent::MildAcuteRespiratoryDistress:
-        m_ss << " Patient no longer has a Mild Acute Respiratory Distress";
-        break;
-      case CDM::enumPatientEvent::ModerateAcuteRespiratoryDistress:
-        m_ss << " Patient no longer has a Moderate Acute Respiratory Distress";
         break;
       case CDM::enumPatientEvent::MuscleGlycogenDepleted:
         m_ss << " Patient's muscle glycogen is no longer depleted";

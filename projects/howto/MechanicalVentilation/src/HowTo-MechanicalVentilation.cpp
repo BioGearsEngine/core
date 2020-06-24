@@ -52,14 +52,14 @@ public:
   virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr)
   {
     switch (type) {
-    case CDM::enumPatientEvent::MildAcuteRespiratoryDistress: {
+    case CDM::enumPatientEvent::AcuteLungInjury: {
       if (active)
         m_Logger->Info("Do something for MildAcuteRespiratoryDistress");
       else
         m_Logger->Info("Stop doing something for MildAcuteRespiratoryDistress");
       break;
     }
-    case CDM::enumPatientEvent::ModerateAcuteRespiratoryDistress: {
+    case CDM::enumPatientEvent::AcuteRespiratoryDistress: {
       if (active)
         m_Logger->Info("Do something for ModerateAcuteRespiratoryDistress");
       else

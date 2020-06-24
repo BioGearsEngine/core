@@ -534,10 +534,10 @@ void Tissue::Process()
   ManageSubstancesAndSaturation();
   CalculateVitals();
 
-  m_data.GetDataTrack().Probe("LungEndothelialResistance", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL));
-  m_data.GetDataTrack().Probe("LungVascularCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungVToLeftLungE1)->GetPressureSource(PressureUnit::mmHg));
-  m_data.GetDataTrack().Probe("LungInterstitialCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE2ToLeftLungE3)->GetPressureSource(PressureUnit::mmHg));
-  m_data.GetDataTrack().Probe("LungFiltrationFlow", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetFlow(VolumePerTimeUnit::mL_Per_min));
+  //m_data.GetDataTrack().Probe("LungEndothelialResistance", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL));
+ // m_data.GetDataTrack().Probe("LungVascularCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungVToLeftLungE1)->GetPressureSource(PressureUnit::mmHg));
+  //m_data.GetDataTrack().Probe("LungInterstitialCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE2ToLeftLungE3)->GetPressureSource(PressureUnit::mmHg));
+  //m_data.GetDataTrack().Probe("LungFiltrationFlow", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetFlow(VolumePerTimeUnit::mL_Per_min));
 
 }
 
