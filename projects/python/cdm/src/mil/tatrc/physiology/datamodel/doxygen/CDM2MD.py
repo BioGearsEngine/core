@@ -111,17 +111,36 @@ class CDM2MD:
                 if files not in self.files_processed:
                     self.files_processed.append(files)
 
+    def convert(self):
+        for i,j in self.tags.items():
+            for k in j:
+                if isinstance(k,str):
+                    if k in self.tags:
+                        for l in self.tags[k]:
+                            self.tags[i].append(l)
+                        self.tags[i].remove(k)
+                    else:
+                        self.tags[i].remove(k)
+        for i in self.tags:
+            self.tags[i]=list(set(self.tags[i]))
+        for i in self.tags:
+            self.tags[i]=dict(self.tags[i])
+            self.tags[i]=dict(sorted(self.tags[i].items(),key=lambda x:x[0]))
+        self.tags=dict(sorted(self.tags.items(),key=lambda x:x[0]))
+        #print(self.tags)
+
 
 if __name__=="__main__":
     import sys
     CDM=CDM2MD()
-    CDM.files_processed.append("./xsd/cdm/Properties.xsd")
+    CDM.files_processed.append("./xsd/BioGearsDataModel.xsd")
     destDir = "./doc/doxygen/processed_md/"
     #destDir="/home/shashank/Desktop/biogears_tips/"
     if not os.path.exists(destDir):
         os.mkdir(destDir)
     fout=open(os.path.join(destDir,"CDMTables.md"),'w',encoding="utf-8")
     CDM.process_sc(fout)
+    CDM.convert()
     list_type=list(set(CDM.list_types))
     list_name=list(set(CDM.list_names))
     CDM.list_types=list_type
