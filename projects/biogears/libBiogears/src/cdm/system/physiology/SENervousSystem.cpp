@@ -170,7 +170,7 @@ void SENervousSystem::Unload(CDM::NervousSystemData& data) const
   if (m_RichmondAgitationSedationScale != nullptr)
     data.RichmondAgitationSedationScale(std::unique_ptr<CDM::ScalarData>(m_RichmondAgitationSedationScale->Unload()));
   if (m_RightEyePupillaryResponse != nullptr)
-      data.RightEyePupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_RightEyePupillaryResponse->Unload()));
+    data.RightEyePupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_RightEyePupillaryResponse->Unload()));
 }
 
 //-------------------------------------------------------------------------------
