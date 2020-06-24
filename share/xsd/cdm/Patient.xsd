@@ -93,6 +93,7 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="SevereSepsis"/><!--<< @brief Sepsis accompanied by systolic pressure < 90 and urine output < 0.5 mL/kg/hr-->
       <xs:enumeration value="Tachycardia"/><!--<< @brief The heart rate is elevated above 100 beats per minute. -->
       <xs:enumeration value="Tachypnea"/><!--<< @brief A breathing rate above 20 breaths per minute. -->
+      <xs:enumeration value="TotalPatientEvents"/><!--<< @brief All enums need to have a end delimiter to allow simple initialization of maps across all values and to simplify maintenance of code. -->
     </xs:restriction>
   </xs:simpleType>
 

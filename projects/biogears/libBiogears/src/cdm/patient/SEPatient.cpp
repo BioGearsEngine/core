@@ -60,6 +60,16 @@ SEPatient::SEPatient(Logger* logger)
   m_TidalVolumeBaseline = nullptr;
   m_TotalLungCapacity = nullptr;
   m_VitalCapacity = nullptr;
+
+
+  for (CDM::enumPatientEvent::value key = static_cast<CDM::enumPatientEvent::value>(0); key < CDM::enumPatientEvent::TotalPatientEvents; key = static_cast<CDM::enumPatientEvent::value>(key + 1)) {
+    //CDM::enumPatientEvent::value is a code generated C style enum.
+    //To my knowladge it must be conitnguous as XSD does not support assinigng manual values to XML Enums that are use dto generated C++ counterpart
+    //Short story is the goal is to set every possible enum to a value of false and accomidate future extensions ot the enum.
+    m_EventState[key] = false;
+    m_EventDuration_s[key] = 0;
+  }
+
 }
 //-----------------------------------------------------------------------------
 SEPatient::~SEPatient()
@@ -91,8 +101,15 @@ bool SEPatient::Load(const std::string& patientFile)
 void SEPatient::Clear()
 {
   m_EventHandler = nullptr;
-  m_EventState.clear();
-  m_EventDuration_s.clear();
+
+  for (CDM::enumPatientEvent::value key = static_cast<CDM::enumPatientEvent::value>(0); key < CDM::enumPatientEvent::TotalPatientEvents; key = static_cast<CDM::enumPatientEvent::value>(key + 1)) {
+    //CDM::enumPatientEvent::value is a code generated C style enum.
+    //To my knowladge it must be conitnguous as XSD does not support assinigng manual values to XML Enums that are use dto generated C++ counterpart
+    //Short story is the goal is to set every possible enum to a value of false and accomidate future extensions ot the enum.
+    m_EventState[key] = false;
+    m_EventDuration_s[key] = 0;
+  }
+
   m_Name = "";
   m_Gender = (CDM::enumSex::value)-1;
   SAFE_DELETE(m_Age);
@@ -475,14 +492,10 @@ void SEPatient::Unload(CDM::PatientData& data) const
 //-----------------------------------------------------------------------------
 void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time)
 {
-  bool b = false; // Default is off
-  if (m_EventState.find(type) != m_EventState.end()) {
-    b = m_EventState[type];
-  }
-  if (b == active) {
+  if (m_EventState[type] == active)
+  {
     return; //No Change
-  }
-  if (active != b) {
+  } else  {
     m_ss.str("");
     m_ss << "[Event] " << time << ", ";
     if (active) {
@@ -785,11 +798,7 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
 //-----------------------------------------------------------------------------
 bool SEPatient::IsEventActive(CDM::enumPatientEvent::value type) const
 {
-  auto i = m_EventState.find(type);
-  if (i == m_EventState.end()) {
-    return false;
-  }
-  return i->second;
+  return m_EventState.at(type);
 }
 //-----------------------------------------------------------------------------
 double SEPatient::GetEventDuration(CDM::enumPatientEvent::value type, const TimeUnit& unit) const
@@ -803,8 +812,9 @@ double SEPatient::GetEventDuration(CDM::enumPatientEvent::value type, const Time
 //-----------------------------------------------------------------------------
 void SEPatient::UpdateEvents(const SEScalarTime& timeStep)
 {
-  for (auto& itr : m_EventDuration_s)
+  for (auto& itr : m_EventDuration_s) {
     itr.second += timeStep.GetValue(TimeUnit::s);
+  }
 }
 //-----------------------------------------------------------------------------
 void SEPatient::ForwardEvents(SEEventHandler* handler) const
