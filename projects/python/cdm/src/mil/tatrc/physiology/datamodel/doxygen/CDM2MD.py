@@ -84,6 +84,13 @@ class CDM2MD:
                 self.name_el.append(v)
             elif k=="@type":
                 self.type_el.append(v)
+            elif k=="@maxOccurs":
+                if v=="unbounded":
+                    if "@name" in d.keys():
+                        self.list_names.append(d["@name"])
+                    if "@type" in d.keys():
+                        self.list_types.append(d["@type"])
+
 
     def parse(self,node,fout):
         for i in node.childNodes:
