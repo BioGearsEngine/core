@@ -90,10 +90,10 @@ public:
   std::vector<double>& GetTimes();
 
   // Creates the file and writes the headers to that file
-  void CreateFile(const char* fileName, std::ofstream& newFile); // TODO C++11
-  void CreateFile(const std::string& fileName, std::ofstream& newFile); // TODO C++11
+  void CreateFile(const char* fileName, std::ofstream& newFile, std::ios_base::openmode mode = std::ios_base::trunc); // TODO C++11
+  void CreateFile(const std::string& fileName, std::ofstream& newFile, std::ios_base::openmode mode = std::ios_base::trunc); // TODO C++11
   // Write all the track to a file
-  void WriteTrackToFile(const char* fileName);
+  void WriteTrackToFile(const char* fileName, std::ios_base::openmode mode = std::ios_base::trunc);
   // Writes data from the provided headings to the file, in the order things were tracked
   void StreamTrackToFile(std::ofstream& file);
   // Writes prob values to file in the order things were tracked

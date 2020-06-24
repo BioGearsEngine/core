@@ -136,7 +136,7 @@ def plot(root_dir, source, skip_count, plotTime):
         #TODO: Validity Check on Log Length
 
         #Read in results file
-        dataCSV = pd.read_csv(input_source,sep=',', header=0)
+        dataCSV = pd.read_csv(input_source,sep=',', header=0, comment='#')
 
         #Extract data calls (specified in xml)
         colNames = list(dataCSV)

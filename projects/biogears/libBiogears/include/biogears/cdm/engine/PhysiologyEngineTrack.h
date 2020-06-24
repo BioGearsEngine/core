@@ -82,7 +82,8 @@ public:
                         SESubstanceManager& subMgr,
                         SECompartmentManager& cmptMgr,
                         const std::vector<SESystem*>& physiology,
-                        const std::vector<SESystem*>& equipment);
+                        const std::vector<SESystem*>& equipment
+                       );
   PhysiologyEngineTrack(PhysiologyEngineTrack&&);
   PhysiologyEngineTrack& operator=(PhysiologyEngineTrack&& rhs);
   virtual ~PhysiologyEngineTrack();
@@ -96,8 +97,8 @@ public:
 
   bool ConnectRequest(SEDataRequest& dr, SEDataRequestScalar& ds);
 
-  virtual void SetupRequests();
-  virtual void TrackData(double currentTime_s);
+  virtual void SetupRequests(bool append = false);
+  virtual void TrackData(double currentTime_s, bool append = false);
   virtual void PullData();
   virtual bool TrackRequest(SEDataRequest& dr);
   virtual void ForceConnection() { m_ForceConnection = true; }

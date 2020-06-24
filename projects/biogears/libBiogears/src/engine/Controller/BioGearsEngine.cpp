@@ -161,16 +161,22 @@ bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simT
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime)
 {
-
+  auto requests = GetEngineTrack()->GetDataRequestManager().GetDataRequests();
+  auto resultsFile = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
+  std::vector<std::unique_ptr<CDM::DataRequestData>> dataVector;
+  for (auto& dr : requests) {
+   dataVector.emplace_back(dr->Unload());
+  }
   BioGears::SetUp();
   m_EngineTrack = PhysiologyEngineTrack(*this);
   m_DataTrack = &m_EngineTrack.GetDataTrack();
-
+  for ( auto& data : dataVector) {
+    m_EngineTrack.GetDataRequestManager().CreateFromBind( *data, *m_Substances); 
+  }
+  m_EngineTrack.GetDataRequestManager().SetResultsFilename(resultsFile);
   m_ss.str("");
   m_ss.clear();
-  // We could preserve the tracker, but I think I want to force the user to set it up
-  // again, they should have the data tracks (or easily get them), and they should
-  // Set it back up, and set or reset the results file they are using
+
   m_State = EngineState::NotReady;
 
   const CDM::BioGearsStateData* bgState = dynamic_cast<const CDM::BioGearsStateData*>(&state);
@@ -179,11 +185,11 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
     return false;
   }
 
-  if (state.DataRequests().present()) {
-    m_EngineTrack.GetDataRequestManager().Clear();
-    m_EngineTrack.GetDataRequestManager().Load(state.DataRequests().get(), *m_Substances);
-    m_EngineTrack.ForceConnection(); // I don't want to rest the file because I would loose all my data
-  }
+  //if (state.DataRequests().present()) {
+  //  m_EngineTrack.GetDataRequestManager().Clear();
+  //  m_EngineTrack.GetDataRequestManager().Load(state.DataRequests().get(), *m_Substances);
+  //  m_EngineTrack.ForceConnection(); // I don't want to rest the file because I would loose all my data
+  //}
 
   if (simTime != nullptr) {
     m_CurrentTime->Set(*simTime);

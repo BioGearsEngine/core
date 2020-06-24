@@ -201,6 +201,7 @@ protected:
 
   DataTrack* m_DataTrack;
 
+
   std::unique_ptr<SEScalarTime> m_CurrentTime;
   std::unique_ptr<SEScalarTime> m_SimulationTime;
   CDM::enumBioGearsAirwayMode::value m_AirwayMode;

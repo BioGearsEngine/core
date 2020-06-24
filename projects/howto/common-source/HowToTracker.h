@@ -21,6 +21,8 @@ class HowToTracker
 private:
   double m_dT_s;  // Cached Engine Time Step
   biogears::PhysiologyEngine& m_Engine;
+  bool m_append_data = false;
+
 public:
   HowToTracker(biogears::PhysiologyEngine& engine);
    ~HowToTracker();

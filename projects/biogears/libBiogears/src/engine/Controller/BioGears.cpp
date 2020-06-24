@@ -47,7 +47,6 @@ BioGears::BioGears(const std::string& logFileName)
 {
 
   m_logger_self_managed = true;
-  m_DataTrack = nullptr;
 }
 
 BioGears::BioGears(Logger* logger)
@@ -55,7 +54,6 @@ BioGears::BioGears(Logger* logger)
 {
 
   m_logger_self_managed = false;
-  m_DataTrack = nullptr;
 
   SetUp();
 }
@@ -64,7 +62,6 @@ BioGears::BioGears(const std::string& logFileName, const std::string& working_di
   : BioGears(new Logger(logFileName, working_dir), working_dir)
 {
   m_logger_self_managed = true;
-  m_DataTrack = nullptr;
 }
 
 BioGears::BioGears(Logger* logger, const std::string& working_dir)
@@ -72,7 +69,6 @@ BioGears::BioGears(Logger* logger, const std::string& working_dir)
 {
   SetCurrentWorkingDirectory(working_dir);
   m_logger_self_managed = false;
-  m_DataTrack = nullptr;
 
   SetUp();
 }

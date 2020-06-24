@@ -37,8 +37,9 @@ void HowToTracker::AdvanceModelTime(double time_s)
 
 		// Pull Track will pull data from the engine and append it to the file
     if (elapsed_time >= 1.0 / m_Engine.GetEngineTrack()->GetDataRequestManager().GetSamplesPerSecond()) {
-      m_Engine.GetEngineTrack()->TrackData(m_Engine.GetSimulationTime(TimeUnit::s));
+      m_Engine.GetEngineTrack()->TrackData(m_Engine.GetSimulationTime(TimeUnit::s),m_append_data);
       elapsed_time -= 1.0 / m_Engine.GetEngineTrack()->GetDataRequestManager().GetSamplesPerSecond();
+      m_append_data = true;
     }
     elapsed_time += m_dT_s;
 	}

@@ -124,10 +124,12 @@ PhysiologyEngineTrack::PhysiologyEngineTrack(SEPatient& patient, SESubstanceMana
   , m_SubMgr(&subMgr)
   , m_CmptMgr(&cmptMgr)
 {
-  for (auto* p : physiology)
+  for (auto* p : physiology) {
     m_PhysiologySystems.push_back(p);
-  for (auto* e : equipment)
-    m_EquipmentSystems.push_back(e);
+  }
+  for (auto* e : equipment) {
+    m_EquipmentSystems.push_back(e);   
+  }
   m_ForceConnection = false;
 }
 PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngineTrack&& obj)
@@ -175,8 +177,9 @@ void PhysiologyEngineTrack::Clear()
 
 void PhysiologyEngineTrack::ResetFile()
 {
-  if (m_ResultsStream.is_open())
-    m_ResultsStream.close();
+  if (m_ResultsStream.is_open()) {
+    m_ResultsStream.close(); 
+  }
 }
 
 DataTrack& PhysiologyEngineTrack::GetDataTrack()
@@ -184,7 +187,7 @@ DataTrack& PhysiologyEngineTrack::GetDataTrack()
   return m_DataTrack;
 }
 
-void PhysiologyEngineTrack::SetupRequests()
+void PhysiologyEngineTrack::SetupRequests(bool append)
 {
   bool isOpen = m_ResultsStream.is_open();
   if (!isOpen || m_ForceConnection) { // Process/Hook up all requests with their associated scalars
@@ -198,16 +201,18 @@ void PhysiologyEngineTrack::SetupRequests()
   }
   // Create the file now that all probes and requests have been added to the track
   // So we get columns for all of our data
-  if (!isOpen)
-    m_DataTrack.CreateFile(m_DataRequestMgr.GetResultsFilename(), m_ResultsStream);
+  if (!isOpen) {
+    m_DataTrack.CreateFile(m_DataRequestMgr.GetResultsFilename(), m_ResultsStream, (append) ? std::ios_base::app : std::ios_base::trunc);  
+  }
 }
 
-void PhysiologyEngineTrack::TrackData(double time_s)
+void PhysiologyEngineTrack::TrackData(double time_s, bool append )
 {
-  if (!m_DataRequestMgr.HasDataRequests())
+  if (!m_DataRequestMgr.HasDataRequests()) {
     return; // Nothing to do here...
+  }
 
-  SetupRequests();
+  SetupRequests(append);
   PullData();
   m_DataTrack.StreamProbesToFile(time_s, m_ResultsStream);
 }

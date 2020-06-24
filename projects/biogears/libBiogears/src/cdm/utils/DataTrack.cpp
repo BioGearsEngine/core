@@ -672,12 +672,12 @@ double DataTrack::StreamDataFromFile(std::vector<std::string>* headings)
   return time;
 }
 
-void DataTrack::CreateFile(const std::string& fileName, std::ofstream& newFile)
+void DataTrack::CreateFile(const std::string& fileName, std::ofstream& newFile, std::ios_base::openmode mode)
 {
 
-  newFile.open(ResolvePath(fileName), std::ofstream::out | std::ofstream::trunc);
+  newFile.open(ResolvePath(fileName), std::ofstream::out | mode);
   // Write our headers
-  newFile << "Time(s)" << m_Delimiter;
+  newFile << ((mode==std::ios_base::trunc) ? "Time(s)" : "#Time(s)") << m_Delimiter;
   for (unsigned int i = 0; i < m_HeadingOrder.size(); i++) {
     newFile << m_HeadingOrder.at(i);
     if (i < (m_HeadingOrder.size() - 1))
@@ -686,16 +686,16 @@ void DataTrack::CreateFile(const std::string& fileName, std::ofstream& newFile)
   newFile << std::endl;
   newFile.flush();
 }
-void DataTrack::CreateFile(const char* fileName, std::ofstream& newFile )
+void DataTrack::CreateFile(const char* fileName, std::ofstream& newFile, std::ios_base::openmode mode)
 {
-  CreateFile(std::string{fileName}, newFile);
+  CreateFile(std::string{fileName}, newFile, mode);
 }
 
-void DataTrack::WriteTrackToFile(const char* fileName)
+void DataTrack::WriteTrackToFile(const char* fileName, std::ios_base::openmode mode)
 {
   std::ofstream file;
   std::string filepath = ResolvePath(fileName);
-  file.open(fileName, std::ofstream::out | std::ofstream::trunc);
+  file.open(fileName, std::ofstream::out | mode);
   // Write our headers
   file << "Time(s)" << m_Delimiter;
   for (unsigned int i = 0; i < m_HeadingOrder.size(); i++) {

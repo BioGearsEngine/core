@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 
+#include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
@@ -225,6 +226,29 @@ SETissueCompartmentDataRequest& SEDataRequestManager::CreateTissueCompartmentDat
   return *dr;
 }
 //-----------------------------------------------------------------------------
+void SEDataRequestManager::CreateFromBind(const CDM::DataRequestData& input, SESubstanceManager& subMgr)
+{
+  bool duplicate = false;
+  //NOTE: MIght want to move the duplicate check to LoadState 
+  for ( auto& request: m_Requests) {
+    if (input.Name() == request->GetName()) {
+      if (input.Unit().present() && input.Unit().get() == request->GetUnit()->GetString()) {
+        duplicate = true;
+        break;
+      }
+    }
+  }
+  if(!duplicate) {
+      SEDataRequest* dr = newFromBind(input, subMgr, m_DefaultDecimalFormatting);
+      if (dr != nullptr) {
+        if (HasOverrideDecimalFormatting()) {
+          ((SEDecimalFormat*)dr)->Set(*m_OverrideDecimalFormatting);
+        }
+        m_Requests.push_back(dr);
+      }
+  }
+}
+  //-----------------------------------------------------------------------------
 SEDataRequest* SEDataRequestManager::newFromBind(const CDM::DataRequestData& data, SESubstanceManager& substances, const SEDecimalFormat* dfault)
 {
   const CDM::DataRequestData* drData = &data;

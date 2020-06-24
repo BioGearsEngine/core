@@ -81,6 +81,8 @@ public:
   SEThermalCompartmentDataRequest& CreateThermalCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   SETissueCompartmentDataRequest& CreateTissueCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
 
+  void CreateFromBind(const CDM::DataRequestData& input, SESubstanceManager& subMgr);
+
 protected:
   double m_SamplesPerSecond;
   std::vector<SEDataRequest*> m_Requests;
