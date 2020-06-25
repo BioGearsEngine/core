@@ -404,6 +404,7 @@ Tree<const char*> SENervousSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idResistanceScaleMuscle)
     .emplace_back(idResistanceScaleMyocardium)
     .emplace_back(idResistanceScaleSplanchnic)
+    .emplace_back(idRichmondAgitationSedationScale)
     .emplace_back(idComplianceScale)
     .emplace_back(idPainVisualAnalogueScale)
     .emplace_back(idLeftEyePupillaryResponse)
