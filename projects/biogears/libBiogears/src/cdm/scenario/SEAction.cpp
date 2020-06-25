@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEAction.h>
 
+#include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
@@ -31,14 +32,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
+#include <biogears/cdm/patient/actions/SEOverride.h>
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
 #include <biogears/cdm/patient/actions/SESleep.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
-#include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+#include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
 #include <biogears/cdm/patient/actions/SETourniquet.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
@@ -61,7 +63,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVentilatorPressureLoss.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
-#include <biogears/cdm/patient/actions/SEOverride.h>
 
 namespace biogears {
 SEAction::SEAction()
@@ -137,6 +138,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       SEPatientAssessmentRequest* a = new SEPatientAssessmentRequest();
       a->Load(*(CDM::PatientAssessmentRequestData*)action);
       return a;
+    }
+
+    CDM::AcuteRespiratoryDistressData* ardsData = dynamic_cast<CDM::AcuteRespiratoryDistressData*>(action);
+    if (ardsData != nullptr) {
+      SEAcuteRespiratoryDistress* ards = new SEAcuteRespiratoryDistress();
+      ards->Load(*ardsData);
+      return ards;
     }
 
     CDM::AcuteStressData* aStressData = dynamic_cast<CDM::AcuteStressData*>(action);
@@ -262,7 +270,7 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
 
     CDM::OverrideData* overrideData = dynamic_cast<CDM::OverrideData*>(action);
     if (overrideData != nullptr) {
-       SEOverride* a = new SEOverride();
+      SEOverride* a = new SEOverride();
       a->Load(*overrideData);
       return a;
     }
@@ -273,13 +281,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       a->Load(*hemData);
       return a;
     }
-	
-	CDM::InfectionData* infData = dynamic_cast<CDM::InfectionData*>(action);
+
+    CDM::InfectionData* infData = dynamic_cast<CDM::InfectionData*>(action);
     if (infData != nullptr) {
       SEInfection* infect = new SEInfection();
       infect->Load(*infData);
       return infect;
-	}
+    }
 
     CDM::PainStimulusData* painData = dynamic_cast<CDM::PainStimulusData*>(action);
     if (painData != nullptr) {
@@ -314,16 +322,16 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       return a;
     }
 
-	CDM::SubstanceOralDoseData* oralData = dynamic_cast<CDM::SubstanceOralDoseData*>(action);
+    CDM::SubstanceOralDoseData* oralData = dynamic_cast<CDM::SubstanceOralDoseData*>(action);
     if (oralData != nullptr) {
-		substance = substances.GetSubstance(oralData->Substance());
-		if (substance == nullptr) {
-			ss << "Unknown substance : " << oralData->Substance();
-			substances.GetLogger()->Fatal(ss.str(), "SEScenario::Load");
-		}
-		SESubstanceOralDose* od = new SESubstanceOralDose(*substance);
-		od->Load(*oralData);
-		return od;
+      substance = substances.GetSubstance(oralData->Substance());
+      if (substance == nullptr) {
+        ss << "Unknown substance : " << oralData->Substance();
+        substances.GetLogger()->Fatal(ss.str(), "SEScenario::Load");
+      }
+      SESubstanceOralDose* od = new SESubstanceOralDose(*substance);
+      od->Load(*oralData);
+      return od;
     }
 
     CDM::SleepData* sleep = dynamic_cast<CDM::SleepData*>(action);
@@ -357,11 +365,11 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       return a;
     }
 
-	CDM::TourniquetData* tourniquetData = dynamic_cast<CDM::TourniquetData*>(action);
+    CDM::TourniquetData* tourniquetData = dynamic_cast<CDM::TourniquetData*>(action);
     if (tourniquetData != nullptr) {
-		SETourniquet* tourniquet = new SETourniquet();
-		tourniquet->Load(*tourniquetData);
-		return tourniquet;
+      SETourniquet* tourniquet = new SETourniquet();
+      tourniquet->Load(*tourniquetData);
+      return tourniquet;
     }
 
     CDM::UrinateData* urinateData = dynamic_cast<CDM::UrinateData*>(action);

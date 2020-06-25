@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
@@ -60,6 +61,10 @@ public:
 
   bool ProcessAction(const SEPatientAction& action);
   bool ProcessAction(const CDM::PatientActionData& action);
+
+  bool HasAcuteRespiratoryDistress() const;
+  SEAcuteRespiratoryDistress* GetAcuteRespiratoryDistress() const;
+  void RemoveAcuteRespiratoryDistress();
 
   bool HasAcuteStress() const;
   SEAcuteStress* GetAcuteStress() const;
@@ -207,6 +212,7 @@ public:
 protected:
   bool IsValid(const SEPatientAction& action);
 
+  SEAcuteRespiratoryDistress* m_AcuteRespiratoryDistress;
   SEAcuteStress* m_AcuteStress;
   SEAirwayObstruction* m_AirwayObstruction;
   SEApnea* m_Apnea;

@@ -20,6 +20,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
 {
+  m_AcuteRespiratoryDistress = nullptr;
   m_AcuteStress = nullptr;
   m_AirwayObstruction = nullptr;
   m_Apnea = nullptr;
@@ -56,6 +57,7 @@ SEPatientActionCollection::~SEPatientActionCollection()
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::Clear()
 {
+  RemoveAcuteRespiratoryDistress();
   RemoveAcuteStress();
   RemoveAirwayObstruction();
   RemoveApnea();
@@ -95,6 +97,9 @@ void SEPatientActionCollection::Clear()
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
 {
+  if (HasAcuteRespiratoryDistress()) {
+    to.push_back(GetAcuteRespiratoryDistress()->Unload());
+  }
   if (HasAcuteStress()) {
     to.push_back(GetAcuteStress()->Unload());
   }
@@ -239,6 +244,19 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
   // certain compartment, we just update the single hemorrhage action associated
   // with that compartment.
   // SO, we make our own copy and manage that copy (i.e. by updating a single action)
+
+  const CDM::AcuteRespiratoryDistressData* ards = dynamic_cast<const CDM::AcuteRespiratoryDistressData*>(&action);
+  if (ards != nullptr) {
+    if (m_AcuteRespiratoryDistress == nullptr) {
+      m_AcuteRespiratoryDistress = new SEAcuteRespiratoryDistress();
+    }
+    m_AcuteRespiratoryDistress->Load(*ards);
+    if (!m_AcuteRespiratoryDistress->IsActive()) {
+      RemoveAcuteRespiratoryDistress();
+      return true;
+    }
+    return IsValid(*m_AcuteRespiratoryDistress);
+  }
 
   const CDM::AcuteStressData* aStress = dynamic_cast<const CDM::AcuteStressData*>(&action);
   if (aStress != nullptr) {
@@ -647,49 +665,49 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
     } else {
       warn << "\n\t Tourniquet cannot be applied to a compartment without a hemorrhage" << std::endl;
     }
-  if (matchingHem && validCmpt) {
-    auto turniquet = tItr->second;
-    turniquet->Load(*tournData);
-    if (!turniquet->IsActive()) {
-      RemoveTourniquet(turniquet->GetCompartment());
+    if (matchingHem && validCmpt) {
+      auto turniquet = tItr->second;
+      turniquet->Load(*tournData);
+      if (!turniquet->IsActive()) {
+        RemoveTourniquet(turniquet->GetCompartment());
+        return true;
+      }
+      return IsValid(*turniquet);
+    } else {
+      Warning(warn);
+      return false;
+    }
+  }
+
+  const CDM::UrinateData* urinate = dynamic_cast<const CDM::UrinateData*>(&action);
+  if (urinate != nullptr) {
+    if (m_Urinate == nullptr) {
+      m_Urinate = new SEUrinate();
+    }
+    m_Urinate->Load(*urinate);
+    if (!m_Urinate->IsActive()) {
+      RemoveUrinate();
       return true;
     }
-    return IsValid(*turniquet);
-  } else {
-    Warning(warn);
-    return false;
+    return IsValid(*m_Urinate);
   }
-}
 
-const CDM::UrinateData* urinate = dynamic_cast<const CDM::UrinateData*>(&action);
-if (urinate != nullptr) {
-  if (m_Urinate == nullptr) {
-    m_Urinate = new SEUrinate();
+  const CDM::OverrideData* orData = dynamic_cast<const CDM::OverrideData*>(&action);
+  if (orData != nullptr) {
+    if (m_OverrideAction == nullptr) {
+      m_OverrideAction = new SEOverride();
+    }
+    m_OverrideAction->Load(*orData);
+    if (!m_OverrideAction->IsActive()) {
+      RemoveOverride();
+      return true;
+    }
+    return IsValid(*m_OverrideAction);
   }
-  m_Urinate->Load(*urinate);
-  if (!m_Urinate->IsActive()) {
-    RemoveUrinate();
-    return true;
-  }
-  return IsValid(*m_Urinate);
-}
 
-const CDM::OverrideData* orData = dynamic_cast<const CDM::OverrideData*>(&action);
-if (orData != nullptr) {
-  if (m_OverrideAction == nullptr) {
-    m_OverrideAction = new SEOverride();
-  }
-  m_OverrideAction->Load(*orData);
-  if (!m_OverrideAction->IsActive()) {
-    RemoveOverride();
-    return true;
-  }
-  return IsValid(*m_OverrideAction);
-}
-
-/// \error Unsupported Action
-Error("Unsupported Action");
-return false;
+  /// \error Unsupported Action
+  Error("Unsupported Action");
+  return false;
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::IsValid(const SEPatientAction& action)
@@ -699,6 +717,22 @@ bool SEPatientActionCollection::IsValid(const SEPatientAction& action)
     return false;
   }
   return true;
+}
+
+//-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasAcuteRespiratoryDistress() const
+{
+  return m_AcuteRespiratoryDistress == nullptr ? false : true;
+}
+//-------------------------------------------------------------------------------
+SEAcuteRespiratoryDistress* SEPatientActionCollection::GetAcuteRespiratoryDistress() const
+{
+  return m_AcuteRespiratoryDistress;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveAcuteRespiratoryDistress()
+{
+  SAFE_DELETE(m_AcuteRespiratoryDistress);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasAcuteStress() const
@@ -943,7 +977,7 @@ const std::map<std::string, SEHemorrhage*>& SEPatientActionCollection::GetHemorr
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveHemorrhage(const char* cmpt)
 {
-  RemoveHemorrhage(std::string{ cmpt });
+  RemoveHemorrhage(std::string { cmpt });
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveHemorrhage(const std::string& cmpt)
@@ -1048,7 +1082,7 @@ const std::map<std::string, SEPainStimulus*>& SEPatientActionCollection::GetPain
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemovePainStimulus(const char* cmpt)
 {
-  RemovePainStimulus(std::string{ cmpt });
+  RemovePainStimulus(std::string { cmpt });
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemovePainStimulus(const std::string& cmpt)
@@ -1326,7 +1360,7 @@ const std::map<std::string, SETourniquet*>& SEPatientActionCollection::GetTourni
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveTourniquet(const char* cmpt)
 {
-  RemoveTourniquet(std::string{ cmpt });
+  RemoveTourniquet(std::string { cmpt });
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveTourniquet(const std::string& cmpt)

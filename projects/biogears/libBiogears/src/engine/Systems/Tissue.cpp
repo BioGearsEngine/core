@@ -534,11 +534,10 @@ void Tissue::Process()
   ManageSubstancesAndSaturation();
   CalculateVitals();
 
-  //m_data.GetDataTrack().Probe("LungEndothelialResistance", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL));
- // m_data.GetDataTrack().Probe("LungVascularCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungVToLeftLungE1)->GetPressureSource(PressureUnit::mmHg));
-  //m_data.GetDataTrack().Probe("LungInterstitialCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE2ToLeftLungE3)->GetPressureSource(PressureUnit::mmHg));
-  //m_data.GetDataTrack().Probe("LungFiltrationFlow", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetFlow(VolumePerTimeUnit::mL_Per_min));
-
+  m_data.GetDataTrack().Probe("LungEndothelialResistance", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL));
+  m_data.GetDataTrack().Probe("LungVascularCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungVToLeftLungE1)->GetPressureSource(PressureUnit::mmHg));
+  m_data.GetDataTrack().Probe("LungInterstitialCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE2ToLeftLungE3)->GetPressureSource(PressureUnit::mmHg));
+  m_data.GetDataTrack().Probe("LungFiltrationFlow", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetFlow(VolumePerTimeUnit::mL_Per_min));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -604,7 +603,14 @@ void Tissue::CalculatePulmonaryCapillarySubstanceTransfer()
   double RightLungRatio = Patient.GetRightLungRatio().GetValue();
 
   double StandardDiffusingCapacityOfOxygen_mLPersPermmHg = (DiffusionSurfaceArea_cm2 * Configuration.GetStandardOxygenDiffusionCoefficient(AreaPerTimePressureUnit::cm2_Per_s_mmHg)) / Configuration.GetStandardDiffusionDistance(LengthUnit::cm);
-  double DiffusingCapacityPerSide_mLPerSPermmHg = StandardDiffusingCapacityOfOxygen_mLPersPermmHg;
+  double DiffusingCapacityPerSide_mLPerSPermmHg = 0.0; //Will be set according to standard value for each substance
+
+  //Decrease the diffusing capacity of oxygen if patient has acute respiratory distress
+  if (m_PatientActions->HasAcuteRespiratoryDistress()) {
+    const double severity = m_PatientActions->GetAcuteRespiratoryDistress()->GetSeverity().GetValue();
+    const double diffusionCapacityReductionFactor = GeneralMath::LinearInterpolator(0.0, 1.0, 1.0, 15.0, severity);
+    StandardDiffusingCapacityOfOxygen_mLPersPermmHg *= (1.0 / diffusionCapacityReductionFactor);
+  }
 
   for (SESubstance* sub : m_data.GetSubstances().GetActiveGases()) {
     sub->GetAlveolarTransfer().SetValue(0, VolumePerTimeUnit::mL_Per_s);
@@ -1798,15 +1804,15 @@ void Tissue::CalculateTissueFluidFluxes()
   }
 
   //Test lung injury
-  int steps = m_data.GetSimulationTime().GetValue(TimeUnit::s) / m_data.GetTimeStep().GetValue(TimeUnit::s);
+  /*int steps = m_data.GetSimulationTime().GetValue(TimeUnit::s) / m_data.GetTimeStep().GetValue(TimeUnit::s);
   if (steps > 15000 && steps < 90000) {
     SETissueCompartment* lung = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::LeftLung);
     SEFluidCircuitPath* lungPath = m_EndothelialResistancePaths[lung];
-    lungPath->GetNextResistance().SetValue(lungPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * 0.2, FlowResistanceUnit::mmHg_min_Per_mL);
+    lungPath->GetNextResistance().SetValue(lungPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * 0.001, FlowResistanceUnit::mmHg_min_Per_mL);
     lung = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::RightLung);
     lungPath = m_EndothelialResistancePaths[lung];
-    lungPath->GetNextResistance().SetValue(lungPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * 0.2, FlowResistanceUnit::mmHg_min_Per_mL);
-  }
+    lungPath->GetNextResistance().SetValue(lungPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_min_Per_mL) * 0.001, FlowResistanceUnit::mmHg_min_Per_mL);
+  }*/
 
   ///\ToDo:  Use derivative of P-V relationship in Himeno2015Mechanisms to update lymph compliance as volume changes
 }

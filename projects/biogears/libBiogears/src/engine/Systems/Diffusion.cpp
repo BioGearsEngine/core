@@ -375,10 +375,10 @@ void DiffusionCalculator::CalculatePerfusionLimitedDiffusion(DiffusionCompartmen
   SELiquidCompartment& intracellular = *cmptSet.intracellular;
   SELiquidSubstanceQuantity* vSubQ = vascular.GetSubstanceQuantity(sub);
   if (vSubQ == nullptr)
-    throw CommonDataModelException("No Vascular Substance Quantity found for substance " + std::string{ sub.GetName() });
+    throw CommonDataModelException("No Vascular Substance Quantity found for substance " + std::string { sub.GetName() });
   SELiquidSubstanceQuantity* tSubQ = intracellular.GetSubstanceQuantity(sub);
   if (tSubQ == nullptr)
-    throw CommonDataModelException("No Tissue-Intracellular Substance Quantity found for substance " + std::string{ sub.GetName() });
+    throw CommonDataModelException("No Tissue-Intracellular Substance Quantity found for substance " + std::string { sub.GetName() });
 
   double VascularFlow_m_LPer_s = vascular.GetInFlow(VolumePerTimeUnit::mL_Per_s);
   double VascularConcentration_ug_Per_mL = vSubQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
@@ -598,12 +598,7 @@ void DiffusionCalculator::CalculateMacromoleculeDiffusion(DiffusionCompartmentSe
     double tissueIntegrity = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
     reflectionCoefficientSmall = reflectionCoefficientSmallBase * tissueIntegrity;
   }
-  int steps = m_data.GetSimulationTime().GetValue(TimeUnit::s) / m_data.GetTimeStep().GetValue(TimeUnit::s);
-  if (steps > 15000 && steps < 90000) {
-    if (fluidFluxPathName == "LeftLungE2ToE3" || fluidFluxPathName == "RightLungE2ToE3") {
-      reflectionCoefficientSmall = 0.0;
-    }
-  }
+
   BLIM(reflectionCoefficientSmall, 0.0, 1.0);
   BLIM(reflectionCoefficientLarge, 0.0, 1.0);
 
