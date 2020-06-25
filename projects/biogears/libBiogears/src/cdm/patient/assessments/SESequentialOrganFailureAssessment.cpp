@@ -26,6 +26,7 @@ SESequentialOrganFailureAssessment::SESequentialOrganFailureAssessment(Logger* l
   m_CoagulationSOFA = nullptr;
   m_LiverSOFA = nullptr;
   m_CardiovascularSOFA = nullptr;
+  m_CentralNervousSOFA = nullptr;
   m_RenalSOFA = nullptr;
 }
 
@@ -41,6 +42,7 @@ void SESequentialOrganFailureAssessment::Clear()
   SAFE_DELETE(m_CoagulationSOFA);
   SAFE_DELETE(m_LiverSOFA);
   SAFE_DELETE(m_CardiovascularSOFA);
+  SAFE_DELETE(m_CentralNervousSOFA);
   SAFE_DELETE(m_RenalSOFA);
 }
 
@@ -51,17 +53,19 @@ void SESequentialOrganFailureAssessment::Reset()
   INVALIDATE_PROPERTY(m_CoagulationSOFA);
   INVALIDATE_PROPERTY(m_LiverSOFA);
   INVALIDATE_PROPERTY(m_CardiovascularSOFA);
+  INVALIDATE_PROPERTY(m_CentralNervousSOFA);
   INVALIDATE_PROPERTY(m_RenalSOFA);
 }
 
 bool SESequentialOrganFailureAssessment::Load(const CDM::SequentialOrganFailureAssessmentData& in)
 {
   SEPatientAssessment::Load(in);
-  GetRespirationSOFA().Load(in.RespirationSOFA);
-  GetCoagulationSOFA().Load(in.CoagulationSOFA);
-  GetLiverSOFA().Load(in.LiverSOFA);
-  GetCardiovascularSOFA().Load(in.CardiovascularSOFA);
-  GetRenalSOFA().Load(in.RenalSOFA);
+  GetRespirationSOFA().Load(in.RespirationSOFA());
+  GetCoagulationSOFA().Load(in.CoagulationSOFA());
+  GetLiverSOFA().Load(in.LiverSOFA());
+  GetCardiovascularSOFA().Load(in.CardiovascularSOFA());
+  GetCentralNervousSOFA().Load(in.CentralNervousSOFA());
+  GetRenalSOFA().Load(in.RenalSOFA());
   return true;
 }
 
@@ -83,6 +87,8 @@ void SESequentialOrganFailureAssessment::Unload(CDM::SequentialOrganFailureAsses
     data.LiverSOFA(std::unique_ptr<CDM::ScalarData>(m_LiverSOFA->Unload()));
   if (HasCardiovascularSOFA())
     data.CardiovascularSOFA(std::unique_ptr<CDM::ScalarData>(m_CardiovascularSOFA->Unload()));
+  if (HasCentralNervousSOFA())
+    data.CentralNervousSOFA(std::unique_ptr<CDM::ScalarData>(m_CentralNervousSOFA->Unload()));
   if (HasRenalSOFA())
     data.RenalSOFA(std::unique_ptr<CDM::ScalarData>(m_RenalSOFA->Unload()));
 }
@@ -130,6 +136,19 @@ SEScalar& SESequentialOrganFailureAssessment::GetCardiovascularSOFA()
     m_CardiovascularSOFA = new SEScalar();
   return *m_CardiovascularSOFA;
 }
+
+bool SESequentialOrganFailureAssessment::HasCentralNervousSOFA()
+{
+  return m_CentralNervousSOFA == nullptr ? false : m_CentralNervousSOFA->IsValid();
+}
+SEScalar& SESequentialOrganFailureAssessment::GetCentralNervousSOFA()
+{
+  if (m_CentralNervousSOFA == nullptr)
+    m_CentralNervousSOFA = new SEScalar();
+  return *m_CentralNervousSOFA;
+}
+
+
 
 bool SESequentialOrganFailureAssessment::HasRenalSOFA()
 {

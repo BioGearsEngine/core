@@ -75,6 +75,7 @@ public:
 
   bool CalculateCompleteBloodCount(SECompleteBloodCount& cbc);
   bool CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabolicPanel& cmp);
+  SEScalar& CalculateCoagulationSOFA();
   void CalculateHemolyticTransfusionReaction(bool rhMismatch = false);
 
 protected:

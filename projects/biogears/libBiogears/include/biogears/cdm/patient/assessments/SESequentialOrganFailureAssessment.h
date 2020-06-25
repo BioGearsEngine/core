@@ -45,6 +45,9 @@ public:
   virtual bool HasCardiovascularSOFA();
   virtual SEScalar& GetCardiovascularSOFA();
 
+  virtual bool HasCentralNervousSOFA();
+  virtual SEScalar& GetCentralNervousSOFA();
+
   virtual bool HasRenalSOFA();
   virtual SEScalar& GetRenalSOFA();
 
@@ -53,6 +56,7 @@ protected:
   SEScalar* m_CoagulationSOFA;
   SEScalar* m_LiverSOFA;
   SEScalar* m_CardiovascularSOFA;
+  SEScalar* m_CentralNervousSOFA;
   SEScalar* m_RenalSOFA;
 
 };

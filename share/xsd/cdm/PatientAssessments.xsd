@@ -55,6 +55,7 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="CoagulationSOFA" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief Determined by platelet count -->
 					<xs:element name="LiverSOFA" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief Determined by bilirubin count -->
 					<xs:element name="CardiovascularSOFA" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief Determined by hypotension and administered pressors. -->
+					<xs:element name="CentralNervousSOFA" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief Determined by Glagow Coma Score -->
 					<xs:element name="RenalSOFA" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief Determined by urine output and creatinine concentration. -->
 				</xs:sequence>
 			</xs:extension>

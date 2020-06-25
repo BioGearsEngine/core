@@ -295,7 +295,6 @@ void BloodChemistry::Process()
     GetPulseOximetry().Set(GetOxygenSaturation());
   }
 
-
   // This Hemoglobin Content is the mass of the hemoglobin only, not the hemoglobin and bound gas.
   // So we have to take our 4 Hb species masses and remove the mass of the gas.
   // Step 1) Get the mass of the bound species, which includes the mass of the bound gas.
@@ -447,8 +446,6 @@ void BloodChemistry::CheckBloodSubstanceLevels()
   double hyperglycemiaLevel_mg_Per_dL = 200;
   double lacticAcidosisLevel_mg_Per_dL = 44;
   double ketoacidosisLevel_mg_Per_dL = 122;
-
-
 
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
   m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
@@ -741,6 +738,14 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
   return true;
 }
 
+//Stub for Coagulation SOFA calculation for when we model platelet count more accurately
+SEScalar& BloodChemistry::CalculateCoagulationSOFA()
+{
+  SEScalar* sofa = new SEScalar();
+  sofa->SetValue(0.0);
+  return *sofa;
+}
+
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Reaction when incompatible blood is transfused
@@ -973,7 +978,7 @@ void BloodChemistry::ManageSIRS()
   double neutrophilActive = m_InflammatoryResponse->GetNeutrophilActive().GetValue();
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
-  double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL); 
+  double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
   double wbcAbsolute_ct_Per_uL = wbcCount_ct_Per_uL * (1.0 + neutrophilActive / 0.25);
   m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
   GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
@@ -1051,7 +1056,7 @@ void BloodChemistry::InflammatoryResponse()
   if (m_data.GetActions().GetPatientActions().HasHemorrhage()) {
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Hemorrhage) == sources.end()) {
       m_InflammatoryResponse->GetTrauma().SetValue(1.0);
-      m_InflammatoryResponse->GetAutonomicResponseLevel().SetValue(1.0); 
+      m_InflammatoryResponse->GetAutonomicResponseLevel().SetValue(1.0);
       m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Hemorrhage);
     }
   }
@@ -1122,7 +1127,7 @@ void BloodChemistry::InflammatoryResponse()
   double kTr = 0.0; //Base value--will be adjusted during burn/hemorrhage (see below)
   double xTr = 0.25;
   //Volume and blood pressure effect
-  double fB = 0.0;        //0 except during hemorrhage
+  double fB = 0.0; //0 except during hemorrhage
   //Macrophage interaction
   double kML = 1.01e2, kMTR = 0.04, kM6 = 0.1, kMB = 0.0495, kMR = 0.05, kMD = 0.05, xML = 37.5, xMD = 0.75, xMTNF = 0.4, xM6 = 1.0, xM10 = 0.297, xMCA = 0.9; //Note xMD was 1.0 for burn, see if this messes things up
   //Activate macrophage interactions
@@ -1146,9 +1151,9 @@ void BloodChemistry::InflammatoryResponse()
   //IL12
   double k12M = 0.303, k12 = 0.05, x12TNF = 0.2, x126 = 0.2, x1210 = 0.2525;
   //Autonomic response
-  double kAuto = 0.0;   //Base value--will be adjusted during burn/hemorrhage (see below)
+  double kAuto = 0.0; //Base value--will be adjusted during burn/hemorrhage (see below)
   //Damage
-  double kD6 = 0.125, kD = 0.15, kDB = 0.5, xD6 = 0.85, xDNO = 0.5, hD6 = 6.0;   //kDB = 1.0
+  double kD6 = 0.125, kD = 0.15, kDB = 0.5, xD6 = 0.85, xDNO = 0.5, hD6 = 6.0; //kDB = 1.0
   double kDTR = 0.0; //This is a base value that will be adjusted as a function of type and severity of trauma
   double tiMin = 0.2; //Minimum tissue integrity allowed
 

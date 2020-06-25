@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/patient/assessments/SEPsychomotorVigilanceTask.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
+#include <biogears/cdm/patient/assessments/SESequentialOrganFailureAssessment.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFlowElastance.h>
@@ -629,7 +630,7 @@ bool BioGears::SetupPatient()
   if (!m_Patient->HasTotalLungCapacity()) {
     totalLungCapacity_L = computedTotalLungCapacity_L;
     m_Patient->GetTotalLungCapacity().SetValue(totalLungCapacity_L, VolumeUnit::L);
-        m_Logger->Info(std::stringstream() << "No patient total lung capacity set. Using a computed value of " << computedTotalLungCapacity_L << " L.");
+    m_Logger->Info(std::stringstream() << "No patient total lung capacity set. Using a computed value of " << computedTotalLungCapacity_L << " L.");
   }
   totalLungCapacity_L = m_Patient->GetTotalLungCapacity(VolumeUnit::L);
   if (totalLungCapacity_L != computedTotalLungCapacity_L) {
@@ -982,6 +983,18 @@ bool BioGears::GetPatientAssessment(SEPatientAssessment& assessment)
   SEUrinalysis* u = dynamic_cast<SEUrinalysis*>(&assessment);
   if (u != nullptr) {
     return m_RenalSystem->CalculateUrinalysis(*u);
+  }
+
+  SESequentialOrganFailureAssessment* sofa = dynamic_cast<SESequentialOrganFailureAssessment*>(&assessment);
+  if (sofa != nullptr) {
+    sofa->Reset();
+    sofa->GetRespirationSOFA().Set(m_RespiratorySystem->CalculateRespirationSOFA());
+    sofa->GetRenalSOFA().Set(m_RenalSystem->CalculateRenalSOFA());
+    sofa->GetCoagulationSOFA().Set(m_BloodChemistrySystem->CalculateCoagulationSOFA());
+    sofa->GetLiverSOFA().Set(m_HepaticSystem->CalculateLiverSOFA());
+    sofa->GetCardiovascularSOFA().Set(m_CardiovascularSystem->CalculateCardiovascularSOFA());
+    sofa->GetCentralNervousSOFA().Set(m_NervousSystem->CalculateCentralNervousSOFA());
+    return true;
   }
 
   m_Logger->Error("Unsupported patient assessment");

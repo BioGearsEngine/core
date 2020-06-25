@@ -1197,7 +1197,7 @@ void Cardiovascular::Hemorrhage()
 
   //We already filtered tourniquet actions during Action Loading to make sure that we do not have a tourniquet that A) Aligns with a non-existent hemorrhage
   //or B) refers to an incompatible compartments.  We are therefore safe to loop through this map without further checks.
-  
+
   for (auto tPair : tourniquets) {
     tournCmpt = tPair.first;
     tourniquet = tPair.second;
@@ -1561,7 +1561,6 @@ void Cardiovascular::BeginCardiacCycle()
   double systolicOverride_mmHg = GetSystolicArterialPressure().GetValue(PressureUnit::mmHg);
   double diastolicOverride_mmHg = GetDiastolicArterialPressure().GetValue(PressureUnit::mmHg);
   double HeartDriverFrequency_Per_Min = m_patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
-
 
   if (m_data.GetActions().GetPatientActions().HasOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
     SEOverride* override = m_data.GetActions().GetPatientActions().GetOverride();
@@ -2167,6 +2166,32 @@ void Cardiovascular::CalculateHeartRate()
   GetHeartRate().SetValue(HeartRate_Per_s * 60.0, FrequencyUnit::Per_min);
   m_CurrentCardiacCycleDuration_s = 0.0; //Incremented each time step in HeartDriver
 }
+
+SEScalar& Cardiovascular::CalculateCardiovascularSOFA()
+{
+  SEScalar* sofa = new SEScalar();
+  double sofaScore = 0.0;
+  const double meanPressure = GetMeanArterialPressure(PressureUnit::mmHg);
+  SESubstance* norEpi = m_data.GetSubstances().GetSubstance("Norepinephrine");
+  std::map<const SESubstance*, SESubstanceInfusion*> infusionMap = m_data.GetActions().GetPatientActions().GetSubstanceInfusions();
+  if (meanPressure >= 70.0) {
+    //Normal, leave sofaScore = 0
+  } else if (m_data.GetSubstances().IsActive(*norEpi) && infusionMap.find(norEpi) != infusionMap.end()) {
+    SESubstanceInfusion* norEpiInfusion = infusionMap.at(norEpi);
+    const double infusionRate_ug_Per_kg_min = norEpiInfusion->GetRate().GetValue(VolumePerTimeUnit::mL_Per_min) * norEpiInfusion->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL) / m_data.GetPatient().GetWeight(MassUnit::kg);
+    if (infusionRate_ug_Per_kg_min < 0.1) {
+      sofaScore = 3.0;
+    } else {
+      sofaScore = 4.0;
+    }
+  } else {
+    //MAP < 70, but we aren't giving catecholamines yet
+    sofaScore = 1.0;
+  }
+  sofa->SetValue(sofaScore);
+  return *sofa;
+}
+
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// determine override requirements from user defined inputs

@@ -89,6 +89,7 @@ public:
   void PostProcess() override;
 
   bool CalculatePulmonaryFunctionTest(SEPulmonaryFunctionTest& pft);
+  SEScalar& CalculateRespirationSOFA();
 
 private:
   //Tuning

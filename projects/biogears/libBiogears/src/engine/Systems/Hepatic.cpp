@@ -20,8 +20,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -658,4 +658,25 @@ void Hepatic::Lipogenesis()
   //TODO Add lipogenesis rate to CDM
   //m_data.GetDataTrack().Probe("InstantaneousTAGGenerated(mg)", TAGGenerated_g * 1000);
 }
+
+SEScalar& Hepatic::CalculateLiverSOFA()
+{
+  SEScalar* sofa = new SEScalar();
+  double sofaScore = 0.0;
+  const double bilirubinCount = m_data.GetBloodChemistry().GetTotalBilirubin(MassPerVolumeUnit::mg_Per_dL);
+  if (bilirubinCount <= 1.2) {
+    //Normal, leave sofaScore = 0
+  } else if (bilirubinCount <= 2.0) {
+    sofaScore = 1.0;
+  } else if (bilirubinCount <= 6.0) {
+    sofaScore = 2.0;
+  } else if (bilirubinCount <= 12.0) {
+    sofaScore = 3.0;
+  } else {
+    sofaScore = 4.0;
+  }
+  sofa->SetValue(sofaScore);
+  return *sofa;
+}
+
 }

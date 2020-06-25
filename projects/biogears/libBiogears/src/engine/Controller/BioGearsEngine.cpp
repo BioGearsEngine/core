@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
+#include <biogears/cdm/patient/assessments/SESequentialOrganFailureAssessment.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/cdm/scenario/SEScenario.h>
@@ -803,6 +804,27 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       std::unique_ptr<CDM::ComprehensiveMetabolicPanelData> unloaded(mp.Unload());
       unloaded->contentVersion(BGE::Version);
       ComprehensiveMetabolicPanel(stream, *mp.Unload(), map);
+      stream.close();
+      break;
+    }
+    case CDM::enumPatientAssessment::SequentialOrganFailureAssessment: {
+      SESequentialOrganFailureAssessment sofa(m_Logger);
+      GetPatientAssessment(sofa);
+      std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
+      if (results_filepath.empty()) {
+        results_filepath = "SequentialOrganFailureAssessment";
+      }
+      m_ss << "_SOFA@" << GetSimulationTime(TimeUnit::s) << "s";
+      results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
+      results_filepath += m_ss.str() + ".xml";
+      std::ofstream stream(ResolvePath(results_filepath));
+
+      // Write out the xml file
+      xml_schema::namespace_infomap map;
+      map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
+      std::unique_ptr<CDM::SequentialOrganFailureAssessmentData> unloaded(sofa.Unload());
+      unloaded->contentVersion(BGE::Version);
+      SequentialOrganFailureAssessment(stream, *sofa.Unload(), map);
       stream.close();
       break;
     }

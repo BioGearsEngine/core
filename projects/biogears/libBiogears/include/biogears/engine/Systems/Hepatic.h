@@ -57,6 +57,9 @@ public:
   virtual bool Load(const CDM::BioGearsHepaticSystemData& in);
   virtual CDM::BioGearsHepaticSystemData* Unload() const override;
 
+  //Assessments
+  SEScalar& CalculateLiverSOFA();
+
 protected:
   virtual void Unload(CDM::BioGearsHepaticSystemData& data) const;
 

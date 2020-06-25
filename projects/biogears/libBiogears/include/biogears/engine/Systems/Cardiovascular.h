@@ -54,7 +54,6 @@ protected:
 
 public:
   virtual ~Cardiovascular() override;
-  ;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
   static constexpr char const * const  TypeTag() { return "Cardiovascular"; }
@@ -69,6 +68,9 @@ public:
   // Load a state
   virtual bool Load(const CDM::BioGearsCardiovascularSystemData& in);
   virtual CDM::BioGearsCardiovascularSystemData* Unload() const override;
+
+  //Assessments
+  SEScalar& CalculateCardiovascularSOFA();
 
 protected:
   virtual void Unload(CDM::BioGearsCardiovascularSystemData& data) const;

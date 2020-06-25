@@ -76,6 +76,7 @@ public:
 
   // Assessments
   bool CalculateUrinalysis(SEUrinalysis& u);
+  SEScalar& CalculateRenalSOFA();
 
 protected:
   struct ActiveTransport {

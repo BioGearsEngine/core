@@ -2180,6 +2180,27 @@ bool Respiratory::CalculatePulmonaryFunctionTest(SEPulmonaryFunctionTest& pft)
   return true;
 }
 
+SEScalar& Respiratory::CalculateRespirationSOFA()
+{
+  SEScalar* sofa = new SEScalar();
+  double sofaScore = 0.0;
+  const double carricoIndex = GetCarricoIndex(PressureUnit::mmHg);
+  if (carricoIndex >= 400.0) {
+    //Normal, leave sofaScore = 0.0
+  } else if (carricoIndex >= 300.0) {
+    sofaScore = 1.0;
+  } else if (carricoIndex >= 200.0) {
+    sofaScore = 2.0;
+  } else if (carricoIndex >= 100.0) {
+    sofaScore = 3.0;
+  } else {
+    sofaScore = 4.0;
+  }
+
+  sofa->SetValue(sofaScore);
+  return *sofa;
+}
+
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Run the circuit standalone for a little to get it into a good starting state

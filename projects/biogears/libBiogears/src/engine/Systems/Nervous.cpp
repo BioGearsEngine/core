@@ -1186,7 +1186,6 @@ void Nervous::SetPupilEffects()
   GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
 }
 
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Sets data on the PVT object.
@@ -1315,4 +1314,15 @@ void biogears::Nervous::UpdateSleepState()
   }
   return;
 }
+
+SEScalar& Nervous::CalculateCentralNervousSOFA()
+{
+  SEScalar* sofa = new SEScalar();
+  double sofaScore = 0.0;
+  //No Glasgow Coma Score in BioGears yet -- could try to use pupil effects
+  sofa->SetValue(sofaScore);
+  return *sofa;
 }
+
+}
+
