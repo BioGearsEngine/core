@@ -129,13 +129,63 @@ class CDM2MD:
         self.tags=dict(sorted(self.tags.items(),key=lambda x:x[0]))
         #print(self.tags)
 
+    def table_create(self,fout):
+        fout.write("CDM Tables {#CDMTables}\n")
+        fout.write("=======================\n")
+        for i in self.tags:
+            fout.write("@anchor "+i+"Table\n")
+            fout.write("## "+i+"\n")
+            fout.write("@copybrief "+"CDM_"+i+"\n")
+            fout.write("|Property Name   |"+"Type     |"+"Definiton     |\n")
+            fout.write("|---          "+"|---         "+"|---             |\n")
+            values=self.tags[i]
+            for propname,type1 in values.items():
+                fout.write("|"+propname)
+                if propname in self.list_names:
+                    fout.write("|List of SE"+propname+"s")
+                    fout.write("|@ref "+propname+"Table"+" "*10+"|\n")
+                else:
+                    if type1.startswith("xs:"):
+                        fout.write("|"+type1[3:]+" "*5)
+                        if type1=="xs:string":
+                            txt="|@copybrief CDM_"+i+"_"+propname+" "*20+"|\n"
+                            fout.write(txt)
+                        else:
+                            fout.write("|@ref "+type1[3:]+"Table"+"|\n")
+
+                    elif type1.startswith("enum"):
+                        fout.write("|E"+type1[1:])
+                        txt="|@copybrief CDM_"+i+"_"+propname+" "*20+"|\n"
+                        fout.write(txt)
+                    elif type1.startswith("Scalar"):
+                        fout.write("|"+type1)
+                        txt="|@copybrief CDM_"+i+"_"+propname+" "*20+"|\n"
+                        fout.write(txt)
+                    elif type1 in self.tags.keys():
+                        if type1=="DoubleArray" or type1=="IntegerArray":
+                            fout.write("|"+type1)
+                            fout.write("|@ref "+type1+"Table"+"|\n")
+                        else:
+                            if type1 in self.list_types:
+                                fout.write("|List of SE"+propname+"s")
+                                fout.write("|@ref "+propname+"Table"+" "*10+"|\n")
+                            else:
+                                fout.write("|"+type1)
+                                fout.write("|@ref "+type1+"Table"+" "*10+"|\n")
+                    elif type1.startswith("list"):
+                        fout.write("|List of SE"+propname+"s")
+                        fout.write("|@ref "+propname+"Table"+" "*10+"|\n")
+                    elif type1 not in self.tags.keys():
+                        fout.write("|"+type1)
+                        fout.write("|@ref "+type1+"Table"+" "*10+"|\n")
+
+            fout.write("\n\n")
 
 if __name__=="__main__":
     import sys
     CDM=CDM2MD()
     CDM.files_processed.append("./xsd/BioGearsDataModel.xsd")
     destDir = "./doc/doxygen/processed_md/"
-    #destDir="/home/shashank/Desktop/biogears_tips/"
     if not os.path.exists(destDir):
         os.mkdir(destDir)
     fout=open(os.path.join(destDir,"CDMTables.md"),'w',encoding="utf-8")
@@ -145,4 +195,4 @@ if __name__=="__main__":
     list_name=list(set(CDM.list_names))
     CDM.list_types=list_type
     CDM.list_names=list_name
- 
+    CDM.table_create(fout) 
