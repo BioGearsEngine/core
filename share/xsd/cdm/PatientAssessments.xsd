@@ -46,6 +46,23 @@ specific language governing permissions and limitations under the License.
 	</xs:complexType>
 	<xs:element name="PulmonaryFunctionTest" type="PulmonaryFunctionTestData"/>
 	
+	<!-- @brief A measure of end-organ integrity, particulary in shock states such as sepsis.  Each category is scored on a scale of 1 (best) to 4 (worst) -->
+	<xs:complexType name="SequentialOrganFailureAssessmentData">
+		<xs:complexContent>
+			<xs:extension base="PatientAssessmentData">
+				<xs:sequence>
+					<xs:element name="RespirationSOFA" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief Determined by Carrico Index (PaO2 / FiO2) -->
+					<xs:element name="CoagulationSOFA" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief Determined by platelet count -->
+					<xs:element name="LiverSOFA" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief Determined by bilirubin count -->
+					<xs:element name="CardiovascularSOFA" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief Determined by hypotension and administered pressors. -->
+					<xs:element name="RenalSOFA" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief Determined by urine output and creatinine concentration. -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="SequentialOrganFailureAssessment" type="SequentialOrganFailureAssessmentData"/>
+	
+	
 	<!-- @brief A blood test used to evaluate overall health and detect a wide range of disorders.
 	     @details References<br>
 	              http://www.nlm.nih.gov/medlineplus/ency/article/003642.htm <br>

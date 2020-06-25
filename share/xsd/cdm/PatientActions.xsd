@@ -30,6 +30,7 @@ specific language governing permissions and limitations under the License.
 			<xs:enumeration value="PulmonaryFunctionTest"/>
 			<xs:enumeration value="CompleteBloodCount"/>
 			<xs:enumeration value="ComprehensiveMetabolicPanel"/>
+			<xs:enumeration value="SequentialOrganFailureAssessment"/>
 			<xs:enumeration value="Urinalysis"/>
 		</xs:restriction>
 	</xs:simpleType>
