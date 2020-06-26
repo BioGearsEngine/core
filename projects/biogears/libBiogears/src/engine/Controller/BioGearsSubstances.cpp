@@ -1107,7 +1107,6 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
   for (SESubstance* sub : m_Substances) {
     if (sub->HasPD()) {
       for (auto pdMod : sub->GetPD().GetPharmacodynamicModifiers()) {
-        std::cout << sub->GetName() << " : " << pdMod.first << " = " << pdMod.second->GetEC50() << "\n";
         if (pdMod.second->GetEC50().IsNegative()) {
           std::stringstream ss;
           ss << sub->GetName() << ": " << pdMod.first << " cannot have EC50 < 0";
