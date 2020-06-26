@@ -3,6 +3,21 @@ from xml.dom import minidom
 import xmltodict
 import json
 
+"""
+CDM2MD class
+______________________________________________________________________
+
+Converts every ComplexType root level tags to the table following
+structure:-
+
+@anchor <ComplexTypeName>+Table
+##<ComplexTypeName>
+@copybrief CDM_<ComplexTypeName>
+|Property Name   |Type    |Definition|
+|---             |---        |---            |
+|<Element Name> |Element type  |@ref/@copybrief <ElementName >Table |
+"""
+
 class CDM2MD:
     def __init__(self):
         self.name=[]
@@ -15,6 +30,12 @@ class CDM2MD:
         self.base1=[]
         
     def process_sc(self,fout):
+        """
+        Process_sc
+        ___________________
+        
+        Creates a minidom parser
+        """
         for input_file in self.files_processed:
             sc=minidom.parse(input_file)
             for child in sc.childNodes:
@@ -22,6 +43,16 @@ class CDM2MD:
                     self.parse(child,fout)
 
     def GenComplexType(self,node,fout):
+        """
+        GenComplexType
+        ____________________________________________________
+        
+        It takes in the complexType node as an argument then
+        converts that node into dictionary level structure and
+        by reiterating through that it extracts element name and
+        type from that dictionary depending on the structure
+        
+        """
         xml_json=json.dumps(xmltodict.parse(node.toxml()))
         json_dict=json.loads(xml_json)
         c_type=json_dict["xs:complexType"]
@@ -54,6 +85,11 @@ class CDM2MD:
         self.name=[]
 
     def iterdict(self,d):
+        """
+        Iterates over the dictionary and extracts name
+        and type from it and append to the names and type
+        lists
+        """
         for k,v in d.items():
             if isinstance(v, dict):
                 if k=="xs:element":
@@ -93,6 +129,13 @@ class CDM2MD:
 
 
     def parse(self,node,fout):
+        """
+        Parse
+        ____________________________________________________
+
+        It checks for the node of childnodes to be either complexType
+        or include type for parsing through the function to create table
+        """
         for i in node.childNodes:
             if i.nodeName=="xs:complexType":
                 self.GenComplexType(i,fout)
@@ -112,6 +155,15 @@ class CDM2MD:
                     self.files_processed.append(files)
 
     def convert(self):
+        """
+        Convert
+        _______________________________________________________
+
+        It converts dictionary of lists into dictionary of dictionaries
+        and replaces all of the string which are extensions with the specific 
+        dictionary as well
+        """
+
         for i,j in self.tags.items():
             for k in j:
                 if isinstance(k,str):
@@ -130,6 +182,15 @@ class CDM2MD:
         #print(self.tags)
 
     def table_create(self,fout):
+        """
+        Table_create
+        ____________________________________________________________________________________________
+
+        It is used for creation of CDMTables from the dictionary of dictionaries
+        names tags variables and then extracts it specific Property Name represented 
+        with dictionary key and Types are replaced with dictionary values and definition are
+        replaced with @ref and @copybrief tags accordingly with list or another types
+        """
         fout.write("CDM Tables {#CDMTables}\n")
         fout.write("=======================\n")
         for i in self.tags:
@@ -184,8 +245,9 @@ class CDM2MD:
 if __name__=="__main__":
     import sys
     CDM=CDM2MD()
-    CDM.files_processed.append("./xsd/BioGearsDataModel.xsd")
-    destDir = "./doc/doxygen/processed_md/"
+    CDM.files_processed.append("/opt/biogears/core/share/xsd/BioGearsDataModel.xsd")
+    #destDir = "./doc/doxygen/processed_md/"
+    destDir="."
     if not os.path.exists(destDir):
         os.mkdir(destDir)
     fout=open(os.path.join(destDir,"CDMTables.md"),'w',encoding="utf-8")
