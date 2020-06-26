@@ -24,11 +24,8 @@ SENutrition::SENutrition(Logger* logger)
 {
   m_Name = "Standard Meal";
   m_Carbohydrate = nullptr;
-  m_CarbohydrateDigestionRate = nullptr;
   m_Fat = nullptr;
-  m_FatDigestionRate = nullptr;
   m_Protein = nullptr;
-  m_ProteinDigestionRate = nullptr;
   m_Calcium = nullptr;
   m_Sodium = nullptr;
   m_Water = nullptr;
@@ -43,11 +40,8 @@ void SENutrition::Clear()
 {
   m_Name = "";
   SAFE_DELETE(m_Carbohydrate);
-  SAFE_DELETE(m_CarbohydrateDigestionRate);
   SAFE_DELETE(m_Fat);
-  SAFE_DELETE(m_FatDigestionRate);
   SAFE_DELETE(m_Protein);
-  SAFE_DELETE(m_ProteinDigestionRate);
   SAFE_DELETE(m_Calcium);
   SAFE_DELETE(m_Sodium);
   SAFE_DELETE(m_Water);
@@ -62,36 +56,12 @@ void SENutrition::Increment(const SENutrition& from)
 {
   double weightedRate; //Unit independent
   if (from.HasCarbohydrate()) {
-    if (HasCarbohydrateDigestionRate()) {
-      // Compute the weighted rate (before we increment nutrient)
-      weightedRate = ComputeWeightedRate(GetCarbohydrate(MassUnit::g), from.GetCarbohydrate(MassUnit::g),
-                                         GetCarbohydrateDigestionRate(MassPerTimeUnit::g_Per_s), from.GetCarbohydrateDigestionRate(MassPerTimeUnit::g_Per_s));
-      GetCarbohydrateDigestionRate().SetValue(weightedRate, MassPerTimeUnit::g_Per_s);
-    } else {
-      GetCarbohydrateDigestionRate().SetValue(from.GetCarbohydrateDigestionRate(MassPerTimeUnit::g_Per_s), MassPerTimeUnit::g_Per_s);
-    }
     GetCarbohydrate().Increment(*from.m_Carbohydrate);
   }
   if (from.HasFat()) {
-    if (HasFatDigestionRate()) {
-      // Compute the weighted rate (before we increment nutrient)
-      weightedRate = ComputeWeightedRate(GetFat(MassUnit::g), from.GetFat(MassUnit::g),
-                                         GetFatDigestionRate(MassPerTimeUnit::g_Per_s), from.GetFatDigestionRate(MassPerTimeUnit::g_Per_s));
-      GetFatDigestionRate().SetValue(weightedRate, MassPerTimeUnit::g_Per_s);
-    } else {
-      GetFatDigestionRate().SetValue(from.GetFatDigestionRate(MassPerTimeUnit::g_Per_s), MassPerTimeUnit::g_Per_s);
-    }
     GetFat().Increment(*from.m_Fat);
   }
   if (from.HasProtein()) {
-    if (HasProteinDigestionRate()) {
-      // Compute the weighted rate (before we increment nutrient)
-      weightedRate = ComputeWeightedRate(GetProtein(MassUnit::g), from.GetProtein(MassUnit::g),
-                                         GetProteinDigestionRate(MassPerTimeUnit::g_Per_s), from.GetProteinDigestionRate(MassPerTimeUnit::g_Per_s));
-      GetProteinDigestionRate().SetValue(weightedRate, MassPerTimeUnit::g_Per_s);
-    } else {
-      GetProteinDigestionRate().SetValue(from.GetProteinDigestionRate(MassPerTimeUnit::g_Per_s), MassPerTimeUnit::g_Per_s);
-    }
     GetProtein().Increment(*from.m_Protein);
   }
   if (from.HasCalcium())
@@ -113,16 +83,10 @@ bool SENutrition::Load(const CDM::NutritionData& in)
   }
   if (in.Carbohydrate().present())
     GetCarbohydrate().Load(in.Carbohydrate().get());
-  if (in.CarbohydrateDigestionRate().present())
-    GetCarbohydrateDigestionRate().Load(in.CarbohydrateDigestionRate().get());
   if (in.Fat().present())
     GetFat().Load(in.Fat().get());
-  if (in.FatDigestionRate().present())
-    GetFatDigestionRate().Load(in.FatDigestionRate().get());
   if (in.Protein().present())
     GetProtein().Load(in.Protein().get());
-  if (in.ProteinDigestionRate().present())
-    GetProteinDigestionRate().Load(in.ProteinDigestionRate().get());
   if (in.Calcium().present())
     GetCalcium().Load(in.Calcium().get());
   if (in.Sodium().present())
@@ -146,16 +110,10 @@ void SENutrition::Unload(CDM::NutritionData& data) const
   }
   if (m_Carbohydrate != nullptr)
     data.Carbohydrate(std::unique_ptr<CDM::ScalarMassData>(m_Carbohydrate->Unload()));
-  if (m_CarbohydrateDigestionRate != nullptr)
-    data.CarbohydrateDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_CarbohydrateDigestionRate->Unload()));
   if (m_Fat != nullptr)
     data.Fat(std::unique_ptr<CDM::ScalarMassData>(m_Fat->Unload()));
-  if (m_FatDigestionRate != nullptr)
-    data.FatDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_FatDigestionRate->Unload()));
   if (m_Protein != nullptr)
     data.Protein(std::unique_ptr<CDM::ScalarMassData>(m_Protein->Unload()));
-  if (m_ProteinDigestionRate != nullptr)
-    data.ProteinDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_ProteinDigestionRate->Unload()));
   if (m_Calcium != nullptr)
     data.Calcium(std::unique_ptr<CDM::ScalarMassData>(m_Calcium->Unload()));
   if (m_Sodium != nullptr)
@@ -173,16 +131,10 @@ const SEScalar* SENutrition::GetScalar(const std::string& name)
 {
   if (name.compare("Carbohydrate") == 0)
     return &GetCarbohydrate();
-  if (name.compare("CarbohydrateDigestionRate") == 0)
-    return &GetCarbohydrateDigestionRate();
   if (name.compare("Fat") == 0)
     return &GetFat();
-  if (name.compare("FatDigestionRate") == 0)
-    return &GetFatDigestionRate();
   if (name.compare("Protein") == 0)
     return &GetProtein();
-  if (name.compare("ProteinDigestionRate") == 0)
-    return &GetProteinDigestionRate();
   if (name.compare("Calcium") == 0)
     return &GetCalcium();
   if (name.compare("Sodium") == 0)
@@ -268,25 +220,6 @@ double SENutrition::GetCarbohydrate(const MassUnit& unit) const
   return m_Carbohydrate->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
-bool SENutrition::HasCarbohydrateDigestionRate() const
-{
-  return m_CarbohydrateDigestionRate == nullptr ? false : m_CarbohydrateDigestionRate->IsValid();
-}
-//-----------------------------------------------------------------------------
-SEScalarMassPerTime& SENutrition::GetCarbohydrateDigestionRate()
-{
-  if (m_CarbohydrateDigestionRate == nullptr)
-    m_CarbohydrateDigestionRate = new SEScalarMassPerTime();
-  return *m_CarbohydrateDigestionRate;
-}
-//-----------------------------------------------------------------------------
-double SENutrition::GetCarbohydrateDigestionRate(const MassPerTimeUnit& unit) const
-{
-  if (m_CarbohydrateDigestionRate == nullptr)
-    return SEScalar::dNaN();
-  return m_CarbohydrateDigestionRate->GetValue(unit);
-}
-//-----------------------------------------------------------------------------
 bool SENutrition::HasFat() const
 {
   return m_Fat == nullptr ? false : m_Fat->IsValid();
@@ -306,25 +239,6 @@ double SENutrition::GetFat(const MassUnit& unit) const
   return m_Fat->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
-bool SENutrition::HasFatDigestionRate() const
-{
-  return m_FatDigestionRate == nullptr ? false : m_FatDigestionRate->IsValid();
-}
-//-----------------------------------------------------------------------------
-SEScalarMassPerTime& SENutrition::GetFatDigestionRate()
-{
-  if (m_FatDigestionRate == nullptr)
-    m_FatDigestionRate = new SEScalarMassPerTime();
-  return *m_FatDigestionRate;
-}
-//-----------------------------------------------------------------------------
-double SENutrition::GetFatDigestionRate(const MassPerTimeUnit& unit) const
-{
-  if (m_FatDigestionRate == nullptr)
-    return SEScalar::dNaN();
-  return m_FatDigestionRate->GetValue(unit);
-}
-//-----------------------------------------------------------------------------
 bool SENutrition::HasProtein() const
 {
   return m_Protein == nullptr ? false : m_Protein->IsValid();
@@ -342,25 +256,6 @@ double SENutrition::GetProtein(const MassUnit& unit) const
   if (m_Protein == nullptr)
     return SEScalar::dNaN();
   return m_Protein->GetValue(unit);
-}
-//-----------------------------------------------------------------------------
-bool SENutrition::HasProteinDigestionRate() const
-{
-  return m_ProteinDigestionRate == nullptr ? false : m_ProteinDigestionRate->IsValid();
-}
-//-----------------------------------------------------------------------------
-SEScalarMassPerTime& SENutrition::GetProteinDigestionRate()
-{
-  if (m_ProteinDigestionRate == nullptr)
-    m_ProteinDigestionRate = new SEScalarMassPerTime();
-  return *m_ProteinDigestionRate;
-}
-//-----------------------------------------------------------------------------
-double SENutrition::GetProteinDigestionRate(const MassPerTimeUnit& unit) const
-{
-  if (m_ProteinDigestionRate == nullptr)
-    return SEScalar::dNaN();
-  return m_ProteinDigestionRate->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SENutrition::HasCalcium() const
@@ -443,16 +338,10 @@ void SENutrition::ToString(std::ostream& str) const
   str << "Nutrient Contents";
   str << "\n\tCharbohydrates: ";
   HasCarbohydrate() ? str << *m_Carbohydrate : str << "None";
-  str << "\n\tCharbohydrates Digestion Rate: ";
-  HasCarbohydrateDigestionRate() ? str << *m_CarbohydrateDigestionRate : str << "None";
   str << "\n\tFat: ";
   HasFat() ? str << *m_Fat : str << "None";
-  str << "\n\tFat Digestion Rate: ";
-  HasFatDigestionRate() ? str << *m_FatDigestionRate : str << "None";
   str << "\n\tProtein: ";
   HasProtein() ? str << *m_Protein : str << "None";
-  str << "\n\tProtein Digestion Rate: ";
-  HasProteinDigestionRate() ? str << *m_ProteinDigestionRate : str << "None";
   str << "\n\tCalcium: ";
   HasCalcium() ? str << *m_Calcium : str << "None";
   str << "\n\tSodium: ";

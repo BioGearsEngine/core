@@ -343,18 +343,6 @@ public:
   virtual SEScalarFraction& GetCarbohydrateAbsorptionFraction();
   virtual double GetCarbohydrateAbsorptionFraction() const;
 
-  virtual bool HasDefaultCarbohydrateDigestionRate() const;
-  virtual SEScalarMassPerTime& GetDefaultCarbohydrateDigestionRate();
-  virtual double GetDefaultCarbohydrateDigestionRate(const MassPerTimeUnit& unit) const;
-
-  virtual bool HasDefaultFatDigestionRate() const;
-  virtual SEScalarMassPerTime& GetDefaultFatDigestionRate();
-  virtual double GetDefaultFatDigestionRate(const MassPerTimeUnit& unit) const;
-
-  virtual bool HasDefaultProteinDigestionRate() const;
-  virtual SEScalarMassPerTime& GetDefaultProteinDigestionRate();
-  virtual double GetDefaultProteinDigestionRate(const MassPerTimeUnit& unit) const;
-
   virtual bool HasDefaultStomachContents() const;
   virtual SENutrition& GetDefaultStomachContents();
   virtual const SENutrition* GetDefaultStomachContents() const;
@@ -375,9 +363,6 @@ protected:
   SEScalarMassPerTime* m_CalciumDigestionRate;
   SEScalarFraction* m_CalciumAbsorptionFraction;
   SEScalarFraction* m_CarbohydrateAbsorptionFraction;
-  SEScalarMassPerTime* m_DefaultCarbohydrateDigestionRate;
-  SEScalarMassPerTime* m_DefaultFatDigestionRate;
-  SEScalarMassPerTime* m_DefaultProteinDigestionRate;
   SENutrition* m_DefaultStomachContents;
   SEScalarFraction* m_FatAbsorptionFraction;
   SEScalarFraction* m_ProteinToUreaFraction;

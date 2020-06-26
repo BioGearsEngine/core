@@ -317,7 +317,6 @@ void Gastrointestinal::PreProcess()
           Error("Could not read provided nutrition file", "Gastrointestinal::PreProcess");
         }
       }
-      DefaultNutritionRates(c->GetNutrition());
       m_StomachContents->Increment(c->GetNutrition());
       m_data.GetPatient().GetWeight().IncrementValue(c->GetNutrition().GetWeight(MassUnit::kg), MassUnit::kg);
       m_data.GetActions().GetPatientActions().RemoveConsumeNutrients();
@@ -479,7 +478,11 @@ void Gastrointestinal::DigestNutrient()
     // Wait till the water volume is correct on the chyme before we balance
   }
 
-  digestedAmount = DigestNutrient(m_StomachContents->GetWater(), m_WaterDigestionRate, false, m_dT_s);
+  const double waterContent_mL = m_StomachContents->GetWater().GetValue(VolumeUnit::mL);
+  const double waterToDigest_mL = m_WaterDigestionRate.GetValue(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
+
+  digestedAmount = waterToDigest_mL < waterContent_mL ? waterToDigest_mL : waterContent_mL;
+
   if (digestedAmount > 0) {
 #ifdef logDigest
     m_ss << "Digested " << digestedAmount << "(mL) of Water";
@@ -489,51 +492,6 @@ void Gastrointestinal::DigestNutrient()
   }
   // Balance Sodium, now that we have proper volume on the gut
   m_SmallIntestineChymeSodium->Balance(BalanceLiquidBy::Mass);
-}
-
-// --------------------------------------------------------------------------------------------------
-/// \brief
-/// Generic code for removal of an amount of a substance from the stomach based on rate and duration
-///
-/// \details
-/// This function is deprecated as of 6.2 release, it is kept to include nutritional conditions
-//--------------------------------------------------------------------------------------------------
-double Gastrointestinal::DigestNutrient(SEUnitScalar& totalAmt, SEUnitScalar& rate, bool mass, double duration_s)
-{
-  //TODO:sawhite:Overload DigestNutrients to a ScalarMass or a ScalarVolume in second paramter and drop third paramater
-  double digestedAmt = 0;
-  if (totalAmt.IsValid()) {
-    double t = totalAmt.GetValue((mass) ? MassUnit::g.GetString() : VolumeUnit::mL.GetString());
-    digestedAmt = rate.GetValue((mass) ? MassPerTimeUnit::g_Per_s.GetString() : VolumePerTimeUnit::mL_Per_s.GetString()) * duration_s;
-    if (t <= digestedAmt) {
-      digestedAmt = t;
-      if (m_DecrementNutrients) { // Decrement stomach contents only if we are running (not stabilizing)
-        totalAmt.Invalidate();
-        if (m_ConsumeRate) // We keep this rate, it's a system parameter not a per nutrition rate as the masses are
-          rate.Invalidate();
-      }
-    } else {
-      if (m_DecrementNutrients) // Decrement stomach content only if we are running (not stabilizing)
-        totalAmt.IncrementValue(-digestedAmt, (mass) ? MassUnit::g.GetString() : VolumeUnit::mL.GetString());
-    }
-  }
-  return digestedAmt;
-}
-
-//--------------------------------------------------------------------------------------------------
-/// \brief
-/// If no substance rates are provided on meals (Action or Condition) use a default from configuration
-///
-/// \details
-//--------------------------------------------------------------------------------------------------
-void Gastrointestinal::DefaultNutritionRates(SENutrition& n)
-{
-  if (n.HasCarbohydrate() && !n.HasCarbohydrateDigestionRate())
-    n.GetCarbohydrateDigestionRate().SetValue(m_data.GetConfiguration().GetDefaultCarbohydrateDigestionRate(MassPerTimeUnit::g_Per_min), MassPerTimeUnit::g_Per_min);
-  if (n.HasFat() && !n.HasFatDigestionRate())
-    n.GetFatDigestionRate().SetValue(m_data.GetConfiguration().GetDefaultFatDigestionRate(MassPerTimeUnit::g_Per_min), MassPerTimeUnit::g_Per_min);
-  if (n.HasProtein() && !n.HasProteinDigestionRate())
-    n.GetProteinDigestionRate().SetValue(m_data.GetConfiguration().GetDefaultProteinDigestionRate(MassPerTimeUnit::g_Per_min), MassPerTimeUnit::g_Per_min);
 }
 
 //--------------------------------------------------------------------------------------------------

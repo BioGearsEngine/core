@@ -21,11 +21,8 @@ specific language governing permissions and limitations under the License.
                 <xs:sequence>
                     <xs:element name="Name" type="xs:string" minOccurs="0"  maxOccurs="1"/>
                     <xs:element name="Carbohydrate" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="CarbohydrateDigestionRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="Fat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="FatDigestionRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="Protein" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="ProteinDigestionRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="Calcium" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="Sodium" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="Water" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/>

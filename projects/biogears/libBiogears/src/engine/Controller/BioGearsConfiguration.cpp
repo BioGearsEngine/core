@@ -102,9 +102,6 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   , m_CalciumDigestionRate(nullptr)
   , m_CalciumAbsorptionFraction(nullptr)
   , m_CarbohydrateAbsorptionFraction(nullptr)
-  , m_DefaultCarbohydrateDigestionRate(nullptr)
-  , m_DefaultFatDigestionRate(nullptr)
-  , m_DefaultProteinDigestionRate(nullptr)
   , m_DefaultStomachContents(nullptr)
   , m_FatAbsorptionFraction(nullptr)
   , m_ProteinToUreaFraction(nullptr)
@@ -203,9 +200,6 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_CalciumDigestionRate);
   SAFE_DELETE(m_CalciumAbsorptionFraction);
   SAFE_DELETE(m_CarbohydrateAbsorptionFraction);
-  SAFE_DELETE(m_DefaultCarbohydrateDigestionRate);
-  SAFE_DELETE(m_DefaultFatDigestionRate);
-  SAFE_DELETE(m_DefaultProteinDigestionRate);
   SAFE_DELETE(m_DefaultStomachContents);
   SAFE_DELETE(m_FatAbsorptionFraction);
   SAFE_DELETE(m_ProteinToUreaFraction);
@@ -310,9 +304,6 @@ void BioGearsConfiguration::Initialize()
   GetCalciumAbsorptionFraction().SetValue(0.25); // Net fractional calcium absorption is 24.9 ± 12.4% (Hunt and Johnson 2007)
   GetCalciumDigestionRate().SetValue(2.7, MassPerTimeUnit::mg_Per_min); // Wasserman1992Intestinal
   GetCarbohydrateAbsorptionFraction().SetValue(0.80); // Guyton p790
-  GetDefaultCarbohydrateDigestionRate().SetValue(0.5, MassPerTimeUnit::g_Per_min); // Guyton (About 4.25hr to digest the carbs in default meal)
-  GetDefaultFatDigestionRate().SetValue(0.055, MassPerTimeUnit::g_Per_min); // Guyton (About 8hr to digest the fat in the default meal)
-  GetDefaultProteinDigestionRate().SetValue(0.071, MassPerTimeUnit::g_Per_min); // Dangin2001Digestion (About 5hr to digest the protein in the default meal)
   GetDefaultStomachContents().Load("nutrition/NoMacros.xml"); // Refs are in the data spreadsheet
   GetFatAbsorptionFraction().SetValue(0.248); // Guyton p797 and the recommended daily value for saturated fat intake according to the AHA //TODO: Add this reference
   // We should be making 30 grams of urea per 100 grams of protein haussinger1990nitrogen
@@ -527,12 +518,6 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
       GetCalciumDigestionRate().Load(config.CalciumDigestionRate().get());
     if (config.CarbohydrateAbsorptionFraction().present())
       GetCarbohydrateAbsorptionFraction().Load(config.CarbohydrateAbsorptionFraction().get());
-    if (config.DefaultCarbohydrateDigestionRate().present())
-      GetDefaultCarbohydrateDigestionRate().Load(config.DefaultCarbohydrateDigestionRate().get());
-    if (config.DefaultFatDigestionRate().present())
-      GetDefaultFatDigestionRate().Load(config.DefaultFatDigestionRate().get());
-    if (config.DefaultProteinDigestionRate().present())
-      GetDefaultProteinDigestionRate().Load(config.DefaultProteinDigestionRate().get());
     if (config.DefaultStomachContentsFile().present()) {
       if (!GetDefaultStomachContents().Load(config.DefaultStomachContentsFile().get())) {
         Error("Unable to load Standard Stomach Contents file");
@@ -543,15 +528,6 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
         Error("Unable to load Standard Stomach Contents");
         return false;
       }
-    }
-    // Use default rate if they are not set
-    {
-      if (m_DefaultStomachContents->HasCarbohydrate() && !m_DefaultStomachContents->HasCarbohydrateDigestionRate())
-        m_DefaultStomachContents->GetCarbohydrateDigestionRate().Set(GetDefaultCarbohydrateDigestionRate());
-      if (m_DefaultStomachContents->HasFat() && !m_DefaultStomachContents->HasFatDigestionRate())
-        m_DefaultStomachContents->GetFatDigestionRate().Set(GetDefaultFatDigestionRate());
-      if (m_DefaultStomachContents->HasProtein() && !m_DefaultStomachContents->HasProteinDigestionRate())
-        m_DefaultStomachContents->GetProteinDigestionRate().Set(GetDefaultProteinDigestionRate());
     }
     if (config.FatAbsorptionFraction().present())
       GetFatAbsorptionFraction().Load(config.FatAbsorptionFraction().get());
@@ -753,12 +729,6 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
     gi->CalciumDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_CalciumDigestionRate->Unload()));
   if (HasCarbohydrateAbsorptionFraction())
     gi->CarbohydrateAbsorptionFraction(std::unique_ptr<CDM::ScalarFractionData>(m_CarbohydrateAbsorptionFraction->Unload()));
-  if (HasDefaultCarbohydrateDigestionRate())
-    gi->DefaultCarbohydrateDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_DefaultCarbohydrateDigestionRate->Unload()));
-  if (HasDefaultFatDigestionRate())
-    gi->DefaultFatDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_DefaultFatDigestionRate->Unload()));
-  if (HasDefaultProteinDigestionRate())
-    gi->DefaultProteinDigestionRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_DefaultProteinDigestionRate->Unload()));
   if (HasDefaultStomachContents())
     gi->DefaultStomachContents(std::unique_ptr<CDM::NutritionData>(m_DefaultStomachContents->Unload()));
   if (HasFatAbsorptionFraction())
@@ -1559,58 +1529,6 @@ double BioGearsConfiguration::GetCarbohydrateAbsorptionFraction() const
     return SEScalar::dNaN();
   return m_CarbohydrateAbsorptionFraction->GetValue();
 }
-
-bool BioGearsConfiguration::HasDefaultCarbohydrateDigestionRate() const
-{
-  return m_DefaultCarbohydrateDigestionRate == nullptr ? false : m_DefaultCarbohydrateDigestionRate->IsValid();
-}
-SEScalarMassPerTime& BioGearsConfiguration::GetDefaultCarbohydrateDigestionRate()
-{
-  if (m_DefaultCarbohydrateDigestionRate == nullptr)
-    m_DefaultCarbohydrateDigestionRate = new SEScalarMassPerTime();
-  return *m_DefaultCarbohydrateDigestionRate;
-}
-double BioGearsConfiguration::GetDefaultCarbohydrateDigestionRate(const MassPerTimeUnit& unit) const
-{
-  if (m_DefaultCarbohydrateDigestionRate == nullptr)
-    return SEScalar::dNaN();
-  return m_DefaultCarbohydrateDigestionRate->GetValue(unit);
-}
-
-bool BioGearsConfiguration::HasDefaultFatDigestionRate() const
-{
-  return m_DefaultFatDigestionRate == nullptr ? false : m_DefaultFatDigestionRate->IsValid();
-}
-SEScalarMassPerTime& BioGearsConfiguration::GetDefaultFatDigestionRate()
-{
-  if (m_DefaultFatDigestionRate == nullptr)
-    m_DefaultFatDigestionRate = new SEScalarMassPerTime();
-  return *m_DefaultFatDigestionRate;
-}
-double BioGearsConfiguration::GetDefaultFatDigestionRate(const MassPerTimeUnit& unit) const
-{
-  if (m_DefaultFatDigestionRate == nullptr)
-    return SEScalar::dNaN();
-  return m_DefaultFatDigestionRate->GetValue(unit);
-}
-
-bool BioGearsConfiguration::HasDefaultProteinDigestionRate() const
-{
-  return m_DefaultProteinDigestionRate == nullptr ? false : m_DefaultProteinDigestionRate->IsValid();
-}
-SEScalarMassPerTime& BioGearsConfiguration::GetDefaultProteinDigestionRate()
-{
-  if (m_DefaultProteinDigestionRate == nullptr)
-    m_DefaultProteinDigestionRate = new SEScalarMassPerTime();
-  return *m_DefaultProteinDigestionRate;
-}
-double BioGearsConfiguration::GetDefaultProteinDigestionRate(const MassPerTimeUnit& unit) const
-{
-  if (m_DefaultProteinDigestionRate == nullptr)
-    return SEScalar::dNaN();
-  return m_DefaultProteinDigestionRate->GetValue(unit);
-}
-
 bool BioGearsConfiguration::HasDefaultStomachContents() const
 {
   return m_DefaultStomachContents != nullptr;

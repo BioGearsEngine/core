@@ -126,10 +126,7 @@
         <xs:sequence>
           <xs:element name="CalciumAbsorptionFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!-- @brief Fraction of the calcium eaten that get absorbed into the body --> 
           <xs:element name="CalciumDigestionRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/><!-- @brief Speed at which calcium is digested by the body, mouth to being absorbed into the blood -->
-          <xs:element name="CarbohydrateAbsorptionFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!-- @brief Fraction of the Carbs eaten that get absorbed into the body --> 
-          <xs:element name="DefaultCarbohydrateDigestionRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/><!-- @brief Carb digestion rate to use if none is provided in the nutrition information -->
-          <xs:element name="DefaultFatDigestionRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/><!-- @brief Fat digestion rate to use if none is provided in the nutrition information -->
-          <xs:element name="DefaultProteinDigestionRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/><!-- @brief Protein digestion rate to use if none is provided in the nutrition information -->
+          <xs:element name="CarbohydrateAbsorptionFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!-- @brief Fraction of the Carbs eaten that get absorbed into the body -->
           <xs:choice>
             <xs:element name="DefaultStomachContents" type="NutritionData" minOccurs="0" maxOccurs="1"/><!-- @brief The default stomach contents for the patient -->
             <xs:element name="DefaultStomachContentsFile" type="xs:string" minOccurs="0" maxOccurs="1"/><!-- @brief The default stomach contents for the patient -->

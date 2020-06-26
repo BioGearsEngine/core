@@ -114,33 +114,13 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     } catch (std::exception e) {
       rValue = false;
     }
-  } else if ("CarbohydrateDigestionRate" == name) {
-    size_t pos;
-    NutritionData::CarbohydrateDigestionRate_type type_data;
-    try {
-      type_data.value(std::stod(value, &pos));
-      type_data.unit(trim(value.substr(pos)));
-      nutrient.CarbohydrateDigestionRate(type_data);
-    } catch (std::exception e) {
-      rValue = false;
-    }
-  } else if ("Fat" == name) {
+  }  else if ("Fat" == name) {
     size_t pos;
     NutritionData::Fat_type type_data;
     try {
       type_data.value(std::stod(value, &pos));
       type_data.unit(trim(value.substr(pos)));
       nutrient.Fat(type_data);
-    } catch (std::exception e) {
-      rValue = false;
-    }
-  } else if ("FatDigestionRate" == name) {
-    size_t pos;
-    NutritionData::FatDigestionRate_type type_data;
-    try {
-      type_data.value(std::stod(value, &pos));
-      type_data.unit(trim(value.substr(pos)));
-      nutrient.FatDigestionRate(type_data);
     } catch (std::exception e) {
       rValue = false;
     }
@@ -151,16 +131,6 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
       type_data.value(std::stod(value, &pos));
       type_data.unit(trim(value.substr(pos)));
       nutrient.Protein(type_data);
-    } catch (std::exception e) {
-      rValue = false;
-    }
-  } else if ("ProteinDigestionRate" == name) {
-    size_t pos;
-    NutritionData::ProteinDigestionRate_type type_data;
-    try {
-      type_data.value(std::stod(value, &pos));
-      type_data.unit(trim(value.substr(pos)));
-      nutrient.ProteinDigestionRate(type_data);
     } catch (std::exception e) {
       rValue = false;
     }

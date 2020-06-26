@@ -69,9 +69,7 @@ public:
 
 protected:
   void GastricSecretion(double duration_s);
-  void DefaultNutritionRates(SENutrition& n);
   void AbsorbNutrients();
-  double DigestNutrient(SEUnitScalar& totalAmt, SEUnitScalar& rate, bool mass, double duration_s);
   void DigestNutrient();
   void AbsorbMeal(double duration_s);
   void AbsorbNutrients(double duration_s);
