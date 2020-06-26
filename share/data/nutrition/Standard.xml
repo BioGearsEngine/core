@@ -2,11 +2,8 @@
 <Nutrition xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
   <Name>Standard</Name>
   <Carbohydrate readOnly="false" unit="g" value="130"/>
-  <CarbohydrateDigestionRate readOnly="false" unit="g/min" value="0.5"/>
   <Fat readOnly="false" unit="g" value="27"/>
-  <FatDigestionRate readOnly="false" unit="g/min" value="0.055"/>
   <Protein readOnly="false" unit="g" value="20"/>
-  <ProteinDigestionRate readOnly="false" unit="g/min" value="0.071"/>
   <Calcium readOnly="false" unit="mg" value="500"/>
   <Sodium readOnly="false" unit="g" value="1"/>
   <Water readOnly="false" unit="L" value="0.5"/>

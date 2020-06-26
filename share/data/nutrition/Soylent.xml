@@ -2,11 +2,8 @@
 <Nutrition xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
   <Name>Soylent</Name>
   <Carbohydrate readOnly="false" unit="g" value="57"/>
-  <CarbohydrateDigestionRate readOnly="false" unit="g/min" value="0.625"/>
   <Fat readOnly="false" unit="g" value="23"/>
-  <FatDigestionRate readOnly="false" unit="g/min" value="0.055"/>
   <Protein readOnly="false" unit="g" value="20"/>
-  <ProteinDigestionRate readOnly="false" unit="g/min" value="0.157"/>
   <Calcium readOnly="false" unit="mg" value="300"/>
   <Sodium readOnly="false" unit="mg" value="380"/>
   <Water readOnly="false" unit="L" value="1"/>
