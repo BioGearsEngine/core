@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Created on Fri Jun 19 15:34:31 2020
+
+@author: Shashank
+
+"""
+
 import os
 from xml.dom import minidom
 import xmltodict
@@ -245,9 +255,9 @@ class CDM2MD:
 if __name__=="__main__":
     import sys
     CDM=CDM2MD()
-    CDM.files_processed.append("/opt/biogears/core/share/xsd/BioGearsDataModel.xsd")
-    #destDir = "./doc/doxygen/processed_md/"
-    destDir="."
+    CDM.files_processed.append("./xsd/BioGearsDataModel.xsd")
+    destDir = "./doc/doxygen/processed_md/"
+    #destDir="."
     if not os.path.exists(destDir):
         os.mkdir(destDir)
     fout=open(os.path.join(destDir,"CDMTables.md"),'w',encoding="utf-8")
