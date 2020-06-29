@@ -268,7 +268,6 @@ private:
   SEFluidCircuitPath* m_ConnectionToMouth;
   SEFluidCircuitPath* m_GroundToConnection;
 
-  SESubstance* m_Propofol;
   SEFluidCircuitCalculator m_Calculator;
   SEGasTransporter m_GasTransporter;
   SELiquidTransporter m_AerosolTransporter;

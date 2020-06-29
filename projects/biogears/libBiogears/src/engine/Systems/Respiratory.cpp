@@ -84,7 +84,6 @@ void Respiratory::Clear()
   SERespiratorySystem::Clear();
   m_Patient = nullptr;
   m_PatientActions = nullptr;
-  m_Propofol = nullptr;
 
   m_Environment = nullptr;
   m_AerosolMouth = nullptr;
@@ -350,8 +349,6 @@ void Respiratory::SetUp()
   m_Patient = &m_data.GetPatient();
   m_PatientActions = &m_data.GetActions().GetPatientActions();
   m_OverrideRRBaseline_Per_min = m_Patient->GetRespirationRateBaseline().GetValue(FrequencyUnit::Per_min);
-  // Substance
-  m_Propofol = m_data.GetSubstances().GetSubstance("Propofol");
   //Configuration parameters
   m_dDefaultOpenResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   m_dDefaultClosedResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetDefaultClosedFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
