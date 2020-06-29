@@ -126,19 +126,6 @@ TEST_F(TEST_FIXTURE_NAME, PulsePressureChange)
   auto dvalue = cds.GetPulsePressureChange(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
 }
-TEST_F(TEST_FIXTURE_NAME, PupillaryResponse)
-{
-  EXPECT_FALSE( ds->HasPupillaryResponse());
-  ds->GetPupillaryResponse();
-  EXPECT_TRUE( ds->HasPupillaryResponse());
-  ds->RemovePupillaryResponse();
-  EXPECT_FALSE( ds->HasPupillaryResponse());
-
-  const biogears::SEDrugSystem cds(logger);
-  EXPECT_FALSE( cds.HasPupillaryResponse());
-  auto dvalue = cds.GetPupillaryResponse(); // so this returns a NULL instead of a nan
-  EXPECT_EQ(NULL, dvalue);
-}
 TEST_F(TEST_FIXTURE_NAME, RespirationRateChange)
 {
   EXPECT_FALSE( ds->HasRespirationRateChange());

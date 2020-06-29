@@ -51,22 +51,12 @@ Gastrointestinal::Gastrointestinal(BioGears& bg)
   SENutrition one(m_Logger);
   SENutrition two(m_Logger);
   one.GetCarbohydrate()->SetValue(1, MassUnit::g);
-  one.GetCarbohydrateDigestionRate()->SetValue(1, MassPerTimeUnit::g_Per_s);
   one.GetFat()->SetValue(2, MassUnit::g);
-  one.GetFatDigestionRate()->SetValue(2, MassPerTimeUnit::g_Per_s);
   one.GetProtein()->SetValue(3, MassUnit::g);
-  one.GetProteinDigestionRate()->SetValue(3, MassPerTimeUnit::g_Per_s);
-
   two.GetCarbohydrate()->SetValue(1, MassUnit::g);
-  two.GetCarbohydrateDigestionRate()->SetValue(2, MassPerTimeUnit::g_Per_s);
   two.GetFat()->SetValue(2, MassUnit::g);
-  two.GetFatDigestionRate()->SetValue(4, MassPerTimeUnit::g_Per_s);
   two.GetProtein()->SetValue(3, MassUnit::g);
-  two.GetProteinDigestionRate()->SetValue(6, MassPerTimeUnit::g_Per_s);
   one.Increment(two);
-  std::cout << "Carbo Rate: " << one.GetCarbohydrateDigestionRate() << std::endl;
-  std::cout << "Fat Rate: " << one.GetFatDigestionRate() << std::endl;
-  std::cout << "Protein Rate: " << one.GetProteinDigestionRate() << std::endl;
   */
 }
 
