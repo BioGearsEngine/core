@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include "HowTo-API_Integration.h"
 
 #include <atomic>
+#include <memory>
 #include <thread>
 // Include the various types you will be using in your code
 
@@ -22,6 +23,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/substance/SESubstanceCompound.h>
+#include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/system/environment/SEActiveCooling.h>
 #include <biogears/cdm/system/environment/SEActiveHeating.h>
@@ -378,6 +381,56 @@ bool action_get_urine_color(std::unique_ptr<biogears::BioGearsEngine>& engine)
   return false;
 }
 //-------------------------------------------------------------------------------
+//
+//Substance Management Functions
+//
+//-------------------------------------------------------------------------------
+std::unique_ptr<biogears::SESubstanceCompound> substance_make_compound(std::unique_ptr<biogears::BioGearsEngine>& engine)
+{
+  // The biggest concern with substances is unique names for storage in the map
+  // In this example we make some trivial thread safe approach of naming all substances Substance_X
+  //
+  // Any approach is acceptable provided you can create a map of the UUID to the substance you want to fetch/
+  // Second concern is that adding substances to simulation invalidates substance iterators so you need to make sure no
+  // one is holding on to a substance iterator or substance ptr nad that time is not advancing.
+  //
+  static std::atomic<int> counter { 0 };
+  std::stringstream ss;
+  ss << "Substance_" << ++counter;
+  return biogears::SESubstanceCompound::make_unique(ss.str().c_str(), engine->GetLogger());
+}
+bool mixSubstanceCompound(std::unique_ptr<biogears::BioGearsEngine>& engine, std::unique_ptr<biogears::SESubstanceCompound>& compound, const char* substance, double concentration, biogears::MassPerVolumeUnit unit)
+{
+  biogears::SESubstance* new_substance = engine->GetSubstanceManager().GetSubstance(substance);
+  if (new_substance) {
+    auto substance_concentration = std::make_unique<biogears::SESubstanceConcentration>(*new_substance);
+    substance_concentration->GetConcentration().SetValue(10.0, biogears::MassPerVolumeUnit::mg_Per_mL);
+    compound->GetComponents().push_back(substance_concentration.release());
+
+    //Because the substance isn't register atat this point, it is possible to adjust the name based on the current mix.
+    //Active infusions are stored by substance name so once registered and infuse you can no longer modify the mix name;
+    return true;
+  }
+  return false;
+}
+std::string substance_register_compound(std::unique_ptr<biogears::BioGearsEngine>& engine, std::unique_ptr<biogears::SESubstanceCompound>&& compound)
+{
+  //This call registeres the substance with the substance manager. At this point we are going to release control of the memory to the biogears library who will
+  //delete it at the end of the run.  DLL boundries being what they are we may need to introduce a make_substancecompound function to the API.
+  std::string compound_name = compound->GetName_cStr();
+  engine->GetSubstanceManager().AddCompound(*compound.release());
+  return compound_name;
+}
+
+bool action_infuse_compound(std::unique_ptr<biogears::BioGearsEngine>& engine, std::string compound_name, double volume, biogears::VolumeUnit volume_unit, double rate, biogears::VolumePerTimeUnit rate_unit)
+{
+  auto& compound = *engine->GetSubstanceManager().GetCompound(compound_name);
+  biogears::SESubstanceCompoundInfusion infusion { compound };
+  infusion.GetBagVolume().SetValue(volume, volume_unit);
+  infusion.GetRate().SetValue(rate, rate_unit);
+  return engine->ProcessAction(infusion);
+}
+//-------------------------------------------------------------------------------
 //!
 //!  Pimpl Implementation Structure.
 //!
@@ -388,12 +441,11 @@ bool action_get_urine_color(std::unique_ptr<biogears::BioGearsEngine>& engine)
 struct BioGearsPlugin::Implementation {
   std::unique_ptr<biogears::BioGearsEngine> engine;
 
-  std::atomic_bool simulation_running{ false };
-  std::atomic_bool simulation_started{ false };
-  std::atomic_bool simulation_finished{ false };
+  std::atomic_bool simulation_running { false };
+  std::atomic_bool simulation_started { false };
+  std::atomic_bool simulation_finished { false };
   std::thread simulation_thread;
 };
-
 //-------------------------------------------------------------------------------
 BioGearsPlugin::BioGearsPlugin(std::string name)
   : _pimpl(std::make_unique<Implementation>())
@@ -407,7 +459,7 @@ BioGearsPlugin::BioGearsPlugin(std::string name)
 
     if (!_pimpl->engine->InitializeEngine("patients/StandardMale.xml")) {
       _pimpl->engine->GetLogger()->Warning("Could not load patient falling back to manually creating a patient.");
-      biogears::SEPatient patient{ _pimpl->engine->GetLogger() };
+      biogears::SEPatient patient { _pimpl->engine->GetLogger() };
       patient.SetName("StandardMale");
       patient.SetGender(CDM::enumSex::Male);
       patient.GetAge().SetValue(44, biogears::TimeUnit::yr);
@@ -446,20 +498,20 @@ void BioGearsPlugin::run()
 
   if (!_pimpl->simulation_thread.joinable()) {
     _pimpl->simulation_running.store(true);
-    _pimpl->simulation_thread = std::thread{
+    _pimpl->simulation_thread = std::thread {
       [&]() {
         _pimpl->simulation_started.store(true);
         while (_pimpl->simulation_running) {
           action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Misapplied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::None);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           //The effectivness of this helper-function is called in to doubt, for such a simple tutorial
           //But you could imagine creating a vector of common conditions and then pushing and poping them in to
           //This function as the patient changes locations.
@@ -483,17 +535,41 @@ void BioGearsPlugin::run()
           conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
 
           action_env_change(_pimpl->engine, conditions);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_tension_pneumothorax(_pimpl->engine, CDM::enumSide::Left, CDM::enumPneumothoraxType::Open, 0.5);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_needle_decompression(_pimpl->engine, CDM::enumSide::Left, true);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_o2_mask(_pimpl->engine, .5, 3., 0.);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_infection(_pimpl->engine, CDM::enumInfectionSeverity::Mild, "LeftLeg", 0.2);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::min);
+          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_bloodtransfuction(_pimpl->engine, 500, 100);
 
+          ///////////////////////////////////////
+          ///DUGS
+          auto customCompound = substance_make_compound(_pimpl->engine);
+          auto mixSuccess = mixSubstanceCompound(_pimpl->engine, customCompound, "Saline", 2.17, MassPerVolumeUnit::kg_Per_L);
+          mixSuccess &= mixSubstanceCompound(_pimpl->engine, customCompound, "Albumin", 10.0, MassPerVolumeUnit::mg_Per_mL);
+          mixSuccess &= mixSubstanceCompound(_pimpl->engine, customCompound, "Morphine", 10.0, MassPerVolumeUnit::mg_Per_mL);
+
+          if (!mixSuccess) {
+            _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Saline"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+            _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Albumin"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+            _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Morphine"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+
+            auto compound_name = substance_register_compound(_pimpl->engine, std::move(customCompound)); //<  _pimpl->engine takes ownership of customCompound here and will delete it once it is removed (DLL Boundry issue need to create a make_compound function to avoid that in biogears)
+            action_infuse_compound(_pimpl->engine, compound_name, 1.0, VolumeUnit::L, 100., VolumePerTimeUnit::mL_Per_hr);
+
+            _pimpl->engine->AdvanceModelTime(10, TimeUnit::s);
+            action_infuse_compound(_pimpl->engine, compound_name, 1.0, VolumeUnit::L, 0, VolumePerTimeUnit::mL_Per_hr);
+
+            _pimpl->engine->AdvanceModelTime(10, TimeUnit::s);
+          } else {
+            _pimpl->engine->GetLogger()->Error("Saline,Albumin, and Morphine definitions required for this HowTo please ensure they exist and try again.");
+          }
+
+          ////////////////////////////////////////
           if (_pimpl->engine->GetActions().GetEnvironmentActions().HasThermalApplication()) {
             _pimpl->engine->GetLogger()->Info(asprintf("ActiveHeating[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveHeating() ? "true" : "false")); // false
           }

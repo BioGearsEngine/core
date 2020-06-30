@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+
+#include <memory>
+
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/Substance.hxx>
@@ -27,6 +30,7 @@ public:
   SESubstanceCompound(Logger* logger);
   virtual ~SESubstanceCompound();
 
+  static std::unique_ptr<SESubstanceCompound> make_unique(const std::string& name, Logger* logger);
   virtual void Clear();
 
   virtual bool Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr);

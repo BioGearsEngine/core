@@ -38,6 +38,11 @@ SESubstanceCompound::~SESubstanceCompound()
   Clear();
 }
 //-----------------------------------------------------------------------------
+std::unique_ptr<SESubstanceCompound> SESubstanceCompound::make_unique(const std::string& name, Logger* logger)
+{
+  return std::make_unique<SESubstanceCompound>(name, logger);
+}
+//-----------------------------------------------------------------------------
 void SESubstanceCompound::Clear()
 {
   m_Name = "";
