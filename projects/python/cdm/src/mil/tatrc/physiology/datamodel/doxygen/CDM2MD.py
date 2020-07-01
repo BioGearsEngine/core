@@ -256,8 +256,10 @@ if __name__=="__main__":
     import sys
     CDM=CDM2MD()
     CDM.files_processed.append("./xsd/BioGearsDataModel.xsd")
-    destDir = "./doc/doxygen/processed_md/"
-    #destDir="."
+    #Uncomment these 2 lines to test these out
+    #CDM.files_processed.append("/opt/biogears/core/share/xsd/BioGearsDataModel.xsd")
+    #destDir = "."
+    destDir="./doc/doxygen/processed_md/"
     if not os.path.exists(destDir):
         os.mkdir(destDir)
     fout=open(os.path.join(destDir,"CDMTables.md"),'w',encoding="utf-8")
