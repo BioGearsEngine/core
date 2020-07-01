@@ -203,8 +203,7 @@ void Cardiovascular::Initialize()
   GetMeanArterialCarbonDioxidePartialPressure().SetValue(60, PressureUnit::mmHg);
   GetMeanArterialCarbonDioxidePartialPressureDelta().SetValue(0.0, PressureUnit::mmHg);
   GetPulmonaryCapillariesWedgePressure().SetValue(0, PressureUnit::mmHg);
-  GetPulmonaryMeanArterialPressure().SetValue(90, PressureUnit::mmHg);
-  GetPulmonaryArterialPressure().SetValue(90, PressureUnit::mmHg);
+  GetPulmonaryArterialPressure().SetValue(15, PressureUnit::mmHg);
   GetPulmonaryMeanCapillaryFlow().SetValue(0, VolumePerTimeUnit::mL_Per_s);
   GetPulmonaryMeanShuntFlow().SetValue(0, VolumePerTimeUnit::mL_Per_s);
 

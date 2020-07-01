@@ -534,10 +534,6 @@ void Tissue::Process()
   ManageSubstancesAndSaturation();
   CalculateVitals();
 
-  m_data.GetDataTrack().Probe("LungEndothelialResistance", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL));
-  m_data.GetDataTrack().Probe("LungVascularCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungVToLeftLungE1)->GetPressureSource(PressureUnit::mmHg));
-  m_data.GetDataTrack().Probe("LungInterstitialCOP", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE2ToLeftLungE3)->GetPressureSource(PressureUnit::mmHg));
-  m_data.GetDataTrack().Probe("LungFiltrationFlow", m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::LeftLungE1ToLeftLungE2)->GetFlow(VolumePerTimeUnit::mL_Per_min));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1701,7 +1697,7 @@ void Tissue::AlveolarPartialPressureGradientDiffusion(SEGasCompartment& pulmonar
     throw CommonDataModelException("No Substance Quantity found for substance " + std::string { sub.GetName() });
 
   double PressureGradient_mmHg = pSubQ->GetPartialPressure(PressureUnit::mmHg) - vSubQ->GetPartialPressure(PressureUnit::mmHg);
-
+  double relativeDiffusionCoefficient = sub.GetRelativeDiffusionCoefficient().GetValue();
   double DiffusedVolume_mL = PressureGradient_mmHg * DiffusingCapacityO2_mL_Per_s_mmHg * sub.GetRelativeDiffusionCoefficient().GetValue() * timestep_s;
 
   //Get special diffused volume if sub is CO

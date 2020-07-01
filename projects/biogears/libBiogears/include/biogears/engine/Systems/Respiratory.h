@@ -103,6 +103,7 @@ private:
   //PreProcess
   void UpdatePleuralCompliance();
   //Actions
+  void AcuteRespiratoryDistress();
   void AirwayObstruction();
   void BronchoConstriction();
   void BronchoDilation();

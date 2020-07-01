@@ -500,6 +500,7 @@ void Respiratory::PreProcess()
 {
   UpdatePleuralCompliance();
   ProcessAerosolSubstances();
+  AcuteRespiratoryDistress();
   AirwayObstruction();
   UpdateObstructiveResistance();
   BronchoConstriction();
@@ -934,7 +935,7 @@ void Respiratory::RespiratoryDriver()
 
     if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::AnesthesiaMachine || m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::MechanicalVentilator) {
       m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
-      m_BreathingCycleTime_s = m_ElapsedBreathingCycleTime_min * 60.0;  //Set driver cycle to match elapsed cycle (dictated by ventilator) so that when we turn machine off we re-start spontaneous breathing in a good place
+      m_BreathingCycleTime_s = m_ElapsedBreathingCycleTime_min * 60.0; //Set driver cycle to match elapsed cycle (dictated by ventilator) so that when we turn machine off we re-start spontaneous breathing in a good place
     }
 
     if (m_bNotBreathing) {
@@ -1028,6 +1029,25 @@ void Respiratory::ProcessDriverActions()
   m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, maximumVentilationFrequency_Per_min);
 }
 
+void Respiratory::AcuteRespiratoryDistress()
+{
+  if (!m_PatientActions->HasAcuteRespiratoryDistress()) {
+    return;
+  } else {
+    const double severity = m_PatientActions->GetAcuteRespiratoryDistress()->GetSeverity().GetValue();
+    const double resistanceMultiplier = GeneralMath::LinearInterpolator(0.0, 1.0, 1.0, 2.0, severity);
+    double rightCapillaryResistance = m_RightPulmonaryCapillary->GetResistanceBaseline().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
+    double leftCapillaryResistance = m_LeftPulmonaryCapillary->GetResistanceBaseline().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
+
+    //We do not make use of UpdatePulmonaryCapillaryResistance function because it changes the baseline resistance values
+    // (for chronic conditions), which occurs one time after initial stabilization.  We want to apply this change as long
+    // the ARDS action is active, so we just want to set next resistance each time step as a function of the baseline.
+    leftCapillaryResistance = leftCapillaryResistance * (1.0 + 5.0 * severity);
+    m_LeftPulmonaryCapillary->GetNextResistance().SetValue(leftCapillaryResistance, FlowResistanceUnit::cmH2O_s_Per_L);
+    rightCapillaryResistance = rightCapillaryResistance * (1.0 + 5.0 * severity);
+    m_RightPulmonaryCapillary->GetNextResistance().SetValue(rightCapillaryResistance, FlowResistanceUnit::cmH2O_s_Per_L);
+  }
+}
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Airway obstruction
