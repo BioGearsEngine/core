@@ -66,8 +66,8 @@ def main( args):
     parser.add_argument('--skip', 
         dest='skip_count', action="store", default=10,
         help="Number of lines to skip for faster plotting")
-    parser.add_argument('--plotTime',action="store",default="s",
-        help="Time unit to use for plots (s,min,hr), default = s")
+    parser.add_argument('--plotTime',action="store",default="min",
+        help="Time unit to use for plots (s,min,hr), default = min")
 
     args = parser.parse_args()
     _log_verbose = args.verbosity
