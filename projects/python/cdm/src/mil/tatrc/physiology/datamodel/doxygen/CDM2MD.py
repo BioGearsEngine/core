@@ -12,6 +12,7 @@ import os
 from xml.dom import minidom
 import xmltodict
 import json
+import argparse
 
 """
 CDM2MD class
@@ -253,20 +254,24 @@ class CDM2MD:
             fout.write("\n\n")
 
 if __name__=="__main__":
-    import sys
-    CDM=CDM2MD()
-    CDM.files_processed.append("./xsd/BioGearsDataModel.xsd")
-    #Uncomment these 2 lines to test these out
-    #CDM.files_processed.append("/opt/biogears/core/share/xsd/BioGearsDataModel.xsd")
-    #destDir = "."
-    destDir="./doc/doxygen/processed_md/"
-    if not os.path.exists(destDir):
-        os.mkdir(destDir)
-    fout=open(os.path.join(destDir,"CDMTables.md"),'w',encoding="utf-8")
-    CDM.process_sc(fout)
-    CDM.convert()
-    list_type=list(set(CDM.list_types))
-    list_name=list(set(CDM.list_names))
-    CDM.list_types=list_type
-    CDM.list_names=list_name
-    CDM.table_create(fout) 
+    parser = argparse.ArgumentParser(description='Creation of CDMTables.md file after parsing all xsd files ')
+    parser.add_argument('-p','--xsdpath',help='Path to BioGearsDataModel.xsd file',required=True)
+    parser.add_argument('-f','--filepath',help='Name and path of CDMTables.md file created',required=True)
+    args=parser.parse_args()
+    if args.xsdpath ==None and args.filepath ==None:
+        parser.print_help()
+        sys.exit(0)
+    else:
+        CDM=CDM2MD()
+        CDM.files_processed.append(args.xsdpath)
+        destDir=args.filepath
+        if not os.path.exists(destDir):
+            os.mkdir(destDir)
+        fout=open(os.path.join(destDir,"CDMTables.md"),'w',encoding="utf-8")
+        CDM.process_sc(fout)
+        CDM.convert()
+        list_type=list(set(CDM.list_types))
+        list_name=list(set(CDM.list_names))
+        CDM.list_types=list_type
+        CDM.list_names=list_name
+        CDM.table_create(fout)  
