@@ -265,7 +265,10 @@ if __name__=="__main__":
     else:
         XSD=XSDToDoxygen()
         XSD.files_processed.append(args.xsdpath)
-        fout=open(args.filepath,'w',encoding="utf-8")
+        destDir=args.filepath
+        if not os.path.exists(destDir):
+            os.mkdir(destDir)
+        fout=open(os.path.join(destDir,"xsd.ixx"),'w',encoding="utf-8")
         fout.write("/**")
         fout.write("\n")
         fout.write("* @defgroup CDM CDM")
