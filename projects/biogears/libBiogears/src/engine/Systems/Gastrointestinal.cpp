@@ -472,6 +472,9 @@ void Gastrointestinal::DigestNutrient()
   const double waterToDigest_mL = m_WaterDigestionRate.GetValue(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
 
   digestedAmount = waterToDigest_mL < waterContent_mL ? waterToDigest_mL : waterContent_mL;
+  if (m_DecrementNutrients) {
+    m_StomachContents->GetWater().IncrementValue(-digestedAmount, VolumeUnit::mL);
+  }
 
   if (digestedAmount > 0) {
 #ifdef logDigest
