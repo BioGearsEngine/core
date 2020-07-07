@@ -644,7 +644,6 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   const double hypoperfusionDeficit_kcal = m_data.GetEnergy().GetEnergyDeficit(PowerUnit::kcal_Per_s) * time_s; //Hypoperfusion deficit is "faux" energy value -- it makes system perceive an energy deficit and enter anaerobic production earlier during hemorrhage and sepsis
   double brainNeededEnergy_kcal = .2 * baseEnergyRequested_kcal; //brain requires a roughly constant 20% of basal energy regardless of exercise \cite raichle2002appraising
   double nonbrainNeededEnergy_kcal = 0.8 * baseEnergyRequested_kcal + hypoperfusionDeficit_kcal;
-  const double totalEnergyRequested_kcal = brainNeededEnergy_kcal + nonbrainNeededEnergy_kcal + exerciseEnergyRequested_kcal + otherEnergyDemandAboveBasal_kcal; //Use to check math below
   double totalEnergyRequested_kcal_Check = 0.0; //Add tissue values to this as we go and use to check our math later
   double brainEnergyDeficit_kcal = 0;
   double nonbrainEnergyDeficit_kcal = 0;
@@ -688,9 +687,9 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double kcal_Per_day_Per_Watt = 20.6362855;
   double maxWorkRate_W = 1200; //see Energy::Exercise
 
-  double SleepTime_min = m_data.GetNervous().GetSleepTime().GetValue(TimeUnit::min);   //update value from last computation
-  double WakeTime_min = m_data.GetNervous().GetWakeTime().GetValue(TimeUnit::min);   //update value from last computation
-  double sleepRatio = WakeTime_min / SleepTime_min;   //independant variable for circadian rythm equation
+  double sleepTime_min = m_data.GetNervous().GetSleepTime().GetValue(TimeUnit::min);   //update value from last computation
+  double wakeTime_min = m_data.GetNervous().GetWakeTime().GetValue(TimeUnit::min);   //update value from last computation
+  double sleepRatio = wakeTime_min / sleepTime_min;   
 
   //Patients with COPD show higher levels of anaerobic metabolism \cite mathur1999cerebral \cite engelen2000factors
   if (m_data.GetConditions().HasChronicObstructivePulmonaryDisease()) {
@@ -707,6 +706,10 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   if (sleepRatio > 5.0) {
     brainNeededEnergy_kcal *= 0.93;
   }
+
+  //update the total energy requested equation with the new brain energy: 
+  const double totalEnergyRequested_kcal = brainNeededEnergy_kcal + nonbrainNeededEnergy_kcal + exerciseEnergyRequested_kcal + otherEnergyDemandAboveBasal_kcal; //Use to check math below
+
 
   //Reusable values for looping
   SELiquidCompartment* vascular;
@@ -1209,13 +1212,13 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   } //end of the tissue loop
 
   ////Debug Info: Make sure that the energy we used lines up with our demand -- allowing 1% tolerance on either side
-  //if ((m_data.GetState() >= EngineState::AtSecondaryStableState) && (totalEnergyRequested_kcal_Check < 0.99 * totalEnergyRequested_kcal || totalEnergyRequested_kcal_Check > 1.01 * totalEnergyRequested_kcal)) {
-  //  std::stringstream ss;
-  //  ss << "Tissue Energy Demand / Accounting Mismatch : " << std::endl;
-  //  ss << "\t Total Energy Requested (kcal) : " << totalEnergyRequested_kcal << std::endl;
-  //  ss << "\t Energy Acounted (kcal) : " << totalEnergyRequested_kcal_Check << std::endl;
-  //  Error(ss);
-  //}
+  if ((m_data.GetState() >= EngineState::AtSecondaryStableState) && (totalEnergyRequested_kcal_Check < 0.99 * totalEnergyRequested_kcal || totalEnergyRequested_kcal_Check > 1.01 * totalEnergyRequested_kcal)) {
+    std::stringstream ss;
+    ss << "Tissue Energy Demand / Accounting Mismatch : " << std::endl;
+    ss << "\t Total Energy Requested (kcal) : " << totalEnergyRequested_kcal << std::endl;
+    ss << "\t Energy Acounted (kcal) : " << totalEnergyRequested_kcal_Check << std::endl;
+    Error(ss);
+  }
 
   //Update outputs
   totalO2Consumed_mol += m_hepaticO2Consumed_mol;

@@ -53,9 +53,9 @@ Endocrine::~Endocrine()
 void Endocrine::Clear()
 {
   SEEndocrineSystem::Clear();
-  m_aortaGlucose = nullptr;
-  m_aortaEpinephrine = nullptr;
-  m_splanchnicInsulin = nullptr;
+  m_AortaGlucose = nullptr;
+  m_AortaEpinephrine = nullptr;
+  m_SplanchnicInsulin = nullptr;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -91,16 +91,16 @@ void Endocrine::SetUp()
   SELiquidCompartment* aorta = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta);
   SELiquidCompartment* rkidney = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightEfferentArteriole);
   SELiquidCompartment* lkidney = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftEfferentArteriole);
-  m_aortaEpinephrine = aorta->GetSubstanceQuantity(m_data.GetSubstances().GetEpi());
+  m_AortaEpinephrine = aorta->GetSubstanceQuantity(m_data.GetSubstances().GetEpi());
   m_rKidneyEpinephrine = rkidney->GetSubstanceQuantity(m_data.GetSubstances().GetEpi());
   m_lKidneyEpinephrine = lkidney->GetSubstanceQuantity(m_data.GetSubstances().GetEpi());
-  m_aortaGlucose = aorta->GetSubstanceQuantity(m_data.GetSubstances().GetGlucose());
+  m_AortaGlucose = aorta->GetSubstanceQuantity(m_data.GetSubstances().GetGlucose());
   SESubstance* insulin = &m_data.GetSubstances().GetInsulin();
-  m_insulinMolarMass_g_Per_mol = insulin->GetMolarMass(MassPerAmountUnit::g_Per_mol);
+  m_InsulinMolarMass_g_Per_mol = insulin->GetMolarMass(MassPerAmountUnit::g_Per_mol);
   SESubstance* glucagon = &m_data.GetSubstances().GetGlucagon();
-  m_glucagonMolarMass_g_Per_mol = glucagon->GetMolarMass(MassPerAmountUnit::g_Per_mol);
-  m_splanchnicInsulin = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Splanchnic)->GetSubstanceQuantity(*insulin);
-  m_splanchnicGlucagon = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Splanchnic)->GetSubstanceQuantity(*glucagon);
+  m_GlucagonMolarMass_g_Per_mol = glucagon->GetMolarMass(MassPerAmountUnit::g_Per_mol);
+  m_SplanchnicInsulin = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Splanchnic)->GetSubstanceQuantity(*insulin);
+  m_SplanchnicGlucagon = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Splanchnic)->GetSubstanceQuantity(*glucagon);
 }
 
 void Endocrine::AtSteadyState()
@@ -124,7 +124,7 @@ void Endocrine::AtSteadyState()
     }
   }
 
-  m_averageBiologicalDebt = m_data.GetNervous().GetBiologicalDebt().GetValue();  //save off the average after stabilization
+  m_AverageBiologicalDebt = m_data.GetNervous().GetBiologicalDebt().GetValue();  //save off the average after stabilization
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -182,7 +182,7 @@ void Endocrine::PostProcess()
 //--------------------------------------------------------------------------------------------------
 void Endocrine::SynthesizeInsulin()
 {
-  double bloodGlucoseConcentration_g_Per_L = m_aortaGlucose->GetConcentration(MassPerVolumeUnit::g_Per_L);
+  double bloodGlucoseConcentration_g_Per_L = m_AortaGlucose->GetConcentration(MassPerVolumeUnit::g_Per_L);
   const double biologicalDebt = m_data.GetNervous().GetBiologicalDebt().GetValue();
   double diabetesScale = 1;
   double metabolicScaling = 0.0;
@@ -215,13 +215,6 @@ void Endocrine::SynthesizeInsulin()
   metabolicScaling = -0.3 / (1 + exp(-55.0 * (biologicalDebt - 0.35))) + 1.0;
   metabolicScaling = std::max(metabolicScaling, 0.0);
 
-  //m_data.GetDataTrack().Probe("metabolicScaling", metabolicScaling);
-
-  // 2.0 = upperConcentration_g_Per_L
-  // 0.3 = lowerConcentration_g_Per_l
-  // 65.421 = amplitudeRate_mU_Per_min
-  // 6.67 = insulinConversionToAmount_pmol_Per_mU
-
   // Note: Guyton says insulin production at 90 mg/dL glucose concentration should be
   // 25 ng/min/kg, which is about 300 pmol/min, double what we have using this curve from Tolic.
   // Because of this, we won't capture insulin behavior for very high glucose concentrations in non-diabetics, see Guyton p 991
@@ -234,15 +227,13 @@ void Endocrine::SynthesizeInsulin()
     insulinSynthesisRate_pmol_Per_min = diabetesScale * metabolicScaling * insulinMolConversion * (23.4 + (37.0 / (1.0 + exp((2.0 - 5.0 * (bloodGlucoseConcentration_g_Per_L - 1.2)) / 0.3))));
   }
 
-  //m_data.GetDataTrack().Probe("insulinSynthesisRate_pmol_Per_min", insulinSynthesisRate_pmol_Per_min);
-
   GetInsulinSynthesisRate().SetValue(insulinSynthesisRate_pmol_Per_min, AmountPerTimeUnit::pmol_Per_min);
 
   double insulinMassDelta_g = Convert(insulinSynthesisRate_pmol_Per_min, AmountPerTimeUnit::pmol_Per_min, AmountPerTimeUnit::mol_Per_s);
-  insulinMassDelta_g *= m_insulinMolarMass_g_Per_mol * m_dt_s;
+  insulinMassDelta_g *= m_InsulinMolarMass_g_Per_mol * m_dt_s;
 
-  m_splanchnicInsulin->GetMass().IncrementValue(insulinMassDelta_g, MassUnit::g);
-  m_splanchnicInsulin->Balance(BalanceLiquidBy::Mass);
+  m_SplanchnicInsulin->GetMass().IncrementValue(insulinMassDelta_g, MassUnit::g);
+  m_SplanchnicInsulin->Balance(BalanceLiquidBy::Mass);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -258,7 +249,7 @@ void Endocrine::SynthesizeGlucagon()
 {
   //https://www.wolframalpha.com/input/?i=y%3D21.3-(21.3%2F(1%2Bexp((2-2x)%2F.3)))+from+.8%3Cx%3C1.2+and+0%3Cy%3C16
 
-  double bloodGlucoseConcentration_g_Per_L = m_aortaGlucose->GetConcentration(MassPerVolumeUnit::g_Per_L);
+  double bloodGlucoseConcentration_g_Per_L = m_AortaGlucose->GetConcentration(MassPerVolumeUnit::g_Per_L);
   double glucagonSynthesisRate_pmol_Per_min = 0.0;
 
   //check to see which curve we are on: 
@@ -268,7 +259,6 @@ void Endocrine::SynthesizeGlucagon()
   else {
     glucagonSynthesisRate_pmol_Per_min = 1.97 / (0.14 + exp(-1.0 + 9.7 * (bloodGlucoseConcentration_g_Per_L - 2.0)));
   }
-  //double glucagonSynthesisRate_pmol_Per_min = 21.3 - (21.3 / (1.0 + exp((2 - 2 * bloodGlucoseConcentration_g_Per_L) / .3))); //should be ~14.07 pmol/min at .9 blood glucose (normal)
 
   //Diabetic patients see glucagon abnormalities chronically, but even in short time-scales we expect to see glucagon levels
   //of ~40 ng/L, so we need to make sure glucagon is being produced even if blood sugar gets very high \cite brown2008too
@@ -294,10 +284,10 @@ void Endocrine::SynthesizeGlucagon()
   GetGlucagonSynthesisRate().SetValue(glucagonSynthesisRate_pmol_Per_min, AmountPerTimeUnit::pmol_Per_min);
 
   double glucagonMassDelta_g = Convert(glucagonSynthesisRate_pmol_Per_min, AmountPerTimeUnit::pmol_Per_min, AmountPerTimeUnit::mol_Per_s);
-  glucagonMassDelta_g *= m_glucagonMolarMass_g_Per_mol * m_dt_s;
+  glucagonMassDelta_g *= m_GlucagonMolarMass_g_Per_mol * m_dt_s;
 
-  m_splanchnicGlucagon->GetMass().IncrementValue(glucagonMassDelta_g, MassUnit::g);
-  m_splanchnicGlucagon->Balance(BalanceLiquidBy::Mass);
+  m_SplanchnicGlucagon->GetMass().IncrementValue(glucagonMassDelta_g, MassUnit::g);
+  m_SplanchnicGlucagon->Balance(BalanceLiquidBy::Mass);
 }
 
 //--------------------------------------------------------------------------------------------------
