@@ -1125,7 +1125,7 @@ void BloodChemistry::InflammatoryResponse()
   double xPS = 1.3e4; //Saturation of background immune response
   //Trauma decay
   double kTr = 0.0; //Base value--will be adjusted during burn/hemorrhage (see below)
-  double xTr = 0.25;
+  double xTr = 0.67;
   //Volume and blood pressure effect
   double fB = 0.0; //0 except during hemorrhage
   //Macrophage interaction
@@ -1151,9 +1151,9 @@ void BloodChemistry::InflammatoryResponse()
   //IL12
   double k12M = 0.303, k12 = 0.05, x12TNF = 0.2, x126 = 0.2, x1210 = 0.2525;
   //Autonomic response
-  double kAuto = 0.0; //Base value--will be adjusted during burn/hemorrhage (see below)
+  double kAuto = 0.0, xAuto = 1.15;   //Base value--will be adjusted during burn/hemorrhage (see below)
   //Damage
-  double kD6 = 0.125, kD = 0.15, kDB = 0.5, xD6 = 0.85, xDNO = 0.5, hD6 = 6.0; //kDB = 1.0
+  double kD6 = 0.125, kD = 0.15, kDB = 0.02, xD6 = 0.85, xDNO = 0.5, hD6 = 6.0;
   double kDTR = 0.0; //This is a base value that will be adjusted as a function of type and severity of trauma
   double tiMin = 0.2; //Minimum tissue integrity allowed
 
@@ -1176,11 +1176,14 @@ void BloodChemistry::InflammatoryResponse()
     double volumeEffect = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL) / m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::mL);
     volumeEffect = std::min(volumeEffect, 1.0);
     if (volumeEffect < 1.0) {
-      fB = std::pow(1.0 - volumeEffect, 2.0) / (std::pow(0.25, 2.0) + std::pow(1.0 - volumeEffect, 2.0));
+      fB = std::pow(1.0 - volumeEffect, 4.0);
     }
-    //kTr = 2.0 * iTime / xTr;
-    //kDTR = 0.05;
-    kAuto = -2.0 * iTime / 1.35;
+    //These parameters are 'as is' from Chow2005Shock (kTr and kAuto depend on duration of inflammation).  These parameters are w/ respect to mice.
+    /// \ ToDo: Investigate whether these parameters can be further optimized for humans 
+    kTr = 2.0 * iTime / (xTr * xTr);
+    kDTR = 0.05;
+    kAuto = 2.0 * iTime / (xAuto * xAuto);
+    kD = 0.05;
   }
 
   //---------------------State equations----------------------------------------------
@@ -1225,7 +1228,7 @@ void BloodChemistry::InflammatoryResponse()
   dI10 = (k10N * NA + MA) * (k10MA + k10TNF * GeneralMath::HillActivation(TNF, x10TNF, 4.0) + k106 * GeneralMath::HillActivation(I6, x106, 4.0)) * ((1 - k10R) * GeneralMath::HillInhibition(I12, x1012, 4.0) + k10R) - k10 * (I10 - s10);
   dI12 = k12M * MA * GeneralMath::HillInhibition(I10, x1210, 2.0) - k12 * I12;
   dCA = kCATR * A - kCA * CA;
-  dA = kAuto * A;
+  dA = -kAuto * A;
   dTI = kD * (1.0 - TI) * (TI - tiMin) * TI - (TI - tiMin) * (kDB * fB + kD6 * GeneralMath::HillActivation(I6, xD6, hD6) + kDTR * TR) * (1.0 / (std::pow(xDNO, 2.0) + std::pow(NO, 2.0)));
 
   //------------------------Update State-----------------------------------------------
