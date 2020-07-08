@@ -952,6 +952,12 @@ Actions
 
 ### Insults
 
+#### Acute Respiratory Distress
+Acute Lung Injury (ALI) and Acute Respiratory Distress Syndrome (ARDS) arise when the pulmonary capililary endothelium and the alveolar epithelium incur damage @cite matthay2011acute.  The source of the epithelial damage could be a foreign agent (bacteria, virus) or some type of trauma, like smoke inhalation.  Capillary endothelial damage generally results from an acute, dysregulated inflammatory response that impairs starling forces across the endothelial barrier and allows fluid and inflammatory mediators to pass into the alveolar space @cite matuschak2010acute.  The accumulation of fluid and inflammatory agents (like neutrophils) in the alveoli impairs gas exchange, leading to hypoxemia.  Furthermore, ALI and ARDS increase pulmonary capillary resistance and mean pulmonary arterial pressure @cite ryan2014pulmonary. The severity of the systemic inflammatory response induced by pulmonary injury can cause multiple organ dysfunction syndrome (MODS), which greatly increases mortality.  While estimates of mortality from ARDS uncomplicated by MODS range from 26% and 40% @cite ryan2014pulmonary @cite varisco2011pharmacology, mortality can exceed 50% in cases of MODS and septic shock @cite matuschak2010acute.  Current standard of care for ALI and ARDS emphasizes mechanical ventilation with low target tidal volumes (6 mL/kg) @cite bein2016standard.  Patients must be sedated for mechanical ventilation and in some cases require neuormuscular blockers.  Other interventions involve positioning the patient facedown and administering pulmonary vasodilators @cite bein2016standard.  
+
+%BioGears models Acute Respiratory Distress by increasing the resistance on the pulmonary capillary pathways (see [Respiratory Circuit])(@ref respiratory-features) and by decreasing the diffusing capacity in the [alveolar gas exchange model](@ref tissue-alveolarExchange).  The %BioGears ARDS treatment scenario focuses on sedation and mechanical ventilation.   
+
+
 #### Airway Obstruction
 
 Airway obstruction refers to a blockage in the airway that partially or wholly
@@ -1172,16 +1178,16 @@ The %BioGears %Respiratory System was validated quantitatively and qualitatively
 Validation - Resting Physiologic State
 --------------------------------------
 
-The %BioGears %Respiratory Model outputs a number of system-level and compartment-level resting physiologic parameters. The tables below compare the values of system- and compartment-level parameters obtained from the model with referenced values. The outputs from the model correspond to the system- and compartment-level respiratory related values of the standard patient (77kg adult male)  under resting physiologic conditions. As shown in Table 3, the majority of the physiological variables show a good match with the literature. The outputs for the major respiratory variables, such as respiration rate, tidal volume, and pulmonary ventilation specifically match well with the reference data. 
+The %BioGears %Respiratory Model outputs a number of system-level and compartment-level resting physiologic parameters. The tables below compare the values of system- and compartment-level parameters obtained from the model with referenced values. The outputs from the model correspond to the system- and compartment-level respiratory related values of the standard patient (77kg adult male)  under resting physiologic conditions. As shown in Table 1, the majority of the physiological variables show a good match with the literature. The outputs for the major respiratory variables, such as respiration rate, tidal volume, and pulmonary ventilation specifically match well with the reference data. 
 
 <center>
-<i>Table 3. Validation of the resting physiologic state of the %Respiratory System. The table shows comparison of system-level outputs from %BioGears to referenced values. System-level outputs show favorable agreement with validation data. The deviations in end tidal carbon dioxide fraction and transpulmonary pressure can be attributed to the tuned parameters used in the model that are selected to meet the major system level physiological parameters.</i>
+<i>Table 1. Validation of the resting physiologic state of the %Respiratory System. The table shows comparison of system-level outputs from %BioGears to referenced values. System-level outputs show favorable agreement with validation data. The deviations in end tidal carbon dioxide fraction and transpulmonary pressure can be attributed to the tuned parameters used in the model that are selected to meet the major system level physiological parameters.</i>
 </center><br>
 
 @insert doc/validation/RespiratoryValidationTable.md
 
 <center>
-<i>Table 4. Validation table for the resting physiologic states. The table shows comparison of compartment-level outputs from %BioGears to referenced values. The majority of the variables show good match with the validation data. There are significant deviations in the carina flow and the dead space volumes. Future versions will address these issues.</i>
+<i>Table 2. Validation table for the resting physiologic states. The table shows comparison of compartment-level outputs from %BioGears to referenced values. The majority of the variables show good match with the validation data. There are significant deviations in the carina flow and the dead space volumes. Future versions will address these issues.</i>
 </center><br>
 
 @insert doc/validation/RespiratoryCompartmentsValidationTable.md
@@ -1193,7 +1199,7 @@ Scenario Validation
 The actions and interventions associated with the %Respiratory System were validated quantitatively where possible and qualitatively elsewhere by comparing the engine output to expected trends and values. For each scenario, the table shows the total number of results in each category. For many investigated scenarios, the model shows good agreement with the expected trends. For the scenarios that did not match with the expected trends, improvements are planned for future %BioGears Engine releases.
 
 <center><br>
-*Table 5. Cumulative validation results for %Respiratory specific conditions and actions scenarios.*
+*Table 3. Cumulative validation results for %Respiratory specific conditions and actions scenarios.*
 </center>
 
 |	Key	|
@@ -1204,6 +1210,8 @@ The actions and interventions associated with the %Respiratory System were valid
 
 |	Scenario 	|	Description	|	Good	|	Decent	|	Bad	|
 |	---	|	---	|	---	|	---	|	---	|
+|	AcuteRespiratoryDistress	|	Levels of respiratory distress from acute lung injury to severe ARDS	|<span class="success">	28	</span>|<span class="warning">	2	</span>|<span class="danger">	0	</span>|
+|	AcuteRespiratoryDistress_Ventilation	|	Treat ARDS by putting patient on ventilator	|<span class="success">	14	</span>|<span class="warning">	1	</span>|<span class="danger">	0	</span>|
 |	AsthmaAttackModerateAcute	|	Moderate acute asthma attack	|<span class="success">	18	</span>|<span class="warning">	0	</span>|<span class="danger">	0	</span>|
 |	AsthmaAttackSevereAcute	|	Severe acute asthma attack	|<span class="success">	15	</span>|<span class="warning">	3	</span>|<span class="danger">	0	</span>|
 |	AsthmaAttackLifeThreateningAcute	|	Life threatening acute asthma attack	|<span class="success">	17	</span>|<span class="warning">	1	</span>|<span class="danger">	0	</span>|
@@ -1220,7 +1228,8 @@ The actions and interventions associated with the %Respiratory System were valid
 |	MainstemIntubation	|	Right and left mainstem intubation and correction (with Succs)	|<span class="success">	25	</span>|<span class="warning">	0	</span>|<span class="danger">	0	</span>|
 |	EsophagealIntubation	|	Esophageal intubation and correction (with Succs)	|<span class="success">	15	</span>|<span class="warning">	0	</span>|<span class="danger">	0	</span>|
 |	Apnea	|	Varied severities of respiratory apnea	|<span class="success">	6	</span>|<span class="warning">	0	</span>|<span class="danger">	0	</span>|
-|		|	Total	|<span class="success">	260	</span>|<span class="warning">	28	</span>|<span class="danger">	23	</span>|
+|		|	Total	|<span class="success">	302	</span>|<span class="warning">	31	</span>|<span class="danger">	23	</span>|
+
 
 @anchor respiratory-conditionvalidation
 Validation - Conditions
@@ -1231,7 +1240,7 @@ Validation - Conditions
 The COPD condition was validated against two scenarios. The severe emphysema scenario (Emphysema Severity = 0.7, Bronchitis Severity = 0.5) attempts to model Gold Stage III Emphysema. Here, most metrics show moderate to good agreement with trends, but a few poor results were obtained. We plan to investigate these issues in later versions.
 
 <center><br>
-<i>Table 6. Validation matrix for severe emphysema. This condition corresponds to GOLD Stage III COPD  @cite man2003contemporary  @cite perez2009can . The table shows the %BioGears engine output compared to validation data for respiratory and hemodynamic values.</i>
+<i>Table 4. Validation matrix for severe emphysema. This condition corresponds to GOLD Stage III COPD  @cite man2003contemporary  @cite perez2009can . The table shows the %BioGears engine output compared to validation data for respiratory and hemodynamic values.</i>
 </center>
 
 |	Segment	|	Notes	|	Sampled Scenario Time (s)	|	Trachea Flow - Peak Expiratory Flow  (L/min)	|	Respiration Rate (breaths/min)	|	Tidal Volume (mL)	|	Heart Rate (beats/min)	|	Systolic Pressure (mmHg)	|	Oxygen Saturation	|	PaO2 (mmHg)	|	PaCO2 (mmHg)	|	IERatio	|	Aorta Lactate (mg/dL)	|
@@ -1239,7 +1248,7 @@ The COPD condition was validated against two scenarios. The severe emphysema sce
 |	Severe Emphysema: Bronchitis Severity = 0.5 Emphysema Severity = 0.7 Both Lungs 100%	|	GOLD Stage III	|	120	|<span class="success">	< 70% of Normal @cite perez2009can	</span>|<span class="success">	Increase,  Tachypnea, Dypsnea,  > 30 @cite gunning2003pathophysiology	</span>|<span class="success">	< 60% of normal @cite gunning2003pathophysiology	</span>|<span class="warning">	Increase, Tachycardia	</span>|<span class="danger">	Increase,   Pulmonary Hypertension ,  > 140 mm Hg @cite keller2003pathophysiology, @cite scharf2002hemodynamic	</span>|<span class="warning">	< 90%  @cite man2003contemporary; < 89% @cite keller2003pathophysiology	</span>|<span class="warning">	Decrease,  Hypoxemia @cite keller2003pathophysiology; < 55 mm Hg  @cite man2003contemporary, @cite keller2003pathophysiology	</span>|<span class="warning">	Increase, Hypercapnia, > 55 mmHg @cite keller2003pathophysiology	</span>|<span class="success">	Decrease @cite van1991physical	</span>|<span class="warning">	Increase @cite mathur1999cerebral	</span>|
 
 <center><br>
-<i>Table 7. Validation matrix for severe chronic bronchitis. The table shows the %BioGears engine output compared to validation data for respiratory and hemodynamic values.</i>
+<i>Table 5. Validation matrix for severe chronic bronchitis. The table shows the %BioGears engine output compared to validation data for respiratory and hemodynamic values.</i>
 </center>
 
 |	Segment	|	Notes	|	Sampled Scenario Time (s)	|	Trachea Flow - Peak Expiratory Flow  (L/min)	|	Respiration Rate (breaths/min)	|	Tidal Volume (mL)	|	Heart Rate (beats/min)	|	Systolic Pressure (mmHg)	|	Oxygen Saturation	|	PaO2 (mmHg)	|	PaCO2 (mmHg)	|	IERatio	|	Aorta Lactate (mg/dL)	|
@@ -1250,7 +1259,7 @@ The COPD condition was validated against two scenarios. The severe emphysema sce
 
 The lobar pneumonia condition was validated against three scenarios; severe pneumonia in the one lobe of the left lung (Severity = 0.7), severe pneumonia in two lobes of the right lung (Severity = 0.7), and moderate pneumonia in both lungs (Severity = 0.2). %BioGears does not model the discrete lobes of each lung, so infected-lobe behavior is modeled by applying pneumonia severity against a fraction of each lung. The fraction approximates the portion of the lung (by volume) that the lobe(s) occupy. In the case of the left lung, there are two lobes. Each lobe constitutes approximately 50% of the whole lung. It is understood that the actual volume distribution is not equal for the two lobes, but we use this as an approximation. The same is true for the right lung, which has three lobes. In all three scenarios, expected general trends are observed for most measures. However, heart rate and blood pressure do not follow expected trends. This is similar to COPD, where heart rate and blood pressure also do not always behave as expected. Additionally, increasing core body temperature is also a symptom of lobar pneumonia that fails to agree with the validation data. However, we expected this disagreement since %BioGears doesn't currently model elevated body temperature in response to infection. This is something we plan to address in subsequent releases. 
 <center><br>
-<i>Table 8. Validation matrix for severe lobar pneumonia concentrated in one lobe in the left lung. The table shows the %BioGears engine output compared to validation data for respiratory and hemodynamic values.</i>
+<i>Table 6. Validation matrix for severe lobar pneumonia concentrated in one lobe in the left lung. The table shows the %BioGears engine output compared to validation data for respiratory and hemodynamic values.</i>
 </center>
 
 |	Condition	|	Notes	|	Sampled Scenario Time (s)	|	Respiration Rate (breaths/min)	|	Tidal Volume (mL)	|	Heart Rate (beats/min)	|	Systolic Pressure (mmHg)	|	Oxygen Saturation	|	PaO2 (mmHg)	|	PaCO2 (mmHg)	|	IERatio	|	Core Body Temperature  (Degrees C)	|
@@ -1258,7 +1267,7 @@ The lobar pneumonia condition was validated against three scenarios; severe pneu
 |	Severe Lobar Pneumonia:  Severity = 0.70 Left Lung = 50% Right Lung = 0%	|	Severe Lobar Pneumonia in one lobe in the left lung. Current model does not include metabolic effects.	|	120	|<span class="success">	Increase,  Tachypnea, Dypsnea  > 20 @cite ebell2007predicting	</span>|<span class="success">	Decrease @cite bergeronSME	</span>|<span class="warning">	Increase,  Tachycardia, > 100 @cite ebell2007predicting	</span>|<span class="danger">	Decrease, < 90 mm Hg @cite fine1997prediction	</span>|<span class="warning">	Decrease , < 95% @cite majumdar2010oxygen	</span>|<span class="danger">	Decrease,  Hypoxemia @cite fine1997prediction < 60 mm Hg	</span>|<span class="success">	Increase @cite bergeronSME	</span>|<span class="success">	Decrease @cite bergeronSME	</span>|<span class="danger">	Increase,   > 37.8 C (100 F) @cite ebell2007predicting	</span>|
 
 <center><br>
-<i>Table 9. Validation matrix for severe lobar pneumonia concentrated in two lobes in the right lung. The table shows the %BioGears engine output compared to validation data for respiratory and hemodynamic values.</i>
+<i>Table 7. Validation matrix for severe lobar pneumonia concentrated in two lobes in the right lung. The table shows the %BioGears engine output compared to validation data for respiratory and hemodynamic values.</i>
 </center>
 
 |	Condition	|	Notes	|	Sampled Scenario Time (s)	|	Respiration Rate (breaths/min)	|	Tidal Volume (mL)	|	Heart Rate (beats/min)	|	Systolic Pressure (mmHg)	|	Oxygen Saturation	|	PaO2 (mmHg)	|	PaCO2 (mmHg)	|	IERatio	|	Core Body Temperature  (Degrees C)	|
@@ -1266,7 +1275,7 @@ The lobar pneumonia condition was validated against three scenarios; severe pneu
 |	Severe Lobar Pneumonia: Right Lung Severity = 0.70 Left Lung = 0% Right Lung  = 67%	|	Severe lobar pneumonia in two lobes of the  right lung. Current model does not include metabolic effects.	|	120	|<span class="success">	Increase,  Tachypnea, Dypsnea  > 20 @cite ebell2007predicting	</span>|<span class="success">	Decrease @cite bergeronSME	</span>|<span class="warning">	Increase,  Tachycardia, > 100 @cite ebell2007predicting	</span>|<span class="danger">	Decrease, < 90 mm Hg @cite fine1997prediction	</span>|<span class="success">	Decrease , < 95% @cite majumdar2010oxygen	</span>|<span class="warning">	Decrease,  Hypoxemia @cite fine1997prediction < 60 mm Hg	</span>|<span class="success">	Increase @cite bergeronSME	</span>|<span class="success">	Decrease @cite bergeronSME	</span>|<span class="danger">	Increase,   > 37.8 C (100 F) @cite ebell2007predicting	</span>|
 
 <center><br>
-<i>Table 10. Validation matrix for moderate lobar pneumonia in both lungs. The table shows the %BioGears engine output compared to validation data for respiratory and hemodynamic values.</i>
+<i>Table 8. Validation matrix for moderate lobar pneumonia in both lungs. The table shows the %BioGears engine output compared to validation data for respiratory and hemodynamic values.</i>
 </center>
 
 |	Condition	|	Notes	|	Sampled Scenario Time (s)	|	Respiration Rate (breaths/min)	|	Tidal Volume (mL)	|	Heart Rate (beats/min)	|	Systolic Pressure (mmHg)	|	Oxygen Saturation	|	PaO2 (mmHg)	|	PaCO2 (mmHg)	|	IERatio	|	Core Body Temperature  (Degrees C)	|
@@ -1276,6 +1285,61 @@ The lobar pneumonia condition was validated against three scenarios; severe pneu
 @anchor respiratory-actionvalidation
 Validation - Actions
 --------------------
+### Acute Respiratory Distress
+The respiratory distress action was validated by applying varying severities to target clinical symptoms progressing from acute lung injury (ALI) to acute respiratory distress syndrome (ARDS) to severe ARDS.  It was found that severity of 0.5 induces ALI, with lesser severities only causing minor respiratory dysfunction.  Severities greater than 0.5 cause the desired progression towards severe ARDS.  As expected, the patient carrico index (ratio of PaO2 to FiO2) deceased as the severity of respiratory distress increased.  However, a carrico index < 100 mmHg was not observed because patient oxygen levels declined too steeply, triggering a BioGears irreversible state.  Mean pulmonary arterial pressure increased as a function of severity consistent with diagnosis of ALI and ARDS but, as was the case with the carrico index, did not reach the target value for severe ARDS.  The nervous system responded to worsening hypoxemia by inducing tachypnea and tachydardia.
+
+In the ARDS treatment scenario, mechanical ventilation successfully increased carrico index and oxygen saturation above the threshold for ALI.  The cardiovascular effects of propofol induction were apparent in the decrease in mean arterial pressure and heart rate. Both of these metrics, however, remained above baseline physiological values and would require additional intervention to reverse.
+
+<center>
+<table border="0">
+<tr>
+    <td><img src="./plots/Respiratory/ARDS_CarricoIndex.jpg" width="550"></td>
+    <td><img src="./plots/Respiratory/ARDS_RespirationRate.jpg" width="550"></td>
+</tr>
+<tr>
+    <td><img src="./plots/Respiratory/ARDS_MeanPulmonaryPressure.jpg" width="550"></td>
+    <td><img src="./plots/Respiratory/ARDS_O2Saturation.jpg" width="550"></td>
+</tr>
+</table>
+</center>
+<center><i>Figure 26. Select outputs from the acute respiratory distress scenario.</i></center>
+
+<center><br>
+<i>Table 9. Validation matrix for physiological responses due to varying severities of respiratory distress.</i>
+</center>
+|	Segment	|	Notes	|	Action Occurrence Time (min)	|	Carrico Index (mmHg)	|	Mean Pulmonary Arterial Pressure (mmHg)	|	Respiration Rate (/min)	|	Heart Rate (/min)	|	Oxygen Saturation	|
+|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|
+|	Respiratory distress, severity = 0.5	|	Target acute lung injury (ALI)	|	0	|<span class="success">	 < 300  @cite varisco2011pharmacology	</span>|<span class="success">	> 25 @cite ryan2014pulmonary	</span>|<span class="success">	Tachypnea @cite matuschak2010acute	</span>|<span class="success">	Tachycardia @cite matuschak2010acute	</span>|<span class="success">	Decrease @cite matuschak2010acute	</span>|
+|	Remove action	|		|	10	|<span class="success">	Normal (~450)	</span>|<span class="success">	<25	</span>|<span class="success">	returns to resting physiology 	</span>|<span class="success">	returns to resting physiology 	</span>|<span class="success">	returns to resting physiology 	</span>|
+|	Respiratory distress, severity = 0.75	|	Target acute respiratory distress syndrome	|	30	|<span class="success">	<200 @cite varisco2011pharmacology	</span>|<span class="success">	>30 @cite ryan2014pulmonary	</span>|<span class="success">	Tachypnea @cite matuschak2010acute	</span>|<span class="success">	Tachycardia @cite matuschak2010acute	</span>|<span class="success">	< 0.9  @cite matuschak2010acute	</span>|
+|	Remove action	|		|	40	|<span class="success">	Normal (~450)	</span>|<span class="success">	<25	</span>|<span class="success">	returns to resting physiology 	</span>|<span class="success">	returns to resting physiology 	</span>|<span class="success">	returns to resting physiology 	</span>|
+|	Respiratory distress, severity = 1.0	|	Target severe acute respiratory distress	|	60	|<span class="warning">	<100 @cite varisco2011pharmacology	</span>|<span class="warning">	>45 @cite ryan2014pulmonary	</span>|<span class="success">	Tachypnea @cite matuschak2010acute	</span>|<span class="success">	Tachycardia @cite matuschak2010acute	</span>|<span class="success">	< 0.9  @cite matuschak2010acute	</span>|
+|	Remove action	|		|	70	|<span class="success">	Normal (~450)	</span>|<span class="success">	<25	</span>|<span class="success">	returns to resting physiology 	</span>|<span class="success">	returns to resting physiology 	</span>|<span class="success">	returns to resting physiology 	</span>|
+
+<center>
+<table border="0">
+<tr>
+    <td><img src="./plots/Respiratory/ARDSVent_CarricoIndex.jpg" width="550"></td>
+    <td><img src="./plots/Respiratory/ARDSVent_RespirationRate.jpg" width="550"></td>
+</tr>
+<tr>
+    <td><img src="./plots/Respiratory/ARDSVent_MeanPulmonaryPressure.jpg" width="550"></td>
+    <td><img src="./plots/Respiratory/ARDSVent_O2Saturation.jpg" width="550"></td>
+</tr>
+</table>
+</center>
+<center><i>Figure 27. Select outputs from the acute respiratory distress with ventilation.</i></center>
+
+
+<center><br>
+<i>Table 10. Validation matrix for treatment of ARDS with ventilation.</i>
+</center>
+|	Segment	|	Notes	|	Action Occurrence Time (min)	|	Carrico Index (mmHg)	|	Mean Pulmonary Arterial Pressure (mmHg)	|	Respiration Rate (/min)	|	Heart Rate (/min)	|	Oxygen Saturation	|
+|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|
+|	Respiratory distress, severity = 0.75	|	Target ARDS	|	0	|<span class="success">	 < 200  @cite varisco2011pharmacology	</span>|<span class="success">	> 30 @cite ryan2014pulmonary	</span>|<span class="success">	Tachypnea @cite matuschak2010acute	</span>|<span class="success">	Tachycardia @cite matuschak2010acute	</span>|<span class="success">	Decrease @cite matuschak2010acute	</span>|
+|	Anesthesia Induction w/ Propofol	|	1.8 mg/kg loading dose followed by 142 ug/kg/min maintenance	|	30	|<span class="success">	Steady	</span>|<span class="success">	Decrease @cite Morgan2006Clinical	</span>|<span class="success">	Decrease @cite Morgan2006Clinical	</span>|<span class="success">	No change @cite Morgan2006Clinical	</span>|<span class="success">	Decrease	</span>|
+|	Connect anesthesia machine	|	InletFlow = 6.0 L/min; FiO2 = 0.5; PEEP = 1.0 cmH2O; PMax = 10.0 cmH2O; IE ratio = 0.5; Respiration Rate = 12	|	33	|<span class="success">	>300 @cite varisco2011pharmacology	</span>|<span class="success">	Minimal change @cite bein2016standard @cite varisco2011pharmacology	</span>|<span class="success">	12 (machine setting)	</span>|<span class="warning">	Decrease	</span>|<span class="success">	> 0.9 @cite bein2016standard	</span>|
+
 
 ### Airway Obstruction
 
