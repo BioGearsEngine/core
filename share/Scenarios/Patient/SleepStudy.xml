@@ -22,7 +22,7 @@
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="WakeTime"                 Unit="s"          Precision="1"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="BiologicalDebt"                 Unit="unitless"          Precision="12"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="AttentionLapses"                 Unit="uniteless"          Precision="1"/>
-    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Brain"     Substance="Glucose"        Name="Concentration" Unit="mg/dL" Precision="3"/>
+    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature"     Substance="Glucose"        Name="Concentration" Unit="mg/dL" Precision="3"/>
         <DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose" Name="MassInBody" Unit="mg" Precision="2"/>
     <DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose" Name="MassInBlood" Unit="mg" Precision="2"/>
     <DataRequest xsi:type="SubstanceDataRequestData" Substance="Glucose" Name="MassInTissue" Unit="mg" Precision="2"/>

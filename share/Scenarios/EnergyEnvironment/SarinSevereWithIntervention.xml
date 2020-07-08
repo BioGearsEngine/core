@@ -64,8 +64,10 @@
 
 	<!-- Anything action specific data needed for verification of this scenario -->			  
 
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-SizeModifier" Precision="3"/>
-    <DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-ReactivityModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-ReactivityModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-ReactivityModifier" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BronchodilationLevel" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralNervousResponse" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RedBloodCellAcetylcholinesterase" Unit="ct/uL" Precision="3"/>

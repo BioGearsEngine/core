@@ -80,8 +80,6 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature" Substance="CarbonDioxide"  Name="Saturation" Unit="Unitless"  Precision="2"/>
 	
 	
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-SizeModifier"               Precision="3"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-ReactivityModifier"         Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-SizeModifier"        Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-SizeModifier"       Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-ReactivityModifier"  Precision="3"/>

@@ -78,8 +78,7 @@ void Nervous::Initialize()
   BioGearsSystem::Initialize();
   m_FeedbackActive = false;
   m_blockActive = false;
-  //m_SleepState = CDM::enumSleepState::Awake;   //patient always starts awake
-  SetSleepState(CDM::enumSleepState::Awake);
+  SetSleepState(CDM::enumSleepState::Awake);  //patient always starts awake
   m_AfferentChemoreceptor_Hz = 3.55;
   m_AfferentPulmonaryStretchReceptor_Hz = 12.0;
   m_AorticBaroreceptorStrain = 0.04226;

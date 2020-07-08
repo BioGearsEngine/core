@@ -644,6 +644,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   const double hypoperfusionDeficit_kcal = m_data.GetEnergy().GetEnergyDeficit(PowerUnit::kcal_Per_s) * time_s; //Hypoperfusion deficit is "faux" energy value -- it makes system perceive an energy deficit and enter anaerobic production earlier during hemorrhage and sepsis
   double brainNeededEnergy_kcal = .2 * baseEnergyRequested_kcal; //brain requires a roughly constant 20% of basal energy regardless of exercise \cite raichle2002appraising
   double nonbrainNeededEnergy_kcal = 0.8 * baseEnergyRequested_kcal + hypoperfusionDeficit_kcal;
+  double totalEnergyRequested_kcal = brainNeededEnergy_kcal + nonbrainNeededEnergy_kcal + exerciseEnergyRequested_kcal + otherEnergyDemandAboveBasal_kcal; //Use to check math below
+  double brainEnergyReduction = 0.0;
   double totalEnergyRequested_kcal_Check = 0.0; //Add tissue values to this as we go and use to check our math later
   double brainEnergyDeficit_kcal = 0;
   double nonbrainEnergyDeficit_kcal = 0;
@@ -704,11 +706,12 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
 
   //if a patient is sleep deprived scale back how much glucose the brain is using (7%)
   if (sleepRatio > 5.0) {
-    brainNeededEnergy_kcal *= 0.93;
+    brainEnergyReduction = 0.07 * brainNeededEnergy_kcal;
+    brainNeededEnergy_kcal -= brainEnergyReduction;
+    totalEnergyRequested_kcal -= brainEnergyReduction;
   }
 
   //update the total energy requested equation with the new brain energy: 
-  const double totalEnergyRequested_kcal = brainNeededEnergy_kcal + nonbrainNeededEnergy_kcal + exerciseEnergyRequested_kcal + otherEnergyDemandAboveBasal_kcal; //Use to check math below
 
 
   //Reusable values for looping

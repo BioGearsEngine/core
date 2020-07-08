@@ -476,7 +476,7 @@ void Gastrointestinal::DigestNutrient()
     m_StomachContents->GetWater().IncrementValue(-digestedAmount, VolumeUnit::mL);
   }
 
-  if (digestedAmount > 0) {
+  if (digestedAmount > 0 && m_DecrementNutrients) {
 #ifdef logDigest
     m_ss << "Digested " << digestedAmount << "(mL) of Water";
     Info(m_ss);

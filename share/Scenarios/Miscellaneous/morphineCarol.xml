@@ -63,8 +63,10 @@
 	<!-- Anything action specific data needed for verification of this scenario -->
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralNervousResponse" Precision="5"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SedationLevel" Precision="5"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-SizeModifier" Precision="5"/>
-	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PupillaryResponse-ReactivityModifier" Precision="5"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-ReactivityModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-ReactivityModifier" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialBloodPH" Precision="5"/>
   
   
