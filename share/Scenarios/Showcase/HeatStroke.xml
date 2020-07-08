@@ -38,8 +38,11 @@
 	<!-- Segment 1: Hiking -->
 	<Action xsi:type="ExerciseData">
 		<Comment>Insult: Moderate hiking</Comment>
-		<Intensity value="0.1"/>
+		<GenericExercise>
+            <Intensity value="0.1"/>
+        </GenericExercise>
 	</Action>
+
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="10" unit="min"/>
 	</Action>
@@ -65,26 +68,37 @@
 	
 	<Action xsi:type="ExerciseData">
 		<Comment>Intervention: Rest for one minute </Comment>
-		<Intensity value="0.0"/>
+		<GenericExercise>
+            <Intensity value="0.0"/>
+        </GenericExercise>
 	</Action>
+
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="1" unit="min"/>
 	</Action>
 	
 	<!-- Segment 2a: Rock Climbing -->
+
 	<Action xsi:type="ExerciseData">
 		<Comment>Insult: Intense rock climbing</Comment>
-		<Intensity value="0.45"/>
+		<GenericExercise>
+            <Intensity value="0.45"/>
+        </GenericExercise>
 	</Action>
+
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="10" unit="min"/>
 	</Action>
 	
 	<!-- Segment 2b: At the top -->
+
 	<Action xsi:type="ExerciseData">
 		<Comment>Intervention: Stop rock climbing</Comment>
-		<Intensity value="0"/>
+		<GenericExercise>
+            <Intensity value="0.0"/>
+        </GenericExercise>
 	</Action>
+
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="0.5" unit="min"/>
 	</Action>
