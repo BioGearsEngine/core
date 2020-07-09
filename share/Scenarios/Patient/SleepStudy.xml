@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
   <Name>SleepStudy</Name>
   <Description>Study the metabolic and psychological impacts of sleep deprivation, a mirror of the Spiegle et al study </Description>
-    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>SleepDeprived.xml</PatientFile></InitialParameters>
   <DataRequests SamplesPerSecond="0.05">
     <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
 
@@ -172,72 +172,6 @@
   <!-- Sleep for 4 hours each day during the study -->
 <Action xsi:type="SleepData" Sleep="Off"/>
 
-<!-- Patient wakes up at 5am, eats at 9 -->
-  <Action xsi:type="AdvanceTimeData">
-        <Time value="4" unit="hr"/>       
-    </Action>
-
-  <!-- This is a 63% carb right meal, see spiegel et al for study details -->
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Food</Name>
-      <Carbohydrate value="111.0" unit="g"/>
-      <Fat value="33.0" unit="g"/>
-      <Protein value="33.0" unit="g"/>
-      <Calcium value="0.5" unit="g"/>
-      <Sodium value="0.75" unit="g"/>
-      <Water value="0.5" unit="L"/>
-    </Nutrition>
-  </Action>
-
-  <Action xsi:type="AdvanceTimeData">
-      <Time value="5" unit="hr"/>       
-  </Action>
-
-  <!-- This is a 63% carb right meal, see spiegel et al for study details -->
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Food</Name>
-      <Carbohydrate value="111.0" unit="g"/>
-      <Fat value="33.0" unit="g"/>
-      <Protein value="33.0" unit="g"/>
-      <Calcium value="0.5" unit="g"/>
-      <Sodium value="0.75" unit="g"/>
-      <Water value="0.5" unit="L"/>
-    </Nutrition>
-  </Action>
-
-  <Action xsi:type="AdvanceTimeData">
-      <Time value="5" unit="hr"/>       
-  </Action>
-
-  <!-- This is a 63% carb right meal, see spiegel et al for study details -->
-  <Action xsi:type="ConsumeNutrientsData">
-    <Nutrition>
-      <Name>Food</Name>
-      <Carbohydrate value="111.0" unit="g"/>
-      <Fat value="33.0" unit="g"/>
-      <Protein value="33.0" unit="g"/>
-      <Calcium value="0.5" unit="g"/>
-      <Sodium value="0.75" unit="g"/>
-      <Water value="0.5" unit="L"/>
-    </Nutrition>
-  </Action>
-
-  <Action xsi:type="AdvanceTimeData">
-      <Time value="6" unit="hr"/>       
-  </Action>
-
-  <!-- Sleep for 4 hours each day during the study -->
-<Action xsi:type="SleepData" Sleep="On"/>
-
-
-  <Action xsi:type="AdvanceTimeData">
-        <Time value="4" unit="hr"/>       
-    </Action>
-
-  <!-- Sleep for 4 hours each day during the study -->
-<Action xsi:type="SleepData" Sleep="Off"/>
 
 
 </Scenario>

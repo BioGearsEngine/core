@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Patient xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>SleepDeprived</Name>
+  <Sex>Male</Sex>
+  <Age readOnly="false" unit="yr" value="44"/>
+  <Weight readOnly="false" unit="lb" value="170"/>
+  <Height readOnly="false" unit="in" value="71"/>
+  <BodyFatFraction readOnly="false" value="0.21"/>
+  <SleepAmount readOnly="false" unit="hr" value="2.0"/>
+  <DiastolicArterialPressureBaseline readOnly="false" unit="mmHg" value="73.5"/>
+  <HeartRateBaseline readOnly="false" unit="1/min" value="72"/>
+  <RespirationRateBaseline readOnly="false" unit="1/min" value="16"/>
+  <SystolicArterialPressureBaseline readOnly="false" unit="mmHg" value="114"/>
+</Patient>
