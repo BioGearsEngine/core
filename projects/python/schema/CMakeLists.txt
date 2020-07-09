@@ -55,7 +55,7 @@ string(REGEX REPLACE "Python_" "" SHORT_NAME ${PROJECT_NAME})
 #        OUTPUT_NAME ${SHORT_NAME}
 #)
 
-message(WARNING "Sources :${${PREFIX}_SOURCES} SRCS : ${SRCS}")
+#message(WARNING "Sources :${${PREFIX}_SOURCES} SRCS : ${SRCS}")
 ###############################################################################
 #Define Logic
 ###############################################################################
@@ -65,7 +65,7 @@ message(WARNING "Sources :${${PREFIX}_SOURCES} SRCS : ${SRCS}")
 ###############################################################################
 
 add_custom_command(OUTPUT ${SHORT_NAME}
-	COMMAND ${CMAKE_COMMAND} -E copy ${${PREFIX}_SOURCES} ${SHORT_NAME}
+	#COMMAND ${CMAKE_COMMAND} -E copy ${${PREFIX}_SOURCES} ${SHORT_NAME}
 	DEPENDS ${${PREFIX}_SOURCES})
 
 add_custom_target(${PROJECT_NAME} ALL

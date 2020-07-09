@@ -139,6 +139,41 @@ class CDM2MD:
                         self.list_types.append(d["@type"])
 
 
+    def ComplexException(self,node,fout):
+        xml_json=json.dumps(xmltodict.parse(node.toxml()),indent=5)
+        json_dict=json.loads(xml_json)
+        c_type=json_dict["xs:complexType"]
+        c_type_name=c_type["@name"]
+        self.tags[c_type_name]=[]
+        c_type_el=c_type["xs:complexContent"]["xs:extension"]["xs:sequence"]["xs:element"]
+        c_type_base=c_type["xs:complexContent"]["xs:extension"]["@base"]
+        self.tags[c_type_name].append(c_type_base)
+        for i in c_type_el:
+            self.tags[c_type_name].append((i["@name"],i["@name"]))
+        for i in c_type_el:
+            self.iterexec(i)
+            item=list(zip(self.name_el[1:],self.type_el))
+            self.tags[i["@name"]]=item
+            self.name_el=[]
+            self.type_el=[]
+
+    def iterexec(self,d):
+        for k,v in d.items():
+            if isinstance(v,list) and k=="xs:element":
+                for i in v:
+                    self.iterexec(i)
+            elif k=="@name":
+                if v=="Regulation":
+                    self.name_el.append(v)
+                    self.type_el.append(v)
+                else:
+                    self.name_el.append(v)
+
+            elif k=="@type":
+                self.type_el.append(v)
+            elif isinstance(v,dict):
+                self.iterexec(v)
+
     def parse(self,node,fout):
         """
         Parse
@@ -148,8 +183,11 @@ class CDM2MD:
         or include type for parsing through the function to create table
         """
         for i in node.childNodes:
-            if i.nodeName=="xs:complexType":
-                self.GenComplexType(i,fout)
+            if i.nodeName == "xs:complexType":
+                if i.getAttribute("name")=="SubstanceClearanceData":
+                    self.ComplexException(i,fout)
+                else:
+                    self.GenComplexType(i,fout)
 
             elif i.nodeName == "xs:include":
                 files=i.getAttribute("schemaLocation")

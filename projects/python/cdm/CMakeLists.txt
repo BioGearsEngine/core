@@ -1,3 +1,9 @@
+
+###############################################################################
+# Policy adjustments
+###############################################################################
+cmake_policy(SET CMP0070 NEW)
+###############################################################################
 # Options
 ###############################################################################
 
@@ -29,5 +35,6 @@ set(${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS})
 string(REGEX REPLACE "Python_" "" SHORT_NAME ${PROJECT_NAME})
 
 set(CDM2MD_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/mil/tatrc/physiology/datamodel/doxygen/CDM2MD.py PARENT_SCOPE)
+set(DoxygenPreprocessor_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/mil/tatrc/physiology/datamodel/doxygen/DoxygenPreprocessor.py PARENT_SCOPE)
 set(XSDToDOXYGEN_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/mil/tatrc/physiology/datamodel/doxygen/XSDToDoxygen.py PARENT_SCOPE)
 
