@@ -123,7 +123,7 @@ if(Biogears_Python_BUILD_WEBSITE)
   add_custom_target(docs-stage-py
         COMMAND ${CMAKE_COMMAND} -E  make_directory output/documentation
         COMMAND ${CMAKE_COMMAND} -E copy_directory doxygen/html/ output/documentation
-        COMMAND ${CMAKE_COMMAND} -E tar cz output/documentation.zip     output/documentation
+	COMMAND ${CMAKE_COMMAND} -E tar cfv output/documentation.zip  --format=zip  -- output/documentation
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/
         VERBATIM
 	COMMENT "Running docs-stage"
