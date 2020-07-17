@@ -41,9 +41,98 @@ class PlotDriver():
             me.processConfigFile(args[2],args[1])
         me.execute()
 
+    class PlotJob():
+        def __init__(self):
+            self.name = None
+            self.headers = list()
+            self.plotter = None
+            self.titleOverride = None
+            self.ignore = False
+            self.showGridLines = True
+            self.logAxis = False
+            self.forceZeroYAxisBound = False
+            self.removeAllLegends = False
+            self.resultsSkipNum = 0
+            self.plotname=None
+            self.dataFile = None
+            self.dataPath = None
+            self.logFile = None
+            self.logPath = None
+            self.scenarioPath = None
+            self.scenarioFile = None
+            self.verificationDirectory = "Patient"
+            self.X1Label = None
+            self.Y1Label = None
+            self.experimentalData = None
+            self.outputDir = "Plots/"
+            self.imageWidth = None
+            self.imageHeight = None
+            self.fontSize = 22
+            self.outputFilename = None
+            self.skipAllActions = False
+            self.skipAllEvents = False
+            self.hideAELegend = False
+            self.legendOnly = False
+            self.eventOmissions = list()
+            self.actionOmissions = list()
+            self.isComparePlot = False
+            self.computedDataPath = None
+            self.computedDataFile = None
+            self.Y1headers = list()
+            self.Y2headers = list()
+            self.X1header = None
+            self.X2header = None
+            self.X1LowerBound = None
+            self.X2LowerBound = None
+            self.X1UpperBound = None
+            self.X2UpperBound = None
+            self.Y1LowerBound = None
+            self.Y2LowerBound = None
+            self.Y1UpperBound = None
+            self.Y2UpperBound = None
+            self.X2Label = None
+            self.Y2Label = None
+            self.PFTFile = None
+            self.basedir= None
+
+        def Reset(self):
+            """ generated source for method Reset """
+            self.headers = None
+            self.eventOmissions = None
+            self.actionOmissions = None
+            self.compareData = None
+            self.Y1headers = None
+            self.Y2headers = None
+
     def processConfigFile(self, configFile,basedir):
         self.name = configFile.split(".")[0]
-        pass
+        currentGroup = self.name
+        try:
+            with open(configFile,"r") as fin:
+                for line in fin:
+                    if len(line)==0 or line.startswith("#"):
+                        continue 
+                    if line.startswith("@group"):
+                        currentGroup = line.partition("@group")[2].strip()
+                    if len(currentGroup)==0:
+                        currentGroup = self.name
+                        continue
+                    if not "=" in line:
+                        continue 
+                    line = line.strip()
+                    key = line.split("=")[0]
+                    value = line.split("=",1)[1].strip()
+                    if key.lower() == "Plotter".lower():
+                        continue
+                    #print(value)
+                    job = self.PlotJob()
+                    if key[0] == '-':
+                        job.ignore = True
+                        key = key[1:]
+                    self.jobs.append(job)
+                    job.name = key.strip()
+                    directives = value.strip().split(" ")
+		    pass
 
     def execute(self):
         pass
