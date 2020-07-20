@@ -23,6 +23,7 @@ class PlotDriver():
         self.expectedFilePath = None
         self.abbreviateContents = 0
         self.isScenario = False
+        self.jobname=""
 
     @classmethod
     def main(cls,args):
@@ -46,6 +47,7 @@ class PlotDriver():
             self.name = None
             self.headers = list()
             self.plotter = None
+            self.logger=True
             self.titleOverride = None
             self.ignore = False
             self.showGridLines = True
@@ -96,7 +98,6 @@ class PlotDriver():
             self.basedir= None
 
         def Reset(self):
-            """ generated source for method Reset """
             self.headers = None
             self.eventOmissions = None
             self.actionOmissions = None
@@ -132,11 +133,179 @@ class PlotDriver():
                     self.jobs.append(job)
                     job.name = key.strip()
                     directives = value.strip().split(" ")
-		    pass
+                    for directive in directives:
+                        if not "=" in directive:
+                            job.basedir=basedir
+                            if directive.lower() == "ActionEventPlotter".lower():
+                                job.plotname="ActionEvent"
+                                job.plotter=ActionEventPlotter()
+                                continue
+                            elif directive.lower()=="MultiPlotter".lower():
+                                job.plotname="Multiplotter"
+                                job.plotter=MultiPlotter()
+                                continue
+                            elif directive.lower()=="ConvexHullPlotter".lower():
+                                job.plotname="ConvexHullPlotter"
+                                job.plotter=MultiPlotter()
+                            elif directive.lower()=="RespiratoryPFTPlotter".lower():
+                                job.plotname="PFTPlotter"
+                                job.plotter="PFTPlotter()"
+                                continue
+                            elif directive.lower() == "NoGrid".lower():
+                                job.showGridLines = False
+                                continue 
+                            elif directive.lower() == "NoActions".lower():
+                                job.skipAllActions = True
+                                continue 
+                            elif directive.lower() == "NoEvents".lower():
+                                job.skipAllEvents = True
+                                continue 
+                            elif directive.lower() == "LogAxis".lower():
+                                job.logAxis = True
+                                continue 
+                            elif directive.lower() == "ZeroAxis".lower():
+                                job.forceZeroYAxisBound = True
+                                continue 
+                            elif directive.lower() == "HideActionEventLegend".lower():
+                                job.hideAELegend = True
+                                continue 
+                            elif directive.lower() == "RemoveLegends".lower():
+                                job.hideAELegend = True
+                                job.removeAllLegends = True
+                                continue 
+                            elif directive.lower() == "LegendOnly".lower():
+                                job.legendOnly = True
+                                continue 
+                        else:
+                            key_1 = directive.split("=")[0].strip()
+                            value_1 = directive.split("=")[1].strip()
+                            if key_1.lower() == "Header".lower():
+                                configHeaders = value_1.split(",")
+                                for h in configHeaders:
+                                    job.headers.append(h)
+                                continue 
+                            elif key_1.lower() == "Y1".lower():
+                                configHeaders = value_1.split(",")
+                                for h in configHeaders:
+                                    job.headers.append(h)
+                                    job.Y1headers.append(h)
+                                continue 
+                            elif key_1.lower() == "Y2".lower():
+                                configHeaders = value_1.split(",")
+                                for h in configHeaders:
+                                    job.headers.append(h)
+                                    job.Y2headers.append(h)
+                                continue 
+                            elif key_1.lower() == "OmitActionsWith".lower():
+                                allSkips = value_1.split(",")
+                                for h in allSkips:
+                                    job.actionOmissions.append(h)
+                                continue 
+                            elif key_1.lower() == "OmitEventsWith".lower():
+                                allSkips = value_1.split(",")
+                                for h in allSkips:
+                                    job.eventOmissions.append(h)
+                                continue 
+                            elif key_1.lower() == "ImageDimensions".lower():
+                                dims = value_1.split(",")
+                                job.imageWidth = int(dims[0])
+                                job.imageHeight = int(dims[1])
+                                continue 
+                            elif key_1.lower() == "VerificationDir".lower():
+                                job.verificationDirectory = value_1
+                                continue 
+                            elif key_1.lower() == "Title".lower():
+                                job.titleOverride = value_1
+                                continue 
+                            elif key_1.lower() == "OutputFilename".lower():
+                                job.outputFilename = value_1
+                                continue 
+                            elif key_1.lower() == "ReadSkip".lower():
+                                job.resultsSkipNum = int(value_1)
+                                continue 
+                            elif key_1.lower() == "X1".lower():
+                                job.X1header = value_1
+                                job.headers.append(value_1)
+                                continue 
+                            elif key_1.lower() == "X2".lower():
+                                job.X2header = value_1
+                                job.headers.append(value_1)
+                                continue 
+                            elif key_1.lower() == "X1LowerBound".lower():
+                                job.X1LowerBound = float(value_1)
+                                continue 
+                            elif key_1.lower() == "X2LowerBound".lower():
+                                job.X2LowerBound = float(value_1)
+                                continue 
+                            elif key_1.lower() == "X1UpperBound".lower():
+                                job.X1UpperBound = float(value_1)
+                                continue 
+                            elif key_1.lower() == "X2UpperBound".lower():
+                                job.X2UpperBound = float(value_1)
+                                continue 
+                            elif key_1.lower() == "Y1LowerBound".lower():
+                                job.Y1LowerBound = float(value_1)
+                                continue 
+                            elif key_1.lower() == "Y2LowerBound".lower():
+                                job.Y2LowerBound = float(value_1)
+                                continue 
+                            elif key_1.lower() == "Y1UpperBound".lower():
+                                job.Y1UpperBound = float(value_1)
+                                continue 
+                            elif key_1.lower() == "Y2UpperBound".lower():
+                                job.Y2UpperBound = float(value_1)
+                                continue 
+                            elif key_1.lower() == "X1Label".lower():
+                                job.X1Label = value_1
+                                continue 
+                            elif key_1.lower() == "Y1Label".lower():
+                                job.Y1Label = value_1
+                                continue 
+                            elif key_1.lower() == "X2Label".lower():
+                                job.X2Label = value_1
+                                continue 
+                            elif key_1.lower() == "Y2Label".lower():
+                                job.Y2Label = value_1
+                                continue 
+                            elif key_1.lower() == "ExperimentalData".lower():
+                                job.experimentalData = value_1
+                                continue 
+                            elif key_1.lower() == "DataFileOverride".lower():
+                                job.dataFile = value_1
+                                continue 
+                            elif key_1.lower() == "DataPathOverride".lower():
+                                job.dataPath = value_1
+                                continue 
+                            elif key_1.lower() == "PFTFile".lower():
+                                job.PFTFile = value_1
+                                continue 
+                            elif key_1.lower() == "OutputOverride".lower():
+                                job.outputDir = value_1
+                                continue 
+                            elif key_1.lower() == "FontSize".lower():
+                                job.fontSize = int(value_1)
+                                continue 
+                            else:
+                                logging.warning("Unrecognized config directive: " + directive)   
+            fin.close()
+        except Exception as e:
+            logging.error("Ouch Something went wrong")
 
     def execute(self):
-        pass
-
+        for job in self.jobs:
+            if not job.ignore:
+                try:
+                    if self.jobname==job.name:
+                        job.logger=False
+                    else:
+                        job.logger=True
+                    if job.plotname!="PFTPlotter":
+                        job.plotter.plot(job)
+                    self.jobname=job.name
+                except Exception as e:
+                    logging.error("Plotter couldn't plot job " + job.name + ". Check your config file line.")
+                    continue 
+        job.Reset()
 
 if __name__ == '__main__':
     import sys
