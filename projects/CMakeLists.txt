@@ -152,6 +152,7 @@ add_subdirectory(unit)
 add_subdirectory(cmd_bio)
 add_subdirectory(circuit_profiler)
 add_subdirectory(zip)
+add_subdirectory(playschool)
 
 if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
   add_subdirectory(java)
