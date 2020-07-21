@@ -548,26 +548,26 @@ void BioGearsPlugin::run()
 
           ///////////////////////////////////////
           ///DUGS
-          auto customCompound = substance_make_compound(_pimpl->engine);
-          auto mixSuccess = mixSubstanceCompound(_pimpl->engine, customCompound, "Saline", 2.17, MassPerVolumeUnit::kg_Per_L);
-          mixSuccess &= mixSubstanceCompound(_pimpl->engine, customCompound, "Albumin", 10.0, MassPerVolumeUnit::mg_Per_mL);
-          mixSuccess &= mixSubstanceCompound(_pimpl->engine, customCompound, "Morphine", 10.0, MassPerVolumeUnit::mg_Per_mL);
+          //auto customCompound = substance_make_compound(_pimpl->engine);
+          //auto mixSuccess = mixSubstanceCompound(_pimpl->engine, customCompound, "Saline", 2.17, MassPerVolumeUnit::kg_Per_L);
+          //mixSuccess &= mixSubstanceCompound(_pimpl->engine, customCompound, "Albumin", 10.0, MassPerVolumeUnit::mg_Per_mL);
+          //mixSuccess &= mixSubstanceCompound(_pimpl->engine, customCompound, "Morphine", 10.0, MassPerVolumeUnit::mg_Per_mL);
 
-          if (!mixSuccess) {
-            _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Saline"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
-            _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Albumin"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
-            _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Morphine"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+          //if (!mixSuccess) {
+          //  _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Saline"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+          //  _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Albumin"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+          //  _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Morphine"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
 
-            auto compound_name = substance_register_compound(_pimpl->engine, std::move(customCompound)); //<  _pimpl->engine takes ownership of customCompound here and will delete it once it is removed (DLL Boundry issue need to create a make_compound function to avoid that in biogears)
-            action_infuse_compound(_pimpl->engine, compound_name, 1.0, VolumeUnit::L, 100., VolumePerTimeUnit::mL_Per_hr);
+          //  auto compound_name = substance_register_compound(_pimpl->engine, std::move(customCompound)); //<  _pimpl->engine takes ownership of customCompound here and will delete it once it is removed (DLL Boundry issue need to create a make_compound function to avoid that in biogears)
+          //  action_infuse_compound(_pimpl->engine, compound_name, 1.0, VolumeUnit::L, 100., VolumePerTimeUnit::mL_Per_hr);
 
-            _pimpl->engine->AdvanceModelTime(10, TimeUnit::s);
-            action_infuse_compound(_pimpl->engine, compound_name, 1.0, VolumeUnit::L, 0, VolumePerTimeUnit::mL_Per_hr);
+          //  _pimpl->engine->AdvanceModelTime(10, TimeUnit::s);
+          //  action_infuse_compound(_pimpl->engine, compound_name, 1.0, VolumeUnit::L, 0, VolumePerTimeUnit::mL_Per_hr);
 
-            _pimpl->engine->AdvanceModelTime(10, TimeUnit::s);
-          } else {
-            _pimpl->engine->GetLogger()->Error("Saline,Albumin, and Morphine definitions required for this HowTo please ensure they exist and try again.");
-          }
+          //  _pimpl->engine->AdvanceModelTime(10, TimeUnit::s);
+          //} else {
+          //  _pimpl->engine->GetLogger()->Error("Saline,Albumin, and Morphine definitions required for this HowTo please ensure they exist and try again.");
+          //}
 
           ////////////////////////////////////////
           if (_pimpl->engine->GetActions().GetEnvironmentActions().HasThermalApplication()) {
