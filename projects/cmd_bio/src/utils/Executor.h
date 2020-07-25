@@ -26,14 +26,10 @@ enum class EPlotter { Undefined,
                       ActionEventPlotter,
                       MultiPlotter };
 enum class EPlotStyle { FastPlot //Plot every nth data point (hardcoded)
-                        ,
-                        FullPlot //Plot all data points
-                        ,
-                        FastPlotErrors //Only plot failures and only every nth data point (hardcoded)
-                        ,
-                        FullPlotErrors //Plot all data points only for failing data
-                        ,
-                        MemoryFastPlot //Do a fast plot, but manage memory better, slower plotting, but can handle larger files
+                        , FullPlot //Plot all data points
+                        , FastPlotErrors //Only plot failures and only every nth data point (hardcoded)
+                        , FullPlotErrors //Plot all data points only for failing data
+                        , MemoryFastPlot //Do a fast plot, but manage memory better, slower plotting, but can handle larger files
 };
 class Executor {
 public:
