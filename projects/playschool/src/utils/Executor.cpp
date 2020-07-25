@@ -17,6 +17,7 @@ Executor::Executor(std::string n, EDriver d)
   , no_compare(false)
   , group("Other")
   , patient("patients/StandardMale.xml")
+  , state("")
   , scenario("Scenarios/BasicStandard.xml")
 {
 }
@@ -39,6 +40,8 @@ std::string Executor::Computed() const { return computed; }
 std::string Executor::Group() const { return group; }
 //-----------------------------------------------------------------------------
 std::string Executor::Patient() const { return patient; }
+//-----------------------------------------------------------------------------
+std::string Executor::State() const { return state; }
 //-----------------------------------------------------------------------------
 std::string Executor::Scenario() const { return scenario; }
 //-----------------------------------------------------------------------------
@@ -83,11 +86,18 @@ void Executor::Group(const std::string& g)
 void Executor::Patient(const std::string& p)
 {
   patient = p;
+  state.clear();
 }
 //-----------------------------------------------------------------------------
 void Executor::Scenario(const std::string& s)
 {
   scenario = s;
+}
+//-----------------------------------------------------------------------------
+void Executor::State(const std::string& s)
+{
+  state = s;
+  patient.clear();
 }
 //-----------------------------------------------------------------------------
 void Executor::Results(const std::vector<std::string>& r)
@@ -116,12 +126,19 @@ std::ostream& operator<<(std::ostream& ostr, const Executor& executor)
   if (!executor.Baselines().empty())
     ostr << ",\n\tBaselines=" << executor.Baselines();
   if (!executor.Computed().empty())
-  ostr << ",\n\tComputed=" << executor.Computed();
+    ostr << ",\n\tComputed=" << executor.Computed();
   ostr << ",\n\tGroup=" << executor.Group();
-  ostr << ",\n\tPatient=" << executor.Patient();
+  if (!executor.Patient().empty()) {
+    ostr << ",\n\tPatient=" << executor.Patient();
+  }
+  if (!executor.State().empty()) {
+    ostr << ",\n\tState=" << executor.State();
+  }
   ostr << ",\n\tScenario=" << executor.Scenario();
-  if (!executor.Results().empty())
+  if (!executor.Results().empty()) {
     ostr << ",\n\tResults=" << results;
+  }
+  return ostr;
 }
 //-----------------------------------------------------------------------------
 std::ostream& operator<<(std::ostream& ostr, const EDriver& driver)

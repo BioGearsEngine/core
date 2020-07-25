@@ -27,7 +27,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-
 namespace biogears {
 SEScenarioExec::SEScenarioExec(PhysiologyEngine& engine)
   : Loggable(engine.GetLogger())
@@ -43,16 +42,17 @@ SEScenarioExec::~SEScenarioExec()
 //-----------------------------------------------------------------------------
 bool SEScenarioExec::Execute(const char* scenarioFile, const char* resultsFile, SEScenarioCustomExec* cExec)
 {
-  return Execute(std::string{ scenarioFile }, std::string{ resultsFile }, cExec);
+  return Execute(std::string { scenarioFile }, std::string { resultsFile }, cExec);
 }
 bool SEScenarioExec::Execute(SEScenario const& scenario, const char* resultsFile, SEScenarioCustomExec* cExec)
 {
-  return Execute(scenario, std::string{ resultsFile }, cExec);
+  return Execute(scenario, std::string { resultsFile }, cExec);
 }
 //-----------------------------------------------------------------------------
 bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resultsFile, SEScenarioCustomExec* cExec)
 {
-  auto scenarioData =  std::unique_ptr<CDM::ScenarioData>(scenario.Unload());
+
+  auto scenarioData = std::unique_ptr<CDM::ScenarioData>(scenario.Unload());
   auto memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
   if (!memory_safe_scenario->Load(*scenarioData)) {
     return false;
@@ -74,7 +74,6 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
       if (!memory_safe_scenario->Load(*scenarioData)) {
         return false;
       }
-
 
       // WE ARE OVERWRITING ANY DATA REQUESTS IN THE STATE WITH WHATS IN THE SCENARIO!!!
       // Make a copy of the data requests, not this clears out data requests from the engine
@@ -162,13 +161,12 @@ bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string&
       return false;
     }
 
-    
     SEScenario scenario(m_Engine.GetSubstanceManager());
     if (!scenario.Load(*scenarioData)) {
       return false;
     }
 
-    bool success = Execute(scenario, rFile,cExec);
+    bool success = Execute(scenario, rFile, cExec);
     return success;
   } catch (CommonDataModelException& ex) {
     Error(ex.what());
@@ -188,6 +186,7 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
 {
   Info("Executing Scenario");
 
+  bool error_free = true;
   double dT_s = m_Engine.GetTimeStep(TimeUnit::s);
   double scenarioTime_s;
   double statusTime_s = 0; // Current time of this status cycle
@@ -209,14 +208,14 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
 
   if (scenario.GetAutoSerialization().IsValid()) {
     serializationFileNameBase = scenario.GetAutoSerialization().GetFileName();
-      // Strip off the xml if it's there
-      size_t split = serializationFileNameBase.find(".xml");
-      if (split != serializationFileNameBase.npos) {
-        serializationFileNameBase = serializationFileNameBase.substr(0, split);
-      }
-      serializationPeriod_s = scenario.GetAutoSerialization().GetPeriod(TimeUnit::s);
-      serializationFileName << scenario.GetAutoSerialization().GetDirectory() << "/" << serializationFileNameBase;
-      serializationFileNameBase = serializationFileName.str();
+    // Strip off the xml if it's there
+    size_t split = serializationFileNameBase.find(".xml");
+    if (split != serializationFileNameBase.npos) {
+      serializationFileNameBase = serializationFileNameBase.substr(0, split);
+    }
+    serializationPeriod_s = scenario.GetAutoSerialization().GetPeriod(TimeUnit::s);
+    serializationFileName << scenario.GetAutoSerialization().GetDirectory() << "/" << serializationFileNameBase;
+    serializationFileNameBase = serializationFileName.str();
   }
 
   TimingProfile profiler;

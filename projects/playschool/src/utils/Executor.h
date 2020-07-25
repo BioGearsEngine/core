@@ -53,6 +53,7 @@ public:
   std::string Computed() const;
   std::string Group() const;
   std::string Patient() const;
+  std::string State() const;
   std::string Scenario() const;
   std::vector<std::string> Results() const;
 
@@ -64,6 +65,7 @@ public:
   void Computed(const std::string&);
   void Group(const std::string&);
   void Patient(const std::string&);
+  void State(const std::string&);
   void Scenario(const std::string&);
   void Results(const std::vector<std::string>&);
 
@@ -79,6 +81,7 @@ private:
   std::string computed;
   std::string group;
   std::string patient;
+  std::string state;
   std::string scenario;
   std::vector<std::string> results;
 };
