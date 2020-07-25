@@ -9,18 +9,6 @@ cmake_policy(SET CMP0087 NEW)
 ###############################################################################
 option(${ROOT_PROJECT_NAME}_BUILD_PLAYSCHOOL "Toggle building of playschool tools" ON)
 if(${ROOT_PROJECT_NAME}_BUILD_PLAYSCHOOL)
-###############################################################################
-# Base Variables
-###############################################################################
-set(PROJECT_NAME playschool)
-set(PREFIX bio)
-
-set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
-set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" )
-set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" PARENT_SCOPE)
-set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" )
-
-
 
 ###############################################################################
 # Requirments
@@ -29,9 +17,6 @@ if (${PREFIX}_BUILD_STATIC)
   add_definitions("-D${PREFIX}_BUILT_AS_STATIC")
   add_definitions("-DARACORE_BUILT_AS_STATIC")
 endif()
-###############################################################################
-#Code Generation
-###############################################################################
 
 ###############################################################################
 #Sorce and Header Defines
@@ -40,55 +25,76 @@ message(STATUS "")
 message(STATUS "Configuring ${PROJECT_NAME}")
 
 #Scenario Driver
-add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.h"   "Headers\\Public\\")
-add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.cpp" "Sources\\")
-add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.c" "Sources\\")
+add_source_files(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.h"   "Headers\\Public\\")
+add_source_files(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/ "*.cpp"   "Sources\\")
+add_source_files(CONTROLLER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/ "bg-cli-main.cpp" "Sources\\")
+add_source_files(DRONE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/ "bg-scenario-main.cpp" "Sources\\")
+configure_file(src/utils/KnownPaths.h.in src/utils/KnownPaths.h )
 
-set(${PREFIX}_SOURCES ${HDRS} ${SRCS})
 ###############################################################################
 #Define Logic
 ###############################################################################
-if(WIN32)
-  list(APPEND ${PREFIX}_CPPFLAGS_EXPORT )
-  list(APPEND ${PREFIX}_CPPFLAGS "-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS"  $ENV{PARALLEL_COMPILE} )
-elseif(CMAKE_COMPILER_IS_GNUCXX)
-list(APPEND ${PREFIX}_CPPFLAGS_EXPORT )
-  list(APPEND ${PREFIX}_CPPFLAGS  ${CodeSynthesis_CPPFLAGS})
-  list(APPEND ${PREFIX}_LDFLAGS "-Wl,--no-as-needed" )
-endif()
+find_package(Boost COMPONENTS  system  date_time filesystem program_options REQUIRED)
 
-if (${PREFIX}_BUILD_STATIC)
-  add_definitions("-D${PREFIX}_BUILT_AS_STATIC")
-endif()
+##########################
+#  Biogears Command Line #
+##########################
 
-
-add_executable(${PROJECT_NAME} ${${PREFIX}_SOURCES} ${${PREFIX}_HEADERS})
-set_target_properties(${PROJECT_NAME}
+add_executable(bg-cli ${HEADERS} ${SOURCES} ${CONTROLLER_SOURCES})
+set_target_properties(bg-cli
   PROPERTIES
-  DEFINE_SYMBOL ${PROJECT_NAME}_EXPORTS
   FOLDER "Binaries"
-  OUTPUT_NAME "${PROJECT_NAME}"
-  COMPILE_PDB_NAME "${PROJECT_NAME}"
-  PROJECT_LABEL "${PROJECT_NAME}"
+  OUTPUT_NAME "bg-cli"
+  COMPILE_PDB_NAME "bg-cli"
+  PROJECT_LABEL "bg-cli"
   DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
   CXX_STANDARD 14
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
 
-  list(APPEND ${PREFIX}_CPPFLAGS "-DASIO_SEPARATE_COMPILATION" "-DASIO_HEADER_ONLY"  )
-  target_compile_definitions(${PROJECT_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} )
-  target_compile_options(${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
-###############################################################################
-# COMPILATION & LINKAGE MODIFICATIONS
-###############################################################################
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE {CMAKE_CURRENT_SOURCE_DIR}/src/asio-1.16.1/include)
-set(${PREFIX}_LIBS
-      ${CMAKE_THREAD_LIBS_INIT}
-      ${CMAKE_DL_LIBS}
-    )
 
-set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
-target_link_libraries(${PROJECT_NAME}  ${${PREFIX}_LIBS} )
- 
+target_compile_definitions(bg-cli PRIVATE ${${PREFIX}_CPPFLAGS} )
+target_compile_options(bg-cli PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
+target_include_directories(bg-cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+target_link_libraries(bg-cli  ${${PREFIX}_LIBS}      
+      Biogears::libbiogears
+      Boost::disable_autolinking
+      Boost::dynamic_linking
+      Boost::filesystem
+      Boost::date_time
+      Boost::program_options
+      minizip::lib
+      )
+
+###################
+#  SCENARIO DRONE #
+###################
+
+add_executable(bg-scenario ${HEADERS} ${SOURCES}  ${DRONE_SOURCES})
+set_target_properties(bg-scenario
+  PROPERTIES
+  FOLDER "Binaries"
+  OUTPUT_NAME "bg-scenario"
+  COMPILE_PDB_NAME "bg-scenario"
+  PROJECT_LABEL "bg-scenario"
+  DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+  CXX_STANDARD 14
+  VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+  )
+
+
+target_compile_definitions(bg-scenario PRIVATE ${${PREFIX}_CPPFLAGS} )
+target_compile_options(bg-scenario PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
+target_include_directories(bg-scenario PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+target_link_libraries(bg-scenario  ${${PREFIX}_LIBS} 
+      Biogears::libbiogears
+      Boost::disable_autolinking
+      Boost::dynamic_linking
+      Boost::filesystem
+      Boost::program_options
+      Boost::date_time 
+      minizip::lib )
+
+####
 message(STATUS "")
 endif()
