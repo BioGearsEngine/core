@@ -12,7 +12,11 @@
 
 #include "Driver.h"
 
+#include <functional>
 #include <iostream>
+
+#include <boost/asio.hpp>
+#include <boost/process.hpp>
 
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
@@ -24,12 +28,31 @@
 #include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 #endif
+
 #include <biogears/schema/cdm/Scenario.hxx>
+#include <biogears/string/manipulation.h>
 #include <xsd/cxx/tree/exceptions.hxx>
 
 #include "../utils/Config.h"
 #include "../utils/Executor.h"
-#include "biogears/string/manipulation.h"
+
+void cout_loop(boost::process::async_pipe& p, boost::asio::mutable_buffer buf)
+{
+  p.async_read_some(buf, [&p, buf](std::error_code ec, size_t n) {
+    std::cout.write(boost::asio::buffer_cast<char const*>(buf), n);
+    if (!ec)
+      cout_loop(p, buf);
+  });
+}
+
+void cerr_loop(boost::process::async_pipe& p, boost::asio::mutable_buffer buf)
+{
+  p.async_read_some(buf, [&p, buf](std::error_code ec, size_t n) {
+    std::cerr.write(boost::asio::buffer_cast<char const*>(buf), n);
+    if (!ec)
+      cerr_loop(p, buf);
+  });
+}
 
 namespace biogears {
 Driver::Driver(size_t thread_count)
@@ -66,7 +89,7 @@ void Driver::queue(const Config& runs)
       queue_Scenario(exec);
       break;
     default:
-      std::cerr << "Unsupported Driver type " << exec.Driver() << " please update your biogears libraries ";
+      std::cerr << "Unsupported Driver type " << exec.Driver() << " please update your biogears libraries \n";
       break;
     }
   }
@@ -108,7 +131,7 @@ void Driver::queue_BGEUnitTest(Executor exec)
       try {
         executor = new BioGearsEngineTest;
       } catch (const std::exception& e) {
-        std::cout << e.what();
+        std::cout << e.what() << "\n";
         return 1;
       }
       executor->RunTest(exec.Name(), exec.Computed());
@@ -117,7 +140,6 @@ void Driver::queue_BGEUnitTest(Executor exec)
     });
 #endif
 }
-
 //-----------------------------------------------------------------------------
 void Driver::queue_CDMUnitTest(Executor exec)
 {
@@ -128,7 +150,7 @@ void Driver::queue_CDMUnitTest(Executor exec)
       try {
         executor = new CommonDataModelTest;
       } catch (const std::exception& e) {
-        std::cout << e.what();
+        std::cout << e.what() << "\n";
         return 1;
       }
       executor->RunTest(exec.Name(), exec.Computed());
@@ -138,6 +160,8 @@ void Driver::queue_CDMUnitTest(Executor exec)
 #endif
 }
 //-----------------------------------------------------------------------------
+#pragma optimize("", off)
+
 void Driver::queue_Scenario(Executor exec)
 {
   enum class PatientType {
@@ -145,73 +169,127 @@ void Driver::queue_Scenario(Executor exec)
     STATE,
     INLINE
   };
-  CDM::PatientData empty_patient_data; //TODO: Git Rid of PatientType and just treat everything line an inline PatientData by passing it in
-  auto scenario_launch = [](Executor& ex, bool multi_patient_run, PatientType patient_type,CDM::PatientData patient_data) {
-    std::string trimed_scenario_path(trim(ex.Scenario()));
-    auto split_scenario_path = split(trimed_scenario_path, '/');
-    auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
 
-    std::string trimed_patient_path(trim(ex.Patient()));
-    auto split_patient_path = split(trimed_patient_path, '/');
-    auto patient_no_extension = split(split_patient_path.back(), '.').front();
-
-    //NOTE: This loses non relative prefixes as the split will eat the leading path_separator
-    std::string parent_dir;
-    for (auto dir = split_scenario_path.begin(); dir != split_scenario_path.end(); ++dir) {
-      if (dir + 1 != split_scenario_path.end()) {
-        parent_dir.append(*dir);
-        parent_dir += "/";
-      }
-    }
-
-    if (multi_patient_run) {
-      ex.Name(ex.Name() + "-" + patient_no_extension);
-    }
-    std::string base_file_name = (multi_patient_run) ? scenario_no_extension + "-" + patient_no_extension : scenario_no_extension;
-    std::string console_file = base_file_name + ".log";
-    std::string log_file = base_file_name + "Results.log";
-    std::string results_file = base_file_name + "Results.csv";
-
-    std::unique_ptr<PhysiologyEngine> eng;
+  auto scenario_launch = [](Executor& ex, bool multi_patient_run) {
     Logger console_logger;
-    Logger file_logger(ex.Computed() + parent_dir + console_file);
     try {
-      file_logger.SetConsoleLogLevel(log4cpp::Priority::WARN);
-      file_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] " + ex.Name() + " %m%n");
       console_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] %m%n");
       console_logger.FormatMessages(false);
-
-      eng = CreateBioGearsEngine(&file_logger);
     } catch (std::exception e) {
       std::cout << e.what();
     }
-
-    BioGearsScenario sce(eng->GetSubstanceManager());
-    if (!sce.Load("Scenarios/" + trim(trimed_scenario_path))) {
-      console_logger.Error("Unable to find  " + trim(trimed_scenario_path));
-    }
-
-    switch (patient_type) {
-    case PatientType::FILE:
-      sce.GetInitialParameters().SetPatientFile(ex.Patient());
-      break;
-    case PatientType::STATE:
-      sce.SetEngineStateFile(ex.Patient());
-      break;
-    case PatientType::INLINE: {
-      biogears::SEPatient patient{ sce.GetLogger() };
-      patient.Load(patient_data);
-      sce.GetInitialParameters().SetPatient(patient);
-    } break;
-    }
-
-    console_logger.Info("Starting " + ex.Name());
     try {
-      BioGearsScenarioExec bse { *eng };
-      bse.Execute(sce, ex.Computed() + parent_dir + results_file, nullptr);
-      console_logger.Info("Completed " + ex.Name());
+      using namespace boost::process;
+
+      std::string options;
+
+      options = "--quiet";
+
+      if (ex.Name().size()) {
+        auto name = biogears::trim(ex.Name());
+        if (name.front() == '\'' && name.back() == '\'') {
+          name = biogears::trim(name, "'");
+        }
+        if (name.front() == '\"' && name.back() == '\"') {
+          name = biogears::trim(name, "\"");
+        }
+        options += biogears::asprintf(" --name \"%s\"", name.c_str());
+      }
+
+      if (ex.Driver() != EDriver::ScenarioTestDriver) {
+        options += " --driver ";
+        switch (ex.Driver()) {
+        case EDriver::ScenarioTestDriver:
+          options += "'ScenarioTestDriver'";
+          break;
+        case EDriver::BGEUnitTestDriver:
+          options += "'BGEUnitTestDriver'";
+          break;
+        case EDriver::CDMUnitTestDriver:
+          options += "'CDMUnitTestDriver'";
+          break;
+        }
+      }
+
+      if (ex.Patient().size()) {
+        auto patient = biogears::trim(ex.Patient());
+        if (patient.front() == '\'' && patient.back() == '\'') {
+          patient = biogears::trim(patient, "'");
+        }
+        if (patient.front() == '\"' && patient.back() == '\"') {
+          patient = biogears::trim(patient, "\"");
+        }
+        options += biogears::asprintf(" --patient \"%s\"", patient.c_str());
+      }
+
+      if (ex.State().size()) {
+        auto state = biogears::trim(ex.State());
+        if (state.front() == '\'' && state.back() == '\'') {
+          state = biogears::trim(state, "'");
+        }
+        if (state.front() == '\"' && state.back() == '\"') {
+          state = biogears::trim(state, "\"");
+        }
+        options += biogears::asprintf(" --state \"%s\"", state.c_str());
+      }
+
+      if (ex.Scenario().size()) {
+        auto scenario = biogears::trim(ex.Scenario());
+        if (scenario.front() == '\'' && scenario.back() == '\'') {
+          scenario = biogears::trim(scenario, "'");
+        }
+        if (scenario.front() == '\"' && scenario.back() == '\"') {
+          scenario = biogears::trim(scenario, "\"");
+        }
+        options += biogears::asprintf(" --scenario \"%s\"", scenario.c_str());
+      }
+
+      if (ex.Results().size()) {
+        auto results = biogears::trim(ex.Results()[0]);
+        if (results.front() == '\'' && results.back() == '\'') {
+          results = biogears::trim(results, "'");
+        }
+        if (results.front() == '\"' && results.back() == '\"') {
+          results = biogears::trim(results, "\"");
+        }
+        options += biogears::asprintf(" --results \"%s\"", results.c_str());
+      }
+
+      if (ex.Group().size()) {
+        auto group = biogears::trim(ex.Group());
+        if (group.front() == '\'' && group.back() == '\'') {
+          group = biogears::trim(group, "'");
+        }
+        if (group.front() == '\"' && group.back() == '\"') {
+          group = biogears::trim(group, "\"");
+        }
+        options += biogears::asprintf(" --group \"%s\"", group.c_str());
+      }
+
+      boost::asio::io_service svc;
+      async_pipe out_stream(svc);
+      async_pipe err_stream(svc);
+      char out_buffer[128];
+      char err_buffer[128];
+
+      //child c("bg-scenario " + options, (std_out & std_err) > out_stream, svc);
+      std::cout << "..\\outputs\\RelWithDebInfo\\bin\\bg-scenario " + options << std::endl;
+      child c("bg-scenario " + options, std_out > out_stream, std_err > err_stream);
+
+      std::function<void(void)> test = [&]() { test(); };
+      cout_loop(out_stream, buffer(out_buffer));
+      cerr_loop(err_stream, buffer(err_buffer));
+
+      svc.run();
+      c.wait();
+
+      if (c.exit_code() != 0) {
+        console_logger.Info(ex.Name() + " failed see log for details.\n");
+        return;
+      }
+      console_logger.Info("Completed " + ex.Name() + "\n");
     } catch (...) {
-      console_logger.Error("Failed " + ex.Name());
+      console_logger.Error("Failed " + ex.Name() + "\n");
     }
   };
 
@@ -219,10 +297,11 @@ void Driver::queue_Scenario(Executor exec)
   if (!ifs.is_open()) {
     ifs.open("Scenarios/" + exec.Scenario());
     if (!ifs.is_open()) {
-      //TODO: Log A Clean Error about Scenario not being found.
+      std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " terminating\n";
       return;
     }
   }
+
   std::unique_ptr<mil::tatrc::physiology::datamodel::ScenarioData> scenario;
   try {
     xml_schema::flags xml_flags;
@@ -231,10 +310,10 @@ void Driver::queue_Scenario(Executor exec)
     xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
     scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
   } catch (std::runtime_error e) {
-    std::cout << e.what();
+    std::cout << e.what() << "\n";
     return;
   } catch (xsd::cxx::tree::parsing<char> e) {
-    std::cout << e;
+    std::cout << e << "\n";
     return;
   }
   // The Biogears Schema states that ScenarioData supports the following boot strap tags
@@ -245,8 +324,8 @@ void Driver::queue_Scenario(Executor exec)
   // TODO: Test for EngineState file and call an appropriate launcher
   // TODO: Test for Patient if PatientFile is not present and call the appropriate launcher
   if (scenario->EngineStateFile().present()) {
-    exec.Patient(scenario->EngineStateFile().get());
-    _pool.queue_work(std::bind(scenario_launch, std::move(exec), false, PatientType::STATE, empty_patient_data));
+    exec.State(scenario->EngineStateFile().get());
+    _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
     return;
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->PatientFile().present()) {
     const auto patient_file = scenario->InitialParameters()->PatientFile().get();
@@ -257,19 +336,23 @@ void Driver::queue_Scenario(Executor exec)
       for (const std::string& patient_file : patient_files) {
         Executor patientEx { exec };
         patientEx.Patient(patient_file);
-        _pool.queue_work(std::bind(scenario_launch, std::move(patientEx), true, PatientType::FILE, empty_patient_data));
+        _pool.queue_work(std::bind(scenario_launch, std::move(patientEx), true));
       }
     } else {
       exec.Patient(patient_file);
-      _pool.queue_work(std::bind(scenario_launch, std::move(exec), false, PatientType::FILE, empty_patient_data));
+      _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
     }
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
-    exec.Patient(scenario->InitialParameters()->Patient().get().Name());
-    _pool.queue_work(std::bind(scenario_launch, std::move(exec), false, PatientType::INLINE, scenario->InitialParameters()->Patient().get()));
+    exec.Patient("");
+    exec.State("");
+    _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
   } else {
     std::cout << "Skipping " << exec.Name() << " no patient specified.\n";
     return;
   }
 }
+
+#pragma optimize("", on)
+
 //-----------------------------------------------------------------------------
 } // NAMESPACE

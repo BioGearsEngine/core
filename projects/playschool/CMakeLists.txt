@@ -34,7 +34,7 @@ configure_file(src/utils/KnownPaths.h.in src/utils/KnownPaths.h )
 ###############################################################################
 #Define Logic
 ###############################################################################
-find_package(Boost COMPONENTS  system  date_time filesystem program_options REQUIRED)
+find_package(Boost COMPONENTS system date_time filesystem program_options REQUIRED)
 
 ##########################
 #  Biogears Command Line #
@@ -92,9 +92,10 @@ target_link_libraries(bg-scenario  ${${PREFIX}_LIBS}
       Boost::dynamic_linking
       Boost::filesystem
       Boost::program_options
-      Boost::date_time 
+      Boost::date_time
       minizip::lib )
 
+add_dependencies(bg-cli bg-scenario)
 ####
 message(STATUS "")
 endif()

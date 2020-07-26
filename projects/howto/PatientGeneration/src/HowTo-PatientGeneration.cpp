@@ -458,7 +458,7 @@ void PatientRun::run()
   std::unique_ptr<
     PhysiologyEngine>
     _bg = CreateBioGearsEngine(&logger);
-  _bg->GetLogger()->Info("Starting " + long_name);
+  _bg->GetLogger()->Info("Starting " + long_name +  "\n");
   if (!_bg->LoadState("states/StandardMale@0s.xml")) {
     _bg->GetLogger()->Error("Could not load state, check the error");
     return;

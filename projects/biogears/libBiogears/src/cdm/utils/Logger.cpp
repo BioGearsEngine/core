@@ -106,7 +106,8 @@ void Logger::ResetLogFile(const char* logFilename, const char* working_dir)
   const std::string working_dir_str{ working_dir };
   ResetLogFile(logFileName_str, working_dir_str);
 }
-Logger::~Logger() {}
+Logger::~Logger() 
+{}
 
 void Logger::SetLogTime(const SEScalarTime* time) { m_time = time; }
 
@@ -158,7 +159,7 @@ std::string Logger::FormatLogMessage(const std::string& msg, const std::string& 
     if (m_time != nullptr && m_time->IsValid()) {
       m_ss << "[" << *m_time << "] " << msg;
     } else {
-      m_ss << msg;
+      m_ss << msg   ;
     }
     if (msg.empty()) {
       return origin;

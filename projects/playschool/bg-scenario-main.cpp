@@ -52,12 +52,8 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   std::string trimed_scenario_path(trim(ex.Scenario()));
   auto split_scenario_path = split(trimed_scenario_path, '/');
   auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
-
-  std::string trimed_patient_path(trim(ex.Patient()));
-  auto split_patient_path = split(trimed_patient_path, '/');
-  auto patient_no_extension = split(split_patient_path.back(), '.').front();
-
-  //NOTE: This loses non relative prefixes as the split will eat the leading path_separator
+  
+   //NOTE: This loses non relative prefixes as the split will eat the leading path_separator
   std::string parent_dir;
   for (auto dir = split_scenario_path.begin(); dir != split_scenario_path.end(); ++dir) {
     if (dir + 1 != split_scenario_path.end()) {
@@ -83,7 +79,7 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
 
     eng = CreateBioGearsEngine(&file_logger);
   } catch (std::exception e) {
-    std::cout << e.what();
+    std::cout << e.what() << std::endl;
   }
 
   BioGearsScenario sce(eng->GetSubstanceManager());
@@ -97,7 +93,7 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   if (!ex.Patient().empty()) {
     sce.GetInitialParameters().SetPatientFile(ex.Patient());
   } else if (!ex.State().empty()) {
-    sce.SetEngineStateFile(ex.Patient());
+    sce.SetEngineStateFile(ex.State());
   } else {
     std::ifstream ifs { ex.Scenario() };
     if (!ifs.is_open()) {
@@ -111,14 +107,14 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
     try {
       xml_schema::flags xml_flags;
       xml_schema::properties xml_properties;
-
+      std::cout << "Reading " << ex.Scenario() << std::endl;
       xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
       scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
     } catch (std::runtime_error e) {
-      std::cerr << e.what();
+      std::cout << e.what() << std::endl;
       return static_cast<int>(ScenarioErrors::SCENARIO_PARSE_ERROR);
     } catch (xsd::cxx::tree::parsing<char> e) {
-      std::cerr << e;
+      std::cout << e << std::endl;
       return static_cast<int>(ScenarioErrors::SCENARIO_PARSE_ERROR);
     }
     biogears::SEPatient patient { sce.GetLogger() };
@@ -131,7 +127,6 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   try {
     BioGearsScenarioExec bse { *eng };
     bse.Execute(sce, ex.Computed() + parent_dir + results_csv_file, nullptr);
-    console_logger.Info("Completed " + ex.Name());
   } catch (...) {
     console_logger.Error("Failed " + ex.Name());
     static_cast<int>(ScenarioErrors::BIOGEARS_RUNTIME_ERROR);
@@ -232,14 +227,21 @@ int main(int argc, char* argv[])
     notify(vm);
 
     if (vm.count("help") || argc < 2) {
-      std::cout << help_message << '\n';
+      std::cout << help_message << std::endl;
       return static_cast<int>(ScenarioErrors::NONE);
     }
 
     Executor ex;
 
     if (vm.count("name")) {
-      ex.Name(vm["name"].as<std ::string>());
+      auto name = vm["name"].as<std ::string>();
+      if (name.front() == '\'' && name.back() == '\'') {
+        name = biogears::trim(name, "'");
+      }
+      if (name.front() == '\"' && name.back() == '\"') {
+        name = biogears::trim(name, "\"");
+      }
+      ex.Name(name);
     }
 
     if (vm["driver"].as<std::string>() == "BGEUnitTestDriver") {
@@ -257,23 +259,51 @@ int main(int argc, char* argv[])
     } 
 
     if (vm.count("patient")) {
-      ex.Patient(vm["patient"].as<std ::string>());
+      auto patient = vm["patient"].as<std ::string>();
+      if (patient.front() == '\'' && patient.back() == '\'') {
+        patient = biogears::trim(patient, "'");
+      }
+      if (patient.front() == '\"' && patient.back() == '\"') {
+        patient = biogears::trim(patient, "\"");
+      }
+      ex.Patient(patient);
       if (!boost::filesystem::exists(ex.Patient())) {
         ex.Patient("patients/" + ex.Patient());
       }
     }
     if (vm.count("state")) {
-      ex.State(vm["state"].as<std ::string>());
+      auto state = vm["state"].as<std ::string>();
+      if (state.front() == '\'' && state.back() == '\'') {
+        state = biogears::trim(state, "'");
+      }
+      if (state.front() == '\"' && state.back() == '\"') {
+        state = biogears::trim(state, "\"");
+      }
+      ex.State(state);
     }
     if (vm.count("scenario")) {
-      ex.Scenario(vm["scenario"].as<std ::string>());
+      auto scenario = vm["scenario"].as<std ::string>();
+      if (scenario.front() == '\'' && scenario.back() == '\'') {
+        scenario = biogears::trim(scenario, "'");
+      }
+      if (scenario.front() == '\"' && scenario.back() == '\"') {
+        scenario = biogears::trim(scenario, "\"");
+      }
+      ex.Scenario(scenario);
       if (!boost::filesystem::exists(ex.Scenario())) {
         ex.Scenario("Scenarios/" + ex.Scenario());
       }
     }
 
     if (vm.count("results")) {
-      ex.Results(biogears::split(vm["results"].as<std::string>(), ','));
+      auto results = vm["results"].as<std ::string>();
+      if (results.front() == '\'' && results.back() == '\'') {
+        results = biogears::trim(results, "'");
+      }
+      if (results.front() == '\"' && results.back() == '\"') {
+        results = biogears::trim(results, "\"");
+      }
+      ex.Results(biogears::split(results, ','));
     } else {
       std::string trimed_scenario_path(trim(ex.Scenario()));
       auto split_scenario_path = split(trimed_scenario_path, '/');
@@ -283,17 +313,24 @@ int main(int argc, char* argv[])
     }
 
     if (vm.count("group")) {
-      ex.Group(vm["group"].as<std ::string>());
+      auto group = vm["group"].as<std ::string>();
+      if (group.front() == '\'' && group.back() == '\'') {
+        group = biogears::trim(group, "'");
+      }
+      if (group.front() == '\"' && group.back() == '\"') {
+        group = biogears::trim(group, "\"");
+      }
+      ex.Group(group);
     }
 
     //std::cout << ex << std::endl;
     return execute_scenario(ex, log_level);
-
+ 
   } catch (boost::program_options::required_option /*e*/) {
     std::cerr << "\n";
     //<< e.what() << "\n\n";
-      std::cout << help_message << '\n';
+      std::cout << help_message << std::endl;
   } catch (std::exception& e) {
-      std::cerr << e.what() << "\n";
+      std::cerr << e.what() << std::endl;
   }
 }

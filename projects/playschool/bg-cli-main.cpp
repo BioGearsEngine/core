@@ -61,10 +61,8 @@ int main(int argc, char** argv)
 {
   biogears::Arguments args(
     { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION" } //Options
-    ,
-    { "J", "THREADS" } //Keywords
-    ,
-    { "TEST", "CONFIG", "SCENARIO", "VALIDATE", "GENTABLES" } //MultiWords
+    ,    { "J", "THREADS" } //Keywords
+    ,    { "TEST", "CONFIG", "SCENARIO", "VALIDATE", "GENTABLES" } //MultiWords
   );
 
   bool run_patient_validation = false;
@@ -204,8 +202,7 @@ int main(int argc, char** argv)
   }
 
   driver.run();
-  driver.stop_when_empty();
-  driver.join();
+  driver.stop_when_empty();  driver.join();
 
   //We want Gentables to run after all other work has finished
   if (args.MultiWordFound("GENTABLES")) {

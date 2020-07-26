@@ -241,7 +241,6 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
         if (m_Cancel) {
           break;
         }
-
         m_Engine.AdvanceModelTime();
 
         if (scenario.GetAutoSerialization().IsValid()) { // Auto Serialize
