@@ -180,7 +180,11 @@ void Logger::Debug(const std::string& msg, const std::string& origin) const
 void Logger::Info(const std::string& msg, const std::string& origin) const
 {
 
-  m_Log->info(FormatLogMessage(msg, origin));
+ try {
+   m_Log->info(FormatLogMessage(msg, origin)); 
+ } catch (...) {
+   //TODO Testing exception handling. Need to figure out where these exceptions come from
+ }
 
   if (m_Forward != nullptr) {
     m_Forward->ForwardInfo(m_ss.str().c_str(), origin.c_str());

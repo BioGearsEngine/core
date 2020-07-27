@@ -35,6 +35,18 @@ enum class EPlotStyle { FastPlot //Plot every nth data point (hardcoded)
                         ,
                         MemoryFastPlot //Do a fast plot, but manage memory better, slower plotting, but can handle larger files
 };
+
+enum ExecutionErrors {
+  NONE = 0,
+  ARGUMENT_ERROR,
+  SCENARIO_IO_ERROR,
+  SCENARIO_PARSE_ERROR,
+  PATIENT_IO_ERROR,
+  PATIENT_PARSE_ERROR,
+  BIOGEARS_RUNTIME_ERROR,
+  OTHER
+};
+
 class Executor {
 public:
   Executor();

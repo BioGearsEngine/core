@@ -205,7 +205,7 @@ void Driver::queue_Scenario(Executor exec)
     } break;
     }
 
-    console_logger.Info("Starting " + ex.Name() + "\n");
+    console_logger.Info("Starting " + ex.Name());
     try {
       BioGearsScenarioExec bse { *eng };
       bse.Execute(sce, ex.Computed() + parent_dir + results_file, nullptr);

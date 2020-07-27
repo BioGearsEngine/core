@@ -36,17 +36,6 @@ enum class PatientType {
   INLINE
 };
 
-enum class ScenarioErrors {
-  NONE = 0,
-  ARGUMENT_ERROR,
-  SCENARIO_IO_ERROR,
-  SCENARIO_PARSE_ERROR,
-  PATIENT_IO_ERROR,
-  PATIENT_PARSE_ERROR,
-  BIOGEARS_RUNTIME_ERROR,
-  OTHER
-};
-
 int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
 {
   std::string trimed_scenario_path(trim(ex.Scenario()));
@@ -100,7 +89,7 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
       ifs.open("Scenarios/" + ex.Scenario());
       if (!ifs.is_open()) {
         std::cerr << "Unable to find " << ex.Scenario() << std::endl;
-        return static_cast<int>(ScenarioErrors::SCENARIO_IO_ERROR);
+        return static_cast<int>(ExecutionErrors::SCENARIO_IO_ERROR);
       }
     }
     std::unique_ptr<mil::tatrc::physiology::datamodel::ScenarioData> scenario;
@@ -112,10 +101,10 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
       scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
     } catch (std::runtime_error e) {
       std::cout << e.what() << std::endl;
-      return static_cast<int>(ScenarioErrors::SCENARIO_PARSE_ERROR);
+      return static_cast<int>(ExecutionErrors::SCENARIO_PARSE_ERROR);
     } catch (xsd::cxx::tree::parsing<char> e) {
       std::cout << e << std::endl;
-      return static_cast<int>(ScenarioErrors::SCENARIO_PARSE_ERROR);
+      return static_cast<int>(ExecutionErrors::SCENARIO_PARSE_ERROR);
     }
     biogears::SEPatient patient { sce.GetLogger() };
     ex.Patient(scenario->InitialParameters()->Patient().get().Name());
@@ -123,16 +112,15 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
     sce.GetInitialParameters().SetPatient(patient);
   }
   //-----------------------------------------------------------------------------------
-  console_logger.Info("Starting " + ex.Name());
   try {
     BioGearsScenarioExec bse { *eng };
     bse.Execute(sce, ex.Computed() + parent_dir + results_csv_file, nullptr);
   } catch (...) {
     console_logger.Error("Failed " + ex.Name());
-    static_cast<int>(ScenarioErrors::BIOGEARS_RUNTIME_ERROR);
+    static_cast<int>(ExecutionErrors::BIOGEARS_RUNTIME_ERROR);
   }
 
-  return static_cast<int>(ScenarioErrors::NONE);
+  return static_cast<int>(ExecutionErrors::NONE);
 };
 
 // Boost doesn't offer any obvious way to construct a usage string
@@ -228,7 +216,7 @@ int main(int argc, char* argv[])
 
     if (vm.count("help") || argc < 2) {
       std::cout << help_message << std::endl;
-      return static_cast<int>(ScenarioErrors::NONE);
+      return static_cast<int>(ExecutionErrors::NONE);
     }
 
     Executor ex;

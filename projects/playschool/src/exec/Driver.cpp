@@ -273,7 +273,10 @@ void Driver::queue_Scenario(Executor exec)
       char err_buffer[128];
 
       //child c("bg-scenario " + options, (std_out & std_err) > out_stream, svc);
-      std::cout << "..\\outputs\\RelWithDebInfo\\bin\\bg-scenario " + options << std::endl;
+      //std::cout << "..\\outputs\\RelWithDebInfo\\bin\\bg-scenario " + options << std::endl;
+
+      console_logger.Info("Starting " + ex.Name());
+
       child c("bg-scenario " + options, std_out > out_stream, std_err > err_stream);
 
       std::function<void(void)> test = [&]() { test(); };
@@ -282,12 +285,34 @@ void Driver::queue_Scenario(Executor exec)
 
       svc.run();
       c.wait();
-
-      if (c.exit_code() != 0) {
+      auto code = c.exit_code();
+      switch (code) {
+      case ExecutionErrors::NONE:
+        console_logger.Info("Completed " + ex.Name());
+        return;
+      case ExecutionErrors::ARGUMENT_ERROR:
+        console_logger.Info(biogears::asprintf("Error[%d]: %s failed with arguments %s", code, ex.Name().c_str(), options.c_str()));
+        return;
+      case ExecutionErrors::SCENARIO_IO_ERROR:
+        console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", code, ex.Name().c_str(), ex.Scenario().c_str()));
+        return;
+      case ExecutionErrors::SCENARIO_PARSE_ERROR:
+        console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", code, ex.Name().c_str(), ex.Scenario().c_str()));
+        return;
+      case ExecutionErrors::PATIENT_IO_ERROR:
+        console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified patient file %s", code, ex.Name().c_str(), ex.Patient().c_str()));
+        return;
+      case ExecutionErrors::PATIENT_PARSE_ERROR:
+        console_logger.Info(biogears::asprintf("Error[%d]: %s failed to parse the specified patient file %s", code, ex.Name().c_str(), ex.Patient().c_str()));
+        return;
+      case ExecutionErrors::BIOGEARS_RUNTIME_ERROR:
+        console_logger.Info(biogears::asprintf("Error[%d]: %s failed mid simulation see log for more details.", code, ex.Name().c_str()));
+        return;
+      default:
         console_logger.Info(ex.Name() + " failed see log for details.\n");
         return;
       }
-      console_logger.Info("Completed " + ex.Name() + "\n");
+
     } catch (...) {
       console_logger.Error("Failed " + ex.Name() + "\n");
     }
@@ -336,6 +361,25 @@ void Driver::queue_Scenario(Executor exec)
       for (const std::string& patient_file : patient_files) {
         Executor patientEx { exec };
         patientEx.Patient(patient_file);
+
+        ///----
+        std::string trimed_patient_path(trim(patientEx.Patient()));
+        auto split_patient_path = split(trimed_patient_path, '/');
+        auto patient_no_extension = split(split_patient_path.back(), '.').front();
+
+        std::string trimed_scenario_path(trim(patientEx.Scenario()));
+        auto split_scenario_path = split(trimed_scenario_path, '/');
+        auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
+
+        if (patientEx.Name().empty()) {
+          patientEx.Results({ scenario_no_extension + "-" + patient_no_extension });
+          patientEx.Name(scenario_no_extension + "-" + patient_no_extension);
+        } else {
+          patientEx.Results({ patientEx.Name() + "-" + patient_no_extension });
+          patientEx.Name(patientEx.Name() + "-" + patient_no_extension);
+        }
+        ///----
+
         _pool.queue_work(std::bind(scenario_launch, std::move(patientEx), true));
       }
     } else {
