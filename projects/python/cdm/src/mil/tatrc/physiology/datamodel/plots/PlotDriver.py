@@ -143,11 +143,11 @@ class PlotDriver():
                                 continue
                             elif directive.lower()=="MultiPlotter".lower():
                                 job.plotname="Multiplotter"
-                                job.plotter=MultiPlotter()
+                                job.plotter="MultiPlotter()"
                                 continue
                             elif directive.lower()=="ConvexHullPlotter".lower():
                                 job.plotname="ConvexHullPlotter"
-                                job.plotter=MultiPlotter()
+                                job.plotter="MultiPlotter()"
                             elif directive.lower()=="RespiratoryPFTPlotter".lower():
                                 job.plotname="PFTPlotter"
                                 job.plotter="PFTPlotter()"
@@ -300,7 +300,7 @@ class PlotDriver():
                         job.logger=False
                     else:
                         job.logger=True
-                    if job.plotname!="PFTPlotter":
+                    if job.plotname=="ActionEvent":
                         job.plotter.plot(job)
                     self.jobname=job.name
                 except Exception as e:
