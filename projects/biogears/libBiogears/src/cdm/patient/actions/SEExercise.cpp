@@ -124,7 +124,7 @@ bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in)
   if (in.Intensity().present()) {
     m_genericExercise.Intensity.Load(in.Intensity().get());
   } else if (in.DesiredWorkRate().present()) {
-    m_genericExercise.Intensity.Load(in.DesiredWorkRate().get());
+    m_genericExercise.DesiredWorkRate.Load(in.DesiredWorkRate().get());
   }
   return true;
 }
