@@ -66,16 +66,283 @@ void cerr_loop(boost::process::async_pipe& p, boost::asio::mutable_buffer buf)
 }
 #endif
 
+namespace biogears {
+Driver::Driver(size_t thread_count)
+  : _pool { thread_count }
+  , _jobs(thread_count)
+{
+}
+//-----------------------------------------------------------------------------
+Driver::~Driver()
+{
+  _pool.stop();
+  _pool.join();
+  if (_join_thread.joinable()) {
+    _join_thread.join();
+  }
+}
+//-----------------------------------------------------------------------------
+void Driver::configure(const Config& runs)
+{
+  _globals = runs;
+  _globals.clear();
+}
+//-----------------------------------------------------------------------------
+void Driver::queue(const Config& runs, bool as_subprocess)
+{
+  for (auto& exec : runs) {
+    switch (exec.Driver()) {
+    case EDriver::Undefined:
+      std::cerr << "Unable to queue Undefined Executor for " << exec.Name() << "\n";
+      break;
+    case EDriver::BGEUnitTestDriver:
+      queue_BGEUnitTest(exec, as_subprocess);
+      break;
+    case EDriver::CDMUnitTestDriver:
+      queue_CDMUnitTest(exec, as_subprocess);
+      break;
+    case EDriver::ScenarioTestDriver:
+      queue_Scenario(exec, as_subprocess);
+      break;
+    default:
+      std::cerr << "Unsupported Driver type " << exec.Driver() << " please update your biogears libraries \n";
+      break;
+    }
+    ++_total_work;
+  }
+}
+//-----------------------------------------------------------------------------
+void Driver::run()
+{
+  _start_time = std::chrono::steady_clock().now();
+  _pool.start();
+}
+//-----------------------------------------------------------------------------
+void Driver::stop()
+{
+  _pool.stop();
+}
+//-----------------------------------------------------------------------------
+bool Driver::stop_if_empty()
+{
+  return _pool.stop_if_empty();
+}
+//-----------------------------------------------------------------------------
+void Driver::stop_when_empty()
+{
+  size_t count;
+  std::chrono::seconds duration;
+  std::chrono::minutes minutes;
+  std::chrono::hours hours;
+  std::string process_s;
+
+  while (!_pool.stop_if_empty()) {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    count = _total_work - _pool.get_sink()->unsafe_size();
+    duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock().now() - _start_time);
+    hours = std::chrono::duration_cast<std::chrono::hours>(duration);
+    minutes = std::chrono::duration_cast<std::chrono::minutes>(duration);
+
+    process_s = process_str();
+    if (duration < std::chrono::hours(1)) {
+      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, minutes.count(), duration.count() % 60);
+    } else {
+      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dh%dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, hours.count(), minutes.count() % 60, duration.count() % 60);
+    }
+  }
+}
+//-----------------------------------------------------------------------------
+void Driver::join()
+{
+  _join_thread = std::thread([&]() { _pool.join(); });
+
+  size_t count;
+  std::chrono::seconds duration;
+  std::chrono::minutes minutes;
+  std::chrono::hours hours;
+  std::string process_s;
+
+  while (!_pool.joined()) {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    count = _total_work; // Work queue is empty so we must of completed the total work
+    duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock().now() - _start_time);
+    hours = std::chrono::duration_cast<std::chrono::hours>(duration);
+    minutes = std::chrono::duration_cast<std::chrono::minutes>(duration);
+
+    process_s = process_str();
+    if (duration < std::chrono::hours(1)) {
+      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, minutes.count(), duration.count() % 60);
+    } else {
+      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dh%dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, hours.count(), minutes.count() % 60, duration.count() % 60);
+    }
+  }
+  if (_join_thread.joinable()) {
+    _join_thread.join();
+  }
+  count = _total_work; // Work queue is empty so we must of completed the total work
+  duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock().now() - _start_time);
+  hours = std::chrono::duration_cast<std::chrono::hours>(duration);
+  minutes = std::chrono::duration_cast<std::chrono::minutes>(duration);
+
+  if (duration < std::chrono::hours(1)) {
+    std::cout << asprintf("\rProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K", count, _total_work, minutes.count(), duration.count() % 60);
+  } else {
+    std::cout << asprintf("\rProgress %d/%d; Elapsed Time  %dh%dm%ds\u001b[0K", count, _total_work, hours.count(), minutes.count() % 60, duration.count() % 60);
+  }
+}
+//-----------------------------------------------------------------------------
+void Driver::queue_BGEUnitTest(Executor exec, bool as_subprocess)
+{
+  //TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
+#ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
+  _pool.queue_work(
+    [=]() {
+      BioGearsEngineTest* executor;
+      try {
+        executor = new BioGearsEngineTest;
+      } catch (const std::exception& e) {
+        std::cout << e.what() << "\n";
+        return 1;
+      }
+      executor->RunTest(exec.Name(), exec.Computed());
+      delete executor;
+      return 0;
+    });
+#endif
+}
+//-----------------------------------------------------------------------------
+void Driver::queue_CDMUnitTest(Executor exec, bool as_subprocess)
+{
+  //TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
+#ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
+  _pool.queue_work(
+    [&]() {
+      CommonDataModelTest* executor;
+      try {
+        executor = new CommonDataModelTest;
+      } catch (const std::exception& e) {
+        std::cout << e.what() << "\n";
+        return 1;
+      }
+      executor->RunTest(exec.Name(), exec.Computed());
+      delete executor;
+      return 0;
+    });
+#endif
+}
+//-----------------------------------------------------------------------------
+void Driver::queue_Scenario(Executor exec, bool as_subprocess)
+{
+  enum class PatientType {
+    FILE,
+    STATE,
+    INLINE
+  };
+
+  std::function<void(Executor, bool)> scenario_launch;
+
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
-void subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
+  if (as_subprocess) {
+    scenario_launch = std::bind(&Driver::subprocess_execute, this, std::placeholders::_1, std::placeholders::_2);
+  } else {
+    scenario_launch = std::bind(&Driver::async_execute, this, std::placeholders::_1, std::placeholders::_2);
+  }
+#else
+  scenario_launch = std::bind(&Driver::async_execute, this, std::placeholders::_1, std::placeholders::_2);
+#endif
+  std::ifstream ifs { exec.Scenario() };
+  if (!ifs.is_open()) {
+    ifs.open("Scenarios/" + exec.Scenario());
+    if (!ifs.is_open()) {
+      std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " terminating\n";
+      return;
+    }
+  }
+
+  std::unique_ptr<mil::tatrc::physiology::datamodel::ScenarioData> scenario;
+  try {
+    xml_schema::flags xml_flags;
+    xml_schema::properties xml_properties;
+
+    xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
+    scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
+  } catch (std::runtime_error e) {
+    std::cout << e.what() << "\n";
+    return;
+  } catch (xsd::cxx::tree::parsing<char> e) {
+    std::cout << e << "\n";
+    return;
+  }
+  // The Biogears Schema states that ScenarioData supports the following boot strap tags
+  // 1. EngineStateFile -- Overrides PatientFile and Patient tag and skips initialization using the state file
+  // 2. PatientFile -- External file which will be read in with a patient definition
+  // 3. Patient -- Inline Patient definition similar to PatientFile
+  // Currently only Patient File is supported by this function
+  // TODO: Test for EngineState file and call an appropriate launcher
+  // TODO: Test for Patient if PatientFile is not present and call the appropriate launcher
+  if (scenario->EngineStateFile().present()) {
+    exec.State(scenario->EngineStateFile().get());
+    _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+    return;
+  } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->PatientFile().present()) {
+    const auto patient_file = scenario->InitialParameters()->PatientFile().get();
+    std::string nc_patient_file = patient_file;
+    std::transform(nc_patient_file.begin(), nc_patient_file.end(), nc_patient_file.begin(), ::tolower);
+    if ("all" == nc_patient_file) {
+      auto patient_files = biogears::ListFiles("patients", R"(\.xml)");
+      for (const std::string& patient_file : patient_files) {
+        Executor patientEx { exec };
+        patientEx.Patient(patient_file);
+
+        ///----
+        std::string trimed_patient_path(trim(patientEx.Patient()));
+        auto split_patient_path = split(trimed_patient_path, '/');
+        auto patient_no_extension = split(split_patient_path.back(), '.').front();
+
+        std::string trimed_scenario_path(trim(patientEx.Scenario()));
+        auto split_scenario_path = split(trimed_scenario_path, '/');
+        auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
+
+        if (patientEx.Name().empty()) {
+          patientEx.Results({ scenario_no_extension + "-" + patient_no_extension });
+          patientEx.Name(scenario_no_extension + "-" + patient_no_extension);
+        } else {
+          patientEx.Results({ patientEx.Name() + "-" + patient_no_extension });
+          patientEx.Name(patientEx.Name() + "-" + patient_no_extension);
+        }
+        ///----
+
+        _pool.queue_work(std::bind(scenario_launch, std::move(patientEx), true));
+      }
+    } else {
+      exec.Patient(patient_file);
+      _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+    }
+  } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
+    exec.Patient("");
+    exec.State("");
+    _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+  } else {
+    std::cout << "Skipping " << exec.Name() << " no patient specified.\n";
+    return;
+  }
+}
+//-----------------------------------------------------------------------------
+#if defined(BIOGEARS_SUBPROCESS_SUPPORT)
+void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
 {
   using namespace biogears;
   Logger console_logger;
+
+  _process_count += 1;
+
   try {
     console_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] %m%n");
     console_logger.FormatMessages(false);
   } catch (std::exception e) {
     std::cout << e.what();
+    _process_count -= 1;
+    return;
   }
   try {
     using namespace boost::process;
@@ -188,47 +455,51 @@ void subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
     switch (code) {
     case ExecutionErrors::NONE:
       console_logger.Info("Completed " + ex.Name());
-      return;
+      break;
     case ExecutionErrors::ARGUMENT_ERROR:
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed with arguments %s", code, ex.Name().c_str(), options.c_str()));
-      return;
+      break;
     case ExecutionErrors::SCENARIO_IO_ERROR:
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", code, ex.Name().c_str(), ex.Scenario().c_str()));
-      return;
+      break;
     case ExecutionErrors::SCENARIO_PARSE_ERROR:
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", code, ex.Name().c_str(), ex.Scenario().c_str()));
-      return;
+      break;
     case ExecutionErrors::PATIENT_IO_ERROR:
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified patient file %s", code, ex.Name().c_str(), ex.Patient().c_str()));
-      return;
+      break;
     case ExecutionErrors::PATIENT_PARSE_ERROR:
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed to parse the specified patient file %s", code, ex.Name().c_str(), ex.Patient().c_str()));
-      return;
+      break;
     case ExecutionErrors::BIOGEARS_RUNTIME_ERROR:
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed mid simulation see log for more details.", code, ex.Name().c_str()));
-      return;
+      break;
     default:
       console_logger.Info(ex.Name() + " failed see log for details.\n");
-      return;
+      break;
     }
+    _process_count -= 1;
+    return;
 
   } catch (...) {
     console_logger.Error("Failed " + ex.Name() + "\n");
+    _process_count -= 1;
+    return;
   }
+  _process_count -= 1;
+  return;
 }
 
 #endif
 
-void async_execute(biogears::Executor& ex, bool multi_patient_run)
+void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
 {
-  //auto scenario_launch = [](Executor& ex, bool multi_patient_run, PatientType patient_type, CDM::PatientData patient_data) {
-
   using namespace biogears;
-
+  _thread_count += 1;
   std::string trimed_scenario_path(trim(ex.Scenario()));
   std::ifstream scenario_stream { trimed_scenario_path };
   if (!scenario_stream.is_open()) {
-     trimed_scenario_path =  "Scenarios/" + trimed_scenario_path;
+    trimed_scenario_path = "Scenarios/" + trimed_scenario_path;
   }
   scenario_stream.close();
 
@@ -251,6 +522,7 @@ void async_execute(biogears::Executor& ex, bool multi_patient_run)
   if (multi_patient_run) {
     ex.Name(ex.Name() + "-" + patient_no_extension);
   }
+
   std::string base_file_name = (multi_patient_run) ? scenario_no_extension + "-" + patient_no_extension : scenario_no_extension;
   std::string console_file = base_file_name + ".log";
   std::string log_file = base_file_name + "Results.log";
@@ -268,6 +540,8 @@ void async_execute(biogears::Executor& ex, bool multi_patient_run)
     eng = CreateBioGearsEngine(&file_logger);
   } catch (std::exception e) {
     std::cout << e.what();
+    _thread_count -= 1;
+    return;
   }
 
   BioGearsScenario sce(eng->GetSubstanceManager());
@@ -283,6 +557,7 @@ void async_execute(biogears::Executor& ex, bool multi_patient_run)
     std::ifstream ifs { ex.Scenario() };
     if (!ifs.is_open()) {
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
+      _thread_count -= 1;
       return;
     }
 
@@ -296,10 +571,12 @@ void async_execute(biogears::Executor& ex, bool multi_patient_run)
     } catch (std::runtime_error e) {
       std::cout << e.what() << std::endl;
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", ExecutionErrors::SCENARIO_PARSE_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
+      _thread_count -= 1;
       return;
     } catch (xsd::cxx::tree::parsing<char> e) {
       std::cout << e << std::endl;
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", ExecutionErrors::SCENARIO_PARSE_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
+      _thread_count -= 1;
       return;
     }
     biogears::SEPatient patient { sce.GetLogger() };
@@ -315,212 +592,23 @@ void async_execute(biogears::Executor& ex, bool multi_patient_run)
     console_logger.Info("Completed " + ex.Name());
   } catch (...) {
     console_logger.Error("Failed " + ex.Name());
-  }
-}
-
-namespace biogears {
-Driver::Driver(size_t thread_count)
-  : _pool { thread_count }
-{
-}
-//-----------------------------------------------------------------------------
-Driver::~Driver()
-{
-  _pool.stop();
-  _pool.join();
-}
-//-----------------------------------------------------------------------------
-void Driver::configure(const Config& runs)
-{
-  _globals = runs;
-  _globals.clear();
-}
-//-----------------------------------------------------------------------------
-void Driver::queue(const Config& runs, bool as_subprocess)
-{
-  for (auto& exec : runs) {
-    switch (exec.Driver()) {
-    case EDriver::Undefined:
-      std::cerr << "Unable to queue Undefined Executor for " << exec.Name() << "\n";
-      break;
-    case EDriver::BGEUnitTestDriver:
-      queue_BGEUnitTest(exec, as_subprocess);
-      break;
-    case EDriver::CDMUnitTestDriver:
-      queue_CDMUnitTest(exec, as_subprocess);
-      break;
-    case EDriver::ScenarioTestDriver:
-      queue_Scenario(exec, as_subprocess);
-      break;
-    default:
-      std::cerr << "Unsupported Driver type " << exec.Driver() << " please update your biogears libraries \n";
-      break;
-    }
-  }
-}
-//-----------------------------------------------------------------------------
-void Driver::run()
-{
-  _pool.start();
-}
-//-----------------------------------------------------------------------------
-void Driver::stop()
-{
-  _pool.stop();
-}
-//-----------------------------------------------------------------------------
-bool Driver::stop_if_empty()
-{
-  return _pool.stop_if_empty();
-}
-//-----------------------------------------------------------------------------
-void Driver::stop_when_empty()
-{
-  while (!_pool.stop_if_empty()) {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-  }
-}
-//-----------------------------------------------------------------------------
-void Driver::join()
-{
-  _pool.join();
-}
-//-----------------------------------------------------------------------------
-void Driver::queue_BGEUnitTest(Executor exec, bool as_subprocess)
-{
-  //TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
-#ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
-  _pool.queue_work(
-    [=]() {
-      BioGearsEngineTest* executor;
-      try {
-        executor = new BioGearsEngineTest;
-      } catch (const std::exception& e) {
-        std::cout << e.what() << "\n";
-        return 1;
-      }
-      executor->RunTest(exec.Name(), exec.Computed());
-      delete executor;
-      return 0;
-    });
-#endif
-}
-//-----------------------------------------------------------------------------
-void Driver::queue_CDMUnitTest(Executor exec, bool as_subprocess)
-{
-  //TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
-#ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
-  _pool.queue_work(
-    [&]() {
-      CommonDataModelTest* executor;
-      try {
-        executor = new CommonDataModelTest;
-      } catch (const std::exception& e) {
-        std::cout << e.what() << "\n";
-        return 1;
-      }
-      executor->RunTest(exec.Name(), exec.Computed());
-      delete executor;
-      return 0;
-    });
-#endif
-}
-//-----------------------------------------------------------------------------
-void Driver::queue_Scenario(Executor exec, bool as_subprocess)
-{
-  enum class PatientType {
-    FILE,
-    STATE,
-    INLINE
-  };
-
-  std::function<void(Executor, bool)> scenario_launch;
-
-#if defined(BIOGEARS_SUBPROCESS_SUPPORT)
-  if (as_subprocess) {
-    scenario_launch = std::bind(subprocess_execute, std::placeholders::_1, std::placeholders::_2);
-  } else {
-    scenario_launch = std::bind(async_execute, std::placeholders::_1, std::placeholders::_2);
-  }
-#else
-  scenario_launch = std::bind(async_execute, std::placeholders::_1, std::placeholders::_2);
-#endif
-  std::ifstream ifs { exec.Scenario() };
-  if (!ifs.is_open()) {
-    ifs.open("Scenarios/" + exec.Scenario());
-    if (!ifs.is_open()) {
-      std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " terminating\n";
-      return;
-    }
-  }
-
-  std::unique_ptr<mil::tatrc::physiology::datamodel::ScenarioData> scenario;
-  try {
-    xml_schema::flags xml_flags;
-    xml_schema::properties xml_properties;
-
-    xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
-    scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
-  } catch (std::runtime_error e) {
-    std::cout << e.what() << "\n";
-    return;
-  } catch (xsd::cxx::tree::parsing<char> e) {
-    std::cout << e << "\n";
+    _thread_count -= 1;
     return;
   }
-  // The Biogears Schema states that ScenarioData supports the following boot strap tags
-  // 1. EngineStateFile -- Overrides PatientFile and Patient tag and skips initialization using the state file
-  // 2. PatientFile -- External file which will be read in with a patient definition
-  // 3. Patient -- Inline Patient definition similar to PatientFile
-  // Currently only Patient File is supported by this function
-  // TODO: Test for EngineState file and call an appropriate launcher
-  // TODO: Test for Patient if PatientFile is not present and call the appropriate launcher
-  if (scenario->EngineStateFile().present()) {
-    exec.State(scenario->EngineStateFile().get());
-    _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
-    return;
-  } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->PatientFile().present()) {
-    const auto patient_file = scenario->InitialParameters()->PatientFile().get();
-    std::string nc_patient_file = patient_file;
-    std::transform(nc_patient_file.begin(), nc_patient_file.end(), nc_patient_file.begin(), ::tolower);
-    if ("all" == nc_patient_file) {
-      auto patient_files = biogears::ListFiles("patients", R"(\.xml)");
-      for (const std::string& patient_file : patient_files) {
-        Executor patientEx { exec };
-        patientEx.Patient(patient_file);
-
-        ///----
-        std::string trimed_patient_path(trim(patientEx.Patient()));
-        auto split_patient_path = split(trimed_patient_path, '/');
-        auto patient_no_extension = split(split_patient_path.back(), '.').front();
-
-        std::string trimed_scenario_path(trim(patientEx.Scenario()));
-        auto split_scenario_path = split(trimed_scenario_path, '/');
-        auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
-
-        if (patientEx.Name().empty()) {
-          patientEx.Results({ scenario_no_extension + "-" + patient_no_extension });
-          patientEx.Name(scenario_no_extension + "-" + patient_no_extension);
-        } else {
-          patientEx.Results({ patientEx.Name() + "-" + patient_no_extension });
-          patientEx.Name(patientEx.Name() + "-" + patient_no_extension);
-        }
-        ///----
-
-        _pool.queue_work(std::bind(scenario_launch, std::move(patientEx), true));
-      }
-    } else {
-      exec.Patient(patient_file);
-      _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
-    }
-  } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
-    exec.Patient("");
-    exec.State("");
-    _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
-  } else {
-    std::cout << "Skipping " << exec.Name() << " no patient specified.\n";
-    return;
-  }
+  _thread_count -= 1;
+  return;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+std::string Driver::process_str()
+{
+  std::stringstream ss;
+  if (_thread_count != 0) {
+    ss << _thread_count << " thread" << ((1 == _process_count) ? "" : "s") << ((_process_count != 0) ? "; " : " ");
+  }
+  if (_process_count != 0) {
+
+    ss << _process_count << " process" << ((1 == _process_count) ? "" : "es") << "; ";
+  }
+  return ss.str();
+}
 } // NAMESPACE

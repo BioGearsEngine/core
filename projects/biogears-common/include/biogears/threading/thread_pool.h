@@ -43,6 +43,7 @@ namespace biogears {
     bool stop_if_empty();   //< Stops  the thread pool
     void join()  ;   //< Waits till all threads have joined
 
+    bool joined();    //Returns true only if join() has return once. Indicates this pool has finished all work
     bool suspend();  //< Suspends individual work threads even when work is available
     bool resume();//< Resumes  individual work threads to continue working the work queue
 
