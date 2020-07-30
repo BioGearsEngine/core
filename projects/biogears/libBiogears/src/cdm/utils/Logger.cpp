@@ -164,7 +164,7 @@ std::string Logger::FormatLogMessage(const std::string& msg, const std::string& 
     if (msg.empty()) {
       return origin;
     }
-    return origin + " : " + m_ss.str();
+    return origin + ": " + m_ss.str();
   } else {
     return msg;
   }
