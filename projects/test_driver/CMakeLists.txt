@@ -6,7 +6,7 @@ cmake_policy(VERSION 3.8.0)
 ###############################################################################
 # Options
 ###############################################################################
-option(${ROOT_PROJECT_NAME}_BUILD_TEST_DRIVER "Toggle building of cmd_bio tools" ON)
+option(${ROOT_PROJECT_NAME}_BUILD_TEST_DRIVER "Toggle building of test driver tools" ON)
 if(${ROOT_PROJECT_NAME}_BUILD_TEST_DRIVER)
 if(NOT ${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS)
   message(FATAL_ERROR "Fatal Error: test_driver requires BUILD_CIRCUIT_TESTS enabled to continue")

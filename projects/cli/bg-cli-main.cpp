@@ -36,19 +36,22 @@
 #include <fstream>
 #include <iostream>
 
-void print_help() {
+void print_help()
+{
+  std::cout << "Usage cmd_bio [HELP, GENDATA, GENSTATES, GENSEPSIS, VERIFY, VERSION]\n"
+               "[JOBS N]\n"
+               "[CONFIG [FILE]...], [SCENARIO [FILE]...], [TEST cdm|bge], [VALIDATE patient|drug|system|all]\n"
+               "[GENTABLES html|md|xml|web|all]\n\n";
 
-    std::cout << "Usage cmd_bio [HELP, GENDATA, GENSTATES, GENSEPSIS, VERIFY, VERSION]\n"
-                                "[THREADS N]\n" 
-                                "[CONFIG [FILE]...], [SCENARIO [FILE]...], [TEST cdm|bge], [VALIDATE patient|drug|system|all]\n"
-                                "[GENTABLES html|md|xml|web|all]\n\n";
-
-    std::cout << "Flags: \n";
-    std::cout << "v : Print Version\n";
-    std::cout << "j : Thread control -j N\n";
-    std::cout << "h : Print this message\n";
-    std::cout << std::endl;
-    exit(0);
+  std::cout << "Flags: \n";
+  std::cout << "-v : Print Version\n";
+  std::cout << "-j : Thread control -j N\n";
+  std::cout << "-h : Print this message\n";
+#if defined(BIOGEARS_SUBPROCESS_SUPPORT)
+  std::cout << "-t : Use Threads instead of Subprocess\n";
+#endif
+  std::cout << std::endl;
+  exit(0);
 }
 //!
 //! \brief Reads command line argument and executes corresponding operation
@@ -59,13 +62,16 @@ void print_help() {
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-    { "H","HELP","GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION" } //Options
+#if defined(BIOGEARS_SUBPROCESS_SUPPORT)
+    { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION" } //Options
+#else
+    { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION", "THREADED", "T" } //Options
+#endif
     ,
-    { "J", "THREADS" } //Keywords
+    { "J", "JOBS" } //Keywords
     ,
     { "TEST", "CONFIG", "SCENARIO", "VALIDATE", "GENTABLES" } //MultiWords
   );
-  
 
   bool run_patient_validation = false;
   bool run_drug_validation = false;
@@ -73,20 +79,20 @@ int main(int argc, char** argv)
   bool run_verification = false;
 
   unsigned int thread_count = std::thread::hardware_concurrency();
-  if ( !args.parse(argc, argv) || args.Option("HELP") || args.Option("H") ||  args.empty() ) {
+  if (!args.parse(argc, argv) || args.Option("HELP") || args.Option("H") || args.empty()) {
     print_help();
   }
 
-  if (args.Option("VERSION") || args.Option("V") ) {
+  if (args.Option("VERSION") || args.Option("V")) {
     std::cout << "Using libbiogears-" << biogears::full_version_string() << std::endl;
     exit(0);
   }
 
-  if (args.KeywordFound("THREADS")) {
+  if (args.KeywordFound("JOBS")) {
     try {
-      thread_count = std::stoi(args.Keyword("THREADS"));
+      thread_count = std::stoi(args.Keyword("JOBS"));
     } catch (std::exception) {
-      std::cerr << "Error: THREADS given but " << args.Keyword("THREADS") << " is not a valid Integer.\n";
+      std::cerr << "Error: JOBS given but " << args.Keyword("JOBS") << " is not a valid Integer.\n";
       exit(1);
     }
   }
@@ -98,19 +104,24 @@ int main(int argc, char** argv)
       exit(1);
     }
   }
-  biogears::Driver driver{ thread_count };
 
-  const biogears::Config conf{ "Email.config", true };
+  biogears::Driver driver { thread_count };
+
+  const biogears::Config conf { "Email.config", true };
   driver.configure(conf);
 
+  bool as_subprocess = false;
+#if defined(BIOGEARS_SUBPROCESS_SUPPORT)
+  as_subprocess = args.KeywordFound("THREADED") || args.KeywordFound("T");
+#endif
   if (args.Option("GENSTATES")) {
-    const biogears::Config runs{ "GenStates.config" };
-    driver.queue(runs);
+    const biogears::Config runs { "GenStates.config" };
+    driver.queue(runs, as_subprocess);
   }
 
   if (args.Option("GENSEPSIS")) {
     const biogears::Config runs { "GenSepsisStates.config" };
-    driver.queue(runs);
+    driver.queue(runs, as_subprocess);
   }
 
   if (args.Option("GENDATA")) { // gen-data
@@ -138,11 +149,11 @@ int main(int argc, char** argv)
     for (auto& test : tests) {
       std::transform(test.begin(), test.end(), test.begin(), ::tolower);
       if (test == "cdm") { // run-cdm-tests
-        biogears::Config runs{ "CDMUnitTests.config" };
-        driver.queue(runs);
+        biogears::Config runs { "CDMUnitTests.config" };
+        driver.queue(runs, as_subprocess);
       } else if (test == "bge") {
-        biogears::Config runs{ "BGEUnitTests.config" };
-        driver.queue(runs);
+        biogears::Config runs { "BGEUnitTests.config" };
+        driver.queue(runs, as_subprocess);
       } else {
         std::cout << "Warning: No Test known as " << test << " exists.\n";
       }
@@ -169,44 +180,43 @@ int main(int argc, char** argv)
 
   if (run_system_validation) { // run-system-validation
     const auto runs = biogears::Config("ValidationSystems.config");
-    driver.queue(runs);
+    driver.queue(runs, as_subprocess);
   }
   if (run_patient_validation) { //run-patient-validation
     const auto runs = biogears::Config("ValidationPatients.config");
-    driver.queue(runs);
+    driver.queue(runs, as_subprocess);
   }
   if (run_drug_validation) { // run-drug-validation
     const auto runs = biogears::Config("ValidationDrugs.config");
-    driver.queue(runs);
+    driver.queue(runs, as_subprocess);
   }
   if (run_verification) { // run-verification
     const auto runs = biogears::Config("VerificationScenarios.config");
-    driver.queue(runs);
+    driver.queue(runs, as_subprocess);
   }
 
   if (args.MultiWordFound("CONFIG")) {
-    auto configs = biogears::Config{  };
+    auto configs = biogears::Config {};
     for (auto& arg : args.MultiWord("CONFIG")) {
       const auto runs = biogears::Config(arg);
-      driver.queue(runs);
+      driver.queue(runs, as_subprocess);
     }
   }
 
   if (args.MultiWordFound("SCENARIO")) {
-    auto configs = biogears::Config{  };
+    auto configs = biogears::Config {};
     for (auto& arg : args.MultiWord("SCENARIO")) {
-      auto ex = biogears::Executor{ arg, biogears::EDriver::ScenarioTestDriver};
+      auto ex = biogears::Executor { arg, biogears::EDriver::ScenarioTestDriver };
       ex.Computed("Scenarios/");
       ex.Scenario(arg);
       configs.push_back(ex);
     }
-    driver.queue(configs);
+    driver.queue(configs, as_subprocess);
   }
 
   driver.run();
   driver.stop_when_empty();
   driver.join();
-
 
   //We want Gentables to run after all other work has finished
   if (args.MultiWordFound("GENTABLES")) {
@@ -231,7 +241,6 @@ int main(int argc, char** argv)
       }
     }
   }
-
 
   return 0;
 }

@@ -145,14 +145,12 @@ option(${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS     "Build Java based development to
 
 add_subdirectory(biogears-common)
 add_subdirectory(biogears)
-add_subdirectory(scenario_driver)
 add_subdirectory(test_driver)
 add_subdirectory(howto)
 add_subdirectory(unit)
-add_subdirectory(cmd_bio)
 add_subdirectory(circuit_profiler)
 add_subdirectory(zip)
-add_subdirectory(playschool)
+add_subdirectory(cli)
 
 if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS)
   add_subdirectory(java)

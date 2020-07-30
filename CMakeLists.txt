@@ -45,10 +45,8 @@ endif()
 ###############################################################################
 add_subdirectory(projects)
 
-if(TARGET cmd_bio)
-	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT cmd_bio)
-elseif(TARGET scenario_driver)
-	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT scenario_driver)
+if(TARGET bg-cli)
+	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT bg-cli)
 endif()
 
 if(NOT TARGET STAGE)

@@ -31,11 +31,6 @@ add_source_files(CONTROLLER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/ "bg-cli-main.cp
 add_source_files(DRONE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/ "bg-scenario-main.cpp" "Sources\\")
 configure_file(src/utils/KnownPaths.h.in src/utils/KnownPaths.h )
 
-###############################################################################
-#Define Logic
-###############################################################################
-find_package(Boost COMPONENTS system date_time filesystem program_options REQUIRED)
-
 ##########################
 #  Biogears Command Line #
 ##########################
@@ -53,7 +48,13 @@ set_target_properties(bg-cli
   )
 
 
-target_compile_definitions(bg-cli PRIVATE ${${PREFIX}_CPPFLAGS} )
+find_package(Boost)
+if(Boost_FOUND)
+   find_package(Boost COMPONENTS system date_time filesystem program_options REQUIRED)
+   target_compile_definitions(bg-cli PRIVATE BIOGEARS_SUBPROCESS_SUPPORT)
+endif()
+
+
 target_compile_options(bg-cli PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
 target_include_directories(bg-cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 target_link_libraries(bg-cli  ${${PREFIX}_LIBS}      
@@ -83,7 +84,6 @@ set_target_properties(bg-scenario
   )
 
 
-target_compile_definitions(bg-scenario PRIVATE ${${PREFIX}_CPPFLAGS} )
 target_compile_options(bg-scenario PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
 target_include_directories(bg-scenario PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 target_link_libraries(bg-scenario  ${${PREFIX}_LIBS} 

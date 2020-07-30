@@ -30,7 +30,7 @@ public:
   ~Driver() override;
 
   void configure(const Config& config);
-  void queue(const Config& runs);
+  void queue(const Config& runs, bool as_subprocess = false);
 
   void run() override;
   void stop() override;
@@ -40,9 +40,9 @@ public:
   void join() override;
 
 protected:
-  void queue_BGEUnitTest(Executor);
-  void queue_CDMUnitTest(Executor);
-  void queue_Scenario(Executor);
+  void queue_BGEUnitTest(Executor, bool as_subprocess = false);
+  void queue_CDMUnitTest(Executor, bool as_subprocess = false);
+  void queue_Scenario(Executor, bool as_subprocess = false);
 private:
   ThreadPool _pool;
   Config _globals;
