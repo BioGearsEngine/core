@@ -41,8 +41,8 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   std::string trimed_scenario_path(trim(ex.Scenario()));
   auto split_scenario_path = split(trimed_scenario_path, '/');
   auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
-  
-   //NOTE: This loses non relative prefixes as the split will eat the leading path_separator
+
+  //NOTE: This loses non relative prefixes as the split will eat the leading path_separator
   std::string parent_dir;
   for (auto dir = split_scenario_path.begin(); dir != split_scenario_path.end(); ++dir) {
     if (dir + 1 != split_scenario_path.end()) {
@@ -60,7 +60,7 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   Logger console_logger;
   Logger file_logger(ex.Computed() + parent_dir + console_log_file);
   try {
- 
+
     file_logger.SetConsoleLogLevel(log_level);
     file_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] " + ex.Name() + " %m%n");
     console_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] %m%n");
@@ -107,9 +107,18 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
       return static_cast<int>(ExecutionErrors::SCENARIO_PARSE_ERROR);
     }
     biogears::SEPatient patient { sce.GetLogger() };
-    ex.Patient(scenario->InitialParameters()->Patient().get().Name());
-    patient.Load(scenario->InitialParameters()->Patient().get());
-    sce.GetInitialParameters().SetPatient(patient);
+    if (scenario->EngineStateFile().present()) {
+      sce.SetEngineStateFile(scenario->EngineStateFile().get());
+    } else if (scenario->InitialParameters()->PatientFile().present()) {
+      sce.GetInitialParameters().SetPatientFile(scenario->InitialParameters()->PatientFile().get());
+    } else if (scenario->InitialParameters()->Patient().present()) {
+      ex.Patient(scenario->InitialParameters()->Patient().get().Name());
+      patient.Load(scenario->InitialParameters()->Patient().get());
+      sce.GetInitialParameters().SetPatient(patient);
+    } else {
+      std::cerr << "A Patient or State file is required to run " << ex.Scenario() << std::endl;
+      return static_cast<int>(ExecutionErrors::PATIENT_IO_ERROR);
+    }
   }
   //-----------------------------------------------------------------------------------
   try {
@@ -190,14 +199,7 @@ int main(int argc, char* argv[])
   try {
     // Declare the supported options.
     options_description desc("Allowed options");
-    desc.add_options()("help,h", "produce help message")
-        ("name,n", value<std::string>(), "Set Scenario Name")
-        ("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")
-        ("group,g", value<std::string>(), "Set Name of Scenario Group")
-        ("patient,p", value<std::string>(), "Specifcy the Initial Patient File")
-        ("state", value<std::string>(), "Specifcy the Initial Patient State File")
-        ("results,r", value<std::string>(), "Specifcy the Resoults File")
-        ("quiet,q", bool_switch()->default_value(false), "Supress most log messages");
+    desc.add_options()("help,h", "produce help message")("name,n", value<std::string>(), "Set Scenario Name")("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")("group,g", value<std::string>(), "Set Name of Scenario Group")("patient,p", value<std::string>(), "Specifcy the Initial Patient File")("state", value<std::string>(), "Specifcy the Initial Patient State File")("results,r", value<std::string>(), "Specifcy the Resoults File")("quiet,q", bool_switch()->default_value(false), "Supress most log messages");
 
     options_description hidden;
     hidden.add_options()("scenario", value<std::string>()->required(), "Specifcy the Scenario File");
@@ -242,15 +244,16 @@ int main(int argc, char* argv[])
       ex.Driver(EDriver::ScenarioTestDriver);
     }
 
-    if ( vm["quiet"].as<bool>() ) {
+    if (vm["quiet"].as<bool>()) {
       log_level = log4cpp::Priority::WARN;
-    } 
+    }
 
     if (vm.count("patient")) {
       auto patient = vm["patient"].as<std ::string>();
       if (patient.front() == '\'' && patient.back() == '\'') {
         patient = biogears::trim(patient, "'");
       }
+
       if (patient.front() == '\"' && patient.back() == '\"') {
         patient = biogears::trim(patient, "\"");
       }
@@ -313,12 +316,12 @@ int main(int argc, char* argv[])
 
     //std::cout << ex << std::endl;
     return execute_scenario(ex, log_level);
- 
+
   } catch (boost::program_options::required_option /*e*/) {
     std::cerr << "\n";
     //<< e.what() << "\n\n";
-      std::cout << help_message << std::endl;
+    std::cout << help_message << std::endl;
   } catch (std::exception& e) {
-      std::cerr << e.what() << std::endl;
+    std::cerr << e.what() << std::endl;
   }
 }

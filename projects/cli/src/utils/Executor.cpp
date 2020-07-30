@@ -16,7 +16,7 @@ Executor::Executor(std::string n, EDriver d)
   , plot_style(EPlotStyle::FastPlot)
   , no_compare(false)
   , group("Other")
-  , patient("patients/StandardMale.xml")
+  , patient("")
   , state("")
   , scenario("Scenarios/BasicStandard.xml")
 {
