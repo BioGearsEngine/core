@@ -53,19 +53,16 @@ set(${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS})
 
 string(REGEX REPLACE "Python_" "" SHORT_NAME ${PROJECT_NAME})
 
-
-add_custom_command( OUTPUT ${SHORT_NAME} 
-	#	COMMAND ${CMAKE_COMMAND} -E copy ${${PREFIX}_SOURCES} ${SHORT_NAME}
-	DEPENDS  Python_DataModelBindings ${${PREFIX}_SOURCES}
+add_custom_command( OUTPUT ${SHORT_NAME}
+        DEPENDS Python_CommonDataModel ${${PREFIX}_SOURCES}
               )
 
 
 add_custom_target(${PROJECT_NAME}
-	      DEPENDS ${SHORT_NAME} ${${PREFIX}_SOURCES} Python_DataModelBindings
-	      SOURCES ${${PREFIX}_SOURCES}
+              DEPENDS ${SHORT_NAME} ${${PREFIX}_SOURCES}
+              SOURCES ${${PREFIX}_SOURCES}
              )
 
-set_source_files_properties( Python_DataModelBindings PROPERTIES GENERATED TRUE )
 
 ###############################################################################
 #Define Logic
@@ -77,8 +74,8 @@ set_target_properties(${PROJECT_NAME}
     PROJECT_LABEL "${PROJECT_NAME}"
     )
 
-add_dependencies(${PROJECT_NAME} 
-	Python_DataModelBindings
+add_dependencies(${PROJECT_NAME}
+	Python_CommonDataModel
 )
 
 ###############################################################################
@@ -99,13 +96,15 @@ endfunction()
 
 if(Biogears_Python_BUILD_WEBSITE)
 
-	message(WARNING "Python_ver: ${Python3_EXECUTABLE}")
+	message(STATUS "Python_ver: ${Python3_EXECUTABLE}")
         add_custom_target(docs-prepare-py
 	COMMAND ${Python3_EXECUTABLE}  ${CDM2MD_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md#cdm
 	COMMAND ${Python3_EXECUTABLE}  ${DoxygenPreprocessor_SOURCE} -p doc/markdown -f doc/doxygen/processed_md #cdm
         COMMAND ${Python3_EXECUTABLE}  ${DoxygenPreprocessor_SOURCE}  -p doc/methodology -f doc/doxygen/processed_md #cdm
         COMMAND ${Python3_EXECUTABLE}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm 
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+	#COMMAND ${Python3_EXECUTABLE}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-1_2.config
+	#COMMAND ${Python3_EXECUTABLE}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-2_2.config
+	WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
 	COMMENT "Running docs-prepare"
 	VERBATIM
         USES_TERMINAL
@@ -123,7 +122,7 @@ if(Biogears_Python_BUILD_WEBSITE)
   add_custom_target(docs-stage-py
         COMMAND ${CMAKE_COMMAND} -E  make_directory output/documentation
         COMMAND ${CMAKE_COMMAND} -E copy_directory doxygen/html/ output/documentation
-	COMMAND ${CMAKE_COMMAND} -E tar cfv output/documentation.zip  --format=zip  -- output/documentation
+        COMMAND ${CMAKE_COMMAND} -E tar cfv output/documentation.zip  --format=zip  -- output/documentation
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/
         VERBATIM
 	COMMENT "Running docs-stage"
@@ -172,6 +171,5 @@ if(Biogears_Python_BUILD_WEBSITE)
   endif()
 endif()
 
- set_target_properties(Python_BioGears PROPERTIES FOLDER "Python/py")
- set_target_properties(Python_DataModelBindings PROPERTIES FOLDER "Python/py")
-                                 
+set_target_properties(Python_BioGears PROPERTIES FOLDER "Python/py")
+set_target_properties(Python_CommonDataModel PROPERTIES FOLDER "Python/py")

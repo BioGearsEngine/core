@@ -37,4 +37,19 @@ string(REGEX REPLACE "Python_" "" SHORT_NAME ${PROJECT_NAME})
 set(CDM2MD_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/mil/tatrc/physiology/datamodel/doxygen/CDM2MD.py PARENT_SCOPE)
 set(DoxygenPreprocessor_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/mil/tatrc/physiology/datamodel/doxygen/DoxygenPreprocessor.py PARENT_SCOPE)
 set(XSDToDOXYGEN_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/mil/tatrc/physiology/datamodel/doxygen/XSDToDoxygen.py PARENT_SCOPE)
+set(Plot_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/mil/tatrc/physiology/datamodel/plots/PlotDriver.py PARENT_SCOPE)
+
+add_custom_command(OUTPUT ${SHORT_NAME}
+        DEPENDS ${${PREFIX}_SOURCES})
+
+add_custom_target(${PROJECT_NAME} ALL
+        DEPENDS ${SHORT_NAME}
+        SOURCES ${${PREFIX}_SOURCES})
+
+set_target_properties(${PROJECT_NAME}
+    PROPERTIES
+    FOLDER "Python/py"
+    OUTPUT_NAME ${SHORT_NAME}
+    PROJECT_LABEL "${PROJECT_NAME}"
+    )
 
