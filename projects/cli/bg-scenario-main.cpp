@@ -42,6 +42,10 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   auto split_scenario_path = split(trimed_scenario_path, '/');
   auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
 
+  if (ex.Name() == "Undefined") {
+    ex.Name(scenario_no_extension);
+  }
+
   //NOTE: This loses non relative prefixes as the split will eat the leading path_separator
   std::string parent_dir;
   for (auto dir = split_scenario_path.begin(); dir != split_scenario_path.end(); ++dir) {
@@ -62,7 +66,7 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   try {
 
     file_logger.SetConsoleLogLevel(log_level);
-    file_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] " + ex.Name() + " %m%n");
+    file_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] " + ex.Name() + "%m%n");
     console_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] %m%n");
     console_logger.FormatMessages(false);
 
@@ -314,7 +318,6 @@ int main(int argc, char* argv[])
       ex.Group(group);
     }
 
-    //std::cout << ex << std::endl;
     return execute_scenario(ex, log_level);
 
   } catch (boost::program_options::required_option /*e*/) {
