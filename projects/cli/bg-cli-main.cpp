@@ -63,9 +63,9 @@ int main(int argc, char** argv)
 {
   biogears::Arguments args(
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
-    { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION" } //Options
-#else
     { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION", "THREADED", "T" } //Options
+#else
+    { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION" } //Options
 #endif
     ,
     { "J", "JOBS" } //Keywords
@@ -80,7 +80,8 @@ int main(int argc, char** argv)
 
   unsigned int thread_count = std::thread::hardware_concurrency();
   if (!args.parse(argc, argv) || args.Option("HELP") || args.Option("H") || args.empty()) {
-    print_help();
+      std::cerr << args.print_error() << "\n";
+      print_help();
   }
 
   if (args.Option("VERSION") || args.Option("V")) {
@@ -113,7 +114,7 @@ int main(int argc, char** argv)
   bool as_subprocess = false;
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
   as_subprocess = true;
-  as_subprocess = !(args.KeywordFound("THREADED") || args.KeywordFound("T"));
+  as_subprocess = !(args.Option("THREADED") || args.Option("T"));
 #endif
 
   if (args.Option("GENSTATES")) {

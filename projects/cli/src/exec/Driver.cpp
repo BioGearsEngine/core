@@ -226,6 +226,12 @@ void async_execute(biogears::Executor& ex, bool multi_patient_run)
   using namespace biogears;
 
   std::string trimed_scenario_path(trim(ex.Scenario()));
+  std::ifstream scenario_stream { trimed_scenario_path };
+  if (!scenario_stream.is_open()) {
+     trimed_scenario_path =  "Scenarios/" + trimed_scenario_path;
+  }
+  scenario_stream.close();
+
   auto split_scenario_path = split(trimed_scenario_path, '/');
   auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
 
@@ -266,9 +272,7 @@ void async_execute(biogears::Executor& ex, bool multi_patient_run)
 
   BioGearsScenario sce(eng->GetSubstanceManager());
   if (!sce.Load(trim(trimed_scenario_path))) {
-    if (!sce.Load("Scenario/" + trim(trimed_scenario_path))) {
-      console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
-    }
+    console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
   }
 
   if (!ex.Patient().empty()) {
@@ -278,12 +282,10 @@ void async_execute(biogears::Executor& ex, bool multi_patient_run)
   } else {
     std::ifstream ifs { ex.Scenario() };
     if (!ifs.is_open()) {
-      ifs.open("Scenarios/" + ex.Scenario());
-      if (!ifs.is_open()) {
-        console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
-        return;
-      }
+      console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
+      return;
     }
+
     std::unique_ptr<mil::tatrc::physiology::datamodel::ScenarioData> scenario;
     try {
       xml_schema::flags xml_flags;

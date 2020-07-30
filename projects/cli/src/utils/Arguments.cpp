@@ -111,14 +111,16 @@ bool Arguments::parse(const std::vector<std::string>& args)
       if (index < args.size()) {
         const std::string& value = args[index];
         if (isOption(value) || isKeyword(value) || isMultiWord(value)) {
-          std::cerr << "Expected value after " << arg << " but keyword " << value << " was found.\n";
+          _error = "Expected value after " + arg + " but keyword " + value + " was found.\n";
+          std::cerr << _error;
           return false;
         }
         ++index;
         _keywords[arg] = value;
         continue; // Argument Loop
       } else {
-        std::cerr << "Expected value after " << arg << " but no value was given.\n";
+        _error = "Expected value after " + arg + " but no value was given.\n";
+        std::cerr << _error;
         return false;
       }
     }
@@ -131,7 +133,8 @@ bool Arguments::parse(const std::vector<std::string>& args)
             if (value_found) {
               break; // Inner Argument Loop
             } else {
-              std::cerr << "Expected value after " << arg << " but keyword " << value << " was found.\n";
+               _error = "Expected value after " + arg + " but keyword " + value + " was found.\n";
+              std::cerr << _error;
               return false;
             }
           } else {
@@ -142,10 +145,12 @@ bool Arguments::parse(const std::vector<std::string>& args)
         }
         continue; // Argument Loop
       } else {
-        std::cerr << "Expected value after " << arg << " but no value was given.\n";
+         _error =  "Expected value after " + arg + " but no value was given.\n";
+        std::cerr << _error;
         return false;
       }
     }
+    _error = " Unexpected Token " + arg;
     return false;
   }
   return true;
@@ -227,4 +232,9 @@ bool Arguments::MultiWordFound(std::string key) const
     return false;
   }
 }
+//-----------------------------------------------------------------------------
+std::string  Arguments::print_error() const {
+  return _error;
+}
+
 }

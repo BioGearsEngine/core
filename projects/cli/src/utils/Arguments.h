@@ -46,13 +46,16 @@ public:
   bool KeywordFound(std::string) const;
   bool MultiWordFound(std::string) const;
 
-  bool empty() const { return _empty;
-                     }
+  bool empty() const {
+	  return _empty;
+  }
+  std::string print_error() const;
 protected:
   std::map<std::string,OptionValue>    _options;
   std::map<std::string,KeywordValue>   _keywords;
   std::map<std::string,MultiwordValue> _multiwords;
   bool _empty = true;
+  std::string _error;
 };
 
 }
