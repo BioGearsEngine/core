@@ -112,8 +112,10 @@ int main(int argc, char** argv)
 
   bool as_subprocess = false;
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
-  as_subprocess = args.KeywordFound("THREADED") || args.KeywordFound("T");
+  as_subprocess = true;
+  as_subprocess = !(args.KeywordFound("THREADED") || args.KeywordFound("T"));
 #endif
+
   if (args.Option("GENSTATES")) {
     const biogears::Config runs { "GenStates.config" };
     driver.queue(runs, as_subprocess);
