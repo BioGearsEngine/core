@@ -1239,6 +1239,19 @@ void SEPatientActionCollection::RemoveSubstanceOralDose(const SESubstance& sub)
   SAFE_DELETE(od);
 }
 //-------------------------------------------------------------------------------
+const std::map<const SESubstance*, SESubstanceNasalDose*>& SEPatientActionCollection::GetSubstanceNasalDoses() const
+{
+  return m_SubstanceNasalDoses;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveSubstanceNasalDose(const SESubstance& sub)
+{
+  SESubstanceNasalDose* od = m_SubstanceNasalDoses[&sub];
+  m_SubstanceNasalDoses.erase(&sub);
+  SAFE_DELETE(od);
+}
+
+//-------------------------------------------------------------------------------
 const std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>& SEPatientActionCollection::GetSubstanceCompoundInfusions() const
 {
   return m_SubstanceCompoundInfusions;

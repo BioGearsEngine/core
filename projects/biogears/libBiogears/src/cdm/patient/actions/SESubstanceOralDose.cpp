@@ -100,7 +100,7 @@ SESubstance& SESubstanceOralDose::GetSubstance() const
 
 void SESubstanceOralDose::ToString(std::ostream& str) const
 {
-  str << "Patient Action : Oral Substance Adminstration";
+  str << "Patient Action : Oral Substance Administration";
   str << "\n\tSubstance: " << m_Substance.GetName();
   str << "\n\tAdministration Route: ";
   HasAdminRoute() ? str << GetAdminRoute() : str << "Not Set";
