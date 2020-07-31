@@ -42,6 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+#include <biogears/cdm/patient/actions/SESubstanceNasalDose.h>
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
 #include <biogears/cdm/patient/actions/SETourniquet.h>
@@ -190,6 +191,9 @@ public:
   const std::map<const SESubstance*, SESubstanceInfusion*>& GetSubstanceInfusions() const;
   void RemoveSubstanceInfusion(const SESubstance& sub);
 
+  const std::map<const SESubstance*, SESubstanceNasalDose*>& GetSubstanceNasalDoses() const;
+  void RemoveSubstanceNasalDose(const SESubstance& sub);
+
   const std::map<const SESubstance*, SESubstanceOralDose*>& GetSubstanceOralDoses() const;
   void RemoveSubstanceOralDose(const SESubstance& sub);
 
@@ -247,6 +251,7 @@ protected:
   std::map<const SESubstance*, SESubstanceBolus*> m_SubstanceBolus;
   std::map<const SESubstance*, SESubstanceInfusion*> m_SubstanceInfusions;
   std::map<const SESubstance*, SESubstanceOralDose*> m_SubstanceOralDoses;
+  std::map<const SESubstance*, SESubstanceNasalDose*> m_SubstanceNasalDoses;
   std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*> m_SubstanceCompoundInfusions;
 
   bool AdministerSubstance(const CDM::SubstanceAdministrationData& subAdmin);

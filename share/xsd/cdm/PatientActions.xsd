@@ -532,6 +532,18 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 
+	<!-- @brief The nasal administration of a substance or other compound that is given to raise its concentration in blood to an effective level. -->
+	<xs:complexType name="SubstanceNasalDoseData">
+		<xs:complexContent>
+			<xs:extension base="SubstanceAdministrationData">
+				<xs:sequence>
+					<xs:element name="Substance" type="xs:string" minOccurs="1" maxOccurs="1"/>	<!--<< @brief -->
+					<xs:element name="Dose" type="ScalarMassData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->													
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
 	<!--@brief Drug administered orally, either as a lozenge that dissolves in mouth (transmucosal) or as a pill that dissolves is stomach (gastrointestinal)-->
 	<xs:complexType name="SubstanceOralDoseData">
 		<xs:complexContent>
