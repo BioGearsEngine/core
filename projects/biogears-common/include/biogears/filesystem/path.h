@@ -43,7 +43,6 @@ derivative works thereof, in binary and source code form.
 
 //This file has been modified from its original version as part of the biogears project
 
-
 #include <algorithm>
 #include <cctype>
 #include <cerrno>
@@ -68,6 +67,12 @@ derivative works thereof, in binary and source code form.
 
 namespace biogears {
 namespace filesystem {
+
+  inline bool exists(const std::string& name)
+  {
+    struct stat buffer;
+    return (stat(name.c_str(), &buffer) == 0);
+  }
 
   /**
  * \brief Simple class for manipulating paths on Linux/Windows/Mac OS
@@ -233,6 +238,10 @@ namespace filesystem {
       if (pos == std::string::npos)
         return "";
       return name.substr(pos + 1);
+    }
+
+    path basename() const {
+      return filename();
     }
 
     path filename() const

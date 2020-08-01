@@ -94,7 +94,7 @@ void Driver::queue(const Config& runs, bool as_subprocess)
     switch (exec.Driver()) {
     case EDriver::Undefined:
       std::cerr << "Unable to queue Undefined Executor for " << exec.Name() << "\n";
-      break;
+      continue;
     case EDriver::BGEUnitTestDriver:
       queue_BGEUnitTest(exec, as_subprocess);
       break;
@@ -106,9 +106,8 @@ void Driver::queue(const Config& runs, bool as_subprocess)
       break;
     default:
       std::cerr << "Unsupported Driver type " << exec.Driver() << " please update your biogears libraries \n";
-      break;
+      continue;
     }
-    ++_total_work;
   }
 }
 //-----------------------------------------------------------------------------
@@ -195,6 +194,7 @@ void Driver::queue_BGEUnitTest(Executor exec, bool as_subprocess)
 {
   //TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
+  ++_total_work;
   _pool.queue_work(
     [=]() {
       BioGearsEngineTest* executor;
@@ -215,6 +215,7 @@ void Driver::queue_CDMUnitTest(Executor exec, bool as_subprocess)
 {
   //TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
+  ++_total_work;
   _pool.queue_work(
     [&]() {
       CommonDataModelTest* executor;
@@ -283,6 +284,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
   if (scenario->EngineStateFile().present()) {
     exec.State(scenario->EngineStateFile().get());
     _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+    ++_total_work;
     return;
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->PatientFile().present()) {
     const auto patient_file = scenario->InitialParameters()->PatientFile().get();
@@ -311,17 +313,19 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
           patientEx.Name(patientEx.Name() + "-" + patient_no_extension);
         }
         ///----
-
         _pool.queue_work(std::bind(scenario_launch, std::move(patientEx), true));
+        ++_total_work;
       }
     } else {
       exec.Patient(patient_file);
       _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+      ++_total_work;
     }
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
     exec.Patient("");
     exec.State("");
     _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+    ++_total_work;
   } else {
     std::cout << "Skipping " << exec.Name() << " no patient specified.\n";
     return;

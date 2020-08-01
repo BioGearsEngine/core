@@ -15,16 +15,16 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 //! \file
 //! \brief Case insensitive argument parser based on cmake_handle_arguments
 
-namespace biogears  {
+namespace biogears {
 class Arguments {
 public:
-
-  explicit Arguments( const std::vector<std::string>&, const std::vector<std::string>&, const std::vector<std::string>&);
+  explicit Arguments(const std::vector<std::string>&, const std::vector<std::string>&, const std::vector<std::string>&);
   ~Arguments() = default;
 
   bool parse(int argc, char* argv[]);
@@ -46,16 +46,31 @@ public:
   bool KeywordFound(std::string) const;
   bool MultiWordFound(std::string) const;
 
-  bool empty() const {
-	  return _empty;
+  void set_required_keywords(std::vector<std::string> keys);
+  std::vector<std::string> required_keywords() const;
+
+  void set_required_multiword(std::string key);
+  std::string required_multiword() const;
+
+  bool empty() const
+  {
+    return _empty;
   }
-  std::string print_error() const;
+  std::string error_msg() const;
+  std::string usuage_string() const;
+
 protected:
-  std::map<std::string,OptionValue>    _options;
-  std::map<std::string,KeywordValue>   _keywords;
-  std::map<std::string,MultiwordValue> _multiwords;
+  std::map<std::string, OptionValue> _options;
+  std::map<std::string, KeywordValue> _keywords;
+  std::map<std::string, MultiwordValue> _multiwords;
+
+  std::vector<std::string> _required_keywords;
+  std::string _required_multiword;
+
   bool _empty = true;
+
   std::string _error;
+  std::string _self_name;
 };
 
 }

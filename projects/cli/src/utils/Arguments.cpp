@@ -4,7 +4,9 @@
 #include <cassert>
 #include <iostream>
 
+#include <biogears/filesystem/path.h>
 #include <biogears/string/manipulation.h>
+
 namespace biogears {
 //!
 //! Constructor for Arguments
@@ -19,7 +21,7 @@ Arguments::Arguments(const std::vector<std::string>& options, const std::vector<
     std::transform(key.begin(), key.end(), key.begin(), ::tolower);
     _options[key] = false;
   }
-  
+
   for (auto key : keywords) {
     std::transform(key.begin(), key.end(), key.begin(), ::tolower);
     if (_options.find(key) != _options.end()) {
@@ -60,6 +62,8 @@ bool Arguments::parse(int argc, char* argv[])
   std::vector<std::string> flags;
   const std::string prefix = "--";
 
+  _self_name = biogears::filesystem::path(argv[0]).basename().string();
+
   size_t index = 1;
   if (argc > 1) {
     _empty = false;
@@ -68,20 +72,18 @@ bool Arguments::parse(int argc, char* argv[])
       --argc;
     }
   }
-  for (auto& arg : args )
-  { 
-    if (arg.length() > 2 && arg[0] == '-' && arg[1] == '-')
-    {
-      arg = arg.substr(2); 
+  for (auto& arg : args) {
+    if (arg.length() > 2 && arg[0] == '-' && arg[1] == '-') {
+      arg = arg.substr(2);
     } else if (arg[0] == '-' && arg.size() > 1) {
       auto sub = arg.substr(2);
       arg = arg[1];
-      for (const char ch : sub ) {
-          flags.push_back(std::string(1,ch));
+      for (const char ch : sub) {
+        flags.push_back(std::string(1, ch));
       }
-    } 
+    }
   }
-  args.insert(args.end(), flags.begin(), flags.end() );
+  args.insert(args.end(), flags.begin(), flags.end());
   return parse(args);
 }
 //-----------------------------------------------------------------------------
@@ -98,10 +100,11 @@ bool Arguments::parse(int argc, char* argv[])
 bool Arguments::parse(const std::vector<std::string>& args)
 {
   size_t index = 0;
+  size_t argument_index = 0;
   while (index < args.size()) {
-     _empty = false;
-     std::string arg = trim(args[index]);
-     std::transform(arg.begin(),arg.end(), arg.begin(), ::tolower);
+    _empty = false;
+    std::string arg = trim(args[index]);
+    std::transform(arg.begin(), arg.end(), arg.begin(), ::tolower);
     ++index;
     if (_options.find(arg) != _options.end()) {
       _options[arg] = true;
@@ -112,7 +115,7 @@ bool Arguments::parse(const std::vector<std::string>& args)
         const std::string& value = args[index];
         if (isOption(value) || isKeyword(value) || isMultiWord(value)) {
           _error = "Expected value after " + arg + " but keyword " + value + " was found.\n";
-          std::cerr << _error;
+          //std::cerr << _error;
           return false;
         }
         ++index;
@@ -120,7 +123,7 @@ bool Arguments::parse(const std::vector<std::string>& args)
         continue; // Argument Loop
       } else {
         _error = "Expected value after " + arg + " but no value was given.\n";
-        std::cerr << _error;
+        //std::cerr << _error;
         return false;
       }
     }
@@ -133,8 +136,8 @@ bool Arguments::parse(const std::vector<std::string>& args)
             if (value_found) {
               break; // Inner Argument Loop
             } else {
-               _error = "Expected value after " + arg + " but keyword " + value + " was found.\n";
-              std::cerr << _error;
+              _error = "Expected value after " + arg + " but keyword " + value + " was found.\n";
+              //std::cerr << _error;
               return false;
             }
           } else {
@@ -145,13 +148,45 @@ bool Arguments::parse(const std::vector<std::string>& args)
         }
         continue; // Argument Loop
       } else {
-         _error =  "Expected value after " + arg + " but no value was given.\n";
-        std::cerr << _error;
+        _error = "Expected value after " + arg + " but no value was given.\n";
+        //std::cerr << _error;
         return false;
       }
     }
-    _error = " Unexpected Token " + arg;
+    if (_required_keywords.size() && argument_index < _required_keywords.size()) {
+      assert(_required_keywords[argument_index].empty());
+      _keywords[_required_keywords[argument_index++]] = arg;
+      continue;
+    }
+    if (!_required_multiword.empty()) {
+      _multiwords[_required_multiword].emplace_back(arg);
+      continue;
+    } else {
+      if (!_required_multiword.empty() && _required_keywords.size() == 1) {
+        _error = _required_keywords.front() + " second occurance as " + arg + "is not allowed.\n";
+        //std::cerr << _error;
+        return false;
+      } else {
+        _error = "argument given after final required argument " + _required_keywords.back() + ".\n";
+        //std::cerr << _error;
+        return false;
+      }
+    }
+  }
+
+  if (!_required_multiword.empty() && _multiwords[_required_multiword].empty()) {
+    _error = _required_multiword + " is required.\n";
+    //std::cerr << _error;
     return false;
+  }
+  if (!_required_keywords.empty()) {
+    for (auto& key : _required_keywords) {
+      if (_keywords[key].empty()) {
+        _error = key + " is required.\n";
+        //std::cerr << _error;
+        return false;
+      }
+    }
   }
   return true;
 }
@@ -174,6 +209,31 @@ bool Arguments::isMultiWord(std::string key) const
   return _multiwords.find(key) != _multiwords.end();
 }
 //-----------------------------------------------------------------------------
+void Arguments::set_required_keywords(std::vector<std::string> keys)
+{
+  for (auto& key : keys) {
+    std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+  }
+  _required_keywords = keys;
+}
+//-----------------------------------------------------------------------------
+auto Arguments::required_keywords() const -> std::vector<std::string>
+{
+  assert(!_default_keywords.empty());
+  return _required_keywords;
+}
+//-----------------------------------------------------------------------------
+void Arguments::set_required_multiword(std::string key)
+{
+  std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+  _required_multiword = key;
+}
+//-----------------------------------------------------------------------------
+std::string Arguments::required_multiword() const
+{
+  return _required_multiword;
+}
+//-----------------------------------------------------------------------------
 bool Arguments::exists(const std::string& key) const
 {
   return isOption(key) || isKeyword(key) || isMultiWord(key);
@@ -185,7 +245,7 @@ auto Arguments::Option(std::string key) const -> OptionValue
   assert(_options.find(key) != _options.end());
   try {
     return _options.at(key);
-  } catch (const std::out_of_range& ) {
+  } catch (const std::out_of_range&) {
     return false;
   }
 }
@@ -196,7 +256,7 @@ auto Arguments::Keyword(std::string key) const -> KeywordValue
   assert(_keywords.find(key) != _keywords.end());
   try {
     return _keywords.at(key);
-  } catch (const std::out_of_range& ) {
+  } catch (const std::out_of_range&) {
     return "";
   }
 }
@@ -207,7 +267,7 @@ auto Arguments::MultiWord(std::string key) const -> MultiwordValue
   assert(_multiwords.find(key) != _multiwords.end());
   try {
     return _multiwords.at(key);
-  } catch (const std::out_of_range& ) {
+  } catch (const std::out_of_range&) {
     return {};
   }
 }
@@ -217,24 +277,77 @@ bool Arguments::KeywordFound(std::string key) const
   std::transform(key.begin(), key.end(), key.begin(), ::tolower);
   try {
     return !_keywords.at(key).empty();
-  } catch (const std::out_of_range& ) {
+  } catch (const std::out_of_range&) {
     return false;
   }
-
 }
 //-----------------------------------------------------------------------------
 bool Arguments::MultiWordFound(std::string key) const
 {
   std::transform(key.begin(), key.end(), key.begin(), ::tolower);
-    try {
+  try {
     return !_multiwords.at(key).empty();
-  } catch (const std::out_of_range& ) {
+  } catch (const std::out_of_range&) {
     return false;
   }
 }
 //-----------------------------------------------------------------------------
-std::string  Arguments::print_error() const {
+std::string Arguments::error_msg() const
+{
   return _error;
 }
+//-----------------------------------------------------------------------------
+std::string Arguments::usuage_string() const
+{
+  std::stringstream ss;
+  bool hasFlags = false;
 
+  ss << "Usage " << _self_name << " [";
+  for (auto& option : _options) {
+    if (1 < option.first.size()) {
+      ss << " " << option.first << ",";
+    } else {
+      hasFlags = true;
+    }
+  }
+  ss.seekp(-1, std::ios_base::end);
+  ss << "]\n\t";
+
+  auto count = 0;
+  for (auto& keyword : _keywords) {
+    if (keyword.first.size() == 1) {
+      //I'm assuming your short flags are proceeding your long flags.
+      //In the future we will accept flag names of the form V,VERSION or J,THREADS which will link short flags to full versions
+      continue;
+    } else {
+      ss << "[" << keyword.first << " VAL]" << ((++count % 4 == 0) ? "\n\t" : " ");
+    }
+  }
+  if (count % 4 != 0) {
+    ss.seekp(-1, std::ios_base::end);
+    ss << "\n\t";
+  }
+
+  count = 0;
+  for (auto& multiword : _multiwords) {
+    ss << "[" << multiword.first << " VAL1 [VAL2]...]" << ((++count % 3 == 0) ? "\n\t" : " ");
+  }
+  if (count % 3 != 0) {
+    ss.seekp(-1, std::ios_base::end);
+    ss << "\n";
+  }
+
+  ss << "\n\n";
+  if (hasFlags) {
+    ss << "Flags: \n";
+    for (auto& option : _options) {
+      if (1 == option.first.size()) {
+        ss << "\t-" << option.first << " : Purpose Description Goes Here \n";
+        //TODO  Convert Pairs to Struct which fields for help and usuage message aiders
+      }
+    }
+  }
+  ss << std::endl;
+  return ss.str();
+}
 }

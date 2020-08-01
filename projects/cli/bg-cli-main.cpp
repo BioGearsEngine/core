@@ -63,14 +63,12 @@ int main(int argc, char** argv)
 {
   biogears::Arguments args(
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
-    { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION", "THREADED", "T" } //Options
+    { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION", "THREADED", "T" }, /*Options*/
 #else
-    { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION" } //Options
+    { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION" }, /*Options*/
 #endif
-    ,
-    { "J", "JOBS" } //Keywords
-    ,
-    { "TEST", "CONFIG", "SCENARIO", "VALIDATE", "GENTABLES" } //MultiWords
+    { "J", "JOBS" }, /*Keywords*/
+    { "TEST", "CONFIG", "SCENARIO", "VALIDATE", "GENTABLES" } /*MultiWords*/
   );
 
   bool run_patient_validation = false;
@@ -80,8 +78,8 @@ int main(int argc, char** argv)
 
   unsigned int thread_count = std::thread::hardware_concurrency();
   if (!args.parse(argc, argv) || args.Option("HELP") || args.Option("H") || args.empty()) {
-      std::cerr << args.print_error() << "\n";
-      print_help();
+    std::cerr << args.error_msg() << "\n";
+    print_help();
   }
 
   if (args.Option("VERSION") || args.Option("V")) {

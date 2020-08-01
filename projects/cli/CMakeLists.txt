@@ -88,13 +88,17 @@ target_compile_options(bg-scenario PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRI
 target_include_directories(bg-scenario PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 target_link_libraries(bg-scenario  ${${PREFIX}_LIBS} 
       Biogears::libbiogears
-      Boost::disable_autolinking
-      Boost::dynamic_linking
-      Boost::filesystem
-      Boost::program_options
-      Boost::date_time
       minizip::lib )
 
+if(Boost_FOUND)
+ target_link_libraries(bg-scenario 
+      Boost::disable_autolinking
+      Boost::dynamic_linking
+      Boost::program_options
+      Boost::filesystem
+ )
+ target_compile_definitions(bg-scenario PRIVATE BIOGEARS_SUBPROCESS_SUPPORT)
+endif()
 add_dependencies(bg-cli bg-scenario)
 ####
 message(STATUS "")

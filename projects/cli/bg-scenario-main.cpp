@@ -7,27 +7,27 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+
+#define NOMINMAX
+
 #include <cmath>
 #include <cstdlib>
+#include <sys/stat.h>
 
 #include <iostream>
-
-#include <boost/process.hpp>
-#include <boost/program_options.hpp>
 
 #include "exec/Driver.h"
 #include "utils/Executor.h"
 
 #include <biogears/cdm/patient/SEPatient.h>
-
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/controller/scenario/BioGearsScenario.h>
 #include <biogears/engine/controller/scenario/BioGearsScenarioExec.h>
-
+#include <biogears/filesystem/path.h>
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/string/manipulation.h>
+#include <biogears/version.h>
 
-using namespace boost::process;
 using namespace biogears;
 
 enum class PatientType {
@@ -136,6 +136,14 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   return static_cast<int>(ExecutionErrors::NONE);
 };
 
+std::string basename_(const std::string& p)
+{
+  return filesystem::path(p).basename().string();
+}
+
+#if defined(BIOGEARS_SUBPROCESS_SUPPORT)
+#include <boost/program_options.hpp>
+
 // Boost doesn't offer any obvious way to construct a usage string
 // from an infinite list of positional parameters.  This hack
 // should work in most reasonable cases.
@@ -149,7 +157,7 @@ std::vector<std::string> get_unlimited_positional_args_(const boost::program_opt
   const int MAX = 1000;
   std::string last = p.name_for_position(MAX);
 
-  for (size_t i = 0; true; ++i) {
+  for (int i = 0; true; ++i) {
     std::string cur = p.name_for_position(i);
     if (cur == last) {
       parts.push_back(cur);
@@ -173,7 +181,7 @@ std::string make_usage_string_(const std::string& program_name, const boost::pro
     std::vector<std::string> args = get_unlimited_positional_args_(p);
     parts.insert(parts.end(), args.begin(), args.end());
   } else {
-    for (size_t i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i) {
       parts.push_back(p.name_for_position(i));
     }
   }
@@ -187,12 +195,6 @@ std::string make_usage_string_(const std::string& program_name, const boost::pro
   return oss.str();
 }
 
-std::string basename_(const std::string& p)
-{
-  return boost::filesystem::path(p).stem().string();
-}
-
-#include <boost/program_options.hpp>
 int main(int argc, char* argv[])
 {
   using namespace boost::program_options;
@@ -203,10 +205,19 @@ int main(int argc, char* argv[])
   try {
     // Declare the supported options.
     options_description desc("Allowed options");
-    desc.add_options()("help,h", "produce help message")("name,n", value<std::string>(), "Set Scenario Name")("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")("group,g", value<std::string>(), "Set Name of Scenario Group")("patient,p", value<std::string>(), "Specifcy the Initial Patient File")("state", value<std::string>(), "Specifcy the Initial Patient State File")("results,r", value<std::string>(), "Specifcy the Resoults File")("quiet,q", bool_switch()->default_value(false), "Supress most log messages");
+    desc.add_options()
+        ("help,h", "produce help message")
+        ("name,n", value<std::string>(), "Set Scenario Name")
+        ("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")
+        ("group,g", value<std::string>(), "Set Name of Scenario Group")
+        ("patient,p", value<std::string>(), "Specifcy the Initial Patient File")
+        ("state,s", value<std::string>(), "Specifcy the Initial Patient State File")
+        ("results,r", value<std::string>(), "Specifcy the Results File")
+        ("quiet,q", bool_switch()->default_value(false), "Supress most log messages")
+        ("version,v", bool_switch()->default_value(false), "Print linked libBioGears version");
 
     options_description hidden;
-    hidden.add_options()("scenario", value<std::string>()->required(), "Specifcy the Scenario File");
+    hidden.add_options()("scenario", value<std::string>(), "Specifcy the Scenario File");
     options_description all_options;
     all_options.add(desc);
     all_options.add(hidden);
@@ -220,8 +231,14 @@ int main(int argc, char* argv[])
     store(command_line_parser(argc, argv).options(all_options).positional(p).run(), vm);
     notify(vm);
 
+
     if (vm.count("help") || argc < 2) {
       std::cout << help_message << std::endl;
+      return static_cast<int>(ExecutionErrors::NONE);
+    }
+
+    if (vm["version"].as<bool>()) {
+      std::cout << biogears::project_name() << "-" << biogears::version_string() << std::endl;
       return static_cast<int>(ExecutionErrors::NONE);
     }
 
@@ -262,7 +279,7 @@ int main(int argc, char* argv[])
         patient = biogears::trim(patient, "\"");
       }
       ex.Patient(patient);
-      if (!boost::filesystem::exists(ex.Patient())) {
+      if (!filesystem::exists(ex.Patient())) {
         ex.Patient("patients/" + ex.Patient());
       }
     }
@@ -285,9 +302,12 @@ int main(int argc, char* argv[])
         scenario = biogears::trim(scenario, "\"");
       }
       ex.Scenario(scenario);
-      if (!boost::filesystem::exists(ex.Scenario())) {
+      if (!filesystem::exists(ex.Scenario())) {
         ex.Scenario("Scenarios/" + ex.Scenario());
       }
+    } else {
+      std::cerr << "No scenario file provided.";
+      std::cerr << help_message << std::endl;
     }
 
     if (vm.count("results")) {
@@ -321,10 +341,142 @@ int main(int argc, char* argv[])
     return execute_scenario(ex, log_level);
 
   } catch (boost::program_options::required_option /*e*/) {
-    std::cerr << "\n";
+      std::cerr << "\n";
     //<< e.what() << "\n\n";
     std::cout << help_message << std::endl;
   } catch (std::exception& e) {
     std::cerr << e.what() << std::endl;
   }
 }
+#else
+#include "utils/Arguments.h"
+int main(int argc, char* argv[])
+{
+  auto log_level = log4cpp::Priority::DEBUG;
+  std::string help_message;
+
+  biogears::Arguments args(
+    { "H", "HELP", "V", "VERSION", "Q", "QUIET" }, /*Options*/
+    { "N", "NAME", "D", "DRIVER", "G", "GROUP", "P", "PATIENT", "S", "STATE", "R", "RESULTS", "SCENARIO" }, /*Keywords*/
+    {} /*MultiWords*/
+  );
+  args.set_required_keywords({ "SCENARIO" });
+
+  if (!args.parse(argc, argv) || args.Option("H") || args.Option("HELP") || argc < 2) {
+    if (args.Option("H") || args.Option("HELP")) {
+      std::cerr << args.usuage_string();
+      return static_cast<int>(ExecutionErrors::NONE);
+    }
+    if (args.Option("VERSION") || args.Option("V")) {
+      std::cout << "Using libbiogears-" << biogears::full_version_string() << std::endl;
+      return static_cast<int>(ExecutionErrors::NONE);
+    }
+    std::cerr << args.error_msg();
+    std::cerr << args.usuage_string();
+    return 1;
+  }
+
+  if (args.Option("H") || args.Option("HELP")) {
+    std::cerr << args.usuage_string();
+    return static_cast<int>(ExecutionErrors::NONE);
+  }
+
+  if (args.Option("VERSION") || args.Option("V")) {
+    std::cout << "Using libbiogears-" << biogears::full_version_string() << std::endl;
+    return static_cast<int>(ExecutionErrors::NONE);
+  }
+
+  Executor ex;
+  if (args.KeywordFound("NAME") || args.KeywordFound("N")) {
+    auto name = args.Keyword("name");
+    if (name.front() == '\'' && name.back() == '\'') {
+      name = biogears::trim(name, "'");
+    }
+    if (name.front() == '\"' && name.back() == '\"') {
+      name = biogears::trim(name, "\"");
+    }
+    ex.Name(name);
+  }
+
+  if (args.Keyword("DRIVER") == "BGEUnitTestDriver") {
+    ex.Driver(EDriver::BGEUnitTestDriver);
+  } else if (args.Keyword("driver") == "CDMUnitTestDriver") {
+    ex.Driver(EDriver::CDMUnitTestDriver);
+  } else if (args.Keyword("driver") == "ScenarioTestDriver") {
+    ex.Driver(EDriver::ScenarioTestDriver);
+  } else {
+    ex.Driver(EDriver::ScenarioTestDriver);
+  }
+
+  if (args.Option("quiet")) {
+    log_level = log4cpp::Priority::WARN;
+  }
+
+  if (args.KeywordFound("PATIENT") || args.KeywordFound("P")) {
+    auto patient = args.Keyword("patient");
+    if (patient.front() == '\'' && patient.back() == '\'') {
+      patient = biogears::trim(patient, "'");
+    }
+
+    if (patient.front() == '\"' && patient.back() == '\"') {
+      patient = biogears::trim(patient, "\"");
+    }
+    ex.Patient(patient);
+    if (!filesystem::exists(ex.Patient())) {
+      ex.Patient("patients/" + ex.Patient());
+    }
+  }
+  if (args.KeywordFound("STATE") || args.KeywordFound("S")) {
+    auto state = args.Keyword("state");
+    if (state.front() == '\'' && state.back() == '\'') {
+      state = biogears::trim(state, "'");
+    }
+    if (state.front() == '\"' && state.back() == '\"') {
+      state = biogears::trim(state, "\"");
+    }
+    ex.State(state);
+  }
+  if (args.KeywordFound("SCENARIO")) {
+    auto scenario = args.Keyword("scenario");
+    if (scenario.front() == '\'' && scenario.back() == '\'') {
+      scenario = biogears::trim(scenario, "'");
+    }
+    if (scenario.front() == '\"' && scenario.back() == '\"') {
+      scenario = biogears::trim(scenario, "\"");
+    }
+    ex.Scenario(scenario);
+    if (!filesystem::exists(ex.Scenario())) {
+      ex.Scenario("Scenarios/" + ex.Scenario());
+    }
+  }
+  if (args.KeywordFound("RESULTS") || args.KeywordFound("R")) {
+    auto results = args.Keyword("results");
+    if (results.front() == '\'' && results.back() == '\'') {
+      results = biogears::trim(results, "'");
+    }
+    if (results.front() == '\"' && results.back() == '\"') {
+      results = biogears::trim(results, "\"");
+    }
+    ex.Results(biogears::split(results, ','));
+  } else {
+    std::string trimed_scenario_path(trim(ex.Scenario()));
+    auto split_scenario_path = split(trimed_scenario_path, '/');
+    auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
+
+    ex.Results({ scenario_no_extension });
+  }
+
+  if (args.KeywordFound("GROUP") || args.KeywordFound("G")) {
+    auto group = args.Keyword("group");
+    if (group.front() == '\'' && group.back() == '\'') {
+      group = biogears::trim(group, "'");
+    }
+    if (group.front() == '\"' && group.back() == '\"') {
+      group = biogears::trim(group, "\"");
+    }
+    ex.Group(group);
+  }
+
+  return execute_scenario(ex, log_level);
+}
+#endif
