@@ -73,9 +73,15 @@ bool SEThermalApplication::Load(const CDM::ThermalApplicationData& in)
     //      all ActiveHeating with an AppliedTemperature component. Append would add the ApliedTemperature
     //      and overwrite the previous ActiveHeating with the inbound. While not appending would clear ActiveCooling.
 
+    if (ah) {
     GetActiveHeating().Load(*ah);
+    }
+    if (ac) {
     GetActiveCooling().Load(*ac);
+    }
+    if (at) {
     GetAppliedTemperature().Load(*at);
+    }
   }
   if (in.ActiveHeating().present()) {
     GetActiveHeating().Load(in.ActiveHeating().get());
