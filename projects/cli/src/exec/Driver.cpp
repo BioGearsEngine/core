@@ -70,6 +70,8 @@ namespace biogears {
 Driver::Driver(size_t thread_count)
   : _pool { thread_count }
   , _jobs(thread_count)
+  ,_thread_count(0)
+  ,_process_count(0)
 {
 }
 //-----------------------------------------------------------------------------
@@ -234,6 +236,7 @@ void Driver::queue_CDMUnitTest(Executor exec, bool as_subprocess)
 //-----------------------------------------------------------------------------
 void Driver::queue_Scenario(Executor exec, bool as_subprocess)
 {
+  using namespace std::placeholders;
   enum class PatientType {
     FILE,
     STATE,
@@ -244,12 +247,12 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
   if (as_subprocess) {
-    scenario_launch = std::bind(&Driver::subprocess_execute, this, std::placeholders::_1, std::placeholders::_2);
+    scenario_launch = [&](Executor ex ,bool b ){this->subprocess_execute(ex,b);};
   } else {
-    scenario_launch = std::bind(&Driver::async_execute, this, std::placeholders::_1, std::placeholders::_2);
+    scenario_launch = [&](Executor ex ,bool b ){this->async_execute(ex,b);};
   }
 #else
-  scenario_launch = std::bind(&Driver::async_execute, this, std::placeholders::_1, std::placeholders::_2);
+    scenario_launch = [&](Executor ex ,bool b ){this->async_execute(ex,b);};
 #endif
   std::ifstream ifs { exec.Scenario() };
   if (!ifs.is_open()) {

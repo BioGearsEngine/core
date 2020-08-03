@@ -114,7 +114,7 @@ void Executor::clear_results() { results.clear(); }
 std::ostream& operator<<(std::ostream& ostr, const Executor& executor)
 {
   std::string results;
-  auto& rv = executor.Results();
+  const auto& rv = executor.Results();
   std::for_each(rv.begin(), rv.end(), [&](const std::string& piece) { results += piece + ", "; });
   if (!results.empty()) {
     results.substr(results.size() - 2);

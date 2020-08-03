@@ -46,7 +46,7 @@ protected:
   void queue_CDMUnitTest(Executor, bool as_subprocess = false);
   void queue_Scenario(Executor, bool as_subprocess = false);
   void subprocess_execute(biogears::Executor& ex, bool multi_patient_run);
-  void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run);
+  void async_execute(biogears::Executor& ex, bool multi_patient_run);
 
   std::string process_str();
 
@@ -56,8 +56,8 @@ private:
   Config _globals;
 
   std::chrono::steady_clock::time_point _start_time;
-  std::atomic<int> _thread_count = 0;
-  std::atomic<int> _process_count = 0;
+  std::atomic<int> _thread_count;
+  std::atomic<int> _process_count;
   size_t _total_work;
   size_t _jobs;
 };

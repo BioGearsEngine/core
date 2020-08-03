@@ -21,8 +21,8 @@
 
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/controller/scenario/BioGearsScenario.h>
-#include <biogears/engine/controller/scenario/BioGearsScenarioExec.h>
+#include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
+#include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #include <biogears/filesystem/path.h>
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/string/manipulation.h>
