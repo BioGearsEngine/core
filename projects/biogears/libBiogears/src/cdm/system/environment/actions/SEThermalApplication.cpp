@@ -74,13 +74,13 @@ bool SEThermalApplication::Load(const CDM::ThermalApplicationData& in)
     //      and overwrite the previous ActiveHeating with the inbound. While not appending would clear ActiveCooling.
 
     if (ah) {
-    GetActiveHeating().Load(*ah);
+      GetActiveHeating().Load(*ah);
     }
     if (ac) {
-    GetActiveCooling().Load(*ac);
+      GetActiveCooling().Load(*ac);
     }
     if (at) {
-    GetAppliedTemperature().Load(*at);
+      GetAppliedTemperature().Load(*at);
     }
   }
   if (in.ActiveHeating().present()) {
@@ -178,12 +178,12 @@ void SEThermalApplication::RemoveAppliedTemperature()
   SAFE_DELETE(m_AppliedTemperature);
 }
 //-------------------------------------------------------------------------------
-bool SEThermalApplication::GetAppendToPrevious() const 
+bool SEThermalApplication::GetAppendToPrevious() const
 {
   return m_AppendToPrevious;
 };
 //-------------------------------------------------------------------------------
-void SEThermalApplication::SetAppendToPrevious(bool toAppend) 
+void SEThermalApplication::SetAppendToPrevious(bool toAppend)
 {
   m_AppendToPrevious = toAppend;
 };
