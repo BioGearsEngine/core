@@ -1447,7 +1447,7 @@ void Cardiovascular::CardiacArrest()
 {
   if (m_data.GetActions().GetPatientActions().HasCardiacArrest()) {
     if (m_data.GetActions().GetPatientActions().GetCardiacArrest()->IsActive()) {
-  m_EnterCardiacArrest = true;
+      m_EnterCardiacArrest = true;
     } else {
       m_data.GetActions().GetPatientActions().RemoveCardiacArrest();
       m_patient->SetEvent(CDM::enumPatientEvent::CardiacArrest, false, m_data.GetSimulationTime());
@@ -1455,8 +1455,10 @@ void Cardiovascular::CardiacArrest()
       m_EnterCardiacArrest = false;
       m_StartSystole = true;
       SetHeartRhythm(CDM::enumHeartRhythm::NormalSinus);
-      GetHeartRate().SetValue(75, FrequencyUnit::Per_min);
-      m_CurrentCardiacCycleDuration_s = .86; //Magic Number picked by testing the average value per cycle fr a minute to help dapen HR spikes.
+      GetHeartRate().SetValue(m_patient->GetHeartRateBaseline().GetValue(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
+      m_CurrentCardiacCycleDuration_s = 1. / m_patient->GetHeartRateBaseline().GetValue(FrequencyUnit::Per_s);;
+      m_CardiacCyclePeriod_s = .0;
+      
     }
   }
 }
@@ -1650,7 +1652,7 @@ void Cardiovascular::BeginCardiacCycle()
 
   BLIM(HeartDriverFrequency_Per_Min, m_data.GetPatient().GetHeartRateMinimum(FrequencyUnit::Per_min), m_data.GetPatient().GetHeartRateMaximum(FrequencyUnit::Per_min));
   m_OverrideHR_Conformant_Per_min = HeartDriverFrequency_Per_Min;
-  m_OverrideHR_Conformant_Per_min = HeartDriverFrequency_Per_Min;
+
   //Apply heart failure effects
   m_LeftHeartElastanceMax_mmHg_Per_mL *= m_LeftHeartElastanceModifier;
 
