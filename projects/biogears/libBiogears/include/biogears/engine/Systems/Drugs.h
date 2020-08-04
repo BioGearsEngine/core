@@ -79,6 +79,7 @@ protected:
   void AdministerSubstanceBolus();
   void AdministerSubstanceInfusion();
   void AdministerSubstanceCompoundInfusion();
+  void AdministerSubstanceNasal();
   void AdministerSubstanceOral();
 
   void CalculatePartitionCoefficients();
