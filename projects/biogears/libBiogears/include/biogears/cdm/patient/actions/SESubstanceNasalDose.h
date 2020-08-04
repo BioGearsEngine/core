@@ -43,6 +43,8 @@ public:
 
   virtual void ToString(std::ostream& str) const;
 
+  virtual SEScalarTime& m_time();
+
 protected:
   SEScalarMass* m_Dose;
   const SESubstance& m_Substance;
