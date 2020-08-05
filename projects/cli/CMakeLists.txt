@@ -7,8 +7,8 @@ cmake_policy(SET CMP0087 NEW)
 ###############################################################################
 # Options
 ###############################################################################
-option(${ROOT_PROJECT_NAME}_BUILD_PLAYSCHOOL "Toggle building of playschool tools" ON)
-if(${ROOT_PROJECT_NAME}_BUILD_PLAYSCHOOL)
+option(${ROOT_PROJECT_NAME}_BUILD_TOOLS "Toggle building of biogears command line tools" ON)
+if(${ROOT_PROJECT_NAME}_BUILD_TOOLS)
 
 ###############################################################################
 # Requirments
