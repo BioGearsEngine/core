@@ -48,19 +48,18 @@ The BioGears source is structured as follows:
 - `projects/`
   - `biogears` - Main Engine Source for building libbiogears libbiogears-cdm
   - `biogears-common` - Helper framework for c++ with no third party dependeincies
-  - `cmd_bio`  - Primary Command Line Utility for using BioGears 
+  - `bg-cli` - Primary Command Line Utility for using BioGears 
   - `howto/` - libbiogears SDK examples
   - `java/`  - JNI utilities for running biogears
   - `unit/`  - Unit test harness used for testing libbiogears components
-  - `zip/`   - Self hosted copy of https://github.com/nmoinvaz/minizip. A cmd_bio third part dep
+  - `zip/`   - Self hosted copy of https://github.com/nmoinvaz/minizip. A bg-cli third part dep
   
 biogears
 biogears-common
 circuit_profiler
-cmd_bio
+bg-cli
 howto
 java
-scenario_driver
 test_driver
 unit
 zip
@@ -118,7 +117,7 @@ zip
   - Handles Albumin transport and re-circulation 
   - Creates realistic oncotic pressure sources for substance transport 
   - Transport from tissue systems back into the vasculature via lymph 
-- New command line utility project (cmd_bio) for native c++ runtime, driver, batch run organizer/manager
+- New command line utility project (bg-cli) for native c++ runtime, driver, batch run organizer/manager
 - Optional name value for xml actions meal and environment
 - New burn model 
   - User defined total body surface area input 
