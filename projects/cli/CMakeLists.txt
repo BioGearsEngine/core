@@ -50,6 +50,7 @@ set_target_properties(bg-cli
 
 find_package(Boost)
 if(Boost_FOUND)
+set(Boost_USE_STATIC_LIBS FALSE)
    find_package(Boost COMPONENTS system date_time filesystem program_options REQUIRED)
    target_compile_definitions(bg-cli PRIVATE BIOGEARS_SUBPROCESS_SUPPORT)
 endif()
