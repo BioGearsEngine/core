@@ -48,25 +48,13 @@ set_target_properties(bg-cli
   )
 
 
-find_package(Boost)
-if(Boost_FOUND)
-set(Boost_USE_STATIC_LIBS FALSE)
-   find_package(Boost COMPONENTS system date_time filesystem program_options REQUIRED)
-   target_compile_definitions(bg-cli PRIVATE BIOGEARS_SUBPROCESS_SUPPORT)
-endif()
-
-
 target_compile_options(bg-cli PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
 target_include_directories(bg-cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+
 target_link_libraries(bg-cli  ${${PREFIX}_LIBS}      
       Biogears::libbiogears
-      Boost::disable_autolinking
-      Boost::dynamic_linking
-      Boost::filesystem
-      Boost::date_time
-      Boost::program_options
       minizip::lib
-      )
+)
 
 ###################
 #  SCENARIO DRONE #
@@ -91,16 +79,35 @@ target_link_libraries(bg-scenario  ${${PREFIX}_LIBS}
       Biogears::libbiogears
       minizip::lib )
 
+add_dependencies(bg-cli bg-scenario)
+
+
+##########################
+# Optional Boost Support #
+##########################
+
+find_package(Boost 1.73.0)
 if(Boost_FOUND)
- target_link_libraries(bg-scenario 
+   set(Boost_USE_STATIC_LIBS FALSE)
+   find_package(Boost 1.73.0 COMPONENTS system date_time filesystem program_options REQUIRED)
+
+   target_compile_definitions(bg-cli PRIVATE BIOGEARS_SUBPROCESS_SUPPORT)
+   target_link_libraries(bg-cli
+      Boost::disable_autolinking
+      Boost::dynamic_linking
+      Boost::filesystem
+      Boost::date_time
+      Boost::program_options
+   )
+
+   target_compile_definitions(bg-scenario PRIVATE BIOGEARS_SUBPROCESS_SUPPORT)
+   target_link_libraries(bg-scenario 
       Boost::disable_autolinking
       Boost::dynamic_linking
       Boost::program_options
       Boost::filesystem
- )
- target_compile_definitions(bg-scenario PRIVATE BIOGEARS_SUBPROCESS_SUPPORT)
+   )
 endif()
-add_dependencies(bg-cli bg-scenario)
 ####
 message(STATUS "")
 endif()
