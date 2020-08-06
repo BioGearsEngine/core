@@ -254,11 +254,13 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
 #else
     scenario_launch = [&](Executor ex ,bool b ){this->async_execute(ex,b);};
 #endif
+  std::cout << exec.Scenario() << std::endl;
   std::ifstream ifs { exec.Scenario() };
   if (!ifs.is_open()) {
+    std::cout << "Scenarios/" + exec.Scenario() << std::endl;
     ifs.open("Scenarios/" + exec.Scenario());
     if (!ifs.is_open()) {
-      std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " terminating\n";
+      std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
       return;
     }
   }
