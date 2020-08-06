@@ -58,9 +58,9 @@ endif()
 
 set(CONFIG_SUFFIX ${CMAKE_${CONFIG}_POSTFIX})
 foreach(_dir IN LISTS CMAKE_PREFIX_PATH)
-    list(APPEND THIRD_PARTY  ${_dir})
-    list(APPEND THIRD_PARTY_LIB ${_dir}/lib)
-    list(APPEND THIRD_PARTY_BIN ${_dir}/bin)
+    list(APPEND THIRD_PARTY  "${_dir}")
+    list(APPEND THIRD_PARTY_LIB "${_dir}/lib")
+    list(APPEND THIRD_PARTY_BIN "${_dir}/bin")
 endforeach()
 
 
@@ -69,6 +69,6 @@ EXELIST(projects ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
 foreach( project IN LISTS projects)
 	fixup_bundle(${project}
                   ""
-                 "'${THIRD_PARTY_LIB}';'${THIRD_PARTY_BIN}'"
+                 "${THIRD_PARTY_LIB};${THIRD_PARTY_BIN}"
 	  )
 endforeach()
