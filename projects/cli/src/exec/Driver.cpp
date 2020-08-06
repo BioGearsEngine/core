@@ -15,10 +15,13 @@
 #include <functional>
 #include <iostream>
 #include <system_error>
+#include <iomanip>
+#include <mutex>
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
 #include <boost/asio.hpp>
 #include <boost/process.hpp>
+#include <boost/date_time.hpp>
 #endif
 
 #include "../utils/Executor.h"
@@ -39,11 +42,25 @@
 #include <biogears/schema/cdm/Scenario.hxx>
 #include <biogears/string/manipulation.h>
 #include <xsd/cxx/tree/exceptions.hxx>
-
 #include "../utils/Config.h"
 #include "../utils/Executor.h"
 
+
+
+
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
+inline std::string fmt_localtime()
+{
+  using namespace boost::posix_time;
+  static std::locale loc(std::cout.getloc(),
+                         new time_facet("%H:%M"));
+
+  
+  std::stringstream ss;
+  ss.imbue(loc);
+  ss << boost::posix_time::second_clock::local_time();;
+  return ss.str();
+}
 
 auto cout_loop(boost::process::async_pipe& p, boost::asio::mutable_buffer buf) -> void
 {
@@ -54,9 +71,9 @@ auto cout_loop(boost::process::async_pipe& p, boost::asio::mutable_buffer buf) -
   });
 }
 
-#endif
 
-#if defined(BIOGEARS_SUBPROCESS_SUPPORT)
+
+
 void cerr_loop(boost::process::async_pipe& p, boost::asio::mutable_buffer buf)
 {
   p.async_read_some(buf, [&p, buf](std::error_code ec, size_t n) {
@@ -71,11 +88,11 @@ namespace biogears {
 Driver::Driver(char* exe_name, size_t thread_count)
   : _pool { thread_count }
   , _jobs(thread_count)
-  ,_thread_count(0)
-  ,_process_count(0)
-  ,_total_work(0)
+  , _thread_count(0)
+  , _process_count(0)
+  , _total_work(0)
 {
-  biogears::filesystem::path p{exe_name};
+  biogears::filesystem::path p { exe_name };
   _relative_path = p.parent_path().string();
 }
 //-----------------------------------------------------------------------------
@@ -150,7 +167,7 @@ void Driver::stop_when_empty()
 
     process_s = process_str();
     if (duration < std::chrono::hours(1)) {
-      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, minutes.count(), duration.count() % 60) << std::flush; 
+      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, minutes.count(), duration.count() % 60) << std::flush;
       std::cout << std::flush;
     } else {
       std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dh%dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, hours.count(), minutes.count() % 60, duration.count() % 60) << std::flush;
@@ -194,8 +211,7 @@ void Driver::join()
     std::cout << asprintf("\rProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K", count, _total_work, minutes.count(), duration.count() % 60) << std::flush;
   } else {
     std::cout << asprintf("\rProgress %d/%d; Elapsed Time  %dh%dm%ds\u001b[0K", count, _total_work, hours.count(), minutes.count() % 60, duration.count() % 60) << std::flush;
-  }  
-
+  }
 }
 //-----------------------------------------------------------------------------
 void Driver::queue_BGEUnitTest(Executor exec, bool as_subprocess)
@@ -253,12 +269,12 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
   if (as_subprocess) {
-    scenario_launch = [&](Executor ex ,bool b ){this->subprocess_execute(ex,b);};
+    scenario_launch = [&](Executor ex, bool b) { this->subprocess_execute(ex, b); };
   } else {
-    scenario_launch = [&](Executor ex ,bool b ){this->async_execute(ex,b);};
+    scenario_launch = [&](Executor ex, bool b) { this->async_execute(ex, b); };
   }
 #else
-    scenario_launch = [&](Executor ex ,bool b ){this->async_execute(ex,b);};
+  scenario_launch = [&](Executor ex, bool b) { this->async_execute(ex, b); };
 #endif
   std::ifstream ifs { exec.Scenario() };
   if (!ifs.is_open()) {
@@ -345,18 +361,8 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
 void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
 {
   using namespace biogears;
-  Logger console_logger;
-
   _process_count += 1;
 
-  try {
-    console_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] %m%n");
-    console_logger.FormatMessages(false);
-  } catch (std::exception e) {
-    std::cout << e.what();
-    _process_count -= 1;
-    return;
-  }
   try {
     using namespace boost::process;
 
@@ -451,9 +457,10 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
     char out_buffer[128];
     char err_buffer[128];
 
-    console_logger.Info("Starting " + ex.Name());
-    child c; 
-    if ( boost::filesystem::exists(_relative_path) ){
+
+    std::cout << asprintf("[%s] Starting %s\n", fmt_localtime(), ex.Name().c_str()) << std::flush;
+    child c;
+    if (boost::filesystem::exists(_relative_path)) {
       c = child(_relative_path + "/bg-scenario " + options, std_out > out_stream, std_err > err_stream);
     } else {
       c = child("bg-scenario " + options, std_out > out_stream, std_err > err_stream);
@@ -467,35 +474,35 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
     auto code = c.exit_code();
     switch (code) {
     case ExecutionErrors::NONE:
-      console_logger.Info("Completed " + ex.Name());
+      std::cout << asprintf("[%s] Completed %s\n", fmt_localtime(), ex.Name().c_str()) << std::flush;
       break;
     case ExecutionErrors::ARGUMENT_ERROR:
-      console_logger.Info(biogears::asprintf("Error[%d]: %s failed with arguments %s", code, ex.Name().c_str(), options.c_str()));
+      std::cerr << asprintf("[%s] Error-%d: %s failed with arguments %s\n", fmt_localtime(), code, ex.Name().c_str(), options.c_str()) << std::flush;
       break;
     case ExecutionErrors::SCENARIO_IO_ERROR:
-      console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", code, ex.Name().c_str(), ex.Scenario().c_str()));
+      std::cerr << asprintf("[%s] Error-%d: %s failed to find the specified scenario file %s\n", fmt_localtime(), code, ex.Name().c_str(), ex.Scenario().c_str()) << std::flush;
       break;
     case ExecutionErrors::SCENARIO_PARSE_ERROR:
-      console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", code, ex.Name().c_str(), ex.Scenario().c_str()));
+      std::cerr << asprintf("[%s] Error-%d: %s failed parse the specified scenario file %s\n", fmt_localtime(), code, ex.Name().c_str(), ex.Scenario().c_str()) << std::flush;
       break;
     case ExecutionErrors::PATIENT_IO_ERROR:
-      console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified patient file %s", code, ex.Name().c_str(), ex.Patient().c_str()));
+      std::cerr << asprintf("[%s] Error-%d: %s failed to find the specified patient file %s\n", fmt_localtime(), code, ex.Name().c_str(), ex.Patient().c_str()) << std::flush;
       break;
     case ExecutionErrors::PATIENT_PARSE_ERROR:
-      console_logger.Info(biogears::asprintf("Error[%d]: %s failed to parse the specified patient file %s", code, ex.Name().c_str(), ex.Patient().c_str()));
+      std::cerr << asprintf("[%s] Error-%d: %s failed to parse the specified patient file %s\n", fmt_localtime(), code, ex.Name().c_str(), ex.Patient().c_str()) << std::flush;
       break;
     case ExecutionErrors::BIOGEARS_RUNTIME_ERROR:
-      console_logger.Info(biogears::asprintf("Error[%d]: %s failed mid simulation see log for more details.", code, ex.Name().c_str()));
+      std::cout << asprintf("[%s] Error-%d: %s failed mid simulation see log for more details.\n", fmt_localtime(), code, ex.Name().c_str()) << std::flush;
       break;
     default:
-      console_logger.Info(ex.Name() + " failed see log for details.\n");
+      std::cerr << asprintf("[%s] %s failed see log for details.\n", fmt_localtime(), ex.Name().c_str()) << std::flush;
       break;
     }
     _process_count -= 1;
     return;
 
   } catch (...) {
-    console_logger.Error("Failed " + ex.Name() + "\n");
+    std::cerr << asprintf("[%s] Failed %s\n" , fmt_localtime(), ex.Name().c_str()) << std::flush;
     _process_count -= 1;
     return;
   }
