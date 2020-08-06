@@ -49,7 +49,7 @@
 
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
-inline std::string fmt_localtime()
+inline std::string  fmt_localtime()
 {
   using namespace boost::posix_time;
   static std::locale loc(std::cout.getloc(),
@@ -458,7 +458,7 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
     char err_buffer[128];
 
 
-    std::cout << asprintf("[%s] Starting %s\n", fmt_localtime(), ex.Name().c_str()) << std::flush;
+    std::cout << asprintf("[%s] Starting %s\n", fmt_localtime().c_str(), ex.Name().c_str()) << std::flush;
     child c;
     if (boost::filesystem::exists(_relative_path)) {
       c = child(_relative_path + "/bg-scenario " + options, std_out > out_stream, std_err > err_stream);
@@ -474,35 +474,35 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
     auto code = c.exit_code();
     switch (code) {
     case ExecutionErrors::NONE:
-      std::cout << asprintf("[%s] Completed %s\n", fmt_localtime(), ex.Name().c_str()) << std::flush;
+      std::cout << asprintf("[%s] Completed %s\n", fmt_localtime().c_str(), ex.Name().c_str()) << std::flush;
       break;
     case ExecutionErrors::ARGUMENT_ERROR:
-      std::cerr << asprintf("[%s] Error-%d: %s failed with arguments %s\n", fmt_localtime(), code, ex.Name().c_str(), options.c_str()) << std::flush;
+      std::cerr << asprintf("[%s] Error-%d: %s failed with arguments %s\n", fmt_localtime().c_str(), code, ex.Name().c_str(), options.c_str()) << std::flush;
       break;
     case ExecutionErrors::SCENARIO_IO_ERROR:
-      std::cerr << asprintf("[%s] Error-%d: %s failed to find the specified scenario file %s\n", fmt_localtime(), code, ex.Name().c_str(), ex.Scenario().c_str()) << std::flush;
+      std::cerr << asprintf("[%s] Error-%d: %s failed to find the specified scenario file %s\n", fmt_localtime().c_str(), code, ex.Name().c_str(), ex.Scenario().c_str()) << std::flush;
       break;
     case ExecutionErrors::SCENARIO_PARSE_ERROR:
-      std::cerr << asprintf("[%s] Error-%d: %s failed parse the specified scenario file %s\n", fmt_localtime(), code, ex.Name().c_str(), ex.Scenario().c_str()) << std::flush;
+      std::cerr << asprintf("[%s] Error-%d: %s failed parse the specified scenario file %s\n", fmt_localtime().c_str(), code, ex.Name().c_str(), ex.Scenario().c_str()) << std::flush;
       break;
     case ExecutionErrors::PATIENT_IO_ERROR:
       std::cerr << asprintf("[%s] Error-%d: %s failed to find the specified patient file %s\n", fmt_localtime(), code, ex.Name().c_str(), ex.Patient().c_str()) << std::flush;
       break;
     case ExecutionErrors::PATIENT_PARSE_ERROR:
-      std::cerr << asprintf("[%s] Error-%d: %s failed to parse the specified patient file %s\n", fmt_localtime(), code, ex.Name().c_str(), ex.Patient().c_str()) << std::flush;
+      std::cerr << asprintf("[%s] Error-%d: %s failed to parse the specified patient file %s\n", fmt_localtime().c_str(), code, ex.Name().c_str(), ex.Patient().c_str()) << std::flush;
       break;
     case ExecutionErrors::BIOGEARS_RUNTIME_ERROR:
-      std::cout << asprintf("[%s] Error-%d: %s failed mid simulation see log for more details.\n", fmt_localtime(), code, ex.Name().c_str()) << std::flush;
+      std::cout << asprintf("[%s] Error-%d: %s failed mid simulation see log for more details.\n", fmt_localtime().c_str(), code, ex.Name().c_str()) << std::flush;
       break;
     default:
-      std::cerr << asprintf("[%s] %s failed see log for details.\n", fmt_localtime(), ex.Name().c_str()) << std::flush;
+      std::cerr << asprintf("[%s] %s failed see log for details.\n", fmt_localtime().c_str(), ex.Name().c_str()) << std::flush;
       break;
     }
     _process_count -= 1;
     return;
 
   } catch (...) {
-    std::cerr << asprintf("[%s] Failed %s\n" , fmt_localtime(), ex.Name().c_str()) << std::flush;
+    std::cerr << asprintf("[%s] Failed %s\n" , fmt_localtime().c_str(), ex.Name().c_str()) << std::flush;
     _process_count -= 1;
     return;
   }
