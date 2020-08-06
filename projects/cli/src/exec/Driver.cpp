@@ -73,6 +73,7 @@ Driver::Driver(char* exe_name, size_t thread_count)
   , _jobs(thread_count)
   ,_thread_count(0)
   ,_process_count(0)
+  ,_total_work(0)
 {
   biogears::filesystem::path p{exe_name};
   _relative_path = p.parent_path().string();
@@ -149,9 +150,10 @@ void Driver::stop_when_empty()
 
     process_s = process_str();
     if (duration < std::chrono::hours(1)) {
-      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, minutes.count(), duration.count() % 60);
+      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, minutes.count(), duration.count() % 60) << std::flush; 
+      std::cout << std::flush;
     } else {
-      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dh%dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, hours.count(), minutes.count() % 60, duration.count() % 60);
+      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dh%dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, hours.count(), minutes.count() % 60, duration.count() % 60) << std::flush;
     }
   }
 }
@@ -175,9 +177,9 @@ void Driver::join()
 
     process_s = process_str();
     if (duration < std::chrono::hours(1)) {
-      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, minutes.count(), duration.count() % 60);
+      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, minutes.count(), duration.count() % 60) << std::flush;
     } else {
-      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dh%dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, hours.count(), minutes.count() % 60, duration.count() % 60);
+      std::cout << asprintf("\r%sProgress %d/%d; Elapsed Time  %dh%dm%ds\u001b[0K\r", process_s.c_str(), count, _total_work, hours.count(), minutes.count() % 60, duration.count() % 60) << std::flush;
     }
   }
   if (_join_thread.joinable()) {
@@ -189,17 +191,17 @@ void Driver::join()
   minutes = std::chrono::duration_cast<std::chrono::minutes>(duration);
 
   if (duration < std::chrono::hours(1)) {
-    std::cout << asprintf("\rProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K", count, _total_work, minutes.count(), duration.count() % 60);
+    std::cout << asprintf("\rProgress %d/%d; Elapsed Time  %dm%ds\u001b[0K", count, _total_work, minutes.count(), duration.count() % 60) << std::flush;
   } else {
-    std::cout << asprintf("\rProgress %d/%d; Elapsed Time  %dh%dm%ds\u001b[0K", count, _total_work, hours.count(), minutes.count() % 60, duration.count() % 60);
-  }
+    std::cout << asprintf("\rProgress %d/%d; Elapsed Time  %dh%dm%ds\u001b[0K", count, _total_work, hours.count(), minutes.count() % 60, duration.count() % 60) << std::flush;
+  }  
+
 }
 //-----------------------------------------------------------------------------
 void Driver::queue_BGEUnitTest(Executor exec, bool as_subprocess)
 {
   //TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
-  ++_total_work;
   _pool.queue_work(
     [=]() {
       BioGearsEngineTest* executor;
@@ -213,6 +215,7 @@ void Driver::queue_BGEUnitTest(Executor exec, bool as_subprocess)
       delete executor;
       return 0;
     });
+  ++_total_work;
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -220,7 +223,6 @@ void Driver::queue_CDMUnitTest(Executor exec, bool as_subprocess)
 {
   //TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
-  ++_total_work;
   _pool.queue_work(
     [&]() {
       CommonDataModelTest* executor;
@@ -234,6 +236,7 @@ void Driver::queue_CDMUnitTest(Executor exec, bool as_subprocess)
       delete executor;
       return 0;
     });
+  ++_total_work;
 #endif
 }
 //-----------------------------------------------------------------------------
