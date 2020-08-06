@@ -12,6 +12,7 @@ from ActionEventPlotter import ActionEventPlotter
 import os
 import argparse
 import logging
+import concurrent.futures
 logging.basicConfig(level = logging.INFO)
 
 class PlotDriver():
@@ -33,7 +34,7 @@ class PlotDriver():
         if len(args)<3:
             logging.error("No files specified")
             return
-        elif len(args)==3:
+        elif len(args)>3:
             if args[2].split(".")[1]!="config":
                 logging.error("Value " + args[2] + " doesn't seem to be a valid config file")
                 return
@@ -41,7 +42,9 @@ class PlotDriver():
                 logging.error("ConfigFile " + args[2] + " not found")
                 return
             me.processConfigFile(args[2],args[1])
-        me.execute()
+        with concurrent.futures.ProcessPoolExecutor(max_workers=int(args[3])) as executor:
+            executor.map(me.execute,range(len(me.jobs)))
+
 
     class PlotJob():
         def __init__(self):
@@ -292,32 +295,33 @@ class PlotDriver():
         except Exception as e:
             logging.error("Ouch Something went wrong")
 
-    def execute(self):
-        for job in self.jobs:
-            if not job.ignore:
-                try:
-                    if self.jobname==job.name:
-                        job.logger=False
-                    else:
-                        job.logger=True
-                    if job.plotname=="ActionEvent":
-                        job.plotter.plot(job)
-                    self.jobname=job.name
-                except Exception as e:
-                    logging.error("Plotter couldn't plot job " + job.name + ". Check your config file line.")
-                    continue 
+    def execute(self,idx):
+        job=self.jobs[idx]
+        if not job.ignore:
+            try:
+                if self.jobname==job.name:
+                    job.logger=False
+                else:
+                    job.logger=True
+                if job.plotname=="ActionEvent":
+                    job.plotter.plot(job)
+                self.jobname=job.name
+            except Exception as e:
+                logging.error("Plotter couldn't plot job " + job.name + ". Check your config file line.") 
         job.Reset()
 
 if __name__ == '__main__':
     import sys
+    print(sys.argv[0])
     parser = argparse.ArgumentParser(description='Creation of Plots')
     parser.add_argument('-p','--configpath',help='Path to Config file',required=True)
     parser.add_argument('-b','--baseline',help='Baseline Dir path',required=True)
+    parser.add_argument('-j','--threads',help='No. of Threads')
     args=parser.parse_args()
     if args.configpath==None and args.baseline==None:
         parser.print_help()
         sys.exit(0)
     else:
-        argv=["PlotDriver.py",args.baseline,args.configpath]
+        argv=[sys.argv[0],args.baseline,args.configpath,args.threads]
         PlotDriver.main(argv)
 

@@ -269,16 +269,12 @@ if __name__=="__main__":
         if not os.path.exists(destDir):
             os.mkdir(destDir)
         fout=open(os.path.join(destDir,"xsd.ixx"),'w',encoding="utf-8")
-        fout.write("/**")
-        fout.write("\n")
-        fout.write("* @defgroup CDM CDM")
-        fout.write("\n")
-        fout.write("* @{")
-        fout.write("\n\n\n")
+        fout.write("/** \n"
+                   "* @defgroup CDM CDM \n"
+                   "* @{ \n\n\n")
         XSD.process_sc(fout)
-        fout.write("\n")
-        fout.write("*}")
-        fout.write("\n")
-        fout.write("*/")
+        fout.write("\n" 
+                   "*} \n"
+                   "*/")
         fout.close()
 

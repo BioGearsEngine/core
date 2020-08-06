@@ -39,11 +39,10 @@ find_program(VIRTUALENV virtualenv)
 if(NOT VIRTUALENV)
     message(FATAL_ERROR "Could not find `virtualenv` in PATH")
 endif()
-set(VIRTUALENV ${VIRTUALENV} -p ${Python3_EXECUTABLE})
 
 add_custom_command(
     OUTPUT venv
-    COMMAND ${VIRTUALENV} venv
+    COMMAND ${VIRTUALENV} -p ${Python3_EXECUTABLE} venv
     )
 
 add_custom_command(
@@ -85,8 +84,8 @@ if(Biogears_Python_BUILD_WEBSITE)
 	COMMAND ${Python3_EXECUTABLE}  ${DoxygenPreprocessor_SOURCE} -p doc/markdown -f doc/doxygen/processed_md #cdm
         COMMAND ${Python3_EXECUTABLE}  ${DoxygenPreprocessor_SOURCE}  -p doc/methodology -f doc/doxygen/processed_md #cdm
         COMMAND ${Python3_EXECUTABLE}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm 
-	#COMMAND ${Python3_EXECUTABLE}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-1_2.config
-	#COMMAND ${Python3_EXECUTABLE}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-2_2.config
+	COMMAND ${Python3_EXECUTABLE}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-1_2.config -j 20
+	COMMAND ${Python3_EXECUTABLE}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-2_2.config -j 20
 	WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
 	COMMENT "Running docs-prepare"
 	VERBATIM

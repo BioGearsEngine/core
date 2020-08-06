@@ -19,7 +19,9 @@ import logging
 import matplotlib.pyplot as plt
 from matplotlib.ticker import LinearLocator,MaxNLocator
 from matplotlib.offsetbox import TextArea, VPacker, AnnotationBbox,HPacker,PackerBase,PaddedBox
+import matplotlib
 
+matplotlib.use('Agg')
 logging.basicConfig(level = logging.INFO)
 logging = logging.getLogger("ActionEventPlotter")
 
