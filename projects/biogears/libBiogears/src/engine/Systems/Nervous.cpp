@@ -918,7 +918,7 @@ void Nervous::ChemoreceptorFeedback()
   const double dFrequencyPeripheral_Per_min = (-m_PeripheralFrequencyDelta_Per_min + gain_p_F * peripheralInput) / tau_p_F * m_dt_s;
   const double dPressurePeripheral_cmH2O = (-m_PeripheralPressureDelta_cmH2O + gain_p_P * peripheralInput) / tau_p_P * m_dt_s;
 
-  m_AfferentChemoreceptor_Hz += dFiringRate_Hz * m_dt_s;
+  m_AfferentChemoreceptor_Hz += dFiringRate_Hz;
   m_AfferentChemoreceptor_Hz = std::max(0.0, m_AfferentChemoreceptor_Hz);
   m_AfferentChemoreceptor_Hz = std::min(m_AfferentChemoreceptor_Hz, firingRateMax_Hz);
   m_CentralFrequencyDelta_Per_min += dFrequencyCentral_Per_min;
