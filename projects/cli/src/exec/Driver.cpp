@@ -35,6 +35,7 @@
 #include <biogears/engine/test/BioGearsEngineTest.h>
 #endif
 
+#include <biogears/filesystem/path.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 #include <biogears/string/manipulation.h>
 #include <xsd/cxx/tree/exceptions.hxx>
@@ -67,12 +68,14 @@ void cerr_loop(boost::process::async_pipe& p, boost::asio::mutable_buffer buf)
 #endif
 
 namespace biogears {
-Driver::Driver(size_t thread_count)
+Driver::Driver(char* exe_name, size_t thread_count)
   : _pool { thread_count }
   , _jobs(thread_count)
   ,_thread_count(0)
   ,_process_count(0)
 {
+  biogears::filesystem::path p{exe_name};
+  _relative_path = p.parent_path().string();
 }
 //-----------------------------------------------------------------------------
 Driver::~Driver()
@@ -254,10 +257,8 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
 #else
     scenario_launch = [&](Executor ex ,bool b ){this->async_execute(ex,b);};
 #endif
-  std::cout << exec.Scenario() << std::endl;
   std::ifstream ifs { exec.Scenario() };
   if (!ifs.is_open()) {
-    std::cout << "Scenarios/" + exec.Scenario() << std::endl;
     ifs.open("Scenarios/" + exec.Scenario());
     if (!ifs.is_open()) {
       std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
@@ -447,12 +448,14 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
     char out_buffer[128];
     char err_buffer[128];
 
-    //child c("bg-scenario " + options, (std_out & std_err) > out_stream, svc);
-    //std::cout << "..\\outputs\\RelWithDebInfo\\bin\\bg-scenario " + options << std::endl;
-
     console_logger.Info("Starting " + ex.Name());
-
-    child c("bg-scenario " + options, std_out > out_stream, std_err > err_stream);
+    child c; 
+    if ( boost::filesystem::exists(_relative_path) ){
+      std::cout << _relative_path << std::endl;
+      c = child(_relative_path + "/bg-scenario " + options, std_out > out_stream, std_err > err_stream);
+    } else {
+      c = child("bg-scenario " + options, std_out > out_stream, std_err > err_stream);
+    }
 
     std::function<void(void)> test = [&]() { test(); };
     cout_loop(out_stream, buffer(out_buffer));

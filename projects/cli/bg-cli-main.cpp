@@ -104,7 +104,7 @@ int main(int argc, char** argv)
     }
   }
 
-  biogears::Driver driver { thread_count };
+  biogears::Driver driver { argv[0], thread_count };
 
   const biogears::Config conf { "Email.config", true };
   driver.configure(conf);

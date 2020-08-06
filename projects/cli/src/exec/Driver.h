@@ -27,7 +27,7 @@ class Config;
 
 class Driver : biogears::Runnable {
 public:
-  Driver(size_t thread_count);
+  Driver(char* exe_name, size_t thread_count);
   Driver(const Driver&) = delete;
   Driver(Driver&&) = default;
   ~Driver() override;
@@ -55,6 +55,7 @@ private:
   std::thread _join_thread;
   Config _globals;
 
+  std::string _relative_path;
   std::chrono::steady_clock::time_point _start_time;
   std::atomic<int> _thread_count;
   std::atomic<int> _process_count;
