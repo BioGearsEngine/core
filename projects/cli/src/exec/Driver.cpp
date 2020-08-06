@@ -454,13 +454,11 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
     console_logger.Info("Starting " + ex.Name());
     child c; 
     if ( boost::filesystem::exists(_relative_path) ){
-      std::cout << _relative_path << std::endl;
       c = child(_relative_path + "/bg-scenario " + options, std_out > out_stream, std_err > err_stream);
     } else {
       c = child("bg-scenario " + options, std_out > out_stream, std_err > err_stream);
     }
 
-    std::function<void(void)> test = [&]() { test(); };
     cout_loop(out_stream, buffer(out_buffer));
     cerr_loop(err_stream, buffer(err_buffer));
 
