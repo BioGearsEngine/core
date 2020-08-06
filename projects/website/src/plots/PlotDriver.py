@@ -16,6 +16,16 @@ import concurrent.futures
 logging.basicConfig(level = logging.INFO)
 
 class PlotDriver():
+    """
+    PlotDriver
+    ___________________
+
+    Driver function which is used for parsing the whole commands from config file
+    and then after parsing the commands extracting each and every parameter from
+    each of the command and then associating to the object of this class named as 
+    job.
+    """
+
     def __init__(self):
         self.name = None
         self.jobs = list()
@@ -29,6 +39,15 @@ class PlotDriver():
 
     @classmethod
     def main(cls,args):
+        """
+        main
+        _______
+
+        Function that is executed first from extracting of arguments and then 
+        calling the particular class from the appropriate file on the basis of
+        plotname
+        """
+
         me=PlotDriver()
         # invalid input
         if len(args)<3:
@@ -110,6 +129,14 @@ class PlotDriver():
             self.Y2headers = None
 
     def processConfigFile(self, configFile,basedir):
+        """
+        processConfigFile
+        __________________________
+
+        Config file is processed in this function and all of the commands are
+        extracted and associated with the particular object which can be used
+        later for plotting
+        """
         self.name = configFile.split(".")[0]
         currentGroup = self.name
         try:
@@ -117,20 +144,26 @@ class PlotDriver():
                 for line in fin:
                     if len(line)==0 or line.startswith("#"):
                         continue 
+                    
                     if line.startswith("@group"):
                         currentGroup = line.partition("@group")[2].strip()
+                    
                     if len(currentGroup)==0:
                         currentGroup = self.name
                         continue
+                    
                     if not "=" in line:
                         continue 
+                    
                     line = line.strip()
                     key = line.split("=")[0]
                     value = line.split("=",1)[1].strip()
+                    
                     if key.lower() == "Plotter".lower():
                         continue
                     #print(value)
                     job = self.PlotJob()
+                    
                     if key[0] == '-':
                         job.ignore = True
                         key = key[1:]
@@ -140,6 +173,7 @@ class PlotDriver():
                     for directive in directives:
                         if not "=" in directive:
                             job.basedir=basedir
+                            
                             if directive.lower() == "ActionEventPlotter".lower():
                                 job.plotname="ActionEvent"
                                 job.plotter=ActionEventPlotter()
@@ -181,6 +215,7 @@ class PlotDriver():
                                 job.legendOnly = True
                                 continue 
                         else:
+                            
                             key_1 = directive.split("=")[0].strip()
                             value_1 = directive.split("=")[1].strip()
                             if key_1.lower() == "Header".lower():
@@ -296,6 +331,13 @@ class PlotDriver():
             logging.error("Ouch Something went wrong")
 
     def execute(self,idx):
+        """
+        Execute
+        __________________
+        This function is used for calling the appropriate file class
+        with job as an argument which is used for plotting
+        """
+
         job=self.jobs[idx]
         if not job.ignore:
             try:
@@ -312,7 +354,6 @@ class PlotDriver():
 
 if __name__ == '__main__':
     import sys
-    print(sys.argv[0])
     parser = argparse.ArgumentParser(description='Creation of Plots')
     parser.add_argument('-p','--configpath',help='Path to Config file',required=True)
     parser.add_argument('-b','--baseline',help='Baseline Dir path',required=True)
@@ -324,4 +365,3 @@ if __name__ == '__main__':
     else:
         argv=[sys.argv[0],args.baseline,args.configpath,args.threads]
         PlotDriver.main(argv)
-
