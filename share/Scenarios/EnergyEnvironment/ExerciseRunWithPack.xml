@@ -108,7 +108,7 @@
 	<Action xsi:type="ExerciseData">
         <RunningExercise>
 			<Speed value="0.75" unit ="m/s"/>
-			<Incline value="0.1"/>
+			<Incline value="10.0"/>
 			<AddedWeight value="20" unit="kg"/>
 		</RunningExercise>
     </Action>
@@ -118,7 +118,7 @@
 	<Action xsi:type="ExerciseData">
         <RunningExercise>
 			<Speed value="1.11" unit ="m/s"/>
-			<Incline value="0.12"/>
+			<Incline value="12.0"/>
 			<AddedWeight value="20" unit="kg"/>
 		</RunningExercise>
     </Action>
@@ -128,7 +128,7 @@
 	<Action xsi:type="ExerciseData">
         <RunningExercise>
 			<Speed value="1.53" unit ="m/s"/>
-			<Incline value="0.14"/>
+			<Incline value="14.0"/>
 			<AddedWeight value="20" unit="kg"/>
 		</RunningExercise>
     </Action>
@@ -138,7 +138,7 @@
 	<Action xsi:type="ExerciseData">
         <RunningExercise>
 			<Speed value="1.89" unit ="m/s"/>
-			<Incline value="0.16"/>
+			<Incline value="16.0"/>
 			<AddedWeight value="20" unit="kg"/>
 		</RunningExercise>
     </Action>

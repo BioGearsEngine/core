@@ -269,6 +269,7 @@ void Energy::Exercise()
       speedRun_m_Per_s = runningEx.SpeedRun.GetValue(LengthPerTimeUnit::m_Per_s);
       const double speedRun_mph = speedRun_m_Per_s * 2.23694;
       inclineRun_percent = runningEx.InclineRun.GetValue();
+      double inclineRun_fraction = inclineRun_percent / 100.0;
       addedWeight_kg = runningEx.AddedWeight.GetValue(MassUnit::kg);
       // Convert into intensity value
       const double C0 = 0.0;
@@ -277,7 +278,7 @@ void Energy::Exercise()
       const double C3 = -0.0019;
       const double C4 = -49;
       const double C5 = 1.16;
-      exerciseIntensity = C0 + (C1 * speedRun_mph) + (C2 * inclineRun_percent) + (C3 * std::pow(speedRun_mph, 2.0)) + (C4 * std::pow(inclineRun_percent, 2.0)) + (C5 * speedRun_mph * inclineRun_percent);
+      exerciseIntensity = C0 + (C1 * speedRun_mph) + (C2 * inclineRun_fraction) + (C3 * std::pow(speedRun_mph, 2.0)) + (C4 * std::pow(inclineRun_fraction, 2.0)) + (C5 * speedRun_mph * inclineRun_fraction);
       if (speedRun_m_Per_s > 0.0) {
         BLIM(exerciseIntensity, 0.1, 1.0);
       } else {
