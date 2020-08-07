@@ -279,7 +279,7 @@ class ActionEventPlotter():
             f = lambda m,c: plt.plot([],[],marker=m, color=c, ls="none")[0]
             handles = [f("_", colors[i]) for i in range(0,len(self.data))]
             labels = [i.replace("\t","    ") for i in self.data]
-            legend = plt.legend(handles, labels, loc=3, framealpha=1, frameon=False,fontsize=10)
+            legend = plt.legend(handles, labels, loc=3, ncol=3, framealpha=1, frameon=False, fontsize=12)
             plt.axis('off')
             def export_legend(legend, filename=os.path.join(job.outputDir,job.outputFilename), expand=[-50,-50,50,50]):
                 fig  = legend.figure
