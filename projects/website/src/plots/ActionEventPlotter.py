@@ -279,7 +279,7 @@ class ActionEventPlotter():
             f = lambda m,c: plt.plot([],[],marker=m, color=c, ls="none")[0]
             handles = [f("_", colors[i]) for i in range(0,len(self.data))]
             labels = [i.replace("\t","    ") for i in self.data]
-            legend = plt.legend(handles, labels, loc=3, framealpha=1, frameon=False,fontsize=16)
+            legend = plt.legend(handles, labels, loc=3, framealpha=1, frameon=False,fontsize=10)
             plt.axis('off')
             def export_legend(legend, filename=os.path.join(job.outputDir,job.outputFilename), expand=[-50,-50,50,50]):
                 fig  = legend.figure
@@ -333,8 +333,8 @@ class ActionEventPlotter():
                 plt.savefig(os.path.join(job.outputDir,job.outputFilename),dpi=my_dpi)
                 plt.close("all")
             else:
-                ax.get_yaxis().set_major_locator(MaxNLocator(nbins=18,min_n_ticks=8))
-                ax.get_xaxis().set_major_locator(MaxNLocator(nbins=20,min_n_ticks=10))
+                ax.get_yaxis().set_major_locator(MaxNLocator(nbins=10,min_n_ticks=8))
+                ax.get_xaxis().set_major_locator(MaxNLocator(nbins=15,min_n_ticks=10))
                 ax.yaxis.set_major_formatter(tick.FuncFormatter(self.y_fmt))
                 ax.yaxis.set_ticks_position("both")
                 ax.yaxis.set_tick_params(labelright=True)
