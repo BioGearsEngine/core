@@ -270,6 +270,10 @@ void Energy::Exercise()
       const double speedRun_mph = speedRun_m_Per_s * 2.23694;
       inclineRun_percent = runningEx.InclineRun.GetValue();
       double inclineRun_fraction = inclineRun_percent / 100.0;
+      if (inclineRun_fraction > 1.0) {
+        Warning("Incline set to greater than 100%. Modifying to a value of 100%.");
+        inclineRun_fraction = 1.0;
+      }
       addedWeight_kg = runningEx.AddedWeight.GetValue(MassUnit::kg);
       // Convert into intensity value
       const double C0 = 0.0;
