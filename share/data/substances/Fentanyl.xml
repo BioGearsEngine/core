@@ -62,7 +62,7 @@
     </NeuromuscularBlock>
     <PainModifier>
       <EMax readOnly="false" value="0.5"/>
-      <EC50 readOnly="false" unit="ug/L" value="0.5"/>
+      <EC50 readOnly="false" unit="ug/L" value="0.4"/>
     </PainModifier>
     <PupilReactivityModifier>
       <EMax readOnly="false" value="-0.5"/>
