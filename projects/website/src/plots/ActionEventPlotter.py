@@ -36,13 +36,13 @@ class ActionEventPlotter():
         """
         
         if job.dataPath == None :
-            job.dataPath = "Scenarios/" + job.verificationDirectory + "/baselines/"
+            job.dataPath = os.path.join("Scenarios",job.verificationDirectory,"baselines")
         
         if job.logPath == None:
-            job.logPath = "Scenarios/" + job.verificationDirectory + "/baselines/"
+            job.logPath = os.path.join("Scenarios",job.verificationDirectory,"baselines")
         
         if job.scenarioPath == None:
-            job.scenarioPath = "Scenarios/" + job.verificationDirectory + "/"
+            job.scenarioPath = os.path.join("Scenarios",job.verificationDirectory)
             
         if job.dataFile == None:
             job.dataFile=job.name+"Results.csv"
@@ -73,14 +73,13 @@ class ActionEventPlotter():
             job.dataFile = job.name + "Results.zip"
             
         if not os.path.isfile(os.path.join(job.dataPath,job.dataFile)):
-            job.dataPath = os.path.join(job.basedir,job.dataPath)
-            
+            job.dataPath = os.path.join(job.basedir,job.dataPath) 
         if not job.skipAllEvents:
             self.events = self.getEventsFromLog(os.path.join(job.logPath, job.logFile),job)
-            
+
         if not job.skipAllActions:
             self.actions = self.getActionsFromLog(os.path.join(job.logPath,job.logFile),job)
-            
+
         if len(self.events)>0 and len(self.actions)>0:
             for i in self.events:
                 self.timeData.append(i["time"])
@@ -88,17 +87,17 @@ class ActionEventPlotter():
             for i in self.actions:
                 self.timeData.append(i["time"])
                 self.data.append("Actions:"+i["text"])
-        
+
         elif len(self.events)>0 and not len(self.actions)>0:
             for i in self.events:
                 self.timeData.append(i["time"])
                 self.data.append("Event:"+i["text"])
-        
+
         elif not len(self.events)>0 and len(self.actions)>0:
             for i in self.actions:
                 self.timeData.append(i["time"])
                 self.data.append("Actions:"+i["text"])
-        
+
         if not os.path.exists(os.path.dirname(job.outputDir)):
             os.mkdir(os.path.dirname(job.outputDir))
         
@@ -151,14 +150,14 @@ class ActionEventPlotter():
                 elif flag==1 and not line.startswith("\t"):
                     txt=txt.replace("\t","\n\t",1)
                     Action["text"]=txt
-                    if job.logger==True and job.verb<2:
+                    if job.logger==True and job.log<2:
                         logging.info("Adding Action:" + Action["text"])
                     actions.append(Action)
                     txt=""
                     flag=0
             fin.close()
         except IOError as e:
-            logging.warning("ActionEventPlotter couldn't read the log file " + file_)
+            logging.error("ActionEventPlotter couldn't read the log file " + file_)
         except NumberFormatException as e:
             logging.error("Couldn't correctly parse log file time to double")
         except Exception as e:
@@ -198,12 +197,12 @@ class ActionEventPlotter():
                         endTimeIndex = eventText.find(",")
                     event["time"] = float(eventText[0:endTimeIndex].strip())
                     event["text"] = eventText[eventText.find(",") + 1:].strip()
-                    if job.logger==True and job.verb<2:
+                    if job.logger==True and job.log<2:
                         logging.info("Adding Event:" + event["text"])
                     events.append(event)
             fin.close()
         except IOError as e:
-            logging.warning("ActionEventPlotter couldn't read the log file " + file_)
+            logging.error("ActionEventPlotter couldn't read the log file " + file_)
         except NumberFormatException as e:
             logging.error("Couldn't correctly parse log file time to double")
         except Exception as e:

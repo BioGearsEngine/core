@@ -345,7 +345,7 @@ class PlotDriver():
                 else:
                     job.logger=True
                 if job.plotname=="ActionEvent":
-                    job.verb=verb
+                    job.log=log
                     job.plotter.plot(job)
                 self.jobname=job.name
             except Exception as e:
@@ -360,8 +360,8 @@ if __name__ == '__main__':
     parser.add_argument('-j','--threads',help='No. of Threads')
     parser.add_argument('-v', help="Adjust the log verbosity.", dest='verbosity', default=0, action='count' )
     args=parser.parse_args()
-    global verb
-    verb=args.verbosity
+    global log
+    log=args.verbosity
     if args.configpath==None and args.baseline==None:
         parser.print_help()
         sys.exit(0)
