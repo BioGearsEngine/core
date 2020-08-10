@@ -397,18 +397,19 @@ void Drugs::AdministerSubstanceInfusion()
 //-------------------------------------------------------------------------------------------------
 void Drugs::AdministerSubstanceNasal()
 {
+  SESubstance* naloxone = m_data.GetSubstances().GetSubstance("Naloxone");
   const double nasaltime = m_data.GetSimulationTime().GetValue(TimeUnit::s); 
 
   //Rate constants
   const double nasalk1 = ;  //translocation rate constant of unreleased substance from the anterior to the posterior section
-  const double nasalk2 = ;  // rate constant of release from drug carrier in anterior section
+  const double nasalk2 = 1000000;  // rate constant of release from drug carrier in anterior section
   const double nasalk3 = ;  // translocation rate constant of released substance from the anterior to the posterior section
   const double nasalk4 = ;  // absorption rate constant in anterior section
   const double nasalk5 = ;  // translocation rate constant of unreleased substance from the posterior to the gastrointestinal section
-  const double nasalk6 = ;  // rate constant of release from drug carrier in posterior section
+  const double nasalk6 = 1000000;  // rate constant of release from drug carrier in posterior section
   const double nasalk7 = ; // translocation rate constant of released substance from the posterior to the gastrointestinal section
   const double nasalk8 = ;  // absorption rate constant in posterior section
-  const double nasalk9 = ;  // rate constant of release from drug carrier in gastrointestinal section
+  const double nasalk9 = 1000000;  // rate constant of release from drug carrier in gastrointestinal section
   const double nasalk10 = ;  // absorption rate constant in gastrointestinal section
   const double nasalk11 = ;  // rate constant of released drug degradation in anterior section
   const double nasalk12 = ;  // rate constant of released drug degradation in posterior section
@@ -417,9 +418,9 @@ void Drugs::AdministerSubstanceNasal()
   const double nasalk15 = ;  // transit rate constant of released drug through gastrointestinal section
   
   //Initial Drug Distribution
-  const double nasalA0 = ; // initial amount of unreleased drug in anterior section
+  const double nasalA0 = 0; // initial amount of unreleased drug in anterior section **0 for naloxone
   const double nasala0 = ; // initial amount of released drug in anterior section
-  const double nasalP0 = ; // initial amount of unreleased drug in posterior section
+  const double nasalP0 = 0; // initial amount of unreleased drug in posterior section **0 for naloxone
   const double nasalp0 = ; // initial amount of released drug in posterior section
   const double nasalG0 = 0; // initial amount of unreleased drug in gastrointestinal section
   const double nasalg0 = 0; // initial amount of released drug in gastrointestinal section
@@ -465,10 +466,12 @@ void Drugs::AdministerSubstanceNasal()
   const double nasalR = nasalk4 * nasala + nasalk8 * nasalp + nasalk10 * nasalg; 
   
   //Drug Dose
-  const double nasalD0 = ;
+  const double nasalD0 = 4; //mg
 
   //Systemic bioavailability of the intact drug
   const double nasalBA = (nasalk4 * (nasalC5 / (nasala1 + nasalC6 / nasalo1)) + nasalk8 * (nasalC7 / nasala1 + nasalC8 / nasalb1 + nasalC9 / nasalo1 + nasalc2 / nasalw1) + nasalk10 * (nasalC10 / nasala1 + nasalC11 / nasalb1 + nasalC12 / nasaly1 + nasalC13 / nasalo1 + nasalC14 / nasalw1 + nasalc3 / nasale1)) / nasalD0;
+
+  m_venaCavaVascular->GetSubstanceQuantity(*naloxone)->GetMass().IncrementValue(nasalR* m_dt_s, MassUnit::ug);
 
 }
   //-------------------------------------------------------------------------------------------------
