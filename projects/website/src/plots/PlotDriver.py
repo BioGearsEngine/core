@@ -337,7 +337,6 @@ class PlotDriver():
         This function is used for calling the appropriate file class
         with job as an argument which is used for plotting
         """
-
         job=self.jobs[idx]
         if not job.ignore:
             try:
@@ -346,6 +345,7 @@ class PlotDriver():
                 else:
                     job.logger=True
                 if job.plotname=="ActionEvent":
+                    job.verb=verb
                     job.plotter.plot(job)
                 self.jobname=job.name
             except Exception as e:
@@ -358,7 +358,10 @@ if __name__ == '__main__':
     parser.add_argument('-p','--configpath',help='Path to Config file',required=True)
     parser.add_argument('-b','--baseline',help='Baseline Dir path',required=True)
     parser.add_argument('-j','--threads',help='No. of Threads')
+    parser.add_argument('-v', help="Adjust the log verbosity.", dest='verbosity', default=0, action='count' )
     args=parser.parse_args()
+    global verb
+    verb=args.verbosity
     if args.configpath==None and args.baseline==None:
         parser.print_help()
         sys.exit(0)
