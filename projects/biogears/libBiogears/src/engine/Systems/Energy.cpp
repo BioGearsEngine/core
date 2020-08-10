@@ -234,7 +234,7 @@ void Energy::Exercise()
   double cadenceCycle_Per_Min;
   double powerCycle_W;
   double speedRun_m_Per_s;
-  double inclineRun_percent;
+  double inclineRun_0to1;
   double weightStrength_kg;
   double repetitionsStrength_number;
   double addedWeight_kg = 0.0;
@@ -268,12 +268,7 @@ void Energy::Exercise()
       SEExercise::SERunning runningEx = exercise->GetRunningExercise();
       speedRun_m_Per_s = runningEx.SpeedRun.GetValue(LengthPerTimeUnit::m_Per_s);
       const double speedRun_mph = speedRun_m_Per_s * 2.23694;
-      inclineRun_percent = runningEx.InclineRun.GetValue();
-      double inclineRun_fraction = inclineRun_percent / 100.0;
-      if (inclineRun_fraction > 1.0) {
-        Warning("Incline set to greater than 100%. Modifying to a value of 100%.");
-        inclineRun_fraction = 1.0;
-      }
+      inclineRun_0to1 = runningEx.InclineRun.GetValue();
       addedWeight_kg = runningEx.AddedWeight.GetValue(MassUnit::kg);
       // Convert into intensity value
       const double C0 = 0.0;
@@ -282,7 +277,7 @@ void Energy::Exercise()
       const double C3 = -0.0019;
       const double C4 = -49;
       const double C5 = 1.16;
-      exerciseIntensity = C0 + (C1 * speedRun_mph) + (C2 * inclineRun_fraction) + (C3 * std::pow(speedRun_mph, 2.0)) + (C4 * std::pow(inclineRun_fraction, 2.0)) + (C5 * speedRun_mph * inclineRun_fraction);
+      exerciseIntensity = C0 + (C1 * speedRun_mph) + (C2 * inclineRun_0to1) + (C3 * std::pow(speedRun_mph, 2.0)) + (C4 * std::pow(inclineRun_0to1, 2.0)) + (C5 * speedRun_mph * inclineRun_0to1);
       if (speedRun_m_Per_s > 0.0) {
         BLIM(exerciseIntensity, 0.1, 1.0);
       } else {

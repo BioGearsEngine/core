@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
@@ -43,7 +42,7 @@ public:
   };
   struct SERunning {
     SEScalarLengthPerTime SpeedRun;
-    SEScalarFraction InclineRun;
+    SEScalar0To1 InclineRun;
     SEScalarMass AddedWeight;
   };
   struct SEStrengthTraining {

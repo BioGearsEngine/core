@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
@@ -198,7 +197,7 @@ std::unique_ptr<CDM::ExerciseData::CyclingExercise_type::Power_type>()
       std::unique_ptr<CDM::ExerciseData::RunningExercise_type::Speed_type>(),
       std::unique_ptr<CDM::ExerciseData::RunningExercise_type::Incline_type>()));
     data.RunningExercise()->Speed(std::unique_ptr<CDM::ScalarLengthPerTimeData>(m_runningExercise.SpeedRun.Unload()));
-    data.RunningExercise()->Incline(std::unique_ptr<CDM::ScalarFractionData>(m_runningExercise.InclineRun.Unload()));
+    data.RunningExercise()->Incline(std::unique_ptr<CDM::Scalar0To1Data>(m_runningExercise.InclineRun.Unload()));
     if (m_runningExercise.AddedWeight.IsValid()) {
       data.RunningExercise()->AddedWeight(std::unique_ptr<CDM::ScalarMassData>(m_runningExercise.AddedWeight.Unload()));
     }

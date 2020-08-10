@@ -276,7 +276,7 @@ specific language governing permissions and limitations under the License.
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
 					<xs:element name="Speed" type="ScalarLengthPerTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief Speed -->
-					<xs:element name="Incline" type="ScalarFractionData" minOccurs="1" maxOccurs="1"/><!--<< @brief fractional repreentation of incline percentage -->
+					<xs:element name="Incline" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief fractional repreentation of incline percentage -->
 					<xs:element name="AddedWeight" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief weighted pack capability -->
 				</xs:sequence>               
 			</xs:extension>
