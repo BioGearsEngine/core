@@ -107,6 +107,10 @@ class ActionEventPlotter():
         if job.dataFile.endswith(".csv"):
             job.dataPath="."
         
+        if job.log>=2:
+            logging.info("Name of Plot" +job.name)
+            logging.info("Input File: "+ os.path.join(job.dataPath,job.dataFile))
+            logging.info("Output File: "+ os.path.join(job.outputDir,job.outputFilename))
         self.drawgraph(self.events,self.actions,job,os.path.join(job.dataPath,job.dataFile),os.path.join(job.outputDir,job.outputFilename))
         
     def getActionsFromLog(self,file_,job):
@@ -150,7 +154,7 @@ class ActionEventPlotter():
                 elif flag==1 and not line.startswith("\t"):
                     txt=txt.replace("\t","\n\t",1)
                     Action["text"]=txt
-                    if job.logger==True and job.log<2:
+                    if job.logger==True and job.log>2:
                         logging.info("Adding Action:" + Action["text"])
                     actions.append(Action)
                     txt=""
@@ -197,7 +201,7 @@ class ActionEventPlotter():
                         endTimeIndex = eventText.find(",")
                     event["time"] = float(eventText[0:endTimeIndex].strip())
                     event["text"] = eventText[eventText.find(",") + 1:].strip()
-                    if job.logger==True and job.log<2:
+                    if job.logger==True and job.log>2:
                         logging.info("Adding Event:" + event["text"])
                     events.append(event)
             fin.close()
@@ -232,20 +236,24 @@ class ActionEventPlotter():
         col=["red","yellow","green","blue","orange","lime","magenta","violet","black","purple","0.1","0.2","0.75","0.8","0.9","pink"]
         
         if input_zip.endswith(".csv"):
-            df = pd.read_csv(input_zip)
+            df = pd.read_csv(input_zip,low_memory=False)
             try:
-                self.plotting(events,actions,job,input_zip,output_file,df,my_dpi,col)    
-            except:
+                self.plotting(events,actions,job,input_zip,output_file,df,my_dpi,col)
+            except IOError:
+                logging.error("File Not found at:"+input_zip)
+            except Exception:
                 logging.error("File Not found at:"+input_zip)
         elif input_zip.endswith(".zip"):
             zf=zipfile.ZipFile(input_zip)
             for i in zf.filelist:
                 if i.filename.endswith(".csv"):
-                    df = pd.read_csv(zf.open(i.filename))
+                    df = pd.read_csv(zf.open(i.filename),low_memory=False)
                     try:
                         self.plotting(events,actions,job,input_zip,output_file,df,my_dpi,col)
-                    except:
+                    except IOError:
                         logging.error("File Not found at:"+input_zip)
+                    except Exception:
+                        logging.error("Something went wrong with:"+input_zip)
 
     def plotting(self,events,actions,job,input_zip,output_file,df,my_dpi,col):
         """
@@ -294,7 +302,8 @@ class ActionEventPlotter():
                 fig.savefig(filename, dpi="figure", bbox_inches=bbox,pad_inches=0)
             
             export_legend(legend)
-            logging.info("Creating Graph:"+job.outputFilename.split(".")[0])
+            if job.log>0:
+                logging.info("Creating Graph:"+job.outputFilename.split(".")[0])
             plt.close("all")
 
         else:
@@ -314,12 +323,15 @@ class ActionEventPlotter():
                 
                 if job.titleOverride==None:
                     plt.title(job.headers[0]+"_vs_Time_Action_Event_Plot",fontsize=job.fontSize)
-                    logging.info("Creating Graph:"+job.headers[0]+"_vs_Time_Action_Event_Plot")
+                    if job.log>0:
+                        logging.info("Creating Graph:"+job.headers[0]+"_vs_Time_Action_Event_Plot")
                 elif job.titleOverride=="None":
-                    logging.info("Creating Graph:"+job.outputFilename.split(".")[0])
+                    if job.log>0:
+                        logging.info("Creating Graph:"+job.outputFilename.split(".")[0])
                 else:
                     plt.title(job.titleOverride,fontsize=job.fontSize)
-                    logging.info("Creating Graph:"+job.titleOverride)
+                    if job.log>0:
+                        logging.info("Creating Graph:"+job.titleOverride)
                 plt.xlim(0,max(X))
                 p=plt.plot(X,y)
                 for i in range(0,len(self.timeData)):
@@ -347,11 +359,14 @@ class ActionEventPlotter():
                 
                 if job.titleOverride==None:
                     plt.title(job.headers[0]+"_vs_Time_Action_Event_Plot",fontsize=job.fontSize)
-                    logging.info("Creating Graph:"+job.headers[0]+"_vs_Time_Action_Event_Plot")
+                    if job.log>0:
+                        logging.info("Creating Graph:"+job.headers[0]+"_vs_Time_Action_Event_Plot")
                 elif job.titleOverride=="None":
-                    logging.info("Creating Graph:"+job.outputFilename.split(".")[0])
+                    if job.log>0:
+                        logging.info("Creating Graph:"+job.outputFilename.split(".")[0])
                 else:
-                    logging.info("Creating Graph:"+job.titleOverride)
+                    if job.log>0:
+                        logging.info("Creating Graph:"+job.titleOverride)
                     plt.title(job.titleOverride,fontsize=job.fontSize)
                 plt.xlim(0,max(X))
                 p=plt.plot(X,y)

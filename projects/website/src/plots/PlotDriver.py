@@ -36,6 +36,7 @@ class PlotDriver():
         self.abbreviateContents = 0
         self.isScenario = False
         self.jobname=""
+        self.verbosity=None
 
     @classmethod
     def main(cls,args):
@@ -61,6 +62,7 @@ class PlotDriver():
                 logging.error("ConfigFile " + args[2] + " not found")
                 return
             me.processConfigFile(args[2],args[1])
+        me.verbosity=args[4]
         with concurrent.futures.ProcessPoolExecutor(max_workers=int(args[3])) as executor:
             executor.map(me.execute,range(len(me.jobs)))
 
@@ -115,6 +117,7 @@ class PlotDriver():
             self.Y2LowerBound = None
             self.Y1UpperBound = None
             self.Y2UpperBound = None
+            self.log=None
             self.X2Label = None
             self.Y2Label = None
             self.PFTFile = None
@@ -339,17 +342,14 @@ class PlotDriver():
         """
         job=self.jobs[idx]
         if not job.ignore:
-            try:
-                if self.jobname==job.name:
-                    job.logger=False
-                else:
-                    job.logger=True
-                if job.plotname=="ActionEvent":
-                    job.log=log
-                    job.plotter.plot(job)
-                self.jobname=job.name
-            except Exception as e:
-                logging.error("Plotter couldn't plot job " + job.name + ". Check your config file line.") 
+            if self.jobname==job.name:
+                job.logger=False
+            else:
+                job.logger=True
+            if job.plotname=="ActionEvent":
+                job.log=self.verbosity
+                job.plotter.plot(job)
+            self.jobname=job.name 
         job.Reset()
 
 if __name__ == '__main__':
@@ -360,11 +360,9 @@ if __name__ == '__main__':
     parser.add_argument('-j','--threads',help='No. of Threads')
     parser.add_argument('-v', help="Adjust the log verbosity.", dest='verbosity', default=0, action='count' )
     args=parser.parse_args()
-    global log
-    log=args.verbosity
     if args.configpath==None and args.baseline==None:
         parser.print_help()
         sys.exit(0)
     else:
-        argv=[sys.argv[0],args.baseline,args.configpath,args.threads]
+        argv=[sys.argv[0],args.baseline,args.configpath,args.threads,args.verbosity]
         PlotDriver.main(argv)
