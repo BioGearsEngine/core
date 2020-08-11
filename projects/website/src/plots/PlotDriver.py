@@ -12,6 +12,7 @@ from ActionEventPlotter import ActionEventPlotter
 import os
 import argparse
 import logging
+import signal
 import concurrent.futures
 logging.basicConfig(level = logging.INFO)
 
@@ -36,8 +37,10 @@ class PlotDriver():
         self.abbreviateContents = 0
         self.isScenario = False
         self.jobname=""
+        self.quit=False
         self.verbosity=None
-
+        self.counter=0
+        
     @classmethod
     def main(cls,args):
         """
@@ -63,10 +66,21 @@ class PlotDriver():
                 return
             me.processConfigFile(args[2],args[1])
         me.verbosity=args[4]
-        with concurrent.futures.ProcessPoolExecutor(max_workers=int(args[3])) as executor:
-            executor.map(me.execute,range(len(me.jobs)))
-
-
+        try:
+            with concurrent.futures.ProcessPoolExecutor(max_workers=int(args[3])) as executor:
+                executor.map(me.execute,range(len(me.jobs)))
+        except KeyboardInterrupt:
+            signal.signal(signal.SIGINT,me.signal_handler)
+            me.quit=True
+            signal.pause()
+    
+    def signal_handler(self,sig, frame):
+        if self.counter==0:
+            print(' \n Terminating the Program .....')
+        self.counter+=1
+        self.quit=True
+        sys.exit(0)        
+    
     class PlotJob():
         def __init__(self):
             self.name = None
@@ -348,7 +362,14 @@ class PlotDriver():
                 job.logger=True
             if job.plotname=="ActionEvent":
                 job.log=self.verbosity
-                job.plotter.plot(job)
+                try:
+                    if self.quit==False:
+                        job.plotter.plot(job)
+                except KeyboardInterrupt:
+                    self.quit=True
+                    signal.signal(signal.SIGINT,self.signal_handler)
+                    signal.pause()
+                    
             self.jobname=job.name 
         job.Reset()
 

@@ -126,47 +126,47 @@ class ActionEventPlotter():
         actions = []
         flag=0
         txt=""
-        try:
-            if file_.endswith(".zip"):
+
+        if file_.endswith(".zip"):
+            try:
                 zf = zipfile.ZipFile(file_,'r')
                 for i in zf.filelist:
                     if i.filename.endswith(".log"):
                         fin = zf.open(i.filename,'r')
                         break
                         #  We expect results zips to only contain 1 text file
-            for line in fin:
-                line=line.decode("utf-8")
-                if len(line)==0:
-                    continue
-                if "[Action]" in line.split():
-                    Action = {}
-                    ActionText =line.split("[Action]",1)[1].strip()
-                    ActionTimeIndex = ActionText.find("(s)")
-                    if ActionTimeIndex == -1:
-                        ActionTimeIndex = ActionText.find(",")
+            except IOError as e:
+                logging.error("ActionEventPlotter couldn't read the log file " + file_)
+
+        for line in fin:
+            line=line.decode("utf-8")
+            if len(line)==0:
+                continue
+            if "[Action]" in line.split():
+                Action = {}
+                ActionText =line.split("[Action]",1)[1].strip()
+                ActionTimeIndex = ActionText.find("(s)")
+                if ActionTimeIndex == -1:
+                    ActionTimeIndex = ActionText.find(",")
+                try:
                     Action["time"] = float(ActionText[0:ActionTimeIndex].strip())
-                    Action["text"] = ActionText[ActionText.find(",") + 1:].strip()
-                    flag=1
-                    txt+=ActionText[ActionText.find(",") + 1:].strip()
-                
-                elif flag==1 and line.startswith("\t"):
-                    txt+=line
-                elif flag==1 and not line.startswith("\t"):
-                    txt=txt.replace("\t","\n\t",1)
-                    Action["text"]=txt
-                    if job.logger==True and job.log>2:
-                        logging.info("Adding Action:" + Action["text"])
-                    actions.append(Action)
-                    txt=""
-                    flag=0
-            fin.close()
-        except IOError as e:
-            logging.error("ActionEventPlotter couldn't read the log file " + file_)
-        except NumberFormatException as e:
-            logging.error("Couldn't correctly parse log file time to double")
-        except Exception as e:
-            logging.error("Something went wrong parsing the log", e)
-            return None
+                except NumberFormatException as e:
+                    logging.error("Couldn't correctly parse log file time to double")
+                Action["text"] = ActionText[ActionText.find(",") + 1:].strip()
+                flag=1
+                txt+=ActionText[ActionText.find(",") + 1:].strip()
+
+            elif flag==1 and line.startswith("\t"):
+                txt+=line
+            elif flag==1 and not line.startswith("\t"):
+                txt=txt.replace("\t","\n\t",1)
+                Action["text"]=txt
+                if job.logger==True and job.log>2:
+                    logging.info("Adding Action:" + Action["text"])
+                actions.append(Action)
+                txt=""
+                flag=0
+        fin.close()
         return actions
     
     def getEventsFromLog(self, file_,job):
@@ -180,38 +180,37 @@ class ActionEventPlotter():
         """
         
         events = []
-        try:
-            if file_.endswith(".zip"):
+
+        if file_.endswith(".zip"):
+            try:
                 zf = zipfile.ZipFile(file_,'r')
                 for i in zf.filelist:
                     if i.filename.endswith(".log"):
                         fin = zf.open(i.filename,'r')
                         break
-            for line in fin:
-                line=line.decode("utf-8")               
-                if len(line)==0:
-                    continue 
-                if "[Event]" not in line.split():
-                    continue 
-                else:
-                    event = {}
-                    eventText =line.split("[Event]",1)[1].strip()
-                    endTimeIndex = eventText.find("(s)")
-                    if endTimeIndex == -1:
-                        endTimeIndex = eventText.find(",")
+            except IOError as e:
+                logging.error("ActionEventPlotter couldn't read the log file " + file_)
+        for line in fin:
+            line=line.decode("utf-8")               
+            if len(line)==0:
+                continue 
+            if "[Event]" not in line.split():
+                continue 
+            else:
+                event = {}
+                eventText =line.split("[Event]",1)[1].strip()
+                endTimeIndex = eventText.find("(s)")
+                if endTimeIndex == -1:
+                    endTimeIndex = eventText.find(",")
+                try:
                     event["time"] = float(eventText[0:endTimeIndex].strip())
-                    event["text"] = eventText[eventText.find(",") + 1:].strip()
-                    if job.logger==True and job.log>2:
-                        logging.info("Adding Event:" + event["text"])
-                    events.append(event)
-            fin.close()
-        except IOError as e:
-            logging.error("ActionEventPlotter couldn't read the log file " + file_)
-        except NumberFormatException as e:
-            logging.error("Couldn't correctly parse log file time to double")
-        except Exception as e:
-            logging.error("Something went wrong parsing the log", e)
-            return None
+                except NumberFormatException as e:
+                    logging.error("Couldn't correctly parse log file time to double")
+                event["text"] = eventText[eventText.find(",") + 1:].strip()
+                if job.logger==True and job.log>2:
+                    logging.info("Adding Event:" + event["text"])
+                events.append(event)
+        fin.close()
         return events
     
     def y_fmt(self,x, y):
