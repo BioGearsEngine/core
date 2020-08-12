@@ -69,7 +69,7 @@ class ActionEventPlotter():
         if not os.path.exists(job.logPath):
             job.logPath = os.path.join(job.basedir, job.logPath)
             
-        if not os.path.isfile(job.dataFile):
+        if not os.path.isfile(os.path.join(job.dataPath,job.dataFile)):
             job.dataFile = job.name + "Results.zip"
             
         if not os.path.isfile(os.path.join(job.dataPath,job.dataFile)):
@@ -104,14 +104,12 @@ class ActionEventPlotter():
         if not job.fontSize:
             job.fontSize=22
         
-        if job.dataFile.endswith(".csv"):
-            job.dataPath="."
-        
         if job.log>=2:
             logging.info("Name of Plot" +job.name)
             logging.info("Input File: "+ os.path.join(job.dataPath,job.dataFile))
             logging.info("Output File: "+ os.path.join(job.outputDir,job.outputFilename))
-        self.drawgraph(self.events,self.actions,job,os.path.join(job.dataPath,job.dataFile),os.path.join(job.outputDir,job.outputFilename))
+        self.drawgraph(self.events,self.actions,job,os.path.join(job.dataPath,job.dataFile),
+                       os.path.join(job.outputDir,job.outputFilename))
         
     def getActionsFromLog(self,file_,job):
         """
@@ -277,28 +275,13 @@ class ActionEventPlotter():
         plotting
         
         """
-        
         X=df.iloc[:,0].values[::20]
         y=df.loc[:,job.headers[0]].values[::20]
-        yRange = max(y)-min(y)
-        #For most scenarios, set plot min to 0 and set upper boundary 25% above max value
-        if yRange > 0:
-            if min(y) >=0:
-                plotMin = 0.0
-                plotMax = 1.25 * max(y)
-            else:
-                #We have negative values somewhere, so lets just take 25% above and below
-                plotMin = min(y)-0.25*abs(min(y))
-                plotMax = max(y) + 0.25*abs(max(y))
-        else:
-            #This means we're probably plotting a bunch of zeros...
-            plotMin = y[0] - 5
-            plotMax = y[0] + 5
-
         if job.legendOnly:
             if not os.path.exists(job.outputDir):
                 os.mkdir(job.outputDir)
-            colors =["red","yellow","green","blue","orange","lime","magenta","violet","black","purple","0.1","0.2","0.75","0.8","0.9","pink"]
+            colors =["red","yellow","green","blue","orange","lime","magenta",
+                     "violet","black","purple","0.1","0.2","0.75","0.8","0.9","pink"]
             f = lambda m,c: plt.plot([],[],marker=m, color=c, ls="none")[0]
             handles = [f("_", colors[i]) for i in range(0,len(self.data))]
             labels = [i.replace("\t","    ") for i in self.data]
