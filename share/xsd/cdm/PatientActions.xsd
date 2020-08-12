@@ -538,7 +538,8 @@ specific language governing permissions and limitations under the License.
 			<xs:extension base="SubstanceAdministrationData">
 				<xs:sequence>
 					<xs:element name="Substance" type="xs:string" minOccurs="1" maxOccurs="1"/>	<!--<< @brief -->
-					<xs:element name="Dose" type="ScalarMassData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->													
+					<xs:element name="Dose" type="ScalarMassData" minOccurs="1" maxOccurs="1"/> <!--<< @brief -->
+          <xs:element name="ElapsedTime" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief -->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
