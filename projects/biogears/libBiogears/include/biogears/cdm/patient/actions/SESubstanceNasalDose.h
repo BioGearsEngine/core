@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
@@ -43,10 +44,11 @@ public:
 
   virtual void ToString(std::ostream& str) const;
 
-  virtual SEScalarTime& m_time();
+  SEScalarTime& GetElapsedTime() { return m_elapsedTime; }
 
 protected:
   SEScalarMass* m_Dose;
   const SESubstance& m_Substance;
+  SEScalarTime m_elapsedTime;
 };
 }

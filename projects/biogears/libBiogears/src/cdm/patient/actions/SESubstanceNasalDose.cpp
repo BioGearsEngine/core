@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceNasalDose.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
 SESubstanceNasalDose::SESubstanceNasalDose(const SESubstance& substance)
@@ -19,6 +21,8 @@ SESubstanceNasalDose::SESubstanceNasalDose(const SESubstance& substance)
   , m_Substance(substance)
 {
   m_Dose = nullptr;
+  m_elapsedTime.SetValue(0, TimeUnit::s);
+
 }
 
 SESubstanceNasalDose::~SESubstanceNasalDose()
@@ -30,6 +34,7 @@ void SESubstanceNasalDose::Clear()
 {
   SESubstanceAdministration::Clear();
   SAFE_DELETE(m_Dose);
+
 }
 
 bool SESubstanceNasalDose::IsValid() const
@@ -45,6 +50,7 @@ bool SESubstanceNasalDose::IsActive() const
 bool SESubstanceNasalDose::Load(const CDM::SubstanceNasalDoseData& in)
 {
   SESubstanceAdministration::Load(in);
+  GetElapsedTime().Load(in.ElapsedTime());
   GetDose().Load(in.Dose());
   return true;
 }
@@ -63,6 +69,7 @@ void SESubstanceNasalDose::Unload(CDM::SubstanceNasalDoseData& data) const
     data.Dose(std::unique_ptr<CDM::ScalarMassData>(m_Dose->Unload()));
   data.Substance(m_Substance.GetName());
 }
+
 
 bool SESubstanceNasalDose::HasDose() const
 {
