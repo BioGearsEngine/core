@@ -122,22 +122,25 @@ class ActionEventPlotter():
         respective text from the log files inside datapath and 
         then log those appropriate to the command line
         """
-        
+        fin=None
         actions = []
         flag=0
         txt=""
-
-        if file_.endswith(".zip"):
-            try:
-                zf = zipfile.ZipFile(file_,'r')
-                for i in zf.filelist:
-                    if i.filename.endswith(".log"):
-                        fin = zf.open(i.filename,'r')
-                        break
-                        #  We expect results zips to only contain 1 text file
-            except IOError as e:
-                logging.error("ActionEventPlotter couldn't read the log file " + file_)
-
+        try:
+            if file_.endswith(".zip"):
+                try:
+                    zf = zipfile.ZipFile(file_,'r')
+                    for i in zf.filelist:
+                        if i.filename.endswith(".log"):
+                            fin = zf.open(i.filename,'r')
+                            break
+                            #  We expect results zips to only contain 1 text file
+                except IOError as e:
+                    logging.error("ActionEventPlotter couldn't read the log file " + file_)
+        except IOError as e:
+            logging.error("Zip file not found " +file_)
+        if not fin:
+            return actions
         for line in fin:
             line=line.decode("utf-8")
             if len(line)==0:
@@ -180,16 +183,21 @@ class ActionEventPlotter():
         """
         
         events = []
-
-        if file_.endswith(".zip"):
-            try:
-                zf = zipfile.ZipFile(file_,'r')
-                for i in zf.filelist:
-                    if i.filename.endswith(".log"):
-                        fin = zf.open(i.filename,'r')
-                        break
-            except IOError as e:
-                logging.error("ActionEventPlotter couldn't read the log file " + file_)
+        fin=None
+        try:
+            if file_.endswith(".zip"):
+                try:
+                    zf = zipfile.ZipFile(file_,'r')
+                    for i in zf.filelist:
+                        if i.filename.endswith(".log"):
+                            fin = zf.open(i.filename,'r')
+                            break
+                except IOError as e:
+                    logging.error("ActionEventPlotter couldn't read the log file " + file_)
+        except IOError as e:
+            logging.error("Zip File not found " +file_)
+        if not fin:
+            return events
         for line in fin:
             line=line.decode("utf-8")               
             if len(line)==0:
@@ -232,28 +240,32 @@ class ActionEventPlotter():
         to the graph
         """
         my_dpi=96
-        col=["red","yellow","green","blue","orange","lime","magenta","violet","black","purple","0.1","0.2","0.75","0.8","0.9","pink"]
-        
-        if input_zip.endswith(".csv"):
-            df = pd.read_csv(input_zip,low_memory=False)
-            try:
-                self.plotting(events,actions,job,input_zip,output_file,df,my_dpi,col)
-            except IOError:
-                logging.error("File Not found at:"+input_zip)
-            except Exception:
-                logging.error("File Not found at:"+input_zip)
-        elif input_zip.endswith(".zip"):
-            zf=zipfile.ZipFile(input_zip)
-            for i in zf.filelist:
-                if i.filename.endswith(".csv"):
-                    df = pd.read_csv(zf.open(i.filename),low_memory=False)
-                    try:
-                        self.plotting(events,actions,job,input_zip,output_file,df,my_dpi,col)
-                    except IOError:
-                        logging.error("File Not found at:"+input_zip)
-                    except Exception:
-                        logging.error("Something went wrong with:"+input_zip)
+        col=["red","yellow","green","blue","orange","lime","magenta","violet"
+             ,"black","purple","0.1","0.2","0.75","0.8","0.9","pink"]
+        try:
+            if input_zip.endswith(".csv"):
+                df = pd.read_csv(input_zip,low_memory=False)
+                try:
+                    self.plotting(events,actions,job,input_zip,output_file,df,my_dpi,col)
+                except IOError:
+                    logging.error("File Not found at:"+input_zip)
+                except Exception:
+                    logging.error("Headers not found at:"+input_zip+" Headers missing are :"+job.headers[0])
 
+            elif input_zip.endswith(".zip"):
+                zf=zipfile.ZipFile(input_zip)
+                for i in zf.filelist:
+                    if i.filename.endswith(".csv"):
+                        df = pd.read_csv(zf.open(i.filename),low_memory=False)
+                        try:
+                            self.plotting(events,actions,job,input_zip,output_file,df,my_dpi,col)
+                        except IOError:
+                            logging.error("File Not found at:"+input_zip)
+                        except Exception:
+                            logging.error("Headers not found at:"+input_zip+" Headers missing are :"+job.headers[0])
+        except IOError:
+            logging.error("Zip file Not found at :"+input_zip)
+        
     def plotting(self,events,actions,job,input_zip,output_file,df,my_dpi,col):
         """
         plotting
@@ -266,8 +278,8 @@ class ActionEventPlotter():
         
         """
         
-        X=df.iloc[:,0].values
-        y=df.loc[:,job.headers[0]].values
+        X=df.iloc[:,0].values[::20]
+        y=df.loc[:,job.headers[0]].values[::20]
         yRange = max(y)-min(y)
         #For most scenarios, set plot min to 0 and set upper boundary 25% above max value
         if yRange > 0:

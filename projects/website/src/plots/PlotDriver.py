@@ -134,7 +134,7 @@ try:
             try:
                 global working
                 p = pool.map_async(me.execute,range(len(me.jobs)))
-                p.get(60)
+                p.get(600)
             except KeyboardInterrupt:
                 print("\n Shutting down. One moment while I clean up remaining threads.")
                 working = False
