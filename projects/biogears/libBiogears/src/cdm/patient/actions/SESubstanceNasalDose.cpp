@@ -50,7 +50,6 @@ bool SESubstanceNasalDose::IsActive() const
 bool SESubstanceNasalDose::Load(const CDM::SubstanceNasalDoseData& in)
 {
   SESubstanceAdministration::Load(in);
-  GetElapsedTime().Load(in.ElapsedTime());
   GetDose().Load(in.Dose());
   return true;
 }
