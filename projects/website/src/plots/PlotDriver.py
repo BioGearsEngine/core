@@ -4,7 +4,7 @@ global working
 working = True
 try:
     from ActionEventPlotter import ActionEventPlotter
-    #from MultiPlotter import MultiPlotter
+    from MultiPlotter import MultiPlotter
     import multiprocessing
     import os
     import signal
@@ -101,6 +101,7 @@ try:
             self.isScenario = False
             self.jobname=""
             self.quit=False
+            self.counter=0
             self.verbosity=None
 
         @classmethod
@@ -159,7 +160,8 @@ try:
             try:
                 with open(configFile,"r") as fin:
                     for line in fin:
-                        if len(line)==0 or line.startswith("#"):
+                        self.counter+=1
+                        if len(line)<=2 or line.startswith("#"):
                             continue 
                         
                         if line.startswith("@group"):
@@ -170,12 +172,12 @@ try:
                             continue
                         
                         if not "=" in line:
+                            print("Error in config file Name of plotter not specified, check line:",str(self.counter))
                             continue 
                         
                         line = line.strip()
                         key = line.split("=")[0]
                         value = line.split("=",1)[1].strip()
-                        
                         if key.lower() == "Plotter".lower():
                             continue
                         job = PlotJob()
@@ -189,18 +191,17 @@ try:
                         for directive in directives:
                             if not "=" in directive:
                                 job.basedir=basedir
-                                
                                 if directive.lower() == "ActionEventPlotter".lower():
                                     job.plotname="ActionEvent"
                                     job.plotter=ActionEventPlotter()
                                     continue
                                 elif directive.lower()=="MultiPlotter".lower():
                                     job.plotname="Multiplotter"
-                                    job.plotter="MultiPlotter()"
+                                    job.plotter=MultiPlotter()
                                     continue
                                 elif directive.lower()=="ConvexHullPlotter".lower():
                                     job.plotname="ConvexHullPlotter"
-                                    job.plotter="MultiPlotter()"
+                                    job.plotter=MultiPlotter()
                                 elif directive.lower()=="RespiratoryPFTPlotter".lower():
                                     job.plotname="PFTPlotter"
                                     job.plotter="PFTPlotter()"
@@ -341,10 +342,11 @@ try:
                                     job.fontSize = int(value_1)
                                     continue 
                                 else:
-                                    logging.warning("Unrecognized config directive: " + directive)   
+                                    logging.warning("Unrecognized config directive: " + directive 
+                                                    +" Check line:"+str(self.counter))   
                 fin.close()
             except Exception as e:
-                logging.error(e, "Ouch Something went wrong")
+                logging.error("Something went wrong with config file:"+str(self.counter))
 
         def execute(self,idx):
             global working
@@ -361,7 +363,7 @@ try:
                         job.logger=False
                     else:
                         job.logger=True
-                    if job.plotname=="ActionEvent":
+                    if job.plotname!="PFTPlotter":
                         job.log=self.verbosity
 
                         if self.quit==False:

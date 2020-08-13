@@ -302,7 +302,7 @@ class ActionEventPlotter():
 
         else:
             fig,ax = plt.subplots()
-            fig.set_size_inches(w=job.imageWidth/my_dpi,h=job.imageHeight/my_dpi)
+            fig.set_size_inches(w=job.imageWidth/my_dpi+1,h=job.imageHeight/my_dpi+1)
             
             if not os.path.exists(job.outputDir):
                 os.mkdir(job.outputDir)
