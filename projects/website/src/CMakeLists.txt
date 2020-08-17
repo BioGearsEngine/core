@@ -154,10 +154,10 @@ endif()
 
 if(Biogears_Python_BUILD_WEBSITE)
   
-    if (NOT Biogears_BUILD_WEBSITE_DEBUG)
-       add_dependencies(docs-doxygen-py docs-prepare-py)
-       add_dependencies(docs-stage-py docs-doxygen-py)
-    endif()
+	#if (NOT Biogears_BUILD_WEBSITE_DEBUG)
+	# add_dependencies(docs-doxygen-py docs-prepare-py)
+	#add_dependencies(docs-stage-py docs-doxygen-py)
+	#endif()
     
     set_target_properties(docs-prepare-py PROPERTIES FOLDER "Python/website" EXCLUDE_FROM_ALL ON)
     set_target_properties(docs-doxygen-py PROPERTIES FOLDER "Python/website" EXCLUDE_FROM_ALL ON)
