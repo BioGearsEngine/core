@@ -399,16 +399,22 @@ std::unique_ptr<biogears::SESubstanceCompound> substance_make_compound(std::uniq
   ss << "Substance_" << ++counter;
   return biogears::SESubstanceCompound::make_unique(ss.str().c_str(), engine->GetLogger());
 }
-bool mixSubstanceCompound(std::unique_ptr<biogears::BioGearsEngine>& engine, std::unique_ptr<biogears::SESubstanceCompound>& compound, const char* substance, double concentration, biogears::MassPerVolumeUnit unit)
+bool addCompoundComponents(std::unique_ptr<biogears::BioGearsEngine>& engine, std::unique_ptr<biogears::SESubstanceCompound>& compound, const char* substance_str, double concentration, biogears::MassPerVolumeUnit unit)
 {
-  biogears::SESubstance* new_substance = engine->GetSubstanceManager().GetSubstance(substance);
-  if (new_substance) {
+  if (biogears::SESubstance* new_substance = engine->GetSubstanceManager().GetSubstance(substance_str)) {
     auto substance_concentration = std::make_unique<biogears::SESubstanceConcentration>(*new_substance);
-    substance_concentration->GetConcentration().SetValue(10.0, biogears::MassPerVolumeUnit::mg_Per_mL);
+    substance_concentration->GetConcentration().SetValue(concentration, biogears::MassPerVolumeUnit::mg_Per_mL);
     compound->GetComponents().push_back(substance_concentration.release());
 
     //Because the substance isn't register atat this point, it is possible to adjust the name based on the current mix.
     //Active infusions are stored by substance name so once registered and infuse you can no longer modify the mix name;
+    return true;
+  } else if (biogears::SESubstanceCompound* source_compound = engine->GetSubstanceManager().GetCompound(substance_str)){
+    for (auto source_component : source_compound->GetComponents()) {
+      biogears::SESubstanceConcentration* new_component = new biogears::SESubstanceConcentration(source_component->GetSubstance());
+      new_component->GetConcentration().Set(source_component->GetConcentration());
+      compound->GetComponents().push_back(new_component);
+    }
     return true;
   }
   return false;
@@ -547,27 +553,27 @@ void BioGearsPlugin::run()
           action_bloodtransfuction(_pimpl->engine, 500, 100);
 
           ///////////////////////////////////////
-          ///DUGS
-          //auto customCompound = substance_make_compound(_pimpl->engine);
-          //auto mixSuccess = mixSubstanceCompound(_pimpl->engine, customCompound, "Saline", 2.17, MassPerVolumeUnit::kg_Per_L);
-          //mixSuccess &= mixSubstanceCompound(_pimpl->engine, customCompound, "Albumin", 10.0, MassPerVolumeUnit::mg_Per_mL);
-          //mixSuccess &= mixSubstanceCompound(_pimpl->engine, customCompound, "Morphine", 10.0, MassPerVolumeUnit::mg_Per_mL);
+          ///DRUGS
+          auto customCompound = substance_make_compound(_pimpl->engine);
+          auto mixSuccess = addCompoundComponents(_pimpl->engine, customCompound, "Saline", 2.17, MassPerVolumeUnit::kg_Per_L);
+          mixSuccess &= addCompoundComponents(_pimpl->engine, customCompound, "Albumin", 10.0, MassPerVolumeUnit::mg_Per_mL);
+          mixSuccess &= addCompoundComponents(_pimpl->engine, customCompound, "Morphine", 10.0, MassPerVolumeUnit::mg_Per_mL);
 
-          //if (!mixSuccess) {
-          //  _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Saline"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
-          //  _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Albumin"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
-          //  _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance("Morphine"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+          if (mixSuccess) {
+            for (auto component : customCompound->GetComponents()) {
+              //We only store plasma concentration for drugs, so only track this for components with PK
+              if (component->GetSubstance().HasPK()) {
+                _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance(component->GetSubstance().GetName()), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);  
+              }
+            }     
+            auto compound_name = substance_register_compound(_pimpl->engine, std::move(customCompound)); //<  _pimpl->engine takes ownership of customCompound here and will delete it once it is removed (DLL Boundry issue need to create a make_compound function to avoid that in biogears)
+            action_infuse_compound(_pimpl->engine, compound_name, 1.0, VolumeUnit::L, 100., VolumePerTimeUnit::mL_Per_hr);
 
-          //  auto compound_name = substance_register_compound(_pimpl->engine, std::move(customCompound)); //<  _pimpl->engine takes ownership of customCompound here and will delete it once it is removed (DLL Boundry issue need to create a make_compound function to avoid that in biogears)
-          //  action_infuse_compound(_pimpl->engine, compound_name, 1.0, VolumeUnit::L, 100., VolumePerTimeUnit::mL_Per_hr);
+            _pimpl->engine->AdvanceModelTime(1, TimeUnit::s);
 
-          //  _pimpl->engine->AdvanceModelTime(10, TimeUnit::s);
-          //  action_infuse_compound(_pimpl->engine, compound_name, 1.0, VolumeUnit::L, 0, VolumePerTimeUnit::mL_Per_hr);
-
-          //  _pimpl->engine->AdvanceModelTime(10, TimeUnit::s);
-          //} else {
-          //  _pimpl->engine->GetLogger()->Error("Saline,Albumin, and Morphine definitions required for this HowTo please ensure they exist and try again.");
-          //}
+          } else {
+            _pimpl->engine->GetLogger()->Error("Saline,Albumin, and Morphine definitions required for this HowTo please ensure they exist and try again.");
+          }
 
           ////////////////////////////////////////
           if (_pimpl->engine->GetActions().GetEnvironmentActions().HasThermalApplication()) {
