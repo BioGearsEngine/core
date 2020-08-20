@@ -117,6 +117,8 @@ void SESubstanceDataRequest::InvalidateSubstance()
 //-----------------------------------------------------------------------------
 void SESubstanceDataRequest::Set(const SESubstance& substance, const char* name, const CCompoundUnit& unit)
 {
+  assert(&substance);
+  assert(const_cast<SESubstance&>(substance).GetScalar(name));
   m_Substance = &substance;
   m_Compartment = "";
   m_Name = name;
@@ -126,6 +128,8 @@ void SESubstanceDataRequest::Set(const SESubstance& substance, const char* name,
 //-----------------------------------------------------------------------------
 void SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& name, const CCompoundUnit& unit)
 {
+  assert(&substance);
+  assert(const_cast<SESubstance&>(substance).GetScalar(name));
   m_Substance = &substance;
   m_Compartment = "";
   m_Name = name;
@@ -135,6 +139,8 @@ void SESubstanceDataRequest::Set(const SESubstance& substance, const std::string
 //-----------------------------------------------------------------------------
 void SESubstanceDataRequest::Set(const SESubstance& substance, const char* name, const char* unit)
 {
+  assert(&substance);
+  assert(const_cast<SESubstance&>(substance).GetScalar(name));
   m_Substance = &substance;
   m_Compartment = "";
   m_Name = name;
@@ -144,6 +150,8 @@ void SESubstanceDataRequest::Set(const SESubstance& substance, const char* name,
 //-----------------------------------------------------------------------------
 void SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& name, const std::string& unit)
 {
+  assert(&substance);
+  assert(const_cast<SESubstance&>(substance).GetScalar(name));
   m_Substance = &substance;
   m_Compartment = "";
   m_Name = name;
@@ -153,6 +161,8 @@ void SESubstanceDataRequest::Set(const SESubstance& substance, const std::string
 //-----------------------------------------------------------------------------
 void SESubstanceDataRequest::Set(const SESubstance& substance, const char* cmpt, const char* name, const CCompoundUnit& unit)
 {
+  assert(&substance);
+  assert(const_cast<SESubstance&>(substance).GetScalar(name));
   m_Substance = &substance;
   m_Compartment = cmpt;
   m_Name = name;
@@ -162,6 +172,8 @@ void SESubstanceDataRequest::Set(const SESubstance& substance, const char* cmpt,
 //-----------------------------------------------------------------------------
 void SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const CCompoundUnit& unit)
 {
+  assert(&substance);
+  assert(const_cast<SESubstance&>(substance).GetScalar(name));
   m_Substance = &substance;
   m_Compartment = cmpt;
   m_Name = name;
@@ -171,6 +183,8 @@ void SESubstanceDataRequest::Set(const SESubstance& substance, const std::string
 //-----------------------------------------------------------------------------
 void SESubstanceDataRequest::Set(const SESubstance& substance, const char* cmpt, const char* name, const char* unit)
 {
+  assert(&substance);
+  assert(const_cast<SESubstance&>(substance).GetScalar(name));
   m_Substance = &substance;
   m_Compartment = cmpt;
   m_Name = name;
@@ -180,6 +194,8 @@ void SESubstanceDataRequest::Set(const SESubstance& substance, const char* cmpt,
 //-----------------------------------------------------------------------------
 void SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const std::string& unit)
 {
+  assert(&substance);
+  assert(const_cast<SESubstance&>(substance).GetScalar(name));
   m_Substance = &substance;
   m_Compartment = cmpt;
   m_Name = name;

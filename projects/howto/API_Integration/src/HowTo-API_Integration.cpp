@@ -564,6 +564,7 @@ void BioGearsPlugin::run()
           mixSuccess &= addCompoundComponents(_pimpl->engine, customCompound, "Morphine", 10.0, MassPerVolumeUnit::mg_Per_mL);
 
           if (mixSuccess) {
+
             for (auto& component : customCompound->GetComponents()) {
               //We only store plasma concentration for drugs, so only track this for components with PK
               if (component.GetSubstance().HasPK()) {
