@@ -47,7 +47,7 @@ void SESubstanceCompound::Clear()
 {
   m_Name = "";
   m_Classification = (CDM::enumSubstanceClass::value)-1;
-  DELETE_VECTOR(m_Components);
+
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr)
@@ -62,7 +62,6 @@ bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESub
   std::string err;
 
   SESubstance* substance = nullptr;
-  SESubstanceConcentration* cc;
   CDM::SubstanceConcentrationData* ccData;
   for (unsigned int i = 0; i < in.Component().size(); i++) {
     ccData = (CDM::SubstanceConcentrationData*)&in.Component().at(i);
@@ -74,9 +73,8 @@ bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESub
       Error(err, "SESubstanceCompound::Load");
       return false;
     }
-    cc = new SESubstanceConcentration(*substance);
-    cc->Load(*ccData);
-    m_Components.push_back(cc);
+    m_Components.emplace_back(*substance);
+    m_Components.back().Load(*ccData);
   }
   return true;
 }
@@ -97,8 +95,8 @@ void SESubstanceCompound::Unload(CDM::SubstanceCompoundData& data) const
   if (HasRhFactor())
     data.BloodRHFactor(m_RhFactor);
 
-  for (unsigned int i = 0; i < m_Components.size(); i++) {
-    data.Component().push_back(*m_Components.at(i)->Unload());
+  for (auto& component : m_Components) {
+    data.Component().push_back( *component.Unload() );
   }
 };
 //-----------------------------------------------------------------------------
@@ -174,56 +172,54 @@ bool SESubstanceCompound::HasComponent() const
 //-----------------------------------------------------------------------------
 bool SESubstanceCompound::HasComponent(const SESubstance& substance) const
 {
-  for (SESubstanceConcentration* q : m_Components) {
-    if (&substance == &q->GetSubstance()) {
+  for (auto const& q : m_Components) {
+    if (&substance == &q.GetSubstance()) {
       return true;
     }
   }
   return false;
 }
 //-----------------------------------------------------------------------------
-std::vector<SESubstanceConcentration*>& SESubstanceCompound::GetComponents()
+std::vector<SESubstanceConcentration>& SESubstanceCompound::GetComponents()
 {
   return m_Components;
 }
 //-----------------------------------------------------------------------------
-std::vector<SESubstanceConcentration const *> SESubstanceCompound::GetComponents() const
+const std::vector<SESubstanceConcentration> SESubstanceCompound::GetComponents() const
 {
-  std::vector<SESubstanceConcentration const*> cCompounds;
-  for (auto componet : m_Components) {
-    cCompounds.push_back(componet);
+  std::vector<SESubstanceConcentration> cCompounds;
+  for (auto &component : m_Components) {
+    cCompounds.push_back(component);
   }
   return cCompounds;
 }
 //-----------------------------------------------------------------------------
-const SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstance& substance)
+SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstance& substance)
 {
-  for (SESubstanceConcentration* sq : m_Components) {
-    if (&substance == &sq->GetSubstance())
-      return *sq;
-  }
-  SESubstanceConcentration* sq = new SESubstanceConcentration(substance);
-  sq->GetConcentration().SetValue(0, MassPerVolumeUnit::ug_Per_mL);
-  m_Components.push_back(sq);
-  return *sq;
-}
-//-----------------------------------------------------------------------------
-const SESubstanceConcentration* SESubstanceCompound::GetComponent(SESubstance& substance) const
-{
-  for (SESubstanceConcentration* sq : m_Components) {
-    if (&substance == &sq->GetSubstance())
+  for (auto& sq : m_Components) {
+    if (&substance == &sq.GetSubstance())
       return sq;
   }
-  return nullptr;
+  // auto concentration = SESubstanceConcentration { substance, 0, MassPerVolumeUnit::ug_Per_mL };
+  m_Components.emplace_back(substance, 0, MassPerVolumeUnit::ug_Per_mL);
+  return m_Components.back();
+}
+//-----------------------------------------------------------------------------
+const SESubstanceConcentration SESubstanceCompound::GetComponent(SESubstance& substance) const
+{
+  for (auto& sq : m_Components) {
+    if (&substance == &sq.GetSubstance())
+      return sq;
+  }
+  throw CommonDataModelException();
 }
 //-----------------------------------------------------------------------------
 void SESubstanceCompound::RemoveComponent(const SESubstance& substance)
 {
   unsigned int i = 0;
-  for (SESubstanceConcentration* sq : m_Components) {
-    if (&substance == &sq->GetSubstance()) {
+  for (auto& sq : m_Components) {
+    if (&substance == &sq.GetSubstance()) {
       m_Components.erase(m_Components.begin() + i);
-      delete sq;
     }
     i++;
   }

@@ -244,6 +244,7 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
     SESubstanceCompound* cmpd = m_Substances->GetCompound(cmpdData.Name());
     if (cmpd == nullptr) {
       cmpd = new SESubstanceCompound(GetLogger());
+      m_Substances->AddCompound(*cmpd);
     }
     if (!cmpd->Load(cmpdData, *m_Substances)) {
       m_ss << "Unable to load compound" << cmpdData.Name() << std::endl;

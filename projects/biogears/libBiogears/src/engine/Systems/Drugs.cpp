@@ -503,13 +503,13 @@ void Drugs::AdministerSubstanceCompoundInfusion()
     }
     infusion->GetBagVolume().IncrementValue(-volumeToAdminister_mL, VolumeUnit::mL);
 
-    for (const SESubstanceConcentration* component : compound->GetComponents()) {
-      subQ = m_venaCavaVascular->GetSubstanceQuantity(component->GetSubstance());
-      double massIncrement_ug = volumeToAdminister_mL * component->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
+    for (auto const& component : compound->GetComponents()) {
+      subQ = m_venaCavaVascular->GetSubstanceQuantity(component.GetSubstance());
+      double massIncrement_ug = volumeToAdminister_mL * component.GetConcentration(MassPerVolumeUnit::ug_Per_mL);
       subQ->GetMass().IncrementValue(massIncrement_ug, MassUnit::ug);
 
       //Blood Transfusion//
-      if (component->GetSubstance().GetName() == "RedBloodCell") {
+      if (component.GetSubstance().GetName() == "RedBloodCell") {
         /* 
          //Transfusiuon-Associated Circulatory Overload (TACO) CHECK 
          if (totalRate_mL_Per_s >= 3) { // Rate should not exceed 2 mL/s plus a 50% deviation to be safe (little diagnostic research on the topic/underreported but common reaction)

@@ -17,11 +17,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/Substance.hxx>
+#include <biogears/cdm/substance/SESubstanceConcentration.h>
 
 namespace biogears {
 class SESubstance;
 class SESubstanceManager;
-class SESubstanceConcentration;
 
 class BIOGEARS_API SESubstanceCompound : public Loggable {
 public:
@@ -57,10 +57,10 @@ public:
 
   bool HasComponent() const;
   bool HasComponent(const SESubstance& substance) const;
-  std::vector<SESubstanceConcentration*>& GetComponents();
-  std::vector<SESubstanceConcentration const *> GetComponents() const;
-  const SESubstanceConcentration& GetComponent(SESubstance& substance);
-  const SESubstanceConcentration* GetComponent(SESubstance& substance) const;
+  std::vector<SESubstanceConcentration>& GetComponents();
+  const std::vector<SESubstanceConcentration> GetComponents() const;
+  SESubstanceConcentration& GetComponent(SESubstance& substance);
+  const SESubstanceConcentration GetComponent(SESubstance& substance) const;
   void RemoveComponent(const SESubstance& substance);
 
 protected:
@@ -68,6 +68,6 @@ protected:
   CDM::enumSubstanceClass::value m_Classification;
   bool m_RhFactor;
 
-  std::vector<SESubstanceConcentration*> m_Components;
+  std::vector<SESubstanceConcentration> m_Components;
 };
 }

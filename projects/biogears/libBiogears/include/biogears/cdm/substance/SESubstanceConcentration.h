@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(SubstanceConcentrationData)
@@ -20,14 +21,14 @@ namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEEnvironmentalConditions;
-class SEScalarMassPerVolume;
-class MassPerVolumeUnit;
 
 class BIOGEARS_API SESubstanceConcentration : public Loggable {
 protected:
   friend SEEnvironmentalConditions; // So it can add substances to the manager
 public:
   SESubstanceConcentration(SESubstance& substance);
+  SESubstanceConcentration(SESubstance& substance, SEScalarMassPerVolume concentration);
+  SESubstanceConcentration(SESubstance& substance, double concentration, const MassPerVolumeUnit& unit);
   virtual ~SESubstanceConcentration();
 
   virtual void Clear();
@@ -45,8 +46,12 @@ public:
 
   virtual SESubstance& GetSubstance() const;
 
+  bool operator==(SESubstanceConcentration const& rhs) const;
+  bool operator!=(SESubstanceConcentration const& rhs) const;
+  SESubstanceConcentration& operator=(SESubstanceConcentration const& rhs);
+
 protected:
-  SESubstance& m_Substance;
-  SEScalarMassPerVolume* m_Concentration;
+  SESubstance* m_Substance;
+  SEScalarMassPerVolume m_Concentration;
 };
 }

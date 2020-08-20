@@ -39,9 +39,9 @@ bool mixSubstanceCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine, s
 {
   SESubstance* new_substance = engine->GetSubstanceManager().GetSubstance(substance);
   if (new_substance) {
-    auto substance_concentration = std::make_unique<SESubstanceConcentration>(*new_substance);
-    substance_concentration->GetConcentration().SetValue(10.0, MassPerVolumeUnit::mg_Per_mL);
-    compound->GetComponents().push_back(substance_concentration.release());
+    auto substance_concentration = SESubstanceConcentration(*new_substance);
+    substance_concentration.GetConcentration().SetValue(10.0, MassPerVolumeUnit::mg_Per_mL);
+    compound->GetComponents().push_back(substance_concentration);
 
     //Because the substance isn't register atat this point, it is possible to adjust the name based on the current mix.
     //Active infusions are stored by substance name so once registered and infuse you can no longer modify the mix name;

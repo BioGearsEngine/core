@@ -153,19 +153,19 @@ void HowToInfusionDrug()
   SESubstance* morphine = bg->GetSubstanceManager().GetSubstance("Morphine");
   SESubstance* saline = bg->GetSubstanceManager().GetSubstance("Saline");
   if (albumin && morphine && saline) {
-    auto albuminConcentration = std::make_unique<SESubstanceConcentration>(*albumin);
-    auto morphineConcentration = std::make_unique<SESubstanceConcentration>(*morphine);
-    auto salineConcentration = std::make_unique<SESubstanceConcentration>(*saline);
+    auto albuminConcentration = SESubstanceConcentration(*albumin);
+    auto morphineConcentration = SESubstanceConcentration(*morphine);
+    auto salineConcentration = SESubstanceConcentration(*saline);
 
-    albuminConcentration->GetConcentration().SetValue (10.0, MassPerVolumeUnit::mg_Per_mL);
-    morphineConcentration->GetConcentration().SetValue(10.0, MassPerVolumeUnit::mg_Per_mL);
-    salineConcentration->GetConcentration().SetValue  (2.17, MassPerVolumeUnit::kg_Per_L);
+    albuminConcentration.GetConcentration().SetValue (10.0, MassPerVolumeUnit::mg_Per_mL);
+    morphineConcentration.GetConcentration().SetValue(10.0, MassPerVolumeUnit::mg_Per_mL);
+    salineConcentration.GetConcentration().SetValue  (2.17, MassPerVolumeUnit::kg_Per_L);
 
     auto morphine_albumin_compound = std::make_unique<SESubstanceCompound>("morphine_albumin_compound", bg->GetLogger());
     morphine_albumin_compound->SetClassification(CDM::enumSubstanceClass::Sedative);
-    morphine_albumin_compound->GetComponents().push_back(albuminConcentration.release());
-    morphine_albumin_compound->GetComponents().push_back(morphineConcentration.release());
-    morphine_albumin_compound->GetComponents().push_back(salineConcentration.release());
+    morphine_albumin_compound->GetComponents().push_back(albuminConcentration);
+    morphine_albumin_compound->GetComponents().push_back(morphineConcentration);
+    morphine_albumin_compound->GetComponents().push_back(salineConcentration);
 
     bg->GetSubstanceManager().AddCompound(*morphine_albumin_compound.release());
   } else {

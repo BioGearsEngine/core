@@ -1336,8 +1336,8 @@ bool SEPatientActionCollection::AdministerSubstance(const CDM::SubstanceAdminist
       m_Substances.AddActiveCompound(*cmpd);
       // Activate the compound component substances
       const SESubstanceCompound& sc = mySubCompInfuse->GetSubstanceCompound();
-      for (const SESubstanceConcentration* scc : sc.GetComponents()) {
-        m_Substances.AddActiveSubstance(scc->GetSubstance());
+      for (auto const& scc : sc.GetComponents()) {
+        m_Substances.AddActiveSubstance(scc.GetSubstance());
       }
     }
     mySubCompInfuse->Load(*cSubInfusion);

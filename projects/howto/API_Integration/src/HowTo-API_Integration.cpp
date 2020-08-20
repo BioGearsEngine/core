@@ -399,21 +399,24 @@ std::unique_ptr<biogears::SESubstanceCompound> substance_make_compound(std::uniq
   ss << "Substance_" << ++counter;
   return biogears::SESubstanceCompound::make_unique(ss.str().c_str(), engine->GetLogger());
 }
+
 bool addCompoundComponents(std::unique_ptr<biogears::BioGearsEngine>& engine, std::unique_ptr<biogears::SESubstanceCompound>& compound, const char* substance_str, double concentration, biogears::MassPerVolumeUnit unit)
 {
-  if (biogears::SESubstance* new_substance = engine->GetSubstanceManager().GetSubstance(substance_str)) {
-    auto substance_concentration = std::make_unique<biogears::SESubstanceConcentration>(*new_substance);
-    substance_concentration->GetConcentration().SetValue(concentration, biogears::MassPerVolumeUnit::mg_Per_mL);
-    compound->GetComponents().push_back(substance_concentration.release());
+  
+  if (biogears::SESubstance* substance = engine->GetSubstanceManager().GetSubstance(substance_str)) {
+    auto substance_concentration = biogears::SESubstanceConcentration(*substance);
+    substance_concentration.GetConcentration().SetValue(10.0, biogears::MassPerVolumeUnit::mg_Per_mL);
+    compound->GetComponents().push_back(substance_concentration);
 
     //Because the substance isn't register atat this point, it is possible to adjust the name based on the current mix.
     //Active infusions are stored by substance name so once registered and infuse you can no longer modify the mix name;
     return true;
-  } else if (biogears::SESubstanceCompound* source_compound = engine->GetSubstanceManager().GetCompound(substance_str)){
-    for (auto source_component : source_compound->GetComponents()) {
-      biogears::SESubstanceConcentration* new_component = new biogears::SESubstanceConcentration(source_component->GetSubstance());
-      new_component->GetConcentration().Set(source_component->GetConcentration());
-      compound->GetComponents().push_back(new_component);
+
+  } else if (biogears::SESubstanceCompound* source_compound = engine->GetSubstanceManager().GetCompound(substance_str)) {
+    for (auto& source_substance : source_compound->GetComponents()) {
+      auto& destination_concentration = compound->GetComponent(source_substance.GetSubstance());
+      destination_concentration.GetConcentration() = source_substance.GetConcentration();
+
     }
     return true;
   }
@@ -508,51 +511,52 @@ void BioGearsPlugin::run()
       [&]() {
         _pimpl->simulation_started.store(true);
         while (_pimpl->simulation_running) {
-          action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Misapplied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::None);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          //The effectivness of this helper-function is called in to doubt, for such a simple tutorial
-          //But you could imagine creating a vector of common conditions and then pushing and poping them in to
-          //This function as the patient changes locations.
-
-          auto conditions = biogears::SEEnvironmentalConditions(_pimpl->engine->GetSubstanceManager());
-          auto* N2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Nitrogen");
-          auto* O2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Oxygen");
-          auto* CO2 = _pimpl->engine->GetSubstanceManager().GetSubstance("CarbonDioxide");
-
-          conditions.SetSurroundingType(CDM::enumSurroundingType::Water);
-          conditions.GetAirVelocity().SetValue(0, LengthPerTimeUnit::m_Per_s);
-          conditions.GetAmbientTemperature().SetValue(10.0, TemperatureUnit::C);
-          conditions.GetAtmosphericPressure().SetValue(760., PressureUnit::mmHg);
-          conditions.GetClothingResistance().SetValue(0.01, HeatResistanceAreaUnit::clo);
-          conditions.GetEmissivity().SetValue(0.0);
-          conditions.GetMeanRadiantTemperature().SetValue(22.0, TemperatureUnit::C);
-          conditions.GetRelativeHumidity().SetValue(1.0);
-          conditions.GetRespirationAmbientTemperature().SetValue(22.0, TemperatureUnit::C);
-          conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(0.7901);
-          conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(0.2095);
-          conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
-
-          action_env_change(_pimpl->engine, conditions);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_tension_pneumothorax(_pimpl->engine, CDM::enumSide::Left, CDM::enumPneumothoraxType::Open, 0.5);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_needle_decompression(_pimpl->engine, CDM::enumSide::Left, true);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_o2_mask(_pimpl->engine, .5, 3., 0.);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_infection(_pimpl->engine, CDM::enumInfectionSeverity::Mild, "LeftLeg", 0.2);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_bloodtransfuction(_pimpl->engine, 500, 100);
+          // action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
+          // action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
+          // action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Misapplied);
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::None);
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // //The effectivness of this helper-function is called in to doubt, for such a simple tutorial
+          // //But you could imagine creating a vector of common conditions and then pushing and poping them in to
+          // //This function as the patient changes locations.
+          //
+          // auto conditions = biogears::SEEnvironmentalConditions(_pimpl->engine->GetSubstanceManager());
+          // auto* N2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Nitrogen");
+          // auto* O2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Oxygen");
+          // auto* CO2 = _pimpl->engine->GetSubstanceManager().GetSubstance("CarbonDioxide");
+          //
+          // conditions.SetSurroundingType(CDM::enumSurroundingType::Water);
+          // conditions.GetAirVelocity().SetValue(0, LengthPerTimeUnit::m_Per_s);
+          // conditions.GetAmbientTemperature().SetValue(10.0, TemperatureUnit::C);
+          // conditions.GetAtmosphericPressure().SetValue(760., PressureUnit::mmHg);
+          // conditions.GetClothingResistance().SetValue(0.01, HeatResistanceAreaUnit::clo);
+          // conditions.GetEmissivity().SetValue(0.0);
+          // conditions.GetMeanRadiantTemperature().SetValue(22.0, TemperatureUnit::C);
+          // conditions.GetRelativeHumidity().SetValue(1.0);
+          // conditions.GetRespirationAmbientTemperature().SetValue(22.0, TemperatureUnit::C);
+          // conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(0.7901);
+          // conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(0.2095);
+          // conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
+          //
+          // action_env_change(_pimpl->engine, conditions);
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_tension_pneumothorax(_pimpl->engine, CDM::enumSide::Left, CDM::enumPneumothoraxType::Open, 0.5);
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_needle_decompression(_pimpl->engine, CDM::enumSide::Left, true);
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_o2_mask(_pimpl->engine, .5, 3., 0.);
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_infection(_pimpl->engine, CDM::enumInfectionSeverity::Mild, "LeftLeg", 0.2);
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_bloodtransfuction(_pimpl->engine, 500, 100);
 
           ///////////////////////////////////////
+
           ///DRUGS
           auto customCompound = substance_make_compound(_pimpl->engine);
           auto mixSuccess = addCompoundComponents(_pimpl->engine, customCompound, "Saline", 2.17, MassPerVolumeUnit::kg_Per_L);
@@ -560,14 +564,19 @@ void BioGearsPlugin::run()
           mixSuccess &= addCompoundComponents(_pimpl->engine, customCompound, "Morphine", 10.0, MassPerVolumeUnit::mg_Per_mL);
 
           if (mixSuccess) {
-            for (auto component : customCompound->GetComponents()) {
+            for (auto& component : customCompound->GetComponents()) {
               //We only store plasma concentration for drugs, so only track this for components with PK
-              if (component->GetSubstance().HasPK()) {
-                _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance(component->GetSubstance().GetName()), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);  
+              if (component.GetSubstance().HasPK()) {
+                _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance(component.GetSubstance().GetName()), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);  
               }
             }     
+
             auto compound_name = substance_register_compound(_pimpl->engine, std::move(customCompound)); //<  _pimpl->engine takes ownership of customCompound here and will delete it once it is removed (DLL Boundry issue need to create a make_compound function to avoid that in biogears)
             action_infuse_compound(_pimpl->engine, compound_name, 1.0, VolumeUnit::L, 100., VolumePerTimeUnit::mL_Per_hr);
+
+            _pimpl->engine->AdvanceModelTime(1, TimeUnit::s);
+
+            action_infuse_compound(_pimpl->engine, compound_name, 1.0, VolumeUnit::L, 0, VolumePerTimeUnit::mL_Per_hr);
 
             _pimpl->engine->AdvanceModelTime(1, TimeUnit::s);
 
@@ -576,27 +585,32 @@ void BioGearsPlugin::run()
           }
 
           ////////////////////////////////////////
-          if (_pimpl->engine->GetActions().GetEnvironmentActions().HasThermalApplication()) {
-            _pimpl->engine->GetLogger()->Info(asprintf("ActiveHeating[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveHeating() ? "true" : "false")); // false
-          }
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_active_heating(_pimpl->engine, 500, 0.5);
-          _pimpl->engine->GetLogger()->Info(asprintf("ActiveHeating[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveHeating() ? "true" : "false")); // true
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-
-          _pimpl->engine->GetLogger()->Info(asprintf("ActiveCooling[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveCooling() ? "true" : "false"));
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_active_cooling(_pimpl->engine, 500, 0.5);
-          _pimpl->engine->GetLogger()->Info(asprintf("ActiveCooling[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveCooling() ? "true" : "false"));
-
-          _pimpl->engine->GetLogger()->Info(asprintf("AppliedTempeture[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasAppliedTemperature() ? "true" : "false"));
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_applied_temperature(_pimpl->engine, 37, 0.5);
-          _pimpl->engine->GetLogger()->Info(asprintf("AppliedTempeture[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasAppliedTemperature() ? "true" : "false"));
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_get_urine_color(_pimpl->engine);
-          action_urinate(_pimpl->engine);
+          // if (_pimpl->engine->GetActions().GetEnvironmentActions().HasThermalApplication()) {
+          //   _pimpl->engine->GetLogger()->Info(asprintf("ActiveHeating[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveHeating() ? "true" : "false")); // false
+          // }
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_active_heating(_pimpl->engine, 500, 0.5);
+          // _pimpl->engine->GetLogger()->Info(asprintf("ActiveHeating[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveHeating() ? "true" : "false")); // true
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          //
+          // _pimpl->engine->GetLogger()->Info(asprintf("ActiveCooling[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveCooling() ? "true" : "false"));
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_active_cooling(_pimpl->engine, 500, 0.5);
+          // _pimpl->engine->GetLogger()->Info(asprintf("ActiveCooling[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveCooling() ? "true" : "false"));
+          //
+          // _pimpl->engine->GetLogger()->Info(asprintf("AppliedTempeture[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasAppliedTemperature() ? "true" : "false"));
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_applied_temperature(_pimpl->engine, 37, 0.5);
+          // _pimpl->engine->GetLogger()->Info(asprintf("AppliedTempeture[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasAppliedTemperature() ? "true" : "false"));
+          // _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          // action_get_urine_color(_pimpl->engine);
+          // action_urinate(_pimpl->engine);
+          try {
           _pimpl->engine->SaveState("HowTo-API_Integration_FinalState.xml");
+            
+          } catch ( xsd::cxx::exception e) {
+            std::cout << e.what();
+          }
           _pimpl->simulation_finished.store(true);
         }
       }

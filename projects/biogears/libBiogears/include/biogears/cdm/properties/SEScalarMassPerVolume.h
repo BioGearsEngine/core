@@ -46,6 +46,8 @@ public:
 class BIOGEARS_API SEScalarMassPerVolume : public SEScalarQuantity<MassPerVolumeUnit> {
 public:
   SEScalarMassPerVolume() = default;
+  SEScalarMassPerVolume(const SEScalarMassPerVolume& obj);
+  SEScalarMassPerVolume(double, const MassPerVolumeUnit&);
   virtual ~SEScalarMassPerVolume() = default;
 
   CDM::ScalarMassPerVolumeData* Unload() const override;

@@ -18,61 +18,91 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 SESubstanceConcentration::SESubstanceConcentration(SESubstance& substance)
   : Loggable(substance.GetLogger())
-  , m_Substance(substance)
+  , m_Substance(&substance)
 {
-  m_Concentration = nullptr;
-}
 
+}
+//-------------------------------------------------------------------------------
+SESubstanceConcentration::SESubstanceConcentration(SESubstance& substance, SEScalarMassPerVolume concentration)
+  : Loggable(substance.GetLogger())
+  , m_Substance(&substance)
+  , m_Concentration( concentration)
+{
+}
+//-------------------------------------------------------------------------------
+SESubstanceConcentration::SESubstanceConcentration(SESubstance& substance, double concentration, const MassPerVolumeUnit& unit)
+  : Loggable(substance.GetLogger())
+  , m_Substance(&substance)
+  , m_Concentration(concentration, unit)
+{
+}
+//-------------------------------------------------------------------------------
 SESubstanceConcentration::~SESubstanceConcentration()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceConcentration::Clear()
 {
-  SAFE_DELETE(m_Concentration);
+  m_Concentration.Clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceConcentration::Load(const CDM::SubstanceConcentrationData& in)
 {
   Clear();
   GetConcentration().Load(in.Concentration());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::SubstanceConcentrationData* SESubstanceConcentration::Unload() const
 {
   CDM::SubstanceConcentrationData* data = new CDM::SubstanceConcentrationData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceConcentration::Unload(CDM::SubstanceConcentrationData& data) const
 {
-  data.Name(m_Substance.GetName());
-  if (m_Concentration != nullptr)
-    data.Concentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Concentration->Unload()));
+  data.Name(m_Substance->GetName());
+  data.Concentration(*m_Concentration.Unload());
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceConcentration::HasConcentration() const
 {
-  return (m_Concentration == nullptr) ? false : m_Concentration->IsValid();
+  return m_Concentration.IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstanceConcentration::GetConcentration()
 {
-  if (m_Concentration == nullptr)
-    m_Concentration = new SEScalarMassPerVolume();
-  return *m_Concentration;
+  return m_Concentration;
 }
+//-------------------------------------------------------------------------------
 double SESubstanceConcentration::GetConcentration(const MassPerVolumeUnit& unit) const
 {
-  if (m_Concentration == nullptr)
-    return SEScalar::dNaN();
-  return m_Concentration->GetValue(unit);
+  return m_Concentration.GetValue(unit);
 }
-
+//-------------------------------------------------------------------------------
 SESubstance& SESubstanceConcentration::GetSubstance() const
 {
-  return m_Substance;
+  return *m_Substance;
 }
+//-------------------------------------------------------------------------------
+bool SESubstanceConcentration::operator==(SESubstanceConcentration const& rhs) const
+{
+  return m_Substance == rhs.m_Substance
+    && m_Concentration == rhs.m_Concentration;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceConcentration::operator!=(SESubstanceConcentration const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+SESubstanceConcentration& SESubstanceConcentration::operator=(SESubstanceConcentration const& rhs)
+{
+  m_Substance = rhs.m_Substance;
+  m_Concentration = rhs.m_Concentration;
+  return *this;
+}
+
 }
