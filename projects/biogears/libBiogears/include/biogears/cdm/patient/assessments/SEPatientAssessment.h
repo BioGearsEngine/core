@@ -27,6 +27,8 @@ public:
   SEPatientAssessment(Logger* logger);
   virtual ~SEPatientAssessment();
 
+  virtual const char* classname() const = 0;
+
   virtual void Reset();
   virtual void Clear();
 

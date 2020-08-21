@@ -26,6 +26,9 @@ public:
   SEPulmonaryFunctionTest(Logger* logger);
   virtual ~SEPulmonaryFunctionTest();
 
+  static constexpr const char* TypeTag() { return "SEPulmonaryFunctionTest"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Reset();
   virtual void Clear();
 

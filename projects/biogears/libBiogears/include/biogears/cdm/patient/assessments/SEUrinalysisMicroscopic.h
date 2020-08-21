@@ -22,6 +22,9 @@ public:
   SEUrinalysisMicroscopic(Logger* logger);
   virtual ~SEUrinalysisMicroscopic();
 
+  static constexpr const char* TypeTag() { return "SEUrinalysisMicroscopic"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Reset();
   virtual void Clear();
 

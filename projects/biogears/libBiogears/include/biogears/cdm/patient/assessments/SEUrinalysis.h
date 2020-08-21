@@ -27,6 +27,9 @@ public:
   SEUrinalysis(Logger* logger);
   virtual ~SEUrinalysis();
 
+  static constexpr const char* TypeTag() { return "SEUrinalysis"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Reset();
   virtual void Clear();
 

@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include "biogears/cdm/properties/SEScalarMassPerAmount.h"
+#include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
 namespace biogears {
@@ -25,6 +25,9 @@ class BIOGEARS_API SECompleteBloodCount : public SEPatientAssessment {
 public:
   SECompleteBloodCount(Logger* logger);
   virtual ~SECompleteBloodCount();
+
+  static constexpr const char* TypeTag() { return "SECompleteBloodCount"; };
+  const char* classname() const override { return TypeTag(); }
 
   virtual void Reset(); //reset values
   virtual void Clear(); //clear memory

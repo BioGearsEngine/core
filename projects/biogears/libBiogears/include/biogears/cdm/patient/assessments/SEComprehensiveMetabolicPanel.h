@@ -24,6 +24,9 @@ public:
   SEComprehensiveMetabolicPanel(Logger* logger);
   virtual ~SEComprehensiveMetabolicPanel();
 
+  static constexpr const char* TypeTag() { return "SEComprehensiveMetabolicPanel"; };
+  const char* classname() const override { return TypeTag(); }
+
   virtual void Reset(); //reset values
   virtual void Clear(); //clear memory
 
