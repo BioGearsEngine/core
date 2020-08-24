@@ -61,6 +61,7 @@ public:
   EDriver Driver() const;
   EPlotStyle PlotStyle() const;
   bool NoCompare() const;
+  bool TrackStabilization() const;
   std::string Baselines() const;
   std::string Computed() const;
   std::string Group() const;
@@ -73,6 +74,7 @@ public:
   void Driver(EDriver);
   void PlotStyle(EPlotStyle);
   void NoCompare(bool);
+  void TrackStabilization(bool);
   void Baselines(const std::string&);
   void Computed(const std::string&);
   void Group(const std::string&);
@@ -88,6 +90,7 @@ private:
   EDriver driver;
   EPlotStyle plot_style;
   bool no_compare;
+  bool track_stabilization;
   std::string name;
   std::string baselines;
   std::string computed;
@@ -105,3 +108,4 @@ std::ostream& operator<<(std::ostream&, const EPlotStyle&);
 } //namespace biogears
 
 #endif //CMD_BIO_UTILS_EXECUTOR_H
+

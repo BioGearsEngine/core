@@ -652,6 +652,8 @@ bool handle_driver_paramaters(Tokenizer::token_list::iterator& tokenItr, Tokeniz
       continue;
     } else if (token == "nocompare") {
       rhs.NoCompare(true);
+    } else if (token == "track_stabilization") {
+      rhs.TrackStabilization(true);  
     } else if (token == "fastplot") {
       rhs.PlotStyle(EPlotStyle::FastPlot);
     } else if (token == "fullplot") {

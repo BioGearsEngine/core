@@ -3,7 +3,41 @@
   <Name>InitialStableState</Name>
   <Description>Stabilize a patient and save out the engines state at time zero</Description>
   <InitialParameters><PatientFile>all</PatientFile></InitialParameters>
-  
+  <DataRequests SamplesPerSecond="50">
+        <DataRequest xsi:type="PatientDataRequestData" Name="Age" Unit="yr" Precision="0"/>
+	<DataRequest xsi:type="PatientDataRequestData" Name="Weight" Unit="kg" Precision="1"/>       
+	<DataRequest xsi:type="PatientDataRequestData" Name="Height" Unit="in" Precision="0"/>
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="BodyDensity" Unit="g/cm^3" Precision="1"/>                                                       <DataRequest xsi:type="PatientDataRequestData" Name="BodyFatFraction" Precision="3"/> 
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="LeanBodyMass" Unit="kg" Precision="1"/> 
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="AlveoliSurfaceArea" Unit="m^2" Precision="0"/>  
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="RightLungRatio" Precision="2"/>
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="SkinSurfaceArea" Unit="m^2" Precision="2"/>
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="BasalMetabolicRate" Unit="kcal/day" Precision="0"/>
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="BloodVolumeBaseline" Unit="mL" Precision="0"/>  
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="DiastolicArterialPressureBaseline" Unit="mmHg" Precision="4"/>
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="HeartRateBaseline" Unit="1/min" Precision="0"/>  
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="MeanArterialPressureBaseline" Unit="mmHg" Precision="4"/>
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="RespirationRateBaseline" Unit="1/min" Precision="0"/>   
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="SystolicArterialPressureBaseline" Unit="mmHg" Precision="4"/> 
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="TidalVolumeBaseline" Unit="mL" Precision="0"/> 
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="HeartRateMaximum" Unit="1/min" Precision="0"/>
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="HeartRateMinimum" Unit="1/min" Precision="3"/>   
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="ExpiratoryReserveVolume" Unit="mL" Precision="0"/>
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="FunctionalResidualCapacity" Unit="mL" Precision="0"/>    
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="InspiratoryCapacity" Unit="mL" Precision="0"/> 
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="InspiratoryReserveVolume" Unit="mL" Precision="0"/> 
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="ResidualVolume" Unit="mL" Precision="0"/>
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="TotalLungCapacity" Unit="mL" Precision="0"/> 
+ 	<DataRequest xsi:type="PatientDataRequestData" Name="VitalCapacity" Unit="mL" Precision="0"/>
+ 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalMetabolicRate" Unit="kcal/day" Precision="0"/>   
+ 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume" Unit="mL" Precision="4"/>   
+ 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure" Unit="mmHg" Precision="4"/>  
+ 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate" Unit="1/min" Precision="0"/>
+ 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure" Unit="mmHg" Precision="4"/>
+ 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate" Unit="1/min" Precision="0"/>
+ 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure" Unit="mmHg" Precision="4"/>   
+ 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume" Unit="mL" Precision="0"/>
+  </DataRequests>                                                                                                                                    
   <Action xsi:type="SerializeStateData" Type="Save">
 		<Filename></Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
   </Action>
