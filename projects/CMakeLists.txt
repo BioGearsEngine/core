@@ -128,7 +128,6 @@ list(APPEND runtime_glob_list   "${runtime_xsd_list}" "${runtime_jar_list}"   "$
 
 add_custom_target( prepare_runtime_dir
   DEPENDS 
-  ${${ROOT_PROJECT_NAME}_RUNTIME_DIR}
   ${${ROOT_PROJECT_NAME}_RUNTIME_DIR}/UCEDefs.conf
   ${runtime_glob_list}
   COMMENT "Scanning for need to stage runtime dir"

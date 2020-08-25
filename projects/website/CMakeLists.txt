@@ -91,8 +91,8 @@ if(Biogears_Python_BUILD_WEBSITE)
     add_custom_target(docs-prepare-py
 	COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${CDM2MD_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md#cdm
 	COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE} -p doc/markdown -f doc/doxygen/processed_md #cdm
-        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE}  -p doc/methodology -f doc/doxygen/processed_md #cdm
-        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm 
+    COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE}  -p doc/methodology -f doc/doxygen/processed_md #cdm
+    COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm 
 	COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-1_2.config -j 5 -v
 	COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-2_2.config -j 5 -v
 	WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
@@ -149,23 +149,19 @@ if(Biogears_Python_BUILD_WEBSITE)
         USES_TERMINAL
     	)
   endif()
-endif()
 
-
-if(Biogears_Python_BUILD_WEBSITE)
   
-	#if (NOT Biogears_BUILD_WEBSITE_DEBUG)
-	# add_dependencies(docs-doxygen-py docs-prepare-py)
-	#add_dependencies(docs-stage-py docs-doxygen-py)
-	#endif()
-    
-    set_target_properties(docs-prepare-py PROPERTIES FOLDER "Python/website" EXCLUDE_FROM_ALL ON)
-    set_target_properties(docs-doxygen-py PROPERTIES FOLDER "Python/website" EXCLUDE_FROM_ALL ON)
-    set_target_properties(docs-stage-py PROPERTIES FOLDER "Python/website"   EXCLUDE_FROM_ALL ON)
-    
-    if(TARGET stage_runtime AND ${ROOT_PROJECT_NAME}_STAGE_RUNTIME)
-    	add_dependencies(docs-prepare-py stage_runtime )
+    add_dependencies(docs-prepare-py prepare_runtime_dir bg-cli venvcreate )
+    add_dependencies(docs-doxygen-py docs-prepare-py )
+    add_dependencies(docs-stage-py   docs-doxygen-py )
+    if(TARGET prepare_runtime_dir AND ${ROOT_PROJECT_NAME}_PREPARE_RUNTIME_DIR)
+    	add_dependencies(docs-prepare-py prepare_runtime_dir )
+        if (Biogears_BUILD_WEBSITE_DEBUG)
+            add_dependencies(docs-prepare-cdm2md prepare_runtime_dir )
+            add_dependencies(docs-prepare-preprocess-markdown prepare_runtime_dir )
+            add_dependencies(docs-prepare-preprocess-methodolgy prepare_runtime_dir )
+            add_dependencies(docs-prepare-xsd2doxygen prepare_runtime_dir )
+        endif()
     endif()
 
 endif()
-
