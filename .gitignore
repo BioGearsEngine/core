@@ -3,7 +3,7 @@ build*/
 
 #Sublime
 *.sublime-workspace
-
+**/__pycache__
 #Linux
 *.swp
 
