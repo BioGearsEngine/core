@@ -9,84 +9,82 @@ cmake_policy(VERSION 3.8.0)
 # Options
 ###############################################################################
 
-option(Biogears_Python_BUILD_WEBSITE "Use Python to build the website" OFF)
+option(Biogears_BUILD_WEBSITE "Adds targets to assist in compiling documentation for the biogears website (Requires Python,Latex,Doxygen,and Perl" OFF)
+if(Biogears_BUILD_WEBSITE)
+    ###############################################################################
+    # Base Variables
+    ###############################################################################
 
-###############################################################################
-# Base Variables
-###############################################################################
+    set(PROJECT_NAME Python_BioGears)
+    set(biogears_reference_file "D:/biogears/references/BioGears.bib")
+    set(doxygen_dot_dir "C:/Program Files/graphviz-2.38/release/bin/")
 
-set(PROJECT_NAME Python_BioGears)
-set(biogears_reference_file "D:/biogears/references/BioGears.bib")
-set(doxygen_dot_dir "C:/Program Files/graphviz-2.38/release/bin/")
+    ###############################################################################
+    # Requirements
+    ###############################################################################
 
-###############################################################################
-# Requirements
-###############################################################################
-
-if(Biogears_Python_BUILD_WEBSITE)
     find_package(Perl REQUIRED)
     find_package(Doxygen REQUIRED)
     find_package (Python3 COMPONENTS Interpreter Development REQUIRED )
     find_package(LATEX COMPONENTS BIBTEX REQUIRED)	
-endif()
 
-###############################################################################
-#Virtual Environment
-###############################################################################
+    ###############################################################################
+    #Virtual Environment
+    ###############################################################################
 
-find_program(VIRTUALENV virtualenv)
+    find_program(VIRTUALENV virtualenv)
 
-if(UNIX)
-  set(PYTHON_SCRIPT_DIR "bin")
-else()
-  set(PYTHON_SCRIPT_DIR "Scripts")
-endif()
+    if(UNIX)
+      set(PYTHON_SCRIPT_DIR "bin")
+    else()
+      set(PYTHON_SCRIPT_DIR "Scripts")
+    endif()
 
-if(NOT VIRTUALENV)
-    message(FATAL_ERROR "Could not find `virtualenv` in PATH")
-endif()
+    if(NOT VIRTUALENV)
+        message(FATAL_ERROR "Could not find `virtualenv` in PATH")
+    endif()
 
-add_custom_command(
-    OUTPUT venv
-    COMMAND ${VIRTUALENV} -p ${Python3_EXECUTABLE} venv
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-    )
+    add_custom_command(
+        OUTPUT venv
+        COMMAND ${VIRTUALENV} -p ${Python3_EXECUTABLE} venv
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        )
 
-add_custom_command(
-    OUTPUT venv.stamp
-    DEPENDS venv requirements.txt
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/requirements.txt requirements.txt
-    COMMAND venv/${PYTHON_SCRIPT_DIR}/pip${CMAKE_EXECUTABLE_SUFFIX} install -r requirements.txt --upgrade
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-    )
+    add_custom_command(
+        OUTPUT venv.stamp
+        DEPENDS venv requirements.txt
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/requirements.txt requirements.txt
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/pip${CMAKE_EXECUTABLE_SUFFIX} install -r requirements.txt --upgrade
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        )
 
-add_custom_target(venvcreate ALL
-    DEPENDS venv.stamp
-    SOURCES requirements.txt
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-    )
+    add_custom_target(venvcreate ALL
+        DEPENDS venv.stamp
+        SOURCES requirements.txt
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        )
 
-###############################################################################
-#Sorce and Header Defines
-###############################################################################
+    ###############################################################################
+    #Sorce and Header Defines
+    ###############################################################################
 
-message(STATUS "Configuring ${PROJECT_NAME}")
-configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/doxyfile.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/Doxyfile @ONLY)
+    message(STATUS "Configuring ${PROJECT_NAME}")
+    configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/doxyfile.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/Doxyfile @ONLY)
 
-###############################################################################
-#Define Logic
-###############################################################################
+    ###############################################################################
+    #Define Logic
+    ###############################################################################
 
-set(CDM2MD_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/doxygen/CDM2MD.py)
-set(DoxygenPreprocessor_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/doxygen/DoxygenPreprocessor.py)
-set(XSDToDOXYGEN_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/doxygen/XSDToDoxygen.py)
-set(Plot_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/plots/PlotDriver.py)
+    set(CDM2MD_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/doxygen/CDM2MD.py)
+    set(DoxygenPreprocessor_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/doxygen/DoxygenPreprocessor.py)
+    set(XSDToDOXYGEN_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/doxygen/XSDToDoxygen.py)
+    set(Plot_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/plots/PlotDriver.py)
 
-###############################################################################
-# COMPILATION & LINKAGE MODIFICATIONS
-###############################################################################
+    ###############################################################################
+    # COMPILATION & LINKAGE MODIFICATIONS
+    ###############################################################################
 
-if(Biogears_Python_BUILD_WEBSITE)
+
     message(STATUS "Python_ver: ${Python3_EXECUTABLE}")
     add_custom_target(docs-prepare-py
 	COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${CDM2MD_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md#cdm
@@ -119,8 +117,7 @@ if(Biogears_Python_BUILD_WEBSITE)
         USES_TERMINAL
  	)
   
-  if(Biogears_BUILD_WEBSITE_DEBUG)
-    
+    if(Biogears_BUILD_WEBSITE_DEBUG)    
     add_custom_target(docs-prepare-cdm2md
         COMMAND ${Python3_EXECUTABLE}  ${CDM2MD_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
@@ -148,14 +145,12 @@ if(Biogears_Python_BUILD_WEBSITE)
         VERBATIM
         USES_TERMINAL
     	)
-  endif()
-
-  
+    endif()
     add_dependencies(docs-prepare-py prepare_runtime_dir bg-cli venvcreate )
     add_dependencies(docs-doxygen-py docs-prepare-py )
     add_dependencies(docs-stage-py   docs-doxygen-py )
     if(TARGET prepare_runtime_dir AND ${ROOT_PROJECT_NAME}_PREPARE_RUNTIME_DIR)
-    	add_dependencies(docs-prepare-py prepare_runtime_dir )
+        add_dependencies(docs-prepare-py prepare_runtime_dir )
         if (Biogears_BUILD_WEBSITE_DEBUG)
             add_dependencies(docs-prepare-cdm2md prepare_runtime_dir )
             add_dependencies(docs-prepare-preprocess-markdown prepare_runtime_dir )
@@ -163,5 +158,4 @@ if(Biogears_Python_BUILD_WEBSITE)
             add_dependencies(docs-prepare-xsd2doxygen prepare_runtime_dir )
         endif()
     endif()
-
 endif()
