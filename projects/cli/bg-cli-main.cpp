@@ -227,8 +227,10 @@ int main(int argc, char** argv)
       std::transform(table.begin(), table.end(), table.begin(), ::tolower);
       if (table == "html") {
         report_writer.gen_tables(biogears::ReportWriter::HTML);
+	report_writer.gen_patient_tables(biogears::ReportWriter::HTML);
       } else if (table == "md") {
         report_writer.gen_tables(biogears::ReportWriter::MD);
+	report_writer.gen_patient_tables(biogears::ReportWriter::MD);
       } else if (table == "xml") {
         report_writer.gen_tables(biogears::ReportWriter::XML);
       } else if (table == "web") {

@@ -260,7 +260,8 @@ void ReportWriter::gen_tables(TYPE table_type)
     { "EndocrineValidation", "Scenarios/Validation" },
     { "RenalValidation", "Scenarios/Validation" },
     { "RespiratoryValidation", "Scenarios/Validation" },
-    { "TissueValidation", "Scenarios/Validation" }
+    { "TissueValidation", "Scenarios/Validation" },
+    
   };
 
   //Map of SystemTables to required test. Second paramater i
@@ -312,6 +313,240 @@ void ReportWriter::gen_tables(TYPE table_type)
     clear();
   }
 }
+/*
+void ReportWriter::gen_patient_tables(TYPE table_type)
+{
+  std::vector<std::pair<std::string, std::string>> SystemTables {
+    {"Validation-Bradycardic","Scenarios/Validation"} 
+  };
+
+  //Map of SystemTables to required test. Second paramater i
+  std::map<std::string, std::vector<std::string>> test_files {
+    { "Validation-Bradycardic", { "states/Bradycardic@0s.xml" } }
+  };
+
+  bool success = true;
+  for (int i = 0; i < SystemTables.size(); i++) {
+    try {
+      bool no_faults = false;
+      const std::string reference_value_file = "Scenarios/Validation/"+SystemTables[i].first + "Results.csv";
+      const std::string library_baseline_file = locateBaseline(SystemTables[i].second, SystemTables[i].first);
+      clear();
+      logger->SetConsolesetConversionPattern(SystemTables[i].first + ".md %n");
+      logger->Info("");
+      logger->SetConsolesetConversionPattern("\t[%p]%m%n");
+      ParseReferenceCSV(reference_value_file);
+      ParseResultsCSV(library_baseline_file);
+      if (test_files[SystemTables[i].first].size()) {
+        for (auto test : test_files[SystemTables[i].first]) {
+          try {
+            //ParseXML(resolveTestLocation(library_baseline_file, test), test);
+              ParseXML(test,test);
+          } catch (std::runtime_error e) {
+            logger->Error(biogears::asprintf("Unable to parse %s for %s \n\t %s", test.c_str(), SystemTables[i].first.c_str(), e.what()));
+            success = false;
+            continue;
+          }
+        }
+      }
+      CalculateAverages();
+      ExtractValues();
+      Validate();
+      PopulateTables();
+      if (table_type == HTML) {
+        set_html();
+      } else if (table_type == MD) {
+        set_md();
+      } else if (table_type == XML) {
+        set_xml();
+      } else {
+        set_web();
+      }
+      to_table();
+    } catch (std::runtime_error e) {
+      logger->Error("Failure generating " + SystemTables[i].first + "\n\t " + e.what());
+      success &= false;
+    }
+    clear();
+  }
+}
+*/
+struct PatientValidationRow {
+  std::string  name;
+  double baseline = 0.0;
+  double mean = 0.0;
+  double percent_error = 0.0;
+};
+
+void ReportWriter::gen_patient_tables(TYPE table_type)
+{
+  std::vector<std::pair<std::string, std::string>> SystemTables {
+    {"Validation-Cynthia","Scenarios/Validation"},
+    {"Validation-Joel","Scenarios/Validation"},
+    {"Validation-Bradycardic","Scenarios/Validation"},
+    {"Validation-ExtremeFemale","Scenarios/Validation"},
+    {"Validation-ExtremeMale","Scenarios/Validation"},
+    {"Validation-Underweight","Scenarios/Validation"},
+    {"Validation-DefaultMale","Scenarios/Validation"},
+    {"Validation-Tachycardic","Scenarios/Validation"},
+    {"Validation-SleepDeprived","Scenarios/Validation"},
+    {"Validation-DefaultFemale","Scenarios/Validation"},
+    {"Validation-Hassan","Scenarios/Validation"},
+    {"Validation-Roy","Scenarios/Validation"},
+    {"Validation-Jeff","Scenarios/Validation"},
+    {"Validation-ToughGirl","Scenarios/Validation"},
+    {"Validation-Nathan","Scenarios/Validation"},
+    {"Validation-StandardMale","Scenarios/Validation"},
+    {"Validation-Overweight","Scenarios/Validation"},
+    {"Validation-Carol","Scenarios/Validation"},
+    {"Validation-DefaultTemplateFemale","Scenarios/Validation"},
+    {"Validation-Guss","Scenarios/Validation"},
+    {"Validation-StandardFemale","Scenarios/Validation"},
+    {"Validation-Rick","Scenarios/Validation"},
+    {"Validation-Jane","Scenarios/Validation"},
+    {"Validation-ToughGuy","Scenarios/Validation"},
+    {"Validation-Tristan","Scenarios/Validation"},
+    {"Validation-Soldier","Scenarios/Validation"},
+     
+  };  
+  bool success = true;
+  for (auto& system : SystemTables) {
+      std::vector<std::string>  row_header;
+      std::map<std::string, double> mean_table;
+      std::string resultsFile =system.second+"/"+system.first + "Results.csv";
+      std::vector<std::pair<std::string, PatientValidationRow>> values(35);
+      std::vector<std::pair<std::string,int>> headers;
+      //std::vector<std::string> headers;
+      std::fstream result {resultsFile};
+      std::string line;
+      double row_count=0.0;
+      std::vector<std::string> validation_rows = {
+       "Time(s)", 
+       "PatientAge(yr)",
+       "PatientWeight(kg)", "PatientHeight(in)",
+       "PatientBodyDensity(g/cm^3)","PatientBodyFatFraction",
+       "PatientLeanBodyMass(kg)", "PatientAlveoliSurfaceArea(m^2)",
+       "PatientRightLungRatio", "PatientSkinSurfaceArea(m^2)",
+       "PatientBasalMetabolicRate(kcal/day)", "PatientBloodVolumeBaseline(mL)",
+       "PatientDiastolicArterialPressureBaseline(mmHg)",
+       "PatientHeartRateBaseline(1/min)",
+       "PatientMeanArterialPressureBaseline(mmHg)",
+       "PatientRespirationRateBaseline(1/min)",
+       "PatientSystolicArterialPressureBaseline(mmHg)",
+       "PatientTidalVolumeBaseline(mL)", "PatientHeartRateMaximum(1/min)",
+       "PatientHeartRateMinimum(1/min)", "PatientExpiratoryReserveVolume(mL)",
+       "PatientFunctionalResidualCapacity(mL)",
+       "PatientInspiratoryCapacity(mL)", "PatientInspiratoryReserveVolume(mL)",
+       "PatientResidualVolume(mL)", "PatientTotalLungCapacity(mL)",
+       "PatientVitalCapacity(mL)", "TotalMetabolicRate(kcal/day)",
+       "BloodVolume(mL)", "DiastolicArterialPressure(mmHg)",
+       "HeartRate(1/min)", "MeanArterialPressure(mmHg)",
+       "RespirationRate(1/min)", "SystolicArterialPressure(mmHg)",
+       "TidalVolume(mL)"      
+        };
+      while (std::getline(result, line)) {
+          if(row_count==0.0){
+            auto column_names = biogears::split(line,',');
+            for ( auto i = 0; i < column_names.size() ; ++i) {
+            headers.emplace_back(column_names[i],i);
+            }
+          }
+          else{
+              auto columns = biogears::split(line,',');
+              for (auto i=0;i<validation_rows.size();++i) {
+              try{
+                  values[i].first=validation_rows[i];
+                  values[i].second.mean +=  std::stod( columns.at(headers[i].second));
+                } catch (std::runtime_error e) {
+                  std::cout<<"Runtime Error";
+                  
+              }
+            }
+            for ( auto& vRows: values){
+                 vRows.second.mean = vRows.second.mean / row_count;
+            }
+          }          
+          row_count+=1.0;          
+      }
+      if (table_type == HTML) {
+        set_html();
+      } else if (table_type == MD) {
+        set_md();
+      } else if (table_type == XML) {
+        set_xml();
+      } else {
+        set_web();
+      }
+      //for (int i=0; i<values.size(); i++) 
+      //  std::cout << values[i].first << " " << values[i].second.mean << std::endl; 
+      std::string Outputfile=system.first;
+      generate_table(Outputfile,headers,values);
+    } 
+ 
+} 
+
+    
+void ReportWriter::generate_table(const std::string& Outputfile,std::vector<std::pair<std::string,int>>& headers,std::vector<std::pair<std::string, PatientValidationRow>>& values)
+{
+  report.append(_body_begin);
+    std::string table;
+    std::string table_name = Outputfile;
+    table += std::string(_table_begin);
+    for (int i = 0; i < values.size(); i++) { // This loop iterates through every TableRow inside table_itr
+      std::string line;
+      if (values[i].second.mean<10) {
+        line += (i == 0) ? _table_row_begin : _table_row_begin_green;
+      } else if (values[i].second.mean>20) {
+        line += (i == 0) ? _table_row_begin : _table_row_begin_red;
+      } else if (values[i].second.mean>10 && values[i].second.mean<20) { //This line isn't technically necessary, but I'm leaving it in for readability
+        line += (i == 0) ? _table_row_begin : _table_row_begin_yellow;
+      }
+      line += _table_item_begin;
+      line += values[i].first;
+      line += _table_item_end;
+      line += _table_item_begin;
+      //line += table_itr->second[i].expected_value;
+      line += values[i].second.mean;
+      line += _table_item_end;
+      line += _table_item_begin;
+      //line += (i == 0) ? "Engine Value" : std::to_string(table_itr->second[i].engine_value);
+      line += (i == 0) ? "Engine Value" : std::to_string(values[i].second.mean);
+      line += _table_item_end;
+      line += _table_item_begin;
+      //line += table_itr->second[i].percent_error;
+      line += values[i].second.mean;
+      line += _table_item_end;
+      line += _table_item_begin;
+      //line += table_itr->second[i].notes;
+      line += values[i].second.mean; 
+      line += _table_row_end;
+      table.append(line);
+      if (i == 0) { //So markdown needs this line after the first line to know that it's representing a table
+        table.append(_table_second_line);
+      }
+    }
+    table += std::string(_table_end);
+    // This block saves out the html tables for website generation
+    std::ofstream file;
+
+#if _WIN32
+    _mkdir("doc");
+    _mkdir("doc/validation");
+#else
+    mkdir("doc", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir("doc/validation", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
+    auto filename = "doc/validation/" + Outputfile + "ValidationTable" + _file_extension;
+    std::cout<<Outputfile+_file_extension+"\n";
+    file.open(filename);
+    if (!file) {
+      throw std::runtime_error(biogears::asprintf("Unable to open file %s", filename.c_str()));
+    }
+    file << (std::string(_body_begin) + table + std::string(_body_end));
+    file.close();
+    table.clear();
+  }
+
 //-------------------------------------------------------------------------------
 /// \brief Takes the data stored in tables (a map pairing table names (std::string) to a list of TableRow objects (std::vector<biogears::TableRow>)
 /// and prints out a full validation table for each item in tables.
