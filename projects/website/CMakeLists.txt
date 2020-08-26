@@ -16,8 +16,6 @@ if(Biogears_BUILD_WEBSITE)
     ###############################################################################
 
     set(PROJECT_NAME Python_BioGears)
-    set(biogears_reference_file "D:/biogears/references/BioGears.bib")
-    set(doxygen_dot_dir "C:/Program Files/graphviz-2.38/release/bin/")
 
     ###############################################################################
     # Requirements
@@ -26,7 +24,7 @@ if(Biogears_BUILD_WEBSITE)
     find_package(Perl REQUIRED)
     find_package(Doxygen REQUIRED)
     find_package (Python3 COMPONENTS Interpreter Development REQUIRED )
-    find_package(LATEX COMPONENTS BIBTEX REQUIRED)	
+    find_package(LATEX COMPONENTS BIBTEX REQUIRED)  
 
     ###############################################################################
     #Virtual Environment
@@ -87,25 +85,25 @@ if(Biogears_BUILD_WEBSITE)
 
     message(STATUS "Python_ver: ${Python3_EXECUTABLE}")
     add_custom_target(docs-prepare-py
-	COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${CDM2MD_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md#cdm
-	COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE} -p doc/markdown -f doc/doxygen/processed_md #cdm
-    COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE}  -p doc/methodology -f doc/doxygen/processed_md #cdm
-    COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm 
-	COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-1_2.config -j 5 -v
-	COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-2_2.config -j 5 -v
-	WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-	COMMENT "Running docs-prepare"
-	VERBATIM
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${CDM2MD_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md#cdm
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE} -p doc/markdown -f doc/doxygen/processed_md #cdm
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE}  -p doc/methodology -f doc/doxygen/processed_md #cdm
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm 
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-1_2.config -j 5 -v
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-2_2.config -j 5 -v
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        COMMENT "Running docs-prepare"
+        VERBATIM
         USES_TERMINAL
-  	)
+    )
   
     add_custom_target(docs-doxygen-py
         COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
-	COMMENT "Running docs-doxygen"
-	WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/doxygen
+        COMMENT "Running docs-doxygen"
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/doxygen
         VERBATIM
         USES_TERMINAL
-  	)
+    )
 
     add_custom_target(docs-stage-py
         COMMAND ${CMAKE_COMMAND} -E  make_directory output/documentation
@@ -113,9 +111,9 @@ if(Biogears_BUILD_WEBSITE)
         COMMAND ${CMAKE_COMMAND} -E tar cfv output/documentation.zip  --format=zip  -- output/documentation
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/
         VERBATIM
-	COMMENT "Running docs-stage"
+        COMMENT "Running docs-stage"
         USES_TERMINAL
- 	)
+   )
   
     if(Biogears_BUILD_WEBSITE_DEBUG)    
     add_custom_target(docs-prepare-cdm2md
@@ -123,28 +121,28 @@ if(Biogears_BUILD_WEBSITE)
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
         VERBATIM
         USES_TERMINAL
-    	)
+      )
     
     add_custom_target(docs-prepare-preprocess-markdown
         COMMAND ${Python3_EXECUTABLE}  ${DoxygenPreprocessor_SOURCE} -p doc/markdown -f doc/doxygen/processed_md
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
         VERBATIM
         USES_TERMINAL
-    	)
+      )
     
     add_custom_target(docs-prepare-preprocess-methodolgy
         COMMAND ${Python3_EXECUTABLE}  ${DoxygenPreprocessor_SOURCE} -p doc/methodology -f doc/doxygen/processed_md
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
         VERBATIM
         USES_TERMINAL
-    	)
+      )
     
     add_custom_target(docs-prepare-xsd2doxygen
         COMMAND ${Python3_EXECUTABLE}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
         VERBATIM
         USES_TERMINAL
-    	)
+      )
     endif()
     add_dependencies(docs-prepare-py prepare_runtime_dir bg-cli venvcreate )
     add_dependencies(docs-doxygen-py docs-prepare-py )
