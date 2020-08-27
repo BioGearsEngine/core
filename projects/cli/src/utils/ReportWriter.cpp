@@ -313,64 +313,7 @@ void ReportWriter::gen_tables(TYPE table_type)
     clear();
   }
 }
-/*
-void ReportWriter::gen_patient_tables(TYPE table_type)
-{
-  std::vector<std::pair<std::string, std::string>> SystemTables {
-    {"Validation-Bradycardic","Scenarios/Validation"} 
-  };
 
-  //Map of SystemTables to required test. Second paramater i
-  std::map<std::string, std::vector<std::string>> test_files {
-    { "Validation-Bradycardic", { "states/Bradycardic@0s.xml" } }
-  };
-
-  bool success = true;
-  for (int i = 0; i < SystemTables.size(); i++) {
-    try {
-      bool no_faults = false;
-      const std::string reference_value_file = "Scenarios/Validation/"+SystemTables[i].first + "Results.csv";
-      const std::string library_baseline_file = locateBaseline(SystemTables[i].second, SystemTables[i].first);
-      clear();
-      logger->SetConsolesetConversionPattern(SystemTables[i].first + ".md %n");
-      logger->Info("");
-      logger->SetConsolesetConversionPattern("\t[%p]%m%n");
-      ParseReferenceCSV(reference_value_file);
-      ParseResultsCSV(library_baseline_file);
-      if (test_files[SystemTables[i].first].size()) {
-        for (auto test : test_files[SystemTables[i].first]) {
-          try {
-            //ParseXML(resolveTestLocation(library_baseline_file, test), test);
-              ParseXML(test,test);
-          } catch (std::runtime_error e) {
-            logger->Error(biogears::asprintf("Unable to parse %s for %s \n\t %s", test.c_str(), SystemTables[i].first.c_str(), e.what()));
-            success = false;
-            continue;
-          }
-        }
-      }
-      CalculateAverages();
-      ExtractValues();
-      Validate();
-      PopulateTables();
-      if (table_type == HTML) {
-        set_html();
-      } else if (table_type == MD) {
-        set_md();
-      } else if (table_type == XML) {
-        set_xml();
-      } else {
-        set_web();
-      }
-      to_table();
-    } catch (std::runtime_error e) {
-      logger->Error("Failure generating " + SystemTables[i].first + "\n\t " + e.what());
-      success &= false;
-    }
-    clear();
-  }
-}
-*/
 struct PatientValidationRow {
   std::string  name;
   double baseline = 0.0;
@@ -400,7 +343,7 @@ void ReportWriter::gen_patient_tables(TYPE table_type)
     {"Validation-Overweight","Scenarios/Validation"},
     {"Validation-Carol","Scenarios/Validation"},
     {"Validation-DefaultTemplateFemale","Scenarios/Validation"},
-    {"Validation-Guss","Scenarios/Validation"},
+    {"Validation-Gus","Scenarios/Validation"},
     {"Validation-StandardFemale","Scenarios/Validation"},
     {"Validation-Rick","Scenarios/Validation"},
     {"Validation-Jane","Scenarios/Validation"},
@@ -479,7 +422,7 @@ void ReportWriter::gen_patient_tables(TYPE table_type)
       }
       //for (int i=0; i<values.size(); i++) 
       //  std::cout << values[i].first << " " << values[i].second.mean << std::endl; 
-      std::string Outputfile=system.first;
+      std::string Outputfile=system.first.substr(11,system.first.length());
       generate_table(Outputfile,headers,values);
     } 
  
@@ -536,8 +479,8 @@ void ReportWriter::generate_table(const std::string& Outputfile,std::vector<std:
     mkdir("doc", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     mkdir("doc/validation", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #endif
-    auto filename = "doc/validation/" + Outputfile + "ValidationTable" + _file_extension;
-    std::cout<<Outputfile+_file_extension+"\n";
+    auto filename = "doc/validation/" + Outputfile + "PatientValidationTable" + _file_extension;
+    std::cout<<Outputfile+"PatientValidationTable"+_file_extension+"\n";
     file.open(filename);
     if (!file) {
       throw std::runtime_error(biogears::asprintf("Unable to open file %s", filename.c_str()));
