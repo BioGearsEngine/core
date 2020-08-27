@@ -62,9 +62,16 @@ public:
   void set_md();
   void set_xml();
   void set_web();
-
+  struct PatientValidationRow {
+  std::string  name;
+  double baseline = 0.0;
+  double mean = 0.0;
+  double percent_error = 0.0;
+};
+  void generate_table(const std::string& Outputfile,std::vector<std::pair<std::string,int>>& headers,std::vector<std::pair<std::string, PatientValidationRow>>& values);
   void gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type);
   void gen_tables(TYPE table_type);
+  void gen_patient_tables(TYPE table_type);
   void ParseReferenceCSV(const std::string filename);
   void ParseResultsCSV(const std::string filename);
   void CalculateAverages();

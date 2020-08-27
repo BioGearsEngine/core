@@ -32,6 +32,8 @@
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
+#include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
+#include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
 
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
 #include <biogears/cdm/test/CommonDataModelTest.h>
@@ -285,13 +287,13 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     }
   }
 
-  std::unique_ptr<mil::tatrc::physiology::datamodel::ScenarioData> scenario;
+  std::unique_ptr<CDM::ScenarioData> scenario;
   try {
     xml_schema::flags xml_flags;
     xml_schema::properties xml_properties;
 
     xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
-    scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
+    scenario = CDM::Scenario(ifs, xml_flags, xml_properties);
   } catch (std::runtime_error e) {
     std::cout << e.what() << "\n";
     return;
@@ -362,13 +364,22 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
 {
   using namespace biogears;
   _process_count += 1;
-
+  std::cout<<"Trying this up in subprocess_execute";
   try {
     using namespace boost::process;
 
     std::string options;
 
     options = "--quiet";
+    if(ex.TrackStabilization()){
+	std::cout<<"Checking sub fun";
+        if (eng->GetConfiguration()->HasDynamicStabilizationCriteria()) {
+          const_cast<PhysiologyEngineDynamicStabilization*>(eng->GetConfiguration()->GetDynamicStabilizationCriteria())->TrackStabilization(CDM::enumOnOff::On);
+        }
+        if (eng->GetConfiguration()->HasTimedStabilizationCriteria()) {
+          const_cast<PhysiologyEngineTimedStabilization*>(eng->GetConfiguration()->GetTimedStabilizationCriteria())->TrackStabilization(CDM::enumOnOff::On);
+        }
+    }
 
     if (ex.Name().size()) {
       auto name = biogears::trim(ex.Name());
@@ -542,7 +553,6 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   if (multi_patient_run) {
     ex.Name(ex.Name() + "-" + patient_no_extension);
   }
-
   std::string base_file_name = (multi_patient_run) ? scenario_no_extension + "-" + patient_no_extension : scenario_no_extension;
   std::string console_file = base_file_name + ".log";
   std::string log_file = base_file_name + "Results.log";
@@ -556,14 +566,23 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
     file_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] " + ex.Name() + " %m%n");
     console_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] %m%n");
     console_logger.FormatMessages(false);
-
     eng = CreateBioGearsEngine(&file_logger);
   } catch (std::exception e) {
     std::cout << e.what();
     _thread_count -= 1;
     return;
   }
-
+   if(ex.TrackStabilization()){
+	   std::cout<<"Checking the function\n";
+        if (eng->GetConfiguration()->HasDynamicStabilizationCriteria()) {
+		std::cout<<"Checking the function 2 \n";
+          const_cast<PhysiologyEngineDynamicStabilization*>(eng->GetConfiguration()->GetDynamicStabilizationCriteria())->TrackStabilization(CDM::enumOnOff::On);
+        }
+        if (eng->GetConfiguration()->HasTimedStabilizationCriteria()) {
+		std::cout<<"Checking the function 3 \n";
+          const_cast<PhysiologyEngineTimedStabilization*>(eng->GetConfiguration()->GetTimedStabilizationCriteria())->TrackStabilization(CDM::enumOnOff::On);
+        }
+    }
   BioGearsScenario sce(eng->GetSubstanceManager());
   if (!sce.Load(trim(trimed_scenario_path))) {
     console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
@@ -581,13 +600,13 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       return;
     }
 
-    std::unique_ptr<mil::tatrc::physiology::datamodel::ScenarioData> scenario;
+    std::unique_ptr<CDM::ScenarioData> scenario;
     try {
       xml_schema::flags xml_flags;
       xml_schema::properties xml_properties;
       std::cout << "Reading " << ex.Scenario() << std::endl;
       xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
-      scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
+      scenario = CDM::Scenario(ifs, xml_flags, xml_properties);
     } catch (std::runtime_error e) {
       std::cout << e.what() << std::endl;
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", ExecutionErrors::SCENARIO_PARSE_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
