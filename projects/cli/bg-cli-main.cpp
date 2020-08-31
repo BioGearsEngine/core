@@ -233,12 +233,17 @@ int main(int argc, char** argv)
 	report_writer.gen_patient_tables(biogears::ReportWriter::MD);
       } else if (table == "xml") {
         report_writer.gen_tables(biogears::ReportWriter::XML);
+	report_writer.gen_patient_tables(biogears::ReportWriter::XML);
       } else if (table == "web") {
         report_writer.gen_tables(biogears::ReportWriter::WEB);
+	report_writer.gen_patient_tables(biogears::ReportWriter::WEB);
       } else if (table == "all") {
         report_writer.gen_tables(biogears::ReportWriter::HTML);
+	report_writer.gen_patient_tables(biogears::ReportWriter::HTML);
         report_writer.gen_tables(biogears::ReportWriter::MD);
+	report_writer.gen_patient_tables(biogears::ReportWriter::MD);
         report_writer.gen_tables(biogears::ReportWriter::XML);
+	report_writer.gen_patient_tables(biogears::ReportWriter::XML);
       } else {
         std::cout << "Warning: " << table << " is not a valid keyword.\n";
       }
