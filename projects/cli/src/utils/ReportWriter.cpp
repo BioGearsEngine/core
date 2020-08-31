@@ -319,7 +319,15 @@ struct PatientValidationRow {
   double baseline = 0.0;
   double mean = 0.0;
   double percent_error = 0.0;
+  double expected_value=0.0;
+  double engine_value=0.0 ;
 };
+
+//-------------------------------------------------------------------------------
+/// \brief Takes a list of validation files and results files from biogears and produces
+/// validation tables for our documentation.
+/// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
+//-------------------------------------------------------------------------------
 
 void ReportWriter::gen_patient_tables(TYPE table_type)
 {
@@ -342,6 +350,7 @@ void ReportWriter::gen_patient_tables(TYPE table_type)
     {"Validation-StandardMale","Scenarios/Validation"},
     {"Validation-Overweight","Scenarios/Validation"},
     {"Validation-Carol","Scenarios/Validation"},
+    {"Validation-DefaultTemplateMale","Scenarios/Validation"},
     {"Validation-DefaultTemplateFemale","Scenarios/Validation"},
     {"Validation-Gus","Scenarios/Validation"},
     {"Validation-StandardFemale","Scenarios/Validation"},
@@ -352,19 +361,48 @@ void ReportWriter::gen_patient_tables(TYPE table_type)
     {"Validation-Soldier","Scenarios/Validation"},
      
   };  
+  std::vector<std::string> XMLFile {
+    "states/Cynthia@0s.xml",
+    "states/Joel@0s.xml",
+    "states/Bradycardic@0s.xml",
+    "states/ExtremeFemale@0s.xml",
+    "states/ExtremeMale@0s.xml",
+    "states/Underweight@0s.xml",
+    "states/DefaultMale@0s.xml",
+    "states/Tachycardic@0s.xml",
+    "states/Tachycardic@0s.xml",
+    "states/DefaultFemale@0s.xml",
+    "states/Hassan@0s.xml",
+    "states/Roy@0s.xml",
+    "states/Jeff@0s.xml",
+    "states/ToughGirl@0s.xml",
+    "states/Nathan@0s.xml",
+    "states/StandardMale@0s.xml",
+    "states/Overweight@0s.xml",
+    "states/Carol@0s.xml",
+    "states/DefaultTemplateMale@0s.xml",
+    "states/DefaultTemplateFemale@0s.xml",
+    "states/Gus@0s.xml",
+    "states/StandardFemale@0s.xml",
+    "states/Rick@0s.xml",
+    "states/Jane@0s.xml",
+    "states/ToughGuy@0s.xml",
+    "states/Tristan@0s.xml",
+    "states/Soldier@0s.xml",
+  };  
   bool success = true;
   for (auto& system : SystemTables) {
+      std::vector<std::pair<std::string, PatientValidationRow>> values(34);
+      std::vector<std::pair<std::string,int>> headers;  
       std::vector<std::string>  row_header;
       std::map<std::string, double> mean_table;
       std::string resultsFile =system.second+"/"+system.first + "Results.csv";
-      std::vector<std::pair<std::string, PatientValidationRow>> values(35);
-      std::vector<std::pair<std::string,int>> headers;
       //std::vector<std::string> headers;
       std::fstream result {resultsFile};
       std::string line;
       double row_count=0.0;
+      int num_files=0;
       std::vector<std::string> validation_rows = {
-       "Time(s)", 
        "PatientAge(yr)",
        "PatientWeight(kg)", "PatientHeight(in)",
        "PatientBodyDensity(g/cm^3)","PatientBodyFatFraction",
@@ -390,27 +428,28 @@ void ReportWriter::gen_patient_tables(TYPE table_type)
       while (std::getline(result, line)) {
           if(row_count==0.0){
             auto column_names = biogears::split(line,',');
-            for ( auto i = 0; i < column_names.size() ; ++i) {
-            headers.emplace_back(column_names[i],i);
+            for ( auto i = 0; i < column_names.size()-1 ; ++i) {
+            headers.emplace_back(column_names[i+1],i);
+            //std::cout<<headers[i].first<<" "<<headers[i].second;
             }
           }
           else{
               auto columns = biogears::split(line,',');
-              for (auto i=0;i<validation_rows.size();++i) {
+              for (auto i=1;i<validation_rows.size();++i) {
               try{
-                  values[i].first=validation_rows[i];
-                  values[i].second.mean +=  std::stod( columns.at(headers[i].second));
-                } catch (std::runtime_error e) {
-                  std::cout<<"Runtime Error";
+                  values[i-1].first=validation_rows[i-1];
+                  values[i-1].second.mean +=  std::stod(columns.at(headers[i].second));
                   
-              }
-            }
-            for ( auto& vRows: values){
-                 vRows.second.mean = vRows.second.mean / row_count;
-            }
-          }          
-          row_count+=1.0;          
+                 }catch (std::runtime_error e) {
+                  std::cout<<"Runtime Error";  
+                  }
+             }
+          }
+          row_count+=1.0;
       }
+      for (int i=0;i<values.size()-1;i++){       
+           values[i].second.mean = values[i].second.mean / (row_count);                
+            }
       if (table_type == HTML) {
         set_html();
       } else if (table_type == MD) {
@@ -420,51 +459,104 @@ void ReportWriter::gen_patient_tables(TYPE table_type)
       } else {
         set_web();
       }
-      //for (int i=0; i<values.size(); i++) 
-      //  std::cout << values[i].first << " " << values[i].second.mean << std::endl; 
+      std::fstream file {XMLFile[num_files]};
+      ParseXMLPatient(file,headers,values);
       std::string Outputfile=system.first.substr(11,system.first.length());
       generate_table(Outputfile,headers,values);
+      num_files++;
     } 
  
 } 
 
-    
+void ReportWriter::ParseXMLPatient(std::istream& stream,std::vector<std::pair<std::string,int>>& headers,std::vector<std::pair<std::string, PatientValidationRow>>& values)
+{
+    std::string line; 
+    bool begin_tag = false;
+    int j=0;
+    while (getline(stream,line))
+    {
+        std::string tmp;
+        for (int i = 0; i < line.length(); i++)
+        {
+            if (line[i] == ' ' && tmp.size() == 0)
+            {
+            }
+            else
+            {
+                tmp += line[i];
+            }
+        }
+       if (tmp == "<Patient>")
+        {
+            begin_tag = true;
+            continue;
+        }
+        else if (tmp == "</Patient>")
+        {
+            begin_tag = false;
+        }
+        if (begin_tag)
+        {   if (tmp.find("value=\"") != std::string::npos){ 
+            size_t name_index = line.find("<");
+            name_index += 1;
+            size_t name_end = line.find(" ", name_index);
+            std::string name = trim(line.substr(name_index, name_end - name_index));
+            values[j].second.name = name;
+            size_t value_index = tmp.find("value=\"") + 7;
+            size_t value_end = tmp.find("\"/", value_index);
+            std::string value = trim(tmp.substr(value_index, value_end - value_index));
+            values[j].second.engine_value=std::stod(value);
+            values[j].second.expected_value=std::stod(value);
+            j++;
+        }    
+        }
+    }
+}
+  
 void ReportWriter::generate_table(const std::string& Outputfile,std::vector<std::pair<std::string,int>>& headers,std::vector<std::pair<std::string, PatientValidationRow>>& values)
 {
   report.append(_body_begin);
     std::string table;
     std::string table_name = Outputfile;
     table += std::string(_table_begin);
-    for (int i = 0; i < values.size(); i++) { // This loop iterates through every TableRow inside table_itr
+    for (int i = 0; i < values.size()-1; i++) { // This loop iterates through every TableRow inside table_itr
       std::string line;
-      if (values[i].second.mean<10) {
+      int idx=0;
+      if(i>0){  
+      for (int j=0;j <values.size();j++){
+        if(values[i-1].first.find(values[j].second.name) != std::string::npos)
+        {
+            idx=j;
+            break;
+        }
+            
+      }
+      }
+      values[idx].second.percent_error=((values[idx].second.expected_value)-values[i-1].second.mean)/(values[idx].second.expected_value);  
+      if (values[idx].second.percent_error<10) {
         line += (i == 0) ? _table_row_begin : _table_row_begin_green;
-      } else if (values[i].second.mean>20) {
+      } else if (values[idx].second.percent_error>20) {
         line += (i == 0) ? _table_row_begin : _table_row_begin_red;
-      } else if (values[i].second.mean>10 && values[i].second.mean<20) { //This line isn't technically necessary, but I'm leaving it in for readability
+      } else if (values[idx].second.percent_error>10 && values[idx].second.percent_error<20) { 
         line += (i == 0) ? _table_row_begin : _table_row_begin_yellow;
       }
       line += _table_item_begin;
-      line += values[i].first;
+      line += (i==0) ? table_name: values[i-1].first;
       line += _table_item_end;
       line += _table_item_begin;
-      //line += table_itr->second[i].expected_value;
-      line += values[i].second.mean;
+      line += (i==0) ? "Expected Value" : std::to_string(values[idx].second.expected_value);
       line += _table_item_end;
       line += _table_item_begin;
-      //line += (i == 0) ? "Engine Value" : std::to_string(table_itr->second[i].engine_value);
-      line += (i == 0) ? "Engine Value" : std::to_string(values[i].second.mean);
+      line += (i == 0) ? "Engine Value" : std::to_string(values[i-1].second.mean);
       line += _table_item_end;
       line += _table_item_begin;
-      //line += table_itr->second[i].percent_error;
-      line += values[i].second.mean;
+      line += (i ==0) ? "Percent Error" : std::to_string(values[idx].second.percent_error);
       line += _table_item_end;
       line += _table_item_begin;
-      //line += table_itr->second[i].notes;
-      line += values[i].second.mean; 
+      line += (i==0) ? "Notes" : " " ; 
       line += _table_row_end;
       table.append(line);
-      if (i == 0) { //So markdown needs this line after the first line to know that it's representing a table
+      if (i == 0) { 
         table.append(_table_second_line);
       }
     }

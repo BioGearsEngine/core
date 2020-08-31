@@ -62,11 +62,13 @@ public:
   void set_md();
   void set_xml();
   void set_web();
-  struct PatientValidationRow {
+struct PatientValidationRow {
   std::string  name;
   double baseline = 0.0;
   double mean = 0.0;
   double percent_error = 0.0;
+  double expected_value = 0.0;
+  double engine_value =0.0;
 };
   void generate_table(const std::string& Outputfile,std::vector<std::pair<std::string,int>>& headers,std::vector<std::pair<std::string, PatientValidationRow>>& values);
   void gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type);
@@ -77,7 +79,7 @@ public:
   void CalculateAverages();
   void ExtractValues();
   void ExtractValuesList();
-
+  void ParseXMLPatient(std::istream& stream,std::vector<std::pair<std::string,int>>& headers,std::vector<std::pair<std::string, PatientValidationRow>>& values);
   void Validate();
   void PopulateTables();
   void clear(); // This does not reset the value of the pointers
@@ -85,7 +87,7 @@ public:
 private:
   void ParseCSV(std::istream& stream, std::vector<std::vector<std::string>>& vec);
   void ParseCSV(const std::string& filename, std::vector<std::vector<std::string>>& vec);
-  void ParseXML(std::istream& stream);
+  void ParseXML(std::istream& stream);  
   void ParseXML(const std::string& filename, const std::string test);
   std::map<std::string, std::vector<biogears::TableRow>> tables;
   std::map<std::string, biogears::TableRow> table_row_map;
