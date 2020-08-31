@@ -46,9 +46,12 @@ specific language governing permissions and limitations under the License.
 using namespace biogears;
 // Make a custom event handler that you can connect to your code (See EngineUse for more info)
 class MechVentHandler : public SEEventHandler {
+private:
+  Logger* m_Logger;
 public:
   MechVentHandler(Logger* logger)
-    : SEEventHandler(logger)
+    : SEEventHandler()
+    , m_Logger(logger)
   {
   }
   virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr)

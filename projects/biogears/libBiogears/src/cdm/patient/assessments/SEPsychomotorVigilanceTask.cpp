@@ -16,8 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 
 namespace biogears {
-SEPsychomotorVigilanceTask::SEPsychomotorVigilanceTask(Logger* logger)
-  : SEPatientAssessment(logger)
+SEPsychomotorVigilanceTask::SEPsychomotorVigilanceTask()
 {
   m_AttentionLapses = nullptr;
   m_ReactionTime = nullptr;

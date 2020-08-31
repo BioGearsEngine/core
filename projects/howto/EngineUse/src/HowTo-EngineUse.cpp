@@ -77,7 +77,7 @@ public:
 class MyEventHandler : public SEEventHandler {
 public:
   MyEventHandler(Logger* logger)
-    : SEEventHandler(logger)
+    : SEEventHandler()
   {
   }
   virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) {}

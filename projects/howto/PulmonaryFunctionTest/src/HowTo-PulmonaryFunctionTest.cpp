@@ -64,7 +64,7 @@ void HowToPulmonaryFunction()
 
 	bg->AdvanceModelTime(5, TimeUnit::s);
 
-	SEPulmonaryFunctionTest pft(bg->GetLogger());
+	SEPulmonaryFunctionTest pft;
 	bg->GetPatientAssessment(pft);
 
 	bg->GetLogger()->Info("Performing PFT at time 0s");

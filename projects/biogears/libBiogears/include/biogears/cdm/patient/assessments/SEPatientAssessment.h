@@ -22,9 +22,9 @@ namespace biogears {
  * This is high level data, such as a mean or generalized data 
  * value intended to give a genaral overview of the patient (SEPatientAssessment) or other systems
  */
-class BIOGEARS_API SEPatientAssessment : public Loggable {
+class BIOGEARS_API SEPatientAssessment {
 public:
-  SEPatientAssessment(Logger* logger);
+  SEPatientAssessment();
   virtual ~SEPatientAssessment();
 
   virtual const char* classname() const = 0;

@@ -21,7 +21,7 @@ class SEScalarTime;
 
 class BIOGEARS_API SEPsychomotorVigilanceTask : public SEPatientAssessment {
 public:
-  SEPsychomotorVigilanceTask(Logger* logger);
+  SEPsychomotorVigilanceTask();
   virtual ~SEPsychomotorVigilanceTask();
 
   virtual void Reset(); //reset values

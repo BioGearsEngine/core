@@ -170,7 +170,7 @@ void PatientRun::refresh_treatment()
   if (_refresh_state != RefreshState::INITIAL_BOLUS
       && _time_to_reassessment_min < 1.0) {
     _time_to_reassessment_min = hours(1);
-    biogears::SEUrinalysis ua(_bg->GetLogger());
+    biogears::SEUrinalysis ua;
     _bg->GetPatientAssessment(ua);
 
     //When MAP < 65mmHg or Systolic < 90mmHg move to TITRATE.  Additionally if Urine Output is to low apply a bolus
@@ -251,7 +251,7 @@ void PatientRun::egdt_treatment()
     case EGDTState::RAPID_FLUID_BOLUS: {
       if (_Saline_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.) {
 
-        biogears::SEUrinalysis ua(_bg->GetLogger());
+        biogears::SEUrinalysis ua;
         _bg->GetPatientAssessment(ua);
 
         auto is_septic = _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.
@@ -365,7 +365,7 @@ void PatientRun::egdt_treatment()
         || _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) <= 90.) {
       _egdt_state = (_egdt_state == EGDTState::NOREPINEPHRINE_TITRATE) ? EGDTState::NOREPINEPHRINE_TITRATE : EGDTState::RAPID_FLUID_BOLUS;
 
-      auto ua = SEUrinalysis(_bg->GetLogger());
+      auto ua = SEUrinalysis();
       _bg->GetPatientAssessment(ua);
 
       _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL); 

@@ -353,7 +353,7 @@ bool action_urinate(std::unique_ptr<biogears::BioGearsEngine>& engine)
 
 bool action_get_urine_color(std::unique_ptr<biogears::BioGearsEngine>& engine)
 {
-  auto urineAnalysis = biogears::SEUrinalysis(engine->GetLogger());
+  auto urineAnalysis = biogears::SEUrinalysis();
   const biogears::Renal* constRenalSystem = dynamic_cast<const biogears::Renal*>(engine->GetRenalSystem());
   biogears::Renal* renalSystem = const_cast<biogears::Renal*>(constRenalSystem);
 

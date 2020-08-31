@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarAmount.h>
 
 namespace biogears {
-SEUrinalysisMicroscopic::SEUrinalysisMicroscopic(Logger* logger)
-  : SEPatientAssessment(logger)
+SEUrinalysisMicroscopic::SEUrinalysisMicroscopic()
+
 {
   m_ObservationType = CDM::enumMicroscopicObservationType::value(-1);
   m_RedBloodCells = nullptr;

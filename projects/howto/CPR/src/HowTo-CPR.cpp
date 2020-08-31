@@ -39,16 +39,21 @@ using namespace biogears;
 class MyListener : public SEEventHandler
 {
 public:
-	MyListener(Logger* logger) : SEEventHandler(logger) {};
+  MyListener(Logger* logger)
+    : SEEventHandler()
+    , log ( logger )
+  {};
 	virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time) override
 	{
-		GetLogger()->Info(std::stringstream() <<"Recieved Patient Event : " << type);
+		log->Info(std::stringstream() <<"Recieved Patient Event : " << type);
 	}
 
 	virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time) override
 	{
-		GetLogger()->Info(std::stringstream() <<"Recieved Anesthesia Machine Event : " << type);
+		log->Info(std::stringstream() <<"Recieved Anesthesia Machine Event : " << type);
 	}
+private:
+  Logger *log;
 };
 
 //--------------------------------------------------------------------------------------------------

@@ -19,7 +19,7 @@ class SEScalarAmount;
 
 class BIOGEARS_API SEUrinalysisMicroscopic : public SEPatientAssessment {
 public:
-  SEUrinalysisMicroscopic(Logger* logger);
+  SEUrinalysisMicroscopic();
   virtual ~SEUrinalysisMicroscopic();
 
   static constexpr const char* TypeTag() { return "SEUrinalysisMicroscopic"; };

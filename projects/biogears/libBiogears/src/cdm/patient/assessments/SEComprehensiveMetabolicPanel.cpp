@@ -17,8 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 
 namespace biogears {
-SEComprehensiveMetabolicPanel::SEComprehensiveMetabolicPanel(Logger* logger)
-  : SEPatientAssessment(logger)
+SEComprehensiveMetabolicPanel::SEComprehensiveMetabolicPanel()
 {
   m_Albumin = nullptr;
   m_ALP = nullptr;

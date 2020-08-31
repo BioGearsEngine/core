@@ -16,8 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
 namespace biogears {
-SEUrinalysis::SEUrinalysis(Logger* logger)
-  : SEPatientAssessment(logger)
+SEUrinalysis::SEUrinalysis()
 {
   m_Color = CDM::enumUrineColor::value(-1);
   m_Appearance = CDM::enumClarityIndicator::value(-1);
@@ -310,7 +309,7 @@ bool SEUrinalysis::HasMicroscopicResult() const
 SEUrinalysisMicroscopic& SEUrinalysis::GetMicroscopicResult()
 {
   if (m_Microscopic == nullptr)
-    m_Microscopic = new SEUrinalysisMicroscopic(GetLogger());
+    m_Microscopic = new SEUrinalysisMicroscopic();
   return *m_Microscopic;
 }
 void SEUrinalysis::RemoveMicroscopicResult()

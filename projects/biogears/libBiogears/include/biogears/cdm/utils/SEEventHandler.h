@@ -20,10 +20,9 @@ specific language governing permissions and limitations under the License.
 namespace CDM = mil::tatrc::physiology::datamodel;
 
 namespace biogears {
-class BIOGEARS_API SEEventHandler : public Loggable {
+class BIOGEARS_API SEEventHandler {
 public:
-  SEEventHandler(Logger* logger)
-    : Loggable(logger){};
+  SEEventHandler() = default;
   virtual ~SEEventHandler() = default;
 
   virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;

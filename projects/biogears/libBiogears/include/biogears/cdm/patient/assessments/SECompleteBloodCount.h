@@ -23,7 +23,7 @@ class SEScalarMassPerAmount;
 
 class BIOGEARS_API SECompleteBloodCount : public SEPatientAssessment {
 public:
-  SECompleteBloodCount(Logger* logger);
+  SECompleteBloodCount();
   virtual ~SECompleteBloodCount();
 
   static constexpr const char* TypeTag() { return "SECompleteBloodCount"; };

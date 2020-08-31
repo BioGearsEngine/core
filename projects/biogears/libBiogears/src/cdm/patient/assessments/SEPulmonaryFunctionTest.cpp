@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
-SEPulmonaryFunctionTest::SEPulmonaryFunctionTest(Logger* logger)
-  : SEPatientAssessment(logger)
+SEPulmonaryFunctionTest::SEPulmonaryFunctionTest()
 {
   m_NumberOfPlotPoints = 100;
   m_ExpiratoryReserveVolume = nullptr;

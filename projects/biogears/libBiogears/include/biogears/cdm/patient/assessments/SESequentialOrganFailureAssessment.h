@@ -20,7 +20,7 @@ class SEScalar;
 
 class BIOGEARS_API SESequentialOrganFailureAssessment : public SEPatientAssessment {
 public:
-  SESequentialOrganFailureAssessment(Logger* logger);
+  SESequentialOrganFailureAssessment();
   virtual ~SESequentialOrganFailureAssessment();
   
   static constexpr const char* TypeTag() {return "SESequentialOrganFailureAssessment"; };

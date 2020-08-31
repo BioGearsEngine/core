@@ -24,7 +24,7 @@ class SEAnatomy;
 
 class BIOGEARS_API SEUrinalysis : public SEPatientAssessment {
 public:
-  SEUrinalysis(Logger* logger);
+  SEUrinalysis();
   virtual ~SEUrinalysis();
 
   static constexpr const char* TypeTag() { return "SEUrinalysis"; };

@@ -23,7 +23,7 @@ class SEFunctionVolumeVsTime;
 
 class BIOGEARS_API SEPulmonaryFunctionTest : public SEPatientAssessment {
 public:
-  SEPulmonaryFunctionTest(Logger* logger);
+  SEPulmonaryFunctionTest();
   virtual ~SEPulmonaryFunctionTest();
 
   static constexpr const char* TypeTag() { return "SEPulmonaryFunctionTest"; };

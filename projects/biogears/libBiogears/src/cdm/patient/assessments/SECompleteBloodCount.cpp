@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 
 namespace biogears {
-SECompleteBloodCount::SECompleteBloodCount(Logger* logger)
-  : SEPatientAssessment(logger)
+SECompleteBloodCount::SECompleteBloodCount()
 {
   m_Hematocrit = nullptr;
   m_Hemoglobin = nullptr;

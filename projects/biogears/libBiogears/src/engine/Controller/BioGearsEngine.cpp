@@ -733,7 +733,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     m_ss.clear();
     switch (patientAss->GetType()) {
     case CDM::enumPatientAssessment::PulmonaryFunctionTest: {
-      SEPulmonaryFunctionTest pft(m_Logger);
+      SEPulmonaryFunctionTest pft;
       GetPatientAssessment(pft);
 
       // Write out the Assessement
@@ -756,7 +756,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
     case CDM::enumPatientAssessment::Urinalysis: {
-      SEUrinalysis upan(m_Logger);
+      SEUrinalysis upan;
       GetPatientAssessment(upan);
 
       std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
@@ -779,7 +779,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     }
 
     case CDM::enumPatientAssessment::CompleteBloodCount: {
-      SECompleteBloodCount cbc(m_Logger);
+      SECompleteBloodCount cbc;
       GetPatientAssessment(cbc);
       std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (results_filepath.empty()) {
@@ -800,7 +800,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     }
 
     case CDM::enumPatientAssessment::ComprehensiveMetabolicPanel: {
-      SEComprehensiveMetabolicPanel mp(m_Logger);
+      SEComprehensiveMetabolicPanel mp;
       GetPatientAssessment(mp);
       std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (results_filepath.empty()) {
@@ -821,7 +821,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
     case CDM::enumPatientAssessment::SequentialOrganFailureAssessment: {
-      SESequentialOrganFailureAssessment sofa(m_Logger);
+      SESequentialOrganFailureAssessment sofa;
       GetPatientAssessment(sofa);
       std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (results_filepath.empty()) {

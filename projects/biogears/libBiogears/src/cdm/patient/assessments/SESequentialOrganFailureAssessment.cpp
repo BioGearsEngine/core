@@ -19,8 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 
 namespace biogears {
-SESequentialOrganFailureAssessment::SESequentialOrganFailureAssessment(Logger* logger)
-  : SEPatientAssessment(logger)
+SESequentialOrganFailureAssessment::SESequentialOrganFailureAssessment()
 {
   m_RespirationSOFA = nullptr;
   m_CoagulationSOFA = nullptr;

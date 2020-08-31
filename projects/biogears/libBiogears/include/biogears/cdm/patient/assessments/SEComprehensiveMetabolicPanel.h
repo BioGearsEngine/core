@@ -21,7 +21,7 @@ class SEScalarAmountPerVolume;
 
 class BIOGEARS_API SEComprehensiveMetabolicPanel : public SEPatientAssessment {
 public:
-  SEComprehensiveMetabolicPanel(Logger* logger);
+  SEComprehensiveMetabolicPanel();
   virtual ~SEComprehensiveMetabolicPanel();
 
   static constexpr const char* TypeTag() { return "SEComprehensiveMetabolicPanel"; };
