@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/patient/SEPatient.h>
@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
 #include <biogears/cdm/patient/actions/SEChestCompressionForce.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -71,7 +73,7 @@ void HowToCPR()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-	HowToTracker tracker(*bg);
+	
 
 	// Create data requests for each value that should be written to the output log as the engine is executing
 	// Physiology System Names are defined on the System Objects 
@@ -109,7 +111,7 @@ void HowToCPR()
 	bg->GetLogger()->Info(std::stringstream() <<"Arterial Pressure : " << bg->GetCardiovascularSystem()->GetArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
 	bg->GetLogger()->Info(std::stringstream() <<"Heart Ejection Fraction : " << bg->GetCardiovascularSystem()->GetHeartEjectionFraction());;
 
-	tracker.AdvanceModelTime(50);
+	bg->AdvanceModelTime(50, TimeUnit::s);
 
 	// Put the patient into cardiac arrest
 	SECardiacArrest c;
@@ -121,7 +123,7 @@ void HowToCPR()
 	MyListener l(bg->GetLogger());
 	bg->GetPatient().ForwardEvents(&l);
 	
-	tracker.AdvanceModelTime(10);
+	bg->AdvanceModelTime(10, TimeUnit::s);
 
 	bg->GetLogger()->Info("It has been 10s since the administration, not doing well...");
 	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -163,7 +165,7 @@ void HowToCPR()
 			bg->ProcessAction(chestCompression);
 
             // Time is advanced until it is time to remove the compression
-			tracker.AdvanceModelTime(timeOn);
+			bg->AdvanceModelTime(timeOn, TimeUnit::s);
             
             // Increment timer1 by the time the chest was compressed
 			timer1 += timeOn;
@@ -178,7 +180,7 @@ void HowToCPR()
 			bg->ProcessAction(chestCompression);
             
             // Time is advanced until it is time to compress the chest again
-			tracker.AdvanceModelTime(timeOff);
+			bg->AdvanceModelTime(timeOff, TimeUnit::s);
             
             // Increment timer1 by the time the chest was no compressed
 			timer1 += timeOff;

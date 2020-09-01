@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -27,6 +27,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -156,7 +158,7 @@ void HowToEngineUse()
 
   // The tracker is responsible for advancing the engine time AND outputting the data requests below at each time step
   // If you do not wish to write data to a file, you do not need to make any data requests
-  HowToTracker tracker(*bg);
+  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -178,7 +180,7 @@ void HowToEngineUse()
 
   // We are ready to execute the engine
   // simply tell the engine how long you would like it to execute
-  tracker.AdvanceModelTime(5); // Note this tracker class takes in seconds
+  bg->AdvanceModelTime(5, TimeUnit::s); // Note this tracker class takes in seconds
   // If not using the tracker call
   // bg->AdvanceModelTime(5,TimeUnit::s);
   // If you do not provide a time, the engine will execute 1 time step, the BioGears timestep can be retrieved with:

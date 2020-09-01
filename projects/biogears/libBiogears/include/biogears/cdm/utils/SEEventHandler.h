@@ -13,7 +13,11 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
+#include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/Anesthesia.hxx>
+#include <biogears/cdm/utils/Logger.h>
+
+namespace CDM = mil::tatrc::physiology::datamodel;
 
 namespace biogears {
 class BIOGEARS_API SEEventHandler : public Loggable {

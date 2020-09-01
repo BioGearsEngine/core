@@ -24,6 +24,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/utils/TimingProfile.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 namespace biogears {
 bool PhysiologyEngineDynamicStabilization::StabilizeRestingState(PhysiologyEngine& engine)

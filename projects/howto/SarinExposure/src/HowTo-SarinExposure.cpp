@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 #include <biogears/schema/cdm/Properties.hxx>
 // Include the various types you will be using in your code
@@ -26,6 +26,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -73,7 +75,7 @@ void HowToSarinExposure()
   eventMap["Gastrointestinal Sounds"] = std::make_pair(0.5, CDM::enumOnOff::Off);
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -91,7 +93,7 @@ void HowToSarinExposure()
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToSarinExposure.csv");
 
   // Advance some time to get some resting data
-  tracker.AdvanceModelTime(60);
+  bg->AdvanceModelTime(60, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient is nice and healthy");
   OutputState(bg);
@@ -141,12 +143,12 @@ void HowToSarinExposure()
 
     //Advance the tracker forward by 30 seconds.  Change this time to adjust how frequently the simulation checks for events (will not effect how the engine runs)
 
-    tracker.AdvanceModelTime(30.0);
+    bg->AdvanceModelTime(30.0, TimeUnit::s);
   }
 
   OutputState(bg);
 
-  tracker.AdvanceModelTime(60);
+  bg->AdvanceModelTime(60, TimeUnit::s);
 
   bg->GetLogger()->Info("Finished");
 }

@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -43,7 +44,7 @@ void HowToAirwayObstruction()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-	HowToTracker tracker(*bg);
+	
 
 	// Create data requests for each value that should be written to the output log as the engine is executing
 	// Physiology System Names are defined on the System Objects 
@@ -65,7 +66,7 @@ void HowToAirwayObstruction()
   bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
   bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
 
-	tracker.AdvanceModelTime(50);
+	bg->AdvanceModelTime(50, TimeUnit::s);
 	
 	// Create an SEAirwayObstruction object
 	// Set the obstruction severity (a fraction between 0 and 1. For a complete obstruction use 1.)	
@@ -75,7 +76,7 @@ void HowToAirwayObstruction()
   bg->GetLogger()->Info("Giving the patient an airway obstruction.");
 
 	// Advance time to see how the obstruction affects the patient
-	tracker.AdvanceModelTime(90);
+	bg->AdvanceModelTime(90, TimeUnit::s);
 
 	bg->GetLogger()->Info(std::stringstream() << "The patient has had an airway obstrcution for 90s, not doing well...");
 	bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -92,7 +93,7 @@ void HowToAirwayObstruction()
 
   bg->GetLogger()->Info("Removing the airway obstruction.");
 
-	tracker.AdvanceModelTime(300);
+	bg->AdvanceModelTime(300, TimeUnit::s);
 
 	bg->GetLogger()->Info(std::stringstream() << "The patient has had the airway obstruction removed for 300s, Patient is much better");
 	bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);

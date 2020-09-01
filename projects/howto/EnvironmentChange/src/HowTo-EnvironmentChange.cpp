@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -25,6 +25,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -71,7 +73,7 @@ void HowToEnvironmentChange()
   SESubstance* CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide");
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -89,7 +91,7 @@ void HowToEnvironmentChange()
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToEnvironmentChange.csv");
 
   // Advance some time to get some resting data
-  tracker.AdvanceModelTime(50);
+  bg->AdvanceModelTime(50, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient is nice and healthy");
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
@@ -122,7 +124,7 @@ void HowToEnvironmentChange()
   conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(0.2095);
   conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
   bg->ProcessAction(env);
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -150,7 +152,7 @@ void HowToEnvironmentChange()
   conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(0.21);
   conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
   bg->ProcessAction(env);
-  tracker.AdvanceModelTime(60);
+  bg->AdvanceModelTime(60, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -168,7 +170,7 @@ void HowToEnvironmentChange()
   SEThermalApplication heat;
   heat.GetActiveHeating().GetPower().SetValue(340, PowerUnit::BTU_Per_hr);
   bg->ProcessAction(heat);
-  tracker.AdvanceModelTime(120);
+  bg->AdvanceModelTime(120, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);

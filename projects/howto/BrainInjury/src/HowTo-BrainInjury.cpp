@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -23,6 +23,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
+
 int GlasgowEstimator(double);
 
 using namespace biogears;
@@ -47,7 +50,7 @@ void HowToBrainInjury()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -81,7 +84,7 @@ void HowToBrainInjury()
   bg->GetLogger()->Info(std::stringstream() << "Right Eye Pupil Size Modifier : " << bg->GetNervousSystem()->GetRightEyePupillaryResponse()->GetSizeModifier());
   bg->GetLogger()->Info(std::stringstream() << "Right Eye Pupil Reactivity Modifier : " << bg->GetNervousSystem()->GetRightEyePupillaryResponse()->GetReactivityModifier());
 
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   // Create an SEBrainInjury object
   // Set the severity (a fraction between 0 and 1; for maximal injury, use 1.)
@@ -92,7 +95,7 @@ void HowToBrainInjury()
   bg->GetLogger()->Info("Giving the patient a brain injury.");
 
   // Advance time to see how the injury affects the patient
-  tracker.AdvanceModelTime(90);
+  bg->AdvanceModelTime(90, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "The patient has had a brain injury for 90s, not doing well...");
   bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -120,7 +123,7 @@ void HowToBrainInjury()
 
   bg->GetLogger()->Info("Removing the brain injury.");
 
-  tracker.AdvanceModelTime(90);
+  bg->AdvanceModelTime(90, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "The patient's brain injury has been removed for 90s; patient is much better");
   bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -146,7 +149,7 @@ void HowToBrainInjury()
   bg->ProcessAction(tbi);
   bg->GetLogger()->Info("Giving the patient a severe brain injury.");
 
-  tracker.AdvanceModelTime(300);
+  bg->AdvanceModelTime(300, TimeUnit::s);
 
   // You can also get information from the compartment rather than the system, in case you want other metrics
   const SELiquidCompartment* brain = bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Brain);

@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 #include <algorithm>
 #include <cctype>
 #include <random>
@@ -38,6 +38,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Drugs.h>
 #include <biogears/engine/Systems/Energy.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 
@@ -495,7 +497,7 @@ void PatientRun::run()
   _bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename(long_name + ".csv");
   _bg->GetEngineTrack()->GetDataRequestManager().SetSamplesPerSecond(1. / (5. * 60.));
 
-  HowToTracker tracker(*_bg);
+
   SEInfection infection {};
   infection.SetSeverity(_infection_severity);
   SEScalarMassPerVolume infection_mic;
@@ -541,7 +543,7 @@ void PatientRun::run()
     }
     nutrition_regimen();
 
-    tracker.AdvanceModelTime(to_seconds(1));
+    _bg->AdvanceModelTime(to_seconds(1), TimeUnit::s);
     _time_remaining_min = hours(_duration_hr) - _bg->GetSimulationTime(TimeUnit::min);
   }
 

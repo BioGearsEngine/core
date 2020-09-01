@@ -658,6 +658,7 @@ double BioGearsEngine::GetSimulationTime(const TimeUnit& unit)
 //-------------------------------------------------------------------------------
 void BioGearsEngine::AdvanceModelTime()
 {
+  //TODO: I am starting to think this should be a protected function
   if (!IsReady()) {
     return;
   }
@@ -679,15 +680,26 @@ void BioGearsEngine::AdvanceModelTime(double time, const TimeUnit& unit)
   double time_s = Convert(time, unit, TimeUnit::s);
   double remains = time_s / m_Config->GetTimeStep(TimeUnit::s);
   remains -= static_cast<int>(remains);
-  timeStep_remainder += remains;
+  m_timeStep_remainder += remains;
   int count = static_cast<int>(time_s / m_Config->GetTimeStep(TimeUnit::s));
-  if (timeStep_remainder >= 1.0) {
+  if (m_timeStep_remainder >= 1.0) {
     ++count;
-    timeStep_remainder -= 1.0;
+    m_timeStep_remainder -= 1.0;
   }
+  auto sample_interval_s = 1.0 / GetEngineTrack()->GetDataRequestManager().GetSamplesPerSecond();
   for (int i = 0; i < count; i++) {
     AdvanceModelTime();
+    m_timeSinceLastDataTrack += m_Config->GetTimeStep(TimeUnit::s);
+    if (m_timeSinceLastDataTrack > sample_interval_s) {
+      m_timeSinceLastDataTrack -= sample_interval_s;
+      //NOTE: This line will automatically truncate the CSV file
+      //If a user wants to concat two files. They would need to manually call
+      //TrackData(time,true) before calling this variant of advance time,
+      GetEngineTrack()->TrackData(GetSimulationTime(TimeUnit::s));
+    }
+      
   }
+
 }
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::ProcessAction(const SEAction& action)

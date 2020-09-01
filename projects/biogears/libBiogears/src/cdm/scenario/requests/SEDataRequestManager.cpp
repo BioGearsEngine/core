@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 namespace biogears {
 SEDataRequestManager::SEDataRequestManager(Logger* logger)

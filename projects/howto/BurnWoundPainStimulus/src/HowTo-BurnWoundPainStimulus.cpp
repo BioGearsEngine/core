@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERenalSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -88,7 +89,6 @@ void HowToBurnWoundPainStimulus()
       burn.GetLogger()->Info("Not a valid option \n");
     }
   } while (active);
-
 }
 
 BurnThread::BurnThread(const std::string& logFile, double& tbsa)
@@ -96,7 +96,7 @@ BurnThread::BurnThread(const std::string& logFile, double& tbsa)
 {
   //Create the engine and load patient state
   m_bg = CreateBioGearsEngine(logFile);
-  m_bg->GetLogger()->Info(std::stringstream() << "Initiating " << tbsa <<"% TBSA burn wound");
+  m_bg->GetLogger()->Info(std::stringstream() << "Initiating " << tbsa << "% TBSA burn wound");
   if (!m_bg->LoadState("./states/StandardMale@0s.xml")) {
     m_bg->GetLogger()->Error("Could not load state, check the error");
     return;
@@ -113,7 +113,7 @@ BurnThread::BurnThread(const std::string& logFile, double& tbsa)
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystemicVascularResistance", "mmHg s/mL");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("BloodVolume", "mL");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanUrineOutput", "mL/hr");
-  
+
   //Load substances and compounds
   SESubstanceCompound* ringers = m_bg->GetSubstanceManager().GetCompound("RingersLactate");
   SESubstance* ketamine = m_bg->GetSubstanceManager().GetSubstance("Ketamine");
@@ -181,7 +181,7 @@ void BurnThread::Status()
 {
   m_mutex.lock();
   m_bg->GetLogger()->Info(std::stringstream() << "The patient suffered a burn wound " << m_bg->GetSimulationTime(TimeUnit::min) << " min ago");
-  m_bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << m_bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) <<" " << VolumeUnit::mL);
+  m_bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << m_bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << " " << VolumeUnit::mL);
   m_bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << m_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << " " << PressureUnit::mmHg);
   m_bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << m_bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << " " << PressureUnit::mmHg);
   m_bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << m_bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << " bpm");

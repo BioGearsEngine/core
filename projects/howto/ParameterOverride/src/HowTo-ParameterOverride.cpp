@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
@@ -26,6 +26,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/scenario/SEPatientActionCollection.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 
 using namespace biogears;
@@ -48,7 +50,7 @@ void HowToParameterOverride()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects 
@@ -70,7 +72,7 @@ void HowToParameterOverride()
   bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
   bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
 
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   // Create an SEParameterOverride object
   // Set a parameter change (based on individual parameter units.)	
@@ -83,7 +85,7 @@ void HowToParameterOverride()
   bg->GetLogger()->Info("Overriding BioGears Parameter.");
 
   // Advance time to see how the obstruction affects the patient
-  tracker.AdvanceModelTime(90);
+  bg->AdvanceModelTime(90, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "The override has been in place for 90s...");
   bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -101,7 +103,7 @@ void HowToParameterOverride()
   bg->GetLogger()->Info("Override Turning Off.");
 
   // Advance time
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "The override has been off for 30s...");
   bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -119,7 +121,7 @@ void HowToParameterOverride()
   bg->GetLogger()->Info("Overriding BioGears Parameter.");
 
   // Advance time
-  tracker.AdvanceModelTime(90);
+  bg->AdvanceModelTime(90, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "The override has been in place for 90s...");
   bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -137,7 +139,7 @@ void HowToParameterOverride()
   bg->GetLogger()->Info("Overriding BioGears Parameter.");
 
   // Advance time
-  tracker.AdvanceModelTime(90);
+  bg->AdvanceModelTime(90, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "The override has been in place for 90s...");
   bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);

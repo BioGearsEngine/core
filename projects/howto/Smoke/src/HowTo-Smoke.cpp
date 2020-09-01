@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -25,6 +25,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -71,7 +73,7 @@ void HowToSmoke()
   SESubstance* Particulate = bg->GetSubstanceManager().GetSubstance("ForestFireParticulate");
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -89,7 +91,7 @@ void HowToSmoke()
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToEnvironmentChange.csv");
 
   // Advance some time to get some resting data
-  tracker.AdvanceModelTime(5);
+  bg->AdvanceModelTime(5, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient is nice and healthy");
   bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
@@ -121,7 +123,7 @@ void HowToSmoke()
   // Concentrations are independent and do not need to add up to 1.0
   envChange.GetConditions().GetAmbientAerosol(*Particulate).GetConcentration().SetValue(2.9, MassPerVolumeUnit::mg_Per_m3);
   bg->ProcessAction(envChange);
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
   bg->GetLogger()->Info(std::stringstream() << "CarbonDioxide Saturation : " << bg->GetBloodChemistrySystem()->GetCarbonDioxideSaturation());

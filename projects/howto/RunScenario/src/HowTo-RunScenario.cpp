@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------

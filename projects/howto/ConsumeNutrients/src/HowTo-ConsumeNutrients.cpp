@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
@@ -21,6 +21,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -42,7 +44,7 @@ void HowToConsumeNutrients()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-	HowToTracker tracker(*bg);
+	
 
 	// Create data requests for each value that should be written to the output log as the engine is executing
 	// Physiology System Names are defined on the System Objects
@@ -58,7 +60,7 @@ void HowToConsumeNutrients()
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToConsumeNutrients.csv");
 
 	// Advance some time to get some resting data
-	tracker.AdvanceModelTime(50);
+	bg->AdvanceModelTime(50, TimeUnit::s);
 	
 	bg->GetLogger()->Info("The patient is nice and healthy");
 	bg->GetLogger()->Info(std::stringstream() <<"Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
@@ -75,7 +77,7 @@ void HowToConsumeNutrients()
 	eat.GetNutrition().GetWater().SetValue(50, VolumeUnit::mL);
 	bg->ProcessAction(eat);
 
-	tracker.AdvanceModelTime(30);
+	bg->AdvanceModelTime(30, TimeUnit::s);
 
 	bg->GetLogger()->Info(std::stringstream() <<"Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
 	bg->GetLogger()->Info(std::stringstream() <<"Blood Volume : " << bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL);

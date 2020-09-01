@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -20,6 +20,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -54,7 +56,7 @@ void HowToFaciculation()
   lowKActive = CDM::enumOnOff::Off;
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Na, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
   bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *K, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
@@ -64,7 +66,7 @@ void HowToFaciculation()
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToFasciculation.csv");
 
   // Advance some time to get some resting data
-  tracker.AdvanceModelTime(60);
+  bg->AdvanceModelTime(60, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient is nice and healthy");
   std::string message = "";
@@ -78,11 +80,11 @@ void HowToFaciculation()
       message = "Patient has low serum potassium, muscle fasciculation may occur";
       bg->GetLogger()->Info(message);
     }
-    tracker.AdvanceModelTime(10.0);
+    bg->AdvanceModelTime(10.0, TimeUnit::s);
   }
   message = "Return membrane resistance to potassium to baseline";
   bg->GetLogger()->Info(message);
   K->GetMembraneResistance().SetValue(0.248, ElectricResistanceUnit::Ohm);
 
-  tracker.AdvanceModelTime(300);
+  bg->AdvanceModelTime(300, TimeUnit::s);
 }

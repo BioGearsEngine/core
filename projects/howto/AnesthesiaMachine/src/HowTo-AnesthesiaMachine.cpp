@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 using namespace biogears;
 //---------------------------------------------------------------------------------------------------------------------
@@ -49,7 +50,7 @@ void HowToAnesthesiaMachine()
   }
 
     // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-	HowToTracker tracker(*bg);
+	
 
 	// Create data requests for each value that should be written to the output log as the engine is executing
 	// Physiology System Names are defined on the System Objects 
@@ -74,7 +75,7 @@ void HowToAnesthesiaMachine()
 	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
 	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());;
 
-	tracker.AdvanceModelTime(50);
+	bg->AdvanceModelTime(50, TimeUnit::s);
 
 	// Turn the anesthesia machine on and get it configured for spontaneous breathing
 	// Create an Anesthesia Machine and configure it as needed
@@ -102,7 +103,7 @@ void HowToAnesthesiaMachine()
 	bg->ProcessAction(AMConfig);
 	bg->GetLogger()->Info(std::stringstream() <<"Turning on the Anesthesia Machine and placing mask on patient for spontaneous breathing with machine connection.");;
 
-	tracker.AdvanceModelTime(60);
+	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("The patient is attempting to breath normally with Anesthesia Machine connected");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -124,7 +125,7 @@ void HowToAnesthesiaMachine()
 	
   bg->GetLogger()->Info("Giving the patient Succinylcholine to test machine-driven ventilation.");
 
-	tracker.AdvanceModelTime(60);
+	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("It has been 60s since the Succinylcholine administration.");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -140,7 +141,7 @@ void HowToAnesthesiaMachine()
 	bg->ProcessAction(AMConfig);
 	bg->GetLogger()->Info("Setting the ventilator pressure to drive the machine. Also increasing the inlet flow and positive end expired pressure to test machine controls.");
 
-	tracker.AdvanceModelTime(60);
+	bg->AdvanceModelTime(60, TimeUnit::s);
 	 
 	bg->GetLogger()->Info("Patient breathing is being controlled by the machine.");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -157,7 +158,7 @@ void HowToAnesthesiaMachine()
 	bg->ProcessAction(AMConfig);
 	bg->GetLogger()->Info("More Anesthesia Machine control manipulation. Increasing respiratory rate, reducing driving pressure and increasing the inspiratory-expiratory ratio.");
 
-	tracker.AdvanceModelTime(60);
+	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("Patient breathing is being controlled by the machine.");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -172,7 +173,7 @@ void HowToAnesthesiaMachine()
 	bg->ProcessAction(AMleak);
 	bg->GetLogger()->Info("Testing an anesthesia machine failure mode. The mask is leaking with a severity of 0.5.");
 
-	tracker.AdvanceModelTime(60);
+	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("Patient breathing is being controlled by the machine. The mask has been leaking for 60 seconds.");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -186,14 +187,14 @@ void HowToAnesthesiaMachine()
 	bg->ProcessAction(AMleak);
 	bg->GetLogger()->Info("Removing the mask leak.");
 
-	tracker.AdvanceModelTime(60);
+	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	SEOxygenWallPortPressureLoss AMpressureloss;
 	AMpressureloss.SetActive(true);
 	bg->ProcessAction(AMpressureloss);
 	bg->GetLogger()->Info("Testing the oxygen pressure loss failure mode. The oxygen pressure from the wall source is dropping.");
 
-	tracker.AdvanceModelTime(60);
+	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("Patient breathing is being controlled by the machine. The wall oxygen pressure loss occurred 60 seconds ago.");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -207,7 +208,7 @@ void HowToAnesthesiaMachine()
 	bg->ProcessAction(AMpressureloss);
 	bg->GetLogger()->Info("Removing the wall oxygen pressure loss action.");
 
-	tracker.AdvanceModelTime(60);
+	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("The anesthesia machine is operating normally");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);

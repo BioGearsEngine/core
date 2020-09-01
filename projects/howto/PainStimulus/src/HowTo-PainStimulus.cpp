@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include "HowTo-PainStimulus.h"
-#include "HowToTracker.h"
+
 
 #include <iostream>
 // Include the various types you will be using in your code
@@ -25,6 +25,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -45,7 +47,7 @@ void HowToPainStimulus()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   //Create variables for scenario
   SEPainStimulus PainStimulus; //pain object
@@ -92,7 +94,7 @@ void HowToPainStimulus()
   bg->ProcessAction(PainStimulus);
   //administer morphine
 
-  tracker.AdvanceModelTime(3);
+  bg->AdvanceModelTime(3, TimeUnit::s);
   pain = bg->GetNervousSystem()->GetPainVisualAnalogueScale();
   std::cout << pain << std::endl;
 
@@ -113,7 +115,7 @@ void HowToPainStimulus()
   while (pain > 1.0) {
     //update value
     pain = bg->GetNervousSystem()->GetPainVisualAnalogueScale();
-    tracker.AdvanceModelTime(dt);
+    bg->AdvanceModelTime(dt, TimeUnit::s);
   }
 
   //after we get out of the while loop patient should be happy now
@@ -128,6 +130,6 @@ void HowToPainStimulus()
   bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
   ;
 
-  tracker.AdvanceModelTime(400);
+  bg->AdvanceModelTime(400, TimeUnit::s);
   bg->GetLogger()->Info("Finished");
 }

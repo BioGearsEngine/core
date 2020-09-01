@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/patient/conditions/SEChronicObstructivePulmonaryDisease.h>
@@ -20,6 +20,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -52,7 +54,7 @@ void HowToCOPD()
 	}
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-	HowToTracker tracker(*bg);
+	
 
 	// Create data requests for each value that should be written to the output log as the engine is executing
 	// Physiology System Names are defined on the System Objects 
@@ -69,7 +71,7 @@ void HowToCOPD()
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToCOPD.csv");
 
 	// Advance some time to get some data
-	tracker.AdvanceModelTime(500);
+	bg->AdvanceModelTime(500, TimeUnit::s);
 
 	bg->GetLogger()->Info("The patient is not very healthy");
 	bg->GetLogger()->Info(std::stringstream() <<"Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);

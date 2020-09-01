@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -43,7 +45,7 @@ void HowToTensionPneumothorax()
     return;
   }
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -69,7 +71,7 @@ void HowToTensionPneumothorax()
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   ;
 
-  tracker.AdvanceModelTime(50);
+  bg->AdvanceModelTime(50, TimeUnit::s);
 
   // Create a Tension Pnuemothorax
   // Set the severity (a fraction between 0 and 1)
@@ -90,7 +92,7 @@ void HowToTensionPneumothorax()
   bg->GetLogger()->Info("Giving the patient a tension pneumothorax");
   bg->GetLogger()->Info("ICD-9: 860.0");
 
-  tracker.AdvanceModelTime(120); //This will advance the engine
+  bg->AdvanceModelTime(120, TimeUnit::s); //This will advance the engine
 
   bg->GetLogger()->Info("The patient has had a tension pneumothorax for 120");
   bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
@@ -115,7 +117,7 @@ void HowToTensionPneumothorax()
   bg->ProcessAction(needleDecomp);
   bg->GetLogger()->Info("Giving the patient a needle decompression");
 
-  tracker.AdvanceModelTime(400);
+  bg->AdvanceModelTime(400, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient has had a needle decompressed tension pneumothorax for 400s");
   bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);

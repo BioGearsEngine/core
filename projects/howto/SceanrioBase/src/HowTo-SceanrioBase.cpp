@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/Serializer.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -92,7 +94,7 @@ void HowToScenarioBase()
     bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("./ResultsFileName.csv");
 
   // Let's request data do be tracked that is in the scenario	
-  HowToTracker tracker(*bg);
+  
 	SEAdvanceTime* adv;
 	// Now run the scenario actions
 	for (SEAction* a : sce.GetActions())
@@ -100,7 +102,7 @@ void HowToScenarioBase()
 		// We want the tracker to process an advance time action so it will write each time step of data to our track file
 		adv = dynamic_cast<SEAdvanceTime*>(a);
 		if (adv != nullptr)
-			tracker.AdvanceModelTime(adv->GetTime(TimeUnit::s));// you could just do bg->AdvanceModelTime without tracking timesteps
+			bg->AdvanceModelTime(adv->GetTime(TimeUnit::s), TimeUnit::s);// you could just do bg->AdvanceModelTime without tracking timesteps
 		else
 			bg->ProcessAction(*a);
 	}

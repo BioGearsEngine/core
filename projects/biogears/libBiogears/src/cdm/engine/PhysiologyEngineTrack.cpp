@@ -47,6 +47,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 #include <biogears/cdm/utils/DataTrack.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 namespace biogears {
 std::string Space2Underscore(const std::string& str)

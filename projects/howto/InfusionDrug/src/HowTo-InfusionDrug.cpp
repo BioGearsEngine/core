@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
@@ -20,10 +20,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
-#include "biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h"
-#include "biogears/cdm/substance/SESubstanceCompound.h"
-#include "biogears/cdm/substance/SESubstanceConcentration.h"
+
+#include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
+#include <biogears/cdm/substance/SESubstanceCompound.h>
+#include <biogears/cdm/substance/SESubstanceConcentration.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -45,7 +49,7 @@ void HowToInfusionDrug()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   SESubstance* vas = bg->GetSubstanceManager().GetSubstance("Vasopressin");
   vas->GetPlasmaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_L);
@@ -72,15 +76,15 @@ void HowToInfusionDrug()
   bg->GetLogger()->Info("Beginning PD Scenario");
 
   bg->ProcessAction(infuse);
-  tracker.AdvanceModelTime(3300);
+  bg->AdvanceModelTime(3300, TimeUnit::s);
 
   infuse.GetConcentration().SetValue(0.292, MassPerVolumeUnit::ug_Per_mL);
   bg->ProcessAction(infuse);
-  tracker.AdvanceModelTime(3300);
+  bg->AdvanceModelTime(3300, TimeUnit::s);
 
   infuse.GetRate().SetValue(0, VolumePerTimeUnit::mL_Per_min);
   bg->ProcessAction(infuse);
-  tracker.AdvanceModelTime(600);
+  bg->AdvanceModelTime(600, TimeUnit::s);
 
   bg->GetLogger()->Info("Finished");
 
@@ -98,7 +102,7 @@ void HowToInfusionDrug()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker2(*bg);
+
 
   SESubstance* txa = bg->GetSubstanceManager().GetSubstance("TranexamicAcid");
   txa->GetPlasmaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_L);
@@ -137,11 +141,11 @@ void HowToInfusionDrug()
   // Hemorrhage Starts - instantiate a hemorrhage action and have the engine process it.  Note that BioGears will output the injury code regardless of which method was used
   bg->ProcessAction(hemorrhageSpleen);
   bg->ProcessAction(infuse2);
-  tracker2.AdvanceModelTime(300);
+  bg->AdvanceModelTime(300, TimeUnit::s);
 
   infuse2.GetConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
   bg->ProcessAction(infuse2);
-  tracker2.AdvanceModelTime(7200);
+  bg->AdvanceModelTime(7200, TimeUnit::s);
 
   //Example 2: Custom SubstanceCompound Infusion
   //In this example we will programatically create a new SubstanceCompound

@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include "HowTo-CWD_Change.h"
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
@@ -54,7 +54,7 @@ void using_direct_control()
   }
 
     // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-	HowToTracker tracker(*bg);
+	
 
 	// Create data requests for each value that should be written to the output log as the engine is executing
 	// Physiology System Names are defined on the System Objects 
@@ -71,7 +71,7 @@ void using_direct_control()
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowTo-CWD_Change.csv");
 
 	// Advance some time to get some healthy data
-	tracker.AdvanceModelTime(50);
+	bg->AdvanceModelTime(50, TimeUnit::s);
   // Cache off compartments of interest!
   const SEGasCompartment* carina = bg->GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Trachea);
 	
@@ -94,7 +94,7 @@ void using_direct_control()
 	asthmaAttack.GetSeverity().SetValue(0.3);
 	bg->ProcessAction(asthmaAttack);
 
-	tracker.AdvanceModelTime(550);
+	bg->AdvanceModelTime(550, TimeUnit::s);
 
 	bg->GetLogger()->Info("The patient has been having an asthma attack for 550s");
 	bg->GetLogger()->Info(std::stringstream() <<"Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
@@ -111,7 +111,7 @@ void using_direct_control()
 	bg->ProcessAction(asthmaAttack);
 	
 	// Advance some time while the patient catches their breath
-	tracker.AdvanceModelTime(200);
+	bg->AdvanceModelTime(200, TimeUnit::s);
 
 	bg->GetLogger()->Info("The patient has NOT had an asthma attack for 200s");
 	bg->GetLogger()->Info(std::stringstream() <<"Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);

@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/EngineState.hxx>
 #include <biogears/container/Tree.h>
@@ -171,7 +172,7 @@ public:
   //! through the API at this time.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual void AdvanceModelTime(double time, const TimeUnit& unit) = 0;
+  virtual void AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s) = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief

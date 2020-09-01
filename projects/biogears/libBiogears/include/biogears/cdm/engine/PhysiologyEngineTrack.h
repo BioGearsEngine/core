@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 #include <biogears/cdm/utils/DataTrack.h>
+
 namespace biogears {
 class SESystem;
 class SEPatient;

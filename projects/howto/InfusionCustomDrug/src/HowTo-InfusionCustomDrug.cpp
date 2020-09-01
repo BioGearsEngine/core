@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
@@ -21,9 +21,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 
-#include "biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h"
-#include "biogears/cdm/substance/SESubstanceCompound.h"
-#include "biogears/cdm/substance/SESubstanceConcentration.h"
+#include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
+#include <biogears/cdm/substance/SESubstanceCompound.h>
+#include <biogears/cdm/substance/SESubstanceConcentration.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 
@@ -84,9 +86,6 @@ void HowToInfusionDrug()
     bg->GetLogger()->Error("Could not load state, check the error");
     return;
   }
-
-  // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
 
    // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects

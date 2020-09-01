@@ -66,7 +66,7 @@ public:
   virtual double GetSimulationTime(const TimeUnit& unit) override;
 
   virtual void AdvanceModelTime() override;
-  virtual void AdvanceModelTime(double time, const TimeUnit& unit) override;
+  virtual void AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s) override; //NOTE: Maynot compile on clang will evaluate
   virtual bool ProcessAction(const SEAction& action) override;
 
   virtual SESubstanceManager& GetSubstanceManager() override;
@@ -98,7 +98,8 @@ protected:
   virtual bool IsReady();
   virtual bool InitializeEngine(const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
 
-  double timeStep_remainder = 0.0;
+  double m_timeStep_remainder = 0.0;
+  double m_timeSinceLastDataTrack = 0.0;
   SEEventHandler* m_EventHandler;
   PhysiologyEngineTrack m_EngineTrack;
 #pragma warning(push,0)

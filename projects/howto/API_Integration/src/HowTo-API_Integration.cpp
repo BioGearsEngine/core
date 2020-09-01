@@ -34,6 +34,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 #include <biogears/string/manipulation.h>
 //!

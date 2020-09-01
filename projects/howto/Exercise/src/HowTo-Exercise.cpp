@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -39,7 +41,7 @@ void HowToExercise()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -60,7 +62,7 @@ void HowToExercise()
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToExercise.csv");
 
   // Advance some time to get some resting data
-  tracker.AdvanceModelTime(20);
+  bg->AdvanceModelTime(20, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient is nice and healthy");
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
@@ -85,7 +87,7 @@ void HowToExercise()
   ge.Intensity.SetValue(0.5);
   SEExercise exG{ ge };
   bg->ProcessAction(exG);
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -108,7 +110,7 @@ void HowToExercise()
   bg->ProcessAction(exGStop);
 
   // Advance some time while the medic gets the drugs ready
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -128,7 +130,7 @@ void HowToExercise()
   cyc.PowerCycle.SetValue(100.0, PowerUnit::W);
   SEExercise exC{ cyc };
   bg->ProcessAction(exC);
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -152,7 +154,7 @@ void HowToExercise()
   bg->ProcessAction(exCStop);
 
   // Advance some time while the medic gets the drugs ready
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -172,7 +174,7 @@ void HowToExercise()
   run.InclineRun.SetValue(0.1);
   SEExercise exR{ run };
   bg->ProcessAction(exR);
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -196,7 +198,7 @@ void HowToExercise()
   bg->ProcessAction(exRStop);
 
   // Advance some time while the medic gets the drugs ready
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -217,7 +219,7 @@ void HowToExercise()
   str.RepsStrength.SetValue(10.0);
   SEExercise exS{ str };
   bg->ProcessAction(exS);
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
@@ -241,7 +243,7 @@ void HowToExercise()
   bg->ProcessAction(exSStop);
 
   // Advance some time while the medic gets the drugs ready
-  tracker.AdvanceModelTime(30);
+  bg->AdvanceModelTime(30, TimeUnit::s);
 
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
   bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);

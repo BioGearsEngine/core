@@ -40,6 +40,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Gastrointestinal.h>
 #include <biogears/schema/cdm/EnvironmentConditions.hxx>
 #include <biogears/schema/cdm/Patient.hxx>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 namespace BGE = mil::tatrc::physiology::biogears;
 

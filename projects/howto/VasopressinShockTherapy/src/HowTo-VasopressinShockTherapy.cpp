@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include "HowTo-VasopressinShockTherapy.h"
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 using namespace biogears;
 void HowToVasopressinShockTherapy()
@@ -37,7 +38,7 @@ void HowToVasopressinShockTherapy()
   }
 
   //The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   //Set up substances.  Initialized vasopressin plasma concentration to 0.  Note that saline is technically a compound--this is
   //so the engine knows to look for multiple components within the same substance file (i.e. Na, Cl, etc)
@@ -97,7 +98,7 @@ void HowToVasopressinShockTherapy()
 
   //Initiate the hemorrhage action and advance engine eight minutes
   bg->ProcessAction(venaCavaBleed);
-  tracker.AdvanceModelTime(480);
+  bg->AdvanceModelTime(480, TimeUnit::s);
 
   //Remove bleeding
   venaCavaBleed.GetInitialRate().SetValue(0.0, VolumePerTimeUnit::mL_Per_min);
@@ -111,7 +112,7 @@ void HowToVasopressinShockTherapy()
   }
 
   //Allow fluid administration for 30 minutes
-  tracker.AdvanceModelTime(1800);
+  bg->AdvanceModelTime(1800, TimeUnit::s);
 
   bg->GetLogger()->Info("Finished");
 }

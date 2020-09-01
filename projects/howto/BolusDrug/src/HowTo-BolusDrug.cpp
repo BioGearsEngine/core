@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/utils/SEEventHandler.h>
@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -44,7 +46,7 @@ void HowToBolusDrug()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-	HowToTracker tracker(*bg);
+	
 
 	// Create data requests for each value that should be written to the output log as the engine is executing
 	// Physiology System Names are defined on the System Objects 
@@ -68,7 +70,7 @@ void HowToBolusDrug()
 	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
 	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());;
 
-	tracker.AdvanceModelTime(50);
+	bg->AdvanceModelTime(50, TimeUnit::s);
 
 	// Get the Succinylcholine substance from the substance manager
 	const SESubstance* succs = bg->GetSubstanceManager().GetSubstance("Succinylcholine");
@@ -82,7 +84,7 @@ void HowToBolusDrug()
 	bg->ProcessAction(bolus);
 	bg->GetLogger()->Info("Giving the patient Succinylcholine.");
 
-	tracker.AdvanceModelTime(200);
+	bg->AdvanceModelTime(200, TimeUnit::s);
 
 	bg->GetLogger()->Info("It has been 200s since the administration, not doing well...");
 	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);

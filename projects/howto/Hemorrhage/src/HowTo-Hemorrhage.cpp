@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -47,7 +48,7 @@ void HowToHemorrhage()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -100,7 +101,7 @@ void HowToHemorrhage()
   bg->ProcessAction(hemorrhageSpleen);
 
   // Advance some time to let the body bleed out a bit
-  tracker.AdvanceModelTime(300);
+  bg->AdvanceModelTime(300, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient has been hemorrhaging for 300s");
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
@@ -118,7 +119,7 @@ void HowToHemorrhage()
   bg->ProcessAction(hemorrhageSpleen);
 
   // Advance some time while the medic gets the drugs ready
-  tracker.AdvanceModelTime(100);
+  bg->AdvanceModelTime(100, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient has NOT been hemorrhaging for 100s");
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
@@ -139,7 +140,7 @@ void HowToHemorrhage()
   iVSaline.GetRate().SetValue(100, VolumePerTimeUnit::mL_Per_min); //The rate to admnister the compound in the bag in this case saline
   bg->ProcessAction(iVSaline);
 
-  tracker.AdvanceModelTime(400);
+  bg->AdvanceModelTime(400, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient has been getting fluids for the past 400s");
   bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);

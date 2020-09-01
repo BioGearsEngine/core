@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #define _USE_MATH_DEFINES
 
-#include "HowToTracker.h"
+
 
 #include <cmath>
 // Include the various types you will be using in your code
@@ -40,6 +40,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
 
 using namespace biogears;
 // Make a custom event handler that you can connect to your code (See EngineUse for more info)
@@ -152,7 +154,7 @@ void HowToMechanicalVentialtion()
   bg->SetEventHandler(&myEventHandler);
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  HowToTracker tracker(*bg);
+  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -208,7 +210,7 @@ void HowToMechanicalVentialtion()
 
   //Go 1 min before doing anything
   //The patient is just doing spontaneous breathing
-  tracker.AdvanceModelTime(60.0);
+  bg->AdvanceModelTime(60.0, TimeUnit::s);
 
   //Let's do a bunch of different actions at the same time!
 
@@ -239,14 +241,14 @@ void HowToMechanicalVentialtion()
   // You can add other actions while this action is being processed.
   // Just be aware that this action is still being processed.
   // It is recommended that you advance time for at least the sum of the command periods.
-  tracker.AdvanceModelTime(60.0);
+  bg->AdvanceModelTime(60.0, TimeUnit::s);
 
   //Airway obstruction
   SEAirwayObstruction obstruction;
   obstruction.GetSeverity().SetValue(0.2);
   bg->ProcessAction(obstruction);
 
-  tracker.AdvanceModelTime(60.0);
+  bg->AdvanceModelTime(60.0, TimeUnit::s);
 
   //Pneumothorax
   // Create a Tension Pnuemothorax
@@ -261,7 +263,7 @@ void HowToMechanicalVentialtion()
   //pneumo.SetSide(CDM::enumSide::Left);
   bg->ProcessAction(pneumo);
 
-  tracker.AdvanceModelTime(60.0);
+  bg->AdvanceModelTime(60.0, TimeUnit::s);
 
   //Asthma attack
   SEAsthmaAttack asthmaAttack;
@@ -289,7 +291,7 @@ void HowToMechanicalVentialtion()
   envConditions.GetMeanRadiantTemperature().SetValue(15.0, TemperatureUnit::C);
   bg->ProcessAction(env);
 
-  tracker.AdvanceModelTime(60.0);
+  bg->AdvanceModelTime(60.0, TimeUnit::s);
 
   //Apnea
   //Maybe the muscles are getting weak?
@@ -308,7 +310,7 @@ void HowToMechanicalVentialtion()
   bolus.SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
   bg->ProcessAction(bolus);
 
-  tracker.AdvanceModelTime(60.0);
+  bg->AdvanceModelTime(60.0, TimeUnit::s);
 
   //Mechanical Ventilation
   // Create an SEMechanicalVentilation object
@@ -342,7 +344,7 @@ void HowToMechanicalVentialtion()
     N2frac.GetFractionAmount().SetValue(0.7896);
     bg->ProcessAction(mechVent);
 
-    tracker.AdvanceModelTime(1);
+    bg->AdvanceModelTime(1, TimeUnit::s);
 
     //Output some random stuff to the log
     bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);

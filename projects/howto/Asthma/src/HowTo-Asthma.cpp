@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowToTracker.h"
+
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
@@ -20,6 +20,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
+
+
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -42,11 +46,12 @@ void HowToAsthma()
   }
 
     // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-	HowToTracker tracker(*bg);
+	
 
 	// Create data requests for each value that should be written to the output log as the engine is executing
 	// Physiology System Names are defined on the System Objects 
-	// defined in the Physiology.xsd file
+	// defined in the Physiology.xsd file        
+  bg->GetEngineTrack()->GetDataRequestManager().SetSamplesPerSecond(1);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", VolumePerTimeUnit::mL_Per_min);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
@@ -59,7 +64,7 @@ void HowToAsthma()
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToAsthma.csv");
 
 	// Advance some time to get some healthy data
-	tracker.AdvanceModelTime(50);
+	bg->AdvanceModelTime(50, TimeUnit::s);
   // Cache off compartments of interest!
   const SEGasCompartment* carina = bg->GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Trachea);
 	
@@ -82,7 +87,7 @@ void HowToAsthma()
 	asthmaAttack.GetSeverity().SetValue(0.3);
 	bg->ProcessAction(asthmaAttack);
 
-	tracker.AdvanceModelTime(550);
+	bg->AdvanceModelTime(550, TimeUnit::s);
 
 	bg->GetLogger()->Info("The patient has been having an asthma attack for 550s");
 	bg->GetLogger()->Info(std::stringstream() <<"Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
@@ -99,7 +104,7 @@ void HowToAsthma()
 	bg->ProcessAction(asthmaAttack);
 	
 	// Advance some time while the patient catches their breath
-	tracker.AdvanceModelTime(200);
+	bg->AdvanceModelTime(200, TimeUnit::s);
 
 	bg->GetLogger()->Info("The patient has NOT had an asthma attack for 200s");
 	bg->GetLogger()->Info(std::stringstream() <<"Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
