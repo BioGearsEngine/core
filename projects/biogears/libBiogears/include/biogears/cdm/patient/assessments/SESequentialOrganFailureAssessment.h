@@ -22,6 +22,9 @@ class BIOGEARS_API SESequentialOrganFailureAssessment : public SEPatientAssessme
 public:
   SESequentialOrganFailureAssessment(Logger* logger);
   virtual ~SESequentialOrganFailureAssessment();
+  
+  static constexpr const char* TypeTag() {return "SESequentialOrganFailureAssessment"; };
+  const char* classname() const override { return TypeTag(); }
 
   virtual void Reset(); //reset values
   virtual void Clear(); //clear memory
