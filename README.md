@@ -3,6 +3,7 @@ Overview
 
 BioGears® source code is hosted here and will be developed through this public repository to encourage community facing development. In addition, we also support official stable releases. Our latest deployment (found under releases) is still in a beta phase, and is intended to be an intermediate release to showcase the capabilities of the BioGears® Physiology Engine. The current version of the software includes examples of all types of engine interfaces, but does not include all of the functionality or physiologic systems that will be present in the final product. This version of the software is meant to elicit feedback and enhance community involvement in establishing end product expectations.
 
+
 Build Status
 -----------------
 | Platform | Compiler | Architecture | Status |
@@ -12,8 +13,8 @@ Build Status
 | Linux  |  gcc5.4  | amd64 | ![Linux-gcc5.4-amd64 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc5.4-core2_64.png) |
 | Linux  |  gcc5.4  | armel | ![Linux-gcc5.4-armel Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc5.4-armel.png) |
 | Linux  |  gcc5.4  | aarch64 | ![Linux-gcc5.4-aarch64 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc5.4-aarch64.png) |
-| MacOS  |  clang11  | amd64 | ![MacOS clang11 Build Status](https://biogearsengine.com/content/badges/libBioGears_macos.png) |
-
+| MacOS  Yosemite |  clang10  | amd64 | ![MacOS Yosemite clang11 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_macos-yosemite.png) |
+| MacOS  Catalina|  clang11  | amd64 | ![MacOS Catalina clang11 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_macos-catalina.png) |
 
 What is BioGears®
 ------------------
