@@ -167,6 +167,7 @@ specific language governing permissions and limitations under the License.
             <xs:element name="Patient" type="PatientData"/>
             <xs:element name="PatientFile" type="xs:string"/>
           </xs:choice>
+          <xs:element name="TrackStabilization" type="enumOnOff" minOccurs="0" maxOccurs="1"/>
           <xs:element name="Condition" type="ConditionData" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="Configuration" type="PhysiologyEngineConfigurationData" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>

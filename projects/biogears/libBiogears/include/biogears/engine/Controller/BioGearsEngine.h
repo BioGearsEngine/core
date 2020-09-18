@@ -65,8 +65,8 @@ public:
   virtual double GetTimeStep(const TimeUnit& unit) override;
   virtual double GetSimulationTime(const TimeUnit& unit) override;
 
-  virtual void AdvanceModelTime() override;
-  virtual void AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s) override; //NOTE: Maynot compile on clang will evaluate
+  virtual void AdvanceModelTime(bool appendDataTrack = false) override;
+  virtual void AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s, bool appendDataTrack = false) override; //NOTE: Maynot compile on clang will evaluate
   virtual bool ProcessAction(const SEAction& action) override;
 
   virtual SESubstanceManager& GetSubstanceManager() override;
@@ -93,6 +93,17 @@ public:
   virtual const SECompartmentManager& GetCompartments() override;
   virtual Tree<const char*> GetDataRequestGraph() const override;
 
+  virtual bool IsAutoTracking() const override;
+  virtual void SetAutoTrackFlag(bool flag) override;
+  virtual bool IsTrackingStabilization() const override;
+
+  //!-------------------------------------------------------------------------------------------------
+  //! \brief
+  //! This value will be overridden if TrackingStabilizationCriteria is loaded by any means
+  //! After it is set. But can be used as a shortcut to modify m_Config->GetStabilizationCriteria()->TrackStabilization()
+  //! After stabiliztion criteira has been loaded.
+  //!-------------------------------------------------------------------------------------------------
+  virtual void SetTrackStabilizationFlag(bool flag) override;
 
 protected:
   virtual bool IsReady();
@@ -105,6 +116,9 @@ protected:
 #pragma warning(push,0)
   std::stringstream m_ss;
 #pragma warning(pop)
+
+  bool m_isAutoTracking = true;
+  bool m_areTrackingStabilization = false;
 
 };
 }

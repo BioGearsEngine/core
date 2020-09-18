@@ -63,12 +63,16 @@ public:
   virtual void AddCondition(const SECondition& c);
   virtual const std::vector<SECondition*>& GetConditions() const;
 
-protected:
+  virtual bool TrackingStabilization() const;
+  virtual void SetTrackStabilization(bool flag);
+
+  protected:
   SESubstanceManager& m_SubMgr;
   PhysiologyEngineConfiguration* m_Configuration;
   SEPatient* m_Patient;
   std::string m_PatientFile;
   std::vector<SECondition*> m_Conditions;
+  bool m_DoTrackStabilization;
 
 };
 }

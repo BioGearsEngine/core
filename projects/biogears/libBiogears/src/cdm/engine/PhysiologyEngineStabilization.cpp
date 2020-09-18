@@ -31,14 +31,12 @@ PhysiologyEngineStabilization::~PhysiologyEngineStabilization()
 void PhysiologyEngineStabilization::Clear()
 {
   m_LogProgress = true;
-  m_TrackingStabilization = CDM::enumOnOff::Off;
   SAFE_DELETE(m_StabilizationDuration);
 }
 
 bool PhysiologyEngineStabilization::Load(const CDM::PhysiologyEngineStabilizationData& in)
 {
   Clear();
-  m_TrackingStabilization = in.TrackingStabilization();
   return true;
 }
 
@@ -51,7 +49,7 @@ CDM::PhysiologyEngineStabilizationData* PhysiologyEngineStabilization::Unload() 
 
 void PhysiologyEngineStabilization::Unload(CDM::PhysiologyEngineStabilizationData& data) const
 {
-  data.TrackingStabilization(m_TrackingStabilization);
+
 }
 
 void PhysiologyEngineStabilization::LogProgress(bool b)
@@ -59,14 +57,6 @@ void PhysiologyEngineStabilization::LogProgress(bool b)
   m_LogProgress = b;
 }
 
-void PhysiologyEngineStabilization::TrackStabilization(CDM::enumOnOff::value state)
-{
-  m_TrackingStabilization = state;
-}
-bool PhysiologyEngineStabilization::IsTrackingStabilization()
-{
-  return m_TrackingStabilization == CDM::enumOnOff::On;
-}
 
 void PhysiologyEngineStabilization::CancelStabilization()
 {

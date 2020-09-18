@@ -85,19 +85,16 @@ bool PhysiologyEngineDynamicStabilization::Stabilize(PhysiologyEngine& engine, c
   }
   // Execute System initialization time
   PhysiologyEngineTrack* tracker = engine.GetEngineTrack();
-  CDM::enumOnOff::value track = m_TrackingStabilization;
-  if (track && tracker == nullptr) {
-    track = CDM::enumOnOff::Off;
-    Warning("PhysiologyEngineTrack not provided by engine, not tracking data to file");
-  }
-
   bool hasOptionalProperties = false;
 
   // Grab all the convergence properties
   for (PropertyConvergence* pc : properties) {
-    if (pc->IsOptional())
+    if (pc->IsOptional()) {
       hasOptionalProperties = true;
-    tracker->ConnectRequest(pc->GetDataRequest(), pc->GetDataRequestScalar());
+    }
+    if (tracker) {
+      tracker->ConnectRequest(pc->GetDataRequest(), pc->GetDataRequestScalar());
+    }
     if (!pc->GetDataRequestScalar().HasScalar()) {
       ss << "Cannot find convergence property " << pc->GetDataRequest().GetName();
       throw CommonDataModelException(ss.str());
@@ -118,12 +115,8 @@ bool PhysiologyEngineDynamicStabilization::Stabilize(PhysiologyEngine& engine, c
       break;
 
     engine.AdvanceModelTime();
-    if (m_currentTime_s == 0)
-      tracker->SetupRequests();
     stablizationTime_s += dT_s;
     m_currentTime_s += dT_s;
-    if (track)
-      tracker->TrackData(m_currentTime_s);
     if (m_LogProgress) {
       statusTime_s += dT_s;
       if (statusTime_s > statusStep_s) {
@@ -408,7 +401,7 @@ void PhysiologyEngineDynamicStabilization::Unload(CDM::PhysiologyEngineDynamicSt
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineDynamicStabilization::Load(const char* file)
 {
-  return Load(std::string{ file });
+  return Load(std::string { file });
 }
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineDynamicStabilization::Load(const std::string& file)
@@ -458,7 +451,7 @@ const PhysiologyEngineDynamicStabilizationCriteria* PhysiologyEngineDynamicStabi
 //-----------------------------------------------------------------------------
 void PhysiologyEngineDynamicStabilization::RemoveConditionCriteria(const char* name)
 {
-  RemoveConditionCriteria(std::string{ name });
+  RemoveConditionCriteria(std::string { name });
 }
 //-----------------------------------------------------------------------------
 void PhysiologyEngineDynamicStabilization::RemoveConditionCriteria(const std::string& name)
@@ -473,7 +466,7 @@ void PhysiologyEngineDynamicStabilization::RemoveConditionCriteria(const std::st
 //-----------------------------------------------------------------------------
 PhysiologyEngineDynamicStabilizationCriteria* PhysiologyEngineDynamicStabilization::GetConditionCriteria(const char* name) const
 {
-  return GetConditionCriteria(std::string{ name });
+  return GetConditionCriteria(std::string { name });
 }
 //-----------------------------------------------------------------------------
 PhysiologyEngineDynamicStabilizationCriteria* PhysiologyEngineDynamicStabilization::GetConditionCriteria(const std::string& name) const
@@ -578,7 +571,7 @@ void PhysiologyEngineDynamicStabilizationCriteria::SetName(const std::string& na
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineDynamicStabilizationCriteria::HasName() const
 {
-  return  m_Name.empty() ? false : true;
+  return m_Name.empty() ? false : true;
 }
 //-----------------------------------------------------------------------------
 void PhysiologyEngineDynamicStabilizationCriteria::InvalidateName()
@@ -657,7 +650,7 @@ double PhysiologyEngineDynamicStabilizationCriteria::GetMaximumAllowedStabilizat
 //--------------------------------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateSystemPropertyConvergence(double percentError, const char* name)
 {
-  return CreateSystemPropertyConvergence(percentError, std::string{ name });
+  return CreateSystemPropertyConvergence(percentError, std::string { name });
 }
 //-----------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateSystemPropertyConvergence(double percentError, const std::string& name)
@@ -687,7 +680,7 @@ PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateSystemP
 //--------------------------------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateGasCompartmentPropertyConvergence(double percentError, const char* cmpt, const char* name)
 {
-  return CreateGasCompartmentPropertyConvergence(percentError, std::string{ cmpt }, std::string{ name });
+  return CreateGasCompartmentPropertyConvergence(percentError, std::string { cmpt }, std::string { name });
 }
 //-----------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateGasCompartmentPropertyConvergence(double percentError, const std::string& cmpt, const std::string& name)
@@ -707,7 +700,7 @@ PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateGasComp
 //-----------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateGasCompartmentPropertyConvergence(double percentError, const char* cmpt, SESubstance& substance, const char* name)
 {
-  return CreateGasCompartmentPropertyConvergence(percentError, std::string{ cmpt }, substance, std::string{ name });
+  return CreateGasCompartmentPropertyConvergence(percentError, std::string { cmpt }, substance, std::string { name });
 }
 //-----------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateGasCompartmentPropertyConvergence(double percentError, const std::string& cmpt, SESubstance& substance, const std::string& name)
@@ -728,7 +721,7 @@ PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateGasComp
 //-----------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateLiquidCompartmentPropertyConvergence(double percentError, const char* cmpt, const char* name)
 {
-  return CreateLiquidCompartmentPropertyConvergence(percentError, std::string{ cmpt }, std::string{ name });
+  return CreateLiquidCompartmentPropertyConvergence(percentError, std::string { cmpt }, std::string { name });
 }
 //-----------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateLiquidCompartmentPropertyConvergence(double percentError, const std::string& cmpt, const std::string& name)
@@ -748,7 +741,7 @@ PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateLiquidC
 //-----------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateLiquidCompartmentPropertyConvergence(double percentError, const char* cmpt, SESubstance& substance, const char* name)
 {
-  return CreateLiquidCompartmentPropertyConvergence(percentError, std::string{ cmpt }, substance, std::string{ name });
+  return CreateLiquidCompartmentPropertyConvergence(percentError, std::string { cmpt }, substance, std::string { name });
 }
 //-----------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateLiquidCompartmentPropertyConvergence(double percentError, const std::string& cmpt, SESubstance& substance, const std::string& name)
@@ -769,7 +762,7 @@ PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateLiquidC
 //-----------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateThermalCompartmentPropertyConvergence(double percentError, const char* cmpt, const char* name)
 {
-  return CreateThermalCompartmentPropertyConvergence(percentError, std::string{cmpt}, std::string{name});
+  return CreateThermalCompartmentPropertyConvergence(percentError, std::string { cmpt }, std::string { name });
 }
 
 //-----------------------------------------------------------------------------
@@ -790,7 +783,7 @@ PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateThermal
 //-----------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateTissueCompartmentPropertyConvergence(double percentError, const char* cmpt, const char* name)
 {
-  return CreateTissueCompartmentPropertyConvergence(percentError, std::string{ cmpt }, std::string{ name });
+  return CreateTissueCompartmentPropertyConvergence(percentError, std::string { cmpt }, std::string { name });
 }
 //-----------------------------------------------------------------------------
 PropertyConvergence& PhysiologyEngineDynamicStabilizationCriteria::CreateTissueCompartmentPropertyConvergence(double percentError, const std::string& cmpt, const std::string& name)
@@ -879,5 +872,5 @@ void PropertyConvergence::SetOptional(bool b)
 {
   m_Optional = b;
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 }

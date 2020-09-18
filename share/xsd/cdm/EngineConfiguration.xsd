@@ -40,9 +40,6 @@ specific language governing permissions and limitations under the License.
     <xs:complexType name="PhysiologyEngineStabilizationData" abstract="true">
         <xs:complexContent>
             <xs:extension base="ObjectData">
-                <xs:sequence>
-                    <xs:element name="TrackingStabilization" type="enumOnOff" minOccurs="1" maxOccurs="1"/>    
-                </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>

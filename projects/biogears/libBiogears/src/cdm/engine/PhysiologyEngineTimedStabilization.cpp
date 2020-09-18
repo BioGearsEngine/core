@@ -69,14 +69,7 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
     profiler.Start("Total");
     profiler.Start("Status");
   }
-  // Execute System initialization time
-  PhysiologyEngineTrack* tracker = engine.GetEngineTrack();
-  CDM::enumOnOff::value track = m_TrackingStabilization;
-  if (track && tracker == nullptr) {
-    track = CDM::enumOnOff::Off;
-    Warning("PhysiologyEngineTrack not provided by engine, not tracking data to file");
-  }
-
+ 
   ss.precision(3);
   double statusTime_s = 0; // Current time of this status cycle
   double statusStep_s = 50; //How long did it take to simulate this much time
@@ -84,8 +77,7 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
   int count = (int)(sTime_s / dT_s);
   int ProgressStep = (int)(count * .1);
   int Progress = ProgressStep;
-  if (track)
-    tracker->SetupRequests();
+
   for (int i = 0; i <= count; i++) {
     if (m_Cancelled)
       break;
@@ -96,10 +88,6 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
     engine.AdvanceModelTime();
 
     m_currentTime_s += dT_s;
-    if (m_currentTime_s == 0)
-      tracker->SetupRequests();
-    if (track)
-      tracker->TrackData(m_currentTime_s);
     if (m_LogProgress) {
       statusTime_s += dT_s;
       if (statusTime_s > statusStep_s) {

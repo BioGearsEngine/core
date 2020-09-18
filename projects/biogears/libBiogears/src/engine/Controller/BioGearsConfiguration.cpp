@@ -244,7 +244,6 @@ void BioGearsConfiguration::Initialize()
   GetTimeStep().SetValue(1.0 / 50.0, TimeUnit::s);
   GetDynamicStabilizationCriteria().Load("config/DynamicStabilization.xml");
   //GetTimedStabilizationCriteria().Load("config/TimedStabilization.xml");
-  m_StabilizationCriteria->TrackStabilization(CDM::enumOnOff::Off); // Turn on to include stabilization tracking for debugging
 
   //Blood Chemistry
   GetMeanCorpuscularVolume().SetValue(9.e-8, VolumeUnit::uL); // Guyton p419

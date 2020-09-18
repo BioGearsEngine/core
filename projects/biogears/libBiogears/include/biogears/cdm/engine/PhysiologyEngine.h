@@ -161,7 +161,7 @@ public:
   //! through the API at this time.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual void AdvanceModelTime() = 0;
+  virtual void AdvanceModelTime(bool appendDataTrack = false) = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -172,7 +172,7 @@ public:
   //! through the API at this time.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual void AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s) = 0;
+  virtual void AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false) = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -329,5 +329,30 @@ public:
   //! Return a Graph of DataRequest that the current PhysiologyEngine Supports.
   //!-------------------------------------------------------------------------------------------------
   virtual Tree<const char*> GetDataRequestGraph() const = 0;
+
+  //!-------------------------------------------------------------------------------------------------
+  //! \brief
+  //! Returns the current state of the AutoTracking Property. True implies for each time advance
+  //! All DataRequest will be tracked if the current simulation time is a multiple of 
+  //! GetDataRequestManager().GetSamplesPerSecond();
+  //!-------------------------------------------------------------------------------------------------
+  virtual bool IsAutoTracking() const = 0;
+  //!-------------------------------------------------------------------------------------------------
+  //! \brief
+  //! Return Allows the toggling of the SetAutoTrackFlag to On/Off
+  //!-------------------------------------------------------------------------------------------------
+  virtual void SetAutoTrackFlag(bool flag) = 0;
+  //!-------------------------------------------------------------------------------------------------
+  //! \brief
+  //! Returns the current state of the Track Stabilization Property. 
+  //! When true the user expects the Results file to include engine values during stabilization routines
+  //! When false the user expects the 0 time index to be the first engine readout post stabilization.
+  //!-------------------------------------------------------------------------------------------------
+  virtual bool IsTrackingStabilization() const = 0;
+  //!-------------------------------------------------------------------------------------------------
+  //! \brief
+  //! Return Allows the toggling of the SetAutoTrackFlag to On/Off
+  //!-------------------------------------------------------------------------------------------------
+  virtual void SetTrackStabilizationFlag(bool flag) = 0;
 };
 }

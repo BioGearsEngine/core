@@ -23,8 +23,6 @@ StabilizationGenerator::StabilizationGenerator(std::string path)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
 
-  _timed.TrackingStabilization(CDM::enumOnOff::On);
-  _dynamic.TrackingStabilization(CDM::enumOnOff::On);
 }
 //-----------------------------------------------------------------------------
 StabilizationGenerator::~StabilizationGenerator()

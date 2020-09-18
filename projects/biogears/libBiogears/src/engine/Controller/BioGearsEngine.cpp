@@ -93,12 +93,12 @@ BioGearsEngine::BioGearsEngine(Logger* logger, const std::string& working_dir)
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(Logger* logger, const char* working_dir)
-  : BioGearsEngine(logger, std::string{ working_dir })
+  : BioGearsEngine(logger, std::string { working_dir })
 {
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const char* logFileName)
-  : BioGearsEngine(std::string{ logFileName })
+  : BioGearsEngine(std::string { logFileName })
 {
 }
 //-------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ PhysiologyEngineTrack* BioGearsEngine::GetEngineTrack()
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 {
-  return LoadState(std::string{ file }, simTime);
+  return LoadState(std::string { file }, simTime);
 }
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime)
@@ -166,13 +166,13 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
   auto resultsFile = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
   std::vector<std::unique_ptr<CDM::DataRequestData>> dataVector;
   for (auto& dr : requests) {
-   dataVector.emplace_back(dr->Unload());
+    dataVector.emplace_back(dr->Unload());
   }
   BioGears::SetUp();
   m_EngineTrack = PhysiologyEngineTrack(*this);
   m_DataTrack = &m_EngineTrack.GetDataTrack();
-  for ( auto& data : dataVector) {
-    m_EngineTrack.GetDataRequestManager().CreateFromBind( *data, *m_Substances); 
+  for (auto& data : dataVector) {
+    m_EngineTrack.GetDataRequestManager().CreateFromBind(*data, *m_Substances);
   }
   m_EngineTrack.GetDataRequestManager().SetResultsFilename(resultsFile);
   m_ss.str("");
@@ -471,7 +471,7 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
 //-------------------------------------------------------------------------------
 std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const char* file)
 {
-  return SaveState(std::string{ file });
+  return SaveState(std::string { file });
 }
 //-------------------------------------------------------------------------------
 std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const std::string& file)
@@ -552,7 +552,7 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
-  return InitializeEngine(std::string{ patientFile }, conditions, config);
+  return InitializeEngine(std::string { patientFile }, conditions, config);
 }
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
@@ -623,26 +623,27 @@ bool BioGearsEngine::InitializeEngine(const std::vector<const SECondition*>* con
     }
   }
   AtSteadyState(EngineState::AtSecondaryStableState);
-
-  m_State = EngineState::Active;
   // Hook up the handlers (Note events will still be in the log)
   m_Patient->ForwardEvents(m_EventHandler);
   m_AnesthesiaMachine->ForwardEvents(m_EventHandler);
   m_Logger->Info("Finalizing homeostasis");
 
-  // Run this again to clear out any bumps from systems resetting baselines in the last AtSteadyState call
-  AdvanceModelTime(30, TimeUnit::s); // I would rather run Feedback stablization again, but...
-  // This does not work for a few patients, they will not stay stable (???)
-  //if (!m_Config->GetStabilizationCriteria()->StabilizeFeedbackState(*this))
-  //  return false;
+  //! Run this again to clear out any bumps from systems resetting baselines in the last AtSteadyState call
+  //! I would rather run Feedback stablization again, but...
+  //! This does not work for a few patients, they will not stay stable (???)
+  AdvanceModelTime(30, TimeUnit::s);
 
-  if (!m_Config->GetStabilizationCriteria()->IsTrackingStabilization()) {
-    m_SimulationTime->SetValue(0, TimeUnit::s);
-  }
+  m_Logger->Info("Engine is now Active");
   // Don't allow any changes to Quantity/Potential/Flux values directly
   // Use Quantity/Potential/Flux Sources
   m_Circuits->SetReadOnly(true);
 
+  m_State = EngineState::Active;
+  if (!IsTrackingStabilization()) {
+    m_SimulationTime->SetValue(0, TimeUnit::s);
+    m_timeSinceLastDataTrack = 0;
+    m_timeStep_remainder = 0;
+  }
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -656,7 +657,7 @@ double BioGearsEngine::GetSimulationTime(const TimeUnit& unit)
   return m_SimulationTime->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-void BioGearsEngine::AdvanceModelTime()
+void BioGearsEngine::AdvanceModelTime(bool appendDataTrack)
 {
   //TODO: I am starting to think this should be a protected function
   if (!IsReady()) {
@@ -673,33 +674,33 @@ void BioGearsEngine::AdvanceModelTime()
   m_Patient->UpdateEvents(m_Config->GetTimeStep());
   m_CurrentTime->Increment(m_Config->GetTimeStep());
   m_SimulationTime->Increment(m_Config->GetTimeStep());
+
+  const auto sample_interval_s = 1.0 / GetEngineTrack()->GetDataRequestManager().GetSamplesPerSecond();
+  m_timeSinceLastDataTrack += m_Config->GetTimeStep(TimeUnit::s);
+  if (m_timeSinceLastDataTrack >= sample_interval_s) {
+    m_timeSinceLastDataTrack -= sample_interval_s;
+    if (m_isAutoTracking && EngineState::Active == m_State || m_State < EngineState::Active && m_areTrackingStabilization) {
+      GetEngineTrack()->TrackData(GetSimulationTime(TimeUnit::s), appendDataTrack);
+    }
+  }
 }
 //-------------------------------------------------------------------------------
-void BioGearsEngine::AdvanceModelTime(double time, const TimeUnit& unit)
+void BioGearsEngine::AdvanceModelTime(double time, const TimeUnit& unit, bool appendDataTrack)
 {
   double time_s = Convert(time, unit, TimeUnit::s);
   double remains = time_s / m_Config->GetTimeStep(TimeUnit::s);
   remains -= static_cast<int>(remains);
   m_timeStep_remainder += remains;
+
   int count = static_cast<int>(time_s / m_Config->GetTimeStep(TimeUnit::s));
   if (m_timeStep_remainder >= 1.0) {
     ++count;
     m_timeStep_remainder -= 1.0;
   }
-  auto sample_interval_s = 1.0 / GetEngineTrack()->GetDataRequestManager().GetSamplesPerSecond();
-  for (int i = 0; i < count; i++) {
-    AdvanceModelTime();
-    m_timeSinceLastDataTrack += m_Config->GetTimeStep(TimeUnit::s);
-    if (m_timeSinceLastDataTrack > sample_interval_s) {
-      m_timeSinceLastDataTrack -= sample_interval_s;
-      //NOTE: This line will automatically truncate the CSV file
-      //If a user wants to concat two files. They would need to manually call
-      //TrackData(time,true) before calling this variant of advance time,
-      GetEngineTrack()->TrackData(GetSimulationTime(TimeUnit::s));
-    }
-      
-  }
 
+  for (int i = 0; i < count; i++) {
+    AdvanceModelTime(appendDataTrack);
+  }
 }
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::ProcessAction(const SEAction& action)
@@ -978,7 +979,7 @@ const SECompartmentManager& BioGearsEngine::GetCompartments()
 //-------------------------------------------------------------------------------
 Tree<const char*> BioGearsEngine::GetDataRequestGraph() const
 {
-  return Tree<const char*>{ "BioGearsEngine" }
+  return Tree<const char*> { "BioGearsEngine" }
     .emplace_back(GetBloodChemistry().GetPhysiologyRequestGraph())
     .emplace_back(GetCardiovascular().GetPhysiologyRequestGraph())
     .emplace_back(GetDrugs().GetPhysiologyRequestGraph())
@@ -991,4 +992,24 @@ Tree<const char*> BioGearsEngine::GetDataRequestGraph() const
     .emplace_back(GetRespiratory().GetPhysiologyRequestGraph())
     .emplace_back(GetTissue().GetPhysiologyRequestGraph());
 }
+bool BioGearsEngine::IsAutoTracking() const
+{
+  return m_isAutoTracking;
+}
+//-------------------------------------------------------------------------------
+void BioGearsEngine::SetAutoTrackFlag(bool flag)
+{
+  m_isAutoTracking = flag;
+}
+//-------------------------------------------------------------------------------
+bool BioGearsEngine::IsTrackingStabilization() const
+{
+  return m_areTrackingStabilization;
+}
+//-------------------------------------------------------------------------------
+void BioGearsEngine::SetTrackStabilizationFlag(bool flag)
+{
+  m_areTrackingStabilization = flag;
+}
+//-------------------------------------------------------------------------------
 }

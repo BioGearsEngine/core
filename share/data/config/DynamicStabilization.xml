@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <PhysiologyEngineDynamicStabilization xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
-  <TrackingStabilization>On</TrackingStabilization>
-  <RestingStabilizationCriteria>
+	<RestingStabilizationCriteria>
     <ConvergenceTime readOnly="false" unit="s" value="15"/>
     <MinimumReactionTime readOnly="false" unit="s" value="25"/>
     <MaximumAllowedStabilizationTime readOnly="false" unit="s" value="1000"/>

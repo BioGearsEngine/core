@@ -22,7 +22,8 @@ namespace biogears {
 SEScenarioInitialParameters::SEScenarioInitialParameters(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())
   , m_SubMgr(subMgr)
- 
+  , m_DoTrackStabilization(false)
+
 {
   m_Configuration = nullptr;
   m_Patient = nullptr;
@@ -38,6 +39,7 @@ SEScenarioInitialParameters::~SEScenarioInitialParameters()
 void SEScenarioInitialParameters::Clear()
 {
   m_PatientFile = "";
+  m_DoTrackStabilization = false;
   SAFE_DELETE(m_Patient);
   SAFE_DELETE(m_Configuration);
   DELETE_VECTOR(m_Conditions);
@@ -65,6 +67,9 @@ bool SEScenarioInitialParameters::Load(const CDM::ScenarioInitialParametersData&
       m_Conditions.push_back(c);
   }
 
+  if (in.TrackStabilization().present()) {
+    m_DoTrackStabilization = in.TrackStabilization().get();
+  }
   return IsValid();
 }
 //-----------------------------------------------------------------------------
@@ -85,6 +90,7 @@ void SEScenarioInitialParameters::Unload(CDM::ScenarioInitialParametersData& dat
     data.Condition().push_back(std::unique_ptr<CDM::ConditionData>(c->Unload()));
   if (HasConfiguration())
     data.Configuration(std::unique_ptr<CDM::PhysiologyEngineConfigurationData>(m_Configuration->Unload()));
+  data.TrackStabilization((m_DoTrackStabilization) ? CDM::enumOnOff::On : CDM::enumOnOff::Off);
 }
 //-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::IsValid() const
@@ -188,4 +194,17 @@ const std::vector<SECondition*>& SEScenarioInitialParameters::GetConditions() co
   return m_Conditions;
 }
 //-----------------------------------------------------------------------------
+
+bool SEScenarioInitialParameters::TrackingStabilization() const
+{
+  return m_DoTrackStabilization;
+}
+//-----------------------------------------------------------------------------
+
+void SEScenarioInitialParameters::SetTrackStabilization(bool flag)
+{
+  m_DoTrackStabilization = flag;
+}
+//-----------------------------------------------------------------------------
+
 }

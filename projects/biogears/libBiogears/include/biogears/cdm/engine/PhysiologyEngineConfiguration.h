@@ -76,6 +76,7 @@ protected:
   bool m_Merge;
   SEElectroCardioGramInterpolator* m_ECGInterpolator;
 
+
   PhysiologyEngineStabilization* m_StabilizationCriteria;
   PhysiologyEngineTimedStabilization* m_TimedStabilizationCriteria;
   PhysiologyEngineDynamicStabilization* m_DynamicStabilizationCriteria;

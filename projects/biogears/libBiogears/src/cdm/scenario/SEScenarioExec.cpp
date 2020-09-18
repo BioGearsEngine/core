@@ -88,8 +88,10 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
 
       //if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
       m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
-
+      
       auto& params = memory_safe_scenario->GetInitialParameters();
+      m_Engine.SetTrackStabilizationFlag(params.TrackingStabilization() == CDM::enumOnOff::On);
+
       // Do we have any conditions
       std::vector<const SECondition*> conditions;
       for (SECondition* c : params.GetConditions()) {

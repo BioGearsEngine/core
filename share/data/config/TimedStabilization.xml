@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <PhysiologyEngineTimedStabilization xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
-  <TrackingStabilization>On</TrackingStabilization>
   <RestingStabilizationTime readOnly="false" unit="s" value="600"/>
   <FeedbackStabilizationTime readOnly="false" unit="s" value="20"/>
   <ConditionStabilization Name="ChronicAnemia">
