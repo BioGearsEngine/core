@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+#include "biogears/cdm/patient/actions/SESubstanceNasalDose.h"
 
 
 namespace biogears {
@@ -91,6 +92,7 @@ protected:
 
   // Serializable member variables (Set in Initialize and in schema)
   std::map<const SESubstance*, SESubstanceBolusState*> m_BolusAdministrations;
+  std::map<const SESubstance*, SENasalState*> m_NasalStates;
   std::map<const SESubstance*, SETransmucosalState*> m_TransmucosalStates;
   double m_SarinRbcAcetylcholinesteraseComplex_nM;
   double m_AgedRbcAcetylcholinesterase_nM;

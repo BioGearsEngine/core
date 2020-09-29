@@ -51,4 +51,36 @@ protected:
   const SESubstance& m_Substance;
   SEScalarTime m_elapsedTime;
 };
+
+class BIOGEARS_API SENasalState {
+public:
+  SENasalState(const SESubstance& sub);
+  ~SENasalState();
+  virtual void Clear();
+
+  virtual bool Load(const CDM::NasalStateData& in);
+  virtual CDM::NasalStateData* Unload() const;
+
+  bool Initialize(SEScalarMass& dose);
+
+  SEScalarMass& GetTotalNasalDose();
+  SEScalarMassPerVolume& GetVenaCavaConcentration();
+  std::vector<SEScalarMass*>& GetUnreleasedNasalMasses();
+  std::vector<SEScalarMass*>& GetReleasedNasalMasses();
+  std::vector<double> GetUnreleasedNasalMasses(const MassUnit& unit);
+  std::vector<double> GetReleasedNasalMasses(const MassUnit& unit);
+  bool SetUnreleasedNasalMasses(std::vector<double>& uMasses, const MassUnit& unit);
+  bool SetReleasedNasalMasses(std::vector<double>& rMasses, const MassUnit& unit);
+
+protected:
+  virtual void Unload(CDM::NasalStateData& data) const;
+  //Nasal specific values
+  const SESubstance* m_Substance;
+  SEScalarMass* m_TotalNasalDose;
+  SEScalarMassPerVolume* m_VenaCavaConcentration;
+  std::vector<SEScalarMass*> m_UnreleasedDrugMasses;
+  std::vector<SEScalarMass*> m_ReleasedDrugMasses;
+  size_t m_NumUnreleasedMasses;
+  size_t m_NumReleasedMasses;
+};
 }

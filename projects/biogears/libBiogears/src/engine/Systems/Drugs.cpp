@@ -145,6 +145,18 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
     otState->Load(otData);
   }
 
+  for (const CDM::NasalStateData& nData : in.NasalStates()) {
+    SESubstance* sub = m_data.GetSubstances().GetSubstance(nData.Substance());
+    if (sub == nullptr) {
+      m_ss << "Unable to find subtance " << nData.Substance();
+      Error(m_ss, "Drugs::Load::NasalAdministration");
+      return false;
+    }
+    SENasalState* nState = new SENasalState(*sub);
+    m_NasalStates[sub] = nState;
+    nState->Load(nData);
+  }
+
   return true;
 }
 CDM::BioGearsDrugSystemData* Drugs::Unload() const
@@ -167,6 +179,11 @@ void Drugs::Unload(CDM::BioGearsDrugSystemData& data) const
   for (auto itr : m_TransmucosalStates) {
     if (itr.second != nullptr)
       data.TransmucosalStates().push_back(std::unique_ptr<CDM::TransmucosalStateData>(itr.second->Unload()));
+  }
+
+  for (auto itr : m_NasalStates) {
+    if (itr.second != nullptr)
+      data.NasalStates().push_back(std::unique_ptr<CDM::NasalStateData>(itr.second->Unload()));
   }
 }
 
@@ -299,7 +316,7 @@ void Drugs::AdministerSubstanceBolus()
       break;
     default:
       /// \error Error: Unavailable Administration Route
-      Error(std::string { "Unavailable Bolus Administration Route for substance " } + b.first->GetName(), "Drugs::AdministerSubstanceBolus");
+      Error(std::string{ "Unavailable Bolus Administration Route for substance " } + b.first->GetName(), "Drugs::AdministerSubstanceBolus");
       completedBolus.push_back(b.first); // Remove it
       continue;
     }
@@ -410,7 +427,23 @@ void Drugs::AdministerSubstanceNasal()
     nSub = nd.first;
     nDose = nd.second;
 
-    double nasalTimeElapsed_s = nDose->GetElapsedTime().GetValue(TimeUnit::s);
+    SENasalState* nState = m_NasalStates[nSub];
+    if (nState == nullptr) {
+      //If it doesn't exist yet, make a new model state for the substance and initialize it
+      nState = new SENasalState(*nSub);
+      if (!nState->Initialize(nDose->GetDose())) {
+        Error("SENasalState::Probable vector length mismatch");
+      }
+      m_NasalStates[nSub] = nState;
+      //Every OT state needs to initialize a GI absorption model state to account for drug that is swallowed.
+      //Clearly we are assuming that there is not already an active pill of the same substance already present in the GI (seems like a safe assumption).
+      //m_data.GetGastrointestinal().NewDrugTransitState(sub);
+      //if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oDose->GetAdminRoute())) {
+      //  Error("SEGastrointestinalSystem::SEDrugAbsorptionTransitModelState: Probably vector length mismatch");
+      //}
+    }
+
+    double nasalTimeElapsed_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
     double nasalDose_mg = nDose->GetDose().GetValue(MassUnit::mg);
 
     //Rate constants in 1/s
@@ -431,12 +464,27 @@ void Drugs::AdministerSubstanceNasal()
     const double nasalk15 = 0.000027777; // transit rate constant of released drug through gastrointestinal section
 
     //Initial Drug Distribution
-    const double nasal_anterior_unreleased_initial = 0; // initial amount of unreleased drug in anterior section
-    const double nasal_anterior_released_initial = 0.6 * nasalDose_mg; // initial amount of released drug in anterior section
-    const double nasal_posterior_unreleased_initial = 0; // initial amount of unreleased drug in posterior section
-    const double nasal_posterior_released_initial = 0.4 * nasalDose_mg; // initial amount of released drug in posterior section
-    const double nasal_gastro_unreleased_initial = 0; // initial amount of unreleased drug in gastrointestinal section
-    const double nasal_gastro_released_initial = 0; // initial amount of released drug in gastrointestinal section
+    std::vector<double> unrelMass = nState->GetUnreleasedNasalMasses(MassUnit::mg);
+    std::vector<double> relMass = nState->GetReleasedNasalMasses(MassUnit::mg);
+    //const double nasal_anterior_unreleased_initial = 0; // initial amount of unreleased drug in anterior section
+    //const double nasal_anterior_released_initial = 0.6 * nasalDose_mg; // initial amount of released drug in anterior section
+    //const double nasal_posterior_unreleased_initial = 0; // initial amount of unreleased drug in posterior section
+    //const double nasal_posterior_released_initial = 0.4 * nasalDose_mg; // initial amount of released drug in posterior section
+    //const double nasal_gastro_unreleased_initial = 0; // initial amount of unreleased drug in gastrointestinal section
+    //const double nasal_gastro_released_initial = 0; // initial amount of released drug in gastrointestinal section
+
+    double nasal_anterior_unreleased_initial = unrelMass[0]; // initial amount of unreleased drug in anterior section
+    double nasal_anterior_released_initial = relMass[0];
+    if (nasal_anterior_released_initial == 0.0) {
+      nasal_anterior_released_initial = 0.6 * nasalDose_mg; // initial amount of released drug in anterior section
+    }
+    double nasal_posterior_unreleased_initial = unrelMass[1]; // initial amount of unreleased drug in posterior section
+    double nasal_posterior_released_initial = relMass[1];
+    if (nasal_posterior_released_initial == 0.0) {
+      nasal_posterior_released_initial = 0.4 * nasalDose_mg; // initial amount of released drug in posterior section
+    }
+    double nasal_gastro_unreleased_initial = unrelMass[2]; // initial amount of unreleased drug in gastrointestinal section
+    double nasal_gastro_released_initial = relMass[2]; // initial amount of released drug in gastrointestinal section
 
     //Intermediate Values
     const double nasala1 = nasalk1 + nasalk2;
@@ -468,13 +516,21 @@ void Drugs::AdministerSubstanceNasal()
 
     //Amounts of Unreleased Drug
     const double nasal_anterior_unreleased = nasal_anterior_unreleased_initial * exp(-nasala1 * nasalTimeElapsed_s); // amount of unreleased drug in anterior section
+    unrelMass[0] = nasal_anterior_unreleased;
     const double nasal_posterior_unreleased = nasalC1 * exp(-nasala1 * nasalTimeElapsed_s) + nasalC2 * exp(-nasalb1 * nasalTimeElapsed_s); // amount of unreleased drug in posterior section
+    unrelMass[1] = nasal_posterior_unreleased;
     const double nasal_gastro_unreleased = nasalC3 * exp(-nasala1 * nasalTimeElapsed_s) + nasalC3 * exp(-nasalb1 * nasalTimeElapsed_s) + nasalCp1 * exp(-nasaly1 * nasalTimeElapsed_s); // amount of unreleased drug in gastrointestinal section
-
+    unrelMass[2] = nasal_gastro_unreleased;
     //Amounts of Released Drug
     const double nasal_anterior_released = nasalC5 * exp(-nasala1 * nasalTimeElapsed_s) + nasalC6 * exp(-nasalo1 * nasalTimeElapsed_s); // amount of released drug in anterior section
+    relMass[0] = nasal_anterior_released;
     const double nasal_posterior_released = nasalC7 * exp(-nasala1 * nasalTimeElapsed_s) + nasalC8 * exp(-nasalb1 * nasalTimeElapsed_s) + nasalC9 * exp(-nasalo1 * nasalTimeElapsed_s) + nasalCp2 * exp(-nasalw1 * nasalTimeElapsed_s); // amount of released drug in posterior section
+    relMass[1] = nasal_posterior_released;
     const double nasal_gastro_released = nasalC10 * exp(-nasala1 * nasalTimeElapsed_s) + nasalC8 * exp(-nasalb1 * nasalTimeElapsed_s) + nasalC12 * exp(-nasaly1 * nasalTimeElapsed_s) + nasalC13 * exp(-nasalo1 * nasalTimeElapsed_s) + nasalC14 * exp(-nasalw1 * nasalTimeElapsed_s) + nasalCp3 * exp(-nasale1 * nasalTimeElapsed_s); // amount of released drug in gastrointestinal section
+    relMass[2] = nasal_gastro_released;
+    // Set new released/unreleased values
+    nState->SetUnreleasedNasalMasses(unrelMass, MassUnit::mg);
+    nState->SetReleasedNasalMasses(relMass, MassUnit::mg);
 
     //Rate of systemic absorption of the intact drug
     const double nasal_systemic_absorption_rate = nasalk4 * nasal_anterior_released + nasalk8 * nasal_posterior_released + nasalk10 * nasal_gastro_released; // mg/s
@@ -484,8 +540,6 @@ void Drugs::AdministerSubstanceNasal()
     m_venaCavaVascular->GetSubstanceQuantity(*naloxone)->GetMass().IncrementValue(nasal_systemic_absorption_rate * m_dt_s, MassUnit::mg);
 
     nDose->GetElapsedTime().IncrementValue(m_dt_s, TimeUnit::s);
-
-
 
     if (nasal_systemic_absorption_rate <= 5E-6) {
       deactiveSubs.emplace_back(nSub);
@@ -517,19 +571,19 @@ void Drugs::AdministerSubstanceNasal()
   //const double nasalk15 = 0.000027777; // transit rate constant of released drug through gastrointestinal section
   //
   ////Initial Drug Distribution
-  //const double nasal_anterior_unreleased_initial = 0; // initial amount of unreleased drug in anterior section 
+  //const double nasal_anterior_unreleased_initial = 0; // initial amount of unreleased drug in anterior section
   //const double nasal_anterior_released_initial = 0.6 * nasaldose; // initial amount of released drug in anterior section
-  //const double nasal_posterior_unreleased_initial = 0; // initial amount of unreleased drug in posterior section 
+  //const double nasal_posterior_unreleased_initial = 0; // initial amount of unreleased drug in posterior section
   //const double nasal_posterior_released_initial = 0.4 * nasaldose; // initial amount of released drug in posterior section
   //const double nasal_gastro_unreleased_initial = 0; // initial amount of unreleased drug in gastrointestinal section
   //const double nasal_gastro_released_initial = 0; // initial amount of released drug in gastrointestinal section
 
   ////Intermediate Values
-  //const double nasala1 = nasalk1 + nasalk2; 
-  //const double nasalb1 = nasalk5 + nasalk6; 
-  //const double nasaly1 = nasalk9 + nasalk14; 
-  //const double nasalo1 = nasalk3 + nasalk4 + nasalk11; 
-  //const double nasalw1 = nasalk7 + nasalk8 + nasalk12; 
+  //const double nasala1 = nasalk1 + nasalk2;
+  //const double nasalb1 = nasalk5 + nasalk6;
+  //const double nasaly1 = nasalk9 + nasalk14;
+  //const double nasalo1 = nasalk3 + nasalk4 + nasalk11;
+  //const double nasalw1 = nasalk7 + nasalk8 + nasalk12;
   //const double nasale1 = nasalk10 + nasalk13 + nasalk15;
 
   ////Differential Equation Solution Constants
@@ -563,7 +617,7 @@ void Drugs::AdministerSubstanceNasal()
   //const double nasal_gastro_released = nasalC10 * exp(-nasala1 * nasaltime) + nasalC8 * exp(-nasalb1 * nasaltime) + nasalC12 * exp(-nasaly1 * nasaltime) + nasalC13 * exp(-nasalo1 * nasaltime) + nasalC14 * exp(-nasalw1 * nasaltime) + nasalCp3 * exp(-nasale1 * nasaltime); // amount of released drug in gastrointestinal section
 
   ////Rate of systemic absorption of the intact drug
-  //const double nasal_systemic_absorption_rate = nasalk4 * nasal_anterior_released + nasalk8 * nasal_posterior_released + nasalk10 * nasal_gastro_released; 
+  //const double nasal_systemic_absorption_rate = nasalk4 * nasal_anterior_released + nasalk8 * nasal_posterior_released + nasalk10 * nasal_gastro_released;
   //
 
   ////Systemic bioavailability of the intact drug
@@ -572,9 +626,8 @@ void Drugs::AdministerSubstanceNasal()
   //m_venaCavaVascular->GetSubstanceQuantity(*naloxone)->GetMass().IncrementValue(nasal_systemic_absorption_rate * m_dt_s, MassUnit::mg);
 
   //nasalDoses.at(naloxone)->GetElapsedTime().IncrementValue(m_dt_s, TimeUnit::s);
-
 }
-  //-------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 /// \brief
 /// Administer drugs via transmucosal and gastrointestinal routes
 ///
@@ -941,7 +994,7 @@ void Drugs::CalculatePartitionCoefficients()
 //--------------------------------------------------------------------------------------------------
 void Drugs::CalculateDrugEffects()
 {
-  std::map<std::string, double> effects_unitless {
+  std::map<std::string, double> effects_unitless{
     { "Bronchodilation", 0 },
     { "CentralNervous", 0 },
     { "DiastolicPressure", 0 },

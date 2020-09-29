@@ -398,6 +398,27 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!--@brief The state variables of a drug administered nasally. Peter Pan-->
+	<xs:complexType name="NasalStateData">
+		<xs:complexContent>
+			<xs:extension base="ObjectData">
+				<xs:sequence>
+					<xs:element name="TotalNasalDose" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="VenaCavaConcentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="UnreleasedDrugMasses" type="ScalarMassData" minOccurs="0" maxOccurs="3"/>
+					<xs:element name="ReleasedDrugMasses" type="ScalarMassData" minOccurs="0" maxOccurs="3"/>
+					<xs:element name="ReleasedDrugMassAnterior" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ReleasedDrugMassPosterior" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ReleasedDrugMassGI" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="UnreleasedDrugMassAnterior" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="UnreleasedDrugMassPosterior" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="UnreleasedDrugMassGI" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attribute name="Substance" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 		<!-- @brief Pain response. -->
 	<xs:complexType name="PainStimulusData">
 		<xs:complexContent>
