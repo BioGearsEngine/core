@@ -293,10 +293,12 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
     scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
   } catch (std::runtime_error e) {
-    std::cout << e.what() << "\n";
+    std::cout << "Error while processing " << exec.Scenario() << "\n";
+    std::cout << e.what() << "\n\n";
     return;
   } catch (xsd::cxx::tree::parsing<char> e) {
-    std::cout << e << "\n";
+    std::cout << "Error while processing " << exec.Scenario() << "\n";
+    std::cout << e << "\n\n";
     return;
   }
   // The Biogears Schema states that ScenarioData supports the following boot strap tags
@@ -589,12 +591,14 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
       scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
     } catch (std::runtime_error e) {
-      std::cout << e.what() << std::endl;
+      std::cout << "Error while processing " << ex.Scenario() << "\n";
+      std::cout << e.what() << "\n" << std::endl;
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", ExecutionErrors::SCENARIO_PARSE_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
       _thread_count -= 1;
       return;
     } catch (xsd::cxx::tree::parsing<char> e) {
-      std::cout << e << std::endl;
+      std::cout << "Error while processing " << ex.Scenario() << "\n";
+      std::cout << e << "\n" << std::endl;
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", ExecutionErrors::SCENARIO_PARSE_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
       _thread_count -= 1;
       return;

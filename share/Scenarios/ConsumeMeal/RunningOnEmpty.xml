@@ -4,11 +4,6 @@
     <Description>Patient has an empty stomach and gut</Description>
     <InitialParameters>
 		<PatientFile>StandardMale.xml</PatientFile>
-		<Condition xsi:type="ConsumeMealData">
-			<Meal>
-				<ElapsedTime value="0" unit="hr"/>
-			</Meal>
-		</Condition>
 	</InitialParameters>
 	
   <!-- Base system data required for all scenario verification -->

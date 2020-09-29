@@ -4,17 +4,6 @@
     <Description>We have eaten a good meal 2 hrs ago</Description>
     <InitialParameters>
 		<PatientFile>StandardMale.xml</PatientFile>
-		<Condition xsi:type="ConsumeMealData">
-			<Meal>
-				<Carbohydrate value="130.0" unit="g"/>
-				<Fat value="27.0" unit="g"/>
-				<Protein value="20.0" unit="g"/>
-				<Calcium value="300.0" unit="mg"/>
-				<Sodium value="0.5" unit="g"/>
-				<Water value="1.25" unit="L"/>
-				<ElapsedTime value="2.0" unit="hr"/>
-			</Meal>
-		</Condition>
 	</InitialParameters>
 	
   <!-- Base system data required for all scenario verification -->

@@ -77,9 +77,7 @@
   </DataRequests>
 	
     <Action xsi:type="AdvanceTimeData">
-        <Time value="30" unit="s"/>       
-    <<Action xsi:type="AdvanceTimeData">
-        <Time value="30" unit="s"/>       
+        <Time value="60" unit="s"/>       
     </Action>
 	<!--Propofol Induction Dose for general anesthesia and maintenance infusion-->
 	<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
