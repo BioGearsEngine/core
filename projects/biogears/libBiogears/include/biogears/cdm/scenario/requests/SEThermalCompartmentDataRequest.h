@@ -27,7 +27,6 @@ protected:
 
 public:
   virtual ~SEThermalCompartmentDataRequest();
-
   virtual bool Load(const CDM::ThermalCompartmentDataRequestData& in);
   virtual CDM::ThermalCompartmentDataRequestData* Unload() const;
 

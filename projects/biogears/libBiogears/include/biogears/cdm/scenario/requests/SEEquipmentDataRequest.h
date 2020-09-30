@@ -29,7 +29,7 @@ public:
   virtual ~SEEquipmentDataRequest();
 
   virtual void Clear() override; //clear memory
-
+  size_t HashCode() const override;
   virtual bool Load(const CDM::EquipmentDataRequestData& in);
   virtual CDM::EquipmentDataRequestData* Unload() const override;
 

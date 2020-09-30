@@ -46,4 +46,12 @@ void SEEnvironmentDataRequest::Unload(CDM::EnvironmentDataRequestData& data) con
 {
   SEDataRequest::Unload(data);
 }
+
+size_t SEEnvironmentDataRequest::HashCode() const
+{
+  if (m_Hash == 0) {
+    m_Hash = std::hash<std::string>()(m_Name);
+  }
+  return m_Hash;
+}
 }

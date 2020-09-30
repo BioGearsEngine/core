@@ -11,10 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 
-#include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-
 
 namespace biogears {
 SEDataRequestManager::SEDataRequestManager(Logger* logger)
@@ -96,7 +95,7 @@ bool SEDataRequestManager::Load(const CDM::DataRequestsData& in, SESubstanceMana
 
   for (unsigned int i = 0; i < in.DataRequest().size(); i++) {
     SEDataRequest* dr = newFromBind(in.DataRequest()[i], subMgr, m_DefaultDecimalFormatting);
-    if (dr != nullptr) {
+    if (dr != nullptr && !DuplicateRequest(dr)) {
       if (HasOverrideDecimalFormatting())
         ((SEDecimalFormat*)dr)->Set(*m_OverrideDecimalFormatting);
       m_Requests.push_back(dr);
@@ -227,30 +226,30 @@ SETissueCompartmentDataRequest& SEDataRequestManager::CreateTissueCompartmentDat
   m_Requests.push_back(dr);
   return *dr;
 }
-//-----------------------------------------------------------------------------
-void SEDataRequestManager::CreateFromBind(const CDM::DataRequestData& input, SESubstanceManager& subMgr)
+//
+bool SEDataRequestManager::DuplicateRequest(SEDataRequest* request)
 {
   bool duplicate = false;
-  //NOTE: MIght want to move the duplicate check to LoadState 
-  for ( auto& request: m_Requests) {
-    if (input.Name() == request->GetName()) {
-      if (input.Unit().present() && input.Unit().get() == request->GetUnit()->GetString()) {
-        duplicate = true;
-        break;
-      }
+  for (auto& req : m_Requests) {
+    if (request->HashCode() == req->HashCode()) {
+      duplicate = true;
+      break;
     }
   }
-  if(!duplicate) {
-      SEDataRequest* dr = newFromBind(input, subMgr, m_DefaultDecimalFormatting);
-      if (dr != nullptr) {
-        if (HasOverrideDecimalFormatting()) {
-          ((SEDecimalFormat*)dr)->Set(*m_OverrideDecimalFormatting);
-        }
-        m_Requests.push_back(dr);
-      }
-  }
+  return duplicate;
 }
   //-----------------------------------------------------------------------------
+void SEDataRequestManager::CreateFromBind(const CDM::DataRequestData& input, SESubstanceManager& subMgr)
+{
+  SEDataRequest* dr = newFromBind(input, subMgr, m_DefaultDecimalFormatting);
+  if (dr != nullptr && !DuplicateRequest(dr)) {
+    if (HasOverrideDecimalFormatting()) {
+      ((SEDecimalFormat*)dr)->Set(*m_OverrideDecimalFormatting);
+    }
+    m_Requests.push_back(dr);
+  }
+}
+//-----------------------------------------------------------------------------
 SEDataRequest* SEDataRequestManager::newFromBind(const CDM::DataRequestData& data, SESubstanceManager& substances, const SEDecimalFormat* dfault)
 {
   const CDM::DataRequestData* drData = &data;

@@ -34,7 +34,7 @@ public:
   virtual bool Load(const CDM::CompartmentDataRequestData& in);
   virtual CDM::CompartmentDataRequestData* Unload() const override= 0 ;
 
-  virtual size_t HashCode();
+  size_t HashCode() const override;
 
   virtual const char* GetCompartment() const;
   virtual void SetCompartment(const char* name);

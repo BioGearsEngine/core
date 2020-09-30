@@ -31,11 +31,12 @@ void SECompartmentDataRequest::Clear()
   m_Compartment = "";
 }
 //-------------------------------------------------------------------------------
-size_t SECompartmentDataRequest::HashCode()
+size_t SECompartmentDataRequest::HashCode() const
 {
-  size_t h = SEDataRequest::HashCode();
-  h += std::hash<std::string>()(m_Compartment);
-  return h;
+  if (m_Hash == 0) {
+    m_Hash = std::hash<std::string>()(m_Name + m_Compartment);
+  }
+  return m_Hash;
 }
 //-------------------------------------------------------------------------------
 bool SECompartmentDataRequest::Load(const CDM::CompartmentDataRequestData& in)

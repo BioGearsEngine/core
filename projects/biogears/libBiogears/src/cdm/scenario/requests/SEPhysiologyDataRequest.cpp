@@ -45,4 +45,12 @@ void SEPhysiologyDataRequest::Unload(CDM::PhysiologyDataRequestData& data) const
 {
   SEDataRequest::Unload(data);
 }
+
+size_t SEPhysiologyDataRequest::HashCode() const
+{
+  if (m_Hash == 0) {
+    m_Hash = std::hash<std::string>()(m_Name);
+  }
+  return m_Hash;
+}
 }

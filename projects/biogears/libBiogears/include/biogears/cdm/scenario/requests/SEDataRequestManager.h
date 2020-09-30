@@ -92,6 +92,7 @@ protected:
   SEDecimalFormat* m_DefaultDecimalFormatting;
   SEDecimalFormat* m_OverrideDecimalFormatting;
 
+  bool DuplicateRequest(SEDataRequest* request);
   static SEDataRequest* newFromBind(const CDM::DataRequestData& dataRequest, SESubstanceManager& substances, const SEDecimalFormat* dfault = nullptr);
 };
 }

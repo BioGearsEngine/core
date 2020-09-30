@@ -29,7 +29,6 @@ public:
   virtual ~SETissueCompartmentDataRequest();
 
   virtual void Clear(); //clear memory
-
   virtual bool Load(const CDM::TissueCompartmentDataRequestData& in);
   virtual CDM::TissueCompartmentDataRequestData* Unload() const;
 

@@ -21,6 +21,7 @@ SEDataRequest::SEDataRequest(const SEDecimalFormat* dfault)
   m_Name = "";
   m_RequestedUnit = "";
   m_Unit = nullptr;
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 SEDataRequest::~SEDataRequest()
@@ -35,14 +36,9 @@ void SEDataRequest::Clear()
   m_Unit = nullptr;
 }
 //-----------------------------------------------------------------------------
-size_t SEDataRequest::HashCode() const
-{
-  size_t h = std::hash<std::string>()(m_Name);
-  return h;
-}
-//-----------------------------------------------------------------------------
 bool SEDataRequest::Load(const CDM::DataRequestData& in)
 {
+  
   SEDecimalFormat::Load(in);
   m_Name = in.Name();
   if (in.Unit().present())

@@ -37,12 +37,14 @@ void SESubstanceDataRequest::Clear()
 //-----------------------------------------------------------------------------
 size_t SESubstanceDataRequest::HashCode() const
 {
-  size_t h = SEDataRequest::HashCode();
-  if (HasSubstance())
-    h += std::hash<std::string>()(m_Substance->GetName());
-  if (HasCompartment())
-    h += std::hash<std::string>()(m_Compartment);
-  return h;
+  if (m_Hash == 0) {
+    std::string hashString = m_Name + m_Compartment;
+    if (HasSubstance()) {
+      hashString += m_Substance->GetName();
+    }
+    m_Hash = std::hash<std::string>()(hashString);
+  }
+  return m_Hash;
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceDataRequest::Load(const CDM::SubstanceDataRequestData& in, const SESubstanceManager& substances)

@@ -77,4 +77,11 @@ void SEEquipmentDataRequest::InvalidateType()
   m_Type = "";
 }
 //-----------------------------------------------------------------------------
+size_t SEEquipmentDataRequest::HashCode() const
+{
+  if (m_Hash == 0) {
+    m_Hash = std::hash<std::string>()(m_Name + m_Type);
+  }
+  return m_Hash;
+}
 }

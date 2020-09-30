@@ -27,7 +27,7 @@ public:
   virtual ~SEPatientDataRequest();
 
   virtual void Clear(); //clear memory
-
+  size_t HashCode() const override;
   virtual bool Load(const CDM::PatientDataRequestData& in);
   virtual CDM::PatientDataRequestData* Unload() const;
 

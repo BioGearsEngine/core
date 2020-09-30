@@ -14,11 +14,11 @@ specific language governing permissions and limitations under the License.
 #include <string>
 
 #include <biogears/cdm/properties/SEDecimalFormat.h>
+#include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
 namespace biogears {
 class SESubstanceManager;
-class CCompoundUnit;
 class SEDecimalFormat;
 class SEDataRequestManager;
 
@@ -40,7 +40,7 @@ protected:
   virtual void Unload(CDM::DataRequestData& data) const;
 
 public:
-  virtual size_t HashCode() const;
+  virtual size_t HashCode() const = 0;
 
   // The System Property Name
   virtual std::string GetName() const;
@@ -74,6 +74,7 @@ public:
 protected:
   std::string m_Name;
   std::string m_RequestedUnit;
+  mutable size_t m_Hash;
   const CCompoundUnit* m_Unit;
 };
 }

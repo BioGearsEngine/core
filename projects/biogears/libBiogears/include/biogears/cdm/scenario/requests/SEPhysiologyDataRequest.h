@@ -27,7 +27,7 @@ public:
   virtual ~SEPhysiologyDataRequest();
 
   virtual void Clear(); //clear memory
-
+  size_t HashCode() const override;
   virtual bool Load(const CDM::PhysiologyDataRequestData& in);
   virtual CDM::PhysiologyDataRequestData* Unload() const;
 

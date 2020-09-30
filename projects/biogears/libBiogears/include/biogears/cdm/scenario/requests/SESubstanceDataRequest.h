@@ -29,7 +29,7 @@ public:
   virtual ~SESubstanceDataRequest();
 
   virtual void Clear(); //clear memory
-
+  
   virtual bool Load(const CDM::SubstanceDataRequestData& in, const SESubstanceManager& substances);
   virtual CDM::SubstanceDataRequestData* Unload() const;
 
@@ -37,8 +37,7 @@ protected:
   virtual void Unload(CDM::SubstanceDataRequestData& data) const;
 
 public:
-  virtual size_t HashCode() const;
-
+  size_t HashCode() const override;
   virtual const char* GetCompartment() const;
   virtual void SetCompartment(const char* name);
   virtual void SetCompartment(const std::string& name);

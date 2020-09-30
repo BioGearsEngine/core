@@ -36,7 +36,7 @@ protected:
   virtual void Unload(CDM::CompartmentSubstanceDataRequestData& data) const;
 
 public:
-  virtual size_t HashCode() override;
+  virtual size_t HashCode() const override;
 
   virtual SESubstance* GetSubstance() const;
   virtual void SetSubstance(SESubstance* sub);
