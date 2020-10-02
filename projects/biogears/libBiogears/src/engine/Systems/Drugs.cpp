@@ -416,6 +416,38 @@ void Drugs::AdministerSubstanceNasal()
 {
   SESubstance* naloxone = m_data.GetSubstances().GetSubstance("Naloxone");
 
+  /////////////////////////////////////
+  //const std::map<const SESubstance*, SESubstanceNasalDose*>& nasalDoses = m_data.GetActions().GetPatientActions().GetSubstanceNasalDoses();
+  //if (nasalDoses.empty() && m_NasalStates.empty) //check if no pending actions and not currently active states
+  //  return;
+
+  //SESubstanceNasalDose* nDose;
+  //const SESubstance* nSub;
+  //std::vector<const SESubstance*> deactiveSubs;
+
+  //for (auto nd : nasalDoses) {
+  //  nSub = nd.first;
+  //  nDose = nd.second;
+  //  SENasalState* nState = m_NasalStates[nSub];
+  //  if (m_NasalStates[nSub] = nullptr) {
+  //    //If it doesn't exist yet, make a new model state for the substance and initialize it
+  //    nState = new SENasalState(*nSub);
+  //    if (!nState->Initialize(nDose->GetDose())) {
+  //      Error("SENasalState::Probable vector length mismatch");
+  //    }
+  //    m_NasalStates[nSub] = nState;
+  //  } else {
+  //    drug already active, so this is a multiple dose m_TransmucosalState[sub].GetMouthSolidMass().IncrementValue(od.Dose)
+  //  }
+  //  //Increment mass in first compartment of model (solid mass in mouth) by whatever the new dose is
+  //}
+  //--Clear out oral doses map-- this way the patient oral dose map will be empty and we
+  //  will be able to detect the next time we add a new dose of the same sub
+  //  //Now process transmucosal states (moved out of for loop since we are going to remove doses from patient map
+  //  for (auto state : m_NasalStates)
+  //    Do all the rest of the stuff in the model
+  ////////////////////////////////////
+
   const std::map<const SESubstance*, SESubstanceNasalDose*>& nasalDoses = m_data.GetActions().GetPatientActions().GetSubstanceNasalDoses();
   if (nasalDoses.empty())
     return;
@@ -435,16 +467,11 @@ void Drugs::AdministerSubstanceNasal()
         Error("SENasalState::Probable vector length mismatch");
       }
       m_NasalStates[nSub] = nState;
-      //Every OT state needs to initialize a GI absorption model state to account for drug that is swallowed.
-      //Clearly we are assuming that there is not already an active pill of the same substance already present in the GI (seems like a safe assumption).
-      //m_data.GetGastrointestinal().NewDrugTransitState(sub);
-      //if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oDose->GetAdminRoute())) {
-      //  Error("SEGastrointestinalSystem::SEDrugAbsorptionTransitModelState: Probably vector length mismatch");
-      //}
     }
 
     double nasalTimeElapsed_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
-    double nasalDose_mg = nDose->GetDose().GetValue(MassUnit::mg);
+    //double nasalDose_mg = nDose->GetDose().GetValue(MassUnit::mg);
+    double nasalDose_mg = nState->GetTotalNasalDose().GetValue(MassUnit::mg);
 
     //Rate constants in 1/s
     const double nasalk1 = 0.00001736111; //translocation rate constant of unreleased substance from the anterior to the posterior section
@@ -473,16 +500,14 @@ void Drugs::AdministerSubstanceNasal()
     //const double nasal_gastro_unreleased_initial = 0; // initial amount of unreleased drug in gastrointestinal section
     //const double nasal_gastro_released_initial = 0; // initial amount of released drug in gastrointestinal section
 
+    if (0.0 != nDose->GetDose().GetValue(MassUnit::mg)) {
+      relMass[0] += (0.6 * nasalDose_mg); // initial amount of released drug in anterior section
+      relMass[1] += (0.4 * nasalDose_mg); // initial amount of released drug in posterior section
+    }
     double nasal_anterior_unreleased_initial = unrelMass[0]; // initial amount of unreleased drug in anterior section
     double nasal_anterior_released_initial = relMass[0];
-    if (nasal_anterior_released_initial == 0.0) {
-      nasal_anterior_released_initial = 0.6 * nasalDose_mg; // initial amount of released drug in anterior section
-    }
     double nasal_posterior_unreleased_initial = unrelMass[1]; // initial amount of unreleased drug in posterior section
     double nasal_posterior_released_initial = relMass[1];
-    if (nasal_posterior_released_initial == 0.0) {
-      nasal_posterior_released_initial = 0.4 * nasalDose_mg; // initial amount of released drug in posterior section
-    }
     double nasal_gastro_unreleased_initial = unrelMass[2]; // initial amount of unreleased drug in gastrointestinal section
     double nasal_gastro_released_initial = relMass[2]; // initial amount of released drug in gastrointestinal section
 
@@ -531,17 +556,22 @@ void Drugs::AdministerSubstanceNasal()
     // Set new released/unreleased values
     nState->SetUnreleasedNasalMasses(unrelMass, MassUnit::mg);
     nState->SetReleasedNasalMasses(relMass, MassUnit::mg);
+    //nState->GetTotalNasalDose().SetValue(0.0, MassUnit::mg);
+    nDose->GetDose().SetValue(0.0, MassUnit::mg);
 
     //Rate of systemic absorption of the intact drug
     const double nasal_systemic_absorption_rate = nasalk4 * nasal_anterior_released + nasalk8 * nasal_posterior_released + nasalk10 * nasal_gastro_released; // mg/s
+    double totalDose_mg = nasal_anterior_unreleased + nasal_anterior_released + nasal_posterior_unreleased + nasal_posterior_released + nasal_gastro_unreleased + nasal_gastro_released;
+    //double doseConsumed_mg = nasal_systemic_absorption_rate*m_dt_s;
+    //nState->GetTotalNasalDose().DecrementValue(doseConsumed_mg, MassUnit::mg);
     //Systemic bioavailability of the intact drug
-    const double nasal_bioavailability = (nasalk4 * (nasalC5 / (nasala1 + nasalC6 / nasalo1)) + nasalk8 * (nasalC7 / nasala1 + nasalC8 / nasalb1 + nasalC9 / nasalo1 + nasalCp2 / nasalw1) + nasalk10 * (nasalC10 / nasala1 + nasalC11 / nasalb1 + nasalC12 / nasaly1 + nasalC13 / nasalo1 + nasalC14 / nasalw1 + nasalCp3 / nasale1)) / nasalDose_mg;
+    const double nasal_bioavailability = (nasalk4 * (nasalC5 / (nasala1 + nasalC6 / nasalo1)) + nasalk8 * (nasalC7 / nasala1 + nasalC8 / nasalb1 + nasalC9 / nasalo1 + nasalCp2 / nasalw1) + nasalk10 * (nasalC10 / nasala1 + nasalC11 / nasalb1 + nasalC12 / nasaly1 + nasalC13 / nasalo1 + nasalC14 / nasalw1 + nasalCp3 / nasale1)) / totalDose_mg;
 
     m_venaCavaVascular->GetSubstanceQuantity(*naloxone)->GetMass().IncrementValue(nasal_systemic_absorption_rate * m_dt_s, MassUnit::mg);
 
-    nDose->GetElapsedTime().IncrementValue(m_dt_s, TimeUnit::s);
+    //nDose->GetElapsedTime().IncrementValue(m_dt_s, TimeUnit::s);
 
-    if (nasal_systemic_absorption_rate <= 5E-6) {
+    if ((nasal_anterior_released + nasal_posterior_released) <= ZERO_APPROX) {
       deactiveSubs.emplace_back(nSub);
     }
   }
