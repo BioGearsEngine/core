@@ -135,7 +135,6 @@ bool SENasalState::Load(const CDM::NasalStateData& in)
 {
 
   GetTotalNasalDose().Load(in.TotalNasalDose());
-  GetVenaCavaConcentration().Load(in.VenaCavaConcentration());
   m_UnreleasedDrugMasses.clear();
   for (auto umData : in.UnreleasedDrugMasses()) {
     SEScalarMass* unrelMass = new SEScalarMass;
@@ -160,7 +159,6 @@ CDM::NasalStateData* SENasalState::Unload() const
 void SENasalState::Unload(CDM::NasalStateData& data) const
 {
   data.TotalNasalDose(std::unique_ptr<CDM::ScalarMassData>(m_TotalNasalDose->Unload()));
-  data.VenaCavaConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_VenaCavaConcentration->Unload()));
   for (auto umData : m_UnreleasedDrugMasses) {
     data.UnreleasedDrugMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(umData->Unload()));
   }
