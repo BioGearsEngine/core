@@ -398,7 +398,7 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<!--@brief The state variables of a drug administered nasally. Peter Pan-->
+	<!--@brief The state variables of a drug administered nasally.-->
 	<xs:complexType name="NasalStateData">
 		<xs:complexContent>
 			<xs:extension base="ObjectData">
