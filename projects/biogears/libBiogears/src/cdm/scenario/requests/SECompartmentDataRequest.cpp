@@ -60,11 +60,13 @@ const char* SECompartmentDataRequest::GetCompartment() const
 void SECompartmentDataRequest::SetCompartment(const char* name)
 {
   m_Compartment = name;
+  m_Hash = 0;
 }
 //-------------------------------------------------------------------------------
 void SECompartmentDataRequest::SetCompartment(const std::string& name)
 {
   m_Compartment = name;
+  m_Hash = 0;
 }
 //-------------------------------------------------------------------------------
 bool SECompartmentDataRequest::HasCompartment() const
@@ -83,6 +85,7 @@ void SECompartmentDataRequest::Set(const char* cmpt, const char* name, const cha
   m_Name = name;
   m_RequestedUnit = unit;
   m_Unit = nullptr;
+  m_Hash = 0;
 }
 //-------------------------------------------------------------------------------
 void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& name, const std::string& unit)
@@ -91,6 +94,7 @@ void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& n
   m_Name = name;
   m_RequestedUnit = unit;
   m_Unit = nullptr;
+  m_Hash = 0;
 }
 //-------------------------------------------------------------------------------
 void SECompartmentDataRequest::Set(const char* cmpt, const char* name, const CCompoundUnit& unit)
@@ -99,6 +103,7 @@ void SECompartmentDataRequest::Set(const char* cmpt, const char* name, const CCo
   m_Name = name;
   m_RequestedUnit = "";
   m_Unit = &unit;
+  m_Hash = 0;
 }
 //-------------------------------------------------------------------------------
 void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& name, const CCompoundUnit& unit)
@@ -107,6 +112,7 @@ void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& n
   m_Name = name;
   m_RequestedUnit = "";
   m_Unit = &unit;
+  m_Hash = 0;
 }
 //-------------------------------------------------------------------------------
 }

@@ -76,11 +76,13 @@ const char* SEDataRequest::GetName_cStr() const
 void SEDataRequest::SetName(const char* name)
 {
   m_Name = name;
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 void SEDataRequest::SetName(const std::string& name)
 {
   m_Name = name;
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 bool SEDataRequest::HasName() const
@@ -102,12 +104,14 @@ void SEDataRequest::SetRequestedUnit(const char* unit)
 {
   m_RequestedUnit = unit;
   m_Unit = nullptr;
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 void SEDataRequest::SetRequestedUnit(const std::string& unit)
 {
   m_RequestedUnit = unit;
   m_Unit = nullptr;
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 bool SEDataRequest::HasRequestedUnit() const
@@ -129,6 +133,7 @@ void SEDataRequest::SetUnit(const CCompoundUnit& unit)
 {
   m_Unit = &unit;
   m_RequestedUnit = "";
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 bool SEDataRequest::HasUnit() const
@@ -153,6 +158,7 @@ void SEDataRequest::Set(const std::string& name, const std::string& unit)
   m_Name = name;
   m_RequestedUnit = unit;
   m_Unit = nullptr;
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 void SEDataRequest::Set(const char* name, const CCompoundUnit& unit)
@@ -160,6 +166,7 @@ void SEDataRequest::Set(const char* name, const CCompoundUnit& unit)
   m_Name = name;
   m_RequestedUnit = "";
   m_Unit = &unit;
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 void SEDataRequest::Set(const std::string& name, const CCompoundUnit& unit)
@@ -167,6 +174,7 @@ void SEDataRequest::Set(const std::string& name, const CCompoundUnit& unit)
   m_Name = name;
   m_RequestedUnit = "";
   m_Unit = &unit;
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 }

@@ -68,6 +68,7 @@ SESubstance* SECompartmentSubstanceDataRequest::GetSubstance() const
 void SECompartmentSubstanceDataRequest::SetSubstance(SESubstance* substance)
 {
   m_Substance = substance;
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 bool SECompartmentSubstanceDataRequest::HasSubstance() const
@@ -92,6 +93,7 @@ void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance
   m_Name = name;
   m_RequestedUnit = unit;
   m_Unit = nullptr;
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::Set(const char* cmpt, SESubstance& substance, const char* name, const CCompoundUnit& unit)
@@ -106,6 +108,7 @@ void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance
   m_Name = name;
   m_RequestedUnit = "";
   m_Unit = &unit;
+  m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
 }
