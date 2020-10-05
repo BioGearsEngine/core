@@ -453,8 +453,24 @@ void Nervous::CentralSignalProcess()
   const double wSH_ACP = -1.38;
   const double afferentCardiopulmonaryBaseline_Hz = 10.0;
 
+  double fExerciseSympathetic = 0.0;
+  double fExerciseVagal = 0.0;
+
+  // Exercise -- reproduce the activation of the autonomic nervous system by motor central command @Magasso2001Theoretical
+  if (m_data.GetActions().GetPatientActions().HasExercise()) {
+    SEExercise* exercise = m_data.GetActions().GetPatientActions().GetExercise();
+    double exerciseIntensity = exercise->GetGenericExercise().Intensity.GetValue();
+
+    fExerciseSympathetic = (15 * exerciseIntensity) - 0.333;
+    fExerciseVagal = (3.5 * exerciseIntensity) + 0.0167;
+
+    BLIM(fExerciseSympathetic, 0., 15.);
+    BLIM(fExerciseVagal, 0., 3.5);
+  }
+
   const double exponentSH = kS * (wSH_ABC * m_AfferentBaroreceptorCarotid_Hz + wSH_ABA * m_AfferentBaroreceptorAortic_Hz + wSH_AC * m_AfferentChemoreceptor_Hz + wSH_ACP * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSH);
-  m_SympatheticSinoatrialSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSH);
+  m_SympatheticSinoatrialSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSH) + fExerciseSympathetic;
+
   // m_SympatheticSinoatrialSignal_Hz = std::min(60.0, m_SympatheticSinoatrialSignal_Hz);
   //Weights of sympathetic signal to peripheral vascular beds--AB, AC, AT as before, AP = Afferent pulmonary stretch receptors, AA = Afferent atrial stretch receptors
   const double wSP_ABA = -0.452;
@@ -498,9 +514,10 @@ void Nervous::CentralSignalProcess()
 
   const double exponentCarotid = (m_AfferentBaroreceptorCarotid_Hz - baroreceptorBaseline_Hz) / kV;
   const double exponentAortic = (m_AfferentBaroreceptorAortic_Hz - baroreceptorBaseline_Hz) / kV;
-  m_VagalSignal_Hz = 0.5 * (fV0 + fVInf * std::exp(exponentCarotid)) / (1.0 + std::exp(exponentCarotid)) + 0.5 * (fV0 + fVInf * std::exp(exponentAortic)) / (1.0 + std::exp(exponentAortic));
+  m_VagalSignal_Hz = 0.5 * (fV0 + fVInf * std::exp(exponentCarotid)) / (1.0 + std::exp(exponentCarotid)) + 0.5 * (fV0 + fVInf * std::exp(exponentAortic)) / (1.0 + std::exp(exponentAortic)) - fExerciseVagal;
   m_VagalSignal_Hz += (wV_AC * m_AfferentChemoreceptor_Hz + wV_AP * m_AfferentPulmonaryStretchReceptor_Hz - hypoxiaThresholdV);
   m_VagalSignal_Hz = std::max(m_VagalSignal_Hz, 0.0);
+
 }
 
 void Nervous::EfferentResponse()

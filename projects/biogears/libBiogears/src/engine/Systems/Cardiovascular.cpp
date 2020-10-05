@@ -730,7 +730,7 @@ void Cardiovascular::PreProcess()
   // and do the appropriate calculations based on the time location.
   HeartDriver();
   ProcessActions();
-}
+  }
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -1456,9 +1456,8 @@ void Cardiovascular::CardiacArrest()
       m_StartSystole = true;
       SetHeartRhythm(CDM::enumHeartRhythm::NormalSinus);
       GetHeartRate().SetValue(m_patient->GetHeartRateBaseline().GetValue(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
-      m_CurrentCardiacCycleDuration_s = 1. / m_patient->GetHeartRateBaseline().GetValue(FrequencyUnit::Per_s);;
+      m_CurrentCardiacCycleDuration_s = 1. / m_patient->GetHeartRateBaseline().GetValue(FrequencyUnit::Per_s);
       m_CardiacCyclePeriod_s = .0;
-      
     }
   }
 }
@@ -1744,13 +1743,15 @@ void Cardiovascular::MetabolicToneResponse()
   //The metabolic modifier is used as a tuned response to represent cardiovascular resistance effects during exercise
   double sp0 = 1.5;
   double divisor = 7.0;
+  double exerciseDeltaFactor = 1.0;
 
   if (m_data.GetActions().GetPatientActions().HasExercise()) {
     //Only change this value if exercise is active (per comment above) -- otherwise this modifier can increase during hypothermia, causing incorrect decease in peripheral resistance
     exerciseModifier = (sp0 * metabolicFraction + (divisor - sp0)) / divisor;
+    exerciseDeltaFactor = 2.0;
   }
   // Max delta approx. 20% of baseline \cite christie1997cardiac \cite foster1999left
-  double metabolicRateMeanArterialPressureDelta_mmHg = (0.05 * metabolicFraction - 0.05) * m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
+  double metabolicRateMeanArterialPressureDelta_mmHg = exerciseDeltaFactor * (0.05 * metabolicFraction - 0.05) * m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
   m_data.GetEnergy().GetExerciseMeanArterialPressureDelta().SetValue(metabolicRateMeanArterialPressureDelta_mmHg, PressureUnit::mmHg);
 
   //Reducing resistances scaling with metabolic rate increase and changes in core temperature
@@ -1969,7 +1970,7 @@ void Cardiovascular::TuneCircuit()
       bloodVolumeBaseline_mL += c->GetVolume(VolumeUnit::mL);
       c->Balance(BalanceLiquidBy::Concentration);
       if (m_CirculatoryGraph->GetCompartment(c->GetName()) == nullptr)
-        Info(std::string { "Cardiovascular Graph does not have cmpt " } + c->GetName());
+        Info(std::string{ "Cardiovascular Graph does not have cmpt " } + c->GetName());
       if (c->HasSubstanceQuantity(m_data.GetSubstances().GetHb())) // Unit testing does not have any Hb
         m_data.GetSaturationCalculator().CalculateBloodGasDistribution(*c); //so don't do this if we don't have Hb
     }
@@ -2136,10 +2137,10 @@ void Cardiovascular::AdjustVascularTone()
       TuningParameter = 0.8; //1.2;
     ResistanceChange *= TuningParameter;
   }
-  
+
   //Drug effects on arterial pressure occur by increasing the systemic vascular resistance. This occurs every time step by updating the next flow resistance.
   //These effects are applied in HeartDriver() since its functionality is called every time step.
-  if (std::abs(ResistanceChange) > ZERO_APPROX) {
+  if (std::abs(ResistanceChange) > ZERO_APPROX || m_data.GetActions().GetPatientActions().HasExercise()) {
     for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
       if (!Path->HasNextResistance())
         continue;
