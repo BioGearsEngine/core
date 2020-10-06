@@ -211,8 +211,8 @@ void Endocrine::SynthesizeInsulin()
     diabetesScale *= multiplier;
   }
 
-  //want to scale insulin synthesis down 30 % during sleep deprived states
-  metabolicScaling = -0.3 / (1 + exp(-55.0 * (biologicalDebt - 0.35))) + 1.0;
+  //want to scale insulin synthesis down ~30 % during sleep deprived states
+  metabolicScaling = -0.35 / (1 + exp(-82.0 * biologicalDebt + 18.0)) + 1.0;
   metabolicScaling = std::max(metabolicScaling, 0.0);
 
   // Note: Guyton says insulin production at 90 mg/dL glucose concentration should be

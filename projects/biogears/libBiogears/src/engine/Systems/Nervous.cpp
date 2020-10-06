@@ -1228,7 +1228,7 @@ void Nervous::CalculateSleepEffects()
   double simTime_hr = m_data.GetSimulationTime().GetValue(TimeUnit::hr);
 
   //consts involved in the ODE 
-  const double pw = 0.3;//0.13;
+  const double pw = 0.2;//0.3;//0.13;
   const double pb1 = 1.9;
   double rwt = 0.05;
   double rbt = 0.018;//0.018; //0.28

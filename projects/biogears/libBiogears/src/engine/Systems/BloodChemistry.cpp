@@ -443,7 +443,7 @@ void BloodChemistry::CheckBloodSubstanceLevels()
   double hypoglycemiaLevel_mg_Per_dL = 70;
   double hypoglycemicShockLevel_mg_Per_dL = 50;
   double hypoglycemicComaLevel_mg_Per_dL = 20;
-  double hyperglycemiaLevel_mg_Per_dL = 200;
+  double hyperglycemiaLevel_mg_Per_dL = 140;   //anything over 140 is considered abnormal, especially during a fasting state
   double lacticAcidosisLevel_mg_Per_dL = 44;
   double ketoacidosisLevel_mg_Per_dL = 122;
 
