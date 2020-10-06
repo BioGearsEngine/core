@@ -730,7 +730,7 @@ void Cardiovascular::PreProcess()
   // and do the appropriate calculations based on the time location.
   HeartDriver();
   ProcessActions();
-  }
+}
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -1750,7 +1750,7 @@ void Cardiovascular::MetabolicToneResponse()
     exerciseModifier = (sp0 * metabolicFraction + (divisor - sp0)) / divisor;
     exerciseDeltaFactor = 2.0;
   }
-  // Max delta approx. 20% of baseline \cite christie1997cardiac \cite foster1999left
+  // Max delta around 20% of baseline \cite christie1997cardiac \cite foster1999left but evidence of larger diffs justify this scaling DeltaFactor
   double metabolicRateMeanArterialPressureDelta_mmHg = exerciseDeltaFactor * (0.05 * metabolicFraction - 0.05) * m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
   m_data.GetEnergy().GetExerciseMeanArterialPressureDelta().SetValue(metabolicRateMeanArterialPressureDelta_mmHg, PressureUnit::mmHg);
 
@@ -2140,7 +2140,7 @@ void Cardiovascular::AdjustVascularTone()
 
   //Drug effects on arterial pressure occur by increasing the systemic vascular resistance. This occurs every time step by updating the next flow resistance.
   //These effects are applied in HeartDriver() since its functionality is called every time step.
-  if (std::abs(ResistanceChange) > ZERO_APPROX || m_data.GetActions().GetPatientActions().HasExercise()) {
+  if (std::abs(ResistanceChange) > ZERO_APPROX) {
     for (SEFluidCircuitPath* Path : m_systemicResistancePaths) {
       if (!Path->HasNextResistance())
         continue;

@@ -413,6 +413,10 @@ void Nervous::CentralSignalProcess()
   const double tauIschemia = 30.0;
   const double tauCO2 = 20.0;
 
+  // Exercise Signal Modifiers
+  double fExerciseSympathetic = 0.0;
+  double fExerciseVagal = 0.0;
+
   //As hypoxia or hypercapnia deepens, the ischemic CNS response leads to increased sympathetic outflow.
   //This is modeled as a reduction on the threshold required to cause sympathetic firing.
   //See Magosso2001Mathematical for more detail
@@ -452,9 +456,6 @@ void Nervous::CentralSignalProcess()
   const double wSH_AC = 1.0;
   const double wSH_ACP = -1.38;
   const double afferentCardiopulmonaryBaseline_Hz = 10.0;
-
-  double fExerciseSympathetic = 0.0;
-  double fExerciseVagal = 0.0;
 
   // Exercise -- reproduce the activation of the autonomic nervous system by motor central command @Magasso2001Theoretical
   if (m_data.GetActions().GetPatientActions().HasExercise()) {
