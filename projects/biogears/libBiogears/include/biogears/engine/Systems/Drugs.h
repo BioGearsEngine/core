@@ -18,7 +18,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
-#include "biogears/cdm/patient/actions/SESubstanceNasalDose.h"
 
 
 namespace biogears {
@@ -27,6 +26,7 @@ class SEFluidCircuitPath;
 class SETissueCompartment;
 class SESubstance;
 class SESubstanceBolusState;
+class SENasalState;
 class SETransmucosalState;
 class SELiquidCompartment;
 

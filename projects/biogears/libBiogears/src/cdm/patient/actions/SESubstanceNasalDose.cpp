@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
-#include "biogears/cdm/patient/actions/SESubstanceOralDose.h"
 
 namespace biogears {
 SESubstanceNasalDose::SESubstanceNasalDose(const SESubstance& substance)
