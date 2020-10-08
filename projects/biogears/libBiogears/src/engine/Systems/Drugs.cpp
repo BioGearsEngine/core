@@ -435,7 +435,7 @@ void Drugs::AdministerSubstanceNasal()
       m_NasalStates[nSub] = nState;
     }
 
-    double nasalDose_mg = nState->GetTotalNasalDose().GetValue(MassUnit::mg);
+    double newNasalDose_mg = nState->GetTotalNasalDose().GetValue(MassUnit::mg);
 
     //Rate constants in 1/s
     const double nasalk1 = 0.00001736111; //translocation rate constant of unreleased substance from the anterior to the posterior section
@@ -459,72 +459,74 @@ void Drugs::AdministerSubstanceNasal()
     std::vector<double> relMass = nState->GetReleasedNasalMasses(MassUnit::mg);
 
     if (0.0 != nDose->GetDose().GetValue(MassUnit::mg)) {
-      relMass[0] += (0.6 * nasalDose_mg); // initial amount of released drug in anterior section
-      relMass[1] += (0.4 * nasalDose_mg); // initial amount of released drug in posterior section
+      relMass[0] += (0.6 * newNasalDose_mg); // initial amount of released drug in anterior section
+      relMass[1] += (0.4 * newNasalDose_mg); // initial amount of released drug in posterior section
     }
-    double nasal_anterior_unreleased_initial = unrelMass[0]; // initial amount of unreleased drug in anterior section
-    double nasal_anterior_released_initial = relMass[0];
-    double nasal_posterior_unreleased_initial = unrelMass[1]; // initial amount of unreleased drug in posterior section
-    double nasal_posterior_released_initial = relMass[1];
-    double nasal_gastro_unreleased_initial = unrelMass[2]; // initial amount of unreleased drug in gastrointestinal section
-    double nasal_gastro_released_initial = relMass[2]; // initial amount of released drug in gastrointestinal section
+    double nasalAnteriorUnreleasedInitial_mg = unrelMass[0]; // initial amount of unreleased drug in anterior section
+    double nasalAnteriorReleasedInitial_mg = relMass[0];
+    double nasalPosteriorUnreleasedInitial_mg = unrelMass[1]; // initial amount of unreleased drug in posterior section
+    double nasalPosteriorReleasedInitial_mg = relMass[1];
+    double nasalGastroUnreleasedInitial_mg = unrelMass[2]; // initial amount of unreleased drug in gastrointestinal section
+    double nasalGastroReleasedInitial_mg = relMass[2]; // initial amount of released drug in gastrointestinal section
 
     //Intermediate Values
-    const double nasala1 = nasalk1 + nasalk2;
-    const double nasalb1 = nasalk5 + nasalk6;
-    const double nasaly1 = nasalk9 + nasalk14;
-    const double nasalo1 = nasalk3 + nasalk4 + nasalk11;
-    const double nasalw1 = nasalk7 + nasalk8 + nasalk12;
-    const double nasale1 = nasalk10 + nasalk13 + nasalk15;
+    const double nasalAlpha = nasalk1 + nasalk2; //alpha
+    const double nasalBeta = nasalk5 + nasalk6; //beta
+    const double nasalGamma = nasalk9 + nasalk14; //gamma
+    const double nasalDelta = nasalk3 + nasalk4 + nasalk11; //delta
+    const double nasalEpsilon = nasalk7 + nasalk8 + nasalk12; //epsilon
+    const double nasalOmega = nasalk10 + nasalk13 + nasalk15; //omega
 
     //Differential Equation Solution Constants
-    const double nasalC1 = (nasalk1 * nasal_anterior_unreleased_initial) / (nasalb1 - nasala1);
-    const double nasalC2 = nasal_posterior_unreleased_initial - nasalC1;
-    const double nasalC3 = (nasalk5 * nasalC1) / (nasaly1 - nasala1);
-    const double nasalC4 = (nasalk5 * nasalC2) / (nasaly1 - nasalb1);
-    const double nasalC5 = nasalk2 * nasal_anterior_unreleased_initial * (nasalo1 - nasala1);
-    const double nasalC6 = nasal_anterior_released_initial - nasalk2 * nasal_anterior_unreleased_initial * (nasalo1 - nasala1);
-    const double nasalC7 = (nasalk6 * nasalC1 + nasalk3 * nasalC5) / (nasalw1 - nasala1);
-    const double nasalC8 = (nasalk6 * nasalC2) / (nasalw1 - nasalb1);
-    const double nasalC9 = (nasalk3 * nasalC6) / (nasalw1 - nasalo1);
-    const double nasalC10 = (nasalk7 * nasalC7 + nasalk9 * nasalC3) / (nasale1 - nasala1);
-    const double nasalC11 = (nasalk7 * nasalC8 + nasalk9 * nasalC4) / (nasale1 - nasalb1);
-    const double nasalC12 = (nasalk9 * (nasal_gastro_unreleased_initial - nasalC3 - nasalC4)) / (nasale1 - nasalo1);
-    const double nasalC13 = (nasalk7 * nasalC9) / (nasale1 - nasalo1);
-    const double nasalC14 = (nasalk7 * (nasalC7 - nasalC8 - nasalC9)) / (nasale1 - nasalw1);
+    const double nasalC1 = (nasalk1 * nasalAnteriorUnreleasedInitial_mg) / (nasalBeta - nasalAlpha);
+    const double nasalC2 = nasalPosteriorUnreleasedInitial_mg - nasalC1;
+    const double nasalC3 = (nasalk5 * nasalC1) / (nasalGamma - nasalAlpha);
+    const double nasalC4 = (nasalk5 * nasalC2) / (nasalGamma - nasalBeta);
+    const double nasalC5 = nasalk2 * nasalAnteriorUnreleasedInitial_mg * (nasalDelta - nasalAlpha);
+    const double nasalC6 = nasalAnteriorReleasedInitial_mg - nasalk2 * nasalAnteriorUnreleasedInitial_mg * (nasalDelta - nasalAlpha);
+    const double nasalC7 = (nasalk6 * nasalC1 + nasalk3 * nasalC5) / (nasalEpsilon - nasalAlpha);
+    const double nasalC8 = (nasalk6 * nasalC2) / (nasalEpsilon - nasalBeta);
+    const double nasalC9 = (nasalk3 * nasalC6) / (nasalEpsilon - nasalDelta);
+    const double nasalC10 = (nasalk7 * nasalC7 + nasalk9 * nasalC3) / (nasalOmega - nasalAlpha);
+    const double nasalC11 = (nasalk7 * nasalC8 + nasalk9 * nasalC4) / (nasalOmega - nasalBeta);
+    const double nasalC12 = (nasalk9 * (nasalGastroUnreleasedInitial_mg - nasalC3 - nasalC4)) / (nasalOmega - nasalDelta);
+    const double nasalC13 = (nasalk7 * nasalC9) / (nasalOmega - nasalDelta);
+    const double nasalC14 = (nasalk7 * (nasalC7 - nasalC8 - nasalC9)) / (nasalOmega - nasalEpsilon);
 
-    const double nasalCp1 = nasal_gastro_unreleased_initial - nasalC3 - nasalC4;
-    const double nasalCp2 = nasal_posterior_released_initial - nasalC7 - nasalC8 - nasalC9;
-    const double nasalCp3 = nasal_gastro_released_initial - nasalC10 - nasalC11 - nasalC12 - nasalC13 - nasalC14;
+    const double nasalCp1 = nasalGastroUnreleasedInitial_mg - nasalC3 - nasalC4;
+    const double nasalCp2 = nasalPosteriorReleasedInitial_mg - nasalC7 - nasalC8 - nasalC9;
+    const double nasalCp3 = nasalGastroReleasedInitial_mg - nasalC10 - nasalC11 - nasalC12 - nasalC13 - nasalC14;
 
-    //Amounts of Unreleased Drug
-    const double nasal_anterior_unreleased = nasal_anterior_unreleased_initial * exp(-nasala1 * m_dt_s); // amount of unreleased drug in anterior section
-    unrelMass[0] = nasal_anterior_unreleased;
-    const double nasal_posterior_unreleased = nasalC1 * exp(-nasala1 * m_dt_s) + nasalC2 * exp(-nasalb1 * m_dt_s); // amount of unreleased drug in posterior section
-    unrelMass[1] = nasal_posterior_unreleased;
-    const double nasal_gastro_unreleased = nasalC3 * exp(-nasala1 * m_dt_s) + nasalC3 * exp(-nasalb1 * m_dt_s) + nasalCp1 * exp(-nasaly1 * m_dt_s); // amount of unreleased drug in gastrointestinal section
-    unrelMass[2] = nasal_gastro_unreleased;
-    //Amounts of Released Drug
-    const double nasal_anterior_released = nasalC5 * exp(-nasala1 * m_dt_s) + nasalC6 * exp(-nasalo1 * m_dt_s); // amount of released drug in anterior section
-    relMass[0] = nasal_anterior_released;
-    const double nasal_posterior_released = nasalC7 * exp(-nasala1 * m_dt_s) + nasalC8 * exp(-nasalb1 * m_dt_s) + nasalC9 * exp(-nasalo1 * m_dt_s) + nasalCp2 * exp(-nasalw1 * m_dt_s); // amount of released drug in posterior section
-    relMass[1] = nasal_posterior_released;
-    const double nasal_gastro_released = nasalC10 * exp(-nasala1 * m_dt_s) + nasalC8 * exp(-nasalb1 * m_dt_s) + nasalC12 * exp(-nasaly1 * m_dt_s) + nasalC13 * exp(-nasalo1 * m_dt_s) + nasalC14 * exp(-nasalw1 * m_dt_s) + nasalCp3 * exp(-nasale1 * m_dt_s); // amount of released drug in gastrointestinal section
-    relMass[2] = nasal_gastro_released;
+    //Amounts of Unreleased Drug - ODE style
+    double dNasal_Anterior_Unreleased_Per_dt = -nasalAlpha * unrelMass[0];
+    unrelMass[0] += (dNasal_Anterior_Unreleased_Per_dt * m_dt_s);
+    double dNasal_Posterior_Unreleased_Per_dt = (nasalk1 * unrelMass[0]) - (nasalBeta * unrelMass[1]);
+    unrelMass[1] += (dNasal_Posterior_Unreleased_Per_dt * m_dt_s);
+    double dNasal_Gastro_Unreleased_Per_dt = (nasalk5 * unrelMass[1]) - (nasalGamma * unrelMass[2]);
+    unrelMass[2] += (dNasal_Gastro_Unreleased_Per_dt * m_dt_s);
+    //Amounts of Released Drug - ODE style
+    double dNasal_Anterior_Released_Per_dt = (nasalk2 * unrelMass[0]) - (nasalDelta * relMass[0]);
+    relMass[0] += (dNasal_Anterior_Released_Per_dt * m_dt_s);
+    double dNasal_Posterior_Released_Per_dt = (nasalk6 * unrelMass[1]) + (nasalk3 * relMass[0]) - (nasalEpsilon * relMass[1]);
+    relMass[1] += (dNasal_Posterior_Released_Per_dt * m_dt_s);
+    double dNasal_Gastro_Released_Per_dt = (nasalk9 * unrelMass[2]) + (nasalk7 * relMass[1]) - (nasalOmega * relMass[2]);
+    relMass[2] += (dNasal_Gastro_Released_Per_dt * m_dt_s);
+
     // Set new released/unreleased values
     nState->SetUnreleasedNasalMasses(unrelMass, MassUnit::mg);
     nState->SetReleasedNasalMasses(relMass, MassUnit::mg);
     nDose->GetDose().SetValue(0.0, MassUnit::mg); // Once dose is distributed in model, set initial dose to zero. This allows for multiple doses.
 
     //Rate of systemic absorption of the intact drug
-    const double nasal_systemic_absorption_rate = nasalk4 * nasal_anterior_released + nasalk8 * nasal_posterior_released + nasalk10 * nasal_gastro_released; // mg/s
-    double totalDose_mg = nasal_anterior_unreleased + nasal_anterior_released + nasal_posterior_unreleased + nasal_posterior_released + nasal_gastro_unreleased + nasal_gastro_released;
+    const double nasalSystemicAbsorptionRate_mg_Per_s = (nasalk4 * relMass[0]) + (nasalk8 * relMass[1]) + (nasalk10 * relMass[2]); // mg/s
+    double totalDose_mg = unrelMass[0] + unrelMass[1] + unrelMass[2] + relMass[0] + relMass[1] + relMass[2];
+    
     //Systemic bioavailability of the intact drug
-    const double nasal_bioavailability = (nasalk4 * (nasalC5 / (nasala1 + nasalC6 / nasalo1)) + nasalk8 * (nasalC7 / nasala1 + nasalC8 / nasalb1 + nasalC9 / nasalo1 + nasalCp2 / nasalw1) + nasalk10 * (nasalC10 / nasala1 + nasalC11 / nasalb1 + nasalC12 / nasaly1 + nasalC13 / nasalo1 + nasalC14 / nasalw1 + nasalCp3 / nasale1)) / totalDose_mg;
+    const double nasalBioavailability = (nasalk4 * (nasalC5 / (nasalAlpha + nasalC6 / nasalDelta)) + nasalk8 * (nasalC7 / nasalAlpha + nasalC8 / nasalBeta + nasalC9 / nasalDelta + nasalCp2 / nasalEpsilon) + nasalk10 * (nasalC10 / nasalAlpha + nasalC11 / nasalBeta + nasalC12 / nasalGamma + nasalC13 / nasalDelta + nasalC14 / nasalEpsilon + nasalCp3 / nasalOmega)) / totalDose_mg;
 
-    m_venaCavaVascular->GetSubstanceQuantity(*nSub)->GetMass().IncrementValue(nasal_systemic_absorption_rate * m_dt_s, MassUnit::mg);
+    m_venaCavaVascular->GetSubstanceQuantity(*nSub)->GetMass().IncrementValue(nasalSystemicAbsorptionRate_mg_Per_s * m_dt_s, MassUnit::mg);
 
-    if ((nasal_anterior_released + nasal_posterior_released) <= ZERO_APPROX) {
+    if ((relMass[0] + relMass[1]) <= ZERO_APPROX) {
       deactiveSubs.emplace_back(nSub);
     }
   }
@@ -554,59 +556,59 @@ void Drugs::AdministerSubstanceNasal()
   //const double nasalk15 = 0.000027777; // transit rate constant of released drug through gastrointestinal section
   //
   ////Initial Drug Distribution
-  //const double nasal_anterior_unreleased_initial = 0; // initial amount of unreleased drug in anterior section
-  //const double nasal_anterior_released_initial = 0.6 * nasaldose; // initial amount of released drug in anterior section
-  //const double nasal_posterior_unreleased_initial = 0; // initial amount of unreleased drug in posterior section
-  //const double nasal_posterior_released_initial = 0.4 * nasaldose; // initial amount of released drug in posterior section
-  //const double nasal_gastro_unreleased_initial = 0; // initial amount of unreleased drug in gastrointestinal section
-  //const double nasal_gastro_released_initial = 0; // initial amount of released drug in gastrointestinal section
+  //const double nasalAnteriorUnreleasedInitial_mg = 0; // initial amount of unreleased drug in anterior section
+  //const double nasalAnteriorReleasedInitial_mg = 0.6 * nasaldose; // initial amount of released drug in anterior section
+  //const double nasalPosteriorUnreleasedInitial_mg = 0; // initial amount of unreleased drug in posterior section
+  //const double nasalPosteriorReleasedInitial_mg = 0.4 * nasaldose; // initial amount of released drug in posterior section
+  //const double nasalGastroUnreleasedInitial_mg = 0; // initial amount of unreleased drug in gastrointestinal section
+  //const double nasalGastroReleasedInitial_mg = 0; // initial amount of released drug in gastrointestinal section
 
   ////Intermediate Values
-  //const double nasala1 = nasalk1 + nasalk2;
-  //const double nasalb1 = nasalk5 + nasalk6;
-  //const double nasaly1 = nasalk9 + nasalk14;
-  //const double nasalo1 = nasalk3 + nasalk4 + nasalk11;
-  //const double nasalw1 = nasalk7 + nasalk8 + nasalk12;
-  //const double nasale1 = nasalk10 + nasalk13 + nasalk15;
+  //const double nasalAlpha = nasalk1 + nasalk2;
+  //const double nasalBeta = nasalk5 + nasalk6;
+  //const double nasalGamma = nasalk9 + nasalk14;
+  //const double nasalDelta = nasalk3 + nasalk4 + nasalk11;
+  //const double nasalEpsilon = nasalk7 + nasalk8 + nasalk12;
+  //const double nasalOmega = nasalk10 + nasalk13 + nasalk15;
 
   ////Differential Equation Solution Constants
-  //const double nasalC1 = (nasalk1 * nasal_anterior_unreleased_initial) / (nasalb1 - nasala1);
-  //const double nasalC2 = nasal_posterior_unreleased_initial - nasalC1;
-  //const double nasalC3 = (nasalk5 * nasalC1) / (nasaly1 - nasala1);
-  //const double nasalC4 = (nasalk5 * nasalC2) / (nasaly1 - nasalb1);
-  //const double nasalC5 = nasalk2 * nasal_anterior_unreleased_initial * (nasalo1 - nasala1);
-  //const double nasalC6 = nasal_anterior_released_initial - nasalk2 * nasal_anterior_unreleased_initial * (nasalo1 - nasala1);
-  //const double nasalC7 = (nasalk6 * nasalC1 + nasalk3 * nasalC5) / (nasalw1 - nasala1);
-  //const double nasalC8 = (nasalk6 * nasalC2) / (nasalw1 - nasalb1);
-  //const double nasalC9 = (nasalk3 * nasalC6) / (nasalw1 - nasalo1);
-  //const double nasalC10 = (nasalk7 * nasalC7 + nasalk9 * nasalC3) / (nasale1 - nasala1);
-  //const double nasalC11 = (nasalk7 * nasalC8 + nasalk9 * nasalC4) / (nasale1 - nasalb1);
-  //const double nasalC12 = (nasalk9 * (nasal_gastro_unreleased_initial - nasalC3 - nasalC4)) / (nasale1 - nasalo1);
-  //const double nasalC13 = (nasalk7 * nasalC9) / (nasale1 - nasalo1);
-  //const double nasalC14 = (nasalk7 * (nasalC7 - nasalC8 - nasalC9)) / (nasale1 - nasalw1);
+  //const double nasalC1 = (nasalk1 * nasalAnteriorUnreleasedInitial_mg) / (nasalBeta - nasalAlpha);
+  //const double nasalC2 = nasalPosteriorUnreleasedInitial_mg - nasalC1;
+  //const double nasalC3 = (nasalk5 * nasalC1) / (nasalGamma - nasalAlpha);
+  //const double nasalC4 = (nasalk5 * nasalC2) / (nasalGamma - nasalBeta);
+  //const double nasalC5 = nasalk2 * nasalAnteriorUnreleasedInitial_mg * (nasalDelta - nasalAlpha);
+  //const double nasalC6 = nasalAnteriorReleasedInitial_mg - nasalk2 * nasalAnteriorUnreleasedInitial_mg * (nasalDelta - nasalAlpha);
+  //const double nasalC7 = (nasalk6 * nasalC1 + nasalk3 * nasalC5) / (nasalEpsilon - nasalAlpha);
+  //const double nasalC8 = (nasalk6 * nasalC2) / (nasalEpsilon - nasalBeta);
+  //const double nasalC9 = (nasalk3 * nasalC6) / (nasalEpsilon - nasalDelta);
+  //const double nasalC10 = (nasalk7 * nasalC7 + nasalk9 * nasalC3) / (nasalOmega - nasalAlpha);
+  //const double nasalC11 = (nasalk7 * nasalC8 + nasalk9 * nasalC4) / (nasalOmega - nasalBeta);
+  //const double nasalC12 = (nasalk9 * (nasalGastroUnreleasedInitial_mg - nasalC3 - nasalC4)) / (nasalOmega - nasalDelta);
+  //const double nasalC13 = (nasalk7 * nasalC9) / (nasalOmega - nasalDelta);
+  //const double nasalC14 = (nasalk7 * (nasalC7 - nasalC8 - nasalC9)) / (nasalOmega - nasalEpsilon);
 
-  //const double nasalCp1 = nasal_gastro_unreleased_initial - nasalC3 - nasalC4;
-  //const double nasalCp2 = nasal_posterior_released_initial - nasalC7 - nasalC8 - nasalC9;
-  //const double nasalCp3 = nasal_gastro_released_initial - nasalC10 - nasalC11 - nasalC12 - nasalC13 - nasalC14;
+  //const double nasalCp1 = nasalGastroUnreleasedInitial_mg - nasalC3 - nasalC4;
+  //const double nasalCp2 = nasalPosteriorReleasedInitial_mg - nasalC7 - nasalC8 - nasalC9;
+  //const double nasalCp3 = nasalGastroReleasedInitial_mg - nasalC10 - nasalC11 - nasalC12 - nasalC13 - nasalC14;
 
   ////Amounts of Unreleased Drug
-  //const double nasal_anterior_unreleased = nasal_anterior_unreleased_initial * exp(-nasala1 * nasaltime); // amount of unreleased drug in anterior section
-  //const double nasal_posterior_unreleased = nasalC1 * exp(-nasala1 * nasaltime) + nasalC2 * exp(-nasalb1 * nasaltime); // amount of unreleased drug in posterior section
-  //const double nasal_gastro_unreleased = nasalC3 * exp(-nasala1 * nasaltime) + nasalC3 * exp(-nasalb1 * nasaltime) + nasalCp1 * exp(-nasaly1 * nasaltime); // amount of unreleased drug in gastrointestinal section
+  //const double nasal_anterior_unreleased = nasalAnteriorUnreleasedInitial_mg * exp(-nasalAlpha * nasaltime); // amount of unreleased drug in anterior section
+  //const double nasal_posterior_unreleased = nasalC1 * exp(-nasalAlpha * nasaltime) + nasalC2 * exp(-nasalBeta * nasaltime); // amount of unreleased drug in posterior section
+  //const double nasal_gastro_unreleased = nasalC3 * exp(-nasalAlpha * nasaltime) + nasalC3 * exp(-nasalBeta * nasaltime) + nasalCp1 * exp(-nasalGamma * nasaltime); // amount of unreleased drug in gastrointestinal section
 
   ////Amounts of Released Drug
-  //const double nasal_anterior_released = nasalC5 * exp(-nasala1 * nasaltime) + nasalC6 * exp(-nasalo1 * nasaltime); // amount of released drug in anterior section
-  //const double nasal_posterior_released = nasalC7 * exp(-nasala1 * nasaltime) + nasalC8 * exp(-nasalb1 * nasaltime) + nasalC9 * exp(-nasalo1 * nasaltime) + nasalCp2 * exp(-nasalw1 * nasaltime); // amount of released drug in posterior section
-  //const double nasal_gastro_released = nasalC10 * exp(-nasala1 * nasaltime) + nasalC8 * exp(-nasalb1 * nasaltime) + nasalC12 * exp(-nasaly1 * nasaltime) + nasalC13 * exp(-nasalo1 * nasaltime) + nasalC14 * exp(-nasalw1 * nasaltime) + nasalCp3 * exp(-nasale1 * nasaltime); // amount of released drug in gastrointestinal section
+  //const double nasal_anterior_released = nasalC5 * exp(-nasalAlpha * nasaltime) + nasalC6 * exp(-nasalDelta * nasaltime); // amount of released drug in anterior section
+  //const double nasal_posterior_released = nasalC7 * exp(-nasalAlpha * nasaltime) + nasalC8 * exp(-nasalBeta * nasaltime) + nasalC9 * exp(-nasalDelta * nasaltime) + nasalCp2 * exp(-nasalEpsilon * nasaltime); // amount of released drug in posterior section
+  //const double nasal_gastro_released = nasalC10 * exp(-nasalAlpha * nasaltime) + nasalC8 * exp(-nasalBeta * nasaltime) + nasalC12 * exp(-nasalGamma * nasaltime) + nasalC13 * exp(-nasalDelta * nasaltime) + nasalC14 * exp(-nasalEpsilon * nasaltime) + nasalCp3 * exp(-nasalOmega * nasaltime); // amount of released drug in gastrointestinal section
 
   ////Rate of systemic absorption of the intact drug
-  //const double nasal_systemic_absorption_rate = nasalk4 * nasal_anterior_released + nasalk8 * nasal_posterior_released + nasalk10 * nasal_gastro_released;
+  //const double nasalSystemicAbsorptionRate_mg_Per_s = nasalk4 * nasal_anterior_released + nasalk8 * nasal_posterior_released + nasalk10 * nasal_gastro_released;
   //
 
   ////Systemic bioavailability of the intact drug
-  //const double nasal_bioavailability = (nasalk4 * (nasalC5 / (nasala1 + nasalC6 / nasalo1)) + nasalk8 * (nasalC7 / nasala1 + nasalC8 / nasalb1 + nasalC9 / nasalo1 + nasalCp2 / nasalw1) + nasalk10 * (nasalC10 / nasala1 + nasalC11 / nasalb1 + nasalC12 / nasaly1 + nasalC13 / nasalo1 + nasalC14 / nasalw1 + nasalCp3 / nasale1)) / nasaldose;
+  //const double nasal_bioavailability = (nasalk4 * (nasalC5 / (nasalAlpha + nasalC6 / nasalDelta)) + nasalk8 * (nasalC7 / nasalAlpha + nasalC8 / nasalBeta + nasalC9 / nasalDelta + nasalCp2 / nasalEpsilon) + nasalk10 * (nasalC10 / nasalAlpha + nasalC11 / nasalBeta + nasalC12 / nasalGamma + nasalC13 / nasalDelta + nasalC14 / nasalEpsilon + nasalCp3 / nasalOmega)) / nasaldose;
 
-  //m_venaCavaVascular->GetSubstanceQuantity(*naloxone)->GetMass().IncrementValue(nasal_systemic_absorption_rate * m_dt_s, MassUnit::mg);
+  //m_venaCavaVascular->GetSubstanceQuantity(*naloxone)->GetMass().IncrementValue(nasalSystemicAbsorptionRate_mg_Per_s * m_dt_s, MassUnit::mg);
 
   //nasalDoses.at(naloxone)->GetElapsedTime().IncrementValue(m_dt_s, TimeUnit::s);
 }
