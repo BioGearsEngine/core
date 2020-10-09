@@ -21,8 +21,6 @@ SESubstanceNasalDose::SESubstanceNasalDose(const SESubstance& substance)
   , m_Substance(substance)
 {
   m_Dose = nullptr;
-  m_elapsedTime.SetValue(0, TimeUnit::s);
-
 }
 
 SESubstanceNasalDose::~SESubstanceNasalDose()

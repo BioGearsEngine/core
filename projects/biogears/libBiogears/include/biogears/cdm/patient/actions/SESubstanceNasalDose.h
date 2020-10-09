@@ -44,12 +44,9 @@ public:
 
   virtual void ToString(std::ostream& str) const;
 
-  SEScalarTime& GetElapsedTime() { return m_elapsedTime; }
-
 protected:
   SEScalarMass* m_Dose;
   const SESubstance& m_Substance;
-  SEScalarTime m_elapsedTime;
 };
 
 class BIOGEARS_API SENasalState {

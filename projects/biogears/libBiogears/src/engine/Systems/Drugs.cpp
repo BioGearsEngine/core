@@ -435,7 +435,7 @@ void Drugs::AdministerSubstanceNasal()
       m_NasalStates[nSub] = nState;
     }
 
-    double newNasalDose_mg = nState->GetTotalNasalDose().GetValue(MassUnit::mg);
+    double newNasalDose_mg = nDose->GetDose().GetValue(MassUnit::mg);
 
     //Rate constants in 1/s
     const double nasalk1 = 0.00001736111; //translocation rate constant of unreleased substance from the anterior to the posterior section
@@ -533,84 +533,6 @@ void Drugs::AdministerSubstanceNasal()
   for (auto deSub : deactiveSubs) {
     m_data.GetActions().GetPatientActions().RemoveSubstanceNasalDose(*deSub);
   }
-
-  // Keeping Rishi's orginial version commented out until we are ready to merge/like the changes. Then we can delete
-  /*double nasaltime = nasalDoses.at(naloxone)->GetElapsedTime().GetValue(TimeUnit::s);
-  double nasaldose = nasalDoses.at(naloxone)->GetDose().GetValue(MassUnit::mg);*/
-
-  ////Rate constants in 1/s
-  //const double nasalk1 = 0.00001736111;  //translocation rate constant of unreleased substance from the anterior to the posterior section
-  //const double nasalk2 = 1000000;  // rate constant of release from drug carrier in anterior section
-  //const double nasalk3 = 0.00001736111; // translocation rate constant of released substance from the anterior to the posterior section
-  //const double nasalk4 = 0.000173;  // absorption rate constant in anterior section
-  //const double nasalk5 = 0.0011575;  // translocation rate constant of unreleased substance from the posterior to the gastrointestinal section
-  //const double nasalk6 = 1000000;  // rate constant of release from drug carrier in posterior section
-  //const double nasalk7 = 0.0011575; // translocation rate constant of released substance from the posterior to the gastrointestinal section
-  //const double nasalk8 = 0.0000260;  // absorption rate constant in posterior section
-  //const double nasalk9 = 1000000;  // rate constant of release from drug carrier in gastrointestinal section
-  //const double nasalk10 = 0.000000027;  // absorption rate constant in gastrointestinal section
-  //const double nasalk11 = 0.00001; // rate constant of released drug degradation in anterior section
-  //const double nasalk12 = 0.00001; // rate constant of released drug degradation in posterior section
-  //const double nasalk13 = 0.00001; // rate constant of released drug degradation in gastrointestinal section
-  //const double nasalk14 = 0.000027777;  // transit rate constant of unreleased drug through gastrointestinal section
-  //const double nasalk15 = 0.000027777; // transit rate constant of released drug through gastrointestinal section
-  //
-  ////Initial Drug Distribution
-  //const double nasalAnteriorUnreleasedInitial_mg = 0; // initial amount of unreleased drug in anterior section
-  //const double nasalAnteriorReleasedInitial_mg = 0.6 * nasaldose; // initial amount of released drug in anterior section
-  //const double nasalPosteriorUnreleasedInitial_mg = 0; // initial amount of unreleased drug in posterior section
-  //const double nasalPosteriorReleasedInitial_mg = 0.4 * nasaldose; // initial amount of released drug in posterior section
-  //const double nasalGastroUnreleasedInitial_mg = 0; // initial amount of unreleased drug in gastrointestinal section
-  //const double nasalGastroReleasedInitial_mg = 0; // initial amount of released drug in gastrointestinal section
-
-  ////Intermediate Values
-  //const double nasalAlpha = nasalk1 + nasalk2;
-  //const double nasalBeta = nasalk5 + nasalk6;
-  //const double nasalGamma = nasalk9 + nasalk14;
-  //const double nasalDelta = nasalk3 + nasalk4 + nasalk11;
-  //const double nasalEpsilon = nasalk7 + nasalk8 + nasalk12;
-  //const double nasalOmega = nasalk10 + nasalk13 + nasalk15;
-
-  ////Differential Equation Solution Constants
-  //const double nasalC1 = (nasalk1 * nasalAnteriorUnreleasedInitial_mg) / (nasalBeta - nasalAlpha);
-  //const double nasalC2 = nasalPosteriorUnreleasedInitial_mg - nasalC1;
-  //const double nasalC3 = (nasalk5 * nasalC1) / (nasalGamma - nasalAlpha);
-  //const double nasalC4 = (nasalk5 * nasalC2) / (nasalGamma - nasalBeta);
-  //const double nasalC5 = nasalk2 * nasalAnteriorUnreleasedInitial_mg * (nasalDelta - nasalAlpha);
-  //const double nasalC6 = nasalAnteriorReleasedInitial_mg - nasalk2 * nasalAnteriorUnreleasedInitial_mg * (nasalDelta - nasalAlpha);
-  //const double nasalC7 = (nasalk6 * nasalC1 + nasalk3 * nasalC5) / (nasalEpsilon - nasalAlpha);
-  //const double nasalC8 = (nasalk6 * nasalC2) / (nasalEpsilon - nasalBeta);
-  //const double nasalC9 = (nasalk3 * nasalC6) / (nasalEpsilon - nasalDelta);
-  //const double nasalC10 = (nasalk7 * nasalC7 + nasalk9 * nasalC3) / (nasalOmega - nasalAlpha);
-  //const double nasalC11 = (nasalk7 * nasalC8 + nasalk9 * nasalC4) / (nasalOmega - nasalBeta);
-  //const double nasalC12 = (nasalk9 * (nasalGastroUnreleasedInitial_mg - nasalC3 - nasalC4)) / (nasalOmega - nasalDelta);
-  //const double nasalC13 = (nasalk7 * nasalC9) / (nasalOmega - nasalDelta);
-  //const double nasalC14 = (nasalk7 * (nasalC7 - nasalC8 - nasalC9)) / (nasalOmega - nasalEpsilon);
-
-  //const double nasalCp1 = nasalGastroUnreleasedInitial_mg - nasalC3 - nasalC4;
-  //const double nasalCp2 = nasalPosteriorReleasedInitial_mg - nasalC7 - nasalC8 - nasalC9;
-  //const double nasalCp3 = nasalGastroReleasedInitial_mg - nasalC10 - nasalC11 - nasalC12 - nasalC13 - nasalC14;
-
-  ////Amounts of Unreleased Drug
-  //const double nasal_anterior_unreleased = nasalAnteriorUnreleasedInitial_mg * exp(-nasalAlpha * nasaltime); // amount of unreleased drug in anterior section
-  //const double nasal_posterior_unreleased = nasalC1 * exp(-nasalAlpha * nasaltime) + nasalC2 * exp(-nasalBeta * nasaltime); // amount of unreleased drug in posterior section
-  //const double nasal_gastro_unreleased = nasalC3 * exp(-nasalAlpha * nasaltime) + nasalC3 * exp(-nasalBeta * nasaltime) + nasalCp1 * exp(-nasalGamma * nasaltime); // amount of unreleased drug in gastrointestinal section
-
-  ////Amounts of Released Drug
-  //const double nasal_anterior_released = nasalC5 * exp(-nasalAlpha * nasaltime) + nasalC6 * exp(-nasalDelta * nasaltime); // amount of released drug in anterior section
-  //const double nasal_posterior_released = nasalC7 * exp(-nasalAlpha * nasaltime) + nasalC8 * exp(-nasalBeta * nasaltime) + nasalC9 * exp(-nasalDelta * nasaltime) + nasalCp2 * exp(-nasalEpsilon * nasaltime); // amount of released drug in posterior section
-  //const double nasal_gastro_released = nasalC10 * exp(-nasalAlpha * nasaltime) + nasalC8 * exp(-nasalBeta * nasaltime) + nasalC12 * exp(-nasalGamma * nasaltime) + nasalC13 * exp(-nasalDelta * nasaltime) + nasalC14 * exp(-nasalEpsilon * nasaltime) + nasalCp3 * exp(-nasalOmega * nasaltime); // amount of released drug in gastrointestinal section
-
-  ////Rate of systemic absorption of the intact drug
-  //const double nasalSystemicAbsorptionRate_mg_Per_s = nasalk4 * nasal_anterior_released + nasalk8 * nasal_posterior_released + nasalk10 * nasal_gastro_released;
-  //
-
-  ////Systemic bioavailability of the intact drug
-  //const double nasal_bioavailability = (nasalk4 * (nasalC5 / (nasalAlpha + nasalC6 / nasalDelta)) + nasalk8 * (nasalC7 / nasalAlpha + nasalC8 / nasalBeta + nasalC9 / nasalDelta + nasalCp2 / nasalEpsilon) + nasalk10 * (nasalC10 / nasalAlpha + nasalC11 / nasalBeta + nasalC12 / nasalGamma + nasalC13 / nasalDelta + nasalC14 / nasalEpsilon + nasalCp3 / nasalOmega)) / nasaldose;
-
-  //m_venaCavaVascular->GetSubstanceQuantity(*naloxone)->GetMass().IncrementValue(nasalSystemicAbsorptionRate_mg_Per_s * m_dt_s, MassUnit::mg);
-
-  //nasalDoses.at(naloxone)->GetElapsedTime().IncrementValue(m_dt_s, TimeUnit::s);
 }
 //-------------------------------------------------------------------------------------------------
 /// \brief
