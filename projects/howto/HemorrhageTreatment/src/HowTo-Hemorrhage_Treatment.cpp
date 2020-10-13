@@ -28,27 +28,31 @@ specific language governing permissions and limitations under the License.
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief
-/// Usage for applying a Hemorrhage insult to the patient and also demonstrate how injury code can be used to initiate a hemorrhage if desired
+/// Usage for applying a Hemorrhage insult from the command line and ouputing patient vitals
 ///
 /// \details
 /// Refer to the SEHemorrhage class
 /// Refer to the SESubstanceManager class
 /// Refer to the SESubstanceIVFluids class for applying an IV to the patient
 //--------------------------------------------------------------------------------------------------
-void ParseMCIS(SEHemorrhage& hem, std::vector<unsigned int>& mcis);
 
-void HowToHemorrhage()
+void HowToHemorrhageTreatment()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToHemorrhage.log");
-  bg->GetLogger()->Info("HowToHemorrhage");
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToHemorrhageTreatment.log");
+  bg->GetLogger()->Info("HowToHemorrhageTreatment");
+    
+// Load patient
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
     return;
   }
 
-  // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  
+  std::string hemorrageLocation;
+  int hemorrageRate;
+
+  std::cout << "Please type the location of the hemorrhage as: leftleg, spleen, or aorta. Followed by the rate of the bleed (assuming units of mL/min), ex. leftleg 150 " << std::endl;
+  std::cin >> hemorrageLocation >> hemorrageRate;
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
