@@ -101,9 +101,6 @@ write_basic_package_version_file(
 )
 
 # install the configuration file
-if(NOT Log4cpp_DIR)
-  list(APPEND Packages ${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/FindLog4cpp.cmake)
-endif()
 if(NOT Xerces-c_DIR)
   list(APPEND Packages ${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/FindXerces-c.cmake)
 endif()
