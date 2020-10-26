@@ -219,7 +219,7 @@ void Arguments::set_required_keywords(std::vector<std::string> keys)
 //-----------------------------------------------------------------------------
 auto Arguments::required_keywords() const -> std::vector<std::string>
 {
-  assert(!_required_keywords.empty());
+  assert(!_default_keywords.empty());
   return _required_keywords;
 }
 //-----------------------------------------------------------------------------

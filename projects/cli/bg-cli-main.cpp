@@ -226,17 +226,25 @@ int main(int argc, char** argv)
     for (auto& table : tables) {
       std::transform(table.begin(), table.end(), table.begin(), ::tolower);
       if (table == "html") {
-        report_writer.gen_tables(biogears::ReportWriter::HTML);
+        report_writer.generate_system_tables(biogears::ReportWriter::HTML);
+        report_writer.generate_patient_tables(biogears::ReportWriter::HTML);
       } else if (table == "md") {
-        report_writer.gen_tables(biogears::ReportWriter::MD);
+        report_writer.generate_system_tables(biogears::ReportWriter::MD);
+        report_writer.generate_patient_tables(biogears::ReportWriter::MD);
       } else if (table == "xml") {
-        report_writer.gen_tables(biogears::ReportWriter::XML);
+        report_writer.generate_system_tables(biogears::ReportWriter::XML);
+        report_writer.generate_patient_tables(biogears::ReportWriter::XML);
       } else if (table == "web") {
-        report_writer.gen_tables(biogears::ReportWriter::WEB);
+        report_writer.generate_system_tables(biogears::ReportWriter::WEB);
+        report_writer.generate_patient_tables(biogears::ReportWriter::WEB);
       } else if (table == "all") {
-        report_writer.gen_tables(biogears::ReportWriter::HTML);
-        report_writer.gen_tables(biogears::ReportWriter::MD);
-        report_writer.gen_tables(biogears::ReportWriter::XML);
+        report_writer.generate_system_tables(biogears::ReportWriter::HTML);
+        report_writer.generate_system_tables(biogears::ReportWriter::MD);
+        report_writer.generate_system_tables(biogears::ReportWriter::XML);
+
+        report_writer.generate_patient_tables(biogears::ReportWriter::HTML);
+        report_writer.generate_patient_tables(biogears::ReportWriter::MD);
+        report_writer.generate_patient_tables(biogears::ReportWriter::XML);
       } else {
         std::cout << "Warning: " << table << " is not a valid keyword.\n";
       }

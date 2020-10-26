@@ -31,7 +31,7 @@
 
 namespace biogears {
 
-TableRow::TableRow() {}
+TableRow::TableRow() { }
 TableRow::TableRow(std::string field_n, std::string expected_v, double engine_v, std::string percent_e, std::string n)
 {
   field_name = field_n;
@@ -41,10 +41,10 @@ TableRow::TableRow(std::string field_n, std::string expected_v, double engine_v,
   notes = n;
   result = Green;
 }
-TableRow::~TableRow() {}
+TableRow::~TableRow() { }
 
-ReferenceValue::ReferenceValue() {}
-ReferenceValue::~ReferenceValue() {}
+ReferenceValue::ReferenceValue() { }
+ReferenceValue::~ReferenceValue() { }
 
 ReportWriter::ReportWriter()
 {
@@ -251,7 +251,7 @@ std::string resolveTestLocation(biogears::filesystem::path baseline, std::string
 /// validation tables for our documentation.
 /// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
 //-------------------------------------------------------------------------------
-void ReportWriter::gen_tables(TYPE table_type)
+void ReportWriter::generate_system_tables(TYPE table_type)
 {
   std::vector<std::pair<std::string, std::string>> SystemTables {
     { "BloodChemistryValidation", "Scenarios/Validation" },
@@ -838,5 +838,217 @@ void ReportWriter::clear()
   validation_data.clear();
   biogears_results.clear();
   report.clear();
+}
+
+//--------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------
+/// \brief Takes a list of validation files and results files from biogears and produces
+/// validation tables for our documentation.
+/// \param table_type: char denoting what type of results file should be produced (html, md, or xml)
+//-------------------------------------------------------------------------------
+
+void ReportWriter::generate_patient_tables(TYPE table_type)
+{
+  std::vector<std::pair<std::string, std::string>> SystemTables;
+  std::vector<std::string> XMLFile;
+  std::vector<std::string> const validation_rows = {
+    "PatientAge(yr)",
+    "PatientWeight(kg)", "PatientHeight(in)",
+    "PatientBodyDensity(g/cm^3)", "PatientBodyFatFraction",
+    "PatientLeanBodyMass(kg)", "PatientAlveoliSurfaceArea(m^2)",
+    "PatientRightLungRatio", "PatientSkinSurfaceArea(m^2)",
+    "PatientBasalMetabolicRate(kcal/day)", "PatientBloodVolumeBaseline(mL)",
+    "PatientDiastolicArterialPressureBaseline(mmHg)",
+    "PatientHeartRateBaseline(1/min)",
+    "PatientMeanArterialPressureBaseline(mmHg)",
+    "PatientRespirationRateBaseline(1/min)",
+    "PatientSystolicArterialPressureBaseline(mmHg)",
+    "PatientTidalVolumeBaseline(mL)", "PatientHeartRateMaximum(1/min)",
+    "PatientHeartRateMinimum(1/min)", "PatientExpiratoryReserveVolume(mL)",
+    "PatientFunctionalResidualCapacity(mL)",
+    "PatientInspiratoryCapacity(mL)", "PatientInspiratoryReserveVolume(mL)",
+    "PatientResidualVolume(mL)", "PatientTotalLungCapacity(mL)",
+    "PatientVitalCapacity(mL)", "TotalMetabolicRate(kcal/day)",
+    "BloodVolume(mL)", "DiastolicArterialPressure(mmHg)",
+    "HeartRate(1/min)", "MeanArterialPressure(mmHg)",
+    "RespirationRate(1/min)", "SystolicArterialPressure(mmHg)",
+    "TidalVolume(mL)"
+  };
+
+  auto patient_list = biogears::filesystem::dirlist("patients/", ".*[.]xml");
+  std::regex rx(R"(patients[\\/](\w+).xml)");
+  std::smatch rx_matches;
+
+  for (auto& patient : patient_list) {
+    std::regex_match(patient, rx_matches, rx);
+    if (std::regex_match(patient, rx_matches, rx)) {
+      std::string stateFile = std::string("states/") + rx_matches[1].str() + "@0s.xml";
+      std::string runName = std::string("Validation-") + rx_matches[1].str();
+      std::string group = "Scenarios/Validation";
+
+      if (filesystem::exists(stateFile)) {
+        SystemTables.emplace_back(std::move(runName), std::move(group));
+        XMLFile.emplace_back(std::move(stateFile));
+      }
+    }
+  }
+
+  
+  bool success = true;
+  for (auto& system : SystemTables) {
+    std::vector<std::pair<std::string, PatientValidationRow>> values(34);
+    std::vector<std::pair<std::string, int>> headers;
+    std::vector<std::string> row_header;
+    std::map<std::string, double> mean_table;
+    std::string resultsFile = system.second + "/" + system.first + "Results.csv";
+    //std::vector<std::string> headers;
+    std::fstream result { resultsFile };
+    std::string line;
+    double row_count = 0.0;
+    int current_file_index = 0;
+
+    while (std::getline(result, line)) {
+      if (row_count == 0.0) {
+        auto column_names = biogears::split(line, ',');
+        for (auto i = 0; i < column_names.size() - 1; ++i) {
+          headers.emplace_back(column_names[i + 1], i);
+        }
+      } else {
+        auto columns = biogears::split(line, ',');
+        for (auto i = 1; i < validation_rows.size(); ++i) {
+          try {
+            values[i - 1].first = validation_rows[i - 1];
+            values[i - 1].second.mean += std::stod(columns.at(headers[i].second));
+
+          } catch (std::runtime_error e) {
+            std::cout << "Runtime Error";
+          }
+        }
+      }
+      row_count += 1.0;
+    }
+    for (int i = 0; i < values.size() - 1; i++) {
+      values[i].second.mean = values[i].second.mean / (row_count);
+    }
+    if (table_type == HTML) {
+      set_html();
+    } else if (table_type == MD) {
+      set_md();
+    } else if (table_type == XML) {
+      set_xml();
+    } else {
+      set_web();
+    }
+    std::fstream file { XMLFile[current_file_index] };
+    ParseXMLPatient(file, headers, values);
+    std::string Outputfile = system.first.substr(11, system.first.length());
+    generate_patient_table(Outputfile, headers, values);
+    current_file_index++;
+  }
+}
+
+void ReportWriter::ParseXMLPatient(std::istream& stream, std::vector<std::pair<std::string, int>>& headers, std::vector<std::pair<std::string, PatientValidationRow>>& values)
+{
+  std::string line;
+  bool begin_tag = false;
+  int j = 0;
+  while (getline(stream, line)) {
+    std::string tmp;
+    for (int i = 0; i < line.length(); i++) {
+      if (line[i] == ' ' && tmp.size() == 0) {
+      } else {
+        tmp += line[i];
+      }
+    }
+    if (tmp == "<Patient>") {
+      begin_tag = true;
+      continue;
+    } else if (tmp == "</Patient>") {
+      begin_tag = false;
+    }
+    if (begin_tag) {
+      if (tmp.find("value=\"") != std::string::npos) {
+        size_t name_index = line.find("<");
+        name_index += 1;
+        size_t name_end = line.find(" ", name_index);
+        std::string name = trim(line.substr(name_index, name_end - name_index));
+        values[j].second.name = name;
+        size_t value_index = tmp.find("value=\"") + 7;
+        size_t value_end = tmp.find("\"/", value_index);
+        std::string value = trim(tmp.substr(value_index, value_end - value_index));
+        values[j].second.engine_value = std::stod(value);
+        values[j].second.expected_value = std::stod(value);
+        j++;
+      }
+    }
+  }
+}
+
+void ReportWriter::generate_patient_table(const std::string& Outputfile, std::vector<std::pair<std::string, int>>& headers, std::vector<std::pair<std::string, PatientValidationRow>>& values)
+{
+  report.append(_body_begin);
+  std::string table;
+  std::string table_name = Outputfile;
+  table += std::string(_table_begin);
+  for (int i = 0; i < values.size() - 1; i++) { // This loop iterates through every TableRow inside table_itr
+    std::string line;
+    int idx = 0;
+    if (i > 0) {
+      for (int j = 0; j < values.size(); j++) {
+        if (values[i - 1].first.find(values[j].second.name) != std::string::npos) {
+          idx = j;
+          break;
+        }
+      }
+    }
+    values[idx].second.percent_error = ((values[idx].second.expected_value) - values[i - 1].second.mean) / (values[idx].second.expected_value);
+    if (values[idx].second.percent_error < 10) {
+      line += (i == 0) ? _table_row_begin : _table_row_begin_green;
+    } else if (values[idx].second.percent_error > 20) {
+      line += (i == 0) ? _table_row_begin : _table_row_begin_red;
+    } else if (values[idx].second.percent_error > 10 && values[idx].second.percent_error < 20) {
+      line += (i == 0) ? _table_row_begin : _table_row_begin_yellow;
+    }
+    line += _table_item_begin;
+    line += (i == 0) ? table_name : values[i - 1].first;
+    line += _table_item_end;
+    line += _table_item_begin;
+    line += (i == 0) ? "Expected Value" : std::to_string(values[idx].second.expected_value);
+    line += _table_item_end;
+    line += _table_item_begin;
+    line += (i == 0) ? "Engine Value" : std::to_string(values[i - 1].second.mean);
+    line += _table_item_end;
+    line += _table_item_begin;
+    line += (i == 0) ? "Percent Error" : std::to_string(values[idx].second.percent_error);
+    line += _table_item_end;
+    line += _table_item_begin;
+    line += (i == 0) ? "Notes" : " ";
+    line += _table_row_end;
+    table.append(line);
+    if (i == 0) {
+      table.append(_table_second_line);
+    }
+  }
+  table += std::string(_table_end);
+  // This block saves out the html tables for website generation
+  std::ofstream file;
+
+#if _WIN32
+  _mkdir("doc");
+  _mkdir("doc/validation");
+#else
+  mkdir("doc", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+  mkdir("doc/validation", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
+  auto filename = "doc/validation/" + Outputfile + "PatientValidationTable" + _file_extension;
+  std::cout << Outputfile + "PatientValidationTable" + _file_extension + "\n";
+  file.open(filename);
+  if (!file) {
+    throw std::runtime_error(biogears::asprintf("Unable to open file %s", filename.c_str()));
+  }
+  file << (std::string(_body_begin) + table + std::string(_body_end));
+  file.close();
+  table.clear();
 }
 }

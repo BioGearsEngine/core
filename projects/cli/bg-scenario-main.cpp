@@ -76,12 +76,16 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   }
 
   BioGearsScenario sce(eng->GetSubstanceManager());
+
   if (!sce.Load(trim(trimed_scenario_path))) {
     if (!sce.Load("Scenarios/" + trim(trimed_scenario_path))) {
       console_logger.Error("Unable to find  " + trim(trimed_scenario_path));
     }
   }
 
+  if (ex.TrackStabilization()) {
+    eng->SetTrackStabilizationFlag(true);
+  }
   //-----------------------------------------------------------------------------------
   if (!ex.Patient().empty()) {
     sce.GetInitialParameters().SetPatientFile(ex.Patient());
@@ -205,16 +209,7 @@ int main(int argc, char* argv[])
   try {
     // Declare the supported options.
     options_description desc("Allowed options");
-    desc.add_options()
-        ("help,h", "produce help message")
-        ("name,n", value<std::string>(), "Set Scenario Name")
-        ("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")
-        ("group,g", value<std::string>(), "Set Name of Scenario Group")
-        ("patient,p", value<std::string>(), "Specifcy the Initial Patient File")
-        ("state,s", value<std::string>(), "Specifcy the Initial Patient State File")
-        ("results,r", value<std::string>(), "Specifcy the Results File")
-        ("quiet,q", bool_switch()->default_value(false), "Supress most log messages")
-        ("version,v", bool_switch()->default_value(false), "Print linked libBioGears version");
+    desc.add_options()("help,h", "produce help message")("name,n", value<std::string>(), "Set Scenario Name")("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")("group,g", value<std::string>(), "Set Name of Scenario Group")("patient,p", value<std::string>(), "Specifcy the Initial Patient File")("state,s", value<std::string>(), "Specifcy the Initial Patient State File")("results,r", value<std::string>(), "Specifcy the Results File")("quiet,q", bool_switch()->default_value(false), "Supress most log messages")("version,v", bool_switch()->default_value(false), "Print linked libBioGears version")("track-stabilization", bool_switch()->default_value(false), "Turn on stabilization tracking for the scenario");
 
     options_description hidden;
     hidden.add_options()("scenario", value<std::string>(), "Specifcy the Scenario File");
@@ -230,7 +225,6 @@ int main(int argc, char* argv[])
     variables_map vm;
     store(command_line_parser(argc, argv).options(all_options).positional(p).run(), vm);
     notify(vm);
-
 
     if (vm.count("help") || argc < 2) {
       std::cout << help_message << std::endl;
@@ -253,6 +247,10 @@ int main(int argc, char* argv[])
         name = biogears::trim(name, "\"");
       }
       ex.Name(name);
+    }
+
+    if (vm["track-stabilization"].as<bool>()) {
+      ex.TrackStabilization(true);
     }
 
     if (vm["driver"].as<std::string>() == "BGEUnitTestDriver") {
@@ -341,7 +339,7 @@ int main(int argc, char* argv[])
     return execute_scenario(ex, log_level);
 
   } catch (boost::program_options::required_option /*e*/) {
-      std::cerr << "\n";
+    std::cerr << "\n";
     //<< e.what() << "\n\n";
     std::cout << help_message << std::endl;
   } catch (std::exception& e) {

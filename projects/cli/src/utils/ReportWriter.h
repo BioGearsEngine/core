@@ -33,6 +33,15 @@ public:
   color result;
 };
 
+struct PatientValidationRow {
+  std::string name;
+  double baseline = 0.0;
+  double mean = 0.0;
+  double percent_error = 0.0;
+  double expected_value = 0.0;
+  double engine_value = 0.0;
+};
+
 class ReferenceValue {
 public:
   ReferenceValue();
@@ -51,10 +60,7 @@ public:
 
 class ReportWriter {
 public:
-  enum TYPE { HTML,
-              MD,
-              XML,
-              WEB };
+  enum TYPE { HTML, MD, XML, WEB };
   ReportWriter();
   ~ReportWriter();
   void to_table();
@@ -62,15 +68,16 @@ public:
   void set_md();
   void set_xml();
   void set_web();
-
+  void generate_system_tables(TYPE table_type);
+  void generate_patient_tables(TYPE table_type);
+  void generate_patient_table(const std::string& Outputfile, std::vector<std::pair<std::string, int>>& headers, std::vector<std::pair<std::string, PatientValidationRow>>& values);
   void gen_tables_single_sheet(std::string reference_file, std::string results_file, char table_type);
-  void gen_tables(TYPE table_type);
   void ParseReferenceCSV(const std::string filename);
   void ParseResultsCSV(const std::string filename);
   void CalculateAverages();
   void ExtractValues();
   void ExtractValuesList();
-
+  void ParseXMLPatient(std::istream& stream, std::vector<std::pair<std::string, int>>& headers, std::vector<std::pair<std::string, PatientValidationRow>>& values);
   void Validate();
   void PopulateTables();
   void clear(); // This does not reset the value of the pointers

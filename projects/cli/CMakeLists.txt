@@ -47,7 +47,7 @@ set_target_properties(bg-cli
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
 
-
+target_compile_definitions(bg-cli PRIVATE DEBUG_POSTFIX=$<$<CONFIG:Debug>:"${CMAKE_DEBUG_POSTFIX}">)
 target_compile_options(bg-cli PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
 target_include_directories(bg-cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
@@ -72,7 +72,7 @@ set_target_properties(bg-scenario
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
 
-
+target_compile_definitions(bg-scenario PRIVATE DEBUG_POSTFIX=$<$<CONFIG:Debug>:"${CMAKE_DEBUG_POSTFIX}">)
 target_compile_options(bg-scenario PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
 target_include_directories(bg-scenario PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 target_link_libraries(bg-scenario  ${${PREFIX}_LIBS} 
