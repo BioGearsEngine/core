@@ -61,7 +61,7 @@ bool StabilizationGenerator::save() const
   namespace CDM = mil::tatrc::physiology::datamodel;
   xml_schema::namespace_infomap info;
   info[""].name = "uri:/mil/tatrc/physiology/datamodel";
-  info[""].schema = "BioGears.xsd";
+  info[""].schema = "BioGearsDataModel.xsd";
 
   try {
     std::ofstream file;

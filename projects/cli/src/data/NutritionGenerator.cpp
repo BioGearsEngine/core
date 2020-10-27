@@ -39,7 +39,7 @@ bool NutritionGenerator::save() const
   for (auto& nutrition_conf : _nutrients) {
     xml_schema::namespace_infomap info;
     info[""].name = "uri:/mil/tatrc/physiology/datamodel";
-    info[""].schema = "BioGears.xsd";
+    info[""].schema = "BioGearsDataModel.xsd";
 
     try {
       std::ofstream file;

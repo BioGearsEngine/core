@@ -16,22 +16,29 @@
 
 namespace biogears
 {
-  class StateGenerator : biogears::Runnable
+  class PopulationGenerator 
   {
   public:
-    StateGenerator( size_t thread_count);
-    StateGenerator( const StateGenerator&) = delete;
-    StateGenerator(StateGenerator&&) = default;
-    ~StateGenerator() override;
+    PopulationGenerator(std::vector<std::string> params);
+    PopulationGenerator( const PopulationGenerator&) = delete;
+    PopulationGenerator(PopulationGenerator&&) = default;
+    ~PopulationGenerator() = default;
 
-    void GenStates();
-   
-    void run()  override;
-    void stop() override;
-    bool stop_if_empty();
-    void join() override; 
+    void Generate();
+
+    void SetGirlNames(std::vector<std::string>&& names);
+    void SetBoyNames(std::vector<std::string>&& names);
+
+    void AddBoyName(std::string);
+    void AddGirlName(std::string);
+
+    void ClearBoyNames();
+    void ClearGirlNames();
+
   private:
-    ThreadPool _pool;
+    std::vector<std::pair<std::string, int>> _runs;
+    std::vector<std::string> _boy_names;
+    std::vector<std::string> _girl_names;
   };
 } //namespace biogears
 

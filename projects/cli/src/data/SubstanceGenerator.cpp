@@ -82,7 +82,7 @@ bool SubstanceGenerator::save() const
   for (auto& substance : _substances) {
     xml_schema::namespace_infomap info;
     info[""].name = "uri:/mil/tatrc/physiology/datamodel";
-    info[""].schema = "BioGears.xsd";
+    info[""].schema = "BioGearsDataModel.xsd";
 
     try {
       std::ofstream file;
