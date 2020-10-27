@@ -116,4 +116,9 @@ install(FILES
   DESTINATION lib/cmake/${ROOT_PROJECT_NAME}
 )
 
+if( PROJECT_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
+  message(STATUS "Preparing Installer Packages")
+  add_subdirectory(cmake/packaging)
+endif()
+
 generate_project_suffix()

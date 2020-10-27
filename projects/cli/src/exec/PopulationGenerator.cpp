@@ -521,7 +521,7 @@ void PopulationGenerator::Generate()
         _mkdir((std::string("patients/") + population_pool_dir).c_str());
 #else
         mkdir("patients", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        mkdir(std::string("patients/") + population_pool_dir).c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        mkdir((std::string("patients/") + population_pool_dir).c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #endif
 
         try {

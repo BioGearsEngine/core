@@ -72,6 +72,10 @@ set_target_properties(bg-scenario
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
 
+  set_property(INSTALL "$<TARGET_FILE_NAME:bg-scenario>"
+  PROPERTY CPACK_START_MENU_SHORTCUTS "BioGears Scenario Driver"
+)
+
 target_compile_definitions(bg-scenario PRIVATE DEBUG_POSTFIX=$<$<CONFIG:Debug>:"${CMAKE_DEBUG_POSTFIX}">)
 target_compile_options(bg-scenario PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
 target_include_directories(bg-scenario PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
@@ -114,5 +118,49 @@ install(TARGETS bg-cli bg-scenario
      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
      ARCHIVE DESTINATION lib
 )
+set_property(INSTALL "$<TARGET_FILE_NAME:bg-cli>"
+  PROPERTY CPACK_START_MENU_SHORTCUTS "BioGears Commnad Line"
+)
+
+  install(CODE "
+    include(BundleUtilities)
+
+    function(EXELIST result curdir)
+    file(GLOB children RELATIVE \${curdir} \${curdir}/*)
+    set(dirlist \"\")
+    foreach(child \${children})
+      if(NOT IS_DIRECTORY \${curdir}/\${child} AND \${child} MATCHES \".*${CMAKE_EXECUTABLE_SUFFIX}\" )
+      list(APPEND dirlist \${curdir}/\${child})
+      set(\${result} \${dirlist} PARENT_SCOPE)
+      return()
+      endif()
+    endforeach()
+    endfunction()
+
+    set(CONFIG_SUFFIX ${CMAKE_${CONFIG}_POSTFIX})
+
+    set(CMAKE_PREFIX_PATH  \"${CMAKE_PREFIX_PATH}\")
+
+    foreach(_dir IN LISTS CMAKE_PREFIX_PATH)
+    list(APPEND THIRD_PARTY  \${_dir})
+    list(APPEND THIRD_PARTY_LIB \${_dir}/lib)
+    list(APPEND THIRD_PARTY_BIN \${_dir}/bin)
+    endforeach()
+		
+	FILE(TO_CMAKE_PATH   \"\${CMAKE_INSTALL_PREFIX}\"  INSTALL_PATH)
+
+	set( Biogears_RUNTIME_DESTINATION \"\${INSTALL_PATH}/bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+    set( Biogears_LIBRARY_DESTINATION \"\${INSTALL_PATH}/${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+    set( Biogears_ARCHIVE_DESTINATION \"\${INSTALL_PATH}/lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+
+    EXELIST(TARGET \"\${INSTALL_PATH}/bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>/\" )
+
+    fixup_bundle(\"\${TARGET}\"
+        \"\"
+        \"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\;\${INSTALL_PATH}/bin;\${INSTALL_PATH}/lib;\${Biogears_RUNTIME_DESTINATION};\${Biogears_LIBRARY_DESTINATION};\${Biogears_ARCHIVE_DESTINATION}\"
+   
+    )
+  ")
+###
 message(STATUS "")
 endif()
