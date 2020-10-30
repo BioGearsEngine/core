@@ -165,14 +165,14 @@ function(create_cache_file)
 endfunction()
 
 function(create_stage)
-  add_custom_target(STAGE 
+  add_custom_target(gather_runtime_dependencies
     ${CMAKE_COMMAND} 
     -DCMAKE_INSTALL_CONFIG_NAME=$<CONFIG> -P "${CMAKE_SOURCE_DIR}/cmake/cmake-common_stage.cmake"
     )
-  set_target_properties(STAGE
+  set_target_properties(gather_runtime_dependencies
       PROPERTIES
-      FOLDER "CMakePredefinedTargets"
-      PROJECT_LABEL "STAGE"
+      FOLDER ""
+      PROJECT_LABEL "gather_runtime_dependencies"
   )
 endfunction() 
 ########################################################################################################

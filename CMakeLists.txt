@@ -49,7 +49,7 @@ if(TARGET bg-cli)
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT bg-cli)
 endif()
 
-if(NOT TARGET STAGE)
+if(NOT TARGET gather_runtime_dependencies)
   ###############################################################################
   # Stage Code for IDE Testing
   ###############################################################################
@@ -61,13 +61,13 @@ if(NOT TARGET STAGE)
   # to stage (AKA move dep DLLs to the run folder for debugging.
   ################################################################################
   if(TARGET  scenario_driver)
-    add_dependencies(STAGE scenario_driver)
+    add_dependencies(gather_runtime_dependencies scenario_driver)
   endif()
   if( TARGET scenario_driver)
-    add_dependencies(STAGE test_driver)
+    add_dependencies(gather_runtime_dependencies test_driver)
   endif()
   if(TARGET  unittest)
-    add_dependencies(STAGE test_driver)
+    add_dependencies(gather_runtime_dependencies test_driver)
   endif()
 endif()
 

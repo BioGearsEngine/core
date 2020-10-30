@@ -84,9 +84,9 @@ function(add_howto name)
       add_dependencies(${TARGET_NAME} prepare_runtime_dir)
     endif()
    
-    add_dependencies(howtos ${TARGET_NAME})
+    add_dependencies(all_howtos ${TARGET_NAME})
      
-  install(TARGETS ${TARGET_NAME} EXPORT howtos
+  install(TARGETS ${TARGET_NAME} EXPORT all_howtos
 	 RUNTIME DESTINATION bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>/howtos
      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
      ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
@@ -129,8 +129,9 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
   target_compile_definitions(howto-common  PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
   target_compile_options(howto-common  PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
   
-  add_custom_target(howtos COMMENT "Meta Target for compiling all howtos")
-  
+  add_custom_target(all_howtos COMMENT "Meta Target for compiling all howtos")
+  set_target_properties(all_howtos PROPERTIES FOLDER "Examples" )
+
   childlist( dir_list ${CMAKE_CURRENT_SOURCE_DIR} )
   foreach( dir IN LISTS dir_list )
   if(NOT dir MATCHES "common-source")
