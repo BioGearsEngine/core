@@ -40,9 +40,14 @@ file(GLOB_RECURSE biogears_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/biogears/*.
 file(GLOB_RECURSE cdm_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/cdm/*.xsd")
 
 
-REGISTER_XSD_DIR(  ""   CONFIG BioGearsDataModel.cfg 
-                    ROOT "biogears" SUBPATH "schema" RESOURCE_FOLDER "resources/schema"
-                    TARGETS XSD_TARGETS)
+REGISTER_XSD_DIR(  "${PROJECT_SOURCE_DIR}/share/xsd/"
+                    CONFIG "${PROJECT_SOURCE_DIR}/share/xsd/BioGearsDataModel.cfg"
+                    PROJECT "biogears" COMPONENT "schema" RESOURCE_FOLDER "resources/schema"
+                    TARGETS XSD_TARGETS VERBOSITY 1)
+
+#REGISTER_XSD_DIR(  ""   CONFIG BioGearsDataModel.cfg 
+#                    ROOT "biogears" SUBPATH "schema" RESOURCE_FOLDER "resources/schema"
+#                    TARGETS XSD_TARGETS)
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src/version.cpp.in  ${CMAKE_CURRENT_BINARY_DIR}/libBiogears/src/version.cpp NEWLINE_STYLE LF)
 ###############################################################################
