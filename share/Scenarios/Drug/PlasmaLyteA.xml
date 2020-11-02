@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>AlbuterolScenario</Name>
-    <Description>Albuterol inhalation by the patient!</Description>	
+    <Name>PlasmaLyteAScenario</Name>
+    <Description>PLasma Lyte A as a stabilizer after a propofol injection!</Description>	
     <InitialParameters>
 		<PatientFile>StandardMale.xml</PatientFile>
 		<Configuration xsi:type="BioGearsConfigurationData">
