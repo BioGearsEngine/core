@@ -264,6 +264,16 @@ The pharmacodynamic effects of diuretics locally target the renal system's funct
 ### %Substances
 The full list of drugs available in the %BioGears library can be found in Table&nbsp;5 in the Validation section. Additional substances, such as oxygen, carbon dioxide, and hemoglobin that are available in the %BioGears Engine can be found in the @ref BloodChemistryMethodology.
 
+@anchor drugs-compounds
+### %Compounds
+BioGears compounds allow a user to administer a specific combination of substances (see above) at the same time. In most cases, compounds (or solutions) used in BioGears can be represented by their ionic components.c Currently, BioGears supports the following compounds:
+- Piperacillin TazobactamL A combination of piperacillin, tazobactam, and sodium.
+- Plasma: Plasma contains components similar to whole blood but without any blood cells. The plasma compound contains sodium, albumin, urea, glucose, triacylglycerol, calcium, creatinine, chloride, and potassium.
+- Plasma Lyte A: A buffered solution made up of sodium, potassium, magnesium, chloride, acetoacetate, and glucose. 
+- Ringers Lactate: A sodium lactate solution consisting of sodium, chloride, lactate, potassium, calcium, oxygen, carbon dioxide.
+- Saline: A combination of sodium, chloride, oxygen, and carbon dioxide.
+- Whole Blood: BioGears supports all eight primary blood types (A, B, AB, and O each either Rh positive or negative). Each whole blood compound contains hemoglobin, oxyhemoglobin, oxygen, carbon dioxide, sodium, albumin, urea, glucose, triacylglycerol, calcium, creatinine, chloride, potassium, red blood cells, white blood cells, platelets, and the appropriate antigens corresponding to blood type.
+
 @anchor drugs-variability
 ### Patient Variability
 It is possible to customize the body that is simulated by %BioGears. For a detailed discussion of patient variability in %BioGears please see the @ref PatientMethodology report. Variability in body morphology will obviously have an effect on the pharmacokinetics of a drug. For example, a larger body may have a larger plasma volume, and thus the plasma concentration for a specific dose of a drug will be less than the same dose administered to a smaller body. Additionally, the partitioning of drugs is dependent on the relative masses of the physiological compartments, and storage is affected by distribution. Lipophilic drugs may appear to remain longer in the %BioGears plasma in patients who are configured with a higher body fat fraction. Patient configuration will also impact the pharmacodynamics. Maximum drug effects are computed as a fraction of baseline physiology. Changing a patient's baseline parameter (e.g. heart rate baseline) will also change the maximum effect (e.g. maximum heart rate) at a specific concentration of a drug. All drug validation is performed on a %BioGears Standard Male.
