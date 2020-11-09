@@ -155,12 +155,12 @@
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
 			<AmbientAerosol Name="Sarin">
-				<Concentration value="15" unit="mg/m^3"/>
+				<Concentration value="1000" unit="mg/m^3"/>
 			</AmbientAerosol>
 		</Conditions>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="6" unit="min"/>       
+		<Time value="10" unit="min"/>       
 	</Action>
 	<!--Return to normal environment-->
 	<Action xsi:type="EnvironmentChangeData">
