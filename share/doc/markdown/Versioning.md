@@ -13,6 +13,130 @@ This versioning follows the <a href="http://semver.org">Semantic Versioning 2.0.
 
 ## %BioGears Version History
 
+## What's new in ver 7.2 and 7.2.1 (January 29, 2019)
+
+- General bug fixes and updates
+  - Finalization for testing and implementation to BioGears override functionality with full physiology request data support
+- Arterial and Venous PH data requests 
+- Inflammation state data to support sepsis model serialization 
+- Generalized sepsis model to a more generic inflammation model 
+  - Will be critical to future modeling efforts (hemorrhage, burn, infection)
+- New example sepsis xml files (SepsisSevere_Gut.xml)
+- New lymph circuit
+  - Handles Albumin transport and re-circulation 
+  - Creates realistic oncotic pressure sources for substance transport 
+  - Transport from tissue systems back into the vasculature via lymph 
+- New command line utility project (bg-cli) for native c++ runtime, driver, batch run organizer/manager
+- Optional name value for xml actions meal and environment
+- New burn model 
+  - User defined total body surface area input 
+  - Inflammation cascade validated for long running scenarios (24 hr +)
+  - Validated for traditional treatment protocols with USISR SMEs
+- New unit testing framework (Google Test) to better support multi-platform functionality 
+  - Unit Test harness is a separate project in CMAKE which can be controlled with Biogears_BUILD_TEST variable
+- Introduced const char* DLL interfaces for all functions dealing with std::string to avoid Windows-related issues dealing with XSD implicitly exporting string through inheritance
+- Updated functionality to tension pneumothorax to fix bug in bilateral behavior 
+- Updated hemorrhage bugs to update blood gas levels and metabolic requirements 
+  - Validated with University of Washington
+
+
+## What's new in ver 7.1 (September 26, 2018)
+
+- Patches to drug blood pressure modifications to restrict pathways to be more physiologically accurate
+- Vasopressin support and validation
+- Major patches to #include requirements, reduction in file dependencies
+  - Increases modularity of the project, increase build times during development 
+- Change in how we generate code from our CDM XSD files to one file per XSD file instead of per type 
+  - Reduced build times for the full source from 40 to 10 min
+  - empty constructors in SETypes to = default and adding override markers
+  - no longer use stdafx.h while compiling and so many headers make direct reference to COmmonDataModel.h and Biogears.h which were previously bundled in these precompiled headers
+- Override functionality now supported in BioGears 
+  - May override any physiology data request with desired value 
+  - Logging will document range of possible values if typing unsupported data 
+  - Engine can now be globally flagged as conformant or non conformant to increase future development possibilities
+  - Can be manipulated via action api calls 
+  - Example xmls and sdks demonstrate functionality 
+- Moved all BioGears functionality in to the BioGears namespace
+
+
+## What's new in ver 7.0 (August 22, 2018)
+
+- BioGears python plotting tool
+- Max work rate now a patient parameter and is configurable
+- Hemorrhage action updates, may now specify location and rate
+  - Rate will diminish as pressure in the vessel decreases 
+- Update build process to be entirely supported by CMAKE
+  - Removed Apache Ant dependency 
+  - Updated build directory and runtime directory dependencies
+- Full build support for ARM platforms 
+ - Updates to source to support all major platforms: Mac, Windows, Linux, and ARM
+- Updated build architecture to python buildbot libraries 
+  - 8 concurrent nightly builds to ensure multi-platform support
+- Setup mirroring onto our new github repository 
+  - All development now open to the community with feature branches also supporting nightly builds 
+- Dockerfile and testing/support now supported, see more at https://cloud.docker.com/u/biogears/repository/docker/biogears/engine
+- Pain model and patient pain susceptibility configuration flag
+  - Validated pain model supported, stimulus can be specified with severity from 0-1
+  - Works with all supported pain medication in the BioGears engine
+    - Treat patient with Morphine, Fentynal, and/or Ketamine
+  - New How-to-pain file to display sdk support
+- Sepsis model 
+  - Robust whole body inflammation model with severity and location specifiers in .xml and SDK
+  - New How-to-sepsis file to show sdk functionality (command-line tool) 
+  - Validated treatments with fluid resuscitation guidelines, vasopressin, norepinephrine, and antibiotics 
+  - Validated blood chemistry markers such as bilirubin, white blood cell count, and lactate
+- New antibiotic IV drip 
+  - Can be used to treat sepsis
+- Two new supported patients: toughguy and toughgirl 
+- Sweat rate patches now meeting validation 
+  - Better core temperature regulation during exercise 
+  - Hyper/hypo-hidrosis now a supported patient parameter
+- Updates and new 7.0 java GUI release to support users who want to create their own substance 
+  - Includes ability to patch in new drugs
+- Chemoreceptor method updated to track validation for hypercapnic and hypoxic conditions 
+  - Better support for respiratory validation across the board, particularly supported respiratory conditions
+- Patches to saline infusion loading on the patient for better respiratory validation 
+
+
+## What's new in ver 6.3 (March 1, 2018)
+The latest deployment includes the following notable updates:
+
+- General bug fixes, system improvements, and tools/solver improvements
+- Fasciculation patient event flags 
+- Updated sweat methodology (fixes to ions lost in sweat)
+- Updated substance and compound infusion functionality
+  - Added Ringers lactate and updated 
+  - Saline compound ion concentrations corrected
+  - Hardened implementation 
+- MuscleMass new patient data request
+  - Muscle catabolism patient flag
+- Added dehydration condition 
+  - Implemented as scalar 0to1 representing fractional total body water lost
+  - Fluid removed from patient compartments 
+  - Updated patient flag for event and track body weight change (validated)
+  - Added totalbodyfluidVolume as data request
+  - Updated patient weight as a function of condition
+- Added starvation condition
+  - TimeSinceMeal determines how long since the patient's last meal 
+  - Scales internal nutrient storages from validated starvation data
+  - Removed ConsumeMeal condition, now replaced by starvation condition
+  - Validated blood concentrations for ketones, glucose, and amino acids
+  - Updated patient weight as a function of condition
+- Intracellular ion transport
+  - Model uses membrane potential  (see @ref TissueMethodology for details)
+  - Michaelis coefficient could support more ion regulation in the future
+  - Gated ion transport allows for differences between intra/extracellular spaces
+- COPD now supports elevated anaerobic metabolism
+- Ion transport model in the small intestine
+- Updated drug library so all drugs support an effects site transport rate
+- Diabetes type 1 and type 2 conditions
+  - insulin resistance and insulin production effects
+- Hemorrhage action now initialized with a 0-1 severity and a location (MCIS SDK example still exists)
+- New drug Vasopressin
+- New drug classifications in the CDM for better grouping in-code 
+  - Include anesthetic, sedative, opioid, and reversal agent
+  - More grouping in future work
+
 ## 6.2 (September 30, 2017)
 
 The latest deployment includes the following notable updates:

@@ -132,64 +132,7 @@ zip
   - Validated with University of Washington
 
 
-## What's new in ver 7.1 (September 26, 2018)
-
-- Patches to drug blood pressure modifications to restrict pathways to be more physiologically accurate
-- Vasopressin support and validation
-- Major patches to #include requirements, reduction in file dependencies
-  - Increases modularity of the project, increase build times during development 
-- Change in how we generate code from our CDM XSD files to one file per XSD file instead of per type 
-  - Reduced build times for the full source from 40 to 10 min
-  - empty constructors in SETypes to = default and adding override markers
-  - no longer use stdafx.h while compiling and so many headers make direct reference to COmmonDataModel.h and Biogears.h which were previously bundled in these precompiled headers
-- Override functionality now supported in BioGears 
-  - May override any physiology data request with desired value 
-  - Logging will document range of possible values if typing unsupported data 
-  - Engine can now be globally flagged as conformant or non conformant to increase future development possibilities
-  - Can be manipulated via action api calls 
-  - Example xmls and sdks demonstrate functionality 
-- Moved all BioGears functionality in to the BioGears namespace
-
-
-## What's new in ver 7.0 (August 22, 2018)
-
-- BioGears python plotting tool
-- Max work rate now a patient parameter and is configurable
-- Hemorrhage action updates, may now specify location and rate
-  - Rate will diminish as pressure in the vessel decreases 
-- Update build process to be entirely supported by CMAKE
-  - Removed Apache Ant dependency 
-  - Updated build directory and runtime directory dependencies
-- Full build support for ARM platforms 
- - Updates to source to support all major platforms: Mac, Windows, Linux, and ARM
-- Updated build architecture to python buildbot libraries 
-  - 8 concurrent nightly builds to ensure multi-platform support
-- Setup mirroring onto our new github repository 
-  - All development now open to the community with feature branches also supporting nightly builds 
-- Dockerfile and testing/support now supported, see more at https://cloud.docker.com/u/biogears/repository/docker/biogears/engine
-- Pain model and patient pain susceptibility configuration flag
-  - Validated pain model supported, stimulus can be specified with severity from 0-1
-  - Works with all supported pain medication in the BioGears engine
-    - Treat patient with Morphine, Fentynal, and/or Ketamine
-  - New How-to-pain file to display sdk support
-- Sepsis model 
-  - Robust whole body inflammation model with severity and location specifiers in .xml and SDK
-  - New How-to-sepsis file to show sdk functionality (command-line tool) 
-  - Validated treatments with fluid resuscitation guidelines, vasopressin, norepinephrine, and antibiotics 
-  - Validated blood chemistry markers such as bilirubin, white blood cell count, and lactate
-- New antibiotic IV drip 
-  - Can be used to treat sepsis
-- Two new supported patients: toughguy and toughgirl 
-- Sweat rate patches now meeting validation 
-  - Better core temperature regulation during exercise 
-  - Hyper/hypo-hidrosis now a supported patient parameter
-- Updates and new 7.0 java GUI release to support users who want to create their own substance 
-  - Includes ability to patch in new drugs
-- Chemoreceptor method updated to track validation for hypercapnic and hypoxic conditions 
-  - Better support for respiratory validation across the board, particularly supported respiratory conditions
-- Patches to saline infusion loading on the patient for better respiratory validation 
-
-
+For a list of historical releases please see our [website](https://www.biogearsengine.com/documentation/index.html).
 
 
 Programmatics
