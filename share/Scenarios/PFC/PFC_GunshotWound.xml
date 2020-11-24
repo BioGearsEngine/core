@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+  <Name>PFC_Gunshot</Name>
+  <Description>PFC state generator for a patient after a gunshot wound.</Description>
+	<EngineStateFile>./states/StandardMale@0s.xml</EngineStateFile>
+  
+  <!-- Base system data required for heat stroke showcase scenario -->
+  <DataRequests SamplesPerSecond="50">
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                 Unit="1/min"    Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"         Unit="mL"       Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"               Unit="mL"       Precision="2"/>  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"      Unit="mmHg"     Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"  Unit="mmHg"     Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure" Unit="mmHg"     Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"             Unit="L/min"   Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"           Unit="1/min"    Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"          Unit="unitless" Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"           Unit="degC"     Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperature"           Unit="degC"     Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SweatRate"                  Unit="mg/min"      Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalMetabolicRate"        Unit="kcal/day" Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalWorkRateLevel"        Unit="unitless" Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="FatigueLevel"              Unit="unitless" Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="AchievedExerciseLevel"     Unit="unitless" Precision="2"/>
+  </DataRequests>
+  
+  
+  <Action xsi:type="HemorrhageData" Compartment="RightLeg">
+	<InitialRate value="100" unit="mL/min"/>
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="5" unit="min"/>
+  </Action>
+  
+  <!--<Action xsi:type="TourniquetData">
+	<Compartment value="RightLeg"/>
+	<TourniquetLevel value="Applied"/>
+  </Action> -->
+  <Action xsi:type="HemorrhageData" Compartment="RightLeg">
+	<InitialRate value="10" unit="mL/min"/>
+  </Action>
+  
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="55" unit="min"/>
+  </Action>
+
+
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@3600s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="HemorrhageData" Compartment="RightLeg">
+	<InitialRate value="0" unit="mL/min"/>
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@7200s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@10800s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@14400s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@18000s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@21600s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@25200s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@28800s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@32400s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@36000s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@39600s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+<Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@43200s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@46800s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  
+  <Action xsi:type="SerializeStateData" Type="Save">
+     <Filename>HemorrhageMale@50400s.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+</Scenario>
