@@ -46,7 +46,9 @@ set_target_properties(bg-cli
   CXX_STANDARD 14
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
-
+if(WIN32)
+  target_sources(bg-cli  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bg-cli.rc)
+endif()
 target_compile_definitions(bg-cli PRIVATE DEBUG_POSTFIX=$<$<CONFIG:Debug>:"${CMAKE_DEBUG_POSTFIX}">)
 target_compile_options(bg-cli PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
 target_include_directories(bg-cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
@@ -71,7 +73,9 @@ set_target_properties(bg-scenario
   CXX_STANDARD 14
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
-
+  if(WIN32)
+    target_sources(bg-scenario  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bg-scenario.rc)
+  endif()
   set_property(INSTALL "$<TARGET_FILE_NAME:bg-scenario>"
   PROPERTY CPACK_START_MENU_SHORTCUTS "BioGears Scenario Driver"
 )
