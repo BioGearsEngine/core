@@ -33,15 +33,15 @@ Physiological models have been used for healthcare simulation for many years but
 
 # Statement of need 
 
-The fields of Medical simulation and computational medicine are growing in application diversity and complexity [@sweet2017crest]. Simple CPR manikins are now being replaced with complex robotic systems that can simulate breathing and react to the performance of the trainee. As these systems use-cases grow, there is a requirement that they be supplemented with physiology modeling. BioGears fills this need by providing a free computational framework to use as a backbone to many of these robotic training manikins and may support other computational medicine research applications. The BioGears project aims to better democratize the construction of high-fidelity medical training by providing a sophisticated, complex physiology engine to developers that is easy to integrate and free to use.
+The fields of Medical simulation and computational medicine are growing in application diversity and complexity [@sweet2017crest]. Simple CPR manikins are now being replaced with complex robotic systems that can simulate breathing and react to the performance of the trainee. As these systems use cases grow, there is a requirement that they be supplemented with physiology modeling. BioGears fills this need by providing a free computational framework to use as a backbone to many of these robotic training manikins and may support other computational medicine research applications. The BioGears project aims to better democratize the construction of high-fidelity medical training by providing a sophisticated, complex physiology engine to developers that is easy to integrate and free to use.
 
 BioGears uses a lumped circuit model to describe the circulatory and respiratory systems. This approximation of the simulated cardiopulmonary system has been studied in the past and shown to accurately represent the hemodynamics of the arterial system by using resistance and compliance elements [@otto1899grundform; @westerhof2009arterial]. This approximation creates a system that can be solved for rapidly, decreasing the simulation run-time and computational requirements. In addition, BioGears implements models of diffusion and substance transport to properly simulate the gas/blood interface in the lungs. To handle more complex models of physiology, such as pharmacological models, BioGears constructs a set of hierarchal compartments built on top of the circuit analogs. Top-most compartments represents the system level data, such as the liver, with sub-compartments representing more granular biology of the patient such as the nephron, extravascular tissue, and even intracellular spaces. A generic data request framework, leveraging XML, is used to access various substance, fluid, thermal, and gas information for a specific compartment of the body. 
 
-The BioGears engine has been used in numerous applications that include computational medical research. This work has extended the engine to support models of sepsis [@mcdaniel2019whole], burn [@mcdaniel2019full], surgical planning  [@potter2017physiology], and pharmacological kinetics and clearance [@mcdaniel2019open]. For each application, the patient physiology and traditional interventions used to treat each injury are validated. Full documentation and validation for every action available to the user is provided through our [website](https://www.biogearsengine.com/).
+The BioGears engine has been used in numerous computational medical research applications including: models of sepsis [@mcdaniel2019whole], burn [@mcdaniel2019full], surgical planning [@potter2017physiology], and pharmacological kinetics and clearance [@mcdaniel2019open]. For each application, the patient physiology and traditional interventions used to treat each injury are validated. Full documentation and validation for every action available to the user is provided through our [website](https://www.biogearsengine.com/).
 
-New dugs can be implemented in BioGears by filling in the appropriate physiochemical properties in the provided eXtensible Markup Language (XML) format. The BioGears engine handles computation of clearance, tissue diffusion, and patient responses based on this file and does not require additional C++ programming by the user. The software architecture of BioGears is implemented in three layers of abstraction to encourage easy integration and provide a robust application programming interface (API), see \autoref{fig:example}
+New drugs can be implemented in BioGears by filling in the appropriate physiochemical properties in the provided eXtensible Markup Language (XML) format. The BioGears engine handles computation of clearance, tissue diffusion, and patient responses based on this file and does not require additional C++ programming by the user. The software architecture of BioGears is implemented in three layers of abstraction to encourage easy integration and provide a robust application programming interface (API), see \autoref{fig:example}.
 
-![Overview of the BioGears engine software structure. The SE layer provides a generic physiology API and may be leveraged for other physiology engine implementations and or integration with other computational biology applications.\label{fig:example}](Fig1.png)
+![Overview of the BioGears engine software structure. The SE layer provides a generic physiology API and may be leveraged for other physiology engine implementations and/or integration with other computational biology applications.\label{fig:example}](Fig1.png)
 
 
 
@@ -60,7 +60,7 @@ Constructing a pointer to an engine, loading a patient, creating data requests (
 
 ```C++
 using namespace biogears;
-void HowToFaciculation()
+void HowToFasciculation()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = 
@@ -98,7 +98,7 @@ void HowToFaciculation()
 The Biogears project includes 36 complete howto's which demonstrate various uses of the API and a versatile command line utility for running XML defined Scenarios using the CDM. Additional support can be found by going to <https://biogearsengine.com/>, <https://www.biogears.dev/>, or by joining our IRC [slack channel](https://github.com/BioGearsEngine/core/wiki/Getting-access-to-our-IRC-development-channel).
 
 
-# Acknowledgements
+# Acknowledgments
 
 This work was made possible by cooperative agreements that were awarded and administered by the US Army Medical Research & Materiel Command (USAMRMC) and the Telemedicine and Advanced Technology Research Center (TATRC), at Fort Detrick, MD, under Contract Number W81XWH‐13‐2‐0068 and W81XWH-17-C-0172. We'd like to acknowledge the support and guidance of Hugh Connacher, Harvey Magee, and Geoff Miller.
 
