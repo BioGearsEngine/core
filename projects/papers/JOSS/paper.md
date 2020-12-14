@@ -19,7 +19,7 @@ authors:
   - name: Lucas Marin
     affiliation: 1
 affiliations:
- - name: Applied Research Associates, Inc. Advanced Modeling and Simulation Systems Directorate
+ - name: Applied Research Associates, Inc. Advanced Modeling and Simulation Systems Directorate, Raleigh, NC, USA
    index: 1
 date: 27 August 2020
 bibliography: paper.bib
