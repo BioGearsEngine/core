@@ -34,6 +34,34 @@ Disclaimer:
 %BioGears has @ref published papers and abstracts on several systems and clinical scenarios. 
 
 - - -
+## What's new in ver 7.3.2 and 7.3.1 (Dec 10, 2020)
+- **ver 1.0 release of the UI**
+- **ver 1.0 release of BioGears Lite**
+- Plasma Lyte compound substance added 
+- **New drug administration route** nasal administration 
+- **New drug** nasal naloxone
+- CPACK installer functionality added 
+- Moved data tracking to advance model time method
+- Added sequential organ failure (SOFA score) as an assessment
+- Changed website documentation tools to python, removed Java requirements 
+- Minor drug model updates for LD50 and PD modifiers
+- Implemented improved command line interface, named bg-cli to support better threading and logging
+- Integrated inflammation model into hemorrhage model to make it more physiologically accurate
+- Implemented acute respiratory distress model 
+- Implemented a model of sleep and the metabolic consequences of sleep
+- added new psychomotor vigilance test (PVT) patient assessment
+- Removed legacy functionality of the GI system 
+- Implemented Richmond agitation sedation (RASS) scale as a patient request 
+  - Is a function of the pharmacokinetics of propofol and other anesthesia drugs
+- Implemented a **new exercise model** that supported weighted exercise, cycling, and rowing
+- Updated nervous system model, validated for inflammation and other injury responses
+  - Including localized autoregulation 
+- Implemented a tourniquet action for specific body regions
+  - will perform locally, reducing hemorrhage in downstream vessels
+- Compatibility updates to support Unreal Engine integration 
+- General CMAKE updates to the build system 
+- Minor bug updates and validation changes to models
+- Finished all conformant override parameters (pressure, heart rate, respiration rate, and oxygen saturation)
 
 ## What's new in ver 7.3 (January 30, 2020)
 - Custom Compound Infusion 
