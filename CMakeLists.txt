@@ -1,5 +1,5 @@
 ###############################################################################
-# CMAKE DEFINITIONS AND setTINGS
+# CMAKE DEFINITIONS AND SETTINGS
 #
 # Requires the following environmental variables:
 #
@@ -36,7 +36,7 @@ find_package(Git QUIET)
 configure_version_information(GIT_SUCESS MAJOR 7 MINOR 3 PATCH 2 TWEAK "Source" )
 if(GIT_FOUND AND NOT GIT_SUCESS)
   # Update these variables to ensure out of source build have some sane tags
-  message(WARNING "GIT_EXECUTABLE was not found or no corrisponding GIT_REPO is avaliable." 
+  message(WARNING "GIT_EXECUTABLE was not found or no corresponding GIT_REPO is available." 
   "If you are building with in a git repo you should ensure GIT is in your current path." 
 	"If you are building outside of a repo ignore this message.")
 endif()
