@@ -84,7 +84,7 @@ Then multiply by our timestep to compute total mass of product moved into the in
 Where *&Delta;P* is in units of mass and is computed each time step given the current substrate concentration on the stomach. Rate constants were taken from experimental papers, often times from in vitro studies, and can be seen in table 1. Even though these may not be perfect numbers, the mouth to cecum transit times line up well with experimental data.
 
 <br><center>
-<i>Table 1. Michaelis–Menten kinetic parameters for nutrient digestion model. Parameters for this model are taken from @cite botham1997lipolysis @cite gangadharan2009biochemical @cite ohta1986purification</i>
+<i>Table 1. Michaelis-Menten kinetic parameters for nutrient digestion model. Parameters for this model are taken from @cite botham1997lipolysis @cite gangadharan2009biochemical @cite ohta1986purification</i>
 </center>
 
 | Nutrient | Enzyme | Product | Vmax (mg/min) | Km (mg/mL) | 

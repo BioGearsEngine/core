@@ -43,7 +43,7 @@ The Post Process step moves everything calculated in Process from the next time 
 
 Features, Capabilities, and Dependencies
 ----------------------------------------
-Pharmacokinetic models quantify the time evolution of drug distribution from the administration of a dose. Pharmacodynamic models, on the other hand, characterize the events from the arrival of the drug at the site of action to the “onset, magnitude and duration of the biological response" @cite rosenbaum2012basic. The %BioGears %Drug system contains both pharmacokinetic and pharmacodynamic models.
+Pharmacokinetic models quantify the time evolution of drug distribution from the administration of a dose. Pharmacodynamic models, on the other hand, characterize the events from the arrival of the drug at the site of action to the "onset, magnitude and duration of the biological response" @cite rosenbaum2012basic. The %BioGears %Drug system contains both pharmacokinetic and pharmacodynamic models.
 
 @anchor pharmacokinetics
 ### Pharmacokinetics
@@ -439,7 +439,7 @@ The PK model was validated by comparing the plasma concentration calculated by t
 
 <img src="./plots/Drugs/TranexamicAcid.jpg" width="1100">
 <center>
-<i>Figure 17. The TXA pharmacokinetics were initially calculated using physiochemical propertioes found in literature with slight adjustments made over time to allow for BioGears plasma concentration to account for proper clearance @cite nilsson1980clinical</i>
+<i>Figure 17. The TXA pharmacokinetics were initially calculated using physiochemical properties found in literature with slight adjustments made over time to allow for BioGears plasma concentration to account for proper clearance @cite nilsson1980clinical</i>
 </center><br>
 
 <img src="./plots/Drugs/Vasopressin.jpg" width="1100">
