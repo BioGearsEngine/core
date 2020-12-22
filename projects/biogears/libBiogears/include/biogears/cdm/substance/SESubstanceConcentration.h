@@ -31,6 +31,8 @@ public:
   SESubstanceConcentration(SESubstance& substance, double concentration, const MassPerVolumeUnit& unit);
   virtual ~SESubstanceConcentration();
 
+  static std::unique_ptr<SESubstanceConcentration> make_unique(SESubstance& substance, double concentration = 0.0f, const MassPerVolumeUnit& unit = MassPerVolumeUnit::mg_Per_L);
+
   virtual void Clear();
 
   virtual bool Load(const CDM::SubstanceConcentrationData& in);

@@ -61,6 +61,8 @@ public:
   const std::vector<SESubstanceConcentration> GetComponents() const;
   SESubstanceConcentration& GetComponent(SESubstance& substance);
   const SESubstanceConcentration GetComponent(SESubstance& substance) const;
+  void AddComponent(SESubstance& substance);
+  void AddComponent(SESubstance const & substance);
   void RemoveComponent(const SESubstance& substance);
 
 protected:

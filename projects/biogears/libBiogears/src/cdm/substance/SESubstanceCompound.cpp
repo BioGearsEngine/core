@@ -214,6 +214,16 @@ const SESubstanceConcentration SESubstanceCompound::GetComponent(SESubstance& su
   throw CommonDataModelException();
 }
 //-----------------------------------------------------------------------------
+void SESubstanceCompound::AddComponent(SESubstance& substance)
+{
+   m_Components.emplace_back(substance);
+}
+//-----------------------------------------------------------------------------
+void SESubstanceCompound::AddComponent(SESubstance const& substance)
+{
+  m_Components.emplace_back(substance);
+}
+//-----------------------------------------------------------------------------
 void SESubstanceCompound::RemoveComponent(const SESubstance& substance)
 {
   unsigned int i = 0;

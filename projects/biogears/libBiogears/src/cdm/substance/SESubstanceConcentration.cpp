@@ -37,6 +37,11 @@ SESubstanceConcentration::SESubstanceConcentration(SESubstance& substance, doubl
 {
 }
 //-------------------------------------------------------------------------------
+std::unique_ptr<SESubstanceConcentration> SESubstanceConcentration::make_unique(SESubstance& name, double concentration, const MassPerVolumeUnit& unit)
+{
+  return std::make_unique<SESubstanceConcentration>(name, concentration, unit);
+}
+//-------------------------------------------------------------------------------
 SESubstanceConcentration::~SESubstanceConcentration()
 {
   Clear();
