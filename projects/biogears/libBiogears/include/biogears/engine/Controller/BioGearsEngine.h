@@ -65,7 +65,24 @@ public:
   virtual double GetTimeStep(const TimeUnit& unit) override;
   virtual double GetSimulationTime(const TimeUnit& unit) override;
 
+  //!-------------------------------------------------------------------------------------------------
+  //! \brief
+  //! Advances the model time by one deltaT.
+  //!
+  //! BioGears updates at the rate set in BioGearsConfiguration.xml which defaults to 0.02 or 50hz
+  //! This is the resolution of the underlying simulation. That is to say you can not record
+  //!	physiology metrics at simulation times that would fall between a deltaT. Additionally advancing time by
+  //! non multiples of deltaT can result in the true simtime being out of sync with the expected time sync
+  //!-------------------------------------------------------------------------------------------------
   virtual void AdvanceModelTime(bool appendDataTrack = false) override;
+
+  //!-------------------------------------------------------------------------------------------------
+  //! \brief
+  //! Subdivdes the time provided by deltaT and calls AdvanceModelTime() for each subdivision
+  //!
+  //! See AdvanceModelTime(bool) for additional details.
+  //!
+  //!-------------------------------------------------------------------------------------------------
   virtual void AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s, bool appendDataTrack = false) override; //NOTE: Maynot compile on clang will evaluate
   virtual bool ProcessAction(const SEAction& action) override;
 
