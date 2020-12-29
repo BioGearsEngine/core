@@ -221,7 +221,7 @@ void SESubstanceCompound::AddComponent(SESubstance& substance)
 //-----------------------------------------------------------------------------
 void SESubstanceCompound::AddComponent(SESubstance const& substance)
 {
-  m_Components.emplace_back(substance);
+  m_Components.emplace_back( const_cast<SESubstance&>(substance));
 }
 //-----------------------------------------------------------------------------
 void SESubstanceCompound::RemoveComponent(const SESubstance& substance)
