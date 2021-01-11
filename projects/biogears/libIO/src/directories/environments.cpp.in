@@ -1,0 +1,61 @@
+#include <biogears/filesystem/path.h>
+#include <biogears/io/directories/environments.h>
+
+#include <biogears/io/data/config/DynamicStabilization.xml.hxx>
+#include <biogears/io/data/config/TimedStabilization.xml.hxx>
+//...
+
+namespace biogears {
+namespace io {
+  bool generate_environments_directory(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  bool does_embeded_environments_file_exists(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* find_environments_file(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_environments_file_hash(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* const* list_environments_files()
+  {
+  }
+  //-----------------------------------------------------------------------------
+  size_t environments_file_count()
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_embeded_environments_file(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+
+  //biogears::filesystem::path overloads
+  bool generate_environments_directory(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  bool does_embeded_environments_file_exists(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  biogears::filesystem::path find_environments_file(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_environments_file_hash(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_embeded_environments_file(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+}
+}

@@ -1,0 +1,62 @@
+#include <biogears/filesystem/path.h>
+#include <biogears/io/directories/states.h>
+
+#include <biogears/io/data/config/DynamicStabilization.xml.hxx>
+#include <biogears/io/data/config/TimedStabilization.xml.hxx>
+
+
+
+namespace biogears {
+namespace io {
+  bool generate_states_directory(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  bool does_embeded_states_file_exists(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* find_states_file(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_states_file_hash(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* const* list_states_files()
+  {
+  }
+  //-----------------------------------------------------------------------------
+  size_t states_file_count()
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_embeded_states_file(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+
+  //biogears::filesystem::path overloads
+  bool generate_states_directory(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  bool does_embeded_states_file_exists(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  biogears::filesystem::path find_states_file(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_states_file_hash(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_embeded_states_file(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+}
+}

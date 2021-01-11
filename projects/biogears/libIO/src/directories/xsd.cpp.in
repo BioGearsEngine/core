@@ -1,0 +1,61 @@
+#include <biogears/filesystem/path.h>
+#include <biogears/io/directories/xsd.h>
+
+#include <biogears/io/xsd/BioGearsDataModel.xsd.hxx>
+#include <biogears/io/xsd/CommonDataModel.xsd.hxx>
+//...
+
+namespace biogears {
+namespace io {
+  bool generate_xsd_directory(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  bool does_embeded_xsd_file_exists(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* find_xsd_file(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_xsd_file_hash(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* const* list_xsd_files()
+  {
+  }
+  //-----------------------------------------------------------------------------
+  size_t xsd_file_count()
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_embeded_xsd_file(const char* file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+
+  //biogears::filesystem::path overloads
+  bool generate_xsd_directory(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  bool does_embeded_xsd_file_exists(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  biogears::filesystem::path find_xsd_file(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_xsd_file_hash(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_embeded_xsd_file(biogears::filesystem::path file)
+  {
+  }
+  //-----------------------------------------------------------------------------
+}
+}

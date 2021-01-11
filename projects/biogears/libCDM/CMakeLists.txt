@@ -4,9 +4,9 @@
 message(STATUS "\t adding libbiogears_cdm")
 
 #Biogears CDM
-add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
-add_source_files(CDM_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears REGEX "*.hxx" SOURCE_GROUP  "Headers\\Public\\")
-add_source_files(CDM_GEN_SRCS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears REGEX "*.cxx" SOURCE_GROUP "Sources\\")
+add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/biogears/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
+add_source_files(CDM_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.hxx" SOURCE_GROUP  "Headers\\Public\\")
+add_source_files(CDM_GEN_SRCS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.cxx" SOURCE_GROUP "Sources\\")
 
 set(LIB${PREFIX}_CDM_HEADERS ${CDM_PUBLIC_HDRS} ${CDM_GEN_HDRS})
 set(LIB${PREFIX}_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
@@ -18,7 +18,7 @@ set(LIB${PREFIX}_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
   ###############################################################################
   # libBiogears_cdm
   ###############################################################################
-  add_library(lib${PROJECT_NAME}_cdm    SHARED ${LIB${PREFIX}_CDM_SOURCES} ${LIB${PREFIX}_CMD_HEADERS})
+  add_library(lib${PROJECT_NAME}_cdm    SHARED ${LIB${PREFIX}_CDM_SOURCES} ${LIB${PREFIX}_CDM_HEADERS})
   add_library(Biogears::lib${PROJECT_NAME}_cdm ALIAS lib${PROJECT_NAME}_cdm)
   set_target_properties(lib${PROJECT_NAME}_cdm
     PROPERTIES
