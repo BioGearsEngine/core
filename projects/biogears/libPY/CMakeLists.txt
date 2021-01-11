@@ -4,10 +4,10 @@
 message(STATUS "\t adding libbiogears_py")
 
 #Biogears CDM
-add_source_files(PY_PUBLIC_HDRS ${BIOGEARS_SOURCE_DIR}/libPY/src "*.h"  "Headers\\Public\\")
-add_source_files(PY_PUBLIC_HDRS ${BIOGEARS_SOURCE_DIR}/libPY/src "*.cpp"  "Sources\\")
-set(LIB${PREFIX}_PY_HEADERS ${PY_PUBLIC_HDRS} ${PY_GEN_HDRS})
-set(LIB${PREFIX}_PY_SOURCES ${PY_PUBLIC_SRCS} ${PY_GEN_SRCS})
+add_source_files(PY_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libPy/src REGEX "*.h" SOURCE_GROUP "Headers\\Private\\")
+add_source_files(PY_SRCS LOCATION ${BIOGEARS_SOURCE_DIR}/libPy/src REGEX "*.cpp" SOURCE_GROUP "Sources\\")
+set(LIB${PREFIX}_PY_HEADERS ${PY_HDRS})
+set(LIB${PREFIX}_PY_SOURCES ${PY_SRCS})
 
 #Define Logic
 ###############################################################################
@@ -62,8 +62,14 @@ set(LIB${PREFIX}_PY_SOURCES ${PY_PUBLIC_SRCS} ${PY_GEN_SRCS})
     target_link_libraries(lib${PROJECT_NAME}_py  PUBLIC ${${PREFIX}_py_LIBS} )
 
 
-    install(TARGETS lib${PROJECT_NAME}_py EXPORT libBiogears
-           RUNTIME DESTINATION bin
-           LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+   ######################################################################################################
+   # INSTALL LOGIC
+   ######################################################################################################
+   install(TARGETS lib${PROJECT_NAME}_py EXPORT libBiogears
+            RUNTIME DESTINATION bin
+            LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
            ARCHIVE DESTINATION lib
-        )
+   )
+  if(WIN32)
+    install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}_py> DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
+  endif()

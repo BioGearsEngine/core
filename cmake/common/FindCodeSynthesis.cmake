@@ -194,9 +194,11 @@ function(REGISTER_XSD_FILE _filepath )
   add_custom_target( xsd_gen${_safe_unique_name} DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.cxx
                      COMMENT "Checking if re-generation is required" )
   
+get_filename_component(SOLUTION_FOLDER "${_component}${_schema}" DIRECTORY )
+
   set_target_properties(xsd_gen${_safe_unique_name}
                         PROPERTIES
-                        FOLDER "Code Generators"
+                        FOLDER "Code Generators/${SOLUTION_FOLDER}"
                         PROJECT_LABEL "XSD_Gen_${_safe_unique_name}")
 
   list(APPEND ${_l_TARGETS} xsd_gen${_safe_unique_name})

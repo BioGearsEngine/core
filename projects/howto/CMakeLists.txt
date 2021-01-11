@@ -28,9 +28,9 @@ function(add_howto name)
     ###############################################################################
     message(STATUS "Configuring ${EXAMPLE_NAME}")
     
-    add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src/ "*.h"   "Headers\\Private\\")
-    add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src "*.cpp" "Sources\\")
-    add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/include "*.h"  "Headers\\Public\\")
+    add_source_files(HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src/ REGEX "*.h" SOURCE_GROUP "Headers\\Private\\")
+    add_source_files(SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src REGEX "*.cpp" SOURCE_GROUP "Sources\\")
+    add_source_files(PUBLIC_HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/${name}/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
     
     set(${EXAMPLE_NAME}_HEADERS ${HDRS} ${PUBLIC_HDRS} )
     set(${EXAMPLE_NAME}_SOURCES ${SRCS} ) 
@@ -106,9 +106,9 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
   find_package(Threads REQUIRED)
 
 
-  add_source_files(COMMON_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.h"   "Headers\\Private\\")
-  add_source_files(COMMON_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.cpp" "Sources\\")
-  add_source_files(COMMON_PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/common-source/include "*.h"  "Headers\\Public\\")
+  add_source_files(COMMON_HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/common-source REGEX "*.h"   SOURCE_GROUP "Headers\\Private\\")
+  add_source_files(COMMON_SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/common-source REGEX "*.cpp" SOURCE_GROUP "Sources\\")
+  add_source_files(COMMON_PUBLIC_HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/common-source/include REGEX  "*.h" SOURCE_GROUP  "Headers\\Public\\")
   add_library(howto-common OBJECT ${COMMON_HDRS} ${COMMON_SRCS} ${COMMON_PUBLIC_HDRS} )
   add_library(howto::common ALIAS howto-common)
    

@@ -80,20 +80,37 @@ function(CHILDLIST result curdir)
 endfunction()
 
 
-function(add_source_files var prefix regex source_group)
-#    message(STATUS "add_source_files( ${var} \"${prefix}\" ${regex} \"${source_group}\")")
-    file(GLOB TEMP "${prefix}/${regex}")
-
-    source_group("${source_group}" FILES ${TEMP})
-
-    CHILDLIST( result ${prefix})
+function(add_source_files var)
+  set(__prefix "_l")
+  set(__options "DEBUG")
+  set(__one_value "LOCATION;SOURCE_GROUP")
+  set(__multi_value "REGEX")
+  cmake_parse_arguments( "_l" "DEBUG" "LOCATION;SOURCE_GROUP" "REGEX" ${ARGN})
+    if(_l_DEBUG)
+      message(STATUS "add_source_files( ${var} LOCATION \"${_l_LOCATION}\" REGEX \"${_l_REGEX}\" SOURCE_GROUP \"${_l_SOURCE_GROUP}\")")
+    endif()
+    foreach(regex IN LISTS _l_REGEX)
+      file(GLOB TEMP "${_l_LOCATION}/${regex}")
+      list(APPEND __new_entries ${TEMP})
+    endforeach()
+    if(_l_SOURCE_GROUP)
+      source_group("${_l_SOURCE_GROUP}" FILES ${__new_entries})
+    endif()
+    if(_l_DEBUG)
+      message(STATUS "CHILDLIST( result ${_l_LOCATION})")
+    endif()
+    CHILDLIST( result ${_l_LOCATION})
     
+
     foreach( dir IN LISTS result)
-#     message(STATUS "add_source_files( ${var} \"${prefix}/${dir}\" ${regex} \"${source_group}\\${dir}\")")
-      add_source_files( ${var} "${prefix}/${dir}" ${regex} "${source_group}${dir}\\")
+      if( _l_DEBUG)
+        add_source_files( ${var} LOCATION "${_l_LOCATION}/${dir}" REGEX ${_l_REGEX} SOURCE_GROUP "${_l_SOURCE_GROUP}\\${dir}" DEBUG)
+      else()
+        add_source_files( ${var} LOCATION "${_l_LOCATION}/${dir}" REGEX ${_l_REGEX} SOURCE_GROUP "${_l_SOURCE_GROUP}\\${dir}")
+      endif()
     endforeach()
 
-    set(${var} ${${var}} ${TEMP} PARENT_SCOPE)
+    set(${var} ${${var}} ${__new_entries} PARENT_SCOPE)
 endfunction()
 
 

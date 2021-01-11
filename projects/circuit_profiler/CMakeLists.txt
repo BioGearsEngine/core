@@ -41,10 +41,10 @@ endif()
 ###############################################################################
 message(STATUS "Configuring ${PROJECT_NAME}") #${PROJECT_NAME} = circuit_test
 
-add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.h"   "Headers\\Private\\")
-add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.hpp"   "Headers\\Private\\")
-add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.cpp" "Sources\\")
-add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.c" "Sources\\")
+add_source_files(HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.h"   SOURCE_GROUP "Headers\\Private\\")
+add_source_files(HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.hpp" SOURCE_GROUP "Headers\\Private\\")
+add_source_files(SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.cpp" SOURCE_GROUP "Sources\\")
+add_source_files(SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.c"   SOURCE_GROUP "Sources\\")
 
 set(${PREFIX}_HEADERS ${HDRS} ${PUBLIC_HDRS} ${GEN_HDRS}) #${PREFIX} = bio, ${HDRS} defined above, ${PUBLIC_HDRS} & ${GEN_HDRS} are empty I think
 set(${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS})

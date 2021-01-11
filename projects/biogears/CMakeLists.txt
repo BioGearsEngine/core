@@ -6,6 +6,8 @@
 # Options
 ###############################################################################
 
+option (${ROOT_PROJECT_NAME}_BUILD_IO_LIBRARY "When enabled an extra IO Library will be built allowing BioGears to fall back to embeded versions of resource files " ON)
+
 option (${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when a ReadOnly SEScalar is Modified." ON)
 option (${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when an  SEScalar is NaNExceptions." ON)
 option (${ROOT_PROJECT_NAME}_USE_OVERRIDE_CONTROL       "When enabled Biogears will control the ranges of override"  OFF)
@@ -20,7 +22,7 @@ set(PREFIX bio)
 
 set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/include" )
 set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src" )
-set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" )
+set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/" )
 set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 
 ###############################################################################
@@ -46,9 +48,10 @@ file(GLOB_RECURSE cdm_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/cdm/*.xsd")
 set (BIOGEARS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set (BIOGEARS_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
+
 REGISTER_XSD_DIR(  "${PROJECT_SOURCE_DIR}/share/xsd/"
                     CONFIG "${PROJECT_SOURCE_DIR}/share/xsd/BioGearsDataModel.cfg"
-                    PROJECT "biogears" COMPONENT "schema" RESOURCE_FOLDER "resources/schema"
+                    PROJECT "generated/biogears" COMPONENT "schema" RESOURCE_FOLDER "resources/schema"
                     TARGETS XSD_TARGETS VERBOSITY 1)
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src/version.cpp.in  ${CMAKE_CURRENT_BINARY_DIR}/libBiogears/src/version.cpp NEWLINE_STYLE LF)
@@ -69,6 +72,12 @@ if(${PREFIX}_BUILD_STATIC)
   ###############################################################################
   add_subdirectory(libBiogears)
 else()
+  ###############################################################################
+  # libBiogears_io
+  ###############################################################################
+  if(${ROOT_PROJECT_NAME}_BUILD_IO_LIBRARY)
+    add_subdirectory(libIO)
+  endif()
   ###############################################################################
   # libBiogears_cdm
   ###############################################################################
