@@ -1,11 +1,15 @@
 #include <biogears/io/utils.h>
 
+#include <fstream>
+#include <string>
+
 #include <biogears/filesystem/path.h>
 
 namespace biogears {
   namespace io {
     std::string g_working_dir = "";
   
+    //---------------------------------------------------------------------------
     std::string GetCurrentWorkingDirectory()
     {
       return g_working_dir;

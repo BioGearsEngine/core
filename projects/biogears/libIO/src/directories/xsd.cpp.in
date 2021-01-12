@@ -5,9 +5,7 @@
 
 #include <biogears/filesystem/path.h>
 
-#include <biogears/io/xsd/BioGearsDataModel.xsd.hxx>
-#include <biogears/io/xsd/CommonDataModel.xsd.hxx>
-//...
+@XSD_INCLUDE_LIST@
 
 namespace biogears {
 namespace io {
@@ -16,33 +14,19 @@ namespace io {
    biogears::filesystem::path working_dir { root };
    std::ofstream output;
 
-   char const* path = nullptr;
-   size_t path_length = 0;
+   bool result = true;
 
-   char const* text = nullptr;
-   size_t text_length = 0;
+   auto write_file = [&](char const* path, char const* content, size_t content_size) {
+      biogears::filesystem::create_directories((working_dir / path).parent_path());
+      output.open((working_dir / path).string(), std::fstream::out);
+      if (!output.is_open()) {
+        return false;
+      }
+      output.write(content, content_size);
+      return true;
+   };
 
-   path = get_BioGearsDataModel_path();
-   path_length = BioGearsDataModel_path_size();
-   text = get_BioGearsDataModel_text();
-   text_length = BioGearsDataModel_text_size();
-
-   biogears::filesystem::create_directories((working_dir / path).parent_path());
-   output.open((working_dir / path).string(), std::fstream::out);
-   if (!output.is_open()) { return false; }
-   output.write(text, text_length);
-   
-
-   path = get_CommonDataModel_path();
-   path_length = CommonDataModel_path_size();
-   text = get_CommonDataModel_text();
-   text_length = CommonDataModel_text_size();
-
-   biogears::filesystem::create_directories((working_dir / path).parent_path());
-   output.open((working_dir / path).string(), std::fstream::out);
-   if (!output.is_open()) { return false; }
-   output.write(text, text_length);
-   
+@GENERATE_XSD_DIRECTORY@
 
    return true;
 
@@ -50,8 +34,7 @@ namespace io {
   //-----------------------------------------------------------------------------
   bool does_embeded_xsd_file_exists(const char* file)
   {
-    return (std::string("xsd/BioGearsDataModel.xsd") == get_BioGearsDataModel_path())
-      || (std::string("xsd/CommonDataModel.xsd") == get_CommonDataModel_path());
+    return @GENERATE_DOES_EMBEDED_FILE_EXISTS@false;
 
   }
   //-----------------------------------------------------------------------------

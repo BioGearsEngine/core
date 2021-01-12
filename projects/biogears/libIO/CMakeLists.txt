@@ -69,9 +69,13 @@ message(STATUS "            : xsd/")
 FILE(GLOB_RECURSE XSD_FILES              RELATIVE "${PROJECT_SOURCE_DIR}/share/" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd" )
 foreach( src IN LISTS XSD_FILES) 
   get_filename_component(src_dir ${src} DIRECTORY)
+  get_filename_component(src_dir_wle ${src} NAME_WLE  )
   generate_hex_header( NAMESPACE biogears io INPUT ${PROJECT_SOURCE_DIR}/share/${src} OUTPUT ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}
                        FOLDER "Code Generators/IO/${src_dir}"  PATH ${src}
   )
+  string(APPEND XSD_INCLUDE_LIST "#include <biogears/io/${src}.hxx>\n")
+  string(APPEND GENERATE_XSD_DIRECTORY  "result &= write_file(get_${src_dir_wle}_path(), get_${src_dir_wle}_text(), ${src_dir_wle}_text_size());\n")
+  string(APPEND GENERATE_DOES_EMBEDED_FILE_EXISTS "(std::string(\"${src}\") == get_${src_dir_wle}_path())\n    ||  ")
 endforeach()
 
 message(STATUS "            : data/config")
