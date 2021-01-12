@@ -55,21 +55,21 @@ namespace biogears {
         return result;
     }
     //---------------------------------------------------------------------------
-    bool  IOManager::does_embeded_file_exists(const char* file){
+    bool  IOManager::does_embedded_file_exist(const char* file){
 
       
       biogears::filesystem::path runtime_directory { file };
 
 
-      return does_embeded_xsd_file_exists(runtime_directory / "xsd")
-      || does_embeded_config_file_exists(runtime_directory / "config")
-      || does_embeded_ecg_file_exists(runtime_directory / "directory")
-      || does_embeded_environments_file_exists(runtime_directory / "environments")
-      || does_embeded_nutrition_file_exists(runtime_directory / "nutrition")
-      || does_embeded_override_file_exists(runtime_directory / "override")
-      || does_embeded_patients_file_exists(runtime_directory / "patients")
-      || does_embeded_states_file_exists(runtime_directory / "states")
-      || does_embeded_substances_file_exists(runtime_directory / "substances");
+      return does_embedded_xsd_file_exist(runtime_directory / "xsd")
+      || does_embedded_config_file_exist(runtime_directory / "config")
+      || does_embedded_ecg_file_exist(runtime_directory / "directory")
+      || does_embedded_environments_file_exist(runtime_directory / "environments")
+      || does_embedded_nutrition_file_exist(runtime_directory / "nutrition")
+      || does_embedded_override_file_exist(runtime_directory / "override")
+      || does_embedded_patients_file_exist(runtime_directory / "patients")
+      || does_embedded_states_file_exist(runtime_directory / "states")
+      || does_embedded_substances_file_exist(runtime_directory / "substances");
 
     }
     //---------------------------------------------------------------------------
@@ -152,41 +152,41 @@ namespace biogears {
       }
     }
     //---------------------------------------------------------------------------
-    char const *  IOManager::get_embeded_resource_file( const char* file){
+    char const *  IOManager::get_embedded_resource_file( const char* file){
       char const* result = nullptr;
-      if (result = get_embeded_xsd_file(file)) {
+      if (result = get_embedded_xsd_file(file)) {
         return result;
       }
 
-      if (result = get_embeded_config_file(file)) {
+      if (result = get_embedded_config_file(file)) {
         return result;
       }
 
-      if (result = get_embeded_ecg_file(file)) {
+      if (result = get_embedded_ecg_file(file)) {
         return result;
       }
 
-      if (result = get_embeded_environments_file(file)) {
+      if (result = get_embedded_environments_file(file)) {
         return result;
       }
 
-      if (result = get_embeded_nutrition_file(file)) {
+      if (result = get_embedded_nutrition_file(file)) {
         return result;
       }
 
-      if (result = get_embeded_override_file(file)) {
+      if (result = get_embedded_override_file(file)) {
         return result;
       }
 
-      if (result = get_embeded_patients_file(file)) {
+      if (result = get_embedded_patients_file(file)) {
         return result;
       }
 
-      if (result = get_embeded_states_file(file)) {
+      if (result = get_embedded_states_file(file)) {
         return result;
       }
 
-      if (result = get_embeded_substances_file(file)) {
+      if (result = get_embedded_substances_file(file)) {
         return result;
       }
     }

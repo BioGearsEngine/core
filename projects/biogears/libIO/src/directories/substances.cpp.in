@@ -9,7 +9,7 @@ namespace io {
     return false;
   }
   //-----------------------------------------------------------------------------
-  bool does_embeded_substances_file_exists(const char* file)
+  bool does_embedded_substances_file_exist(const char* file)
   {
      return false;
   }
@@ -34,7 +34,7 @@ namespace io {
      return 0;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embeded_substances_file(const char* file)
+  char const* get_embedded_substances_file(const char* file)
   {
     return nullptr;
   }
@@ -46,7 +46,7 @@ namespace io {
     return false;
   }
   //-----------------------------------------------------------------------------
-  bool does_embeded_substances_file_exists(biogears::filesystem::path file)
+  bool does_embedded_substances_file_exist(biogears::filesystem::path file)
   {
     return false;
   }
@@ -56,7 +56,7 @@ namespace io {
     return nullptr;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embeded_substances_file(biogears::filesystem::path file)
+  char const* get_embedded_substances_file(biogears::filesystem::path file)
   {
     return nullptr;
   }

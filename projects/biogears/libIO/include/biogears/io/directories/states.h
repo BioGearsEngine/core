@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 namespace io {
   BIOGEARS_IO_API bool generate_states_directory(const char* file);
-  BIOGEARS_IO_API bool does_embeded_states_file_exists(const char* file);
+  BIOGEARS_IO_API bool does_embedded_states_file_exist(const char* file);
 
   BIOGEARS_IO_API char const* find_states_file(const char* file);
   BIOGEARS_IO_API char const* get_states_file_hash(const char* file);
@@ -33,14 +33,14 @@ namespace io {
   BIOGEARS_IO_API char const* const* list_states_files();
   BIOGEARS_IO_API size_t states_file_count();
 
-  BIOGEARS_IO_API char const* get_embeded_states_file(const char* file);
+  BIOGEARS_IO_API char const* get_embedded_states_file(const char* file);
 
   //biogears::filesystem::path overloads
   BIOGEARS_IO_API bool generate_states_directory(biogears::filesystem::path file);
-  BIOGEARS_IO_API bool does_embeded_states_file_exists(biogears::filesystem::path file);
+  BIOGEARS_IO_API bool does_embedded_states_file_exist(biogears::filesystem::path file);
 
   BIOGEARS_IO_API char const* get_states_file_hash(biogears::filesystem::path file);
 
-  BIOGEARS_IO_API char const* get_embeded_states_file(biogears::filesystem::path file);
+  BIOGEARS_IO_API char const* get_embedded_states_file(biogears::filesystem::path file);
 }
 }

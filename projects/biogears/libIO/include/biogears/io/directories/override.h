@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 namespace io {
   BIOGEARS_IO_API bool generate_override_directory(const char* file);
-  BIOGEARS_IO_API bool does_embeded_override_file_exists(const char* file);
+  BIOGEARS_IO_API bool does_embedded_override_file_exist(const char* file);
 
   BIOGEARS_IO_API char const* find_override_file(const char* file);
   BIOGEARS_IO_API char const* get_override_file_hash(const char* file);
@@ -33,13 +33,13 @@ namespace io {
   BIOGEARS_IO_API char const* const* list_override_files();
   BIOGEARS_IO_API size_t override_file_count();
 
-  BIOGEARS_IO_API char const* get_embeded_override_file(const char* file);
+  BIOGEARS_IO_API char const* get_embedded_override_file(const char* file);
 
   //biogears::filesystem::path overloads
   BIOGEARS_IO_API bool generate_override_directory(biogears::filesystem::path file);
-  BIOGEARS_IO_API bool does_embeded_override_file_exists(biogears::filesystem::path file);
+  BIOGEARS_IO_API bool does_embedded_override_file_exist(biogears::filesystem::path file);
 
   BIOGEARS_IO_API char const* get_override_file_hash(biogears::filesystem::path file);
-  BIOGEARS_IO_API char const* get_embeded_override_file(biogears::filesystem::path file);
+  BIOGEARS_IO_API char const* get_embedded_override_file(biogears::filesystem::path file);
 }
 }

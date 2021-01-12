@@ -54,10 +54,17 @@ target_compile_options(bg-cli PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE 
 target_include_directories(bg-cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 target_link_libraries(bg-cli  ${${PREFIX}_LIBS}      
+      Biogears::libbiogears_io
       Biogears::libbiogears
       minizip::lib
 )
 
+
+if (${ROOT_PROJECT_NAME}_BUILD_IO_LIBRARY)
+  target_link_libraries(bg-cli
+        Biogears::libbiogears_io
+  )
+endif()
 ###################
 #  SCENARIO DRONE #
 ###################

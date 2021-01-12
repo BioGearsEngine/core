@@ -75,7 +75,7 @@ foreach( src IN LISTS XSD_FILES)
   )
   string(APPEND XSD_INCLUDE_LIST "#include <biogears/io/${src}.hxx>\n")
   string(APPEND GENERATE_XSD_DIRECTORY  "result &= write_file(get_${src_dir_wle}_path(), get_${src_dir_wle}_text(), ${src_dir_wle}_text_size());\n")
-  string(APPEND GENERATE_DOES_EMBEDED_FILE_EXISTS "(std::string(\"${src}\") == get_${src_dir_wle}_path())\n    ||  ")
+  string(APPEND GENERATE_DOES_EMBEDDED_FILE_EXIST "(std::string(\"${src}\") == get_${src_dir_wle}_path())\n    ||  ")
 endforeach()
 
 message(STATUS "            : data/config")

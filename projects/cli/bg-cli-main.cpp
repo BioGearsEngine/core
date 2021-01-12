@@ -36,6 +36,8 @@
 
 #include <fstream>
 #include <iostream>
+#include "biogears/io/directories/config.h"
+#include "biogears/io/io-manager.h"
 
 void print_help()
 {
@@ -54,6 +56,11 @@ void print_help()
   std::cout << std::endl;
   exit(0);
 }
+//bool genRuntime(const char* pathName)
+//{
+//    biogears::io::IOManager iom;
+//    return iom.generate_runtime_directory(pathName);
+//}
 //!
 //! \brief Reads command line argument and executes corresponding operation
 //! \param argc : Number of command line arguments

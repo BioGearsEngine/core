@@ -32,9 +32,9 @@ namespace io {
 
   }
   //-----------------------------------------------------------------------------
-  bool does_embeded_xsd_file_exists(const char* file)
+  bool does_embedded_xsd_file_exist(const char* file)
   {
-    return @GENERATE_DOES_EMBEDED_FILE_EXISTS@false;
+    return @GENERATE_DOES_EMBEDDED_FILE_EXIST@false;
 
   }
   //-----------------------------------------------------------------------------
@@ -58,7 +58,7 @@ namespace io {
     return 0;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embeded_xsd_file(const char* file)
+  char const* get_embedded_xsd_file(const char* file)
   {
     return nullptr;
   }
@@ -70,7 +70,7 @@ namespace io {
     return false;
   }
   //-----------------------------------------------------------------------------
-  bool does_embeded_xsd_file_exists(biogears::filesystem::path file)
+  bool does_embedded_xsd_file_exist(biogears::filesystem::path file)
   {
      return false;
   }
@@ -80,7 +80,7 @@ namespace io {
   return nullptr;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embeded_xsd_file(biogears::filesystem::path file)
+  char const* get_embedded_xsd_file(biogears::filesystem::path file)
   {
     return nullptr;
   }

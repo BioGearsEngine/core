@@ -40,12 +40,12 @@ namespace biogears {
       char* _biogears_schema_root = nullptr;
     public:
       BIOGEARS_IO_API bool generate_runtime_directory(const char* file);
-      BIOGEARS_IO_API bool does_embeded_file_exists(const char* file);
+      BIOGEARS_IO_API bool does_embedded_file_exist(const char* file);
 
       BIOGEARS_IO_API char const* find_resource_file(const char* file);
       BIOGEARS_IO_API char const* get_hash(const char* file);
 
-      BIOGEARS_IO_API char const* get_embeded_resource_file(const char* file);
+      BIOGEARS_IO_API char const* get_embedded_resource_file(const char* file);
     };
   }
 }
