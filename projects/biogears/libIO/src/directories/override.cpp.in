@@ -43,12 +43,12 @@ namespace io {
   //biogears::filesystem::path overloads
   bool generate_override_directory(biogears::filesystem::path file)
   {
-      return nullptr;
+      return false;
   }
   //-----------------------------------------------------------------------------
   bool does_embeded_override_file_exists(biogears::filesystem::path file)
   {
-      return nullptr;
+      return false;
   }
   //-----------------------------------------------------------------------------
   char const* get_override_file_hash(biogears::filesystem::path file)

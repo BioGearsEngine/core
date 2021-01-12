@@ -198,10 +198,11 @@ target_include_directories(lib${PROJECT_NAME}_io
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
             ${BIOGEARS_BINARY_DIR}/generated
             ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}
-    
-    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    INTERFACE $<BUILD_INTERFACE:${BIOGEARS_BINARY_DIR}/generated>
-    INTERFACE $<INSTALL_INTERFACE:include>
+
+    INTERFACE 
+              $<BUILD_INTERFACE:${BIOGEARS_SOURCE_DIR}/libIO/include>
+              $<BUILD_INTERFACE:${BIOGEARS_BINARY_DIR}/generated>
+              $<INSTALL_INTERFACE:include>
 )
 
 set(${PREFIX}_io_LIBS
