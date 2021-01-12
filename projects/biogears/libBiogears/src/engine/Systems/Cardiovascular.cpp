@@ -255,6 +255,14 @@ bool Cardiovascular::Load(const CDM::BioGearsCardiovascularSystemData& in)
   m_RightHeartElastanceMax_mmHg_Per_mL = in.RightHeartElastanceMax_mmHg_Per_mL();
   m_RightHeartElastanceMin_mmHg_Per_mL = in.RightHeartElastanceMin_mmHg_Per_mL();
 
+  //need to initialize these on a state load or there is an nan error that pops up, 
+  ///todo: might want to revisit the override functionality to properly do this
+  m_OverrideLHEMax_Conformant_mmHg = m_LeftHeartElastanceMax_mmHg_Per_mL;
+  m_OverrideRHEMax_Conformant_mmHg = m_RightHeartElastanceMax_mmHg_Per_mL;
+  m_OverrideLHEMin_Conformant_mmHg = m_LeftHeartElastanceMin_mmHg_Per_mL;
+  m_OverrideRHEMin_Conformant_mmHg = m_RightHeartElastanceMin_mmHg_Per_mL;
+
+
   m_CompressionTime_s = in.CompressionTime_s();
   m_CompressionRatio = in.CompressionRatio();
   m_CompressionPeriod_s = in.CompressionPeriod_s();

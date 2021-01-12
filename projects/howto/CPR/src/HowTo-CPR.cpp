@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
 #include <biogears/cdm/patient/actions/SEChestCompressionForce.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include "biogears/cdm/patient/actions/SEChestCompressionForceScale.h"
 
 
 using namespace biogears;
@@ -104,6 +105,9 @@ void HowToCPR()
   // This is where you specify how much force to apply to the chest. We have capped the applicable force at 600 N.
 	double compressionForce_Newtons = 400;
 
+  //set a compression scale
+  double compressionScale = 0.6;
+
   // This is the percent of time per period that the chest will be compressed e.g. if I have a 1 second period
   // (60 beats per minute) the chest will be compressed for 0.3 seconds
 	double percentOn = .3;
@@ -121,6 +125,7 @@ void HowToCPR()
 
 	// Put the patient into cardiac arrest
 	SECardiacArrest c;
+  c.SetActive(true);
 	bg->ProcessAction(c);
 	
   bg->GetLogger()->Info("Giving the patient Cardiac Arrest.");
@@ -143,6 +148,7 @@ void HowToCPR()
 
 	// After patient's heart is not beating, start doing CPR
 	SEChestCompressionForce chestCompression;
+  SEChestCompressionForceScale chestCompressionScale;
 
   // The period is calculated via 1 / compressionRate.  Because the compression rate is given
   // in beats per minute it is divided by 60 to give a period in seconds.
@@ -166,9 +172,13 @@ void HowToCPR()
 	{
 		if (pulseState) // check if the chest is supposed to be compressed. If yes...
 		{
+
+       //set the cpr using a force scale function
+      chestCompressionScale.GetForceScale().SetValue(compressionScale);
+      bg->ProcessAction(chestCompressionScale);
             // This calls the CPR function in the Cardiovascular system.  It sets the chest compression at the specified force.
-			chestCompression.GetForce().SetValue(compressionForce_Newtons, ForceUnit::N);
-			bg->ProcessAction(chestCompression);
+			//chestCompression.GetForce().SetValue(compressionForce_Newtons, ForceUnit::N);
+			//bg->ProcessAction(chestCompression);
 
             // Time is advanced until it is time to remove the compression
 			bg->AdvanceModelTime(timeOn, TimeUnit::s);
@@ -182,8 +192,8 @@ void HowToCPR()
 		else
 		{
             // This removes the chest compression by specifying the applied force as 0 N
-			chestCompression.GetForce().SetValue(0, ForceUnit::N);
-			bg->ProcessAction(chestCompression);
+			//chestCompression.GetForce().SetValue(0, ForceUnit::N);
+			//bg->ProcessAction(chestCompression);
             
             // Time is advanced until it is time to compress the chest again
 			bg->AdvanceModelTime(timeOff, TimeUnit::s);
@@ -197,12 +207,21 @@ void HowToCPR()
 	}
 
 	// Make sure that the chest is no longer being compressed
-	if (chestCompression.GetForce().GetValue(ForceUnit::N) != 0)
-	{
-        // If it is compressed, set force to 0 to turn off
-		chestCompression.GetForce().SetValue(0, ForceUnit::N);
-		bg->ProcessAction(chestCompression);
-	}
+	//if (chestCompression.GetForce().GetValue(ForceUnit::N) != 0)
+	//{
+ //       // If it is compressed, set force to 0 to turn off
+	//	chestCompression.GetForce().SetValue(0, ForceUnit::N);
+	//	bg->ProcessAction(chestCompression);
+	//}
+
+  // Make sure that the chest is no longer being compressed
+  if (chestCompressionScale.GetForceScale().GetValue() != 0)
+  {
+    // If it is compressed, set force to 0 to turn off
+    chestCompressionScale.GetForceScale().SetValue(0);
+    bg->ProcessAction(chestCompressionScale);
+  }
+
 
 	// Do one last output to show status after CPR.
 	bg->GetLogger()->Info("Check on the patient's status after CPR has been performed");

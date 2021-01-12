@@ -128,6 +128,9 @@
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketones" Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="1"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albumin"      Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="8"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albumin"      Name="Clearance-GlomerularFilterability" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albumin"      Name="Clearance-RenalExcretionRate" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albumin"      Name="Clearance-RenalFiltrationRate" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albumin"      Name="Clearance-RenalReabsorptionRate" Precision="4"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Bicarbonate"  Name="Clearance-RenalClearance" Unit="mL/min kg" Precision="5"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Bicarbonate"  Name="Clearance-RenalExcretionRate" Unit="g/day" Precision="3"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Bicarbonate"  Name="Clearance-RenalFiltrationRate" Unit="g/day" Precision="0"/>

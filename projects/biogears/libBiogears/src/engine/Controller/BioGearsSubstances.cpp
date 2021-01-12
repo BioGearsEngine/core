@@ -458,6 +458,8 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   SELiquidSubstanceQuantity* subQ;
   // Initialize Substances throughout the body
   SEScalarMassPerVolume concentration;
+  SEScalarMassPerVolume concentrationIntracellular;
+  SEScalarMassPerVolume concentrationExtracellular;
   SEScalarAmountPerVolume molarity1;
   SEScalarAmountPerVolume molarity2;
 
@@ -481,7 +483,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   concentration.SetValue(4.5, MassPerVolumeUnit::g_Per_dL);
   SetSubstanceConcentration(*m_albumin, vascular, concentration);
   // Set Urine
-  concentration.SetValue(0.155 / 3.0, MassPerVolumeUnit::mg_Per_dL);
+  concentration.SetValue(0.0, MassPerVolumeUnit::mg_Per_dL);
   subQ = leftBowmansCapsules->GetSubstanceQuantity(*m_albumin);
   subQ->GetConcentration().Set(concentration);
   subQ->Balance(BalanceLiquidBy::Concentration);
@@ -494,8 +496,11 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   rightUreter->GetSubstanceQuantity(*m_albumin)->SetToZero();
   bladder->GetSubstanceQuantity(*m_albumin)->SetToZero();
   // Tissue
+  concentrationIntracellular.SetValue(0.0, MassPerVolumeUnit::mg_Per_dL);
+  concentrationExtracellular.SetValue(1.0, MassPerVolumeUnit::mg_Per_dL);
   molarity1.SetValue(20.0 / (m_albumin->GetMolarMass(MassPerAmountUnit::g_Per_mmol)), AmountPerVolumeUnit::mmol_Per_L);
   molarity2.SetValue(0.0, AmountPerVolumeUnit::mmol_Per_L);
+ //SetSubstanceConcentration(*m_albumin, tissue, concentrationExtracellular, concentrationIntracellular);
   SetSubstanceMolarity(*m_albumin, tissue, molarity1, molarity2);
   //Lymph - should be same as extracellular
   concentration.SetValue(2.0, MassPerVolumeUnit::g_Per_dL);

@@ -194,7 +194,7 @@ void BloodChemistry::SetUp()
   //Substance
   SESubstance* albumin = &m_data.GetSubstances().GetAlbumin();
   SESubstance* aminoAcids = &m_data.GetSubstances().GetAminoAcids();
-  SESubstance* bicarbonate = &m_data.GetSubstances().GetBicarbonate();
+  SESubstance* bicarbonate = &m_data.GetSubstances().GetHCO3();
   SESubstance* calcium = &m_data.GetSubstances().GetCalcium();
   SESubstance* chloride = &m_data.GetSubstances().GetChloride();
   SESubstance* creatinine = &m_data.GetSubstances().GetCreatinine();
@@ -346,7 +346,7 @@ void BloodChemistry::Process()
   double albuminConcentration_ug_Per_mL = m_venaCavaAlbumin->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
   m_data.GetSubstances().GetAlbumin().GetBloodConcentration().Set(m_venaCavaAlbumin->GetConcentration());
   m_data.GetSubstances().GetAminoAcids().GetBloodConcentration().Set(m_venaCavaAminoAcids->GetConcentration());
-  m_data.GetSubstances().GetBicarbonate().GetBloodConcentration().Set(m_venaCavaBicarbonate->GetConcentration());
+  m_data.GetSubstances().GetHCO3().GetBloodConcentration().Set(m_venaCavaBicarbonate->GetConcentration());
   GetBloodUreaNitrogenConcentration().SetValue(m_venaCavaUrea->GetConcentration(MassPerVolumeUnit::ug_Per_mL) / 2.14, MassPerVolumeUnit::ug_Per_mL);
   m_data.GetSubstances().GetCalcium().GetBloodConcentration().Set(m_venaCavaCalcium->GetConcentration());
   m_data.GetSubstances().GetChloride().GetBloodConcentration().Set(m_venaCavaChloride->GetConcentration());
@@ -692,26 +692,32 @@ void BloodChemistry::CheckBloodSubstanceLevels()
 //--------------------------------------------------------------------------------------------------
 bool BloodChemistry::CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabolicPanel& cmp)
 {
+  //for now the units on this are going to be hardcoded to be consistent with our validation data 
+  /// \todo: update this to take in generic units, then allow the user to configure units on data call in the API or scenario files
   cmp.Reset();
-  cmp.GetAlbumin().Set(m_data.GetSubstances().GetAlbumin().GetBloodConcentration());
+  double Alb_g_Per_dL = m_data.GetSubstances().GetAlbumin().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL);
+  cmp.GetAlbumin().SetValue(Alb_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
   //cmp.GetALP().SetValue();
   //cmp.GetALT().SetValue();
   //cmp.GetAST().SetValue();
-  cmp.GetBUN().Set(GetBloodUreaNitrogenConcentration());
+  double BUN_mg_Per_dL = GetBloodUreaNitrogenConcentration(MassPerVolumeUnit::mg_Per_dL);
+  cmp.GetBUN().SetValue(BUN_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
   cmp.GetCalcium().Set(m_data.GetSubstances().GetCalcium().GetBloodConcentration());
   double CL_mmol_Per_L = m_data.GetSubstances().GetChloride().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetChloride().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetChloride().SetValue(CL_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   // CO2 is predominantly Bicarbonate, so going to put that in this slot
-  double HCO3_mmol_Per_L = m_data.GetSubstances().GetBicarbonate().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetHCO3().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
+  double HCO3_mmol_Per_L = m_data.GetSubstances().GetHCO3().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetHCO3().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetCO2().SetValue(HCO3_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   cmp.GetCreatinine().Set(m_data.GetSubstances().GetCreatinine().GetBloodConcentration());
-  cmp.GetGlucose().Set(m_data.GetSubstances().GetGlucose().GetBloodConcentration());
+  double Glucose_mg_Per_dL = m_data.GetSubstances().GetGlucose().GetBloodConcentration(MassPerVolumeUnit::mg_Per_dL);
+  cmp.GetGlucose().SetValue(Glucose_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
   double K_mmol_Per_L = m_data.GetSubstances().GetPotassium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetPotassium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetPotassium().SetValue(K_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   double Sodium_mmol_Per_L = m_data.GetSubstances().GetSodium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetSodium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetSodium().SetValue(Sodium_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   //cmp.GetTotalBelirubin().SetValue();
-  cmp.GetTotalProtein().Set(GetTotalProteinConcentration());
+  double TotalProtein_g_Per_dL = GetTotalProteinConcentration(MassPerVolumeUnit::g_Per_dL);
+  cmp.GetTotalProtein().SetValue(TotalProtein_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
   return true;
 }
 

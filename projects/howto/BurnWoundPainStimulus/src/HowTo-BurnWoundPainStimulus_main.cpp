@@ -5,5 +5,8 @@
 
 int main( int argc, char* argv[] )
 {
-  HowToBurnWoundPainStimulus();
+  //HowToBurnWoundPainStimulus();
+  std::string log = "./HowToBurnWound.log";
+  BurnThread burn(log, 25.0);
+  burn.FluidLoading();
 }

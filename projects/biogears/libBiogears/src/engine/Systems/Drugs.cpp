@@ -77,7 +77,6 @@ void Drugs::Clear()
   m_IVToVenaCava = nullptr;
   m_Sarin = nullptr;
   m_Pralidoxime = nullptr;
-  m_totalAdministered_uL = 0.0;
   DELETE_MAP_SECOND(m_BolusAdministrations);
 }
 
@@ -105,7 +104,6 @@ void Drugs::Initialize()
   m_data.GetBloodChemistry().GetHemoglobinLostToUrine().SetValue(0.0, MassUnit::g); //Need to initialize here since Drugs processed before BloodChemistry
   m_data.GetBloodChemistry().GetRhTransfusionReactionVolume().SetValue(0.0, VolumeUnit::uL);
 
-  m_totalAdministered_uL = 0.0;
   m_SarinRbcAcetylcholinesteraseComplex_nM = 0.0;
   m_AgedRbcAcetylcholinesterase_nM = 0.0;
 }
@@ -208,7 +206,6 @@ void Drugs::SetUp()
   //Need to set up pointers for Sarin and Pralidoxime to handle nerve agent events since they use a different method to calculate effects
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
   m_Pralidoxime = m_data.GetSubstances().GetSubstance("Pralidoxime");
-  m_totalAdministered_uL = 0.0;
   DELETE_MAP_SECOND(m_BolusAdministrations);
 }
 
@@ -647,7 +644,6 @@ void Drugs::AdministerSubstanceCompoundInfusion()
     totalRate_mL_Per_s += rate_mL_Per_s;
     volumeRemaining_mL = infusion->GetBagVolume().GetValue(VolumeUnit::mL);
     volumeToAdminister_mL = rate_mL_Per_s * m_dt_s;
-    m_totalAdministered_uL = m_totalAdministered_uL + (volumeToAdminister_mL * 1000.0);
 
     if (volumeRemaining_mL < volumeToAdminister_mL) {
       volumeToAdminister_mL = volumeRemaining_mL;

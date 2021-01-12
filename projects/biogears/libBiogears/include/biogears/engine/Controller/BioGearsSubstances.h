@@ -78,7 +78,6 @@ public:
 
   inline SESubstance& GetAlbumin() { return *m_albumin; }
   inline SESubstance& GetAminoAcids() { return *m_aminoAcids; }
-  inline SESubstance& GetBicarbonate() { return *m_HCO3; }
   inline SESubstance& GetCalcium() { return *m_calcium; }
   inline SESubstance& GetChloride() { return *m_chloride; }
   inline SESubstance& GetCreatinine() { return *m_creatinine; }

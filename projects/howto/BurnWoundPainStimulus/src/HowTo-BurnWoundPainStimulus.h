@@ -28,17 +28,28 @@ class SESubstanceCompoundInfusion;
 
 class BurnThread {
 public:
-  BurnThread(const std::string& logFile, double &tbsa);
+  BurnThread(const std::string logFile, double tbsa);
   virtual ~BurnThread();
 
   void AdministerKetamine(double &bolus);
   void SetRingersInfusionRate(double& volume, double& rate);
+  void SetAlbuminInfusionRate(double& volume, double& rate);
   void Status();
+  void FluidLoading();
+
+  enum fluidType
+  {
+    ringers, ///< Label vessels with radius size
+    albumin ///< Label vessels by region (serviced by the anterior, middle, or posterior cerebral artery)
+  };
 
   biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
 
   protected:
   void AdvanceTime();
+  void AdvanceTimeFluids();
+  void AdvanceTimeFluidsAlbumin();
+
 
   std::thread m_burnThread;
   std::mutex m_mutex;
@@ -49,6 +60,9 @@ public:
   biogears::SEBurnWound* m_burnWound;
   biogears::SESubstanceBolus* m_ketamineBolus;
   biogears::SESubstanceCompoundInfusion* m_ringers;
+  biogears::SESubstanceCompoundInfusion* m_albumex;
   double m_ivBagVolume_mL;
+  double m_TotalVolume_mL = 0.0;
+
 
 };

@@ -33,10 +33,10 @@ void SESubstanceOralDose::Clear()
   m_AdminRoute = (CDM::enumOralAdministration::value)-1;
   SAFE_DELETE(m_Dose);
 }
-
+//The oral model requires physiochemical properties
 bool SESubstanceOralDose::IsValid() const
 {
-  return SESubstanceAdministration::IsValid() && HasDose() && HasAdminRoute();
+  return SESubstanceAdministration::IsValid() && HasDose() && HasAdminRoute() && m_Substance.GetPK()->HasPhysicochemicals();;
 }
 
 bool SESubstanceOralDose::IsActive() const

@@ -86,7 +86,7 @@ PlateletCount,ct/uL,"[150000,400000]",ross1988stability,,CompleteBloodCount
 RedBloodCellCount,ct/uL,"5200000,
  5400000","guyton2006medical,
 valentin2002icrp",,CompleteBloodCount
-WhiteBloodCellCount,ct/uL,"7,000",guyton2006medical   ,,CompleteBloodCount
+WhiteBloodCellCount,ct/uL,"7000",guyton2006medical   ,,CompleteBloodCount
 Albumin,g/dL,"[4,5]",valtin1995renal,,CompleteMetabolicPanel
 BUN,mg/dL,"[9.0,18.0],
 [6.0,20.0]","valtin1995renal,

@@ -68,9 +68,15 @@ zip -->
 
 Citing BioGears 
 ------------
-If you'd like to use BioGears in your research, we ask that you cite the following publication
+If you'd like to use BioGears in your research, we ask that you cite the following publication:
 
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02645/status.svg)](https://doi.org/10.21105/joss.02645)
+
+We have made available to the medical simulation community a large set of burn injury physiology data, hosted on Zenodo. We have listed this dataset under the creative commons 4.0 license so that it be used for any reason you may deem fit. We only ask that any results properly cite the above article and the database DOI: 
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4606078.svg)](https://doi.org/10.5281/zenodo.4606078)
+
+
 
 ## What's new in ver 7.3.2 and 7.3.1 (Dec 10, 2020)
 - **ver 1.0 release of the UI**

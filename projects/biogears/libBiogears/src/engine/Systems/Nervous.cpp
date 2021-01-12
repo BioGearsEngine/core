@@ -749,6 +749,9 @@ void Nervous::LocalAutoregulation()
   const double kCO2 = 20.0;
   const double bCO2 = 10.0;
 
+  double largePialResistanceMultiplier;
+  double smallPialResistanceMultiplier;
+
   //Determine cerebral blood flow (filtered for noise)
   double filterConstant = m_FeedbackActive ? 0.5 : 0.02; //Lower during initial stabilization so that our baseline we derive from this output is not noisy
   const double cerebralBloodFlow_mL_Per_s = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralVeins2ToNeckVeins)->GetFlow(VolumePerTimeUnit::mL_Per_s);
@@ -809,8 +812,27 @@ void Nervous::LocalAutoregulation()
     resistanceWidthSmall = maxResistanceMultiplierSmall - 1.0;
     resistanceSlopeSmall = (maxResistanceMultiplierSmall - 1.0) / 4.0;
   }
-  const double largePialResistanceMultiplier = ((1.0 + resistanceWidthLarge) + (1.0 - resistanceWidthLarge) * std::exp(-combinedLargePialRegulator / resistanceSlopeLarge)) / (1.0 + std::exp(-combinedLargePialRegulator / resistanceSlopeLarge));
-  const double smallPialResistanceMultiplier = ((1.0 + resistanceWidthSmall) + (1.0 - resistanceWidthSmall) * std::exp(-combinedSmallPialRegulator / resistanceSlopeSmall)) / (1.0 + std::exp(-combinedSmallPialRegulator / resistanceSlopeSmall));
+
+  double large_ex = std::exp(-combinedLargePialRegulator / resistanceSlopeLarge);
+  double small_ex = std::exp(-combinedSmallPialRegulator / resistanceSlopeSmall);
+
+
+  //check the exponentials, if they are too big set them to a large number
+  if(!std::isinf(large_ex)) {
+    largePialResistanceMultiplier = ((1.0 + resistanceWidthLarge) + (1.0 - resistanceWidthLarge) * large_ex) / (1.0 + large_ex);
+  }
+  else {
+    large_ex = 1000000.0;
+    largePialResistanceMultiplier = ((1.0 + resistanceWidthLarge) + (1.0 - resistanceWidthLarge) * large_ex) / (1.0 + large_ex);
+  }
+
+  if(!std::isinf(small_ex)) {
+    smallPialResistanceMultiplier = ((1.0 + resistanceWidthSmall) + (1.0 - resistanceWidthSmall) * small_ex) / (1.0 + small_ex);
+  }
+  else {
+    small_ex = 1000000.0;
+    smallPialResistanceMultiplier = ((1.0 + resistanceWidthSmall) + (1.0 - resistanceWidthSmall) * small_ex) / (1.0 + small_ex);
+  }
 
   if (!m_FeedbackActive) {
     m_CerebralBloodFlowBaseline_mL_Per_s = m_CerebralBloodFlowInput_mL_Per_s;
