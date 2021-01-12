@@ -41,9 +41,7 @@ namespace io {
   BIOGEARS_IO_API bool generate_config_directory(biogears::filesystem::path file);
   BIOGEARS_IO_API bool does_embeded_config_file_exists(biogears::filesystem::path file);
 
-  BIOGEARS_IO_API biogears::filesystem::path find_config_file(biogears::filesystem::path file);
   BIOGEARS_IO_API char const* get_config_file_hash(biogears::filesystem::path file);
-
   BIOGEARS_IO_API char const* get_embeded_config_file(biogears::filesystem::path file);
 }
 }

@@ -156,8 +156,6 @@ std::string ResolvePath(const std::string& path)
     given_path;
     return filesystem::normalize(origin/cwd/given_path).string();
   }
-  //TODO -- IS this right? If the user wants a relative library CWD is that realtive to the actual CWD
-  //TODO -- Document this behavior for sure.
 }
 //!
 //!  \param const char* path Path to be resolved

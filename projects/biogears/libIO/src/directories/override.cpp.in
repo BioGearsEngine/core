@@ -1,61 +1,64 @@
-#include <biogears/filesystem/path.h>
 #include <biogears/io/directories/override.h>
 
-#include <biogears/io/data/config/DynamicStabilization.xml.hxx>
-#include <biogears/io/data/config/TimedStabilization.xml.hxx>
-
-
+#include <biogears/filesystem/path.h>
 
 namespace biogears {
 namespace io {
   bool generate_override_directory(const char* file)
   {
+      return false;
   }
   //-----------------------------------------------------------------------------
   bool does_embeded_override_file_exists(const char* file)
   {
+      return false;
   }
   //-----------------------------------------------------------------------------
   char const* find_override_file(const char* file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   char const* get_override_file_hash(const char* file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   char const* const* list_override_files()
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   size_t override_file_count()
   {
+    return 0;
   }
   //-----------------------------------------------------------------------------
   char const* get_embeded_override_file(const char* file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
 
   //biogears::filesystem::path overloads
   bool generate_override_directory(biogears::filesystem::path file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   bool does_embeded_override_file_exists(biogears::filesystem::path file)
   {
-  }
-  //-----------------------------------------------------------------------------
-  biogears::filesystem::path find_override_file(biogears::filesystem::path file)
-  {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   char const* get_override_file_hash(biogears::filesystem::path file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   char const* get_embeded_override_file(biogears::filesystem::path file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
 }

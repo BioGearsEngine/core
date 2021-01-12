@@ -35,8 +35,9 @@ namespace biogears {
       bool _error_if_not_empty = false;
       bool _transaction_based_writes = false;
 
-      char* _staging_ground = nullptr;
-
+      char* _staging_ground       = nullptr;
+      char* _biogears_data_root   = nullptr;
+      char* _biogears_schema_root = nullptr;
     public:
       BIOGEARS_IO_API bool generate_runtime_directory(const char* file);
       BIOGEARS_IO_API bool does_embeded_file_exists(const char* file);

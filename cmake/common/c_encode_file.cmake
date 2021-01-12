@@ -32,10 +32,11 @@
       foreach (_ns IN LISTS _NAMESPACE)
          file(APPEND ${header_file} "namespace ${_ns} { \n")
       endforeach()
+
       file (APPEND ${header_file} 
-                   "  unsigned char const*  get_${safe_content_name}_path();\n"
+                   "  char const*  get_${safe_content_name}_path();\n"
                    "  std::size_t  ${safe_content_name}_path_size();\n"
-                   "  unsigned char const*  get_${safe_content_name}_text();\n"
+                   "  char const*  get_${safe_content_name}_text();\n"
                    "  std::size_t  ${safe_content_name}_text_size();\n"
       )
       foreach (_ns IN LISTS _NAMESPACE)
@@ -54,24 +55,24 @@
          file(APPEND ${source_file} "namespace ${_ns} { \n")
       endforeach()
       file (APPEND ${source_file} 
-                   "  unsigned char const ${safe_content_name}_path[]={\n"
+                   "  char const ${safe_content_name}_path[]={\n"
                    "        ${path_c_tuples}"
                    "\n  };\n"
                    "  constexpr std::size_t  size_of_${safe_content_name}_path=sizeof(${safe_content_name}_path);\n"
                    "\n\n"
-                   "  unsigned char const*  get_${safe_content_name}_path(){ \n"
+                   " char const*  get_${safe_content_name}_path(){ \n"
                    "    return ${safe_content_name}_path;\n"
                    "  }\n\n"
                    "  std::size_t ${safe_content_name}_path_size() {\n"
                    "    return size_of_${safe_content_name}_path;\n"
                    "  }\n\n"
                    "\n\n"
-                   "  unsigned char const ${safe_content_name}_text[]={\n"
+                   "  char const ${safe_content_name}_text[]={\n"
                    "        ${text_c_tuples}"
                     "\n  };\n"
                    "  constexpr std::size_t  size_of_${safe_content_name}=sizeof(${safe_content_name}_text);\n"
                    "\n\n"
-                   "  unsigned char const*  get_${safe_content_name}_text(){ \n"
+                   " char const*  get_${safe_content_name}_text(){ \n"
                    "    return ${safe_content_name}_text;\n"
                    "  }\n\n"
                    "  std::size_t ${safe_content_name}_text_size() {\n"

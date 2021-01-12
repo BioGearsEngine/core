@@ -9,52 +9,59 @@ namespace biogears {
 namespace io {
   bool generate_nutrition_directory(const char* file)
   {
+      return false;
   }
   //-----------------------------------------------------------------------------
   bool does_embeded_nutrition_file_exists(const char* file)
   {
+      return false;
   }
   //-----------------------------------------------------------------------------
   char const* find_nutrition_file(const char* file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   char const* get_nutrition_file_hash(const char* file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   char const* const* list_nutrition_files()
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   size_t nutrition_file_count()
   {
+      return 0;
   }
   //-----------------------------------------------------------------------------
   char const* get_embeded_nutrition_file(const char* file)
   {
+     return nullptr;
   }
   //-----------------------------------------------------------------------------
 
   //biogears::filesystem::path overloads
   bool generate_nutrition_directory(biogears::filesystem::path file)
   {
+      return false;
   }
   //-----------------------------------------------------------------------------
   bool does_embeded_nutrition_file_exists(biogears::filesystem::path file)
   {
-  }
-  //-----------------------------------------------------------------------------
-  biogears::filesystem::path find_nutrition_file(biogears::filesystem::path file)
-  {
+      return false;
   }
   //-----------------------------------------------------------------------------
   char const* get_nutrition_file_hash(biogears::filesystem::path file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   char const* get_embeded_nutrition_file(biogears::filesystem::path file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
 }

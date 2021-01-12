@@ -1,5 +1,9 @@
-#include <biogears/filesystem/path.h>
 #include <biogears/io/directories/xsd.h>
+
+#include <string>
+#include <fstream>
+
+#include <biogears/filesystem/path.h>
 
 #include <biogears/io/xsd/BioGearsDataModel.xsd.hxx>
 #include <biogears/io/xsd/CommonDataModel.xsd.hxx>
@@ -7,54 +11,95 @@
 
 namespace biogears {
 namespace io {
-  bool generate_xsd_directory(const char* file)
+  bool generate_xsd_directory(const char* root)
   {
+   biogears::filesystem::path working_dir { root };
+   std::ofstream output;
+
+   char const* path = nullptr;
+   size_t path_length = 0;
+
+   char const* text = nullptr;
+   size_t text_length = 0;
+
+   path = get_BioGearsDataModel_path();
+   path_length = BioGearsDataModel_path_size();
+   text = get_BioGearsDataModel_text();
+   text_length = BioGearsDataModel_text_size();
+
+   biogears::filesystem::create_directories((working_dir / path).parent_path());
+   output.open((working_dir / path).string(), std::fstream::out);
+   if (!output.is_open()) { return false; }
+   output.write(text, text_length);
+   
+
+   path = get_CommonDataModel_path();
+   path_length = CommonDataModel_path_size();
+   text = get_CommonDataModel_text();
+   text_length = CommonDataModel_text_size();
+
+   biogears::filesystem::create_directories((working_dir / path).parent_path());
+   output.open((working_dir / path).string(), std::fstream::out);
+   if (!output.is_open()) { return false; }
+   output.write(text, text_length);
+   
+
+   return true;
+
   }
   //-----------------------------------------------------------------------------
   bool does_embeded_xsd_file_exists(const char* file)
   {
+    return (std::string("xsd/BioGearsDataModel.xsd") == get_BioGearsDataModel_path())
+      || (std::string("xsd/CommonDataModel.xsd") == get_CommonDataModel_path());
+
   }
   //-----------------------------------------------------------------------------
-  char const* find_xsd_file(const char* file)
-  {
+  char const* find_xsd_file(const char* file, const char* root)
+  { 
+    return "";
   }
   //-----------------------------------------------------------------------------
   char const* get_xsd_file_hash(const char* file)
   {
+     return "";
   }
   //-----------------------------------------------------------------------------
   char const* const* list_xsd_files()
   {
+    return nullptr;
   }
   //-----------------------------------------------------------------------------
   size_t xsd_file_count()
   {
+    return 0;
   }
   //-----------------------------------------------------------------------------
   char const* get_embeded_xsd_file(const char* file)
   {
+    return nullptr;
   }
   //-----------------------------------------------------------------------------
 
   //biogears::filesystem::path overloads
   bool generate_xsd_directory(biogears::filesystem::path file)
   {
+    return false;
   }
   //-----------------------------------------------------------------------------
   bool does_embeded_xsd_file_exists(biogears::filesystem::path file)
   {
-  }
-  //-----------------------------------------------------------------------------
-  biogears::filesystem::path find_xsd_file(biogears::filesystem::path file)
-  {
+     return false;
   }
   //-----------------------------------------------------------------------------
   char const* get_xsd_file_hash(biogears::filesystem::path file)
   {
+  return nullptr;
   }
   //-----------------------------------------------------------------------------
   char const* get_embeded_xsd_file(biogears::filesystem::path file)
   {
+    return nullptr;
   }
   //-----------------------------------------------------------------------------
 }

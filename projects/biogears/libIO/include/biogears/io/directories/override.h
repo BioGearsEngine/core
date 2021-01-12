@@ -39,9 +39,7 @@ namespace io {
   BIOGEARS_IO_API bool generate_override_directory(biogears::filesystem::path file);
   BIOGEARS_IO_API bool does_embeded_override_file_exists(biogears::filesystem::path file);
 
-  BIOGEARS_IO_API biogears::filesystem::path find_override_file(biogears::filesystem::path file);
   BIOGEARS_IO_API char const* get_override_file_hash(biogears::filesystem::path file);
-
   BIOGEARS_IO_API char const* get_embeded_override_file(biogears::filesystem::path file);
 }
 }

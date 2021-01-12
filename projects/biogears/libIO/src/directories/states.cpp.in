@@ -1,61 +1,64 @@
-#include <biogears/filesystem/path.h>
 #include <biogears/io/directories/states.h>
 
-#include <biogears/io/data/config/DynamicStabilization.xml.hxx>
-#include <biogears/io/data/config/TimedStabilization.xml.hxx>
-
-
+#include <biogears/filesystem/path.h>
 
 namespace biogears {
 namespace io {
   bool generate_states_directory(const char* file)
   {
+      return false;
   }
   //-----------------------------------------------------------------------------
   bool does_embeded_states_file_exists(const char* file)
   {
+      return false;
   }
   //-----------------------------------------------------------------------------
   char const* find_states_file(const char* file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   char const* get_states_file_hash(const char* file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   char const* const* list_states_files()
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   size_t states_file_count()
   {
+      return 0;
   }
   //-----------------------------------------------------------------------------
   char const* get_embeded_states_file(const char* file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
 
   //biogears::filesystem::path overloads
   bool generate_states_directory(biogears::filesystem::path file)
   {
+      return false;
   }
   //-----------------------------------------------------------------------------
   bool does_embeded_states_file_exists(biogears::filesystem::path file)
   {
-  }
-  //-----------------------------------------------------------------------------
-  biogears::filesystem::path find_states_file(biogears::filesystem::path file)
-  {
+      return false;
   }
   //-----------------------------------------------------------------------------
   char const* get_states_file_hash(biogears::filesystem::path file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
   char const* get_embeded_states_file(biogears::filesystem::path file)
   {
+      return nullptr;
   }
   //-----------------------------------------------------------------------------
 }

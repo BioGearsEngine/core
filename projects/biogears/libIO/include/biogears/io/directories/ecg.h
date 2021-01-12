@@ -38,9 +38,7 @@ namespace io {
   BIOGEARS_IO_API bool generate_ecg_directory(biogears::filesystem::path file);
   BIOGEARS_IO_API bool does_embeded_ecg_file_exists(biogears::filesystem::path file);
 
-  BIOGEARS_IO_API biogears::filesystem::path find_ecg_file(biogears::filesystem::path file);
   BIOGEARS_IO_API char const* get_ecg_file_hash(biogears::filesystem::path file);
-
   BIOGEARS_IO_API char const* get_embeded_ecg_file(biogears::filesystem::path file);
 }
 }

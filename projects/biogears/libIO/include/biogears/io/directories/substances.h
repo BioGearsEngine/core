@@ -39,7 +39,6 @@ namespace io {
   BIOGEARS_IO_API bool generate_substances_directory(biogears::filesystem::path file);
   BIOGEARS_IO_API bool does_embeded_substances_file_exists(biogears::filesystem::path file);
 
-  BIOGEARS_IO_API biogears::filesystem::path find_substances_file(biogears::filesystem::path file);
   BIOGEARS_IO_API char const* get_substances_file_hash(biogears::filesystem::path file);
 
   BIOGEARS_IO_API char const* get_embeded_substances_file(biogears::filesystem::path file);
