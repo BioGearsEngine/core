@@ -1,10 +1,6 @@
 #include <biogears/filesystem/path.h>
 #include <biogears/io/directories/nutrition.h>
 
-#include <biogears/io/data/config/DynamicStabilization.xml.hxx>
-#include <biogears/io/data/config/TimedStabilization.xml.hxx>
-
-
 namespace biogears {
 namespace io {
   bool generate_nutrition_directory(const char* file)
