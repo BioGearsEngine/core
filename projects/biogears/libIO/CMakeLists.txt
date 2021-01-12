@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.18.0)
 message(STATUS "  Configuring lib${PROJECT_NAME}_io")
 ###############################################################################
 #Source files

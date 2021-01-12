@@ -1,4 +1,5 @@
-  function(generate_hex_header)
+cmake_minimum_required(VERSION 3.18.0)  
+function(generate_hex_header)
     set(options )
     set(oneValueArgs INPUT OUTPUT PATH)
     set(multiValueArgs NAMESPACE)
