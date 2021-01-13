@@ -16,7 +16,7 @@ namespace biogears {
     BIOGEARS_IO_API bool  generate_xsd_directory(const char* file);
     BIOGEARS_IO_API bool does_embedded_xsd_file_exist(const char* file);
     
-    BIOGEARS_IO_API  char const *  find_xsd_file(const char* file, const char* root = nullptr);
+    BIOGEARS_IO_API  size_t find_xsd_file(const char* file, const char* root, char* buffer, size_t buffer_length);
     BIOGEARS_IO_API  char const *  get_xsd_file_hash (const char* file);
  
     BIOGEARS_IO_API char const * const *  list_xsd_files();

@@ -27,7 +27,7 @@ namespace io {
   BIOGEARS_IO_API bool generate_environments_directory(const char* file);
   BIOGEARS_IO_API bool does_embedded_environments_file_exist(const char* file);
 
-  BIOGEARS_IO_API char const* find_environments_file(const char* file);
+  BIOGEARS_IO_API  size_t find_environment_file(const char* file, const char* root, char* buffer, size_t buffer_length);
   BIOGEARS_IO_API char const* get_environments_file_hash(const char* file);
 
   BIOGEARS_IO_API char const* const* list_environments_files();

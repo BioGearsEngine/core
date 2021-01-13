@@ -14,9 +14,9 @@ namespace io {
       return false;
   }
   //-----------------------------------------------------------------------------
-  char const* find_patients_file(const char* file)
+  size_t find_patients_file(const char* file, const char* root, char* buffer, size_t buffer_length)
   {
-      return nullptr;
+      return 0;
   }
   //-----------------------------------------------------------------------------
   char const* get_patients_file_hash(const char* file)

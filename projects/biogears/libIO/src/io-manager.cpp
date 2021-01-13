@@ -68,44 +68,45 @@ namespace biogears {
 
     }
     //---------------------------------------------------------------------------
-    char const *   IOManager::find_resource_file(const char* file){
+    size_t  IOManager::find_resource_file(char const* file, char * buffer, size_t buffer_size) {
 
-      char const* result = nullptr;
-      if (result = find_xsd_file(file)) {
-        return result;
+      size_t bytes_written = 0;
+      if ( bytes_written = find_xsd_file(file, _biogears_schema_root, buffer,buffer_size) ){
+        return bytes_written;
       }
      
-      if (result = find_config_file(file)) {
-        return result;
+      if ( bytes_written = find_config_file(file, _biogears_data_root, buffer,buffer_size) ) {
+        return bytes_written;
       }
 
-      if (result = find_ecg_file(file)) {
-        return result;
+      if (bytes_written = find_ecg_file(file,_biogears_data_root,buffer,buffer_size) ) {
+        return bytes_written;
       }
 
-      if (result = find_environments_file(file)) {
-        return result;
+      if (bytes_written = find_environment_file(file,_biogears_data_root,buffer,buffer_size) ) {
+        return bytes_written;
       }
 
-      if (result = find_nutrition_file(file)) {
-        return result;
+      if (bytes_written = find_nutrition_file(file,_biogears_data_root,buffer,buffer_size) ) {
+        return bytes_written;
       }
 
-      if (result = find_override_file(file)) {
-        return result;
+      if (bytes_written = find_override_file(file,_biogears_data_root,buffer,buffer_size) ) {
+        return bytes_written;
       }
 
-      if (result = find_patients_file(file)) {
-        return result;
+      if (bytes_written = find_patients_file(file,_biogears_data_root,buffer,buffer_size) ) {
+        return bytes_written;
       }
 
-      if (result = find_states_file(file)) {
-        return result;
+      if (bytes_written = find_states_file(file,_biogears_data_root,buffer,buffer_size) ) {
+        return bytes_written;
       }
 
-      if (result = find_substances_file(file)) {
-        return result;
+      if (bytes_written = find_substances_file(file,_biogears_data_root,buffer,buffer_size) ) {
+        return bytes_written;
       }
+      return 0;
     }
     //---------------------------------------------------------------------------
     char const *   IOManager::get_hash (const char* file){
@@ -145,6 +146,8 @@ namespace biogears {
       if (result = get_substances_file_hash(file)) {
         return result;
       }
+
+      return nullptr;
     }
     //---------------------------------------------------------------------------
     char const *  IOManager::get_embedded_resource_file( const char* file){
@@ -184,6 +187,7 @@ namespace biogears {
       if (result = get_embedded_substances_file(file)) {
         return result;
       }
+      return nullptr;
     }
 
   }

@@ -14,9 +14,9 @@ namespace io {
       return false;
   }
   //-----------------------------------------------------------------------------
-  char const* find_ecg_file(const char* file)
+  size_t find_ecg_file(const char* file, const char* root, char* buffer, size_t buffer_length)
   {
-      return nullptr;
+      return 0;
   }
   //-----------------------------------------------------------------------------
   char const* get_ecg_file_hash(const char* file)

@@ -26,7 +26,7 @@ namespace io {
   BIOGEARS_IO_API bool generate_ecg_directory(const char* file);
   BIOGEARS_IO_API bool does_embedded_ecg_file_exist(const char* file);
 
-  BIOGEARS_IO_API char const* find_ecg_file(const char* file);
+  BIOGEARS_IO_API  size_t find_ecg_file(const char* file, const char* root, char* buffer, size_t buffer_length);
   BIOGEARS_IO_API char const* get_ecg_file_hash(const char* file);
 
   BIOGEARS_IO_API char const* const* list_ecg_files();

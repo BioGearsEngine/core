@@ -27,7 +27,7 @@ namespace io {
   BIOGEARS_IO_API bool generate_substances_directory(const char* file);
   BIOGEARS_IO_API bool does_embedded_substances_file_exist(const char* file);
 
-  BIOGEARS_IO_API char const* find_substances_file(const char* file);
+  BIOGEARS_IO_API  size_t find_substances_file(const char* file, const char* root, char* buffer, size_t buffer_length);
   BIOGEARS_IO_API char const* get_substances_file_hash(const char* file);
 
   BIOGEARS_IO_API char const* const* list_substances_files();
