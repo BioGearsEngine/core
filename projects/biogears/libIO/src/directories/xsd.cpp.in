@@ -40,6 +40,24 @@ namespace io {
   //-----------------------------------------------------------------------------
   char const* find_xsd_file(const char* file, const char* root)
   { 
+    biogears::filesystem::path test_location {file};
+    if ( test_location.exists() && test_location.is_file() ){
+      std::ofstream xsd_file { test_location.str(), std::ios::in };
+      if ( xsd_file.is_open() ){
+        
+      }
+    }
+
+    test_location = root; test_location /= file;
+    if ( test_location.exists() && test_location.is_file() ){
+      std::ofstream xsd_file { test_location.str(), std::ios::in };
+      if ( xsd_file.is_open() ){
+        
+      }
+    }
+
+    @FIND_XSD_FILE@
+
     return "";
   }
   //-----------------------------------------------------------------------------
@@ -67,7 +85,24 @@ namespace io {
   //biogears::filesystem::path overloads
   bool generate_xsd_directory(biogears::filesystem::path file)
   {
-    return false;
+   biogears::filesystem::path working_dir  = file;
+   std::ofstream output;
+
+   bool result = true;
+
+   auto write_file = [&](char const* path, char const* content, size_t content_size) {
+      biogears::filesystem::create_directories((working_dir / path).parent_path());
+      output.open((working_dir / path).string(), std::fstream::out);
+      if (!output.is_open()) {
+        return false;
+      }
+      output.write(content, content_size);
+      return true;
+   };
+
+@GENERATE_XSD_DIRECTORY@
+
+   return true;
   }
   //-----------------------------------------------------------------------------
   bool does_embedded_xsd_file_exist(biogears::filesystem::path file)

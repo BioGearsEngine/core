@@ -29,6 +29,11 @@ namespace biogears {
     //!  If Checks across the entire embeded library when testing for membership
     //!
     //!  TODO: Implmement behavior control
+    //!  
+    //!  Look First in BIOGEARS_DATA_ROOT
+    //!  Look Second in CWD  FILE
+    //!  Look in the LIBRARY
+
     class IOManager {
     private:
       bool _overwrite_mode = true;

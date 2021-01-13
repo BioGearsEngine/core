@@ -3,6 +3,7 @@
 
 namespace biogears {
 namespace io {
+
   bool generate_nutrition_directory(const char* file)
   {
       return false;
