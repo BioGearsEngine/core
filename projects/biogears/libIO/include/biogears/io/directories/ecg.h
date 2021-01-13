@@ -27,7 +27,7 @@ namespace io {
   BIOGEARS_IO_API bool does_embedded_ecg_file_exist(const char* file);
 
   BIOGEARS_IO_API  size_t find_ecg_file(const char* file, const char* root, char* buffer, size_t buffer_length);
-  BIOGEARS_IO_API char const* get_ecg_file_hash(const char* file);
+  BIOGEARS_IO_API char const* get_ecg_file_sha1(const char* file);
 
   BIOGEARS_IO_API char const* const* list_ecg_files();
   BIOGEARS_IO_API size_t ecg_file_count();
@@ -38,7 +38,7 @@ namespace io {
   BIOGEARS_IO_API bool generate_ecg_directory(biogears::filesystem::path file);
   BIOGEARS_IO_API bool does_embedded_ecg_file_exist(biogears::filesystem::path file);
 
-  BIOGEARS_IO_API char const* get_ecg_file_hash(biogears::filesystem::path file);
+  BIOGEARS_IO_API char const* get_ecg_file_sha1(biogears::filesystem::path file);
   BIOGEARS_IO_API char const* get_embedded_ecg_file(biogears::filesystem::path file);
 }
 }

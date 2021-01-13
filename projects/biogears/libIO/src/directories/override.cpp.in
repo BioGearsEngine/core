@@ -1,64 +1,168 @@
 #include <biogears/io/directories/override.h>
 
+#include <string>
+#include <fstream>
+
 #include <biogears/filesystem/path.h>
+
+@RESOURCE_INCLUDE_LIST@
 
 namespace biogears {
 namespace io {
-  bool generate_override_directory(const char* file)
+
+  char const * override_file_list[] = {
+@RESOURCE_FILE_LIST@
+  };
+
+  constexpr size_t count_of_override_files = @RESOURCE_FILE_COUNT@;
+
+  bool generate_override_directory(const char* root)
   {
-      return false;
+   biogears::filesystem::path working_dir { root };
+   std::ofstream output;
+
+   bool result = true;
+
+   auto write_file = [&](char const* path, char const* content, size_t content_size) {
+      biogears::filesystem::create_directories((working_dir / path).parent_path());
+      output.open((working_dir / path).string(), std::fstream::out);
+      if (!output.is_open()) {
+        return false;
+      }
+      output.write(content, content_size);
+      return true;
+   };
+
+@GENERATE_DIRECTORY_BODY@
+
+   return true;
+
   }
   //-----------------------------------------------------------------------------
-  bool does_embedded_override_file_exist(const char* file)
+  bool does_embedded_override_file_exist(const char* path)
   {
-      return false;
+    return @DOES_EMBEDDED_FILE_EXIST_BODY@false;
+
   }
   //-----------------------------------------------------------------------------
   size_t find_override_file(const char* file, const char* root, char* buffer, size_t buffer_length)
-  {
-      return 0;
+  { 
+    size_t content_size = 0;
+    biogears::filesystem::path test_location { file };
+    if (test_location.exists() && test_location.is_file()) {
+      std::ifstream override_file { test_location.str(), std::ios::in };
+      if (override_file.is_open()) {
+        override_file.seekg(0, override_file.end);
+        content_size = override_file.tellg();
+        override_file.seekg(0, override_file.beg);
+      }
+      if (content_size < buffer_length) {
+        override_file.read(buffer, content_size);
+        return content_size;
+      }
+    }
+
+    test_location = root;
+    test_location /= file;
+    if (test_location.exists() && test_location.is_file()) {
+      std::ifstream override_file { test_location.str(), std::ios::in };
+      if (override_file.is_open()) {
+        override_file.seekg(0, override_file.end);
+        content_size = override_file.tellg();
+        override_file.seekg(0, override_file.beg);
+        if (content_size < buffer_length) {
+          override_file.read(buffer, content_size);
+          return content_size;
+        }
+      }
+    }
+
+    auto embeded_content = get_embedded_override_file(file);
+
+    return content_size;
   }
   //-----------------------------------------------------------------------------
-  char const* get_override_file_hash(const char* file)
+  char const* get_override_file_sha1(const char* path)
   {
-      return nullptr;
+     char const* file_sha1 = nullptr;
+     
+@GET_FILE_SHA1_BODY@
+     return file_sha1;
   }
   //-----------------------------------------------------------------------------
   char const* const* list_override_files()
   {
-      return nullptr;
+    return override_file_list;
   }
   //-----------------------------------------------------------------------------
   size_t override_file_count()
   {
-    return 0;
+    return count_of_override_files;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embedded_override_file(const char* file)
+  char const* get_embedded_override_file(const char* path)
   {
-      return nullptr;
+    char const * embedded_content = nullptr;
+
+@GET_EMBEDED_CONTENTS_BODY@
+
+    return embedded_content;
   }
   //-----------------------------------------------------------------------------
 
   //biogears::filesystem::path overloads
-  bool generate_override_directory(biogears::filesystem::path file)
+  bool generate_override_directory(biogears::filesystem::path path)
   {
-      return false;
+   biogears::filesystem::path working_dir  = path;
+   std::ofstream output;
+
+   bool result = true;
+
+   auto write_file = [&](char const* path, char const* content, size_t content_size) {
+      biogears::filesystem::create_directories((working_dir / path).parent_path());
+      output.open((working_dir / path).string(), std::fstream::out);
+      if (!output.is_open()) {
+        return false;
+      }
+      output.write(content, content_size);
+      return true;
+   };
+
+@GENERATE_DIRECTORY_BODY@
+
+   return true;
   }
   //-----------------------------------------------------------------------------
-  bool does_embedded_override_file_exist(biogears::filesystem::path file)
+  bool does_embedded_override_file_exist(biogears::filesystem::path path)
   {
-      return false;
+     return @DOES_EMBEDDED_FILE_EXIST_BODY@false;
   }
   //-----------------------------------------------------------------------------
-  char const* get_override_file_hash(biogears::filesystem::path file)
+  char const* get_override_file_sha1(biogears::filesystem::path path)
   {
-      return nullptr;
+     char const* file_sha1 = nullptr;
+     
+@GET_FILE_SHA1_BODY@
+
+     return file_sha1;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embedded_override_file(biogears::filesystem::path file)
+  char const* get_embedded_override_file(biogears::filesystem::path path)
   {
-      return nullptr;
+    char const * embedded_content = nullptr;
+
+@GET_EMBEDED_CONTENTS_BODY@
+
+    return embedded_content;
+  }
+  //-----------------------------------------------------------------------------
+  size_t  get_embedded_override_file_size( const char* path) 
+  {
+    size_t size_of_embedded_content = 0;
+
+@GET_EMBEDED_CONTENTS_SIZE_BODY@
+
+    return size_of_embedded_content ;
   }
   //-----------------------------------------------------------------------------
 }

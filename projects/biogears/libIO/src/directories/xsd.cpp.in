@@ -5,10 +5,17 @@
 
 #include <biogears/filesystem/path.h>
 
-@XSD_INCLUDE_LIST@
+@RESOURCE_INCLUDE_LIST@
 
 namespace biogears {
 namespace io {
+
+  char const * schema_file_list[] = {
+@RESOURCE_FILE_LIST@
+  };
+
+  constexpr size_t count_of_schema_files = @RESOURCE_FILE_COUNT@;
+
   bool generate_xsd_directory(const char* root)
   {
    biogears::filesystem::path working_dir { root };
@@ -26,15 +33,15 @@ namespace io {
       return true;
    };
 
-@GENERATE_XSD_DIRECTORY@
+@GENERATE_DIRECTORY_BODY@
 
    return true;
 
   }
   //-----------------------------------------------------------------------------
-  bool does_embedded_xsd_file_exist(const char* file)
+  bool does_embedded_xsd_file_exist(const char* path)
   {
-    return @GENERATE_DOES_EMBEDDED_FILE_EXIST@false;
+    return @DOES_EMBEDDED_FILE_EXIST_BODY@false;
 
   }
   //-----------------------------------------------------------------------------
@@ -70,36 +77,43 @@ namespace io {
       }
     }
 
-    @FIND_XSD_FILE@
+    auto embeded_content = get_embedded_xsd_file(file);
 
     return content_size;
   }
   //-----------------------------------------------------------------------------
-  char const* get_xsd_file_hash(const char* file)
+  char const* get_xsd_file_sha1(const char* path)
   {
-     return "";
+     char const* file_sha1 = nullptr;
+     
+@GET_FILE_SHA1_BODY@
+     return file_sha1;
   }
   //-----------------------------------------------------------------------------
   char const* const* list_xsd_files()
   {
-    return nullptr;
+    return schema_file_list;
   }
   //-----------------------------------------------------------------------------
   size_t xsd_file_count()
   {
-    return 0;
+    return count_of_schema_files;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embedded_xsd_file(const char* file)
+  char const* get_embedded_xsd_file(const char* path)
   {
-    return nullptr;
+    char const * embedded_content = nullptr;
+
+@GET_EMBEDED_CONTENTS_BODY@
+
+    return embedded_content;
   }
   //-----------------------------------------------------------------------------
 
   //biogears::filesystem::path overloads
-  bool generate_xsd_directory(biogears::filesystem::path file)
+  bool generate_xsd_directory(biogears::filesystem::path path)
   {
-   biogears::filesystem::path working_dir  = file;
+   biogears::filesystem::path working_dir  = path;
    std::ofstream output;
 
    bool result = true;
@@ -114,24 +128,41 @@ namespace io {
       return true;
    };
 
-@GENERATE_XSD_DIRECTORY@
+@GENERATE_DIRECTORY_BODY@
 
    return true;
   }
   //-----------------------------------------------------------------------------
-  bool does_embedded_xsd_file_exist(biogears::filesystem::path file)
+  bool does_embedded_xsd_file_exist(biogears::filesystem::path path)
   {
-     return false;
+     return @DOES_EMBEDDED_FILE_EXIST_BODY@false;
   }
   //-----------------------------------------------------------------------------
-  char const* get_xsd_file_hash(biogears::filesystem::path file)
+  char const* get_xsd_file_sha1(biogears::filesystem::path path)
   {
-  return nullptr;
+     char const* file_sha1 = nullptr;
+     
+@GET_FILE_SHA1_BODY@
+
+     return file_sha1;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embedded_xsd_file(biogears::filesystem::path file)
+  char const* get_embedded_xsd_file(biogears::filesystem::path path)
   {
-    return nullptr;
+    char const * embedded_content = nullptr;
+
+@GET_EMBEDED_CONTENTS_BODY@
+
+    return embedded_content;
+  }
+  //-----------------------------------------------------------------------------
+  size_t  get_embedded_xsd_file_size( const char* path) 
+  {
+    size_t size_of_embedded_content = 0;
+
+@GET_EMBEDED_CONTENTS_SIZE_BODY@
+
+    return size_of_embedded_content ;
   }
   //-----------------------------------------------------------------------------
 }

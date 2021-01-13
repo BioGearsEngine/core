@@ -48,7 +48,7 @@ namespace biogears {
       BIOGEARS_IO_API bool does_embedded_file_exist(const char* file);
 
       BIOGEARS_IO_API size_t find_resource_file(char const* file, char * buffer, size_t buffer_size);
-      BIOGEARS_IO_API char const* get_hash(const char* file);
+      BIOGEARS_IO_API char const* get_sha1(const char* file);
 
       BIOGEARS_IO_API char const* get_embedded_resource_file(const char* file);
     };

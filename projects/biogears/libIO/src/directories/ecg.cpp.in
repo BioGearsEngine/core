@@ -1,69 +1,168 @@
 #include <biogears/io/directories/ecg.h>
 
+#include <string>
+#include <fstream>
+
 #include <biogears/filesystem/path.h>
+
+@RESOURCE_INCLUDE_LIST@
 
 namespace biogears {
 namespace io {
-  bool generate_ecg_directory(const char* file)
+
+  char const * ecg_file_list[] = {
+@RESOURCE_FILE_LIST@
+  };
+
+  constexpr size_t count_of_ecg_files = @RESOURCE_FILE_COUNT@;
+
+  bool generate_ecg_directory(const char* root)
   {
-      return false;
+   biogears::filesystem::path working_dir { root };
+   std::ofstream output;
+
+   bool result = true;
+
+   auto write_file = [&](char const* path, char const* content, size_t content_size) {
+      biogears::filesystem::create_directories((working_dir / path).parent_path());
+      output.open((working_dir / path).string(), std::fstream::out);
+      if (!output.is_open()) {
+        return false;
+      }
+      output.write(content, content_size);
+      return true;
+   };
+
+@GENERATE_DIRECTORY_BODY@
+
+   return true;
+
   }
   //-----------------------------------------------------------------------------
-  bool does_embedded_ecg_file_exist(const char* file)
+  bool does_embedded_ecg_file_exist(const char* path)
   {
-      return false;
+    return @DOES_EMBEDDED_FILE_EXIST_BODY@false;
+
   }
   //-----------------------------------------------------------------------------
   size_t find_ecg_file(const char* file, const char* root, char* buffer, size_t buffer_length)
-  {
-      return 0;
+  { 
+    size_t content_size = 0;
+    biogears::filesystem::path test_location { file };
+    if (test_location.exists() && test_location.is_file()) {
+      std::ifstream ecg_file { test_location.str(), std::ios::in };
+      if (ecg_file.is_open()) {
+        ecg_file.seekg(0, ecg_file.end);
+        content_size = ecg_file.tellg();
+        ecg_file.seekg(0, ecg_file.beg);
+      }
+      if (content_size < buffer_length) {
+        ecg_file.read(buffer, content_size);
+        return content_size;
+      }
+    }
+
+    test_location = root;
+    test_location /= file;
+    if (test_location.exists() && test_location.is_file()) {
+      std::ifstream ecg_file { test_location.str(), std::ios::in };
+      if (ecg_file.is_open()) {
+        ecg_file.seekg(0, ecg_file.end);
+        content_size = ecg_file.tellg();
+        ecg_file.seekg(0, ecg_file.beg);
+        if (content_size < buffer_length) {
+          ecg_file.read(buffer, content_size);
+          return content_size;
+        }
+      }
+    }
+
+    auto embeded_content = get_embedded_ecg_file(file);
+
+    return content_size;
   }
   //-----------------------------------------------------------------------------
-  char const* get_ecg_file_hash(const char* file)
+  char const* get_ecg_file_sha1(const char* path)
   {
-      return nullptr;
+     char const* file_sha1 = nullptr;
+     
+@GET_FILE_SHA1_BODY@
+     return file_sha1;
   }
   //-----------------------------------------------------------------------------
   char const* const* list_ecg_files()
   {
-      return nullptr;
+    return ecg_file_list;
   }
   //-----------------------------------------------------------------------------
   size_t ecg_file_count()
   {
-      return 0;
+    return count_of_ecg_files;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embedded_ecg_file(const char* file)
+  char const* get_embedded_ecg_file(const char* path)
   {
-      return nullptr;
+    char const * embedded_content = nullptr;
+
+@GET_EMBEDED_CONTENTS_BODY@
+
+    return embedded_content;
   }
   //-----------------------------------------------------------------------------
 
   //biogears::filesystem::path overloads
-  bool generate_ecg_directory(biogears::filesystem::path file)
+  bool generate_ecg_directory(biogears::filesystem::path path)
   {
-      return false;
+   biogears::filesystem::path working_dir  = path;
+   std::ofstream output;
+
+   bool result = true;
+
+   auto write_file = [&](char const* path, char const* content, size_t content_size) {
+      biogears::filesystem::create_directories((working_dir / path).parent_path());
+      output.open((working_dir / path).string(), std::fstream::out);
+      if (!output.is_open()) {
+        return false;
+      }
+      output.write(content, content_size);
+      return true;
+   };
+
+@GENERATE_DIRECTORY_BODY@
+
+   return true;
   }
   //-----------------------------------------------------------------------------
-  bool does_embedded_ecg_file_exist(biogears::filesystem::path file)
+  bool does_embedded_ecg_file_exist(biogears::filesystem::path path)
   {
-      return false;
+     return @DOES_EMBEDDED_FILE_EXIST_BODY@false;
   }
   //-----------------------------------------------------------------------------
-  biogears::filesystem::path find_ecg_file(biogears::filesystem::path file)
+  char const* get_ecg_file_sha1(biogears::filesystem::path path)
   {
-      return "";
+     char const* file_sha1 = nullptr;
+     
+@GET_FILE_SHA1_BODY@
+
+     return file_sha1;
   }
   //-----------------------------------------------------------------------------
-  char const* get_ecg_file_hash(biogears::filesystem::path file)
+  char const* get_embedded_ecg_file(biogears::filesystem::path path)
   {
-      return nullptr;
+    char const * embedded_content = nullptr;
+
+@GET_EMBEDED_CONTENTS_BODY@
+
+    return embedded_content;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embedded_ecg_file(biogears::filesystem::path file)
+  size_t  get_embedded_ecg_file_size( const char* path) 
   {
-      return nullptr;
+    size_t size_of_embedded_content = 0;
+
+@GET_EMBEDED_CONTENTS_SIZE_BODY@
+
+    return size_of_embedded_content ;
   }
   //-----------------------------------------------------------------------------
 }

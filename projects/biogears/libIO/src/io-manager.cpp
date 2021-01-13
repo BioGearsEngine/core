@@ -109,41 +109,41 @@ namespace biogears {
       return 0;
     }
     //---------------------------------------------------------------------------
-    char const *   IOManager::get_hash (const char* file){
+    char const *   IOManager::get_sha1 (const char* file){
       char const* result = nullptr;
-      if (result = get_xsd_file_hash(file)) {
+      if (result = get_xsd_file_sha1(file)) {
         return result;
       }
 
-      if (result = get_config_file_hash(file)) {
+      if (result = get_config_file_sha1(file)) {
         return result;
       }
 
-      if (result = get_ecg_file_hash(file)) {
+      if (result = get_ecg_file_sha1(file)) {
         return result;
       }
 
-      if (result = get_environments_file_hash(file)) {
+      if (result = get_environments_file_sha1(file)) {
         return result;
       }
 
-      if (result = get_nutrition_file_hash(file)) {
+      if (result = get_nutrition_file_sha1(file)) {
         return result;
       }
 
-      if (result = get_override_file_hash(file)) {
+      if (result = get_override_file_sha1(file)) {
         return result;
       }
 
-      if (result = get_patients_file_hash(file)) {
+      if (result = get_patients_file_sha1(file)) {
         return result;
       }
 
-      if (result = get_states_file_hash(file)) {
+      if (result = get_states_file_sha1(file)) {
         return result;
       }
 
-      if (result = get_substances_file_hash(file)) {
+      if (result = get_substances_file_sha1(file)) {
         return result;
       }
 
