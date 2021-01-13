@@ -14,6 +14,13 @@ function(generate_hex_header)
       string(REGEX REPLACE ", " "," text_c_tuples ${text_c_tuples})
       string(REGEX REPLACE ",$" "" text_c_tuples ${text_c_tuples})
 
+      file (SHA1 ${_INPUT}  _content )
+      string(HEX ${_content} hash_c_tuples)
+      string(REGEX REPLACE "(${TOUPLE_LIMIT})" "\\1\n\        " hash_c_tuples "${hash_c_tuples}")
+      string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1, " hash_c_tuples ${hash_c_tuples})
+      string(REGEX REPLACE ", " "," hash_c_tuples ${hash_c_tuples})
+      string(REGEX REPLACE ",$" "" hash_c_tuples ${hash_c_tuples})
+
       string(HEX ${_PATH} _PATH)
       string(REGEX REPLACE "(${TOUPLE_LIMIT})" "\\1\n\        " path_c_tuples "${_PATH}")
       string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1, " path_c_tuples ${path_c_tuples})
@@ -37,6 +44,8 @@ function(generate_hex_header)
       file (APPEND ${header_file} 
                    "  char const*  get_${safe_content_name}_path();\n"
                    "  std::size_t  ${safe_content_name}_path_size();\n"
+                   "  char const*  get_${safe_content_name}_sha1();\n"
+                   "  std::size_t  ${safe_content_name}_sha1_size();\n"
                    "  char const*  get_${safe_content_name}_text();\n"
                    "  std::size_t  ${safe_content_name}_text_size();\n"
       )
@@ -68,6 +77,20 @@ function(generate_hex_header)
                    "    return size_of_${safe_content_name}_path;\n"
                    "  }\n\n"
                    "\n\n"
+
+                   "  unsigned char const ${safe_content_name}_sha1[]={\n"
+                   "        ${sha1_c_tuples}"
+                   "\n  };\n"
+                   "  constexpr std::size_t  size_of_${safe_content_name}_sha1=sizeof(${safe_content_name}_sha1);\n"
+                   "\n\n"
+                   "  char const*  get_${safe_content_name}_sha1(){\n"
+                   "    return reinterpret_cast<char const *>(${safe_content_name}_sha1);\n"
+                   "  }\n\n"
+                   "  std::size_t ${safe_content_name}_sha1_size() {\n"
+                   "    return size_of_${safe_content_name}_sha1;\n"
+                   "  }\n\n"
+                   "\n\n"
+
                    "  unsigned  const ${safe_content_name}_text[]={\n"
                    "        ${text_c_tuples}"
                     "\n  };\n"
