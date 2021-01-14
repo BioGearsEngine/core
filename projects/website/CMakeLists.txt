@@ -89,8 +89,8 @@ if(Biogears_BUILD_WEBSITE)
         COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE} -p doc/markdown -f doc/doxygen/processed_md #cdm
         COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE}  -p doc/methodology -f doc/doxygen/processed_md #cdm
         COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm 
-        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-1_2.config -j 5 -v
-        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRunJava-2_2.config -j 5 -v
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRun-1_2.config -j 5 -v
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRun-2_2.config -j 5 -v
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
         COMMENT "Running docs-prepare"
         VERBATIM
