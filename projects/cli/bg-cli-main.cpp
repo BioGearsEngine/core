@@ -36,9 +36,10 @@
 
 #include <fstream>
 #include <iostream>
-#include "biogears/io/directories/config.h"
-#include "biogears/io/io-manager.h"
 
+#ifdef BIOGEARS_IO_PRESENT
+  #include <biogears/io/io-manager.h>
+#endif
 void print_help()
 {
   std::cout << "Usage cmd_bio [HELP, GENDATA, GENSTATES, GENSEPSIS, VERIFY, VERSION]\n"
@@ -56,11 +57,15 @@ void print_help()
   std::cout << std::endl;
   exit(0);
 }
-//bool genRuntime(const char* pathName)
-//{
-//    biogears::io::IOManager iom;
-//    return iom.generate_runtime_directory(pathName);
-//}
+
+#ifdef BIOGEARS_IO_PRESENT
+bool genRuntime(const char* pathName)
+{
+    biogears::io::IOManager iom;
+    return iom.generate_runtime_directory(pathName);
+}
+#endif
+
 //!
 //! \brief Reads command line argument and executes corresponding operation
 //! \param argc : Number of command line arguments

@@ -59,11 +59,11 @@ target_link_libraries(bg-cli
       minizip::lib
 )
 
-if (${ROOT_PROJECT_NAME}_BUILD_IO_LIBRARY)
-  target_link_libraries(bg-cli
-        Biogears::libbiogears_io
-  )
+if(TARGET Biogears::libbiogears_io)
+  target_link_libraries(bg-cli Biogears::libbiogears_io)
+  target_compile_definitions(bg-cli PRIVATE "BIOGEARS_IO_PRESENT")
 endif()
+
 ###################
 #  SCENARIO DRONE #
 ###################
@@ -92,9 +92,6 @@ target_include_directories(bg-scenario PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includ
 target_link_libraries(bg-scenario 
       Biogears::libbiogears
       minizip::lib )
-
-add_dependencies(bg-cli bg-scenario)
-
 
 ##########################
 # Optional Boost Support #
