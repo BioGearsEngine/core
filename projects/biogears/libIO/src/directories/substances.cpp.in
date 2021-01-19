@@ -62,22 +62,22 @@ namespace io {
         return content_size;
       }
     }
-
-    test_location = root;
-    test_location /= file;
-    if (test_location.exists() && test_location.is_file()) {
-      std::ifstream substances_file { test_location.str(), std::ios::in };
-      if (substances_file.is_open()) {
-        substances_file.seekg(0, substances_file.end);
-        content_size = substances_file.tellg();
-        substances_file.seekg(0, substances_file.beg);
-        if (content_size < buffer_length) {
-          substances_file.read(buffer, content_size);
-          return content_size;
+    if (root != nullptr) {
+      test_location = root;
+      test_location /= file;
+      if (test_location.exists() && test_location.is_file()) {
+        std::ifstream substances_file { test_location.str(), std::ios::in };
+        if (substances_file.is_open()) {
+          substances_file.seekg(0, substances_file.end);
+          content_size = substances_file.tellg();
+          substances_file.seekg(0, substances_file.beg);
+          if (content_size < buffer_length) {
+            substances_file.read(buffer, content_size);
+            return content_size;
+          }
         }
       }
     }
-
     auto embeded_content = get_embedded_substances_file(file);
 
     return content_size;

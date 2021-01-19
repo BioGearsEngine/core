@@ -62,22 +62,22 @@ namespace io {
         return content_size;
       }
     }
-
-    test_location = root;
-    test_location /= file;
-    if (test_location.exists() && test_location.is_file()) {
-      std::ifstream override_file { test_location.str(), std::ios::in };
-      if (override_file.is_open()) {
-        override_file.seekg(0, override_file.end);
-        content_size = override_file.tellg();
-        override_file.seekg(0, override_file.beg);
-        if (content_size < buffer_length) {
-          override_file.read(buffer, content_size);
-          return content_size;
+    if (root != nullptr) {
+      test_location = root;
+      test_location /= file;
+      if (test_location.exists() && test_location.is_file()) {
+        std::ifstream override_file { test_location.str(), std::ios::in };
+        if (override_file.is_open()) {
+          override_file.seekg(0, override_file.end);
+          content_size = override_file.tellg();
+          override_file.seekg(0, override_file.beg);
+          if (content_size < buffer_length) {
+            override_file.read(buffer, content_size);
+            return content_size;
+          }
         }
       }
     }
-
     auto embeded_content = get_embedded_override_file(file);
 
     return content_size;
