@@ -1,5 +1,7 @@
 #include "Arguments.h"
 
+#include <assert.h>
+
 #include <algorithm>
 #include <cassert>
 #include <iostream>
@@ -216,6 +218,87 @@ bool Arguments::isMultiWord(std::string key) const
   return _multiwords.find(key) != _multiwords.end();
 }
 //-----------------------------------------------------------------------------
+bool Arguments::append_options(std::vector<std::string> new_options)
+{
+  for (auto option : new_options) {
+    std::transform(option.begin(), option.end(), option.begin(), ::tolower);
+    if (_options.find(option) != _options.end()) {
+      std::cerr << "Warrning: Option Key" << option << " already in Options."
+                << "\n";
+      assert(true);
+      continue;
+    }
+    if (_keywords.find(option) != _keywords.end()) {
+      std::cerr << "Warrning: Option Key " << option << " also found in Keywords."
+                << "\n";
+      assert(true);
+      continue;
+    }
+    if (_keywords.find(option) != _keywords.end()) {
+      std::cerr << "Warrning: Option Key " << option << " also found in Multiwords."
+                << "\n";
+      assert(true);
+      continue;
+    }
+    _options[option] = false;
+  }
+  return true;
+}
+//-----------------------------------------------------------------------------
+bool Arguments::append_keywords(std::vector<std::string> new_keys)
+{
+  for (auto key : new_keys) {
+    std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+    if (_options.find(key) != _options.end()) {
+      std::cerr << "Warrning: Keyword " << key << " already in Options."
+                << "\n";
+      assert(true);
+      return false;
+    }
+    if (_keywords.find(key) != _keywords.end()) {
+      std::cerr << "Warrning: Option Key " << key << " also found in Keywords."
+                << "\n";
+      assert(true);
+      return false;
+    }
+    if (_multiwords.find(key) != _multiwords.end()) {
+      std::cerr << "Warrning: Option Key " << key << " also found in Multiwords."
+                << "\n";
+      assert(true);
+      return false;
+    }
+    _keywords[key] = "";
+  }
+  return true;
+}
+//-----------------------------------------------------------------------------
+bool Arguments::append_multiword(std::vector<std::string> new_multiwords)
+{
+  for (auto multiword : new_multiwords) {
+    std::transform(multiword.begin(), multiword.end(), multiword.begin(), ::tolower);
+    if (_options.find(multiword) != _options.end()) {
+      std::cerr << "Warrning: Multiword  " << multiword << " already in Options."
+                << "\n";
+      assert(true);
+      return false;
+    }
+    if (_keywords.find(multiword) != _keywords.end()) {
+      std::cerr << "Warrning: Multiword " << multiword << " also found in Keywords."
+                << "\n";
+      assert(true);
+      return false;
+    }
+    if (_multiwords.find(multiword) != _multiwords.end()) {
+      std::cerr << "Warrning: Multiword " << multiword << " also found in Multiwords."
+                << "\n";
+      assert(true);
+      return false;
+    }
+    _multiwords[multiword] = {};
+  }
+  return true;
+  }
+  //-----------------------------------------------------------------------------
 void Arguments::set_required_keywords(std::vector<std::string> keys)
 {
   for (auto& key : keys) {

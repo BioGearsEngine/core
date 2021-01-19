@@ -26,6 +26,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/io/directories/substances.h>
 
+#include <biogears/io/utils.h>
+
 namespace biogears {
 namespace io {
   //!
@@ -59,19 +61,19 @@ namespace io {
   bool IOManager::does_embedded_file_exist(const char* file)
   {
 
-    biogears::filesystem::path runtime_directory { file };
+    biogears::filesystem::path embeded_path { file };
 
-    return does_embedded_xsd_file_exist(runtime_directory / "xsd")
-      || does_embedded_config_file_exist(runtime_directory / "config")
-      || does_embedded_ecg_file_exist(runtime_directory / "directory")
-      || does_embedded_environments_file_exist(runtime_directory / "environments")
-      || does_embedded_nutrition_file_exist(runtime_directory / "nutrition")
-      || does_embedded_override_file_exist(runtime_directory / "override")
-      || does_embedded_patients_file_exist(runtime_directory / "patients")
+    return does_embedded_xsd_file_exist(embeded_path)
+      || does_embedded_config_file_exist(embeded_path)
+      || does_embedded_ecg_file_exist(embeded_path)
+      || does_embedded_environments_file_exist(embeded_path)
+      || does_embedded_nutrition_file_exist(embeded_path)
+      || does_embedded_override_file_exist(embeded_path)
+      || does_embedded_patients_file_exist(embeded_path)
 #ifdef IO_EMBED_STATES
-      || does_embedded_states_file_exist(runtime_directory / "states")
+      || does_embedded_states_file_exist(embeded_path)
 #endif
-      || does_embedded_substances_file_exist(runtime_directory / "substances");
+      || does_embedded_substances_file_exist(embeded_path);
   }
   //---------------------------------------------------------------------------
   size_t IOManager::find_resource_file(char const* file, char* buffer, size_t buffer_size)
@@ -116,46 +118,80 @@ namespace io {
     return 0;
   }
   //---------------------------------------------------------------------------
-  char const* IOManager::get_sha1(const char* file)
+  char const* IOManager::get_expected_sha1(const char* file)
   {
     char const* result = nullptr;
-    if (result = get_xsd_file_sha1(file)) {
+    result = get_xsd_file_sha1(file);
+    if (*result) {
       return result;
     }
-
-    if (result = get_config_file_sha1(file)) {
+    result = get_config_file_sha1(file);
+    if (*result) {
       return result;
     }
-
-    if (result = get_ecg_file_sha1(file)) {
+    result = get_ecg_file_sha1(file);
+    if (*result) {
       return result;
     }
-
-    if (result = get_environments_file_sha1(file)) {
+    result = get_environments_file_sha1(file);
+    if (*result) {
       return result;
     }
-
-    if (result = get_nutrition_file_sha1(file)) {
+    result = get_nutrition_file_sha1(file);
+    if (*result) {
       return result;
     }
-
-    if (result = get_override_file_sha1(file)) {
+    result = get_override_file_sha1(file);
+    if (*result) {
       return result;
     }
-
-    if (result = get_patients_file_sha1(file)) {
+    result = get_patients_file_sha1(file);
+    if (*result) {
       return result;
     }
 #ifdef IO_EMBED_STATES
-    if (result = get_states_file_sha1(file)) {
+    result = get_states_file_sha1(file);
+    if (*result) {
       return result;
     }
 #endif
-    if (result = get_substances_file_sha1(file)) {
+    result = get_substances_file_sha1(file);
+    if (*result) {
       return result;
     }
 
-    return nullptr;
+    return "";
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::calculate_sha1(const char* path)
+  {
+    return generate_file_sha1(path);
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::calculate_sha1(const char* buffer, size_t buffer_size)
+  {
+    return generate_sha1(buffer, buffer_size);
+  }
+  //---------------------------------------------------------------------------
+  //!
+  //!  This function does not provide fall back mechanics. This is intentional
+  //!  It should be used to compare two file locations exsactly
+  bool IOManager::validate_file(const char* path, const char* embeded_path)
+  {
+    if (embeded_path) {
+      std::string embeded_hash = get_expected_sha1(embeded_path);
+      std::string file_hash = calculate_sha1(path);
+
+      return embeded_hash == file_hash;
+    } else {
+      if (does_embedded_file_exist(path)) {
+        std::string embeded_hash = get_expected_sha1(path);
+        std::string file_hash = calculate_sha1(path);
+
+        return embeded_hash == file_hash;
+      }
+      return false;
+    }
   }
   //---------------------------------------------------------------------------
   char const* IOManager::get_embedded_resource_file(const char* file)

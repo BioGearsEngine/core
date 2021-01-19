@@ -5,6 +5,8 @@ function(generate_hex_header)
     set(multiValueArgs NAMESPACE)
     cmake_parse_arguments("" "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
+    #Notice all these arrays are nullterminated except the TEXT content_name, because it could be a binary file which contains 0x00 we can not concider it a null termianted string
+    #But its just two helpful not to to terminate PATH and SHA1.
     if (_INPUT AND _OUTPUT)
       file (READ ${_INPUT}  _content  HEX)
       get_filename_component( content_name ${_INPUT} NAME_WE)
@@ -16,12 +18,14 @@ function(generate_hex_header)
 
       file (SHA1 ${_INPUT}  _content )
       string(HEX ${_content} sha1_c_tuples)
+      string(APPEND sha1_c_tuples "00")
       string(REGEX REPLACE "(${TOUPLE_LIMIT})" "\\1\n\        " sha1_c_tuples "${sha1_c_tuples}")
       string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1, " sha1_c_tuples ${sha1_c_tuples})
       string(REGEX REPLACE ", " "," sha1_c_tuples ${sha1_c_tuples})
       string(REGEX REPLACE ",$" "" sha1_c_tuples ${sha1_c_tuples})
 
       string(HEX ${_PATH} _PATH)
+      string(APPEND _PATH "00")
       string(REGEX REPLACE "(${TOUPLE_LIMIT})" "\\1\n\        " path_c_tuples "${_PATH}")
       string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1, " path_c_tuples ${path_c_tuples})
       string(REGEX REPLACE ", " "," path_c_tuples ${path_c_tuples})

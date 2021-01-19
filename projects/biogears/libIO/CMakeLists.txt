@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18.0)
+cmake_minimum_required(VERSION 3.19.0)
 message(STATUS "  Configuring lib${PROJECT_NAME}_io")
 ###############################################################################
 #Source files
@@ -78,25 +78,41 @@ function(configure_io_directory_file )
     LIST(APPEND ${_HEADERS}  "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.hxx")
     LIST(APPEND ${_SOURCES}  "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.cxx")
 
-    source_group("${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.hxx" FILES "Headers\\Generated\\${IO_VERSION}\\${src_dir}")
-    source_group("${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.cxx" FILES "Sources\\Generated\\${IO_VERSION}\\directories\\${src_dir}")
+    source_group("Headers/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.hxx" )
+    source_group("Sources/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.cxx" )
   
     string(APPEND RESOURCE_FILE_LIST "    get_${safe_src_dir_wle}_path(),\n")
      
     string(APPEND RESOURCE_INCLUDE_LIST "#include <biogears/io/${src}.hxx>\n")
     string(APPEND GENERATE_DIRECTORY_BODY  "    result &= write_file(get_${safe_src_dir_wle}_path(), get_${safe_src_dir_wle}_text(), ${safe_src_dir_wle}_text_size());\n")
-    string(APPEND DOES_EMBEDDED_FILE_EXIST_BODY "  ( path == get_${safe_src_dir_wle}_path())\n    ||  ")
+    string(APPEND DOES_EMBEDDED_FILE_EXIST_BODY "  ( 0 == std::strcmp(path, get_${safe_src_dir_wle}_path()))\n    ||  ")
+    string(APPEND DOES_EMBEDDED_FILE_EXIST_PATH_BODY "  ( path == get_${safe_src_dir_wle}_path())\n    ||  ")
     string(APPEND GET_FILE_SHA1_BODY
+    "    if ( 0 == std::strcmp(path, get_${safe_src_dir_wle}_path())) {\n"
+    "      return get_${safe_src_dir_wle}_sha1();\n"
+    "    }\n"
+    )
+    string(APPEND GET_FILE_SHA1_PATH_BODY
     "    if ( path == get_${safe_src_dir_wle}_path() ) {\n"
     "      return get_${safe_src_dir_wle}_sha1();\n"
     "    }\n"
     )
     string(APPEND GET_EMBEDED_CONTENTS_BODY
+    "    if ( 0 == std::strcmp(path, get_${safe_src_dir_wle}_path())) {\n"
+    "      return get_${safe_src_dir_wle}_text();\n"
+    "    }\n"
+    )
+    string(APPEND GET_EMBEDED_CONTENTS_PATH_BODY
     "    if ( path == get_${safe_src_dir_wle}_path() ) {\n"
     "      return get_${safe_src_dir_wle}_text();\n"
     "    }\n"
     )
       string(APPEND GET_EMBEDED_CONTENTS_SIZE_BODY
+    "    if ( 0 == std::strcmp(path, get_${safe_src_dir_wle}_path())) {\n"
+    "      return ${safe_src_dir_wle}_text_size();\n"
+    "    }\n"
+    )
+    string(APPEND GET_EMBEDED_CONTENTS_SIZE_PATH_BODY
     "    if ( path == get_${safe_src_dir_wle}_path() ) {\n"
     "      return ${safe_src_dir_wle}_text_size();\n"
     "    }\n"

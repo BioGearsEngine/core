@@ -75,14 +75,17 @@ bool genRuntime(const char* pathName)
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-#if defined(BIOGEARS_SUBPROCESS_SUPPORT)
-    { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION", "THREADED", "T" }, /*Options*/
-#else
     { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION" }, /*Options*/
-#endif
     { "J", "JOBS" }, /*Keywords*/
     { "TEST", "CONFIG", "SCENARIO", "VALIDATE", "GENTABLES", "GENPATIENTS" } /*MultiWords*/
   );
+
+#if defined(BIOGEARS_SUBPROCESS_SUPPORT)
+  args.append_options({ "THREADED", "T" });
+#endif
+#if defined(BIOGEARS_IO_PRESENT)
+  args.append_keywords({ "SHA1", "GENRUNTIME" });
+#endif
 
   bool run_patient_validation = false;
   bool run_drug_validation = false;
@@ -116,6 +119,37 @@ int main(int argc, char** argv)
       exit(1);
     }
   }
+#ifdef BIOGEARS_IO_PRESENT
+  if (args.KeywordFound("SHA1")) {
+    biogears::io::IOManager iom;
+    auto path = args.Keyword("SHA1");
+    auto sha1 = iom.calculate_sha1(path.c_str());
+    if (sha1.empty()) {
+      std::cout << "Failed to calculate SHA1: Unable to read " << args.Keyword("GENRUNTIME") << std::endl;
+      exit(1);
+    }
+    std::cout << path << " : " << sha1;
+    if (iom.does_embedded_file_exist(path.c_str())) {
+      auto expected_sha1 = iom.get_expected_sha1(path.c_str());
+      std::cout << " : ";
+
+      auto result = sha1.compare(expected_sha1);
+      if ( result == 0) {
+        std::cout << "matched";
+      } else {
+        std::cout << std::string("expected ") + expected_sha1;
+      }
+    } else {
+      std::cout << std::endl;
+    }
+    exit(0);
+  }
+
+  if (args.KeywordFound("GENRUNTIME")) {
+    bool success = genRuntime(args.Keyword("GENRUNTIME").c_str());
+    exit((success) ? 0 : 1);
+  }
+#endif
 
   biogears::Driver driver { argv[0], thread_count };
 

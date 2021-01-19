@@ -1,5 +1,6 @@
 #include <biogears/io/directories/environments.h>
 
+#include <cstring>
 #include <string>
 #include <fstream>
 
@@ -84,7 +85,7 @@ namespace io {
   //-----------------------------------------------------------------------------
   char const* get_environments_file_sha1(const char* path)
   {
-     char const* file_sha1 = nullptr;
+     char const* file_sha1 = "";
      
 @GET_FILE_SHA1_BODY@
      return file_sha1;
@@ -102,7 +103,7 @@ namespace io {
   //-----------------------------------------------------------------------------
   char const* get_embedded_environments_file(const char* path)
   {
-    char const * embedded_content = nullptr;
+    char const * embedded_content = "";
 
 @GET_EMBEDED_CONTENTS_BODY@
 
@@ -135,23 +136,23 @@ namespace io {
   //-----------------------------------------------------------------------------
   bool does_embedded_environments_file_exist(biogears::filesystem::path path)
   {
-     return @DOES_EMBEDDED_FILE_EXIST_BODY@false;
+     return @DOES_EMBEDDED_FILE_EXIST_PATH_BODY@false;
   }
   //-----------------------------------------------------------------------------
   char const* get_environments_file_sha1(biogears::filesystem::path path)
   {
-     char const* file_sha1 = nullptr;
+     char const* file_sha1 = "";
      
-@GET_FILE_SHA1_BODY@
+@GET_FILE_SHA1_PATH_BODY@
 
      return file_sha1;
   }
   //-----------------------------------------------------------------------------
   char const* get_embedded_environments_file(biogears::filesystem::path path)
   {
-    char const * embedded_content = nullptr;
+    char const * embedded_content = "";
 
-@GET_EMBEDED_CONTENTS_BODY@
+@GET_EMBEDED_CONTENTS_PATH_BODY@
 
     return embedded_content;
   }
@@ -160,7 +161,7 @@ namespace io {
   {
     size_t size_of_embedded_content = 0;
 
-@GET_EMBEDED_CONTENTS_SIZE_BODY@
+@GET_EMBEDED_CONTENTS_SIZE_PATH_BODY@
 
     return size_of_embedded_content ;
   }
