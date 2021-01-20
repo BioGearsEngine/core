@@ -57,6 +57,10 @@ namespace biogears {
 
       BIOGEARS_IO_API char const* get_embedded_resource_file(const char* file);
 
+	  BIOGEARS_IO_API size_t get_directory_count(); //!< Returns the list of directories embeded IE 1 for each cpp file in libIO/src/directories
+      BIOGEARS_IO_API char const** get_directory_list(); 
+	  //!< Returns a static character array that is hard coded to those expected directories no need for cmake we just have to know to maintain it for now
+
 
     };
   }

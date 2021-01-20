@@ -235,5 +235,13 @@ namespace io {
     return nullptr;
   }
 
+  size_t get_directory_count()
+  {
+	return 0;
+  }
+  char const** get_directory_list() 
+  {
+	return nullptr;
+  }
 }
 }
