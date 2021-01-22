@@ -235,13 +235,44 @@ namespace io {
     return nullptr;
   }
 
-  size_t get_directory_count()
+  size_t IOManager::get_directory_count()
   {
-	return 0;
+	size_t sum = biogears::io::config_file_count() 
+		+ biogears::io::ecg_file_count()
+		+ biogears::io::environments_file_count()
+        + biogears::io::nutrition_file_count()
+        + biogears::io::override_file_count()
+	    + biogears::io::patients_file_count()
+        + biogears::io::substances_file_count()
+        + biogears::io::xsd_file_count();
+#ifdef IO_EMBED_STATES 
+	sum += states_file_count();
+#endif
+	return sum;
   }
-  char const** get_directory_list() 
+
+  char const** IOManager::get_directory_list() 
   {
-	return nullptr;
+	std::vector<char const* const*> directory_lists;
+    directory_lists.push_back(biogears::io::list_config_files());
+	directory_lists.push_back(biogears::io::list_ecg_files());
+    directory_lists.push_back(biogears::io::list_environments_files());
+	directory_lists.push_back(biogears::io::list_nutrition_files());
+    directory_lists.push_back(biogears::io::list_override_files());
+	directory_lists.push_back(biogears::io::list_patients_files());
+    directory_lists.push_back(biogears::io::list_substances_files());
+    directory_lists.push_back(biogears::io::list_xsd_files());
+#ifdef IO_EMBED_STATES
+	directory_lists.push_back(biogears::io::list_states_files());
+#endif
+	std::vector<const char*> fileList;
+	for (int i = 0;i < directory_lists.size();++i) {
+		for (int k = 0;directory_lists[i][k] != '\0';++k) {
+			fileList.push_back(directory_lists[i][k]);
+		}
+	}
+	const char ** result = fileList.data();
+	return result;
   }
 }
 }
