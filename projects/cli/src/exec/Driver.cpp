@@ -304,6 +304,37 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
   // TODO: Test for EngineState file and call an appropriate launcher
   // TODO: Test for Patient if PatientFile is not present and call the appropriate launcher
   if (scenario->EngineStateFile().present()) {
+	const auto state_file = scenario->EngineStateFile().get();
+	std::string nc_state_file = state_file;
+	std::transform(nc_state_file.begin(), nc_state_file.end(), nc_state_file.begin(), ::tolower);
+	if ("all" == nc_state_file) {
+	  auto state_files = biogears::ListFiles("states", R"(\.xml)");
+	  auto infection_state_files = biogears::ListFiles("states/InfectionStates","R(\.xml)");
+	  state_files.insert(state_files.end(),infection_state_files.begin(),infection_state_files.end());
+	  for (const std::string& state_file : state_files) {
+        Executor stateEx{ exec };
+        stateEx.State(state_file);
+        std::string trimmed_state_path(trim(stateEx.State()));
+        auto split_state_path = split(trimmed_state_path, '/');
+        auto state_no_extension = split(split_state_path.back(), '.').front();
+
+        std::string trimmed_scenario_path(trim(stateEx.Scenario()));
+        auto split_scenario_path = split(trimmed_scenario_path, '/');
+        auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
+
+        if (stateEx.Name().empty()) {
+          stateEx.Results({ scenario_no_extension + "-" + state_no_extension });
+          stateEx.Name(scenario_no_extension + "-" + state_no_extension);
+        } else {
+          stateEx.Results({ stateEx.Name() + "-" + state_no_extension });
+          stateEx.Name(stateEx.Name() + "-" + state_no_extension);
+        }
+      ///----
+        _pool.queue_work(std::bind(scenario_launch, std::move(stateEx), true));
+        ++_total_work;
+      }
+	  return;
+	} 
     exec.State(scenario->EngineStateFile().get());
     _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
     ++_total_work;
@@ -315,16 +346,17 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     if ("all" == nc_patient_file) {
       auto patient_files = biogears::ListFiles("patients", R"(\.xml)");
       for (const std::string& patient_file : patient_files) {
+		std::cout << patient_file << std::endl;
         Executor patientEx { exec };
         patientEx.Patient(patient_file);
 
         ///----
-        std::string trimed_patient_path(trim(patientEx.Patient()));
-        auto split_patient_path = split(trimed_patient_path, '/');
+        std::string trimmed_patient_path(trim(patientEx.Patient()));
+        auto split_patient_path = split(trimmed_patient_path, '/');
         auto patient_no_extension = split(split_patient_path.back(), '.').front();
 
-        std::string trimed_scenario_path(trim(patientEx.Scenario()));
-        auto split_scenario_path = split(trimed_scenario_path, '/');
+        std::string trimmed_scenario_path(trim(patientEx.Scenario()));
+        auto split_scenario_path = split(trimmed_scenario_path, '/');
         auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
 
         if (patientEx.Name().empty()) {
