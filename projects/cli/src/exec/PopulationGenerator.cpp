@@ -53,7 +53,7 @@ std::vector<std::string> generate_girl_names();
 PopulationGenerator::PopulationGenerator(std::vector<std::string> params)
 {
   if (params.size() == 1) {
-    _runs.emplace_back("PatientTemplate.xml", 10);
+    _runs.emplace_back("PopulationTemplate.xml", 10);
   } else {
     for (auto i = 0; i < params.size(); ++i) {
       if (i + 2 <= params.size()) {
