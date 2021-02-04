@@ -1,3 +1,6 @@
+cmake_policy(SET CMP0087 NEW)
+
+
 include(InstallRequiredSystemLibraries)
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "BioGears")
@@ -58,7 +61,7 @@ set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}\\\\BioGearsLogo.bmp")
     endif()
     
 
-    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH})
+    set(CMAKE_PREFIX_PATH \"${CMAKE_PREFIX_PATH}\")
 
     foreach(_dir IN LISTS CMAKE_PREFIX_PATH)
       list(APPEND THIRD_PARTY  \"\${_dir}\")
@@ -66,17 +69,15 @@ set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}\\\\BioGearsLogo.bmp")
       list(APPEND THIRD_PARTY_BIN \"\${_dir}/bin\")
     endforeach()
     
-    EXELIST(artifacts \${CMAKE_INSTALL_PREFIX}/bin )
+    #EXELIST(artifacts \${CMAKE_INSTALL_PREFIX}/bin )
 
-    message(\"CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}\")
-    message(\"artifacts=\${artifacts}\")
+   message(\"CMAKE_INSTALL_PREFIX=\${CMAKE_INSTALL_PREFIX}\")
 
-    foreach( artifact IN LISTS artifacts)
-      fixup_bundle(\${artifact}
+   fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/bin/$<TARGET_FILE_NAME:bg-cli>\"
                       \"\"
                     \"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\"
-        )
-    endforeach()
+   )
+
   "         
   )
 

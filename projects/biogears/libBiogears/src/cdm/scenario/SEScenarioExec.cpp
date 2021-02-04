@@ -276,11 +276,7 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
 
         // Pull data from the engine
         scenarioTime_s = m_Engine.GetSimulationTime(TimeUnit::s);
-        currentSampleTime_s += dT_s;
-        if (currentSampleTime_s >= sampleTime_s) {
-          currentSampleTime_s = 0;
-          m_Engine.GetEngineTrack()->TrackData(scenarioTime_s);
-        }
+
         // Call any custom callback provided
         if (m_CustomExec != nullptr) {
           m_CustomExec->CustomExec(scenarioTime_s, &m_Engine);
