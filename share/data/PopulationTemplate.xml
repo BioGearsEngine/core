@@ -2,9 +2,11 @@
 <PopulationProfile xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel xsd/BioGearsDataModel.xsd">
 
   <Heterogametic-SexDistribution>0.333</Heterogametic-SexDistribution>
-  <AgeDistribution mean="44.0" diviation="2.0" unit="yr"/>
-  <WeightDistribution mean="57.79" diviation="2.0" unit="kg"/>
-  <HeightDistribution  mean="163" diviation="2.0" unit="cm"/>
+  <AgeDistribution mean="40.0" diviation="5.0" unit="yr"/>
+  <WeightDistribution group="Male"   mean="75" diviation="10.0" unit="kg"/>
+  <WeightDistribution group="Female" mean="60" diviation="6.0" unit="kg"/>
+  <HeightDistribution  group="Male"  mean="185" diviation="7.0" unit="cm"/>
+  <HeightDistribution  group="Female" mean="170" diviation="7.0" unit="cm"/>
   <!-- BodyDensity CANNOT be set by the user. It is determined using body fat fraction -->
   <BodyFatFractionDistribution  mean="0.28" diviation="2.0"/>
   <!-- LeanBodyMass CANNOT be set by the user. It is determined using weight and body fat fraction -->
@@ -33,8 +35,8 @@
   <RespirationRateBaselineDistribution mean="16.0" diviation="2.0"  unit="1/min"/>
   <SystolicArterialPressureBaselineDistribution  mean="114.0" diviation="2.0"  unit="mmHg" />
   <!-- TidalVolumeBaseline CANNOT be set by the user -->
-  <HeartRateMaximumDistribution mean="177.2" diviation="2.0" unit="1/min" />
-  <HeartRateMinimumDistribution  mean="0.001" diviation="2.0"  unit="1/min"/>
+  <HeartRateMaximumDistribution mean="180.0" diviation="2.0" unit="1/min" />
+  <HeartRateMinimumDistribution  mean="0.001" diviation="0.0"  unit="1/min"/>
   <!-- ExpiratoryReserveVolume CANNOT be set by the user -->
   <FunctionalResidualCapacityDistribution mean="1.7337" diviation="2.0"  unit="L" />
   <!-- InspiratoryCapacity CANNOT be set by the user -->
