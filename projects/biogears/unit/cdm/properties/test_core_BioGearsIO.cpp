@@ -7,7 +7,6 @@
 #include <biogears/io/io-manager.h>
 #include <biogears/io/directories/xsd.h>
 
-//#include <biogears/../../biogears/generated/c_encoded/7.3/biogears/io/xsd/BioGearsDataModel.xsd.hxx>
 
 
 #ifdef DISABLE_BIOGEARS_BioGearsIO_TEST
@@ -62,7 +61,7 @@ TEST_F(TEST_FIXTURE_NAME,ReturnBackupFile)
 }
 
 TEST_F(TEST_FIXTURE_NAME,ResolvePathAbsolute)
-{
+{ // This isn't actually checking this path, as it is not guaranteed to exist on every given machine, it's just formatting
   EXPECT_EQ("D:\biogears", biogears::io::ResolvePath(std::string("D:\biogears\\")));
   EXPECT_EQ("D:\biogears\\core", biogears::io::ResolvePath(std::string("D:\biogears\\core\\")));
   EXPECT_EQ("D:\biogears\\core\\build", biogears::io::ResolvePath(std::string("D:\biogears\\core\\build\\")));
