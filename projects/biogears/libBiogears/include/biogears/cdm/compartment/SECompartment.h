@@ -13,7 +13,8 @@ specific language governing permissions and limitations under the License.
 #include <vector>
 
 #include <biogears/cdm/CommonDataModel.h>
-
+#include<biogears/schema/cdm/Compartment.hxx>
+#include<biogears/cdm/circuit/SECircuitManager.h>
 #pragma once
 
 CDM_BIND_DECL(CompartmentData)

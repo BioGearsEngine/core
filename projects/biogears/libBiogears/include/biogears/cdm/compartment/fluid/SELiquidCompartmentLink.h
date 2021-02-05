@@ -10,6 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
+#include <biogears/exports.h>
 
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
@@ -18,7 +19,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SELiquidCompartment;
 class SECompartmentManager;
-class SELiquidCompartmentLink : public SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment> {
+class BIOGEARS_API SELiquidCompartmentLink : public SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment> {
   friend class SECompartmentManager;
 
 protected:

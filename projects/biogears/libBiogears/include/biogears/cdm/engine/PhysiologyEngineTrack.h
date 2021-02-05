@@ -12,22 +12,23 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
+
+#include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
+#include <biogears/cdm/engine/PhysiologyEngine.h>
+#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/properties/SEGenericScalar.h>
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/SESystem.h>
+#include <biogears/cdm/system/environment/SEEnvironment.h>
 #include <biogears/cdm/utils/DataTrack.h>
 
 namespace biogears {
-class SESystem;
-class SEPatient;
-class SEEnvironment;
-class PhysiologyEngine;
-class SESubstanceManager;
-class SECompartmentManager;
 
 enum class CompartmentUpdate { None,
                                InFlow,
@@ -83,8 +84,7 @@ public:
                         SESubstanceManager& subMgr,
                         SECompartmentManager& cmptMgr,
                         const std::vector<SESystem*>& physiology,
-                        const std::vector<SESystem*>& equipment
-                       );
+                        const std::vector<SESystem*>& equipment);
   PhysiologyEngineTrack(PhysiologyEngineTrack&&);
   PhysiologyEngineTrack& operator=(PhysiologyEngineTrack&& rhs);
   virtual ~PhysiologyEngineTrack();

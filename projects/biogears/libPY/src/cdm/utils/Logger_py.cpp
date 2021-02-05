@@ -8,9 +8,11 @@ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 **************************************************************************************/
+#include <pybind11/pybind11.h>
+
+#include <string>
 
 #include <biogears/cdm/utils/Logger.h>
-#include <pybind11/pybind11.h>
 
 namespace py = pybind11;
 using namespace pybind11::literals; 
@@ -31,10 +33,15 @@ PYBIND11_MODULE(pybiogears, m)
     .def("GetLogLevel", &Logger::GetLogLevel)
     .def("SetsetConversionPattern", &Logger::SetsetConversionPattern, "Set conversion pattern for file logging", "pattern"_a = Loggable::empty)
     .def("SetConsolesetConversionPattern", &Logger::SetConsolesetConversionPattern, "Set conversion pattern for console logging", "pattern"_a = Loggable::empty)
-    .def("Debug", static_cast<void (Logger::*)(const std::string&, const std::string&)>(&Logger::Debug),   "Log a Debug Message")
-    .def("Info",    static_cast<void (Logger::*)(const std::string&, const std::string&)> (&Logger::Info),    "Log a Info Message"   , "message"_a, "origin"_a = Loggable::empty)
-    .def("Warning", static_cast<void (Logger::*)(const std::string&, const std::string&)> (&Logger::Warning), "Log a Warning Message", "message"_a, "origin"_a = Loggable::empty)
-    .def("Error",   static_cast<void (Logger::*)(const std::string&, const std::string&)> (&Logger::Error),   "Log a Error Message"  , "message"_a, "origin"_a = Loggable::empty)
-    .def("Fatal",   static_cast<void (Logger::*)(const std::string&, const std::string&)> (&Logger::Fatal),   "Log a Fatal Message"  , "message"_a, "origin"_a = Loggable::empty);
+    .def("Debug",py::overload_cast<const std::string&,const std::string&>(&biogears::Logger::Debug,py::const_))
+    .def("Debug",py::overload_cast<const std::ostream&,const std::string&>(&biogears::Logger::Debug,py::const_))
+    .def("Info",py::overload_cast<const std::string&,const std::string&>(&biogears::Logger::Info,py::const_),py::arg("msg")="",py::arg("origin") ="")
+    .def("Info",py::overload_cast<const std::ostream&,const std::string&>(&biogears::Logger::Info,py::const_),py::arg("msg")="",py::arg("origin") ="")
+    .def("Warning",py::overload_cast<const std::string&,const std::string&>(&biogears::Logger::Warning,py::const_))
+    .def("Warning",py::overload_cast<const std::ostream&,const std::string&>(&biogears::Logger::Warning,py::const_))
+    .def("Error",py::overload_cast<const std::string&,const std::string&>(&biogears::Logger::Error,py::const_))
+    .def("Error",py::overload_cast<const std::ostream&,const std::string&>(&biogears::Logger::Error,py::const_))
+    .def("Fatal",py::overload_cast<const std::string&,const std::string&>(&biogears::Logger::Fatal,py::const_))
+    .def("Fatal",py::overload_cast<const std::ostream&,const std::string&>(&biogears::Logger::Fatal,py::const_));
      m.doc() = "Python Bindings for BioGears Human Physiology Engine"; // optional module docstring
 }

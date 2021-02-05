@@ -23,9 +23,9 @@ namespace io {
 class BIOGEARS_API SEBreathHold : public SEConsciousRespirationCommand {
   friend class SEConsciousRespiration;
   friend io::PatientActions;
-  SEBreathHold();
 
 public:
+  SEBreathHold();
   virtual ~SEBreathHold();
 
   virtual void Clear(); //clear memory
