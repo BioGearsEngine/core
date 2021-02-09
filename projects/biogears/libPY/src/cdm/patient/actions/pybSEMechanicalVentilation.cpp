@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEMechanicalVentilation, m)
+void define_pybSEMechanicalVentilation(py::module_ &m)
 {
 
   py::class_<biogears::SEMechanicalVentilation, biogears::SEPatientAction>(m, "SEMechanicalVentilation")

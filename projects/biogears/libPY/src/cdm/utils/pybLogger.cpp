@@ -5,7 +5,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybLogger, m) {
+void define_pybLogger(py::module_ &m) {
 
     std::cout<<"pybLogger called";
     py::class_<biogears::Logger>(m, "Logger")

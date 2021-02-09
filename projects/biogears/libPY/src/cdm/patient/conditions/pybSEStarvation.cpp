@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEStarvation, m)
+void define_pybSEStarvation(py::module_ &m)
 {
 
   py::class_<biogears::SEStarvation, biogears::SEPatientCondition>(m, "SEStarvation")

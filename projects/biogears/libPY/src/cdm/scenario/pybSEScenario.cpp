@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEScenario, m)
+void define_pybSEScenario(py::module_ &m)
 {
 
   py::class_<biogears::SEScenario, biogears::Loggable>(m, "SEScenario")

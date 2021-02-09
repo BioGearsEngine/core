@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESerializeState, m)
+void define_pybSESerializeState(py::module_ &m)
 {
 
   py::class_<biogears::SESerializeState, biogears::SEAction>(m, "SESerializeState")

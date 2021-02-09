@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEScenarioExec, m)
+void define_pybSEScenarioExec(py::module_ &m)
 {
   py::class_<biogears::SEScenarioCustomExec>(m, "SEScenarioCustomExec")
     .def("CustomExec", &biogears::SEScenarioCustomExec::CustomExec);

@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEDiabetesType1, m)
+void define_pybSEDiabetesType1(py::module_ &m)
 {
 
   py::class_<biogears::SEDiabetesType1, biogears::SEPatientCondition>(m, "SEDiabetesType1")

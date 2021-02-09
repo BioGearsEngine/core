@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEChestOcclusiveDressing, m)
+void define_pybSEChestOcclusiveDressing(py::module_ &m)
 {
   py::class_<biogears::SEChestOcclusiveDressing>(m, "SEChestOcclusiveDressing")
     .def(py::init<>())

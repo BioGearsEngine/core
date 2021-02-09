@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESubstanceConcentration, m)
+void define_pybSESubstanceConcentration(py::module_ &m)
 {
 
   py::class_<biogears::SESubstanceConcentration, biogears::Loggable>(m, "SESubstanceConcentration")

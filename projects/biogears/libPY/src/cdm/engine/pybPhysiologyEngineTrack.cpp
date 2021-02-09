@@ -6,7 +6,7 @@
 namespace py = pybind11;
 
 
-PYBIND11_MODULE(pybPhysiologyEngineTrack, m) {
+void define_pybPhysiologyEngineTrack(py::module_ &m) {
 
 
     py::class_<biogears::PhysiologyEngineTrack>(m, "PhysiologyEngineTrack")

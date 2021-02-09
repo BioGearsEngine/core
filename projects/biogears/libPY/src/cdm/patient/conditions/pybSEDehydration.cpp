@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEDehydration, m)
+void define_pybSEDehydration(py::module_ &m)
 {
 
   py::class_<biogears::SEDehydration, biogears::SEPatientCondition>(m, "SEDehydration")

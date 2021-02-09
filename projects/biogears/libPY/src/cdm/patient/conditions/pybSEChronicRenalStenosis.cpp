@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEChronicRenalStenosis, m)
+void define_pybSEChronicRenalStenosis(py::module_ &m)
 {
 
   py::class_<biogears::SEChronicRenalStenosis, biogears::SEPatientCondition>(m, "SEChronicRenalStenosis")

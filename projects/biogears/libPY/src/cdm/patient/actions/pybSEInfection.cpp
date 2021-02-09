@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEInfection, m)
+void define_pybSEInfection(py::module_ &m)
 {
 
   py::class_<biogears::SEInfection>(m, "SEInfection")

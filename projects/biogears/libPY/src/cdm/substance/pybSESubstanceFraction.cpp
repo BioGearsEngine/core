@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESubstanceFraction, m)
+void define_pybSESubstanceFraction(py::module_ &m)
 {
 
   py::class_<biogears::SESubstanceFraction, biogears::Loggable>(m, "SESubstanceFraction")

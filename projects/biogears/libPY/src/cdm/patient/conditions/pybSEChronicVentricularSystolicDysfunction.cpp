@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEChronicVentricularSystolicDysfunction, m)
+void define_pybSEChronicVentricularSystolicDysfunction(py::module_ &m)
 {
 
   py::class_<biogears::SEChronicVentricularSystolicDysfunction, biogears::SEChronicHeartFailure>(m, "SEChronicVentricularSystolicDysfunction")

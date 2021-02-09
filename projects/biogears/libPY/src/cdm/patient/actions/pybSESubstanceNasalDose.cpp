@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESubstanceNasalDose, m)
+void define_pybSESubstanceNasalDose(py::module_ &m)
 {
 
   py::class_<biogears::SESubstanceNasalDose, biogears::SESubstanceAdministration>(m, "SESubstanceNasalDose")

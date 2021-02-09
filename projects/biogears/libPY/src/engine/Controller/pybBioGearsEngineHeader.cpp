@@ -10,7 +10,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybBioGearsEngineHeader, m)
+void define_pybBioGearsEngineHeader(py::module_ &m)
 {
 
   py::class_<biogears::SEScalarTime>(m, "SEScalarTime");

@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEChestCompressionForce, m)
+void define_pybSEChestCompressionForce(py::module_ &m)
 {
   py::class_<biogears::SEChestCompressionForce, biogears::SEChestCompression>(m, "SEChestCompressionForce")
     .def(py::init<>())

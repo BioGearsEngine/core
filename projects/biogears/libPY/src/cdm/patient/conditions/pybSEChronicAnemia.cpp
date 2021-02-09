@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEChronicAnemia, m)
+void define_pybSEChronicAnemia(py::module_ &m)
 {
 
   py::class_<biogears::SEChronicAnemia, biogears::SEPatientCondition>(m, "SEChronicAnemia")

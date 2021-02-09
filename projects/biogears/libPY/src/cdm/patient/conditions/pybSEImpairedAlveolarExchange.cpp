@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEImpairedAlveolarExchange, m)
+void define_pybSEImpairedAlveolarExchange(py::module_ &m)
 {
 
   py::class_<biogears::SEImpairedAlveolarExchange, biogears::SEPatientCondition>(m, "SEImpairedAlveolarExchange")

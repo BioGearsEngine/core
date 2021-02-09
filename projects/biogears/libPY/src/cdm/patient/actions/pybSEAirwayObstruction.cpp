@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEAirwayObstruction, m) {
+void define_pybSEAirwayObstruction(py::module_ &m) {
 
 
     py::class_<biogears::SEAirwayObstruction>(m, "SEAirwayObstruction")

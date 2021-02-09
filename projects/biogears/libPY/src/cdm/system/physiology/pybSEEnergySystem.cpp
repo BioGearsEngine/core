@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEEnergySystem, m)
+void define_pybSEEnergySystem(py::module_ &m)
 {
   py::module_::import("pybSESystem");
 

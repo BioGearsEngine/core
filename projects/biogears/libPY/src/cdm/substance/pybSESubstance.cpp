@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESubstance, m)
+void define_pybSESubstance(py::module_ &m)
 {
 
   py::class_<biogears::SESubstance, biogears::Loggable>(m, "SESubstance")

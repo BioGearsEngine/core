@@ -12,7 +12,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEConsciousRespiration, m)
+void define_pybSEConsciousRespiration(py::module_ &m)
 {
 
   py::class_<biogears::SEConsciousRespiration>(m, "SEChestOcclusiveDressing")

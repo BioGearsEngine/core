@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSETensionPneumothorax, m)
+void define_pybSETensionPneumothroax(py::module_ &m)
 {
 
   py::class_<biogears::SETensionPneumothorax, biogears::SEPatientAction>(m, "SETensionPneumothorax")

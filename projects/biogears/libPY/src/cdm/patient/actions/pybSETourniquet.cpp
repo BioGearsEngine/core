@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSETourniquet, m)
+void define_pybSETourniquet(py::module_ &m)
 {
 
   py::class_<biogears::SETourniquet, biogears::SEPatientAction>(m, "SETourniquet")

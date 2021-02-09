@@ -9,7 +9,7 @@ namespace py = pybind11;
 
 
 
-PYBIND11_MODULE(pybscalarpressure, m) {
+void define_pybscalarpressure(py::module_ &m) {
 
 //    py::class_<biogears::PressureUnit,biogears::CCompoundUnit>(m, "PressureUnit");
 

@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSELobarPneumonia, m)
+void define_pybSELobarPneumonia(py::module_ &m)
 {
 
   py::class_<biogears::SELobarPneumonia, biogears::SEPatientCondition>(m, "SELobarPneumonia")

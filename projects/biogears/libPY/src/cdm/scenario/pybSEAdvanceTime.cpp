@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEAdvanceTime, m)
+void define_pybSEAdvanceTime(py::module_ &m)
 {
 
   py::class_<biogears::SEAdvanceTime, biogears::SEAction>(m, "SEAdvanceTime")

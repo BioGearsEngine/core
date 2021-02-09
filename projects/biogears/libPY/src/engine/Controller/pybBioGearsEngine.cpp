@@ -6,7 +6,7 @@
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybBioGearsEngine, m)
+void define_pybBioGearsEngine(py::module_ &m)
 {
   // m.def("CreateBioGearsEngine")
   //testing

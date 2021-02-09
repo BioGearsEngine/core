@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEPatient, m)
+void define_pybSEPatient(py::module_ &m)
 {
 
   py::class_<biogears::SEPatient, biogears::Loggable>(m, "SEPatient")

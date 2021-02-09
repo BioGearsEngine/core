@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEExercise, m)
+void define_pybSEExercise(py::module_ &m)
 {
 
   py::class_<biogears::SEExercise::SEGeneric>(m, "SEExerciseSEGeneric")

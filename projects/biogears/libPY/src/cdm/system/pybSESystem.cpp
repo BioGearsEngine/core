@@ -8,11 +8,8 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESystem, m)
+void define_pybSESystem(py::module_ &m)
 {
-
-  py::module_::import("pybLogger");
-
   py::class_<biogears::SESystem, biogears::Loggable>(m, "SESystem");
   // .def(py::init<>())
   // .def("Clear",&biogears::SEPatientAction::Clear)

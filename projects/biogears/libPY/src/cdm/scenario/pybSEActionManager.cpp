@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEActionManager, m)
+void define_pybSEActionManager(py::module_ &m)
 {
 
   py::class_<biogears::SEActionManager, biogears::Loggable>(m, "SEActionManager")

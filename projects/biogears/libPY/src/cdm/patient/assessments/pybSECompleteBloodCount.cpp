@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSECompleteBloodCount, m)
+void define_pybSECompleteBloodCount(py::module_ &m)
 {
 
   py::class_<biogears::SECompleteBloodCount, biogears::SEPatientAssessment>(m, "SECompleteBloodCount")

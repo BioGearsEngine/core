@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEPatientAssessmentRequest, m)
+void define_pybSEPatientAssessmentRequest(py::module_ &m)
 {
 
   py::class_<biogears::SEPatientAssessmentRequest, biogears::SEPatientAction>(m, "SEPatientAssessmentRequest")

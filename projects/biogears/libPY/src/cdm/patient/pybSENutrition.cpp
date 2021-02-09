@@ -9,7 +9,7 @@ namespace py = pybind11;
 
 CDM_BIND_DECL(NutritionData)
 
-PYBIND11_MODULE(pybSENutrition, m)
+void define_pybSENutrition(py::module_ &m)
 {
 
   py::class_<biogears::SENutrition, biogears::Loggable>(m, "SENutrition")

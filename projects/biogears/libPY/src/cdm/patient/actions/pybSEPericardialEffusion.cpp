@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEPericardialEffusion, m)
+void define_pybSEPericardialEffusion(py::module_ &m)
 {
 
   py::class_<biogears::SEPericardialEffusion, biogears::SEPatientAction>(m, "SEPericardialEffusion")

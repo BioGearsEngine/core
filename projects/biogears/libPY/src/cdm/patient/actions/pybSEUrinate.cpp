@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEUrinate, m)
+void define_pybSEUrinate(py::module_ &m)
 {
 
   py::class_<biogears::SEUrinate, biogears::SEPatientAction>(m, "SEUrinate")

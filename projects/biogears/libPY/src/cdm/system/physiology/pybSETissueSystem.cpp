@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSETissueSystem, m)
+void define_pybSETissueSystem(py::module_ &m)
 {
   py::module_::import("pybSESystem");
 

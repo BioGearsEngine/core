@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEPupillaryResponse, m)
+void define_pybSEPupillaryResponse(py::module_ &m)
 {
 
   py::class_<biogears::SEPupillaryResponse>(m, "SEPupillaryResponse")

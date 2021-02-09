@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEGasCompartmentDataRequest, m)
+void define_pybSEGasCompartmentDataRequest(py::module_ &m)
 {
 
   py::class_<biogears::SEGasCompartmentDataRequest, biogears::SECompartmentSubstanceDataRequest>(m, "SEGasCompartmentDataRequest")

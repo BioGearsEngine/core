@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEConsumeNutrients, m)
+void define_pybSEConsumeNutrients(py::module_ &m)
 {
 
   py::class_<biogears::SEConsumeNutrients>(m, "SEConsumeNutrients")

@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSENeedleDecompression, m)
+void define_pybSENeedleDecompression(py::module_ &m)
 {
 
   py::class_<biogears::SENeedleDecompression, biogears::SEPatientAction>(m, "SENeedleDecompression")

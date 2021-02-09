@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEEndocrineSystem, m)
+void define_pybSEEndocrineSystem(py::module_ &m)
 {
   py::module_::import("pybSESystem");
 

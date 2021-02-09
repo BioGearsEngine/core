@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSECardiovascularSystem, m)
+void define_pybSECardiovascularSystem(py::module_ &m)
 {
   py::module_::import("pybSESystem");
 

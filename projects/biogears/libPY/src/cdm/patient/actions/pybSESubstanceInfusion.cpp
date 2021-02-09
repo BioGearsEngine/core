@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESubstanceInfusion, m)
+void define_pybSESubstanceInfusion(py::module_ &m)
 {
 
   py::class_<biogears::SESubstanceInfusion, biogears::SESubstanceAdministration>(m, "SESubstanceInfusion")

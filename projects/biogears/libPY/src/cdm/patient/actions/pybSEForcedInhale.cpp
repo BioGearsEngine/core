@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEForcedInhale, m)
+void define_pybSEForcedInhale(py::module_ &m)
 {
 
   py::class_<biogears::SEForcedInhale>(m, "SEForcedInhale")

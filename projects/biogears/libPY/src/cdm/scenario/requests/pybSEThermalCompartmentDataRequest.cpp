@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEThermalCompartmentDataRequest, m)
+void define_pybSEThermalCompartmentDataRequest(py::module_ &m)
 {
 
   py::class_<biogears::SEThermalCompartmentDataRequest, biogears::SECompartmentDataRequest>(m, "SEThermalCompartmentDataRequest")

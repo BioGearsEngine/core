@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESequentialOrganFailureAssessment, m)
+void define_pybSESequentialOrganFailureAssessment(py::module_ &m)
 {
 
   py::class_<biogears::SESequentialOrganFailureAssessment, biogears::SEPatientAssessment>(m, "SESequentialOrganFailureAssessment")

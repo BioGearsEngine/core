@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESubstanceDataRequest, m)
+void define_pybSESubstanceDataRequest(py::module_ &m)
 {
 
   py::class_<biogears::SESubstanceDataRequest, biogears::SEDataRequest>(m, "SESubstanceDataRequest")

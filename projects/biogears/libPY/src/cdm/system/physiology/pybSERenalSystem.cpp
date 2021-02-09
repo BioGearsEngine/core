@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSERenalSystem, m)
+void define_pybSERenalSystem(py::module_ &m)
 {
   py::module_::import("pybSESystem");
 

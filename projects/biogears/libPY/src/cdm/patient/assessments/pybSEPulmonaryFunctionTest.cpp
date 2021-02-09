@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEPulmonaryFunctionTest, m)
+void define_pybSEPulmonaryFunctionTest(py::module_ &m)
 {
 
   py::class_<biogears::SEPulmonaryFunctionTest, biogears::SEPatientAssessment>(m, "SEPulmonaryFunctionTest")

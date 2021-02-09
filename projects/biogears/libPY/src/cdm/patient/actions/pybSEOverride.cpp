@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEOverride, m)
+void define_pybSEOverride(py::module_ &m)
 {
 
   py::class_<biogears::SEOverride, biogears::SEPatientAction>(m, "SEOverride")

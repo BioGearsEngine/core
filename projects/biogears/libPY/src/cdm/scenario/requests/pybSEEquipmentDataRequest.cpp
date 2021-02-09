@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEEquipmentDataRequest, m)
+void define_pybSEEquipmentDataRequest(py::module_ &m)
 {
 
   py::class_<biogears::SEEquipmentDataRequest, biogears::SEDataRequest>(m, "SEEquipmentDataRequest")

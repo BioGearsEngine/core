@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEUrinalysisMicroscopic, m)
+void define_pybSEUrinalysisMicroscopic(py::module_ &m)
 {
 
   py::class_<biogears::SEUrinalysisMicroscopic, biogears::SEPatientAssessment>(m, "SEUrinalysisMicroscopic")

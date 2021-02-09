@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESleep, m)
+void define_pybSESleep(py::module_ &m)
 {
 
   py::class_<biogears::SESleep, biogears::SEPatientAction>(m, "SESleep")

@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEEnvironmentActionCollection, m)
+void define_pybSEEnvironmentActionCollection(py::module_ &m)
 {
 
   py::class_<biogears::SEEnvironmentActionCollection, biogears::Loggable>(m, "SEEnvironmentActionCollection")

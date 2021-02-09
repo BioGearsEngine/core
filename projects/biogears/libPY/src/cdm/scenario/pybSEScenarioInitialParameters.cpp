@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEScenarioInitialParameters, m)
+void define_pybSEScenarioInitialParameters(py::module_ &m)
 {
 
   py::class_<biogears::SEScenarioInitialParameters, biogears::Loggable, std::unique_ptr<biogears::SEScenarioInitialParameters, py::nodelete>>(m, "SEScenarioInitialParameters")

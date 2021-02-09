@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEConditionManager, m)
+void define_pybSEConditionManager(py::module_ &m)
 {
 
   py::class_<biogears::SEConditionManager, biogears::Loggable>(m, "SEConditionManager")

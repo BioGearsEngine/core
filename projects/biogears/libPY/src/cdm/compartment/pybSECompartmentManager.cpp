@@ -14,12 +14,16 @@
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+#include <biogears/cdm/compartment/SECompartmentGraph.inl>
+#include <biogears/cdm/compartment/SECompartmentTransportGraph.inl>
+#include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.inl>
+
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSECompartmentManager, m)
+void define_pybSECompartmentManager(py::module_& m)
 {
 
-  py::module_::import("pybLogger");
+
 
   py::class_<biogears::SECompartmentManager, biogears::Loggable>(m, "SECompartmentManager")
     .def(py::init<biogears::SESubstanceManager&>())

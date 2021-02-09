@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEDataRequest, m)
+void define_pybSEDataRequest(py::module_ &m)
 {
   // py::arg("dfault") = nullptr
 

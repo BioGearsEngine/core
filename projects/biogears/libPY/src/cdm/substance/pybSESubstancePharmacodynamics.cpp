@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESubstancePharmacodynamics, m)
+void define_pybSESubstancePharmacodynamics(py::module_ &m)
 {
 
   py::class_<biogears::SEPharmacodynamicModifier>(m, "SEPharmacodynamicModifier")

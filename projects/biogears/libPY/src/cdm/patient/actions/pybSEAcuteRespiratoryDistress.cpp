@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEAcuteRespiratoryDistress, m) {
+void define_pybSEAcuteRespiratoryDistress(py::module_ &m) {
 
 
     py::class_<biogears::SEAcuteRespiratoryDistress>(m, "SEAcuteRespiratoryDistress")

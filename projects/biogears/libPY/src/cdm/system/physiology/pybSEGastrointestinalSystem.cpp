@@ -11,7 +11,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEGastrointestinalSystem, m)
+void define_pybSEGastrointestinalSystem(py::module_ &m)
 {
   py::module_::import("pybSESystem");
 

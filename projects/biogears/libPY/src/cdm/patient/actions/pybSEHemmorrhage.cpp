@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEHemorrhage, m)
+void define_pybSEHemmorrhage(py::module_ &m)
 {
 
   py::class_<biogears::SEHemorrhage>(m, "SEHemorrhage")

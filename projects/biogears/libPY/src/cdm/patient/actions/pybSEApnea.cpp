@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEApnea, m) {
+void define_pybSEApnea(py::module_ &m) {
 
 
     py::class_<biogears::SEApnea>(m, "SEApnea")

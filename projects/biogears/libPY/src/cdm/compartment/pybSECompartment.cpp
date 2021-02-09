@@ -6,10 +6,10 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSECompartment, m)
+void define_pybSECompartment(py::module_ &m)
 {
 
-  py::module_::import("pybLogger");
+
 
   py::class_<biogears::SECompartment, biogears::Loggable>(m, "SECompartment")
     .def("Clear", &biogears::SECompartment::Clear)

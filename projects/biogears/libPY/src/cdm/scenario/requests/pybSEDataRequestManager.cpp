@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEDataRequestManager, m)
+void define_pybSEDataRequestManager(py::module_ &m)
 {
 
   py::class_<biogears::SEDecimalFormat>(m, "SEDecimalFormat");

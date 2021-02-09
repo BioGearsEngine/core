@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESubstancePhysicochemicals, m)
+void define_pybSESubstancePhysicochemicals(py::module_ &m)
 {
 
   py::class_<biogears::SESubstancePhysicochemicals, biogears::Loggable>(m, "SESubstancePhysicochemicals")

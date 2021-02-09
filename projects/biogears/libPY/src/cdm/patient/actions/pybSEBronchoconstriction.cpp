@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEBronchoconstriction, m)
+void define_pybSEBronchoconstriction(py::module_ &m)
 {
 
   py::class_<biogears::SEBronchoconstriction>(m, "SEBronchoconstriction")

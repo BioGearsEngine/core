@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESubstanceAerosolization, m)
+void define_pybSESubstanceAerosolization(py::module_ &m)
 {
 
   py::class_<biogears::SESubstanceAerosolization, biogears::Loggable>(m, "SESubstanceAerosolization")

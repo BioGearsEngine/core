@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEAnesthesiaMachineActionCollection, m)
+void define_pybSEAnesthesiaMachineActionCollection(py::module_ &m)
 {
 
   py::class_<biogears::SEAnesthesiaMachineActionCollection, biogears::Loggable>(m, "SEAnesthesiaMachineActionCollection")

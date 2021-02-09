@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEBrainInjury, m) {
+void define_pybSEBrainInjury(py::module_ &m) {
 
 
     py::class_<biogears::SEBrainInjury>(m, "SEBrainInjury")

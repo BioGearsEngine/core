@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEInhalerActionCollection, m)
+void define_pybSEInhalerActionCollection(py::module_ &m)
 {
 
   py::class_<biogears::SEInhalerActionCollection, biogears::Loggable>(m, "SEInhalerActionCollection")

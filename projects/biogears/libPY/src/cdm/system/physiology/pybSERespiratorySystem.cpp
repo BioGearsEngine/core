@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSERespiratorySystem, m)
+void define_pybSERespiratorySystem(py::module_ &m)
 {
   py::module_::import("pybSESystem");
 

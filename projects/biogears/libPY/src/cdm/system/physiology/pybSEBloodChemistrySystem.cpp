@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEBloodChemistrySystem, m)
+void define_pybSEBloodChemistrySystem(py::module_ &m)
 {
   py::module_::import("pybSESystem");
 

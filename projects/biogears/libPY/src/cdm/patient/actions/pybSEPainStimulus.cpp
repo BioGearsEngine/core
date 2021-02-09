@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEPainStimulus, m)
+void define_pybSEPainStimulus(py::module_ &m)
 {
 
   py::class_<biogears::SEPainStimulus, biogears::SEPatientAction>(m, "SEPainStimulus")

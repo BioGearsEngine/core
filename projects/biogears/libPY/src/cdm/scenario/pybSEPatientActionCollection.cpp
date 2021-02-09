@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEPatientActionCollection, m)
+void define_pybSEPatientActionCollection(py::module_ &m)
 {
 
   py::class_<biogears::SEPatientActionCollection, biogears::Loggable>(m, "SEPatientActionCollection")

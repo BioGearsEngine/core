@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEEnvironmentDataRequest, m)
+void define_pybSEEnvironmentDataRequest(py::module_ &m)
 {
 
   py::class_<biogears::SEEnvironmentDataRequest, biogears::SEDataRequest>(m, "SEEnvironmentDataRequest")

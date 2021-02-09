@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESubstanceClearance, m)
+void define_pybSESubstanceClearance(py::module_ &m)
 {
 
   py::class_<biogears::SESubstanceClearance, biogears::Loggable>(m, "SESubstanceClearance")

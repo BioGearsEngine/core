@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSECardiacArrest, m)
+void define_pybSECardiacArrest(py::module_ &m)
 {
 
   py::class_<biogears::SECardiacArrest>(m, "SECardiacArrest")

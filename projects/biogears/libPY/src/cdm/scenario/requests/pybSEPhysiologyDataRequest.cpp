@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEPhysiologyDataRequest, m)
+void define_pybSEPhysiologyDataRequest(py::module_ &m)
 {
   py::module_::import("pybSEDataRequest");
 

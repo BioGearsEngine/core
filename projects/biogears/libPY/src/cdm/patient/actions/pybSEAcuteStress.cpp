@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEAcuteStress, m) {
+void define_pybSEAcuteStress(py::module_ &m) {
 
 
     py::class_<biogears::SEAcuteStress>(m, "SEAcuteStress")

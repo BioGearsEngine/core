@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEBurnWound, m)
+void define_pybSEBurnWound(py::module_ &m)
 {
 
   py::class_<biogears::SEBurnWound>(m, "SEBurnWound")

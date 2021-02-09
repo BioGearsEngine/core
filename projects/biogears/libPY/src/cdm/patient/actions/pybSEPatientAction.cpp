@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEPatientAction, m) {
+void define_pybSEPatientAction(py::module_ &m) {
 
   py::module_::import("pybSEAction");
 

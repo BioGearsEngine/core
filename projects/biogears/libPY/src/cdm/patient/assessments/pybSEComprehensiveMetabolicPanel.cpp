@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEComprehensiveMetabolicPanel, m)
+void define_pybSEComprehensiveMetabolicPanel(py::module_ &m)
 {
 
   py::class_<biogears::SEComprehensiveMetabolicPanel, biogears::SEPatientAssessment>(m, "SEComprehensiveMetabolicPanel")

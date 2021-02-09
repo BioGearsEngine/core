@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSEHepaticSystem, m)
+void define_pybSEHepaticSystem(py::module_ &m)
 {
   py::module_::import("pybSESystem");
 

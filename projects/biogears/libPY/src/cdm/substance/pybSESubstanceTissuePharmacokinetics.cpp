@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pybSESubstanceTissuePharmacokinetics, m)
+void define_pybSESubstanceTissuePharmacokinetics(py::module_ &m)
 {
 
   py::class_<biogears::SESubstanceTissuePharmacokinetics, biogears::Loggable>(m, "SESubstanceTissuePharmacokinetics")
