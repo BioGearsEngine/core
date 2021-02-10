@@ -13,7 +13,7 @@ namespace py = pybind11;
 
 void define_pybSEGastrointestinalSystem(py::module_ &m)
 {
-  py::module_::import("pybSESystem");
+  
 
   py::class_<biogears::SEGastrointestinalSystem, biogears::SESystem>(m, "SEGastrointestinalSystem")
     .def(py::init<biogears::Logger*>())

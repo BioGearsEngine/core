@@ -12,7 +12,7 @@ namespace py = pybind11;
 void define_pybSEMechanicalVentilation(py::module_ &m)
 {
 
-  py::class_<biogears::SEMechanicalVentilation, biogears::SEPatientAction>(m, "SEMechanicalVentilation")
+  py::class_<biogears::SEMechanicalVentilation>(m, "SEMechanicalVentilation")
     .def(py::init<>())
     .def("TypeTag", &biogears::SEMechanicalVentilation::TypeTag)
     .def("classname", py::overload_cast<>(&biogears::SEMechanicalVentilation::classname, py::const_))

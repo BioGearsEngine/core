@@ -15,7 +15,7 @@ namespace py = pybind11;
 void define_pybSEConsciousRespiration(py::module_ &m)
 {
 
-  py::class_<biogears::SEConsciousRespiration>(m, "SEChestOcclusiveDressing")
+  py::class_<biogears::SEConsciousRespiration>(m, "SEConsciousRespiration")
     .def(py::init<>())
     .def("TypeTag", &biogears::SEConsciousRespiration::TypeTag)
     .def("classname", py::overload_cast<>(&biogears::SEConsciousRespiration::classname, py::const_))

@@ -11,7 +11,7 @@ namespace py = pybind11;
 
 void define_pybSERespiratorySystem(py::module_ &m)
 {
-  py::module_::import("pybSESystem");
+  
 
   py::class_<biogears::SERespiratorySystem, biogears::SESystem>(m, "SERespiratorySystem")
     .def(py::init<biogears::Logger*>())

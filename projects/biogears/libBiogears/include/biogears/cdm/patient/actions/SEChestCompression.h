@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
+#include <biogears/schema/cdm/Scenario.hxx>
 
 namespace biogears {
 class BIOGEARS_API SEChestCompression : public SEPatientAction {
@@ -29,12 +30,12 @@ public:
   virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::ChestCompressionData& in);
-
+  virtual CDM::ChestCompressionData* Unload() const override;
 protected:
   virtual void Unload(CDM::ChestCompressionData& data) const;
 
 public:
-  virtual void ToString(std::ostream& str) const  override= 0;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
 };

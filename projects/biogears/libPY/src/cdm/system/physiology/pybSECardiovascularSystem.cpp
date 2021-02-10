@@ -10,8 +10,6 @@ namespace py = pybind11;
 
 void define_pybSECardiovascularSystem(py::module_ &m)
 {
-  py::module_::import("pybSESystem");
-
   py::class_<biogears::SECardiovascularSystem, biogears::SESystem>(m, "SECardiovascularSystem")
     .def(py::init<biogears::Logger*>())
     .def("TypeHash", &biogears::SECardiovascularSystem::TypeHash)

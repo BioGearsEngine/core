@@ -9,13 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#pragma once
+
 #include <string>
 #include <vector>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include<biogears/schema/cdm/Compartment.hxx>
 #include<biogears/cdm/circuit/SECircuitManager.h>
-#pragma once
+#include <biogears/cdm/utils/Logger.h>
+#include <biogears/schema/cdm/Compartment.hxx>
 
 CDM_BIND_DECL(CompartmentData)
 

@@ -29,6 +29,7 @@ void define_pybSEBreathHold(py::module_& m);
 void define_pybSEBronchoconstriction(py::module_& m);
 void define_pybSEBurnWound(py::module_& m);
 void define_pybSECardiacArrest(py::module_& m);
+void define_pybSEChestCompression(py::module_& m);
 void define_pybSEChestCompressionForce(py::module_& m);
 void define_pybSEChestCompressionForceScale(py::module_& m);
 void define_pybSEChestOcclusiveDressing(py::module_& m);
@@ -189,6 +190,7 @@ void define_pybSERespiratorySystem(py::module_& m);
 void define_pybSETissueSystem(py::module_& m);
 void define_pybSESystem(py::module_& m);
 void define_pybLogger(py::module_& m);
+void define_pybLoggable(py::module_& m);
 void define_pybBioGearsEngine(py::module_& m);
 void define_pybBioGearsEngineHeader(py::module_& m);
 void define_pybSEScalar(py::module_& m);
@@ -197,6 +199,14 @@ void define_pybscalarpressure(py::module_& m);
 
 PYBIND11_MODULE(pybiogears, m)
 {
+  //!Order of these function matters :(
+  //I plan to come back and create a block level 
+  //Inheritance tree to represent why they are in a given order
+
+  define_pybLogger(m);
+  define_pybLoggable(m);
+  define_pybSEPatientAction(m);
+
   define_pybSECompartment(m);
   define_pybSECompartmentManager(m);
   define_pybPhysiologyEngineTrack(m);
@@ -210,6 +220,7 @@ PYBIND11_MODULE(pybiogears, m)
   define_pybSEBronchoconstriction(m);
   define_pybSEBurnWound(m);
   define_pybSECardiacArrest(m);
+  define_pybSEChestCompression(m);
   define_pybSEChestCompressionForce(m);
   define_pybSEChestCompressionForceScale(m);
   define_pybSEChestOcclusiveDressing(m);
@@ -225,14 +236,13 @@ PYBIND11_MODULE(pybiogears, m)
   define_pybSENeedleDecompression(m);
   define_pybSEOverride(m);
   define_pybSEPainStimulus(m);
-  define_pybSEPatientAction(m);
   define_pybSEPatientAssessmentRequest(m);
   define_pybSEPericardialEffusion(m);
   define_pybSEPupillaryResponse(m);
   define_pybSESleep(m);
-  define_pybSESubstanceBolus(m);
-  define_pybSESubstanceCompoundInfusion(m);
   define_pybSESubstanceInfusion(m);
+  define_pybSESubstanceCompoundInfusion(m);
+  define_pybSESubstanceBolus(m);
   define_pybSESubstanceNasalDose(m);
   define_pybSESubstanceOralDose(m);
   define_pybSETensionPneumothroax(m);
@@ -370,7 +380,6 @@ PYBIND11_MODULE(pybiogears, m)
   define_pybSERespiratorySystem(m);
   define_pybSETissueSystem(m);
   define_pybSESystem(m);
-  define_pybLogger(m);
   define_pybBioGearsEngine(m);
   define_pybBioGearsEngineHeader(m);
   define_pybSEScalar(m);

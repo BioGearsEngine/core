@@ -11,7 +11,7 @@ namespace py = pybind11;
 
 void define_pybSETissueSystem(py::module_ &m)
 {
-  py::module_::import("pybSESystem");
+  
 
   py::class_<biogears::SETissueSystem, biogears::SESystem>(m, "SETissueSystem")
     .def(py::init<biogears::Logger*>())

@@ -43,8 +43,25 @@ bool SEChestCompression::Load(const CDM::ChestCompressionData& in)
   return true;
 }
 
+CDM::ChestCompressionData* SEChestCompression::Unload() const
+{
+  CDM::ChestCompressionData* data(new CDM::ChestCompressionData());
+  Unload(*data);
+  return data;
+}
+
 void SEChestCompression::Unload(CDM::ChestCompressionData& data) const
 {
   SEPatientAction::Unload(data);
 }
+
+void SEChestCompression::ToString(std::ostream& str) const
+{
+  str << "Patient Action : Chest Compression";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << "\n\IsActive: "  << ((IsActive()) ? "True" : "False");
+  str << std::flush;
+}
+
 }

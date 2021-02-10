@@ -41,7 +41,7 @@ public:
   virtual bool HasForce() const;
   virtual SEScalarForce& GetForce();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalarForce* m_Force;

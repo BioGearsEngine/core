@@ -11,7 +11,7 @@ namespace py = pybind11;
 
 void define_pybSENervousSystem(py::module_ &m)
 {
-  py::module_::import("pybSESystem");
+  
 
   py::class_<biogears::SENervousSystem, biogears::SESystem>(m, "SENervousSystem")
     .def(py::init<biogears::Logger*>())

@@ -41,9 +41,9 @@ void define_pybSEExercise(py::module_ &m)
 
   // .export_values();
 
-  py::module_::import("pybSEPatientAction");
 
-  py::class_<biogears::SEExercise, biogears::SEPatientAction>(m, "SEExercise")
+
+  py::class_<biogears::SEExercise>(m, "SEExercise")
     .def(py::init<>())
     .def(py::init<biogears::SEExercise::SEGeneric>())
     .def(py::init<biogears::SEExercise::SECycling>())

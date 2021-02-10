@@ -10,8 +10,6 @@ namespace py = pybind11;
 
 void define_pybSEBloodChemistrySystem(py::module_ &m)
 {
-  py::module_::import("pybSESystem");
-
   py::class_<biogears::SEBloodChemistrySystem, biogears::SESystem>(m, "SEBloodChemistrySystem")
     .def(py::init<biogears::Logger*>())
     .def("HasBloodDensity", &biogears::SEBloodChemistrySystem::HasBloodDensity)

@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include <biogears/cdm/utils/Logger.h>
 #include <biogears/cdm/compartment/SECompartment.h>
 
 namespace py = pybind11;
