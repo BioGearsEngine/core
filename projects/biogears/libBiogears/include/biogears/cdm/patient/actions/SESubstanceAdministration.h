@@ -33,7 +33,5 @@ public:
 protected:
   virtual void Unload(CDM::SubstanceAdministrationData& data) const;
 
-public:
-protected:
 };
 }

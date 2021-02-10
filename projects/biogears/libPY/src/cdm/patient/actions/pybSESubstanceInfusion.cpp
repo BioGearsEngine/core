@@ -10,7 +10,6 @@ namespace py = pybind11;
 
 void define_pybSESubstanceInfusion(py::module_ &m)
 {
-
   py::class_<biogears::SESubstanceInfusion, biogears::SESubstanceAdministration>(m, "SESubstanceInfusion")
     .def(py::init<const biogears::SESubstance&>())
     .def("Clear", &biogears::SESubstanceInfusion::Clear)

@@ -6,66 +6,10 @@
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 
+#include "PySEAction.h"
+#include "PySEPatientAction.h"
+
 namespace py = pybind11;
-
-class PySEAction : public biogears::SEAction {
-public:
-  /* Inherit the constructors */
-  using biogears::SEAction::SEAction;
-
-  char const* classname() const override
-  {
-    PYBIND11_OVERRIDE_PURE(
-      char const*,
-      biogears::SEAction,
-      classname,
-
-    );
-  }
-  /* Trampoline (need one for each virtual function) */
-  void ToString(std::ostream& str) const override
-  {
-    PYBIND11_OVERRIDE_PURE(
-      void,
-      biogears::SEAction,
-      ToString,
-      str);
-  }
-};
-
-class PySEPatientAction : public biogears::SEPatientAction {
-public:
-  /* Inherit the constructors */
-  using biogears::SEPatientAction::SEPatientAction;
-
-  /* Trampoline (need one for each virtual function) */
-  char const* classname() const override
-  {
-    PYBIND11_OVERRIDE_PURE(
-      char const*,
-      biogears::SEAction,
-      classname);
-  }
-
-  /* Trampoline (need one for each virtual function) */
-  CDM::PatientActionData* Unload() const override
-  {
-    PYBIND11_OVERRIDE_PURE(
-      CDM::PatientActionData*,
-      biogears::SEPatientAction,
-      Unload);
-  }
-
-  /* Trampoline (need one for each virtual function) */
-  void ToString(std::ostream& str) const override
-  {
-    PYBIND11_OVERRIDE_PURE(
-      void,
-      biogears::SEPatientAction,
-      ToString,
-      str);
-  }
-};
 
 void define_pybSEPatientAction(py::module_& m)
 {

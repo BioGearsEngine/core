@@ -52,6 +52,7 @@ void define_pybSEPupillaryResponse(py::module_& m);
 void define_pybSESleep(py::module_& m);
 void define_pybSESubstanceBolus(py::module_& m);
 void define_pybSESubstanceCompoundInfusion(py::module_& m);
+void define_pybSESubstanceAdministration(py::module_ &m);
 void define_pybSESubstanceInfusion(py::module_& m);
 void define_pybSESubstanceNasalDose(py::module_& m);
 void define_pybSESubstanceOralDose(py::module_& m);
@@ -240,6 +241,7 @@ PYBIND11_MODULE(pybiogears, m)
   define_pybSEPericardialEffusion(m);
   define_pybSEPupillaryResponse(m);
   define_pybSESleep(m);
+  define_pybSESubstanceAdministration(m);
   define_pybSESubstanceInfusion(m);
   define_pybSESubstanceCompoundInfusion(m);
   define_pybSESubstanceBolus(m);
