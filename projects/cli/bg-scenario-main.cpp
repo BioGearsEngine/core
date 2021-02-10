@@ -209,7 +209,17 @@ int main(int argc, char* argv[])
   try {
     // Declare the supported options.
     options_description desc("Allowed options");
-    desc.add_options()("help,h", "produce help message")("name,n", value<std::string>(), "Set Scenario Name")("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")("group,g", value<std::string>(), "Set Name of Scenario Group")("patient,p", value<std::string>(), "Specifcy the Initial Patient File")("state,s", value<std::string>(), "Specifcy the Initial Patient State File")("results,r", value<std::string>(), "Specifcy the Results File")("quiet,q", bool_switch()->default_value(false), "Supress most log messages")("version,v", bool_switch()->default_value(false), "Print linked libBioGears version")("track-stabilization", bool_switch()->default_value(false), "Turn on stabilization tracking for the scenario");
+    desc.add_options()
+      ("help,h", "produce help message")
+      ("name,n", value<std::string>(), "Set Scenario Name")
+      ("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")
+      ("group,g", value<std::string>(), "Set Name of Scenario Group")
+      ("patient,p", value<std::string>(), "Specifcy the Initial Patient File")
+      ("state,s", value<std::string>(), "Specifcy the Initial Patient State File")
+      ("results,r", value<std::string>(), "Specifcy the Results File")
+      ("quiet,q", bool_switch()->default_value(false), "Supress most log messages")
+      ("version,v", bool_switch()->default_value(false), "Print linked libBioGears version")
+      ("track-stabilization", bool_switch()->default_value(false), "Turn on stabilization tracking for the scenario");
 
     options_description hidden;
     hidden.add_options()("scenario", value<std::string>(), "Specifcy the Scenario File");
@@ -232,7 +242,7 @@ int main(int argc, char* argv[])
     }
 
     if (vm["version"].as<bool>()) {
-      std::cout << biogears::project_name() << "-" << biogears::version_string() << std::endl;
+      std::cout << branded_version_string_str() << std::endl;
       return static_cast<int>(ExecutionErrors::NONE);
     }
 

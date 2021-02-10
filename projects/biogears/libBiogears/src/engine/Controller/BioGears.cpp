@@ -167,7 +167,7 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
     std::string stableDir = "./stable/";
     MakeDirectory(stableDir);
     CDM::PatientData* pData = m_Patient->Unload();
-    pData->contentVersion(BGE::Version);
+    pData->contentVersion(branded_version_string());
     // Write out the stable patient state
     std::ofstream stream(stableDir + m_Patient->GetName() + ".xml");
     // Write out the xml file

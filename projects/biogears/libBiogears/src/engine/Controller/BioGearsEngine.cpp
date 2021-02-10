@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <memory>
 //Project Includes
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -33,6 +34,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Equipment/ECG.h>
+#include <biogears/version.h>
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
@@ -478,7 +480,7 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
 {
   std::unique_ptr<CDM::PhysiologyEngineStateData> state(new CDM::BioGearsStateData());
 
-  state->contentVersion(BGE::Version);
+  state->contentVersion(branded_version_string());
 
   state->SimulationTime(std::unique_ptr<CDM::ScalarTimeData>(m_SimulationTime->Unload()));
   if (m_EngineTrack.GetDataRequestManager().HasDataRequests()) {
@@ -752,7 +754,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
       map[""].schema = "BioGears.xsd";
       std::unique_ptr<CDM::PulmonaryFunctionTestData> unloaded(pft.Unload());
-      unloaded->contentVersion(BGE::Version);
+      unloaded->contentVersion(branded_version_string());
       PulmonaryFunctionTest(stream, *unloaded, map);
       stream.close();
       break;
@@ -774,7 +776,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
       std::unique_ptr<CDM::UrinalysisData> unloaded(upan.Unload());
-      unloaded->contentVersion(BGE::Version);
+      unloaded->contentVersion(branded_version_string());
       Urinalysis(stream, *unloaded, map);
       stream.close();
       break;
@@ -795,7 +797,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
       std::unique_ptr<CDM::CompleteBloodCountData> unloaded(cbc.Unload());
-      unloaded->contentVersion(BGE::Version);
+      unloaded->contentVersion(branded_version_string());
       CompleteBloodCount(stream, *unloaded, map);
       stream.close();
       break;
@@ -817,7 +819,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
       std::unique_ptr<CDM::ComprehensiveMetabolicPanelData> unloaded(mp.Unload());
-      unloaded->contentVersion(BGE::Version);
+      unloaded->contentVersion(branded_version_string());
       ComprehensiveMetabolicPanel(stream, *mp.Unload(), map);
       stream.close();
       break;
@@ -838,7 +840,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
       std::unique_ptr<CDM::SequentialOrganFailureAssessmentData> unloaded(sofa.Unload());
-      unloaded->contentVersion(BGE::Version);
+      unloaded->contentVersion(branded_version_string());
       SequentialOrganFailureAssessment(stream, *sofa.Unload(), map);
       stream.close();
       break;

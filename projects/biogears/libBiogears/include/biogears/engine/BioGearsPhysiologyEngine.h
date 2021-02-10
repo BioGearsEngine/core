@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/exports.h>
-
+#include <biogears/version.h>
 #include <biogears/cdm/CommonDataModel.h>
 // CDM Features in use
 #include <biogears/cdm/engine/PhysiologyEngine.h>
@@ -34,9 +34,6 @@ namespace mil {
 namespace tatrc {
   namespace physiology {
     namespace biogears {
-
-      DEFINE_STATIC_STRING_EX(Version, BioGears_6 .1.1_beta);
-
       namespace Graph {
 
         DEFINE_STATIC_STRING(ActiveCardiovascular);
