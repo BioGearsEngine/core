@@ -41,28 +41,30 @@ public:
   }
 };
 
-using biogears::SEScalar0To1;
 using biogears::NoUnit;
+using biogears::SEScalar0To1;
 
 void define_pybSEScalar0To1(pybind11::module_& m)
 {
+
 
   py::class_<SEScalar0To1, SEScalar0To1Trampoline>(m, "SEScalar0To1")
     .def(py::init<>())
     .def("Unload", &SEScalar0To1::Unload)
     .def("GetValue", py::overload_cast<>(&SEScalar0To1::GetValue, py::const_))
-    .def("GetValue", py::overload_cast<const NoUnit&>(&biogears::SEScalar0To1::GetValue, py::const_))
+    .def("GetValue", py::overload_cast<const NoUnit&>(&biogears::SEScalar0To1::GetValue),  py::arg("unitless") = NoUnit::unitless)
     .def("SetValue", py::overload_cast<double>(&SEScalar0To1::SetValue))
     .def("SetValue", py::overload_cast<double, const NoUnit&>(&biogears::SEScalar0To1::SetValue))
-  //.def("ToString", py::overload_cast<>(&SEAction::ToString, py::const_))
-    .def("__repr__", [](const SEScalar0To1& obj){ 
-    std::stringstream ss;
-    obj.ToString(ss);
-    return ss.str();
-      
-      })
-    .def_property("Value", py::overload_cast<>(&SEScalar0To1::GetValue, py::const_), py::overload_cast<double>(&SEScalar0To1::SetValue))
-    ;
+    //.def("ToString", py::overload_cast<>(&SEAction::ToString, py::const_))
+    .def("__repr__", [](const SEScalar0To1& obj) {
+      std::stringstream ss;
+      obj.ToString(ss);
+      return ss.str();
+    })
+    .def_property("Value", 
+      [](SEScalar0To1& obj){ return obj.GetValue(NoUnit::unitless);},
+      [](SEScalar0To1& obj, double value){ obj.SetValue(value, NoUnit::unitless); }
+      );
 
 #ifdef VERSION_INFO
   m.attr("__version__") == VERSION_INFO

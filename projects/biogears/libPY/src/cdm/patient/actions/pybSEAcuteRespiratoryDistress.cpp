@@ -1,4 +1,5 @@
 #include <pybind11/pybind11.h>
+#include <pybind11/functional.h>
 
 #include <string>
 
@@ -12,14 +13,6 @@ using biogears::SEPatientAction;
 
 void define_pybSEAcuteRespiratoryDistress(py::module_& m)
 {
-  py::class_<CDM::enumInfectionSeverity> enumInfectionSeverity(m, "enumInfectionSeverity");
-  py::enum_<CDM::enumInfectionSeverity::value>(enumInfectionSeverity, "enumInfectionSeverity")
-    .value("Eliminated", CDM::enumInfectionSeverity::Eliminated)
-    .value("Mild", CDM::enumInfectionSeverity::Mild)
-    .value("Moderate", CDM::enumInfectionSeverity::Moderate)
-    .value("Severe", CDM::enumInfectionSeverity::Severe)
-    .export_values();
-
 
   py::class_<SEAcuteRespiratoryDistress>(m, "SEAcuteRespiratoryDistress")
     .def(py::init<>())
@@ -31,7 +24,7 @@ void define_pybSEAcuteRespiratoryDistress(py::module_& m)
     .def("Load", &SEAcuteRespiratoryDistress::Load)
     .def("Unload", py::overload_cast<>(&SEAcuteRespiratoryDistress::Unload, py::const_))
     .def("HasSeverity", &SEAcuteRespiratoryDistress::HasSeverity)
-    .def("GetSeverity", &SEAcuteRespiratoryDistress::GetSeverity)
+    .def("GetSeverity", &SEAcuteRespiratoryDistress::GetSeverity, py::return_value_policy::reference)
     .def("ToString", py::overload_cast<>(&SEAction::ToString, py::const_))
     .def("__repr__", py::overload_cast<>(&SEAction::ToString, py::const_))
     .def_property("Severity", &SEAcuteRespiratoryDistress::GetSeverity, nullptr);

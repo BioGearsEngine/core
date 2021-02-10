@@ -17,8 +17,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 
 namespace py = pybind11;
-using biogears::SEScalar;
 
+using biogears::NoUnit;
+using biogears::SEScalar;
 
 class SEScalarTrampoline : public biogears::SEScalar {
 public:
@@ -42,17 +43,21 @@ public:
   }
 };
 
-void define_pybSEScalar(pybind11::module_ &m)
+void define_pybSEScalar(pybind11::module_& m)
 {
+  pybind11::class_<NoUnit>(m, "NoUnit")
+    .def(py::init<>())
+    .def_readonly_static("unitless", &NoUnit::unitless);
+
   pybind11::class_<biogears::SEScalar, SEScalarTrampoline>(m, "SEScalar")
     .def(py::init<>())
-    .def("Unload",py::overload_cast<>(&biogears::SEScalar::Unload,py::const_))
-    .def("ToString",py::overload_cast<std::ostream&>(&biogears::SEScalar::ToString,py::const_))
-    .def("GetValue", &biogears::SEScalar::GetValue)
+    .def("Unload", py::overload_cast<>(&biogears::SEScalar::Unload, py::const_))
+    .def("ToString", py::overload_cast<std::ostream&>(&biogears::SEScalar::ToString, py::const_))
     .def("GetValue", &biogears::SEScalar::GetValue)
     .def("SetValue", &biogears::SEScalar::SetValue)
-    .def("SetValue",&biogears::SEScalar::SetValue);
-  ;
+    .def_property("Value",
+                  &biogears::SEScalar::GetValue,
+                  &biogears::SEScalar::SetValue);
 
 #ifdef VERSION_INFO
   m.attr("__version__") == VERSION_INFO
