@@ -10,8 +10,8 @@ void define_pybLogger(py::module_& m)
 
   std::cout << "pybLogger called";
   py::class_<biogears::Logger>(m, "Logger")
-    .def(py::init<std::string&, std::string&>())
-    .def(py::init<char*, char*>())
+    .def(py::init<std::string&, std::string&>(), py::arg("logFilename") = "", py::arg("working_dir") = "")
+    .def(py::init<char*, char*>(), py::arg("logFilename") = "", py::arg("working_dir") = "")
     .def("LogToConsole", &biogears::Logger::LogToConsole)
     .def("FormatMessages", &biogears::Logger::FormatMessages)
     .def("ResetLogFile", py::overload_cast<const std::string&, const std::string&>(&biogears::Logger::ResetLogFile))

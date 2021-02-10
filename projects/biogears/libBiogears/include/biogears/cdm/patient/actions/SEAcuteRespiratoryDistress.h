@@ -40,6 +40,7 @@ public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
+  using SEAction::ToString;
   virtual void ToString(std::ostream& str) const override;
 
 protected:

@@ -14,16 +14,15 @@ specific language governing permissions and limitations under the License.
 
 #include <string>
 
-#include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEProperty.h>
 
 namespace py = pybind11;
-using biogears::SEScalar;
+using biogears::SEProperty;
 
-
-class SEScalarTrampoline : public biogears::SEScalar {
+class SEPropertyTrampoline : public biogears::SEProperty {
 public:
   /* Inherit the constructors */
-  using SEScalar::SEScalar;
+  using SEProperty::SEProperty;
 
   void Invalidate() override
   {
@@ -42,17 +41,14 @@ public:
   }
 };
 
-void define_pybSEScalar(pybind11::module_ &m)
+void define_pybSEProperty(pybind11::module_& m)
 {
-  pybind11::class_<biogears::SEScalar, SEScalarTrampoline>(m, "SEScalar")
+  pybind11::class_<biogears::SEProperty, SEPropertyTrampoline>(m, "SEProperty")
     .def(py::init<>())
-    .def("Unload",py::overload_cast<>(&biogears::SEScalar::Unload,py::const_))
-    .def("ToString",py::overload_cast<std::ostream&>(&biogears::SEScalar::ToString,py::const_))
-    .def("GetValue", &biogears::SEScalar::GetValue)
-    .def("GetValue", &biogears::SEScalar::GetValue)
-    .def("SetValue", &biogears::SEScalar::SetValue)
-    .def("SetValue",&biogears::SEScalar::SetValue);
-  ;
+    .def("Clear", &biogears::SEProperty::Clear)
+    .def("Invalidate", &biogears::SEProperty::Invalidate)
+    .def("IsValid", &biogears::SEProperty::IsValid)
+    .def("Load", &biogears::SEProperty::Load);
 
 #ifdef VERSION_INFO
   m.attr("__version__") == VERSION_INFO

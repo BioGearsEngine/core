@@ -60,7 +60,7 @@ void SEChestCompression::ToString(std::ostream& str) const
   str << "Patient Action : Chest Compression";
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
-  str << "\n\IsActive: "  << ((IsActive()) ? "True" : "False");
+  str << "\nIsActive: "  << ((IsActive()) ? "True" : "False");
   str << std::flush;
 }
 

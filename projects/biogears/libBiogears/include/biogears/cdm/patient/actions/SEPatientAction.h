@@ -32,6 +32,7 @@ protected:
   virtual void Unload(CDM::PatientActionData& data) const;
 
 public:
+  using SEAction::ToString;
   virtual void ToString(std::ostream& str) const = 0;
 };
 }

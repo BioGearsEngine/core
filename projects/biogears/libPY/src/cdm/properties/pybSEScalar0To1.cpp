@@ -19,16 +19,50 @@ specific language governing permissions and limitations under the License.
 namespace py = pybind11;
 using biogears::SEScalar;
 
-void define_pybSEScalar0To1(pybind11::module_ &m)
+class SEScalar0To1Trampoline : public biogears::SEScalar0To1 {
+public:
+  /* Inherit the constructors */
+  using SEScalar0To1::SEScalar0To1;
+
+  void Invalidate() override
+  {
+    PYBIND11_OVERRIDE_PURE(
+      void,
+      biogears::SEProperty,
+      Invalidate);
+  }
+
+  bool IsValid() const override
+  {
+    PYBIND11_OVERRIDE_PURE(
+      bool,
+      biogears::SEProperty,
+      IsValid);
+  }
+};
+
+using biogears::SEScalar0To1;
+using biogears::NoUnit;
+
+void define_pybSEScalar0To1(pybind11::module_& m)
 {
 
-    py::class_<biogears::SEScalar0To1>(m, "SEScalar0To1")
+  py::class_<SEScalar0To1, SEScalar0To1Trampoline>(m, "SEScalar0To1")
     .def(py::init<>())
-    .def("Unload", &biogears::SEScalar0To1::Unload)
-    .def("GetValue", py::overload_cast<>(&biogears::SEScalar0To1::GetValue, py::const_))
-    .def("GetValue", py::overload_cast<const biogears::NoUnit&>(&biogears::SEScalar0To1::GetValue, py::const_))
-    .def("SetValue", py::overload_cast<double>(&biogears::SEScalar0To1::SetValue))
-    .def("SetValue", py::overload_cast<double, const biogears::NoUnit&>(&biogears::SEScalar0To1::SetValue));
+    .def("Unload", &SEScalar0To1::Unload)
+    .def("GetValue", py::overload_cast<>(&SEScalar0To1::GetValue, py::const_))
+    .def("GetValue", py::overload_cast<const NoUnit&>(&biogears::SEScalar0To1::GetValue, py::const_))
+    .def("SetValue", py::overload_cast<double>(&SEScalar0To1::SetValue))
+    .def("SetValue", py::overload_cast<double, const NoUnit&>(&biogears::SEScalar0To1::SetValue))
+  //.def("ToString", py::overload_cast<>(&SEAction::ToString, py::const_))
+    .def("__repr__", [](const SEScalar0To1& obj){ 
+    std::stringstream ss;
+    obj.ToString(ss);
+    return ss.str();
+      
+      })
+    .def_property("Value", py::overload_cast<>(&SEScalar0To1::GetValue, py::const_), py::overload_cast<double>(&SEScalar0To1::SetValue))
+    ;
 
 #ifdef VERSION_INFO
   m.attr("__version__") == VERSION_INFO
