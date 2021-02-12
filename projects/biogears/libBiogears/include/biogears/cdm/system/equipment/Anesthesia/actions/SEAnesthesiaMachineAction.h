@@ -14,8 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 namespace biogears {
+namespace io {
+class  AnesthesiaActions;
+}
 class BIOGEARS_API SEAnesthesiaMachineAction : public SEAction {
 public:
+  friend io::AnesthesiaActions;
   SEAnesthesiaMachineAction();
   virtual ~SEAnesthesiaMachineAction();
 

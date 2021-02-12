@@ -16,8 +16,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalarAmount;
-
+namespace io {
+  class PatientAssessments;
+}
 class BIOGEARS_API SEUrinalysisMicroscopic : public SEPatientAssessment {
+  friend io::PatientAssessments;
+
 public:
   SEUrinalysisMicroscopic();
   virtual ~SEUrinalysisMicroscopic();

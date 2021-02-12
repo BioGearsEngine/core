@@ -17,8 +17,11 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(ScenarioAutoSerializationData)
 namespace biogears {
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SEScenarioAutoSerialization : public Loggable {
+  friend io::Scenario;
 public:
   SEScenarioAutoSerialization(Logger* logger);
   virtual ~SEScenarioAutoSerialization();

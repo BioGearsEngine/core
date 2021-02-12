@@ -22,8 +22,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SECircuitManager;
+namespace io {
+  class Circuit;
+}
 class BIOGEARS_API SEFluidCircuitPath : public SECircuitPath<FLUID_CIRCUIT_PATH> {
   friend class SECircuitManager;
+  friend io::Circuit;
 
 protected:
   SEFluidCircuitPath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const char* name);

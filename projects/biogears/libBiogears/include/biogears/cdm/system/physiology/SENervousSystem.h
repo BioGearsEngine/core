@@ -20,9 +20,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 namespace biogears {
-  class TimeUnit;
+class TimeUnit;
+namespace io {
+  class Physiology;
+}
+class BIOGEARS_API SENervousSystem : public SESystem {
+  friend io::Physiology;
 
-  class BIOGEARS_API SENervousSystem : public SESystem {
 public:
   SENervousSystem(Logger* logger);
   ~SENervousSystem() override;
@@ -134,9 +138,6 @@ protected:
   SEScalar* m_BiologicalDebt;
   SEScalarTime* m_ReactionTime;
   SEScalar* m_AttentionLapses;
-
-
-
 
   SEScalar* m_RichmondAgitationSedationScale;
 };

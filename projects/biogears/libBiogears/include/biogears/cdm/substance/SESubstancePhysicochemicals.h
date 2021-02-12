@@ -19,7 +19,12 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(SubstancePhysicochemicalData)
 
 namespace biogears {
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstancePhysicochemicals : public Loggable {
+  friend io::Substance;
+
 public:
   SESubstancePhysicochemicals(Logger* logger);
   virtual ~SESubstancePhysicochemicals();
@@ -37,14 +42,13 @@ protected:
   virtual void Unload(CDM::SubstancePhysicochemicalData& data) const;
 
 public:
-  
-   virtual bool HasPrimaryPKA() const;
-   virtual SEScalar& GetPrimaryPKA();
-   virtual double GetPrimaryPKA() const;
- 
-   virtual bool HasSecondaryPKA() const;
-   virtual SEScalar& GetSecondaryPKA();
-   virtual double GetSecondaryPKA() const;
+  virtual bool HasPrimaryPKA() const;
+  virtual SEScalar& GetPrimaryPKA();
+  virtual double GetPrimaryPKA() const;
+
+  virtual bool HasSecondaryPKA() const;
+  virtual SEScalar& GetSecondaryPKA();
+  virtual double GetSecondaryPKA() const;
 
   virtual CDM::enumSubstanceBindingProtein::value GetBindingProtein() const;
   virtual void SetBindingProtein(CDM::enumSubstanceBindingProtein::value state);
@@ -85,6 +89,5 @@ protected:
   SEScalar* m_LogP;
   SEScalar* m_HydrogenBondCount;
   SEScalar* m_PolarSurfaceArea;
-
 };
 }

@@ -17,9 +17,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
-
 namespace biogears {
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEPainStimulus : public SEPatientAction {
+  friend io::PatientActions;
 public:
   SEPainStimulus();
   virtual ~SEPainStimulus() override;

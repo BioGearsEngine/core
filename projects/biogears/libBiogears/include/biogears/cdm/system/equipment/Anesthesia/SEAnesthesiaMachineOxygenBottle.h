@@ -23,10 +23,14 @@ class SESubstanceManager;
 class SEScalar;
 class SEScalarVolume;
 class VolumeUnit;
+namespace io {
+  class Anesthesia;
+}
 
 class BIOGEARS_API SEAnesthesiaMachineOxygenBottle : Loggable {
 protected:
   friend SEAnesthesiaMachine;
+  friend io::Anesthesia;
 
 public:
   SEAnesthesiaMachineOxygenBottle(Logger* logger);

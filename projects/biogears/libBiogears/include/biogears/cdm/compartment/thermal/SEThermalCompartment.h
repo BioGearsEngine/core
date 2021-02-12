@@ -10,8 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
-#include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
+#include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/cdm/compartment/SECompartmentNodes.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
@@ -21,16 +21,21 @@ namespace biogears {
 class SEThermalCompartmentLink;
 class SEScalarPower;
 class PowerUnit;
-
 class SECompartmentManager;
+
+namespace io {
+  class Compartment;
+}
 class BIOGEARS_API SEThermalCompartment : public SECompartment {
   friend class SECompartmentManager;
   template <typename CompartmentType, typename CompartmentLinkType>
   friend class SECompartmentGraph;
+  friend io::Compartment;
 
 protected:
   SEThermalCompartment(const char* name, Logger* logger);
   SEThermalCompartment(const std::string& name, Logger* logger);
+
 public:
   virtual ~SEThermalCompartment() override;
 

@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Substance.hxx>
 #include "biogears/cdm/properties/SEScalarFrequency.h"
+#include <biogears/schema/cdm/Substance.hxx>
 
 CDM_BIND_DECL(SubstanceClearanceData)
 
@@ -29,10 +29,13 @@ class SESubstanceClearanceAnatomyEffect;
 class SEScalarVolumePerTimeMass;
 class SEScalarFraction;
 
-
+namespace io {
+  class Substance;
+}
 enum class RenalDynamic { Clearance,
-  Regulation };
+                          Regulation };
 class BIOGEARS_API SESubstanceClearance : public Loggable {
+  friend io::Substance;
 public:
   SESubstanceClearance(Logger* logger);
   virtual ~SESubstanceClearance();
@@ -55,7 +58,7 @@ public:
 
   virtual bool HasCellular() const { return m_hasCellular; }
   virtual void SetCellular(bool b) { m_hasCellular = b; }
-  
+
   virtual bool HasCellBirthRate() const;
   virtual SEScalarFrequency& GetCellBirthRate();
   virtual double GetCellBirthRate(const FrequencyUnit& unit) const;

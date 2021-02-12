@@ -18,14 +18,15 @@ namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SEGasCompartmentDataRequest : public SECompartmentSubstanceDataRequest {
   friend class SEDataRequestManager;
-
-protected:
-  SEGasCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+  friend io::Scenario;
 
 public:
+  SEGasCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEGasCompartmentDataRequest();
 
   virtual bool Load(const CDM::GasCompartmentDataRequestData& in, const SESubstanceManager& substances);

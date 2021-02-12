@@ -17,9 +17,12 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class TimeUnit;
 class ElectricPotentialUnit;
-
+namespace io {
+  class Property;
+}
 class BIOGEARS_API SEFunctionElectricPotentialVsTime : public SEFunction {
 public:
+  friend io::Property;
   SEFunctionElectricPotentialVsTime();
   virtual ~SEFunctionElectricPotentialVsTime();
 

@@ -16,8 +16,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class TimeUnit;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SEAdvanceTime : public SEAction {
+  friend io::Scenario;
+
 public:
   SEAdvanceTime();
   virtual ~SEAdvanceTime() override;

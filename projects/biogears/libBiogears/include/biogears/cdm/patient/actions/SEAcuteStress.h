@@ -16,12 +16,16 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalar0To1;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEAcuteStress : public SEPatientAction {
+  friend io::PatientActions;
+
 public:
   SEAcuteStress();
   virtual ~SEAcuteStress() override;
-  
+
   static constexpr const char* TypeTag() { return "SEAcuteStress"; };
   const char* classname() const override { return TypeTag(); }
 

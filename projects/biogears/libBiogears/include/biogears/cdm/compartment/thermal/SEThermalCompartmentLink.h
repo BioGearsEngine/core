@@ -19,8 +19,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SECompartmentManager;
+namespace io {
+  class Compartment;
+}
 class BIOGEARS_API SEThermalCompartmentLink : public SECompartmentLink {
   friend class SECompartmentManager;
+  friend io::Compartment;
 
 protected:
   SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const char* name);

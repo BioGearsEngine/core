@@ -19,8 +19,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalar0To1;
-
+namespace io {
+  class PatientConditions;
+}
 class BIOGEARS_API SEDiabetesType2 : public SEPatientCondition {
+  friend io::PatientConditions;
+
 public:
   SEDiabetesType2();
   virtual ~SEDiabetesType2();

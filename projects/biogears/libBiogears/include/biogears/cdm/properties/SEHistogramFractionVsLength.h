@@ -16,9 +16,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class LengthUnit;
-
+namespace io {
+  class Property;
+}
 class BIOGEARS_API SEHistogramFractionVsLength : public SEHistogram {
 public:
+  friend io::Property;
   SEHistogramFractionVsLength();
   virtual ~SEHistogramFractionVsLength();
 

@@ -23,11 +23,16 @@ class VolumePerTimeUnit;
 class SESubstance;
 class SEDrugTransitState;
 
-class BIOGEARS_API SEGastrointestinalSystem : public SESystem {		
+namespace io {
+  class Physiology;
+}
+class BIOGEARS_API SEGastrointestinalSystem : public SESystem {
+  friend io::Physiology;
+
 public:
   SEGastrointestinalSystem(Logger* logger);
   ~SEGastrointestinalSystem() override;
-  	
+
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); } //! Hopefully this returns a unique ID for every type
   static constexpr char const* const TypeTag() { return "SEGastrointestinalSystem"; }
   const char* classname() const override { return TypeTag(); }

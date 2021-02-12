@@ -20,8 +20,12 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(FunctionData)
 
 namespace biogears {
+namespace io {
+  class Property;
+}
 class BIOGEARS_API SEFunction : public SEProperty {
 public:
+  friend io::Property;
   SEFunction();
   virtual ~SEFunction();
 

@@ -29,14 +29,17 @@ class SEScalarPower;
 class PowerUnit;
 class SEScalarHeatConductancePerArea;
 class HeatConductancePerAreaUnit;
-
+namespace io {
+  class Environment;
+}
 class BIOGEARS_API SEEnvironment : public SESystem {
 public:
+  friend io::Environment;
   SEEnvironment(SESubstanceManager& substances);
   ~SEEnvironment() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SEEnvironment"; }
+  static constexpr char const* const TypeTag() { return "SEEnvironment"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 

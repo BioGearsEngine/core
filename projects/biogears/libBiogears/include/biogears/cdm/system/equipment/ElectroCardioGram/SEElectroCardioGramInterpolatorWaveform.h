@@ -12,13 +12,19 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/exports.h>
+
+#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/schema/CommonDataModel.hxx>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 CDM_BIND_DECL(ElectroCardioGramInterpolationWaveformData)
 
 namespace biogears {
+namespace io {
+  class ElectroCardioGram;
+}
 class BIOGEARS_API SEElectroCardioGramInterpolatorWaveform : public Loggable {
+  friend io::ElectroCardioGram;
 public:
   SEElectroCardioGramInterpolatorWaveform(Logger* logger);
   virtual ~SEElectroCardioGramInterpolatorWaveform();

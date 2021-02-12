@@ -21,7 +21,12 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(SubstancePharmacokineticsData)
 
 namespace biogears {
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {
+  friend io::Substance;
+
 public:
   SESubstancePharmacokinetics(Logger* logger);
   virtual ~SESubstancePharmacokinetics();

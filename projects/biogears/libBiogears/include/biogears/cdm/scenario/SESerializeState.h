@@ -17,7 +17,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Scenario.hxx>
 
 namespace biogears {
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SESerializeState : public SEAction {
+  friend io::Scenario;
+
 public:
   SESerializeState();
   virtual ~SESerializeState() override;

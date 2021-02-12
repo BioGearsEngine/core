@@ -24,11 +24,15 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(CircuitPathData)
 
 namespace biogears {
+  namespace io {
+  class Circuit;
+}
+
 template <CIRCUIT_PATH_TEMPLATE>
 class SECircuitPath : public Loggable {
   template <typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType>
   friend class SECircuit;
-
+  friend io::Circuit;
 protected:
   SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const char* name);
   SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const std::string& name);

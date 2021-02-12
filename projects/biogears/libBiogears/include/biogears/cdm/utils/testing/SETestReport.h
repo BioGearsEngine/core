@@ -14,8 +14,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 
 CDM_BIND_DECL(TestReportData)
-namespace biogears{
+namespace biogears {
+namespace io {
+  class TestReport;
+}
 class BIOGEARS_API SETestReport : public Loggable {
+  friend io::TestReport;
+
 public:
   SETestReport(Logger* logger);
   virtual ~SETestReport();

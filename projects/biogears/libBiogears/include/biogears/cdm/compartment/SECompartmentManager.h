@@ -29,7 +29,12 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(CompartmentManagerData)
 
 namespace biogears {
+  namespace io {
+  class Compartment;
+}
+
 class BIOGEARS_API SECompartmentManager : public Loggable {
+  friend io::Compartment;
 public:
   SECompartmentManager(SESubstanceManager& subMgr);
   virtual ~SECompartmentManager();

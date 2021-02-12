@@ -18,8 +18,12 @@ CDM_BIND_DECL(ActionData);
 
 namespace biogears {
 class SESubstanceManager;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SEAction : public Loggable {
+  friend io::Scenario;
+
 public:
   virtual const char* classname() const = 0;
 
@@ -51,7 +55,7 @@ public:
 
   virtual void ToString(std::ostream& str) const = 0;
   virtual const char* ToString() const;
- 
+
 protected:
   std::string m_Comment;
   mutable std::string m_StringRepresnetation; //<Cached Value of the last called to ToString();

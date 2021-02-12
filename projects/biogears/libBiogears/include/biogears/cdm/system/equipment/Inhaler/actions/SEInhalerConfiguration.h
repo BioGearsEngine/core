@@ -17,12 +17,16 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEInhaler;
 class SESubstanceManager;
-
+namespace io {
+  class InhalerActions;
+}
 class BIOGEARS_API SEInhalerConfiguration : public SEInhalerAction {
+  friend io::InhalerActions;
+
 public:
   SEInhalerConfiguration(SESubstanceManager& substances);
   virtual ~SEInhalerConfiguration() override;
-  
+
   static constexpr const char* TypeTag() { return "SEInhalerConfiguration"; };
   const char* classname() const override { return TypeTag(); }
 

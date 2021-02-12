@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
+#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class SESubstance;
@@ -23,10 +23,13 @@ class SESubstanceManager;
 class SEAnesthesiaMachine;
 class SEScalar;
 class SEScalarFraction;
-
+namespace io {
+  class Anesthesia;
+}
 class BIOGEARS_API SEAnesthesiaMachineChamber : Loggable {
 protected:
   friend SEAnesthesiaMachine;
+  friend io::Anesthesia;
 
 public:
   SEAnesthesiaMachineChamber(SESubstanceManager& substances);

@@ -45,8 +45,12 @@ class SEScalarPressure;
 class PressureUnit;
 class SEScalarTimeMassPerVolume;
 class TimeMassPerVolumeUnit;
-
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstance : public Loggable {
+  friend io::Substance;
+
 public:
   SESubstance(Logger* logger);
   virtual ~SESubstance();

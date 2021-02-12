@@ -157,6 +157,7 @@ const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name)
     return GetPupilReactivityModifier().GetScalar(name);
   if (name.find("PupilSizeModifier") != std::string::npos)
     return GetPupilSizeModifier().GetScalar(name);
+  return nullptr;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData& in)

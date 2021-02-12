@@ -20,8 +20,11 @@ class SEScalar;
 class SEScalarNeg1To1;
 class SEScalar0To1;
 class SEHistogramFractionVsLength;
-
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstanceAerosolization : public Loggable {
+  friend io::Substance;
 public:
   SESubstanceAerosolization(Logger* logger);
   virtual ~SESubstanceAerosolization();

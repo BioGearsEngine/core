@@ -11,9 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include "biogears/cdm/properties/SEScalarVolumePerTimePressure.h"
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
-#include "biogears/cdm/properties/SEScalarVolumePerTimePressure.h"
 
 namespace biogears {
 class SEScalarPressure;
@@ -38,14 +38,18 @@ class VolumePerTimePressureAreaUnit;
 class OsmolarityUnit;
 class OsmolalityUnit;
 class MassPerVolumeUnit;
-
+namespace io {
+  class Physiology;
+}
 class BIOGEARS_API SERenalSystem : public SESystem {
+  friend io::Physiology;
+
 public:
   SERenalSystem(Logger* logger);
   ~SERenalSystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SERenalSystem"; }
+  static constexpr char const* const TypeTag() { return "SERenalSystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -58,6 +62,7 @@ public:
   CDM::RenalSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::RenalSystemData& data) const;
 

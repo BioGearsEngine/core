@@ -18,14 +18,16 @@ namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SEThermalCompartmentDataRequest : public SECompartmentDataRequest {
   friend class SEDataRequestManager;
+  friend io::Scenario;
 
-protected:
-  SEThermalCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
 
 public:
+  SEThermalCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEThermalCompartmentDataRequest();
   virtual bool Load(const CDM::ThermalCompartmentDataRequestData& in);
   virtual CDM::ThermalCompartmentDataRequestData* Unload() const;

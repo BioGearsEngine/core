@@ -18,8 +18,12 @@ CDM_BIND_DECL(CompartmentLinkData)
 namespace biogears {
 class SECircuitManager;
 class SEScalar;
-
+namespace io {
+  class Compartment;
+}
 class BIOGEARS_API SECompartmentLink : public Loggable {
+  friend io::Compartment;
+
 protected:
   SECompartmentLink(const char* name, Logger* logger);
   SECompartmentLink(const std::string& name, Logger* logger);

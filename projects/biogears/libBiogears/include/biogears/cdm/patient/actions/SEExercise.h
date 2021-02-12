@@ -12,17 +12,21 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
 class SEScalar;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEExercise : public SEPatientAction {
+  friend io::PatientActions;
+
 public:
   enum ExerciseType {
     GENERIC,
@@ -106,6 +110,5 @@ private:
   SECycling m_cyclingExercise;
   SERunning m_runningExercise;
   SEStrengthTraining m_strengthExercise;
-
 };
 }

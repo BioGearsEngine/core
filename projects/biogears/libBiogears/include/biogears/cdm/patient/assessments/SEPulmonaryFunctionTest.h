@@ -20,8 +20,11 @@ class SERespiratorySystem;
 class SEScalarVolume;
 class SEScalarVolumePerTime;
 class SEFunctionVolumeVsTime;
-
+namespace io {
+  class PatientAssessments;
+}
 class BIOGEARS_API SEPulmonaryFunctionTest : public SEPatientAssessment {
+friend io::PatientAssessments;
 public:
   SEPulmonaryFunctionTest();
   virtual ~SEPulmonaryFunctionTest();

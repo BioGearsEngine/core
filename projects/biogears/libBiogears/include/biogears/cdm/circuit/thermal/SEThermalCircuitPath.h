@@ -22,8 +22,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SECircuitManager;
+namespace io {
+  class Circuit;
+}
 class BIOGEARS_API SEThermalCircuitPath : public SECircuitPath<THERMAL_CIRCUIT_PATH> {
   friend class SECircuitManager;
+  friend io::Circuit;
 
 protected:
   SEThermalCircuitPath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const char* name);
@@ -46,13 +50,13 @@ public:
 
   virtual bool HasResistance() const override;
   virtual SEScalarHeatResistance& GetResistance() override;
-  virtual double GetResistance(const HeatResistanceUnit& unit) const ;
+  virtual double GetResistance(const HeatResistanceUnit& unit) const;
   virtual bool HasNextResistance() const override;
   virtual SEScalarHeatResistance& GetNextResistance() override;
-  virtual double GetNextResistance(const HeatResistanceUnit& unit) const ;
+  virtual double GetNextResistance(const HeatResistanceUnit& unit) const;
   virtual bool HasResistanceBaseline() const override;
   virtual SEScalarHeatResistance& GetResistanceBaseline() override;
-  virtual double GetResistanceBaseline(const HeatResistanceUnit& unit) const ;
+  virtual double GetResistanceBaseline(const HeatResistanceUnit& unit) const;
 
   virtual bool HasCapacitance() const override;
   virtual SEScalarHeatCapacitance& GetCapacitance() override;

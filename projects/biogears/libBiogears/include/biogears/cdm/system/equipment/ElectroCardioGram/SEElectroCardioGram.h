@@ -17,15 +17,18 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEScalarElectricPotential;
 class ElectricPotentialUnit;
-
+namespace io {
+  class ElectroCardioGram;
+}
 class BIOGEARS_API SEElectroCardioGram : public SESystem {
+  friend io::ElectroCardioGram;
 protected:
 public:
   SEElectroCardioGram(Logger* logger);
   ~SEElectroCardioGram() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SEElectroCardioGram"; }
+  static constexpr char const* const TypeTag() { return "SEElectroCardioGram"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -37,6 +40,7 @@ public:
   bool Load(const CDM::ElectroCardioGramData& in);
   CDM::ElectroCardioGramData* Unload() const override;
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::ElectroCardioGramData& data) const;
 

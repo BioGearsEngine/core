@@ -16,14 +16,16 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEDataRequestManager;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SEPatientDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
+  friend io::Scenario;
 
-protected:
-  SEPatientDataRequest(const SEDecimalFormat* dfault = nullptr);
 
 public:
+  SEPatientDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEPatientDataRequest();
 
   virtual void Clear(); //clear memory

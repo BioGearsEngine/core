@@ -27,8 +27,11 @@ class SEThermalCompartment;
 class SETissueCompartment;
 class SESubstance;
 class SECircuitManager;
-
+namespace io {
+  class Compartment;
+}
 class BIOGEARS_API SECompartment : public Loggable {
+  friend io::Compartment;
 protected:
   SECompartment(const char* name, Logger* logger);
   SECompartment(const std::string& name, Logger* logger);

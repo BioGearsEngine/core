@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(PatientData)
 
 namespace biogears {
-  
+
 class SEEventHandler;
 class SENutrition;
 class SEScalar;
@@ -45,7 +45,13 @@ class SEScalarNeg1To1;
 class SEScalarVolumePerTime;
 class VolumePerTimeUnit;
 
+namespace io {
+  class Patient;
+}
+
 class BIOGEARS_API SEPatient : public Loggable {
+  friend io::Patient;
+
 public:
   SEPatient(Logger* logger);
   virtual ~SEPatient();

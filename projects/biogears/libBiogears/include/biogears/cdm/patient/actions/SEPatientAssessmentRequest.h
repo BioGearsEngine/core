@@ -15,7 +15,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEPatientAssessmentRequest : public SEPatientAction {
+  friend io::PatientActions;
 public:
   SEPatientAssessmentRequest();
   virtual ~SEPatientAssessmentRequest() override;

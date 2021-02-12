@@ -39,11 +39,16 @@ class SEScalarPressure;
 class PressureUnit;
 class SEScalarFraction;
 
+namespace io {
+  class Environment;
+}
+
 class BIOGEARS_API SEEnvironmentalConditions : public Loggable {
 protected:
   friend SEEnvironment;
   friend SEEnvironmentChange;
   friend SEInitialEnvironment;
+  friend io::Environment;
 
 public:
   SEEnvironmentalConditions(SESubstanceManager& substances);

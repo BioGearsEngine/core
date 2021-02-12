@@ -18,8 +18,11 @@ namespace biogears {
 class SESubstance;
 class SEScalarMassPerVolume;
 class SEScalarVolumePerTime;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SESubstanceInfusion : public SESubstanceAdministration {
+friend io::PatientActions;
 public:
   SESubstanceInfusion(const SESubstance& substance);
   virtual ~SESubstanceInfusion();

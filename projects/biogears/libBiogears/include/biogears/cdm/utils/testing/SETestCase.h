@@ -17,9 +17,12 @@ CDM_BIND_DECL(TestCase)
 
 namespace biogears {
 class SETestSuite;
-
+namespace io {
+  class TestReport;
+}
 class BIOGEARS_API SETestCase : public Loggable {
   friend SETestSuite;
+  friend io::TestReport;
 
 protected:
   SETestCase(Logger* logger);

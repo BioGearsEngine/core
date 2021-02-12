@@ -16,8 +16,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalarForce;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEChestCompressionForce : public SEChestCompression {
+  friend io::PatientActions;
+
 public:
   SEChestCompressionForce();
   virtual ~SEChestCompressionForce();

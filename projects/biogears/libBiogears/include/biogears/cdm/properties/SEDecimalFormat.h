@@ -17,13 +17,16 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(DecimalFormatData)
 
 namespace biogears {
-
+namespace io {
+  class Property;
+}
 enum class DecimalNotation { Default,
-  Fixed,
-  Scientific };
+                             Fixed,
+                             Scientific };
 
 class BIOGEARS_API SEDecimalFormat {
 public:
+  friend io::Property;
   SEDecimalFormat(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEDecimalFormat();
 

@@ -19,8 +19,12 @@ CDM_BIND_DECL(SubstanceCompoundData);
 namespace biogears {
 class SESubstance;
 class SESubstanceCompound;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SESubstanceManager : public Loggable {
+  friend io::Scenario;
+
 public:
   SESubstanceManager(Logger* logger);
   virtual ~SESubstanceManager();

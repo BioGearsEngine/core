@@ -17,11 +17,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(TestErrorStatisticsData)
-namespace biogears{
+namespace biogears {
 class SETestCase;
 class SETestSuite;
 class SEFunction;
-
+namespace io {
+  class TestReport;
+}
 // This data class is intended for use in array based data
 // Each value in the array is compared and can be tracked
 // and this provides a summary of how many values in the array
@@ -29,6 +31,7 @@ class SEFunction;
 class BIOGEARS_API SETestErrorStatistics : public Loggable {
   friend SETestCase;
   friend SETestSuite;
+  friend io::TestReport;
 
 protected:
   SETestErrorStatistics(Logger* logger);

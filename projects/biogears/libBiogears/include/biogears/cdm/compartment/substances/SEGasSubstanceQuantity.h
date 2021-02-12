@@ -16,9 +16,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEGasCompartment;
-
+namespace io {
+  class SubstanceQuantity;
+}
 class BIOGEARS_API SEGasSubstanceQuantity : public SESubstanceQuantity, public SEGasTransportSubstance {
   friend class SEGasCompartment;
+  friend io::SubstanceQuantity;
 
 protected:
   SEGasSubstanceQuantity(SESubstance& sub, SEGasCompartment& compartment);

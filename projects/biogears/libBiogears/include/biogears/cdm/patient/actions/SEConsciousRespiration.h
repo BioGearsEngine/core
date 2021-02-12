@@ -20,8 +20,11 @@ class SEForcedExhale;
 class SEForcedInhale;
 class SEBreathHold;
 class SEUseInhaler;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEConsciousRespiration : public SEPatientAction {
+  friend io::PatientActions;
 public:
   SEConsciousRespiration();
   virtual ~SEConsciousRespiration() override;

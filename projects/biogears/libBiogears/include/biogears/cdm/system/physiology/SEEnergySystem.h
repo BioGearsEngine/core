@@ -29,13 +29,18 @@ class MassPerTimeUnit;
 class SEScalarPower;
 class PowerUnit;
 
+namespace io {
+  class Physiology;
+}
 class BIOGEARS_API SEEnergySystem : public SESystem {
+  friend io::Physiology;
+
 public:
   SEEnergySystem(Logger* logger);
   ~SEEnergySystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SEEnergySystem"; }
+  static constexpr char const* const TypeTag() { return "SEEnergySystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -48,6 +53,7 @@ public:
   CDM::EnergySystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::EnergySystemData& data) const;
 

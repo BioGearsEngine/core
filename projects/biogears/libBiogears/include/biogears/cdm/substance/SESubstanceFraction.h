@@ -21,8 +21,12 @@ class SESubstance;
 class SESubstanceManager;
 class SEEnvironmentalConditions;
 class SEScalarFraction;
-
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstanceFraction : public Loggable {
+  friend io::Substance;
+
 protected:
   friend SEEnvironmentalConditions; // So it can add substances to the manager
 public:

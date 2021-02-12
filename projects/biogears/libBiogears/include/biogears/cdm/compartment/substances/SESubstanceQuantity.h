@@ -15,11 +15,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/SubstanceQuantity.hxx>
 
 namespace biogears {
+namespace io {
+  class SubstanceQuantity;
+}
 class BIOGEARS_API SESubstanceQuantity : public Loggable {
+  friend io::SubstanceQuantity;
+
 public:
   SESubstanceQuantity(SESubstance& sub)
     : Loggable(sub.GetLogger())
-    , m_Substance(sub){};
+    , m_Substance(sub) {};
 
   virtual ~SESubstanceQuantity() override = default;
 

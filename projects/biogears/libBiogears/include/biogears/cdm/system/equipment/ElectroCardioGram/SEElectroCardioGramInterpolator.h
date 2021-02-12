@@ -20,8 +20,12 @@ CDM_BIND_DECL(ElectroCardioGramWaveformInterpolatorData)
 namespace biogears {
 class SEElectroCardioGramInterpolatorWaveform;
 class SEScalarElectricPotential;
-
+namespace io {
+  class ElectroCardioGram;
+}
 class BIOGEARS_API SEElectroCardioGramInterpolator : public Loggable {
+  friend io::ElectroCardioGram;
+
 public:
   SEElectroCardioGramInterpolator(Logger* logger);
   virtual ~SEElectroCardioGramInterpolator();

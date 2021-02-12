@@ -21,20 +21,25 @@ specific language governing permissions and limitations under the License.
 #define FLUID_COMPARTMENT_LINK_TYPES EdgeType, VertexType, CompartmentType
 
 namespace biogears {
+namespace io {
+  class Compartment;
+}
+
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 class SEFluidCompartmentLink : public SECompartmentLink, public EdgeType {
+  friend io::Compartment;
 protected:
   SEFluidCompartmentLink(CompartmentType& src, CompartmentType& tgt, const char* name);
   SEFluidCompartmentLink(CompartmentType& src, CompartmentType& tgt, const std::string& name);
 
-  public:
-    virtual ~SEFluidCompartmentLink();
-  
-    virtual void Clear() override;
-  
-    virtual bool Load(const CDM::FluidCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
-    virtual CDM::FluidCompartmentLinkData* Unload() override = 0;
-  
+public:
+  virtual ~SEFluidCompartmentLink();
+
+  virtual void Clear() override;
+
+  virtual bool Load(const CDM::FluidCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
+  virtual CDM::FluidCompartmentLinkData* Unload() override = 0;
+
 protected:
   virtual void Unload(CDM::FluidCompartmentLinkData& data);
 
@@ -63,12 +68,12 @@ public:
 
 protected:
   // For Transport
-  virtual bool HasFlux() const  override{ return HasFlow(); }
-  virtual SEScalarVolumePerTime& GetFlux()  override{ return GetFlow(); }
+  virtual bool HasFlux() const override { return HasFlow(); }
+  virtual SEScalarVolumePerTime& GetFlux() override { return GetFlow(); }
   virtual double GetFlux(const VolumePerTimeUnit& unit) const { return GetFlow(unit); }
 
-  virtual VertexType& GetSourceVertex()  override{ return m_SourceVertex; }
-  virtual VertexType& GetTargetVertex()  override{ return m_TargetVertex; }
+  virtual VertexType& GetSourceVertex() override { return m_SourceVertex; }
+  virtual VertexType& GetTargetVertex() override { return m_TargetVertex; }
 
   SEScalarVolumePerTime* m_Flow;
   CompartmentType& m_SourceCmpt;

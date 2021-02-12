@@ -21,9 +21,13 @@ CDM_BIND_DECL(GasCompartmentGraphData)
 
 namespace biogears {
 class SECompartmentManager;
+namespace io {
+  class Compartment;
+}
 
 class BIOGEARS_API SEGasCompartmentGraph : public SECompartmentTransportGraph<SEGasTransportGraph, SEGasTransportVertex, SEGasTransportEdge, SEGasCompartment, SEGasCompartmentLink> {
   friend class SECompartmentManager;
+  friend io::Compartment;
 
 protected:
   SEGasCompartmentGraph(const char* name, Logger* logger);

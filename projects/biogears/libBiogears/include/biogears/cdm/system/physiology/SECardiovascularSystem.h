@@ -31,14 +31,17 @@ class SEScalarFlowResistance;
 class FlowResistanceUnit;
 class SEScalarPressureTimePerVolumeArea;
 class PressureTimePerVolumeAreaUnit;
-
+namespace io {
+  class Physiology;
+}
 class BIOGEARS_API SECardiovascularSystem : public SESystem {
+  friend io::Physiology;
 public:
   SECardiovascularSystem(Logger* logger);
   ~SECardiovascularSystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SECardiovascularSystem"; }
+  static constexpr char const* const TypeTag() { return "SECardiovascularSystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -51,6 +54,7 @@ public:
   CDM::CardiovascularSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::CardiovascularSystemData& data) const;
 

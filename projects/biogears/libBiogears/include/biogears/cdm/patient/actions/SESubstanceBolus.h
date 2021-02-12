@@ -18,8 +18,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SESubstance;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SESubstanceBolus : public SESubstanceAdministration {
+  friend io::PatientActions;
+
 public:
   SESubstanceBolus(const SESubstance& substance);
   virtual ~SESubstanceBolus();
@@ -63,6 +67,8 @@ protected:
 };
 
 class BIOGEARS_API SESubstanceBolusState {
+  friend io::PatientActions;
+
 public:
   SESubstanceBolusState(const SESubstance& sub);
   ~SESubstanceBolusState();

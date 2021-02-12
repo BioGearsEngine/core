@@ -13,14 +13,17 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Physiology.hxx>
 #include <biogears/cdm/utils/Logger.h>
+#include <biogears/schema/cdm/Physiology.hxx>
 
 namespace biogears {
 class SEScalar;
 class SEScalarNeg1To1;
-
+namespace io {
+  class Physiology;
+}
 class BIOGEARS_API SEPupillaryResponse {
+friend io::Physiology;
 public:
   SEPupillaryResponse(Logger* logger);
   virtual ~SEPupillaryResponse();

@@ -18,10 +18,13 @@ namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
-
+namespace io {
+  class Scenario;
+}
 
 class BIOGEARS_API SECompartmentDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
+  friend io::Scenario;
 
 protected:
   SECompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
@@ -32,7 +35,7 @@ public:
   virtual void Clear() override; //clear memory
 
   virtual bool Load(const CDM::CompartmentDataRequestData& in);
-  virtual CDM::CompartmentDataRequestData* Unload() const override= 0 ;
+  virtual CDM::CompartmentDataRequestData* Unload() const override = 0;
 
   size_t HashCode() const override;
 

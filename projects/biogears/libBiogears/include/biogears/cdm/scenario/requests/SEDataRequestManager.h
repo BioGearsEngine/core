@@ -27,7 +27,12 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(DataRequestsData)
 
 namespace biogears {
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SEDataRequestManager : public Loggable {
+  friend io::Scenario;
+
 public:
   SEDataRequestManager(Logger* logger);
   ~SEDataRequestManager();
@@ -43,17 +48,17 @@ protected:
 public:
   bool HasResultsFilename() const { return !m_ResultsFile.empty(); }
   std::string GetResultsFilename() const;
-  const char * GetResultsFilename_cStr() const;
+  const char* GetResultsFilename_cStr() const;
   void SetResultsFilename(const char* name);
   void SetResultsFilename(const std::string& name);
 
   bool HasWorkingDir() const { return !m_ResultsFile.empty(); }
   std::string GetWorkingDir() const;
-  const char * GetWorkingDir_cStr() const;
+  const char* GetWorkingDir_cStr() const;
   void SetWorkingDir(const char* name);
   void SetWorkingDir(const std::string& name);
 
-  std::string GetResovedFilePath() const; 
+  std::string GetResovedFilePath() const;
   //const char * GetResovedFilePath_cStr() const;
 
   double GetSamplesPerSecond() const { return m_SamplesPerSecond; }

@@ -29,8 +29,13 @@ class SEScalarElectricPotential;
 class ElectricPotentialUnit;
 
 class SECompartmentManager;
+
+namespace io {
+  class Compartment;
+}
 class BIOGEARS_API SETissueCompartment : public SECompartment {
   friend class SECompartmentManager;
+  friend io::Compartment;
 
 protected:
   SETissueCompartment(const char* name, Logger* logger);

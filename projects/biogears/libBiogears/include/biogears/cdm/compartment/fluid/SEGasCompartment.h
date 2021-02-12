@@ -17,12 +17,17 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
 namespace biogears {
+namespace io {
+  class Compartment;
+}
+
 enum class BalanceGasBy { Volume,
-  VolumeFraction };
+                          VolumeFraction };
 
 class SECompartmentManager;
 class BIOGEARS_API SEGasCompartment : public SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity> {
   friend class SECompartmentManager;
+  friend io::Compartment;
 
 protected:
   SEGasCompartment(const char* name, Logger* logger);

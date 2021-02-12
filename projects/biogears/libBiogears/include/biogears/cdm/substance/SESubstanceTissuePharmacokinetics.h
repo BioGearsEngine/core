@@ -18,8 +18,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalar;
-
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstanceTissuePharmacokinetics : public Loggable {
+  friend io::Substance;
+
 public:
   SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger);
   virtual ~SESubstanceTissuePharmacokinetics();

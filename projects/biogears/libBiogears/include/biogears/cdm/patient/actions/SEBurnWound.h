@@ -20,8 +20,12 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEScalar0To1;
 class SEScalar;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEBurnWound : public SEPatientAction {
+  friend io::PatientActions;
+
 public:
   SEBurnWound();
   virtual ~SEBurnWound() override;

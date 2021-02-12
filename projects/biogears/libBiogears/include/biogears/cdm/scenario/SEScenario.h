@@ -23,8 +23,12 @@ class SEDataRequest;
 class SEScenarioInitialParameters;
 class SEScenarioAutoSerialization;
 class SEDecimalFormat;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SEScenario : public Loggable {
+  friend io::Scenario;
+
 public:
   SEScenario(SESubstanceManager& subMgr);
 

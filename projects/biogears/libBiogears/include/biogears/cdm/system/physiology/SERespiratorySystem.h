@@ -28,16 +28,20 @@ class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarVolume;
 class VolumeUnit;
-
+namespace io {
+  class Physiology;
+}
 class BIOGEARS_API SERespiratorySystem : public SESystem {
+  friend io::Physiology;
+
 public:
   SERespiratorySystem(Logger* logger);
   ~SERespiratorySystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SERespiratorySystem"; }
+  static constexpr char const* const TypeTag() { return "SERespiratorySystem"; }
   const char* classname() const override { return TypeTag(); }
-  size_t hash_code() const override { return TypeHash();  }
+  size_t hash_code() const override { return TypeHash(); }
 
   void Clear() override; // Deletes all members
 
@@ -48,6 +52,7 @@ public:
   CDM::RespiratorySystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::RespiratorySystemData& data) const;
 

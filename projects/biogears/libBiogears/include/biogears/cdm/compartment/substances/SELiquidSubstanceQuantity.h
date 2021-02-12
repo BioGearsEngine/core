@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/compartment/substances/SESubstanceQuantity.h>
-#include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/substance/SESubstanceTransport.h>
 
 namespace biogears {
 class SELiquidCompartment;
@@ -22,11 +22,16 @@ enum class BalanceLiquidBy {
   Mass,
   Concentration,
   Molarity,
-  PartialPressure };
+  PartialPressure
+};
 
 class SELiquidCompartment;
+namespace io {
+  class SubstanceQuantity;
+}
 class BIOGEARS_API SELiquidSubstanceQuantity : public SESubstanceQuantity, public SELiquidTransportSubstance {
   friend class SELiquidCompartment;
+  friend io::SubstanceQuantity;
 
 protected:
   SELiquidSubstanceQuantity(SESubstance& sub, SELiquidCompartment& compartment);
@@ -87,10 +92,10 @@ protected:
   virtual void AddChild(SELiquidSubstanceQuantity& subQ);
 
   virtual bool HasExtensive() const override { return HasMass(); }
-  virtual SEScalarMass& GetExtensive() override  { return GetMass(); }
+  virtual SEScalarMass& GetExtensive() override { return GetMass(); }
 
-  virtual bool HasIntensive() const override  { return HasConcentration(); }
-  virtual SEScalarMassPerVolume& GetIntensive() override  { return GetConcentration(); }
+  virtual bool HasIntensive() const override { return HasConcentration(); }
+  virtual SEScalarMassPerVolume& GetIntensive() override { return GetConcentration(); }
 
   SEScalarMassPerVolume* m_Concentration;
   SEScalarMass* m_Mass;

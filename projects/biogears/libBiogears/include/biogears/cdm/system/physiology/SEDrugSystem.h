@@ -31,14 +31,18 @@ class FrequencyUnit;
 class SEScalarVolume;
 class VolumeUnit;
 class SEScalarVolumePerTime;
-
+namespace io {
+  class Physiology;
+}
 class BIOGEARS_API SEDrugSystem : public SESystem {
+  friend io::Physiology;
+
 public:
   SEDrugSystem(Logger* logger);
   ~SEDrugSystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SEDrugSystem"; }
+  static constexpr char const* const TypeTag() { return "SEDrugSystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -51,6 +55,7 @@ public:
   CDM::DrugSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::DrugSystemData& data) const;
 

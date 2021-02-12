@@ -19,14 +19,18 @@ class SEScalarAmountPerTime;
 class AmountPerTimeUnit;
 class SEScalarMassPerTime;
 class MassPerTimeUnit;
-
+namespace io {
+  class Physiology;
+}
 class BIOGEARS_API SEHepaticSystem : public SESystem {
+  friend io::Physiology;
+
 public:
   SEHepaticSystem(Logger* logger);
   ~SEHepaticSystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SEHepaticSystem"; }
+  static constexpr char const* const TypeTag() { return "SEHepaticSystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -39,6 +43,7 @@ public:
   CDM::HepaticSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::HepaticSystemData& data) const;
 

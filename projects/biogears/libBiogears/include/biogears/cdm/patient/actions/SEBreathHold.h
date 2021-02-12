@@ -17,8 +17,12 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEScalar0To1;
 class SEConsciousRespiration;
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEBreathHold : public SEConsciousRespirationCommand {
   friend class SEConsciousRespiration;
+  friend io::PatientActions;
   SEBreathHold();
 
 public:

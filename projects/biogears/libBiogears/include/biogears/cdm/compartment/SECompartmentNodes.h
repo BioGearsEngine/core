@@ -21,8 +21,13 @@ specific language governing permissions and limitations under the License.
 #define THERMAL_COMPARTMENT_NODE SEThermalCircuitNode, SEScalarTemperature, TemperatureUnit, SEScalarEnergy, EnergyUnit
 
 namespace biogears {
+namespace io {
+  class Compartment;
+}
+
 template <COMPARTMENT_NODE_TEMPLATE>
 class SECompartmentNodes : public Loggable {
+  friend io::Compartment;
 public:
   SECompartmentNodes(Logger* logger);
   virtual ~SECompartmentNodes();

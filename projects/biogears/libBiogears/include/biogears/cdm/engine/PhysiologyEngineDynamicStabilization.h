@@ -19,9 +19,13 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class TimeUnit;
 class PhysiologyEngineDynamicStabilizationCriteria;
+namespace io {
+  class EngineConfiguration;
+}
 
 class BIOGEARS_API PropertyConvergence : public Loggable {
   friend PhysiologyEngineDynamicStabilizationCriteria;
+  friend io::EngineConfiguration;
 
 protected:
   PropertyConvergence(SEDataRequest& dr, Logger* logger);
@@ -58,6 +62,7 @@ class PhysiologyEngineDynamicStabilization;
 CDM_BIND_DECL(PhysiologyEngineDynamicStabilizationCriteriaData)
 class BIOGEARS_API PhysiologyEngineDynamicStabilizationCriteria : public Loggable {
   friend PhysiologyEngineDynamicStabilization;
+  friend io::EngineConfiguration;
 
 public:
   PhysiologyEngineDynamicStabilizationCriteria(Logger* logger);
@@ -65,7 +70,6 @@ public:
   virtual ~PhysiologyEngineDynamicStabilizationCriteria();
 
   virtual void Clear();
-
   virtual bool Load(const CDM::PhysiologyEngineDynamicStabilizationCriteriaData& in);
   virtual CDM::PhysiologyEngineDynamicStabilizationCriteriaData* Unload() const;
 
@@ -121,8 +125,9 @@ protected:
 
 class BIOGEARS_API PhysiologyEngineDynamicStabilizer : public Loggable {
 public:
+  friend io::EngineConfiguration;
   PhysiologyEngineDynamicStabilizer(double timeStep_s, const PhysiologyEngineDynamicStabilizationCriteria& criteria);
-  virtual ~PhysiologyEngineDynamicStabilizer(){};
+  virtual ~PhysiologyEngineDynamicStabilizer() {};
 
   virtual void Converge();
   virtual bool HasConverged() { return m_converged; }
@@ -148,6 +153,7 @@ protected:
 CDM_BIND_DECL(PhysiologyEngineDynamicStabilizationData)
 class PhysiologyEngineDynamicStabilization : public PhysiologyEngineStabilization {
 public:
+  friend io::EngineConfiguration;
   BIOGEARS_API PhysiologyEngineDynamicStabilization(Logger* logger);
   BIOGEARS_API virtual ~PhysiologyEngineDynamicStabilization();
 
@@ -191,6 +197,5 @@ protected:
   BIOGEARS_API bool Merge();
   PhysiologyEngineDynamicStabilizationCriteria m_MergedConditions;
   std::vector<PhysiologyEngineDynamicStabilizationCriteria*> m_ActiveConditions;
-
 };
 }

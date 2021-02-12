@@ -18,8 +18,12 @@ namespace biogears {
 class SEBloodChemistrySystem;
 class SEScalarMassPerVolume;
 class SEScalarAmountPerVolume;
-
+namespace io {
+  class PatientAssessments;
+}
 class BIOGEARS_API SEComprehensiveMetabolicPanel : public SEPatientAssessment {
+  friend io::PatientAssessments;
+
 public:
   SEComprehensiveMetabolicPanel();
   virtual ~SEComprehensiveMetabolicPanel();
@@ -37,46 +41,46 @@ protected:
   virtual void Unload(CDM::ComprehensiveMetabolicPanelData& data);
 
 public:
-  bool HasAlbumin();
+  bool HasAlbumin() const;
   SEScalarMassPerVolume& GetAlbumin();
 
-  bool HasALP();
+  bool HasALP() const;
   SEScalarMassPerVolume& GetALP();
 
-  bool HasALT();
+  bool HasALT() const;
   SEScalarMassPerVolume& GetALT();
 
-  bool HasAST();
+  bool HasAST() const;
   SEScalarMassPerVolume& GetAST();
 
-  bool HasBUN();
+  bool HasBUN() const;
   SEScalarMassPerVolume& GetBUN();
 
-  bool HasCalcium();
+  bool HasCalcium() const;
   SEScalarMassPerVolume& GetCalcium();
 
-  bool HasChloride();
+  bool HasChloride() const;
   SEScalarAmountPerVolume& GetChloride();
 
-  bool HasCO2();
+  bool HasCO2() const;
   SEScalarAmountPerVolume& GetCO2();
 
-  bool HasCreatinine();
+  bool HasCreatinine() const;
   SEScalarMassPerVolume& GetCreatinine();
 
-  bool HasGlucose();
+  bool HasGlucose() const;
   SEScalarMassPerVolume& GetGlucose();
 
-  bool HasPotassium();
+  bool HasPotassium() const;
   SEScalarAmountPerVolume& GetPotassium();
 
-  bool HasSodium();
+  bool HasSodium() const;
   SEScalarAmountPerVolume& GetSodium();
 
-  bool HasTotalBilirubin();
+  bool HasTotalBilirubin() const;
   SEScalarMassPerVolume& GetTotalBilirubin();
 
-  bool HasTotalProtein();
+  bool HasTotalProtein() const;
   SEScalarMassPerVolume& GetTotalProtein();
 
 protected:

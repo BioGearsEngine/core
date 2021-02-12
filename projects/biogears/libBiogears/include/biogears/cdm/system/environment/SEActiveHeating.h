@@ -24,9 +24,12 @@ class SEScalarPower;
 class PowerUnit;
 class SEScalarArea;
 class AreaUnit;
-
+namespace io {
+  class Environment;
+}
 class BIOGEARS_API SEActiveHeating : public Loggable {
 public:
+  friend io::Environment;
   SEActiveHeating(Logger* logger);
   virtual ~SEActiveHeating();
 

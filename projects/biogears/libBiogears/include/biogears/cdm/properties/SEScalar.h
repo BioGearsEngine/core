@@ -19,6 +19,9 @@ CDM_BIND_DECL(ScalarData)
 
 namespace biogears {
 class SEGenericScalar;
+namespace io {
+  class Property;
+}
 
 static constexpr double ZERO_APPROX = 1e-10;
 
@@ -36,6 +39,7 @@ protected:
   bool m_readOnly;
 
 public:
+  friend io::Property;
   SEScalar();
   SEScalar(double);
 

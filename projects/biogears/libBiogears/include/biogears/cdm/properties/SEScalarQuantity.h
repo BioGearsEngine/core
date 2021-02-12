@@ -18,11 +18,14 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(ScalarData)
 
 namespace biogears {
-
+namespace io {
+  class Property;
+}
 
 template <typename Unit>
-class  SEScalarQuantity : public SEUnitScalar {
+class SEScalarQuantity : public SEUnitScalar {
 public:
+  friend io::Property;
   SEScalarQuantity();
   SEScalarQuantity(const SEScalarQuantity&);
   explicit SEScalarQuantity(double, const Unit&);
@@ -83,9 +86,9 @@ public:
 
   const Unit* GetCompoundUnit(const char* unit) const override;
   const Unit* GetCompoundUnit(const std::string& unit) const override;
+
 protected:
   virtual void Unload(CDM::ScalarData& s) const override;
-
 
 protected:
   const Unit* m_unit;

@@ -16,8 +16,11 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalarVolumePerTime;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEPericardialEffusion : public SEPatientAction {
+  friend io::PatientActions;
 public:
   SEPericardialEffusion();
   virtual ~SEPericardialEffusion() override;

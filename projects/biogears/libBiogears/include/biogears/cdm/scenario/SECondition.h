@@ -18,8 +18,12 @@ CDM_BIND_DECL(ConditionData);
 
 namespace biogears {
 class SESubstanceManager;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SECondition : public Loggable {
+  friend io::Scenario;
+
 public:
   SECondition();
   virtual ~SECondition();

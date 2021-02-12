@@ -20,14 +20,18 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalarVolumePerTime;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEHemorrhage : public SEPatientAction {
-//! \class SEHemorrhage
-//! \brief Patient Action for submitting hemorrhage events
-//!
-//! Two major fields Compartment and InitialRate
-//! SEScalarVolumePerTime InitialRate
-//! std::string Compartment "Map Key for referring to the Hemorrhage in the future"
+  friend io::PatientActions;
+
+  //! \class SEHemorrhage
+  //! \brief Patient Action for submitting hemorrhage events
+  //!
+  //! Two major fields Compartment and InitialRate
+  //! SEScalarVolumePerTime InitialRate
+  //! std::string Compartment "Map Key for referring to the Hemorrhage in the future"
 public:
   SEHemorrhage();
   virtual ~SEHemorrhage() override;

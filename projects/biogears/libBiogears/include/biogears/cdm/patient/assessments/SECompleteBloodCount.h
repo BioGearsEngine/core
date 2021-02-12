@@ -20,8 +20,12 @@ class SEScalarFraction;
 class SEScalarMassPerVolume;
 class SEScalarAmountPerVolume;
 class SEScalarMassPerAmount;
-
+namespace io {
+  class PatientAssessments;
+}
 class BIOGEARS_API SECompleteBloodCount : public SEPatientAssessment {
+  friend io::PatientAssessments;
+
 public:
   SECompleteBloodCount();
   virtual ~SECompleteBloodCount();
@@ -39,28 +43,28 @@ protected:
   virtual void Unload(CDM::CompleteBloodCountData& data);
 
 public:
-  virtual bool HasHematocrit();
+  virtual bool HasHematocrit() const;
   virtual SEScalarFraction& GetHematocrit();
 
-  virtual bool HasHemoglobin();
+  virtual bool HasHemoglobin() const;
   virtual SEScalarMassPerVolume& GetHemoglobin();
 
-  virtual bool HasPlateletCount();
+  virtual bool HasPlateletCount() const;
   virtual SEScalarAmountPerVolume& GetPlateletCount();
 
-  virtual bool HasMeanCorpuscularHemoglobin();
+  virtual bool HasMeanCorpuscularHemoglobin() const;
   virtual SEScalarMassPerAmount& GetMeanCorpuscularHemoglobin();
 
-  virtual bool HasMeanCorpuscularHemoglobinConcentration();
+  virtual bool HasMeanCorpuscularHemoglobinConcentration() const;
   virtual SEScalarMassPerVolume& GetMeanCorpuscularHemoglobinConcentration();
 
-  virtual bool HasMeanCorpuscularVolume();
+  virtual bool HasMeanCorpuscularVolume() const;
   virtual SEScalarVolume& GetMeanCorpuscularVolume();
 
-  virtual bool HasRedBloodCellCount();
+  virtual bool HasRedBloodCellCount() const;
   virtual SEScalarAmountPerVolume& GetRedBloodCellCount();
 
-  virtual bool HasWhiteBloodCellCount();
+  virtual bool HasWhiteBloodCellCount() const;
   virtual SEScalarAmountPerVolume& GetWhiteBloodCellCount();
 
 protected:

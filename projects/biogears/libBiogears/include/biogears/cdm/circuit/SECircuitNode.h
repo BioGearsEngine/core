@@ -23,11 +23,15 @@ CDM_BIND_DECL(CircuitNodeData);
 #define THERMAL_CIRCUIT_NODE SEScalarTemperature, SEScalarEnergy
 
 namespace biogears {
+namespace io {
+  class Circuit;
+}
 
 template <CIRCUIT_NODE_TEMPLATE>
 class SECircuitNode : public Loggable {
   template <typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType>
   friend class SECircuit;
+  friend class io::Circuit;
 
 protected:
   SECircuitNode(const char* name, Logger* logger);

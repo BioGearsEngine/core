@@ -21,9 +21,12 @@ namespace biogears {
 class SESubstanceManager;
 class SEDecimalFormat;
 class SEDataRequestManager;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SEDataRequest : public SEDecimalFormat {
   friend class SEDataRequestManager;
+  friend io::Scenario;
 
 protected:
   SEDataRequest(const SEDecimalFormat* dfault = nullptr);

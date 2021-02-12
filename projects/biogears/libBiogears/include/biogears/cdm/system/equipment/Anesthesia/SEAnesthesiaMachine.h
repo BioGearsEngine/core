@@ -17,7 +17,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 namespace biogears {
-
+namespace io {
+  class Anesthesia;
+}
 class SEEventHandler;
 class SESubstanceManager;
 class SEAnesthesiaMachineChamber;
@@ -36,7 +38,7 @@ class SEScalarFraction;
 class BIOGEARS_API SEAnesthesiaMachine : public SESystem {
 protected:
   friend SEAnesthesiaMachineConfiguration;
-
+  friend io::Anesthesia;
 public:
   SEAnesthesiaMachine(SESubstanceManager& substances);
   ~SEAnesthesiaMachine() override;

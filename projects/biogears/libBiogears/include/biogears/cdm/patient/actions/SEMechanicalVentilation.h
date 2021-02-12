@@ -24,8 +24,12 @@ class SEScalarVolumePerTime;
 class VolumePerTimeUnit;
 class SEScalarPressure;
 class PressureUnit;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEMechanicalVentilation : public SEPatientAction {
+  friend io::PatientActions;
+
 protected:
 public:
   SEMechanicalVentilation();

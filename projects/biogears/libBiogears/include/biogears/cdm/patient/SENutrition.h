@@ -25,8 +25,11 @@ class SEScalarMassPerTime;
 class MassPerTimeUnit;
 class SEScalarVolume;
 class VolumeUnit;
-
+namespace io {
+  class PatientNutrition;
+}
 class BIOGEARS_API SENutrition : public Loggable {
+  friend io::PatientNutrition;
 public:
   SENutrition(Logger* logger);
   virtual ~SENutrition();

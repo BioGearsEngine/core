@@ -23,9 +23,11 @@ CDM_BIND_DECL(SystemData)
 namespace biogears {
 class SESubstanceManager;
 class SEScalar;
-
+   namespace io{
+   class Environment;}
 class BIOGEARS_API SESystem : public Loggable {
 public:
+  friend io::Environment;
   SESystem(Logger* logger);
   virtual ~SESystem();
 
