@@ -21,7 +21,7 @@
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
-#include <biogears/cdm/substance/SESubstanceFraction.h >
+#include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>

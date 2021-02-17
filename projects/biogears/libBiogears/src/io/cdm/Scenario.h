@@ -12,10 +12,10 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-#include "biogears/cdm/CommonDataModel.h"
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include "biogears/cdm/substance/SESubstanceManager.h"
+#include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
 namespace biogears {
@@ -124,7 +124,8 @@ namespace io {
     static void Marshall(const CDM::SerializeStateData& in, SESerializeState& out);
     static void UnMarshall(const SESerializeState& in, CDM::SerializeStateData& out);
 
-    static std::unique_ptr<SEDataRequest> factory(const CDM::DataRequestData& in, SESubstanceManager const& substances, const SEDecimalFormat* default = nullptr);
+    static std::unique_ptr<SEDataRequest> factory(const CDM::DataRequestData& in, SESubstanceManager const& substances,  SEDecimalFormat const* df = nullptr);
+
     static std::unique_ptr<CDM::DataRequestData> factory(const SEDataRequest* in);
   };
 

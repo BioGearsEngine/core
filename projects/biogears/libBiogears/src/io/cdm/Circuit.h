@@ -54,9 +54,9 @@ namespace io {
     static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
     //class SECircuit
     template <CIRCUIT_TEMPLATE>
-    static void Marshall(CircuitBindType in, SECircuit<CIRCUIT_TYPES>& out, const std::map<std::string, NodeType*>& nodes, const std::map<std::string, PathType*>& paths);
+    static void Marshall(const CircuitBindType&  in, SECircuit<CIRCUIT_TYPES>& out, const std::map<std::string, NodeType*>& nodes, const std::map<std::string, PathType*>& paths);
     template <CIRCUIT_TEMPLATE>
-    static void UnMarshall(const SECircuit<CIRCUIT_TYPES>& in, CDM::CircuitData& out);
+    static void UnMarshall(const SECircuit<CIRCUIT_TYPES>& in, CircuitBindType&  out);
     //class SECircuitNode
     template <CIRCUIT_NODE_TEMPLATE>
     static void Marshall(const CDM::CircuitNodeData& in, SECircuitNode<CIRCUIT_NODE_TYPES>& out);
@@ -67,6 +67,8 @@ namespace io {
     static void Marshall(const CDM::CircuitPathData& in, SECircuitPath<CIRCUIT_PATH_TYPES>& out);
     template <CIRCUIT_PATH_TEMPLATE>
     static void UnMarshall(const SECircuitPath<CIRCUIT_PATH_TYPES>& in, CDM::CircuitPathData& out);
+
+
     //class SEElectricalCircuit
     static void Marshall(const CDM::ElectricalCircuitData& in, SEElectricalCircuit& out);
     static void UnMarshall(const SEElectricalCircuit& in, CDM::ElectricalCircuitData& out);
@@ -118,7 +120,7 @@ namespace io {
   }
   //class SECircuit
   template <CIRCUIT_TEMPLATE>
-  void Circuit::Marshall(CircuitBindType in, SECircuit<CIRCUIT_TYPES>& out, const std::map<std::string, NodeType*>& nodes, const std::map<std::string, PathType*>& paths)
+  void Circuit::Marshall(const CircuitBindType& in, SECircuit<CIRCUIT_TYPES>& out, const std::map<std::string, NodeType*>& nodes, const std::map<std::string, PathType*>& paths)
   {
     out.Clear();
     out.m_Name = in.Name();
@@ -147,10 +149,10 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
   template <CIRCUIT_TEMPLATE>
-  void Circuit::UnMarshall(const SECircuit<CIRCUIT_TYPES>& in, CDM::CircuitData& out)
+  void Circuit::UnMarshall(const SECircuit<CIRCUIT_TYPES>& in, CircuitBindType& out)
   {
     out.Name(in.m_Name);
-    if (HasReferenceNode()) {
+    if (in.HasReferenceNode()) {
       for (NodeType* n : in.m_ReferenceNodes)
         out.ReferenceNode().push_back(n->GetName());
     }

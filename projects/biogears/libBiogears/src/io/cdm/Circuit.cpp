@@ -293,7 +293,7 @@ namespace io {
   void Circuit::UnMarshall(const SEThermalCircuitNode& in, CDM::ThermalCircuitNodeData& out)
   {
 
-    UnMarshall(static_cast<const SECircuitNode<THERMAL_CIRCUIT_NODE>&>(in), static_cast<CDM::CircuitNodeData>(out));
+    UnMarshall(static_cast<const SECircuitNode<THERMAL_CIRCUIT_NODE>&>(in), static_cast<CDM::CircuitNodeData&>(out));
     if (in.HasTemperature())
       io::Property::UnMarshall(*in.m_Potential, out.Temperature());
     if (in.HasNextTemperature())

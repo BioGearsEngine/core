@@ -440,60 +440,60 @@ namespace io {
     }
   }
   //-----------------------------------------------------------------------------
-  std::unique_ptr<SEDataRequest> Scenario::factory(const CDM::DataRequestData& in, SESubstanceManager const& substances, const SEDecimalFormat* default)
+  std::unique_ptr<SEDataRequest> Scenario::factory(const CDM::DataRequestData& in, SESubstanceManager const& substances, const SEDecimalFormat* df)
   {
     const CDM::DataRequestData* drData = &in;
     const CDM::PhysiologyDataRequestData* physSysData = dynamic_cast<const CDM::PhysiologyDataRequestData*>(drData);
     if (physSysData != nullptr) {
-      auto sys = std::make_unique<SEPhysiologyDataRequest>(default);
+      auto sys = std::make_unique<SEPhysiologyDataRequest>(df);
       Scenario::Marshall(*physSysData, *sys);
       return sys;
     }
     const CDM::GasCompartmentDataRequestData* gasData = dynamic_cast<const CDM::GasCompartmentDataRequestData*>(drData);
     if (gasData != nullptr) {
-      auto Comp = std::make_unique<SEGasCompartmentDataRequest>(default);
+      auto Comp = std::make_unique<SEGasCompartmentDataRequest>(df);
       Scenario::Marshall(*gasData, substances, *Comp);
       return Comp;
     }
     const CDM::LiquidCompartmentDataRequestData* liquidData = dynamic_cast<const CDM::LiquidCompartmentDataRequestData*>(drData);
     if (liquidData != nullptr) {
-      auto Comp = std::make_unique<SELiquidCompartmentDataRequest>(default);
+      auto Comp = std::make_unique<SELiquidCompartmentDataRequest>(df);
       Scenario::Marshall(*liquidData, substances, *Comp);
       return Comp;
     }
     const CDM::ThermalCompartmentDataRequestData* thermData = dynamic_cast<const CDM::ThermalCompartmentDataRequestData*>(drData);
     if (thermData != nullptr) {
-      auto Comp = std::make_unique<SEThermalCompartmentDataRequest>(default);
+      auto Comp = std::make_unique<SEThermalCompartmentDataRequest>(df);
       Scenario::Marshall(*thermData, *Comp);
       return Comp;
     }
     const CDM::TissueCompartmentDataRequestData* tissueData = dynamic_cast<const CDM::TissueCompartmentDataRequestData*>(drData);
     if (tissueData != nullptr) {
-      auto Comp = std::make_unique<SETissueCompartmentDataRequest>(default);
+      auto Comp = std::make_unique<SETissueCompartmentDataRequest>(df);
       Scenario::Marshall(*tissueData, *Comp);
       return Comp;
     }
     const CDM::PatientDataRequestData* patData = dynamic_cast<const CDM::PatientDataRequestData*>(drData);
     if (patData != nullptr) {
-      auto sys = std::make_unique<SEPatientDataRequest>(default);
+      auto sys = std::make_unique<SEPatientDataRequest>(df);
       Scenario::Marshall(*patData, *sys);
       return sys;
     }
     const CDM::SubstanceDataRequestData* subData = dynamic_cast<const CDM::SubstanceDataRequestData*>(drData);
     if (subData != nullptr) {
-      auto sub = std::make_unique<SESubstanceDataRequest>(default);
+      auto sub = std::make_unique<SESubstanceDataRequest>(df);
       Scenario::Marshall(*subData, substances, *sub);
       return sub;
     }
     const CDM::EnvironmentDataRequestData* envData = dynamic_cast<const CDM::EnvironmentDataRequestData*>(drData);
     if (envData != nullptr) {
-      auto env = std::make_unique<SEEnvironmentDataRequest>(default);
+      auto env = std::make_unique<SEEnvironmentDataRequest>(df);
       Scenario::Marshall(*envData, *env);
       return env;
     }
     const CDM::EquipmentDataRequestData* equipSysData = dynamic_cast<const CDM::EquipmentDataRequestData*>(drData);
     if (equipSysData != nullptr) {
-      auto sys = std::make_unique<SEEquipmentDataRequest>(default);
+      auto sys = std::make_unique<SEEquipmentDataRequest>(df);
       Scenario::Marshall(*equipSysData, *sys);
       return sys;
     }
