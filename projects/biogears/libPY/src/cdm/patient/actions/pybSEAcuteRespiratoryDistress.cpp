@@ -27,5 +27,5 @@ void define_pybSEAcuteRespiratoryDistress(py::module_& m)
     .def("GetSeverity", &SEAcuteRespiratoryDistress::GetSeverity, py::return_value_policy::reference)
     .def("ToString", py::overload_cast<>(&SEAction::ToString, py::const_))
     .def("__repr__", py::overload_cast<>(&SEAction::ToString, py::const_))
-    .def_property("Severity", &SEAcuteRespiratoryDistress::GetSeverity, nullptr);
+    .def_property("Severity", &SEAcuteRespiratoryDistress::GetSeverity,  nullptr, py::return_value_policy::reference);
 }
