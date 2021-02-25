@@ -10,9 +10,9 @@ Build Status
 |----------|----------|--------------|--------|
 | Windows  |  msvc15  | amd64        | ![Windows msvc15 Build  Status](https://biogearsengine.com/content/badges/nightly_libBioGears_windows_msvc15.png) |
 | Windows  |  msvc16  | amd64        | ![Windows msvc16 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_windows_msvc16.png) |
-| Linux  |  gcc5.4  | amd64 | ![Linux-gcc5.4-amd64 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc5.4-core2_64.png) |
-| Linux  |  gcc5.4  | armel | ![Linux-gcc5.4-armel Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc5.4-armel.png) |
-| Linux  |  gcc5.4  | aarch64 | ![Linux-gcc5.4-aarch64 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc5.4-aarch64.png) |
+| Linux  |  gcc9  | amd64 | ![Linux-gcc9-amd64 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc9-amd64.png) |
+| Linux  |  gcc9  | armhf | ![Linux-gcc9-armhf Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc9-armhf.png) |
+| Linux  |  gcc9  | aarch64 | ![Linux-gcc9-aarch64 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc9-aarch64.png) |
 | MacOS  Yosemite |  clang10  | amd64 | ![MacOS Yosemite clang11 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_macos-yosemite.png) |
 | MacOS  Catalina|  clang11  | amd64 | ![MacOS Catalina clang11 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_macos-catalina.png) |
 
