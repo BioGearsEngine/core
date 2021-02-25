@@ -58,5 +58,6 @@ namespace io {
     BIOGEARS_IO_API char const* get_embedded_resource_file(const char* file);
 
     BIOGEARS_IO_API size_t get_directory_count(); //!< Returns the list of directories embeded IE 1 for each cpp file in libIO/src/directories
+  };
 }
 }

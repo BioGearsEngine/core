@@ -237,7 +237,7 @@ namespace io {
 
   size_t IOManager::get_directory_count()
   {
-    size_t sum = biogears::io::config_file_count() 
+    size_t sum = biogears::io::config_file_count()
       + biogears::io::ecg_file_count()
       + biogears::io::environments_file_count()
       + biogears::io::nutrition_file_count()
@@ -245,10 +245,10 @@ namespace io {
       + biogears::io::patients_file_count()
       + biogears::io::substances_file_count()
       + biogears::io::xsd_file_count();
-#ifdef IO_EMBED_STATES 
-   sum += states_file_count();
+#ifdef IO_EMBED_STATES
+    sum += states_file_count();
 #endif
-   return sum;
+    return sum;
   }
 
 }
