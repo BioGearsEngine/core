@@ -264,11 +264,11 @@ void ReportWriter::generate_system_tables(TYPE table_type)
   std::vector<std::pair<std::string, std::string>> SystemTables {
     { "BloodChemistryValidation", "Scenarios/Validation" },
     { "CardiovascularValidation", "Scenarios/Validation" },
-    { "EnergyValidation", "Scenarios/Validation" },
-    { "EndocrineValidation", "Scenarios/Validation" },
-    { "RenalValidation", "Scenarios/Validation" },
-    { "RespiratoryValidation", "Scenarios/Validation" },
-    { "TissueValidation", "Scenarios/Validation" }
+    { "EnergyValidation",         "Scenarios/Validation" },
+    { "EndocrineValidation",      "Scenarios/Validation" },
+    { "RenalValidation",          "Scenarios/Validation" },
+    { "RespiratoryValidation",    "Scenarios/Validation" },
+    { "TissueValidation",         "Scenarios/Validation" }
   };
 
   //Map of SystemTables to required test. Second paramater i

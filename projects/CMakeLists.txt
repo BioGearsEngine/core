@@ -13,6 +13,12 @@ find_path (
         ${PROJECT_SOURCE_DIR}/../verification  
         ${PROJECT_SOURCE_DIR}/../validation 
         ${PROJECT_SOURCE_DIR}/../baselines
+        ${PROJECT_SOURCE_DIR}/../../../verification/core  
+        ${PROJECT_SOURCE_DIR}/../../../validation/core 
+        ${PROJECT_SOURCE_DIR}/../../../baselines/core
+        ${PROJECT_SOURCE_DIR}/../../../verification  
+        ${PROJECT_SOURCE_DIR}/../../../validation 
+        ${PROJECT_SOURCE_DIR}/../../../baselines
   DOC "Optional directory path to hiarchial filetree of baseline archives. This will be used by Python Plotters to find Baselines"
 )
 find_path (

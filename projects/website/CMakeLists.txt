@@ -89,20 +89,31 @@ if(Biogears_BUILD_WEBSITE)
         COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE} -p doc/markdown -f doc/doxygen/processed_md #cdm
         COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE}  -p doc/methodology -f doc/doxygen/processed_md #cdm
         COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm 
-        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRun-1_2.config -j 5 -v
-        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRun-2_2.config -j 5 -v
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRun1_of_2.config -j 5 -v
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRun2_of_2.config -j 5 -v
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-        COMMENT "Running docs-prepare"
         VERBATIM
         USES_TERMINAL
     )
-  
+    set_target_properties(docs-prepare-py PROPERTIES
+        FOLDER "Website"
+        EXCLUDE_FROM_ALL ON
+        COMMENT "Running docs-prepare"
+    )
+    
     add_custom_target(docs-doxygen-py
         COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
-        COMMENT "Running docs-doxygen"
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/doxygen
+        FOLDER "Website"
+        EXCLUDE_FROM_ALL
+        COMMENT "Running docs-doxygen"
         VERBATIM
         USES_TERMINAL
+    )
+    set_target_properties(docs-doxygen-py PROPERTIES
+        FOLDER "Website"
+        EXCLUDE_FROM_ALL ON
+        COMMENT "Running docs-prepare"
     )
 
     add_custom_target(docs-stage-py
@@ -114,35 +125,56 @@ if(Biogears_BUILD_WEBSITE)
         COMMENT "Running docs-stage"
         USES_TERMINAL
    )
-  
+   set_target_properties(docs-stage-py PROPERTIES
+        FOLDER "Website"
+        EXCLUDE_FROM_ALL ON
+        COMMENT "Running docs-prepare"
+    )
     if(Biogears_BUILD_WEBSITE_DEBUG)    
-    add_custom_target(docs-prepare-cdm2md
-        COMMAND ${Python3_EXECUTABLE}  ${CDM2MD_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-        VERBATIM
-        USES_TERMINAL
-      )
-    
-    add_custom_target(docs-prepare-preprocess-markdown
-        COMMAND ${Python3_EXECUTABLE}  ${DoxygenPreprocessor_SOURCE} -p doc/markdown -f doc/doxygen/processed_md
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-        VERBATIM
-        USES_TERMINAL
-      )
-    
-    add_custom_target(docs-prepare-preprocess-methodolgy
-        COMMAND ${Python3_EXECUTABLE}  ${DoxygenPreprocessor_SOURCE} -p doc/methodology -f doc/doxygen/processed_md
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-        VERBATIM
-        USES_TERMINAL
-      )
-    
-    add_custom_target(docs-prepare-xsd2doxygen
-        COMMAND ${Python3_EXECUTABLE}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
-        VERBATIM
-        USES_TERMINAL
-      )
+       add_custom_target(docs-prepare-cdm2md
+           COMMAND ${Python3_EXECUTABLE}  ${CDM2MD_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm
+           WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+           VERBATIM
+           USES_TERMINAL
+         )
+       set_target_properties(docs-prepare-cdm2md PROPERTIES
+           FOLDER "Website"
+           EXCLUDE_FROM_ALL ON
+           COMMENT "Running docs-prepare"
+       )
+       add_custom_target(docs-prepare-preprocess-markdown
+           COMMAND ${Python3_EXECUTABLE}  ${DoxygenPreprocessor_SOURCE} -p doc/markdown -f doc/doxygen/processed_md
+           WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+           VERBATIM
+           USES_TERMINAL
+         )
+          set_target_properties(docs-prepare-preprocess-markdown PROPERTIES
+           FOLDER "Website"
+           EXCLUDE_FROM_ALL ON
+           COMMENT "Running docs-prepare"
+       )
+       add_custom_target(docs-prepare-preprocess-methodolgy
+           COMMAND ${Python3_EXECUTABLE}  ${DoxygenPreprocessor_SOURCE} -p doc/methodology -f doc/doxygen/processed_md
+           WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+           VERBATIM
+           USES_TERMINAL
+         )
+          set_target_properties(docs-prepare-preprocess-methodolgy PROPERTIES
+           FOLDER "Website"
+           EXCLUDE_FROM_ALL ON
+           COMMENT "Running docs-prepare"
+       )
+       add_custom_target(docs-prepare-xsd2doxygen
+           COMMAND ${Python3_EXECUTABLE}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm
+           WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+           VERBATIM
+           USES_TERMINAL
+         )
+       set_target_properties(docs-prepare-xsd2doxygen PROPERTIES
+           FOLDER "Website"
+           EXCLUDE_FROM_ALL ON
+           COMMENT "Running docs-prepare"
+       )
     endif()
     add_dependencies(docs-prepare-py prepare_runtime_dir bg-cli venvcreate )
     add_dependencies(docs-doxygen-py docs-prepare-py )
