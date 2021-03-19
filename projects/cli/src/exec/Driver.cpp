@@ -308,8 +308,8 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
 	std::string nc_state_file = state_file;
 	std::transform(nc_state_file.begin(), nc_state_file.end(), nc_state_file.begin(), ::tolower);
 	if ("all" == nc_state_file) {
-	  auto state_files = biogears::ListFiles("states", R"(\.xml)");
-	  auto infection_state_files = biogears::ListFiles("states/InfectionStates","R(\.xml)");
+	  auto state_files = biogears::ListFiles("states", R"(\.xml)", false);
+	  auto infection_state_files = biogears::ListFiles("states/InfectionStates","R(\.xml)", false);
 	  state_files.insert(state_files.end(),infection_state_files.begin(),infection_state_files.end());
 	  for (const std::string& state_file : state_files) {
         Executor stateEx{ exec };
@@ -319,10 +319,11 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
         auto state_no_extension = split(split_state_path.back(), '.').front();
 
         std::string trimmed_scenario_path(trim(stateEx.Scenario()));
-        auto split_scenario_path = split(trimmed_scenario_path, '/');
+        auto split_scenario_path = split(trimmed_scenario_path, '\\/');
         auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
 
         if (stateEx.Name().empty()) {
+
           stateEx.Results({ scenario_no_extension + "-" + state_no_extension });
           stateEx.Name(scenario_no_extension + "-" + state_no_extension);
         } else {
@@ -344,9 +345,9 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     std::string nc_patient_file = patient_file;
     std::transform(nc_patient_file.begin(), nc_patient_file.end(), nc_patient_file.begin(), ::tolower);
     if ("all" == nc_patient_file) {
-      auto patient_files = biogears::ListFiles("patients", R"(\.xml)");
+      auto patient_files = biogears::ListFiles("patients", R"(\.xml)", false);
       for (const std::string& patient_file : patient_files) {
-		std::cout << patient_file << std::endl;
+        std::cout << patient_file << std::endl;
         Executor patientEx { exec };
         patientEx.Patient(patient_file);
 
@@ -363,8 +364,10 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
           patientEx.Results({ scenario_no_extension + "-" + patient_no_extension });
           patientEx.Name(scenario_no_extension + "-" + patient_no_extension);
         } else {
-          patientEx.Results({ patientEx.Name() + "-" + patient_no_extension });
-          patientEx.Name(patientEx.Name() + "-" + patient_no_extension);
+          auto patient_name = split(patientEx.Name(), '/').back(); 
+          std::size_t found = patient_name.find_last_of(".");
+          patientEx.Results({  patient_name.substr(0,found) + "-" + patient_no_extension });
+          patientEx.Name( patient_name.substr(0,found) + "-" + patient_no_extension);
         }
         ///----
         _pool.queue_work(std::bind(scenario_launch, std::move(patientEx), true));
