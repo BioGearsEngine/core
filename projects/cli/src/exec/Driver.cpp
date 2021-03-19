@@ -304,15 +304,15 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
   // TODO: Test for EngineState file and call an appropriate launcher
   // TODO: Test for Patient if PatientFile is not present and call the appropriate launcher
   if (scenario->EngineStateFile().present()) {
-	const auto state_file = scenario->EngineStateFile().get();
-	std::string nc_state_file = state_file;
-	std::transform(nc_state_file.begin(), nc_state_file.end(), nc_state_file.begin(), ::tolower);
-	if ("all" == nc_state_file) {
-	  auto state_files = biogears::ListFiles("states", R"(\.xml)", false);
-	  auto infection_state_files = biogears::ListFiles("states/InfectionStates","R(\.xml)", false);
-	  state_files.insert(state_files.end(),infection_state_files.begin(),infection_state_files.end());
-	  for (const std::string& state_file : state_files) {
-        Executor stateEx{ exec };
+    const auto state_file = scenario->EngineStateFile().get();
+    std::string nc_state_file = state_file;
+    std::transform(nc_state_file.begin(), nc_state_file.end(), nc_state_file.begin(), ::tolower);
+    if ("all" == nc_state_file) {
+      auto state_files = biogears::ListFiles("states", R"(\.xml)", false);
+      auto infection_state_files = biogears::ListFiles("states/InfectionStates", "R(\.xml)", false);
+      state_files.insert(state_files.end(), infection_state_files.begin(), infection_state_files.end());
+      for (const std::string& state_file : state_files) {
+        Executor stateEx { exec };
         stateEx.State(state_file);
         std::string trimmed_state_path(trim(stateEx.State()));
         auto split_state_path = split(trimmed_state_path, '/');
@@ -323,24 +323,29 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
         auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
 
         if (stateEx.Name().empty()) {
-
           stateEx.Results({ scenario_no_extension + "-" + state_no_extension });
           stateEx.Name(scenario_no_extension + "-" + state_no_extension);
         } else {
-          stateEx.Results({ stateEx.Name() + "-" + state_no_extension });
-          stateEx.Name(stateEx.Name() + "-" + state_no_extension);
+          auto patient_name = split(stateEx.Name(), '/').back();
+          std::size_t found = patient_name.find_last_of(".");
+          stateEx.Results({ patient_name.substr(0, found) + "-" + state_no_extension });
+          stateEx.Name(patient_name.substr(0, found) + "-" + state_no_extension);
         }
-      ///----
+        ///----
         _pool.queue_work(std::bind(scenario_launch, std::move(stateEx), true));
         ++_total_work;
       }
-	  return;
-	} 
-    exec.State(scenario->EngineStateFile().get());
-    _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
-    ++_total_work;
-    return;
-  } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->PatientFile().present()) {
+      return;
+    } else if (false) {
+
+    } else {
+      exec.State(scenario->EngineStateFile().get());
+      _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+      ++_total_work;
+      return;
+    }
+  } 
+  else if (scenario->InitialParameters().present() && scenario->InitialParameters()->PatientFile().present()) {
     const auto patient_file = scenario->InitialParameters()->PatientFile().get();
     std::string nc_patient_file = patient_file;
     std::transform(nc_patient_file.begin(), nc_patient_file.end(), nc_patient_file.begin(), ::tolower);
@@ -364,21 +369,25 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
           patientEx.Results({ scenario_no_extension + "-" + patient_no_extension });
           patientEx.Name(scenario_no_extension + "-" + patient_no_extension);
         } else {
-          auto patient_name = split(patientEx.Name(), '/').back(); 
+          auto patient_name = split(patientEx.Name(), '/').back();
           std::size_t found = patient_name.find_last_of(".");
-          patientEx.Results({  patient_name.substr(0,found) + "-" + patient_no_extension });
-          patientEx.Name( patient_name.substr(0,found) + "-" + patient_no_extension);
+          patientEx.Results({ patient_name.substr(0, found) + "-" + patient_no_extension });
+          patientEx.Name(patient_name.substr(0, found) + "-" + patient_no_extension);
         }
         ///----
         _pool.queue_work(std::bind(scenario_launch, std::move(patientEx), true));
         ++_total_work;
       }
+    } 
+    else if(false){ 
+    
     } else {
       exec.Patient(patient_file);
       _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
       ++_total_work;
     }
-  } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
+  } 
+  else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
     exec.Patient("");
     exec.State("");
     _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
@@ -485,7 +494,6 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
 
     if (ex.TrackStabilization()) {
       options += biogears::asprintf(" --track-stabilization");
-
     }
 
     boost::asio::io_service svc;
@@ -638,13 +646,15 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       scenario = CDM::Scenario(ifs, xml_flags, xml_properties);
     } catch (std::runtime_error e) {
       std::cout << "Error while processing " << ex.Scenario() << "\n";
-      std::cout << e.what() << "\n" << std::endl;
+      std::cout << e.what() << "\n"
+                << std::endl;
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", ExecutionErrors::SCENARIO_PARSE_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
       _thread_count -= 1;
       return;
     } catch (xsd::cxx::tree::parsing<char> e) {
       std::cout << "Error while processing " << ex.Scenario() << "\n";
-      std::cout << e << "\n" << std::endl;
+      std::cout << e << "\n"
+                << std::endl;
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", ExecutionErrors::SCENARIO_PARSE_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
       _thread_count -= 1;
       return;

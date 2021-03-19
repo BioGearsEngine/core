@@ -884,7 +884,7 @@ void ReportWriter::generate_patient_tables(TYPE table_type)
     std::regex_match(patient, rx_matches, rx);
     if (std::regex_match(patient, rx_matches, rx)) {
       std::string stateFile = std::string("states/") + rx_matches[1].str() + "@0s.xml";
-      std::string runName = std::string("Validation-") + rx_matches[1].str();
+      std::string runName = std::string("PatientValidation-") + rx_matches[1].str();
       std::string group = "Scenarios/Validation";
 
       if (filesystem::exists(stateFile)) {

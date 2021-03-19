@@ -158,6 +158,7 @@ bool Arguments::parse(const std::vector<std::string>& args)
       _keywords[_required_keywords[argument_index++]] = arg;
       continue;
     }
+
     if (!_required_multiword.empty()) {
       _multiwords[_required_multiword].emplace_back(arg);
       continue;
@@ -166,8 +167,14 @@ bool Arguments::parse(const std::vector<std::string>& args)
         _error = _required_keywords.front() + " second occurance as " + arg + "is not allowed.\n";
         //std::cerr << _error;
         return false;
-      } else {
+      } else if (_required_keywords.size() != 0) {
         _error = "argument given after final required argument " + _required_keywords.back() + ".\n";
+        //std::cerr << _error;
+        return false;
+      } else {
+        //TODO: This message could be improved by printing out the full line given and declaring that the previous token an option
+        //      or basically trying to deduce what went wrong
+        _error = "Unexpected argument " + arg + ".\n";
         //std::cerr << _error;
         return false;
       }
