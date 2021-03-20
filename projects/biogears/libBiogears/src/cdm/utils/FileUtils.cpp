@@ -93,6 +93,14 @@ bool CreateFilePath(const char* path)
   std::string path_str{ path };
   return CreateFilePath(path_str);
 }
+//!
+//! \param std::string directory - Directory which the files to be listed are contained
+//! \param std::vector<std::string> [INOUT] - The full path to all files discovered durring ListFiles. These values are prepended to dir (is modified in place)
+//! \param std::string regex     - Pattern that FILENAMES will be filtered by (*.xml,Default*.xml,...)
+//! \param bool recurseOn        - Defaults to true; determines if the ListFiles is recursive matching filenames in subdirectories 
+//!
+//! Regexes use ECMAScript TODO: Debate if we should switch to Extended Posix so *xml and Gus* are valud instead of .*\.xml and Gus.*
+//! Possibly support passing in the regex standard as a forth parameter. 
 void ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& regex, bool recurse)
 {
   DIR* d;
@@ -110,7 +118,7 @@ void ListFiles(const std::string& dir, std::vector<std::string>& files, const st
       filename += ent->d_name;
 
       if (!IsDirectory(ent)) {
-        if (std::regex_search(filename, mask))
+        if (std::regex_match(ent->d_name, mask))
           files.push_back(filename);
       } else {
         if (recurse) {
@@ -161,7 +169,13 @@ const char* ResolvePath_cStr(const char* path)
   storage = ResolvePath(storage);
   return storage.c_str();
 }
-
+     
+//!
+//! \param std::string directory - Directory which the files to be listed are contained
+//! \param std::string regex     - Pattern that FILENAMES will be filtered by (*.xml,Default*.xml,...)
+//! \param bool recurseOn        - Defaults to true; determines if the ListFiles is recursive matching filenames in subdirectories 
+//!
+//! \return std::vector<std::string> - The full path to all files discovered durring ListFiles. These values are prepended to dir
 std::vector<std::string> ListFiles(const std::string& dir, const std::string& regex, bool recurse)
 {
   std::vector<std::string> files;

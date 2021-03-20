@@ -309,15 +309,15 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     std::string nc_state_file = state_file;
     std::transform(nc_state_file.begin(), nc_state_file.end(), nc_state_file.begin(), ::tolower);
     if ("all" == nc_state_file) {
-      auto state_files = biogears::ListFiles("states", R"(\.xml)", false);
-      auto infection_state_files = biogears::ListFiles("states/InfectionStates", R"(\.xml)", false);
+      auto state_files = biogears::ListFiles("states", R"(.*\.xml)", false);
+      auto infection_state_files = biogears::ListFiles("states/InfectionStates", R"(.*\.xml)", false);
       state_files.insert(state_files.end(), infection_state_files.begin(), infection_state_files.end());
       queue_from_sate_files(exec, state_files, scenario_launch);
       return;
     }
     else if (filesystem::exists(scenario->EngineStateFile().get())) {
       if (filesystem::is_directory(scenario->EngineStateFile().get())) {
-        auto state_files = biogears::ListFiles(scenario->EngineStateFile().get(), R"(\.xml)", false);
+        auto state_files = biogears::ListFiles(scenario->EngineStateFile().get(), R"(.*\.xml)", false);
         queue_from_sate_files(exec, state_files, scenario_launch);
         return;
       } else {
@@ -329,7 +329,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     } 
     else if (filesystem::exists("states/" + scenario->EngineStateFile().get())) {
       if (filesystem::is_directory("states/" + scenario->EngineStateFile().get())) {
-        auto state_files = biogears::ListFiles("states/" + scenario->EngineStateFile().get(), R"(\.xml)", false);
+        auto state_files = biogears::ListFiles("states/" + scenario->EngineStateFile().get(), R"(.*\.xml)", false);
         queue_from_sate_files(exec, state_files, scenario_launch);
         return;
       } else {
@@ -344,7 +344,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
       if (matching_states.empty()) {
         matching_states = find_matching_files("states/" + scenario->EngineStateFile().get());
       }
-      queue_from_patient_files(exec, matching_states, scenario_launch);
+      queue_from_sate_files(exec, matching_states, scenario_launch);
     }
 
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->PatientFile().present()) {
@@ -352,12 +352,12 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     std::string nc_patient_file = patient_file;
     std::transform(nc_patient_file.begin(), nc_patient_file.end(), nc_patient_file.begin(), ::tolower);
     if ("all" == nc_patient_file) {
-      auto patient_files = biogears::ListFiles("patients", R"(\.xml)", false);
+      auto patient_files = biogears::ListFiles("patients", R"(.*\.xml)", false);
       queue_from_patient_files(exec, patient_files, scenario_launch);
     } 
     else if (filesystem::exists(scenario->InitialParameters()->PatientFile().get())) {
       if (filesystem::is_directory(scenario->InitialParameters()->PatientFile().get())) {
-        auto patient_files = biogears::ListFiles(scenario->InitialParameters()->PatientFile().get(), R"(\.xml)",false);
+        auto patient_files = biogears::ListFiles(scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)",false);
         queue_from_patient_files(exec, patient_files, scenario_launch);
         return;
       } else {
@@ -369,7 +369,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     } 
     else if (filesystem::exists("patients/" + scenario->InitialParameters()->PatientFile().get())) {
       if (filesystem::is_directory("patients/" + scenario->InitialParameters()->PatientFile().get())) {
-        auto patient_files = biogears::ListFiles("patients/" + scenario->InitialParameters()->PatientFile().get(), R"(\.xml)", false);
+        auto patient_files = biogears::ListFiles("patients/" + scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)", false);
         queue_from_patient_files(exec, patient_files, scenario_launch);
         return;
       } else {
@@ -461,6 +461,7 @@ void Driver::queue_from_patient_files(const Executor& exec, const std::vector<st
 //!  \return std::vector<std::string> list of all paths that matched the regex
 //!
 //!
+#pragma optimize( "", off )
 std::vector<std::string> Driver::find_matching_files(const std::string& pattern)
 {
 
@@ -485,7 +486,6 @@ std::vector<std::string> Driver::find_matching_files(const std::string& pattern)
 
   std::vector<std::string> possible_paths { "" };
   std::vector<std::string> new_work;
-  std::string filename_regex = "*.xml";
 
   std::vector<int> remove_queue;
   remove_queue.reserve(possible_paths.size());
@@ -505,19 +505,24 @@ std::vector<std::string> Driver::find_matching_files(const std::string& pattern)
       ++index;
     }
 
-    auto begin = possible_paths.begin();
-    auto end = possible_paths.end();
+
+    std::vector<std::string>::iterator end = possible_paths.end();
     for (auto& index : remove_queue) {
-      std::swap(begin + index, end);
-      end--;
+      std::swap(possible_paths[index], possible_paths.back());
+      end = end - 1;
     }
-    end = possible_paths.erase(end, possible_paths.end());
-    possible_paths.insert(possible_paths.end(), new_work.begin(), new_work.end());
+    if ( end != possible_paths.end()){
+      end = possible_paths.erase(end, possible_paths.end());
+    }
+    if ( new_work.size() ){
+      possible_paths.insert(possible_paths.end(), new_work.begin(), new_work.end());
+    }
     new_work.clear();
     remove_queue.clear();
   }
   return possible_paths;
 }
+#pragma optimize( "", on )
 //-----------------------------------------------------------------------------
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
 void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)

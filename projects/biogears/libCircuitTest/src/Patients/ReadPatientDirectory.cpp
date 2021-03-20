@@ -35,7 +35,7 @@ void CommonDataModelTest::ReadPatientDirectory(const std::string& rptDirectory)
   testSuite.SetName(testName);
 
   std::vector<std::string> files;
-  ListFiles(dir, files, R"(\.xml)");
+  ListFiles(dir, files, R"(.*\.xml)");
   for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it) {
     if (it->find("xml") != std::string::npos) {
       pTimer.Start("Case");
