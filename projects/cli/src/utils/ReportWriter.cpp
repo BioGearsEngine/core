@@ -184,12 +184,20 @@ void ReportWriter::gen_tables_single_sheet(std::string reference_file, std::stri
 //
 inline bool file_exists(const std::string& name)
 {
+  #ifndef _CRT_SECURE_NO_WARNINGS
+  #define UNDEF__CRT_SECURE_NO_WARNINGS
+  #define _CRT_SECURE_NO_WARNINGS
+  #endif
   if (FILE* file = fopen(name.c_str(), "r")) {
     fclose(file);
     return true;
   } else {
     return false;
   }
+  #ifdef  UNDEF__CRT_SECURE_NO_WARNINGS
+  #undef  UNDEF__CRT_SECURE_NO_WARNINGS
+  #undef _CRT_SECURE_NO_WARNINGS
+  #endif
 }
 //--------------------------------------------------------------------------------
 //
@@ -441,7 +449,7 @@ void ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector
     uint32_t ratio = 0;
     int16_t level = 0;
     int32_t err = MZ_OK;
-    struct tm tmu_date;
+  
     const char* string_method = NULL;
     char crypt = ' ';
     void* reader = NULL;
@@ -474,7 +482,7 @@ void ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector
       throw std::runtime_error(biogears::asprintf("Error %" PRId32 " opening entry in archive\n", err));
     }
     auto buffer = std::vector<char>(file_info->uncompressed_size + 1, '\0');
-    err = mz_zip_reader_entry_read(reader, &buffer[0], file_info->uncompressed_size);
+    err = mz_zip_reader_entry_read(reader, &buffer[0], static_cast<int32_t>(file_info->uncompressed_size));
     if (err < 0) {
       mz_zip_reader_delete(&reader);
       throw std::runtime_error(biogears::asprintf("Error %" PRId32 " reading entry in archive\n", err));
@@ -549,7 +557,7 @@ void ReportWriter::ParseXML(const std::string& filename, std::string test)
     uint32_t ratio = 0;
     int16_t level = 0;
     int32_t err = MZ_OK;
-    struct tm tmu_date;
+
     const char* string_method = NULL;
     char crypt = ' ';
     void* reader = NULL;
@@ -587,7 +595,7 @@ void ReportWriter::ParseXML(const std::string& filename, std::string test)
           throw std::runtime_error(biogears::asprintf("Error %" PRId32 "  opening entry in archive\n", err));
         }
         auto buffer = std::vector<char>(file_info->uncompressed_size + 1, '\0');
-        err = mz_zip_reader_entry_read(reader, &buffer[0], file_info->uncompressed_size);
+        err = mz_zip_reader_entry_read(reader, &buffer[0], static_cast<int32_t>(file_info->uncompressed_size));
         if (err < 0) {
           mz_zip_reader_delete(&reader);
           throw std::runtime_error(biogears::asprintf("Error %" PRId32 "  reading entry in archive\n", err));

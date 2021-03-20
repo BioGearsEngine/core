@@ -31,12 +31,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(ObjectData)
+
 namespace biogears {
-class BIOGEARS_API Serializer {
+class  Serializer {
 public:
-  static void Destroy() { SAFE_DELETE(m_me); }
-  static std::unique_ptr<CDM::ObjectData> ReadFile(const char* xmlFile, Logger* logger);
-  static std::unique_ptr<CDM::ObjectData> ReadFile(const std::string& xmlFile, Logger* logger);
+  BIOGEARS_API static void Destroy() { SAFE_DELETE(m_me); }
+  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadFile(const char* xmlFile, Logger* logger);
+  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadFile(const std::string& xmlFile, Logger* logger);
 private:
   Serializer();
   virtual ~Serializer();

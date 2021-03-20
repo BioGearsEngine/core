@@ -50,46 +50,46 @@ protected:
 };
 
 CDM_BIND_DECL(PhysiologyEngineTimedStabilizationData)
-class BIOGEARS_API PhysiologyEngineTimedStabilization : public PhysiologyEngineStabilization {
+class  PhysiologyEngineTimedStabilization : public PhysiologyEngineStabilization {
 public:
-  PhysiologyEngineTimedStabilization(Logger* logger);
-  virtual ~PhysiologyEngineTimedStabilization();
+  BIOGEARS_API PhysiologyEngineTimedStabilization(Logger* logger);
+  BIOGEARS_API virtual ~PhysiologyEngineTimedStabilization();
 
-  virtual void Clear() override;
+  BIOGEARS_API virtual void Clear() override;
 
-  virtual bool Load(const CDM::PhysiologyEngineTimedStabilizationData& in);
-  virtual CDM::PhysiologyEngineTimedStabilizationData* Unload() const override;
+  BIOGEARS_API virtual bool Load(const CDM::PhysiologyEngineTimedStabilizationData& in);
+  BIOGEARS_API virtual CDM::PhysiologyEngineTimedStabilizationData* Unload() const override;
 
 protected:
-  virtual void Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const;
+  BIOGEARS_API virtual void Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const;
 
 public:
-  virtual bool Load(const char* file) override;
-  virtual bool Load(const std::string& file) override;
+  BIOGEARS_API virtual bool Load(const char* file) override;
+  BIOGEARS_API virtual bool Load(const std::string& file) override;
 
-  virtual bool StabilizeRestingState(PhysiologyEngine& engine) override;
-  virtual bool StabilizeFeedbackState(PhysiologyEngine& engine) override;
-  virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions) override;
+  BIOGEARS_API virtual bool StabilizeRestingState(PhysiologyEngine& engine) override;
+  BIOGEARS_API virtual bool StabilizeFeedbackState(PhysiologyEngine& engine) override;
+  BIOGEARS_API virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions) override;
 
-  virtual SEScalarTime& GetRestingStabilizationTime();
-  virtual double GetRestingStabilizationTime(const TimeUnit& unit) const;
+  BIOGEARS_API virtual SEScalarTime& GetRestingStabilizationTime();
+  BIOGEARS_API virtual double GetRestingStabilizationTime(const TimeUnit& unit) const;
 
-  virtual bool HasFeedbackStabilizationTime() const;
-  virtual SEScalarTime& GetFeedbackStabilizationTime();
-  virtual double GetFeedbackStabilizationTime(const TimeUnit& unit) const;
+  BIOGEARS_API virtual bool HasFeedbackStabilizationTime() const;
+  BIOGEARS_API virtual SEScalarTime& GetFeedbackStabilizationTime();
+  BIOGEARS_API virtual double GetFeedbackStabilizationTime(const TimeUnit& unit) const;
 
-  virtual bool HasConditionCriteria(const  char* name) const;
-  virtual bool HasConditionCriteria(const std::string& name) const;
-  virtual void RemoveConditionCriteria(const char* name);
-  virtual void RemoveConditionCriteria(const std::string& name);
-  virtual const std::vector<PhysiologyEngineTimedStabilizationCriteria*>& GetConditionCriteria() const;
-  virtual PhysiologyEngineTimedStabilizationCriteria& GetConditionCriteria(const char* name);
-  virtual PhysiologyEngineTimedStabilizationCriteria& GetConditionCriteria(const std::string& name);
-  virtual PhysiologyEngineTimedStabilizationCriteria* GetConditionCriteria(const char* name) const;
-  virtual PhysiologyEngineTimedStabilizationCriteria* GetConditionCriteria(const std::string& name) const;
+  BIOGEARS_API virtual bool HasConditionCriteria(const  char* name) const;
+  BIOGEARS_API virtual bool HasConditionCriteria(const std::string& name) const;
+  BIOGEARS_API virtual void RemoveConditionCriteria(const char* name);
+  BIOGEARS_API virtual void RemoveConditionCriteria(const std::string& name);
+  BIOGEARS_API virtual const std::vector<PhysiologyEngineTimedStabilizationCriteria*>& GetConditionCriteria() const;
+  BIOGEARS_API virtual PhysiologyEngineTimedStabilizationCriteria& GetConditionCriteria(const char* name);
+  BIOGEARS_API virtual PhysiologyEngineTimedStabilizationCriteria& GetConditionCriteria(const std::string& name);
+  BIOGEARS_API virtual PhysiologyEngineTimedStabilizationCriteria* GetConditionCriteria(const char* name) const;
+  BIOGEARS_API virtual PhysiologyEngineTimedStabilizationCriteria* GetConditionCriteria(const std::string& name) const;
 
 protected:
-  virtual bool Stabilize(PhysiologyEngine& engine, const SEScalarTime& time);
+  BIOGEARS_API virtual bool Stabilize(PhysiologyEngine& engine, const SEScalarTime& time);
 
   SEScalarTime m_RestingStabilizationTime;
   SEScalarTime* m_FeedbackStabilizationTime;

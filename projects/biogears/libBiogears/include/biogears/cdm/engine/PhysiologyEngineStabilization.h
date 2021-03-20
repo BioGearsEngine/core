@@ -25,33 +25,33 @@ class PhysiologyEngineTrack;
 class PhysiologyEngineConfiguration;
 class SECondition;
 
-class BIOGEARS_API PhysiologyEngineStabilization : public Loggable {
+class  PhysiologyEngineStabilization : public Loggable {
 public:
-  PhysiologyEngineStabilization(Logger* logger);
-  virtual ~PhysiologyEngineStabilization();
+  BIOGEARS_API PhysiologyEngineStabilization(Logger* logger);
+  BIOGEARS_API virtual ~PhysiologyEngineStabilization();
 
-  virtual void Clear();
+  BIOGEARS_API virtual void Clear();
 
-  virtual bool Load(const CDM::PhysiologyEngineStabilizationData& in);
-  virtual CDM::PhysiologyEngineStabilizationData* Unload() const;
+  BIOGEARS_API virtual bool Load(const CDM::PhysiologyEngineStabilizationData& in);
+  BIOGEARS_API virtual CDM::PhysiologyEngineStabilizationData* Unload() const;
 
 protected:
-  virtual void Unload(CDM::PhysiologyEngineStabilizationData& data) const;
+  BIOGEARS_API virtual void Unload(CDM::PhysiologyEngineStabilizationData& data) const;
 
 public:
-  virtual bool Load(const char* file) = 0;
-  virtual bool Load(const std::string& file) = 0;
+  BIOGEARS_API virtual bool Load(const char* file) = 0;
+  BIOGEARS_API virtual bool Load(const std::string& file) = 0;
 
-  virtual bool StabilizeRestingState(PhysiologyEngine& engine) = 0;
-  virtual bool StabilizeFeedbackState(PhysiologyEngine& engine) = 0;
-  virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions) = 0;
+  BIOGEARS_API virtual bool StabilizeRestingState(PhysiologyEngine& engine) = 0;
+  BIOGEARS_API virtual bool StabilizeFeedbackState(PhysiologyEngine& engine) = 0;
+  BIOGEARS_API virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions) = 0;
 
-  virtual void LogProgress(bool b);
+  BIOGEARS_API virtual void LogProgress(bool b);
 
-  virtual void CancelStabilization();
+  BIOGEARS_API virtual void CancelStabilization();
 
-  virtual bool HasStabilizationDuration();
-  virtual SEScalarTime& GetStabilizationDuration();
+  BIOGEARS_API virtual bool HasStabilizationDuration();
+  BIOGEARS_API virtual SEScalarTime& GetStabilizationDuration();
 
 protected:
   bool m_Cancelled;

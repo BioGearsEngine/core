@@ -146,49 +146,49 @@ protected:
 };
 
 CDM_BIND_DECL(PhysiologyEngineDynamicStabilizationData)
-class BIOGEARS_API PhysiologyEngineDynamicStabilization : public PhysiologyEngineStabilization {
+class PhysiologyEngineDynamicStabilization : public PhysiologyEngineStabilization {
 public:
-  PhysiologyEngineDynamicStabilization(Logger* logger);
-  virtual ~PhysiologyEngineDynamicStabilization();
+  BIOGEARS_API PhysiologyEngineDynamicStabilization(Logger* logger);
+  BIOGEARS_API virtual ~PhysiologyEngineDynamicStabilization();
 
-  virtual void Clear() override;
+  BIOGEARS_API virtual void Clear() override;
 
-  virtual bool Load(const CDM::PhysiologyEngineDynamicStabilizationData& in);
-  virtual CDM::PhysiologyEngineDynamicStabilizationData* Unload() const override;
+  BIOGEARS_API virtual bool Load(const CDM::PhysiologyEngineDynamicStabilizationData& in);
+  BIOGEARS_API virtual CDM::PhysiologyEngineDynamicStabilizationData* Unload() const override;
 
 protected:
-  virtual void Unload(CDM::PhysiologyEngineDynamicStabilizationData& data) const;
+  BIOGEARS_API virtual void Unload(CDM::PhysiologyEngineDynamicStabilizationData& data) const;
 
 public:
-  virtual bool Load(const char* file) override;
-  virtual bool Load(const std::string& file) override;
+  BIOGEARS_API virtual bool Load(const char* file) override;
+  BIOGEARS_API virtual bool Load(const std::string& file) override;
 
-  virtual bool StabilizeRestingState(PhysiologyEngine& engine) override;
-  virtual bool StabilizeFeedbackState(PhysiologyEngine& engine) override;
-  virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions) override;
+  BIOGEARS_API virtual bool StabilizeRestingState(PhysiologyEngine& engine) override;
+  BIOGEARS_API virtual bool StabilizeFeedbackState(PhysiologyEngine& engine) override;
+  BIOGEARS_API virtual bool StabilizeConditions(PhysiologyEngine& engine, const std::vector<const SECondition*>& conditions) override;
 
-  virtual PhysiologyEngineDynamicStabilizationCriteria& GetRestingCriteria();
-  virtual const PhysiologyEngineDynamicStabilizationCriteria& GetRestingCriteria() const;
+  BIOGEARS_API virtual PhysiologyEngineDynamicStabilizationCriteria& GetRestingCriteria();
+  BIOGEARS_API virtual const PhysiologyEngineDynamicStabilizationCriteria& GetRestingCriteria() const;
 
-  virtual bool HasFeedbackCriteria() const;
-  virtual PhysiologyEngineDynamicStabilizationCriteria& GetFeedbackCriteria();
-  virtual const PhysiologyEngineDynamicStabilizationCriteria* GetFeedbackCriteria() const;
+  BIOGEARS_API virtual bool HasFeedbackCriteria() const;
+  BIOGEARS_API virtual PhysiologyEngineDynamicStabilizationCriteria& GetFeedbackCriteria();
+  BIOGEARS_API virtual const PhysiologyEngineDynamicStabilizationCriteria* GetFeedbackCriteria() const;
 
-  virtual void RemoveConditionCriteria(const char* name);
-  virtual void RemoveConditionCriteria(const std::string& name);
-  virtual void AddConditionCriteria(PhysiologyEngineDynamicStabilizationCriteria& criteria);
-  virtual const std::vector<PhysiologyEngineDynamicStabilizationCriteria*>& GetConditionCriteria() const;
-  virtual PhysiologyEngineDynamicStabilizationCriteria* GetConditionCriteria(const char* name) const;
-  virtual PhysiologyEngineDynamicStabilizationCriteria* GetConditionCriteria(const std::string& name) const;
+  BIOGEARS_API virtual void RemoveConditionCriteria(const char* name);
+  BIOGEARS_API virtual void RemoveConditionCriteria(const std::string& name);
+  BIOGEARS_API virtual void AddConditionCriteria(PhysiologyEngineDynamicStabilizationCriteria& criteria);
+  BIOGEARS_API virtual const std::vector<PhysiologyEngineDynamicStabilizationCriteria*>& GetConditionCriteria() const;
+  BIOGEARS_API virtual PhysiologyEngineDynamicStabilizationCriteria* GetConditionCriteria(const char* name) const;
+  BIOGEARS_API virtual PhysiologyEngineDynamicStabilizationCriteria* GetConditionCriteria(const std::string& name) const;
 
 protected:
-  virtual bool Stabilize(PhysiologyEngine& engine, const PhysiologyEngineDynamicStabilizationCriteria& criteria);
+  BIOGEARS_API virtual bool Stabilize(PhysiologyEngine& engine, const PhysiologyEngineDynamicStabilizationCriteria& criteria);
 
   PhysiologyEngineDynamicStabilizationCriteria m_RestingCriteria;
   PhysiologyEngineDynamicStabilizationCriteria* m_FeedbackCriteria;
   std::vector<PhysiologyEngineDynamicStabilizationCriteria*> m_ConditionCriteria;
 
-  bool Merge();
+  BIOGEARS_API bool Merge();
   PhysiologyEngineDynamicStabilizationCriteria m_MergedConditions;
   std::vector<PhysiologyEngineDynamicStabilizationCriteria*> m_ActiveConditions;
 
