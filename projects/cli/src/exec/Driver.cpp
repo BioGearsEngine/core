@@ -314,17 +314,39 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
       state_files.insert(state_files.end(), infection_state_files.begin(), infection_state_files.end());
       queue_from_sate_files(exec, state_files, scenario_launch);
       return;
-    } else if (!filesystem::exists(scenario->EngineStateFile().get())) {
-      queue_from_patient_files(exec, find_matching_files(scenario->EngineStateFile().get()), scenario_launch);
-    } else if (filesystem::exists(scenario->EngineStateFile().get()) && filesystem::is_directory(scenario->EngineStateFile().get())) {
-      auto state_files = biogears::ListFiles(scenario->EngineStateFile().get(), R"(\.xml)", false);
-      queue_from_sate_files(exec, state_files, scenario_launch);
-    } else {
-      exec.State(scenario->EngineStateFile().get());
-      _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
-      ++_total_work;
-      return;
     }
+    else if (filesystem::exists(scenario->EngineStateFile().get())) {
+      if (filesystem::is_directory(scenario->EngineStateFile().get())) {
+        auto state_files = biogears::ListFiles(scenario->EngineStateFile().get(), R"(\.xml)", false);
+        queue_from_sate_files(exec, state_files, scenario_launch);
+        return;
+      } else {
+        exec.State(scenario->EngineStateFile().get());
+        _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+        ++_total_work;
+        return;
+      }
+    } 
+    else if (filesystem::exists("states/" + scenario->EngineStateFile().get())) {
+      if (filesystem::is_directory("states/" + scenario->EngineStateFile().get())) {
+        auto state_files = biogears::ListFiles("states/" + scenario->EngineStateFile().get(), R"(\.xml)", false);
+        queue_from_sate_files(exec, state_files, scenario_launch);
+        return;
+      } else {
+        exec.State(scenario->EngineStateFile().get());
+        _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+        ++_total_work;
+        return;
+      }
+    } 
+    else {
+      auto matching_states = find_matching_files(scenario->EngineStateFile().get());
+      if (matching_states.empty()) {
+        matching_states = find_matching_files("states/" + scenario->EngineStateFile().get());
+      }
+      queue_from_patient_files(exec, matching_states, scenario_launch);
+    }
+
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->PatientFile().present()) {
     const auto patient_file = scenario->InitialParameters()->PatientFile().get();
     std::string nc_patient_file = patient_file;
@@ -332,33 +354,37 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     if ("all" == nc_patient_file) {
       auto patient_files = biogears::ListFiles("patients", R"(\.xml)", false);
       queue_from_patient_files(exec, patient_files, scenario_launch);
-    } else if (!filesystem::exists(scenario->InitialParameters()->PatientFile().get())) {
-      //
-      // Attempt to handle Regex based matching
-      // Example   Pattern  = "states/*/Billy*.xml"
-      //
-      // Steps:
-      // Insert first path segment in possible_paths
-      // Foreach segment
-      // Foreach possible_paths
-      //   Does possible_path/segment exists
-      //   If so possible_path = possible_path/segment
-      //   Else  Assume segment is a Regex and List all matches of possible_path/segment_regex
-      //         Remove current possible_path
-      //          Append result of Regex Step
-      // For each dir in possible_paths queue all *.xml files
-      // For each file in possible_paths queue file
-      // Queue Executors
-
-      queue_from_patient_files(exec, find_matching_files(scenario->InitialParameters()->PatientFile().get()), scenario_launch);
-
-    } else if (filesystem::exists(scenario->InitialParameters()->PatientFile().get()) && filesystem::is_directory(scenario->InitialParameters()->PatientFile().get())) {
-      auto patient_files = biogears::ListFiles(scenario->InitialParameters()->PatientFile().get(), R"(\.xml)", false);
-      queue_from_patient_files(exec, patient_files, scenario_launch);
-    } else {
-      exec.Patient(patient_file);
-      _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
-      ++_total_work;
+    } 
+    else if (filesystem::exists(scenario->InitialParameters()->PatientFile().get())) {
+      if (filesystem::is_directory(scenario->InitialParameters()->PatientFile().get())) {
+        auto patient_files = biogears::ListFiles(scenario->InitialParameters()->PatientFile().get(), R"(\.xml)",false);
+        queue_from_patient_files(exec, patient_files, scenario_launch);
+        return;
+      } else {
+        exec.Patient(patient_file);
+        _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+        ++_total_work;
+        return;
+      }
+    } 
+    else if (filesystem::exists("patients/" + scenario->InitialParameters()->PatientFile().get())) {
+      if (filesystem::is_directory("patients/" + scenario->InitialParameters()->PatientFile().get())) {
+        auto patient_files = biogears::ListFiles("patients/" + scenario->InitialParameters()->PatientFile().get(), R"(\.xml)", false);
+        queue_from_patient_files(exec, patient_files, scenario_launch);
+        return;
+      } else {
+        exec.Patient("patients/" + patient_file);
+        _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
+        ++_total_work;
+        return;
+      }
+    } 
+    else {
+      auto matching_patients = find_matching_files(scenario->InitialParameters()->PatientFile().get());
+      if (matching_patients.empty()) {
+        matching_patients = find_matching_files("patients/" + scenario->InitialParameters()->PatientFile().get());
+      }
+      queue_from_patient_files(exec, matching_patients, scenario_launch);
     }
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
     exec.Patient("");
@@ -430,9 +456,33 @@ void Driver::queue_from_patient_files(const Executor& exec, const std::vector<st
   }
 }
 //-----------------------------------------------------------------------------
- std::vector<std::string> Driver::find_matching_files( const std::string& pattern )
+//!
+//!  \input std::string : Regex for finding files
+//!  \return std::vector<std::string> list of all paths that matched the regex
+//!
+//!
+std::vector<std::string> Driver::find_matching_files(const std::string& pattern)
 {
+
+      //
+      // Attempt to handle Regex based matching
+      // Example   Pattern  = "states/*/Billy*.xml"
+      //
+      // Steps:
+      // Insert first path segment in possible_paths
+      // Foreach segment
+      // Foreach possible_paths
+      //   Does possible_path/segment exists
+      //   If so possible_path = possible_path/segment
+      //   Else  Assume segment is a Regex and List all matches of possible_path/segment_regex
+      //         Remove current possible_path
+      //          Append result of Regex Step
+      // For each dir in possible_paths queue all *.xml files
+      // For each file in possible_paths queue file
+      // Queue Executors
+
   auto path_parts = split(pattern, '/');
+
   std::vector<std::string> possible_paths { "" };
   std::vector<std::string> new_work;
   std::string filename_regex = "*.xml";
