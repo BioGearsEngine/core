@@ -40,7 +40,7 @@
 void print_help()
 {
   std::cout << "Usage cmd_bio [HELP, GENDATA, GENSTATES, GENSEPSIS, VERIFY, VERSION]\n"
-               "[JOBS N] [GENPATIENTS [FILE] N]\n"
+               "[JOBS N] [GENPATIENTS [FILE] N] \n"
                "[CONFIG [FILE]...], [SCENARIO [FILE]...], [TEST cdm|bge], [VALIDATE patient|drug|system|all]\n"
                "[GENTABLES html|md|xml|web|all]\n\n";
 
@@ -125,6 +125,7 @@ int main(int argc, char** argv)
     const biogears::Config runs { "GenSepsisStates.config" };
     driver.queue(runs, as_subprocess);
   }
+
 
   if (args.MultiWordFound("GENPATIENTS")) {
     biogears::PopulationGenerator generator { args.MultiWord("GENPATIENTS") };
