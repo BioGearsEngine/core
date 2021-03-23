@@ -65,4 +65,25 @@ const AmountUnit& AmountUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(  unit.c_str() );
 }
 //-----------------------------------------------------------------------------
+bool AmountUnit::operator==(const AmountUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool AmountUnit::operator!=(const AmountUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarAmount::operator==(const SEScalarAmount& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarAmount::operator!=(const SEScalarAmount& obj) const
+{
+  return !(*this == obj);
+}
 }

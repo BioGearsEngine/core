@@ -48,6 +48,9 @@ public:
   double GetIndependentValue(unsigned int index) const;
   std::vector<double>& GetIndependent();
   const std::vector<double>& GetIndependent() const;
+     
+  bool operator==(const SEHistogram&) const;
+  bool operator!=(const SEHistogram&) const;
 
 protected:
   std::vector<double> m_Dependent;

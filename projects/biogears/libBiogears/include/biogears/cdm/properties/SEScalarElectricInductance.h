@@ -22,6 +22,9 @@ public:
 
   virtual ~ElectricInductanceUnit() = default;
 
+  bool operator==(const ElectricInductanceUnit&) const;
+  bool operator!=(const ElectricInductanceUnit&) const;
+
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const ElectricInductanceUnit& GetCompoundUnit(const char* unit);
@@ -35,6 +38,9 @@ public:
   SEScalarElectricInductance() = default;
   virtual ~SEScalarElectricInductance() = default;
 
-  CDM::ScalarElectricInductanceData* Unload() const override;
+  CDM::ScalarElectricInductanceData* Unload() const override;   
+
+  bool operator==(const SEScalarElectricInductance&) const;
+  bool operator!=(const SEScalarElectricInductance&) const;
 };
 }

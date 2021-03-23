@@ -20,7 +20,10 @@ public:
   MassPerTimeUnit(const char* u);
   MassPerTimeUnit(const std::string& u);
 
-  virtual ~MassPerTimeUnit() = default;
+  virtual ~MassPerTimeUnit() = default;   
+
+  bool operator==(const MassPerTimeUnit&) const;
+  bool operator!=(const MassPerTimeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -42,6 +45,9 @@ public:
   SEScalarMassPerTime() = default;
   virtual ~SEScalarMassPerTime() = default;
 
-  CDM::ScalarMassPerTimeData* Unload() const override;
+  CDM::ScalarMassPerTimeData* Unload() const override;      
+
+  bool operator==(const SEScalarMassPerTime&) const;
+  bool operator!=(const SEScalarMassPerTime&) const;
 };
 }

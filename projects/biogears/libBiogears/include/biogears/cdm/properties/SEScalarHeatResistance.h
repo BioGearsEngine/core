@@ -20,7 +20,10 @@ public:
   HeatResistanceUnit(const char* u);
   HeatResistanceUnit(const std::string& u);
 
-  virtual ~HeatResistanceUnit() = default;
+  virtual ~HeatResistanceUnit() = default;  
+
+  bool operator==(const HeatResistanceUnit&) const;
+  bool operator!=(const HeatResistanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -38,6 +41,9 @@ public:
   SEScalarHeatResistance() = default;
   virtual ~SEScalarHeatResistance() = default;
 
-  CDM::ScalarHeatResistanceData* Unload() const override;
+  CDM::ScalarHeatResistanceData* Unload() const override;      
+
+  bool operator==(const SEScalarHeatResistance&) const;
+  bool operator!=(const SEScalarHeatResistance&) const;
 };
 }

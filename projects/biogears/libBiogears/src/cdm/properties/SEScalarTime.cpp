@@ -83,4 +83,25 @@ const TimeUnit& TimeUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool TimeUnit::operator==(const TimeUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool TimeUnit::operator!=(const TimeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarTime::operator==(const SEScalarTime& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarTime::operator!=(const SEScalarTime& obj) const
+{
+  return !(*this == obj);
+}
 }

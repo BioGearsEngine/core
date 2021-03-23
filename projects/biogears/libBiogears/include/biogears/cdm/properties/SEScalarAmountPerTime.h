@@ -20,7 +20,10 @@ public:
   AmountPerTimeUnit(const char* u);
   AmountPerTimeUnit(const std::string& u);
 
-  virtual ~AmountPerTimeUnit() override = default;
+  virtual ~AmountPerTimeUnit() override = default;       
+
+  bool operator==(const AmountPerTimeUnit&) const;
+  bool operator!=(const AmountPerTimeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -41,6 +44,9 @@ public:
   SEScalarAmountPerTime() = default;
   virtual ~SEScalarAmountPerTime() = default;
 
-  CDM::ScalarAmountPerTimeData* Unload() const override;
+  CDM::ScalarAmountPerTimeData* Unload() const override;  
+
+  bool operator==(const SEScalarAmountPerTime&) const;
+  bool operator!=(const SEScalarAmountPerTime&) const;
 };
 }

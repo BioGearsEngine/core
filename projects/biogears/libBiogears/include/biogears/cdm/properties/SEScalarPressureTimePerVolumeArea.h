@@ -21,7 +21,10 @@ public:
   PressureTimePerVolumeAreaUnit(const char* u);
   PressureTimePerVolumeAreaUnit(const std::string& u);
 
-  virtual ~PressureTimePerVolumeAreaUnit() = default;
+  virtual ~PressureTimePerVolumeAreaUnit() = default;    
+
+  bool operator==(const PressureTimePerVolumeAreaUnit&) const;
+  bool operator!=(const PressureTimePerVolumeAreaUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -38,6 +41,9 @@ public:
   SEScalarPressureTimePerVolumeArea() = default;
   virtual ~SEScalarPressureTimePerVolumeArea() = default;
 
-  CDM::ScalarPressureTimePerVolumeAreaData* Unload() const override;
+  CDM::ScalarPressureTimePerVolumeAreaData* Unload() const override;     
+
+  bool operator==(const SEScalarPressureTimePerVolumeArea&) const;
+  bool operator!=(const SEScalarPressureTimePerVolumeArea&) const;
 };
 }

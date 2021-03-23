@@ -19,7 +19,7 @@ const VolumePerTimePressureUnit VolumePerTimePressureUnit::L_Per_min_mmHg("L/min
 const VolumePerTimePressureUnit VolumePerTimePressureUnit::mL_Per_min_mmHg("mL/min mmHg");
 
 VolumePerTimePressureUnit::VolumePerTimePressureUnit(const char* u)
-  : VolumePerTimePressureUnit(std::string{ u })
+  : VolumePerTimePressureUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
@@ -39,13 +39,13 @@ CDM::ScalarVolumePerTimePressureData* SEScalarVolumePerTimePressure::Unload() co
 //-------------------------------------------------------------------------------
 bool VolumePerTimePressureUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(L_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(L_Per_s_mmHg.GetString(), unit) == 0)
     return true;
-  if (strcmp(mL_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(mL_Per_s_mmHg.GetString(), unit) == 0)
     return true;
-  if (strcmp(L_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(L_Per_min_mmHg.GetString(), unit) == 0)
     return true;
-  if (strcmp(mL_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(mL_Per_min_mmHg.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -57,13 +57,13 @@ bool VolumePerTimePressureUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const VolumePerTimePressureUnit& VolumePerTimePressureUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(L_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(L_Per_s_mmHg.GetString(), unit) == 0)
     return L_Per_s_mmHg;
-  if (strcmp(mL_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(mL_Per_s_mmHg.GetString(), unit) == 0)
     return mL_Per_s_mmHg;
-  if (strcmp(L_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(L_Per_min_mmHg.GetString(), unit) == 0)
     return L_Per_min_mmHg;
-  if (strcmp(mL_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(mL_Per_min_mmHg.GetString(), unit) == 0)
     return mL_Per_min_mmHg;
   std::stringstream err;
   err << unit << " is not a valid VolumePerTimePressure unit";
@@ -75,4 +75,25 @@ const VolumePerTimePressureUnit& VolumePerTimePressureUnit::GetCompoundUnit(cons
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool VolumePerTimePressureUnit::operator==(const VolumePerTimePressureUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool VolumePerTimePressureUnit::operator!=(const VolumePerTimePressureUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarVolumePerTimePressure::operator==(const SEScalarVolumePerTimePressure& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarVolumePerTimePressure::operator!=(const SEScalarVolumePerTimePressure& obj) const
+{
+  return !(*this == obj);
+}
 }

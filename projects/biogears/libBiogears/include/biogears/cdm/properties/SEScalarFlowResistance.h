@@ -20,7 +20,10 @@ public:
   FlowResistanceUnit(const char* u);
   FlowResistanceUnit(const std::string& u);
 
-  virtual ~FlowResistanceUnit() = default;
+  virtual ~FlowResistanceUnit() = default;   
+
+  bool operator==(const FlowResistanceUnit&) const;
+  bool operator!=(const FlowResistanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -39,6 +42,9 @@ public:
   SEScalarFlowResistance() = default;
   virtual ~SEScalarFlowResistance() = default;
 
-  CDM::ScalarFlowResistanceData* Unload() const override;
+  CDM::ScalarFlowResistanceData* Unload() const override;  
+
+  bool operator==(const SEScalarFlowResistance&) const;
+  bool operator!=(const SEScalarFlowResistance&) const;
 };
 }

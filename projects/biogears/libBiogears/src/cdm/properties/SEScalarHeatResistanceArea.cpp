@@ -75,4 +75,24 @@ const HeatResistanceAreaUnit& HeatResistanceAreaUnit::GetCompoundUnit(const std:
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool HeatResistanceAreaUnit::operator==(const HeatResistanceAreaUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool HeatResistanceAreaUnit::operator!=(const HeatResistanceAreaUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatResistanceArea::operator==(const SEScalarHeatResistanceArea& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatResistanceArea::operator!=(const SEScalarHeatResistanceArea& obj) const
+{
+  return !(*this == obj);
+}
 }

@@ -20,7 +20,10 @@ public:
   LengthUnit(const char* u);
   LengthUnit(const std::string& u);
 
-  virtual ~LengthUnit() = default;
+  virtual ~LengthUnit() = default;   
+
+  bool operator==(const LengthUnit&) const;
+  bool operator!=(const LengthUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -40,6 +43,9 @@ public:
   SEScalarLength() = default;
   virtual ~SEScalarLength() = default;
 
-  CDM::ScalarLengthData* Unload() const override;
+  CDM::ScalarLengthData* Unload() const override;       
+
+  bool operator==(const SEScalarLength&) const;
+  bool operator!=(const SEScalarLength&) const;
 };
 }

@@ -20,7 +20,10 @@ public:
   EnergyUnit(const char* u);
   EnergyUnit(const std::string& u);
 
-  virtual ~EnergyUnit() = default;
+  virtual ~EnergyUnit() = default;        
+
+  bool operator==(const EnergyUnit&) const;
+  bool operator!=(const EnergyUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -38,6 +41,9 @@ public:
   SEScalarEnergy() = default;
   virtual ~SEScalarEnergy() = default;
 
-  CDM::ScalarEnergyData* Unload() const override;
+  CDM::ScalarEnergyData* Unload() const override;     
+
+  bool operator==(const SEScalarEnergy&) const;
+  bool operator!=(const SEScalarEnergy&) const;
 };
 }

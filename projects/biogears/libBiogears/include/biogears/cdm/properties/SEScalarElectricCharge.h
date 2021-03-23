@@ -20,7 +20,10 @@ public:
   ElectricChargeUnit(const char* u);
   ElectricChargeUnit(const std::string& u);
 
-  virtual ~ElectricChargeUnit() = default;
+  virtual ~ElectricChargeUnit() = default;  
+
+  bool operator==(const ElectricChargeUnit&) const;
+  bool operator!=(const ElectricChargeUnit&) const;
 
   static bool IsValidUnit(const char*  unit);
   static bool IsValidUnit(const std::string& unit);
@@ -35,6 +38,9 @@ public:
   SEScalarElectricCharge() = default;
   virtual ~SEScalarElectricCharge() = default;
 
-  CDM::ScalarElectricChargeData* Unload() const override;
+  CDM::ScalarElectricChargeData* Unload() const override;   
+
+  bool operator==(const SEScalarElectricCharge&) const;
+  bool operator!=(const SEScalarElectricCharge&) const;
 };
 }

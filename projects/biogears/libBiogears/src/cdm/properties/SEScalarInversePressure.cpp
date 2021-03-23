@@ -75,4 +75,24 @@ const InversePressureUnit& InversePressureUnit::GetCompoundUnit(const std::strin
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool InversePressureUnit::operator==(const InversePressureUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool InversePressureUnit::operator!=(const InversePressureUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarInversePressure::operator==(const SEScalarInversePressure& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarInversePressure::operator!=(const SEScalarInversePressure& obj) const
+{
+  return !(*this == obj);
+}
 }

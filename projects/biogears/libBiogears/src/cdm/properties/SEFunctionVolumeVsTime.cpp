@@ -98,4 +98,23 @@ void SEFunctionVolumeVsTime::SetVolumeUnit(const VolumeUnit& unit)
 {
   m_VolumeUnit = &unit;
 }
+//-------------------------------------------------------------------------------
+bool SEFunctionVolumeVsTime::operator==(const SEFunctionVolumeVsTime& obj) const
+{
+  return m_TimeUnit != nullptr
+    &&  obj.m_TimeUnit != nullptr
+    &&  *m_TimeUnit == *obj.m_TimeUnit
+    &&  m_VolumeUnit != nullptr
+    &&  obj.m_VolumeUnit != nullptr
+    &&  *m_VolumeUnit == *obj.m_VolumeUnit
+    &&  m_Dependent == obj.m_Dependent
+    &&  m_Independent == obj.m_Independent
+    ;
+}
+//-------------------------------------------------------------------------------
+bool SEFunctionVolumeVsTime::operator!=(const SEFunctionVolumeVsTime& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
 }

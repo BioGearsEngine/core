@@ -20,7 +20,10 @@ public:
   TimeMassPerVolumeUnit(const char* u);
   TimeMassPerVolumeUnit(const std::string& u);
 
-  virtual ~TimeMassPerVolumeUnit() {}
+  virtual ~TimeMassPerVolumeUnit() = default;   
+
+  bool operator==(const TimeMassPerVolumeUnit&) const;
+  bool operator!=(const TimeMassPerVolumeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -40,6 +43,9 @@ public:
   SEScalarTimeMassPerVolume() = default;
   virtual ~SEScalarTimeMassPerVolume() = default;
 
-  CDM::ScalarTimeMassPerVolumeData* Unload() const override;
+  CDM::ScalarTimeMassPerVolumeData* Unload() const override;     
+
+  bool operator==(const SEScalarTimeMassPerVolume&) const;
+  bool operator!=(const SEScalarTimeMassPerVolume&) const;
 };
 }

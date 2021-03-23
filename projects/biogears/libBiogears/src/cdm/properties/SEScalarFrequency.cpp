@@ -76,4 +76,24 @@ const FrequencyUnit& FrequencyUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool FrequencyUnit::operator==(const FrequencyUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool FrequencyUnit::operator!=(const FrequencyUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarFrequency::operator==(const SEScalarFrequency& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarFrequency::operator!=(const SEScalarFrequency& obj) const
+{
+  return !(*this == obj);
+}
 }

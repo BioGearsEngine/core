@@ -27,6 +27,7 @@ class BIOGEARS_API SEFunction : public SEProperty {
 public:
   friend io::Property;
   SEFunction();
+
   virtual ~SEFunction();
 
   virtual void Clear(); //clear memory
@@ -48,6 +49,9 @@ public:
 
   double GetIndependentValue(unsigned int index);
   std::vector<double>& GetIndependent();
+
+  bool operator==(const SEFunction&) const;
+  bool operator!=(const SEFunction&) const;
 
 protected:
   std::vector<double> m_Dependent;

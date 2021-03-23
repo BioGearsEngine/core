@@ -19,7 +19,10 @@ public:
   MassPerMassUnit(const char* u);
   MassPerMassUnit(const std::string& u);
 
-  virtual ~MassPerMassUnit() = default;
+  virtual ~MassPerMassUnit() = default;   
+
+  bool operator==(const MassPerMassUnit&) const;
+  bool operator!=(const MassPerMassUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -35,6 +38,9 @@ public:
   SEScalarMassPerMass() = default;
   virtual ~SEScalarMassPerMass() = default;
 
-  CDM::ScalarMassPerMassData* Unload() const override;
+  CDM::ScalarMassPerMassData* Unload() const override;      
+
+  bool operator==(const SEScalarMassPerMass&) const;
+  bool operator!=(const SEScalarMassPerMass&) const;
 };
 }

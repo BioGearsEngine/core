@@ -80,4 +80,25 @@ const PressureUnit& PressureUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool PressureUnit::operator==(const PressureUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool PressureUnit::operator!=(const PressureUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarPressure::operator==(const SEScalarPressure& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarPressure::operator!=(const SEScalarPressure& obj) const
+{
+  return !(*this == obj);
+}
 }

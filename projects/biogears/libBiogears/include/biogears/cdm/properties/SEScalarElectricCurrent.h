@@ -20,7 +20,10 @@ public:
   ElectricCurrentUnit(const char* u);
   ElectricCurrentUnit(const std::string& u);
 
-  virtual ~ElectricCurrentUnit() = default;
+  virtual ~ElectricCurrentUnit() = default;       
+
+  bool operator==(const ElectricCurrentUnit&) const;
+  bool operator!=(const ElectricCurrentUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -35,6 +38,9 @@ public:
   SEScalarElectricCurrent() = default;
   virtual ~SEScalarElectricCurrent() = default;
 
-  CDM::ScalarElectricCurrentData* Unload() const override;
+  CDM::ScalarElectricCurrentData* Unload() const override;  
+
+  bool operator==(const SEScalarElectricCurrent&) const;
+  bool operator!=(const SEScalarElectricCurrent&) const;
 };
 }

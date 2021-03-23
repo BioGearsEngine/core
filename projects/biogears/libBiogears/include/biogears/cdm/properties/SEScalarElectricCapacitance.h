@@ -20,7 +20,10 @@ public:
   ElectricCapacitanceUnit(const char* u);
   ElectricCapacitanceUnit(const std::string& u);
 
-  virtual ~ElectricCapacitanceUnit() = default;
+  virtual ~ElectricCapacitanceUnit() = default;      
+
+  bool operator==(const ElectricCapacitanceUnit&) const;
+  bool operator!=(const ElectricCapacitanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -35,6 +38,9 @@ public:
   SEScalarElectricCapacitance() = default;
   virtual ~SEScalarElectricCapacitance() = default;
 
-  CDM::ScalarElectricCapacitanceData* Unload() const override;
+  CDM::ScalarElectricCapacitanceData* Unload() const override;   
+
+  bool operator==(const SEScalarElectricCapacitance&) const;
+  bool operator!=(const SEScalarElectricCapacitance&) const;
 };
 }

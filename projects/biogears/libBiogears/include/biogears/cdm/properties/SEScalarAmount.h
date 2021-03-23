@@ -20,7 +20,10 @@ public:
   AmountUnit(const char* u);
   AmountUnit(const std::string& u);
 
-  virtual ~AmountUnit() = default;
+  virtual ~AmountUnit() = default;        
+
+  bool operator==(const AmountUnit&) const;
+  bool operator!=(const AmountUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -37,6 +40,9 @@ public:
   SEScalarAmount() = default;
   virtual ~SEScalarAmount() = default;
 
-  virtual CDM::ScalarAmountData* Unload() const override;
+  virtual CDM::ScalarAmountData* Unload() const override;   
+
+  bool operator==(const SEScalarAmount&) const;
+  bool operator!=(const SEScalarAmount&) const;
 };
 }

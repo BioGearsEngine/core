@@ -29,13 +29,13 @@ CDM::ScalarAreaPerTimePressureData* SEScalarAreaPerTimePressure::Unload() const
 //-----------------------------------------------------------------------------
 bool AreaPerTimePressureUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(m2_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(m2_Per_s_mmHg.GetString(), unit) == 0)
     return true;
-  if (strcmp(cm2_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(cm2_Per_s_mmHg.GetString(), unit) == 0)
     return true;
-  if (strcmp(m2_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(m2_Per_min_mmHg.GetString(), unit) == 0)
     return true;
-  if (strcmp(cm2_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(cm2_Per_min_mmHg.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -47,13 +47,13 @@ bool AreaPerTimePressureUnit::IsValidUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 const AreaPerTimePressureUnit& AreaPerTimePressureUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(m2_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(m2_Per_s_mmHg.GetString(), unit) == 0)
     return m2_Per_s_mmHg;
-  if (strcmp(cm2_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(cm2_Per_s_mmHg.GetString(), unit) == 0)
     return cm2_Per_s_mmHg;
-  if (strcmp(m2_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(m2_Per_min_mmHg.GetString(), unit) == 0)
     return m2_Per_min_mmHg;
-  if (strcmp(cm2_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(cm2_Per_min_mmHg.GetString(), unit) == 0)
     return cm2_Per_min_mmHg;
   std::stringstream err;
   err << unit << " is not a valid AreaPerTimePressure unit";
@@ -64,5 +64,26 @@ const AreaPerTimePressureUnit& AreaPerTimePressureUnit::GetCompoundUnit(const st
 {
   return GetCompoundUnit(unit.c_str());
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool AreaPerTimePressureUnit::operator==(const AreaPerTimePressureUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool AreaPerTimePressureUnit::operator!=(const AreaPerTimePressureUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarAreaPerTimePressure::operator==(const SEScalarAreaPerTimePressure& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarAreaPerTimePressure::operator!=(const SEScalarAreaPerTimePressure& obj) const
+{
+  return !(*this == obj);
+}
 }

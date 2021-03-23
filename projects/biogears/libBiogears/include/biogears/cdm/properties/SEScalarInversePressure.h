@@ -20,7 +20,10 @@ public:
   InversePressureUnit(const char* u);
   InversePressureUnit(const std::string& u);
 
-  virtual ~InversePressureUnit() = default;
+  virtual ~InversePressureUnit() = default;    
+
+  bool operator==(const InversePressureUnit&) const;
+  bool operator!=(const InversePressureUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -38,6 +41,9 @@ public:
   SEScalarInversePressure() = default;
   virtual ~SEScalarInversePressure() = default;
 
-  CDM::ScalarInversePressureData* Unload() const override;
+  CDM::ScalarInversePressureData* Unload() const override;    
+
+  bool operator==(const SEScalarInversePressure&) const;
+  bool operator!=(const SEScalarInversePressure&) const;
 };
 }

@@ -20,7 +20,10 @@ public:
   PowerUnit(const char* u);
   PowerUnit(const std::string& u);
 
-  virtual ~PowerUnit() = default;
+  virtual ~PowerUnit() = default;        
+
+  bool operator==(const PowerUnit&) const;
+  bool operator!=(const PowerUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -40,6 +43,9 @@ public:
   SEScalarPower() = default;
   virtual ~SEScalarPower() = default;
 
-  CDM::ScalarPowerData* Unload() const override ;
+  CDM::ScalarPowerData* Unload() const override ;   
+
+  bool operator==(const SEScalarPower&) const;
+  bool operator!=(const SEScalarPower&) const;
 };
 }

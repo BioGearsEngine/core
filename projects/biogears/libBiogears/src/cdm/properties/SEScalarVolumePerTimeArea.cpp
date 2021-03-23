@@ -70,4 +70,26 @@ const VolumePerTimeAreaUnit& VolumePerTimeAreaUnit::GetCompoundUnit(const std::s
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+
+bool VolumePerTimeAreaUnit::operator==(const VolumePerTimeAreaUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool VolumePerTimeAreaUnit::operator!=(const VolumePerTimeAreaUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarVolumePerTimeArea::operator==(const SEScalarVolumePerTimeArea& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarVolumePerTimeArea::operator!=(const SEScalarVolumePerTimeArea& obj) const
+{
+  return !(*this == obj);
+}
 }

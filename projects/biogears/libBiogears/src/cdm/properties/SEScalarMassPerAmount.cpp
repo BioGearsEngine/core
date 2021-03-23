@@ -110,4 +110,24 @@ const MassPerAmountUnit& MassPerAmountUnit::GetCompoundUnit(const std::string& u
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool MassPerAmountUnit::operator==(const MassPerAmountUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool MassPerAmountUnit::operator!=(const MassPerAmountUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarMassPerAmount::operator==(const SEScalarMassPerAmount& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarMassPerAmount::operator!=(const SEScalarMassPerAmount& obj) const
+{
+  return !(*this == obj);
+}
 }

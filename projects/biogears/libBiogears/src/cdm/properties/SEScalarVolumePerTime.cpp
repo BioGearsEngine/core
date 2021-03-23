@@ -95,4 +95,25 @@ const VolumePerTimeUnit& VolumePerTimeUnit::GetCompoundUnit(const std::string& u
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool VolumePerTimeUnit::operator==(const VolumePerTimeUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool VolumePerTimeUnit::operator!=(const VolumePerTimeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarVolumePerTime::operator==(const SEScalarVolumePerTime& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarVolumePerTime::operator!=(const SEScalarVolumePerTime& obj) const
+{
+  return !(*this == obj);
+}
 }

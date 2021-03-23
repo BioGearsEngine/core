@@ -75,4 +75,24 @@ const HeatConductanceUnit& HeatConductanceUnit::GetCompoundUnit(const std::strin
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool HeatConductanceUnit::operator==(const HeatConductanceUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool HeatConductanceUnit::operator!=(const HeatConductanceUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatConductance::operator==(const SEScalarHeatConductance& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatConductance::operator!=(const SEScalarHeatConductance& obj) const
+{
+  return !(*this == obj);
+}
 }

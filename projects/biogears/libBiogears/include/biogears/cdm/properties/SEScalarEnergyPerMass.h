@@ -20,7 +20,10 @@ public:
   EnergyPerMassUnit(const char* u);
   EnergyPerMassUnit(const std::string& u);
 
-  virtual ~EnergyPerMassUnit() = default;
+  virtual ~EnergyPerMassUnit() = default; 
+
+  bool operator==(const EnergyPerMassUnit&) const;
+  bool operator!=(const EnergyPerMassUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -38,6 +41,9 @@ public:
   SEScalarEnergyPerMass() = default;
   virtual ~SEScalarEnergyPerMass() = default;
 
-  CDM::ScalarEnergyPerMassData* Unload() const override;
+  CDM::ScalarEnergyPerMassData* Unload() const override;      
+
+  bool operator==(const SEScalarEnergyPerMass&) const;
+  bool operator!=(const SEScalarEnergyPerMass&) const;
 };
 }

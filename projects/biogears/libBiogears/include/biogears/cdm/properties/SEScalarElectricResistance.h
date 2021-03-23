@@ -20,7 +20,10 @@ public:
   ElectricResistanceUnit(const char* u);
   ElectricResistanceUnit(const std::string& u);
 
-  virtual ~ElectricResistanceUnit() = default;
+  virtual ~ElectricResistanceUnit() = default;       
+
+  bool operator==(const ElectricResistanceUnit&) const;
+  bool operator!=(const ElectricResistanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -35,6 +38,9 @@ public:
   SEScalarElectricResistance() = default;
   virtual ~SEScalarElectricResistance() = default;
 
-  CDM::ScalarElectricResistanceData* Unload() const override;
+  CDM::ScalarElectricResistanceData* Unload() const override;     
+
+  bool operator==(const SEScalarElectricResistance&) const;
+  bool operator!=(const SEScalarElectricResistance&) const;
 };
 }

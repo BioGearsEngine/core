@@ -60,4 +60,25 @@ const MassPerAreaTimeUnit& MassPerAreaTimeUnit::GetCompoundUnit(const std::strin
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool MassPerAreaTimeUnit::operator==(const MassPerAreaTimeUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool MassPerAreaTimeUnit::operator!=(const MassPerAreaTimeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarMassPerAreaTime::operator==(const SEScalarMassPerAreaTime& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarMassPerAreaTime::operator!=(const SEScalarMassPerAreaTime& obj) const
+{
+  return !(*this == obj);
+}
 }

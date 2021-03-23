@@ -22,6 +22,9 @@ public:
 
   virtual ~VolumePerTimeAreaUnit() = default;
 
+  bool operator==(const VolumePerTimeAreaUnit&) const;
+  bool operator!=(const VolumePerTimeAreaUnit&) const;
+
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const VolumePerTimeAreaUnit& GetCompoundUnit(const char* unit);
@@ -37,6 +40,9 @@ public:
   SEScalarVolumePerTimeArea() = default;
   virtual ~SEScalarVolumePerTimeArea() = default;
 
-  CDM::ScalarVolumePerTimeAreaData* Unload() const override;
+  CDM::ScalarVolumePerTimeAreaData* Unload() const override;  
+
+  bool operator==(const SEScalarVolumePerTimeArea&) const;
+  bool operator!=(const SEScalarVolumePerTimeArea&) const;
 };
 }

@@ -95,4 +95,25 @@ const MassPerTimeUnit& MassPerTimeUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool MassPerTimeUnit::operator==(const MassPerTimeUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool MassPerTimeUnit::operator!=(const MassPerTimeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarMassPerTime::operator==(const SEScalarMassPerTime& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarMassPerTime::operator!=(const SEScalarMassPerTime& obj) const
+{
+  return !(*this == obj);
+}
 }

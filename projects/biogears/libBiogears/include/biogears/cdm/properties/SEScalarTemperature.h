@@ -20,7 +20,10 @@ public:
   TemperatureUnit(const char* u);
   TemperatureUnit(const std::string& u);
 
-  virtual ~TemperatureUnit() = default;
+  virtual ~TemperatureUnit() = default;  
+
+  bool operator==(const TemperatureUnit&) const;
+  bool operator!=(const TemperatureUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -40,6 +43,9 @@ public:
 
   CDM::ScalarTemperatureData* Unload() const override;
 
-  double GetValue(const TemperatureUnit& unit) const override; // Zero is not Zero for all units, gotta remove that logic for this scalar type
+  double GetValue(const TemperatureUnit& unit) const override; // Zero is not Zero for all units, gotta remove that logic for this scalar type    
+
+  bool operator==(const SEScalarTemperature&) const;
+  bool operator!=(const SEScalarTemperature&) const;
 };
 }

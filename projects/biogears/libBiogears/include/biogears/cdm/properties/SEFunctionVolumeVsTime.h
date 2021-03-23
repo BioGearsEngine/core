@@ -46,6 +46,9 @@ public:
   virtual std::vector<double>& GetVolume();
   virtual const VolumeUnit* GetVolumeUnit();
   virtual void SetVolumeUnit(const VolumeUnit& unit);
+     
+  bool operator==(const SEFunctionVolumeVsTime&) const;
+  bool operator!=(const SEFunctionVolumeVsTime&) const;
 
 protected:
   const TimeUnit* m_TimeUnit;

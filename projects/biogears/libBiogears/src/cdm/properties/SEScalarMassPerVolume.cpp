@@ -134,4 +134,25 @@ SEScalarMassPerVolume::SEScalarMassPerVolume(double v,const  MassPerVolumeUnit& 
   : SEScalarQuantity<MassPerVolumeUnit>(v,u)
 {}
 //-------------------------------------------------------------------------------
+bool MassPerVolumeUnit::operator==(const MassPerVolumeUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool MassPerVolumeUnit::operator!=(const MassPerVolumeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarMassPerVolume::operator==(const SEScalarMassPerVolume& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarMassPerVolume::operator!=(const SEScalarMassPerVolume& obj) const
+{
+  return !(*this == obj);
+}
 }

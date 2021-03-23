@@ -22,6 +22,9 @@ public:
 
   virtual ~VolumePerTimePressureUnit() = default;
 
+  bool operator==(const VolumePerTimePressureUnit&) const;
+  bool operator!=(const VolumePerTimePressureUnit&) const;
+
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const VolumePerTimePressureUnit& GetCompoundUnit(const char* unit);
@@ -38,6 +41,9 @@ public:
   SEScalarVolumePerTimePressure() = default;
   virtual ~SEScalarVolumePerTimePressure() = default;
 
-  CDM::ScalarVolumePerTimePressureData* Unload() const override;
+  CDM::ScalarVolumePerTimePressureData* Unload() const override;   
+
+  bool operator==(const SEScalarVolumePerTimePressure&) const;
+  bool operator!=(const SEScalarVolumePerTimePressure&) const;
 };
 }

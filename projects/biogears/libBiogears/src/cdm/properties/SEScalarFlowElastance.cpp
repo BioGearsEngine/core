@@ -70,4 +70,25 @@ const FlowElastanceUnit& FlowElastanceUnit::GetCompoundUnit(const std::string& u
   return GetCompoundUnit(unit.c_str());
 }
   //-----------------------------------------------------------------------------
+bool FlowElastanceUnit::operator==(const FlowElastanceUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool FlowElastanceUnit::operator!=(const FlowElastanceUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarFlowElastance::operator==(const SEScalarFlowElastance& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarFlowElastance::operator!=(const SEScalarFlowElastance& obj) const
+{
+  return !(*this == obj);
+}
 }

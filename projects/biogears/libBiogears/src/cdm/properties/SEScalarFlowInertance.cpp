@@ -80,4 +80,25 @@ const FlowInertanceUnit& FlowInertanceUnit::GetCompoundUnit(const std::string& u
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool FlowInertanceUnit::operator==(const FlowInertanceUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool FlowInertanceUnit::operator!=(const FlowInertanceUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarFlowInertance::operator==(const SEScalarFlowInertance& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarFlowInertance::operator!=(const SEScalarFlowInertance& obj) const
+{
+  return !(*this == obj);
+}
 }

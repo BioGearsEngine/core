@@ -70,4 +70,25 @@ const PressureTimePerVolumeAreaUnit& PressureTimePerVolumeAreaUnit::GetCompoundU
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool PressureTimePerVolumeAreaUnit::operator==(const PressureTimePerVolumeAreaUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool PressureTimePerVolumeAreaUnit::operator!=(const PressureTimePerVolumeAreaUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarPressureTimePerVolumeArea::operator==(const SEScalarPressureTimePerVolumeArea& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarPressureTimePerVolumeArea::operator!=(const SEScalarPressureTimePerVolumeArea& obj) const
+{
+  return !(*this == obj);
+}
 }

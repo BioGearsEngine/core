@@ -65,4 +65,25 @@ const AreaUnit& AreaUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool AreaUnit::operator==(const AreaUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool AreaUnit::operator!=(const AreaUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarArea::operator==(const SEScalarArea& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarArea::operator!=(const SEScalarArea& obj) const
+{
+  return !(*this == obj);
+}
 }

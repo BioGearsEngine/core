@@ -20,7 +20,10 @@ public:
   PowerPerAreaTemperatureToTheFourthUnit(const char* u);
   PowerPerAreaTemperatureToTheFourthUnit(const std::string& u);
 
-  virtual ~PowerPerAreaTemperatureToTheFourthUnit() = default;
+  virtual ~PowerPerAreaTemperatureToTheFourthUnit() = default;  
+
+  bool operator==(const PowerPerAreaTemperatureToTheFourthUnit&) const;
+  bool operator!=(const PowerPerAreaTemperatureToTheFourthUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -35,6 +38,9 @@ public:
   SEScalarPowerPerAreaTemperatureToTheFourth() = default;
   virtual ~SEScalarPowerPerAreaTemperatureToTheFourth() = default;
 
-  CDM::ScalarPowerPerAreaTemperatureToTheFourthData* Unload() const override;
+  CDM::ScalarPowerPerAreaTemperatureToTheFourthData* Unload() const override;   
+
+  bool operator==(const SEScalarPowerPerAreaTemperatureToTheFourth&) const;
+  bool operator!=(const SEScalarPowerPerAreaTemperatureToTheFourth&) const;
 };
 }

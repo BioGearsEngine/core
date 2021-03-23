@@ -85,4 +85,25 @@ const AmountPerTimeUnit& AmountPerTimeUnit::GetCompoundUnit(const std::string& u
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool AmountPerTimeUnit::operator==(const AmountPerTimeUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool AmountPerTimeUnit::operator!=(const AmountPerTimeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarAmountPerTime::operator==(const SEScalarAmountPerTime& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarAmountPerTime::operator!=(const SEScalarAmountPerTime& obj) const
+{
+  return !(*this == obj);
+}
 }

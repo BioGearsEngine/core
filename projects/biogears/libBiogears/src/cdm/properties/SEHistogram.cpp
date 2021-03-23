@@ -126,4 +126,16 @@ const std::vector<double>& SEHistogram::GetIndependent() const
 {
   return m_Independent;
 }
+//-------------------------------------------------------------------------------
+bool SEHistogram::operator==(const SEHistogram& obj) const
+{
+  return m_Independent == obj.m_Independent
+    &&  m_Dependent == obj.m_Dependent;
+}
+//-------------------------------------------------------------------------------
+bool SEHistogram::operator!=(const SEHistogram& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
 }

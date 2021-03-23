@@ -60,4 +60,25 @@ const ElectricChargeUnit& ElectricChargeUnit::GetCompoundUnit(const std::string&
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool ElectricChargeUnit::operator==(const ElectricChargeUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool ElectricChargeUnit::operator!=(const ElectricChargeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarElectricCharge::operator==(const SEScalarElectricCharge& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarElectricCharge::operator!=(const SEScalarElectricCharge& obj) const
+{
+  return !(*this == obj);
+}
 }

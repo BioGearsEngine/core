@@ -20,7 +20,10 @@ public:
   FlowElastanceUnit(const char* u);
   FlowElastanceUnit(const std::string& u);
 
-  virtual ~FlowElastanceUnit() = default;
+  virtual ~FlowElastanceUnit() = default;     
+
+  bool operator==(const FlowElastanceUnit&) const;
+  bool operator!=(const FlowElastanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -37,6 +40,9 @@ public:
   SEScalarFlowElastance() = default;
   virtual ~SEScalarFlowElastance() = default;
 
-  CDM::ScalarFlowElastanceData* Unload() const override;
+  CDM::ScalarFlowElastanceData* Unload() const override;     
+
+  bool operator==(const SEScalarFlowElastance&) const;
+  bool operator!=(const SEScalarFlowElastance&) const;
 };
 }

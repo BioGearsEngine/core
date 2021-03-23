@@ -20,7 +20,10 @@ public:
   HeatInductanceUnit(const char* u);
   HeatInductanceUnit(const std::string& u);
 
-  virtual ~HeatInductanceUnit() = default;
+  virtual ~HeatInductanceUnit() = default;          
+
+  bool operator==(const HeatInductanceUnit&) const;
+  bool operator!=(const HeatInductanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -35,6 +38,9 @@ public:
   SEScalarHeatInductance() = default;
   virtual ~SEScalarHeatInductance() = default;
 
-  CDM::ScalarHeatInductanceData* Unload() const override;
+  CDM::ScalarHeatInductanceData* Unload() const override;   
+
+  bool operator==(const SEScalarHeatInductance&) const;
+  bool operator!=(const SEScalarHeatInductance&) const;
 };
 }

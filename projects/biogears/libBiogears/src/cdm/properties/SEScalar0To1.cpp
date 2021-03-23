@@ -38,4 +38,14 @@ void SEScalar0To1::SetValue(double d, const NoUnit& unitless)
 {
   SEScalar0To1::SetValue(d);
 }
+
+//-------------------------------------------------------------------------------
+
+  bool SEScalar0To1::operator==(const SEScalar0To1& obj) const {
+    return m_value == obj.m_value;
+  }
+//-------------------------------------------------------------------------------
+  bool SEScalar0To1::operator!=(const SEScalar0To1& obj) const {
+    return !(*this == obj);
+  }
 }

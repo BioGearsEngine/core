@@ -19,7 +19,10 @@ public:
   AmountPerVolumeUnit(const char* u);
   AmountPerVolumeUnit(const std::string& u);
 
-  virtual ~AmountPerVolumeUnit() = default;
+  virtual ~AmountPerVolumeUnit() = default;         
+
+  bool operator==(const AmountPerVolumeUnit&) const;
+  bool operator!=(const AmountPerVolumeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -40,6 +43,9 @@ public:
   SEScalarAmountPerVolume() = default;
   virtual ~SEScalarAmountPerVolume() = default;
 
-  CDM::ScalarAmountPerVolumeData* Unload() const override;
+  CDM::ScalarAmountPerVolumeData* Unload() const override;     
+
+  bool operator==(const SEScalarAmountPerVolume&) const;
+  bool operator!=(const SEScalarAmountPerVolume&) const;
 };
 }

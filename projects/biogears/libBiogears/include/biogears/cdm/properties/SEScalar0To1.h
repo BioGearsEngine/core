@@ -18,13 +18,18 @@ class BIOGEARS_API SEScalar0To1 : public SEScalar {
 
 public:
   SEScalar0To1();
-  virtual ~SEScalar0To1() {}
+  virtual ~SEScalar0To1() = default;
 
   CDM::Scalar0To1Data* Unload() const;
 
   double GetValue() const { return SEScalar::GetValue(); }
   double GetValue(const NoUnit& unitless) const { return SEScalar::GetValue(); }
+
   void SetValue(double d);
   void SetValue(double d, const NoUnit& unitless);
+
+  bool operator==(const SEScalar0To1&) const;
+  bool operator!=(const SEScalar0To1&) const;
+
 };
 }

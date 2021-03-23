@@ -20,7 +20,10 @@ public:
   MassPerAreaTimeUnit(const char* u);
   MassPerAreaTimeUnit(const std::string& u);
 
-  virtual ~MassPerAreaTimeUnit() = default;
+  virtual ~MassPerAreaTimeUnit() = default;     
+
+  bool operator==(const MassPerAreaTimeUnit&) const;
+  bool operator!=(const MassPerAreaTimeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -35,6 +38,9 @@ public:
   SEScalarMassPerAreaTime() = default;
   virtual ~SEScalarMassPerAreaTime() = default;
 
-  CDM::ScalarMassPerAreaTimeData* Unload() const override;
+  CDM::ScalarMassPerAreaTimeData* Unload() const override;   
+
+  bool operator==(const SEScalarMassPerAreaTime&) const;
+  bool operator!=(const SEScalarMassPerAreaTime&) const;
 };
 }

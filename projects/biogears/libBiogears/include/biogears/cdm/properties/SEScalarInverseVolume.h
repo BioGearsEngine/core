@@ -20,7 +20,10 @@ public:
   InverseVolumeUnit(const char* u);
   InverseVolumeUnit(const std::string& u);
 
-  virtual ~InverseVolumeUnit() = default;
+  virtual ~InverseVolumeUnit() = default;      
+
+  bool operator==(const InverseVolumeUnit&) const;
+  bool operator!=(const InverseVolumeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -36,6 +39,9 @@ public:
   SEScalarInverseVolume() = default;
   virtual ~SEScalarInverseVolume() = default;
 
-  CDM::ScalarInverseVolumeData* Unload() const override;
+  CDM::ScalarInverseVolumeData* Unload() const override;   
+
+  bool operator==(const SEScalarInverseVolume&) const;
+  bool operator!=(const SEScalarInverseVolume&) const;
 };
 }

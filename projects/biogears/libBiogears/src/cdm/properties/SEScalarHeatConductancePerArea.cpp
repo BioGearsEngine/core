@@ -70,4 +70,24 @@ const HeatConductancePerAreaUnit& HeatConductancePerAreaUnit::GetCompoundUnit(co
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool HeatConductancePerAreaUnit::operator==(const HeatConductancePerAreaUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool HeatConductancePerAreaUnit::operator!=(const HeatConductancePerAreaUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatConductancePerArea::operator==(const SEScalarHeatConductancePerArea& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatConductancePerArea::operator!=(const SEScalarHeatConductancePerArea& obj) const
+{
+  return !(*this == obj);
+}
 }

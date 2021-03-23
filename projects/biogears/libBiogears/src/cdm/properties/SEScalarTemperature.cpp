@@ -86,4 +86,25 @@ double SEScalarTemperature::GetValue(const TemperatureUnit& unit) const
   return Convert(m_value, *m_unit, unit);
 }
 //-------------------------------------------------------------------------------
+bool TemperatureUnit::operator==(const TemperatureUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool TemperatureUnit::operator!=(const TemperatureUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarTemperature::operator==(const SEScalarTemperature& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarTemperature::operator!=(const SEScalarTemperature& obj) const
+{
+  return !(*this == obj);
+}
 }

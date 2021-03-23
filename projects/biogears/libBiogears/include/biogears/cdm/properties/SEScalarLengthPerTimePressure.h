@@ -20,7 +20,10 @@ public:
   LengthPerTimePressureUnit(const char* u);
   LengthPerTimePressureUnit(const std::string& u);
 
-  virtual ~LengthPerTimePressureUnit() = default;
+  virtual ~LengthPerTimePressureUnit() = default;    
+
+  bool operator==(const LengthPerTimePressureUnit&) const;
+  bool operator!=(const LengthPerTimePressureUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -38,6 +41,9 @@ public:
   SEScalarLengthPerTimePressure() = default;
   virtual ~SEScalarLengthPerTimePressure() = default;
 
-  CDM::ScalarLengthPerTimePressureData* Unload() const override;
+  CDM::ScalarLengthPerTimePressureData* Unload() const override;   
+
+  bool operator==(const SEScalarLengthPerTimePressure&) const;
+  bool operator!=(const SEScalarLengthPerTimePressure&) const;
 };
 }

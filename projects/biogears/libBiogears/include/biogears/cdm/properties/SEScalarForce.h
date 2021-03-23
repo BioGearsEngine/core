@@ -22,6 +22,9 @@ public:
 
   virtual ~ForceUnit() {}
 
+  bool operator==(const ForceUnit&) const;
+  bool operator!=(const ForceUnit&) const;
+
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const ForceUnit& GetCompoundUnit(const char* unit);
@@ -37,6 +40,9 @@ public:
   SEScalarForce() = default;
   virtual ~SEScalarForce() = default;
 
-  CDM::ScalarForceData* Unload() const override;
+  CDM::ScalarForceData* Unload() const override;  
+
+  bool operator==(const SEScalarForce&) const;
+  bool operator!=(const SEScalarForce&) const;
 };
 }

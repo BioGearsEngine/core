@@ -29,6 +29,7 @@ public:
   SEScalarQuantity();
   SEScalarQuantity(const SEScalarQuantity&);
   explicit SEScalarQuantity(double, const Unit&);
+
   ~SEScalarQuantity() override;
 
   void Clear() override;

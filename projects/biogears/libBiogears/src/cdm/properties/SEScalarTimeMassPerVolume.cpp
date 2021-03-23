@@ -85,4 +85,25 @@ const TimeMassPerVolumeUnit& TimeMassPerVolumeUnit::GetCompoundUnit(const std::s
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool TimeMassPerVolumeUnit::operator==(const TimeMassPerVolumeUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool TimeMassPerVolumeUnit::operator!=(const TimeMassPerVolumeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarTimeMassPerVolume::operator==(const SEScalarTimeMassPerVolume& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarTimeMassPerVolume::operator!=(const SEScalarTimeMassPerVolume& obj) const
+{
+  return !(*this == obj);
+}
 }

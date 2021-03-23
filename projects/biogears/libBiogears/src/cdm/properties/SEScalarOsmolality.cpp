@@ -65,4 +65,25 @@ const OsmolalityUnit& OsmolalityUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool OsmolalityUnit::operator==(const OsmolalityUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool OsmolalityUnit::operator!=(const OsmolalityUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarOsmolality::operator==(const SEScalarOsmolality& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarOsmolality::operator!=(const SEScalarOsmolality& obj) const
+{
+  return !(*this == obj);
+}
 }

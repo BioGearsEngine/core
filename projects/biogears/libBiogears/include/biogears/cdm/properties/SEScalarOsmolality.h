@@ -20,7 +20,10 @@ public:
   OsmolalityUnit(const char* u);
   OsmolalityUnit(const std::string& u);
 
-  virtual ~OsmolalityUnit() = default;
+  virtual ~OsmolalityUnit() = default;    
+
+  bool operator==(const OsmolalityUnit&) const;
+  bool operator!=(const OsmolalityUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -36,6 +39,9 @@ public:
   SEScalarOsmolality() = default;
   virtual ~SEScalarOsmolality() = default;
 
-  CDM::ScalarOsmolalityData* Unload() const override;
+  CDM::ScalarOsmolalityData* Unload() const override;  
+
+  bool operator==(const SEScalarOsmolality&) const;
+  bool operator!=(const SEScalarOsmolality&) const;
 };
 }

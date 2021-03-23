@@ -31,6 +31,9 @@ public:
 
   virtual bool Load(const CDM::HistogramFractionVsLengthData& in);
   virtual CDM::HistogramFractionVsLengthData* Unload() const override;
+        
+  bool operator==(const SEHistogramFractionVsLength&) const;
+  bool operator!=(const SEHistogramFractionVsLength&) const;
 
 protected:
   virtual void Unload(CDM::HistogramFractionVsLengthData& data) const;

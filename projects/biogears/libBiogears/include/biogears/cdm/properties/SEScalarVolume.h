@@ -20,7 +20,10 @@ public:
   VolumeUnit(const char* u);
   VolumeUnit(const std::string& u);
 
-  virtual ~VolumeUnit() = default;
+  virtual ~VolumeUnit() = default;   
+
+  bool operator==(const VolumeUnit&) const;
+  bool operator!=(const VolumeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -39,6 +42,9 @@ public:
   SEScalarVolume() = default;
   virtual ~SEScalarVolume() = default;
 
-  CDM::ScalarVolumeData* Unload() const override;
+  CDM::ScalarVolumeData* Unload() const override;       
+
+  bool operator==(const SEScalarVolume&) const;
+  bool operator!=(const SEScalarVolume&) const;
 };
 }

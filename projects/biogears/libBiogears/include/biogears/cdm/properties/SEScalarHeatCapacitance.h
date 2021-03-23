@@ -20,7 +20,10 @@ public:
   HeatCapacitanceUnit(const char* u);
   HeatCapacitanceUnit(const std::string& u);
 
-  virtual ~HeatCapacitanceUnit() = default;
+  virtual ~HeatCapacitanceUnit() = default;       
+
+  bool operator==(const HeatCapacitanceUnit&) const;
+  bool operator!=(const HeatCapacitanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -38,6 +41,9 @@ public:
   SEScalarHeatCapacitance() = default;
   virtual ~SEScalarHeatCapacitance() = default;
 
-  CDM::ScalarHeatCapacitanceData* Unload() const override;
+  CDM::ScalarHeatCapacitanceData* Unload() const override;      
+
+  bool operator==(const SEScalarHeatCapacitance&) const;
+  bool operator!=(const SEScalarHeatCapacitance&) const;
 };
 }

@@ -75,4 +75,24 @@ const LengthPerTimePressureUnit& LengthPerTimePressureUnit::GetCompoundUnit(cons
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool LengthPerTimePressureUnit::operator==(const LengthPerTimePressureUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool LengthPerTimePressureUnit::operator!=(const LengthPerTimePressureUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarLengthPerTimePressure::operator==(const SEScalarLengthPerTimePressure& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarLengthPerTimePressure::operator!=(const SEScalarLengthPerTimePressure& obj) const
+{
+  return !(*this == obj);
+}
 }

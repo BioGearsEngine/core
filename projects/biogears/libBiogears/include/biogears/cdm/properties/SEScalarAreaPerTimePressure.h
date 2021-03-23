@@ -25,7 +25,11 @@ public:
     : CCompoundUnit(u)
   {
   }
-  virtual ~AreaPerTimePressureUnit() = default;
+
+  virtual ~AreaPerTimePressureUnit() = default; 
+
+  bool operator==(const AreaPerTimePressureUnit&) const;
+  bool operator!=(const AreaPerTimePressureUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -43,6 +47,9 @@ public:
   SEScalarAreaPerTimePressure() = default;
   virtual ~SEScalarAreaPerTimePressure() = default;
 
-  CDM::ScalarAreaPerTimePressureData* Unload() const override;
+  CDM::ScalarAreaPerTimePressureData* Unload() const override;        
+
+  bool operator==(const SEScalarAreaPerTimePressure&) const;
+  bool operator!=(const SEScalarAreaPerTimePressure&) const;
 };
 }

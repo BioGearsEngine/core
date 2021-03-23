@@ -60,4 +60,25 @@ const PowerPerAreaTemperatureToTheFourthUnit& PowerPerAreaTemperatureToTheFourth
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool PowerPerAreaTemperatureToTheFourthUnit::operator==(const PowerPerAreaTemperatureToTheFourthUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool PowerPerAreaTemperatureToTheFourthUnit::operator!=(const PowerPerAreaTemperatureToTheFourthUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarPowerPerAreaTemperatureToTheFourth::operator==(const SEScalarPowerPerAreaTemperatureToTheFourth& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarPowerPerAreaTemperatureToTheFourth::operator!=(const SEScalarPowerPerAreaTemperatureToTheFourth& obj) const
+{
+  return !(*this == obj);
+}
 }

@@ -19,7 +19,11 @@ class BIOGEARS_API SEScalarFraction : public SEScalar {
 
 public:
   SEScalarFraction();
-  virtual ~SEScalarFraction() = default;
+
+  virtual ~SEScalarFraction() = default; 
+
+  bool operator==(const SEScalarFraction&) const;
+  bool operator!=(const SEScalarFraction&) const;
 
   CDM::ScalarFractionData* Unload() const;
 

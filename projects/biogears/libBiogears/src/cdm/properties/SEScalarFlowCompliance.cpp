@@ -75,4 +75,25 @@ const FlowComplianceUnit& FlowComplianceUnit::GetCompoundUnit(const std::string&
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+ bool FlowComplianceUnit::operator==(const FlowComplianceUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool FlowComplianceUnit::operator!=(const FlowComplianceUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarFlowCompliance::operator==(const SEScalarFlowCompliance& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarFlowCompliance::operator!=(const SEScalarFlowCompliance& obj) const
+{
+  return !(*this == obj);
+}
 }

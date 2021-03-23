@@ -60,4 +60,25 @@ const ElectricResistanceUnit& ElectricResistanceUnit::GetCompoundUnit(const std:
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool ElectricResistanceUnit::operator==(const ElectricResistanceUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool ElectricResistanceUnit::operator!=(const ElectricResistanceUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarElectricResistance::operator==(const SEScalarElectricResistance& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarElectricResistance::operator!=(const SEScalarElectricResistance& obj) const
+{
+  return !(*this == obj);
+}
 }

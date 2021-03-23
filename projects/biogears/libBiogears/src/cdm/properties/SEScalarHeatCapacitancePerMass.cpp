@@ -74,4 +74,24 @@ const HeatCapacitancePerMassUnit& HeatCapacitancePerMassUnit::GetCompoundUnit(co
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool HeatCapacitancePerMassUnit::operator==(const HeatCapacitancePerMassUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool HeatCapacitancePerMassUnit::operator!=(const HeatCapacitancePerMassUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatCapacitancePerMass::operator==(const SEScalarHeatCapacitancePerMass& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatCapacitancePerMass::operator!=(const SEScalarHeatCapacitancePerMass& obj) const
+{
+  return !(*this == obj);
+}
 }

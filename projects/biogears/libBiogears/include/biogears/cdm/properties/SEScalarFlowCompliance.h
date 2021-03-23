@@ -20,7 +20,10 @@ public:
   FlowComplianceUnit(const char* u);
   FlowComplianceUnit(const std::string& u);
 
-  virtual ~FlowComplianceUnit() = default;
+  virtual ~FlowComplianceUnit() = default;      
+
+  bool operator==(const FlowComplianceUnit&) const;
+  bool operator!=(const FlowComplianceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -38,6 +41,9 @@ public:
   SEScalarFlowCompliance() = default;
   virtual ~SEScalarFlowCompliance() = default;
 
-  CDM::ScalarFlowComplianceData* Unload() const override;
+  CDM::ScalarFlowComplianceData* Unload() const override;   
+
+  bool operator==(const SEScalarFlowCompliance&) const;
+  bool operator!=(const SEScalarFlowCompliance&) const;
 };
 }

@@ -42,6 +42,9 @@ public:
   virtual double GetValue() const;
   virtual double GetValue(const char* unit) const;
   virtual double GetValue(const std::string& unit) const;
+      
+  bool operator==(const SEGenericScalar&) const;
+  bool operator!=(const SEGenericScalar&) const;
 
 protected:
   const SEScalar* m_Scalar;

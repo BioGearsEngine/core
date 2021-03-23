@@ -65,5 +65,25 @@ const VolumePerPressureUnit& VolumePerPressureUnit::GetCompoundUnit(const std::s
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool VolumePerPressureUnit::operator==(const VolumePerPressureUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool VolumePerPressureUnit::operator!=(const VolumePerPressureUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
 
+bool SEScalarVolumePerPressure::operator==(const SEScalarVolumePerPressure& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarVolumePerPressure::operator!=(const SEScalarVolumePerPressure& obj) const
+{
+  return !(*this == obj);
+}
 }

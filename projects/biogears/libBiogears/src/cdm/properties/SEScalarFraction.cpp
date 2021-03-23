@@ -45,4 +45,16 @@ void SEScalarFraction::SetValue(double d, const NoUnit& unitless)
 {
   SEScalar::SetValue(d);
 }
+
+
+//-------------------------------------------------------------------------------
+bool SEScalarFraction::operator==(const SEScalarFraction& obj) const
+{
+  return  m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarFraction::operator!=(const SEScalarFraction& obj) const
+{
+  return !(*this == obj);
+}
 }

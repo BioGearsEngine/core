@@ -85,4 +85,25 @@ const PowerUnit& PowerUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool PowerUnit::operator==(const PowerUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool PowerUnit::operator!=(const PowerUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarPower::operator==(const SEScalarPower& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarPower::operator!=(const SEScalarPower& obj) const
+{
+  return !(*this == obj);
+}
 }

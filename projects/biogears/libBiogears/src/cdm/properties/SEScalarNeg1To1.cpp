@@ -43,4 +43,16 @@ void SEScalarNeg1To1::SetValue(double d, const NoUnit& unitless)
 {
   SEScalarNeg1To1::SetValue(d);
 }
+
+//-------------------------------------------------------------------------------
+
+bool SEScalarNeg1To1::operator==(const SEScalarNeg1To1& obj) const
+{
+  return m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarNeg1To1::operator!=(const SEScalarNeg1To1& obj) const
+{
+  return !(*this == obj);
+}
 }

@@ -78,4 +78,24 @@ const MassUnit& MassUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool MassUnit::operator==(const MassUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool MassUnit::operator!=(const MassUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarMass::operator==(const SEScalarMass& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarMass::operator!=(const SEScalarMass& obj) const
+{
+  return !(*this == obj);
+}
 }

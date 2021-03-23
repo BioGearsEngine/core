@@ -60,4 +60,25 @@ const ElectricCapacitanceUnit& ElectricCapacitanceUnit::GetCompoundUnit(const st
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool ElectricCapacitanceUnit::operator==(const ElectricCapacitanceUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool ElectricCapacitanceUnit::operator!=(const ElectricCapacitanceUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarElectricCapacitance::operator==(const SEScalarElectricCapacitance& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarElectricCapacitance::operator!=(const SEScalarElectricCapacitance& obj) const
+{
+  return !(*this == obj);
+}
 }

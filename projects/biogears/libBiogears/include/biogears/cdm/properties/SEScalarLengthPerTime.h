@@ -20,7 +20,10 @@ public:
   LengthPerTimeUnit(const char* u);
   LengthPerTimeUnit(const std::string& u);
 
-  virtual ~LengthPerTimeUnit() = default;
+  virtual ~LengthPerTimeUnit() = default;  
+
+  bool operator==(const LengthPerTimeUnit&) const;
+  bool operator!=(const LengthPerTimeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -40,6 +43,9 @@ public:
   SEScalarLengthPerTime() = default;
   virtual ~SEScalarLengthPerTime() = default;
 
-  CDM::ScalarLengthPerTimeData* Unload() const override;
+  CDM::ScalarLengthPerTimeData* Unload() const override;   
+
+  bool operator==(const SEScalarLengthPerTime&) const;
+  bool operator!=(const SEScalarLengthPerTime&) const;
 };
 }

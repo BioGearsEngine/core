@@ -20,7 +20,10 @@ public:
   PressurePerVolumeUnit(const char* u);
   PressurePerVolumeUnit(const std::string& u);
 
-  virtual ~PressurePerVolumeUnit() = default;
+  virtual ~PressurePerVolumeUnit() = default;   
+
+  bool operator==(const PressurePerVolumeUnit&) const;
+  bool operator!=(const PressurePerVolumeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -36,6 +39,9 @@ public:
   SEScalarPressurePerVolume() = default;
   virtual ~SEScalarPressurePerVolume() = default;
 
-  CDM::ScalarPressurePerVolumeData* Unload() const override;
+  CDM::ScalarPressurePerVolumeData* Unload() const override;    
+
+  bool operator==(const SEScalarPressurePerVolume&) const;
+  bool operator!=(const SEScalarPressurePerVolume&) const;
 };
 }

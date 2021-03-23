@@ -20,7 +20,7 @@ const FlowResistanceUnit FlowResistanceUnit::mmHg_min_Per_L("mmHg min/L");
 const FlowResistanceUnit FlowResistanceUnit::Pa_s_Per_m3("Pa s/m^3");
 
 FlowResistanceUnit::FlowResistanceUnit(const char* u)
-  : FlowResistanceUnit(std::string{ u })
+  : FlowResistanceUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
@@ -40,15 +40,15 @@ CDM::ScalarFlowResistanceData* SEScalarFlowResistance::Unload() const
 //-----------------------------------------------------------------------------
 bool FlowResistanceUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(cmH2O_s_Per_L.GetString(),unit) == 0)
+  if (strcmp(cmH2O_s_Per_L.GetString(), unit) == 0)
     return true;
-  if (strcmp(mmHg_s_Per_mL.GetString(),unit) == 0)
+  if (strcmp(mmHg_s_Per_mL.GetString(), unit) == 0)
     return true;
-  if (strcmp(mmHg_min_Per_mL.GetString(),unit) == 0)
+  if (strcmp(mmHg_min_Per_mL.GetString(), unit) == 0)
     return true;
-  if (strcmp(mmHg_min_Per_L.GetString(),unit) == 0)
+  if (strcmp(mmHg_min_Per_L.GetString(), unit) == 0)
     return true;
-  if (strcmp(Pa_s_Per_m3.GetString(),unit) == 0)
+  if (strcmp(Pa_s_Per_m3.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -60,15 +60,15 @@ bool FlowResistanceUnit::IsValidUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 const FlowResistanceUnit& FlowResistanceUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(cmH2O_s_Per_L.GetString(),unit) == 0)
+  if (strcmp(cmH2O_s_Per_L.GetString(), unit) == 0)
     return cmH2O_s_Per_L;
-  if (strcmp(mmHg_s_Per_mL.GetString(),unit) == 0)
+  if (strcmp(mmHg_s_Per_mL.GetString(), unit) == 0)
     return mmHg_s_Per_mL;
-  if (strcmp(mmHg_min_Per_mL.GetString(),unit) == 0)
+  if (strcmp(mmHg_min_Per_mL.GetString(), unit) == 0)
     return mmHg_min_Per_mL;
-  if (strcmp(mmHg_min_Per_L.GetString(),unit) == 0)
+  if (strcmp(mmHg_min_Per_L.GetString(), unit) == 0)
     return mmHg_min_Per_L;
-  if (strcmp(Pa_s_Per_m3.GetString(),unit) == 0)
+  if (strcmp(Pa_s_Per_m3.GetString(), unit) == 0)
     return Pa_s_Per_m3;
   std::stringstream err;
   err << unit << " is not a valid FlowResistance unit";
@@ -79,5 +79,26 @@ const FlowResistanceUnit& FlowResistanceUnit::GetCompoundUnit(const std::string&
 {
   return GetCompoundUnit(unit.c_str());
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool FlowResistanceUnit::operator==(const FlowResistanceUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool FlowResistanceUnit::operator!=(const FlowResistanceUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarFlowResistance::operator==(const SEScalarFlowResistance& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarFlowResistance::operator!=(const SEScalarFlowResistance& obj) const
+{
+  return !(*this == obj);
+}
 }

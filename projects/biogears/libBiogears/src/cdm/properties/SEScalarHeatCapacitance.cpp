@@ -75,4 +75,24 @@ const HeatCapacitanceUnit& HeatCapacitanceUnit::GetCompoundUnit(const std::strin
   return GetCompoundUnit(unit.c_str());
 }
 //---------------------`---------------------------------------------------------
+bool HeatCapacitanceUnit::operator==(const HeatCapacitanceUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool HeatCapacitanceUnit::operator!=(const HeatCapacitanceUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatCapacitance::operator==(const SEScalarHeatCapacitance& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatCapacitance::operator!=(const SEScalarHeatCapacitance& obj) const
+{
+  return !(*this == obj);
+}
 }

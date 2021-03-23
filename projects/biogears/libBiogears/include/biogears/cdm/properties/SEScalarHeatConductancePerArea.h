@@ -20,7 +20,10 @@ public:
   HeatConductancePerAreaUnit(const char* u);
   HeatConductancePerAreaUnit(const std::string& u);
 
-  virtual ~HeatConductancePerAreaUnit() = default;
+  virtual ~HeatConductancePerAreaUnit() = default;   
+
+  bool operator==(const HeatConductancePerAreaUnit&) const;
+  bool operator!=(const HeatConductancePerAreaUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -37,6 +40,9 @@ public:
   SEScalarHeatConductancePerArea() = default;
   virtual ~SEScalarHeatConductancePerArea() = default;
 
-  CDM::ScalarHeatConductancePerAreaData* Unload() const override;
+  CDM::ScalarHeatConductancePerAreaData* Unload() const override;   
+
+  bool operator==(const SEScalarHeatConductancePerArea&) const;
+  bool operator!=(const SEScalarHeatConductancePerArea&) const;
 };
 }

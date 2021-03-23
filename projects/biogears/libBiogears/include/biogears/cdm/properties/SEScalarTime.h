@@ -20,7 +20,10 @@ public:
   TimeUnit(const char* u);
   TimeUnit(const std::string& u);
 
-  virtual ~TimeUnit() = default;
+  virtual ~TimeUnit() = default;      
+
+  bool operator==(const TimeUnit&) const;
+  bool operator!=(const TimeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -39,6 +42,9 @@ public:
   SEScalarTime() = default;
   virtual ~SEScalarTime() = default;
 
-  CDM::ScalarTimeData* Unload() const override;
+  CDM::ScalarTimeData* Unload() const override;       
+
+  bool operator==(const SEScalarTime&) const;
+  bool operator!=(const SEScalarTime&) const;
 };
 }

@@ -84,4 +84,25 @@ const AmountPerVolumeUnit& AmountPerVolumeUnit::GetCompoundUnit(const std::strin
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool AmountPerVolumeUnit::operator==(const AmountPerVolumeUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool AmountPerVolumeUnit::operator!=(const AmountPerVolumeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarAmountPerVolume::operator==(const SEScalarAmountPerVolume& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarAmountPerVolume::operator!=(const SEScalarAmountPerVolume& obj) const
+{
+  return !(*this == obj);
+}
 }

@@ -20,7 +20,10 @@ public:
   FlowInertanceUnit(const char* u);
   FlowInertanceUnit(const std::string& u);
 
-  virtual ~FlowInertanceUnit() = default;
+  virtual ~FlowInertanceUnit() = default;   
+
+  bool operator==(const FlowInertanceUnit&) const;
+  bool operator!=(const FlowInertanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -39,6 +42,9 @@ public:
   SEScalarFlowInertance() = default;
   virtual ~SEScalarFlowInertance() = default;
 
-  CDM::ScalarFlowInertanceData* Unload() const override;
+  CDM::ScalarFlowInertanceData* Unload() const override;    
+
+  bool operator==(const SEScalarFlowInertance&) const;
+  bool operator!=(const SEScalarFlowInertance&) const;
 };
 }

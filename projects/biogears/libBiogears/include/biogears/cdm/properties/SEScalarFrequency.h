@@ -22,6 +22,9 @@ public:
 
   virtual ~FrequencyUnit() = default;
 
+  bool operator==(const FrequencyUnit&) const;
+  bool operator!=(const FrequencyUnit&) const;
+
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const FrequencyUnit& GetCompoundUnit(const char* unit);
@@ -38,6 +41,9 @@ public:
   SEScalarFrequency() = default;
   virtual ~SEScalarFrequency() = default;
 
-  CDM::ScalarFrequencyData* Unload() const override;
+  CDM::ScalarFrequencyData* Unload() const override; 
+
+  bool operator==(const SEScalarFrequency&) const;
+  bool operator!=(const SEScalarFrequency&) const;
 };
 }

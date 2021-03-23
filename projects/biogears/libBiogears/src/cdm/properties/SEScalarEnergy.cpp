@@ -75,4 +75,25 @@ const EnergyUnit& EnergyUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool EnergyUnit::operator==(const EnergyUnit& obj) const
+{
+  return GetString() == obj.GetString();
+}
+//-------------------------------------------------------------------------------
+bool EnergyUnit::operator!=(const EnergyUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarEnergy::operator==(const SEScalarEnergy& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarEnergy::operator!=(const SEScalarEnergy& obj) const
+{
+  return !(*this == obj);
+}
 }

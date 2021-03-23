@@ -26,7 +26,10 @@ public:
   MassUnit(const char* u);
   MassUnit(const std::string& u);
 
-  virtual ~MassUnit() = default;
+  virtual ~MassUnit() = default;     
+
+  bool operator==(const MassUnit&) const;
+  bool operator!=(const MassUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -40,6 +43,9 @@ public:
     SEScalarMass() = default;
     virtual ~SEScalarMass() = default;
 
-    CDM::ScalarMassData* Unload() const override;
+    CDM::ScalarMassData* Unload() const override;  
+
+  bool operator==(const SEScalarMass&) const;
+  bool operator!=(const SEScalarMass&) const;
   };
 }
