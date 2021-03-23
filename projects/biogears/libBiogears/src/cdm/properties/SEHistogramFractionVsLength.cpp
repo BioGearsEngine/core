@@ -108,4 +108,19 @@ const std::vector<double>& SEHistogramFractionVsLength::GetFraction() const
 {
   return m_Dependent;
 }
+//-------------------------------------------------------------------------------
+bool SEHistogramFractionVsLength::operator==(const SEHistogramFractionVsLength& obj) const
+{
+  return m_LengthUnit != nullptr 
+    && obj.m_LengthUnit != nullptr 
+    && *m_LengthUnit == *obj.m_LengthUnit
+    && m_Independent == obj.m_Independent
+    &&  m_Dependent == obj.m_Dependent;
+}
+//-------------------------------------------------------------------------------
+bool SEHistogramFractionVsLength::operator!=(const SEHistogramFractionVsLength& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
 }
