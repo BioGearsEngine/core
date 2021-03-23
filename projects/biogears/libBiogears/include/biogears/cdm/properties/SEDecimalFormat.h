@@ -48,6 +48,9 @@ public:
 
   void SetStream(std::ofstream& s);
 
+  bool operator==(const SEDecimalFormat&) const ;
+  bool operator!=(const SEDecimalFormat&) const;
+
 protected:
   std::streamsize m_Precision;
   DecimalNotation m_Notation;

@@ -157,4 +157,17 @@ SEFunctionElectricPotentialVsTime* SEFunctionElectricPotentialVsTime::Interpolat
     throw new CommonDataModelException("Could not Interpolate to provided time");
   return newFunction;
 }
+//--------------------------------------------------------------------------------------------------
+bool SEFunctionElectricPotentialVsTime::operator==(const SEFunctionElectricPotentialVsTime& rhs) const
+{
+return 
+  m_TimeUnit == rhs.m_TimeUnit
+  && m_ElectricPotentialUnit == rhs.m_ElectricPotentialUnit;
+}
+//--------------------------------------------------------------------------------------------------
+bool SEFunctionElectricPotentialVsTime::operator!=(const SEFunctionElectricPotentialVsTime& rhs) const
+{
+  return !(*this == rhs);
+}
+//--------------------------------------------------------------------------------------------------
 }

@@ -49,6 +49,8 @@ public:
 
   virtual SEFunctionElectricPotentialVsTime* InterpolateToTime(std::vector<double>& Independent, const TimeUnit& unit);
 
+  bool operator==(const SEFunctionElectricPotentialVsTime&) const ;
+  bool operator!=(const SEFunctionElectricPotentialVsTime&) const;
 protected:
   const TimeUnit* m_TimeUnit;
   const ElectricPotentialUnit* m_ElectricPotentialUnit;

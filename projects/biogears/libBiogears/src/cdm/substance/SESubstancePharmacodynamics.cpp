@@ -39,7 +39,6 @@ SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   m_TubularPermeabilityModifier = nullptr;
   m_CentralNervousModifier = nullptr;
   m_EffectSiteRateConstant = nullptr;
-
 }
 //-----------------------------------------------------------------------------
 SESubstancePharmacodynamics::~SESubstancePharmacodynamics()
@@ -199,7 +198,6 @@ bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData&
   m_Modifiers["TidalVolume"] = m_TidalVolumeModifier;
   m_Modifiers["TubularPermeability"] = m_TubularPermeabilityModifier;
 
-
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -250,7 +248,6 @@ void SESubstancePharmacodynamics::Unload(CDM::SubstancePharmacodynamicsData& dat
     data.AntibacterialEffect(std::unique_ptr<CDM::ScalarFrequencyData>(m_AntibacterialEffect->Unload()));
   if (HasEffectSiteRateConstant())
     data.EffectSiteRateConstant(std::unique_ptr<CDM::ScalarFrequencyData>(m_EffectSiteRateConstant->Unload()));
-
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasAntibacterialEffect() const
@@ -637,10 +634,13 @@ const SEScalar* SEPharmacodynamicModifier::GetScalar(const char* name)
 //-----------------------------------------------------------------------------
 const SEScalar* SEPharmacodynamicModifier::GetScalar(const std::string& name)
 {
-  if (name.find("EMax") != std::string::npos)
+  if (name.find("EMax") != std::string::npos) {
     return &GetEMax();
-  if (name.find("EC50") != std::string::npos)
+  }
+  if (name.find("EC50") != std::string::npos) {
     return &GetEC50();
+  }
+  return nullptr;
 }
 //-----------------------------------------------------------------------------
 bool SEPharmacodynamicModifier::Load(const CDM::PharmacodynamicModifierData& in)

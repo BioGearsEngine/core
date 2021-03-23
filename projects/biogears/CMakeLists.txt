@@ -107,6 +107,9 @@ if(${PREFIX}_BUILD_STATIC)
    if(${PROJECT_NAME}_USE_OVERRIDE_CONTROL)
       target_compile_definitions( lib${PROJECT_NAME} PRIVATE BIOGEARS_USE_OVERRIDE_CONTROL)
    endif()
+   if(UNITTEST_biogears-core)
+     target_compile_definitions( lib${PROJECT_NAME} PUBLIC ENABLE_UNIT_TEST_API)
+   endif()
   if(WIN32)
     list(APPEND ${PREFIX}_CPPFLAGS _SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX $ENV{PARALLEL_COMPILE} )
   elseif(CMAKE_COMPILER_IS_GNUCXX)
@@ -212,7 +215,9 @@ else()
     CXX_STANDARD 14
     )
   set_target_properties(lib${PROJECT_NAME} PROPERTIES SOVERSION "${${ROOT_PROJECT_NAME}_LIB_VERSION}")
-
+  if(UNITTEST_biogears-core)
+     target_compile_definitions( lib${PROJECT_NAME} PUBLIC ENABLE_UNIT_TEST_API)
+   endif()
   ###############################################################################
   # libBiogears COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################

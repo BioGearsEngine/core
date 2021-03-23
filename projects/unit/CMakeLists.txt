@@ -122,6 +122,12 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main)
       ${GTEST_INCLUDE_DIR}
       ${bio_INCLUDE_DIR}
   )
+  if(UNITTEST_biogears-core)
+    target_include_directories(unittest
+      PRIVATE
+      ${CMAKE_CURRENT_SOURCE_DIR}/../biogears/libBiogears/src
+  )
+  endif()
 
      target_compile_definitions(unittest PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
      target_compile_options(unittest PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)

@@ -36,5 +36,7 @@ public:
   virtual SEUnitScalar& DecrementValue(double d, const char* unit) = 0;
   virtual SEUnitScalar& DecrementValue(double d, const std::string& unit) = 0;
   
+  bool operator==(const SEUnitScalar&) const;
+  bool operator!=(const SEUnitScalar&) const;
 };
 }

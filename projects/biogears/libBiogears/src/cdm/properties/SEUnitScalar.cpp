@@ -36,4 +36,16 @@ double SEUnitScalar::GetValue() const
     return std::numeric_limits<double>::quiet_NaN();
   }
 }
+  bool SEUnitScalar::operator==(const SEUnitScalar& obj) const{
+    return m_value == obj.m_value
+      && GetUnit() != nullptr 
+      && obj.GetUnit() != nullptr
+      && *GetUnit() == *obj.GetUnit();
+
+  }
+  //------------------------------------------------------------------------------
+  bool SEUnitScalar::operator!=(const SEUnitScalar& obj) const{
+      return !(*this == obj);
+  }
+  //------------------------------------------------------------------------------
 }

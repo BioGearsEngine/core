@@ -112,4 +112,14 @@ void SEDecimalFormat::SetStream(std::ofstream& s)
     s << std::scientific << std::setprecision(m_Precision);
   }
 }
+
+bool SEDecimalFormat::operator==(const SEDecimalFormat& rhs) const{ 
+  
+  return   m_Precision == rhs.m_Precision
+        && m_Notation   == rhs.m_Notation;
+}
+bool SEDecimalFormat::operator!=(const SEDecimalFormat& rhs) const {     
+  return !(*this == rhs);
+}
+
 }

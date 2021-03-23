@@ -54,7 +54,6 @@ double ComputeWeightedRate(double amt1, double amt2, double rate1, double rate2)
 //-----------------------------------------------------------------------------
 void SENutrition::Increment(const SENutrition& from)
 {
-
   if (from.HasCarbohydrate()) {
     GetCarbohydrate().Increment(*from.m_Carbohydrate);
   }
