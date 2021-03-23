@@ -19,9 +19,9 @@ specific language governing permissions and limitations under the License.
 #elif defined(__gnu_linux__)
   #define BIOGEARS_API __attribute__((visibility("default")))
     #ifdef ENABLE_UNIT_TEST_API
-      #define BIOGEARS_PRIVATE_API  __attribute__((visibility("default")))
+      #define BIOGEARS_PRIVATE_API __attribute__((visibility("default")))
     #else 
-      #define BIOGEARS_PRIVATE_API   __attribute__((visibility("hidden"))
+      #define BIOGEARS_PRIVATE_API __attribute__((visibility("hidden")))
     #endif 
   #define BG_EXT extern
 #elif defined(_WIN32)

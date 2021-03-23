@@ -28,6 +28,7 @@ class SEAnesthesiaMachineOxygenBottle;
     xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
     io::Property::UnMarshall(*m_##func, xsd.func());                       \
   }
+
 namespace io {
   class BIOGEARS_PRIVATE_API Anesthesia {
   public:
