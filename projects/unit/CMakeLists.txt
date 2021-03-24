@@ -50,15 +50,14 @@ if(${PROJECT_NAME}_BUILD_TEST)
    add_source_files(BIOGEARS_CIRCUIT_UNITTEST_SOURCES "${PROJECT_SOURCE_DIR}/projects/biogears/unit/" "test_circuit*.cpp"  "circuit\\")
   endif()  
   
-list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main)
 
   add_executable(unittest
     ${UNITTEST_SOURCES}
     ${UNITTEST_HEADERS}
     ${BIOGEARS_CORE_UNITTEST_HEADERS}
     ${BIOGEARS_CORE_UNITTEST_SOURCES}
-	${BIOGEARS_COMMON_UNITTEST_HEADERS}
-	${BIOGEARS_COMMON_UNITTEST_SOURCES}
+    ${BIOGEARS_COMMON_UNITTEST_HEADERS}
+    ${BIOGEARS_COMMON_UNITTEST_SOURCES}
     ${BIOGEARS_CMDLINE_UNITTEST_HEADERS}
     ${BIOGEARS_CMDLINE_UNITTEST_SOURCES}
     ${BIOGEARS_CIRCUIT_UNITTEST_HEADERS}
@@ -133,8 +132,8 @@ list(APPEND UNITTEST_LIBRARIES GTest::GTest GTest::Main)
      target_compile_options(unittest PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
 
   target_link_libraries(unittest
-    ${UNITTEST_LIBRARIES}
-    ${bio_LIBRARIES}
-    libbiogears
+    GTest::GTest 
+    GTest::Main
+    Biogears::libbiogears
   )
 endif(${PROJECT_NAME}_BUILD_TEST)

@@ -144,11 +144,11 @@ add_custom_target( prepare_runtime_dir
 ###############################################################################
 
 verify_package(Log4cpp REQUIRED)
+add_subdirectory(unit)
 add_subdirectory(biogears-common)
 add_subdirectory(biogears)
 add_subdirectory(test_driver)
 add_subdirectory(howto)
-add_subdirectory(unit)
 add_subdirectory(circuit_profiler)
 add_subdirectory(zip)
 add_subdirectory(cli)
