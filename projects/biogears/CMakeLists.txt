@@ -10,7 +10,7 @@ option (${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS "Toggle the throwing Comm
 option (${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when an  SEScalar is NaNExceptions." ON)
 option (${ROOT_PROJECT_NAME}_USE_OVERRIDE_CONTROL       "When enabled Biogears will control the ranges of override"  OFF)
 option (${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS       "Toggle on the Circuit Test Library which is a dependeny of libbiogears_jni"  ON)
-option (${ROOT_PROJECT_NAME}_BUILD_PYTHON_HOOKS   "Toggle the building of Python Hooks. pybind11 is a dependency of this process"  OFF)
+option (${ROOT_PROJECT_NAME}_BUILD_PYTHON_HOOKS   "Toggle the building of Python Hooks. pybind11 is a dependency of this process (Experimental)"  OFF)
 
 ###############################################################################
 # Base Variables
