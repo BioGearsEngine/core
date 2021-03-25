@@ -24,6 +24,7 @@ class SEChronicObstructivePulmonaryDisease;
 class SEChronicPericardialEffusion;
 class SEChronicVentricularSystolicDysfunction;
 class SEChronicRenalStenosis;
+class SECompartmentSyndrome;
 class SEStarvation;
 class SEDehydration;
 class SEDiabetesType1;
@@ -67,6 +68,9 @@ public:
   bool HasChronicRenalStenosis() const;
   SEChronicRenalStenosis* GetChronicRenalStenosis() const;
 
+  bool HasCompartmentSyndrome() const;
+  std::vector<SECompartmentSyndrome*> GetCompartmentSyndromes() const;
+
   bool HasStarvation() const;
   SEStarvation* GetStarvation() const;
 
@@ -95,6 +99,7 @@ protected:
   SEChronicAnemia* m_Anemia;
   SEStarvation* m_Starvation;
   SEChronicObstructivePulmonaryDisease* m_COPD;
+  SECompartmentSyndrome* m_CompartmentSyndrome;
   SEDehydration* m_Dehydration;
   SEDiabetesType1* m_DiabetesType1;
   SEDiabetesType2* m_DiabetesType2;
@@ -106,6 +111,7 @@ protected:
 
   SEInitialEnvironment* m_InitialEnvironment;
 
+  std::vector<SECompartmentSyndrome*> m_CompartmentSyndromes;
   std::vector<SECondition*> m_Conditions;
   std::stringstream m_ss;
 };
