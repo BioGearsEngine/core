@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEChronicPericardialEffusion.h>
 #include <biogears/cdm/patient/conditions/SEChronicRenalStenosis.h>
 #include <biogears/cdm/patient/conditions/SEChronicVentricularSystolicDysfunction.h>
+#include <biogears/cdm/patient/conditions/SECompartmentSyndrome.h>
 #include <biogears/cdm/patient/conditions/SEDehydration.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
@@ -34,6 +35,7 @@ SEConditionManager::SEConditionManager(SESubstanceManager& substances)
 {
   m_Anemia = nullptr;
   m_COPD = nullptr;
+  m_CompartmentSyndrome = nullptr;
   m_HeartFailure = nullptr;
   m_RenalStenosis = nullptr;
   m_Dehydration = nullptr;
@@ -66,6 +68,7 @@ void SEConditionManager::Clear()
   m_ImpairedAlveolarExchange = nullptr;
   m_InitialEnvironment = nullptr;
   DELETE_VECTOR(m_Conditions);
+  DELETE_VECTOR(m_CompartmentSyndromes);
 }
 
 void SEConditionManager::Unload(std::vector<CDM::ConditionData*>& to)
@@ -148,6 +151,15 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition)
     m_RenalStenosis = new SEChronicRenalStenosis();
     m_RenalStenosis->Load(*renalStenosisData);
     m_Conditions.push_back(m_RenalStenosis);
+    return true;
+  }
+
+  const CDM::CompartmentSyndromeData* csData = dynamic_cast<const CDM::CompartmentSyndromeData*>(&condition);
+  if (csData != nullptr) {
+    m_CompartmentSyndrome = new SECompartmentSyndrome();
+    m_CompartmentSyndrome->Load(*csData);
+    m_CompartmentSyndromes.push_back(m_CompartmentSyndrome);
+    m_Conditions.push_back(m_Starvation);
     return true;
   }
 
@@ -288,6 +300,16 @@ SEChronicRenalStenosis* SEConditionManager::GetChronicRenalStenosis() const
 {
   return m_RenalStenosis;
 }
+
+bool SEConditionManager::HasCompartmentSyndrome() const
+{
+  return m_CompartmentSyndrome != nullptr;
+}
+std::vector<SECompartmentSyndrome*> SEConditionManager::GetCompartmentSyndromes() const
+{
+  return m_CompartmentSyndromes;
+}
+
 
 bool SEConditionManager::HasDehydration() const
 {

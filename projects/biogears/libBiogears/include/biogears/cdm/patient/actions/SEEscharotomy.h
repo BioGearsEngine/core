@@ -18,19 +18,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
-class SEScalar0To1;
 class SEScalar;
-namespace io {
-  class PatientActions;
-}
-class BIOGEARS_API SEBurnWound : public SEPatientAction {
-  friend io::PatientActions;
 
+class BIOGEARS_API SEEscharotomy : public SEPatientAction {
 public:
-  SEBurnWound();
-  virtual ~SEBurnWound() override;
+  SEEscharotomy();
+  virtual ~SEEscharotomy() override;
 
-  static constexpr const char* TypeTag() { return "SEBurnWound"; };
+  static constexpr const char* TypeTag() { return "SEEscharotomy"; };
   const char* classname() const override { return TypeTag(); }
 
   virtual void Clear() override; //clear memory
@@ -38,36 +33,22 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::BurnWoundData& in);
-  virtual CDM::BurnWoundData* Unload() const override;
+  virtual bool Load(const CDM::EscharotomyData& in);
+  virtual CDM::EscharotomyData* Unload() const override;
 
-  virtual bool HasTotalBodySurfaceArea() const;
-  virtual SEScalar0To1& GetTotalBodySurfaceArea();
+protected:
+  virtual void Unload(CDM::EscharotomyData& data) const;
 
-  bool HasCompartment() const;
-  bool HasCompartment(const std::string compartment) const;
-  const std::vector<std::string>& GetCompartments();
- // std::string GetCompartment(std::string compartment);
-  const std::string GetCompartment(const std::string compartment) const;
-  void RemoveCompartment(const std::string compartment);
-  void RemoveCompartments();
-  //virtual void InvalidateCompartment();
-
-  virtual bool HasInflammation() const;
-  virtual void SetInflammation(bool activate);
+public:
+  virtual std::string GetLocation() const;
+  virtual bool HasLocation() const;
+  virtual void SetLocation(const char* name);
+  virtual void SetLocation(const std::string& name);
+  virtual void InvalidateLocation();
 
   virtual void ToString(std::ostream& str) const override;
 
-  bool operator==( const SEBurnWound& rhs) const;
-  bool operator!=( const SEBurnWound& rhs) const;
-
 protected:
-  virtual void Unload(CDM::BurnWoundData& data) const;
-
-
-protected:
-  bool m_Inflammation;
-  SEScalar0To1* m_TBSA;
-  std::vector<std::string> m_compartmentsAffected;
+  std::string m_Location;
 };
 }

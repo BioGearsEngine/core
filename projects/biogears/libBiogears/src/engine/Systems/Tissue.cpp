@@ -531,6 +531,7 @@ void Tissue::Process()
   CalculateMetabolicConsumptionAndProduction(m_Dt_s);
   CalculatePulmonaryCapillarySubstanceTransfer();
   CalculateDiffusion();
+  CalculateCompartmentalBurn();
   ManageSubstancesAndSaturation();
   CalculateVitals();
 
@@ -550,6 +551,74 @@ void Tissue::PostProcess()
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasTissueOverride()) {
       ProcessOverride();
     }
+  }
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Determines the correct type of diffusion for a substance and executes the diffusion.
+///
+///
+/// \details
+/// Determines the type of diffusion for each substance and calls the function for that type of diffusion.
+/// This is executed for all compartments in the tissue system. Options include, perfusion limited diffusion,
+/// permeability limited diffusion (untested), pressure gradient diffusion, and flat rate diffusion. The appropriate
+/// diffusion methodology is chosen based on the substance parameters.
+//--------------------------------------------------------------------------------------------------
+void Tissue::CalculateCompartmentalBurn()
+{
+  //Map the increased pressure in the muscle extracellular tissue compartment to the flow across the affected node
+  SEFluidCircuit* activeCirculatoryCircuit = &m_data.GetCircuits().GetActiveCardiovascularCircuit();
+  SEFluidCircuit* activeRespiratoryCircuit = &m_data.GetCircuits().GetActiveRespiratoryCircuit();
+  SELiquidCompartment* muscleExtracellularCompartment = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::MuscleExtracellular);
+  std::string comptSyndromePath = "Aorta1To";
+
+  SEFluidCircuitPath* targetPathCardio = nullptr;
+  SEFluidCircuitPath* targetPathRespRight = activeRespiratoryCircuit->GetPath(BGE::RespiratoryPath::RightAlveoliToRightPleuralConnection);
+  SEFluidCircuitPath* targetPathRespLeft = activeRespiratoryCircuit->GetPath(BGE::RespiratoryPath::LeftAlveoliToLeftPleuralConnection);
+  double muscleTissuePressure_mmHg;
+  double muscleTissueVolume_mL;
+  double targetPathBloodFlow_mL_Per_s;
+  double targetPathRespRightPressure_mmHg;
+  double targetPathRespLeftPressure_mmHg;
+  double deltaR_mmHg_s_Per_mL;
+  double deltaCRight_mL_Per_mmHG;
+  double deltaCLeft_mL_Per_mmHG;
+
+  if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
+    SEBurnWound* BurnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
+    std::vector<std::string> burnComptVector = BurnAction->GetCompartments();
+    for (std::string burnCompt : burnComptVector) {
+      muscleTissuePressure_mmHg = muscleExtracellularCompartment->GetPressure(PressureUnit::mmHg);
+      muscleTissueVolume_mL = muscleExtracellularCompartment->GetVolume(VolumeUnit::mL);
+      if (burnCompt == "Trunk") {
+        comptSyndromePath = comptSyndromePath + "Muscle1";
+      } else {
+        comptSyndromePath = comptSyndromePath + burnCompt + "1";
+      }
+      targetPathCardio = activeCirculatoryCircuit->GetPath(comptSyndromePath);
+      targetPathBloodFlow_mL_Per_s = targetPathCardio->GetFlow(VolumePerTimeUnit::mL_Per_s);
+      deltaR_mmHg_s_Per_mL = muscleTissuePressure_mmHg / targetPathBloodFlow_mL_Per_s;
+    } 
+    targetPathRespRightPressure_mmHg = targetPathRespRight->GetPressureSource(PressureUnit::mmHg);
+    targetPathRespLeftPressure_mmHg = targetPathRespLeft->GetPressureSource(PressureUnit::mmHg);
+    deltaCRight_mL_Per_mmHG = muscleTissueVolume_mL / targetPathRespRightPressure_mmHg;
+    deltaCLeft_mL_Per_mmHG = muscleTissueVolume_mL / targetPathRespLeftPressure_mmHg;
+
+    //Implement Changes
+    targetPathCardio->GetNextResistance().SetValue(targetPathCardio->GetNextResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL) + deltaR_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+    targetPathRespRight->GetNextCompliance().SetValue(targetPathRespRight->GetNextCompliance(FlowComplianceUnit::mL_Per_mmHg) + deltaCRight_mL_Per_mmHG, FlowComplianceUnit::mL_Per_mmHg);
+    targetPathRespLeft->GetNextCompliance().SetValue(targetPathRespLeft->GetNextCompliance(FlowComplianceUnit::mL_Per_mmHg) + deltaCLeft_mL_Per_mmHG, FlowComplianceUnit::mL_Per_mmHg);
+
+    /*if (some threshold is crossed) {
+      m_data.GetConditions().GetCompartmentSybdrome();
+    }*/
+
+    if (m_data.GetActions().GetPatientActions().HasEscharotomy()) {
+        //By placing within the Burn Check, an escharatomy will not happen without a burn; however, still need to check for compartment compliance
+    }
+  } else {
+    return;
   }
 }
 

@@ -88,6 +88,7 @@ void SEPatientActionCollection::Clear()
   RemoveUrinate();
   RemoveOverride();
 
+  DELETE_MAP_SECOND(m_Escharotomies);
   DELETE_MAP_SECOND(m_Hemorrhages);
   DELETE_MAP_SECOND(m_PainStimuli);
   DELETE_MAP_SECOND(m_SubstanceBolus);
@@ -143,6 +144,11 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   }
   if (HasConsumeNutrients()) {
     to.push_back(GetConsumeNutrients()->Unload());
+  }
+  if (HasEscharotomy()) {
+    for (auto itr : GetEscharotomies()) {
+      to.push_back(itr.second->Unload());
+    }
   }
   if (HasExercise()) {
     to.push_back(GetExercise()->Unload());
@@ -456,6 +462,35 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return true;
     }
     return IsValid(*m_ConsumeNutrients);
+  }
+
+  const CDM::EscharotomyData* eschData = dynamic_cast<const CDM::EscharotomyData*>(&action);
+  if (eschData != nullptr) {
+    auto eItr = m_Escharotomies.find(eschData->Location());
+    //bool matchingCompartmentSyndrome = false;
+    //bool validCmpt = false;
+    //std::stringstream warn;
+    //Check for compartment syndrome relevance cannot be done here without access to conditions
+    SEEscharotomy* escharotomy = std::make_unique<SEEscharotomy>().release();
+    if (eItr != m_Escharotomies.end()) {
+      escharotomy = m_Escharotomies[eschData->Location()];
+      escharotomy->Load(*eschData);
+    } else {
+      escharotomy->Load(*eschData);
+      if (escharotomy->IsValid()) {
+        m_Escharotomies[eschData->Location()] = escharotomy;
+        eItr = m_Escharotomies.find(eschData->Location());
+      } else {
+        escharotomy->Clear();
+      }
+    }
+    auto escharotomy2 = eItr->second;
+    escharotomy2->Load(*eschData);
+    if (!escharotomy2->IsActive()) {
+      RemoveEscharotomy(escharotomy2->GetLocation());
+      return true;
+    }
+    return IsValid(*escharotomy2);
   }
 
   const CDM::ExerciseData* exercise = dynamic_cast<const CDM::ExerciseData*>(&action);
@@ -970,6 +1005,28 @@ SEConsumeNutrients* SEPatientActionCollection::GetConsumeNutrients() const
 void SEPatientActionCollection::RemoveConsumeNutrients()
 {
   SAFE_DELETE(m_ConsumeNutrients);
+}
+//-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasEscharotomy() const
+{
+  return !m_Escharotomies.empty();
+}
+//-------------------------------------------------------------------------------
+const std::map<std::string, SEEscharotomy*>& SEPatientActionCollection::GetEscharotomies() const
+{
+  return m_Escharotomies;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveEscharotomy(const char* cmpt)
+{
+  RemoveEscharotomy(std::string { cmpt });
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveEscharotomy(const std::string& cmpt)
+{
+  SEEscharotomy* h = m_Escharotomies[cmpt];
+  m_Escharotomies.erase(cmpt);
+  SAFE_DELETE(h);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasExercise() const
