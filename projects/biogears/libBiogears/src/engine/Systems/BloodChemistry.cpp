@@ -695,8 +695,8 @@ bool BloodChemistry::CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabol
   //for now the units on this are going to be hardcoded to be consistent with our validation data 
   /// \todo: update this to take in generic units, then allow the user to configure units on data call in the API or scenario files
   cmp.Reset();
-  double Alb_g_Per_dL = m_data.GetSubstances().GetAlbumin().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL);
-  cmp.GetAlbumin().SetValue(Alb_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
+  double Albumin_g_Per_dL = m_data.GetSubstances().GetAlbumin().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL);
+  cmp.GetAlbumin().SetValue(Albumin_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
   //cmp.GetALP().SetValue();
   //cmp.GetALT().SetValue();
   //cmp.GetAST().SetValue();

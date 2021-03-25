@@ -1617,11 +1617,6 @@ void Renal::UpdateBladderVolume()
 {
   /// \todo Eventually replace this entire thing with a compliance and model peristaltic flow
 
-  //Don't fill the bladder during stabilization
-  //if (m_data.GetState() != EngineState::Active)
-  //  return;
-
-
   //Manually modify the bladder volume based on flow
   //This will work for both filling the bladder and urinating
   double bladderFlow_mL_Per_s = m_bladderToGroundPressurePath->GetNextFlow(VolumePerTimeUnit::mL_Per_s);
