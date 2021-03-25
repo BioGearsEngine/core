@@ -610,9 +610,9 @@ void Tissue::CalculateCompartmentalBurn()
     targetPathRespRight->GetNextCompliance().SetValue(targetPathRespRight->GetNextCompliance(FlowComplianceUnit::mL_Per_mmHg) + deltaCRight_mL_Per_mmHG, FlowComplianceUnit::mL_Per_mmHg);
     targetPathRespLeft->GetNextCompliance().SetValue(targetPathRespLeft->GetNextCompliance(FlowComplianceUnit::mL_Per_mmHg) + deltaCLeft_mL_Per_mmHG, FlowComplianceUnit::mL_Per_mmHg);
 
-    if (true) {
-      m_data.GetConditions().GetCompartmentSyndromes().
-    }
+    //if (true) {
+    //  m_data.GetConditions().GetCompartmentSyndromes().
+    //}
 
     if (m_data.GetActions().GetPatientActions().HasEscharotomy()) {
         //By placing within the Burn Check, an escharatomy will not happen without a burn; however, still need to check for compartment compliance
