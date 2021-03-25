@@ -44,6 +44,11 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="BrainOxygenDeficit"/>      <!--<< @brief A lack of oxygen in the brain. Death will occur ~30min-->
       <xs:enumeration value="CardiacArrest"/>      <!--<< @brief Sudden, unexpected loss of heart function, breathing, and consciousness.-->
       <xs:enumeration value="CardiogenicShock"/>      <!--<< @brief Inadequate blood circulation due to failure of the heart ventricles (Cardiac Index < 2.2 L/min m2).-->
+	  <xs:enumeration value="CompartmentSyndrome-LeftArm"/>      <!--<< @brief Loss of blood flow into the left arm and intrathoracic pressure from extremity burn.-->
+	  <xs:enumeration value="CompartmentSyndrome-RightArm"/>      <!--<< @brief Loss of blood flow into the left arm and intrathoracic pressure from extremity burn.-->
+	  <xs:enumeration value="CompartmentSyndrome-LeftLeg"/>      <!--<< @brief Loss of blood flow into the left arm and intrathoracic pressure from extremity burn.-->
+	  <xs:enumeration value="CompartmentSyndrome-RightLeg"/>      <!--<< @brief Loss of blood flow into the left arm and intrathoracic pressure from extremity burn.-->
+	  <xs:enumeration value="CompartmentSyndrome-Abdominal"/>      <!--<< @brief Loss of blood flow into the left arm and intrathoracic pressure from trunk burn.-->
       <xs:enumeration value="CriticalBrainOxygenDeficit"/>      <!--<< @brief A critical lack of oxygen in the brain. Death in under 10min-->
       <xs:enumeration value="Dehydration"/>      <!--<< @brief A loss of more fluid than is taken in (More than 3% loss of resting fluid mass). -->
       <xs:enumeration value="Diuresis"/>      <!--<< @brief High urine flow.-->
