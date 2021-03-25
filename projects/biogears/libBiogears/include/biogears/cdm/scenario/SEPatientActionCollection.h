@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
+#include <biogears/cdm/patient/actions/SEEscharotomy.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
@@ -122,6 +123,11 @@ public:
   bool HasConsumeNutrients() const;
   SEConsumeNutrients* GetConsumeNutrients() const;
   void RemoveConsumeNutrients();
+
+  bool HasEscharotomy() const;
+  const std::map<std::string, SEEscharotomy*>& GetEscharotomies() const;
+  void RemoveEscharotomy(const char* cmpt);
+  void RemoveEscharotomy(const std::string& cmpt);
 
   bool HasExercise() const;
   SEExercise* GetExercise() const;
@@ -253,6 +259,7 @@ protected:
 
   std::map<std::string, SEHemorrhage*> m_Hemorrhages;
   std::map<std::string, SETourniquet*> m_Tourniquets;
+  std::map<std::string, SEEscharotomy*> m_Escharotomies;
   std::map<std::string, SEPainStimulus*> m_PainStimuli;
   std::map<const SESubstance*, SESubstanceBolus*> m_SubstanceBolus;
   std::map<const SESubstance*, SESubstanceInfusion*> m_SubstanceInfusions;

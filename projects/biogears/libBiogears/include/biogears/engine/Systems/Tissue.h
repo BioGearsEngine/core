@@ -85,6 +85,7 @@ protected:
   void FatStorageAndRelease();
 
   // Process Methods
+  void CalculateCompartmentalBurn();
   void CalculateDiffusion();
   void CalculatePulmonaryCapillarySubstanceTransfer();
   void AlveolarPartialPressureGradientDiffusion(SEGasCompartment& pulmonary, SELiquidCompartment& vascular, SESubstance& sub, double DiffusingCapacityO2_mL_Per_s_mmHg, double timestep_s);
