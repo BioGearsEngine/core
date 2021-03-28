@@ -656,7 +656,7 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
       std::cerr << asprintf("[%s] Error-%d: %s failed parse the specified scenario file %s\n", fmt_localtime().c_str(), code, ex.Name().c_str(), ex.Scenario().c_str()) << std::flush;
       break;
     case ExecutionErrors::PATIENT_IO_ERROR:
-      std::cerr << asprintf("[%s] Error-%d: %s failed to find the specified patient file %s\n", fmt_localtime(), code, ex.Name().c_str(), ex.Patient().c_str()) << std::flush;
+      std::cerr << asprintf("[%s] Error-%d: %s failed to find the specified patient file %s\n", fmt_localtime().c_str(), code, ex.Name().c_str(), ex.Patient().c_str()) << std::flush;
       break;
     case ExecutionErrors::PATIENT_PARSE_ERROR:
       std::cerr << asprintf("[%s] Error-%d: %s failed to parse the specified patient file %s\n", fmt_localtime().c_str(), code, ex.Name().c_str(), ex.Patient().c_str()) << std::flush;
