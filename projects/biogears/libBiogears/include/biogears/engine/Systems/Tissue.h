@@ -122,6 +122,16 @@ protected:
   double m_maxProteinStorage_g;
   double m_lastFatigueTime;
 
+  double m_leftArmDeltaResistance_mmHg_s_Per_mL;
+  double m_rightArmDeltaResistance_mmHg_s_Per_mL;
+  double m_leftLegDeltaResistance_mmHg_s_Per_mL;
+  double m_rightLegDeltaResistance_mmHg_s_Per_mL;
+  double m_trunkDeltaResistance_mmHg_s_Per_mL;
+  double m_leftLungDeltaCompliance_mL_Per_mmHG;
+  double m_rightLungDeltaCompliance_mL_Per_mmHG;
+  double m_compartmentSyndromeCount;
+
+
   std::stringstream m_ss;
   SESubstance* m_Albumin;
   SESubstance* m_AminoAcids;
