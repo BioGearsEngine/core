@@ -41,6 +41,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_LeftNeedleDecompression = nullptr;
   m_RightNeedleDecompression = nullptr;
   m_PericardialEffusion = nullptr;
+  m_PulmonaryShunt = nullptr;
   m_Sleep = nullptr;
   m_LeftOpenTensionPneumothorax = nullptr;
   m_LeftClosedTensionPneumothorax = nullptr;
@@ -78,6 +79,7 @@ void SEPatientActionCollection::Clear()
   RemoveLeftNeedleDecompression();
   RemoveRightNeedleDecompression();
   RemovePericardialEffusion();
+  RemovePulmonaryShunt();
   RemoveSleepState();
   RemoveLeftOpenTensionPneumothorax();
   RemoveLeftClosedTensionPneumothorax();
@@ -172,9 +174,14 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   }
   if (HasPericardialEffusion()) {
     to.push_back(GetPericardialEffusion()->Unload());
-  if (HasSleepState())
-      to.push_back(GetSleepState()->Unload());
-  if (HasLeftClosedTensionPneumothorax())
+  }
+  if (HasPulmonaryShunt()) {
+    to.push_back(GetPulmonaryShunt()->Unload());
+  }
+  if (HasSleepState()) {
+    to.push_back(GetSleepState()->Unload());
+  }
+  if (HasLeftClosedTensionPneumothorax()) {
     to.push_back(GetLeftClosedTensionPneumothorax()->Unload());
   }
   if (HasLeftOpenTensionPneumothorax()) {
@@ -574,6 +581,19 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return true;
     }
     return IsValid(*m_PericardialEffusion);
+  }
+
+  const CDM::PulmonaryShuntData* pulmonaryShunt = dynamic_cast<const CDM::PulmonaryShuntData*>(&action);
+  if (pulmonaryShunt != nullptr) {
+    if (m_PulmonaryShunt == nullptr) {
+      m_PulmonaryShunt = new SEPulmonaryShunt();
+    }
+    m_PulmonaryShunt->Load(*pulmonaryShunt);
+    if (!m_PulmonaryShunt->IsActive()) {
+      RemovePulmonaryShunt();
+      return true;
+    }
+    return IsValid(*m_PulmonaryShunt);
   }
 
   const CDM::SleepData* sleep = dynamic_cast<const CDM::SleepData*>(&action);
@@ -1107,6 +1127,21 @@ SEPericardialEffusion* SEPatientActionCollection::GetPericardialEffusion() const
 void SEPatientActionCollection::RemovePericardialEffusion()
 {
   SAFE_DELETE(m_PericardialEffusion);
+}
+//-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasPulmonaryShunt() const
+{
+  return m_PulmonaryShunt == nullptr ? false : true;
+}
+//-------------------------------------------------------------------------------
+SEPulmonaryShunt* SEPatientActionCollection::GetPulmonaryShunt() const
+{
+  return m_PulmonaryShunt;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemovePulmonaryShunt()
+{
+  SAFE_DELETE(m_PulmonaryShunt);
 }
 //-------------------------------------------------------------------------------  
 bool SEPatientActionCollection::HasSleepState() const

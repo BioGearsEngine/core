@@ -456,6 +456,16 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>	
 
+	<!--@brief Pulmonary shunt adjustments, severity of which alters the baseline flow rate up to 100%-->
+	<xs:complexType name="PulmonaryShuntData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:sequence>
+					<xs:element name="FlowRateScaling" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
 	<!-- @brief put the patient into a sleep state. Can also be used to awaken the patient from a sleep state. -->
     <xs:complexType name="SleepData">

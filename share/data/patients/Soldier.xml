@@ -6,6 +6,7 @@
   <Weight readOnly="false" unit="lb" value="170"/>
   <Height readOnly="false" unit="in" value="71"/>
   <BodyFatFraction readOnly="false" value="0.18"/>
+  <BloodTypeABO>A</BloodTypeABO>
   <DiastolicArterialPressureBaseline readOnly="false" unit="mmHg" value="73.5"/>
   <HeartRateBaseline readOnly="false" unit="1/min" value="84"/>
   <RespirationRateBaseline readOnly="false" unit="1/min" value="16"/>

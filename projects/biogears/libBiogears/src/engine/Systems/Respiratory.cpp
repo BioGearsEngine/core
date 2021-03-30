@@ -105,6 +105,10 @@ void Respiratory::Clear()
   m_LeftAlveoli = nullptr;
   m_LeftBronchi = nullptr;
   m_LeftPleuralCavity = nullptr;
+  m_LeftPulmonaryArteries = nullptr;
+  m_LeftPulmonaryVeins = nullptr;
+  m_RightPulmonaryArteries = nullptr;
+  m_RightPulmonaryVeins = nullptr;
   m_RespiratoryMuscle = nullptr;
   m_RightAlveoli = nullptr;
   m_RightBronchi = nullptr;
@@ -126,6 +130,8 @@ void Respiratory::Clear()
   m_RightAlveoliLeakToRightPleuralCavity = nullptr;
   m_LeftPleuralCavityToEnvironment = nullptr;
   m_RightPleuralCavityToEnvironment = nullptr;
+  m_LeftPulmonaryArteriesToLeftPulmonaryVeins = nullptr;
+  m_RightPulmonaryArteriesToRightPulmonaryVeins = nullptr;
   m_RightAlveoliToRightPleuralConnection = nullptr;
   m_LeftAlveoliToLeftPleuralConnection = nullptr;
   m_RightPulmonaryCapillary = nullptr;
@@ -352,6 +358,7 @@ void Respiratory::SetUp()
   //Configuration parameters
   m_dDefaultOpenResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   m_dDefaultClosedResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetDefaultClosedFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
+  m_meanShuntFlow_L_Per_s = m_data.GetCardiovascular().GetPulmonaryMeanShuntFlow(VolumePerTimeUnit::L_Per_s);
   m_dRespOpenResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetRespiratoryOpenResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   m_dRespClosedResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetRespiratoryClosedResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   m_VentilatoryOcclusionPressure_cmH2O = m_data.GetConfiguration().GetVentilatoryOcclusionPressure(PressureUnit::cmH2O); //This increases the absolute max driver pressure
@@ -386,8 +393,14 @@ void Respiratory::SetUp()
   m_AerosolEffects.push_back(m_data.GetCompartments().GetLiquidCompartment(BGE::PulmonaryCompartment::RightBronchi));
   //Circuits
   m_RespiratoryCircuit = &m_data.GetCircuits().GetRespiratoryCircuit();
+  m_CardiovascularCircuit = &m_data.GetCircuits().GetCardiovascularCircuit();
+
   //Nodes
   m_LeftAlveoli = m_RespiratoryCircuit->GetNode(BGE::RespiratoryNode::LeftAlveoli);
+  m_LeftPulmonaryArteries = m_CardiovascularCircuit->GetNode(BGE::CardiovascularNode::LeftPulmonaryArteries);
+  m_LeftPulmonaryVeins = m_CardiovascularCircuit->GetNode(BGE::CardiovascularNode::LeftPulmonaryVeins);
+  m_RightPulmonaryArteries = m_CardiovascularCircuit->GetNode(BGE::CardiovascularNode::RightPulmonaryArteries);
+  m_RightPulmonaryVeins = m_CardiovascularCircuit->GetNode(BGE::CardiovascularNode::RightPulmonaryVeins);
   m_LeftBronchi = m_RespiratoryCircuit->GetNode(BGE::RespiratoryNode::LeftBronchi);
   m_LeftPleuralCavity = m_RespiratoryCircuit->GetNode(BGE::RespiratoryNode::LeftPleuralCavity);
   m_RespiratoryMuscle = m_RespiratoryCircuit->GetNode(BGE::RespiratoryNode::RespiratoryMuscle);
@@ -412,6 +425,8 @@ void Respiratory::SetUp()
   m_RightAlveoliLeakToRightPleuralCavity = m_RespiratoryCircuit->GetPath(BGE::RespiratoryPath::RightAlveoliLeakToRightPleuralCavity);
   m_LeftPleuralCavityToEnvironment = m_RespiratoryCircuit->GetPath(BGE::RespiratoryPath::LeftPleuralCavityToEnvironment);
   m_RightPleuralCavityToEnvironment = m_RespiratoryCircuit->GetPath(BGE::RespiratoryPath::RightPleuralCavityToEnvironment);
+  m_LeftPulmonaryArteriesToLeftPulmonaryVeins = m_CardiovascularCircuit->GetPath(BGE::CardiovascularPath::LeftPulmonaryArteriesToLeftPulmonaryVeins);
+  m_RightPulmonaryArteriesToRightPulmonaryVeins = m_CardiovascularCircuit->GetPath(BGE::CardiovascularPath::RightPulmonaryArteriesToRightPulmonaryVeins);
   m_RightAlveoliToRightPleuralConnection = m_RespiratoryCircuit->GetPath(BGE::RespiratoryPath::RightAlveoliToRightPleuralConnection);
   m_LeftAlveoliToLeftPleuralConnection = m_RespiratoryCircuit->GetPath(BGE::RespiratoryPath::LeftAlveoliToLeftPleuralConnection);
   m_RightBronchiToRightPleuralConnection = m_RespiratoryCircuit->GetPath(BGE::RespiratoryPath::RightBronchiToRightPleuralConnection);
@@ -420,8 +435,8 @@ void Respiratory::SetUp()
   m_GroundToConnection = m_data.GetCircuits().GetRespiratoryAndMechanicalVentilatorCircuit().GetPath(BGE::MechanicalVentilatorPath::GroundToConnection);
 
   /// \todo figure out how to modify these resistances without getting the cv circuit - maybe add a parameter, like baroreceptors does
-  m_RightPulmonaryCapillary = m_data.GetCircuits().GetCardiovascularCircuit().GetPath(BGE::CardiovascularPath::RightPulmonaryCapillariesToRightPulmonaryVeins);
-  m_LeftPulmonaryCapillary = m_data.GetCircuits().GetCardiovascularCircuit().GetPath(BGE::CardiovascularPath::LeftPulmonaryCapillariesToLeftPulmonaryVeins);
+  m_RightPulmonaryCapillary = m_CardiovascularCircuit->GetPath(BGE::CardiovascularPath::RightPulmonaryCapillariesToRightPulmonaryVeins);
+  m_LeftPulmonaryCapillary = m_CardiovascularCircuit->GetPath(BGE::CardiovascularPath::LeftPulmonaryCapillariesToLeftPulmonaryVeins);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -507,6 +522,7 @@ void Respiratory::PreProcess()
   BronchoDilation();
   Intubation();
   Pneumothorax();
+  PulmonaryShunt();
   ConsciousRespiration();
 
   MechanicalVentilation();
@@ -1512,6 +1528,43 @@ void Respiratory::DoRightNeedleDecompression(double dFlowResistance)
   double dScalingFactor = 0.5; //Tuning parameter to allow gas flow due to needle decompression using lung resistance as reference
   double dFlowResistanceRightNeedle = dScalingFactor * dFlowResistance;
   m_RightPleuralCavityToEnvironment->GetNextResistance().SetValue(dFlowResistanceRightNeedle, FlowResistanceUnit::cmH2O_s_Per_L);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Pulmonary Shunt Implementation
+///
+///
+/// \details
+/// Used for right side needle decompression. this is an intervention (action) used to treat right
+/// side tension pneumothorax
+//--------------------------------------------------------------------------------------------------
+void Respiratory::PulmonaryShunt()
+{
+  if (!m_PatientActions->HasPulmonaryShunt()) {
+    return;
+  }
+  else {
+    const double flowScale = m_PatientActions->GetPulmonaryShunt()->GetFlowRateScale().GetValue();
+    double rightCapillaryResistance = m_RightPulmonaryArteriesToRightPulmonaryVeins->GetResistanceBaseline().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
+    double leftCapillaryResistance = m_LeftPulmonaryArteriesToLeftPulmonaryVeins->GetResistanceBaseline().GetValue(FlowResistanceUnit::cmH2O_s_Per_L);
+    double leftPulmonaryArtPressure_cmH2O = m_LeftPulmonaryArteries->GetPressure().GetValue(PressureUnit::cmH2O);
+    double leftPulmonaryVeinPressure_cmH2O = m_LeftPulmonaryVeins->GetPressure().GetValue(PressureUnit::cmH2O);
+    double rightPulmonaryArtPressure_cmH2O = m_RightPulmonaryArteries->GetPressure().GetValue(PressureUnit::cmH2O);
+    double rightPulmonaryVeinPressure_cmH2O = m_RightPulmonaryVeins->GetPressure().GetValue(PressureUnit::cmH2O);
+
+    //compute new resistance: 
+    double leftResistance = (leftPulmonaryArtPressure_cmH2O - leftPulmonaryVeinPressure_cmH2O) / m_meanShuntFlow_L_Per_s;
+    double rightResistance = (rightPulmonaryArtPressure_cmH2O - rightPulmonaryVeinPressure_cmH2O) / m_meanShuntFlow_L_Per_s;
+
+    leftResistance = GeneralMath::LinearInterpolator(0.0, 1.0, leftCapillaryResistance, leftResistance, flowScale);
+    rightResistance = GeneralMath::LinearInterpolator(0.0, 1.0, rightCapillaryResistance, rightResistance, flowScale);
+
+    //apply
+    m_RightPulmonaryArteriesToRightPulmonaryVeins->GetNextResistance().SetValue(rightResistance * 0.11, FlowResistanceUnit::cmH2O_s_Per_L);
+    m_LeftPulmonaryArteriesToLeftPulmonaryVeins->GetNextResistance().SetValue(leftResistance * 0.11, FlowResistanceUnit::cmH2O_s_Per_L);
+
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
