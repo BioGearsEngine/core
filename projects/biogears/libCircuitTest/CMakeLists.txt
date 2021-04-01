@@ -1,7 +1,7 @@
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################
-message(STATUS "\t adding libbiogears_circuit_test")
+message(STATUS "  Configuring libbiogears_circuit_test")
 
 #Biogears circuit_test
 add_source_files(CIRCUIT_TEST_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCircuitTest/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")

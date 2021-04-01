@@ -1,7 +1,7 @@
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################
-message(STATUS "\t adding libbiogears_cdm")
+message(STATUS "  Configuring libbiogears_cdm")
 
 #Biogears CDM
 add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/biogears/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")

@@ -3,7 +3,6 @@ message(STATUS "  Configuring lib${PROJECT_NAME}_io")
 ###############################################################################
 #Source files
 ###############################################################################
-
 function(generate_hex_header)
   set(options )
   set(oneValueArgs INPUT OUTPUT FOLDER PATH)
@@ -24,21 +23,10 @@ function(generate_hex_header)
     if( NOT EXISTS ${_header} OR NOT EXISTS ${_source} )
       get_filename_component(_source_name ${_OUTPUT} NAME)
       get_filename_component(_source_directory ${_OUTPUT} DIRECTORY )
-      
 
       message(STATUS  "                   ${_source_name}.{hxx,cxx}")
-
-      execute_process( WORKING_DIRECTORY ${BIOGEARS_BINARY_DIR}/
-      COMMAND ${CMAKE_COMMAND} -DIN=${_INPUT} -DOUT=${_OUTPUT} -DNS=${_NS_SAFE}  -DPATH="${_PATH}" -P ${PROJECT_SOURCE_DIR}/cmake/common/c_encode_file.cmake
-                        ERROR_VARIABLE CMAKE_ERROR
-                        #OUTPUT_QUIET
-                      )
-      if(CMAKE_ERROR)
-        message(FATAL_ERROR "Failed to generate c_encoding\n"
-                            "Error Msg:\n"
-                            "${CMAKE_ERROR}\n"
-                )
-      endif(CMAKE_ERROR)
+      file(WRITE ${_header} "//! THIS IS PLACEHOLDER DATA THAT WILL BE REPLACED BY THE FIRST RUN OF TARGET generate_${content_name}")
+      file(WRITE ${_source} "//! THIS IS PLACEHOLDER DATA THAT WILL BE REPLACED BY THE FIRST RUN OF TARGET generate_${content_name}")
     endif()
 
     add_custom_command(
@@ -68,19 +56,19 @@ function(configure_io_directory_file )
   cmake_parse_arguments("" "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
   foreach( src IN LISTS _FILE_LIST ) 
-  get_filename_component(src_dir ${src} DIRECTORY)
-  get_filename_component(src_dir_wle ${src} NAME_WLE  )
+    get_filename_component(src_dir ${src} DIRECTORY)
+    get_filename_component(src_dir_wle ${src} NAME_WLE  )
     string(REGEX REPLACE "@" "_at_" safe_src_dir_wle ${src_dir_wle})
     generate_hex_header( NAMESPACE biogears io INPUT ${_RESOURCE_PATH}/${src} OUTPUT ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}
-                       FOLDER "Code Generators/IO/${src_dir}"  PATH ${src}
-  )
+                         FOLDER "Code Generators/IO/${src_dir}"  PATH ${src}
+    )
   
     LIST(APPEND ${_HEADERS}  "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.hxx")
     LIST(APPEND ${_SOURCES}  "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.cxx")
 
     source_group("Headers/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.hxx" )
     source_group("Sources/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.cxx" )
-  
+
     string(APPEND RESOURCE_FILE_LIST "    get_${safe_src_dir_wle}_path(),\n")
      
     string(APPEND RESOURCE_INCLUDE_LIST "#include <biogears/io/${src}.hxx>\n")
@@ -93,7 +81,7 @@ function(configure_io_directory_file )
     "    }\n"
     )
     string(APPEND GET_FILE_SHA1_PATH_BODY
-    "    if ( path == get_${safe_src_dir_wle}_path() ) {\n"
+    "    if ( path == get_${safe_src_dir_wle}_path()) {\n"
     "      return get_${safe_src_dir_wle}_sha1();\n"
     "    }\n"
     )
@@ -103,21 +91,21 @@ function(configure_io_directory_file )
     "    }\n"
     )
     string(APPEND GET_EMBEDED_CONTENTS_PATH_BODY
-    "    if ( path == get_${safe_src_dir_wle}_path() ) {\n"
+    "    if ( path == get_${safe_src_dir_wle}_path()) {\n"
     "      return get_${safe_src_dir_wle}_text();\n"
     "    }\n"
     )
-      string(APPEND GET_EMBEDED_CONTENTS_SIZE_BODY
+    string(APPEND GET_EMBEDED_CONTENTS_SIZE_BODY
     "    if ( 0 == std::strcmp(path, get_${safe_src_dir_wle}_path())) {\n"
     "      return ${safe_src_dir_wle}_text_size();\n"
     "    }\n"
     )
     string(APPEND GET_EMBEDED_CONTENTS_SIZE_PATH_BODY
-    "    if ( path == get_${safe_src_dir_wle}_path() ) {\n"
+    "    if ( path == get_${safe_src_dir_wle}_path()) {\n"
     "      return ${safe_src_dir_wle}_text_size();\n"
     "    }\n"
     )
-endforeach()
+  endforeach()
 
   LIST(LENGTH _FILE_LIST RESOURCE_FILE_COUNT)
   get_filename_component( base_name ${_OUTPUT} NAME_WE)
@@ -219,12 +207,10 @@ target_include_directories(lib${PROJECT_NAME}_io
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
             ${BIOGEARS_BINARY_DIR}/generated
             ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}
-
-    INTERFACE 
-              $<BUILD_INTERFACE:${BIOGEARS_SOURCE_DIR}/libIO/include>
-              $<BUILD_INTERFACE:${BIOGEARS_BINARY_DIR}/generated>
-              $<INSTALL_INTERFACE:include>
-
+    
+    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    INTERFACE $<BUILD_INTERFACE:${BIOGEARS_BINARY_DIR}/generated>
+    INTERFACE $<INSTALL_INTERFACE:include>
 )
 
 set(${PREFIX}_io_LIBS
@@ -235,9 +221,8 @@ target_link_libraries(lib${PROJECT_NAME}_io  PUBLIC ${${PREFIX}_io_LIBS} )
 install(TARGETS lib${PROJECT_NAME}_io  EXPORT libBiogears
     RUNTIME DESTINATION bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
-    ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECTgit lo_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
-    )
-
+    ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+)
 if(WIN32)
 install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}_io> DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
 endif()

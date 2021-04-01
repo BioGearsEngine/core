@@ -1,7 +1,7 @@
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################
-message(STATUS "\t adding libbiogears_py")
+message(STATUS "  Configuring libbiogears_py")
 
 #Biogears CDM
 add_source_files(PY_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libPy/src REGEX "*.h" SOURCE_GROUP "Headers\\Private\\")
