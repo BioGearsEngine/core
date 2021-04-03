@@ -41,6 +41,7 @@ public:
   void stop_when_empty();
   void join() override;
 
+  bool has_work() const { return _total_work > 0; }
 protected:
   void subprocess_execute(biogears::Executor& ex, bool multi_patient_run);
   void async_execute(biogears::Executor& ex, bool multi_patient_run);

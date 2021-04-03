@@ -95,7 +95,7 @@ function(generate_hex_header)
                    "  }\n\n"
                    "\n\n"
 
-                   "  unsigned  const ${safe_content_name}_text[]={\n"
+                   "  unsigned char const ${safe_content_name}_text[]={\n"
                    "        ${text_c_tuples}"
                     "\n  };\n"
                    "  constexpr std::size_t  size_of_${safe_content_name}=sizeof(${safe_content_name}_text);\n"

@@ -20,30 +20,13 @@ namespace io {
   bool generate_override_directory(const char* root)
   {
    biogears::filesystem::path working_dir { root };
-   std::ofstream output;
-
-   bool result = true;
-
-   auto write_file = [&](char const* path, char const* content, size_t content_size) {
-      biogears::filesystem::create_directories((working_dir / path).parent_path());
-      output.open((working_dir / path).string(), std::fstream::out);
-      if (!output.is_open()) {
-        return false;
-      }
-      output.write(content, content_size);
-      return true;
-   };
-
-@GENERATE_DIRECTORY_BODY@
-
-   return true;
-
+   return generate_override_directory(working_dir);
   }
   //-----------------------------------------------------------------------------
   bool does_embedded_override_file_exist(const char* path)
   {
-    return @DOES_EMBEDDED_FILE_EXIST_BODY@false;
-
+    biogears::filesystem::path working_dir { path };
+    return does_embedded_override_file_exist(working_dir);
   }
   //-----------------------------------------------------------------------------
   size_t find_override_file(const char* file, const char* root, char* buffer, size_t buffer_length)
@@ -103,11 +86,8 @@ namespace io {
   //-----------------------------------------------------------------------------
   char const* get_embedded_override_file(const char* path)
   {
-    char const * embedded_content = "";
-
-@GET_EMBEDED_CONTENTS_BODY@
-
-    return embedded_content;
+    biogears::filesystem::path working_dir { path };
+    return get_embedded_override_file(working_dir);
   }
   //-----------------------------------------------------------------------------
 
@@ -121,11 +101,12 @@ namespace io {
 
    auto write_file = [&](char const* path, char const* content, size_t content_size) {
       biogears::filesystem::create_directories((working_dir / path).parent_path());
-      output.open((working_dir / path).string(), std::fstream::out);
-      if (!output.is_open()) {
+      output.open((working_dir / path).string(), std::fstream::binary | std::fstream::out);
+      if (output.good() && !output.is_open()) {
         return false;
       }
       output.write(content, content_size);
+      output.close();
       return true;
    };
 

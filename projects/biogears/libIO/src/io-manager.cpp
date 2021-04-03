@@ -43,17 +43,17 @@ namespace io {
 
     biogears::filesystem::path runtime_directory { file };
 
-    bool result = generate_xsd_directory(runtime_directory / "xsd");
-    result &= generate_config_directory(runtime_directory / "config");
-    result &= generate_ecg_directory(runtime_directory / "directory");
-    result &= generate_environments_directory(runtime_directory / "environments");
-    result &= generate_nutrition_directory(runtime_directory / "nutrition");
-    result &= generate_override_directory(runtime_directory / "override");
-    result &= generate_patients_directory(runtime_directory / "patients");
+    bool result = generate_xsd_directory(runtime_directory);
+    result &= generate_config_directory(runtime_directory );
+    result &= generate_ecg_directory(runtime_directory );
+    result &= generate_environments_directory(runtime_directory );
+    result &= generate_nutrition_directory(runtime_directory );
+    result &= generate_override_directory(runtime_directory );
+    result &= generate_patients_directory(runtime_directory );
 #ifdef IO_EMBED_STATES
-    result &= generate_states_directory(runtime_directory / "states");
+    result &= generate_states_directory(runtime_directory );
 #endif
-    result &= generate_substances_directory(runtime_directory / "substances");
+    result &= generate_substances_directory(runtime_directory);
 
     return result;
   }
