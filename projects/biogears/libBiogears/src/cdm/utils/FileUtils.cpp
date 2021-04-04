@@ -67,7 +67,7 @@ bool CreateFilePath(const std::string& path)
   auto end = path.end();
 
   for (auto current = path.begin(); current != end; ++current) {
-    if (*current == '\\' | *current == '/') {
+    if (*current == '\\' || *current == '/') {
       if (current - begin > 0) {
         auto substr = std::string(begin, current);
         if (!filesystem::exists(substr)) {
