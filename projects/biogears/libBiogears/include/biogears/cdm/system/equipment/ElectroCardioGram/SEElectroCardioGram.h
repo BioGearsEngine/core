@@ -20,78 +20,78 @@ class ElectricPotentialUnit;
 namespace io {
   class ElectroCardioGram;
 }
-class BIOGEARS_API SEElectroCardioGram : public SESystem {
+class SEElectroCardioGram : public SESystem {
   friend io::ElectroCardioGram;
 protected:
 public:
-  SEElectroCardioGram(Logger* logger);
-  ~SEElectroCardioGram() override;
+  BIOGEARS_API SEElectroCardioGram(Logger* logger);
+  BIOGEARS_API ~SEElectroCardioGram() override;
 
-  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const* const TypeTag() { return "SEElectroCardioGram"; }
-  const char* classname() const override { return TypeTag(); }
-  size_t hash_code() const override { return TypeHash(); }
+  BIOGEARS_API static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
+  BIOGEARS_API static constexpr char const* const TypeTag() { return "SEElectroCardioGram"; }
+  BIOGEARS_API const char* classname() const override { return TypeTag(); }
+  BIOGEARS_API size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override;
+  BIOGEARS_API void Clear() override;
 
-  const SEScalar* GetScalar(const char* name) override;
-  const SEScalar* GetScalar(const std::string& name) override;
+  BIOGEARS_API const SEScalar* GetScalar(const char* name) override;
+  BIOGEARS_API const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::ElectroCardioGramData& in);
-  CDM::ElectroCardioGramData* Unload() const override;
-  Tree<const char*> GetPhysiologyRequestGraph() const override;
+  BIOGEARS_API bool Load(const CDM::ElectroCardioGramData& in);
+  BIOGEARS_API CDM::ElectroCardioGramData* Unload() const override;
+  BIOGEARS_API Tree<const char*> GetPhysiologyRequestGraph() const override;
 
 protected:
-  void Unload(CDM::ElectroCardioGramData& data) const;
+  BIOGEARS_API void Unload(CDM::ElectroCardioGramData& data) const;
 
 public:
-  bool HasLead1ElectricPotential() const;
-  SEScalarElectricPotential& GetLead1ElectricPotential();
-  double GetLead1ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead1ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead1ElectricPotential();
+  BIOGEARS_API double GetLead1ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  bool HasLead2ElectricPotential() const;
-  SEScalarElectricPotential& GetLead2ElectricPotential();
-  double GetLead2ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead2ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead2ElectricPotential();
+  BIOGEARS_API double GetLead2ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  bool HasLead3ElectricPotential() const;
-  SEScalarElectricPotential& GetLead3ElectricPotential();
-  double GetLead3ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead3ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead3ElectricPotential();
+  BIOGEARS_API double GetLead3ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  bool HasLead4ElectricPotential() const;
-  SEScalarElectricPotential& GetLead4ElectricPotential();
-  double GetLead4ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead4ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead4ElectricPotential();
+  BIOGEARS_API double GetLead4ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  bool HasLead5ElectricPotential() const;
-  SEScalarElectricPotential& GetLead5ElectricPotential();
-  double GetLead5ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead5ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead5ElectricPotential();
+  BIOGEARS_API double GetLead5ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  bool HasLead6ElectricPotential() const;
-  SEScalarElectricPotential& GetLead6ElectricPotential();
-  double GetLead6ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead6ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead6ElectricPotential();
+  BIOGEARS_API double GetLead6ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  bool HasLead7ElectricPotential() const;
-  SEScalarElectricPotential& GetLead7ElectricPotential();
-  double GetLead7ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead7ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead7ElectricPotential();
+  BIOGEARS_API double GetLead7ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  bool HasLead8ElectricPotential() const;
-  SEScalarElectricPotential& GetLead8ElectricPotential();
-  double GetLead8ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead8ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead8ElectricPotential();
+  BIOGEARS_API double GetLead8ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  bool HasLead9ElectricPotential() const;
-  SEScalarElectricPotential& GetLead9ElectricPotential();
-  double GetLead9ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead9ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead9ElectricPotential();
+  BIOGEARS_API double GetLead9ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  bool HasLead10ElectricPotential() const;
-  SEScalarElectricPotential& GetLead10ElectricPotential();
-  double GetLead10ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead10ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead10ElectricPotential();
+  BIOGEARS_API double GetLead10ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  bool HasLead11ElectricPotential() const;
-  SEScalarElectricPotential& GetLead11ElectricPotential();
-  double GetLead11ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead11ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead11ElectricPotential();
+  BIOGEARS_API double GetLead11ElectricPotential(const ElectricPotentialUnit& unit) const;
 
-  bool HasLead12ElectricPotential() const;
-  SEScalarElectricPotential& GetLead12ElectricPotential();
-  double GetLead12ElectricPotential(const ElectricPotentialUnit& unit) const;
+  BIOGEARS_API bool HasLead12ElectricPotential() const;
+  BIOGEARS_API SEScalarElectricPotential& GetLead12ElectricPotential();
+  BIOGEARS_API double GetLead12ElectricPotential(const ElectricPotentialUnit& unit) const;
 
 protected:
   SEScalarElectricPotential* m_Lead1ElectricPotential;

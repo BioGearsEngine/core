@@ -33,13 +33,13 @@ namespace io {
   BIOGEARS_IO_API char const* const* list_patients_files();
   BIOGEARS_IO_API size_t patients_file_count();
 
-  BIOGEARS_IO_API char const* get_embedded_patients_file(const char* file);
+  BIOGEARS_IO_API char const* get_embedded_patients_file(const char* file, size_t& content_size);
 
   //biogears::filesystem::path overloads
   BIOGEARS_IO_API bool generate_patients_directory(biogears::filesystem::path file);
   BIOGEARS_IO_API bool does_embedded_patients_file_exist(biogears::filesystem::path file);
 
   BIOGEARS_IO_API char const* get_patients_file_sha1(biogears::filesystem::path file);
-  BIOGEARS_IO_API char const* get_embedded_patients_file(biogears::filesystem::path file);
+  BIOGEARS_IO_API char const* get_embedded_patients_file(biogears::filesystem::path file, size_t& content_size);
 }
 }

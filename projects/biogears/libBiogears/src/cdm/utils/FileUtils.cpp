@@ -16,6 +16,9 @@ specific language governing permissions and limitations under the License.
 #include <dirent.h>
 #include <regex>
 
+#ifdef BIOGEARS_IO_PRESENT
+#  include <biogears/io/io-manager.h>
+#endif
 #include <biogears/filesystem/path.h>
 
 #if defined(_MSC_VER) || defined(__MINGW64_VERSION_MAJOR)
@@ -48,7 +51,10 @@ std::string Replace(const std::string& original, const std::string& replace, con
   }
   return s;
 }
-
+//!
+//!  Calls mkdir once for each directory seperator in the path
+//!  Note this behavior will avoid calling mkdir for the file at the end of a path like /usr/bin/sh
+//!  So you want to terminate your path with a / if the last entry is a directory
 bool CreateFilePath(const std::string& path)
 {
   ScopedFileSystemLock lock;
@@ -57,56 +63,41 @@ bool CreateFilePath(const std::string& path)
     return false;
   }
 
-  std::string buffer = path;
-  std::vector<std::string> folderLevels;
-  char* c_str = (char*)buffer.c_str();
+  auto begin = path.begin();
+  auto end = path.end();
 
-  // Point to end of the string
-  char* strPtr = &c_str[strlen(c_str) - 1];
-
-  // Break out each directory into our vector
-  do {
-    do {
-      strPtr--;
-    } while ((*strPtr != '\\') && (*strPtr != '/') && (strPtr >= c_str));
-    folderLevels.push_back(std::string(strPtr + 1));
-    strPtr[1] = 0;
-  } while (strPtr >= c_str);
-
-  std::string destDir = "";
-
-  std::string dir;
-
-  // Create the folders iteratively, backwards
-  for (size_t i = folderLevels.size() - 1; i >= 1; i--) {
-    dir = folderLevels.at(i);
-    if (dir == "/" || dir == "\\")
-      continue;
-    destDir += dir;
-    MKDIR(destDir.c_str());
+  for (auto current = path.begin(); current != end; ++current) {
+    if (*current == '\\' | *current == '/') {
+      if (current - begin > 0) {
+        auto substr = std::string(begin, current);
+        if (!filesystem::exists(substr)) {
+          MKDIR(substr.c_str());
+        }
+      }
+    }
   }
   return true;
 }
 
 bool CreateFilePath(const char* path)
 {
-  std::string path_str{ path };
+  std::string path_str { path };
   return CreateFilePath(path_str);
 }
 //!
 //! \param std::string directory - Directory which the files to be listed are contained
 //! \param std::vector<std::string> [INOUT] - The full path to all files discovered durring ListFiles. These values are prepended to dir (is modified in place)
 //! \param std::string regex     - Pattern that FILENAMES will be filtered by (*.xml,Default*.xml,...)
-//! \param bool recurseOn        - Defaults to true; determines if the ListFiles is recursive matching filenames in subdirectories 
+//! \param bool recurseOn        - Defaults to true; determines if the ListFiles is recursive matching filenames in subdirectories
 //!
 //! Regexes use ECMAScript TODO: Debate if we should switch to Extended Posix so *xml and Gus* are valud instead of .*\.xml and Gus.*
-//! Possibly support passing in the regex standard as a forth parameter. 
+//! Possibly support passing in the regex standard as a forth parameter.
 void ListFiles(const std::string& dir, std::vector<std::string>& files, const std::string& regex, bool recurse)
 {
   DIR* d;
   dirent* ent;
   std::string filename;
-  std::regex mask{ regex };
+  std::regex mask { regex };
   if ((d = opendir(dir.c_str())) != nullptr) {
     while ((ent = readdir(d)) != nullptr) {
       size_t nameLength = strlen(ent->d_name);
@@ -131,18 +122,18 @@ void ListFiles(const std::string& dir, std::vector<std::string>& files, const st
 
 bool IsAbsolutePath(const std::string& path)
 {
-  return filesystem::path{ path }.is_absolute();
+  return filesystem::path { path }.is_absolute();
 }
 
 bool IsAbsolutePath(const char* path)
 {
-  return filesystem::path{ path }.is_absolute();
+  return filesystem::path { path }.is_absolute();
 }
 
 std::string ResolvePath(const std::string& path)
 {
-  filesystem::path given_path{ path };
-  filesystem::path cwd{ GetCurrentWorkingDirectory() };
+  filesystem::path given_path { path };
+  filesystem::path cwd { GetCurrentWorkingDirectory() };
   if (path.empty()) {
     return "";
   } else if (given_path.is_absolute()) {
@@ -154,7 +145,7 @@ std::string ResolvePath(const std::string& path)
     auto origin = filesystem::path::getcwd();
     cwd;
     given_path;
-    return filesystem::normalize(origin/cwd/given_path).string();
+    return filesystem::normalize(origin / cwd / given_path).string();
   }
 }
 //!
@@ -163,15 +154,15 @@ std::string ResolvePath(const std::string& path)
 //!         Copy this return value immediatly after the call to avoid most issues
 const char* ResolvePath_cStr(const char* path)
 {
-  static std::string storage = std::string{ path };
+  static std::string storage = std::string { path };
   storage = ResolvePath(storage);
   return storage.c_str();
 }
-     
+
 //!
 //! \param std::string directory - Directory which the files to be listed are contained
 //! \param std::string regex     - Pattern that FILENAMES will be filtered by (*.xml,Default*.xml,...)
-//! \param bool recurseOn        - Defaults to true; determines if the ListFiles is recursive matching filenames in subdirectories 
+//! \param bool recurseOn        - Defaults to true; determines if the ListFiles is recursive matching filenames in subdirectories
 //!
 //! \return std::vector<std::string> - The full path to all files discovered durring ListFiles. These values are prepended to dir
 std::vector<std::string> ListFiles(const std::string& dir, const std::string& regex, bool recurse)
@@ -223,15 +214,16 @@ void SetCurrentWorkingDirectory(const char* working_dir)
 
 bool TestLastDirName(std::string path, std::string dirname)
 {
-  filesystem::path p{ std::move(path) };
+  filesystem::path p { std::move(path) };
   if (!filesystem::is_directory(p)) {
     p = p.parent_path();
   }
   return p.filename().string() == dirname;
 }
+
 bool TestFirstDirName(std::string path, std::string dirname)
 {
-  filesystem::path p{ std::move(path) };
+  filesystem::path p { std::move(path) };
   p = p.make_normal();
   if (!p.is_absolute()) {
     if (p.begin() != p.end()) {
@@ -245,12 +237,12 @@ bool TestFirstDirName(std::string path, std::string dirname)
 
 bool TestLastDirName(const char* path, const char* dirname)
 {
-  return TestLastDirName(std::string{ path }, std::string{ dirname });
+  return TestLastDirName(std::string { path }, std::string { dirname });
 }
 
 bool TestFirstDirName(const char* path, const char* dirname)
 {
-  return TestFirstDirName(std::string{ path }, std::string{ dirname });
+  return TestFirstDirName(std::string { path }, std::string { dirname });
 }
 
 std::string GetCurrentWorkingDirectory()

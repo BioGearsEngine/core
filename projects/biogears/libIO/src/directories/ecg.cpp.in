@@ -61,7 +61,11 @@ namespace io {
         }
       }
     }
-    auto embeded_content = get_embedded_ecg_file(file);
+
+    auto embeded_content = get_embedded_ecg_file(file, content_size);
+    if ( content_size < buffer_length )  {
+      memcpy(buffer, embeded_content, content_size); 
+    }
 
     return content_size;
   }
@@ -82,10 +86,10 @@ namespace io {
     return count_of_ecg_files;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embedded_ecg_file(const char* path)
+  char const* get_embedded_ecg_file(const char* path, size_t& content_size)
   {
     biogears::filesystem::path working_dir { path };
-    return get_embedded_ecg_file(working_dir);
+    return get_embedded_ecg_file(working_dir, content_size);
   }
   //-----------------------------------------------------------------------------
 
@@ -127,7 +131,7 @@ namespace io {
      return file_sha1;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embedded_ecg_file(biogears::filesystem::path path)
+  char const* get_embedded_ecg_file(biogears::filesystem::path path, size_t& content_size)
   {
     char const * embedded_content = "";
 
@@ -136,7 +140,7 @@ namespace io {
     return embedded_content;
   }
   //-----------------------------------------------------------------------------
-  size_t  get_embedded_ecg_file_size( const char* path) 
+  size_t  get_embedded_ecg_file_size( const char* path, size_t& content_size) 
   {
     size_t size_of_embedded_content = 0;
 

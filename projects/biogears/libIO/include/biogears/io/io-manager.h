@@ -1,3 +1,4 @@
+
 #pragma once
 
 /**************************************************************************************
@@ -29,8 +30,10 @@ namespace io {
   //!
   //!  TODO: Implmement behavior control
   //!
-  //!  Look First in BIOGEARS_DATA_ROOT
+  //! 
   //!  Look Second in CWD  FILE
+  //!  Look First in BIOGEARS_DATA_ROOT
+  //!  Look in BIOGEARS_INSTALL_ROOT <determined by cmake>  
   //!  Look in the LIBRARY
 
   class IOManager {
@@ -55,7 +58,7 @@ namespace io {
 
     BIOGEARS_IO_API bool validate_file(const char* path, const char* embeded_path = nullptr);
 
-    BIOGEARS_IO_API char const* get_embedded_resource_file(const char* file);
+    BIOGEARS_IO_API const char* get_embedded_resource_file(const char* file, size_t& content_size);
 
     BIOGEARS_IO_API size_t get_directory_count(); //!< Returns the list of directories embeded IE 1 for each cpp file in libIO/src/directories
   };
