@@ -3,6 +3,8 @@
 ###############################################################################
 message(STATUS "  Configuring libbiogears_cdm")
 
+option(UNITTEST_biogears-cdm "Enable libBiogears_cdm UnitTest "  ON)
+
 #Biogears CDM
 add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/biogears/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
 add_source_files(CDM_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.hxx" SOURCE_GROUP  "Headers\\Public\\")

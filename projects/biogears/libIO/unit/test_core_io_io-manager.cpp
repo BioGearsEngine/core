@@ -189,8 +189,9 @@ TEST_F(TEST_FIXTURE_NAME, GetSha1Substances)
 TEST_F(TEST_FIXTURE_NAME,GetEmbeddedResourceFileXSD)
 {
 	biogears::io::IOManager iom;
-	std::string s(iom.get_embedded_resource_file("xsd/BioGearsDataModel.xsd"));
-	EXPECT_GE(1,s.size());
+  size_t embeded_size;
+	std::string s(iom.get_embedded_resource_file("xsd/BioGearsDataModel.xsd", embeded_size));
+	EXPECT_EQ(embeded_size, s.size());
 	if (s.size() > 1) {
 		EXPECT_EQ(s[0],'<');
 		EXPECT_GE(100,s.size());
@@ -201,8 +202,9 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileConfig)
 {
 
   biogears::io::IOManager iom;
-  std::string s(iom.get_embedded_resource_file("xsd/BioGearsDataModel.xsd"));
-  EXPECT_GE(1, s.size());
+  size_t embeded_size;
+  std::string s(iom.get_embedded_resource_file("xsd/BioGearsDataModel.xsd", embeded_size));
+  EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
     EXPECT_GE(100, s.size());
@@ -213,8 +215,9 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileECG)
 {
 
   biogears::io::IOManager iom;
-  std::string s(iom.get_embedded_resource_file("config/DynamicStabilization.xml"));
-  EXPECT_GE(1, s.size());
+  size_t embeded_size;
+  std::string s(iom.get_embedded_resource_file("config/DynamicStabilization.xml", embeded_size));
+  EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
     EXPECT_GE(100, s.size());
@@ -225,8 +228,9 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileEnvironments)
 {
 
   biogears::io::IOManager iom;
-  std::string s(iom.get_embedded_resource_file("environments/AnchorageDecember.xml"));
-  EXPECT_GE(1, s.size());
+  size_t embeded_size;
+  std::string s(iom.get_embedded_resource_file("environments/AnchorageDecember.xml", embeded_size));
+  EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
     EXPECT_GE(100, s.size());
@@ -237,8 +241,9 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileNutrition)
 {
 
   biogears::io::IOManager iom;
-  std::string s(iom.get_embedded_resource_file("nutrition/NoMacros.xml"));
-  EXPECT_GE(1, s.size());
+  size_t embeded_size;
+  std::string s(iom.get_embedded_resource_file("nutrition/NoMacros.xml", embeded_size));
+  EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
     EXPECT_GE(100, s.size());
@@ -249,8 +254,9 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileOverride)
 {
 
   biogears::io::IOManager iom;
-  std::string s(iom.get_embedded_resource_file("override/BioGearsOverride.xml"));
-  EXPECT_GE(1, s.size());
+  size_t embeded_size;
+  std::string s(iom.get_embedded_resource_file("override/BioGearsOverride.xml", embeded_size));
+  EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
     EXPECT_GE(100, s.size());
@@ -261,8 +267,9 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFilePatients)
 {
 
   biogears::io::IOManager iom;
-  std::string s(iom.get_embedded_resource_file("patients/Bradycardic.xml"));
-  EXPECT_GE(1, s.size());
+  size_t embeded_size;
+  std::string s(iom.get_embedded_resource_file("patients/Bradycardic.xml", embeded_size));
+  EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
     EXPECT_GE(100, s.size());
@@ -273,8 +280,9 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileSubstances)
 {
 
   biogears::io::IOManager iom;
-  std::string s(iom.get_embedded_resource_file("substances/Acetaminophen.xml"));
-  EXPECT_GE(1, s.size());
+  size_t embeded_size;
+  std::string s(iom.get_embedded_resource_file("substances/Acetaminophen.xml",embeded_size));
+  EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
     EXPECT_GE(100, s.size());

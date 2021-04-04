@@ -2,8 +2,9 @@
 #Sorce and Header Defines
 ###############################################################################
 message(STATUS "  Configuring libbiogears_py")
-
-#Biogears CDM
+option(UNITTEST_biogears-py "Enable libBiogears_py UnitTest "         ${UNITTEST_biogears-core})
+option(UNITTEST_biogears-csharp "Enable libBiogears_csharp UnitTest " ${UNITTEST_biogears-core})
+ #Biogears CDM
 add_source_files(PY_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libPy/src REGEX "*.h" SOURCE_GROUP "Headers\\Private\\")
 add_source_files(PY_SRCS LOCATION ${BIOGEARS_SOURCE_DIR}/libPy/src REGEX "*.cpp" SOURCE_GROUP "Sources\\")
 set(LIB${PREFIX}_PY_HEADERS ${PY_HDRS})

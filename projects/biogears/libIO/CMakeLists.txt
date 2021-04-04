@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.19.0)
 message(STATUS "  Configuring lib${PROJECT_NAME}_io")
+
+option(UNITTEST_biogears-io "Enable libBiogears_io UnitTest "  ON)
 ###############################################################################
 #Source files
 ###############################################################################
@@ -69,35 +71,21 @@ function(configure_io_directory_file )
     source_group("Headers/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.hxx" )
     source_group("Sources/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.cxx" )
 
+    string(APPEND RESOURCE_INCLUDE_LIST "#include <biogears/io/${src}.hxx>\n")
     string(APPEND RESOURCE_FILE_LIST "    get_${safe_src_dir_wle}_path(),\n")
      
-    string(APPEND RESOURCE_INCLUDE_LIST "#include <biogears/io/${src}.hxx>\n")
     string(APPEND GENERATE_DIRECTORY_BODY  "    result &= write_file(get_${safe_src_dir_wle}_path(), get_${safe_src_dir_wle}_text(), ${safe_src_dir_wle}_text_size());\n")
-    string(APPEND DOES_EMBEDDED_FILE_EXIST_BODY "  ( 0 == std::strcmp(path, get_${safe_src_dir_wle}_path()))\n    ||  ")
     string(APPEND DOES_EMBEDDED_FILE_EXIST_PATH_BODY "  ( path == get_${safe_src_dir_wle}_path())\n    ||  ")
-    string(APPEND GET_FILE_SHA1_BODY
-    "    if ( 0 == std::strcmp(path, get_${safe_src_dir_wle}_path())) {\n"
-    "      return get_${safe_src_dir_wle}_sha1();\n"
-    "    }\n"
-    )
     string(APPEND GET_FILE_SHA1_PATH_BODY
     "    if ( path == get_${safe_src_dir_wle}_path()) {\n"
     "      return get_${safe_src_dir_wle}_sha1();\n"
     "    }\n"
     )
-    string(APPEND GET_EMBEDED_CONTENTS_BODY
-    "    if ( 0 == std::strcmp(path, get_${safe_src_dir_wle}_path())) {\n"
-    "      return get_${safe_src_dir_wle}_text();\n"
-    "    }\n"
-    )
+
     string(APPEND GET_EMBEDED_CONTENTS_PATH_BODY
     "    if ( path == get_${safe_src_dir_wle}_path()) {\n"
-    "      return get_${safe_src_dir_wle}_text();\n"
-    "    }\n"
-    )
-    string(APPEND GET_EMBEDED_CONTENTS_SIZE_BODY
-    "    if ( 0 == std::strcmp(path, get_${safe_src_dir_wle}_path())) {\n"
-    "      return ${safe_src_dir_wle}_text_size();\n"
+    "        content_size = ${safe_src_dir_wle}_text_size();\n"
+    "        return get_${safe_src_dir_wle}_text();\n"
     "    }\n"
     )
     string(APPEND GET_EMBEDED_CONTENTS_SIZE_PATH_BODY
@@ -169,6 +157,9 @@ message(STATUS "            : data/substances")
 FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/substances/*.xml")
 configure_io_directory_file( OUTPUT "directories/substances.cpp.in" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
 
+configure_file( src/constants.h.in  ${BIOGEARS_BINARY_DIR}/generated/biogears/io/constants.h NEWLINE_STYLE LF)
+add_source_files(GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/io/
+               REGEX "constants.h" SOURCE_GROUP  "Headers\\Private\\")
 add_source_files(INTERFACE_HEADERS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/include/
                REGEX "*.h" SOURCE_GROUP  "Headers\\Public\\")
 add_source_files(INTERFACE_SOURCES LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/

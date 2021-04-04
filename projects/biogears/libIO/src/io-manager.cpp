@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/filesystem/path.h>
 
+#include <biogears/io/constants.h>
+
 #include <biogears/io/directories/config.h>
 #include <biogears/io/directories/ecg.h>
 #include <biogears/io/directories/environments.h>
@@ -28,6 +30,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/io/utils.h>
 
+#include <fstream>
+
 namespace biogears {
 namespace io {
   //!
@@ -44,14 +48,14 @@ namespace io {
     biogears::filesystem::path runtime_directory { file };
 
     bool result = generate_xsd_directory(runtime_directory);
-    result &= generate_config_directory(runtime_directory );
-    result &= generate_ecg_directory(runtime_directory );
-    result &= generate_environments_directory(runtime_directory );
-    result &= generate_nutrition_directory(runtime_directory );
-    result &= generate_override_directory(runtime_directory );
-    result &= generate_patients_directory(runtime_directory );
+    result &= generate_config_directory(runtime_directory);
+    result &= generate_ecg_directory(runtime_directory);
+    result &= generate_environments_directory(runtime_directory);
+    result &= generate_nutrition_directory(runtime_directory);
+    result &= generate_override_directory(runtime_directory);
+    result &= generate_patients_directory(runtime_directory);
 #ifdef IO_EMBED_STATES
-    result &= generate_states_directory(runtime_directory );
+    result &= generate_states_directory(runtime_directory);
 #endif
     result &= generate_substances_directory(runtime_directory);
 
@@ -79,43 +83,129 @@ namespace io {
   size_t IOManager::find_resource_file(char const* file, char* buffer, size_t buffer_size)
   {
 
-    size_t bytes_written = 0;
-    if (bytes_written = find_xsd_file(file, _biogears_schema_root, buffer, buffer_size)) {
-      return bytes_written;
+    //!  Look Second in CWD  FILE
+    //!  Look First in BIOGEARS_DATA_ROOT
+    //!  Look in BIOGEARS_INSTALL_ROOT <determined by cmake>
+    //!  Look in the LIBRARY
+
+    //Step 1 : Current Working Directory
+    size_t content_size = 0;
+    biogears::filesystem::path test_location { file };
+    if (test_location.exists() && test_location.is_file()) {
+      std::ifstream resource_file { test_location.str(), std::ios::in };
+      if (resource_file.is_open()) {
+        resource_file.seekg(0, resource_file.end);
+        content_size = resource_file.tellg();
+        resource_file.seekg(0, resource_file.beg);
+      }
+      if (content_size < buffer_size) {
+        resource_file.read(buffer, content_size);
+        return content_size;
+      }
     }
 
-    if (bytes_written = find_config_file(file, _biogears_data_root, buffer, buffer_size)) {
-      return bytes_written;
+    //Step 2 : Alternative CWD
+    if (_biogears_data_root != nullptr) {
+      test_location = _biogears_data_root;
+      test_location /= file;
+      if (test_location.exists() && test_location.is_file()) {
+        std::ifstream resource_file { test_location.str(), std::ios::in };
+        if (resource_file.is_open()) {
+          resource_file.seekg(0, resource_file.end);
+          content_size = resource_file.tellg();
+          resource_file.seekg(0, resource_file.beg);
+          if (content_size < buffer_size) {
+            resource_file.read(buffer, content_size);
+            return content_size;
+          }
+        }
+      }
     }
 
-    if (bytes_written = find_ecg_file(file, _biogears_data_root, buffer, buffer_size)) {
-      return bytes_written;
+    if (_biogears_schema_root != nullptr) {
+      test_location = _biogears_schema_root;
+      test_location /= file;
+      if (test_location.exists() && test_location.is_file()) {
+        std::ifstream resource_file { test_location.str(), std::ios::in };
+        if (resource_file.is_open()) {
+          resource_file.seekg(0, resource_file.end);
+          content_size = resource_file.tellg();
+          resource_file.seekg(0, resource_file.beg);
+          if (content_size < buffer_size) {
+            resource_file.read(buffer, content_size);
+            return content_size;
+          }
+        }
+      }
     }
 
-    if (bytes_written = find_environment_file(file, _biogears_data_root, buffer, buffer_size)) {
-      return bytes_written;
+    //Step 3: ENV{BIOGEARS_DATA_ROOT} ENV{BIOGEARS_SCHEMA_ROOT}
+    char* data_root = getenv("BIOGEARS_DATA_ROOT");
+    if (data_root != nullptr) {
+      test_location = data_root;
+      test_location /= file;
+      if (test_location.exists() && test_location.is_file()) {
+        std::ifstream resource_file { test_location.str(), std::ios::in };
+        if (resource_file.is_open()) {
+          resource_file.seekg(0, resource_file.end);
+          content_size = resource_file.tellg();
+          resource_file.seekg(0, resource_file.beg);
+          if (content_size < buffer_size) {
+            resource_file.read(buffer, content_size);
+            return content_size;
+          }
+        }
+      }
     }
-
-    if (bytes_written = find_nutrition_file(file, _biogears_data_root, buffer, buffer_size)) {
-      return bytes_written;
+    char* schema_root = getenv("BIOGEARS_SCHEMA_ROOT");
+    if (schema_root != nullptr) {
+      test_location = schema_root;
+      test_location /= file;
+      if (test_location.exists() && test_location.is_file()) {
+        std::ifstream resource_file { test_location.str(), std::ios::in };
+        if (resource_file.is_open()) {
+          resource_file.seekg(0, resource_file.end);
+          content_size = resource_file.tellg();
+          resource_file.seekg(0, resource_file.beg);
+          if (content_size < buffer_size) {
+            resource_file.read(buffer, content_size);
+            return content_size;
+          }
+        }
+      }
     }
-
-    if (bytes_written = find_override_file(file, _biogears_data_root, buffer, buffer_size)) {
-      return bytes_written;
-    }
-
-    if (bytes_written = find_patients_file(file, _biogears_data_root, buffer, buffer_size)) {
-      return bytes_written;
-    }
-#ifdef IO_EMBED_STATES
-    if (bytes_written = find_states_file(file, _biogears_data_root, buffer, buffer_size)) {
-      return bytes_written;
-    }
+    //Step 3: BIOGEARS_INSTALL_ROOT
+    std::string install_root;
+#ifdef _WIN32
+    install_root = getenv("APPDATA");
+    install_root += "/biogears/";
+#else
+    install_root= "~/.biogears/";
 #endif
-    if (bytes_written = find_substances_file(file, _biogears_data_root, buffer, buffer_size)) {
-      return bytes_written;
+    install_root += _REV_TAG_;
+    if (install_root != "") {
+      test_location = install_root;
+      test_location /= file;
+      if (test_location.exists() && test_location.is_file()) {
+        std::ifstream resource_file { test_location.str(), std::ios::in };
+        if (resource_file.is_open()) {
+          resource_file.seekg(0, resource_file.end);
+          content_size = resource_file.tellg();
+          resource_file.seekg(0, resource_file.beg);
+          if (content_size < buffer_size) {
+            resource_file.read(buffer, content_size);
+            return content_size;
+          }
+        }
+      }
     }
-    return 0;
+    //Step 4: Embeded Content
+    auto embeded_content = get_embedded_resource_file(file, content_size);
+    if (content_size > 0 && content_size < buffer_size) {
+      memcpy(buffer, embeded_content, content_size);
+    }
+
+    return content_size;
   }
   //---------------------------------------------------------------------------
   char const* IOManager::get_expected_sha1(const char* file)
@@ -194,42 +284,48 @@ namespace io {
     }
   }
   //---------------------------------------------------------------------------
-  char const* IOManager::get_embedded_resource_file(const char* file)
+  //!  Returns a char const * of the embeded conents if it exists
+  //!
+  //!  \param const char* file  -- Resource path relative to runtime/ matching the embeded file path
+  //!  \param size_t [OUT]      -- Size of the const char* file return. Only valid when return != nullptr
+  //!  \return  bool            -- True of a matching embeded file was found else false
+
+  char const* IOManager::get_embedded_resource_file(const char* file, std::size_t& size)
   {
     char const* result = nullptr;
-    if (result = get_embedded_xsd_file(file)) {
+    if (result = get_embedded_xsd_file(file, size)) {
       return result;
     }
 
-    if (result = get_embedded_config_file(file)) {
+    if (result = get_embedded_config_file(file, size)) {
       return result;
     }
 
-    if (result = get_embedded_ecg_file(file)) {
+    if (result = get_embedded_ecg_file(file, size)) {
       return result;
     }
 
-    if (result = get_embedded_environments_file(file)) {
+    if (result = get_embedded_environments_file(file, size)) {
       return result;
     }
 
-    if (result = get_embedded_nutrition_file(file)) {
+    if (result = get_embedded_nutrition_file(file, size)) {
       return result;
     }
 
-    if (result = get_embedded_override_file(file)) {
+    if (result = get_embedded_override_file(file, size)) {
       return result;
     }
 
-    if (result = get_embedded_patients_file(file)) {
+    if (result = get_embedded_patients_file(file, size)) {
       return result;
     }
 #ifdef IO_EMBED_STATES
-    if (result = get_embedded_states_file(file)) {
+    if (result = get_embedded_states_file(file, size)) {
       return result;
     }
 #endif
-    if (result = get_embedded_substances_file(file)) {
+    if (result = get_embedded_substances_file(file, size)) {
       return result;
     }
     return nullptr;

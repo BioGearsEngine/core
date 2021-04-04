@@ -3,6 +3,8 @@
 ###############################################################################
 message(STATUS "  Configuring libbiogears_circuit_test")
 
+option(UNITTEST_biogears-circuit "Enable Biogears circuit UnitTest "  ${UNITTEST_biogears-core})
+
 #Biogears circuit_test
 add_source_files(CIRCUIT_TEST_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCircuitTest/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
 add_source_files(CIRCUIT_TEST_SRCS LOCATION ${BIOGEARS_SOURCE_DIR}/libCircuitTest/src REGEX  "*cpp" SOURCE_GROUP "Sources\\")
