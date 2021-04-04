@@ -104,14 +104,14 @@ bool genRuntime(std::string pathName)
 }
 #endif
 
-void parse_generate_arguments(biogears::Arguments::MultiwordValue& args)
+void parse_generate_arguments(biogears::Arguments::MultiwordValue&& args)
 {
 
-  auto is_keyword = [](std::string& v) { return v == "data" || v == "patients" || v == "runtime" || v == "states" || v == "sepsis" || v == "tables"; };
+  auto is_keyword = [](const std::string& v) { return v == "data" || v == "patients" || v == "runtime" || v == "states" || v == "sepsis" || v == "tables"; };
   auto current = args.begin();
   auto end = args.end();
-  for (auto& arg = *current; current != end; arg = *current, ++current) {
-    std::transform(arg.begin(), arg.end(), arg.begin(), ::tolower);
+  for (; current != end;  ++current) {
+    const auto& arg = *current;
     if (arg == "data") {
       g_run_generate_data = true;
     } else if (arg == "patients") {
@@ -267,10 +267,10 @@ int main(int argc, char** argv)
   //Argument Parsing for 2.0 Arguments
   //                     and legacy 1.0 GEN args
   if (args.MultiWordFound("GENERATE")) {
-    parse_generate_arguments( std::move(args.MultiWord("GENERATE")));
+    parse_generate_arguments( args.MultiWord("GENERATE") );
   }
   if (args.MultiWordFound("GEN")) {
-    parse_generate_arguments( std::move(args.MultiWord("GEN")));
+    parse_generate_arguments( args.MultiWord("GEN"));
   }
   if (args.Option("GENSTATES")) {
     g_run_generate_patient_states = true;
