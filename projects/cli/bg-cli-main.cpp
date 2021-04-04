@@ -267,10 +267,10 @@ int main(int argc, char** argv)
   //Argument Parsing for 2.0 Arguments
   //                     and legacy 1.0 GEN args
   if (args.MultiWordFound("GENERATE")) {
-    parse_generate_arguments(args.MultiWord("GENERATE"));
+    parse_generate_arguments( std::move(args.MultiWord("GENERATE")));
   }
   if (args.MultiWordFound("GEN")) {
-    parse_generate_arguments(args.MultiWord("GEN"));
+    parse_generate_arguments( std::move(args.MultiWord("GEN")));
   }
   if (args.Option("GENSTATES")) {
     g_run_generate_patient_states = true;
