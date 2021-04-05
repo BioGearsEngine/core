@@ -104,8 +104,6 @@ if(Biogears_BUILD_WEBSITE)
     add_custom_target(docs-doxygen-py
         COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/doxygen
-        FOLDER "Website"
-        EXCLUDE_FROM_ALL
         COMMENT "Running docs-doxygen"
         VERBATIM
         USES_TERMINAL
