@@ -1,5 +1,6 @@
 option(${ROOT_PROJECT_NAME}_BUILD_HOWTOS     "Select to build sdk how to examples." ON)
 cmake_policy(SET CMP0087 NEW)
+message(STATUS "Configuring Examples")
 function(add_howto name)
   ###############################################################################
   # Step 1:  Set the name of this example to a unique identifier
@@ -26,7 +27,7 @@ function(add_howto name)
     ###############################################################################
     #Sorce and Header Defines
     ###############################################################################
-    message(STATUS "Configuring ${EXAMPLE_NAME}")
+    message(STATUS "           : ${EXAMPLE_NAME}")
     
     add_source_files(HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src/ REGEX "*.h" SOURCE_GROUP "Headers\\Private\\")
     add_source_files(SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src REGEX "*.cpp" SOURCE_GROUP "Sources\\")

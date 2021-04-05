@@ -12,7 +12,8 @@ option (${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS "Toggle the throwing Comm
 option (${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when an  SEScalar is NaNExceptions." ON)
 option (${ROOT_PROJECT_NAME}_USE_OVERRIDE_CONTROL       "When enabled Biogears will control the ranges of override"  OFF)
 option (${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS       "Toggle on the Circuit Test Library which is a dependeny of libbiogears_jni"  ON)
-option (${ROOT_PROJECT_NAME}_BUILD_PYTHON_HOOKS   "Toggle the building of Python Hooks. pybind11 is a dependency of this process (Experimental)"  OFF)
+option (${ROOT_PROJECT_NAME}_BUILD_PYBIND11_BINDINGS   "Toggle the building of Python Hooks. pybind11 is a dependency of this process (Experimental)"  OFF)
+option (${ROOT_PROJECT_NAME}_BUILD_SWIG_BINDINGS       "Toggle the Genearting of languge bindings using SWIG (Experimental)"  OFF)
 
 ###############################################################################
 # Base Variables
@@ -35,7 +36,7 @@ endif()
 verify_package(Threads REQUIRED)
 verify_package(Eigen3 REQUIRED)
 verify_package(CodeSynthesis REQUIRED)
-if(${ROOT_PROJECT_NAME}_BUILD_PYTHON_HOOKS)
+if(${ROOT_PROJECT_NAME}_BUILD_PYTHON_BINDINGS)
   verify_package(pybind11 REQUIRED)
 endif()
 ###############################################################################
@@ -103,8 +104,11 @@ else()
   ###############################################################################
   # libBiogears_py
   ###############################################################################
-  if( ${ROOT_PROJECT_NAME}_BUILD_PYTHON_HOOKS )
+  if( ${ROOT_PROJECT_NAME}_BUILD_PYBIND11_BINDINGS )
     add_subdirectory(libPy)
+  endif() #pybind11_FOUND
+  if( ${ROOT_PROJECT_NAME}_BUILD_SWIG_BINDINGS )
+    add_subdirectory(swig_bindings)
   endif() #pybind11_FOUND
 endif() #${PREFIX}_BUILD_STATIC
 ######################################################################################################

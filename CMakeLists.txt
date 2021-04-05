@@ -21,7 +21,7 @@ include(cmake/cmake-common_logic.cmake)
 # STEP 1: 
 # Change this to custimize your project
 ################################################################################
-project( ${ROOT_PROJECT_NAME}  LANGUAGES CXX C)
+project( ${ROOT_PROJECT_NAME}  LANGUAGES CXX C CSharp)
 
  list(APPEND CMAKE_MODULE_PATH   ${PROJECT_SOURCE_DIR}/cmake  ${PROJECT_SOURCE_DIR}/cmake/common )
 

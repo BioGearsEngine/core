@@ -71,7 +71,7 @@ if(${PROJECT_NAME}_BUILD_TEST)
   endif()  
   
 
-  add_executable(unittest
+  add_executable(unittest_cpp
     ${UNITTEST_SOURCES}
     ${UNITTEST_HEADERS}
     ${BIOGEARS_CORE_UNITTEST_HEADERS}
@@ -143,31 +143,30 @@ if(${PROJECT_NAME}_BUILD_TEST)
                   TESTS 
                     ${CIRCUIT_TEST_LIST})
  
-  set_target_properties(unittest PROPERTIES
+  set_target_properties(unittest_cpp PROPERTIES
                         DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
                         CXX_STANDARD 14
-                        FOLDER Other
-                        PROJECT_LABEL "Unit Test"
+                        FOLDER UnitTest
                         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
                       )
 
-  target_include_directories(unittest
+  target_include_directories(unittest_cpp
       PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
       ${GTEST_INCLUDE_DIR}
       ${bio_INCLUDE_DIR}
   )
   if(UNITTEST_biogears-core)
-    target_include_directories(unittest
+    target_include_directories(unittest_cpp
       PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/../biogears/libBiogears/src
   )
   endif()
 
-     target_compile_definitions(unittest PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
-     target_compile_options(unittest PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
+     target_compile_definitions(unittest_cpp PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
+     target_compile_options(unittest_cpp PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
 
-  target_link_libraries(unittest
+  target_link_libraries(unittest_cpp
     GTest::GTest 
     GTest::Main
     Biogears::libbiogears

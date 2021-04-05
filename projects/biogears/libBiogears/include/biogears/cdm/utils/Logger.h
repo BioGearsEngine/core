@@ -19,11 +19,15 @@ specific language governing permissions and limitations under the License.
 #include <log4cpp/Category.hh>
 #pragma warning(pop)
 
+#include <biogears/exports.h>
+
 #include <biogears/cdm/CommonDataModel.h>
 
 namespace biogears {
+
 class Logger;
 class SEScalarTime;
+
 class BIOGEARS_API Loggable {
 public:
   static const std::string empty;
@@ -58,7 +62,9 @@ protected:
 
   Logger* m_Logger;
 };
+}
 
+namespace biogears {
 #pragma warning(push)
 #pragma warning(disable : 4100)
 class BIOGEARS_API LoggerForward {
@@ -71,7 +77,9 @@ public:
 };
 
 #pragma warning(pop)
+}
 
+namespace biogears {
 class BIOGEARS_API Logger {
   friend Loggable;
 
@@ -121,4 +129,5 @@ protected:
   mutable std::stringstream m_ss;
   bool m_FormatMessages;
 };
+
 }
