@@ -101,7 +101,7 @@ if(SWIG_FOUND)
   ###############################################################################
   if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
    message(STATUS "            : lib${PROJECT_NAME}_csharp")
-
+   enable_language( CSharp )
    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
@@ -172,7 +172,7 @@ if(SWIG_FOUND)
       FOLDERS ON
     )
     
-  target_link_libraries(unittest_csharp PUBLIC  lib${PROJECT_NAME}_csharp)
+  target_link_libraries(unittest_csharp PUBLIC  lib${PROJECT_NAME} lib${PROJECT_NAME}_csharp)
   target_include_directories(unittest_csharp PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
   endif()
 endif()
