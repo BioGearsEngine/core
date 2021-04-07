@@ -100,12 +100,9 @@ if(Biogears_BUILD_WEBSITE)
         EXCLUDE_FROM_ALL ON
         COMMENT "Running docs-prepare"
     )
-    
     add_custom_target(docs-doxygen-py
         COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime/doc/doxygen
-        FOLDER "Website"
-        EXCLUDE_FROM_ALL
         COMMENT "Running docs-doxygen"
         VERBATIM
         USES_TERMINAL
@@ -115,7 +112,6 @@ if(Biogears_BUILD_WEBSITE)
         EXCLUDE_FROM_ALL ON
         COMMENT "Running docs-prepare"
     )
-
     add_custom_target(docs-stage-py
         COMMAND ${CMAKE_COMMAND} -E  make_directory output/documentation
         COMMAND ${CMAKE_COMMAND} -E copy_directory doxygen/html/ output/documentation
@@ -136,7 +132,7 @@ if(Biogears_BUILD_WEBSITE)
            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
            VERBATIM
            USES_TERMINAL
-         )
+       )
        set_target_properties(docs-prepare-cdm2md PROPERTIES
            FOLDER "Website"
            EXCLUDE_FROM_ALL ON
@@ -169,7 +165,7 @@ if(Biogears_BUILD_WEBSITE)
            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
            VERBATIM
            USES_TERMINAL
-         )
+       )
        set_target_properties(docs-prepare-xsd2doxygen PROPERTIES
            FOLDER "Website"
            EXCLUDE_FROM_ALL ON
