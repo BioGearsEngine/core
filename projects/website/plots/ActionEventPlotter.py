@@ -247,8 +247,8 @@ class ActionEventPlotter():
                     self.plotting(events,actions,job,input_zip,output_file,df,my_dpi,col)
                 except IOError:
                     logging.error("File Not found at:"+input_zip)
-                except Exception:
-                    logging.error("Headers not found at:"+input_zip+" Headers missing are :"+job.headers[0])
+                except Exception as e:
+                    logging.error("Exception occured when plotting header \"" + job.headers[0] + "\": " + str(e))
 
             elif input_zip.endswith(".zip"):
                 zf=zipfile.ZipFile(input_zip)
@@ -259,8 +259,8 @@ class ActionEventPlotter():
                             self.plotting(events,actions,job,input_zip,output_file,df,my_dpi,col)
                         except IOError:
                             logging.error("File Not found at:"+input_zip)
-                        except Exception:
-                            logging.error("Headers not found at:"+input_zip+" Headers missing are :"+job.headers[0])
+                        except Exception as e:
+                            logging.error("Exception occured when plotting header \"" + job.headers[0] + "\": " + str(e))
         except IOError:
             logging.error("Zip file Not found at :"+input_zip)
         
@@ -275,8 +275,24 @@ class ActionEventPlotter():
         plotting
         
         """
+
         X=df.iloc[:,0].values[::20]
-        y=df.loc[:,job.headers[0]].values[::20]
+        Y=df.loc[:,job.headers[0]].values[::20]
+
+        df2 = None
+        Xexp = None
+        Yexp = None
+        plotExperimentalData = False
+
+        try:
+            if job.experimentalData is not None:
+                df2 = pd.read_csv(job.experimentalData)
+                Xexp = df2.iloc[:,0]
+                Yexp = df2.iloc[:,1]
+                plotExperimentalData = True
+        except Exception as e:
+            logging.info("Exception occured when opening Experimental Data: " + str(e))
+
         if job.legendOnly:
             if not os.path.exists(job.outputDir):
                 os.mkdir(job.outputDir)
@@ -327,7 +343,11 @@ class ActionEventPlotter():
                     if job.log>0:
                         logging.info("Creating Graph:"+job.titleOverride)
                 plt.xlim(0,max(X))
-                p=plt.plot(X,y)
+                plt.plot(X, Y)
+                
+                if (plotExperimentalData):
+                    plt.plot(Xexp, Yexp)
+
                 for i in range(0,len(self.timeData)):
                     plt.axvline(self.timeData[i],color=col[i])
                 
@@ -335,8 +355,10 @@ class ActionEventPlotter():
                     plt.grid(b=True, which='major', color='r', linestyle='--')
                 
                 if not job.hideAELegend and not job.removeAllLegends:
-                    labs=job.headers
-                    plt.legend(p,labs)
+                    legendEntries = job.headers
+                    if (plotExperimentalData):
+                        legendEntries.append("Experimental Data")
+                    plt.legend(legendEntries)
                 
                 if "(" and ")" in job.outputFilename:
                     job.outputFilename=job.outputFilename.split("(")[0]+".jpg"
@@ -363,15 +385,21 @@ class ActionEventPlotter():
                         logging.info("Creating Graph:"+job.titleOverride)
                     plt.title(job.titleOverride,fontsize=job.fontSize)
                 plt.xlim(0,max(X))
-                p=plt.plot(X,y)
+                plt.plot(X,Y)
+
+                if (plotExperimentalData):
+                        plt.plot(Xexp, Yexp)
+
                 for i in range(0,len(self.timeData)):
                     plt.axvline(self.timeData[i],color=col[i])
                 if job.showGridLines:
                     plt.grid(b=True, which='major', color='r', linestyle='--')
                 
                 if not job.hideAELegend and not job.removeAllLegends:
-                    labs=job.headers
-                    plt.legend(p,labs)
+                    legendEntries = job.headers
+                    if (plotExperimentalData):
+                        legendEntries.append("Experimental Data")
+                    plt.legend(legendEntries)
                 
                 if "(" and ")" in job.outputFilename:
                     job.outputFilename=job.outputFilename.split("(")[0]+".jpg"
