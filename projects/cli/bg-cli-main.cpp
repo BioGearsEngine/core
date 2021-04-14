@@ -45,6 +45,7 @@ bool g_run_patient_validation = false;
 bool g_run_drug_validation = false;
 bool g_run_system_validation = false;
 bool g_run_verification_routine = false;
+bool g_run_custom_validation = false;
 bool g_run_generate_tables = false;
 bool g_run_generate_sepsis_states = false;
 bool g_run_generate_patient_states = false;
@@ -376,6 +377,8 @@ int main(int argc, char** argv)
         g_run_system_validation = true;
       } else if (test == "all") {
         g_run_patient_validation = g_run_drug_validation = g_run_system_validation = g_run_verification_routine = true;
+      } else if (test == "custom") {
+        g_run_custom_validation = true;
       } else {
         std::cout << "Warning: No Validation known as " << test << " exists.\n";
       }
@@ -396,6 +399,10 @@ int main(int argc, char** argv)
   }
   if (g_run_verification_routine) { // run-verification
     const auto runs = biogears::Config("config/VerificationScenarios.config");
+    driver.queue(runs, as_subprocess);
+  }
+  if (g_run_custom_validation) { // run-custom-file
+    const auto runs = biogears::Config("CustomScenarios.config");
     driver.queue(runs, as_subprocess);
   }
 
