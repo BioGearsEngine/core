@@ -299,7 +299,7 @@ class ActionEventPlotter():
             colors =["red","yellow","green","blue","orange","lime","magenta",
                      "violet","black","purple","0.1","0.2","0.75","0.8","0.9","pink"]
             f = lambda m,c: plt.plot([],[],marker=m, color=c, ls="none")[0]
-            handles = [f("_", colors[i]) for i in range(0,len(self.data))]
+            handles = [f("_", colors[i]) for i in range(0,len(colors))]
             labels = [i.replace("\t","    ") for i in self.data]
             legend = plt.legend(handles, labels, loc=3, ncol=3, framealpha=1, frameon=False, fontsize=12)
             plt.axis('off')
@@ -390,7 +390,7 @@ class ActionEventPlotter():
                 if (plotExperimentalData):
                         plt.plot(Xexp, Yexp)
 
-                for i in range(0,len(self.timeData)):
+                for i in range(0,min(len(self.timeData), len(col))):
                     plt.axvline(self.timeData[i],color=col[i])
                 if job.showGridLines:
                     plt.grid(b=True, which='major', color='r', linestyle='--')
