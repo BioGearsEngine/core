@@ -76,6 +76,7 @@ int main(int argc, char** argv)
   bool run_drug_validation = false;
   bool run_system_validation = false;
   bool run_verification = false;
+  bool run_custom_file = false;
 
   unsigned int thread_count = std::thread::hardware_concurrency();
   if (!args.parse(argc, argv) || args.Option("HELP") || args.Option("H") || args.empty()) {
@@ -180,6 +181,8 @@ int main(int argc, char** argv)
         run_system_validation = true;
       } else if (test == "all") {
         run_patient_validation = run_drug_validation = run_system_validation = run_verification = true;
+      } else if (test == "custom") {
+        run_custom_file = true;
       } else {
         std::cout << "Warning: No Validation known as " << test << " exists.\n";
       }
@@ -200,6 +203,10 @@ int main(int argc, char** argv)
   }
   if (run_verification) { // run-verification
     const auto runs = biogears::Config("VerificationScenarios.config");
+    driver.queue(runs, as_subprocess);
+  }
+  if (run_custom_file) { // run-custom-file
+    const auto runs = biogears::Config("CustomScenarios.config");
     driver.queue(runs, as_subprocess);
   }
 
