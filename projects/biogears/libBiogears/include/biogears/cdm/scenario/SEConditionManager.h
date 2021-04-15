@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEChronicPericardialEffusion.h>
 #include <biogears/cdm/patient/conditions/SEChronicRenalStenosis.h>
 #include <biogears/cdm/patient/conditions/SEChronicVentricularSystolicDysfunction.h>
-#include <biogears/cdm/patient/conditions/SECompartmentSyndrome.h>
 #include <biogears/cdm/patient/conditions/SEDehydration.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
@@ -67,9 +66,6 @@ public:
   bool HasChronicRenalStenosis() const;
   SEChronicRenalStenosis* GetChronicRenalStenosis() const;
 
-  bool HasCompartmentSyndrome() const;
-  std::vector<SECompartmentSyndrome*> GetCompartmentSyndromes() const;
-
   bool HasStarvation() const;
   SEStarvation* GetStarvation() const;
 
@@ -98,7 +94,6 @@ protected:
   SEChronicAnemia* m_Anemia;
   SEStarvation* m_Starvation;
   SEChronicObstructivePulmonaryDisease* m_COPD;
-  SECompartmentSyndrome* m_CompartmentSyndrome;
   SEDehydration* m_Dehydration;
   SEDiabetesType1* m_DiabetesType1;
   SEDiabetesType2* m_DiabetesType2;
@@ -111,7 +106,6 @@ protected:
   SEInitialEnvironment* m_InitialEnvironment;
 
   std::vector<SECondition*> m_Conditions;
-  std::vector<SECompartmentSyndrome*> m_CompartmentSyndromes;
   std::stringstream m_ss;
 };
 }
