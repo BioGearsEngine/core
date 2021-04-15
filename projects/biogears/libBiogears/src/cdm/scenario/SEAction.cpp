@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
+#include <biogears/cdm/patient/actions/SEEscharotomy.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
@@ -240,6 +241,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       SEConsumeNutrients* a = new SEConsumeNutrients();
       a->Load(*consumeData);
       return a;
+    }
+
+    CDM::EscharotomyData* escharotomyData = dynamic_cast<CDM::EscharotomyData*>(action);
+    if (escharotomyData != nullptr) {
+      SEEscharotomy* escharotomy = new SEEscharotomy();
+      escharotomy->Load(*escharotomyData);
+      return escharotomy;
     }
 
     CDM::ExerciseData* exerciseData = dynamic_cast<CDM::ExerciseData*>(action);

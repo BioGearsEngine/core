@@ -130,6 +130,14 @@ protected:
   double m_leftLungDeltaCompliance_mL_Per_mmHG;
   double m_rightLungDeltaCompliance_mL_Per_mmHG;
   double m_compartmentSyndromeCount;
+  double m_lastTissueMusleExtracellularVolume_mL;
+  double m_baselineMuscleTissueVolume_mL;
+  bool m_trunkEscharotomy = false;
+  bool m_leftArmEscharotomy = false;
+  bool m_leftLegEscharotomy = false;
+  bool m_rightArmEscharotomy = false;
+  bool m_rightLegEscharotomy = false;
+  double m_testvalue = 0.0;
 
 
   std::stringstream m_ss;
