@@ -21,17 +21,6 @@ specific language governing permissions and limitations under the License.
 			<xs:extension base="ConditionData"/>
 		</xs:complexContent>
 	</xs:complexType>
-	
-	<!-- @brief Compartment syndrome occurs due to high severity burns and fluid creep -->
-	<xs:complexType name="CompartmentSyndromeData">
-		<xs:complexContent>
-			<xs:extension base="PatientConditionData">
-				<xs:sequence>
-					<xs:element name="Location" type="xs:string" minOccurs="1" maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>   
 	<!-- @brief Condition characterized by reduced red blood cells, which leads to reduced oxygen carrying capacity. Implemented by reducing the amount of hemoglobin in the blood. -->
 	<xs:complexType name="ChronicAnemiaData">
 		<xs:complexContent>
