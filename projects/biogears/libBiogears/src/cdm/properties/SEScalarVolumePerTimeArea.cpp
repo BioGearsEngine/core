@@ -73,7 +73,10 @@ const VolumePerTimeAreaUnit& VolumePerTimeAreaUnit::GetCompoundUnit(const std::s
 
 bool VolumePerTimeAreaUnit::operator==(const VolumePerTimeAreaUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool VolumePerTimeAreaUnit::operator!=(const VolumePerTimeAreaUnit& obj) const

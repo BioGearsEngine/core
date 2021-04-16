@@ -34,10 +34,6 @@ public:
   virtual bool Load(const CDM::ChestCompressionForceScaleData& in);
   virtual CDM::ChestCompressionForceScaleData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::ChestCompressionForceScaleData& data) const;
-
-public:
   virtual bool HasForceScale() const;
   virtual SEScalar0To1& GetForceScale();
 
@@ -45,6 +41,12 @@ public:
   virtual SEScalarTime& GetForcePeriod();
 
   virtual void ToString(std::ostream& str) const;
+
+  bool operator==( const SEChestCompressionForceScale& rhs) const;
+  bool operator!=( const SEChestCompressionForceScale& rhs) const;
+
+protected:
+  virtual void Unload(CDM::ChestCompressionForceScaleData& data) const;
 
 protected:
   SEScalar0To1* m_ForceScale;

@@ -50,8 +50,8 @@ public:
 
   virtual SESubstance& GetSubstance() const;
 
-  bool operator==(SESubstanceConcentration const& rhs) const;
-  bool operator!=(SESubstanceConcentration const& rhs) const;
+  bool operator==( const SESubstanceConcentration& rhs) const;
+  bool operator!=( const SESubstanceConcentration& rhs) const;
   SESubstanceConcentration& operator=(SESubstanceConcentration const& rhs);
 
 protected:

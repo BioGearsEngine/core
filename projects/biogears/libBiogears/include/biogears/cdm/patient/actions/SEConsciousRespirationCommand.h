@@ -33,9 +33,6 @@ public:
   virtual bool Load(const CDM::ConsciousRespirationCommandData& in);
   virtual CDM::ConsciousRespirationCommandData* Unload() const = 0;
 
-protected:
-  virtual void Unload(CDM::ConsciousRespirationCommandData& data) const;
-
 public:
   virtual std::string GetComment() const;
   virtual const char* GetComment_cStr() const;
@@ -45,6 +42,12 @@ public:
   virtual void InvalidateComment();
 
   virtual void ToString(std::ostream& str) const = 0;
+
+  bool operator==( const SEConsciousRespirationCommand& rhs) const;
+  bool operator!=( const SEConsciousRespirationCommand& rhs) const;
+
+protected:
+  virtual void Unload(CDM::ConsciousRespirationCommandData& data) const;
 
 protected:
   std::string m_Comment;

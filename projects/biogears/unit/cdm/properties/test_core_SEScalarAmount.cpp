@@ -76,8 +76,8 @@ TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::AmountUnit mu0 = biogears::AmountUnit::GetCompoundUnit("mol");
-  biogears::AmountUnit mu1 = biogears::AmountUnit::GetCompoundUnit("pmol");
+  auto& mu0 = biogears::AmountUnit::GetCompoundUnit("mol");
+  auto & mu1 = biogears::AmountUnit::GetCompoundUnit("pmol");
   EXPECT_EQ(mu0, biogears::AmountUnit::mol);
   EXPECT_EQ(mu1, biogears::AmountUnit::pmol);
   EXPECT_THROW(biogears::AmountUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);

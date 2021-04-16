@@ -40,9 +40,6 @@ public:
   virtual bool Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr);
   virtual CDM::SubstanceCompoundData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstanceCompoundData& data) const;
-
 public:
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;
@@ -66,6 +63,12 @@ public:
   SESubstanceConcentration& GetComponent(SESubstance& substance);
   const SESubstanceConcentration GetComponent(SESubstance& substance) const;
   void RemoveComponent(const SESubstance& substance);
+   
+  bool operator==( const SESubstanceCompound& rhs) const;
+  bool operator!=( const SESubstanceCompound& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstanceCompoundData& data) const;
 
 protected:
   std::string m_Name;

@@ -82,7 +82,10 @@ const VolumeUnit& VolumeUnit::GetCompoundUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 bool VolumeUnit::operator==(const VolumeUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool VolumeUnit::operator!=(const VolumeUnit& obj) const

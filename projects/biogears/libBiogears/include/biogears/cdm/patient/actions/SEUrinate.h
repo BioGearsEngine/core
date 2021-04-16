@@ -32,11 +32,14 @@ public:
   virtual bool Load(const CDM::UrinateData& in);
   virtual CDM::UrinateData* Unload() const override;
 
+  virtual void ToString(std::ostream& str) const override;
+  
+  bool operator==( const SEUrinate& rhs) const;
+  bool operator!=( const SEUrinate& rhs) const;
+
 protected:
   virtual void Unload(CDM::UrinateData& data) const;
 
-public:
-  virtual void ToString(std::ostream& str) const override;
 
 protected:
 };

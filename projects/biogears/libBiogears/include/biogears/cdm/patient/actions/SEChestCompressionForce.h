@@ -34,14 +34,16 @@ public:
   virtual bool Load(const CDM::ChestCompressionForceData& in);
   virtual CDM::ChestCompressionForceData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::ChestCompressionForceData& data) const;
-
-public:
   virtual bool HasForce() const;
   virtual SEScalarForce& GetForce();
 
   virtual void ToString(std::ostream& str) const override;
+
+  bool operator==( const SEChestCompressionForce& rhs) const;
+  bool operator!=( const SEChestCompressionForce& rhs) const;
+
+protected:
+  virtual void Unload(CDM::ChestCompressionForceData& data) const;
 
 protected:
   SEScalarForce* m_Force;

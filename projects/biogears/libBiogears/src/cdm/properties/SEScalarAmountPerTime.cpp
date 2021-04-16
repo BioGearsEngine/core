@@ -87,7 +87,10 @@ const AmountPerTimeUnit& AmountPerTimeUnit::GetCompoundUnit(const std::string& u
 //-------------------------------------------------------------------------------
 bool AmountPerTimeUnit::operator==(const AmountPerTimeUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr 
+    || strcmp(lhsPtr,rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool AmountPerTimeUnit::operator!=(const AmountPerTimeUnit& obj) const

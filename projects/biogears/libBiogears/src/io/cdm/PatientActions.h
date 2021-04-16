@@ -63,11 +63,17 @@ class SEUrinate;
 class SEOverride;
 
 
-#define CDM_PATIENT_ACTIONS_UNMARSHAL_HELPER(xsd, func)                                     \
+#define CDM_PATIENT_ACTIONS_UNMARSHAL_HELPER(xsd, func)                              \
   if (m_##func) {                                                                    \
     xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::Property::UnMarshall(*m_##func, xsd.func());                       \
+    io::PatientActions::UnMarshall(*m_##func, xsd.func());                           \
   }
+
+#define CDM_OPTIONAL_PATIENT_ACTIONS_UNMARSHAL_HELPER(xsd, func)                     \
+  if (in.m_##func) {                                                                 \
+    io::PatientActions::UnMarshall(*in.m_##func, out.func());                        \
+  
+
 namespace io {
   class BIOGEARS_PRIVATE_API PatientActions {
   public:

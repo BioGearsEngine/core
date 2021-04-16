@@ -67,7 +67,10 @@ const InverseVolumeUnit& InverseVolumeUnit::GetCompoundUnit(const std::string& u
 //-------------------------------------------------------------------------------
 bool InverseVolumeUnit::operator==(const InverseVolumeUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool InverseVolumeUnit::operator!=(const InverseVolumeUnit& obj) const

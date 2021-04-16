@@ -36,9 +36,6 @@ public:
   virtual bool Load(const CDM::SubstanceBolusData& in);
   virtual CDM::SubstanceBolusData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstanceBolusData& data) const;
-
 public:
   virtual CDM::enumBolusAdministration::value GetAdminRoute() const;
   virtual void SetAdminRoute(CDM::enumBolusAdministration::value name);
@@ -57,6 +54,12 @@ public:
   virtual SESubstance& GetSubstance() const;
 
   virtual void ToString(std::ostream& str) const;
+  
+  bool operator==(const SESubstanceBolus& rhs) const;
+  bool operator!=(const SESubstanceBolus& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstanceBolusData& data) const;
 
 protected:
   CDM::enumBolusAdministration::value m_AdminRoute;
@@ -76,16 +79,18 @@ public:
   virtual bool Load(const CDM::SubstanceBolusStateData& in);
   virtual CDM::SubstanceBolusStateData* Unload() const;
 
+  SEScalarTime& GetElapsedTime() { return m_ElapsedTime; }
+  SEScalarVolume& GetAdministeredDose() { return m_AdministeredDose; }
+
+  bool operator==( const SESubstanceBolusState& rhs) const;
+  bool operator!=( const SESubstanceBolusState& rhs) const;
+
 protected:
   virtual void Unload(CDM::SubstanceBolusStateData& data) const;
 
-public:
-  SEScalarTime& GetElapsedTime() { return m_elapsedTime; }
-  SEScalarVolume& GetAdministeredDose() { return m_administeredDose; }
-
 protected:
-  const SESubstance& m_substance;
-  SEScalarTime m_elapsedTime;
-  SEScalarVolume m_administeredDose;
+  const SESubstance& m_Substance;
+  SEScalarTime m_ElapsedTime;
+  SEScalarVolume m_AdministeredDose;
 };
 }

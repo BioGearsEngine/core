@@ -148,4 +148,19 @@ namespace biogears
     str << std::flush;
   }
   //-------------------------------------------------------------------------------
+bool SEInfection::operator==( const SEInfection& rhs) const
+{
+bool equivilant;
+  equivilant = m_Comment == rhs.m_Comment;
+  equivilant = m_Location == rhs.m_Location;
+  equivilant = m_Severity == rhs.m_Severity;
+  equivilant &= (m_MinimumInhibitoryConcentration && rhs.m_MinimumInhibitoryConcentration) ? m_MinimumInhibitoryConcentration->operator==(*rhs.m_MinimumInhibitoryConcentration) 
+    : m_MinimumInhibitoryConcentration == rhs.m_MinimumInhibitoryConcentration;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEInfection::operator!=( const SEInfection& rhs) const
+{
+  return !(*this == rhs);
+}
 }

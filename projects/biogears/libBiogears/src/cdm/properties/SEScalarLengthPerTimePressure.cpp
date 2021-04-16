@@ -77,7 +77,10 @@ const LengthPerTimePressureUnit& LengthPerTimePressureUnit::GetCompoundUnit(cons
 //-------------------------------------------------------------------------------
 bool LengthPerTimePressureUnit::operator==(const LengthPerTimePressureUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool LengthPerTimePressureUnit::operator!=(const LengthPerTimePressureUnit& obj) const

@@ -18,53 +18,53 @@ SECardiacArrest::SECardiacArrest()
 {
   m_State = CDM::enumOnOff::Off;
 }
-
+//-------------------------------------------------------------------------------
 SECardiacArrest::~SECardiacArrest()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SECardiacArrest::Clear()
 {
   SEPatientAction::Clear();
   m_State = CDM::enumOnOff::Off;
 }
-
+//-------------------------------------------------------------------------------
 bool SECardiacArrest::IsValid() const
 {
   return SEPatientAction::IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SECardiacArrest::IsActive() const
 {
   return IsValid() && m_State == CDM::enumOnOff::On;
 }
-
+//-------------------------------------------------------------------------------
 void SECardiacArrest::SetActive(bool b)
 {
   m_State = b ? CDM::enumOnOff::On : CDM::enumOnOff::Off;
 }
-
+//-------------------------------------------------------------------------------
 bool SECardiacArrest::Load(const CDM::CardiacArrestData& in)
 {
   SEPatientAction::Load(in);
   m_State = in.State();
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::CardiacArrestData* SECardiacArrest::Unload() const
 {
   CDM::CardiacArrestData* data(new CDM::CardiacArrestData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SECardiacArrest::Unload(CDM::CardiacArrestData& data) const
 {
   SEPatientAction::Unload(data);
   data.State(m_State);
 }
-
+//-------------------------------------------------------------------------------
 void SECardiacArrest::ToString(std::ostream& str) const
 {
   str << "Patient Action : Cardiac Arrest";
@@ -72,5 +72,15 @@ void SECardiacArrest::ToString(std::ostream& str) const
     str << "\n\tComment: " << m_Comment;
   str << "\n\tState: " << IsActive();
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SECardiacArrest::operator==( const SECardiacArrest& rhs) const
+{
+  return m_Comment == rhs.m_Comment;
+}
+//-------------------------------------------------------------------------------
+bool SECardiacArrest::operator!=( const SECardiacArrest& rhs) const
+{
+  return !(*this == rhs);
 }
 }

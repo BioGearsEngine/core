@@ -35,6 +35,8 @@ public:
   virtual bool Load(const CDM::PatientAssessmentRequestData& in);
   virtual CDM::PatientAssessmentRequestData* Unload() const override;
 
+  bool operator==( const SEPatientAssessmentRequest& rhs) const;
+  bool operator!=( const SEPatientAssessmentRequest& rhs) const;
 protected:
   virtual void Unload(CDM::PatientAssessmentRequestData& data) const;
 

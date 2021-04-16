@@ -19,50 +19,62 @@ SEUseInhaler::SEUseInhaler()
   : SEConsciousRespirationCommand()
 {
 }
-
+//-------------------------------------------------------------------------------
 SEUseInhaler::~SEUseInhaler()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEUseInhaler::Clear()
 {
   SEConsciousRespirationCommand::Clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SEUseInhaler::IsValid() const
 {
   return SEConsciousRespirationCommand::IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SEUseInhaler::IsActive() const
 {
   return SEConsciousRespirationCommand::IsActive();
 }
-
+//-------------------------------------------------------------------------------
 bool SEUseInhaler::Load(const CDM::UseInhalerData& in)
 {
   SEConsciousRespirationCommand::Load(in);
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::UseInhalerData* SEUseInhaler::Unload() const
 {
   CDM::UseInhalerData* data(new CDM::UseInhalerData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEUseInhaler::Unload(CDM::UseInhalerData& data) const
 {
   SEConsciousRespirationCommand::Unload(data);
 }
-
+//-------------------------------------------------------------------------------
 void SEUseInhaler::ToString(std::ostream& str) const
 {
   str << "Use Inhaler";
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEUseInhaler::operator==( const SEUseInhaler& rhs) const
+{
+  bool equivilant;
+  equivilant = m_Comment == rhs.m_Comment;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEUseInhaler::operator!=( const SEUseInhaler& rhs) const
+{
+  return !(*this == rhs);
 }
 }

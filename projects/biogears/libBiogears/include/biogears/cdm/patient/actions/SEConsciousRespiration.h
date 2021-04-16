@@ -40,10 +40,6 @@ public:
   virtual bool Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances);
   virtual CDM::ConsciousRespirationData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::ConsciousRespirationData& data) const;
-
-public:
   // Get the active command
   virtual SEConsciousRespirationCommand* GetActiveCommand();
   /// When the active command has been processed, remove it
@@ -55,6 +51,13 @@ public:
   virtual SEUseInhaler& AddUseInhaler();
 
   virtual void ToString(std::ostream& str) const override;
+
+  bool operator==( const SEConsciousRespiration& rhs) const;
+  bool operator!=( const SEConsciousRespiration& rhs) const;
+
+protected:
+  virtual void Unload(CDM::ConsciousRespirationData& data) const;
+
 
 protected:
   bool m_ClearCommands;

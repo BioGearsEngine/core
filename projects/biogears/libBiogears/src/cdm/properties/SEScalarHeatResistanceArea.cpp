@@ -77,7 +77,10 @@ const HeatResistanceAreaUnit& HeatResistanceAreaUnit::GetCompoundUnit(const std:
 //-------------------------------------------------------------------------------
 bool HeatResistanceAreaUnit::operator==(const HeatResistanceAreaUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool HeatResistanceAreaUnit::operator!=(const HeatResistanceAreaUnit& obj) const

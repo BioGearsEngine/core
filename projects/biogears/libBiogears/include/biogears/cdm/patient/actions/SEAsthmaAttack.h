@@ -37,14 +37,15 @@ public:
   virtual bool Load(const CDM::AsthmaAttackData& in);
   virtual CDM::AsthmaAttackData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::AsthmaAttackData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
   virtual void ToString(std::ostream& str) const override;
+
+  bool operator==(const SEAsthmaAttack& rhs) const;
+  bool operator!=(const SEAsthmaAttack& rhs) const;
+protected:
+  virtual void Unload(CDM::AsthmaAttackData& data) const;
 
 protected:
   SEScalar0To1* m_Severity;

@@ -21,12 +21,12 @@ SEBrainInjury::SEBrainInjury()
   m_Severity = nullptr;
   m_Type = (CDM::enumBrainInjuryType::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 SEBrainInjury::~SEBrainInjury()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEBrainInjury::Clear()
 {
 
@@ -34,17 +34,17 @@ void SEBrainInjury::Clear()
   SAFE_DELETE(m_Severity);
   m_Type = (CDM::enumBrainInjuryType::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 bool SEBrainInjury::IsValid() const
 {
   return SEPatientAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SEBrainInjury::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEBrainInjury::Load(const CDM::BrainInjuryData& in)
 {
   SEPatientAction::Load(in);
@@ -52,14 +52,14 @@ bool SEBrainInjury::Load(const CDM::BrainInjuryData& in)
   m_Type = in.Type();
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::BrainInjuryData* SEBrainInjury::Unload() const
 {
   CDM::BrainInjuryData* data(new CDM::BrainInjuryData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEBrainInjury::Unload(CDM::BrainInjuryData& data) const
 {
   SEPatientAction::Unload(data);
@@ -68,35 +68,39 @@ void SEBrainInjury::Unload(CDM::BrainInjuryData& data) const
   if (HasType())
     data.Type(m_Type);
 }
-
+//-------------------------------------------------------------------------------
 bool SEBrainInjury::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEBrainInjury::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 CDM::enumBrainInjuryType::value SEBrainInjury::GetType() const
 {
   return m_Type;
 }
+//-------------------------------------------------------------------------------
 void SEBrainInjury::SetType(CDM::enumBrainInjuryType::value Type)
 {
   m_Type = Type;
 }
+//-------------------------------------------------------------------------------
 bool SEBrainInjury::HasType() const
 {
   return m_Type == ((CDM::enumBrainInjuryType::value)-1) ? false : true;
 }
+//-------------------------------------------------------------------------------
 void SEBrainInjury::InvalidateType()
 {
   m_Type = (CDM::enumBrainInjuryType::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 void SEBrainInjury::ToString(std::ostream& str) const
 {
   str << "Patient Action : Brain Injury";
@@ -107,5 +111,19 @@ void SEBrainInjury::ToString(std::ostream& str) const
   str << "\n\tType: ";
   HasType() ? str << GetType() : str << "Not Set";
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEBrainInjury::operator==( const SEBrainInjury& rhs) const
+{
+  bool equivilant;
+  equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
+  equivilant &= m_Type == rhs.m_Type;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEBrainInjury::operator!=( const SEBrainInjury& rhs) const
+{
+  return !(*this == rhs);
 }
 }

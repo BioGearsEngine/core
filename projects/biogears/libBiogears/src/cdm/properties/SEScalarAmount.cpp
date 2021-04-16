@@ -67,7 +67,10 @@ const AmountUnit& AmountUnit::GetCompoundUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 bool AmountUnit::operator==(const AmountUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool AmountUnit::operator!=(const AmountUnit& obj) const

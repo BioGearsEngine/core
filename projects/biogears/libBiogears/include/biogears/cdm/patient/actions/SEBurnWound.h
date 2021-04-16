@@ -41,10 +41,6 @@ public:
   virtual bool Load(const CDM::BurnWoundData& in);
   virtual CDM::BurnWoundData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::BurnWoundData& data) const;
-
-public:
   virtual bool HasTotalBodySurfaceArea() const;
   virtual SEScalar0To1& GetTotalBodySurfaceArea();
 
@@ -52,6 +48,13 @@ public:
   virtual void SetInflammation(bool activate);
 
   virtual void ToString(std::ostream& str) const override;
+
+  bool operator==( const SEBurnWound& rhs) const;
+  bool operator!=( const SEBurnWound& rhs) const;
+
+protected:
+  virtual void Unload(CDM::BurnWoundData& data) const;
+
 
 protected:
   bool m_Inflammation;

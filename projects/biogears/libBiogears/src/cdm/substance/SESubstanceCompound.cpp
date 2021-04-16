@@ -21,15 +21,13 @@ SESubstanceCompound::SESubstanceCompound(const std::string& name, Logger* logger
   , m_Name(name)
   , m_Classification((CDM::enumSubstanceClass::value)-1)
 {
-
 }
 SESubstanceCompound::SESubstanceCompound(const char* name, Logger* logger)
   : SESubstanceCompound(std::string { name }, logger)
 {
-  
 }
 SESubstanceCompound::SESubstanceCompound(Logger* logger)
-  : SESubstanceCompound("",logger)
+  : SESubstanceCompound("", logger)
 {
 }
 //-----------------------------------------------------------------------------
@@ -47,7 +45,6 @@ void SESubstanceCompound::Clear()
 {
   m_Name = "";
   m_Classification = (CDM::enumSubstanceClass::value)-1;
-
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr)
@@ -96,7 +93,7 @@ void SESubstanceCompound::Unload(CDM::SubstanceCompoundData& data) const
     data.BloodRHFactor(m_RhFactor);
 
   for (auto& component : m_Components) {
-    data.Component().push_back( *component.Unload() );
+    data.Component().push_back(*component.Unload());
   }
 };
 //-----------------------------------------------------------------------------
@@ -188,7 +185,7 @@ std::vector<SESubstanceConcentration>& SESubstanceCompound::GetComponents()
 const std::vector<SESubstanceConcentration> SESubstanceCompound::GetComponents() const
 {
   std::vector<SESubstanceConcentration> cCompounds;
-  for (auto &component : m_Components) {
+  for (auto& component : m_Components) {
     cCompounds.push_back(component);
   }
   return cCompounds;
@@ -224,5 +221,22 @@ void SESubstanceCompound::RemoveComponent(const SESubstance& substance)
     i++;
   }
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SESubstanceCompound::operator==(const SESubstanceCompound& rhs) const
+{
+  bool equivilant;
+  equivilant = m_Name == rhs.m_Name;
+  equivilant = m_RhFactor == rhs.m_RhFactor;
+  equivilant = m_Classification == rhs.m_Classification;
+  equivilant = m_Components.size() == rhs.m_Components.size();
+  for (auto i = 0; i < m_Components.size(); ++i) {
+    equivilant &= m_Components[i] == rhs.m_Components[i];
+  }
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceCompound::operator!=(const SESubstanceCompound& rhs) const
+{
+  return !(*this == rhs);
+}
 }

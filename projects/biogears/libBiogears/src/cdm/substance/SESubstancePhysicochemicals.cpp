@@ -142,7 +142,6 @@ bool SESubstancePhysicochemicals::HasPrimaryPKA() const
 {
   return (!m_AcidDissociationConstants.empty());
 }
-//-----------------------------------------------------------------------------
 SEScalar& SESubstancePhysicochemicals::GetPrimaryPKA()
 {
   if (m_AcidDissociationConstants.empty()) {
@@ -151,7 +150,6 @@ SEScalar& SESubstancePhysicochemicals::GetPrimaryPKA()
   }
   return *m_AcidDissociationConstants[0];
 }
-//-----------------------------------------------------------------------------
 double SESubstancePhysicochemicals::GetPrimaryPKA() const
 {
   if (m_AcidDissociationConstants.empty())
@@ -163,7 +161,6 @@ bool SESubstancePhysicochemicals::HasSecondaryPKA() const
 {
   return m_AcidDissociationConstants.size() < 2 ? false : true;
 }
-//-----------------------------------------------------------------------------
 SEScalar& SESubstancePhysicochemicals::GetSecondaryPKA()
 {
   if (m_AcidDissociationConstants.size() < 2) {
@@ -172,7 +169,6 @@ SEScalar& SESubstancePhysicochemicals::GetSecondaryPKA()
   }
   return *m_AcidDissociationConstants[1];
 }
-//-----------------------------------------------------------------------------
 double SESubstancePhysicochemicals::GetSecondaryPKA() const
 {
   if (m_AcidDissociationConstants.size()<2)
@@ -184,17 +180,14 @@ CDM::enumSubstanceBindingProtein::value SESubstancePhysicochemicals::GetBindingP
 {
   return m_BindingProtein;
 }
-//-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::SetBindingProtein(CDM::enumSubstanceBindingProtein::value protein)
 {
   m_BindingProtein = protein;
 }
-//-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::HasBindingProtein() const
 {
   return m_BindingProtein == ((CDM::enumSubstanceBindingProtein::value)-1) ? false : true;
 }
-//-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::InvalidateBindingProtein()
 {
   m_BindingProtein = (CDM::enumSubstanceBindingProtein::value)-1;
@@ -204,14 +197,12 @@ bool SESubstancePhysicochemicals::HasBloodPlasmaRatio() const
 {
   return (m_BloodPlasmaRatio == nullptr) ? false : m_BloodPlasmaRatio->IsValid();
 }
-//-----------------------------------------------------------------------------
 SEScalar& SESubstancePhysicochemicals::GetBloodPlasmaRatio()
 {
   if (m_BloodPlasmaRatio == nullptr)
     m_BloodPlasmaRatio = new SEScalar();
   return *m_BloodPlasmaRatio;
 }
-//-----------------------------------------------------------------------------
 double SESubstancePhysicochemicals::GetBloodPlasmaRatio() const
 {
   if (m_BloodPlasmaRatio == nullptr)
@@ -223,14 +214,12 @@ bool SESubstancePhysicochemicals::HasFractionUnboundInPlasma() const
 {
   return (m_FractionUnboundInPlasma == nullptr) ? false : m_FractionUnboundInPlasma->IsValid();
 }
-//-----------------------------------------------------------------------------
 SEScalarFraction& SESubstancePhysicochemicals::GetFractionUnboundInPlasma()
 {
   if (m_FractionUnboundInPlasma == nullptr)
     m_FractionUnboundInPlasma = new SEScalarFraction();
   return *m_FractionUnboundInPlasma;
 }
-//-----------------------------------------------------------------------------
 double SESubstancePhysicochemicals::GetFractionUnboundInPlasma() const
 {
   if (m_FractionUnboundInPlasma == nullptr)
@@ -242,7 +231,6 @@ CDM::enumSubstanceIonicState::value SESubstancePhysicochemicals::GetIonicState()
 {
   return m_IonicState;
 }
-//-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::SetIonicState(CDM::enumSubstanceIonicState::value state)
 {
   m_IonicState = state;
@@ -251,7 +239,6 @@ bool SESubstancePhysicochemicals::HasIonicState() const
 {
   return m_IonicState == ((CDM::enumSubstanceIonicState::value)-1) ? false : true;
 }
-//-----------------------------------------------------------------------------
 void SESubstancePhysicochemicals::InvalidateIonicState()
 {
   m_IonicState = (CDM::enumSubstanceIonicState::value)-1;
@@ -261,26 +248,24 @@ bool SESubstancePhysicochemicals::HasLogP() const
 {
   return (m_LogP == nullptr) ? false : m_LogP->IsValid();
 }
-//-----------------------------------------------------------------------------
 SEScalar& SESubstancePhysicochemicals::GetLogP()
 {
   if (m_LogP == nullptr)
     m_LogP = new SEScalar();
   return *m_LogP;
 }
-//-----------------------------------------------------------------------------
 double SESubstancePhysicochemicals::GetLogP() const
 {
   if (m_LogP == nullptr)
     return SEScalar::dNaN();
   return m_LogP->GetValue();
 }
+
 //-----------------------------------------------------------------------------
 bool SESubstancePhysicochemicals::HasHydrogenBondCount() const
 {
   return (m_HydrogenBondCount == nullptr) ? false : m_HydrogenBondCount->IsValid();
 }
-//-----------------------------------------------------------------------------
 SEScalar& SESubstancePhysicochemicals::GetHydrogenBondCount()
 {
   if (m_HydrogenBondCount == nullptr)
@@ -298,7 +283,6 @@ bool SESubstancePhysicochemicals::HasPolarSurfaceArea() const
 {
   return (m_PolarSurfaceArea == nullptr) ? false : m_PolarSurfaceArea->IsValid();
 }
-//-----------------------------------------------------------------------------
 SEScalar& SESubstancePhysicochemicals::GetPolarSurfaceArea()
 {
   if (m_PolarSurfaceArea == nullptr)
@@ -311,5 +295,37 @@ double SESubstancePhysicochemicals::GetPolarSurfaceArea() const
     return SEScalar::dNaN();
   return m_PolarSurfaceArea->GetValue();
 }
-//-----------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------
+bool SESubstancePhysicochemicals::operator==( const SESubstancePhysicochemicals& rhs) const
+{
+  /*
+    std::vector<SEScalar*> m_AcidDissociationConstants;
+
+
+};
+  */
+bool equivilant;
+  equivilant = m_BindingProtein == rhs.m_BindingProtein;
+  equivilant = m_IonicState == rhs.m_IonicState;
+  equivilant &= (m_BloodPlasmaRatio && rhs.m_BloodPlasmaRatio) ? m_BloodPlasmaRatio->operator==(*rhs.m_BloodPlasmaRatio) : m_BloodPlasmaRatio == rhs.m_BloodPlasmaRatio;
+  equivilant &= (m_FractionUnboundInPlasma && rhs.m_FractionUnboundInPlasma) ? m_FractionUnboundInPlasma->operator==(*rhs.m_FractionUnboundInPlasma) : m_FractionUnboundInPlasma == rhs.m_FractionUnboundInPlasma;
+  equivilant &= (m_LogP && rhs.m_LogP) ? m_LogP->operator==(*rhs.m_LogP) : m_LogP == rhs.m_LogP;
+  equivilant &= (m_HydrogenBondCount && rhs.m_HydrogenBondCount) ? m_HydrogenBondCount->operator==(*rhs.m_HydrogenBondCount) : m_HydrogenBondCount == rhs.m_HydrogenBondCount;
+  equivilant &= (m_PolarSurfaceArea && rhs.m_PolarSurfaceArea) ? m_PolarSurfaceArea->operator==(*rhs.m_PolarSurfaceArea) : m_PolarSurfaceArea == rhs.m_PolarSurfaceArea;
+  equivilant &= m_AcidDissociationConstants.size() == rhs.m_AcidDissociationConstants.size();
+  if(equivilant){
+    for ( auto i = 0; i< m_AcidDissociationConstants.size(); ++i){
+      equivilant &= (m_AcidDissociationConstants[i] && rhs.m_AcidDissociationConstants[i]) 
+        ? m_AcidDissociationConstants[i]->operator==(*rhs.m_AcidDissociationConstants[i]) 
+        : m_AcidDissociationConstants[i] == rhs.m_AcidDissociationConstants[i];    
+    }
+  }
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstancePhysicochemicals::operator!=( const SESubstancePhysicochemicals& rhs) const
+{
+  return !(*this == rhs);
+}
 }

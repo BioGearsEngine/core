@@ -15,9 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
-#include <biogears/cdm/utils/FileUtils.h>
 namespace biogears {
 SENutrition::SENutrition(Logger* logger)
   : Loggable(logger)
@@ -123,7 +123,7 @@ void SENutrition::Unload(CDM::NutritionData& data) const
 //-----------------------------------------------------------------------------
 const SEScalar* SENutrition::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SENutrition::GetScalar(const std::string& name)
@@ -145,7 +145,7 @@ const SEScalar* SENutrition::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SENutrition::Load(const char* nutritionFile)
 {
-  return Load(std::string{ nutritionFile });
+  return Load(std::string { nutritionFile });
 }
 //-----------------------------------------------------------------------------
 bool SENutrition::Load(const std::string& given)
@@ -154,7 +154,7 @@ bool SENutrition::Load(const std::string& given)
   std::unique_ptr<CDM::ObjectData> data;
 
   std::string filepath = given;
-  if ( !IsAbsolutePath(given) && !TestFirstDirName(given,"nutrition")) {
+  if (!IsAbsolutePath(given) && !TestFirstDirName(given, "nutrition")) {
     filepath = "nutrition/";
     filepath += given;
   }
@@ -182,7 +182,7 @@ const char* SENutrition::GetName_cStr() const
 //-----------------------------------------------------------------------------
 void SENutrition::SetName(const char* name)
 {
-  return SetName(std::string{ name });
+  return SetName(std::string { name });
 }
 //-----------------------------------------------------------------------------
 void SENutrition::SetName(const std::string& name)
@@ -350,4 +350,22 @@ void SENutrition::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SENutrition::operator==( const SENutrition& rhs) const
+{
+  bool equivilant;
+  equivilant = m_Name == rhs.m_Name;
+  equivilant &= (m_Carbohydrate && rhs.m_Carbohydrate) ? m_Carbohydrate->operator==(*rhs.m_Carbohydrate) : m_Carbohydrate == rhs.m_Carbohydrate;
+  equivilant &= (m_Fat && rhs.m_Fat) ? m_Fat->operator==(*rhs.m_Fat) : m_Fat == rhs.m_Fat;
+  equivilant &= (m_Protein && rhs.m_Protein) ? m_Protein->operator==(*rhs.m_Protein) : m_Protein == rhs.m_Protein;
+  equivilant &= (m_Calcium && rhs.m_Calcium) ? m_Calcium->operator==(*rhs.m_Calcium) : m_Calcium == rhs.m_Calcium;
+  equivilant &= (m_Sodium && rhs.m_Sodium) ? m_Sodium->operator==(*rhs.m_Sodium) : m_Sodium == rhs.m_Sodium;
+  equivilant &= (m_Water && rhs.m_Water) ? m_Water->operator==(*rhs.m_Water) : m_Water == rhs.m_Water;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SENutrition::operator!=( const SENutrition& rhs) const
+{
+  return !(*this == rhs);
+}
 }

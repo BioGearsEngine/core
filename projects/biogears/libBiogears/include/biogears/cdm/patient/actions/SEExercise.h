@@ -38,20 +38,32 @@ public:
   struct SEGeneric {
     SEScalarPower DesiredWorkRate;
     SEScalar0To1 Intensity;
+
+    bool operator==( const SEGeneric& rhs) const;
+    bool operator!=( const SEGeneric& rhs) const;
   };
   struct SECycling {
     SEScalarFrequency CadenceCycle;
     SEScalarPower PowerCycle;
     SEScalarMass AddedWeight;
+
+    bool operator==( const SECycling& rhs) const;
+    bool operator!=( const SECycling& rhs) const;
   };
   struct SERunning {
     SEScalarLengthPerTime SpeedRun;
     SEScalar0To1 InclineRun;
     SEScalarMass AddedWeight;
+
+    bool operator==( const SERunning& rhs) const;
+    bool operator!=( const SERunning& rhs) const;
   };
   struct SEStrengthTraining {
     SEScalarMass WeightStrength;
     SEScalar RepsStrength;
+
+    bool operator==( const SEStrengthTraining& rhs) const;
+    bool operator!=( const SEStrengthTraining& rhs) const;
   };
 
   SEExercise();
@@ -96,6 +108,9 @@ public:
   virtual void SetStrengthExercise(SEStrengthTraining exercise);
 
   virtual void ToString(std::ostream& str) const override;
+
+  bool operator==( const SEExercise& rhs) const;
+  bool operator!=( const SEExercise& rhs) const;
 
 protected:
   virtual void Unload(CDM::ExerciseData& data) const;

@@ -87,7 +87,10 @@ const PowerUnit& PowerUnit::GetCompoundUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 bool PowerUnit::operator==(const PowerUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool PowerUnit::operator!=(const PowerUnit& obj) const

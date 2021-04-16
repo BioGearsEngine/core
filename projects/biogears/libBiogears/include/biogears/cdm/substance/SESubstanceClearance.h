@@ -48,10 +48,6 @@ public:
 
   virtual bool Load(const CDM::SubstanceClearanceData& in);
   virtual CDM::SubstanceClearanceData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::SubstanceClearanceData& data) const;
-
 public:
   virtual bool HasSystemic() const { return m_hasSystemic; }
   virtual void SetSystemic(bool b) { m_hasSystemic = b; }
@@ -128,6 +124,13 @@ public:
   virtual bool HasSystemicClearance() const;
   virtual SEScalarVolumePerTimeMass& GetSystemicClearance();
   virtual double GetSystemicClearance(const VolumePerTimeMassUnit& unit) const;
+    
+  bool operator==( const SESubstanceClearance& rhs) const;
+  bool operator!=( const SESubstanceClearance& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstanceClearanceData& data) const;
+
 
 protected:
   bool m_hasSystemic;

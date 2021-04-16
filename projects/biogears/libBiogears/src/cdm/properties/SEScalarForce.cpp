@@ -72,7 +72,10 @@ const ForceUnit& ForceUnit::GetCompoundUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 bool ForceUnit::operator==(const ForceUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool ForceUnit::operator!=(const ForceUnit& obj) const

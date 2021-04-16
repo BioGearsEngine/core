@@ -46,10 +46,6 @@ public:
   virtual bool Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr);
   virtual CDM::MechanicalVentilationData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::MechanicalVentilationData& data) const;
-
-public:
   virtual CDM::enumOnOff::value GetState() const;
   virtual void SetState(CDM::enumOnOff::value name);
   virtual bool HasState() const;
@@ -73,6 +69,12 @@ public:
   void RemoveGasFractions();
 
   virtual void ToString(std::ostream& str) const override;
+
+  bool operator==( const SEMechanicalVentilation& rhs) const;
+  bool operator!=( const SEMechanicalVentilation& rhs) const;
+
+protected:
+  virtual void Unload(CDM::MechanicalVentilationData& data) const;
 
 protected:
   std::stringstream m_ss;

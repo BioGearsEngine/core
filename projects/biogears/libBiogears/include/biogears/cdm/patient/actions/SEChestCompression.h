@@ -31,12 +31,15 @@ public:
 
   virtual bool Load(const CDM::ChestCompressionData& in);
   virtual CDM::ChestCompressionData* Unload() const override;
+
+  virtual void ToString(std::ostream& str) const override;
+
+  bool operator==( const SEChestCompression& rhs) const;
+  bool operator!=( const SEChestCompression& rhs) const;
+
 protected:
   virtual void Unload(CDM::ChestCompressionData& data) const;
 
-public:
-  virtual void ToString(std::ostream& str) const override;
-
-protected:
+private:
 };
 }

@@ -85,7 +85,10 @@ const TimeUnit& TimeUnit::GetCompoundUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 bool TimeUnit::operator==(const TimeUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool TimeUnit::operator!=(const TimeUnit& obj) const

@@ -62,7 +62,10 @@ const ElectricCapacitanceUnit& ElectricCapacitanceUnit::GetCompoundUnit(const st
 //-----------------------------------------------------------------------------
 bool ElectricCapacitanceUnit::operator==(const ElectricCapacitanceUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool ElectricCapacitanceUnit::operator!=(const ElectricCapacitanceUnit& obj) const

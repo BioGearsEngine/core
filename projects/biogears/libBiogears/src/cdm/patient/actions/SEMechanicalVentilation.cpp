@@ -28,12 +28,12 @@ SEMechanicalVentilation::SEMechanicalVentilation()
   m_Flow = nullptr;
   m_Pressure = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEMechanicalVentilation::~SEMechanicalVentilation()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEMechanicalVentilation::Clear()
 {
   SEPatientAction::Clear();
@@ -45,7 +45,7 @@ void SEMechanicalVentilation::Clear()
   DELETE_VECTOR(m_GasFractions);
   m_cGasFractions.clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SEMechanicalVentilation::IsValid() const
 {
   if (!HasState()) {
@@ -72,14 +72,14 @@ bool SEMechanicalVentilation::IsValid() const
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 bool SEMechanicalVentilation::IsActive() const
 {
   if (!HasState())
     return false;
   return GetState() == CDM::enumOnOff::On;
 }
-
+//-------------------------------------------------------------------------------
 bool SEMechanicalVentilation::Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr)
 {
   SEPatientAction::Clear();
@@ -114,14 +114,14 @@ bool SEMechanicalVentilation::Load(const CDM::MechanicalVentilationData& in, con
 
   return IsValid();
 }
-
+//-------------------------------------------------------------------------------
 CDM::MechanicalVentilationData* SEMechanicalVentilation::Unload() const
 {
   CDM::MechanicalVentilationData* data = new CDM::MechanicalVentilationData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEMechanicalVentilation::Unload(CDM::MechanicalVentilationData& data) const
 {
   SEPatientAction::Unload(data);
@@ -135,7 +135,7 @@ void SEMechanicalVentilation::Unload(CDM::MechanicalVentilationData& data) const
   for (SESubstanceFraction* sf : m_GasFractions)
     data.GasFraction().push_back(std::unique_ptr<CDM::SubstanceFractionData>(sf->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 CDM::enumOnOff::value SEMechanicalVentilation::GetState() const
 {
   return m_State;
@@ -152,7 +152,7 @@ void SEMechanicalVentilation::InvalidateState()
 {
   m_State = (CDM::enumOnOff::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 bool SEMechanicalVentilation::HasFlow() const
 {
   return m_Flow == nullptr ? false : m_Flow->IsValid();
@@ -169,7 +169,7 @@ double SEMechanicalVentilation::GetFlow(const VolumePerTimeUnit& unit) const
     return SEScalar::dNaN();
   return m_Flow->GetValue(unit);
 }
-
+//-------------------------------------------------------------------------------
 bool SEMechanicalVentilation::HasPressure() const
 {
   return m_Pressure == nullptr ? false : m_Pressure->IsValid();
@@ -186,7 +186,7 @@ double SEMechanicalVentilation::GetPressure(const PressureUnit& unit) const
     return SEScalar::dNaN();
   return m_Pressure->GetValue(unit);
 }
-
+//-------------------------------------------------------------------------------
 bool SEMechanicalVentilation::HasGasFraction() const
 {
   return m_GasFractions.size() == 0 ? false : true;
@@ -246,7 +246,7 @@ void SEMechanicalVentilation::RemoveGasFractions()
   DELETE_VECTOR(m_GasFractions);
   m_cGasFractions.clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEMechanicalVentilation::ToString(std::ostream& str) const
 {
   str << "Patient Action : Mechanical Ventilation";
@@ -265,5 +265,38 @@ void SEMechanicalVentilation::ToString(std::ostream& str) const
     }
   }
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEMechanicalVentilation::operator==(const SEMechanicalVentilation& rhs) const
+{
+  /*
+  
+  CDM::enumOnOff::value m_State;
+  SEScalarVolumePerTime* m_Flow;
+  SEScalarPressure* m_Pressure;
+
+  std::vector<SESubstanceFraction*> m_GasFractions;
+  std::vector<const SESubstanceFraction*> m_cGasFractions;
+  */
+
+  bool equivilant;
+  equivilant = m_Comment == rhs.m_Comment;
+  equivilant = m_State == rhs.m_State;
+  equivilant &= (m_Flow && rhs.m_Flow) ? m_Flow->operator==(*rhs.m_Flow) : m_Flow == rhs.m_Flow;
+  equivilant &= (m_Pressure && rhs.m_Pressure) ? m_Pressure->operator==(*rhs.m_Pressure) : m_Pressure == rhs.m_Pressure;
+  equivilant &= m_GasFractions.size() == rhs.m_GasFractions.size();
+  if (equivilant) {
+    for (auto i = 0; i < m_GasFractions.size(); ++i) {
+      equivilant &= (m_GasFractions[i] && rhs.m_GasFractions[i]) ? m_GasFractions[i]->operator==(*rhs.m_GasFractions[i]) : m_GasFractions[i] == rhs.m_GasFractions[i];
+    }
+  }
+  equivilant &= m_GasFractions.size() == rhs.m_GasFractions.size();
+
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEMechanicalVentilation::operator!=(const SEMechanicalVentilation& rhs) const
+{
+  return !(*this == rhs);
 }
 }

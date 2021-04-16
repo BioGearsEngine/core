@@ -77,7 +77,10 @@ const InversePressureUnit& InversePressureUnit::GetCompoundUnit(const std::strin
 //-------------------------------------------------------------------------------
 bool InversePressureUnit::operator==(const InversePressureUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool InversePressureUnit::operator!=(const InversePressureUnit& obj) const

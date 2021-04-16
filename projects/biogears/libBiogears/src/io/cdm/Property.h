@@ -95,10 +95,20 @@ class SEScalarVolumePerTimePressureArea;
 class SEScalarVolumePerTimePressure;
 class SEUnitScalar;
 
-#define CDM_PROPERTY_UNMARSHAL_HELPER(xsd, func)                                     \
+#define CDM_PROPERTY_UNMARSHAL_HELPER(in, out, func)                                 \
   if (in.m_##func) {                                                                 \
-    xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::Property::UnMarshall(*in.m_##func, xsd.func());                              \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::Property::UnMarshall(*in.m_##func, out.func());                              \
+  }
+
+#define CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, func)                        \
+  if (in.m_##func) {                                                                 \
+    io::Property::UnMarshall(*in.m_##func, out.func());                              \
+  }
+
+#define CDM_ENUM_UNMARSHAL_HELPER(in, out, func) \
+  if (in.Has##func()) {                          \
+    out.func(in.m_##func);                       \
   }
 
 namespace io {
@@ -368,4 +378,5 @@ namespace io {
     option_out.set(*item);
   }
 }
+
 }

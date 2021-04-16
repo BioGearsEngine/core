@@ -77,7 +77,10 @@ const EnergyPerMassUnit& EnergyPerMassUnit::GetCompoundUnit(const std::string& u
 //-----------------------------------------------------------------------------
 bool EnergyPerMassUnit::operator==(const EnergyPerMassUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool EnergyPerMassUnit::operator!=(const EnergyPerMassUnit& obj) const

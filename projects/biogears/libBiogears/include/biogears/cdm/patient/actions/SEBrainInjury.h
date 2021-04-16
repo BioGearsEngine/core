@@ -37,10 +37,6 @@ public:
   virtual bool Load(const CDM::BrainInjuryData& in);
   virtual CDM::BrainInjuryData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::BrainInjuryData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
@@ -50,6 +46,12 @@ public:
   virtual void InvalidateType();
 
   virtual void ToString(std::ostream& str) const override;
+  
+  bool operator==(const SEBrainInjury& rhs) const;
+  bool operator!=(const SEBrainInjury& rhs) const;
+
+protected:
+  virtual void Unload(CDM::BrainInjuryData& data) const;
 
 protected:
   SEScalar0To1* m_Severity;

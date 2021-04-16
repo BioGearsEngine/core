@@ -38,10 +38,6 @@ public:
   virtual bool Load(const CDM::SubstancePhysicochemicalData& in);
   virtual CDM::SubstancePhysicochemicalData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstancePhysicochemicalData& data) const;
-
-public:
   virtual bool HasPrimaryPKA() const;
   virtual SEScalar& GetPrimaryPKA();
   virtual double GetPrimaryPKA() const;
@@ -78,7 +74,13 @@ public:
 
   virtual bool HasPolarSurfaceArea() const;
   virtual SEScalar& GetPolarSurfaceArea();
-  virtual double GetPolarSurfaceArea() const;
+  virtual double GetPolarSurfaceArea() const;       
+  
+  bool operator==( const SESubstancePhysicochemicals& rhs) const;
+  bool operator!=( const SESubstancePhysicochemicals& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstancePhysicochemicalData& data) const;
 
 protected:
   std::vector<SEScalar*> m_AcidDissociationConstants;

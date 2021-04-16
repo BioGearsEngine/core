@@ -39,10 +39,6 @@ public:
   virtual bool Load(const CDM::InfectionData& in);
   virtual CDM::InfectionData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::InfectionData& data) const;
-
-public:
   virtual const char* GetLocation_cStr() const;
   virtual std::string GetLocation() const;
   virtual bool HasLocation() const;
@@ -59,6 +55,12 @@ public:
   virtual SEScalarMassPerVolume& GetMinimumInhibitoryConcentration();
 
   virtual void ToString(std::ostream& str) const override;
+
+  bool operator==( const SEInfection& rhs) const;
+  bool operator!=( const SEInfection& rhs) const;
+
+protected:
+  virtual void Unload(CDM::InfectionData& data) const;
 
 protected:
   std::string m_Location;

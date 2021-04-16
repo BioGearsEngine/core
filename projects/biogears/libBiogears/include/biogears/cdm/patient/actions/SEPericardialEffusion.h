@@ -36,14 +36,17 @@ public:
   virtual bool Load(const CDM::PericardialEffusionData& in);
   virtual CDM::PericardialEffusionData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::PericardialEffusionData& data) const;
-
-public:
   virtual bool HasEffusionRate() const;
   virtual SEScalarVolumePerTime& GetEffusionRate();
 
   virtual void ToString(std::ostream& str) const override;
+
+  bool operator==( const SEPericardialEffusion& rhs) const;
+  bool operator!=( const SEPericardialEffusion& rhs) const;
+
+protected:
+  virtual void Unload(CDM::PericardialEffusionData& data) const;
+
 
 protected:
   SEScalarVolumePerTime* m_EffusionRate;

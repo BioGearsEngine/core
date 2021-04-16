@@ -18,15 +18,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/schema/biogears/BioGears.hxx>
 
-#include <xercesc/dom/DOMLSInput.hpp>
-#include <xercesc/framework/MemBufInputSource.hpp>
-#include <xercesc/framework/Wrapper4DOMLSInput.hpp>
-#include <xercesc/framework/Wrapper4InputSource.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
-
-#if BIOGEARS_IO_PRESENT
-#include <biogears/io/io-manager.h>
-#endif
 using namespace xercesc;
 namespace xml = xsd::cxx::xml;
 
@@ -174,7 +165,7 @@ DOMLSParser* Serializer::CreateParser(Logger* logger) const
 //-----------------------------------------------------------------------------
 std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const char* xmlFile, Logger* logger)
 {
-  return ReadFile(std::string { xmlFile }, logger);
+  return ReadFile( std::string{ xmlFile }, logger);
 }
 //-----------------------------------------------------------------------------
 std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile, Logger* logger)
@@ -194,64 +185,56 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   std::unique_ptr<DOMLSParser> parser(m_me->CreateParser(logger));
   parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, &eh);
 
-  io::IOManager io_manager;
-  XMLByte buffer[5 * 1024 * 1024]; //5MBs Average State file is 2MBs
-  size_t buffer_size = sizeof(buffer);
-  auto content_size = io_manager.find_resource_file(xmlFile.c_str(), reinterpret_cast<char*>(buffer), buffer_size);
-  if (content_size > 0) {
-    MemBufInputSource content(buffer, content_size, "dummy", false);
-    Wrapper4InputSource content_wraper {&content};
-    std::unique_ptr<xercesc::DOMDocument> doc( parser->parse(&content_wraper));
-    if (eh.failed() || doc == nullptr) {
-      // TODO Append parse error
-      /// \error Error reading xml file
-      err << "Error reading xml file " << xmlFile << "\n"
-          << eh.getError() << std::ends;
-      logger->Error(err.str());
-      return std::unique_ptr<CDM::ObjectData>();
-    }
-    // Let's see what kind of object this is
-    DOMElement* root(doc->getDocumentElement());
-    std::string ns(xml::transcode<char>(root->getNamespaceURI()));
-    std::string name(xml::transcode<char>(root->getLocalName()));
-
-    std::unique_ptr<CDM::ObjectData> obj = std::unique_ptr<CDM::ObjectData>();
-    // Check the name and read it into the right object type
-    if (name.compare("Substance") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Substance(*doc).release());
-    if (name.compare("Patient") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Patient(*doc).release());
-    if (name.compare("SubstanceCompound") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::SubstanceCompound(*doc).release());
-    if (name.compare("Scenario") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Scenario(*doc).release());
-    if (name.compare("EnvironmentalConditions") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::EnvironmentalConditions(*doc).release());
-    if (name.compare("ElectroCardioGramWaveformInterpolator") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::ElectroCardioGramWaveformInterpolator(*doc).release());
-    if (name.compare("Nutrition") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Nutrition(*doc).release());
-    if (name.compare("PhysiologyEngineDynamicStabilization") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::PhysiologyEngineDynamicStabilization(*doc).release());
-    if (name.compare("PhysiologyEngineTimedStabilization") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::PhysiologyEngineTimedStabilization(*doc).release());
-    if (name.compare("CircuitManager") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::CircuitManager(*doc).release());
-    if (name.compare("CompartmentManager") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::CompartmentManager(*doc).release());
-    if (name.compare("BioGearsConfiguration") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsConfiguration(*doc).release());
-    if (name.compare("BioGearsState") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsState(*doc).release());
-    if (name.compare("DataRequests") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::DataRequests(*doc).release());
-
-    /// \error Unsupported root tag
-    err << "Unsupported root tag " << name << " found in xml file " << xmlFile << std::ends;
+  const std::string resolved_xmlFile = ResolvePath(xmlFile);
+  std::unique_ptr<xercesc::DOMDocument> doc(parser->parseURI( resolved_xmlFile.c_str()));
+  if (eh.failed() || doc == nullptr) {
+    // TODO Append parse error
+    /// \error Error reading xml file
+    err << "Error reading xml file " << xmlFile << "\n"
+        << eh.getError() << std::ends;
     logger->Error(err.str());
-    return obj;
+    return std::unique_ptr<CDM::ObjectData>();
   }
-  return nullptr;
+  // Let's see what kind of object this is
+  DOMElement* root(doc->getDocumentElement());
+  std::string ns(xml::transcode<char>(root->getNamespaceURI()));
+  std::string name(xml::transcode<char>(root->getLocalName()));
+
+  std::unique_ptr<CDM::ObjectData> obj = std::unique_ptr<CDM::ObjectData>();
+  // Check the name and read it into the right object type
+  if (name.compare("Substance") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Substance(*doc).release());
+  if (name.compare("Patient") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Patient(*doc).release());
+  if (name.compare("SubstanceCompound") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::SubstanceCompound(*doc).release());
+  if (name.compare("Scenario") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Scenario(*doc).release());
+  if (name.compare("EnvironmentalConditions") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::EnvironmentalConditions(*doc).release());
+  if (name.compare("ElectroCardioGramWaveformInterpolator") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::ElectroCardioGramWaveformInterpolator(*doc).release());
+  if (name.compare("Nutrition") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Nutrition(*doc).release());
+  if (name.compare("PhysiologyEngineDynamicStabilization") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::PhysiologyEngineDynamicStabilization(*doc).release());
+  if (name.compare("PhysiologyEngineTimedStabilization") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::PhysiologyEngineTimedStabilization(*doc).release());
+  if (name.compare("CircuitManager") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::CircuitManager(*doc).release());
+  if (name.compare("CompartmentManager") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::CompartmentManager(*doc).release());
+  if (name.compare("BioGearsConfiguration") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsConfiguration(*doc).release());
+  if (name.compare("BioGearsState") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsState(*doc).release());
+  if (name.compare("DataRequests") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::DataRequests(*doc).release());
+
+  /// \error Unsupported root tag
+  err << "Unsupported root tag " << name << " found in xml file " << xmlFile << std::ends;
+  logger->Error(err.str());
+  return obj;
 }
 //-----------------------------------------------------------------------------
 }

@@ -20,62 +20,62 @@ SEApnea::SEApnea()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEApnea::~SEApnea()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEApnea::Clear()
 {
 
   SEPatientAction::Clear();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SEApnea::IsValid() const
 {
   return SEPatientAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SEApnea::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEApnea::Load(const CDM::ApneaData& in)
 {
   SEPatientAction::Load(in);
   GetSeverity().Load(in.Severity());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ApneaData* SEApnea::Unload() const
 {
   CDM::ApneaData* data(new CDM::ApneaData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEApnea::Unload(CDM::ApneaData& data) const
 {
   SEPatientAction::Unload(data);
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEApnea::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
-
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEApnea::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SEApnea::ToString(std::ostream& str) const
 {
   str << "Patient Action : Apnea";
@@ -84,5 +84,18 @@ void SEApnea::ToString(std::ostream& str) const
   str << "\n\tSeverity: ";
   HasSeverity() ? str << *m_Severity : str << "Not Set";
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEApnea::operator==(const SEApnea& rhs) const
+{
+  bool equivilant;
+  equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEApnea::operator!=( const SEApnea& rhs) const
+{
+  return !(*this == rhs);
 }
 }

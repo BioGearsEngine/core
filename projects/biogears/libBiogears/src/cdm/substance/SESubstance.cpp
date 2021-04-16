@@ -11,8 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstance.h>
 
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarInversePressure.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
@@ -27,8 +29,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
 
 namespace biogears {
 SESubstance::SESubstance(Logger* logger)
@@ -108,7 +108,7 @@ void SESubstance::Clear()
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstance::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstance::GetScalar(const std::string& name)
@@ -849,5 +849,49 @@ void SESubstance::RemovePD()
 {
   SAFE_DELETE(m_PD);
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SESubstance::operator==(const SESubstance& rhs) const
+{
+  bool equivilant;
+  equivilant = m_Name == rhs.m_Name;
+  equivilant = m_Classification == rhs.m_Classification;
+  equivilant = m_State == rhs.m_State;
+
+  equivilant &= (m_Density && rhs.m_Density) ? m_Density->operator==(*rhs.m_Density) : m_Density == rhs.m_Density;
+  equivilant &= (m_MolarMass && rhs.m_MolarMass) ? m_MolarMass->operator==(*rhs.m_MolarMass) : m_MolarMass == rhs.m_MolarMass;
+
+  equivilant &= (m_MaximumDiffusionFlux && rhs.m_MaximumDiffusionFlux) ? m_MaximumDiffusionFlux->operator==(*rhs.m_MaximumDiffusionFlux) : m_MaximumDiffusionFlux == rhs.m_MaximumDiffusionFlux;
+  equivilant &= (m_MichaelisCoefficient && rhs.m_MichaelisCoefficient) ? m_MichaelisCoefficient->operator==(*rhs.m_MichaelisCoefficient) : m_MichaelisCoefficient == rhs.m_MichaelisCoefficient;
+  equivilant &= (m_MembraneResistance && rhs.m_MembraneResistance) ? m_MembraneResistance->operator==(*rhs.m_MembraneResistance) : m_MembraneResistance == rhs.m_MembraneResistance;
+
+
+  equivilant &= (m_Aerosolization && rhs.m_Aerosolization) ? m_Aerosolization->operator==(*rhs.m_Aerosolization) : m_Aerosolization == rhs.m_Aerosolization;
+  equivilant &= (m_AreaUnderCurve && rhs.m_AreaUnderCurve) ? m_AreaUnderCurve->operator==(*rhs.m_AreaUnderCurve) : m_AreaUnderCurve == rhs.m_AreaUnderCurve;
+  equivilant &= (m_BloodConcentration && rhs.m_BloodConcentration) ? m_BloodConcentration->operator==(*rhs.m_BloodConcentration) : m_BloodConcentration == rhs.m_BloodConcentration;
+  equivilant &= (m_EffectSiteConcentration && rhs.m_EffectSiteConcentration) ? m_EffectSiteConcentration->operator==(*rhs.m_EffectSiteConcentration) : m_EffectSiteConcentration == rhs.m_EffectSiteConcentration;
+  equivilant &= (m_MassInBody && rhs.m_MassInBody) ? m_MassInBody->operator==(*rhs.m_MassInBody) : m_MassInBody == rhs.m_MassInBody;
+  equivilant &= (m_MassInBlood && rhs.m_MassInBlood) ? m_MassInBlood->operator==(*rhs.m_MassInBlood) : m_MassInBlood == rhs.m_MassInBlood;
+  equivilant &= (m_MassInTissue && rhs.m_MassInTissue) ? m_MassInTissue->operator==(*rhs.m_MassInTissue) : m_MassInTissue == rhs.m_MassInTissue;
+  equivilant &= (m_PlasmaConcentration && rhs.m_PlasmaConcentration) ? m_PlasmaConcentration->operator==(*rhs.m_PlasmaConcentration) : m_PlasmaConcentration == rhs.m_PlasmaConcentration;
+  equivilant &= (m_SystemicMassCleared && rhs.m_SystemicMassCleared) ? m_SystemicMassCleared->operator==(*rhs.m_SystemicMassCleared) : m_SystemicMassCleared == rhs.m_SystemicMassCleared;
+  equivilant &= (m_TissueConcentration && rhs.m_TissueConcentration) ? m_TissueConcentration->operator==(*rhs.m_TissueConcentration) : m_TissueConcentration == rhs.m_TissueConcentration;
+
+  equivilant &= (m_AlveolarTransfer && rhs.m_AlveolarTransfer) ? m_AlveolarTransfer->operator==(*rhs.m_AlveolarTransfer) : m_AlveolarTransfer == rhs.m_AlveolarTransfer;
+  equivilant &= (m_DiffusingCapacity && rhs.m_DiffusingCapacity) ? m_DiffusingCapacity->operator==(*rhs.m_DiffusingCapacity) : m_DiffusingCapacity == rhs.m_DiffusingCapacity;
+  equivilant &= (m_EndTidalFraction && rhs.m_EndTidalFraction) ? m_EndTidalFraction->operator==(*rhs.m_EndTidalFraction) : m_EndTidalFraction == rhs.m_EndTidalFraction;
+  equivilant &= (m_EndTidalPressure && rhs.m_EndTidalPressure) ? m_EndTidalPressure->operator==(*rhs.m_EndTidalPressure) : m_EndTidalPressure == rhs.m_EndTidalPressure;
+  equivilant &= (m_RelativeDiffusionCoefficient && rhs.m_RelativeDiffusionCoefficient) ? m_RelativeDiffusionCoefficient->operator==(*rhs.m_RelativeDiffusionCoefficient) : m_RelativeDiffusionCoefficient == rhs.m_RelativeDiffusionCoefficient;
+  equivilant &= (m_SolubilityCoefficient && rhs.m_SolubilityCoefficient) ? m_SolubilityCoefficient->operator==(*rhs.m_SolubilityCoefficient) : m_SolubilityCoefficient == rhs.m_SolubilityCoefficient;
+
+  equivilant &= (m_Clearance && rhs.m_Clearance) ? m_Clearance->operator==(*rhs.m_Clearance) : m_Clearance == rhs.m_Clearance;
+  equivilant &= (m_PK && rhs.m_PK) ? m_PK->operator==(*rhs.m_PK) : m_PK == rhs.m_PK;
+  equivilant &= (m_PD && rhs.m_PD) ? m_PD->operator==(*rhs.m_PD) : m_PD == rhs.m_PD;
+
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstance::operator!=(const SESubstance& rhs) const
+{
+  return !(*this == rhs);
+}
 }

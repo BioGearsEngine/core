@@ -40,10 +40,6 @@ public:
   virtual bool Load(const CDM::SubstancePharmacokineticsData& in);
   virtual CDM::SubstancePharmacokineticsData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstancePharmacokineticsData& data) const;
-
-public:
   virtual bool HasPhysicochemicals() const;
   virtual SESubstancePhysicochemicals& GetPhysicochemicals();
   virtual const SESubstancePhysicochemicals* GetPhysicochemicals() const;
@@ -57,6 +53,12 @@ public:
   virtual const SESubstanceTissuePharmacokinetics* GetTissueKinetics(const std::string& name) const;
   virtual void RemoveTissueKinetics(const char* name);
   virtual void RemoveTissueKinetics(const std::string& name);
+ 
+  bool operator==( const SESubstancePharmacokinetics& rhs) const;
+  bool operator!=( const SESubstancePharmacokinetics& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstancePharmacokineticsData& data) const;
 
 protected:
   SESubstancePhysicochemicals* m_Physicochemicals;

@@ -20,62 +20,62 @@ SEAirwayObstruction::SEAirwayObstruction()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEAirwayObstruction::~SEAirwayObstruction()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEAirwayObstruction::Clear()
 {
 
   SEPatientAction::Clear();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAirwayObstruction::IsValid() const
 {
   return SEPatientAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SEAirwayObstruction::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEAirwayObstruction::Load(const CDM::AirwayObstructionData& in)
 {
   SEPatientAction::Load(in);
   GetSeverity().Load(in.Severity());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::AirwayObstructionData* SEAirwayObstruction::Unload() const
 {
   CDM::AirwayObstructionData* data(new CDM::AirwayObstructionData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEAirwayObstruction::Unload(CDM::AirwayObstructionData& data) const
 {
   SEPatientAction::Unload(data);
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEAirwayObstruction::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
-
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEAirwayObstruction::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SEAirwayObstruction::ToString(std::ostream& str) const
 {
   str << "Patient Action : Airway Obstruction";
@@ -84,5 +84,18 @@ void SEAirwayObstruction::ToString(std::ostream& str) const
   str << "\n\tSeverity: ";
   HasSeverity() ? str << *m_Severity : str << "Not Set";
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEAirwayObstruction::operator==( const SEAirwayObstruction& rhs) const
+{
+  bool equivilant;
+  equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEAirwayObstruction::operator!=( const SEAirwayObstruction& rhs) const
+{
+  return !(*this == rhs);
 }
 }

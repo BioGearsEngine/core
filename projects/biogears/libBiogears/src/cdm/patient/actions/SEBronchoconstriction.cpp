@@ -19,60 +19,61 @@ SEBronchoconstriction::SEBronchoconstriction()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEBronchoconstriction::~SEBronchoconstriction()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEBronchoconstriction::Clear()
 {
   SEPatientAction::Clear();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SEBronchoconstriction::IsValid() const
 {
   return SEPatientAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SEBronchoconstriction::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEBronchoconstriction::Load(const CDM::BronchoconstrictionData& in)
 {
   SEPatientAction::Load(in);
   GetSeverity().Load(in.Severity());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::BronchoconstrictionData* SEBronchoconstriction::Unload() const
 {
   CDM::BronchoconstrictionData* data(new CDM::BronchoconstrictionData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEBronchoconstriction::Unload(CDM::BronchoconstrictionData& data) const
 {
   SEPatientAction::Unload(data);
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEBronchoconstriction::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEBronchoconstriction::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SEBronchoconstriction::ToString(std::ostream& str) const
 {
   str << "Patient Action : Bronchoconstriction";
@@ -81,5 +82,18 @@ void SEBronchoconstriction::ToString(std::ostream& str) const
   str << "\n\tSeverity: ";
   HasSeverity() ? str << *m_Severity : str << "NaN";
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEBronchoconstriction::operator==( const SEBronchoconstriction& rhs) const
+{
+  bool equivilant;
+  equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEBronchoconstriction::operator!=( const SEBronchoconstriction& rhs) const
+{
+  return !(*this == rhs);
 }
 }

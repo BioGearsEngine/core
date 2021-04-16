@@ -2,6 +2,7 @@
 
 #include "Property.h"
 #include "Scenario.h"
+#include "PatientNutrition.h"
 
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 #include <biogears/schema/cdm/EnvironmentActions.hxx>
@@ -508,9 +509,8 @@ namespace io {
   void PatientActions::UnMarshall(const SEAcuteStress& in, CDM::AcuteStressData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.m_Severity != nullptr) {
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
-    }
+    out.Severity(std::make_unique<CDM::Scalar0To1Data>());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEAirwayObstruction
@@ -523,9 +523,8 @@ namespace io {
   void PatientActions::UnMarshall(const SEAirwayObstruction& in, CDM::AirwayObstructionData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.m_Severity != nullptr) {
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
-    }
+    out.Severity(std::make_unique<CDM::Scalar0To1Data>());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEApnea
@@ -538,9 +537,8 @@ namespace io {
   void PatientActions::UnMarshall(const SEApnea& in, CDM::ApneaData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.m_Severity != nullptr) {
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
-    }
+    out.Severity(std::make_unique<CDM::Scalar0To1Data>());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEAsthmaAttack
@@ -553,7 +551,7 @@ namespace io {
   void PatientActions::UnMarshall(const SEAsthmaAttack& in, CDM::AsthmaAttackData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_UNMARSHAL_HELPER(out, Severity)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEBrainInjury
@@ -567,12 +565,8 @@ namespace io {
   void PatientActions::UnMarshall(const SEBrainInjury& in, CDM::BrainInjuryData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.m_Severity != nullptr) {
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
-    }
-    if (in.HasType()) {
-      out.Type(in.m_Type);
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, Type)
   }
   //----------------------------------------------------------------------------------
   //class SEBronchoconstriction
@@ -585,9 +579,7 @@ namespace io {
   void PatientActions::UnMarshall(const SEBronchoconstriction& in, CDM::BronchoconstrictionData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.m_Severity != nullptr) {
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEBurnWound
@@ -639,9 +631,7 @@ namespace io {
   void PatientActions::UnMarshall(const SEChestCompressionForce& in, CDM::ChestCompressionForceData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.m_Force != nullptr) {
-      io::Property::UnMarshall(*in.m_Force, out.Force());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Force)
   }
   //----------------------------------------------------------------------------------
   //class SEChestCompressionForceScale
@@ -657,12 +647,8 @@ namespace io {
   void PatientActions::UnMarshall(const SEChestCompressionForceScale& in, CDM::ChestCompressionForceScaleData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.m_ForceScale != nullptr) {
-      io::Property::UnMarshall(*in.m_ForceScale, out.ForceScale());
-    }
-    if (in.m_ForcePeriod != nullptr) {
-      io::Property::UnMarshall(*in.m_ForcePeriod, out.ForcePeriod());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, ForceScale)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ForcePeriod)
   }
   //----------------------------------------------------------------------------------
   //class SEChestOcclusiveDressing
@@ -677,9 +663,7 @@ namespace io {
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     out.State(in.m_State);
-    if (in.HasSide()) {
-      out.Side(in.m_Side);
-    }
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, Side)
   }
   //----------------------------------------------------------------------------------
   //class SEConsciousRespirationCommand
@@ -692,9 +676,7 @@ namespace io {
   //----------------------------------------------------------------------------------
   void PatientActions::UnMarshall(const SEConsciousRespirationCommand& in, CDM::ConsciousRespirationCommandData& out)
   {
-    if (in.HasComment()) {
-      out.Comment(in.m_Comment);
-    }
+    out.Comment(in.m_Comment);
   }
   //----------------------------------------------------------------------------------
   //class SEForcedInhale
@@ -708,12 +690,8 @@ namespace io {
   void PatientActions::UnMarshall(const SEForcedInhale& in, CDM::ForcedInhaleData& out)
   {
     PatientActions::UnMarshall(static_cast<const SEConsciousRespirationCommand&>(in), static_cast<CDM::ConsciousRespirationCommandData&>(out));
-    if (in.m_InspiratoryCapacityFraction != nullptr) {
-      io::Property::UnMarshall(*in.m_InspiratoryCapacityFraction, out.InspiratoryCapacityFraction());
-    }
-    if (in.m_Period != nullptr) {
-      io::Property::UnMarshall(*in.m_Period, out.Period());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Period)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, InspiratoryCapacityFraction)
   }
   //----------------------------------------------------------------------------------
   //class SEForcedExhale
@@ -727,12 +705,8 @@ namespace io {
   void PatientActions::UnMarshall(const SEForcedExhale& in, CDM::ForcedExhaleData& out)
   {
     PatientActions::UnMarshall(static_cast<const SEConsciousRespirationCommand&>(in), static_cast<CDM::ConsciousRespirationCommandData&>(out));
-    if (in.m_ExpiratoryReserveVolumeFraction != nullptr) {
-      io::Property::UnMarshall(*in.m_ExpiratoryReserveVolumeFraction, out.ExpiratoryReserveVolumeFraction());
-    }
-    if (in.m_Period != nullptr) {
-      io::Property::UnMarshall(*in.m_Period, out.Period());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Period)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, ExpiratoryReserveVolumeFraction)
   }
   //----------------------------------------------------------------------------------
   //class SEBreathHold
@@ -745,9 +719,7 @@ namespace io {
   void PatientActions::UnMarshall(const SEBreathHold& in, CDM::BreathHoldData& out)
   {
     PatientActions::UnMarshall(static_cast<const SEConsciousRespirationCommand&>(in), static_cast<CDM::ConsciousRespirationCommandData&>(out));
-    if (in.m_Period != nullptr) {
-      io::Property::UnMarshall(*in.m_Period, out.Period());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Period)
   }
   //----------------------------------------------------------------------------------
   //class SEUseInhaler
@@ -824,12 +796,8 @@ namespace io {
   void PatientActions::UnMarshall(const SEConsumeNutrients& in, CDM::ConsumeNutrientsData& out)
   {
     PatientActions::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.HasNutrition()) {
-      out.Nutrition(std::unique_ptr<CDM::NutritionData>(in.m_Nutrition->Unload()));
-    }
-    if (in.HasNutritionFile()) {
-      out.NutritionFile(in.m_NutritionFile);
-    }
+    CDM_OPTIONAL_PATIENT_NUTRITION_UNMARSHAL_HELPER(in, out, Nutrition)
+    out.NutritionFile(in.m_NutritionFile);
   }
   //----------------------------------------------------------------------------------
   //class SEExercise
@@ -956,12 +924,8 @@ namespace io {
   void PatientActions::UnMarshall(const SEHemorrhage& in, CDM::HemorrhageData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.HasCompartment()) {
-      out.Compartment(in.m_Compartment);
-    }
-    if (in.HasInitialRate()) {
-      io::Property::UnMarshall(*in.m_InitialRate, out.InitialRate());
-    }
+    out.Compartment(in.m_Compartment);
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, InitialRate)
   }
   //----------------------------------------------------------------------------------
   //class SESepsis
@@ -977,15 +941,9 @@ namespace io {
   {
 
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.HasLocation()) {
-      out.Location(in.GetLocation());
-    }
-    if (in.HasSeverity()) {
-      out.Severity(in.m_Severity);
-    }
-    if (in.HasMinimumInhibitoryConcentration()) {
-      io::Property::UnMarshall(*in.m_MinimumInhibitoryConcentration, out.MinimumInhibitoryConcentration());
-    }
+    out.Location(in.GetLocation());
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, Severity)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, MinimumInhibitoryConcentration)
   }
   //----------------------------------------------------------------------------------
   //class SEIntubation
@@ -998,9 +956,7 @@ namespace io {
   void PatientActions::UnMarshall(const SEIntubation& in, CDM::IntubationData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.HasType()) {
-      out.Type(in.m_Type);
-    }
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, Type)
   }
   //----------------------------------------------------------------------------------
   //class SEMechanicalVentilation
@@ -1045,15 +1001,9 @@ namespace io {
   void PatientActions::UnMarshall(const SEMechanicalVentilation& in, CDM::MechanicalVentilationData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.HasState()) {
-      out.State(in.m_State);
-    }
-    if (in.HasFlow()) {
-      io::Property::UnMarshall(*in.m_Flow, out.Flow());
-    }
-    if (in.HasPressure()) {
-      io::Property::UnMarshall(*in.m_Pressure, out.Pressure());
-    }
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, State)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Flow)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Pressure)
 
     for (SESubstanceFraction* sf : in.m_GasFractions) {
       out.GasFraction().push_back(std::unique_ptr<CDM::SubstanceFractionData>(sf->Unload()));
@@ -1072,9 +1022,7 @@ namespace io {
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     out.State(in.m_State);
-    if (in.HasSide()) {
-      out.Side(in.m_Side);
-    }
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, Side)
   }
   //----------------------------------------------------------------------------------
   //class SEPainStimulus
@@ -1088,12 +1036,9 @@ namespace io {
   void PatientActions::UnMarshall(const SEPainStimulus& in, CDM::PainStimulusData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.m_Severity != nullptr) {
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
-    }
-    if (in.HasLocation()) {
-      out.Location(in.m_Location);
-    }
+
+    out.Location(in.m_Location);
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEPericardialEffusion
@@ -1123,15 +1068,9 @@ namespace io {
   void PatientActions::UnMarshall(const SETensionPneumothorax& in, CDM::TensionPneumothoraxData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.m_Severity != nullptr) {
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
-    }
-    if (in.HasType()) {
-      out.Type(in.m_Type);
-    }
-    if (in.HasSide()) {
-      out.Side(in.m_Side);
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, Type)
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, Side)
   }
   //----------------------------------------------------------------------------------
   //class SESubstanceAdministration
@@ -1157,38 +1096,33 @@ namespace io {
   void PatientActions::UnMarshall(const SESubstanceBolus& in, CDM::SubstanceBolusData& out)
   {
     Scenario::UnMarshall(static_cast<const SESubstanceAdministration&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
-
-    if (in.m_Dose != nullptr) {
-      io::Property::UnMarshall(*in.m_Dose, out.Dose());
-    }
-    if (in.m_Concentration != nullptr) {
-      io::Property::UnMarshall(*in.m_Concentration, out.Concentration());
-    }
-    if (in.HasAdminRoute()) {
-      out.AdminRoute(in.m_AdminRoute);
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Dose)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Concentration)
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, AdminRoute)
     out.Substance(in.m_Substance.GetName());
   }
   //----------------------------------------------------------------------------------
   //class SESubstanceBolusState
   void PatientActions::Marshall(const CDM::SubstanceBolusStateData& in, SESubstanceBolusState& out)
   {
-    io::Property::Marshall(in.ElapsedTime(), out.m_elapsedTime);
-    io::Property::Marshall(in.AdministeredDose(), out.m_administeredDose);
+    //TODO: Need to pass SubstanceManager to populate Substance based on name
+    //NOTE: THis might require us to throw exception
+
+    io::Property::Marshall(in.ElapsedTime(), out.m_ElapsedTime);
+    io::Property::Marshall(in.AdministeredDose(), out.m_AdministeredDose);
   }
   //----------------------------------------------------------------------------------
   void PatientActions::UnMarshall(const SESubstanceBolusState& in, CDM::SubstanceBolusStateData& out)
   {
-    out.Substance(in.m_substance.GetName());
-    io::Property::UnMarshall(in.m_elapsedTime, out.ElapsedTime());
-    io::Property::UnMarshall(in.m_administeredDose, out.AdministeredDose());
+    out.Substance(in.m_Substance.GetName());
+    io::Property::UnMarshall(in.m_ElapsedTime, out.ElapsedTime());
+    io::Property::UnMarshall(in.m_AdministeredDose, out.AdministeredDose());
   }
   //----------------------------------------------------------------------------------
   //class SESubstanceCompoundInfusion
   void PatientActions::Marshall(const CDM::SubstanceCompoundInfusionData& in, SESubstanceCompoundInfusion& out)
   {
     Scenario::Marshall(static_cast<const CDM::SubstanceAdministrationData&>(in), static_cast<SESubstanceAdministration&>(out));
-
     io::Property::Marshall(in.Rate(), out.GetRate());
     io::Property::Marshall(in.BagVolume(), out.GetBagVolume());
   }
@@ -1196,12 +1130,8 @@ namespace io {
   void PatientActions::UnMarshall(const SESubstanceCompoundInfusion& in, CDM::SubstanceCompoundInfusionData& out)
   {
     Scenario::UnMarshall(static_cast<const SESubstanceAdministration&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
-    if (in.m_Rate != nullptr) {
-      io::Property::UnMarshall(*in.m_Rate, out.Rate());
-    }
-    if (in.m_BagVolume != nullptr) {
-      io::Property::UnMarshall(*in.m_BagVolume, out.BagVolume());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Rate)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, BagVolume)
     out.SubstanceCompound(in.m_Compound.GetName());
   }
   //----------------------------------------------------------------------------------
@@ -1216,12 +1146,8 @@ namespace io {
   void PatientActions::UnMarshall(const SESubstanceInfusion& in, CDM::SubstanceInfusionData& out)
   {
     Scenario::UnMarshall(static_cast<const SESubstanceAdministration&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
-    if (in.m_Rate != nullptr) {
-      io::Property::UnMarshall(*in.m_Rate, out.Rate());
-    }
-    if (in.m_Concentration != nullptr) {
-      io::Property::UnMarshall(*in.m_Concentration, out.Concentration());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Rate)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Concentration)
     out.Substance(in.m_Substance.GetName());
   }
   //----------------------------------------------------------------------------------
@@ -1578,196 +1504,82 @@ namespace io {
     if (in.HasOverrideConformance()) {
       out.Conformant((in.m_OverrideConformance) ? CDM::enumOnOff::On : CDM::enumOnOff::Off);
     }
-    if (in.HasArterialPHOverride()) {
-      io::Property::UnMarshall(*in.m_ArterialPHOR, out.ArterialBloodPHOverride());
-    }
-    if (in.HasVenousPHOverride()) {
-      io::Property::UnMarshall(*in.m_VenousPHOR, out.VenousBloodPHOverride());
-    }
-    if (in.HasCO2SaturationOverride()) {
-      io::Property::UnMarshall(*in.m_CO2SaturationOR, out.CarbonDioxideSaturationOverride());
-    }
-    if (in.HasCOSaturationOverride()) {
-      io::Property::UnMarshall(*in.m_COSaturationOR, out.CarbonMonoxideSaturationOverride());
-    }
-    if (in.HasO2SaturationOverride()) {
-      io::Property::UnMarshall(*in.m_O2SaturationOR, out.OxygenSaturationOverride());
-    }
-    if (in.HasPhosphateOverride()) {
-      io::Property::UnMarshall(*in.m_PhosphateOR, out.PhosphateOverride());
-    }
-    if (in.HasWBCCountOverride()) {
-      io::Property::UnMarshall(*in.m_WBCCountOR, out.WhiteBloodCellCountOverride());
-    }
-    if (in.HasTotalBilirubinOverride()) {
-      io::Property::UnMarshall(*in.m_TotalBilirubinOR, out.TotalBilirubinOverride());
-    }
-    if (in.HasCalciumConcentrationOverride()) {
-      io::Property::UnMarshall(*in.m_CalciumConcentrationOR, out.CalciumConcentrationOverride());
-    }
-    if (in.HasGlucoseConcentrationOverride()) {
-      io::Property::UnMarshall(*in.m_GlucoseConcentrationOR, out.GlucoseConcentrationOverride());
-    }
-    if (in.HasLactateConcentrationOverride()) {
-      io::Property::UnMarshall(*in.m_LactateConcentrationOR, out.LactateConcentrationOverride());
-    }
-    if (in.HasPotassiumConcentrationOverride()) {
-      io::Property::UnMarshall(*in.m_PotassiumConcentrationOR, out.PotassiumConcentrationOverride());
-    }
-    if (in.HasSodiumConcentrationOverride()) {
-      io::Property::UnMarshall(*in.m_SodiumConcentrationOR, out.SodiumConcentrationOverride());
-    }
-    if (in.HasBloodVolumeOverride()) {
-      io::Property::UnMarshall(*in.m_BloodVolumeOR, out.BloodVolumeOverride());
-    }
-    if (in.HasCardiacOutputOverride()) {
-      io::Property::UnMarshall(*in.m_CardiacOutputOR, out.CardiacOutputOverride());
-    }
-    if (in.HasDiastolicArterialPressureOverride()) {
-      io::Property::UnMarshall(*in.m_DiastolicArtPressureOR, out.DiastolicArterialPressureOverride());
-    }
-    if (in.HasMAPOverride()) {
-      io::Property::UnMarshall(*in.m_MeanArtPressureOR, out.MeanArterialPressureOverride());
-    }
-    if (in.HasHeartRateOverride()) {
-      io::Property::UnMarshall(*in.m_HeartRateOR, out.HeartRateOverride());
-    }
-    if (in.HasHeartStrokeVolumeOverride()) {
-      io::Property::UnMarshall(*in.m_HeartStrokeVolumeOR, out.HeartStrokeVolumeOverride());
-    }
-    if (in.HasSystolicArterialPressureOverride()) {
-      io::Property::UnMarshall(*in.m_SystolicArtPressureOR, out.SystolicArterialPressureOverride());
-    }
-    if (in.HasInsulinSynthesisRateOverride()) {
-      io::Property::UnMarshall(*in.m_InsulinSynthesisRateOR, out.InsulinSynthesisRateOverride());
-    }
-    if (in.HasGlucagonSynthesisRateOverride()) {
-      io::Property::UnMarshall(*in.m_GlucagonSynthesisRateOR, out.GlucagonSynthesisRateOverride());
-    }
-    if (in.HasAchievedExerciseLevelOverride()) {
-      io::Property::UnMarshall(*in.m_AcheivedExerciseLevelOR, out.AchievedExerciseLevelOverride());
-    }
-    if (in.HasCoreTemperatureOverride()) {
-      io::Property::UnMarshall(*in.m_CoreTemperatureOR, out.CoreTemperatureOverride());
-    }
-    if (in.HasCreatinineProductionRateOverride()) {
-      io::Property::UnMarshall(*in.m_CreatinineProductionRateOR, out.CreatinineProductionRateOverride());
-    }
-    if (in.HasExerciseMeanArterialPressureDeltaOverride()) {
-      io::Property::UnMarshall(*in.m_ExerciseMeanArterialPressureDeltaOR, out.ExerciseMeanArterialPressureDeltaOverride());
-    }
-    if (in.HasFatigueLevelOverride()) {
-      io::Property::UnMarshall(*in.m_FatigueLevelOR, out.FatigueLevelOverride());
-    }
-    if (in.HasLactateProductionRateOverride()) {
-      io::Property::UnMarshall(*in.m_LactateProductionRateOR, out.LactateProductionRateOverride());
-    }
-    if (in.HasSkinTemperatureOverride()) {
-      io::Property::UnMarshall(*in.m_SkinTemperatureOR, out.SkinTemperatureOverride());
-    }
-    if (in.HasSweatRateOverride()) {
-      io::Property::UnMarshall(*in.m_SweatRateOR, out.SweatRateOverride());
-    }
-    if (in.HasTotalMetabolicOverride()) {
-      io::Property::UnMarshall(*in.m_TotalMetabolicOR, out.TotalMetabolicRateOverride());
-    }
-    if (in.HasTotalWorkRateLevelOverride()) {
-      io::Property::UnMarshall(*in.m_TotalWorkRateLevelOR, out.TotalWorkRateLevelOverride());
-    }
-    if (in.HasSodiumLostToSweatOverride()) {
-      io::Property::UnMarshall(*in.m_SodiumLostToSweatOR, out.SodiumLostToSweatOverride());
-    }
-    if (in.HasPotassiumLostToSweatOverride()) {
-      io::Property::UnMarshall(*in.m_PotassiumLostToSweatOR, out.PotassiumLostToSweatOverride());
-    }
-    if (in.HasChlorideLostToSweatOverride()) {
-      io::Property::UnMarshall(*in.m_ChlorideLostToSweatOR, out.ChlorideLostToSweatOverride());
-    }
-    if (in.HasLeftAfferentArterioleResistanceOverride()) {
-      io::Property::UnMarshall(*in.m_LAfferentArterioleResistOR, out.LeftAfferentArterioleResistanceOverride());
-    }
-    if (in.HasLeftGlomerularFiltrationRateOverride()) {
-      io::Property::UnMarshall(*in.m__LeftGlomerularFiltrationOR, out.LeftGlomerularFiltrationRateOverride());
-      ;
-    }
-    if (in.HasLeftReaborptionRateOverride()) {
-      io::Property::UnMarshall(*in.m_LReabsorptionRateOR, out.LeftReabsorptionRateOverride());
-    }
-    if (in.HasRenalBloodFlowOverride()) {
-      io::Property::UnMarshall(*in.m_RenalBloodFlowOR, out.RenalBloodFlowOverride());
-    }
-    if (in.HasRenalPlasmaFlowOverride()) {
-      io::Property::UnMarshall(*in.m_RenalPlasmaOR, out.RenalPlasmaFlowOverride());
-    }
-    if (in.HasRightAfferentArterioleResistanceOverride()) {
-      io::Property::UnMarshall(*in.m_RAfferentArterioleResistOR, out.RightAfferentArterioleResistanceOverride());
-    }
-    if (in.HasRightGlomerularFiltrationRateOverride()) {
-      io::Property::UnMarshall(*in.m__RightGlomerularFiltrationOR, out.RightGlomerularFiltrationRateOverride());
-    }
-    if (in.HasRightReaborptionRateOverride()) {
-      io::Property::UnMarshall(*in.m_RReabsorptionRateOR, out.RightReabsorptionRateOverride());
-    }
-    if (in.HasUrineProductionRateOverride()) {
-      io::Property::UnMarshall(*in.m_UrineProductionRateOR, out.UrineProductionRateOverride());
-    }
-    if (in.HasUrineOsmolalityOverride()) {
-      io::Property::UnMarshall(*in.m_UrineOsmolalityOR, out.UrineOsmolalityOverride());
-    }
-    if (in.HasUrineVolumeOverride()) {
-      io::Property::UnMarshall(*in.m_UrineVolumeOR, out.UrineVolumeOverride());
-    }
-    if (in.HasUrineUreaNitrogenConcentrationOverride()) {
-      io::Property::UnMarshall(*in.m_UrineUreaNitrogenConcentrationOverrideOR, out.UrineUreaNitrogenConcentrationOverride());
-    }
-    if (in.HasExpiratoryFlowOverride()) {
-      io::Property::UnMarshall(*in.m_ExpiratoryFlowOR, out.ExpiratoryFlowOverride());
-    }
-    if (in.HasInspiratoryFlowOverride()) {
-      io::Property::UnMarshall(*in.m_InspiratoryFlowOR, out.InspiratoryFlowOverride());
-    }
-    if (in.HasPulmonaryComplianceOverride()) {
-      io::Property::UnMarshall(*in.m_PulmonaryComplianceOR, out.PulmonaryComplianceOverride());
-    }
-    if (in.HasPulmonaryResistanceOverride()) {
-      io::Property::UnMarshall(*in.m_PulmonaryResistanceOR, out.PulmonaryResistanceOverride());
-    }
-    if (in.HasRespirationRateOverride()) {
-      io::Property::UnMarshall(*in.m_RespirationRateOR, out.RespirationRateOverride());
-    }
-    if (in.HasTidalVolumeOverride()) {
-      io::Property::UnMarshall(*in.m_TidalVolumeOR, out.TidalVolumeOverride());
-    }
-    if (in.HasTargetPulmonaryVentilationOverride()) {
-      io::Property::UnMarshall(*in.m_TargetPulmonaryVentilationOR, out.TargetPulmonaryVentilationOverride());
-    }
-    if (in.HasTotalAlveolarVentilationOverride()) {
-      io::Property::UnMarshall(*in.m_TotalAlveolarVentilationOR, out.TotalAlveolarVentilationOverride());
-    }
-    if (in.HasTotalLungVolumeOverride()) {
-      io::Property::UnMarshall(*in.m_TotalLungVolumeOR, out.TotalLungVolumeOverride());
-    }
-    if (in.HasTotalPulmonaryVentilationOverride()) {
-      io::Property::UnMarshall(*in.m_TotalPulmonaryVentilationOR, out.TotalPulmonaryVentilationOverride());
-    }
-    if (in.HasExtravascularFluidVolumeOverride()) {
-      io::Property::UnMarshall(*in.m_ExtravascularFluidVolumeOR, out.ExtravascularFluidVolumeOverride());
-    }
-    if (in.HasIntracellularFluidVolumeOverride()) {
-      io::Property::UnMarshall(*in.m_IntracellularFluidVolumeOR, out.IntracellularFluidVolumeOverride());
-    }
-    if (in.HasLiverGlycogenOverride()) {
-      io::Property::UnMarshall(*in.m_LiverGlycogenOR, out.LiverGlycogenOverride());
-    }
-    if (in.HasMuscleGlycogenOverride()) {
-      io::Property::UnMarshall(*in.m_MuscleGlycogenOR, out.MuscleGlycogenOverride());
-    }
-    if (in.HasStoredProteinOverride()) {
-      io::Property::UnMarshall(*in.m_StoredProteinOR, out.StoredProteinOverride());
-    }
-    if (in.HasStoredFatOverride()) {
-      io::Property::UnMarshall(*in.m_StoredFatOR, out.StoredFatOverride());
-    }
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ArterialBloodPHOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, VenousBloodPHOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, CarbonDioxideSaturationOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, CarbonMonoxideSaturationOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, OxygenSaturationOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PhosphateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, WhiteBloodCellCountOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TotalBilirubinOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, CalciumConcentrationOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, GlucoseConcentrationOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, LactateConcentrationOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PotassiumConcentrationOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SodiumConcentrationOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, BloodVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, CardiacOutputOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, DiastolicArterialPressureOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MeanArterialPressureOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, HeartRateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, HeartStrokeVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SystolicArterialPressureOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, InsulinSynthesisRateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, GlucagonSynthesisRateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, AchievedExerciseLevelOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, CoreTemperatureOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, CreatinineProductionRateOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ExerciseMeanArterialPressureDeltaOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, FatigueLevelOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, LactateProductionRateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SkinTemperatureOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SweatRateOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TotalMetabolicRateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TotalWorkRateLevelOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SodiumLostToSweatOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PotassiumLostToSweatOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ChlorideLostToSweatOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, LeftAfferentArterioleResistanceOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, LeftGlomerularFiltrationRateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, LeftReabsorptionRateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RenalBloodFlowOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RenalPlasmaFlowOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RightAfferentArterioleResistanceOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RightGlomerularFiltrationRateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RightReabsorptionRateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, UrineProductionRateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, UrineOsmolalityOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, UrineVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, UrineUreaNitrogenConcentrationOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ExpiratoryFlowOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, InspiratoryFlowOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PulmonaryComplianceOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PulmonaryResistanceOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RespirationRateOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TidalVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TargetPulmonaryVentilationOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TotalAlveolarVentilationOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TotalLungVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TotalPulmonaryVentilationOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ExtravascularFluidVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, IntracellularFluidVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, LiverGlycogenOverride)
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MuscleGlycogenOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, StoredProteinOverride)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, StoredFatOverride)
+
   }
   //----------------------------------------------------------------------------------
 }

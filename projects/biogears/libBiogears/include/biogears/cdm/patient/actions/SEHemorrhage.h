@@ -47,10 +47,6 @@ public:
   virtual bool Load(const CDM::HemorrhageData& in);
   virtual CDM::HemorrhageData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::HemorrhageData& data) const;
-
-public:
   virtual const char* GetCompartment_cStr() const;
   virtual std::string GetCompartment() const;
   virtual bool HasCompartment() const;
@@ -69,6 +65,12 @@ public:
   virtual SEScalarFlowResistance& GetBleedResistance();
 
   virtual void ToString(std::ostream& str) const override;
+
+  bool operator==( const SEHemorrhage& rhs) const;
+  bool operator!=( const SEHemorrhage& rhs) const;
+
+protected:
+  virtual void Unload(CDM::HemorrhageData& data) const;
 
 protected:
   std::string m_Compartment;

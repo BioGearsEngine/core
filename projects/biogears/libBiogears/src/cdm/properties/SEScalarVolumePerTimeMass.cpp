@@ -83,7 +83,10 @@ const VolumePerTimeMassUnit& VolumePerTimeMassUnit::GetCompoundUnit(const std::s
 
 bool VolumePerTimeMassUnit::operator==(const VolumePerTimeMassUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool VolumePerTimeMassUnit::operator!=(const VolumePerTimeMassUnit& obj) const

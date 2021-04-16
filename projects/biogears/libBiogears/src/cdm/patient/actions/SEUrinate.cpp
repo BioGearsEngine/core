@@ -17,50 +17,63 @@ SEUrinate::SEUrinate()
   : SEPatientAction()
 {
 }
-
+//-------------------------------------------------------------------------------
 SEUrinate::~SEUrinate()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEUrinate::Clear()
 {
   SEPatientAction::Clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinate::IsValid() const
 {
   return SEPatientAction::IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinate::IsActive() const
 {
   return IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinate::Load(const CDM::UrinateData& in)
 {
   SEPatientAction::Load(in);
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::UrinateData* SEUrinate::Unload() const
 {
   CDM::UrinateData* data(new CDM::UrinateData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEUrinate::Unload(CDM::UrinateData& data) const
 {
   SEPatientAction::Unload(data);
 }
-
+//-------------------------------------------------------------------------------
 void SEUrinate::ToString(std::ostream& str) const
 {
   str << "Patient Action : Urinate";
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEUrinate::operator==( const SEUrinate& rhs) const
+{
+bool equivilant;
+  equivilant = m_Comment == rhs.m_Comment;
+  
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEUrinate::operator!=( const SEUrinate& rhs) const
+{
+  return !(*this == rhs);
 }
 }

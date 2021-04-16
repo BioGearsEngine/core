@@ -21,11 +21,17 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SENutrition;
 
-#define CDM_PATIENT_NUTRITION_UNMARSHAL_HELPER(xsd, func)                           \
-  if (m_##func) {                                                                    \
-    xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::Property::UnMarshall(*m_##func, xsd.func());                       \
+#define CDM_PATIENT_NUTRITION_UNMARSHAL_HELPER(in, out, func)                        \
+  if (in.m_##func) {                                                                 \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::PatientNutrition::UnMarshall(*in.m_##func, out.func());                              \
   }
+
+#define CDM_OPTIONAL_PATIENT_NUTRITION_UNMARSHAL_HELPER(in, out, func)               \
+  if (in.m_##func) {                                                                 \
+    io::PatientNutrition::UnMarshall(*in.m_##func, out.func());                              \
+  }
+
 namespace io {
   class BIOGEARS_PRIVATE_API PatientNutrition {
   public:
@@ -43,7 +49,7 @@ namespace io {
   void PatientNutrition::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
-      out.Ckear();
+      out.Clear();
     } else {
       Marshall(option_in.get(), out);
     }

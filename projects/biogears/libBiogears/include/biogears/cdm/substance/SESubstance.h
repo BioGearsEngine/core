@@ -63,10 +63,6 @@ public:
   virtual bool Load(const CDM::SubstanceData& in);
   virtual CDM::SubstanceData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstanceData& data) const;
-
-public:
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;
   virtual void SetName(const char* name);
@@ -186,6 +182,12 @@ public:
   virtual SESubstancePharmacodynamics& GetPD();
   virtual const SESubstancePharmacodynamics* GetPD() const;
   virtual void RemovePD();
+    
+  bool operator==(const SESubstance& rhs) const;
+  bool operator!=(const SESubstance& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstanceData& data) const;
 
 protected:
   std::string m_Name;

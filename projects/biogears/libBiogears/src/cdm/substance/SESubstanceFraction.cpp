@@ -21,56 +21,71 @@ SESubstanceFraction::SESubstanceFraction(SESubstance& substance)
 {
   m_FractionAmount = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SESubstanceFraction::~SESubstanceFraction()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceFraction::Clear()
 {
   SAFE_DELETE(m_FractionAmount);
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceFraction::Load(const CDM::SubstanceFractionData& in)
 {
   GetFractionAmount().Load(in.FractionAmount());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::SubstanceFractionData* SESubstanceFraction::Unload() const
 {
   CDM::SubstanceFractionData* data = new CDM::SubstanceFractionData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceFraction::Unload(CDM::SubstanceFractionData& data) const
 {
   data.Name(m_Substance.GetName());
   if (HasFractionAmount())
     data.FractionAmount(std::unique_ptr<CDM::ScalarFractionData>(m_FractionAmount->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceFraction::HasFractionAmount() const
 {
   return m_FractionAmount == nullptr ? false : m_FractionAmount->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarFraction& SESubstanceFraction::GetFractionAmount()
 {
   if (m_FractionAmount == nullptr)
     m_FractionAmount = new SEScalarFraction();
   return *m_FractionAmount;
 }
+//-------------------------------------------------------------------------------
 double SESubstanceFraction::GetFractionAmount() const
 {
   if (m_FractionAmount == nullptr)
     SEScalar::dNaN();
   return m_FractionAmount->GetValue();
 }
-
+//-------------------------------------------------------------------------------
 SESubstance& SESubstanceFraction::GetSubstance() const
 {
   return m_Substance;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceFraction::operator==( const SESubstanceFraction& rhs) const
+{
+  bool equivilant;
+  equivilant &=  m_Substance == rhs.m_Substance;
+  equivilant &=  (m_FractionAmount && rhs.m_FractionAmount) ? m_FractionAmount->operator==(*rhs.m_FractionAmount) : m_FractionAmount == rhs.m_FractionAmount;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceFraction::operator!=( const SESubstanceFraction& rhs) const
+{
+  return !(*this == rhs);
 }
 }

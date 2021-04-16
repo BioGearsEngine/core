@@ -23,9 +23,9 @@ namespace io {
 class BIOGEARS_API SEForcedInhale : public SEConsciousRespirationCommand {
   friend class SEConsciousRespiration;
   friend io::PatientActions;
-  SEForcedInhale();
 
 public:
+  SEForcedInhale();
   virtual ~SEForcedInhale();
 
   virtual void Clear(); //clear memory
@@ -36,10 +36,6 @@ public:
   virtual bool Load(const CDM::ForcedInhaleData& in);
   virtual CDM::ForcedInhaleData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::ForcedInhaleData& data) const;
-
-public:
   virtual bool HasInspiratoryCapacityFraction() const;
   virtual SEScalar0To1& GetInspiratoryCapacityFraction();
 
@@ -47,6 +43,12 @@ public:
   virtual SEScalarTime& GetPeriod();
 
   virtual void ToString(std::ostream& str) const;
+  
+  bool operator==( const SEForcedInhale& rhs) const;
+  bool operator!=( const SEForcedInhale& rhs) const;
+
+protected:
+  virtual void Unload(CDM::ForcedInhaleData& data) const;
 
 protected:
   SEScalar0To1* m_InspiratoryCapacityFraction;

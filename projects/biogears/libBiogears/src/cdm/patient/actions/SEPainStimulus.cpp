@@ -149,5 +149,19 @@ void SEPainStimulus::ToString(std::ostream& str) const
     str << std::flush;
   }
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEPainStimulus::operator==( const SEPainStimulus& rhs) const
+{
+bool equivilant;
+  equivilant = m_Comment == rhs.m_Comment;
+  equivilant = m_Location == rhs.m_Location;
+  equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
+  equivilant &= (m_HalfLife && rhs.m_HalfLife) ? m_HalfLife->operator==(*rhs.m_HalfLife) : m_HalfLife == rhs.m_HalfLife;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEPainStimulus::operator!=( const SEPainStimulus& rhs) const
+{
+  return !(*this == rhs);
+}
 }

@@ -17,7 +17,7 @@ const AreaUnit AreaUnit::cm2("cm^2");
 const AreaUnit AreaUnit::m2("m^2");
 
 AreaUnit::AreaUnit(const char* u)
-  : AreaUnit(std::string{ u })
+  : AreaUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
@@ -67,7 +67,10 @@ const AreaUnit& AreaUnit::GetCompoundUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 bool AreaUnit::operator==(const AreaUnit& obj) const
 {
-  return GetString() == obj.GetString();
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
 }
 //-------------------------------------------------------------------------------
 bool AreaUnit::operator!=(const AreaUnit& obj) const

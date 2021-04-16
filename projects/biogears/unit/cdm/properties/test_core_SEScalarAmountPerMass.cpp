@@ -76,8 +76,8 @@ TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::AmountPerMassUnit mu0 = biogears::AmountPerMassUnit::GetCompoundUnit("ct/g");
-  biogears::AmountPerMassUnit mu1 = biogears::AmountPerMassUnit::GetCompoundUnit("ct/ug");
+  auto& mu0 = biogears::AmountPerMassUnit::GetCompoundUnit("ct/g");
+  auto& mu1 = biogears::AmountPerMassUnit::GetCompoundUnit("ct/ug");
   EXPECT_EQ(mu0, biogears::AmountPerMassUnit::ct_Per_g);
   EXPECT_EQ(mu1, biogears::AmountPerMassUnit::ct_Per_ug);
   EXPECT_THROW(biogears::AmountPerMassUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);

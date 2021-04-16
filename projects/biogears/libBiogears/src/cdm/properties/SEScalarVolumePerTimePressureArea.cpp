@@ -17,7 +17,7 @@ const VolumePerTimePressureAreaUnit VolumePerTimePressureAreaUnit::mL_Per_min_mm
 const VolumePerTimePressureAreaUnit VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2("mL/s mmHg m^2");
 
 VolumePerTimePressureAreaUnit::VolumePerTimePressureAreaUnit(const char* u)
-  : VolumePerTimePressureAreaUnit(std::string{ u })
+  : VolumePerTimePressureAreaUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
@@ -66,21 +66,28 @@ const VolumePerTimePressureAreaUnit& VolumePerTimePressureAreaUnit::GetCompoundU
 }
 //-------------------------------------------------------------------------------
 
-  bool VolumePerTimePressureAreaUnit::operator==(const VolumePerTimePressureAreaUnit& obj) const {
-    return GetString() == obj.GetString();
-  }
+bool VolumePerTimePressureAreaUnit::operator==(const VolumePerTimePressureAreaUnit& obj) const
+{
+  auto lhsPtr = GetString();
+  auto rhsPtr = obj.GetString();
+  return lhsPtr == rhsPtr
+    || strcmp(lhsPtr, rhsPtr) == 0;
+}
 //-------------------------------------------------------------------------------
-  bool VolumePerTimePressureAreaUnit::operator!=(const VolumePerTimePressureAreaUnit& obj) const {
-    return !(*this == obj);
-  }
+bool VolumePerTimePressureAreaUnit::operator!=(const VolumePerTimePressureAreaUnit& obj) const
+{
+  return !(*this == obj);
+}
 //-------------------------------------------------------------------------------
 
-  bool SEScalarVolumePerTimePressureArea::operator==(const SEScalarVolumePerTimePressureArea& obj) const {
-    return m_unit == obj.m_unit
-       &&  m_value == obj.m_value;
-  }
+bool SEScalarVolumePerTimePressureArea::operator==(const SEScalarVolumePerTimePressureArea& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
 //-------------------------------------------------------------------------------
-  bool SEScalarVolumePerTimePressureArea::operator!=(const SEScalarVolumePerTimePressureArea& obj) const {
-    return !(*this == obj);
-  }
+bool SEScalarVolumePerTimePressureArea::operator!=(const SEScalarVolumePerTimePressureArea& obj) const
+{
+  return !(*this == obj);
+}
 }

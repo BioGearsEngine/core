@@ -34,10 +34,6 @@ public:
 
   virtual bool Load(const CDM::SubstanceInfusionData& in);
   virtual CDM::SubstanceInfusionData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::SubstanceInfusionData& data) const;
-
 public:
   virtual bool HasConcentration() const;
   virtual SEScalarMassPerVolume& GetConcentration();
@@ -48,6 +44,13 @@ public:
   virtual SESubstance& GetSubstance() const;
 
   virtual void ToString(std::ostream& str) const;
+    
+  bool operator==( const SESubstanceInfusion& rhs) const;
+  bool operator!=( const SESubstanceInfusion& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstanceInfusionData& data) const;
+
 
 protected:
   SEScalarMassPerVolume* m_Concentration;

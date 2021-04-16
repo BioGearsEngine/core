@@ -31,25 +31,25 @@ public:
   virtual void Clear() override; //clear memory
 
   virtual bool IsValid() const override;
-  ;
+  
   virtual bool IsActive() const override;
-  ;
+  
 
   virtual bool Load(const CDM::IntubationData& in);
   virtual CDM::IntubationData* Unload() const override;
-  ;
-
-protected:
-  virtual void Unload(CDM::IntubationData& data) const;
-
-public:
+  
   virtual CDM::enumIntubationType::value GetType() const;
   virtual void SetType(CDM::enumIntubationType::value t);
   virtual bool HasType() const;
   virtual void InvalidateType();
 
   virtual void ToString(std::ostream& str) const override;
-  ;
+          
+  bool operator==( const SEIntubation& rhs) const;
+  bool operator!=( const SEIntubation& rhs) const;
+
+protected:
+  virtual void Unload(CDM::IntubationData& data) const;
 
 protected:
   CDM::enumIntubationType::value m_Type;

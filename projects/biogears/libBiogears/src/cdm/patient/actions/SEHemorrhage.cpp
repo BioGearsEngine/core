@@ -219,5 +219,19 @@ void SEHemorrhage::ToString(std::ostream& str) const
   }
   str << std::flush;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEHemorrhage::operator==( const SEHemorrhage& rhs) const
+{
+bool equivilant;
+  equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= m_MCIS == rhs.m_MCIS;
+  equivilant &= (m_InitialRate && rhs.m_InitialRate) ? m_InitialRate->operator==(*rhs.m_InitialRate) : m_InitialRate == rhs.m_InitialRate;
+  equivilant &= (m_BleedResistance && rhs.m_BleedResistance) ? m_BleedResistance->operator==(*rhs.m_BleedResistance) : m_BleedResistance == rhs.m_BleedResistance;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEHemorrhage::operator!=( const SEHemorrhage& rhs) const
+{
+  return !(*this == rhs);
+}
 }

@@ -36,16 +36,19 @@ public:
   virtual bool Load(const CDM::ChestOcclusiveDressingData& in);
   virtual CDM::ChestOcclusiveDressingData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::ChestOcclusiveDressingData& data) const;
-
-public:
   virtual CDM::enumSide::value GetSide() const;
   virtual void SetSide(CDM::enumSide::value LeftOrRight);
   virtual bool HasSide() const;
   virtual void InvalidateSide();
 
   virtual void ToString(std::ostream& str) const override;
+    
+  bool operator==( const SEChestOcclusiveDressing& rhs) const;
+  bool operator!=( const SEChestOcclusiveDressing& rhs) const;
+
+protected:
+  virtual void Unload(CDM::ChestOcclusiveDressingData& data) const;
+
 
 protected:
   CDM::enumSide::value m_Side;

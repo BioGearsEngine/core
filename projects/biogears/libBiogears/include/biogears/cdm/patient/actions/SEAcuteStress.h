@@ -37,14 +37,16 @@ public:
   virtual bool Load(const CDM::AcuteStressData& in);
   virtual CDM::AcuteStressData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::AcuteStressData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
   virtual void ToString(std::ostream& str) const override;
+ 
+  bool operator==( const SEAcuteStress& rhs) const;
+  bool operator!=( const SEAcuteStress& rhs) const;
+
+protected:
+  virtual void Unload(CDM::AcuteStressData& data) const;
 
 protected:
   SEScalar0To1* m_Severity;

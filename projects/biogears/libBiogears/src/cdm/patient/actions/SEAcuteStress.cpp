@@ -20,62 +20,62 @@ SEAcuteStress::SEAcuteStress()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEAcuteStress::~SEAcuteStress()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEAcuteStress::Clear()
 {
 
   SEPatientAction::Clear();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAcuteStress::IsValid() const
 {
   return SEPatientAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SEAcuteStress::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEAcuteStress::Load(const CDM::AcuteStressData& in)
 {
   SEPatientAction::Load(in);
   GetSeverity().Load(in.Severity());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::AcuteStressData* SEAcuteStress::Unload() const
 {
   CDM::AcuteStressData* data(new CDM::AcuteStressData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEAcuteStress::Unload(CDM::AcuteStressData& data) const
 {
   SEPatientAction::Unload(data);
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEAcuteStress::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
-
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEAcuteStress::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SEAcuteStress::ToString(std::ostream& str) const
 {
   str << "Patient Action : Acute Stress";
@@ -84,5 +84,18 @@ void SEAcuteStress::ToString(std::ostream& str) const
   str << "\n\tSeverity: ";
   HasSeverity() ? str << *m_Severity : str << "Not Set";
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEAcuteStress::operator==( const SEAcuteStress& rhs) const
+{
+bool equivilant;
+  equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEAcuteStress::operator!=( const SEAcuteStress& rhs) const
+{
+  return !(*this == rhs);
 }
 }

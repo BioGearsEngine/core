@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/schema/cdm/Substance.hxx>
 #include <biogears/exports.h>
+#include <biogears/schema/cdm/Substance.hxx>
 
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 
@@ -45,9 +45,6 @@ public:
 
   virtual bool Load(const CDM::SubstancePharmacodynamicsData& in);
   virtual CDM::SubstancePharmacodynamicsData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::SubstancePharmacodynamicsData& data) const;
 
 public:
   virtual bool HasAntibacterialEffect() const;
@@ -124,6 +121,12 @@ public:
 
   virtual std::map<std::string, SEPharmacodynamicModifier*> GetPharmacodynamicModifiers() const;
 
+  bool operator==( const SESubstancePharmacodynamics& rhs) const;
+  bool operator!=( const SESubstancePharmacodynamics& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstancePharmacodynamicsData& data) const;
+
 private:
   std::map<std::string, SEPharmacodynamicModifier*> m_Modifiers;
   SEScalarFrequency* m_AntibacterialEffect;
@@ -168,6 +171,9 @@ public:
   virtual bool HasEC50() const;
   virtual SEScalarMassPerVolume& GetEC50();
   virtual double GetEC50(const MassPerVolumeUnit& unit) const;
+
+  bool operator==( const SEPharmacodynamicModifier& rhs) const;
+  bool operator!=( const SEPharmacodynamicModifier& rhs) const;
 
 protected:
   virtual void Unload(CDM::PharmacodynamicModifierData& data) const;

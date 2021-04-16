@@ -38,10 +38,6 @@ public:
   virtual bool Load(const CDM::PainStimulusData& in);
   virtual CDM::PainStimulusData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::PainStimulusData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
@@ -55,6 +51,12 @@ public:
   virtual void SetLocation(const std::string& name);
 
   virtual void ToString(std::ostream& str) const override;
+     
+  bool operator==( const SEPainStimulus& rhs) const;
+  bool operator!=( const SEPainStimulus& rhs) const;
+
+protected:
+  virtual void Unload(CDM::PainStimulusData& data) const;
 
 protected:
   SEScalar0To1* m_Severity;

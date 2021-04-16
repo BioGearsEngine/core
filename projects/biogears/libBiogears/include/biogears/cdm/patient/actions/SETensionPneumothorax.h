@@ -37,10 +37,6 @@ public:
   virtual bool Load(const CDM::TensionPneumothoraxData& in);
   virtual CDM::TensionPneumothoraxData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::TensionPneumothoraxData& data) const;
-
-public:
   virtual CDM::enumPneumothoraxType::value GetType() const;
   virtual void SetType(CDM::enumPneumothoraxType::value name);
   virtual bool HasType() const;
@@ -55,11 +51,16 @@ public:
   virtual SEScalar0To1& GetSeverity();
 
   virtual void ToString(std::ostream& str) const override;
+         
+  bool operator==( const SETensionPneumothorax& rhs) const;
+  bool operator!=( const SETensionPneumothorax& rhs) const;
+
+protected:
+  virtual void Unload(CDM::TensionPneumothoraxData& data) const;
 
 protected:
   CDM::enumPneumothoraxType::value m_Type;
   CDM::enumSide::value m_Side;
   SEScalar0To1* m_Severity;
-  CDM::enumOnOff::value m_State;
 };
 }

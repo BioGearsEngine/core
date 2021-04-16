@@ -37,14 +37,17 @@ public:
   virtual bool Load(const CDM::BronchoconstrictionData& in);
   virtual CDM::BronchoconstrictionData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::BronchoconstrictionData& data) const;
+  bool operator==( const SEBronchoconstriction& rhs) const;
+  bool operator!=( const SEBronchoconstriction& rhs) const;
 
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
   virtual void ToString(std::ostream& str) const override;
+
+protected:
+  virtual void Unload(CDM::BronchoconstrictionData& data) const;
+
 
 protected:
   SEScalar0To1* m_Severity;
