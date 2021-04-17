@@ -184,7 +184,7 @@ void BioGearsEngineTest::RespiratoryDriverTest(const std::string& sTestDirectory
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
   bg.CreateCircuitsAndCompartments();
   SEEnvironmentalConditions env(bg.GetSubstances());
-  env.Load("./environments/Standard.xml");
+  env.Load("./environments/StandardEnvironment.xml");
   SEGasCompartment* cEnv = bg.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient);
   for (SESubstanceFraction* subFrac : env.GetAmbientGases()) {
     bg.GetSubstances().AddActiveSubstance(subFrac->GetSubstance());

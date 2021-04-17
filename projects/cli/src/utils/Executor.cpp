@@ -19,7 +19,7 @@ Executor::Executor(std::string n, EDriver d)
   , group("Other")
   , patient("")
   , state("")
-  , scenario("Scenarios/BasicStandard.xml")
+  , scenario("Scenarios/Patient/BasicStandard.xml")
 {
 }
 //-----------------------------------------------------------------------------

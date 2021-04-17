@@ -607,7 +607,7 @@ void BioGearsEngineTest::EnvironmentISO7730ComparisonTest(const std::string& sTe
   bg.CreateCircuitsAndCompartments();
   Environment& env = (Environment&)bg.GetEnvironment();
   env.Initialize();
-  env.GetConditions().Load("./environments/Standard.xml");
+  env.GetConditions().Load("./environments/StandardEnvironment.xml");
   env.StateChange();
 
   bg.GetEnergy().GetCoreTemperature().SetValue(37.0, TemperatureUnit::C);
