@@ -87,8 +87,7 @@ void SEChestCompressionForce::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SEChestCompressionForce::operator==( const SEChestCompressionForce& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_Force && rhs.m_Force) ? m_Force->operator==(*rhs.m_Force) : m_Force == rhs.m_Force;
   return equivilant;
 }

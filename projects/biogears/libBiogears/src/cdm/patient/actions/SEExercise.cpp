@@ -329,18 +329,18 @@ void SEExercise::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::SEGeneric::operator==( const SEGeneric& rhs) const
+bool SEExercise::SEGeneric::operator==(const SEGeneric& rhs) const
 {
   return DesiredWorkRate == rhs.DesiredWorkRate
     && Intensity == rhs.Intensity;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::SEGeneric::operator!=( const SEGeneric& rhs) const
+bool SEExercise::SEGeneric::operator!=(const SEGeneric& rhs) const
 {
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::SECycling::operator==( const SECycling& rhs) const
+bool SEExercise::SECycling::operator==(const SECycling& rhs) const
 {
 
   return CadenceCycle == rhs.CadenceCycle
@@ -348,12 +348,12 @@ bool SEExercise::SECycling::operator==( const SECycling& rhs) const
     && AddedWeight == rhs.AddedWeight;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::SECycling::operator!=( const SECycling& rhs) const
+bool SEExercise::SECycling::operator!=(const SECycling& rhs) const
 {
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::SERunning::operator==( const SERunning& rhs) const
+bool SEExercise::SERunning::operator==(const SERunning& rhs) const
 {
 
   return SpeedRun == rhs.SpeedRun
@@ -361,35 +361,48 @@ bool SEExercise::SERunning::operator==( const SERunning& rhs) const
     && AddedWeight == rhs.AddedWeight;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::SERunning::operator!=( const SERunning& rhs) const
+bool SEExercise::SERunning::operator!=(const SERunning& rhs) const
 {
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::SEStrengthTraining::operator==( const SEStrengthTraining& rhs) const
+bool SEExercise::SEStrengthTraining::operator==(const SEStrengthTraining& rhs) const
 {
   return WeightStrength == rhs.WeightStrength
     && RepsStrength == rhs.RepsStrength;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::SEStrengthTraining::operator!=( const SEStrengthTraining& rhs) const
+bool SEExercise::SEStrengthTraining::operator!=(const SEStrengthTraining& rhs) const
 {
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::operator==( const SEExercise& rhs) const
+bool SEExercise::operator==(const SEExercise& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= m_mode == rhs.m_mode;
-  equivilant &= m_genericExercise == rhs.m_genericExercise;
-  equivilant &= m_cyclingExercise == rhs.m_cyclingExercise;
-  equivilant &= m_runningExercise == rhs.m_runningExercise;
-  equivilant &= m_strengthExercise == rhs.m_strengthExercise;
+  if (equivilant) {
+    switch (m_mode) {
+    case SEExercise::GENERIC:
+      equivilant &= m_genericExercise == rhs.m_genericExercise;
+      break;
+    case SEExercise::CYCLING:
+      equivilant &= m_cyclingExercise == rhs.m_cyclingExercise;
+      break;
+    case SEExercise::RUNNING:
+      equivilant &= m_runningExercise == rhs.m_runningExercise;
+      break;
+    case SEExercise::STRENGTH_TRAINING:
+      equivilant &= m_strengthExercise == rhs.m_strengthExercise;
+      break;
+    default:
+      equivilant = false;
+    }
+  }
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::operator!=( const SEExercise& rhs) const
+bool SEExercise::operator!=(const SEExercise& rhs) const
 {
   return !(*this == rhs);
 }

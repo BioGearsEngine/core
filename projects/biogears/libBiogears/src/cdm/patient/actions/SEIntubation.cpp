@@ -91,15 +91,14 @@ void SEIntubation::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
-bool SEIntubation::operator==( const SEIntubation& rhs) const
+bool SEIntubation::operator==(const SEIntubation& rhs) const
 {
-bool equivilant;
-  equivilant =  m_Comment == rhs.m_Comment;
-  equivilant &= m_Type== rhs.m_Type;
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= m_Type == rhs.m_Type;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEIntubation::operator!=( const SEIntubation& rhs) const
+bool SEIntubation::operator!=(const SEIntubation& rhs) const
 {
   return !(*this == rhs);
 }

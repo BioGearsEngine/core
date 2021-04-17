@@ -279,9 +279,8 @@ bool SEMechanicalVentilation::operator==(const SEMechanicalVentilation& rhs) con
   std::vector<const SESubstanceFraction*> m_cGasFractions;
   */
 
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
-  equivilant = m_State == rhs.m_State;
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= m_State == rhs.m_State;
   equivilant &= (m_Flow && rhs.m_Flow) ? m_Flow->operator==(*rhs.m_Flow) : m_Flow == rhs.m_Flow;
   equivilant &= (m_Pressure && rhs.m_Pressure) ? m_Pressure->operator==(*rhs.m_Pressure) : m_Pressure == rhs.m_Pressure;
   equivilant &= m_GasFractions.size() == rhs.m_GasFractions.size();

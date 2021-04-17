@@ -171,8 +171,7 @@ void SEConsciousRespiration::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SEConsciousRespiration::operator==( const SEConsciousRespiration& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= m_ClearCommands == rhs.m_ClearCommands;
   equivilant &= m_Commands.size() == rhs.m_Commands.size();
   

@@ -93,8 +93,7 @@ void SEPatientAssessmentRequest::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SEPatientAssessmentRequest::operator==( const SEPatientAssessmentRequest& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= m_Type == rhs.m_Type;
   return equivilant;
 }

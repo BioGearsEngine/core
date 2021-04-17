@@ -609,9 +609,8 @@ double SESubstanceClearance::GetSystemicClearance(const VolumePerTimeMassUnit& u
 //-------------------------------------------------------------------------------
 bool SESubstanceClearance::operator==( const SESubstanceClearance& rhs) const
 {
-  bool equivilant;
-  equivilant = m_hasSystemic == rhs.m_hasSystemic;
-  equivilant = m_hasCellular == rhs.m_hasCellular;
+  bool equivilant = m_hasSystemic == rhs.m_hasSystemic;
+  equivilant &= m_hasCellular == rhs.m_hasCellular;
   equivilant &= (m_CellBirthRate && rhs.m_CellBirthRate) ? m_CellBirthRate->operator==(*rhs.m_CellBirthRate) : m_CellBirthRate == rhs.m_CellBirthRate;
   equivilant &= (m_CellDeathRate && rhs.m_CellDeathRate) ? m_CellDeathRate->operator==(*rhs.m_CellDeathRate) : m_CellDeathRate == rhs.m_CellDeathRate;
 

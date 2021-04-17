@@ -86,15 +86,14 @@ void SEAirwayObstruction::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
-bool SEAirwayObstruction::operator==( const SEAirwayObstruction& rhs) const
+bool SEAirwayObstruction::operator==(const SEAirwayObstruction& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEAirwayObstruction::operator!=( const SEAirwayObstruction& rhs) const
+bool SEAirwayObstruction::operator!=(const SEAirwayObstruction& rhs) const
 {
   return !(*this == rhs);
 }

@@ -86,15 +86,14 @@ void SEAcuteStress::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
-bool SEAcuteStress::operator==( const SEAcuteStress& rhs) const
+bool SEAcuteStress::operator==(const SEAcuteStress& rhs) const
 {
-bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEAcuteStress::operator!=( const SEAcuteStress& rhs) const
+bool SEAcuteStress::operator!=(const SEAcuteStress& rhs) const
 {
   return !(*this == rhs);
 }

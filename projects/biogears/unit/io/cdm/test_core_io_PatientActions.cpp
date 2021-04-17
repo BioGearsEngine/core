@@ -574,9 +574,81 @@ TEST_F(TEST_FIXTURE_NAME, Exercise)
   SEType source, sink;
   CDMType data;
 
-  source.SetComment("Test Comment");
-  source.GetCyclingExercise().AddedWeight.SetValue(2.5, biogears::MassUnit::g);
-  source.GetCyclingExercise().CadenceCycle.SetValue(2.5, biogears::FrequencyUnit::Hz);
+  source.SetComment("SECycling");
+  biogears::SEExercise::SECycling cycling;
+
+  cycling.AddedWeight.SetValue(2.5, biogears::MassUnit::g);
+  cycling.PowerCycle.SetValue(2.5, biogears::PowerUnit::W);
+  cycling.CadenceCycle.SetValue(2.5, biogears::FrequencyUnit::Hz);
+  source.SetCyclingExercise(cycling);
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+
+  /*   Generic Exercise */
+  data = CDMType {};
+  source.Clear();
+  source.SetComment("SEGeneric");
+  biogears::SEExercise::SEGeneric generic;
+
+  generic.DesiredWorkRate.SetValue(2.5, biogears::PowerUnit::W);
+  generic.Intensity.SetValue(0.5, biogears::NoUnit::unitless);
+  source.SetGenericExercise(generic);
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+
+  /*   Strength  Training*/
+  data = CDMType {};
+  source.Clear();
+  source.SetComment("SEStrengthTraining");
+  biogears::SEExercise::SEStrengthTraining strength;
+
+  strength.RepsStrength.SetValue(2.5);
+  strength.WeightStrength.SetValue(2.5, biogears::MassUnit::kg);
+  source.SetStrengthExercise(strength);
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+
+  /*   Running  Training*/
+  data = CDMType {};
+  source.Clear();
+  source.SetComment("SERunning");
+  biogears::SEExercise::SERunning running;
+
+  running.InclineRun.SetValue(0.1);
+  running.AddedWeight.SetValue(2.5, biogears::MassUnit::kg);
+  running.SpeedRun.SetValue(2.5, biogears::LengthPerTimeUnit::m_Per_s);
+  source.SetRunningExercise(running);
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+
+  /*   Running  ALL*/
+  data = CDMType {};
+  source.Clear();
+  source.SetComment("SERunning");
+  source.SetCyclingExercise(cycling);
+  source.SetRunningExercise(running);
+  source.SetGenericExercise(generic);
+  source.SetStrengthExercise(strength);
 
   EXPECT_NE(source, sink);
 
@@ -601,9 +673,9 @@ TEST_F(TEST_FIXTURE_NAME, Hemorrhage)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.SetCompartment("Fake Compartment");
   source.GetInitialRate().SetValue(2.5, biogears::VolumePerTimeUnit::mL_Per_s);
   source.GetBleedResistance().SetValue(.5, biogears::FlowResistanceUnit::cmH2O_s_Per_L);
+  source.SetCompartment("Fake Compartment");
 
   EXPECT_NE(source, sink);
 
@@ -665,26 +737,31 @@ TEST_F(TEST_FIXTURE_NAME, Intubation)
 }
 
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
 //class SEMechanicalVentilation;
 //!
 //! TYPE MechanicalVentilation
-//! static void Marshall(const CDM::MechanicalVentilationData& in, const SESubstanceManager& substances, SEMechanicalVentilation& out);
-//! static void UnMarshall(const const SESubstanceManager& substances, SEMechanicalVentilation& in, CDM::MechanicalVentilationData& out);
+//!     static void Marshall(const CDM::MechanicalVentilationData& in, const SESubstanceManager& substances, SEMechanicalVentilation& out);
+//!     static void UnMarshall(const SEMechanicalVentilation& in, CDM::MechanicalVentilationData& out);
 TEST_F(TEST_FIXTURE_NAME, MechanicalVentilation)
 {
   USING_TYPES(MechanicalVentilation)
 
+  biogears::Logger logger;
+  biogears::SESubstanceManager mgr { &logger };
+  mgr.LoadSubstanceDirectory();
   SEType source, sink;
   CDMType data;
 
   source.SetComment("Test Comment");
+  source.SetState(CDM::enumOnOff::Off);
   source.GetFlow().SetValue(1.23, biogears::VolumePerTimeUnit::L_Per_s);
   source.GetPressure().SetValue(1.23, biogears::PressureUnit::cmH2O);
 
   EXPECT_NE(source, sink);
 
   PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(data, mgr, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -767,6 +844,7 @@ TEST_F(TEST_FIXTURE_NAME, PericardialEffusion)
 //class SETensionPneumothorax;
 //!
 //! TYPE TensionPneumothorax
+//!
 //! static void Marshall(const CDM::TensionPneumothoraxData& in, SETensionPneumothorax& out);
 //! static void UnMarshall(const SETensionPneumothorax& in, CDM::TensionPneumothoraxData& out);
 TEST_F(TEST_FIXTURE_NAME, TensionPneumothorax)
@@ -802,14 +880,16 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceBolus)
 
   biogears::Logger logger;
   biogears::SESubstanceManager mgr { &logger };
+  mgr.LoadSubstanceDirectory();
   auto oxygen = mgr.GetSubstance("Oxygen");
-  auto nitrogen = mgr.GetSubstance("Nitrogen");
-  SEType source { *oxygen }, sink { *nitrogen };
+
+  SEType source { *oxygen }, sink { *oxygen };
   CDMType data;
 
   source.SetComment("Test Comment");
   source.SetAdminRoute(CDM::enumBolusAdministration::Intramuscular);
   source.GetAdminTime().SetValue(2.9, biogears::TimeUnit::s);
+  source.GetDose().SetValue(1.9, biogears::VolumeUnit::dL);
   source.GetConcentration().SetValue(2.0, biogears::MassPerVolumeUnit::mg_Per_m3);
 
   EXPECT_NE(source, sink);
@@ -832,9 +912,10 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceBolusState)
 
   biogears::Logger logger;
   biogears::SESubstanceManager mgr { &logger };
+  mgr.LoadSubstanceDirectory();
   auto oxygen = mgr.GetSubstance("Oxygen");
-  auto nitrogen = mgr.GetSubstance("Nitrogen");
-  SEType source { *oxygen }, sink { *nitrogen };
+
+  SEType source { *oxygen }, sink { *oxygen };
   CDMType data;
 
   source.GetAdministeredDose().SetValue(0.314, biogears::VolumeUnit::dL);
@@ -861,9 +942,9 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceCompoundInfusion)
 
   biogears::Logger logger;
   biogears::SESubstanceManager mgr { &logger };
+  mgr.LoadSubstanceDirectory();
   auto oxygen = mgr.GetCompound("Saline");
-  auto nitrogen = mgr.GetCompound("SalineSlowDrip");
-  SEType source { *oxygen }, sink { *nitrogen };
+  SEType source { *oxygen }, sink { *oxygen };
   CDMType data;
 
   source.SetComment("Test Comment");
@@ -891,9 +972,9 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceInfusion)
 
   biogears::Logger logger;
   biogears::SESubstanceManager mgr { &logger };
+  mgr.LoadSubstanceDirectory();
   auto oxygen = mgr.GetSubstance("Oxygen");
-  auto nitrogen = mgr.GetSubstance("Nitrogen");
-  SEType source { *oxygen }, sink { *nitrogen };
+  SEType source { *oxygen }, sink { *oxygen };
   CDMType data;
 
   source.SetComment("Test Comment");

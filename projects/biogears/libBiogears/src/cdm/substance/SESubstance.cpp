@@ -852,10 +852,9 @@ void SESubstance::RemovePD()
 //-------------------------------------------------------------------------------
 bool SESubstance::operator==(const SESubstance& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Name == rhs.m_Name;
-  equivilant = m_Classification == rhs.m_Classification;
-  equivilant = m_State == rhs.m_State;
+  bool equivilant = m_Name == rhs.m_Name;
+  equivilant &= m_Classification == rhs.m_Classification;
+  equivilant &= m_State == rhs.m_State;
 
   equivilant &= (m_Density && rhs.m_Density) ? m_Density->operator==(*rhs.m_Density) : m_Density == rhs.m_Density;
   equivilant &= (m_MolarMass && rhs.m_MolarMass) ? m_MolarMass->operator==(*rhs.m_MolarMass) : m_MolarMass == rhs.m_MolarMass;

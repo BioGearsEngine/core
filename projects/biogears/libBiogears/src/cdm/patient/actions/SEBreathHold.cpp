@@ -88,8 +88,7 @@ void SEBreathHold::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SEBreathHold::operator==( const SEBreathHold& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_Period && rhs.m_Period) ? m_Period->operator==(*rhs.m_Period) : m_Period == rhs.m_Period;
   return equivilant;
 }

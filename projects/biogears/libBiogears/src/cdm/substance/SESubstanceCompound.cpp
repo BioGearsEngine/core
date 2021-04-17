@@ -224,11 +224,10 @@ void SESubstanceCompound::RemoveComponent(const SESubstance& substance)
 //-------------------------------------------------------------------------------
 bool SESubstanceCompound::operator==(const SESubstanceCompound& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Name == rhs.m_Name;
-  equivilant = m_RhFactor == rhs.m_RhFactor;
-  equivilant = m_Classification == rhs.m_Classification;
-  equivilant = m_Components.size() == rhs.m_Components.size();
+  bool equivilant = m_Name == rhs.m_Name;
+  equivilant &= m_RhFactor == rhs.m_RhFactor;
+  equivilant &= m_Classification == rhs.m_Classification;
+  equivilant &= m_Components.size() == rhs.m_Components.size();
   for (auto i = 0; i < m_Components.size(); ++i) {
     equivilant &= m_Components[i] == rhs.m_Components[i];
   }

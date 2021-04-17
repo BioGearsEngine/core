@@ -102,16 +102,15 @@ void SEChestOcclusiveDressing::ToString(std::ostream& str) const
 }
 //-------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------
-bool SEChestOcclusiveDressing::operator==( const SEChestOcclusiveDressing& rhs) const
+bool SEChestOcclusiveDressing::operator==(const SEChestOcclusiveDressing& rhs) const
 {
-bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
-  equivilant &=  m_Side == rhs.m_Side;
-  equivilant &=  m_State == rhs.m_State;
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= m_Side == rhs.m_Side;
+  equivilant &= m_State == rhs.m_State;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEChestOcclusiveDressing::operator!=( const SEChestOcclusiveDressing& rhs) const
+bool SEChestOcclusiveDressing::operator!=(const SEChestOcclusiveDressing& rhs) const
 {
   return !(*this == rhs);
 }

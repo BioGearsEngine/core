@@ -1,8 +1,8 @@
 #include "PatientActions.h"
 
+#include "PatientNutrition.h"
 #include "Property.h"
 #include "Scenario.h"
-#include "PatientNutrition.h"
 
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 #include <biogears/schema/cdm/EnvironmentActions.hxx>
@@ -593,6 +593,7 @@ namespace io {
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     if (in.m_TBSA != nullptr) {
+      out.TotalBodySurfaceArea(std::make_unique<CDM::Scalar0To1Data>());
       io::Property::UnMarshall(*in.m_TBSA, out.TotalBodySurfaceArea());
     }
   }
@@ -854,23 +855,40 @@ namespace io {
   //----------------------------------------------------------------------------------
   void UnMarshall(const SEExercise::SEGeneric& in, CDM::GenericExerciseData& out)
   {
-    io::Property::UnMarshall(in.Intensity, out.Intensity());
-    io::Property::UnMarshall(in.DesiredWorkRate, out.DesiredWorkRate());
+    if (in.Intensity.IsValid()) {
+      io::Property::UnMarshall(in.Intensity, out.Intensity());
+    }
+    if (in.DesiredWorkRate.IsValid()) {
+      io::Property::UnMarshall(in.DesiredWorkRate, out.DesiredWorkRate());
+    }
   }
   void UnMarshall(const SEExercise::SECycling& in, CDM::CyclingExerciseData& out)
   {
+    out.Cadence(std::make_unique<CDM::ScalarFrequencyData>());
+    out.Power(std::make_unique<CDM::ScalarPowerData>());
+
     io::Property::UnMarshall(in.CadenceCycle, out.Cadence());
     io::Property::UnMarshall(in.PowerCycle, out.Power());
-    io::Property::UnMarshall(in.AddedWeight, out.AddedWeight());
+    if (in.AddedWeight.IsValid()) {
+      io::Property::UnMarshall(in.AddedWeight, out.AddedWeight());
+    }
   }
   void UnMarshall(const SEExercise::SERunning& in, CDM::RunningExerciseData& out)
   {
+    out.Speed(std::make_unique<CDM::ScalarLengthPerTimeData>());
+    out.Incline(std::make_unique<CDM::Scalar0To1Data>());
+
     io::Property::UnMarshall(in.SpeedRun, out.Speed());
     io::Property::UnMarshall(in.InclineRun, out.Incline());
-    io::Property::UnMarshall(in.AddedWeight, out.AddedWeight());
+    if (in.AddedWeight.IsValid()) {
+      io::Property::UnMarshall(in.AddedWeight, out.AddedWeight());
+    }
   }
   void UnMarshall(const SEExercise::SEStrengthTraining& in, CDM::StrengthExerciseData& out)
   {
+    out.Weight(std::make_unique<CDM::ScalarMassData>());
+    out.Repetitions(std::make_unique<CDM::ScalarData>());
+
     io::Property::UnMarshall(in.WeightStrength, out.Weight());
     io::Property::UnMarshall(in.RepsStrength, out.Repetitions());
   }
@@ -906,18 +924,7 @@ namespace io {
     Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
     out.m_Compartment = in.Compartment();
     io::Property::Marshall(in.InitialRate(), out.GetInitialRate());
-    //Place compartments in torso in a map so that we don't get too messy with nested conditionals.  Each vector is digits 2-4 of the MCIS code
-    out.organMap["VenaCava"] = std::vector<unsigned int> { 6, 6, 0 };
-    out.organMap["LeftLung"] = std::vector<unsigned int> { 7, 1, 0 };
-    out.organMap["RightLung"] = std::vector<unsigned int> { 7, 1, 0 };
-    out.organMap["Myocardium"] = std::vector<unsigned int> { 7, 2, 0 };
-    out.organMap["Liver"] = std::vector<unsigned int> { 8, 1, 0 };
-    out.organMap["Spleen"] = std::vector<unsigned int> { 8, 2, 0 };
-    out.organMap["Splanchnic"] = std::vector<unsigned int> { 8, 3, 0 };
-    out.organMap["LeftKidney"] = std::vector<unsigned int> { 8, 4, 0 };
-    out.organMap["RightKidney"] = std::vector<unsigned int> { 8, 4, 0 };
-    out.organMap["SmallIntestine"] = std::vector<unsigned int> { 8, 5, 0 };
-    out.organMap["LargeIntestine"] = std::vector<unsigned int> { 8, 6, 0 };
+    io::Property::Marshall(in.BleedResistance(), out.GetBleedResistance());
     out.SetMCIS();
   }
   //----------------------------------------------------------------------------------
@@ -926,6 +933,7 @@ namespace io {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     out.Compartment(in.m_Compartment);
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, InitialRate)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, BleedResistance)
   }
   //----------------------------------------------------------------------------------
   //class SESepsis
@@ -1051,9 +1059,7 @@ namespace io {
   void PatientActions::UnMarshall(const SEPericardialEffusion& in, CDM::PericardialEffusionData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    if (in.m_EffusionRate != nullptr) {
-      io::Property::UnMarshall(*in.m_EffusionRate, out.EffusionRate());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, EffusionRate)
   }
   //----------------------------------------------------------------------------------
   //class SETensionPneumothorax
@@ -1090,15 +1096,17 @@ namespace io {
     Scenario::Marshall(static_cast<const CDM::SubstanceAdministrationData&>(in), static_cast<SESubstanceAdministration&>(out));
     io::Property::Marshall(in.Dose(), out.GetDose());
     io::Property::Marshall(in.Concentration(), out.GetConcentration());
+    io::Property::Marshall(in.AdminTime(), out.GetAdminTime());
     out.m_AdminRoute = in.AdminRoute();
   }
   //----------------------------------------------------------------------------------
   void PatientActions::UnMarshall(const SESubstanceBolus& in, CDM::SubstanceBolusData& out)
   {
     Scenario::UnMarshall(static_cast<const SESubstanceAdministration&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, AdminRoute)
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Dose)
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Concentration)
-    CDM_ENUM_UNMARSHAL_HELPER(in, out, AdminRoute)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, AdminTime)
     out.Substance(in.m_Substance.GetName());
   }
   //----------------------------------------------------------------------------------
@@ -1106,7 +1114,8 @@ namespace io {
   void PatientActions::Marshall(const CDM::SubstanceBolusStateData& in, SESubstanceBolusState& out)
   {
     //TODO: Need to pass SubstanceManager to populate Substance based on name
-    //NOTE: THis might require us to throw exception
+    //NOTE: This might require us to throw exception
+    //NOTE: This deffintly requires a refactor to not store internal substances as references
 
     io::Property::Marshall(in.ElapsedTime(), out.m_ElapsedTime);
     io::Property::Marshall(in.AdministeredDose(), out.m_AdministeredDose);
@@ -1115,7 +1124,9 @@ namespace io {
   void PatientActions::UnMarshall(const SESubstanceBolusState& in, CDM::SubstanceBolusStateData& out)
   {
     out.Substance(in.m_Substance.GetName());
+    out.ElapsedTime(std::make_unique<CDM::ScalarTimeData>());
     io::Property::UnMarshall(in.m_ElapsedTime, out.ElapsedTime());
+    out.AdministeredDose(std::make_unique<CDM::ScalarVolumeData>());
     io::Property::UnMarshall(in.m_AdministeredDose, out.AdministeredDose());
   }
   //----------------------------------------------------------------------------------
@@ -1579,7 +1590,6 @@ namespace io {
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MuscleGlycogenOverride)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, StoredProteinOverride)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, StoredFatOverride)
-
   }
   //----------------------------------------------------------------------------------
 }

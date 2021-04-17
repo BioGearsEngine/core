@@ -167,8 +167,7 @@ void SESubstancePharmacokinetics::RemoveTissueKinetics(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacokinetics::operator==(const SESubstancePharmacokinetics& rhs) const
 {
-  bool equivilant;
-  equivilant = (m_Physicochemicals && rhs.m_Physicochemicals) ? m_Physicochemicals->operator==(*rhs.m_Physicochemicals) : m_Physicochemicals == rhs.m_Physicochemicals;
+  bool equivilant = (m_Physicochemicals && rhs.m_Physicochemicals) ? m_Physicochemicals->operator==(*rhs.m_Physicochemicals) : m_Physicochemicals == rhs.m_Physicochemicals;
   equivilant &= m_TissueKinetics.size() == rhs.m_TissueKinetics.size();
   if (equivilant) {
     for (auto& pair : m_TissueKinetics) {

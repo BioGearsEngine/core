@@ -103,8 +103,7 @@ void SENeedleDecompression::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SENeedleDecompression::operator==( const SENeedleDecompression& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= m_Side == rhs.m_Side;
   equivilant &= m_State == rhs.m_State;
   return equivilant;

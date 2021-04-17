@@ -100,8 +100,7 @@ void SEBurnWound::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SEBurnWound::operator==( const SEBurnWound& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_TBSA && rhs.m_TBSA) ? m_TBSA->operator==(*rhs.m_TBSA) : m_TBSA == rhs.m_TBSA;
   return equivilant;
 }

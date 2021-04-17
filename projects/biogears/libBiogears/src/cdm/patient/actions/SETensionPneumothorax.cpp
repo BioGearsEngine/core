@@ -140,10 +140,9 @@ void SETensionPneumothorax::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SETensionPneumothorax::operator==( const SETensionPneumothorax& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
-  equivilant = m_Side == rhs.m_Side;
-  equivilant = m_Type == rhs.m_Type;
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= m_Side == rhs.m_Side;
+  equivilant &= m_Type == rhs.m_Type;
   equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
   return equivilant;
 }

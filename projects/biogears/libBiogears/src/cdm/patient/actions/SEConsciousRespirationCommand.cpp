@@ -83,8 +83,7 @@ void SEConsciousRespirationCommand::InvalidateComment()
 //-------------------------------------------------------------------------------
 bool SEConsciousRespirationCommand::operator==( const SEConsciousRespirationCommand& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   return equivilant;
 }
 //-------------------------------------------------------------------------------

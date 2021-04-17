@@ -117,8 +117,7 @@ void SESubstanceCompoundInfusion::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::operator==(const SESubstanceCompoundInfusion& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_BagVolume && rhs.m_BagVolume) ? m_BagVolume->operator==(*rhs.m_BagVolume) : m_BagVolume == rhs.m_BagVolume;
   equivilant &= (m_Rate && rhs.m_Rate) ? m_Rate->operator==(*rhs.m_Rate) : m_Rate == rhs.m_Rate;
   equivilant &= m_Compound == rhs.m_Compound;

@@ -2615,8 +2615,7 @@ void SEOverride::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SEOverride::operator==(const SEOverride& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= m_OverrideState == rhs.m_OverrideState;
   equivilant &= m_OverrideConformance == rhs.m_OverrideConformance;
   equivilant &= (m_ArterialBloodPHOverride && rhs.m_ArterialBloodPHOverride) ? m_ArterialBloodPHOverride->operator==(*rhs.m_ArterialBloodPHOverride) : m_ArterialBloodPHOverride == rhs.m_ArterialBloodPHOverride;

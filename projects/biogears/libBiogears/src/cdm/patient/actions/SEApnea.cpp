@@ -88,8 +88,7 @@ void SEApnea::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SEApnea::operator==(const SEApnea& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
   return equivilant;
 }

@@ -66,8 +66,7 @@ void SEUrinate::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SEUrinate::operator==( const SEUrinate& rhs) const
 {
-bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+bool equivilant = m_Comment == rhs.m_Comment;
   
   return equivilant;
 }

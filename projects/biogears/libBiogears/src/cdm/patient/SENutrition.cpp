@@ -353,8 +353,7 @@ void SENutrition::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SENutrition::operator==( const SENutrition& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Name == rhs.m_Name;
+  bool equivilant = m_Name == rhs.m_Name;
   equivilant &= (m_Carbohydrate && rhs.m_Carbohydrate) ? m_Carbohydrate->operator==(*rhs.m_Carbohydrate) : m_Carbohydrate == rhs.m_Carbohydrate;
   equivilant &= (m_Fat && rhs.m_Fat) ? m_Fat->operator==(*rhs.m_Fat) : m_Fat == rhs.m_Fat;
   equivilant &= (m_Protein && rhs.m_Protein) ? m_Protein->operator==(*rhs.m_Protein) : m_Protein == rhs.m_Protein;

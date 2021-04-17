@@ -148,8 +148,7 @@ const SEHistogramFractionVsLength* SESubstanceAerosolization::GetParticulateSize
 //-------------------------------------------------------------------------------
 bool SESubstanceAerosolization::operator==( const SESubstanceAerosolization& rhs) const
 {
-  bool equivilant;
-  equivilant &= (m_BronchioleModifier && rhs.m_BronchioleModifier) ? m_BronchioleModifier->operator==(*rhs.m_BronchioleModifier) : m_BronchioleModifier == rhs.m_BronchioleModifier;
+  bool equivilant = (m_BronchioleModifier && rhs.m_BronchioleModifier) ? m_BronchioleModifier->operator==(*rhs.m_BronchioleModifier) : m_BronchioleModifier == rhs.m_BronchioleModifier;
   equivilant &= (m_InflammationCoefficient && rhs.m_InflammationCoefficient) ? m_InflammationCoefficient->operator==(*rhs.m_InflammationCoefficient) : m_InflammationCoefficient == rhs.m_InflammationCoefficient;
   equivilant &= (m_ParticulateSizeDistribution && rhs.m_ParticulateSizeDistribution) ? m_ParticulateSizeDistribution->operator==(*rhs.m_ParticulateSizeDistribution) : m_ParticulateSizeDistribution == rhs.m_ParticulateSizeDistribution;
   return equivilant;

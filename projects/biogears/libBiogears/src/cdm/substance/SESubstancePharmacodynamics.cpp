@@ -716,8 +716,7 @@ double SEPharmacodynamicModifier::GetEC50(const MassPerVolumeUnit& unit) const
 //-------------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::operator==(const SESubstancePharmacodynamics& rhs) const
 {
-  bool equivilant;
-  equivilant = (m_AntibacterialEffect && rhs.m_AntibacterialEffect) ? m_AntibacterialEffect->operator==(*rhs.m_AntibacterialEffect) : m_AntibacterialEffect == rhs.m_AntibacterialEffect;
+  bool equivilant = (m_AntibacterialEffect && rhs.m_AntibacterialEffect) ? m_AntibacterialEffect->operator==(*rhs.m_AntibacterialEffect) : m_AntibacterialEffect == rhs.m_AntibacterialEffect;
   equivilant &= (m_Bronchodilation && rhs.m_Bronchodilation) ? m_Bronchodilation->operator==(*rhs.m_Bronchodilation) : m_Bronchodilation == rhs.m_Bronchodilation;
   equivilant &= (m_DiastolicPressureModifier && rhs.m_DiastolicPressureModifier) ? m_DiastolicPressureModifier->operator==(*rhs.m_DiastolicPressureModifier) : m_DiastolicPressureModifier == rhs.m_DiastolicPressureModifier;
   equivilant &= (m_EMaxShapeParameter && rhs.m_EMaxShapeParameter) ? m_EMaxShapeParameter->operator==(*rhs.m_EMaxShapeParameter) : m_EMaxShapeParameter == rhs.m_EMaxShapeParameter;
@@ -754,8 +753,7 @@ bool SESubstancePharmacodynamics::operator!=(const SESubstancePharmacodynamics& 
 //-------------------------------------------------------------------------------
 bool SEPharmacodynamicModifier::operator==(const SEPharmacodynamicModifier& rhs) const
 {
-  bool equivilant;
-  equivilant = (m_EMax && rhs.m_EMax) ? m_EMax->operator==(*rhs.m_EMax) : m_EMax == rhs.m_EMax;
+  bool equivilant = (m_EMax && rhs.m_EMax) ? m_EMax->operator==(*rhs.m_EMax) : m_EMax == rhs.m_EMax;
   equivilant &= (m_EC50 && rhs.m_EC50) ? m_EC50->operator==(*rhs.m_EC50) : m_EC50 == rhs.m_EC50;
   return equivilant;
 }

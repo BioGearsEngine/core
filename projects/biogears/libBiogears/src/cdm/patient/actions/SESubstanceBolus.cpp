@@ -195,8 +195,7 @@ void SESubstanceBolusState::Unload(CDM::SubstanceBolusStateData& data) const
 //-------------------------------------------------------------------------------
 bool SESubstanceBolus::operator==(const SESubstanceBolus& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant = m_AdminRoute == rhs.m_AdminRoute;
   equivilant &= (m_AdminTime && rhs.m_AdminTime) ? m_AdminTime->operator==(*rhs.m_AdminTime) : m_AdminTime == rhs.m_AdminTime;
   equivilant &= (m_Concentration && rhs.m_Concentration) ? m_Concentration->operator==(*rhs.m_Concentration) : m_Concentration == rhs.m_Concentration;
@@ -212,8 +211,7 @@ bool SESubstanceBolus::operator!=(const SESubstanceBolus& rhs) const
 //-------------------------------------------------------------------------------
 bool SESubstanceBolusState::operator==(const SESubstanceBolusState& rhs) const
 {
-  bool equivilant;
-  equivilant &=  m_ElapsedTime == rhs.m_ElapsedTime;
+  bool equivilant =  m_ElapsedTime == rhs.m_ElapsedTime;
   equivilant &=  m_AdministeredDose == rhs.m_AdministeredDose;
   equivilant &=  m_Substance == rhs.m_Substance;
   return equivilant;

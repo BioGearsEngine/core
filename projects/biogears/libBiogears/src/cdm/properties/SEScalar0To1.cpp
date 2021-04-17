@@ -36,7 +36,7 @@ void SEScalar0To1::SetValue(double d)
 
 void SEScalar0To1::SetValue(double d, const NoUnit& unitless)
 {
-  SEScalar0To1::SetValue(d);
+  SetValue(d);
 }
 
 //-------------------------------------------------------------------------------

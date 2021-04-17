@@ -115,8 +115,7 @@ void SEBrainInjury::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SEBrainInjury::operator==( const SEBrainInjury& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
   equivilant &= m_Type == rhs.m_Type;
   return equivilant;

@@ -78,8 +78,7 @@ SESubstance& SESubstanceFraction::GetSubstance() const
 //-------------------------------------------------------------------------------
 bool SESubstanceFraction::operator==( const SESubstanceFraction& rhs) const
 {
-  bool equivilant;
-  equivilant &=  m_Substance == rhs.m_Substance;
+  bool equivilant =  m_Substance == rhs.m_Substance;
   equivilant &=  (m_FractionAmount && rhs.m_FractionAmount) ? m_FractionAmount->operator==(*rhs.m_FractionAmount) : m_FractionAmount == rhs.m_FractionAmount;
   return equivilant;
 }

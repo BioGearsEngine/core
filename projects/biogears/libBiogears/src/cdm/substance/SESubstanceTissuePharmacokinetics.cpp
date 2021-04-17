@@ -102,8 +102,7 @@ double SESubstanceTissuePharmacokinetics::GetPartitionCoefficient() const
 //-------------------------------------------------------------------------------
 bool SESubstanceTissuePharmacokinetics::operator==( const SESubstanceTissuePharmacokinetics& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Name == rhs.m_Name;
+  bool equivilant = m_Name == rhs.m_Name;
   equivilant &= (m_PartitionCoefficient && rhs.m_PartitionCoefficient) ? m_PartitionCoefficient->operator==(*rhs.m_PartitionCoefficient) : m_PartitionCoefficient == rhs.m_PartitionCoefficient;
   return equivilant;
 }

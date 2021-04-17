@@ -305,9 +305,8 @@ bool SESubstancePhysicochemicals::operator==( const SESubstancePhysicochemicals&
 
 };
   */
-bool equivilant;
-  equivilant = m_BindingProtein == rhs.m_BindingProtein;
-  equivilant = m_IonicState == rhs.m_IonicState;
+bool equivilant = m_BindingProtein == rhs.m_BindingProtein;
+  equivilant &= m_IonicState == rhs.m_IonicState;
   equivilant &= (m_BloodPlasmaRatio && rhs.m_BloodPlasmaRatio) ? m_BloodPlasmaRatio->operator==(*rhs.m_BloodPlasmaRatio) : m_BloodPlasmaRatio == rhs.m_BloodPlasmaRatio;
   equivilant &= (m_FractionUnboundInPlasma && rhs.m_FractionUnboundInPlasma) ? m_FractionUnboundInPlasma->operator==(*rhs.m_FractionUnboundInPlasma) : m_FractionUnboundInPlasma == rhs.m_FractionUnboundInPlasma;
   equivilant &= (m_LogP && rhs.m_LogP) ? m_LogP->operator==(*rhs.m_LogP) : m_LogP == rhs.m_LogP;

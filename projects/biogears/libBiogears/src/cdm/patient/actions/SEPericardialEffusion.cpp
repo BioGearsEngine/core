@@ -87,8 +87,7 @@ void SEPericardialEffusion::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SEPericardialEffusion::operator==( const SEPericardialEffusion& rhs) const
 {
-bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_EffusionRate && rhs.m_EffusionRate) ? m_EffusionRate->operator==(*rhs.m_EffusionRate) : m_EffusionRate == rhs.m_EffusionRate;
   return equivilant;
 }

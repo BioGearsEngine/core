@@ -68,8 +68,7 @@ void SEUseInhaler::ToString(std::ostream& str) const
 //-------------------------------------------------------------------------------
 bool SEUseInhaler::operator==( const SEUseInhaler& rhs) const
 {
-  bool equivilant;
-  equivilant = m_Comment == rhs.m_Comment;
+  bool equivilant  = m_Comment == rhs.m_Comment;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
