@@ -2671,28 +2671,28 @@ bool SEOverride::operator==(const SEOverride& rhs) const
   equivilant &= (m_RightReabsorptionRateOverride && rhs.m_RightReabsorptionRateOverride) ? m_RightReabsorptionRateOverride->operator==(*rhs.m_RightReabsorptionRateOverride) : m_RightReabsorptionRateOverride == rhs.m_RightReabsorptionRateOverride;
   equivilant &= (m_UrinationRateOverride && rhs.m_UrinationRateOverride) ? m_UrinationRateOverride->operator==(*rhs.m_UrinationRateOverride) : m_UrinationRateOverride == rhs.m_UrinationRateOverride;
   equivilant &= (m_UrineProductionRateOverride && rhs.m_UrineProductionRateOverride) ? m_UrineProductionRateOverride->operator==(*rhs.m_UrineProductionRateOverride) : m_UrineProductionRateOverride == rhs.m_UrineProductionRateOverride;
-  equivilant &= (m_UrineOsmolalityOverride && rhs.m_UrineOsmolalityOverride) ? m_UrineOsmolalityOverride->operator==(*rhs.m_UrineOsmolalityOverride) : m_UrineOsmolalityOverride == rhs.m_UrineOsmolalityOverride;
 
+  equivilant &= (m_UrineOsmolalityOverride && rhs.m_UrineOsmolalityOverride) ? m_UrineOsmolalityOverride->operator==(*rhs.m_UrineOsmolalityOverride) : m_UrineOsmolalityOverride == rhs.m_UrineOsmolalityOverride;
   equivilant &= (m_UrineVolumeOverride && rhs.m_UrineVolumeOverride) ? m_UrineVolumeOverride->operator==(*rhs.m_UrineVolumeOverride) : m_UrineVolumeOverride == rhs.m_UrineVolumeOverride;
   equivilant &= (m_UrineUreaNitrogenConcentrationOverride && rhs.m_UrineUreaNitrogenConcentrationOverride) ? m_UrineUreaNitrogenConcentrationOverride->operator==(*rhs.m_UrineUreaNitrogenConcentrationOverride) : m_UrineUreaNitrogenConcentrationOverride == rhs.m_UrineUreaNitrogenConcentrationOverride;
   equivilant &= (m_ExpiratoryFlowOverride && rhs.m_ExpiratoryFlowOverride) ? m_ExpiratoryFlowOverride->operator==(*rhs.m_ExpiratoryFlowOverride) : m_ExpiratoryFlowOverride == rhs.m_ExpiratoryFlowOverride;
   equivilant &= (m_InspiratoryFlowOverride && rhs.m_InspiratoryFlowOverride) ? m_InspiratoryFlowOverride->operator==(*rhs.m_InspiratoryFlowOverride) : m_InspiratoryFlowOverride == rhs.m_InspiratoryFlowOverride;
+
   equivilant &= (m_PulmonaryComplianceOverride && rhs.m_PulmonaryComplianceOverride) ? m_PulmonaryComplianceOverride->operator==(*rhs.m_PulmonaryComplianceOverride) : m_PulmonaryComplianceOverride == rhs.m_PulmonaryComplianceOverride;
   equivilant &= (m_PulmonaryResistanceOverride && rhs.m_PulmonaryResistanceOverride) ? m_PulmonaryResistanceOverride->operator==(*rhs.m_PulmonaryResistanceOverride) : m_PulmonaryResistanceOverride == rhs.m_PulmonaryResistanceOverride;
-
   equivilant &= (m_RespirationRateOverride && rhs.m_RespirationRateOverride) ? m_RespirationRateOverride->operator==(*rhs.m_RespirationRateOverride) : m_RespirationRateOverride == rhs.m_RespirationRateOverride;
   equivilant &= (m_TidalVolumeOverride && rhs.m_TidalVolumeOverride) ? m_TidalVolumeOverride->operator==(*rhs.m_TidalVolumeOverride) : m_TidalVolumeOverride == rhs.m_TidalVolumeOverride;
   equivilant &= (m_TargetPulmonaryVentilationOverride && rhs.m_TargetPulmonaryVentilationOverride) ? m_TargetPulmonaryVentilationOverride->operator==(*rhs.m_TargetPulmonaryVentilationOverride) : m_TargetPulmonaryVentilationOverride == rhs.m_TargetPulmonaryVentilationOverride;
+
   equivilant &= (m_TotalAlveolarVentilationOverride && rhs.m_TotalAlveolarVentilationOverride) ? m_TotalAlveolarVentilationOverride->operator==(*rhs.m_TotalAlveolarVentilationOverride) : m_TotalAlveolarVentilationOverride == rhs.m_TotalAlveolarVentilationOverride;
   equivilant &= (m_TotalLungVolumeOverride && rhs.m_TotalLungVolumeOverride) ? m_TotalLungVolumeOverride->operator==(*rhs.m_TotalLungVolumeOverride) : m_TotalLungVolumeOverride == rhs.m_TotalLungVolumeOverride;
-
   equivilant &= (m_TotalPulmonaryVentilationOverride && rhs.m_TotalPulmonaryVentilationOverride) ? m_TotalPulmonaryVentilationOverride->operator==(*rhs.m_TotalPulmonaryVentilationOverride) : m_TotalPulmonaryVentilationOverride == rhs.m_TotalPulmonaryVentilationOverride;
   equivilant &= (m_ExtravascularFluidVolumeOverride && rhs.m_ExtravascularFluidVolumeOverride) ? m_ExtravascularFluidVolumeOverride->operator==(*rhs.m_ExtravascularFluidVolumeOverride) : m_ExtravascularFluidVolumeOverride == rhs.m_ExtravascularFluidVolumeOverride;
   equivilant &= (m_IntracellularFluidVolumeOverride && rhs.m_IntracellularFluidVolumeOverride) ? m_IntracellularFluidVolumeOverride->operator==(*rhs.m_IntracellularFluidVolumeOverride) : m_IntracellularFluidVolumeOverride == rhs.m_IntracellularFluidVolumeOverride;
+
   equivilant &= (m_LiverGlycogenOverride && rhs.m_LiverGlycogenOverride) ? m_LiverGlycogenOverride->operator==(*rhs.m_LiverGlycogenOverride) : m_LiverGlycogenOverride == rhs.m_LiverGlycogenOverride;
   equivilant &= (m_MuscleGlycogenOverride && rhs.m_MuscleGlycogenOverride) ? m_MuscleGlycogenOverride->operator==(*rhs.m_MuscleGlycogenOverride) : m_MuscleGlycogenOverride == rhs.m_MuscleGlycogenOverride;
   equivilant &= (m_StoredProteinOverride && rhs.m_StoredProteinOverride) ? m_StoredProteinOverride->operator==(*rhs.m_StoredProteinOverride) : m_StoredProteinOverride == rhs.m_StoredProteinOverride;
-
   equivilant &= (m_StoredFatOverride && rhs.m_StoredFatOverride) ? m_StoredFatOverride->operator==(*rhs.m_StoredFatOverride) : m_StoredFatOverride == rhs.m_StoredFatOverride;
 
   return equivilant;

@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 SEFunctionVolumeVsTime::SEFunctionVolumeVsTime()
   : SEFunction()
+  ,m_TimeUnit(nullptr)
+  ,m_VolumeUnit(nullptr)
 {
 }
 
@@ -99,22 +101,17 @@ void SEFunctionVolumeVsTime::SetVolumeUnit(const VolumeUnit& unit)
   m_VolumeUnit = &unit;
 }
 //-------------------------------------------------------------------------------
-bool SEFunctionVolumeVsTime::operator==(const SEFunctionVolumeVsTime& obj) const
+bool SEFunctionVolumeVsTime::operator==(const SEFunctionVolumeVsTime& rhs) const
 {
-  return m_TimeUnit != nullptr
-    &&  obj.m_TimeUnit != nullptr
-    &&  *m_TimeUnit == *obj.m_TimeUnit
-    &&  m_VolumeUnit != nullptr
-    &&  obj.m_VolumeUnit != nullptr
-    &&  *m_VolumeUnit == *obj.m_VolumeUnit
-    &&  m_Dependent == obj.m_Dependent
-    &&  m_Independent == obj.m_Independent
-    ;
+  bool equivilant = (m_TimeUnit && rhs.m_TimeUnit) ? m_TimeUnit->operator==(*rhs.m_TimeUnit) : m_TimeUnit == rhs.m_TimeUnit;
+  equivilant &= (m_VolumeUnit && rhs.m_VolumeUnit) ? m_VolumeUnit->operator==(*rhs.m_VolumeUnit) : m_VolumeUnit == rhs.m_VolumeUnit;
+  equivilant &= SEFunction::operator==(rhs);
+  return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEFunctionVolumeVsTime::operator!=(const SEFunctionVolumeVsTime& obj) const
+bool SEFunctionVolumeVsTime::operator!=(const SEFunctionVolumeVsTime& rhs) const
 {
-  return !(*this == obj);
+  return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
 }

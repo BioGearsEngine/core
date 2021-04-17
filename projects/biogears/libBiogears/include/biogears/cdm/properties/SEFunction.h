@@ -35,10 +35,6 @@ public:
   virtual bool Load(const CDM::FunctionData& in);
   virtual CDM::FunctionData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::FunctionData& data) const;
-
-public:
   virtual bool IsValid() const;
   virtual void Invalidate();
 
@@ -52,6 +48,10 @@ public:
 
   bool operator==(const SEFunction&) const;
   bool operator!=(const SEFunction&) const;
+
+protected:
+  virtual void Unload(CDM::FunctionData& data) const;
+
 
 protected:
   std::vector<double> m_Dependent;

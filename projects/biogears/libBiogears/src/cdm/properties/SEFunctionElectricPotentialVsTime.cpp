@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 SEFunctionElectricPotentialVsTime::SEFunctionElectricPotentialVsTime()
   : SEFunction()
+  ,m_TimeUnit(nullptr)
+  ,m_ElectricPotentialUnit(nullptr)
 {
 }
 
@@ -160,9 +162,10 @@ SEFunctionElectricPotentialVsTime* SEFunctionElectricPotentialVsTime::Interpolat
 //--------------------------------------------------------------------------------------------------
 bool SEFunctionElectricPotentialVsTime::operator==(const SEFunctionElectricPotentialVsTime& rhs) const
 {
-return 
-  m_TimeUnit == rhs.m_TimeUnit
-  && m_ElectricPotentialUnit == rhs.m_ElectricPotentialUnit;
+  bool equivilant = (m_TimeUnit && rhs.m_TimeUnit) ? m_TimeUnit->operator==(*rhs.m_TimeUnit) : m_TimeUnit == rhs.m_TimeUnit;
+  equivilant &= (m_ElectricPotentialUnit && rhs.m_ElectricPotentialUnit) ? m_ElectricPotentialUnit->operator==(*rhs.m_ElectricPotentialUnit) : m_ElectricPotentialUnit == rhs.m_ElectricPotentialUnit;
+  equivilant &= SEFunction::operator==(rhs);
+  return equivilant;
 }
 //--------------------------------------------------------------------------------------------------
 bool SEFunctionElectricPotentialVsTime::operator!=(const SEFunctionElectricPotentialVsTime& rhs) const
