@@ -72,10 +72,7 @@ const PressureTimePerVolumeAreaUnit& PressureTimePerVolumeAreaUnit::GetCompoundU
 //-------------------------------------------------------------------------------
 bool PressureTimePerVolumeAreaUnit::operator==(const PressureTimePerVolumeAreaUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool PressureTimePerVolumeAreaUnit::operator!=(const PressureTimePerVolumeAreaUnit& obj) const

@@ -112,10 +112,7 @@ const MassPerAmountUnit& MassPerAmountUnit::GetCompoundUnit(const std::string& u
 //-------------------------------------------------------------------------------
 bool MassPerAmountUnit::operator==(const MassPerAmountUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool MassPerAmountUnit::operator!=(const MassPerAmountUnit& obj) const

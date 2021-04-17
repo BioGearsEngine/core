@@ -67,10 +67,7 @@ const AreaUnit& AreaUnit::GetCompoundUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 bool AreaUnit::operator==(const AreaUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool AreaUnit::operator!=(const AreaUnit& obj) const

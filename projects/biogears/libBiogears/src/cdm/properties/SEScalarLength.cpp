@@ -87,10 +87,7 @@ const LengthUnit& LengthUnit::GetCompoundUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 bool LengthUnit::operator==(const LengthUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool LengthUnit::operator!=(const LengthUnit& obj) const

@@ -82,10 +82,7 @@ const PressureUnit& PressureUnit::GetCompoundUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 bool PressureUnit::operator==(const PressureUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool PressureUnit::operator!=(const PressureUnit& obj) const

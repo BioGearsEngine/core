@@ -62,10 +62,7 @@ const ElectricResistanceUnit& ElectricResistanceUnit::GetCompoundUnit(const std:
 //-------------------------------------------------------------------------------
 bool ElectricResistanceUnit::operator==(const ElectricResistanceUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool ElectricResistanceUnit::operator!=(const ElectricResistanceUnit& obj) const

@@ -77,10 +77,7 @@ const HeatConductanceUnit& HeatConductanceUnit::GetCompoundUnit(const std::strin
 //-------------------------------------------------------------------------------
 bool HeatConductanceUnit::operator==(const HeatConductanceUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool HeatConductanceUnit::operator!=(const HeatConductanceUnit& obj) const

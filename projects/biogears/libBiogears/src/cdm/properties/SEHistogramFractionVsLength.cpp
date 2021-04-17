@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 SEHistogramFractionVsLength::SEHistogramFractionVsLength()
   : SEHistogram()
+  , m_LengthUnit(nullptr)
 {
 }
 
@@ -109,18 +110,16 @@ const std::vector<double>& SEHistogramFractionVsLength::GetFraction() const
   return m_Dependent;
 }
 //-------------------------------------------------------------------------------
-bool SEHistogramFractionVsLength::operator==(const SEHistogramFractionVsLength& obj) const
+bool SEHistogramFractionVsLength::operator==(const SEHistogramFractionVsLength& rhs) const
 {
-  return m_LengthUnit != nullptr 
-    && obj.m_LengthUnit != nullptr 
-    && *m_LengthUnit == *obj.m_LengthUnit
-    && m_Independent == obj.m_Independent
-    &&  m_Dependent == obj.m_Dependent;
+  bool equivilant = (m_LengthUnit && rhs.m_LengthUnit) ? m_LengthUnit->operator==(*rhs.m_LengthUnit) : m_LengthUnit == rhs.m_LengthUnit;
+  equivilant &= SEHistogram::operator==(rhs);
+  return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEHistogramFractionVsLength::operator!=(const SEHistogramFractionVsLength& obj) const
+bool SEHistogramFractionVsLength::operator!=(const SEHistogramFractionVsLength& rhs) const
 {
-  return !(*this == obj);
+  return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
 }

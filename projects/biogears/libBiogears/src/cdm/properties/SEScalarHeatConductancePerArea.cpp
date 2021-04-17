@@ -72,10 +72,7 @@ const HeatConductancePerAreaUnit& HeatConductancePerAreaUnit::GetCompoundUnit(co
 //-------------------------------------------------------------------------------
 bool HeatConductancePerAreaUnit::operator==(const HeatConductancePerAreaUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool HeatConductancePerAreaUnit::operator!=(const HeatConductancePerAreaUnit& obj) const

@@ -62,10 +62,7 @@ const PowerPerAreaTemperatureToTheFourthUnit& PowerPerAreaTemperatureToTheFourth
 //-------------------------------------------------------------------------------
 bool PowerPerAreaTemperatureToTheFourthUnit::operator==(const PowerPerAreaTemperatureToTheFourthUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool PowerPerAreaTemperatureToTheFourthUnit::operator!=(const PowerPerAreaTemperatureToTheFourthUnit& obj) const

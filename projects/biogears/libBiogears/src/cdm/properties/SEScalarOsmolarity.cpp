@@ -67,10 +67,7 @@ const OsmolarityUnit& OsmolarityUnit::GetCompoundUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 bool OsmolarityUnit::operator==(const OsmolarityUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool OsmolarityUnit::operator!=(const OsmolarityUnit& obj) const

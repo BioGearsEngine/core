@@ -76,10 +76,7 @@ const HeatCapacitancePerMassUnit& HeatCapacitancePerMassUnit::GetCompoundUnit(co
 //-------------------------------------------------------------------------------
 bool HeatCapacitancePerMassUnit::operator==(const HeatCapacitancePerMassUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool HeatCapacitancePerMassUnit::operator!=(const HeatCapacitancePerMassUnit& obj) const

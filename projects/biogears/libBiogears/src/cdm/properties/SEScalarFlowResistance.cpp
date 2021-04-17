@@ -82,10 +82,7 @@ const FlowResistanceUnit& FlowResistanceUnit::GetCompoundUnit(const std::string&
 //-----------------------------------------------------------------------------
 bool FlowResistanceUnit::operator==(const FlowResistanceUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool FlowResistanceUnit::operator!=(const FlowResistanceUnit& obj) const

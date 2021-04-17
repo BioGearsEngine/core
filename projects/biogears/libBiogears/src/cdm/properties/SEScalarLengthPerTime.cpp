@@ -87,10 +87,7 @@ const LengthPerTimeUnit& LengthPerTimeUnit::GetCompoundUnit(const std::string& u
 //-------------------------------------------------------------------------------
 bool LengthPerTimeUnit::operator==(const LengthPerTimeUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool LengthPerTimeUnit::operator!=(const LengthPerTimeUnit& obj) const

@@ -62,10 +62,7 @@ const ElectricCurrentUnit& ElectricCurrentUnit::GetCompoundUnit(const std::strin
 //-----------------------------------------------------------------------------
 bool ElectricCurrentUnit::operator==(const ElectricCurrentUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool ElectricCurrentUnit::operator!=(const ElectricCurrentUnit& obj) const

@@ -72,10 +72,7 @@ const FlowElastanceUnit& FlowElastanceUnit::GetCompoundUnit(const std::string& u
   //-----------------------------------------------------------------------------
 bool FlowElastanceUnit::operator==(const FlowElastanceUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool FlowElastanceUnit::operator!=(const FlowElastanceUnit& obj) const

@@ -62,10 +62,7 @@ const ElectricInductanceUnit& ElectricInductanceUnit::GetCompoundUnit(const std:
   //-----------------------------------------------------------------------------
 bool ElectricInductanceUnit::operator==(const ElectricInductanceUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool ElectricInductanceUnit::operator!=(const ElectricInductanceUnit& obj) const

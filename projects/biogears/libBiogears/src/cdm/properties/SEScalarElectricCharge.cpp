@@ -62,10 +62,7 @@ const ElectricChargeUnit& ElectricChargeUnit::GetCompoundUnit(const std::string&
 //-----------------------------------------------------------------------------
 bool ElectricChargeUnit::operator==(const ElectricChargeUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool ElectricChargeUnit::operator!=(const ElectricChargeUnit& obj) const

@@ -77,10 +77,7 @@ const EnergyUnit& EnergyUnit::GetCompoundUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 bool EnergyUnit::operator==(const EnergyUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool EnergyUnit::operator!=(const EnergyUnit& obj) const

@@ -67,10 +67,7 @@ const EnergyPerAmountUnit& EnergyPerAmountUnit::GetCompoundUnit(const std::strin
 //-----------------------------------------------------------------------------
 bool EnergyPerAmountUnit::operator==(const EnergyPerAmountUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool EnergyPerAmountUnit::operator!=(const EnergyPerAmountUnit& obj) const

@@ -78,10 +78,7 @@ const FrequencyUnit& FrequencyUnit::GetCompoundUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 bool FrequencyUnit::operator==(const FrequencyUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool FrequencyUnit::operator!=(const FrequencyUnit& obj) const

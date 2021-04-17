@@ -82,10 +82,7 @@ const FlowInertanceUnit& FlowInertanceUnit::GetCompoundUnit(const std::string& u
 //-----------------------------------------------------------------------------
 bool FlowInertanceUnit::operator==(const FlowInertanceUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool FlowInertanceUnit::operator!=(const FlowInertanceUnit& obj) const

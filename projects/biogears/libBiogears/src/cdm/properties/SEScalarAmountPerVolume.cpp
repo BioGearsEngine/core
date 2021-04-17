@@ -86,9 +86,7 @@ const AmountPerVolumeUnit& AmountPerVolumeUnit::GetCompoundUnit(const std::strin
 //-------------------------------------------------------------------------------
 bool AmountPerVolumeUnit::operator==(const AmountPerVolumeUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr || strcmp(lhsPtr,rhsPtr) == 0 ;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool AmountPerVolumeUnit::operator!=(const AmountPerVolumeUnit& obj) const

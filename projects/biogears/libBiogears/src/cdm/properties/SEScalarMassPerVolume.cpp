@@ -136,10 +136,7 @@ SEScalarMassPerVolume::SEScalarMassPerVolume(double v,const  MassPerVolumeUnit& 
 //-------------------------------------------------------------------------------
 bool MassPerVolumeUnit::operator==(const MassPerVolumeUnit& obj) const
 {
-  auto lhsPtr = GetString();
-  auto rhsPtr = obj.GetString();
-  return lhsPtr == rhsPtr
-    || strcmp(lhsPtr, rhsPtr) == 0;
+  return CCompoundUnit::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool MassPerVolumeUnit::operator!=(const MassPerVolumeUnit& obj) const
