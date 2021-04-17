@@ -44,22 +44,6 @@ void TEST_FIXTURE_NAME::TearDown()
 {
 }
 
-
-TEST_F(TEST_FIXTURE_NAME, ReturnEmbedded)
-{
-	EXPECT_TRUE(0 == std::strcmp(biogears::io::ReadFileOrReturnEmbedded("","","Embedded"),"Embedded"));
-}  
-
-TEST_F(TEST_FIXTURE_NAME, ReturnFirstFile)
-{
-  EXPECT_TRUE(0 == std::strcmp(biogears::io::ReadFileOrReturnEmbedded("TestTXT.txt", "XXNOTFILEXX", "Embedded"), "123Test"));
-}
-
-TEST_F(TEST_FIXTURE_NAME,ReturnBackupFile)
-{
-  EXPECT_EQ(std::string(biogears::io::ReadFileOrReturnEmbedded("XXNOTFILEXX", "TestTXT.txt", "Embedded")), std::string("123Test"));
-}
-
 TEST_F(TEST_FIXTURE_NAME,ResolvePathAbsolute)
 { // This isn't actually checking this path, as it is not guaranteed to exist on every given machine, it's just formatting
   EXPECT_EQ("D:\biogears", biogears::io::ResolvePath(std::string("D:\biogears\\")));
@@ -140,49 +124,49 @@ TEST_F(TEST_FIXTURE_NAME,GetSha1XSD)
 {
 	biogears::io::IOManager iom; 
 	//38971f4027302e2a2758543a54eb0a21676a7bf4 sha1 of BioGearsDataModel.xsd as of 1/20/21, if the test is failing, maybe the file was changed
-	EXPECT_EQ(0,std::strcmp("38971f4027302e2a2758543a54eb0a21676a7bf4",iom.get_expected_sha1("xsd/BioGearsDataModel.xsd")));
+	EXPECT_EQ(biogears::io::generate_file_sha1("xsd/BioGearsDataModel.xsd"),iom.get_expected_sha1("xsd/BioGearsDataModel.xsd"));
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetSha1Config)
 {
   biogears::io::IOManager iom; // this tests against the sha1 of DynamicStabilization.xml as of 1/22/21
-  EXPECT_EQ(0,std::strcmp("c87747e75ba54ab10aceb010e6d09b49c0055bb0", iom.get_expected_sha1("config/DynamicStabilization.xml")));
+  EXPECT_EQ(biogears::io::generate_file_sha1("config/DynamicStabilization.xml"), iom.get_expected_sha1("config/DynamicStabilization.xml"));
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetSha1ECG)
 {
   biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(0,std::strcmp("fd5e51323cb6146b5959045e04acc8a3588c4429", iom.get_expected_sha1("ecg/StandardECG.xml")));
+  EXPECT_EQ(biogears::io::generate_file_sha1("ecg/StandardECG.xml"), iom.get_expected_sha1("ecg/StandardECG.xml"));
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetSha1Environments)
 {
   biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(0,std::strcmp("2c112bd6bd3ac0385f98ea9fa8963e6587a372c0", iom.get_expected_sha1("environments/AnchorageDecember.xml")));
+  EXPECT_EQ(biogears::io::generate_file_sha1("environments/AnchorageDecember.xml"), iom.get_expected_sha1("environments/AnchorageDecember.xml"));
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetSha1Nutrition)
 {
   biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(0,std::strcmp("ae03bed9287c5caf1f2cdba67e2eed691c227acf", iom.get_expected_sha1("nutrition/NoMacros.xml")));
+  EXPECT_EQ(biogears::io::generate_file_sha1("nutrition/NoMacros.xml"), iom.get_expected_sha1("nutrition/NoMacros.xml"));
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetSha1Override)
 {
   biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(0,std::strcmp("94fec7802fddcd68addb5779f54e55e512241bb5", iom.get_expected_sha1("override/BioGearsOverride.xml")));
+  EXPECT_EQ(biogears::io::generate_file_sha1("override/BioGearsOverride.xml"), iom.get_expected_sha1("override/BioGearsOverride.xml"));
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetSha1Patients)
 {
   biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(0,std::strcmp("e98f28b9ae987f63736f1d35da66fa57d8aa63f4", iom.get_expected_sha1("patients/Bradycardic.xml")));
+  EXPECT_EQ(biogears::io::generate_file_sha1("patients/Bradycardic.xml"), iom.get_expected_sha1("patients/Bradycardic.xml"));
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetSha1Substances)
 {
   biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(0,std::strcmp("7a5ba12bd140661d23fb6ef357a832252fa23413", iom.get_expected_sha1("substances/Acetaminophen.xml")));
+  EXPECT_EQ(biogears::io::generate_file_sha1("substances/Acetaminophen.xml"), iom.get_expected_sha1("substances/Acetaminophen.xml"));
 }
 
 
@@ -194,7 +178,7 @@ TEST_F(TEST_FIXTURE_NAME,GetEmbeddedResourceFileXSD)
 	EXPECT_EQ(embeded_size, s.size());
 	if (s.size() > 1) {
 		EXPECT_EQ(s[0],'<');
-		EXPECT_GE(100,s.size());
+		EXPECT_LE(100,s.size());
 	}
 }
 
@@ -207,7 +191,7 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileConfig)
   EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
-    EXPECT_GE(100, s.size());
+    EXPECT_LE(100, s.size());
   }
 }
 
@@ -220,7 +204,7 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileECG)
   EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
-    EXPECT_GE(100, s.size());
+    EXPECT_LE(100, s.size());
   }
 }
 
@@ -233,7 +217,7 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileEnvironments)
   EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
-    EXPECT_GE(100, s.size());
+    EXPECT_LE(100, s.size());
   }
 }
 
@@ -246,7 +230,7 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileNutrition)
   EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
-    EXPECT_GE(100, s.size());
+    EXPECT_LE(100, s.size());
   }
 }
 
@@ -259,7 +243,7 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileOverride)
   EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
-    EXPECT_GE(100, s.size());
+    EXPECT_LE(100, s.size());
   }
 }
 
@@ -272,7 +256,7 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFilePatients)
   EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
-    EXPECT_GE(100, s.size());
+    EXPECT_LE(100, s.size());
   }
 }
 
@@ -285,7 +269,7 @@ TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileSubstances)
   EXPECT_EQ(embeded_size, s.size());
   if (s.size() > 1) {
     EXPECT_EQ(s[0], '<');
-    EXPECT_GE(100, s.size());
+    EXPECT_LE(100, s.size());
   }
 }
 

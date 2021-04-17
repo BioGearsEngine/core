@@ -107,8 +107,8 @@ void SEForcedInhale::ToString(std::ostream& str) const
 bool SEForcedInhale::operator==( const SEForcedInhale& rhs) const
 {
   bool equivilant = m_Comment == rhs.m_Comment;
-  equivilant &= (m_InspiratoryCapacityFraction && rhs.m_InspiratoryCapacityFraction) ? m_InspiratoryCapacityFraction->operator==(*rhs.m_InspiratoryCapacityFraction) : m_InspiratoryCapacityFraction== rhs.m_InspiratoryCapacityFraction;
-  equivilant &= (m_Period && rhs.m_Period) ? m_Period->operator==(*rhs.m_Period) : m_Period;
+  equivilant &= (m_InspiratoryCapacityFraction && rhs.m_InspiratoryCapacityFraction) ? m_InspiratoryCapacityFraction->operator==(*rhs.m_InspiratoryCapacityFraction) : m_InspiratoryCapacityFraction == rhs.m_InspiratoryCapacityFraction;
+  equivilant &= (m_Period && rhs.m_Period) ? m_Period->operator==(*rhs.m_Period) : m_Period == rhs.m_Period;
   return equivilant;
 }
 //-------------------------------------------------------------------------------

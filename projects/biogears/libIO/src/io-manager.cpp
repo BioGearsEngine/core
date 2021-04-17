@@ -180,7 +180,7 @@ namespace io {
     install_root = getenv("APPDATA");
     install_root += "/biogears/";
 #else
-    install_root= "~/.biogears/";
+    install_root = "~/.biogears/";
 #endif
     install_root += _REV_TAG_;
     if (install_root != "") {
@@ -287,45 +287,49 @@ namespace io {
   //!  Returns a char const * of the embeded conents if it exists
   //!
   //!  \param const char* file  -- Resource path relative to runtime/ matching the embeded file path
-  //!  \param size_t [OUT]      -- Size of the const char* file return. Only valid when return != nullptr
-  //!  \return  bool            -- True of a matching embeded file was found else false
+  //!  \param size_t [OUT]      -- Size of the const char* file return. Zero if nothing was found. (why embedded an empty file?)
+  //!  \return  char const *    -- Contents of the file "" if nothing was found
 
   char const* IOManager::get_embedded_resource_file(const char* file, std::size_t& size)
   {
     char const* result = nullptr;
-    if (result = get_embedded_xsd_file(file, size)) {
+    size = 0;
+    result = get_embedded_xsd_file(file, size);
+    if (size > 0) {
       return result;
     }
-
-    if (result = get_embedded_config_file(file, size)) {
+    result = get_embedded_config_file(file, size);
+    if (size > 0) {
       return result;
     }
-
-    if (result = get_embedded_ecg_file(file, size)) {
+    result = get_embedded_ecg_file(file, size);
+    if (size > 0) {
       return result;
     }
-
-    if (result = get_embedded_environments_file(file, size)) {
+    result = get_embedded_environments_file(file, size);
+    if (size > 0) {
       return result;
     }
-
-    if (result = get_embedded_nutrition_file(file, size)) {
+    result = get_embedded_nutrition_file(file, size);
+    if (size > 0) {
       return result;
     }
-
-    if (result = get_embedded_override_file(file, size)) {
+    result = get_embedded_override_file(file, size);
+    if (size > 0) {
       return result;
     }
-
-    if (result = get_embedded_patients_file(file, size)) {
+    result = get_embedded_patients_file(file, size);
+    if (size > 0) {
       return result;
     }
 #ifdef IO_EMBED_STATES
-    if (result = get_embedded_states_file(file, size)) {
+    result = get_embedded_states_file(file, size);
+    if (size > 0) {
       return result;
     }
 #endif
-    if (result = get_embedded_substances_file(file, size)) {
+    result = get_embedded_substances_file(file, size);
+    if (size > 0) {
       return result;
     }
     return nullptr;

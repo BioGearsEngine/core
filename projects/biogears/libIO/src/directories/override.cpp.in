@@ -72,10 +72,8 @@ namespace io {
   //-----------------------------------------------------------------------------
   char const* get_override_file_sha1(const char* path)
   {
-     char const* file_sha1 = "";
-     
-@GET_FILE_SHA1_BODY@
-     return file_sha1;
+    biogears::filesystem::path working_dir { path };
+    return get_override_file_sha1(working_dir);
   }
   //-----------------------------------------------------------------------------
   char const* const* list_override_files()
