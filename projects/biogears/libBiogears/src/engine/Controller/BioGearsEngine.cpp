@@ -552,6 +552,16 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
   return state;
 }
 //-------------------------------------------------------------------------------
+bool BioGearsEngine::InitializeEngine(const char* patientFile)
+{
+  return InitializeEngine(std::string { patientFile }, nullptr, nullptr);
+}
+//-------------------------------------------------------------------------------
+bool BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions)
+{
+  return InitializeEngine(std::string { patientFile }, conditions, nullptr);
+}
+//-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
   return InitializeEngine(std::string { patientFile }, conditions, config);

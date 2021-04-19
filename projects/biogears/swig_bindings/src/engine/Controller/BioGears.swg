@@ -1,24 +1,46 @@
-//%module "biogears_engine_Controller_BioGears"
-%module(package="biogears") "BioGears"
+
+
 // Add necessary symbols to generated header
 %{
-#include <biogears/container/Tree.tci.h>
-#include <biogears/cdm/utils/Logger.h>
-#include <biogears/cdm/engine/PhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
-using namespace biogears;
-using namespace CDM;
-%}
-%include <windows.i>
-%include <std_shared_ptr.i>
+  #include <biogears/container/Tree.tci.h>
+  #include <biogears/cdm/utils/Logger.h>
+  #include <biogears/engine/Controller/BioGears.h>
 
-%include <std_string.i>
-%include <std_vector.i>
+  using namespace biogears;
+  using namespace CDM;
+%}
+
+%include "windows.i"
+#if defined(SWIGCSHARP)
+  %include "csharp/std_string.i"
+  %include "csharp/std_vector.i"
+  %include "csharp/std_except.i"
+
+  namespace std 
+{
+  %ignore runtime_error;
+  struct runtime_error {};
+}
+
+#elif defind(SWIGPYTHON)
+  %include "python/std_string.i"
+  %include "python/std_vector.i"
+  %include "python/std_except.i"
+#else
+  %include "std_string.i"
+  %include "std_vector.i"
+  %include "std_except.i"
+#endif 
+%include "exception.i"
 
 %include <biogears/exports.h>
+%import(module="CommonDataModel") <biogears/cdm/CommonDataModel.h>
+%import(module="Logger") <biogears/cdm/utils/Logger.h>
 
-%nspace "biogears::BioGears";
-%ignore biogears::BioGears::SaveState(const char* file);
-%ignore biogears::BioGears::SaveState(const std::string&);
-%ignore biogears::BioGears::SaveState();
-%include<biogears/engine/Controller/BioGears.h>
+%nspace biogears::BioGears;
+
+namespace biogears {
+  class BioGears {
+    BioGears (Logger* logger);
+  };
+}

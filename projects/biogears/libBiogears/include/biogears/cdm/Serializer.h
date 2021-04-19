@@ -48,7 +48,9 @@ private:
   static Serializer* m_me;
 
   static bool m_Initialized;
-  static std::unique_ptr<xercesc::XMLGrammarPool> m_GrammerPool;
+  std::unique_ptr<xercesc::XMLGrammarPool> m_GrammerPool;
+  std::vector<XMLByte> m_buffer;
+  size_t m_buffer_size;
 };
 
 class ErrorHandler : public xercesc::DOMErrorHandler {

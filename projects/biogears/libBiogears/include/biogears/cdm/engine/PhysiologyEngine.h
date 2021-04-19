@@ -109,7 +109,9 @@ public:
   //! Some combinations of patients and conditions may prevent the engine from stabilizing
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) = 0;
+  virtual bool InitializeEngine(const char* patientFile) = 0;
+  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions) = 0;
+  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions , const PhysiologyEngineConfiguration* config ) = 0;
   virtual bool InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) = 0;
 
   //!-------------------------------------------------------------------------------------------------

@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  } 
+  ,"configurePresets": [
+    {
+      "name": "linux-gcc9-amd64"
+      , "hidden":true
+      ,"displayName": "Default Ninja GCC9 amd64"
+      ,"description": "Ninja Geneator for gnu-linux-x64"
+      ,"generator": "Ninja"
+      ,"binaryDir": "${sourceDir}/build-ninja-amd64"
+      ,"cacheVariables": {
+        "CMAKE_BUILD_TYPE":"Release"
+      }
+      ,"environment": {
+      }
+    }
+    ,{
+      "name": "linux-gcc9-aarch64"
+      , "hidden":true
+      ,"displayName": "Default Ninja GCC9 amd64"
+      ,"description": "Ninja Geneator for gnu-linux-aarch64"
+      ,"generator": "Ninja"
+      ,"binaryDir": "${sourceDir}/build-ninja-aarch64"
+      ,"cacheVariables": {
+        "CMAKE_BUILD_TYPE":"Release"
+        ,"CMAKE_TOOLCHAIN_FILE":{
+          "type":"FILEPATH"
+          ,"value":"${sourceDir}/cmake/toolchains/aarch64-linux-gnueabihf-gcc-9"
+        }
+      }
+      ,"environment": {
+      }     
+    }
+    ,{
+      "name": "linux-gcc9-armhf"
+      , "hidden":true
+      ,"displayName": "Default Ninja GCC9 armhf"
+      ,"description": "Ninja Geneator for gnu-linux-armhf"
+      ,"generator": "Ninja"
+      ,"binaryDir": "${sourceDir}/build-ninja-armhf"
+      ,"cacheVariables": {
+        "CMAKE_BUILD_TYPE":"Release"
+        ,"CMAKE_TOOLCHAIN_FILE":{
+          "type":"FILEPATH"
+          ,"value":"${sourceDir}/cmake/toolchains/arm-linux-gnueabihf-gcc-9"
+        }        
+      }
+      ,"environment": {
+      }    
+    }
+    ,{
+      "name": "macos-yosemite"
+      , "hidden":true
+      ,"displayName": "Default MacOs Yosmite"
+      ,"description": "Ninja Geneator for clain on MacOs Yosemite"
+      ,"generator": "Ninja"
+      ,"binaryDir": "${sourceDir}/build-ninja"
+      ,"cacheVariables": {
+        "CMAKE_BUILD_TYPE":"Release"
+      }
+      ,"environment": {
+      }     
+    }
+    ,{
+      "name": "macos-catalina"
+      , "hidden":true
+      ,"displayName": "Default MacOs Catalina"
+      ,"description": "Ninja Geneator for Clang on MacOS Catalina"
+      ,"generator": "Ninja"
+      ,"binaryDir": "${sourceDir}/build-ninja"
+      ,"cacheVariables": {
+        "CMAKE_BUILD_TYPE":"Release"
+        
+       }
+      ,"environment": {
+      }     
+    }
+    ,{
+      "name": "windows-msvc16-amd64"
+      , "hidden":true
+      ,"displayName": "Default Visual Studio 2019 x64"
+      ,"description": "Windows 10 Visual Sudo 16 2019 x64"
+      ,"generator": "Visual Studio 16 2019"
+      ,"architecture":"x64"
+      ,"binaryDir": "${sourceDir}/build-msvc16"
+      ,"cacheVariables": {
+        "CMAKE_BUILD_TYPE":"Release"
+       }
+      ,"environment": {
+      }     
+    }
+    ,{
+      "name": "windows-msvc15-amd64"
+      , "hidden":true
+      ,"displayName": "Default Visual Studio 2017 x64"
+      ,"description": "Windows 10 Visual Sudo 15 2017 x64"
+      ,"generator": "Visual Studio 15 2017"
+      ,"architecture":"x64"
+      ,"binaryDir": "${sourceDir}/build-msvc15"
+      ,"cacheVariables": {
+        "CMAKE_BUILD_TYPE":"Release"
+       }
+      ,"environment": {
+      }    
+    }
+  ]
+  }

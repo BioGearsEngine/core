@@ -42,7 +42,10 @@ public:
   SEScalarTime() = default;
   virtual ~SEScalarTime() = default;
 
-  CDM::ScalarTimeData* Unload() const override;       
+  using SEScalarQuantity<TimeUnit>::SetValue;
+  using SEScalarQuantity<TimeUnit>::GetValue;
+
+  CDM::ScalarTimeData* Unload() const override;
 
   bool operator==(const SEScalarTime&) const;
   bool operator!=(const SEScalarTime&) const;
