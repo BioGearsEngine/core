@@ -41,7 +41,10 @@ public:
   SEScalarEnergy() = default;
   virtual ~SEScalarEnergy() = default;
 
-  CDM::ScalarEnergyData* Unload() const override;     
+  CDM::ScalarEnergyData* Unload() const override;   
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarEnergy&) const;
   bool operator!=(const SEScalarEnergy&) const;

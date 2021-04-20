@@ -39,7 +39,10 @@ public:
   SEScalarPressureTimePerArea() = default;
   virtual ~SEScalarPressureTimePerArea() = default;
 
-  CDM::ScalarPressureTimePerAreaData* Unload() const override;    
+  CDM::ScalarPressureTimePerAreaData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarPressureTimePerArea&) const;
   bool operator!=(const SEScalarPressureTimePerArea&) const;

@@ -48,7 +48,11 @@ public:
   SEScalarMassPerAmount() = default;
   virtual ~SEScalarMassPerAmount() = default;
 
-  CDM::ScalarMassPerAmountData* Unload() const override;   
+  CDM::ScalarMassPerAmountData* Unload() const override; 
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
+  
 
   bool operator==(const SEScalarMassPerAmount&) const;
   bool operator!=(const SEScalarMassPerAmount&) const;

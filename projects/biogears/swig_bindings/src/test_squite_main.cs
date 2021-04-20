@@ -30,7 +30,7 @@ namespace bio
             logger.Info(String.Format("{0}",percent.GetValue()));
 
             var time = new SEScalarTime();
-            time.SetValue(4, UnitTime::s);
+            time.SetValue(4, TimeUnit.s);
             logger.Info(String.Format("{0}",time.GetValue()));
 
 

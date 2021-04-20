@@ -40,7 +40,10 @@ public:
   SEScalarFlowElastance() = default;
   virtual ~SEScalarFlowElastance() = default;
 
-  CDM::ScalarFlowElastanceData* Unload() const override;     
+  CDM::ScalarFlowElastanceData* Unload() const override;   
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarFlowElastance&) const;
   bool operator!=(const SEScalarFlowElastance&) const;

@@ -43,7 +43,10 @@ public:
   SEScalarPower() = default;
   virtual ~SEScalarPower() = default;
 
-  CDM::ScalarPowerData* Unload() const override ;   
+  CDM::ScalarPowerData* Unload() const override ;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarPower&) const;
   bool operator!=(const SEScalarPower&) const;

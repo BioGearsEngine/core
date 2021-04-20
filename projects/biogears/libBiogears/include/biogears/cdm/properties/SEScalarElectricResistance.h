@@ -38,7 +38,10 @@ public:
   SEScalarElectricResistance() = default;
   virtual ~SEScalarElectricResistance() = default;
 
-  CDM::ScalarElectricResistanceData* Unload() const override;     
+  CDM::ScalarElectricResistanceData* Unload() const override;   
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarElectricResistance&) const;
   bool operator!=(const SEScalarElectricResistance&) const;

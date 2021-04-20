@@ -41,7 +41,10 @@ public:
   SEScalarFrequency() = default;
   virtual ~SEScalarFrequency() = default;
 
-  CDM::ScalarFrequencyData* Unload() const override; 
+  CDM::ScalarFrequencyData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarFrequency&) const;
   bool operator!=(const SEScalarFrequency&) const;

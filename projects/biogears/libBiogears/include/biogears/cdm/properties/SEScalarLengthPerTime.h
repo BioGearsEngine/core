@@ -43,7 +43,10 @@ public:
   SEScalarLengthPerTime() = default;
   virtual ~SEScalarLengthPerTime() = default;
 
-  CDM::ScalarLengthPerTimeData* Unload() const override;   
+  CDM::ScalarLengthPerTimeData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarLengthPerTime&) const;
   bool operator!=(const SEScalarLengthPerTime&) const;

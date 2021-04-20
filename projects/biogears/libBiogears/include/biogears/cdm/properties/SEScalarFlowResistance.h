@@ -42,7 +42,10 @@ public:
   SEScalarFlowResistance() = default;
   virtual ~SEScalarFlowResistance() = default;
 
-  CDM::ScalarFlowResistanceData* Unload() const override;  
+  CDM::ScalarFlowResistanceData* Unload() const override;   
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarFlowResistance&) const;
   bool operator!=(const SEScalarFlowResistance&) const;

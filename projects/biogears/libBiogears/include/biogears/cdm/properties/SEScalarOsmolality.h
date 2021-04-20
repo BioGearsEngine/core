@@ -39,7 +39,10 @@ public:
   SEScalarOsmolality() = default;
   virtual ~SEScalarOsmolality() = default;
 
-  CDM::ScalarOsmolalityData* Unload() const override;  
+  CDM::ScalarOsmolalityData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarOsmolality&) const;
   bool operator!=(const SEScalarOsmolality&) const;

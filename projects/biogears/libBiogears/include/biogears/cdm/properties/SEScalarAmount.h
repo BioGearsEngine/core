@@ -42,6 +42,9 @@ public:
 
   virtual CDM::ScalarAmountData* Unload() const override;   
 
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
+
   bool operator==(const SEScalarAmount&) const;
   bool operator!=(const SEScalarAmount&) const;
 };

@@ -41,7 +41,10 @@ public:
   SEScalarLengthPerTimePressure() = default;
   virtual ~SEScalarLengthPerTimePressure() = default;
 
-  CDM::ScalarLengthPerTimePressureData* Unload() const override;   
+  CDM::ScalarLengthPerTimePressureData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarLengthPerTimePressure&) const;
   bool operator!=(const SEScalarLengthPerTimePressure&) const;

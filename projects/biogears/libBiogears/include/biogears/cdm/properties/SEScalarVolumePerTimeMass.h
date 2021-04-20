@@ -42,7 +42,10 @@ public:
   SEScalarVolumePerTimeMass() = default;
   virtual ~SEScalarVolumePerTimeMass() = default;
 
-  CDM::ScalarVolumePerTimeMassData* Unload() const override;    
+  CDM::ScalarVolumePerTimeMassData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarVolumePerTimeMass&) const;
   bool operator!=(const SEScalarVolumePerTimeMass&) const;

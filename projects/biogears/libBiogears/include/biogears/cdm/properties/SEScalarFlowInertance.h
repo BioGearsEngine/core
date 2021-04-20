@@ -42,7 +42,10 @@ public:
   SEScalarFlowInertance() = default;
   virtual ~SEScalarFlowInertance() = default;
 
-  CDM::ScalarFlowInertanceData* Unload() const override;    
+  CDM::ScalarFlowInertanceData* Unload() const override;   
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarFlowInertance&) const;
   bool operator!=(const SEScalarFlowInertance&) const;

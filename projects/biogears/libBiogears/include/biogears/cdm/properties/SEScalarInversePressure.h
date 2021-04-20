@@ -41,7 +41,10 @@ public:
   SEScalarInversePressure() = default;
   virtual ~SEScalarInversePressure() = default;
 
-  CDM::ScalarInversePressureData* Unload() const override;    
+  CDM::ScalarInversePressureData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarInversePressure&) const;
   bool operator!=(const SEScalarInversePressure&) const;

@@ -43,7 +43,10 @@ public:
   SEScalarLength() = default;
   virtual ~SEScalarLength() = default;
 
-  CDM::ScalarLengthData* Unload() const override;       
+  CDM::ScalarLengthData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarLength&) const;
   bool operator!=(const SEScalarLength&) const;

@@ -25,6 +25,9 @@ namespace io {
 template <typename Unit>
 class SEScalarQuantity : public SEUnitScalar {
 public:
+
+  using unit = Unit;
+
   friend io::Property;
   SEScalarQuantity();
   SEScalarQuantity(const SEScalarQuantity&);

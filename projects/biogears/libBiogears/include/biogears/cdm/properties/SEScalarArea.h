@@ -39,7 +39,10 @@ public:
   SEScalarArea() = default;
   virtual ~SEScalarArea() = default;
 
-  CDM::ScalarAreaData* Unload() const override;  
+  CDM::ScalarAreaData* Unload() const override;   
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarArea&) const;
   bool operator!=(const SEScalarArea&) const;

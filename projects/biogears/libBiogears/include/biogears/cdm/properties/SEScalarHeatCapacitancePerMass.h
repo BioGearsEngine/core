@@ -41,7 +41,10 @@ public:
   SEScalarHeatCapacitancePerMass() = default;
   virtual ~SEScalarHeatCapacitancePerMass() = default;
 
-  CDM::ScalarHeatCapacitancePerMassData* Unload() const override;   
+  CDM::ScalarHeatCapacitancePerMassData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarHeatCapacitancePerMass&) const;
   bool operator!=(const SEScalarHeatCapacitancePerMass&) const;

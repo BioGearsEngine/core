@@ -35,6 +35,7 @@ using namespace CDM;
 %import (module="SEProperty") <biogears/cdm/properties/SEProperty.h>
 %import (module="SEScalar") <biogears/cdm/properties/SEScalar.h>
 %import (module="SEUnitScalar") <biogears/cdm/properties/SEUnitScalar.h>
+%import (module="CComoundUnit") <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 %import (module="SEScalarQuantity") <biogears/cdm/properties/SEScalarQuantity.h>
 
 %nspace biogears::SEScalarTime;
@@ -62,6 +63,9 @@ using namespace CDM;
 %rename(Equals)  operator==(const SEScalarTime&) const;
 %rename(NotEquals)  operator!=(const SEScalarTime&) const;
  
+ 
+%nspace biogears::SEScalarQuantity<TimeUnit>;
+%nspace biogears::QuantityTime;
 namespace biogears {
  class TimeUnit;
  %template(QuantityTime) SEScalarQuantity<TimeUnit>;

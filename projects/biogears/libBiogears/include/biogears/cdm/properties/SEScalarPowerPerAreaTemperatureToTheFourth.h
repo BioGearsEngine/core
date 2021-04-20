@@ -38,7 +38,10 @@ public:
   SEScalarPowerPerAreaTemperatureToTheFourth() = default;
   virtual ~SEScalarPowerPerAreaTemperatureToTheFourth() = default;
 
-  CDM::ScalarPowerPerAreaTemperatureToTheFourthData* Unload() const override;   
+  CDM::ScalarPowerPerAreaTemperatureToTheFourthData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarPowerPerAreaTemperatureToTheFourth&) const;
   bool operator!=(const SEScalarPowerPerAreaTemperatureToTheFourth&) const;

@@ -38,7 +38,10 @@ public:
   SEScalarMassPerAreaTime() = default;
   virtual ~SEScalarMassPerAreaTime() = default;
 
-  CDM::ScalarMassPerAreaTimeData* Unload() const override;   
+  CDM::ScalarMassPerAreaTimeData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarMassPerAreaTime&) const;
   bool operator!=(const SEScalarMassPerAreaTime&) const;

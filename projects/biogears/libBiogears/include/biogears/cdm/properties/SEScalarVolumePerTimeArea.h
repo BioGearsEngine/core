@@ -40,7 +40,10 @@ public:
   SEScalarVolumePerTimeArea() = default;
   virtual ~SEScalarVolumePerTimeArea() = default;
 
-  CDM::ScalarVolumePerTimeAreaData* Unload() const override;  
+  CDM::ScalarVolumePerTimeAreaData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarVolumePerTimeArea&) const;
   bool operator!=(const SEScalarVolumePerTimeArea&) const;

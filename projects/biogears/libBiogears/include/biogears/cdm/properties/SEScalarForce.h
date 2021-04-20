@@ -40,7 +40,10 @@ public:
   SEScalarForce() = default;
   virtual ~SEScalarForce() = default;
 
-  CDM::ScalarForceData* Unload() const override;  
+  CDM::ScalarForceData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarForce&) const;
   bool operator!=(const SEScalarForce&) const;

@@ -39,7 +39,10 @@ public:
   SEScalarEnergyPerAmount() = default;
   virtual ~SEScalarEnergyPerAmount() = default;
 
-  CDM::ScalarEnergyPerAmountData* Unload() const override;    
+  CDM::ScalarEnergyPerAmountData* Unload() const override;   
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarEnergyPerAmount&) const;
   bool operator!=(const SEScalarEnergyPerAmount&) const;

@@ -43,7 +43,10 @@ public:
   SEScalarAmountPerVolume() = default;
   virtual ~SEScalarAmountPerVolume() = default;
 
-  CDM::ScalarAmountPerVolumeData* Unload() const override;     
+  CDM::ScalarAmountPerVolumeData* Unload() const override;   
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarAmountPerVolume&) const;
   bool operator!=(const SEScalarAmountPerVolume&) const;

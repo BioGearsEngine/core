@@ -41,7 +41,10 @@ public:
   SEScalarHeatConductance() = default;
   virtual ~SEScalarHeatConductance() = default;
 
-  CDM::ScalarHeatConductanceData* Unload() const override;     
+  CDM::ScalarHeatConductanceData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarHeatConductance&) const;
   bool operator!=(const SEScalarHeatConductance&) const;

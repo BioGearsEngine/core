@@ -40,6 +40,9 @@ public:
 
   CDM::ScalarElectricCapacitanceData* Unload() const override;   
 
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
+
   bool operator==(const SEScalarElectricCapacitance&) const;
   bool operator!=(const SEScalarElectricCapacitance&) const;
 };

@@ -53,7 +53,10 @@ public:
   SEScalarMassPerVolume(double, const MassPerVolumeUnit&);
   virtual ~SEScalarMassPerVolume() = default;
 
-  CDM::ScalarMassPerVolumeData* Unload() const override;   
+  CDM::ScalarMassPerVolumeData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarMassPerVolume&) const;
   bool operator!=(const SEScalarMassPerVolume&) const;

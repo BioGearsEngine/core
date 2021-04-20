@@ -38,7 +38,10 @@ public:
   SEScalarElectricCurrent() = default;
   virtual ~SEScalarElectricCurrent() = default;
 
-  CDM::ScalarElectricCurrentData* Unload() const override;  
+  CDM::ScalarElectricCurrentData* Unload() const override;   
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarElectricCurrent&) const;
   bool operator!=(const SEScalarElectricCurrent&) const;

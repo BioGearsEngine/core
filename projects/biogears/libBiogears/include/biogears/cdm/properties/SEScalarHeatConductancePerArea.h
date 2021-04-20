@@ -40,7 +40,10 @@ public:
   SEScalarHeatConductancePerArea() = default;
   virtual ~SEScalarHeatConductancePerArea() = default;
 
-  CDM::ScalarHeatConductancePerAreaData* Unload() const override;   
+  CDM::ScalarHeatConductancePerAreaData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarHeatConductancePerArea&) const;
   bool operator!=(const SEScalarHeatConductancePerArea&) const;

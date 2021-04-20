@@ -39,7 +39,10 @@ public:
   SEScalarPressurePerVolume() = default;
   virtual ~SEScalarPressurePerVolume() = default;
 
-  CDM::ScalarPressurePerVolumeData* Unload() const override;    
+  CDM::ScalarPressurePerVolumeData* Unload() const override;
+
+  using SEScalarQuantity::SetValue;
+  using SEScalarQuantity::GetValue;
 
   bool operator==(const SEScalarPressurePerVolume&) const;
   bool operator!=(const SEScalarPressurePerVolume&) const;
