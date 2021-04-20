@@ -58,18 +58,24 @@ using namespace CDM;
 %ignore operator/;
 %ignore operator/=;
 
+%ignore operator<<;
+
+%ignore biogears::SEScalarQuantity::ToString;
+%ignore biogears::SEScalarQuantity<TimeUnit>::ToString;
+
 %rename(Equals)  operator==(const TimeUnit&) const;
 %rename(NotEquals)  operator!=(const TimeUnit&) const;
 %rename(Equals)  operator==(const SEScalarTime&) const;
-%rename(NotEquals)  operator!=(const SEScalarTime&) const;
- 
+%rename(NotEquals)  operator!=(const SEScalarTime&) const; 
  
 %nspace biogears::SEScalarQuantity<TimeUnit>;
-%nspace biogears::QuantityTime;
+
+
 namespace biogears {
- class TimeUnit;
- %template(QuantityTime) SEScalarQuantity<TimeUnit>;
+   class TimeUnit;
 }
+  %template(QuantityTime) biogears::SEScalarQuantity<TimeUnit>;
+
 %include <biogears/cdm/properties/SEScalarTime.h>
 
 

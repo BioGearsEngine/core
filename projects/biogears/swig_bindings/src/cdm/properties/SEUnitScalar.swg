@@ -35,11 +35,46 @@ using namespace CDM;
 %import (module="SEProperty") <biogears/cdm/properties/SEProperty.h>
 %import (module="SEScalar") <biogears/cdm/properties/SEScalar.h>
 %import (module="SEScalarQuantity") <biogears/cdm/properties/SEScalarQuantity.h>
+%import (module="CompoundUnit") <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 
 %nspace biogears::SEUnitScalar;
 
 %ignore Unload;
 %ignore Load; 
+
+ 
+%ignore  biogears::SEUnitScalar::operator==;
+%ignore  biogears::SEUnitScalar::operator!=;
+
+%ignore  biogears::SEUnitScalar::operator+;
+%ignore  biogears::SEUnitScalar::operator+=;
+%ignore  biogears::SEUnitScalar::operator-;
+%ignore  biogears::SEUnitScalar::operator-=;
+%ignore  biogears::SEUnitScalar::operator/;
+%ignore  biogears::SEUnitScalar::operator/=;
+%ignore  biogears::SEUnitScalar::operator*;
+%ignore  biogears::SEUnitScalar::operator*=;
+
+%ignore  biogears::operator==;
+%ignore  biogears::operator!=;
+
+%ignore  biogears::operator+;
+%ignore  biogears::operator+=;
+%ignore  biogears::operator-;
+%ignore  biogears::operator-=;
+%ignore  biogears::operator/;
+%ignore  biogears::operator/=;
+%ignore  biogears::operator*;
+%ignore  biogears::operator*=;
+
+%ignore  biogears::operator<<;
+
+%ignore  biogears::SEUnitScalar::ToString;
+%ignore  biogears::SEUnitScalar::operator>>;
+%ignore  biogears::SEUnitScalar::operator<<;
+
+%ignore biogears::SEUnitScalar::Load;
+%ignore biogears::SEUnitScalar::Unload;
 
 %include <biogears/cdm/properties/SEUnitScalar.h>
 

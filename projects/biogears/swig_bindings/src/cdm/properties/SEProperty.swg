@@ -38,6 +38,9 @@ using namespace CDM;
 %rename(Equals)  operator==(const SEProperty&) const;
 %rename(NotEquals)  operator!=(const SEProperty&) const;
 
+%ignore biogears::SEProperty::Unload;
+%ignore biogears::SEProperty::Load;
+
 %include <biogears/cdm/properties/SEProperty.h>
 
 

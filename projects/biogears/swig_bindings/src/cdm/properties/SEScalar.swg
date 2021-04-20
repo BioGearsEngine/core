@@ -43,19 +43,39 @@ using namespace CDM;
 %rename (GreaterThan)  operator>;
 %rename (GreaterThanEqual)  operator>=;
  
-%ignore  operator==;
-%ignore  operator!=;
+%ignore  biogears::SEScalar::operator==;
+%ignore  biogears::SEScalar::operator!=;
 
-%ignore  operator+;
-%ignore   operator+=;
-%ignore  operator-;
-%ignore   operator-=;
-%ignore  operator/;
-%ignore   operator/=;
-%ignore  operator*;
-%ignore   operator*=;
+%ignore  biogears::SEScalar::operator+;
+%ignore  biogears::SEScalar::operator+=;
+%ignore  biogears::SEScalar::operator-;
+%ignore  biogears::SEScalar::operator-=;
+%ignore  biogears::SEScalar::operator/;
+%ignore  biogears::SEScalar::operator/=;
+%ignore  biogears::SEScalar::operator*;
+%ignore  biogears::SEScalar::operator*=;
 
-%rename (ToString) operator<<;
+%ignore  biogears::operator==;
+%ignore  biogears::operator!=;
+
+%ignore  biogears::operator+;
+%ignore  biogears::operator+=;
+%ignore  biogears::operator-;
+%ignore  biogears::operator-=;
+%ignore  biogears::operator/;
+%ignore  biogears::operator/=;
+%ignore  biogears::operator*;
+%ignore  biogears::operator*=;
+
+%ignore  biogears::operator<<;
+
+%ignore  biogears::SEScalar::ToString;
+%ignore  biogears::SEScalar::operator>>;
+%ignore  biogears::SEScalar::operator<<;
+
+%ignore biogears::SEScalar::Load;
+%ignore biogears::SEScalar::Unload;
+
 
 %ignore unitless;
 
