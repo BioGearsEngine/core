@@ -8,8 +8,8 @@
 %import <biogears/cdm/properties/SESCalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<EnergyPerAmountUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<EnergyPerAmountUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const EnergyPerAmountUnit&) const;
 %rename(NotEquals)  operator!=(const EnergyPerAmountUnit&) const;
@@ -35,7 +35,21 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit >::IncrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit >::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit >::GetCompoundUnit(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit>::GetCompoundUnit(std::string const &) const ;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::DivideValue "public new";
+#endif 
+
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::DivideValue "public new";
+#endif 
+
 %ignore  GetValue(std::string const &) const ;
 
 %ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit >::operator==;

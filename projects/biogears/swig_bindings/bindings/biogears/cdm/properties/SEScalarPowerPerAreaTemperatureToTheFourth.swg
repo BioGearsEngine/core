@@ -8,8 +8,8 @@
 %import <biogears/cdm/properties/SESCalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const PowerPerAreaTemperatureToTheFourthUnit&) const;
 %rename(NotEquals)  operator!=(const PowerPerAreaTemperatureToTheFourthUnit&) const;
@@ -35,7 +35,14 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::IncrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::GetCompoundUnit(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit>::GetCompoundUnit(std::string const &) const ;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerPerAreaTemperatureToTheFourthUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerPerAreaTemperatureToTheFourthUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerPerAreaTemperatureToTheFourthUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerPerAreaTemperatureToTheFourthUnit>::DivideValue "public new";
+#endif 
+
 %ignore  GetValue(std::string const &) const ;
 
 %ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::operator==;

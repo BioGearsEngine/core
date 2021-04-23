@@ -18,12 +18,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
 namespace biogears {
-class SEPatient;
-class SERenalSystem;
-class SEAnatomy;
+
 namespace io {
   class PatientAssessments;
 }
+
 class BIOGEARS_API SEUrinalysis : public SEPatientAssessment {
   friend io::PatientAssessments;
 

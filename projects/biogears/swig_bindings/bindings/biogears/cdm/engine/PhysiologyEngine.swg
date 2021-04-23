@@ -17,6 +17,10 @@ using namespace CDM;
 
 %import <biogears/cdm/CommonDataModel.swg>
 %import <biogears/cdm/utils/Logger.swg>
+%import <biogears/cdm/patient/assessments/SEPatientAssessment.swg>
+%import <biogears/cdm/scenario/SEAction.swg>
+
+%import <biogears/cdm/properties/SEScalarTime.swg>
 
 %nspace "biogears::PhysiologyEngine";
 
@@ -35,6 +39,9 @@ class PhysiologyEngine {
   virtual ~PhysiologyEngine() {}; 
   virtual bool InitializeEngine(const char* patientFile) = 0;
   virtual void AdvanceModelTime(bool appendDataTrack = false) = 0;
+  virtual void AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false) = 0;
+  virtual bool GetPatientAssessment(SEPatientAssessment& assessment) = 0;
+  virtual bool ProcessAction(const SEAction& action) = 0;
 
 };
 } // namespace biogears

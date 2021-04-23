@@ -15,13 +15,16 @@
 
 namespace biogears {
 %nodefaultctor BioGearsEngine;
-class BioGearsEngine {
+class BioGearsEngine : public PhysiologyEngine{
 public:
   
   BioGearsEngine(Logger* logger);
   BioGearsEngine(const char* logFileName);
   bool InitializeEngine(const char* patientFile);
   virtual void AdvanceModelTime(bool appendDataTrack = false) override;
+  virtual void AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false) override;
+  virtual bool GetPatientAssessment(SEPatientAssessment& assessment) override;
+  virtual bool ProcessAction(const SEAction& action) override;
 
 };
 }

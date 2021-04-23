@@ -8,8 +8,8 @@
 %import <biogears/cdm/properties/SESCalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<InverseVolumeUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<InverseVolumeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const InverseVolumeUnit&) const;
 %rename(NotEquals)  operator!=(const InverseVolumeUnit&) const;
@@ -35,7 +35,14 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity< InverseVolumeUnit >::IncrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity< InverseVolumeUnit >::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity< InverseVolumeUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< InverseVolumeUnit >::GetCompoundUnit(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< InverseVolumeUnit>::GetCompoundUnit(std::string const &) const ;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::InverseVolumeUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::InverseVolumeUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::InverseVolumeUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::InverseVolumeUnit>::DivideValue "public new";
+#endif 
+
 %ignore  GetValue(std::string const &) const ;
 
 %ignore  biogears::SEScalarQuantity< InverseVolumeUnit >::operator==;

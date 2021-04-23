@@ -8,8 +8,8 @@
 %import <biogears/cdm/properties/SESCalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<HeatCapacitancePerMassUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<HeatCapacitancePerMassUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const HeatCapacitancePerMassUnit&) const;
 %rename(NotEquals)  operator!=(const HeatCapacitancePerMassUnit&) const;
@@ -35,7 +35,21 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::IncrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::GetCompoundUnit(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit>::GetCompoundUnit(std::string const &) const ;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::DivideValue "public new";
+#endif 
+
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::DivideValue "public new";
+#endif 
+
 %ignore  GetValue(std::string const &) const ;
 
 %ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::operator==;

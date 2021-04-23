@@ -8,8 +8,8 @@
 %import <biogears/cdm/properties/SESCalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<HeatCapacitanceUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<HeatCapacitanceUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const HeatCapacitanceUnit&) const;
 %rename(NotEquals)  operator!=(const HeatCapacitanceUnit&) const;
@@ -35,7 +35,14 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity< HeatCapacitanceUnit >::IncrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity< HeatCapacitanceUnit >::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity< HeatCapacitanceUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< HeatCapacitanceUnit >::GetCompoundUnit(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< HeatCapacitanceUnit>::GetCompoundUnit(std::string const &) const ;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitanceUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitanceUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitanceUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitanceUnit>::DivideValue "public new";
+#endif 
+
 %ignore  GetValue(std::string const &) const ;
 
 %ignore  biogears::SEScalarQuantity< HeatCapacitanceUnit >::operator==;

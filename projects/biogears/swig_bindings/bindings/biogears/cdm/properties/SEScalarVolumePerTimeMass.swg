@@ -8,8 +8,8 @@
 %import <biogears/cdm/properties/SESCalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<VolumePerTimeMassUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<VolumePerTimeMassUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const VolumePerTimeMassUnit&) const;
 %rename(NotEquals)  operator!=(const VolumePerTimeMassUnit&) const;
@@ -36,7 +36,14 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity< VolumePerTimeMassUnit >::IncrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity< VolumePerTimeMassUnit >::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity< VolumePerTimeMassUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< VolumePerTimeMassUnit >::GetCompoundUnit(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< VolumePerTimeMassUnit>::GetCompoundUnit(std::string const &) const ;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumePerTimeMassUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumePerTimeMassUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumePerTimeMassUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumePerTimeMassUnit>::DivideValue "public new";
+#endif 
+
 %ignore  GetValue(std::string const &) const ;
 
 %ignore  biogears::SEScalarQuantity< VolumePerTimeMassUnit >::operator==;

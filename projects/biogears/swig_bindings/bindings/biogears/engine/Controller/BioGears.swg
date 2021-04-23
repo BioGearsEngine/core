@@ -11,7 +11,7 @@
 %nspace biogears::BioGears;
 
 namespace biogears {
-  class BioGears {
+  class BioGears : public Loggable{
     BioGears (Logger* logger);
   };
 }

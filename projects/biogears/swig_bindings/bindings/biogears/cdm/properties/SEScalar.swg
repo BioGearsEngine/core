@@ -16,7 +16,7 @@
 %rename (GreaterThan)  biogears::SEScalar::operator>;
 %rename (GreaterThanEqual)  biogears::SEScalar::operator>=;
  
-%ignore  biogears::SEScalar::ToString;
+%ignore  biogears::SEScalar::ToString(std::ostream& str);
 %ignore  biogears::SEScalar::operator>>;
 %ignore  biogears::SEScalar::operator<<;
 

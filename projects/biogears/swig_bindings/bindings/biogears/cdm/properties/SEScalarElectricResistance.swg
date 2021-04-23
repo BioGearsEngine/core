@@ -8,8 +8,8 @@
 %import <biogears/cdm/properties/SESCalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<ElectricResistanceUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<ElectricResistanceUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const ElectricResistanceUnit&) const;
 %rename(NotEquals)  operator!=(const ElectricResistanceUnit&) const;
@@ -35,7 +35,14 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity< ElectricResistanceUnit >::IncrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity< ElectricResistanceUnit >::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity< ElectricResistanceUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< ElectricResistanceUnit >::GetCompoundUnit(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< ElectricResistanceUnit>::GetCompoundUnit(std::string const &) const ;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricResistanceUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricResistanceUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricResistanceUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricResistanceUnit>::DivideValue "public new";
+#endif 
+
 %ignore  GetValue(std::string const &) const ;
 
 %ignore  biogears::SEScalarQuantity< ElectricResistanceUnit >::operator==;

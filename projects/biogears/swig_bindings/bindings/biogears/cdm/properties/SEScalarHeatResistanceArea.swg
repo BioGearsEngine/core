@@ -8,8 +8,8 @@
 %import <biogears/cdm/properties/SESCalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<HeatResistanceAreaUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<HeatResistanceAreaUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const HeatResistanceAreaUnit&) const;
 %rename(NotEquals)  operator!=(const HeatResistanceAreaUnit&) const;
@@ -35,7 +35,14 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity< HeatResistanceAreaUnit >::IncrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity< HeatResistanceAreaUnit >::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity< HeatResistanceAreaUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< HeatResistanceAreaUnit >::GetCompoundUnit(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< HeatResistanceAreaUnit>::GetCompoundUnit(std::string const &) const ;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatResistanceAreaUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatResistanceAreaUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatResistanceAreaUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatResistanceAreaUnit>::DivideValue "public new";
+#endif 
+
 %ignore  GetValue(std::string const &) const ;
 
 %ignore  biogears::SEScalarQuantity< HeatResistanceAreaUnit >::operator==;

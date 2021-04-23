@@ -18,8 +18,9 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEScalarFraction;
 class SEScalarMassPerVolume;
-class SEScalarAmountPerVolume;
 class SEScalarMassPerAmount;
+class SEScalarVolume;
+class SEScalarAmountPerVolume;
 namespace io {
   class PatientAssessments;
 }

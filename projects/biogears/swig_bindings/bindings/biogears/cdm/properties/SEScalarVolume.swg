@@ -12,8 +12,8 @@
 %nspace biogears::SEScalarVolume;
 %nspace biogears::VolumeUnit;
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<VolumeUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<VolumeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const VolumeUnit&) const;
 %rename(NotEquals)  operator!=(const VolumeUnit&) const;
@@ -38,6 +38,12 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity<VolumeUnit>::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity<VolumeUnit>::DecrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity<VolumeUnit>::GetCompoundUnit(std::string const &) const ;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumeUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumeUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumeUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumeUnit>::DivideValue "public new";
+#endif 
 
 %ignore  biogears::SEScalarQuantity<VolumeUnit>::operator==;
 %rename(NotEquals)  biogears::SEScalarQuantity<VolumeUnit>::operator!=;

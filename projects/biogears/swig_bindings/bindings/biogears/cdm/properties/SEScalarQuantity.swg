@@ -11,8 +11,8 @@
 %nspace biogears::SEScalarQuantity;
 %nspace biogears::QuantityUnit;
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<TimeUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<TimeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const SEScalarQuantity&) const;
 %rename(NotEquals)  operator!=(const SEScalarQuantity&) const;

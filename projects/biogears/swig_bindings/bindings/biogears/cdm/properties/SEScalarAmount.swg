@@ -8,8 +8,8 @@
 %import "SESCalarQuantity.swg"
 
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<AmountUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<AmountUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const AmountUnit&) const;
 %rename(NotEquals)  operator!=(const AmountUnit&) const;
@@ -36,7 +36,6 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity< AmountUnit >::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity< AmountUnit >::DecrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity< AmountUnit >::GetCompoundUnit(std::string const &) const ;
-
 #if defined(SWIGCSHARP)
 %csmethodmodifiers biogears::SEScalarQuantity<biogears::AmountUnit>::Multiply "public new";
 %csmethodmodifiers biogears::SEScalarQuantity<biogears::AmountUnit>::Divide "public new";

@@ -8,8 +8,8 @@
 %import <biogears/cdm/properties/SESCalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<FlowElastanceUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<FlowElastanceUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const FlowElastanceUnit&) const;
 %rename(NotEquals)  operator!=(const FlowElastanceUnit&) const;
@@ -35,7 +35,21 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity< FlowElastanceUnit >::IncrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity< FlowElastanceUnit >::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity< FlowElastanceUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< FlowElastanceUnit >::GetCompoundUnit(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< FlowElastanceUnit>::GetCompoundUnit(std::string const &) const ;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowElastanceUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowElastanceUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowElastanceUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowElastanceUnit>::DivideValue "public new";
+#endif 
+
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowElastanceUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowElastanceUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowElastanceUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowElastanceUnit>::DivideValue "public new";
+#endif 
+
 %ignore  GetValue(std::string const &) const ;
 
 %ignore  biogears::SEScalarQuantity< FlowElastanceUnit >::operator==;

@@ -35,7 +35,7 @@ namespace std
 
 %ignore Unload;
 %ignore Load; 
-%ignore ToString( std::ostream& ); 
+%ignore ToString(std::ostream& ); 
 %ignore ToString(std::ostream& str) const;
 
 %ignore  operator+;
@@ -56,6 +56,10 @@ namespace std
 
 %ignore  operator<<;
 %ignore  operator>>;
+
+#if defined(SWIGCSHARP)
+%csmethodmodifiers ToString() "public override";
+#endif 
 
 %nspace std::vector<double>;
 %template(vector_d) std::vector<double>;

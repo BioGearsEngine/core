@@ -8,8 +8,8 @@
 %import <biogears/cdm/properties/SESCalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString;
-%ignore biogears::SEScalarQuantity<FlowInertanceUnit>::ToString;
+%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
+%ignore biogears::SEScalarQuantity<FlowInertanceUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const FlowInertanceUnit&) const;
 %rename(NotEquals)  operator!=(const FlowInertanceUnit&) const;
@@ -35,7 +35,14 @@ namespace biogears {
 %ignore  biogears::SEScalarQuantity< FlowInertanceUnit >::IncrementValue(double,char const *) ;
 %ignore  biogears::SEScalarQuantity< FlowInertanceUnit >::DecrementValue(double,std::string const &) ;
 %ignore  biogears::SEScalarQuantity< FlowInertanceUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< FlowInertanceUnit >::GetCompoundUnit(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< FlowInertanceUnit>::GetCompoundUnit(std::string const &) const ;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowInertanceUnit>::Multiply "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowInertanceUnit>::Divide "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowInertanceUnit>::MultiplyValue "public new";
+%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowInertanceUnit>::DivideValue "public new";
+#endif 
+
 %ignore  GetValue(std::string const &) const ;
 
 %ignore  biogears::SEScalarQuantity< FlowInertanceUnit >::operator==;
