@@ -5,7 +5,7 @@
 
 %include <biogears/exports.h>
 
-%import <biogears/cdm/properties/SESCalarQuantity.swg>
+%import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
 %ignore biogears::SEScalarQuantity::ToStringToString(std::ostream& str);

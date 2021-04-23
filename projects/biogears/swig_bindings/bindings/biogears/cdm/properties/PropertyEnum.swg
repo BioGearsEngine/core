@@ -14,8 +14,8 @@
 
 %rename(SESide_toString) biogears::ToString(const SESide& e);
 %rename(SEOpenClosed_toString) biogears::ToString(const SEOpenClosed& e);
-%rename(SESide_toString) biogears::ToString(const SEOnOff& e);
-%rename(SESide_toString) biogears::ToString(const SEErrorType& e);
+%rename(SEOnOff_toString) biogears::ToString(const SEOnOff& e);
+%rename(SEErrorType_toString) biogears::ToString(const SEErrorType& e);
 
 %ignore operator<<(std::ostream& os, const SESide& e);
 %ignore operator<<(std::ostream& os, const SEOpenClosed& e);

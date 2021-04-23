@@ -56,116 +56,119 @@ enum class SEInfectionSeverity {
   Severe
 };
 
-inline std::ostream& operator<<(std::ostream& os, const SEPatientAssessmentType& pa)
+inline std::string ToString(const SEPatientAssessmentType& pa)
 {
   switch (pa) {
   case SEPatientAssessmentType::PulmonaryFunctionTest:
-    os << "PulmonaryFunctionTest";
-    break;
+    return "PulmonaryFunctionTest";
   case SEPatientAssessmentType::CompleteBloodCount:
-    os << "CompleteBloodCount";
-    break;
+    return "CompleteBloodCount";
   case SEPatientAssessmentType::ComprehensiveMetabolicPanel:
-    os << "ComprehensiveMetabolicPanel";
-    break;
+    return "ComprehensiveMetabolicPanel";
   case SEPatientAssessmentType::Urinalysis:
-    os << "Urinalysis";
-    break;
+    return "Urinalysis";
   default:
-    os << "Invalid";
+    return "Invalid";
   }
+}
+inline std::string ToString(const SEBrainInjuryType& bit)
+{
+  switch (bit) {
+  case SEBrainInjuryType::Diffuse:
+    return "Diffuse";
+  case SEBrainInjuryType::LeftFocal:
+    return "LeftFocal";
+  case SEBrainInjuryType::RightFocal:
+    return "RightFocal";
+  default:
+    return "Invalid";
+  }
+}
+inline std::string ToString(const SEIntubationType& it)
+{
+  switch (it) {
+  case SEIntubationType::Off:
+    return "Off";
+  case SEIntubationType::Esophageal:
+    return "Esophageal";
+  case SEIntubationType::LeftMainstem:
+    return "LeftMainstem";
+  case SEIntubationType::RightMainstem:
+    return "RightMainstem";
+  case SEIntubationType::Tracheal:
+    return "Tracheal";
+  default:
+    return "Invalid";
+  }
+}
+inline std::string ToString(const SEPneumothoraxType& pt)
+{
+  switch (pt) {
+  case SEPneumothoraxType::Open:
+    return "Open";
+  case SEPneumothoraxType::Closed:
+    return "Closed";
+  default:
+    return "Invalid";
+  }
+}
+inline std::string ToString(const SEBolusAdministration& ba)
+{
+  switch (ba) {
+  case SEBolusAdministration::Intraarterial:
+    return "Intraarterial";
+  case SEBolusAdministration::Intramuscular:
+    return "Intramuscular";
+  case SEBolusAdministration::Intravenous:
+    return "Intravenous";
+  default:
+    return "Invalid";
+  }
+}
+inline std::string ToString(const SEInfectionSeverity& ba)
+{
+  switch (ba) {
+  case SEInfectionSeverity::Eliminated:
+    return "Eliminated";
+  case SEInfectionSeverity::Mild:
+    return "Mild";
+  case SEInfectionSeverity::Moderate:
+    return "Moderate";
+  case SEInfectionSeverity::Severe:
+    return "Severe";
+  default:
+    return "Invalid";
+  }
+}
+
+inline std::ostream& operator<<(std::ostream& os, const SEPatientAssessmentType& pa)
+{
+  os << ToString(pa);
   return os;
 }
 inline std::ostream& operator<<(std::ostream& os, const SEBrainInjuryType& bit)
 {
-  switch (bit) {
-  case SEBrainInjuryType::Diffuse:
-    os << "Diffuse";
-    break;
-  case SEBrainInjuryType::LeftFocal:
-    os << "LeftFocal";
-    break;
-  case SEBrainInjuryType::RightFocal:
-    os << "RightFocal";
-    break;
-  default:
-    os << "Invalid";
-  }
+  os << ToString(bit);
   return os;
 }
 inline std::ostream& operator<<(std::ostream& os, const SEIntubationType& it)
 {
-  switch (it) {
-  case SEIntubationType::Off:
-    os << "Off";
-    break;
-  case SEIntubationType::Esophageal:
-    os << "Esophageal";
-    break;
-  case SEIntubationType::LeftMainstem:
-    os << "LeftMainstem";
-    break;
-  case SEIntubationType::RightMainstem:
-    os << "RightMainstem";
-    break;
-  case SEIntubationType::Tracheal:
-    os << "Tracheal";
-    break;
-  default:
-    os << "Invalid";
-  }
+  os << ToString(it);
   return os;
 }
 inline std::ostream& operator<<(std::ostream& os, const SEPneumothoraxType& pt)
 {
-  switch (pt) {
-  case SEPneumothoraxType::Open:
-    os << "Open";
-    break;
-  case SEPneumothoraxType::Closed:
-    os << "Closed";
-    break;
-  default:
-    os << "Invalid";
-  }
+  os << ToString(pt);
   return os;
 }
 inline std::ostream& operator<<(std::ostream& os, const SEBolusAdministration& ba)
 {
-  switch (ba) {
-  case SEBolusAdministration::Intraarterial:
-    os << "Intraarterial";
-    break;
-  case SEBolusAdministration::Intramuscular:
-    os << "Intramuscular";
-    break;
-  case SEBolusAdministration::Intravenous:
-    os << "Intravenous";
-    break;
-  default:
-    os << "Invalid";
-  }
+  os << ToString(ba);
   return os;
 }
-
-inline std::ostream& operator<<(std::ostream& os, const SEInfectionSeverity& ba)
+inline std::ostream& operator<<(std::ostream& os, const SEInfectionSeverity& is)
 {
-  switch (ba) {
-  case SEInfectionSeverity::Eliminated:
-    os << "Eliminated";
-    break;
-  case SEInfectionSeverity::Mild:
-    os << "Mild";
-    break;
-  case SEInfectionSeverity::Moderate:
-    os << "Moderate";
-    break;
-  case SEInfectionSeverity::Severe:
-    os << "Severe";
-    break;
-  default:
-    os << "Invalid";
-  }
+  os << ToString(is);
   return os;
 }
 

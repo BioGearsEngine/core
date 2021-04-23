@@ -28,10 +28,11 @@ namespace std
 %{
 #include <exception>
 #include<biogears/cdm/CommonDataModel.h>
+#include <biogears/schema/cdm/Anesthesia.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/PatientActions.hxx>
-#include <biogears/schema/cdm/Anesthesia.hxx>
+#include <biogears/schema/cdm/PatientAssessments.hxx>
 %}
 
 %include <biogears/exports.h>
@@ -295,6 +296,47 @@ namespace tatrc {
         Applied,
         Misapplied,
         None
+      };
+    };
+    //Patient Assessment
+    class  enumPresenceIndicator {
+    public:
+      enum value {
+        Positive,
+        Negative
+      };
+    };
+    class enumClarityIndicator {
+    public:
+      enum value {
+        Clear,
+        SlightlyCloudy,
+        Cloudy,
+        Turbid
+      };
+    };
+    class enumUrineColor {
+    public:
+      enum value {
+        PaleYellow,
+        Yellow,
+        DarkYellow,
+        Pink
+      };
+    };
+    class enumMicroscopicObservationType {
+    public:
+      enum value {
+          LowPowerField,
+          HighPowerField
+        };
+    };
+    class enumMicroscopicObservationAmount {
+    public:
+      enum value {
+          Few,
+          Moderate,
+          Many
       };
     };
   }
