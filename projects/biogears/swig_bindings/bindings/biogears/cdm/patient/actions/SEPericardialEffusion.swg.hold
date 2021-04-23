@@ -1,6 +1,6 @@
 %module "biogears::SEPericardialEffusion"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/patient/actions/SEPericardialEffusion.h>
 %}

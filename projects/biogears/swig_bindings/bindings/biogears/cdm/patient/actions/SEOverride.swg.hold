@@ -1,6 +1,6 @@
 %module "biogears::SEOverride"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/patient/actions/SEOverride.h>
 %}

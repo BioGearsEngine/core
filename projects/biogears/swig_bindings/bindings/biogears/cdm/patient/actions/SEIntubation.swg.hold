@@ -1,6 +1,6 @@
 %module "biogears::SEIntubation"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/patient/actions/SEIntubation.h>
 %}

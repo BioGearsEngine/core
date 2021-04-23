@@ -1,6 +1,6 @@
 %module "biogears::SEInfection"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/patient/actions/SEInfection.h>
 %}

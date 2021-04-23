@@ -1,6 +1,6 @@
 %module "biogears::SESubstanceManager"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/substance/SESubstanceManager.h>
 %}

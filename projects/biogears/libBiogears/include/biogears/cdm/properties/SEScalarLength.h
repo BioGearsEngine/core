@@ -34,7 +34,7 @@ public:
   static const LengthUnit cm;
   static const LengthUnit mm;
   static const LengthUnit um;
-  static const LengthUnit in;
+  static const LengthUnit inch;
   static const LengthUnit ft;
 };
 

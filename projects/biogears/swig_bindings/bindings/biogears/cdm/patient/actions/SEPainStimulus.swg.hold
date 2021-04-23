@@ -1,6 +1,6 @@
 %module "biogears::SEPainStimulus"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/patient/actions/SEPainStimulus.h>
 %}

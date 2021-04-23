@@ -1,6 +1,6 @@
 %module "biogears::SEPulmonaryFunctionTest"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 %}

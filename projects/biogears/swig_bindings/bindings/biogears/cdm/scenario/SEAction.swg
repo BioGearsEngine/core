@@ -1,5 +1,3 @@
-
-// Add necessary symbols to generated header
 %{
 #include <biogears/cdm/scenario/SEAction.h>
 %}
@@ -15,6 +13,12 @@
 %ignore biogears::SEAction::Load;
 %ignore newFromBind(const CDM::ActionData& action, SESubstanceManager& substances);
 %ignore SetComment(std::string const &);
+
+%ignore SEAction::ToString(std::ostream& str) const;
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEAction::ToString() const "public override";
+#endif 
+
 %include <biogears/cdm/scenario/SEAction.h>
 
 

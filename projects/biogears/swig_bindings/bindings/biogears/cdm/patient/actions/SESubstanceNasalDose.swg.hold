@@ -1,6 +1,6 @@
 %module "biogears::SESubstanceNasalDose"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/patient/actions/SESubstanceNasalDose.h>
 %}

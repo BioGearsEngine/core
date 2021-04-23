@@ -52,21 +52,22 @@ if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
   ######################################################################################################
 
   #add_source_files(libiogears_csharp_files LOCATION ${CMAKE_BINARY_DIR}/outputs/csharp/ REGEX "*.cs" SOURCE_GROUP "Source Files\\")
-  file(GLOB_RECURSE  libiogears_csharp_files_1  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_BINARY_DIR}/outputs/csharp/biogears/*.cs")
-  file(GLOB_RECURSE  libiogears_csharp_files_2  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_BINARY_DIR}/outputs/csharp/std/*.cs")
-  file(GLOB_RECURSE  libiogears_csharp_files_3  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cs")
+  file(GLOB_RECURSE  libiogears_csharp_biogears  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_BINARY_DIR}/outputs/csharp/biogears/*.cs")
+  file(GLOB_RECURSE  libiogears_csharp_cdm  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_BINARY_DIR}/outputs/csharp/mil/*.cs")
+  file(GLOB_RECURSE  libiogears_csharp_std  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_BINARY_DIR}/outputs/csharp/std/*.cs")
+  file(GLOB_RECURSE  libiogears_csharp_unittest  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cs")
   
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-  source_group(TREE ${CMAKE_BINARY_DIR}/outputs/csharp/ PREFIX "Source Files"  FILES ${libiogears_csharp_files_1} ${libiogears_csharp_files_2})
-  source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files"  FILES ${libiogears_csharp_files_3} )
+  source_group(TREE ${CMAKE_BINARY_DIR}/outputs/csharp/ PREFIX "Source Files"  FILES ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std})
+  source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files"  FILES ${libiogears_csharp_unittest} )
   get_property(support_files TARGET lib${PROJECT_NAME}_csharp PROPERTY SWIG_SUPPORT_FILES)
 
   include(CSharpUtilities)
   foreach(file IN LISTS support_files)
-    LIST(APPEND libiogears_csharp_files_1 ${file})
+    LIST(APPEND libiogears_csharp_biogears ${file})
   endforeach()
 
-  add_executable(unittest_csharp ${libiogears_csharp_files_1} ${libiogears_csharp_files_2} ${libiogears_csharp_files_3} )
+  add_executable(unittest_csharp ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std} ${libiogears_csharp_unittest})
   set_target_properties(unittest_csharp PROPERTIES
       POSITION_INDEPENDENT_CODE ON
       FOLDER UnitTest

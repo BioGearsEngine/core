@@ -1,6 +1,6 @@
 %module "biogears::SESubstanceCompoundInfusion"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/patient/actions/SESubstanceCompoundInfusion.h>
 %}

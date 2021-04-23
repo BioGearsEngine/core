@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(NutritionData)
 
 namespace biogears {
-class SEPatient;
+
 class SEScalar;
 class SEScalarMass;
 class MassUnit;
@@ -26,9 +26,11 @@ class SEScalarMassPerTime;
 class MassPerTimeUnit;
 class SEScalarVolume;
 class VolumeUnit;
+
 namespace io {
   class PatientNutrition;
 }
+
 class BIOGEARS_API SENutrition : public Loggable {
   friend io::PatientNutrition;
 

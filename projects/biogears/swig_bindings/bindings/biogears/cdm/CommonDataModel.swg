@@ -2,6 +2,7 @@
 #if defined(SWIGCSHARP)
   %import "csharp/std_string.i"
   %import "csharp/std_vector.i"
+  %import "csharp/std_map.i"
   %import "csharp/std_except.i"
 
 namespace std 
@@ -13,18 +14,24 @@ namespace std
 #elif defind(SWIGPYTHON)
   %import "python/std_string.i"
   %import "python/std_vector.i"
+  %import "python/std_map.i"
   %import "python/std_except.i"
 #else
   %import "std_string.i"
   %import "std_vector.i"
+  %import "std_map.i"
   %import "std_except.i"
 #endif 
 %import"exception.i"
 
-// Add necessary symbols to generated header
+
 %{
 #include <exception>
 #include<biogears/cdm/CommonDataModel.h>
+#include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/schema/cdm/Patient.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
+#include <biogears/schema/cdm/Anesthesia.hxx>
 %}
 
 %include <biogears/exports.h>
@@ -62,6 +69,236 @@ namespace std
 #endif 
 
 %nspace std::vector<double>;
+%nspace std::vector<unsigned int>;
+%nspace std::map<std::string, std::vector<unsigned int> >;
 %template(vector_d) std::vector<double>;
-
+%template(vector_ui) std::vector<unsigned int>;
+%template(map_string_vector_ui) std::map<std::string, std::vector<unsigned int> >; 
 %include <biogears/cdm/CommonDataModel.h>
+
+namespace mil {
+namespace tatrc {
+  namespace physiology {
+   namespace datamodel {
+    //Anesthesia.hxx
+    class enumAnesthesiaMachineEvent {
+    public:
+      enum value {
+        OxygenBottle1Exhausted,
+        OxygenBottle2Exhausted,
+        ReliefValveActive
+      };
+    };
+    class enumAnesthesiaMachineOxygenSource {
+    public:
+      enum value {
+        Wall,
+        BottleOne,
+        BottleTwo
+      };
+    };
+    class enumAnesthesiaMachinePrimaryGas {
+    public:
+      enum value {
+        Air,
+        Nitrogen
+      };
+    };
+    class enumAnesthesiaMachineConnection {
+    public:
+      enum value {
+        Off,
+        Mask,
+        Tube
+      };
+    };
+    //Properties.hxx
+    class  enumDecimalFormat {
+    public:
+      enum value
+      {
+        FixedMantissa,
+        SignificantDigits
+      };
+    };
+    class enumSide {
+    public:
+      enum value {
+        Left,
+        Right
+      };
+    };
+    class enumOpenClosed {
+    public:
+      enum value {
+        Closed,
+        Open
+      };
+    };
+    class  enumOnOff {
+    public:
+      enum value {
+        Off,
+        On
+      };
+    };
+    class enumErrorType {
+    public:
+      enum value {
+        Standard
+      };  
+    };    
+    //Patient.hxx
+    class  enumSex {
+    public:
+      enum value {
+        Male,
+        Female
+      };
+    };
+    class enumBloodType {
+    public:
+      enum value {
+        A,
+        B,
+        AB,
+        O
+      };
+    };
+    class enumPatientEvent {
+    public:
+      enum value {
+        AcuteLungInjury,
+        AcuteRespiratoryDistress,
+        Antidiuresis,
+        Asystole,
+        Bradycardia,
+        Bradypnea,
+        BrainOxygenDeficit,
+        CardiacArrest,
+        CardiogenicShock,
+        CriticalBrainOxygenDeficit,
+        Dehydration,
+        Diuresis,
+        Fasciculation,
+        Fatigue,
+        FunctionalIncontinence,
+        HemolyticTransfusionReaction,
+        Hypercapnia,
+        Hyperglycemia,
+        MildHyperkalemia,
+        SevereHyperkalemia,
+        MildHypernatremia,
+        SevereHypernatremia,
+        Hyperthermia,
+        Hypoglycemia,
+        HypoglycemicShock,
+        HypoglycemicComa,
+        Hypothermia,
+        MildHypokalemia,
+        SevereHypokalemia,
+        MildHyponatremia,
+        SevereHyponatremia,
+        Hypoxia,
+        HypovolemicShock,
+        IntracranialHypertension,
+        IntracranialHypotension,
+        IrreversibleState,
+        Ketoacidosis,
+        LacticAcidosis,
+        LiverGlycogenDepleted,
+        MaximumPulmonaryVentilationRate,
+        MetabolicAcidosis,
+        MetabolicAlkalosis,
+        MuscleCatabolism,
+        MuscleGlycogenDepleted,
+        MyocardiumOxygenDeficit,
+        Natriuresis,
+        NutritionDepleted,
+        PulselessRhythm,
+        RenalHypoperfusion,
+        RespiratoryAcidosis,
+        RespiratoryAlkalosis,
+        SevereAcuteRespiratoryDistress,
+        StartOfCardiacCycle,
+        StartOfExhale,
+        StartOfInhale,
+        SevereSepsis,
+        Tachycardia,
+        Tachypnea,
+        TotalPatientEvents
+      };
+    };
+    //PatientActions.hxx
+    class enumPatientAssessment {
+    public:
+      enum value{
+        PulmonaryFunctionTest,
+        CompleteBloodCount,
+        ComprehensiveMetabolicPanel,
+        SequentialOrganFailureAssessment,
+        Urinalysis
+      };
+    };
+    class  enumBrainInjuryType {
+    public:
+      enum value {
+        Diffuse,
+        LeftFocal,
+        RightFocal
+      };
+    };
+    class  enumInfectionSeverity {
+    public:
+      enum value {
+        Eliminated,
+        Mild,
+        Moderate,
+        Severe
+      };
+    };
+    class enumIntubationType {
+    public:
+      enum value {
+        Off,
+        Esophageal,
+        LeftMainstem,
+        RightMainstem,
+        Tracheal
+      };
+    };
+    class  enumPneumothoraxType {
+    public:
+      enum value {
+        Open,
+        Closed
+      };
+    };
+    class  enumBolusAdministration {
+    public:  
+      enum value {
+        Intraarterial,
+        Intramuscular,
+        Intravenous
+      };
+    };
+    class enumOralAdministration  {
+    public:
+      enum value {
+        Transmucosal,
+        Gastrointestinal
+      };
+    };
+    class  enumTourniquetApplicationLevel  {
+    public:
+      enum value {
+        Applied,
+        Misapplied,
+        None
+      };
+    };
+  }
+  }
+}
+}
+

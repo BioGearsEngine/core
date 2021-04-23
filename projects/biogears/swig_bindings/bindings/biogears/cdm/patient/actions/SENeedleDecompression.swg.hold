@@ -1,6 +1,6 @@
 %module "biogears::SENeedleDecompression"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/patient/actions/SENeedleDecompression.h>
 %}

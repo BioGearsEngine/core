@@ -1,6 +1,6 @@
 %module "biogears::SEPatientActionsEnums"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/patient/actions/SEPatientActionsEnums.h>
 %}

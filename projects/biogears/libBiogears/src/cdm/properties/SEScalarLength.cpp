@@ -17,7 +17,7 @@ const LengthUnit LengthUnit::m("m");
 const LengthUnit LengthUnit::cm("cm");
 const LengthUnit LengthUnit::mm("mm");
 const LengthUnit LengthUnit::um("um");
-const LengthUnit LengthUnit::in("in");
+const LengthUnit LengthUnit::inch("in");
 const LengthUnit LengthUnit::ft("ft");
 
 LengthUnit::LengthUnit(const char* u)
@@ -49,7 +49,7 @@ bool LengthUnit::IsValidUnit(const char* unit)
     return true;
   if (strcmp(um.GetString(),unit) == 0)
     return true;
-  if (strcmp(in.GetString(),unit) == 0)
+  if (strcmp(inch.GetString(),unit) == 0)
     return true;
   if (strcmp(ft.GetString(),unit) == 0)
     return true;
@@ -71,8 +71,8 @@ const LengthUnit& LengthUnit::GetCompoundUnit(const char* unit)
     return mm;
   if (strcmp(um.GetString(),unit) == 0)
     return um;
-  if (strcmp(in.GetString(),unit) == 0)
-    return in;
+  if (strcmp(inch.GetString(),unit) == 0)
+    return inch;
   if (strcmp(ft.GetString(),unit) == 0)
     return ft;
   std::stringstream err;

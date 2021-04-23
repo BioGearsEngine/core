@@ -25,6 +25,5 @@ public:
   virtual void AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false) override;
   virtual bool GetPatientAssessment(SEPatientAssessment& assessment) override;
   virtual bool ProcessAction(const SEAction& action) override;
-
 };
 }

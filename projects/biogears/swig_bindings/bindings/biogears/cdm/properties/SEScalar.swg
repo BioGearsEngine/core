@@ -1,5 +1,5 @@
 
-// Add necessary symbols to generated header
+
 %{
 #include <biogears/cdm/properties/SEScalar.h>
 %}

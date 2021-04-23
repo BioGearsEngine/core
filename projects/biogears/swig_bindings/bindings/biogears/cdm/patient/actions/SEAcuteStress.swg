@@ -1,5 +1,5 @@
 
-// Add necessary symbols to generated header
+
 %{
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 %}
@@ -17,5 +17,3 @@
 %ignore biogears::SEAcuteStress::Load;
 
 %include <biogears/cdm/patient/actions/SEAcuteStress.h>
-
-

@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalar0To1;
+class SEScalarTime;
 class SEConsciousRespiration;
 namespace io {
   class PatientActions;

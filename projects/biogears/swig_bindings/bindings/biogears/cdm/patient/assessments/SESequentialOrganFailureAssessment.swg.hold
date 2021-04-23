@@ -1,6 +1,6 @@
 %module "biogears::SESequentialOrganFailureAssessment"
 
-// Add necessary symbols to generated header
+
 %{
 #include<cdm/patient/assessments/SESequentialOrganFailureAssessment.h>
 %}

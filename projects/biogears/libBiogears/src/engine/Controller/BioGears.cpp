@@ -3313,16 +3313,16 @@ void BioGears::SetupTissue()
     standardPatientWeight_lb = 130.0;
     standardPatientHeight_in = 64.0;
   }
-  double typicalSkinSurfaceArea_m2 = 0.20247 * std::pow(Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg), 0.425) * std::pow(Convert(standardPatientHeight_in, LengthUnit::in, LengthUnit::m), 0.725);
+  double typicalSkinSurfaceArea_m2 = 0.20247 * std::pow(Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg), 0.425) * std::pow(Convert(standardPatientHeight_in, LengthUnit::inch, LengthUnit::m), 0.725);
   double patientSkinArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
   SkinTissueMass = SkinTissueMass * patientSkinArea_m2 / typicalSkinSurfaceArea_m2;
 
   //Modify most based on lean body mass
   //Hume, R (Jul 1966). "Prediction of lean body mass from height and weight." Journal of clinical pathology. 19 (4): 389–91. doi:10.1136/jcp.19.4.389. PMC 473290. PMID 5929341.
-  //double typicalLeanBodyMass_kg = 0.32810 * Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg) + 0.33929 * Convert(standardPatientHeight_in, LengthUnit::in, LengthUnit::cm) - 29.5336; //Male
+  //double typicalLeanBodyMass_kg = 0.32810 * Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg) + 0.33929 * Convert(standardPatientHeight_in, LengthUnit::inch, LengthUnit::cm) - 29.5336; //Male
   //if (m_Patient->GetGender() == CDM::enumSex::Female)
   //{
-  // typicalLeanBodyMass_kg = 0.29569 * Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg) + 0.41813 * Convert(standardPatientHeight_in, LengthUnit::in, LengthUnit::cm) - 43.2933; //Female
+  // typicalLeanBodyMass_kg = 0.29569 * Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg) + 0.41813 * Convert(standardPatientHeight_in, LengthUnit::inch, LengthUnit::cm) - 43.2933; //Female
   //}
 
   //Male
