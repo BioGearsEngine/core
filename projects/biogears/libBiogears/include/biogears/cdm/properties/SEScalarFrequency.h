@@ -43,8 +43,8 @@ public:
 
   CDM::ScalarFrequencyData* Unload() const override;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<FrequencyUnit>::SetValue;
+  using SEScalarQuantity<FrequencyUnit>::GetValue;
 
   bool operator==(const SEScalarFrequency&) const;
   bool operator!=(const SEScalarFrequency&) const;

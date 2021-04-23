@@ -47,8 +47,8 @@ public:
 
   CDM::ScalarMassPerTimeData* Unload() const override;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<MassPerTimeUnit>::SetValue;
+  using SEScalarQuantity<MassPerTimeUnit>::GetValue;
 
   bool operator==(const SEScalarMassPerTime&) const;
   bool operator!=(const SEScalarMassPerTime&) const;

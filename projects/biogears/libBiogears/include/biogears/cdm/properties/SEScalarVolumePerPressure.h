@@ -41,8 +41,8 @@ public:
 
   CDM::ScalarVolumePerPressureData* Unload() const;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<VolumePerPressureUnit>::SetValue;
+  using SEScalarQuantity<VolumePerPressureUnit>::GetValue;
 
   bool operator==(const SEScalarVolumePerPressure&) const;
   bool operator!=(const SEScalarVolumePerPressure&) const;

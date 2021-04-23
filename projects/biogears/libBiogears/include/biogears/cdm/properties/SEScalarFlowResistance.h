@@ -44,8 +44,8 @@ public:
 
   CDM::ScalarFlowResistanceData* Unload() const override;   
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<FlowResistanceUnit>::SetValue;
+  using SEScalarQuantity<FlowResistanceUnit>::GetValue;
 
   bool operator==(const SEScalarFlowResistance&) const;
   bool operator!=(const SEScalarFlowResistance&) const;

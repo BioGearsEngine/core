@@ -41,8 +41,8 @@ public:
 
   CDM::ScalarElectricPotentialData* Unload() const override;   
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<ElectricPotentialUnit>::SetValue;
+  using SEScalarQuantity<ElectricPotentialUnit>::GetValue;
 
   bool operator==(const SEScalarElectricPotential&) const;
   bool operator!=(const SEScalarElectricPotential&) const;

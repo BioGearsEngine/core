@@ -29,11 +29,11 @@ if(SWIG_FOUND)
   option (${ROOT_PROJECT_NAME}_SWIG_PYTHON_BINDINGS "Toggle the building of Python Hooks. pybind11 is a dependency of this process (Experimental)"  ${SWIG_python_FOUND})
   option (${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS "Toggle the Genearting of languge bindings using SHARP (Experimental)"  ${SWIG_csharp_FOUND})
   
-  add_source_files(CSharp_SWIGS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.swg" SOURCE_GROUP "Templates/")
-  add_source_files(Python_SWIGS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.swg" SOURCE_GROUP "Templates/")
-  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src/*.swg" PREFIX "Source Files"  FILES ${csharp_test_files} )
+  add_source_files(CSharp_SWIGS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/bindings REGEX "*.swg" SOURCE_GROUP "Templates/")
+  add_source_files(Python_SWIGS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/bindings REGEX "*.swg" SOURCE_GROUP "Templates/")
+  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/bindings/*.swg" PREFIX "Source Files"  FILES ${csharp_test_files} )
 
   add_subdirectory(csharp)
-  add_subdirectory(python)
+  #add_subdirectory(python)
 endif()
 

@@ -44,8 +44,8 @@ public:
 
   CDM::ScalarFlowInertanceData* Unload() const override;   
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<FlowInertanceUnit>::SetValue;
+  using SEScalarQuantity<FlowInertanceUnit>::GetValue;
 
   bool operator==(const SEScalarFlowInertance&) const;
   bool operator!=(const SEScalarFlowInertance&) const;

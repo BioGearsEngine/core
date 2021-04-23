@@ -42,8 +42,8 @@ public:
 
   CDM::ScalarFlowElastanceData* Unload() const override;   
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<FlowElastanceUnit>::SetValue;
+  using SEScalarQuantity<FlowElastanceUnit>::GetValue;
 
   bool operator==(const SEScalarFlowElastance&) const;
   bool operator!=(const SEScalarFlowElastance&) const;

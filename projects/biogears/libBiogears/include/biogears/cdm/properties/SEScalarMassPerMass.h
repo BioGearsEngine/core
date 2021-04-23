@@ -40,8 +40,8 @@ public:
 
   CDM::ScalarMassPerMassData* Unload() const override;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<MassPerMassUnit>::SetValue;
+  using SEScalarQuantity<MassPerMassUnit>::GetValue;
 
   bool operator==(const SEScalarMassPerMass&) const;
   bool operator!=(const SEScalarMassPerMass&) const;

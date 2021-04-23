@@ -46,8 +46,8 @@ public:
 
   CDM::ScalarAmountPerTimeData* Unload() const override;   
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<AmountPerTimeUnit>::SetValue;
+  using SEScalarQuantity<AmountPerTimeUnit>::GetValue;
 
   bool operator==(const SEScalarAmountPerTime&) const;
   bool operator!=(const SEScalarAmountPerTime&) const;

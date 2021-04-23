@@ -45,8 +45,8 @@ public:
 
   CDM::ScalarLengthData* Unload() const override;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<LengthUnit>::SetValue;
+  using SEScalarQuantity<LengthUnit>::GetValue;
 
   bool operator==(const SEScalarLength&) const;
   bool operator!=(const SEScalarLength&) const;

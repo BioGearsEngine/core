@@ -1,0 +1,50 @@
+// Add necessary symbols to generated header
+%{
+#include <biogears/cdm/properties/SEScalarMass.h>
+%}
+
+%include <biogears/exports.h>
+
+%import <biogears/cdm/properties/SESCalarQuantity.swg>
+
+
+%ignore biogears::SEScalarQuantity::ToString;
+%ignore biogears::SEScalarQuantity<MassUnit>::ToString;
+
+%rename(Equals)  operator==(const MassUnit&) const;
+%rename(NotEquals)  operator!=(const MassUnit&) const;
+%rename(Equals)  operator==(const SEScalarMass&) const;
+%rename(NotEquals)  operator!=(const SEScalarMass&) const;  
+
+%ignore biogears::MassUnit::MassUnit(std::string const &);
+%ignore biogears::MassUnit::IsValidUnit(std::string const &);
+%ignore biogears::MassUnit::GetCompoundUnit(std::string const &);
+
+%nspace biogears::SEScalarMass;
+%nspace biogears::MassUnit;
+%nspace biogears::SEScalarQuantity<MassUnit>;
+
+namespace biogears {
+   class MassUnit;
+}
+
+%warnfilter(842) biogears::SEScalarQuantity<biogears::MassUnit>;
+
+%ignore  biogears::SEScalarQuantity< MassUnit >::GetValue(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< MassUnit >::IncrementValue(double,std::string const &) ;
+%ignore  biogears::SEScalarQuantity< MassUnit >::IncrementValue(double,char const *) ;
+%ignore  biogears::SEScalarQuantity< MassUnit >::DecrementValue(double,std::string const &) ;
+%ignore  biogears::SEScalarQuantity< MassUnit >::DecrementValue(double,char const *) ;
+%ignore  biogears::SEScalarQuantity< MassUnit >::GetCompoundUnit(std::string const &) const ;
+%ignore  GetValue(std::string const &) const ;
+
+%ignore  biogears::SEScalarQuantity< MassUnit >::operator==;
+%rename(NotEquals)  biogears::SEScalarQuantity< MassUnit >::operator!=;
+
+%template(QuantityMass) biogears::SEScalarQuantity<biogears::MassUnit>;
+
+%include <biogears/cdm/properties/SEScalarMass.h>
+
+
+
+

@@ -40,8 +40,8 @@ public:
 
   CDM::ScalarElectricResistanceData* Unload() const override;   
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<ElectricResistanceUnit>::SetValue;
+  using SEScalarQuantity<ElectricResistanceUnit>::GetValue;
 
   bool operator==(const SEScalarElectricResistance&) const;
   bool operator!=(const SEScalarElectricResistance&) const;

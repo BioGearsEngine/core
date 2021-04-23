@@ -34,57 +34,69 @@ enum class SEErrorType {
   Invalid = -1,
   Standard = 0
 };
-inline std::ostream& operator<<(std::ostream& os, const SESide& e)
+
+inline std::string ToString(const SESide& e)
 {
   switch (e) {
   case SESide::Left:
-    os << "Left";
-    break;
+    return "Left";
   case SESide::Right:
-    os << "Right";
-    break;
+    return "Right";
   default:
-    os << "Invalid";
+    return "Invalid";
   }
+}
+inline std::string ToString(const SEOpenClosed& e)
+{
+  switch (e) {
+  case SEOpenClosed::Closed:
+    return "Closed";
+  case SEOpenClosed::Open:
+    return "Open";
+  default:
+    return "Invalid";
+  }
+}
+inline std::string ToString(const SEOnOff& e)
+{
+  switch (e) {
+  case SEOnOff::Off:
+    return "Off";
+  case SEOnOff::On:
+    return "On";
+  default:
+    return "Invalid";
+  }
+}
+inline std::string ToString(const SEErrorType& e)
+{
+  switch (e) {
+  case SEErrorType::Standard:
+    return "Standard";
+
+  default:
+    return "Invalid";
+  }
+}
+
+inline std::ostream& operator<<(std::ostream& os, const SESide& e)
+{
+  os << ToString(e);
   return os;
 }
 inline std::ostream& operator<<(std::ostream& os, const SEOpenClosed& e)
 {
-  switch (e) {
-  case SEOpenClosed::Closed:
-    os << "Closed";
-    break;
-  case SEOpenClosed::Open:
-    os << "Open";
-    break;
-  default:
-    os << "Invalid";
-  }
+  os << ToString(e);
   return os;
 }
 inline std::ostream& operator<<(std::ostream& os, const SEOnOff& e)
 {
-  switch (e) {
-  case SEOnOff::Off:
-    os << "Off";
-    break;
-  case SEOnOff::On:
-    os << "On";
-    break;
-  default:
-    os << "Invalid";
-  }
+  os << ToString(e);
   return os;
 }
 inline std::ostream& operator<<(std::ostream& os, const SEErrorType& e)
 {
-  switch (e) {
-  case SEErrorType::Standard:
-    os << "Standard";
-    break;
-  default:
-    os << "Invalid";
-  }
+  os << ToString(e);
   return os;
 }
 }

@@ -44,8 +44,8 @@ public:
 
   CDM::ScalarPressureData* Unload() const override;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<PressureUnit>::SetValue;
+  using SEScalarQuantity<PressureUnit>::GetValue;
 
   bool operator==(const SEScalarPressure&) const;
   bool operator!=(const SEScalarPressure&) const;

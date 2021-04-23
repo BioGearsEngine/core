@@ -43,8 +43,8 @@ public:
 
   CDM::ScalarHeatCapacitancePerMassData* Unload() const override;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<HeatCapacitancePerMassUnit>::SetValue;
+  using SEScalarQuantity<HeatCapacitancePerMassUnit>::GetValue;
 
   bool operator==(const SEScalarHeatCapacitancePerMass&) const;
   bool operator!=(const SEScalarHeatCapacitancePerMass&) const;

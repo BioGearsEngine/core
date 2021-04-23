@@ -41,8 +41,8 @@ public:
 
   CDM::ScalarOsmolarityData* Unload() const override;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<OsmolarityUnit>::SetValue;
+  using SEScalarQuantity<OsmolarityUnit>::GetValue;
 
   bool operator==(const SEScalarOsmolarity&) const;
   bool operator!=(const SEScalarOsmolarity&) const;

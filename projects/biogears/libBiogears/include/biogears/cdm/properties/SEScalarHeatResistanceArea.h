@@ -43,8 +43,8 @@ public:
 
   CDM::ScalarHeatResistanceAreaData* Unload() const override;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<HeatResistanceAreaUnit>::SetValue;
+  using SEScalarQuantity<HeatResistanceAreaUnit>::GetValue;
 
   bool operator==(const SEScalarHeatResistanceArea&) const;
   bool operator!=(const SEScalarHeatResistanceArea&) const;

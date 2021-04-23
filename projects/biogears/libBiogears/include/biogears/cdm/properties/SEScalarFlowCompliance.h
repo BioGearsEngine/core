@@ -43,8 +43,8 @@ public:
 
   CDM::ScalarFlowComplianceData* Unload() const override;   
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<FlowComplianceUnit>::SetValue;
+  using SEScalarQuantity<FlowComplianceUnit>::GetValue;
 
   bool operator==(const SEScalarFlowCompliance&) const;
   bool operator!=(const SEScalarFlowCompliance&) const;

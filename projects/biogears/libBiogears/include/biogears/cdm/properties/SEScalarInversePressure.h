@@ -43,8 +43,8 @@ public:
 
   CDM::ScalarInversePressureData* Unload() const override;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<InversePressureUnit>::SetValue;
+  using SEScalarQuantity<InversePressureUnit>::GetValue;
 
   bool operator==(const SEScalarInversePressure&) const;
   bool operator!=(const SEScalarInversePressure&) const;

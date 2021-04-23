@@ -41,8 +41,8 @@ public:
 
   CDM::ScalarEnergyPerAmountData* Unload() const override;   
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<EnergyPerAmountUnit>::SetValue;
+  using SEScalarQuantity<EnergyPerAmountUnit>::GetValue;
 
   bool operator==(const SEScalarEnergyPerAmount&) const;
   bool operator!=(const SEScalarEnergyPerAmount&) const;

@@ -45,8 +45,8 @@ public:
 
     CDM::ScalarMassData* Unload() const override;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<MassUnit>::SetValue;
+  using SEScalarQuantity<MassUnit>::GetValue;
 
   bool operator==(const SEScalarMass&) const;
   bool operator!=(const SEScalarMass&) const;

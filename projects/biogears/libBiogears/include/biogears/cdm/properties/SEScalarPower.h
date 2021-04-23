@@ -45,8 +45,8 @@ public:
 
   CDM::ScalarPowerData* Unload() const override ;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<PowerUnit>::SetValue;
+  using SEScalarQuantity<PowerUnit>::GetValue;
 
   bool operator==(const SEScalarPower&) const;
   bool operator!=(const SEScalarPower&) const;

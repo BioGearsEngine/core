@@ -35,7 +35,9 @@
            SOURCES  ${Python_SWIGS}
      )
      add_library(Biogears::lib${PROJECT_NAME}_py ALIAS lib${PROJECT_NAME}_py)
-
+     target_include_directories(lib${PROJECT_NAME}_py PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../bindings"
+                                                      PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../libbiogears/include"
+     )
      target_link_libraries(lib${PROJECT_NAME}_py PUBLIC lib${PROJECT_NAME} Python3::Python)
      set_target_properties(lib${PROJECT_NAME}_py PROPERTIES
        POSITION_INDEPENDENT_CODE ON

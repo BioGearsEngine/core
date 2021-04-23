@@ -41,8 +41,8 @@ public:
 
   CDM::ScalarAreaData* Unload() const override;   
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<AreaUnit>::SetValue;
+  using SEScalarQuantity<AreaUnit>::GetValue;
 
   bool operator==(const SEScalarArea&) const;
   bool operator!=(const SEScalarArea&) const;

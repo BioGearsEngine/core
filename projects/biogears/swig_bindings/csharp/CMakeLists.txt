@@ -27,6 +27,7 @@ if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
          SOURCES ${CSharp_SWIGS}
    )
    target_link_libraries(lib${PROJECT_NAME}_csharp PUBLIC lib${PROJECT_NAME} )
+   target_include_directories(lib${PROJECT_NAME}_csharp PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../bindings")
    set_target_properties(lib${PROJECT_NAME}_csharp PROPERTIES
       POSITION_INDEPENDENT_CODE ON
       FOLDER Libraries
@@ -52,11 +53,12 @@ if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
 
   #add_source_files(libiogears_csharp_files LOCATION ${CMAKE_BINARY_DIR}/outputs/csharp/ REGEX "*.cs" SOURCE_GROUP "Source Files\\")
   add_source_files(libiogears_csharp_files  LOCATION ${CMAKE_BINARY_DIR}/outputs/csharp/biogears/ REGEX "*.cs" SOURCE_GROUP "Source Files\\")
-  add_source_files(csharp_test_files LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/../src REGEX "*.cs" SOURCE_GROUP "Source Files\\")
+  add_source_files(libiogears_csharp_files  LOCATION ${CMAKE_BINARY_DIR}/outputs/csharp/std/ REGEX "*.cs" SOURCE_GROUP "Source Files\\")
+  add_source_files(csharp_test_files LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.cs" SOURCE_GROUP "Source Files\\")
   
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
   source_group(TREE ${CMAKE_BINARY_DIR}/outputs/csharp/ PREFIX "Source Files"  FILES ${libiogears_csharp_files} )
-  source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/../src PREFIX "Source Files"  FILES ${csharp_test_files} )
+  source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files"  FILES ${csharp_test_files} )
   get_property(support_files TARGET lib${PROJECT_NAME}_csharp PROPERTY SWIG_SUPPORT_FILES)
 
   include(CSharpUtilities)

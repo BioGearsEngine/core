@@ -40,8 +40,8 @@ public:
   SEScalarAmountPerMass() = default;
   virtual ~SEScalarAmountPerMass() = default;
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<AmountPerMassUnit>::SetValue;
+  using SEScalarQuantity<AmountPerMassUnit>::GetValue;
 
   CDM::ScalarAmountPerMassData* Unload() const override;    
 

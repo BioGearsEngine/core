@@ -40,8 +40,8 @@ public:
 
   CDM::ScalarElectricInductanceData* Unload() const override;   
 
-  using SEScalarQuantity::SetValue;
-  using SEScalarQuantity::GetValue;
+  using SEScalarQuantity<ElectricInductanceUnit>::SetValue;
+  using SEScalarQuantity<ElectricInductanceUnit>::GetValue;
 
   bool operator==(const SEScalarElectricInductance&) const;
   bool operator!=(const SEScalarElectricInductance&) const;
