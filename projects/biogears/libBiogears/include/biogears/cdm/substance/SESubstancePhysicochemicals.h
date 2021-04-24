@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(SubstancePhysicochemicalData)
 
 namespace biogears {
+  class SEScalar;
+  class SEScalarFraction;
 namespace io {
   class Substance;
 }

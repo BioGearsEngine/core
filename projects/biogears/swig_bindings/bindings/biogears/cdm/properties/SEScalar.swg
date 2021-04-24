@@ -26,4 +26,7 @@
 
 %include <biogears/cdm/properties/SEScalar.h>
 
+%nspace std::vector<biogears::SEScalar*>;
+%template(vector_SEScalar_ptr)  std::vector<biogears::SEScalar*>;
+
 

@@ -7,7 +7,7 @@
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/CommonDataModel.swg>
 
-%nspace biogears::SEProperty;
+%nspace biogears::SEAction;
 
 %ignore biogears::SEAction::Unload;
 %ignore biogears::SEAction::Load;

@@ -37,7 +37,7 @@
 #include <biogears/cdm/patient/actions/SEOverride.h>
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/cdm/patient/actions/SEPatientActionsEnums.h>
+#include <biogears/cdm/patient/actions/PatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>

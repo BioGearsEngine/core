@@ -29,10 +29,13 @@ namespace std
 #include <exception>
 #include<biogears/cdm/CommonDataModel.h>
 #include <biogears/schema/cdm/Anesthesia.hxx>
+#include <biogears/schema/cdm/Environment.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
+#include <biogears/schema/cdm/Physiology.hxx>
+#include <biogears/schema/cdm/Substance.hxx>
 %}
 
 %include <biogears/exports.h>
@@ -111,6 +114,15 @@ namespace tatrc {
         Off,
         Mask,
         Tube
+      };
+    };
+    //Environment.hxx
+    class enumSurroundingType {
+    public:
+      enum value
+      {
+        Air,
+        Water
       };
     };
     //Properties.hxx
@@ -339,8 +351,88 @@ namespace tatrc {
           Many
       };
     };
+    //Physiology
+    class  enumInflammationSource {
+    public:
+      enum value {
+        Burn,
+        Hemorrhage,
+        Infection
+      };
+    };
+    class enumHeartRhythm {
+    public:
+      enum value {
+        Asystole,
+        NormalSinus
+      };
+    };
+    class enumSleepState {
+    public:
+      enum value
+      {
+        Awake,
+        Asleep
+      };
+    };
+    //Substance
+    class  enumSubstanceState{
+    public:
+      enum value {
+          Solid,
+          Liquid,
+          Gas,
+          Molecular
+        };
+    };
+    class enumSubstanceIonicState {
+    public:
+      enum value
+        {
+          WeakBase,
+          Base,
+          Acid,
+          Neutral,
+          Zwitterion
+        };
+    };
+    class enumSubstanceBindingProtein {
+    public:
+      enum value {
+        Albumin,
+        Lipoprotein,
+        AAG
+      };
+    };
+    class enumCharge {
+    public:
+      enum value
+      {
+        Positive,
+        Negative,
+        Neutral
+      };
+    };
+    class enumSubstanceClass {
+    public:
+      enum value {
+        Anesthetic,
+        Antibiotic,
+        WholeBlood,
+        Ion,
+        Opioid,
+        ReversalAgent,
+        Sedative
+      };
+    };
   }
   }
 }
 }
 
+%nspace std::vector<CDM::enumInflammationSource>;
+%template (vector_enumInflammationSource) std::vector<CDM::enumInflammationSource>;
+%nspace std::map<CDM::enumPatientEvent::value, bool>;
+%nspace std::map<CDM::enumPatientEvent::value, double>;
+%template (map_enumPatientEvent__bool) std::map<CDM::enumPatientEvent::value, bool>;
+%template (map_enumPatientEvent__double) std::map<CDM::enumPatientEvent::value, double>;

@@ -30,12 +30,13 @@ namespace biogears {
 
 %warnfilter(842) biogears::SEScalarQuantity<biogears::MassUnit>;
 
-%ignore  biogears::SEScalarQuantity< MassUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< MassUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< MassUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< MassUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< MassUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< MassUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  biogears::SEScalarQuantity< MassUnit >::GetValue(std::string const &) const;
+%ignore  biogears::SEScalarQuantity< MassUnit >::IncrementValue(double,std::string const &);
+%ignore  biogears::SEScalarQuantity< MassUnit >::IncrementValue(double,char const *);
+%ignore  biogears::SEScalarQuantity< MassUnit >::DecrementValue(double,std::string const &);
+%ignore  biogears::SEScalarQuantity< MassUnit >::DecrementValue(double,char const *);
+%ignore  biogears::SEScalarQuantity< MassUnit>::GetCompoundUnit(std::string const &) const;
+
 #if defined(SWIGCSHARP)
 %csmethodmodifiers biogears::SEScalarQuantity<biogears::MassUnit>::Multiply "public new";
 %csmethodmodifiers biogears::SEScalarQuantity<biogears::MassUnit>::Divide "public new";
@@ -52,6 +53,7 @@ namespace biogears {
 
 %include <biogears/cdm/properties/SEScalarMass.h>
 
-
+%nspace std::vector<biogears::SEScalarMass*>;
+%template (vector_SEScalarMass_ptr) std::vector<biogears::SEScalarMass*>;
 
 

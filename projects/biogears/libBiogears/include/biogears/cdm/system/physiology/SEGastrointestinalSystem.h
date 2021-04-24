@@ -16,9 +16,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 namespace biogears {
-class SEScalarVolumePerTime;
 class SEScalarMass;
 class MassUnit;
+class SEScalarVolumePerTime;
 class VolumePerTimeUnit;
 class SESubstance;
 class SEDrugTransitState;

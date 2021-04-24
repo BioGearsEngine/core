@@ -26,11 +26,12 @@ class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarMassPerVolume;
 class MassPerVolumeUnit;
+class SEScalarFraction;
 class SEPharmacodynamicModifier;
 namespace io {
   class Substance;
 }
-class BIOGEARS_API SESubstancePharmacodynamics : Loggable {
+class BIOGEARS_API SESubstancePharmacodynamics : public Loggable {
   friend io::Substance;
 
 public:

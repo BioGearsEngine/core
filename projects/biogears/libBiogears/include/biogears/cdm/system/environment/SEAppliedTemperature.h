@@ -28,7 +28,7 @@ class BIOGEARS_API SEAppliedTemperature : public Loggable {
 public:
   friend io::Environment;
   SEAppliedTemperature(Logger* logger);
-  SEAppliedTemperature(const SEAppliedTemperature& other);
+  SEAppliedTemperature(const SEAppliedTemperature& other)  = delete;
   virtual ~SEAppliedTemperature();
 
   virtual void Clear();

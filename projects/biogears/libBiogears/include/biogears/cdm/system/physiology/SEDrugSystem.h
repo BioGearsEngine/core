@@ -20,8 +20,6 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEScalar;
 class SEScalarFraction;
-class SEScalarMass;
-class MassUnit;
 class SEScalarTemperature;
 class TemperatureUnit;
 class SEScalarPressure;
@@ -30,7 +28,6 @@ class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarVolume;
 class VolumeUnit;
-class SEScalarVolumePerTime;
 namespace io {
   class Physiology;
 }

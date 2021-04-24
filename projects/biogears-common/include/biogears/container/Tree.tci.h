@@ -204,14 +204,14 @@ auto Tree<Data>::end() noexcept -> typename child_vector::iterator
 //-------------------------------------------------------------------------------
 //! Returns a reference to the element at specified location pos. No bounds checking is performed.
 template <typename Data>
-auto Tree<Data>::operator[](size_t pos) -> reference
+auto Tree<Data>::operator[](size_t pos) -> Tree&
 {
   return _children[pos];
 }
 //-------------------------------------------------------------------------------
 //! Returns a const_reference to the element at specified location pos. No bounds checking is performed.
 template <typename Data>
-auto Tree<Data>::operator[](size_t pos) const -> const_reference
+auto Tree<Data>::operator[](size_t pos) const -> Tree const &
 {
   return _children[pos];
 }

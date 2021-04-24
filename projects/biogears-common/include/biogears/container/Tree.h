@@ -83,8 +83,8 @@ public:
     return _children.emplace(pos, args...);
   }
 
-  auto operator[]( size_t pos ) -> reference;
-  auto operator[]( size_t pos ) const -> const_reference;
+  auto operator[]( size_t pos ) -> Tree&;
+  auto operator[]( size_t pos ) const -> Tree const &;
 
   auto operator=(const Tree&) -> Tree&;
   auto operator=(Tree&&) -> Tree&;

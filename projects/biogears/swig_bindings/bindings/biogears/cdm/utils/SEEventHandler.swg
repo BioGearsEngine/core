@@ -9,7 +9,7 @@
 
 %import <biogears/cdm/properties/SEScalarTime.swg>
 
-%nspace biogears::SEBreatSEEventHandler;
+%nspace biogears::SEEventHandler;
 
 %ignore biogears::SEBreathHold::Unload;
 %ignore biogears::SEBreathHold::Load;

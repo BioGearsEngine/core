@@ -1,4 +1,3 @@
-
 %{
 #include <biogears/cdm/properties/SEScalarFraction.h>
 %}

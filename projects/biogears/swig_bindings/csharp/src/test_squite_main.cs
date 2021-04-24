@@ -37,7 +37,7 @@ namespace bio
             var engine = new BioGearsEngine(logger);
             engine.InitializeEngine("StandardMale.xml");
             engine.AdvanceModelTime();
-            engine.AdvanceModelTime( 2.0, TimeUnit.s);
+            engine.AdvanceModelTimeBy( 2.0, TimeUnit.s);
 
             var acuteStress = new SEAcuteStress();
             acuteStress.GetSeverity().SetValue(.75);
@@ -45,12 +45,12 @@ namespace bio
             logger.Warning(String.Format("AcuteStress @ Severity {0}",acuteStress.GetSeverity().GetValue()));
             engine.ProcessAction(acuteStress);
 
-            engine.AdvanceModelTime( 2.0, TimeUnit.s);
+            engine.AdvanceModelTimeBy( 2.0, TimeUnit.s);
 
             var severity = acuteStress.GetSeverity();
             severity.SetValue(0.5);
 
-            engine.AdvanceModelTime( 2.0, TimeUnit.s);
+            engine.AdvanceModelTimeBy( 2.0, TimeUnit.s);
 
             logger.Warning(String.Format("AcuteStress @ Severity {0}",acuteStress.GetSeverity().GetValue()));
 
