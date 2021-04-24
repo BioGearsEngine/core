@@ -11,7 +11,7 @@
 %import <biogears/cdm/substance/SESubstance.swg>
 %import <biogears/cdm/substance/SESubstanceCompound.swg>
 
-%nspace biogears::SubstanceManager;
+%nspace biogears::SESubstanceManager;
 
 %ignore biogears::SESubstanceManager::GetSubstance(const std::string& name) const;
 %ignore biogears::SESubstanceManager::ReadSubstanceFile(const std::string& name);

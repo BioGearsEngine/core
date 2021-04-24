@@ -1,5 +1,3 @@
-
-
 %{
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 %}
@@ -16,5 +14,3 @@
 %ignore biogears::SEPatientAction::Load;
 
 %include <biogears/cdm/patient/actions/SEPatientAction.h>
-
-

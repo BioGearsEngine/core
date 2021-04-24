@@ -1,4 +1,3 @@
-
 %{
 #include <biogears/cdm/properties/SEScalarMass.h>
 %}

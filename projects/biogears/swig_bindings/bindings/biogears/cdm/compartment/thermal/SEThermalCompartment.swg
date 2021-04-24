@@ -1,5 +1,5 @@
 %{
-#include <biogears/cdm/patient/actions/SEThermalCompartment.h>
+#include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 %}
 
 %include <biogears/exports.h>
@@ -28,11 +28,16 @@
 %rename (GetHeatTransferRateIn_const) biogears::SEThermalCompartment::GetHeatTransferRateIn(const PowerUnit& unit) const;
 %rename (GetHeatTransferRateOut_const) biogears::SEThermalCompartment::GetHeatTransferRateOut(const PowerUnit& unit) const;
 %rename (GetHeat_const) biogears::SEThermalCompartment::GetHeat(const EnergyUnit& unit) const;
-%rename (GetTemperature_const) biogears::SEThermalCompartment::GetTemperature(const TemperatureUnit& unit) constt;
+%rename (GetTemperature_const) biogears::SEThermalCompartment::GetTemperature(const TemperatureUnit& unit) const;
+
+%rename (HasChild_const) biogears::SEThermalCompartment::HasChild(std::string const &);
 
 %ignore biogears::SEThermalCompartment::AddLink(SEThermalCompartmentLink& link);
 %ignore biogears::SEThermalCompartment::RemoveLink(SEThermalCompartmentLink& link);
 %ignore biogears::SEThermalCompartment::RemoveLinks();
 %ignore biogears::SEThermalCompartment::GetLinks();
 
-%include <biogears/cdm/patient/actions/SEThermalCompartment.h>
+%include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
+
+%nspace std::vector<biogears::SEThermalCompartment*>;
+%template (vector_SEThermalCompartment_ptr) std::vector<biogears::SEThermalCompartment*>;

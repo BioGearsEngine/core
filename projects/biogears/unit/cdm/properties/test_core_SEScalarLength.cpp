@@ -94,7 +94,7 @@ TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
   EXPECT_EQ(mu1, biogears::LengthUnit::cm);
   EXPECT_EQ(mu2, biogears::LengthUnit::mm);
   EXPECT_EQ(mu3, biogears::LengthUnit::um);
-  EXPECT_EQ(mu4, biogears::LengthUnit::in);
+  EXPECT_EQ(mu4, biogears::LengthUnit::inch);
   EXPECT_EQ(mu5, biogears::LengthUnit::ft);
   EXPECT_THROW(biogears::LengthUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
 }

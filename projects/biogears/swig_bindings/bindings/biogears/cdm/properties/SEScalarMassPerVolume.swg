@@ -50,8 +50,7 @@ namespace biogears {
 
 %template(QuantityMassPerVolume) biogears::SEScalarQuantity<biogears::MassPerVolumeUnit>;
 
-%include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+%include <biogears/cdm/properties/SEScalarMassPerVolume.h>;
 
-
-
-
+%nspace  std::vector<biogears::SEScalarMassPerVolume*>;
+%template (vector_SEScalarMasPerVolume_ptr)  std::vector<biogears::SEScalarMassPerVolume*>;

@@ -44,7 +44,7 @@ void HowToCreateAPatient()
   patient.SetGender(CDM::enumSex::Male);
   patient.GetAge().SetValue(44, TimeUnit::yr);
   patient.GetWeight().SetValue(170, MassUnit::lb);
-  patient.GetHeight().SetValue(71, LengthUnit::in);
+  patient.GetHeight().SetValue(71, LengthUnit::inch);
   patient.GetBodyFatFraction().SetValue(0.21);
   patient.GetDiastolicArterialPressureBaseline().SetValue(74, PressureUnit::mmHg);
   patient.GetHeartRateBaseline().SetValue(72, FrequencyUnit::Per_min);

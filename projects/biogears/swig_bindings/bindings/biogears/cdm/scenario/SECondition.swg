@@ -21,4 +21,5 @@
 
 %include <biogears/cdm/scenario/SECondition.h>
 
-
+%nspace  std::vector<biogears::SECondition*> ;
+%template (vector_SECondition_ptr)  std::vector<biogears::SECondition*> ;

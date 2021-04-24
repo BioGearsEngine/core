@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 
 namespace biogears {
-
+class SEScalar0To1;
 class SESubstance;
 class SESubstanceManager;
 class SELiquidCompartment;
@@ -27,7 +27,8 @@ class SEScalarMassPerMass;
 class MassPerMassUnit;
 class SEScalarElectricPotential;
 class ElectricPotentialUnit;
-
+class SEScalarMass;
+class MassUnit;
 class SECompartmentManager;
 
 namespace io {

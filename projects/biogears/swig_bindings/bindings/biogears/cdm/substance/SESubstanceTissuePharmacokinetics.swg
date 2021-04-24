@@ -10,7 +10,7 @@
 
 %import <biogears/cdm/properties/SEScalar.swg>
 
-%nspace biogears::SubstanceConcenration;
+%nspace biogears::SubstanceConcSESubstanceTissuePharmacokineticsenration;
 
 %ignore biogears::SESubstanceTissuePharmacokinetics::GetScalar(const std::string& name);
 %ignore biogears::SESubstanceTissuePharmacokinetics::Unload;
