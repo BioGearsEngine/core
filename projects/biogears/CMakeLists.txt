@@ -96,20 +96,9 @@ else()
     add_subdirectory(libCircuitTest)
   endif()
   ###############################################################################
-  # libBiogears_jni
+  # libBiogears_circuit_test
   ###############################################################################
-  if(Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS AND ${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS)
-    add_subdirectory(libJNI)
-  endif() #Java_FOUND AND ${ROOT_PROJECT_NAME}_BUILD_JAVATOOLS AND ${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS
-  ###############################################################################
-  # libBiogears_py
-  ###############################################################################
-  if( ${ROOT_PROJECT_NAME}_BUILD_PYBIND11_BINDINGS )
-    add_subdirectory(libPy)
-  endif() #pybind11_FOUND
-  if( ${ROOT_PROJECT_NAME}_BUILD_SWIG_BINDINGS )
-    add_subdirectory(swig_bindings)
-  endif() #pybind11_FOUND
+  add_subdirectory(swig_bindings)
 endif() #${PREFIX}_BUILD_STATIC
 ######################################################################################################
 # INSTALL LOGIC
