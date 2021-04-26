@@ -130,8 +130,7 @@ protected:
   double m_leftLungDeltaCompliance_mL_Per_mmHG;
   double m_rightLungDeltaCompliance_mL_Per_mmHG;
   double m_compartmentSyndromeCount;
-  double m_lastTissueMusleExtracellularVolume_mL;
-  double m_baselineMuscleTissueVolume_mL;
+  double m_baselineECFluidVolume_mL;
   bool m_trunkEscharotomy = false;
   bool m_leftArmEscharotomy = false;
   bool m_leftLegEscharotomy = false;
