@@ -57,7 +57,11 @@ biogears::Arguments::KeywordValue g_runtime_directory;
 biogears::Arguments::MultiwordValue g_requested_table_formats;
 biogears::Arguments::MultiwordValue g_patient_population_args;
 
-void print_help()
+constexpr int BG_CLI_SUCCESS = 0;
+constexpr int BG_CLI_PARSE_ERROR = 1;
+constexpr int BG_CLI_MISSING_ARGUMENT = 2;
+constexpr int BG_CLI_SHA_FAILURE = 3;
+void print_help(int rc)
 {
   std::cout << "Usage bg-cli [FLAGS] COMMAND...\n";
 
@@ -93,7 +97,7 @@ void print_help()
   std::cout << "\nNotes";
   std::cout << "\nbg-cli arguments are not case-sensitive.";
   std::cout << std::endl;
-  exit(0);
+  exit(rc);
 }
 
 #ifdef BIOGEARS_IO_PRESENT
@@ -117,7 +121,7 @@ void parse_generate_arguments(biogears::Arguments::MultiwordValue&& args)
     } else if (arg == "patients") {
       if (current + 1 != end && is_keyword(*(current + 1))) {
         std::cout << "GENERATE patients requires at least one argument.\n";
-        print_help();
+        print_help(BG_CLI_MISSING_ARGUMENT);
       };
       g_run_generate_populations = true;
       while (current + 1 != end) {
@@ -131,7 +135,7 @@ void parse_generate_arguments(biogears::Arguments::MultiwordValue&& args)
     } else if (arg == "runtime") {
       if (current + 1 != end && is_keyword(*(current + 1))) {
         std::cout << "GENERATE runtime requires at destination\n";
-        print_help();
+        print_help(BG_CLI_MISSING_ARGUMENT);
       };
       ++current;
       g_runtime_directory = *current;
@@ -165,12 +169,12 @@ void parse_generate_arguments(biogears::Arguments::MultiwordValue&& args)
         }
         if (g_requested_table_formats.size() == 0) {
           std::cout << "Scenario must be provided a valid mode html,md,xml,all; but " << *current << " found.\n";
-          print_help();
+          print_help(BG_CLI_MISSING_ARGUMENT);
         }
       }
       if (g_requested_table_formats.size() == 0) {
         std::cout << "Scenario must be provided a valid mode html,md,xml,all; but " << *current << " found.\n";
-        print_help();
+        print_help(BG_CLI_MISSING_ARGUMENT);
       }
     }
   }
@@ -197,14 +201,19 @@ int main(int argc, char** argv)
 #endif
 
   unsigned int thread_count = std::thread::hardware_concurrency();
-  if (!args.parse(argc, argv) || args.Option("HELP") || args.Option("H") || args.empty()) {
+  if (!args.parse(argc, argv) ) {
     std::cerr << args.error_msg() << "\n";
-    print_help();
+    print_help(BG_CLI_PARSE_ERROR);
+  } else if (args.empty())  {
+     std::cerr << "No arguments supplied\n.";
+    print_help(BG_CLI_PARSE_ERROR);
+  } else if(  args.Option("HELP") || args.Option("H") ) {
+    print_help(BG_CLI_SUCCESS);
   }
 
   if (args.Option("VERSION") || args.Option("V")) {
     std::cout << "Using " << biogears::branded_version_string_str() << std::endl;
-    exit(0);
+    exit(BG_CLI_SUCCESS);
   }
 
   if (args.KeywordFound("JOBS")) {
@@ -212,7 +221,7 @@ int main(int argc, char** argv)
       thread_count = std::stoi(args.Keyword("JOBS"));
     } catch (std::exception) {
       std::cerr << "Error: JOBS given but " << args.Keyword("JOBS") << " is not a valid Integer.\n";
-      exit(1);
+      print_help(BG_CLI_MISSING_ARGUMENT);
     }
   }
   if (args.KeywordFound("J")) {
@@ -220,7 +229,7 @@ int main(int argc, char** argv)
       thread_count = std::stoi(args.Keyword("J"));
     } catch (std::exception) {
       std::cerr << "Error: J given but " << args.Keyword("J") << " is not a valid Integer.\n";
-      exit(1);
+      print_help(BG_CLI_MISSING_ARGUMENT);
     }
   }
 #ifdef BIOGEARS_IO_PRESENT
@@ -230,7 +239,7 @@ int main(int argc, char** argv)
     auto sha1 = iom.calculate_sha1(path.c_str());
     if (sha1.empty()) {
       std::cout << "Failed to calculate SHA1: Unable to read " << args.Keyword("GENRUNTIME") << std::endl;
-      exit(1);
+      exit(BG_CLI_SHA_FAILURE);
     }
     std::cout << path << " : " << sha1;
     if (iom.does_embedded_file_exist(path.c_str())) {
@@ -246,7 +255,7 @@ int main(int argc, char** argv)
     } else {
       std::cout << std::endl;
     }
-    exit(0);
+    exit(BG_CLI_SUCCESS);
   }
 #endif
 
