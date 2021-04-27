@@ -41,6 +41,7 @@
 #include <biogears/cdm/patient/actions/PatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
+#include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
@@ -317,6 +318,13 @@ namespace io {
       if (pneumoData != nullptr) {
         auto a = std::make_unique<SETensionPneumothorax>();
         Scenario::Marshall(*pneumoData, *a);
+        return a;
+      }
+
+      CDM::PulmonaryShuntData* pulmData = dynamic_cast<CDM::PulmonaryShuntData*>(action);
+      if (pulmData != nullptr) {
+        auto a = std::make_unique<SEPulmonaryShunt>();
+        Scenario::Marshall(*pulmData, *a);
         return a;
       }
 
@@ -1026,6 +1034,7 @@ namespace io {
     io::Property::Marshall(in.MinimumInhibitoryConcentration(), out.GetMinimumInhibitoryConcentration());
   }
   //----------------------------------------------------------------------------------
+  //class SEInfection
   void PatientActions::UnMarshall(const SEInfection& in, CDM::InfectionData& out)
   {
 
@@ -1155,6 +1164,22 @@ namespace io {
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, EffusionRate)
+  }
+  //----------------------------------------------------------------------------------
+  //class SEPulmonaryShunt
+  void PatientActions::Marshall(const CDM::PulmonaryShuntData& in, SEPulmonaryShunt& out)
+  {
+    out.Clear();
+
+    Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
+
+    io::Property::Marshall(in.FlowRateScaling(), out.GetFlowRateScale());
+  }
+  //----------------------------------------------------------------------------------
+  void PatientActions::UnMarshall(const SEPulmonaryShunt& in, CDM::PulmonaryShuntData& out)
+  {
+    Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, FlowRateScaling)
   }
   //----------------------------------------------------------------------------------
   //class SETensionPneumothorax

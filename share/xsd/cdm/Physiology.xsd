@@ -314,6 +314,7 @@ specific language governing permissions and limitations under the License.
                 <xs:sequence>    
                     <xs:element name="HeartRateScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart rate multiplier used to scale the heart rate due to baroreceptor feedback-->
                     <xs:element name="HeartElastanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart elastance multiplier used to scale the heart rate due to baroreceptor feedback-->
+                    <xs:element name="MentalStatus" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief mental status of the patient from 0 to 1, 1 indicating fully comatose, used in CBRNE exposure models-->
                     <xs:element name="ResistanceScaleExtrasplanchnic" type="ScalarData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="ResistanceScaleMuscle" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Cardiovascular resistance multiplier used to scale the heart rate due to baroreceptor feedback-->
                     <xs:element name="ResistanceScaleMyocardium" type="ScalarData" minOccurs="0" maxOccurs="1"/>

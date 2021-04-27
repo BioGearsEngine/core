@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.1.0-beta" xsi:schemaLocation="">
     <Name>Sarin Moderate Long</Name>
     <Description>Exposure to a lethal dose of Sarin, catalyzing entry into irreversible state</Description>
-    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+	<EngineStateFile>./states/StandardMale@0s.xml</EngineStateFile>
 	
 	<!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="3.0">
@@ -149,18 +149,18 @@
   </DataRequests>
 	
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="30" unit="s"/>       
+		<Time value="5" unit="s"/>       
 	</Action>
 	<!-- Environment with sarin -->
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
 			<AmbientAerosol Name="Sarin">
-				<Concentration value="1000" unit="mg/m^3"/>
+				<Concentration value="15" unit="mg/m^3"/>
 			</AmbientAerosol>
 		</Conditions>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="10" unit="min"/>       
+		<Time value="6" unit="min"/>       
 	</Action>
 	<!--Return to normal environment-->
 	<Action xsi:type="EnvironmentChangeData">
@@ -171,6 +171,6 @@
 		</Conditions>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="30" unit="min"/>
+		<Time value="10" unit="min"/>
 	</Action>
 </Scenario>

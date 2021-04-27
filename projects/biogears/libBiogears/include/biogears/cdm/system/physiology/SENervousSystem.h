@@ -62,6 +62,10 @@ public:
   SEScalar& GetHeartElastanceScale();
   double GetHeartElastanceScale() const;
 
+  bool HasMentalStatus() const;
+  SEScalar& GetMentalStatus();
+  double GetMentalStatus() const;
+
   bool HasResistanceScaleExtrasplanchnic() const;
   SEScalar& GetResistanceScaleExtrasplanchnic();
   double GetResistanceScaleExtrasplanchnic() const;
@@ -125,6 +129,7 @@ protected:
   SEScalar* m_ComplianceScale;
   SEScalar* m_HeartRateScale;
   SEScalar* m_HeartElastanceScale;
+  SEScalar* m_MentalStatus;
   SEPupillaryResponse* m_LeftEyePupillaryResponse;
   SEPupillaryResponse* m_RightEyePupillaryResponse;
   SEScalar* m_PainVisualAnalogueScale;

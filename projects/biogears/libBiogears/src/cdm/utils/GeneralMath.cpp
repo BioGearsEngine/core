@@ -66,15 +66,17 @@ void GeneralMath::CalculateConcentration(const SEScalarMass& mass, const SEScala
   double volume_mL = volume.GetValue(VolumeUnit::mL);
   //Can't have a negative mass or volume
   if (mass_ug < 0.0) {
-    std::stringstream ss;
-    ss << "GeneralMath::CalculateConcentration: Mass is negative:" << mass_ug << " ug. Setting concentration to 0.";
-    logger->Error(ss.str());
+    ///TODO: think of a better way to handle this error, we should be tracking these down and not just logging it. Uncomment for debugging.
+    //std::stringstream ss;
+    //ss << "GeneralMath::CalculateConcentration: Mass is negative:" << mass_ug << " ug. Setting concentration to 0.";
+    //logger->Error(ss.str());
     mass_ug = 0.0;
   }
   if (volume_mL < 0.0) {
-    std::stringstream ss;
-    ss << "GeneralMath::CalculateConcentration: Volume is negative:" << volume_mL << " mL. Setting it to 0.";
-    logger->Error(ss.str());
+    ///TODO: think of a better way to handle this error, we should be tracking these down and not just logging it. Uncomment for debugging.
+    //std::stringstream ss;
+    //ss << "GeneralMath::CalculateConcentration: Volume is negative:" << volume_mL << " mL. Setting it to 0.";
+    //logger->Error(ss.str());
     volume_mL = 0.0;
   }
   if (volume_mL == 0.0) {

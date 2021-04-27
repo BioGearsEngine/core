@@ -18,7 +18,7 @@ namespace biogears {
 SEPulmonaryShunt::SEPulmonaryShunt()
   : SEPatientAction()
 {
-  m_FlowRateScale = nullptr;
+  m_FlowRateScaling = nullptr;
 }
 
 SEPulmonaryShunt::~SEPulmonaryShunt()
@@ -30,7 +30,7 @@ void SEPulmonaryShunt::Clear()
 {
 
   SEPatientAction::Clear();
-  SAFE_DELETE(m_FlowRateScale);
+  SAFE_DELETE(m_FlowRateScaling);
 }
 
 bool SEPulmonaryShunt::IsValid() const
@@ -40,7 +40,7 @@ bool SEPulmonaryShunt::IsValid() const
 
 bool SEPulmonaryShunt::IsActive() const
 {
-  return IsValid() ? !m_FlowRateScale->IsZero() : false;
+  return IsValid() ? !m_FlowRateScaling->IsZero() : false;
 }
 
 bool SEPulmonaryShunt::Load(const CDM::PulmonaryShuntData& in)
@@ -60,20 +60,20 @@ CDM::PulmonaryShuntData* SEPulmonaryShunt::Unload() const
 void SEPulmonaryShunt::Unload(CDM::PulmonaryShuntData& data) const
 {
   SEPatientAction::Unload(data);
-  if (m_FlowRateScale != nullptr)
-    data.FlowRateScaling(std::unique_ptr<CDM::Scalar0To1Data>(m_FlowRateScale->Unload()));
+  if (m_FlowRateScaling != nullptr)
+    data.FlowRateScaling(std::unique_ptr<CDM::Scalar0To1Data>(m_FlowRateScaling->Unload()));
 }
 
 bool SEPulmonaryShunt::HasFlowRateScale() const
 {
-  return m_FlowRateScale == nullptr ? false : m_FlowRateScale->IsValid();
+  return m_FlowRateScaling == nullptr ? false : m_FlowRateScaling->IsValid();
 }
 
 SEScalar0To1& SEPulmonaryShunt::GetFlowRateScale()
 {
-  if (m_FlowRateScale == nullptr)
-    m_FlowRateScale = new SEScalar0To1();
-  return *m_FlowRateScale;
+  if (m_FlowRateScaling == nullptr)
+    m_FlowRateScaling = new SEScalar0To1();
+  return *m_FlowRateScaling;
 }
 
 void SEPulmonaryShunt::ToString(std::ostream& str) const
@@ -82,7 +82,7 @@ void SEPulmonaryShunt::ToString(std::ostream& str) const
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
   str << "\n\tFlow Rate Scale: ";
-  HasFlowRateScale() ? str << *m_FlowRateScale : str << "Not Set";
+  HasFlowRateScale() ? str << *m_FlowRateScaling : str << "Not Set";
   str << std::flush;
 }
 }

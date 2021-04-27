@@ -581,6 +581,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::Fasciculation:
         m_ss << "Patient has Fasciculation";
         break;
+      case CDM::enumPatientEvent::FlaccidParalysis:
+        m_ss << "Patient has Flaccid Paralysis";
+        break;
       case CDM::enumPatientEvent::FunctionalIncontinence:
         m_ss << " Patient has involuntarily emptied their bladder";
         break;
@@ -641,6 +644,27 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::MetabolicAlkalosis:
         m_ss << " The patient is in a state of metabolic alkalosis";
         break;
+      case CDM::enumPatientEvent::MildDiaphoresis:
+        m_ss << " Patient has Mild Diaphoresis";
+        break;
+      case CDM::enumPatientEvent::ModerateDiaphoresis:
+        m_ss << " Patient has Moderate Diaphoresis";
+        break;
+      case CDM::enumPatientEvent::SevereDiaphoresis:
+        m_ss << " Patient has Severe Diaphoresis";
+        break;
+      case CDM::enumPatientEvent::MildSecretions:
+        m_ss << " Patient has Mild Secretions";
+        break;
+      case CDM::enumPatientEvent::ModerateSecretions:
+        m_ss << " Patient has Moderate Secretions";
+        break;
+      case CDM::enumPatientEvent::MildWeakness:
+        m_ss << " Patient has Mild Weakness";
+        break;
+      case CDM::enumPatientEvent::ModerateWeakness:
+        m_ss << " Patient has Moderate Weakness";
+        break;
       case CDM::enumPatientEvent::MuscleCatabolism:
         m_ss << " Patient has begun muscle catabolism";
         break;
@@ -653,6 +677,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::Natriuresis:
         m_ss << " Patient has Natriuresis";
         break;
+      case CDM::enumPatientEvent::Nausea:
+        m_ss << " Patient is Nauseous";
+        break;
       case CDM::enumPatientEvent::NutritionDepleted:
         m_ss << " Patient has depleted all nutrition in body";
         break;
@@ -662,8 +689,14 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::RenalHypoperfusion:
         m_ss << " Patient has Renal Hypoperfusion";
         break;
+      case CDM::enumPatientEvent::Seizures:
+        m_ss << " The patient is having a seizure";
+        break;
       case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress:
         m_ss << " Carrico Index < 100 : Patient has Severe Acute Respiratory Distress";
+        break;
+      case CDM::enumPatientEvent::SevereSecretions:
+        m_ss << " The patient has severe Secretions";
         break;
       case CDM::enumPatientEvent::SevereSepsis:
         m_ss << " The patient has severe sepsis";
@@ -676,6 +709,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
         break;
       case CDM::enumPatientEvent::Fatigue:
         m_ss << " Patient has fatigue";
+        break;
+      case CDM::enumPatientEvent::Vomiting:
+        m_ss << " Patient is Vomiting";
         break;
       case CDM::enumPatientEvent::StartOfCardiacCycle:
       case CDM::enumPatientEvent::StartOfExhale:

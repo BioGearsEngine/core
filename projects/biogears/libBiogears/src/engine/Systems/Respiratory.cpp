@@ -1023,7 +1023,7 @@ void Respiratory::ProcessDriverActions()
   //Apply tidal volume modifiers by adjusting the peak driver pressure
   m_PeakRespiratoryDrivePressure_cmH2O *= cardiacArrestEffect;
   m_PeakRespiratoryDrivePressure_cmH2O *= NMBModifier;
-  m_PeakRespiratoryDrivePressure_cmH2O *= (1.0 + DrugsTVChange_L / m_Patient->GetTidalVolumeBaseline(VolumeUnit::L));
+  m_PeakRespiratoryDrivePressure_cmH2O *= (1.0 - (DrugsTVChange_L / m_Patient->GetTidalVolumeBaseline(VolumeUnit::L)));
 
   //update PH during stabilization
   if (m_data.GetState() < EngineState::Active) {

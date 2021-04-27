@@ -47,6 +47,6 @@ public:
   virtual void ToString(std::ostream& str) const override;
 
 protected:
-  SEScalar0To1* m_FlowRateScale;
+  SEScalar0To1* m_FlowRateScaling;
 };
 }

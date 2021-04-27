@@ -110,5 +110,6 @@ protected:
   SETissueCompartment* m_fatTissue;
   SESubstance* m_Sarin;
   SESubstance* m_Pralidoxime;
+  SESubstance* m_Atropine;
 };
 }

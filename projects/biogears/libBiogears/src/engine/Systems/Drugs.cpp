@@ -206,6 +206,7 @@ void Drugs::SetUp()
   //Need to set up pointers for Sarin and Pralidoxime to handle nerve agent events since they use a different method to calculate effects
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
   m_Pralidoxime = m_data.GetSubstances().GetSubstance("Pralidoxime");
+  m_Atropine = m_data.GetSubstances().GetSubstance("Atropine");
   DELETE_MAP_SECOND(m_BolusAdministrations);
 }
 
@@ -953,7 +954,7 @@ void Drugs::CalculateDrugEffects()
       if (sub->GetClassification() == CDM::enumSubstanceClass::Opioid) {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * std::pow(1.0 + inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
       } else if (sub->GetName() == "Sarin") {
-        effect = m_RbcAcetylcholinesteraseFractionInhibited;
+        effect = 0.8 * (m_RbcAcetylcholinesteraseFractionInhibited);
       } else {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) + std::pow(ec50_ug_Per_mL, shapeParameter));
       }
@@ -1205,9 +1206,9 @@ void Drugs::SarinKinetics()
   //Rate constants
   double RateRbcAcheInhibition_per_nM_s = 4.50e-4; /// \cite gupta2009handbook \cite rodriguez2015model
   double RateRbcAcheAging_per_s = 4.83e-5; /// \cite gupta2009handbook \cite rodriguez2015model
-  double RateRbcAcheSynthesis_nM_per_s = 9.33e-7; /// \cite grob1958effects
+  double RateRbcAcheSynthesis_nM_per_s = 8*(9.33e-5); /// \cite grob1958effects
   double RateRbcAcheDegredation_per_s = 1.17e-7; /// \cite rodriguez2015model
-  double RatePralidoximeReversal_per_s = 4.22e-3; /// \cite rodriguez2015model
+  double RatePralidoximeReversal_per_s = 0.7*(4.22e-3); /// \cite rodriguez2015model
   double PralidoximeDissociationConstant_nM = 27630.0; /// \cite rodriguez2015model
 
   //Michaelis-Menten expression for rate of pralidoxime interaction with bound sarin/rbc-ache complex

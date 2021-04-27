@@ -141,6 +141,7 @@ protected:
   double m_dt_s;
   SESubstance* m_Succinylcholine;
   SESubstance* m_Sarin;
+  SESubstance* m_atropine;
   SEPatient* m_Patient;
   bool m_blockActive;
   double m_painStimulusDuration_s;

@@ -24,6 +24,7 @@ constexpr char idBiologicalDebt[] = "BiologicalDebt";
 constexpr char idComplianceScale[] = "ComplianceScale";
 constexpr char idHeartRateScale[] = "HeartRateScale";
 constexpr char idHeartElastanceScale[] = "HeartElastanceScale";
+constexpr char idMentalStatus[] = "MentalStatus";
 constexpr char idPainVisualAnalogueScale[] = "PainVisualAnalogueScale";
 constexpr char idLeftEyePupillaryResponse[] = "LeftEyePupillaryResponse";
 constexpr char idRightEyePupillaryResponse[] = "RightEyePupillaryResponse";
@@ -47,6 +48,7 @@ SENervousSystem::SENervousSystem(Logger* logger)
   m_HeartElastanceScale = nullptr;
   m_LeftEyePupillaryResponse = nullptr;
   m_RightEyePupillaryResponse = nullptr;
+  m_MentalStatus = nullptr;
   m_PainVisualAnalogueScale = nullptr;
   m_ReactionTime = nullptr;
   m_ResistanceScaleExtrasplanchnic = nullptr;
@@ -73,6 +75,7 @@ void SENervousSystem::Clear()
   SAFE_DELETE(m_BiologicalDebt);
   SAFE_DELETE(m_HeartRateScale);
   SAFE_DELETE(m_HeartElastanceScale);
+  SAFE_DELETE(m_MentalStatus);
   SAFE_DELETE(m_ReactionTime);
   SAFE_DELETE(m_ResistanceScaleExtrasplanchnic);
   SAFE_DELETE(m_ResistanceScaleMuscle);
@@ -103,6 +106,8 @@ const SEScalar* SENervousSystem::GetScalar(const std::string& name)
     return &GetHeartRateScale();
   if (name == idHeartElastanceScale)
     return &GetHeartElastanceScale();
+  if (name == idMentalStatus)
+    return &GetMentalStatus();
   if (name == idReactionTime)
     return &GetReactionTime();
   if (name == idResistanceScaleExtrasplanchnic)
@@ -148,6 +153,8 @@ bool SENervousSystem::Load(const CDM::NervousSystemData& in)
     GetHeartRateScale().Load(in.HeartRateScale().get());
   if (in.HeartElastanceScale().present())
     GetHeartElastanceScale().Load(in.HeartElastanceScale().get());
+  if (in.MentalStatus().present())
+    GetMentalStatus().Load(in.MentalStatus().get());
   if (in.ReactionTime().present())
     GetReactionTime().Load(in.ReactionTime().get());
   if (in.ResistanceScaleExtrasplanchnic().present())
@@ -197,6 +204,8 @@ void SENervousSystem::Unload(CDM::NervousSystemData& data) const
     data.HeartRateScale(std::unique_ptr<CDM::ScalarData>(m_HeartRateScale->Unload()));
   if (m_HeartElastanceScale != nullptr)
     data.HeartElastanceScale(std::unique_ptr<CDM::ScalarData>(m_HeartElastanceScale->Unload()));
+  if (m_MentalStatus != nullptr)
+    data.MentalStatus(std::unique_ptr<CDM::ScalarData>(m_MentalStatus->Unload()));
   if (m_ReactionTime != nullptr)
     data.ReactionTime(std::unique_ptr<CDM::ScalarTimeData>(m_ReactionTime->Unload()));
   if (m_ResistanceScaleExtrasplanchnic != nullptr)
@@ -301,6 +310,26 @@ double SENervousSystem::GetHeartElastanceScale() const
   if (m_HeartElastanceScale == nullptr)
     return SEScalar::dNaN();
   return m_HeartElastanceScale->GetValue();
+}
+//-------------------------------------------------------------------------------
+
+bool SENervousSystem::HasMentalStatus() const
+{
+  return m_MentalStatus == nullptr ? false : m_MentalStatus->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SENervousSystem::GetMentalStatus()
+{
+  if (m_MentalStatus == nullptr)
+    m_MentalStatus = new SEScalar();
+  return *m_MentalStatus;
+}
+//-------------------------------------------------------------------------------
+double SENervousSystem::GetMentalStatus() const
+{
+  if (m_MentalStatus == nullptr)
+    return SEScalar::dNaN();
+  return m_MentalStatus->GetValue();
 }
 //-------------------------------------------------------------------------------
 bool SENervousSystem::HasResistanceScaleExtrasplanchnic() const
@@ -570,6 +599,7 @@ Tree<const char*> SENervousSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idBiologicalDebt)
     .emplace_back(idHeartRateScale)
     .emplace_back(idHeartElastanceScale)
+    .emplace_back(idMentalStatus)
     .emplace_back(idReactionTime)
     .emplace_back(idResistanceScaleExtrasplanchnic)
     .emplace_back(idResistanceScaleMuscle)

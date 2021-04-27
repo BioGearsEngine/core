@@ -734,6 +734,15 @@ For reasons that are hopefully obvious, the validation metrics for Sarin exposur
 |	 Severe Sarin Aerosol, Concentration = 20 mg/m^3	|	2 minute exposure; CT = 40 mg-min/m^3	|	30	|	1530	|<span class="success">	75-80% inhibited @cite gupta2009handbook	</span>| <span class="success">	Maximum constriction	</span>| <span class="success">	Depressed ventilation; decreased tidal volume @cite zhuang2008inhalation	</span>| <span class="warning">	Bradycardia and decreased MAP	</span>| <span class="success">	Increased increased PCO2 and decreased P02	</span>|
 |	Pralidoxime 15mg/kg Iv @cite gupta2009handbook	|		|	1530	|	2430	|<span class="success">	Increase in activity @cite sidell1997medical	</span>| <span class="success">	No change	</span>| <span class="success">	Increased respiration rate @cite rxlist	</span>| <span class="success">	Increased heart rate @cite rxlist	</span>| <span class="success">	Decreased PCO2 and increased PO2	</span>|
 
+<center>
+<i>Table 14:  A severe inhaled dose of Sarin followed by intravenous administration of Atropine. Muscarinic patient reactions are recorded and shown to reverse as a function of Artopine administration. </i>
+</center>
+
+|	Action	|	Notes	|	Occurrence Time (s)	|	Sampled Scenario Time (s)	|	Red Blood Cell Acetylcholinesterase Activity	|	Nausea and Vomiting	|	Secretions	|	Diaphoresis	|	Urination and Diarrhea	|
+|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|
+|	 Severe Sarin Aerosol, Concentration = 4 mg/m^3	|	10 minute exposure; CT = 40 mg-min/m^3	|	30	|	1530	|<span class="success">	70-80% inhibited @cite leikin2002review	</span>| <span class="success">	Vomiting (at 50% ACHE inhibited @cite lee2003clinical)	</span>| <span class="success">	Moderate Rhinorrhea, Salivation @cite lee2003clinical	</span>| <span class="success">	Moderate Diaphoresis @cite lee2003clinical	</span>| <span class="success">	Urinary Incontinence and Diarrhea (at 75% ACHE inhibited) @cite lee2003clinical	</span>|
+|	Atropine 4 mg Iv @cite gupta2009handbook	|		|	1530	|	2430	|<span class="success">	no change	</span>| <span class="success">	Reversal 	</span>| <span class="success">	Reversal	</span>| <span class="success">	Reversal	</span>| <span class="success">	Reversal	</span>|
+
 
 <center>
 <table border="0">
