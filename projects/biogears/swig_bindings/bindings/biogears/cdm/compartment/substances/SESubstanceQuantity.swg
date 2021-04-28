@@ -16,4 +16,4 @@
 
 %ignore GetScalar(const std::string& name);
 
-%include <biogears/cdm/compartment/substances/SESubstanceQuantity.swg>
+%include <biogears/cdm/compartment/substances/SESubstanceQuantity.h>

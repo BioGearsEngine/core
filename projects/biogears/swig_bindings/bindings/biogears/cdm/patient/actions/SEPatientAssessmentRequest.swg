@@ -13,4 +13,7 @@
 %ignore biogears::SEPatientAssessmentRequest::Unload;
 %ignore biogears::SEPatientAssessmentRequest::Load;
 
+%rename (SetPatientAssessmentType) biogears::SEPatientAssessmentRequest::SetType;
+%rename (GetPatientAssessmentType) biogears::SEPatientAssessmentRequest::GetType;
+
 %include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>

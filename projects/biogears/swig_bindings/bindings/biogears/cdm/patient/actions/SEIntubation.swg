@@ -13,4 +13,7 @@
 %ignore biogears::SEIntubation::Unload;
 %ignore biogears::SEIntubation::Load;
 
+%rename (SetIntubationType) biogears::SEIntubation::SetType;
+%rename (GetIntubationType) biogears::SEIntubation::GetType;
+
 %include <biogears/cdm/patient/actions/SEIntubation.h>

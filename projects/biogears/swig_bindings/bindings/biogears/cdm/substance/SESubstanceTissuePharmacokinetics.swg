@@ -10,10 +10,10 @@
 
 %import <biogears/cdm/properties/SEScalar.swg>
 
-%nspace biogears::SubstanceConcSESubstanceTissuePharmacokineticsenration;
+%nspace biogears::SESubstanceTissuePharmacokinetics;
 
 %ignore biogears::SESubstanceTissuePharmacokinetics::GetScalar(const std::string& name);
 %ignore biogears::SESubstanceTissuePharmacokinetics::Unload;
 %ignore biogears::SESubstanceTissuePharmacokinetics::Load;
 
-%import <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
+%include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>

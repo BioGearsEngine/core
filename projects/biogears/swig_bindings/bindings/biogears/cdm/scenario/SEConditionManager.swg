@@ -28,9 +28,9 @@
 
 %nspace biogears::SEConditionManager;
 
-%ignore biogears::SEPatientActionCollection::Unload;
-%ignore biogears::SEPatientActionCollection::Load;
-%ignore biogears::SEPatientActionCollection::ProcessCondition(const CDM::ConditionData& condition);
+%ignore biogears::SEConditionManager::Unload;
+%ignore biogears::SEConditionManager::Load;
+%ignore biogears::SEConditionManager::ProcessCondition(const CDM::ConditionData& condition);
 
 %ignore biogears::SEConditionManager::GetCondition(const std::string& name) const;
 %ignore biogears::SEConditionManager::ReadConditionFile(const std::string& name);

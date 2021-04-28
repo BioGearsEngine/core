@@ -15,4 +15,7 @@
 %ignore biogears::SETensionPneumothorax::Unload;
 %ignore biogears::SETensionPneumothorax::Load;
 
+%rename (SetTensionPneumothoraxType) biogears::SETensionPneumothorax::SetType;
+%rename (GetTensionPneumothoraxType) biogears::SETensionPneumothorax::GetType;
+
 %include <biogears/cdm/patient/actions/SETensionPneumothorax.h>

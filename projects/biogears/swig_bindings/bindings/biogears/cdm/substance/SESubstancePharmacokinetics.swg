@@ -9,7 +9,7 @@
 %import <biogears/cdm/CommonDataModel.swg>
 
 %import <biogears/cdm/properties/SEScalar.swg>
-%import <biogears/cdm/substance/SESubstancePharmacokinetics.swg>
+%import <biogears/cdm/substance/SESubstancePhysicochemicals.swg>
 %import <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.swg>
 
 %nspace biogears::SESubstancePharmacokinetics;
