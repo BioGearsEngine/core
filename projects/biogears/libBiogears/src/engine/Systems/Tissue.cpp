@@ -408,8 +408,8 @@ void Tissue::SetUp()
   m_leftLegDeltaResistance_mmHg_s_Per_mL = 0.0;
   m_rightLegDeltaResistance_mmHg_s_Per_mL = 0.0;
   m_trunkDeltaResistance_mmHg_s_Per_mL = 0.0;
-  m_leftLungDeltaCompliance_mL_Per_mmHG = 0.0;
-  m_rightLungDeltaCompliance_mL_Per_mmHG = 0.0;
+  //m_leftLungDeltaCompliance_mL_Per_mmHG = 0.0;
+  //m_rightLungDeltaCompliance_mL_Per_mmHG = 0.0;
   m_compartmentSyndromeCount = 0.0;
   //m_lastTissueMusleExtracellularVolume_mL = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::MuscleExtracellular)->GetVolume(VolumeUnit::mL);
   m_baselineECFluidVolume_mL = m_data.GetTissue().GetExtracellularFluidVolume().GetValue(VolumeUnit::mL);
@@ -551,32 +551,6 @@ void Tissue::Process()
   CalculateDiffusion();
   ManageSubstancesAndSaturation();
   CalculateVitals();
-  
-  double testPressure = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetNode(BGE::CardiovascularNode::RightArm1)->GetPressure(PressureUnit::mmHg);
-  double testResistance = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Aorta1ToRightArm1)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-  double testFlow = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Aorta1ToRightArm1)->GetFlow(VolumePerTimeUnit::mL_Per_s);
-  double testCap = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::RightArm1ToGround)->GetCompliance(FlowComplianceUnit::mL_Per_mmHg);
-
-  double testPressure1 = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetNode(BGE::CardiovascularNode::Muscle1)->GetPressure(PressureUnit::mmHg);
-  double testResistance1 = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Aorta1ToMuscle1)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-  double testFlow1 = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Aorta1ToMuscle1)->GetFlow(VolumePerTimeUnit::mL_Per_s);
-  double testCap1 = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Muscle1ToGround)->GetCompliance(FlowComplianceUnit::mL_Per_mmHg);
-
-  double testVenaCava = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava)->GetVolume(VolumeUnit::mL);
-
-  m_data.GetDataTrack().Probe("RAPressure", testPressure);
-  m_data.GetDataTrack().Probe("RAResistance", testResistance);
-  m_data.GetDataTrack().Probe("RAFlow", testFlow);
-  m_data.GetDataTrack().Probe("RACap", testCap);
-
-  m_data.GetDataTrack().Probe("VCVol", testVenaCava);
-
-  m_data.GetDataTrack().Probe("AbdominalPressure", testPressure1);
-  m_data.GetDataTrack().Probe("AbdominalResistance", testResistance1);
-  m_data.GetDataTrack().Probe("AbdominalFlow", testFlow1);
-  m_data.GetDataTrack().Probe("AbdominalCap", testCap1);
-
-  m_data.GetDataTrack().Probe("TEST", m_testvalue);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -629,7 +603,7 @@ void Tissue::CalculateCompartmentalBurn()
   double muscleTissueVolume_mL;
   double targetPathBloodFlow_mL_Per_s;
   double deltaR_mmHg_s_Per_mL = 0.0;
-  double csTuningFactor = 20000.0; // This value adjusts the effect of burn on the flow into affected compartment(s). Higher value means slower incidence of compartment syndrome
+  double csTuningFactor = 20000.0; // This value adjusts the effect of burn on the flow into affected compartment(s). Higher value means slower incidence of compartment syndrome. INitial is 20000
   double fluidCreepTuningFactor = 1.0;
   double burnSpread;
   std::string locale;
@@ -656,13 +630,11 @@ void Tissue::CalculateCompartmentalBurn()
   double tissueIntegrityPercent = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
 
   // As extracellular volume increases (particularly with fluid resuscitation), we would expect the resistance in the burned extremity to increase (less flow to extremity)
-  // May need to cap (ULIM)
   double ecVolume_mL = m_data.GetTissue().GetExtracellularFluidVolume().GetValue(VolumeUnit::mL);
   ///\todo Determine through SME validation if initiation is immediate after fluid resusitation begins (with smaller initial effect) or if initiation begins only after "too much" fluid is given
   double fluidCreepIncidence_pct = 1.05; 
   if (ecVolume_mL > (m_baselineECFluidVolume_mL * fluidCreepIncidence_pct)) { // This if statement determines when fluid resuscitations begins affecting compartment syndrome initiation. 
     fluidCreepTuningFactor = (ecVolume_mL / m_baselineECFluidVolume_mL);
-    //LLIM(fluidCreepTuningFactor, 1.0);
     BLIM(fluidCreepTuningFactor, 1.0, 1.1);
   }
 
@@ -734,13 +706,12 @@ void Tissue::CalculateCompartmentalBurn()
         return;
       }
       // Implement appropriate compartmental changes
-      m_testvalue = tunedDeltaR_mmHg_s_Per_mL; //Remove this after testing
-
       targetPathCardio->GetNextResistance().IncrementValue(tunedDeltaR_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
       targetNodeCardio = "";
       targetPathCardio = nullptr;
   }
     // Any "Per Burn" changes not affecting specific burn compartments would go here
+
     // Compartment syndrome is known to cause decreased compliance in the lungs, though not touching the lungs still show this physiology effect, so this change has been left out for now
 
     //targetPathRespRightPressure_mmHg = targetNodeRespRight->GetPressure(PressureUnit::mmHg);
@@ -768,40 +739,40 @@ void Tissue::CalculateCompartmentalBurn()
             locale = e->GetLocation();
             // Check to make sure escharotomy compartment matches compartment syndrome location
             if (locale == "Trunk" && bgPatient.IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal)) {
-            eschPath += "Muscle1";
-            releasedResistance = m_trunkDeltaResistance_mmHg_s_Per_mL;
-            m_trunkDeltaResistance_mmHg_s_Per_mL = 0.0;
-            bgPatient.SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal, false, m_data.GetSimulationTime());
-            //m_compartmentSyndromeCount -= 1.0;
-            m_trunkEscharotomy = true;
+                eschPath += "Muscle1";
+                releasedResistance = m_trunkDeltaResistance_mmHg_s_Per_mL;
+                m_trunkDeltaResistance_mmHg_s_Per_mL = 0.0;
+                bgPatient.SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal, false, m_data.GetSimulationTime());
+                m_compartmentSyndromeCount -= 1.0;
+                m_trunkEscharotomy = true;
             } else if (locale == "LeftArm" && bgPatient.IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm)) {
-            eschPath += "LeftArm1";
-            releasedResistance = m_leftArmDeltaResistance_mmHg_s_Per_mL;
-            m_leftArmDeltaResistance_mmHg_s_Per_mL = 0.0;
-            bgPatient.SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm, false, m_data.GetSimulationTime());
-            //m_compartmentSyndromeCount -= 1.0;
-            m_leftArmEscharotomy = true;
+                eschPath += "LeftArm1";
+                releasedResistance = m_leftArmDeltaResistance_mmHg_s_Per_mL;
+                m_leftArmDeltaResistance_mmHg_s_Per_mL = 0.0;
+                bgPatient.SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm, false, m_data.GetSimulationTime());
+                m_compartmentSyndromeCount -= 1.0;
+                m_leftArmEscharotomy = true;
             } else if (locale == "LeftLeg" && bgPatient.IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg)) {
-            eschPath += "LeftLeg1";
-            releasedResistance = m_leftLegDeltaResistance_mmHg_s_Per_mL;
-            m_leftLegDeltaResistance_mmHg_s_Per_mL = 0.0;
-            bgPatient.SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg, false, m_data.GetSimulationTime());
-            //m_compartmentSyndromeCount -= 1.0;
-            m_leftLegEscharotomy = true;
+                eschPath += "LeftLeg1";
+                releasedResistance = m_leftLegDeltaResistance_mmHg_s_Per_mL;
+                m_leftLegDeltaResistance_mmHg_s_Per_mL = 0.0;
+                bgPatient.SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg, false, m_data.GetSimulationTime());
+                m_compartmentSyndromeCount -= 1.0;
+                m_leftLegEscharotomy = true;
             } else if (locale == "RightArm" && bgPatient.IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightArm)) {
-            eschPath += "RightArm1";
-            releasedResistance = m_rightArmDeltaResistance_mmHg_s_Per_mL;
-            m_rightArmDeltaResistance_mmHg_s_Per_mL = 0.0;
-            bgPatient.SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_RightArm, false, m_data.GetSimulationTime());
-            //m_compartmentSyndromeCount -= 1.0;
-            m_rightArmEscharotomy = true;
+                eschPath += "RightArm1";
+                releasedResistance = m_rightArmDeltaResistance_mmHg_s_Per_mL;
+                m_rightArmDeltaResistance_mmHg_s_Per_mL = 0.0;
+                bgPatient.SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_RightArm, false, m_data.GetSimulationTime());
+                m_compartmentSyndromeCount -= 1.0;
+                m_rightArmEscharotomy = true;
             } else if (locale == "RightLeg" && bgPatient.IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg)) {
-            eschPath += "RightLeg1";
-            releasedResistance = m_rightLegDeltaResistance_mmHg_s_Per_mL;
-            m_rightLegDeltaResistance_mmHg_s_Per_mL = 0.0;
-            bgPatient.SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg, false, m_data.GetSimulationTime());
-            //m_compartmentSyndromeCount -= 1.0;
-            m_rightLegEscharotomy = true;
+                eschPath += "RightLeg1";
+                releasedResistance = m_rightLegDeltaResistance_mmHg_s_Per_mL;
+                m_rightLegDeltaResistance_mmHg_s_Per_mL = 0.0;
+                bgPatient.SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg, false, m_data.GetSimulationTime());
+                m_compartmentSyndromeCount -= 1.0;
+                m_rightLegEscharotomy = true;
             } else {
             Warning("There is no compartment syndrome where you wish to perform an escharotomy. Ignoring action request.");
             //If we do not remove the action, it will check every time step for the compartment syndrome to match the escharotomy
@@ -811,11 +782,11 @@ void Tissue::CalculateCompartmentalBurn()
             targetPathCardio = activeCirculatoryCircuit->GetPath(eschPath);
             double eschResistance = targetPathCardio->GetNextResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL) - releasedResistance;
             targetPathCardio->GetNextResistance().SetValue(eschResistance, FlowResistanceUnit::mmHg_s_Per_mL);
-            //targetPathCardio->GetResistance().SetValue(targetPathCardio->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
-            //targetPathCardio->GetNextResistance().SetValue(targetPathCardio->GetResistanceBaseline().GetValue(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
             targetPathCardio = nullptr;
             m_data.GetActions().GetPatientActions().RemoveEscharotomy(locale);
+
             // Per Escharotomy
+
             // If we implement lung changes as commented before, here would be the spot to reverse them, paying special note to not release all pressure if only one of multiple compartment syndromes were cared for
 
             /*double percentChestRelease = 1.0/m_compartmentSyndromeCount; //Assume equal effect of each compartment on lungs
