@@ -13,7 +13,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/io-exports.h>
+#include <biogears/exports.h>
 //!
 //!  Functions for finding resource files that were part of the current biogears release
 //!  These functions are encoded as part of libbiogears_io
@@ -47,20 +47,20 @@ namespace io {
     char* _biogears_schema_root = nullptr;
 
   public:
-    BIOGEARS_IO_API bool generate_runtime_directory(const char* file);
-    BIOGEARS_IO_API bool does_embedded_file_exist(const char* file);
+    BIOGEARS_API bool generate_runtime_directory(const char* file);
+    BIOGEARS_API bool does_embedded_file_exist(const char* file);
 
-    BIOGEARS_IO_API size_t find_resource_file(char const* file, char* buffer, size_t buffer_size);
+    BIOGEARS_API size_t find_resource_file(char const* file, char* buffer, size_t buffer_size);
 
-    BIOGEARS_IO_API char const* get_expected_sha1(const char* file);
-    BIOGEARS_IO_API std::string calculate_sha1(const char* path);
-    BIOGEARS_IO_API std::string calculate_sha1(const char* buffer, size_t buffer_size);
+    BIOGEARS_API char const* get_expected_sha1(const char* file);
+    BIOGEARS_API std::string calculate_sha1(const char* path);
+    BIOGEARS_API std::string calculate_sha1(const char* buffer, size_t buffer_size);
 
-    BIOGEARS_IO_API bool validate_file(const char* path, const char* embeded_path = nullptr);
+    BIOGEARS_API bool validate_file(const char* path, const char* embeded_path = nullptr);
 
-    BIOGEARS_IO_API const char* get_embedded_resource_file(const char* file, size_t& content_size);
+    BIOGEARS_API const char* get_embedded_resource_file(const char* file, size_t& content_size);
 
-    BIOGEARS_IO_API size_t get_directory_count(); //!< Returns the list of directories embeded IE 1 for each cpp file in libIO/src/directories
+    BIOGEARS_API size_t get_directory_count(); //!< Returns the list of directories embeded IE 1 for each cpp file in libIO/src/directories
   };
 }
 }
