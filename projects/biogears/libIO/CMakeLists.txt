@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19.0)
 message(STATUS "  Configuring lib${PROJECT_NAME}_io")
 
-option(UNITTEST_biogears-io "Enable libBiogears_io UnitTest "  ON)
+option(UNITTEST_biogears-core_io "Enable libBiogears_io UnitTest "  ON)
 ###############################################################################
 #Source files
 ###############################################################################

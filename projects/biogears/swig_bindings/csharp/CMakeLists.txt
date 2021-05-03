@@ -9,6 +9,9 @@ if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
 
+   file(GLOB_RECURSE CSharp_SWIGS LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../bindings/*.swg" )
+   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/bindings/*.swg" PREFIX "Source Files"  FILES ${csharp_test_files} )
+
    foreach(_file IN LISTS CSharp_SWIGS)
      set_property(SOURCE ${_file} PROPERTY CPLUSPLUS ON)
      set_property(SOURCE ${_file} PROPERTY UseSWIG_MODULE_VERSION 2)
@@ -18,7 +21,8 @@ if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
      set_property(SOURCE ${_file} PROPERTY SWIG_MODULE_NAME "SWIG_${_file_name}" )
      set_property(SOURCE ${_file} PROPERTY COMPILE_OPTIONS )
    endforeach()
-
+   
+   option(UNITTEST_biogears-swig_csharp "Enable libBiogears_csharp UnitTest " ${${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS})
    swig_add_library(lib${PROJECT_NAME}_csharp 
          TYPE SHARED 
          LANGUAGE csharp 

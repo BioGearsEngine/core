@@ -35,53 +35,49 @@ if(${PROJECT_NAME}_BUILD_TEST)
   if(UNITTEST_biogears-common)
    add_source_files(BIOGEARS_COMMON_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/" REGEX "test_common*.h" SOURCE_GROUP "common\\")
    add_source_files(BIOGEARS_COMMON_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears-common/unit/" REGEX "test_common*.cpp" SOURCE_GROUP "common\\")
+   LIST(APPEND UNITTEST_HEADERS ${BIOGEARS_COMMON_UNITTEST_HEADERS})
+   LIST(APPEND UNITTEST_SOURCES ${BIOGEARS_COMMON_UNITTEST_SOURCES})
   endif()
   if(UNITTEST_biogears-core)
-   add_source_files(BIOGEARS_CORE_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/unit/" REGEX "test_core*.h" SOURCE_GROUP "core\\")
-   add_source_files(BIOGEARS_CORE_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/unit/" REGEX "test_core*.cpp" SOURCE_GROUP "core\\")
+   add_source_files(BIOGEARS_CORE_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libBiogears/unit/" REGEX "test_core*.h" SOURCE_GROUP "core\\")
+   add_source_files(BIOGEARS_CORE_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libBiogears/unit/" REGEX "test_core*.cpp" SOURCE_GROUP "core\\")
+   LIST(APPEND UNITTEST_HEADERS ${BIOGEARS_CORE_UNITTEST_HEADERS})
+   LIST(APPEND UNITTEST_SOURCES ${BIOGEARS_CORE_UNITTEST_SOURCES})
   endif()
-  if(UNITTEST_biogears-cdm)
-   add_source_files(BIOGEARS_CORE_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libCDM/unit/" REGEX "test_core_cdm*.h" SOURCE_GROUP "core\\")
-   add_source_files(BIOGEARS_CORE_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libCDM/unit/" REGEX "test_core_cdm*.cpp" SOURCE_GROUP "core_cdm\\")
+  if(UNITTEST_biogears-core_cdm)
+   add_source_files(BIOGEARS_CORE_CDM_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libCDM/unit/" REGEX "test_core_cdm*.h" SOURCE_GROUP "core_cdm\\")
+   add_source_files(BIOGEARS_CORE_CDM_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libCDM/unit/" REGEX "test_core_cdm*.cpp" SOURCE_GROUP "core_cdm\\")
+   LIST(APPEND UNITTEST_HEADERS ${BIOGEARS_CORE_CDM_UNITTEST_HEADERS})
+   LIST(APPEND UNITTEST_SOURCES ${BIOGEARS_CORE_CDM_UNITTEST_SOURCES})
   endif()
-  if(UNITTEST_biogears-io)
-   add_source_files(BIOGEARS_CORE_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libIO/unit/" REGEX "test_core_io*.h" SOURCE_GROUP "core\\")
-   add_source_files(BIOGEARS_CORE_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libIO/unit/" REGEX "test_core_io*.cpp" SOURCE_GROUP "core_io\\")
-  endif()
-  if(UNITTEST_biogears-py)
-   add_source_files(BIOGEARS_CORE_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libPY/unit/" REGEX "test_core_py*.h" SOURCE_GROUP "core_py\\")
-   add_source_files(BIOGEARS_CORE_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libPY/unit/" REGEX "test_core_py*.cpp" SOURCE_GROUP "core_py\\")
-  endif()
-  if(UNITTEST_biogears-csharp)
-   add_source_files(BIOGEARS_CORE_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libCSharp/unit/" REGEX "test_core_csharp*.h" SOURCE_GROUP "core_csharp\\")
-   add_source_files(BIOGEARS_CORE_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libCSharp/unit/" REGEX "test_core_csharp*.cpp" SOURCE_GROUP "core_csharp\\")
-  endif()
-  if(UNITTEST_biogears-JNI)
-   add_source_files(BIOGEARS_CORE_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libJNI/unit/" REGEX "test_core_jni*.h" SOURCE_GROUP "core_jni\\")
-   add_source_files(BIOGEARS_CORE_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libJNI/unit/" REGEX "test_core_jni*.cpp" SOURCE_GROUP "core_jni\\")
+  if(UNITTEST_biogears-core_io)
+   add_source_files(BIOGEARS_CORE_IO_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libIO/unit/" REGEX "test_core_io*.h" SOURCE_GROUP "core_io\\")
+   add_source_files(BIOGEARS_CORE_IO_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/libIO/unit/" REGEX "test_core_io*.cpp" SOURCE_GROUP "core_io\\")
+   LIST(APPEND UNITTEST_HEADERS ${BIOGEARS_CORE_IO_UNITTEST_HEADERS})
+   LIST(APPEND UNITTEST_SOURCES ${BIOGEARS_CORE_IO_UNITTEST_SOURCES})
   endif()
   if(UNITTEST_biogears-cmd)
    add_source_files(BIOGEARS_CMDLINE_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/cli/unit/" REGEX "test_cli*.h" SOURCE_GROUP "cmdline\\" )
    add_source_files(BIOGEARS_CMDLINE_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/cli/unit/" REGEX "test_cli*.cpp" SOURCE_GROUP "cmdline\\")
+   LIST(APPEND UNITTEST_HEADERS ${BIOGEARS_CMDLINE_UNITTEST_HEADERS})
+   LIST(APPEND UNITTEST_SOURCES ${BIOGEARS_CMDLINE_UNITTEST_SOURCES})
   endif()
-
   if(UNITTEST_biogears-circuit)
    add_source_files(BIOGEARS_CIRCUIT_UNITTEST_HEADERS LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/unit/" REGEX "test_circuit*.h" SOURCE_GROUP "circuit\\" )
    add_source_files(BIOGEARS_CIRCUIT_UNITTEST_SOURCES LOCATION "${PROJECT_SOURCE_DIR}/projects/biogears/unit/" REGEX "test_circuit*.cpp" SOURCE_GROUP "circuit\\")
+   LIST(APPEND UNITTEST_HEADERS ${BIOGEARS_CIRCUIT_UNITTEST_HEADERS})
+   LIST(APPEND UNITTEST_SOURCES ${BIOGEARS_CIRCUIT_UNITTEST_SOURCES})
   endif()  
-  
+  if(UNITTEST_biogears-swig_py)
+
+  endif()
+  if(UNITTEST_biogears-swig_csharp)
+
+  endif()
 
   add_executable(unittest
     ${UNITTEST_SOURCES}
     ${UNITTEST_HEADERS}
-    ${BIOGEARS_CORE_UNITTEST_HEADERS}
-    ${BIOGEARS_CORE_UNITTEST_SOURCES}
-    ${BIOGEARS_COMMON_UNITTEST_HEADERS}
-    ${BIOGEARS_COMMON_UNITTEST_SOURCES}
-    ${BIOGEARS_CMDLINE_UNITTEST_HEADERS}
-    ${BIOGEARS_CMDLINE_UNITTEST_SOURCES}
-    ${BIOGEARS_CIRCUIT_UNITTEST_HEADERS}
-    ${BIOGEARS_CIRCUIT_UNITTEST_SOURCES}
   )
  
   ##################################################################V#############
@@ -96,52 +92,39 @@ if(${PROJECT_NAME}_BUILD_TEST)
                           "TESTS"
                           ${ARGN}
                           )
-    if(UNITTEST_${_l_GROUP})
-    	  foreach ( filepath IN LISTS _l_TESTS )
+
+    if(UNITTEST_${_l_GROUP})  
+        foreach ( filepath IN LISTS _l_TESTS )
           string(REGEX REPLACE ".*\\/test_${_l_PREFIX}_(.*).cpp" "\\1" test_name ${filepath})
-	    	  option(UNITTEST_${_l_GROUP}_${test_name} "Enable ${_l_GROUP}_${test_name}" ON)
-	    	  mark_as_advanced(UNITTEST_${_l_GROUP}_${test_name})
-	    	  if (  NOT UNITTEST_${_l_GROUP}_${test_name})
-            set_property(   SOURCE ${filepath}
-                            PROPERTY
-                            COMPILE_DEFINITIONS DISABLE_BIOGEARS_${test_name}_TEST )
-	        endif()
-	      endforeach()
+          option(UNITTEST_${_l_GROUP}_${test_name} "Enable ${_l_GROUP}_${test_name}" ON)
+          mark_as_advanced(UNITTEST_${_l_GROUP}_${test_name})
+          if (  NOT UNITTEST_${_l_GROUP}_${test_name})
+              set_property(   SOURCE ${filepath}
+                              PROPERTY
+                              COMPILE_DEFINITIONS DISABLE_BIOGEARS_${test_name}_TEST )
+          endif()
+        endforeach()
     endif()
   endfunction() 
 
-  set(COMMON_TEST_LIST ${BIOGEARS_COMMON_UNITTEST_SOURCES})
-  setup_unittest( GROUP biogears-common PREFIX common
-                  TESTS 
-                    ${COMMON_TEST_LIST})
-  set(CORE_TEST_LIST ${BIOGEARS_CORE_UNITTEST_SOURCES})
-  setup_unittest( GROUP biogears-core PREFIX core
-                  TESTS 
-                    ${CORE_TEST_LIST})
-  set(CORE_TEST_LIST ${BIOGEARS_CORE_UNITTEST_SOURCES})
-  setup_unittest( GROUP biogears-core_io PREFIX core_io
-                  TESTS 
-                    ${CORE_TEST_LIST})
-  set(CORE_TEST_LIST ${BIOGEARS_CORE_UNITTEST_SOURCES})
-  setup_unittest( GROUP biogears-core_cdm PREFIX core_cdm
-                  TESTS 
-                    ${CORE_TEST_LIST})
-  set(CORE_TEST_LIST ${BIOGEARS_CORE_UNITTEST_SOURCES})
-  setup_unittest( GROUP biogears-core_py PREFIX core_py
-                  TESTS 
-                    ${CORE_TEST_LIST})
-  set(CORE_TEST_LIST ${BIOGEARS_CORE_UNITTEST_SOURCES})
-  setup_unittest( GROUP biogears-core_csharp PREFIX core_csharp
-                  TESTS 
-                    ${CORE_TEST_LIST})
-  set(CMDLINE_TEST_LIST ${BIOGEARS_CMDLINE_UNITTEST_SOURCES})
-  setup_unittest( GROUP biogears-cmd PREFIX cmd
-                  TESTS 
-                    ${CMDLINE_TEST_LIST})
-  set(CIRCUIT_TEST_LIST ${BIOGEARS_CIRCUIT_UNITTEST_SOURCES})
-  setup_unittest( GROUP biogears-circuit PREFIX circuit
-                  TESTS 
-                    ${CIRCUIT_TEST_LIST})
+ set(COMMON_TEST_LIST ${BIOGEARS_COMMON_UNITTEST_SOURCES})
+ setup_unittest( GROUP biogears-common PREFIX common
+                 TESTS ${COMMON_TEST_LIST})
+ set(CORE_TEST_LIST ${BIOGEARS_CORE_UNITTEST_SOURCES})
+ setup_unittest( GROUP biogears-core PREFIX core
+                 TESTS ${CORE_TEST_LIST})
+ set(CORE_TEST_LIST ${BIOGEARS_CORE_IO_UNITTEST_SOURCES})
+ setup_unittest( GROUP biogears-core_io PREFIX core_io
+                  TESTS  ${CORE_TEST_LIST})
+ set(CORE_TEST_LIST ${BIOGEARS_CORE_CDM_UNITTEST_SOURCES})
+ setup_unittest( GROUP biogears-core_cdm PREFIX core_cdm
+                 TESTS   ${CORE_TEST_LIST})
+ set(CMDLINE_TEST_LIST ${BIOGEARS_CMDLINE_UNITTEST_SOURCES})
+ setup_unittest( GROUP biogears-cmd PREFIX cmd
+                 TESTS ${CMDLINE_TEST_LIST})
+ set(CIRCUIT_TEST_LIST ${BIOGEARS_CIRCUIT_UNITTEST_SOURCES})
+ setup_unittest( GROUP biogears-circuit PREFIX circuit
+                 TESTS  ${CIRCUIT_TEST_LIST})
  
   set_target_properties(unittest PROPERTIES
                         DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
