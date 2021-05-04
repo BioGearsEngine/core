@@ -22,18 +22,134 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/directories/xsd.h>
 #include <biogears/io/io-manager.h>
 
+#include <biogears/io/sha1.h>
+
 #ifdef IO_EMBED_STATES
 #include <biogears/io/directories/states.h>
 #endif
 
 #include <biogears/io/directories/substances.h>
 
-#include <biogears/io/utils.h>
-
 #include <fstream>
 
 namespace biogears {
 namespace io {
+
+  IOManager::IOManager(char const* dataroot, char const* schemaroot)
+    : _biogears_data_root(dataroot)
+  {
+    _biogears_schema_root = (schemaroot) ? schemaroot : _biogears_data_root;
+  }
+  std::string IOManager::GetConfigDirectory() const
+  {
+    return _dirs.config;
+  }
+  //---------------------------------------------------------------------------
+  void IOManager::SetConfigDirectory(std::string const& s)
+  {
+    _dirs.config = s;
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::GetEcgDirectory() const
+  {
+    return _dirs.ecg;
+  }
+  //---------------------------------------------------------------------------
+  void IOManager::SetEcgDirectory(std::string const& s)
+  {
+    _dirs.ecg = s;
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::GetEnvironmentsDirectory() const
+  {
+    return _dirs.environments;
+  }
+  //---------------------------------------------------------------------------
+  void IOManager::SetEnvironmentsDirectory(std::string const& s)
+  {
+    _dirs.environments = s;
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::GetNutritionDirectory() const
+  {
+    return _dirs.nutrition;
+  }
+  //---------------------------------------------------------------------------
+  void IOManager::SetNutritionDirectory(std::string const& s)
+  {
+    _dirs.nutrition = s;
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::GetOverrideDirectory() const
+  {
+    return _dirs.override;
+  }
+  //---------------------------------------------------------------------------
+  void IOManager::SetOverrideDirectory(std::string const& s)
+  {
+    _dirs.override = s;
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::GetPatientsDirectory() const
+  {
+    return _dirs.patients;
+  }
+  //---------------------------------------------------------------------------
+  void IOManager::SetPatientsDirectory(std::string const& s)
+  {
+    _dirs.patients = s;
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::GetStatesDirectory() const
+  {
+    return _dirs.states;
+  }
+  //---------------------------------------------------------------------------
+  void IOManager::SetStatesDirectory(std::string const& s)
+  {
+    _dirs.states = s;
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::GetSubstancesDirectory() const
+  {
+    return _dirs.substances;
+  }
+  //---------------------------------------------------------------------------
+  void IOManager::SetSubstancesDirectory(std::string const& s)
+  {
+    _dirs.substances = s;
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::GetScenariosDirectory() const
+  {
+    return _dirs.scenarios;
+  }
+  //---------------------------------------------------------------------------
+  void IOManager::SetScenariosDirectory(std::string const& s)
+  {
+    _dirs.scenarios = s;
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::GetBioGearsDataRootDirectory() const
+  {
+    return _biogears_data_root;
+  }
+  //---------------------------------------------------------------------------
+  void IOManager::SetBioGearsDataRootDirectory(std::string const& s)
+  {
+    _biogears_data_root = s;
+  }
+  //---------------------------------------------------------------------------
+  std::string IOManager::GetBioGearsSchemaDirectory() const
+  {
+    return _biogears_schema_root;
+  }
+  //---------------------------------------------------------------------------
+  void IOManager::SetBioGearsSchemaDirectory(std::string const& s)
+  {
+    _biogears_schema_root = s;
+  }
+  //---------------------------------------------------------------------------
   //!
   //!  Writes the contents to the embded runtime_directory to disk
   //!
@@ -41,7 +157,7 @@ namespace io {
   //!  //TODO: Optional temporary directory construction to prevent partial write
   //!  //TODO: Optional empty dir check with cleanup
 
-  bool IOManager::generate_runtime_directory(const char* file)
+  bool IOManager::generate_runtime_directory(const char* file) const
   {
     biogears::filesystem::create_directories(file);
 
@@ -62,7 +178,7 @@ namespace io {
     return result;
   }
   //---------------------------------------------------------------------------
-  bool IOManager::does_embedded_file_exist(const char* file)
+  bool IOManager::does_embedded_file_exist(const char* file) const
   {
 
     biogears::filesystem::path embeded_path { file };
@@ -80,7 +196,7 @@ namespace io {
       || does_embedded_substances_file_exist(embeded_path);
   }
   //---------------------------------------------------------------------------
-  size_t IOManager::find_resource_file(char const* file, char* buffer, size_t buffer_size)
+  size_t IOManager::find_resource_file(char const* file, char* buffer, size_t buffer_size) const
   {
 
     //!  Look Second in CWD  FILE
@@ -105,7 +221,7 @@ namespace io {
     }
 
     //Step 2 : Alternative CWD
-    if (_biogears_data_root != nullptr) {
+    if (!_biogears_data_root.empty()) {
       test_location = _biogears_data_root;
       test_location /= file;
       if (test_location.exists() && test_location.is_file()) {
@@ -122,7 +238,7 @@ namespace io {
       }
     }
 
-    if (_biogears_schema_root != nullptr) {
+    if (!_biogears_schema_root.empty()) {
       test_location = _biogears_schema_root;
       test_location /= file;
       if (test_location.exists() && test_location.is_file()) {
@@ -208,7 +324,7 @@ namespace io {
     return content_size;
   }
   //---------------------------------------------------------------------------
-  char const* IOManager::get_expected_sha1(const char* file)
+  char const* IOManager::get_expected_sha1(const char* file) const
   {
     char const* result = nullptr;
     result = get_xsd_file_sha1(file);
@@ -253,20 +369,49 @@ namespace io {
     return "";
   }
   //---------------------------------------------------------------------------
-  std::string IOManager::calculate_sha1(const char* path)
+  std::string IOManager::calculate_sha1(const char* path) const
   {
-    return generate_file_sha1(path);
+    std::string content;
+    std::string result = std::string(40, '\0');
+    sha1 hash;
+
+    std::ifstream file { path, std::ios::in | std::ios::binary };
+    if (file) {
+
+      auto start = file.tellg();
+      file.seekg(0, file.end);
+      auto end = file.tellg();
+      auto length = end  - start;
+      file.seekg(0, file.beg);
+
+      content.resize(length);
+      file.read(&content[0], length);
+      file.close();
+
+      hash.add(&content[0]);
+      hash.finalize();
+      hash.print_hex(&result[0]);
+    }
+
+    return result;
   }
   //---------------------------------------------------------------------------
-  std::string IOManager::calculate_sha1(const char* buffer, size_t buffer_size)
+  std::string IOManager::calculate_sha1(const char* buffer, size_t buffer_size) const
   {
-    return generate_sha1(buffer, buffer_size);
+    std::string result = std::string(40, '\0');
+    sha1 hash;
+
+    hash.add(buffer, buffer_size);
+    hash.finalize();
+    hash.print_hex(&result[0]);
+
+    return result;
   }
   //---------------------------------------------------------------------------
   //!
   //!  This function does not provide fall back mechanics. This is intentional
   //!  It should be used to compare two file locations exsactly
-  bool IOManager::validate_file(const char* path, const char* embeded_path)
+  bool IOManager::validate_file(const char* path, const char* embeded_path) const
   {
     if (embeded_path) {
       std::string embeded_hash = get_expected_sha1(embeded_path);
@@ -290,7 +435,7 @@ namespace io {
   //!  \param size_t [OUT]      -- Size of the const char* file return. Zero if nothing was found. (why embedded an empty file?)
   //!  \return  char const *    -- Contents of the file "" if nothing was found
 
-  char const* IOManager::get_embedded_resource_file(const char* file, std::size_t& size)
+  char const* IOManager::get_embedded_resource_file(const char* file, std::size_t& size) const
   {
     char const* result = nullptr;
     size = 0;
@@ -335,7 +480,7 @@ namespace io {
     return nullptr;
   }
 
-  size_t IOManager::get_directory_count()
+  size_t IOManager::get_directory_count() const
   {
     size_t sum = biogears::io::config_file_count()
       + biogears::io::ecg_file_count()
@@ -351,5 +496,7 @@ namespace io {
     return sum;
   }
 
-}
-}
+  //-----------------------------------------------------------------------------
+
+} //namespace io
+} // namespace biogears

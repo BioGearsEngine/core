@@ -3,7 +3,6 @@
 
 #include <gtest/gtest.h>
 
-#include <biogears/io/utils.h>
 #include <biogears/io/io-manager.h>
 #include <biogears/io/directories/xsd.h>
 
@@ -42,14 +41,6 @@ void TEST_FIXTURE_NAME::SetUp()
 
 void TEST_FIXTURE_NAME::TearDown()
 {
-}
-
-TEST_F(TEST_FIXTURE_NAME,ResolvePathAbsolute)
-{ // This isn't actually checking this path, as it is not guaranteed to exist on every given machine, it's just formatting
-  EXPECT_EQ("D:\biogears", biogears::io::ResolvePath(std::string("D:\biogears\\")));
-  EXPECT_EQ("D:\biogears\\core", biogears::io::ResolvePath(std::string("D:\biogears\\core\\")));
-  EXPECT_EQ("D:\biogears\\core\\build", biogears::io::ResolvePath(std::string("D:\biogears\\core\\build\\")));
-  EXPECT_EQ("D:\biogears\\core\\build\\runtime", biogears::io::ResolvePath(std::string("D:\biogears\\core\\build\\runtime\\")));
 }
 
 TEST_F(TEST_FIXTURE_NAME,GenerateRuntimeDirectory)
@@ -120,54 +111,54 @@ TEST_F(TEST_FIXTURE_NAME,FindResourceFile)
   EXPECT_TRUE(0 < iom.find_resource_file("patients/StandardMale.xml",buf,10000));
 }
 
-TEST_F(TEST_FIXTURE_NAME,GetSha1XSD)
-{
-	biogears::io::IOManager iom; 
-	//38971f4027302e2a2758543a54eb0a21676a7bf4 sha1 of BioGearsDataModel.xsd as of 1/20/21, if the test is failing, maybe the file was changed
-	EXPECT_EQ(biogears::io::generate_file_sha1("xsd/BioGearsDataModel.xsd"),iom.get_expected_sha1("xsd/BioGearsDataModel.xsd"));
-}
-
-TEST_F(TEST_FIXTURE_NAME, GetSha1Config)
-{
-  biogears::io::IOManager iom; // this tests against the sha1 of DynamicStabilization.xml as of 1/22/21
-  EXPECT_EQ(biogears::io::generate_file_sha1("config/DynamicStabilization.xml"), iom.get_expected_sha1("config/DynamicStabilization.xml"));
-}
-
-TEST_F(TEST_FIXTURE_NAME, GetSha1ECG)
-{
-  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(biogears::io::generate_file_sha1("ecg/StandardECG.xml"), iom.get_expected_sha1("ecg/StandardECG.xml"));
-}
-
-TEST_F(TEST_FIXTURE_NAME, GetSha1Environments)
-{
-  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(biogears::io::generate_file_sha1("environments/AnchorageDecember.xml"), iom.get_expected_sha1("environments/AnchorageDecember.xml"));
-}
-
-TEST_F(TEST_FIXTURE_NAME, GetSha1Nutrition)
-{
-  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(biogears::io::generate_file_sha1("nutrition/NoMacros.xml"), iom.get_expected_sha1("nutrition/NoMacros.xml"));
-}
-
-TEST_F(TEST_FIXTURE_NAME, GetSha1Override)
-{
-  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(biogears::io::generate_file_sha1("override/BioGearsOverride.xml"), iom.get_expected_sha1("override/BioGearsOverride.xml"));
-}
-
-TEST_F(TEST_FIXTURE_NAME, GetSha1Patients)
-{
-  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(biogears::io::generate_file_sha1("patients/Bradycardic.xml"), iom.get_expected_sha1("patients/Bradycardic.xml"));
-}
-
-TEST_F(TEST_FIXTURE_NAME, GetSha1Substances)
-{
-  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-  EXPECT_EQ(biogears::io::generate_file_sha1("substances/Acetaminophen.xml"), iom.get_expected_sha1("substances/Acetaminophen.xml"));
-}
+//TEST_F(TEST_FIXTURE_NAME,GetSha1XSD)
+//{
+//	biogears::io::IOManager iom; 
+//	//38971f4027302e2a2758543a54eb0a21676a7bf4 sha1 of BioGearsDataModel.xsd as of 1/20/21, if the test is failing, maybe the file was changed
+//	EXPECT_EQ(biogears::io::generate_file_sha1("xsd/BioGearsDataModel.xsd"),iom.get_expected_sha1("xsd/BioGearsDataModel.xsd"));
+//}
+//
+//TEST_F(TEST_FIXTURE_NAME, GetSha1Config)
+//{
+//  biogears::io::IOManager iom; // this tests against the sha1 of DynamicStabilization.xml as of 1/22/21
+//  EXPECT_EQ(biogears::io::generate_file_sha1("config/DynamicStabilization.xml"), iom.get_expected_sha1("config/DynamicStabilization.xml"));
+//}
+//
+//TEST_F(TEST_FIXTURE_NAME, GetSha1ECG)
+//{
+//  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
+//  EXPECT_EQ(biogears::io::generate_file_sha1("ecg/StandardECG.xml"), iom.get_expected_sha1("ecg/StandardECG.xml"));
+//}
+//
+//TEST_F(TEST_FIXTURE_NAME, GetSha1Environments)
+//{
+//  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
+//  EXPECT_EQ(biogears::io::generate_file_sha1("environments/AnchorageDecember.xml"), iom.get_expected_sha1("environments/AnchorageDecember.xml"));
+//}
+//
+//TEST_F(TEST_FIXTURE_NAME, GetSha1Nutrition)
+//{
+//  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
+//  EXPECT_EQ(biogears::io::generate_file_sha1("nutrition/NoMacros.xml"), iom.get_expected_sha1("nutrition/NoMacros.xml"));
+//}
+//
+//TEST_F(TEST_FIXTURE_NAME, GetSha1Override)
+//{
+//  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
+//  EXPECT_EQ(biogears::io::generate_file_sha1("override/BioGearsOverride.xml"), iom.get_expected_sha1("override/BioGearsOverride.xml"));
+//}
+//
+//TEST_F(TEST_FIXTURE_NAME, GetSha1Patients)
+//{
+//  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
+//  EXPECT_EQ(biogears::io::generate_file_sha1("patients/Bradycardic.xml"), iom.get_expected_sha1("patients/Bradycardic.xml"));
+//}
+//
+//TEST_F(TEST_FIXTURE_NAME, GetSha1Substances)
+//{
+//  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
+//  EXPECT_EQ(biogears::io::generate_file_sha1("substances/Acetaminophen.xml"), iom.get_expected_sha1("substances/Acetaminophen.xml"));
+//}
 
 
 TEST_F(TEST_FIXTURE_NAME,GetEmbeddedResourceFileXSD)
