@@ -11,10 +11,10 @@
 #define NOMINMAX
 
 #include <cmath>
+#include <csignal>
 #include <cstdlib>
-#include <sys/stat.h>
-
 #include <iostream>
+#include <sys/stat.h>
 
 #include "exec/Driver.h"
 #include "utils/Executor.h"
@@ -37,6 +37,15 @@ enum class PatientType {
   STATE,
   INLINE
 };
+
+
+void signal_callback_handler(int signum)
+{
+  std::cout << "User Requested Termination " << signum << std::endl;
+  // Terminate program
+  exit(signum);
+}
+
 
 int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
 {
@@ -206,6 +215,11 @@ std::string make_usage_string_(const std::string& program_name, const boost::pro
 
 int main(int argc, char* argv[])
 {
+
+  signal(SIGINT, signal_callback_handler);
+  signal(SIGABRT, signal_callback_handler);
+
+
   using namespace boost::program_options;
 
   auto log_level = log4cpp::Priority::DEBUG;
@@ -355,6 +369,9 @@ int main(int argc, char* argv[])
 #include "utils/Arguments.h"
 int main(int argc, char* argv[])
 {
+  signal(SIGINT, signal_callback_handler);
+  signal(SIGABRT, signal_callback_handler);
+
   auto log_level = log4cpp::Priority::DEBUG;
   std::string help_message;
 
