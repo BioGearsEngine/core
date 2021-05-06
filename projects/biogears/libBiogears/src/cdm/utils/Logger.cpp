@@ -9,7 +9,6 @@ KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/Logger.h>
 
 #pragma warning(push, 0)
@@ -26,21 +25,40 @@ governing permissions and limitations under the License.
 namespace biogears {
 const std::string Loggable::empty("");
 const char* Loggable::empty_cStr("");
-// logger constructor
-Logger::Logger(const std::string& logFilename, const std::string& working_dir)
-  : m_Forward(nullptr)
-  , m_time(nullptr)
-  , m_FormatMessages(true)
-{
-  ResetLogFile(logFilename, working_dir);
-}
 
-Logger::Logger(const char* logFilename, const char* working_dir)
+
+
+Logger::Logger(const std::string& logFilename)
   : m_Forward(nullptr)
   , m_time(nullptr)
   , m_FormatMessages(true)
+  , m_io( std::make_shared<IOManager>())
 {
-  ResetLogFile(logFilename, working_dir);
+  ResetLogFile(logFilename);
+}
+Logger::Logger(const std::string& logFilename, IOManager const& io)
+  : m_Forward(nullptr)
+  , m_time(nullptr)
+  , m_FormatMessages(true)
+  , m_io( std::make_shared<IOManager>(io))
+{
+  ResetLogFile(logFilename);
+}
+Logger::Logger(const char* logFilename)
+  : m_Forward(nullptr)
+  , m_time(nullptr)
+  , m_FormatMessages(true)
+  , m_io( std::make_shared<IOManager>())
+{
+  ResetLogFile(logFilename);
+}
+Logger::Logger(const char* logFilename, IOManager const& io)
+  : m_Forward(nullptr)
+  , m_time(nullptr)
+  , m_FormatMessages(true)
+  , m_io( std::make_shared<IOManager>(io))
+{
+  ResetLogFile(logFilename);
 }
 
 void Logger::LogToConsole(bool log_to_console)
@@ -56,7 +74,7 @@ void Logger::FormatMessages(bool format_messages)
 {
   m_FormatMessages = format_messages;
 }
-void Logger::ResetLogFile(const std::string& logFilename, const std::string& working_dir)
+void Logger::ResetLogFile(const std::string& logFilename)
 {
 
   std::string key = logFilename;
@@ -69,9 +87,9 @@ void Logger::ResetLogFile(const std::string& logFilename, const std::string& wor
   m_Log->removeAllAppenders();
   m_Log->setPriority(log4cpp::Priority::INFO);
 
-  std::string qualified_path = ResolvePath((filesystem::path(working_dir) / logFilename).str());
+  std::string qualified_path = m_io->ResolveLogFileLocation(logFilename);
   if (!qualified_path.empty()) {
-    CreateFilePath(qualified_path);
+    filesystem::create_directories(qualified_path);
 
     // delete previous log contents if it exists
     FILE* FilePointer = fopen(qualified_path.c_str(), "wt+");
@@ -100,14 +118,15 @@ void Logger::ResetLogFile(const std::string& logFilename, const std::string& wor
   LogToConsole(true);
 }
 
-void Logger::ResetLogFile(const char* logFilename, const char* working_dir)
+void Logger::ResetLogFile(const char* logFilename)
 {
-  const std::string logFileName_str{ logFilename };
-  const std::string working_dir_str{ working_dir };
-  ResetLogFile(logFileName_str, working_dir_str);
+  const std::string logFileName_str { logFilename };
+
+  ResetLogFile(logFileName_str);
 }
-Logger::~Logger() 
-{}
+Logger::~Logger()
+{
+}
 
 void Logger::SetLogTime(const SEScalarTime* time) { m_time = time; }
 
@@ -159,7 +178,7 @@ std::string Logger::FormatLogMessage(const std::string& msg, const std::string& 
     if (m_time != nullptr && m_time->IsValid()) {
       m_ss << "[" << *m_time << "] " << msg;
     } else {
-      m_ss << msg   ;
+      m_ss << msg;
     }
     if (msg.empty()) {
       return origin;
@@ -180,11 +199,11 @@ void Logger::Debug(const std::string& msg, const std::string& origin) const
 void Logger::Info(const std::string& msg, const std::string& origin) const
 {
 
- try {
-   m_Log->info(FormatLogMessage(msg, origin)); 
- } catch (...) {
-   //TODO Testing exception handling. Need to figure out where these exceptions come from
- }
+  try {
+    m_Log->info(FormatLogMessage(msg, origin));
+  } catch (...) {
+    //TODO Testing exception handling. Need to figure out where these exceptions come from
+  }
 
   if (m_Forward != nullptr) {
     m_Forward->ForwardInfo(m_ss.str().c_str(), origin.c_str());
@@ -246,9 +265,13 @@ void Logger::Fatal(std::ostream const& msg, const std::string& origin) const
   Fatal(ss.str(), origin);
 }
 
+std::weak_ptr<IOManager> Logger::GetIoManager() const{
+  return m_io;
+}
+
 void Loggable::Error(const char* msg, const char* origin) const
 {
-  Error(std::string{ msg }, std::string{ origin });
+  Error(std::string { msg }, std::string { origin });
 }
 void Loggable::Error(const std::string msg, const std::string origin) const
 {
@@ -268,7 +291,7 @@ void Loggable::Error(std::ostream& msg, const std::string& origin) const
 
 void Loggable::Info(const char* msg, const char* origin) const
 {
-  Info(std::string{ msg }, std::string{ origin });
+  Info(std::string { msg }, std::string { origin });
 }
 void Loggable::Info(const std::string& msg, const std::string& origin) const
 {
@@ -288,7 +311,7 @@ void Loggable::Info(std::ostream& msg, const std::string& origin) const
 
 void Loggable::Warning(const char* msg, const char* origin) const
 {
-  Warning(std::string{ msg }, std::string{ origin });
+  Warning(std::string { msg }, std::string { origin });
 }
 void Loggable::Warning(const std::string& msg, const std::string& origin) const
 {
@@ -308,7 +331,7 @@ void Loggable::Warning(std::ostream& msg, const std::string& origin) const
 
 void Loggable::Fatal(const char* msg, const char* origin) const
 {
-  Fatal(std::string{ msg }, std::string{ origin });
+  Fatal(std::string { msg }, std::string { origin });
 }
 void Loggable::Fatal(const std::string& msg, const std::string& origin) const
 {
@@ -328,7 +351,7 @@ void Loggable::Fatal(std::ostream& msg, const std::string& origin) const
 
 void Loggable::Debug(const char* msg, const char* origin) const
 {
-  Debug(std::string{ msg }, std::string{ origin });
+  Debug(std::string { msg }, std::string { origin });
 }
 void Loggable::Debug(const std::string& msg, const std::string& origin) const
 {
@@ -348,7 +371,7 @@ void Loggable::Debug(std::ostream& msg, const std::string& origin) const
 
 Loggable::Loggable() { m_Logger = nullptr; }
 Loggable::Loggable(Logger* logger) { m_Logger = logger; }
-Loggable::~Loggable() {}
+Loggable::~Loggable() { }
 
 Logger* Loggable::GetLogger() const { return m_Logger; }
 }

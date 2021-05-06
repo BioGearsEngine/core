@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
 namespace biogears {
@@ -153,17 +152,22 @@ bool SENutrition::Load(const std::string& given)
   CDM::NutritionData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  std::string filepath = given;
-  if (!IsAbsolutePath(given) && !TestFirstDirName(given, "nutrition")) {
-    filepath = "nutrition/";
-    filepath += given;
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindNutritionFile(given.c_str());
+  if (possible_path.empty()) {
+    size_t content_size;
+
+    auto resource = filesystem::path { "nutrition" } / filesystem::path(given).basename();
+    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+  } else {
+    data = Serializer::ReadFile(possible_path.string(), m_Logger);
   }
 
-  data = Serializer::ReadFile(filepath, GetLogger());
   pData = dynamic_cast<CDM::NutritionData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
-    ss << "Nutrition file could not be read : " << ResolvePath(given) << std::endl;
+    ss << "Nutrition file could not be read : " << io->find_resource_file(given.c_str()) << std::endl;
     Error(ss);
     return false;
   }
@@ -351,7 +355,7 @@ void SENutrition::ToString(std::ostream& str) const
 }
 //-----------------------------------------------------------------------------
 //-------------------------------------------------------------------------------
-bool SENutrition::operator==( const SENutrition& rhs) const
+bool SENutrition::operator==(const SENutrition& rhs) const
 {
   bool equivilant = m_Name == rhs.m_Name;
   equivilant &= (m_Carbohydrate && rhs.m_Carbohydrate) ? m_Carbohydrate->operator==(*rhs.m_Carbohydrate) : m_Carbohydrate == rhs.m_Carbohydrate;
@@ -363,7 +367,7 @@ bool SENutrition::operator==( const SENutrition& rhs) const
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SENutrition::operator!=( const SENutrition& rhs) const
+bool SENutrition::operator!=(const SENutrition& rhs) const
 {
   return !(*this == rhs);
 }

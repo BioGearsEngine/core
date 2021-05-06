@@ -30,7 +30,7 @@ namespace io {
   BIOGEARS_IO_API  size_t find_substances_file(const char* file, const char* root, char* buffer, size_t buffer_length);
   BIOGEARS_IO_API char const* get_substances_file_sha1(const char* file);
 
-  BIOGEARS_IO_API char const* const* list_substances_files();
+  BIOGEARS_IO_API char const** list_substances_files();
   BIOGEARS_IO_API size_t substances_file_count();
 
   BIOGEARS_IO_API char const* get_embedded_substances_file(const char* file, size_t& content_size);
@@ -42,5 +42,7 @@ namespace io {
   BIOGEARS_IO_API char const* get_substances_file_sha1(biogears::filesystem::path file);
 
   BIOGEARS_IO_API char const* get_embedded_substances_file(biogears::filesystem::path file, size_t& content_size);
+  BIOGEARS_IO_API size_t      get_embedded_substances_file_size( const char* path);
+
 }
 }

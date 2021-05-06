@@ -13,9 +13,10 @@
 //specific language governing permissions and limitations under the License.
 //**************************************************************************************
 
-#include <chrono>
 #include <atomic>
+#include <chrono>
 
+#include <biogears/filesystem/path.h>
 #include <biogears/threading/runnable.h>
 #include <biogears/threading/thread_pool.h>
 
@@ -42,17 +43,18 @@ public:
   void join() override;
 
   bool has_work() const { return _total_work > 0; }
+
 protected:
   void subprocess_execute(biogears::Executor& ex, bool multi_patient_run);
   void async_execute(biogears::Executor& ex, bool multi_patient_run);
 
   void queue_BGEUnitTest(Executor, bool as_subprocess = false);
   void queue_CDMUnitTest(Executor, bool as_subprocess = false);
-  
+
   void queue_Scenario(Executor, bool as_subprocess = false);
-  void queue_from_patient_files(const Executor& exec, const std::vector<std::string>& patient_files, std::function<void(Executor, bool)> scenario_launch_func);
-  void queue_from_sate_files(const Executor& exec, const std::vector<std::string>& state_files, std::function<void(Executor, bool)> scenario_launch_func);
-  std::vector<std::string> find_matching_files( const std::string& pattern );
+  void queue_from_patient_files(const Executor& exec, const std::vector<filesystem::path>& patient_files, std::function<void(Executor, bool)> scenario_launch_func);
+  void queue_from_sate_files(const Executor& exec, const std::vector<filesystem::path>& state_files, std::function<void(Executor, bool)> scenario_launch_func);
+  std::vector<filesystem::path> find_matching_files(const std::string& pattern);
   std::string process_str();
 
 private:

@@ -15,10 +15,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
-#include <biogears/cdm/utils/FileUtils.h>
 
 namespace biogears {
 CommonDataModelTest::CommonDataModelTest()
@@ -257,9 +255,9 @@ void CommonDataModelTest::FillFunctionMap()
 
 void CommonDataModelTest::TestCompartmentSerialization(SECompartmentManager& mgr, const std::string& fileName)
 {
-  ScopedFileSystemLock lock;
 
-  std::ofstream stream(ResolvePath(fileName));
+  auto io = m_Logger->GetIoManager().lock();
+  std::ofstream stream(io->ResolveResultsFileLocation(fileName));
   xml_schema::namespace_infomap map;
   map[""].name = "uri:/mil/tatrc/physiology/datamodel";
 

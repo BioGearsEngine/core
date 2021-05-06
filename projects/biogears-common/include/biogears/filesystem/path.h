@@ -54,6 +54,7 @@ derivative works thereof, in binary and source code form.
 #include <vector>
 
 #if defined(_WIN32)
+#define  WIN32_LEAN_AND_MEAN
 #include <ShlObj.h>
 #include <windows.h>
 #else

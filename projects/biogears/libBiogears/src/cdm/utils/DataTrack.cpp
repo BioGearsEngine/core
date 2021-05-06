@@ -30,7 +30,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
-#include <biogears/cdm/utils/FileUtils.h>
 
 namespace biogears {
 DataTrack::DataTrack()
@@ -110,7 +109,7 @@ void DataTrack::Probe(const std::string& name, double value)
   m_Probe[name] = value;
 }
 
-void DataTrack::Probe(const::std::string& name, std::vector<double> &values)
+void DataTrack::Probe(const ::std::string& name, std::vector<double>& values)
 {
   std::string header;
   int valCount = 1;
@@ -125,48 +124,47 @@ void DataTrack::Probe(const::std::string& name, std::vector<double> &values)
   }
 }
 
-
 void DataTrack::Probe(const SEFluidCircuit& c)
 {
   for (SEFluidCircuitNode* n : c.GetNodes()) {
     if (n->HasPressure()) {
       auto unit = n->GetPressure().GetUnit();
-      Probe(std::string{ n->GetName() } +"_Pressure_" + unit->GetString(), n->GetPressure().GetValue(*unit));
+      Probe(std::string { n->GetName() } + "_Pressure_" + unit->GetString(), n->GetPressure().GetValue(*unit));
     }
     if (n->HasVolume()) {
       auto unit = n->GetVolume().GetUnit();
-      Probe(std::string{ n->GetName() }+"_Volume_" + unit->GetString(), n->GetVolume().GetValue(*unit));
+      Probe(std::string { n->GetName() } + "_Volume_" + unit->GetString(), n->GetVolume().GetValue(*unit));
     }
   }
   for (SEFluidCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Probe(std::string{ p->GetName() }+"_Switch", p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Switch", p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Probe(std::string{ p->GetName() }+"_Valve", p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Valve", p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();
-      Probe(std::string{ p->GetName() }+"_Resistance_" + unit->GetString(), p->GetResistance().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_Resistance_" + unit->GetString(), p->GetResistance().GetValue(*unit));
     }
     if (p->HasCompliance()) {
       auto unit = p->GetCompliance().GetUnit();
-      Probe(std::string{ p->GetName() }+"_Compliance_" + unit->GetString(), p->GetCompliance().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_Compliance_" + unit->GetString(), p->GetCompliance().GetValue(*unit));
     }
     if (p->HasInertance()) {
       auto unit = p->GetInertance().GetUnit();
-      Probe(std::string{ p->GetName() }+"_Inertance_" + unit->GetString(), p->GetInertance().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_Inertance_" + unit->GetString(), p->GetInertance().GetValue(*unit));
     }
     if (p->HasFlow()) {
       auto unit = p->GetFlow().GetUnit();
-      Probe(std::string{ p->GetName() }+"_Flow_" + unit->GetString(), p->GetFlow().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_Flow_" + unit->GetString(), p->GetFlow().GetValue(*unit));
     }
     if (p->HasPressureSource()) {
       auto unit = p->GetPressureSource().GetUnit();
-      Probe(std::string{ p->GetName() }+"_PressureSource_" + unit->GetString(), p->GetPressureSource().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_PressureSource_" + unit->GetString(), p->GetPressureSource().GetValue(*unit));
     }
     if (p->HasFlowSource()) {
       auto unit = p->GetFlowSource().GetUnit();
-      Probe(std::string{ p->GetName() }+"_FlowSource_" + unit->GetString(), p->GetFlowSource().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_FlowSource_" + unit->GetString(), p->GetFlowSource().GetValue(*unit));
     }
   }
 }
@@ -176,42 +174,42 @@ void DataTrack::Probe(const SEThermalCircuit& c)
   for (SEThermalCircuitNode* n : c.GetNodes()) {
     if (n->HasTemperature()) {
       auto unit = n->GetTemperature().GetUnit();
-      Probe(std::string{ n->GetName() } +"_Temperature_" + unit->GetString(), n->GetTemperature().GetValue(*unit));
+      Probe(std::string { n->GetName() } + "_Temperature_" + unit->GetString(), n->GetTemperature().GetValue(*unit));
     }
     if (n->HasHeat()) {
       auto unit = n->GetHeat().GetUnit();
-      Probe(std::string{ n->GetName() } +"_Heat_" + unit->GetString(), n->GetHeat().GetValue(*unit));
+      Probe(std::string { n->GetName() } + "_Heat_" + unit->GetString(), n->GetHeat().GetValue(*unit));
     }
   }
   for (SEThermalCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Probe(std::string{ p->GetName() } +"_Switch", p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Switch", p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Probe(std::string{ p->GetName() } +"_Valve", p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Valve", p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();
-      Probe(std::string{ p->GetName() } +"_Resistance_" + unit->GetString(), p->GetResistance().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_Resistance_" + unit->GetString(), p->GetResistance().GetValue(*unit));
     }
     if (p->HasCapacitance()) {
       auto unit = p->GetCapacitance().GetUnit();
-      Probe(std::string{ p->GetName() } +"_Capacitance_" + unit->GetString(), p->GetCapacitance().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_Capacitance_" + unit->GetString(), p->GetCapacitance().GetValue(*unit));
     }
     if (p->HasInductance()) {
       auto unit = p->GetInductance().GetUnit();
-      Probe(std::string{ p->GetName() } +"_Inductance_" + unit->GetString(), p->GetInductance().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_Inductance_" + unit->GetString(), p->GetInductance().GetValue(*unit));
     }
     if (p->HasHeatTransferRate()) {
       auto unit = p->GetHeatTransferRate().GetUnit();
-      Probe(std::string{ p->GetName() } +"_HeatTransferRate_" + unit->GetString(), p->GetHeatTransferRate().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_HeatTransferRate_" + unit->GetString(), p->GetHeatTransferRate().GetValue(*unit));
     }
     if (p->HasTemperatureSource()) {
       auto unit = p->GetTemperatureSource().GetUnit();
-      Probe(std::string{ p->GetName() } +"_TemperatureSource_" + unit->GetString(), p->GetTemperatureSource().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_TemperatureSource_" + unit->GetString(), p->GetTemperatureSource().GetValue(*unit));
     }
     if (p->HasHeatSource()) {
       auto unit = p->GetHeatSource().GetUnit();
-      Probe(std::string{ p->GetName() } +"_HeatSource_" + unit->GetString(), p->GetHeatSource().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_HeatSource_" + unit->GetString(), p->GetHeatSource().GetValue(*unit));
     }
   }
 }
@@ -221,42 +219,42 @@ void DataTrack::Probe(const SEElectricalCircuit& c)
   for (SEElectricalCircuitNode* n : c.GetNodes()) {
     if (n->HasVoltage()) {
       auto unit = n->GetVoltage().GetUnit();
-      Probe(std::string{ n->GetName() }+"_Voltage_" + unit->GetString(), n->GetVoltage().GetValue(*unit));
+      Probe(std::string { n->GetName() } + "_Voltage_" + unit->GetString(), n->GetVoltage().GetValue(*unit));
     }
     if (n->HasCharge()) {
       auto unit = n->GetCharge().GetUnit();
-      Probe(std::string{ n->GetName() }+"_Charge_" + unit->GetString(), n->GetCharge().GetValue(*unit));
+      Probe(std::string { n->GetName() } + "_Charge_" + unit->GetString(), n->GetCharge().GetValue(*unit));
     }
   }
   for (SEElectricalCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Probe(std::string{ p->GetName() } +"_Switch", p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Switch", p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Probe(std::string{ p->GetName() } +"_Valve", p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Valve", p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();
-      Probe( std::string{ p->GetName() } + "_Resistance_" + unit->GetString(), p->GetResistance().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_Resistance_" + unit->GetString(), p->GetResistance().GetValue(*unit));
     }
     if (p->HasCapacitance()) {
       auto unit = p->GetCapacitance().GetUnit();
-      Probe( std::string{ p->GetName() } + "_Capacitance_" + unit->GetString(), p->GetCapacitance().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_Capacitance_" + unit->GetString(), p->GetCapacitance().GetValue(*unit));
     }
     if (p->HasInductance()) {
       auto unit = p->GetInductance().GetUnit();
-      Probe( std::string{ p->GetName() } + "_Inductance_" + unit->GetString(), p->GetInductance().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_Inductance_" + unit->GetString(), p->GetInductance().GetValue(*unit));
     }
     if (p->HasCurrent()) {
       auto unit = p->GetCurrent().GetUnit();
-      Probe( std::string{ p->GetName() } + "_Current_" + unit->GetString(), p->GetCurrent().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_Current_" + unit->GetString(), p->GetCurrent().GetValue(*unit));
     }
     if (p->HasVoltageSource()) {
       auto unit = p->GetVoltageSource().GetUnit();
-      Probe( std::string{ p->GetName() } + "_VoltageSource_" + unit->GetString(), p->GetVoltageSource().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_VoltageSource_" + unit->GetString(), p->GetVoltageSource().GetValue(*unit));
     }
     if (p->HasCurrentSource()) {
       auto unit = p->GetCurrentSource().GetUnit();
-      Probe( std::string{ p->GetName() } + "_CurrentSource_" + unit->GetString(), p->GetCurrentSource().GetValue(*unit));
+      Probe(std::string { p->GetName() } + "_CurrentSource_" + unit->GetString(), p->GetCurrentSource().GetValue(*unit));
     }
   }
 }
@@ -266,42 +264,42 @@ void DataTrack::Probe(const SELiquidCompartmentGraph& graph)
   for (SELiquidCompartment* cmpt : graph.GetCompartments()) {
     if (cmpt->HasPressure()) {
       auto unit = cmpt->GetPressure().GetUnit();
-      Probe( std::string{ cmpt->GetName() } + "_Pressure_" + unit->GetString(), cmpt->GetPressure().GetValue(*unit));
+      Probe(std::string { cmpt->GetName() } + "_Pressure_" + unit->GetString(), cmpt->GetPressure().GetValue(*unit));
     }
     if (cmpt->HasVolume()) {
       auto unit = cmpt->GetVolume().GetUnit();
-      Probe( std::string{ cmpt->GetName() } + "_Volume_" + unit->GetString(), cmpt->GetVolume().GetValue(*unit));
+      Probe(std::string { cmpt->GetName() } + "_Volume_" + unit->GetString(), cmpt->GetVolume().GetValue(*unit));
     }
     if (cmpt->HasPH()) {
-      Probe( std::string{ cmpt->GetName() } + "_pH_", cmpt->GetPH().GetValue());
+      Probe(std::string { cmpt->GetName() } + "_pH_", cmpt->GetPH().GetValue());
     }
 
     for (SELiquidSubstanceQuantity* subQ : cmpt->GetSubstanceQuantities()) {
       if (subQ->HasSaturation()) {
-        Probe( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Saturation", subQ->GetSaturation().GetValue());
+        Probe(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Saturation", subQ->GetSaturation().GetValue());
       }
       if (subQ->HasPartialPressure()) {
         auto unit = subQ->GetPartialPressure().GetUnit();
-        Probe( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_PartialPressure_" + unit->GetString(), subQ->GetPartialPressure().GetValue(*unit));
+        Probe(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_PartialPressure_" + unit->GetString(), subQ->GetPartialPressure().GetValue(*unit));
       }
       if (subQ->HasMass()) {
         auto unit = subQ->GetMass().GetUnit();
-        Probe( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Mass_" + unit->GetString(), subQ->GetMass().GetValue(*unit));
+        Probe(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Mass_" + unit->GetString(), subQ->GetMass().GetValue(*unit));
       }
       if (subQ->HasConcentration()) {
         auto unit = subQ->GetConcentration().GetUnit();
-        Probe( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Concentration_" + unit->GetString(), subQ->GetConcentration().GetValue(*unit));
+        Probe(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Concentration_" + unit->GetString(), subQ->GetConcentration().GetValue(*unit));
       }
       if (subQ->HasMolarity()) {
         auto unit = subQ->GetMolarity().GetUnit();
-        Probe( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Molarity_" + unit->GetString(), subQ->GetMolarity().GetValue(*unit));
+        Probe(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Molarity_" + unit->GetString(), subQ->GetMolarity().GetValue(*unit));
       }
     }
   }
   for (SELiquidCompartmentLink* link : graph.GetLinks()) {
     if (link->HasFlow()) {
       auto unit = link->GetFlow().GetUnit();
-      Probe( std::string{ link->GetName() } + "_Flow_" + unit->GetString(), link->GetFlow(*unit));
+      Probe(std::string { link->GetName() } + "_Flow_" + unit->GetString(), link->GetFlow(*unit));
     }
   }
 }
@@ -358,42 +356,42 @@ void DataTrack::Track(double time_s, const SEElectricalCircuit& c)
   for (SEElectricalCircuitNode* n : c.GetNodes()) {
     if (n->HasVoltage()) {
       auto unit = n->GetVoltage().GetUnit();
-      Track( std::string{ n->GetName() } + "_Voltage_" + unit->GetString(), time_s, n->GetVoltage().GetValue(*unit));
+      Track(std::string { n->GetName() } + "_Voltage_" + unit->GetString(), time_s, n->GetVoltage().GetValue(*unit));
     }
     if (n->HasCharge()) {
       auto unit = n->GetCharge().GetUnit();
-      Track( std::string{ n->GetName() } + "_Charge_" + unit->GetString(), time_s, n->GetCharge().GetValue(*unit));
+      Track(std::string { n->GetName() } + "_Charge_" + unit->GetString(), time_s, n->GetCharge().GetValue(*unit));
     }
   }
   for (SEElectricalCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Track( std::string{ p->GetName() } + "_Switch", time_s, p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Switch", time_s, p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Track( std::string{ p->GetName() } + "_Valve", time_s, p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Valve", time_s, p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();
-      Track( std::string{ p->GetName() } + "_Resistance_" + unit->GetString(), time_s, p->GetResistance().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_Resistance_" + unit->GetString(), time_s, p->GetResistance().GetValue(*unit));
     }
     if (p->HasCapacitance()) {
       auto unit = p->GetCapacitance().GetUnit();
-      Track( std::string{ p->GetName() } + "_Capacitance_" + unit->GetString(), time_s, p->GetCapacitance().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_Capacitance_" + unit->GetString(), time_s, p->GetCapacitance().GetValue(*unit));
     }
     if (p->HasInductance()) {
       auto unit = p->GetInductance().GetUnit();
-      Track( std::string{ p->GetName() } + "_Inductance_" + unit->GetString(), time_s, p->GetInductance().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_Inductance_" + unit->GetString(), time_s, p->GetInductance().GetValue(*unit));
     }
     if (p->HasCurrent()) {
       auto unit = p->GetCurrent().GetUnit();
-      Track( std::string{ p->GetName() } + "_Current_" + unit->GetString(), time_s, p->GetCurrent().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_Current_" + unit->GetString(), time_s, p->GetCurrent().GetValue(*unit));
     }
     if (p->HasVoltageSource()) {
       auto unit = p->GetVoltageSource().GetUnit();
-      Track( std::string{ p->GetName() } + "_VoltageSource_" + unit->GetString(), time_s, p->GetVoltageSource().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_VoltageSource_" + unit->GetString(), time_s, p->GetVoltageSource().GetValue(*unit));
     }
     if (p->HasCurrentSource()) {
       auto unit = p->GetCurrentSource().GetUnit();
-      Track( std::string{ p->GetName() } + "_CurrentSource_" + unit->GetString(), time_s, p->GetCurrentSource().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_CurrentSource_" + unit->GetString(), time_s, p->GetCurrentSource().GetValue(*unit));
     }
   }
 }
@@ -402,42 +400,42 @@ void DataTrack::Track(double time_s, const SEFluidCircuit& c)
   for (SEFluidCircuitNode* n : c.GetNodes()) {
     if (n->HasPressure()) {
       auto unit = n->GetPressure().GetUnit();
-      Track( std::string{ n->GetName() } + "_Pressure_" + unit->GetString(), time_s, n->GetPressure().GetValue(*unit));
+      Track(std::string { n->GetName() } + "_Pressure_" + unit->GetString(), time_s, n->GetPressure().GetValue(*unit));
     }
     if (n->HasVolume()) {
       auto unit = n->GetVolume().GetUnit();
-      Track( std::string{ n->GetName() } + "_Volume_" + unit->GetString(), time_s, n->GetVolume().GetValue(*unit));
+      Track(std::string { n->GetName() } + "_Volume_" + unit->GetString(), time_s, n->GetVolume().GetValue(*unit));
     }
   }
   for (SEFluidCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Track( std::string{ p->GetName() } + "_Switch", time_s, p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Switch", time_s, p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Track( std::string{ p->GetName() } + "_Valve", time_s, p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Valve", time_s, p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();
-      Track( std::string{ p->GetName() } + "_Resistance_" + unit->GetString(), time_s, p->GetResistance().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_Resistance_" + unit->GetString(), time_s, p->GetResistance().GetValue(*unit));
     }
     if (p->HasCompliance()) {
       auto unit = p->GetCompliance().GetUnit();
-      Track( std::string{ p->GetName() } + "_Compliance_" + unit->GetString(), time_s, p->GetCompliance().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_Compliance_" + unit->GetString(), time_s, p->GetCompliance().GetValue(*unit));
     }
     if (p->HasInertance()) {
       auto unit = p->GetInertance().GetUnit();
-      Track( std::string{ p->GetName() } + "_Inertance_" + unit->GetString(), time_s, p->GetInertance().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_Inertance_" + unit->GetString(), time_s, p->GetInertance().GetValue(*unit));
     }
     if (p->HasFlow()) {
       auto unit = p->GetFlow().GetUnit();
-      Track( std::string{ p->GetName() } + "_Flow_" + unit->GetString(), time_s, p->GetFlow().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_Flow_" + unit->GetString(), time_s, p->GetFlow().GetValue(*unit));
     }
     if (p->HasPressureSource()) {
       auto unit = p->GetPressureSource().GetUnit();
-      Track( std::string{ p->GetName() } + "_PressureSource_" + unit->GetString(), time_s, p->GetPressureSource().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_PressureSource_" + unit->GetString(), time_s, p->GetPressureSource().GetValue(*unit));
     }
     if (p->HasFlowSource()) {
       auto unit = p->GetFlowSource().GetUnit();
-      Track( std::string{ p->GetName() } + "_FlowSource_" + unit->GetString(), time_s, p->GetFlowSource().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_FlowSource_" + unit->GetString(), time_s, p->GetFlowSource().GetValue(*unit));
     }
   }
 }
@@ -446,42 +444,42 @@ void DataTrack::Track(double time_s, const SEThermalCircuit& c)
   for (SEThermalCircuitNode* n : c.GetNodes()) {
     if (n->HasTemperature()) {
       auto unit = n->GetTemperature().GetUnit();
-      Track( std::string{ n->GetName() } + "_Temperature_" + unit->GetString(), time_s, n->GetTemperature().GetValue(*unit));
+      Track(std::string { n->GetName() } + "_Temperature_" + unit->GetString(), time_s, n->GetTemperature().GetValue(*unit));
     }
     if (n->HasHeat()) {
       auto unit = n->GetHeat().GetUnit();
-      Track( std::string{ n->GetName() } + "_Heat_" + unit->GetString(), time_s, n->GetHeat().GetValue(*unit));
+      Track(std::string { n->GetName() } + "_Heat_" + unit->GetString(), time_s, n->GetHeat().GetValue(*unit));
     }
   }
   for (SEThermalCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Track( std::string{ p->GetName() } + "_Switch", time_s, p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Switch", time_s, p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Track( std::string{ p->GetName() } + "_Valve", time_s, p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Valve", time_s, p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();
-      Track( std::string{ p->GetName() } + "_Resistance_" + unit->GetString(), time_s, p->GetResistance().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_Resistance_" + unit->GetString(), time_s, p->GetResistance().GetValue(*unit));
     }
     if (p->HasCapacitance()) {
       auto unit = p->GetCapacitance().GetUnit();
-      Track( std::string{ p->GetName() } + "_Capacitance_" + unit->GetString(), time_s, p->GetCapacitance().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_Capacitance_" + unit->GetString(), time_s, p->GetCapacitance().GetValue(*unit));
     }
     if (p->HasInductance()) {
       auto unit = p->GetInductance().GetUnit();
-      Track( std::string{ p->GetName() } + "_Inductance_" + unit->GetString(), time_s, p->GetInductance().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_Inductance_" + unit->GetString(), time_s, p->GetInductance().GetValue(*unit));
     }
     if (p->HasHeatTransferRate()) {
       auto unit = p->GetHeatTransferRate().GetUnit();
-      Track( std::string{ p->GetName() } + "_HeatTransferRate_" + unit->GetString(), time_s, p->GetHeatTransferRate().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_HeatTransferRate_" + unit->GetString(), time_s, p->GetHeatTransferRate().GetValue(*unit));
     }
     if (p->HasTemperatureSource()) {
       auto unit = p->GetTemperatureSource().GetUnit();
-      Track( std::string{ p->GetName() } + "_TemperatureSource_" + unit->GetString(), time_s, p->GetTemperatureSource().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_TemperatureSource_" + unit->GetString(), time_s, p->GetTemperatureSource().GetValue(*unit));
     }
     if (p->HasHeatSource()) {
       auto unit = p->GetHeatSource().GetUnit();
-      Track( std::string{ p->GetName() } + "_HeatSource_" + unit->GetString(), time_s, p->GetHeatSource().GetValue(*unit));
+      Track(std::string { p->GetName() } + "_HeatSource_" + unit->GetString(), time_s, p->GetHeatSource().GetValue(*unit));
     }
   }
 }
@@ -490,11 +488,11 @@ void DataTrack::Track(double time_s, const SEGasCompartmentGraph& graph, std::ve
   for (SEGasCompartment* cmpt : graph.GetCompartments()) {
     if (cmpt->HasPressure()) {
       auto unit = cmpt->GetPressure().GetUnit();
-      Track( std::string{ cmpt->GetName() } + "_Pressure_" + unit->GetString(), time_s, cmpt->GetPressure().GetValue(*unit));
+      Track(std::string { cmpt->GetName() } + "_Pressure_" + unit->GetString(), time_s, cmpt->GetPressure().GetValue(*unit));
     }
     if (cmpt->HasVolume()) {
       auto unit = cmpt->GetVolume().GetUnit();
-      Track( std::string{ cmpt->GetName() } + "_Volume_" + unit->GetString(), time_s, cmpt->GetVolume().GetValue(*unit));
+      Track(std::string { cmpt->GetName() } + "_Volume_" + unit->GetString(), time_s, cmpt->GetVolume().GetValue(*unit));
     }
 
     for (SEGasSubstanceQuantity* subQ : cmpt->GetSubstanceQuantities()) {
@@ -503,21 +501,21 @@ void DataTrack::Track(double time_s, const SEGasCompartmentGraph& graph, std::ve
 
       if (subQ->HasPartialPressure()) {
         auto unit = subQ->GetPartialPressure().GetUnit();
-        Track( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_PartialPressure_" + unit->GetString(), time_s, subQ->GetPartialPressure().GetValue(*unit));
+        Track(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_PartialPressure_" + unit->GetString(), time_s, subQ->GetPartialPressure().GetValue(*unit));
       }
       if (subQ->HasVolume()) {
         auto unit = subQ->GetVolume().GetUnit();
-        Track( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Volume_" + unit->GetString(), time_s, subQ->GetVolume().GetValue(*unit));
+        Track(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Volume_" + unit->GetString(), time_s, subQ->GetVolume().GetValue(*unit));
       }
       if (subQ->HasVolumeFraction()) {
-        Track( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_VolumeFraction", time_s, subQ->GetVolumeFraction().GetValue());
+        Track(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_VolumeFraction", time_s, subQ->GetVolumeFraction().GetValue());
       }
     }
   }
   for (SEGasCompartmentLink* link : graph.GetLinks()) {
     if (link->HasFlow()) {
       auto unit = link->GetFlow().GetUnit();
-      Track( std::string{ link->GetName() } + "_Flow_" + unit->GetString(), time_s, link->GetFlow(*unit));
+      Track(std::string { link->GetName() } + "_Flow_" + unit->GetString(), time_s, link->GetFlow(*unit));
     }
   }
 }
@@ -526,14 +524,14 @@ void DataTrack::Track(double time_s, const SELiquidCompartmentGraph& graph, std:
   for (SELiquidCompartment* cmpt : graph.GetCompartments()) {
     if (cmpt->HasPressure()) {
       auto unit = cmpt->GetPressure().GetUnit();
-      Track( std::string{ cmpt->GetName() } + "_Pressure_" + unit->GetString(), time_s, cmpt->GetPressure().GetValue(*unit));
+      Track(std::string { cmpt->GetName() } + "_Pressure_" + unit->GetString(), time_s, cmpt->GetPressure().GetValue(*unit));
     }
     if (cmpt->HasVolume()) {
       auto unit = cmpt->GetVolume().GetUnit();
-      Track( std::string{ cmpt->GetName() } + "_Volume_" + unit->GetString(), time_s, cmpt->GetVolume().GetValue(*unit));
+      Track(std::string { cmpt->GetName() } + "_Volume_" + unit->GetString(), time_s, cmpt->GetVolume().GetValue(*unit));
     }
     if (cmpt->HasPH()) {
-      Track( std::string{ cmpt->GetName() } + "_pH_", time_s, cmpt->GetPH().GetValue());
+      Track(std::string { cmpt->GetName() } + "_pH_", time_s, cmpt->GetPH().GetValue());
     }
 
     for (SELiquidSubstanceQuantity* subQ : cmpt->GetSubstanceQuantities()) {
@@ -541,30 +539,30 @@ void DataTrack::Track(double time_s, const SELiquidCompartmentGraph& graph, std:
         continue;
 
       if (subQ->HasSaturation()) {
-        Track( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Saturation", time_s, subQ->GetSaturation().GetValue());
+        Track(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Saturation", time_s, subQ->GetSaturation().GetValue());
       }
       if (subQ->HasPartialPressure()) {
         auto unit = subQ->GetPartialPressure().GetUnit();
-        Track( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_PartialPressure_" + unit->GetString(), time_s, subQ->GetPartialPressure().GetValue(*unit));
+        Track(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_PartialPressure_" + unit->GetString(), time_s, subQ->GetPartialPressure().GetValue(*unit));
       }
       if (subQ->HasMass()) {
         auto unit = subQ->GetMass().GetUnit();
-        Track( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Mass_" + unit->GetString(), time_s, subQ->GetMass().GetValue(*unit));
+        Track(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Mass_" + unit->GetString(), time_s, subQ->GetMass().GetValue(*unit));
       }
       if (subQ->HasConcentration()) {
         auto unit = subQ->GetConcentration().GetUnit();
-        Track( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Concentration_" + unit->GetString(), time_s, subQ->GetConcentration().GetValue(*unit));
+        Track(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Concentration_" + unit->GetString(), time_s, subQ->GetConcentration().GetValue(*unit));
       }
       if (subQ->HasMolarity()) {
         auto unit = subQ->GetMolarity().GetUnit();
-        Track( std::string{ cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Molarity_" + unit->GetString(), time_s, subQ->GetMolarity().GetValue(*unit));
+        Track(std::string { cmpt->GetName() } + "_" + subQ->GetSubstance().GetName() + "_Molarity_" + unit->GetString(), time_s, subQ->GetMolarity().GetValue(*unit));
       }
     }
   }
   for (SELiquidCompartmentLink* link : graph.GetLinks()) {
     if (link->HasFlow()) {
       auto unit = link->GetFlow().GetUnit();
-      Track( std::string{ link->GetName() } + "_Flow_" + unit->GetString(), time_s, link->GetFlow(*unit));
+      Track(std::string { link->GetName() } + "_Flow_" + unit->GetString(), time_s, link->GetFlow(*unit));
     }
   }
 }
@@ -605,8 +603,8 @@ std::vector<std::string> DataTrack::ReadTrackFromFile(const char* fileName)
     if ((pos = line.find_first_of(',', pos)) != std::string::npos)
       line[pos] = ' ';
   copy(std::istream_iterator<std::string>(iss),
-    std::istream_iterator<std::string>(),
-    std::back_inserter<std::vector<std::string>>(headings));
+       std::istream_iterator<std::string>(),
+       std::back_inserter<std::vector<std::string>>(headings));
   // Pull out each value
   std::vector<double> values;
   while (std::getline(infile, line)) {
@@ -616,8 +614,8 @@ std::vector<std::string> DataTrack::ReadTrackFromFile(const char* fileName)
         line[pos] = ' ';
     std::istringstream iss(line);
     copy(std::istream_iterator<double>(iss),
-      std::istream_iterator<double>(),
-      std::back_inserter<std::vector<double>>(values));
+         std::istream_iterator<double>(),
+         std::back_inserter<std::vector<double>>(values));
     double time = values[0];
     for (unsigned int i = 1; i < values.size(); i++) {
       Track(headings[i], time, values[i]);
@@ -633,18 +631,21 @@ std::vector<std::string> DataTrack::StreamDataFromFile(const char* fileName)
 {
   Reset();
   std::string line;
-  m_FileStream.open(ResolvePath(fileName));
+  auto io = m_Logger->GetIoManager().lock();
+  m_FileStream.open(io->ResolveLogFileLocation(fileName));
   // Grab the headings from the first line
   std::getline(m_FileStream, line);
   std::size_t pos = 0;
-  while (pos < line.size())
-    if ((pos = line.find_first_of(',', pos)) != std::string::npos)
+  while (pos < line.size()) {
+    if ((pos = line.find_first_of(',', pos)) != std::string::npos) {
       line[pos] = ' ';
+    }
+  }
   std::istringstream iss(line);
   std::vector<std::string> headings;
   copy(std::istream_iterator<std::string>(iss),
-    std::istream_iterator<std::string>(),
-    std::back_inserter<std::vector<std::string>>(headings));
+       std::istream_iterator<std::string>(),
+       std::back_inserter<std::vector<std::string>>(headings));
 
   return headings;
 }
@@ -662,8 +663,8 @@ double DataTrack::StreamDataFromFile(std::vector<std::string>* headings)
         line[pos] = ' ';
     std::istringstream iss(line);
     copy(std::istream_iterator<double>(iss),
-      std::istream_iterator<double>(),
-      std::back_inserter<std::vector<double>>(values));
+         std::istream_iterator<double>(),
+         std::back_inserter<std::vector<double>>(values));
     time = values[0];
     for (unsigned int i = 1; i < values.size(); i++)
       Probe(headings->at(i), values[i]);
@@ -675,9 +676,10 @@ double DataTrack::StreamDataFromFile(std::vector<std::string>* headings)
 void DataTrack::CreateFile(const std::string& fileName, std::ofstream& newFile, std::ios_base::openmode mode)
 {
 
-  newFile.open(ResolvePath(fileName), std::ofstream::out | mode);
+  auto io = m_Logger->GetIoManager().lock();
+  newFile.open(io->ResolveLogFileLocation(fileName), std::ofstream::out | mode);
   // Write our headers
-  newFile << ((mode==std::ios_base::trunc) ? "Time(s)" : "#Time(s)") << m_Delimiter;
+  newFile << ((mode == std::ios_base::trunc) ? "Time(s)" : "#Time(s)") << m_Delimiter;
   for (unsigned int i = 0; i < m_HeadingOrder.size(); i++) {
     newFile << m_HeadingOrder.at(i);
     if (i < (m_HeadingOrder.size() - 1))
@@ -688,13 +690,15 @@ void DataTrack::CreateFile(const std::string& fileName, std::ofstream& newFile, 
 }
 void DataTrack::CreateFile(const char* fileName, std::ofstream& newFile, std::ios_base::openmode mode)
 {
-  CreateFile(std::string{fileName}, newFile, mode);
+  CreateFile(std::string { fileName }, newFile, mode);
 }
 
 void DataTrack::WriteTrackToFile(const char* fileName, std::ios_base::openmode mode)
 {
   std::ofstream file;
-  std::string filepath = ResolvePath(fileName);
+
+  auto io = m_Logger->GetIoManager().lock();
+  std::string filepath = io->ResolveLogFileLocation(fileName);
   file.open(fileName, std::ofstream::out | mode);
   // Write our headers
   file << "Time(s)" << m_Delimiter;

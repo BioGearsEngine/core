@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/cdm/utils/testing/SETestReport.h>
@@ -27,7 +26,7 @@ void CommonDataModelTest::ReadSubstanceDirectory(const std::string& rptDirectory
   m_Logger->ResetLogFile(rptDirectory + "/" + testName + ".log");
   SESubstance obj(m_Logger);
 
-  std::string dir = GetCurrentWorkingDirectory();
+  std::string dir = m_Logger->GetIoManager().lock()->GetBioGearsWorkingDirectory();
   dir.append("/substances");
 
   SETestReport testReport(m_Logger);

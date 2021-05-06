@@ -76,7 +76,7 @@ namespace io {
    return get_nutrition_file_sha1(working_dir);
   }
   //-----------------------------------------------------------------------------
-  char const* const* list_nutrition_files()
+  char const** list_nutrition_files()
   {
     return nutrition_file_list;
   }

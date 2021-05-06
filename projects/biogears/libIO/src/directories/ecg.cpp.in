@@ -76,7 +76,7 @@ namespace io {
     return get_ecg_file_sha1(working_dir);
   }
   //-----------------------------------------------------------------------------
-  char const* const* list_ecg_files()
+  char const** list_ecg_files()
   {
     return ecg_file_list;
   }
@@ -140,7 +140,7 @@ namespace io {
     return embedded_content;
   }
   //-----------------------------------------------------------------------------
-  size_t  get_embedded_ecg_file_size( const char* path, size_t& content_size) 
+  size_t  get_embedded_ecg_file_size( const char* path) 
   {
     size_t size_of_embedded_content = 0;
 

@@ -76,7 +76,7 @@ namespace io {
     return get_substances_file_sha1(working_dir);
   }
   //-----------------------------------------------------------------------------
-  char const* const* list_substances_files()
+  char const** list_substances_files()
   {
     return substance_file_list;
   }

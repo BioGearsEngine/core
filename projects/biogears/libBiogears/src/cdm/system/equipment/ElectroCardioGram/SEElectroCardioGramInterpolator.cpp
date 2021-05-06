@@ -39,7 +39,7 @@ void SEElectroCardioGramInterpolator::Clear()
 //-------------------------------------------------------------------------------
 bool SEElectroCardioGramInterpolator::LoadWaveforms(const char* file, const SEScalarTime* timeStep)
 {
-  return LoadWaveforms(std::string{ file }, timeStep);
+  return LoadWaveforms(std::string { file }, timeStep);
 }
 //-------------------------------------------------------------------------------
 bool SEElectroCardioGramInterpolator::LoadWaveforms(const std::string& file, const SEScalarTime* timeStep)
@@ -52,7 +52,20 @@ bool SEElectroCardioGramInterpolator::LoadWaveforms(const std::string& file, con
     return false;
   }
   Clear();
-  std::unique_ptr<CDM::ObjectData> data = Serializer::ReadFile(file, GetLogger());
+
+  std::unique_ptr<CDM::ObjectData> data;
+
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindEcgFile(file.c_str());
+  if (possible_path.empty()) {
+    size_t content_size;
+    auto resource = filesystem::path { "ecg" } / filesystem::path(file).basename();
+    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+  } else {
+    data = Serializer::ReadFile(possible_path.string(), m_Logger);
+  }
+
   CDM::ElectroCardioGramWaveformInterpolatorData* pData = dynamic_cast<CDM::ElectroCardioGramWaveformInterpolatorData*>(data.get());
   if (pData == nullptr) {
     ss << "Waveform data file could not be read : " << file << std::endl;

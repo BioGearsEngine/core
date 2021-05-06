@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -11,6 +12,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <memory>
 #include <sstream>
 
 #pragma warning(push)
@@ -22,6 +24,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
+
+#include <biogears/io/io-manager.h>
 
 namespace biogears {
 
@@ -84,15 +88,18 @@ class BIOGEARS_API Logger {
   friend Loggable;
 
 public:
-  Logger(const std::string& logFilename = Loggable::empty, const std::string& working_dir = Loggable::empty);
-  Logger(const char* logFilename, const char* working_dir = Loggable::empty_cStr);
+  explicit Logger(const std::string& logFilename = Loggable::empty);
+  explicit Logger(const std::string& logFilename, IOManager const& io);
+  explicit Logger(const char* logFilename );
+  explicit Logger(const char* logFilename, IOManager const& io);
+
   virtual ~Logger();
 
   void LogToConsole(bool log_to_console);
   void FormatMessages(bool format_messages);
 
-  void ResetLogFile(const std::string& logFilename = Loggable::empty, const std::string& working_dir = Loggable::empty);
-  void ResetLogFile(const char* logFilename, const char* working_dir = Loggable::empty_cStr);
+  void ResetLogFile(const std::string& logFilename = Loggable::empty);
+  void ResetLogFile(const char* logFilename);
 
   void SetLogLevel(log4cpp::Priority::Value priority) const;
   void SetConsoleLogLevel(log4cpp::Priority::Value priority) const;
@@ -118,8 +125,13 @@ public:
   virtual void Error(std::ostream const& msg, std::string const& origin = Loggable::empty) const;
   virtual void Fatal(std::ostream const& msg, std::string const& origin = Loggable::empty) const;
 
+  std::weak_ptr<IOManager> GetIoManager() const;
+  void SetIoManager(IOManager const&); //< Logger will setup a copy of the IOManager to distributed amongs the Engine components
+
 protected:
   virtual std::string FormatLogMessage(const std::string& origin, const std::string& msg) const;
+
+  std::shared_ptr<IOManager> m_io;
 
   LoggerForward* m_Forward;
   log4cpp::Category* m_Log;
@@ -128,6 +140,7 @@ protected:
   const SEScalarTime* m_time;
   mutable std::stringstream m_ss;
   bool m_FormatMessages;
+  Logger* m_Logger;
 };
 
 }

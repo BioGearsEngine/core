@@ -76,7 +76,7 @@ namespace io {
     return get_config_file_sha1(working_dir);
   }
   //-----------------------------------------------------------------------------
-  char const* const* list_config_files()
+  char const** list_config_files()
   {
     return config_file_list;
   }

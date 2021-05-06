@@ -15,16 +15,17 @@ specific language governing permissions and limitations under the License.
 //Project Includes
 #include <biogears/cdm/Serializer.h>
 
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/schema/biogears/BioGears.hxx>
+
+#include <xercesc/framework/MemBufInputSource.hpp>
+#include <xercesc/framework/Wrapper4InputSource.hpp>
 
 using namespace xercesc;
 namespace xml = xsd::cxx::xml;
-
+ #pragma optimize( "", off )
 namespace biogears {
 Serializer* Serializer::m_me = nullptr;
 bool Serializer::m_Initialized = false;
-
 
 bool ErrorHandler::failed() const
 {
@@ -64,7 +65,7 @@ bool ErrorHandler::handleError(const xercesc::DOMError& err)
 //-----------------------------------------------------------------------------
 Serializer::Serializer()
 {
-  m_buffer.resize(5 * 1024 * 1024,'\0'); //5MBs Average State file is 2MBs
+  m_buffer.resize(5 * 1024 * 1024, '\0'); //5MBs Average State file is 2MBs
   m_buffer_size = sizeof(XMLByte) * m_buffer.size();
 }
 //-----------------------------------------------------------------------------
@@ -84,7 +85,8 @@ bool Serializer::Initialize(Logger* logger)
   xercesc::XMLPlatformUtils::Initialize();
   m_GrammerPool.reset(new XMLGrammarPoolImpl());
 
-  std::string shortDir = ResolvePath("xsd/BioGearsDataModel.xsd");
+  auto io = logger->GetIoManager().lock();
+  std::string shortDir = io->find_resource_file("xsd/BioGearsDataModel.xsd");
 
   ErrorHandler eh;
   DOMLSParser* parser(CreateParser(logger));
@@ -167,14 +169,12 @@ DOMLSParser* Serializer::CreateParser(Logger* logger) const
 //-----------------------------------------------------------------------------
 std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const char* xmlFile, Logger* logger)
 {
-  return ReadFile( std::string{ xmlFile }, logger);
+  return ReadFile(std::string { xmlFile }, logger);
 }
 //-----------------------------------------------------------------------------
 std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile, Logger* logger)
 {
-  ////ScopedFileSystemLock lock;
-
-  if (m_me == nullptr){
+  if (m_me == nullptr) {
     m_me = new Serializer();
   }
 
@@ -188,68 +188,84 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   std::unique_ptr<DOMLSParser> parser(m_me->CreateParser(logger));
   parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, &eh);
 
-  const std::string resolved_xmlFile = ResolvePath(xmlFile);
-  std::unique_ptr<xercesc::DOMDocument> doc(parser->parseURI( resolved_xmlFile.c_str()));
-  
-  //io::IOManager io_manager;
-  //
-  //auto content_size = io_manager.find_resource_file(xmlFile.c_str(), reinterpret_cast<char*>(&m_me->m_buffer[0]), m_me->m_buffer_size);
-  //m_me->m_buffer[content_size]='\0';
-  if (doc) {//(content_size > 0) {
-  //  MemBufInputSource content(&m_me->m_buffer[0], content_size, "dummy", false);
-  //  Wrapper4InputSource content_wraper {&content, false};
-  //  std::unique_ptr<xercesc::DOMDocument> doc( parser->parse(&content_wraper));
-  
-    if (eh.failed() || doc == nullptr) {
-      // TODO Append parse error
-      /// \error Error reading xml file
-      err << "Error reading xml file " << xmlFile << "\n"
-          << eh.getError() << std::ends;
-      logger->Error(err.str());
-      return std::unique_ptr<CDM::ObjectData>();
-    }
-    // Let's see what kind of object this is
-    DOMElement* root(doc->getDocumentElement());
-    std::string ns(xml::transcode<char>(root->getNamespaceURI()));
-    std::string name(xml::transcode<char>(root->getLocalName()));
+  auto io = logger->GetIoManager().lock();
+  size_t content_size = io->read_resource_file(xmlFile.c_str(), reinterpret_cast<char*>(&m_me->m_buffer[0]), m_me->m_buffer.size());
 
-    std::unique_ptr<CDM::ObjectData> obj = std::unique_ptr<CDM::ObjectData>();
-    // Check the name and read it into the right object type
-    if (name.compare("Substance") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Substance(*doc).release());
-    if (name.compare("Patient") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Patient(*doc).release());
-    if (name.compare("SubstanceCompound") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::SubstanceCompound(*doc).release());
-    if (name.compare("Scenario") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Scenario(*doc).release());
-    if (name.compare("EnvironmentalConditions") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::EnvironmentalConditions(*doc).release());
-    if (name.compare("ElectroCardioGramWaveformInterpolator") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::ElectroCardioGramWaveformInterpolator(*doc).release());
-    if (name.compare("Nutrition") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Nutrition(*doc).release());
-    if (name.compare("PhysiologyEngineDynamicStabilization") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::PhysiologyEngineDynamicStabilization(*doc).release());
-    if (name.compare("PhysiologyEngineTimedStabilization") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::PhysiologyEngineTimedStabilization(*doc).release());
-    if (name.compare("CircuitManager") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::CircuitManager(*doc).release());
-    if (name.compare("CompartmentManager") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::CompartmentManager(*doc).release());
-    if (name.compare("BioGearsConfiguration") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsConfiguration(*doc).release());
-    if (name.compare("BioGearsState") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsState(*doc).release());
-    if (name.compare("DataRequests") == 0)
-      return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::DataRequests(*doc).release());
-
-    /// \error Unsupported root tag
-    err << "Unsupported root tag " << name << " found in xml file " << xmlFile << std::ends;
-    logger->Error(err.str());
-    return obj;
-  }
-  return nullptr;
+  return ReadBuffer(&m_me->m_buffer[0], content_size,  logger);
 }
 //-----------------------------------------------------------------------------
+std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte* buffer, size_t size, Logger* logger)
+{
+  if (m_me == nullptr) {
+    m_me = new Serializer();
+  }
+
+  if (!m_me->m_Initialized && !m_me->Initialize(logger)) {
+    /// \error Serializer was not able to initialize
+    logger->Error("Serializer was not able to initialize");
+    return std::unique_ptr<CDM::ObjectData>();
+  }
+
+  ErrorHandler eh;
+  std::stringstream err;
+  std::unique_ptr<DOMLSParser> parser(m_me->CreateParser(logger));
+  parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, &eh);
+
+  //Cast: char const* -> unsigned char*
+  MemBufInputSource content((XMLByte*)buffer, size, "dummy", false);
+  Wrapper4InputSource content_wraper {&content, false};
+  std::unique_ptr<xercesc::DOMDocument> doc( parser->parse(&content_wraper));
+
+  if (eh.failed() || doc == nullptr) {
+    // TODO Append parse error
+    /// \error Error reading xml file
+    err << "Error reading data from buffer\n"
+        << eh.getError() << std::ends;
+    logger->Error(err.str());
+    return std::unique_ptr<CDM::ObjectData>();
+  }
+  // Let's see what kind of object this is
+  DOMElement* root(doc->getDocumentElement());
+  std::string ns(xml::transcode<char>(root->getNamespaceURI()));
+  std::string name(xml::transcode<char>(root->getLocalName()));
+
+  std::unique_ptr<CDM::ObjectData> obj = std::unique_ptr<CDM::ObjectData>();
+  // Check the name and read it into the right object type
+  if (name.compare("Substance") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Substance(*doc).release());
+  if (name.compare("Patient") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Patient(*doc).release());
+  if (name.compare("SubstanceCompound") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::SubstanceCompound(*doc).release());
+  if (name.compare("Scenario") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Scenario(*doc).release());
+  if (name.compare("EnvironmentalConditions") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::EnvironmentalConditions(*doc).release());
+  if (name.compare("ElectroCardioGramWaveformInterpolator") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::ElectroCardioGramWaveformInterpolator(*doc).release());
+  if (name.compare("Nutrition") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Nutrition(*doc).release());
+  if (name.compare("PhysiologyEngineDynamicStabilization") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::PhysiologyEngineDynamicStabilization(*doc).release());
+  if (name.compare("PhysiologyEngineTimedStabilization") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::PhysiologyEngineTimedStabilization(*doc).release());
+  if (name.compare("CircuitManager") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::CircuitManager(*doc).release());
+  if (name.compare("CompartmentManager") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::CompartmentManager(*doc).release());
+  if (name.compare("BioGearsConfiguration") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsConfiguration(*doc).release());
+  if (name.compare("BioGearsState") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsState(*doc).release());
+  if (name.compare("DataRequests") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::DataRequests(*doc).release());
+
+  /// \error Unsupported root tag
+  err << "Unsupported root tag " << name << " found in buffer" << std::ends;
+  logger->Error(err.str());
+  return obj;
 }
+
+//-----------------------------------------------------------------------------
+}
+             #pragma optimize( "", on )

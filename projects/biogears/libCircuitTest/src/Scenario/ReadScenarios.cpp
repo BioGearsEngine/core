@@ -22,7 +22,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/cdm/utils/testing/SETestReport.h>
@@ -54,7 +53,7 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
 
   SECompartmentManager cmptMgr(subMgr);
 
-  std::string dir = GetCurrentWorkingDirectory();
+  std::string dir = m_Logger->GetIoManager().lock()->GetBioGearsWorkingDirectory();
   dir.append("Scenarios");
 
   SETestReport testReport(m_Logger);
@@ -76,20 +75,20 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
   equipment.push_back(new SEElectroCardioGram(m_Logger));
   equipment.push_back(new SEInhaler(subMgr));
 
-  std::vector<std::string> files;
-  ListFiles(dir, files, R"(.*\.xml)");
-  for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it) {
-    if (it->find("xml") != std::string::npos) {
-      if (it->find("PFT@") != std::string::npos || it->find("CBC@") != std::string::npos || it->find("MP@") != std::string::npos || it->find("Urinalysis@") != std::string::npos) // Ignore PFT, CBC, UPanel  and MP files
+  auto files = ListFiles(dir, R"(.*\.xml)");
+  for (auto& file : files) {
+    if (file.extension() == "xml") {
+      std::string path = file.string();
+      if (path.find("PFT@") != std::string::npos || path.find("CBC@") != std::string::npos || path.find("MP@") != std::string::npos || path.find("Urinalysis@") != std::string::npos) // Ignore PFT, CBC, UPanel  and MP files
         continue; // TODO should actually peek the file and ensure it starts with a <scenario> tag
 
       pTimer.Start("Case");
       SETestCase& testCase = testSuite.CreateTestCase();
-      Info(it->c_str());
+      Info(path.c_str());
       try {
-        if (scenario.Load(*it)) {
+        if (scenario.Load(path)) {
           if (!scenario.IsValid())
-            testCase.AddFailure(*it + " is not a valid scenario!");
+            testCase.AddFailure(path+ " is not a valid scenario!");
 
           //if (scenario.GetInitialParameters().HasPatientFile())
           //{
@@ -137,13 +136,13 @@ void CommonDataModelTest::ReadScenarios(const std::string& rptDirectory)
           //}
 
         } else {
-          testCase.AddFailure(*it + " has failed to load!");
+          testCase.AddFailure(path + " has failed to load!");
         }
       } catch (...) {
-        testCase.AddFailure(*it + " has failed to load! unknown exception.");
+        testCase.AddFailure(path + " has failed to load! unknown exception.");
       }
       testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Case"), TimeUnit::s);
-      testCase.SetName(*it);
+      testCase.SetName(path);
     }
   }
   testReport.WriteFile(rptDirectory + "/" + testName + "Report.xml");

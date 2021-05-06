@@ -14,7 +14,7 @@ namespace biogears {
 
   class Logger {
   public:
-    Logger(const char* logFilename, const char* working_dir = Loggable::empty_cStr);
+    Logger(const char* logFilename);
     virtual ~Logger();
 
     virtual void Debug(const std::string& msg, std::string const& origin = Loggable::empty) const;

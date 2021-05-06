@@ -32,7 +32,6 @@
 #include "utils/ReportWriter.h"
 
 #include <biogears/cdm/utils/ConfigParser.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/version.h>
 
 #include <fstream>
@@ -103,7 +102,7 @@ void print_help(int rc)
 #ifdef BIOGEARS_IO_PRESENT
 bool genRuntime(std::string pathName)
 {
-  biogears::io::IOManager iom;
+  biogears::IOManager iom;
   return iom.generate_runtime_directory(pathName.c_str());
 }
 #endif
@@ -234,7 +233,7 @@ int main(int argc, char** argv)
   }
 #ifdef BIOGEARS_IO_PRESENT
   if (args.KeywordFound("SHA1")) {
-    biogears::io::IOManager iom;
+    biogears::IOManager iom;
     auto path = args.Keyword("SHA1");
     auto sha1 = iom.calculate_sha1(path.c_str());
     if (sha1.empty()) {

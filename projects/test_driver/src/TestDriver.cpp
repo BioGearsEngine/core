@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #include "TestDriver.h"
 #include "Verification.h"
 
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 #include <biogears/cdm/utils/ConfigParser.h>
@@ -23,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <iostream>
 #include <string>
 #include <set>
+#include <regex>
 
 using namespace biogears;
 
@@ -83,12 +83,12 @@ void TestDriver::RunScenario()
 {
   // Set up the log file
   std::string logFile = m_file;
-  logFile = Replace(logFile, "verification", "bin");
-  logFile = Replace(logFile, ".xml", ".log");
-  // Set up the verification output file	
+  logFile = std::regex_replace(logFile, std::regex(R"(verification)"), "bin");
+  logFile = std::regex_replace(logFile, std::regex(R"(\.xml)"), ".log");
+  // Set up the verification output file
   std::string dataFile = m_file;
-  dataFile = Replace(dataFile, "verification", "bin");
-  dataFile = Replace(dataFile, ".xml", "Results.csv");
+  dataFile = std::regex_replace(dataFile, std::regex(R"(verification)"), "bin");
+  dataFile = std::regex_replace(dataFile, std::regex(R"(\.xml)"), "Results.csv");
   // Delete any results file that may be there
   remove(dataFile.c_str());
   std::unique_ptr<PhysiologyEngine> bioGears = CreateBioGearsEngine(logFile.c_str());

@@ -32,7 +32,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/utils/DataTrack.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Equipment/AnesthesiaMachine.h>
 #include <biogears/engine/Equipment/ECG.h>
@@ -63,7 +62,7 @@ BioGears::BioGears(Logger* logger)
 }
 
 BioGears::BioGears(const std::string& logFileName, const std::string& working_dir)
-  : BioGears(new Logger(logFileName, working_dir), working_dir)
+  : BioGears(new Logger(logFileName), working_dir)
 {
   m_logger_self_managed = true;
 }
@@ -71,7 +70,8 @@ BioGears::BioGears(const std::string& logFileName, const std::string& working_di
 BioGears::BioGears(Logger* logger, const std::string& working_dir)
   : m_Logger(logger)
 {
-  SetCurrentWorkingDirectory(working_dir);
+  auto io = m_Logger->GetIoManager().lock();
+  io->SetBioGearsWorkingDirectory(working_dir);
   m_logger_self_managed = false;
 
   SetUp();
@@ -163,9 +163,13 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   m_Config->Merge(cFile);
 
   // Now we can check the config
-  if (m_Config->WritePatientBaselineFile()) {
-    std::string stableDir = "./stable/";
-    MakeDirectory(stableDir);
+  if (m_Config->WritePatientBaselineFile()) 
+  {
+    
+    
+    auto io = m_Logger->GetIoManager().lock();
+    std::string stableDir = io->GetBioGearsWorkingDirectory() += "/stable/";
+    filesystem::create_directories(stableDir);
     CDM::PatientData* pData = m_Patient->Unload();
     pData->contentVersion(branded_version_string());
     // Write out the stable patient state

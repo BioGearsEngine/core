@@ -62,7 +62,6 @@ SEPatient::SEPatient(Logger* logger)
   m_TotalLungCapacity = nullptr;
   m_VitalCapacity = nullptr;
 
-
   for (CDM::enumPatientEvent::value key = static_cast<CDM::enumPatientEvent::value>(0); key < CDM::enumPatientEvent::TotalPatientEvents; key = static_cast<CDM::enumPatientEvent::value>(key + 1)) {
     //CDM::enumPatientEvent::value is a code generated C style enum.
     //To my knowladge it must be conitnguous as XSD does not support assinigng manual values to XML Enums that are use dto generated C++ counterpart
@@ -70,7 +69,6 @@ SEPatient::SEPatient(Logger* logger)
     m_EventState[key] = false;
     m_EventDuration_s[key] = 0;
   }
-
 }
 //-----------------------------------------------------------------------------
 SEPatient::~SEPatient()
@@ -88,7 +86,18 @@ bool SEPatient::Load(const std::string& patientFile)
   CDM::PatientData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  data = Serializer::ReadFile(patientFile, GetLogger());
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindPatientFile(patientFile.c_str());
+  if (possible_path.empty()) {
+    size_t content_size;
+
+    auto resource = filesystem::path { "patients" } / filesystem::path(patientFile).basename();
+    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+  } else {
+    data = Serializer::ReadFile(possible_path.string(), m_Logger);
+  }
+
   pData = dynamic_cast<CDM::PatientData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
@@ -501,10 +510,9 @@ void SEPatient::Unload(CDM::PatientData& data) const
 //-----------------------------------------------------------------------------
 void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time)
 {
-  if (m_EventState[type] == active)
-  {
+  if (m_EventState[type] == active) {
     return; //No Change
-  } else  {
+  } else {
     m_ss.str("");
     m_ss << "[Event] " << time << ", ";
     if (active) {

@@ -48,8 +48,20 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
     Info(m_ss);
     m_Cancel = false;
     m_CustomExec = cExec;
+    std::unique_ptr<CDM::ObjectData> bind ;
 
-    std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(scenarioFile, GetLogger());
+    auto io = m_Logger->GetIoManager().lock();
+    auto possible_path = io->FindScenarioFile(scenarioFile.c_str());
+    if (possible_path.empty()) {
+      size_t content_size;
+
+      auto resource = filesystem::path { "Scenarios" } / filesystem::path(scenarioFile).basename();
+      auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+      bind = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+    } else {
+      bind = Serializer::ReadFile(possible_path.string(), m_Logger);
+    }
+
     if (bind == nullptr) {
       m_ss << "Unable to load scenario file : " << scenarioFile << std::endl;
       Error(m_ss);
@@ -64,7 +76,7 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
     BioGearsScenario scenario(m_Engine.GetSubstanceManager());
     scenario.Load(*sceData);
     std::string rFile = resultsFile;
- 
+
     bool success = SEScenarioExec::Execute(scenario, rFile, cExec);
     return success;
   } catch (CommonDataModelException& ex) {

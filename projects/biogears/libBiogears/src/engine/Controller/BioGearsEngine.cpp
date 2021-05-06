@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <memory>
 //Project Includes
 
+#include <biogears/filesystem/path.h>
+#include <biogears/string/manipulation.h>
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -29,7 +32,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SESerializeState.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/container/Tree.tci.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
@@ -88,7 +90,7 @@ BioGearsEngine::BioGearsEngine(Logger* logger, const std::string& working_dir)
   : BioGears(logger, working_dir)
   , m_EngineTrack(*this)
 {
-  SetCurrentWorkingDirectory(working_dir);
+  m_Logger->GetIoManager().lock()->SetBioGearsWorkingDirectory(working_dir);
   m_State = EngineState::NotReady;
   m_EventHandler = nullptr;
   m_DataTrack = &m_EngineTrack.GetDataTrack();
@@ -117,7 +119,7 @@ BioGearsEngine::BioGearsEngine(const std::string& logFileName, const std::string
   : BioGears(logFileName, working_dir)
   , m_EngineTrack(*this)
 {
-  SetCurrentWorkingDirectory(working_dir);
+  m_Logger->GetIoManager().lock()->SetBioGearsWorkingDirectory(working_dir);
   m_State = EngineState::NotReady;
   m_EventHandler = nullptr;
   m_DataTrack = &m_EngineTrack.GetDataTrack();
@@ -153,8 +155,22 @@ bool BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime)
 {
-  std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(file, GetLogger());
-  CDM::BioGearsStateData* state = dynamic_cast<CDM::BioGearsStateData*>(bind.get());
+
+  std::unique_ptr<CDM::ObjectData> obj;
+
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindStateFile(file.c_str());
+  if (possible_path.empty()) {
+    size_t content_size;
+
+    auto resource = filesystem::path { "states" } / filesystem::path(file).basename();
+    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+    obj = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+  } else {
+    obj = Serializer::ReadFile(possible_path.string(), m_Logger);
+  }
+
+  auto state = dynamic_cast<const CDM::BioGearsStateData*>(obj.get());
   if (state != nullptr) {
     return LoadState(*state, simTime);
   }
@@ -534,10 +550,10 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
   state->CircuitManager(std::unique_ptr<CDM::CircuitManagerData>(m_Circuits->Unload()));
 
   if (!file.empty()) {
-    std::string qulaified_path = ResolvePath(file);
-    CreateFilePath(qulaified_path);
+    auto qualified_path = m_Logger->GetIoManager().lock()->ResolveStateFileLocation(file);
+    filesystem::create_directories(qualified_path);
     // Write out the engine state
-    std::ofstream stream(qulaified_path);
+    std::ofstream stream(qualified_path);
     // Write out the xml file
     xml_schema::namespace_infomap map;
     map[""].name = "uri:/mil/tatrc/physiology/datamodel";
@@ -570,9 +586,8 @@ bool BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector
 bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
   std::string pFile = patientFile;
-  if (!IsAbsolutePath(patientFile) && !TestFirstDirName(patientFile, "patients")) { // Prepend the patient directory if it's not there
-    pFile = "patients/" + patientFile;
-  }
+  auto io = m_Logger->GetIoManager().lock();
+  pFile = io->find_resource_file(patientFile.c_str());
   if (!m_Patient->Load(pFile)) {
     return false;
   }
@@ -730,10 +745,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       if (serialize->HasFilename()) {
         SaveState(serialize->GetFilename());
       } else {
-        std::stringstream ss;
-        MakeDirectory("./states");
-        ss << "./states/" << m_Patient->GetName() << "@" << GetSimulationTime(TimeUnit::s) << "s.xml";
-        SaveState(ss.str());
+        SaveState(asprintf("%s@%fs.xml", m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));
       }
     } else {
       return LoadState(serialize->GetFilename());
@@ -741,24 +753,21 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     return true;
   }
 
-  const SEPatientAssessmentRequest* patientAss = dynamic_cast<const SEPatientAssessmentRequest*>(&action);
-  if (patientAss != nullptr) {
+  const SEPatientAssessmentRequest* assessment = dynamic_cast<const SEPatientAssessmentRequest*>(&action);
+  auto io = m_Logger->GetIoManager().lock();
+  if (assessment != nullptr) {
     m_ss.str("");
-    m_ss.clear();
-    switch (patientAss->GetType()) {
+    std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
+    results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
+
+    switch (assessment->GetType()) {
     case CDM::enumPatientAssessment::PulmonaryFunctionTest: {
       SEPulmonaryFunctionTest pft;
       GetPatientAssessment(pft);
-
-      // Write out the Assessement
-      std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (results_filepath.empty()) {
         results_filepath = "PulmonaryFunctionTest";
       }
-      m_ss << "PFT@" << GetSimulationTime(TimeUnit::s) << "s";
-      results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
-      results_filepath += m_ss.str() + ".xml";
-      std::ofstream stream(ResolvePath(results_filepath));
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sPFT@%fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -772,16 +781,10 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     case CDM::enumPatientAssessment::Urinalysis: {
       SEUrinalysis upan;
       GetPatientAssessment(upan);
-
-      std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (results_filepath.empty()) {
         results_filepath = "Urinalysis";
       }
-      m_ss << "Urinalysis@" << GetSimulationTime(TimeUnit::s) << "s";
-      results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
-      results_filepath += m_ss.str() + ".xml";
-      std::ofstream stream(ResolvePath(results_filepath));
-
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sUrinalysis@%fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -795,14 +798,10 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     case CDM::enumPatientAssessment::CompleteBloodCount: {
       SECompleteBloodCount cbc;
       GetPatientAssessment(cbc);
-      std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (results_filepath.empty()) {
         results_filepath = "CompleteBloodCount";
       }
-      m_ss << "CBC@" << GetSimulationTime(TimeUnit::s) << "s";
-      results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
-      results_filepath += m_ss.str() + ".xml";
-      std::ofstream stream(ResolvePath(results_filepath));
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sCBC@%fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -816,15 +815,10 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     case CDM::enumPatientAssessment::ComprehensiveMetabolicPanel: {
       SEComprehensiveMetabolicPanel mp;
       GetPatientAssessment(mp);
-      std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (results_filepath.empty()) {
         results_filepath = "ComprehensiveMetabolicPanel";
       }
-      m_ss << "CMP@" << GetSimulationTime(TimeUnit::s) << "s";
-      results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
-      results_filepath += m_ss.str() + ".xml";
-      std::ofstream stream(ResolvePath(results_filepath));
-
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sCMP@%fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -837,15 +831,10 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     case CDM::enumPatientAssessment::SequentialOrganFailureAssessment: {
       SESequentialOrganFailureAssessment sofa;
       GetPatientAssessment(sofa);
-      std::string results_filepath = GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
       if (results_filepath.empty()) {
         results_filepath = "SequentialOrganFailureAssessment";
       }
-      m_ss << "_SOFA@" << GetSimulationTime(TimeUnit::s) << "s";
-      results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
-      results_filepath += m_ss.str() + ".xml";
-      std::ofstream stream(ResolvePath(results_filepath));
-
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%s_SOF@%fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -856,7 +845,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
     default: {
-      m_ss << "Unsupported assessment request " << patientAss->GetType();
+      m_ss << "Unsupported assessment request " << assessment->GetType();
       m_Logger->Error(m_ss);
       return false;
     }

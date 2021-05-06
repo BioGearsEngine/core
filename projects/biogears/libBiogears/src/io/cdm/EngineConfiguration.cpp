@@ -41,7 +41,19 @@ namespace io {
     const CDM::PhysiologyEngineTimedStabilizationData* tData = nullptr;
     const CDM::PhysiologyEngineDynamicStabilizationData* dData = nullptr;
     if (in.StabilizationCriteriaFile().present()) {
-      sData = Serializer::ReadFile(in.StabilizationCriteriaFile().get(), out.GetLogger());
+
+      auto io = out.GetLogger()->GetIoManager().lock();
+      auto possible_path = io->FindEnvironmentFile(in.StabilizationCriteriaFile().get().c_str());
+      if (possible_path.empty()) {
+        size_t content_size;
+
+        auto resource = filesystem::path { "environments" } / filesystem::path(in.StabilizationCriteriaFile().get()).basename();
+        auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+        sData = Serializer::ReadBuffer((XMLByte*)content, content_size, out.GetLogger());
+      } else {
+        sData = Serializer::ReadFile(possible_path.string(), out.GetLogger());
+      }
+
       if (sData == nullptr) {
         throw CommonDataModelException("Unable to load Stabilization Criteria file");
       }
@@ -78,7 +90,6 @@ namespace io {
   void EngineConfiguration::Marshall(const CDM::PhysiologyEngineStabilizationData& in, PhysiologyEngineStabilization& out)
   {
     out.Clear();
-
   }
   //----------------------------------------------------------------------------------
   void EngineConfiguration::UnMarshall(const PhysiologyEngineStabilization& in, CDM::PhysiologyEngineStabilizationData& out)
@@ -147,7 +158,7 @@ namespace io {
   {
     UnMarshall(static_cast<const PhysiologyEngineStabilization&>(in), static_cast<CDM::PhysiologyEngineStabilizationData&>(out));
     UnMarshall(in.GetRestingCriteria(), out.RestingStabilizationCriteria());
-    
+
     if (in.HasFeedbackCriteria())
       UnMarshall(*in.m_FeedbackCriteria, out.FeedbackStabilizationCriteria());
     for (auto& c : in.m_ConditionCriteria) {

@@ -77,7 +77,7 @@ namespace io {
     return get_xsd_file_sha1(working_dir);
   }
   //-----------------------------------------------------------------------------
-  char const* const* list_xsd_files()
+  char const** list_xsd_files()
   {
     return schema_file_list;
   }

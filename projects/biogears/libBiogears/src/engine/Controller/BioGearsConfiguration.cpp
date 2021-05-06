@@ -44,7 +44,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
-#include <biogears/cdm/utils/FileUtils.h>
+
 
 namespace biogears {
 
@@ -362,7 +362,18 @@ bool BioGearsConfiguration::Load(const std::string& file)
   CDM::BioGearsConfigurationData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  data = Serializer::ReadFile(file, GetLogger());
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindConfigFile(file.c_str());
+  if (possible_path.empty()) {
+    size_t content_size;
+
+    auto resource = filesystem::path { "config" } / filesystem::path(file).basename();
+    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+  } else {
+    data = Serializer::ReadFile(possible_path.string(), m_Logger);
+  }
+
   pData = dynamic_cast<CDM::BioGearsConfigurationData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
@@ -541,8 +552,8 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
     const CDM::NervousConfigurationData& config = in.NervousConfiguration().get();
     if (config.EnableCerebral().present())
       EnableCerebral(config.EnableCerebral().get());
-	if (config.PupilDiameterBaseline().present())
-	  GetPupilDiameterBaseline().Load(config.PupilDiameterBaseline().get());
+    if (config.PupilDiameterBaseline().present())
+      GetPupilDiameterBaseline().Load(config.PupilDiameterBaseline().get());
   }
 
   // Renal

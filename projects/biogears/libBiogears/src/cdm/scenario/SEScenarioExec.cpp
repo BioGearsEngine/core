@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 
+#include <biogears/filesystem/path.h>
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
@@ -23,7 +25,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
@@ -88,7 +89,7 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
 
       //if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
       m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
-      
+
       auto& params = memory_safe_scenario->GetInitialParameters();
       m_Engine.SetTrackStabilizationFlag(params.TrackingStabilization() == CDM::enumOnOff::On);
 
@@ -121,7 +122,7 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
     }
 
     if (scenarioData->AutoSerialization().present()) {
-      CreateFilePath(scenarioData->AutoSerialization()->Directory()); // Note method assumes you have a file and it ignores it
+      filesystem::create_directories(scenarioData->AutoSerialization()->Directory()); // Note method assumes you have a file and it ignores it
     }
     return ProcessActions(*memory_safe_scenario);
   } catch (CommonDataModelException& ex) {
@@ -150,7 +151,19 @@ bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string&
     m_Cancel = false;
     m_CustomExec = cExec;
 
-    std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(scenarioFile, GetLogger());
+    std::unique_ptr<CDM::ObjectData> bind;
+    auto io = m_Logger->GetIoManager().lock();
+    auto possible_path = io->FindScenarioFile(scenarioFile.c_str());
+    if (possible_path.empty()) {
+      size_t content_size;
+
+      auto resource = filesystem::path { "Scenarios" } / filesystem::path(scenarioFile).basename();
+      auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+      bind = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+    } else {
+      bind = Serializer::ReadFile(possible_path.string(), m_Logger);
+    }
+
     if (bind == nullptr) {
       m_ss << "Unable to load scenario file : " << scenarioFile << std::endl;
       Error(m_ss);

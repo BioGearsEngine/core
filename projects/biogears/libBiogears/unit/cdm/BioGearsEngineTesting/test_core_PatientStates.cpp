@@ -21,7 +21,6 @@
 #include <gtest/gtest.h>
 
 #include <biogears/cdm/utils/DataTrack.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>

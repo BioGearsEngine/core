@@ -30,7 +30,7 @@ namespace io {
   BIOGEARS_IO_API  size_t find_environment_file(const char* file, const char* root, char* buffer, size_t buffer_length);
   BIOGEARS_IO_API char const* get_environments_file_sha1(const char* file);
 
-  BIOGEARS_IO_API char const* const* list_environments_files();
+  BIOGEARS_IO_API char const** list_environments_files();
   BIOGEARS_IO_API size_t environments_file_count();
 
   BIOGEARS_IO_API char const* get_embedded_environments_file(const char* file, size_t& content_size);
@@ -40,6 +40,8 @@ namespace io {
   BIOGEARS_IO_API bool does_embedded_environments_file_exist(biogears::filesystem::path file);
 
   BIOGEARS_IO_API char const* get_environments_file_sha1(biogears::filesystem::path file);
+
   BIOGEARS_IO_API char const* get_embedded_environments_file(biogears::filesystem::path file, size_t& content_size);
+  BIOGEARS_IO_API size_t      get_embedded_environments_file_size( const char *  file);
 }
 }

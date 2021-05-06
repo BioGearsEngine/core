@@ -397,11 +397,11 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
   }
 }
 //-----------------------------------------------------------------------------
-void Driver::queue_from_sate_files(const Executor& exec, const std::vector<std::string>& state_files, std::function<void(Executor, bool)> scenario_launch_func)
+void Driver::queue_from_sate_files(const Executor& exec, const std::vector<filesystem::path>& state_files, std::function<void(Executor, bool)> scenario_launch_func)
 {
-  for (const std::string& state_file : state_files) {
+  for (auto& state_file : state_files) {
     Executor stateEx { exec };
-    stateEx.State(state_file);
+    stateEx.State(state_file.string());
     std::string trimmed_state_path(trim(stateEx.State()));
     auto split_state_path = split(trimmed_state_path, '/');
     auto state_no_extension = split(split_state_path.back(), '.').front();
@@ -425,12 +425,12 @@ void Driver::queue_from_sate_files(const Executor& exec, const std::vector<std::
   }
 }
 //-----------------------------------------------------------------------------
-void Driver::queue_from_patient_files(const Executor& exec, const std::vector<std::string>& patient_files, std::function<void(Executor, bool)> scenario_launch_func)
+void Driver::queue_from_patient_files(const Executor& exec, const std::vector<filesystem::path>& patient_files, std::function<void(Executor, bool)> scenario_launch_func)
 {
-  for (const std::string& patient_file : patient_files) {
+  for (auto& patient_file : patient_files) {
     std::cout << patient_file << std::endl;
     Executor patientEx { exec };
-    patientEx.Patient(patient_file);
+    patientEx.Patient(patient_file.string());
 
     ///----
     std::string trimmed_patient_path(trim(patientEx.Patient()));
@@ -462,7 +462,7 @@ void Driver::queue_from_patient_files(const Executor& exec, const std::vector<st
 //!
 //!
 #pragma optimize( "", off )
-std::vector<std::string> Driver::find_matching_files(const std::string& pattern)
+std::vector<filesystem::path> Driver::find_matching_files(const std::string& pattern)
 {
 
       //
@@ -484,8 +484,8 @@ std::vector<std::string> Driver::find_matching_files(const std::string& pattern)
 
   auto path_parts = split(pattern, '/');
 
-  std::vector<std::string> possible_paths { "" };
-  std::vector<std::string> new_work;
+  std::vector<filesystem::path> possible_paths { "" };
+  std::vector<filesystem::path> new_work;
 
   std::vector<int> remove_queue;
   remove_queue.reserve(possible_paths.size());
@@ -498,7 +498,7 @@ std::vector<std::string> Driver::find_matching_files(const std::string& pattern)
       if (temp.exists()) {
         path = temp.string();
       } else {
-        auto work = ListFiles(path, part, false);
+        auto work = ListFiles(path.string(), part, false);
         new_work.insert(new_work.begin(), work.begin(), work.end());
         remove_queue.push_back(index);
       }
@@ -506,7 +506,7 @@ std::vector<std::string> Driver::find_matching_files(const std::string& pattern)
     }
 
 
-    std::vector<std::string>::iterator end = possible_paths.end();
+    auto end = possible_paths.end();
     for (auto& index : remove_queue) {
       std::swap(possible_paths[index], possible_paths.back());
       end = end - 1;
