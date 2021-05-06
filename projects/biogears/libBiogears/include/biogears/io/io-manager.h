@@ -142,8 +142,8 @@ public:
   //! Exposes probing of embedded IO files
   BIOGEARS_API bool generate_runtime_directory(const char* file) const; //!< Recreates the embeded runtime directory at the path given.
   BIOGEARS_API bool does_embedded_file_exist(const char* file) const; //!< When given a relative path to data_root (e.g ecg/StandardECG.xml ) will return if it is part of the embedded library
-  BIOGEARS_API char const* IOManager::get_embedded_resource_file(const char* file, std::size_t& size) const; //!< Return embeded cstring which represents the requested embeded string
-  BIOGEARS_API size_t IOManager::get_embedded_resource_file_size(const char* file) const; //!< Return embeded cstring which represents the requested embeded string
+  BIOGEARS_API char const* get_embedded_resource_file(const char* file, std::size_t& size) const; //!< Return embeded cstring which represents the requested embeded string
+  BIOGEARS_API size_t get_embedded_resource_file_size(const char* file) const; //!< Return embeded cstring which represents the requested embeded string
   BIOGEARS_API char const* get_expected_sha1(const char* file) const; //!< When given a relative path to data_root will return the sha1 data for the matching file
   BIOGEARS_API size_t get_directory_count() const; //!< Returns the list of directories embeded IE 1 for each cpp file in libIO/src/directories
   BIOGEARS_API bool validate_file(const char* path, const char* embeded_path = nullptr) const; //!< Returns true if the sha1 of path is equal to the embeded files

@@ -32,6 +32,7 @@ if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
    )
    target_link_libraries(lib${PROJECT_NAME}_csharp PUBLIC lib${PROJECT_NAME} )
    target_include_directories(lib${PROJECT_NAME}_csharp PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../bindings")
+   target_compile_options(lib${PROJECT_NAME}_csharp PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
    set_target_properties(lib${PROJECT_NAME}_csharp PROPERTIES
       POSITION_INDEPENDENT_CODE ON
       FOLDER Libraries

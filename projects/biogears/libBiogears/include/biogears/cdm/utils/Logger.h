@@ -140,7 +140,7 @@ protected:
   const SEScalarTime* m_time;
   mutable std::stringstream m_ss;
   bool m_FormatMessages;
-  Logger* m_Logger;
+
 };
 
 }

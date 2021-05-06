@@ -585,10 +585,9 @@ bool BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
-  std::string pFile = patientFile;
+
   auto io = m_Logger->GetIoManager().lock();
-  pFile = io->find_resource_file(patientFile.c_str());
-  if (!m_Patient->Load(pFile)) {
+  if (!m_Patient->Load(patientFile)) {
     return false;
   }
   return InitializeEngine(conditions, config);

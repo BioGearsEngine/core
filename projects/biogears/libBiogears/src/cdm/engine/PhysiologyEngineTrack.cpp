@@ -66,6 +66,7 @@ PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngine& engine)
   , m_Patient(&(SEPatient&)engine.GetPatient())
   , m_SubMgr(&(SESubstanceManager&)engine.GetSubstanceManager())
   , m_CmptMgr(&(SECompartmentManager&)engine.GetCompartments())
+  , m_DataTrack(engine.GetLogger())
 {
 
   // TODO We are not handling nullptr well here...
@@ -125,6 +126,7 @@ PhysiologyEngineTrack::PhysiologyEngineTrack(SEPatient& patient, SESubstanceMana
   , m_Patient(&patient)
   , m_SubMgr(&subMgr)
   , m_CmptMgr(&cmptMgr)
+  , m_DataTrack(patient.GetLogger())
 {
   for (auto* p : physiology) {
     m_PhysiologySystems.push_back(p);

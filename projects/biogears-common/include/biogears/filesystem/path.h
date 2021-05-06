@@ -54,7 +54,7 @@ derivative works thereof, in binary and source code form.
 #include <vector>
 
 #if defined(_WIN32)
-#define  WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
 #include <ShlObj.h>
 #include <windows.h>
 #else
@@ -154,10 +154,12 @@ namespace filesystem {
       return path(temp);
 #else
       std::wstring value = wstr(), out(MAX_PATH_WINDOWS, '\0');
-      DWORD length = GetFullPathNameW(value.c_str(), MAX_PATH_WINDOWS, &out[0], NULL);
-      if (length == 0)
-        throw std::runtime_error("Internal error in realpath(): " + std::to_string(GetLastError()));
-      return path(out.substr(0, length));
+      value = (value.empty()) ? L"." : value;
+
+        DWORD length = GetFullPathNameW(value.c_str(), MAX_PATH_WINDOWS, &out[0], NULL);
+        if (length == 0)
+          throw std::runtime_error("Internal error in realpath(): " + std::to_string(GetLastError()));
+        return path(out.substr(0, length));
 #endif
     }
 
@@ -241,7 +243,8 @@ namespace filesystem {
       return name.substr(pos + 1);
     }
 
-    path basename() const {
+    path basename() const
+    {
       return filename();
     }
 

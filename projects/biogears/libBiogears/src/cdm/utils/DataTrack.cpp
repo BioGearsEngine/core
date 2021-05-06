@@ -32,10 +32,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 
 namespace biogears {
-DataTrack::DataTrack()
-  : DataTrack(nullptr)
-{
-}
 
 DataTrack::DataTrack(Logger* logger)
   : Loggable(logger)

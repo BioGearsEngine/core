@@ -461,7 +461,7 @@ void Driver::queue_from_patient_files(const Executor& exec, const std::vector<fi
 //!  \return std::vector<std::string> list of all paths that matched the regex
 //!
 //!
-#pragma optimize( "", off )
+
 std::vector<filesystem::path> Driver::find_matching_files(const std::string& pattern)
 {
 
@@ -522,7 +522,7 @@ std::vector<filesystem::path> Driver::find_matching_files(const std::string& pat
   }
   return possible_paths;
 }
-#pragma optimize( "", on )
+
 //-----------------------------------------------------------------------------
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
 void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)

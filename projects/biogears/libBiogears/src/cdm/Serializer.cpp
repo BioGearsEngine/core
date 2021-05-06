@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 
 using namespace xercesc;
 namespace xml = xsd::cxx::xml;
- #pragma optimize( "", off )
+
 namespace biogears {
 Serializer* Serializer::m_me = nullptr;
 bool Serializer::m_Initialized = false;
@@ -268,4 +268,3 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte* buffer, size_t 
 
 //-----------------------------------------------------------------------------
 }
-             #pragma optimize( "", on )

@@ -2282,7 +2282,7 @@ SEScalar& Respiratory::CalculateRespirationSOFA()
 //--------------------------------------------------------------------------------------------------
 void Respiratory::TuneCircuit()
 {
-  DataTrack circuitTrk;
+  DataTrack circuitTrk{m_Logger};
   std::ofstream circuitFile;
   SEFluidCircuit& RespiratoryCircuit = m_data.GetCircuits().GetRespiratoryCircuit();
   double time_s = 0.0;

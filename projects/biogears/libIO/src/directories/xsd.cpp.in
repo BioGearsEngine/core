@@ -102,7 +102,7 @@ namespace io {
 
    bool result = true;
 
-   auto write_file = [&](char const* path, char const* content, size_t content_size) {
+   auto write_file = [&](biogears::filesystem::path path, char const* content, size_t content_size) {
       biogears::filesystem::create_directories((working_dir / path).parent_path());
       output.open((working_dir / path).string(), std::fstream::binary | std::fstream::out);
       if (output.good() && !output.is_open()) {
@@ -112,7 +112,7 @@ namespace io {
       output.close();
       return true;
    };
-
+  biogears::filesystem::path dir {"xsd/"};
 @GENERATE_DIRECTORY_BODY@
 
    return true;
@@ -131,6 +131,8 @@ namespace io {
 
      return file_sha1;
   }
+  //-----------------------------------------------------------------------------
+  char const * get_default_xsd_directory() { return "xsd/"; }
   //-----------------------------------------------------------------------------
   char const* get_embedded_xsd_file(biogears::filesystem::path path, size_t& content_size)
   {

@@ -7,11 +7,14 @@ option(UNITTEST_biogears-core_io "Enable libBiogears_io UnitTest "  ON)
 ###############################################################################
 function(generate_hex_header)
   set(options )
-  set(oneValueArgs INPUT OUTPUT FOLDER PATH)
+  set(oneValueArgs INPUT OUTPUT PREFIX FOLDER PATH)
   set(multiValueArgs NAMESPACE)
 
   cmake_parse_arguments("" "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
   string (REPLACE ";" "\\;" _NS_SAFE "${_NAMESPACE}")
+  string (REPLACE ";" "\\;" _NS_SAFE "${_NAMESPACE}")
+
+  string(MAKE_C_IDENTIFIER  "${_PREFIX}" _c_safe_prefix)
 
   set(_header ${_OUTPUT}.hxx)
   set(_source ${_OUTPUT}.cxx)
@@ -21,10 +24,10 @@ function(generate_hex_header)
     
     get_filename_component( content_name ${_INPUT} NAME_WE)
     string (REPLACE "@" "_at_" content_name "${content_name}")
+    get_filename_component(_source_name ${_OUTPUT} NAME)
+    get_filename_component(_source_directory ${_OUTPUT} DIRECTORY )
 
     if( NOT EXISTS ${_header} OR NOT EXISTS ${_source} )
-      get_filename_component(_source_name ${_OUTPUT} NAME)
-      get_filename_component(_source_directory ${_OUTPUT} DIRECTORY )
 
       message(STATUS  "                   ${_source_name}.{hxx,cxx}")
       file(WRITE ${_header} "//! THIS IS PLACEHOLDER DATA THAT WILL BE REPLACED BY THE FIRST RUN OF TARGET generate_${content_name}")
@@ -38,10 +41,10 @@ function(generate_hex_header)
     )
   
 
-    add_custom_target( generate_${content_name}
+    add_custom_target( generate_${_c_safe_prefix}_${content_name}
       DEPENDS  "${_OUTPUT}.hxx" "${_OUTPUT}.cxx"
     )
-    set_target_properties(generate_${content_name} PROPERTIES 
+    set_target_properties(generate_${_c_safe_prefix}_${content_name} PROPERTIES 
       FOLDER ${_FOLDER}
     )
   else()    
@@ -52,29 +55,47 @@ endfunction(generate_hex_header)
 function(configure_io_directory_file )
 
   set(options )
-  set(oneValueArgs OUTPUT RESOURCE_PATH HEADERS SOURCES)
+  set(oneValueArgs OUTPUT RESOURCE_PATH TYPE HEADERS SOURCES)
   set(multiValueArgs FILE_LIST)
 
   cmake_parse_arguments("" "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
   foreach( src IN LISTS _FILE_LIST ) 
-    get_filename_component(src_dir ${src} DIRECTORY)
+    #We going to have to add a runtime directory.in to get rid of this.
+    if(src STREQUAL "BioGearsConfiguration.xml")
+      set(_true_source "${src}")
+    else()
+      set(_true_source "${_TYPE}${src}")
+    endif()
+    get_filename_component(src_dir "${_true_source}" DIRECTORY)
     get_filename_component(src_dir_wle ${src} NAME_WLE  )
     string(REGEX REPLACE "@" "_at_" safe_src_dir_wle ${src_dir_wle})
-    generate_hex_header( NAMESPACE biogears io INPUT ${_RESOURCE_PATH}/${src} OUTPUT ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}
-                         FOLDER "Code Generators/IO/${src_dir}"  PATH ${src}
-    )
-  
-    LIST(APPEND ${_HEADERS}  "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.hxx")
-    LIST(APPEND ${_SOURCES}  "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.cxx")
 
-    source_group("Headers/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.hxx" )
-    source_group("Sources/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${src}.cxx" )
 
+    generate_hex_header( NAMESPACE biogears io INPUT ${_RESOURCE_PATH}/${_true_source} OUTPUT ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}
+                         FOLDER "Code Generators/IO/${src_dir}"  PATH ${src} PREFIX ${src_dir})
+   
+    
+    LIST(APPEND ${_HEADERS}  "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}.hxx")
+    LIST(APPEND ${_SOURCES}  "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}.cxx")
+
+    source_group("Headers/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}.hxx" )
+    source_group("Sources/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}.cxx" )
+
+  if(src STREQUAL "BioGearsConfiguration.xml")
     string(APPEND RESOURCE_INCLUDE_LIST "#include <biogears/io/${src}.hxx>\n")
+  else()
+  string(APPEND RESOURCE_INCLUDE_LIST "#include <biogears/io/${_true_source}.hxx>\n")
+  endif()
+
     string(APPEND RESOURCE_FILE_LIST "    get_${safe_src_dir_wle}_path(),\n")
-     
-    string(APPEND GENERATE_DIRECTORY_BODY  "    result &= write_file(get_${safe_src_dir_wle}_path(), get_${safe_src_dir_wle}_text(), ${safe_src_dir_wle}_text_size());\n")
+
+    if(src STREQUAL "BioGearsConfiguration.xml")
+      string(APPEND GENERATE_DIRECTORY_BODY  "    result &= write_file(get_${safe_src_dir_wle}_path(), get_${safe_src_dir_wle}_text(), ${safe_src_dir_wle}_text_size());\n")
+    else()
+      string(APPEND GENERATE_DIRECTORY_BODY  "    result &= write_file(dir/get_${safe_src_dir_wle}_path(), get_${safe_src_dir_wle}_text(), ${safe_src_dir_wle}_text_size());\n")
+    endif()
+
     string(APPEND DOES_EMBEDDED_FILE_EXIST_PATH_BODY "  ( path == get_${safe_src_dir_wle}_path())\n    ||  ")
     string(APPEND GET_FILE_SHA1_PATH_BODY
     "    if ( path == get_${safe_src_dir_wle}_path()) {\n"
@@ -103,7 +124,7 @@ function(configure_io_directory_file )
 
   add_source_files(${_SOURCES} LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/io/${base_directory}
                REGEX "${base_name}.cpp" SOURCE_GROUP  "Sources\\")
-    
+  
   LIST(APPEND ${_SOURCES}  "${BIOGEARS_BINARY_DIR}/generated/biogears/io/${base_directory}/${base_name}.cpp")
   source_group("Sources/${base_directory}/${base_name}.cpp" FILES ${BIOGEARS_BINARY_DIR}/generated/biogears/io/${base_directory}/${base_name}.cpp )
 
@@ -120,42 +141,43 @@ message(STATUS "  Iterating over source files to be encoded as C strings. This i
 message(STATUS "  Encoding: runtime/")
 
 message(STATUS "            : xsd/")
-FILE(GLOB_RECURSE XSD_FILES RELATIVE "${PROJECT_SOURCE_DIR}/share/" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd" )
-configure_io_directory_file( OUTPUT "directories/xsd.cpp.in" FILE_LIST ${XSD_FILES}  RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/ HEADERS GEN_HDRS SOURCES GEN_SRCS)
+FILE(GLOB_RECURSE XSD_FILES RELATIVE "${PROJECT_SOURCE_DIR}/share/xsd" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd" )
+configure_io_directory_file( OUTPUT "directories/xsd.cpp.in" TYPE "xsd/" FILE_LIST ${XSD_FILES}  RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/ HEADERS GEN_HDRS SOURCES GEN_SRCS)
 
 message(STATUS "            : data/config")
-FILE(GLOB_RECURSE DATA_CONFIG_FILES      RELATIVE "${PROJECT_SOURCE_DIR}/share/data/" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/config/*.xml")
-configure_io_directory_file( OUTPUT "directories/config.cpp.in" FILE_LIST ${DATA_CONFIG_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
+FILE(GLOB_RECURSE DATA_CONFIG_FILES      RELATIVE "${PROJECT_SOURCE_DIR}/share/data/config" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/config/*.xml")
+LIST(APPEND DATA_CONFIG_FILES   "BioGearsConfiguration.xml")
+configure_io_directory_file( OUTPUT "directories/config.cpp.in"  TYPE "config/" FILE_LIST ${DATA_CONFIG_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
 
 message(STATUS "            : data/ecg")
-FILE(GLOB_RECURSE DATA_ECG_FILES         RELATIVE "${PROJECT_SOURCE_DIR}/share/data/" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/ecg/*.xml")
-configure_io_directory_file( OUTPUT "directories/ecg.cpp.in" FILE_LIST ${DATA_ECG_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
+FILE(GLOB_RECURSE DATA_ECG_FILES         RELATIVE "${PROJECT_SOURCE_DIR}/share/data/ecg" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/ecg/*.xml")
+configure_io_directory_file( OUTPUT "directories/ecg.cpp.in"  TYPE "ecg/" FILE_LIST ${DATA_ECG_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
 
 message(STATUS "            : data/environments")
-FILE(GLOB_RECURSE DATA_ENIRONMENT_FILES  RELATIVE "${PROJECT_SOURCE_DIR}/share/data/" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/environments/*.xml")
-configure_io_directory_file( OUTPUT "directories/environments.cpp.in" FILE_LIST ${DATA_ENIRONMENT_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
+FILE(GLOB_RECURSE DATA_ENIRONMENT_FILES  RELATIVE "${PROJECT_SOURCE_DIR}/share/data/environments" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/environments/*.xml")
+configure_io_directory_file( OUTPUT "directories/environments.cpp.in"  TYPE "environments/" FILE_LIST ${DATA_ENIRONMENT_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
 
 message(STATUS "            : data/nutrition")
-FILE(GLOB_RECURSE DATA_NUTRITION_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/nutrition/*.xml")
-configure_io_directory_file( OUTPUT "directories/nutrition.cpp.in" FILE_LIST ${DATA_NUTRITION_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
+FILE(GLOB_RECURSE DATA_NUTRITION_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/nutrition" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/nutrition/*.xml")
+configure_io_directory_file( OUTPUT "directories/nutrition.cpp.in"  TYPE "nutrition/" FILE_LIST ${DATA_NUTRITION_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
 
 message(STATUS "            : data/override")
-FILE(GLOB_RECURSE DATA_OVERRIDE_FILES    RELATIVE "${PROJECT_SOURCE_DIR}/share/data/" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/override/*.xml")
-configure_io_directory_file( OUTPUT "directories/override.cpp.in" FILE_LIST ${DATA_OVERRIDE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
+FILE(GLOB_RECURSE DATA_OVERRIDE_FILES    RELATIVE "${PROJECT_SOURCE_DIR}/share/data/override" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/override/*.xml")
+configure_io_directory_file( OUTPUT "directories/override.cpp.in"  TYPE "override/" FILE_LIST ${DATA_OVERRIDE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
 
 message(STATUS "            : data/patients")
-FILE(GLOB_RECURSE DATA_PATIENT_FILES     RELATIVE "${PROJECT_SOURCE_DIR}/share/data/" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/patients/*.xml")
-configure_io_directory_file( OUTPUT "directories/patients.cpp.in" FILE_LIST ${DATA_PATIENT_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
+FILE(GLOB_RECURSE DATA_PATIENT_FILES     RELATIVE "${PROJECT_SOURCE_DIR}/share/data/patients" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/patients/*.xml")
+configure_io_directory_file( OUTPUT "directories/patients.cpp.in"  TYPE "patients/" FILE_LIST ${DATA_PATIENT_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
 
 option(Biogears_IO_INCLUDE_STATES "Add default states which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" OFF)
 if (Biogears_IO_INCLUDE_STATES)
 message(STATUS "            : data/states")
-FILE(GLOB_RECURSE DATA_STATE_FILES       RELATIVE "${PROJECT_SOURCE_DIR}/share/data/" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/states/*.xml")
-configure_io_directory_file( OUTPUT "directories/states.cpp.in" FILE_LIST ${DATA_STATE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
+FILE(GLOB_RECURSE DATA_STATE_FILES       RELATIVE "${PROJECT_SOURCE_DIR}/share/data/states" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/states/*.xml")
+configure_io_directory_file( OUTPUT "directories/states.cpp.in" TYPE "states/" FILE_LIST ${DATA_STATE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
 endif()
 message(STATUS "            : data/substances")
-FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/substances/*.xml")
-configure_io_directory_file( OUTPUT "directories/substances.cpp.in" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
+FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/substances" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/substances/*.xml")
+configure_io_directory_file( OUTPUT "directories/substances.cpp.in" TYPE "substances/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
 
 configure_file( src/constants.h.in  ${BIOGEARS_BINARY_DIR}/generated/biogears/io/constants.h NEWLINE_STYLE LF)
 add_source_files(GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/io/

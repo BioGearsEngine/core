@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-#include <biogears/schema/biogears/BioGearsConfiguration.hxx>
+#include <biogears/schema/biogears/BioGearsEngineConfiguration.hxx>
 #include "CSVToXMLConvertor.h"
 namespace biogears
 {

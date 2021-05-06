@@ -41,7 +41,7 @@ specific language governing permissions and limitations under the License.
 #include <fstream>
 
 namespace biogears {
-  #pragma optimize( "", off )
+
 IOManager::IOManager()
   : IOManager("", nullptr)
 {
@@ -117,7 +117,7 @@ std::vector<filesystem::path> ListFiles(std::string const& dir, std::string cons
                        std::make_move_iterator(recurseResults.end()));
       } else {
         if (std::regex_match(data.cFileName, filter)) {
-          results.emplace_back( pattern.parent_path() /  data.cFileName);
+          results.emplace_back(pattern.parent_path() / data.cFileName);
         }
       }
     } while (FindNextFile(hFind, &data));
@@ -292,7 +292,7 @@ filesystem::path IOManager::FindConfigFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.config;
     implied_path /= file;
-    find_resource_file(implied_path.string().c_str());
+    possible_path = find_resource_file(implied_path.string().c_str());
   }
   return possible_path;
 }
@@ -307,7 +307,7 @@ filesystem::path IOManager::FindEcgFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.ecg;
     implied_path /= file;
-    find_resource_file(implied_path.string().c_str());
+    possible_path = find_resource_file(implied_path.string().c_str());
   }
   return possible_path;
 }
@@ -322,7 +322,7 @@ filesystem::path IOManager::FindEnvironmentFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.environments;
     implied_path /= file;
-    find_resource_file(implied_path.string().c_str());
+    possible_path = find_resource_file(implied_path.string().c_str());
   }
   return possible_path;
 }
@@ -337,7 +337,7 @@ filesystem::path IOManager::FindNutritionFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.nutrition;
     implied_path /= file;
-    find_resource_file(implied_path.string().c_str());
+    possible_path = find_resource_file(implied_path.string().c_str());
   }
   return possible_path;
 }
@@ -352,7 +352,7 @@ filesystem::path IOManager::FindOverrideFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.override;
     implied_path /= file;
-    find_resource_file(implied_path.string().c_str());
+    possible_path = find_resource_file(implied_path.string().c_str());
   }
   return possible_path;
 }
@@ -367,7 +367,7 @@ filesystem::path IOManager::FindPatientFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.patients;
     implied_path /= file;
-    find_resource_file(implied_path.string().c_str());
+    possible_path = find_resource_file(implied_path.string().c_str());
   }
   return possible_path;
 }
@@ -382,7 +382,7 @@ filesystem::path IOManager::FindStateFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.states;
     implied_path /= file;
-    find_resource_file(implied_path.string().c_str());
+    possible_path = find_resource_file(implied_path.string().c_str());
   }
   return possible_path;
 }
@@ -397,7 +397,7 @@ filesystem::path IOManager::FindSubstanceFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.substances;
     implied_path /= file;
-    find_resource_file(implied_path.string().c_str());
+    possible_path = find_resource_file(implied_path.string().c_str());
   }
   return possible_path;
 }
@@ -412,7 +412,7 @@ filesystem::path IOManager::FindScenarioFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.scenarios;
     implied_path /= file;
-    find_resource_file(implied_path.string().c_str());
+    possible_path = find_resource_file(implied_path.string().c_str());
   }
   return possible_path;
 }
@@ -938,4 +938,3 @@ std::string IOManager::calculate_sha1(const char* buffer, size_t buffer_size) co
 //-----------------------------------------------------------------------------
 
 } // namespace biogears
-#pragma optimize( "", on )

@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
   
   <xs:include schemaLocation="../cdm/EngineState.xsd"/>
   
-  <xs:include schemaLocation="../biogears/BioGearsConfiguration.xsd"/>
+  <xs:include schemaLocation="../biogears/BioGearsEngineConfiguration.xsd"/>
   <xs:include schemaLocation="../biogears/BioGearsEnvironment.xsd"/>
   <xs:include schemaLocation="../biogears/BioGearsEquipment.xsd"/>
   <xs:include schemaLocation="../biogears/BioGearsPhysiology.xsd"/>

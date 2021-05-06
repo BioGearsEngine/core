@@ -26,6 +26,8 @@ specific language governing permissions and limitations under the License.
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/substances.h>
 #endif
+
+
 namespace biogears {
 SESubstanceManager::SESubstanceManager(Logger* logger)
   : Loggable(logger)
@@ -317,7 +319,7 @@ bool SESubstanceManager::LoadSubstanceDirectory()
 
   std::map<std::string, std::unique_ptr<CDM::ObjectData>> definitions;
 
-  std::unique_ptr<CDM::ObjectData> data;
+
   std::string path_string;
   for (auto& filepath : io->FindAllSubstanceFiles()) {
     path_string = filepath.string();
@@ -342,22 +344,25 @@ bool SESubstanceManager::LoadSubstanceDirectory()
     }
   }
 #endif
-  for (auto& pair : definitions) {
-    auto subData = dynamic_cast<CDM::SubstanceData*>(data.get());
+  for (auto& pair : definitions) {  
+
+    auto subData = dynamic_cast<CDM::SubstanceData*>(pair.second.get());
     if (subData != nullptr) {
       auto sub = new SESubstance(GetLogger());
       sub->Load(*subData);
       AddSubstance(*sub);
       m_OriginalSubstanceData[sub] = subData;
-      data.release();
+      pair.second.release();
       continue;
     }
-    auto compoundData = dynamic_cast<CDM::SubstanceCompoundData*>(data.get());
-    if (compoundData != nullptr) { // Save this off and process it till later, once all substances are read
+    auto compoundData = dynamic_cast<CDM::SubstanceCompoundData*>(pair.second.get());
+    if (compoundData != nullptr) { 
+      // Differ processing compounds, until after all substances are known
+      // To prevent first pass errors.
       auto compound = new SESubstanceCompound(GetLogger());
       m_OriginalCompoundData[compound] = compoundData;
       AddCompound(*compound);
-      data.release();
+      pair.second.release();
       continue;
     }
     Error("Unknown Type");

@@ -1797,10 +1797,10 @@ void Cardiovascular::MetabolicToneResponse()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::TuneCircuit()
 {
-  DataTrack circuitTrk;
+  DataTrack circuitTrk{m_Logger};
   std::ofstream circuitFile;
 
-  DataTrack cerebralTrk;
+  DataTrack cerebralTrk{m_Logger};
   std::ofstream cerebralFile;
 
   bool success = false;

@@ -41,6 +41,7 @@ namespace io {
 
   BIOGEARS_IO_API char const* get_substances_file_sha1(biogears::filesystem::path file);
 
+  BIOGEARS_IO_API char const* get_default_substance_directory();
   BIOGEARS_IO_API char const* get_embedded_substances_file(biogears::filesystem::path file, size_t& content_size);
   BIOGEARS_IO_API size_t      get_embedded_substances_file_size( const char* path);
 

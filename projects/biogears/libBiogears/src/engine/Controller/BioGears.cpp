@@ -80,7 +80,7 @@ BioGears::BioGears(Logger* logger, const std::string& working_dir)
 DataTrack& BioGears::GetDataTrack()
 {
   if (m_DataTrack == nullptr) {
-    m_DataTrack = new DataTrack();
+    m_DataTrack = new DataTrack(m_Logger);
   }
   return *m_DataTrack;
 }

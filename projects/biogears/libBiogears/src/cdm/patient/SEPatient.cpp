@@ -14,9 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
+#include <biogears/io/directories/patients.h>
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
-
 namespace biogears {
 SEPatient::SEPatient(Logger* logger)
   : Loggable(logger)
@@ -89,11 +89,15 @@ bool SEPatient::Load(const std::string& patientFile)
   auto io = m_Logger->GetIoManager().lock();
   auto possible_path = io->FindPatientFile(patientFile.c_str());
   if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
     size_t content_size;
 
-    auto resource = filesystem::path { "patients" } / filesystem::path(patientFile).basename();
-    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
-    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+    auto resource = filesystem::path(patientFile).basename();
+    auto content  = io::get_embedded_patients_file(resource.string().c_str(), content_size);
+    if ( content_size > 0 ){
+      data = Serializer::ReadBuffer((XMLByte*)content[0], content_size, m_Logger);
+    }
+#endif
   } else {
     data = Serializer::ReadFile(possible_path.string(), m_Logger);
   }
