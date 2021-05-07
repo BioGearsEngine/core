@@ -194,7 +194,7 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   return ReadBuffer(&m_me->m_buffer[0], content_size,  logger);
 }
 //-----------------------------------------------------------------------------
-std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte* buffer, size_t size, Logger* logger)
+std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const * buffer, size_t size, Logger* logger)
 {
   if (m_me == nullptr) {
     m_me = new Serializer();

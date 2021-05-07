@@ -101,12 +101,8 @@ double SEGenericScalar::GetValue(const std::string& unit) const
 //-------------------------------------------------------------------------------
 bool SEGenericScalar::operator==(const SEGenericScalar& obj) const
 {
-  return m_Scalar != nullptr
-    &&  obj.m_Scalar != nullptr
-    &&  *m_Scalar == *obj.m_Scalar
-    ||  m_UnitScalar != nullptr
-    &&  obj.m_UnitScalar != nullptr
-    &&  *m_UnitScalar == *obj.m_UnitScalar;
+  return (m_Scalar != nullptr &&  obj.m_Scalar != nullptr &&  *m_Scalar == *obj.m_Scalar   )
+    || ( m_UnitScalar != nullptr &&  obj.m_UnitScalar != nullptr &&  *m_UnitScalar == *obj.m_UnitScalar);
 }
 //-------------------------------------------------------------------------------
 bool SEGenericScalar::operator!=(const SEGenericScalar& obj) const

@@ -29,11 +29,11 @@ public:
   static constexpr const char* TypeTag() { return "SEUrinalysisMicroscopic"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset();
-  virtual void Clear();
+  virtual void Reset() override;
+  virtual void Clear() override;
 
   virtual bool Load(const CDM::UrinalysisMicroscopicData& in);
-  virtual CDM::UrinalysisMicroscopicData* Unload();
+  virtual CDM::UrinalysisMicroscopicData* Unload() override;
 
 protected:
   virtual void Unload(CDM::UrinalysisMicroscopicData& data);

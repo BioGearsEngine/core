@@ -67,7 +67,7 @@ void BioGearsEngineTest::InternalTemperatureVariableBMRCircuitTest(const std::st
   m_TCircuit.SetNextAndCurrentFromBaselines();
   m_TCircuit.StateChange();
 
-  DataTrack outTrk;
+  DataTrack outTrk{m_Logger};
   std::ofstream file;
   SEThermalCircuitCalculator calc(bg.GetLogger());
 
@@ -137,7 +137,7 @@ void BioGearsEngineTest::InternalTemperatureVariableSkinCircuitTest(const std::s
   m_TCircuit.SetNextAndCurrentFromBaselines();
   m_TCircuit.StateChange();
 
-  DataTrack outTrk;
+  DataTrack outTrk{m_Logger};
 
   std::ofstream file;
 
@@ -220,7 +220,7 @@ void BioGearsEngineTest::InternalTemperatureVariableCoreCircuitTest(const std::s
   m_TCircuit.SetNextAndCurrentFromBaselines();
   m_TCircuit.StateChange();
 
-  DataTrack outTrk;
+  DataTrack outTrk{m_Logger};
 
   std::ofstream file;
 
@@ -324,7 +324,7 @@ void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::st
   m_ECircuit.SetNextAndCurrentFromBaselines();
   m_ECircuit.StateChange();
 
-  DataTrack outTrk;
+  DataTrack outTrk{m_Logger};
 
   std::ofstream file;
 
@@ -433,7 +433,7 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentVariableBMRandTemperature
   m_TECircuit.SetNextAndCurrentFromBaselines();
   m_TECircuit.StateChange();
 
-  DataTrack outTrk;
+  DataTrack outTrk{m_Logger};
   std::ofstream file;
   SEThermalCircuitCalculator calc(bg.GetLogger());
 
@@ -553,7 +553,7 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentSkinTempDropCircuitTest(c
   m_TECircuit.SetNextAndCurrentFromBaselines();
   m_TECircuit.StateChange();
 
-  DataTrack outTrk;
+  DataTrack outTrk{m_Logger};
   std::ofstream file;
   SEThermalCircuitCalculator calc(bg.GetLogger());
 
@@ -685,7 +685,7 @@ void BioGearsEngineTest::EnvironmentISO7730ComparisonTest(const std::string& sTe
   }
 
   //Write results to file
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   for (unsigned int i = 0; i < 13; i++) {
     trk.Track("ClothingSurfaceTemperature(C)", i, dClothingSurfaceTemperature_C[i]);
     trk.Track("ConvectiveHeatLoss(W/m^2)", i, dConvectiveHeatLoss_WPerM2[i]);

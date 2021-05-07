@@ -32,7 +32,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 void BioGearsEngineTest::NutrientKineticsTest(bool usingAbsorption, bool usingDynamicHormones, bool usingGlycogen, bool usingProteinStorage, bool usingFatStorage, bool fullStores, bool useDiffusion, bool useConsumption, bool usingLipogenesis, bool usingGluconeogenesis, bool isAnaerobic, double exerciseWork_W, const std::string& rptDirectory, double testDuration_hr, MealType mealType, std::string testName)
 {
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   std::string outputName;
   if (testName != "Custom") {
     outputName = "/" + testName;

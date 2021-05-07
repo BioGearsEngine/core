@@ -38,7 +38,7 @@ public:
   BIOGEARS_API static void Destroy() { SAFE_DELETE(m_me); }
   BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadFile(const char* xmlFile, Logger* logger);
   BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadFile(const std::string& xmlFile, Logger* logger);
-  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadBuffer(XMLByte* buffer, size_t size, Logger* logger);
+  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadBuffer(XMLByte const * buffer, size_t size, Logger* logger);
 private:
   Serializer();
   virtual ~Serializer();

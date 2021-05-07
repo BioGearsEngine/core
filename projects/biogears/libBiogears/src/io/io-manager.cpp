@@ -260,7 +260,7 @@ std::vector<filesystem::path> IOManager::find_files(std::string suffix, std::str
 #else
   install_root = "~/.biogears/";
 #endif
-  install_root += rev_tag_str();
+  install_root += rev_tag();
   if (install_root != "") {
     test_location = install_root;
     test_location /= suffix;
@@ -850,7 +850,7 @@ std::string IOManager::find_resource_file(char const* file) const
 #else
   install_root = "~/.biogears/";
 #endif
-  install_root += rev_tag_str();
+  install_root += rev_tag();
   if (install_root != "") {
     test_location = install_root;
     test_location /= file;

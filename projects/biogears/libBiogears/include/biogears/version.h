@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
-BIOGEARS_API std::string project_name();
-constexpr BIOGEARS_API char const* project_name_str();
+ BIOGEARS_API std::string project_name();
+ BIOGEARS_API char const* project_name_str();
 
  BIOGEARS_API std::string version_string();
  BIOGEARS_API char const* version_string_str();
@@ -32,22 +32,22 @@ constexpr BIOGEARS_API char const* project_name_str();
  BIOGEARS_API char const* branded_full_version_string_str();
 
  BIOGEARS_API std::string rev_hash();
-constexpr BIOGEARS_API char const* rev_hash_str();
+ BIOGEARS_API char const* rev_hash_str();
 
  BIOGEARS_API std::string rev_tag();
-constexpr BIOGEARS_API char const* rev_tag_str();
+ BIOGEARS_API char const* rev_tag_str();
 
-BIOGEARS_API int rev_offset();
+ BIOGEARS_API int rev_offset();
 
-constexpr BIOGEARS_API int biogears_major_version();
-constexpr BIOGEARS_API int biogears_minor_version();
-constexpr BIOGEARS_API int biogears_patch_version();
+ BIOGEARS_API int biogears_major_version();
+ BIOGEARS_API int biogears_minor_version();
+ BIOGEARS_API int biogears_patch_version();
 
-constexpr BIOGEARS_API bool biogears_offical_release();
+ BIOGEARS_API bool biogears_offical_release();
 
  BIOGEARS_API std::string rev_commit_date();
-constexpr BIOGEARS_API char const* rev_commit_date_str();
+ BIOGEARS_API char const* rev_commit_date_str();
  BIOGEARS_API std::string biogears_build_date();
-constexpr BIOGEARS_API const char* biogears_build_date_str();
+ BIOGEARS_API const char* biogears_build_date_str();
 
 }

@@ -28,10 +28,10 @@ public:
   SEPatientDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEPatientDataRequest();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
   size_t HashCode() const override;
   virtual bool Load(const CDM::PatientDataRequestData& in);
-  virtual CDM::PatientDataRequestData* Unload() const;
+  virtual CDM::PatientDataRequestData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::PatientDataRequestData& data) const;

@@ -34,7 +34,7 @@ public:
   virtual bool IsValid() const override;
 
   virtual bool Load(const CDM::AdvanceTimeData& in);
-  virtual CDM::AdvanceTimeData* Unload() const;
+  virtual CDM::AdvanceTimeData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::AdvanceTimeData& data) const;

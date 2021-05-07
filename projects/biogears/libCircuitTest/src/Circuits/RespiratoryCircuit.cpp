@@ -35,9 +35,9 @@ void BioGearsEngineTest::RespiratoryCircuitAndTransportTest(RespiratoryConfigura
   TimingProfile tmr;
   tmr.Start("Test");
   //Output files
-  DataTrack outTrkCircuit;
-  DataTrack outTrkGraph;
-  DataTrack aerosolGraphTrk;
+  DataTrack outTrkCircuit{m_Logger};
+  DataTrack outTrkGraph{m_Logger};
+  DataTrack aerosolGraphTrk{m_Logger};
   std::ofstream fileCircuit;
   std::ofstream fileGraph;
   std::ofstream fAerosolGraph;
@@ -192,7 +192,7 @@ void BioGearsEngineTest::RespiratoryDriverTest(const std::string& sTestDirectory
   }
   bg.GetSubstances().InitializeGasCompartments();
 
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   SEFluidCircuit& RespCircuit = bg.GetCircuits().GetRespiratoryCircuit();
   SEFluidCircuitCalculator calc(FlowComplianceUnit::L_Per_cmH2O, VolumePerTimeUnit::L_Per_s, FlowInertanceUnit::cmH2O_s2_Per_L, PressureUnit::cmH2O, VolumeUnit::L, FlowResistanceUnit::cmH2O_s_Per_L, bg.GetLogger());
 

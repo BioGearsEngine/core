@@ -4325,7 +4325,7 @@ void CommonDataModelTest::BasicCircuitTest(const std::string& outputDirectory)
   m_Logger = new Logger(outputDirectory + "/BasicCircuit.log");
   double timeStep_s = 1.0 / 165.0;
   double currentTime_s = 0.0;
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
 
   //Test Circuit
@@ -5066,7 +5066,7 @@ void CommonDataModelTest::RunTest(const std::string& outputDirectory, const std:
   m_Logger = new Logger(outputDirectory + "/" + testName + ".log");
   double timeStep_s = 1.0 / 165.0;
   double currentTime_s = 0.0;
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
   SEFluidCircuit* fluidCircuit = m_Circuits.GetFluidCircuit("Fluid");
 

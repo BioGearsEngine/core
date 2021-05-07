@@ -39,7 +39,7 @@ void BioGearsEngineTest::AcidBaseMathTest(const std::string& rptDirectory)
   // so named because "An arterial blood gas (ABG) test measures the acidity (pH) and the levels of oxygen and carbon dioxide in the blood from an artery."
   // Where it goes doesn't matter so much.
 
-  DataTrack trk;
+  DataTrack trk{m_Logger};
 
   BioGears bg(rptDirectory + "/AcidBaseMath.log");
   SaturationCalculator& c = bg.GetSaturationCalculator();
@@ -273,7 +273,7 @@ void BioGearsEngineTest::AcidBaseFeedbackTest(const std::string& rptDirectory)
 
   // It’s making sure the solver gives the same answer when it's feed back the previous answer.
 
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   BioGears bg(rptDirectory + "/AcidBaseFeedback.log");
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SESubstanceManager& subMgr = bg.GetSubstances();
@@ -383,7 +383,7 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
   // This tests the solvers ability to handle all zeros and combinations of zeros as initial conditions.
   // Did not test negatives because the engine already has checks for negative mass and concentrations.
 
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   BioGears bg(rptDirectory + "/AcidBaseLimits.log");
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SESubstanceManager& subMgr = bg.GetSubstances();
@@ -570,7 +570,7 @@ void BioGearsEngineTest::AcidBaseLimitsTest(const std::string& rptDirectory)
 
 void BioGearsEngineTest::AcidBaseExtremeTest(const std::string& rptDirectory)
 {
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   BioGears bg(rptDirectory + "/AcidBaseExtreme.log");
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SESubstanceManager& subMgr = bg.GetSubstances();

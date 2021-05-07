@@ -94,7 +94,7 @@ void CommonDataModelTest::LargeFlowTransportTest(const std::string& sTestDirecto
 
   SELiquidTransporter Transporter(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, m_Logger);
 
-  DataTrack outTrk;
+  DataTrack outTrk{m_Logger};
   std::ofstream file;
   bool serialized = false;
   double time = 0;
@@ -270,7 +270,7 @@ void CommonDataModelTest::LiquidTransportTest(const std::string& rptDirectory)
   bool serialized = false;
   SELiquidTransporter Transporter(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::mg, MassPerVolumeUnit::mg_Per_mL, &logger);
   double deltaT_s = 1.0 / 165;
-  DataTrack outTrk;
+  DataTrack outTrk{m_Logger};
   std::ofstream file;
   double time = 0;
   while (time < 10.0) {
@@ -441,7 +441,7 @@ void CommonDataModelTest::GasTransportTest(const std::string& rptDirectory)
   bool serialized = false;
   SEGasTransporter Transporter(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, VolumeUnit::mL, NoUnit::unitless, &logger);
   double deltaT_s = 1.0 / 165;
-  DataTrack outTrk;
+  DataTrack outTrk{m_Logger};
   std::ofstream file;
   double time = 0;
   while (time < 10.0) {

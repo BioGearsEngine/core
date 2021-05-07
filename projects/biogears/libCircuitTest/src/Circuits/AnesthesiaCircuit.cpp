@@ -42,8 +42,8 @@ void BioGearsEngineTest::AnesthesiaMachineCircuitAndTransportTest(RespiratoryCon
   TimingProfile tmr;
   tmr.Start("Test");
   //Output files
-  DataTrack outTrkCircuit;
-  DataTrack outTrkGraph;
+  DataTrack outTrkCircuit{m_Logger};
+  DataTrack outTrkGraph{m_Logger};
   std::ofstream fileCircuit;
   std::ofstream fileGraph;
 

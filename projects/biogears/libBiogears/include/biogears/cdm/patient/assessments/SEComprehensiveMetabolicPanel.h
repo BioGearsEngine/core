@@ -31,11 +31,11 @@ public:
   static constexpr const char* TypeTag() { return "SEComprehensiveMetabolicPanel"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset(); //reset values
-  virtual void Clear(); //clear memory
+  virtual void Reset() override; //reset values
+  virtual void Clear() override; //clear memory
 
   virtual bool Load(const CDM::ComprehensiveMetabolicPanelData& in);
-  virtual CDM::ComprehensiveMetabolicPanelData* Unload();
+  virtual CDM::ComprehensiveMetabolicPanelData* Unload() override;
 
 protected:
   virtual void Unload(CDM::ComprehensiveMetabolicPanelData& data);

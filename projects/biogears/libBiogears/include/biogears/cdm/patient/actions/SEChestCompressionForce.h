@@ -26,13 +26,13 @@ public:
   SEChestCompressionForce();
   virtual ~SEChestCompressionForce();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::ChestCompressionForceData& in);
-  virtual CDM::ChestCompressionForceData* Unload() const;
+  virtual CDM::ChestCompressionForceData* Unload() const override;
 
   virtual bool HasForce() const;
   virtual SEScalarForce& GetForce();

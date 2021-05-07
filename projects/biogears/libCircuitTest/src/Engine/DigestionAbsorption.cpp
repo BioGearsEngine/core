@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 void BioGearsEngineTest::DigestionTest(const std::string& rptDirectory, MealType mealType)
 {
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   std::string outputName;
 
   if (mealType == CarbsOnly)
@@ -330,7 +330,7 @@ void BioGearsEngineTest::DigestionTest(const std::string& rptDirectory, MealType
 
 void BioGearsEngineTest::AbsorptionTest(const std::string& rptDirectory, MealType mealType)
 {
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   std::string outputName;
 
   if (mealType == CarbsOnly)

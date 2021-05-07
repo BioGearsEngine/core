@@ -705,7 +705,7 @@ void BioGearsEngine::AdvanceModelTime(bool appendDataTrack)
   m_timeSinceLastDataTrack += m_Config->GetTimeStep(TimeUnit::s);
   if (m_timeSinceLastDataTrack >= sample_interval_s) {
     m_timeSinceLastDataTrack -= sample_interval_s;
-    if (m_isAutoTracking && EngineState::Active == m_State || m_State < EngineState::Active && m_areTrackingStabilization) {
+    if ((m_isAutoTracking && EngineState::Active == m_State) || (m_State < EngineState::Active && m_areTrackingStabilization)) {
       auto time = GetSimulationTime(TimeUnit::s);
       GetEngineTrack()->TrackData(time, appendDataTrack);
     }

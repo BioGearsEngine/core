@@ -50,7 +50,7 @@ double TotalHbMols(SELiquidCompartmentGraph& Graph, SESubstance& Hb, SESubstance
 
 void BioGearsEngineTest::FourCompartmentTest(bool usingAcidBase, bool usingProductionConsumption, bool usingDiffusion, bool activeDiffusion, const std::string& rptDirectory)
 {
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   std::string outputName;
   if (!usingAcidBase && !usingProductionConsumption && !usingDiffusion && !activeDiffusion) {
     outputName = "/FourCompartmentTestSimple";

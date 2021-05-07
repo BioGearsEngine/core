@@ -63,7 +63,7 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
 {
   std::string tName = "BrainInjuryTest";
 
-  DataTrack outTrk;
+  DataTrack outTrk{m_Logger};
   std::ofstream file;
 
   BioGears bg(sTestDirectory + "/" + tName + ".log");

@@ -142,7 +142,7 @@ void CommonDataModelTest::ElectricalCircuitTest(const std::string& sTestDirector
   // Lock it so you cannot modify Quantity/Potential/Flux values with out a source
   m_Circuits.SetReadOnly(true);
 
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   bool serialized = false;
   double sample = 0;
   double dT = 0.0;
@@ -206,7 +206,7 @@ void CommonDataModelTest::FluidCircuitTest(const std::string& sTestDirectory)
   // Lock it so you cannot modify Quantity/Potential/Flux values with out a source
   m_Circuits.SetReadOnly(true);
 
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   bool serialized = false;
   double sample = 0;
   double dT = 0.0;
@@ -270,7 +270,7 @@ void CommonDataModelTest::ThermalCircuitTest(const std::string& sTestDirectory)
   // Lock it so you cannot modify Quantity/Potential/Flux values with out a source
   m_Circuits.SetReadOnly(true);
 
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   bool serialized = false;
   double sample = 0;
   double dT = 0.0;
@@ -329,7 +329,7 @@ void CommonDataModelTest::CombinedCircuitTest(const std::string& sTestDirectory)
   TimingProfile p;
   double timeStep_s = 1.0 / 165.0;
   double currentTime_s = 0.0;
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
 
   //Master Circuit
@@ -429,8 +429,8 @@ void CommonDataModelTest::InterCircuitComparisonTest(const std::string& sTestDir
   TimingProfile p;
   double timeStep_s = 1.0 / 165.0;
   double currentTime_s = 0.0;
-  DataTrack trk1;
-  DataTrack trk2;
+  DataTrack trk1{m_Logger};
+  DataTrack trk2{m_Logger};
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
 
   //Test Circuit
@@ -496,8 +496,8 @@ void CommonDataModelTest::InterCircuitIndividualTest(const std::string& sTestDir
   TimingProfile p;
   double timeStep_s = 1.0 / 165.0;
   double currentTime_s = 0.0;
-  DataTrack trk1;
-  DataTrack trk2;
+  DataTrack trk1{m_Logger};
+  DataTrack trk2{m_Logger};
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
 
   //Circuit 1
@@ -593,7 +593,7 @@ void InterCircuitTest(const std::string& sTestDirectory)
   TimingProfile p;
   double dDT = 1.0/165.0;
   double dT = 0.0;
-  DataTrack trk1;
+  DataTrack trk{m_Logger};
   DataTrack trk2;
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
   AdvancedCircuitCalculator.GetTimeStep().SetValue(dDT, TimeUnit::s);
@@ -719,7 +719,7 @@ void CommonDataModelTest::DynamicallyChangingCircuitTest(const std::string& sTes
   m_Logger->ResetLogFile(sTestDirectory + "/DynamicallyChangingCircuitTest.log");
   TimingProfile p;
   double timeStep_s = 1.0 / 165.0;
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
 
   //Test Circuit
@@ -819,7 +819,7 @@ void CommonDataModelTest::NonZeroReferencePositive(const std::string& sTestDirec
   m_Logger->ResetLogFile(sTestDirectory + "/NonZeroReferencePositive.log");
   TimingProfile p;
   double timeStep_s = 1.0 / 165.0;
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
   SEFluidCircuit* fluidCircuit = &m_Circuits.CreateFluidCircuit("Fluid");
   //-----------------------------------------------------------
@@ -891,7 +891,7 @@ void CommonDataModelTest::NonZeroReferenceNegative(const std::string& sTestDirec
   m_Logger->ResetLogFile(sTestDirectory + "/NonZeroReferenceNegative.log");
   TimingProfile p;
   double timeStep_s = 1.0 / 165.0;
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
   SEFluidCircuit* fluidCircuit = &m_Circuits.CreateFluidCircuit("Fluid");
   //-----------------------------------------------------------
@@ -966,7 +966,7 @@ void CommonDataModelTest::PolarizedCapacitorTest(const std::string& sTestDirecto
   TimingProfile p;
   double timeStep_s = 1.0 / 100.0;
   double currentTime_s = 0.0;
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
   SEFluidCircuit* fluidCircuit = &m_Circuits.CreateFluidCircuit("Fluid");
   //-----------------------------------------------------------
@@ -1029,7 +1029,7 @@ void CommonDataModelTest::PreChargeComplianceZeroVolume(const std::string& sTest
   TimingProfile p;
   double timeStep_s = 1.0 / 165.0;
   double currentTime_s = 0.0;
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
 
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
   SEFluidCircuit* fluidCircuit = &m_Circuits.CreateFluidCircuit("Fluid");
@@ -1074,7 +1074,7 @@ void CommonDataModelTest::PreChargeComplianceNonZeroVolume(const std::string& sT
   TimingProfile p;
   double timeStep_s = 1.0 / 165.0;
   double currentTime_s = 0.0;
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
 
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
   SEFluidCircuit* fluidCircuit = &m_Circuits.CreateFluidCircuit("Fluid");

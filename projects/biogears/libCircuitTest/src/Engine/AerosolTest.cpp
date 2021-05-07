@@ -303,7 +303,7 @@ void BioGearsEngineTest::DepositionFractionTest(SETestSuite& suite, SESubstance&
   double yOffset = -12.0;
   double sinusoid = 0;
 
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   std::ofstream file;
   double totalInspiredAir_mL = 0;
   double totalExspiredAir_mL = 0;

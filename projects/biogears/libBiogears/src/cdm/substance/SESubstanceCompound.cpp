@@ -139,7 +139,7 @@ void SESubstanceCompound::SetClassification(CDM::enumSubstanceClass::value subCl
 //-----------------------------------------------------------------------------
 bool SESubstanceCompound::HasClassification() const
 {
-  return m_Classification == ((CDM::enumSubstanceState::value)-1) ? false : true;
+  return m_Classification == ((CDM::enumSubstanceClass::value)-1) ? false : true;
 }
 //-----------------------------------------------------------------------------
 void SESubstanceCompound::InvalidateClassification()

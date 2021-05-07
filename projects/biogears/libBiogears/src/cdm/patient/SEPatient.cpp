@@ -95,7 +95,7 @@ bool SEPatient::Load(const std::string& patientFile)
     auto resource = filesystem::path(patientFile).basename();
     auto content  = io::get_embedded_patients_file(resource.string().c_str(), content_size);
     if ( content_size > 0 ){
-      data = Serializer::ReadBuffer((XMLByte*)content[0], content_size, m_Logger);
+      data = Serializer::ReadBuffer(reinterpret_cast<XMLByte const*>(content), content_size, m_Logger);
     }
 #endif
   } else {

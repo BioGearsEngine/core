@@ -34,11 +34,11 @@ public:
   static constexpr const char* TypeTag() { return "SECompleteBloodCount"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset(); //reset values
-  virtual void Clear(); //clear memory
+  virtual void Reset() override; //reset values
+  virtual void Clear() override; //clear memory
 
   virtual bool Load(const CDM::CompleteBloodCountData& in);
-  virtual CDM::CompleteBloodCountData* Unload();
+  virtual CDM::CompleteBloodCountData* Unload() override;
 
 protected:
   virtual void Unload(CDM::CompleteBloodCountData& data);

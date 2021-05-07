@@ -469,6 +469,10 @@ void Cardiovascular::SetUp()
             case CDM::enumResistancePathType::Splanchnic:
               m_splanchnicResistancePaths.push_back(path);
               break;
+            case CDM::enumResistancePathType::Cerebral:
+               m_cerebralResistancePaths.push_back(path);
+              break;
+
             }
           }
           m_systemicResistancePaths.push_back(path);

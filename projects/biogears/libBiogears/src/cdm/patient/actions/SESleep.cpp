@@ -67,7 +67,7 @@ namespace biogears
   //-------------------------------------------------------------------------------
   bool SESleep::HasSleepState() const
   {
-      return m_SleepState == ((CDM::enumSleepState::value) - 1) ? false : true;
+      return m_SleepState == ((CDM::enumOnOff::value) - 1) ? false : true;
   }
   //-------------------------------------------------------------------------------
   void SESleep::SetSleepState(CDM::enumOnOff::value t) 

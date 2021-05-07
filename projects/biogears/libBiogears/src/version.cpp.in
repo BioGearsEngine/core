@@ -29,7 +29,7 @@ using namespace std::string_literals;
   return biogears_build_date_str();
 }
 //-----------------------------------------------------------------------------
-constexpr const char * rev_commit_date_str() {
+const char * rev_commit_date_str() {
   return _REV_COMMIT_DATE_;
 }
 //-----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ constexpr const char * rev_commit_date_str() {
   return biogears_build_date_str();
 }
 //-----------------------------------------------------------------------------
-constexpr const char * biogears_build_date_str() {
+const char * biogears_build_date_str() {
   return __DATE__;
 }
 //-----------------------------------------------------------------------------
@@ -108,7 +108,7 @@ char const * branded_full_version_string_str()
   return _PROJECT_NAME_;
 }
 //-----------------------------------------------------------------------------
-constexpr char const * project_name_str()
+char const * project_name_str()
 {
  return _PROJECT_NAME_;
 }
@@ -118,7 +118,7 @@ constexpr char const * project_name_str()
   return _REV_HASH_;
 }
 //-----------------------------------------------------------------------------
-constexpr char const * rev_hash_str()
+char const * rev_hash_str()
 {
   return _REV_HASH_;
 }
@@ -129,7 +129,7 @@ constexpr char const * rev_hash_str()
 }
 
 //-----------------------------------------------------------------------------
-constexpr char const * rev_tag_str()
+char const * rev_tag_str()
 {
   return _REV_TAG_;
 }
@@ -147,22 +147,22 @@ int rev_offset()
 }
 //-----------------------------------------------------------------------------
 
-constexpr int biogears_major_version()
+int biogears_major_version()
 {
   return _MAJOR_VERSION_NUMBER_;
 }
 //-----------------------------------------------------------------------------
-constexpr int biogears_minor_version()
+int biogears_minor_version()
 {
   return _MINOR_VERSION_NUMBER_;
 }
 //-----------------------------------------------------------------------------
-constexpr int biogears_patch_version()
+int biogears_patch_version()
 {
   return _PATCH_VERSION_NUMBER_;
 }
 //-----------------------------------------------------------------------------
-constexpr bool biogears_offical_release()
+bool biogears_offical_release()
 {
   return _OFFICAL_RELEASE_;
 }
