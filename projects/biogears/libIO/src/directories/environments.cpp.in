@@ -10,13 +10,70 @@
 
 namespace biogears {
 namespace io {
-
+  static char default_directory[] = "environments/";
   char const * environment_file_list[] = {
 @RESOURCE_FILE_LIST@
   };
 
   constexpr size_t count_of_environment_files = @RESOURCE_FILE_COUNT@;
+  //biogears::filesystem::path overloads
+  bool generate_environments_directory(biogears::filesystem::path path)
+  {
+   biogears::filesystem::path working_dir  = path;
+   std::ofstream output;
 
+   bool result = true;
+
+   auto write_file = [&](biogears::filesystem::path path, char const* content, size_t content_size) {
+      biogears::filesystem::create_directories((working_dir / path).parent_path());
+      output.open((working_dir / path).string(), std::fstream::binary | std::fstream::out);
+      if (output.good() && !output.is_open()) {
+        return false;
+      }
+      output.write(content, content_size);
+      output.close();
+      return true;
+   };
+   biogears::filesystem::path dir {"environments/"};
+@GENERATE_DIRECTORY_BODY@
+
+   return true;
+  }
+  //-----------------------------------------------------------------------------
+  bool does_embedded_environments_file_exist(biogears::filesystem::path path)
+  {
+     return @DOES_EMBEDDED_FILE_EXIST_PATH_BODY@false;
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_environments_file_sha1(biogears::filesystem::path path)
+  {
+     char const* file_sha1 = "";
+     
+@GET_FILE_SHA1_PATH_BODY@
+
+     return file_sha1;
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_embedded_environments_file(biogears::filesystem::path path, size_t& content_size)
+  {
+    char const * embedded_content = "";
+
+@GET_EMBEDED_CONTENTS_PATH_BODY@
+
+    return embedded_content;
+  }
+//-----------------------------------------------------------------------------
+  char const * get_default_environments_directory() { return default_directory; }
+  //-----------------------------------------------------------------------------
+  size_t  get_embedded_environments_file_size( const char* path) 
+  {
+    size_t size_of_embedded_content = 0;
+
+@GET_EMBEDED_CONTENTS_SIZE_PATH_BODY@
+
+    return size_of_embedded_content ;
+  }
+  //-----------------------------------------------------------------------------
   bool generate_environments_directory(const char* root)
   {
    biogears::filesystem::path working_dir { root };
@@ -25,8 +82,11 @@ namespace io {
   //-----------------------------------------------------------------------------
   bool does_embedded_environments_file_exist(const char* path)
   {
-   biogears::filesystem::path working_dir { path };
-   return does_embedded_environments_file_exist(working_dir);
+   std::string resource_id { path };
+    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
+      resource_id = resource_id.substr(sizeof(default_directory));
+    }
+   return does_embedded_environments_file_exist(resource_id);
   }
   //-----------------------------------------------------------------------------
   size_t find_environment_file(const char* file, const char* root, char* buffer, size_t buffer_length)
@@ -72,8 +132,11 @@ namespace io {
   //-----------------------------------------------------------------------------
   char const* get_environments_file_sha1(const char* path)
   {
-   biogears::filesystem::path working_dir { path };
-   return get_environments_file_sha1(working_dir);
+   std::string resource_id { path };
+    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
+      resource_id = resource_id.substr(sizeof(default_directory));
+    }
+   return get_environments_file_sha1(resource_id);
   }
   //-----------------------------------------------------------------------------
   char const** list_environments_files()
@@ -88,67 +151,11 @@ namespace io {
   //-----------------------------------------------------------------------------
   char const* get_embedded_environments_file(const char* path, size_t& content_size)
   {
-    biogears::filesystem::path working_dir { path };
-    return get_embedded_environments_file(working_dir, content_size);
-  }
-  //-----------------------------------------------------------------------------
-
-  //biogears::filesystem::path overloads
-  bool generate_environments_directory(biogears::filesystem::path path)
-  {
-   biogears::filesystem::path working_dir  = path;
-   std::ofstream output;
-
-   bool result = true;
-
-   auto write_file = [&](biogears::filesystem::path path, char const* content, size_t content_size) {
-      biogears::filesystem::create_directories((working_dir / path).parent_path());
-      output.open((working_dir / path).string(), std::fstream::binary | std::fstream::out);
-      if (output.good() && !output.is_open()) {
-        return false;
-      }
-      output.write(content, content_size);
-      output.close();
-      return true;
-   };
-   biogears::filesystem::path dir {"environments/"};
-@GENERATE_DIRECTORY_BODY@
-
-   return true;
-  }
-  //-----------------------------------------------------------------------------
-  bool does_embedded_environments_file_exist(biogears::filesystem::path path)
-  {
-     return @DOES_EMBEDDED_FILE_EXIST_PATH_BODY@false;
-  }
-  //-----------------------------------------------------------------------------
-  char const* get_environments_file_sha1(biogears::filesystem::path path)
-  {
-     char const* file_sha1 = "";
-     
-@GET_FILE_SHA1_PATH_BODY@
-
-     return file_sha1;
-  }
-  //-----------------------------------------------------------------------------
-  char const * get_default_environments_directory() { return "environments/"; }
-  //-----------------------------------------------------------------------------
-  char const* get_embedded_environments_file(biogears::filesystem::path path, size_t& content_size)
-  {
-    char const * embedded_content = "";
-
-@GET_EMBEDED_CONTENTS_PATH_BODY@
-
-    return embedded_content;
-  }
-  //-----------------------------------------------------------------------------
-  size_t  get_embedded_environments_file_size( const char* path) 
-  {
-    size_t size_of_embedded_content = 0;
-
-@GET_EMBEDED_CONTENTS_SIZE_PATH_BODY@
-
-    return size_of_embedded_content ;
+    std::string resource_id { path };
+    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
+      resource_id = resource_id.substr(sizeof(default_directory));
+    }
+    return get_embedded_environments_file(resource_id, content_size);
   }
   //-----------------------------------------------------------------------------
 }

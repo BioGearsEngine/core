@@ -1,12 +1,12 @@
-#include <thread>
 #include <cmath>
+#include <thread>
 
 #include <gtest/gtest.h>
 
-//#include <biogears/io/io-manager.h>
+#include <biogears/io/io-manager.h>
+#ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/xsd.h>
-
-
+#endif
 
 #ifdef DISABLE_BIOGEARS_BioGearsIO_TEST
 #define TEST_FIXTURE_NAME DISABLED_BioGearsIO_Fixture
@@ -71,7 +71,7 @@ void TEST_FIXTURE_NAME::TearDown()
 //TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistECG)
 //{
 //  biogears::io::IOManager iom;
-//  EXPECT_TRUE(iom.does_embedded_file_exist("ecg/StandardECG.xml"));
+//  EXPECT_TRUE(iom.does_embedded_file_exist("StandardECG.xml"));
 //}
 //
 //TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistEnvironments)
@@ -104,16 +104,16 @@ void TEST_FIXTURE_NAME::TearDown()
 //  EXPECT_TRUE(iom.does_embedded_file_exist("substances/Acetaminophen.xml"));
 //}
 //
-//TEST_F(TEST_FIXTURE_NAME,FindResourceFile) 
+//TEST_F(TEST_FIXTURE_NAME,FindResourceFile)
 //{
 //  biogears::io::IOManager iom;
-//  char buf[10000];  
+//  char buf[10000];
 //  EXPECT_TRUE(0 < iom.find_resource_file("patients/StandardMale.xml",buf,10000));
 //}
 
 //TEST_F(TEST_FIXTURE_NAME,GetSha1XSD)
 //{
-//	biogears::io::IOManager iom; 
+//	biogears::io::IOManager iom;
 //	//38971f4027302e2a2758543a54eb0a21676a7bf4 sha1 of BioGearsDataModel.xsd as of 1/20/21, if the test is failing, maybe the file was changed
 //	EXPECT_EQ(biogears::io::generate_file_sha1("xsd/BioGearsDataModel.xsd"),iom.get_expected_sha1("xsd/BioGearsDataModel.xsd"));
 //}
@@ -127,7 +127,7 @@ void TEST_FIXTURE_NAME::TearDown()
 //TEST_F(TEST_FIXTURE_NAME, GetSha1ECG)
 //{
 //  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
-//  EXPECT_EQ(biogears::io::generate_file_sha1("ecg/StandardECG.xml"), iom.get_expected_sha1("ecg/StandardECG.xml"));
+//  EXPECT_EQ(biogears::io::generate_file_sha1("StandardECG.xml"), iom.get_expected_sha1("ecg/StandardECG.xml"));
 //}
 //
 //TEST_F(TEST_FIXTURE_NAME, GetSha1Environments)
@@ -159,7 +159,6 @@ void TEST_FIXTURE_NAME::TearDown()
 //  biogears::io::IOManager iom; // this tests against the sha1 of the file as of 1/22/21
 //  EXPECT_EQ(biogears::io::generate_file_sha1("substances/Acetaminophen.xml"), iom.get_expected_sha1("substances/Acetaminophen.xml"));
 //}
-
 
 //TEST_F(TEST_FIXTURE_NAME,GetEmbeddedResourceFileXSD)
 //{
@@ -264,7 +263,7 @@ void TEST_FIXTURE_NAME::TearDown()
 //  }
 //}
 //
-//TEST_F(TEST_FIXTURE_NAME,GetDirectoryCount) 
+//TEST_F(TEST_FIXTURE_NAME,GetDirectoryCount)
 //{
 //	biogears::io::IOManager iom;
 //	//EXPECT_EQ(150,iom.get_directory_count());

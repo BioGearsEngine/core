@@ -25,7 +25,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/config.h>
+#endif
 namespace biogears {
 bool PhysiologyEngineDynamicStabilization::StabilizeRestingState(PhysiologyEngine& engine)
 {
@@ -412,10 +414,10 @@ bool PhysiologyEngineDynamicStabilization::Load(const std::string& file)
   auto possible_path = io->FindConfigFile(file.c_str());
   if (possible_path.empty()) {
     size_t content_size;
-
-    auto resource = filesystem::path { "config" } / filesystem::path(file).basename();
-    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+#ifdef BIOGEARS_IO_PRESENT
+    auto content = io::get_embedded_config_file(file.c_str(), content_size);
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
   } else {
     data = Serializer::ReadFile(possible_path.string(), m_Logger);
   }

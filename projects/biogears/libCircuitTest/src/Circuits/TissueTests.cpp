@@ -416,7 +416,7 @@ void BioGearsEngineTest::EigenDiffusionTest(const std::string& rptDirectory)
   m_Logger->ResetLogFile(rptDirectory + "/EigenDiffusionTest.log");
   BioGears bg(m_Logger);
   Tissue& tsu = (Tissue&)bg.GetTissue();
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::On);
@@ -691,7 +691,7 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
 
   Tissue& tsu = (Tissue&)bg.GetTissue();
   DiffusionCalculator& diffCalc = (DiffusionCalculator&)bg.GetDiffusionCalculator();
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);

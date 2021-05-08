@@ -48,13 +48,13 @@ void BioGearsEngineTest::AnesthesiaMachineCircuitAndTransportTest(RespiratoryCon
   std::ofstream fileGraph;
 
   BioGears bg(sTestDirectory + "/AnesthesiaMachineCircuitAndTransportTest.log");
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
   bg.CreateCircuitsAndCompartments();
   SEEnvironmentalConditions env(bg.GetSubstances());
-  env.Load("./environments/StandardEnvironment.xml");
+  env.Load("StandardEnvironment.xml");
   SEGasCompartment* cEnv = bg.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient);
   for (SESubstanceFraction* subFrac : env.GetAmbientGases()) {
     bg.GetSubstances().AddActiveSubstance(subFrac->GetSubstance());
@@ -75,8 +75,8 @@ void BioGearsEngineTest::AnesthesiaMachineCircuitAndTransportTest(RespiratoryCon
   if (config == AnesthesiaMachineSolo) {
     amCircuit = &bg.GetCircuits().GetAnesthesiaMachineCircuit();
     amGraph = &bg.GetCompartments().GetAnesthesiaMachineGraph();
-    sCircuitFileName = "/AnesthesiaMachineCircuitOutput.csv";
-    sTransportFileName = "/AnesthesiaMachineTransportOutput.csv";
+    sCircuitFileName = "AnesthesiaMachineCircuitOutput.csv";
+    sTransportFileName = "AnesthesiaMachineTransportOutput.csv";
 
     //Allow things to flow to ground, since the respiratory circuit isn't here
     //This approximates the total respiratory system resistance
@@ -88,8 +88,8 @@ void BioGearsEngineTest::AnesthesiaMachineCircuitAndTransportTest(RespiratoryCon
 
     amCircuit = &bg.GetCircuits().GetRespiratoryAndAnesthesiaMachineCircuit();
     amGraph = &bg.GetCompartments().GetRespiratoryAndAnesthesiaMachineGraph();
-    sCircuitFileName = "/RespiratoryAndAnesthesiaMachineCircuitOutput.csv";
-    sTransportFileName = "/RespiratoryAndAnesthesiaMachineTransportOutput.csv";
+    sCircuitFileName = "RespiratoryAndAnesthesiaMachineCircuitOutput.csv";
+    sTransportFileName = "RespiratoryAndAnesthesiaMachineTransportOutput.csv";
 
     //Precharge the stomach to prevent negative volume
     amCircuit->GetNode(BGE::RespiratoryNode::Stomach)->GetNextPressure().Set(env.GetAtmosphericPressure());

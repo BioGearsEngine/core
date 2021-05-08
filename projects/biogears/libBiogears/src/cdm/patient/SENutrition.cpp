@@ -17,6 +17,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/nutrition.h>
+#endif
+
 namespace biogears {
 SENutrition::SENutrition(Logger* logger)
   : Loggable(logger)
@@ -156,10 +160,10 @@ bool SENutrition::Load(const std::string& given)
   auto possible_path = io->FindNutritionFile(given.c_str());
   if (possible_path.empty()) {
     size_t content_size;
-
-    auto resource = filesystem::path { "nutrition" } / filesystem::path(given).basename();
-    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+#ifdef BIOGEARS_IO_PRESENT
+    auto content = io::get_embedded_nutrition_file(given.c_str(), content_size);
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
   } else {
     data = Serializer::ReadFile(possible_path.string(), m_Logger);
   }

@@ -44,7 +44,7 @@ private:
   virtual ~Serializer();
 
   bool Initialize(Logger* logger);
-  xercesc::DOMLSParser* CreateParser(Logger* logger) const;
+  xercesc::DOMLSParser* CreateParser(Logger* logger, bool embeddedResolver = false) const;
 
   static Serializer* m_me;
 

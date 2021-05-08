@@ -332,7 +332,7 @@ namespace filesystem {
 
     std::string string(path_type type = native_path) const
     {
-      return str();
+      return str(type);
     }
 
     void set(const std::string& str, path_type type = native_path)

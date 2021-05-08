@@ -15,13 +15,70 @@ specific language governing permissions and limitations under the License.
 //Project Includes
 #include <biogears/cdm/Serializer.h>
 
+#include <biogears/filesystem/path.h>
 #include <biogears/schema/biogears/BioGears.hxx>
 
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/framework/Wrapper4InputSource.hpp>
 
-using namespace xercesc;
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/xsd.h>
+#endif
+
 namespace xml = xsd::cxx::xml;
+
+XERCES_CPP_NAMESPACE_BEGIN
+
+struct embedded_resource_resolver : DOMLSResourceResolver {
+#pragma optimize("", off)
+  xercesc::DOMLSInput* resolveResource(XMLCh const* const resourceType,
+                                       XMLCh const* const namespaceUri,
+                                       XMLCh const* const publicId,
+                                       XMLCh const* const systemId,
+                                       XMLCh const* const baseURI)
+  {
+#ifdef BIOGEARS_IO_PRESENT
+    using ::biogears::filesystem::path;
+    using namespace ::biogears::io;
+    std::string systemId_str = xml::transcode<char>(systemId);
+    std::string baseURI_str = xml::transcode<char>(baseURI);
+
+    path normalized_path;
+    if (baseURI_str != "uri:/mil/tatrc/physiology/datamodel") {
+      path include_path = path(baseURI_str).parent_path() / systemId_str;
+      normalized_path = include_path.make_normal();
+    } else {
+      normalized_path = systemId_str;
+    }
+
+#ifdef DEBUG
+    std::cout << "embeded_resource_resolver::revolveResource(\n";
+    std::cout << "\t" << xml::transcode<char>(resourceType) << "\n";
+    std::cout << "\t," << xml::transcode<char>(namespaceUri) << "\n";
+    std::cout << "\t," << xml::transcode<char>(publicId) << "\n";
+    std::cout << "\t," << systemId_str << "\n";
+    std::cout << "\t," << baseURI_str << "\n";
+    std::cout << ")" << std::endl;
+#endif
+    auto xsd_files = list_xsd_files();
+
+    for (auto i = xsd_file_count(); i != 0; --i) {
+      auto schema = xsd_files[i - 1];
+      std::string n_path_str = normalized_path.string(path::posix_path);
+      if (std::strcmp(schema, n_path_str.c_str()) == 0) {
+        size_t schema_size = 0;
+        char const* schema_content = get_embedded_xsd_file(schema, schema_size);
+        auto source = new xercesc::MemBufInputSource(reinterpret_cast<XMLByte const*>(schema_content), schema_size, schema);
+        return new xercesc::Wrapper4InputSource(source);
+      }
+    }
+#endif
+    return nullptr;
+  }
+#pragma optimize("", on)
+};
+embedded_resource_resolver g_embedded_resource_resolver;
+XERCES_CPP_NAMESPACE_END
 
 namespace biogears {
 Serializer* Serializer::m_me = nullptr;
@@ -39,15 +96,15 @@ const char* ErrorHandler::getError()
 //-----------------------------------------------------------------------------
 bool ErrorHandler::handleError(const xercesc::DOMError& err)
 {
-  bool warn(err.getSeverity() == DOMError::DOM_SEVERITY_WARNING);
+  bool warn(err.getSeverity() == xercesc::DOMError::DOM_SEVERITY_WARNING);
 
   if (!warn)
     failed_ = true;
 
-  DOMLocator* loc(err.getLocation());
+  xercesc::DOMLocator* loc(err.getLocation());
 
-  char* uri(XMLString::transcode(loc->getURI()));
-  char* msg(XMLString::transcode(err.getMessage()));
+  char* uri(xercesc::XMLString::transcode(loc->getURI()));
+  char* msg(xercesc::XMLString::transcode(err.getMessage()));
 
   error_ << uri << ":"
          << loc->getLineNumber() << ":" << loc->getColumnNumber() << " "
@@ -57,8 +114,8 @@ bool ErrorHandler::handleError(const xercesc::DOMError& err)
   std::cerr << err.getRelatedData() << std::endl;
   std::cerr << err.getRelatedException() << std::endl;
 
-  XMLString::release(&uri);
-  XMLString::release(&msg);
+  xercesc::XMLString::release(&uri);
+  xercesc::XMLString::release(&msg);
 
   return true;
 }
@@ -75,6 +132,7 @@ Serializer::~Serializer()
   xercesc::XMLPlatformUtils::Terminate();
 }
 //-----------------------------------------------------------------------------
+#pragma optimize("", off)
 bool Serializer::Initialize(Logger* logger)
 {
   if (m_Initialized)
@@ -83,45 +141,86 @@ bool Serializer::Initialize(Logger* logger)
   std::stringstream err;
 
   xercesc::XMLPlatformUtils::Initialize();
-  m_GrammerPool.reset(new XMLGrammarPoolImpl());
+  m_GrammerPool.reset(new xercesc::XMLGrammarPoolImpl());
 
   auto io = logger->GetIoManager().lock();
-  std::string shortDir = io->find_resource_file("xsd/BioGearsDataModel.xsd");
-
+  std::string xsd_filepath = io->find_resource_file("xsd/BioGearsDataModel.xsd");
   ErrorHandler eh;
-  DOMLSParser* parser(CreateParser(logger));
-  parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, &eh);
-  if (!parser->loadGrammar(shortDir.c_str(), Grammar::SchemaGrammarType, true)) {
-    err << "Error: unable to load : " << shortDir << std::ends;
-    /// \error Unable to recognize schema grammar
-    logger->Error(err.str());
-    return false;
-  }
-  if (eh.failed()) { // TODO append error some how
-    err << "Error loading : " << shortDir << std::ends;
-    /// \error Unable to load
-    logger->Error(err.str());
-    return false;
-  }
-  parser->release();
+  if (!xsd_filepath.empty()) {
+    std::unique_ptr<xercesc::DOMLSParser> parser { CreateParser(logger) };
+    parser->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMErrorHandler, &eh);
+    if (!parser->loadGrammar(xsd_filepath.c_str(), xercesc::Grammar::SchemaGrammarType, true)) {
+      err << "Error: unable to load : " << xsd_filepath << std::ends;
+      /// \error Unable to recognize schema xercesc::Grammar
+      logger->Error(err.str());
+      return false;
+    }
+    if (eh.failed()) { // TODO append error some how
+      err << "Error loading : " << xsd_filepath << std::ends;
+      /// \error Unable to load
+      logger->Error(err.str());
+      return false;
+    }
+    parser->release(); //Careful hear this is to call the DOMLSParser not the unique_ptr release
 
-  // Lock the grammar pool. This is necessary if we plan to use the
-  // same grammar pool in multiple threads (this way we can reuse the
-  // same grammar in multiple parsers). Locking the pool disallows any
-  // modifications to the pool, such as an attempt by one of the threads
-  // to cache additional schemas.
-  m_GrammerPool->lockPool();
-  m_Initialized = true;
-  return true;
+    // Lock the xercesc::Grammar pool. This is necessary if we plan to use the
+    // same xercesc::Grammar pool in multiple threads (this way we can reuse the
+    // same xercesc::Grammar in multiple parsers). Locking the pool disallows any
+    // modifications to the pool, such as an attempt by one of the threads
+    // to cache additional schemas.
+    m_GrammerPool->lockPool();
+    m_Initialized = true;
+    return true;
+  } else {
+#if BIOGEARS_IO_PRESENT
+
+    std::unique_ptr<xercesc::DOMLSParser> parser { CreateParser(logger) };
+    parser->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMErrorHandler, &eh);
+    size_t schema_size = 0;
+
+    //for (auto i = io::xsd_file_count(); i != 0; --i) {
+    schema_size = 0;
+    //char const* schema_content = io::get_embedded_xsd_file(io::list_xsd_files()[i - 1], schema_size);
+    //xercesc::MemBufInputSource schema_buffer { reinterpret_cast<XMLByte const*>(schema_content), schema_size, io::list_xsd_files()[i - 1] };
+
+    char const* schema_content = io::get_embedded_xsd_file("BioGearsDataModel.xsd", schema_size);
+    xercesc::MemBufInputSource schema_buffer { reinterpret_cast<XMLByte const*>(schema_content), schema_size, "uri:/mil/tatrc/physiology/datamodel" };
+    //char const* schema_content = io::get_embedded_xsd_file(io::list_xsd_files()[i - 1], schema_size);
+    //xercesc::MemBufInputSource schema_buffer { reinterpret_cast<XMLByte const*>(schema_content), schema_size, io::list_xsd_files()[i - 1] };
+    xercesc::Wrapper4InputSource embeded_is { &schema_buffer, false };
+    auto grammer = parser->loadGrammar(&embeded_is, xercesc::Grammar::SchemaGrammarType, true);
+    if (grammer == nullptr) {
+      err << "Error: unable to load : " << xsd_filepath << std::ends;
+      /// \error Unable to recognize schema xercesc::Grammar
+      logger->Error(err.str());
+      return false;
+    }
+    if (eh.failed()) { // TODO append error some how
+      err << "Error loading : " << xsd_filepath << std::ends;
+      /// \error Unable to load
+      logger->Error(err.str());
+      return false;
+    }
+    //}
+
+    m_GrammerPool->lockPool();
+    m_Initialized = true;
+    return true;
+#else
+    logger->Error("Unable to find xsd/BioGearsDataModel.xsd") return false;
+#endif
+  }
 }
+#pragma optimize("", on)
 //-----------------------------------------------------------------------------
-DOMLSParser* Serializer::CreateParser(Logger* logger) const
+xercesc::DOMLSParser* Serializer::CreateParser(Logger* logger, bool embeddedXSD) const
 {
+  using namespace xercesc;
   const XMLCh ls_id[] = { chLatin_L, chLatin_S, chNull };
 
   DOMImplementation* impl(DOMImplementationRegistry::getDOMImplementation(ls_id));
 
-  DOMLSParser* parser(
+  xercesc::DOMLSParser* parser(
     impl->createLSParser(
       DOMImplementationLS::MODE_SYNCHRONOUS,
       0,
@@ -132,38 +231,43 @@ DOMLSParser* Serializer::CreateParser(Logger* logger) const
 
   // Commonly useful configuration.
   //
-  conf->setParameter(XMLUni::fgDOMComments, false);
-  conf->setParameter(XMLUni::fgDOMDatatypeNormalization, true);
-  conf->setParameter(XMLUni::fgDOMEntities, false);
-  conf->setParameter(XMLUni::fgDOMNamespaces, true);
-  conf->setParameter(XMLUni::fgDOMElementContentWhitespace, false);
+  conf->setParameter(xercesc::XMLUni::fgDOMComments, false);
+  conf->setParameter(xercesc::XMLUni::fgDOMDatatypeNormalization, true);
+  conf->setParameter(xercesc::XMLUni::fgDOMEntities, false);
+  conf->setParameter(xercesc::XMLUni::fgDOMNamespaces, true);
+  conf->setParameter(xercesc::XMLUni::fgDOMElementContentWhitespace, false);
 
   // Enable validation.
   //
-  conf->setParameter(XMLUni::fgDOMValidate, true);
-  conf->setParameter(XMLUni::fgXercesSchema, true);
-  conf->setParameter(XMLUni::fgXercesSchemaFullChecking, false);
+  conf->setParameter(xercesc::XMLUni::fgDOMValidate, true);
+  conf->setParameter(xercesc::XMLUni::fgXercesSchema, true);
+  conf->setParameter(xercesc::XMLUni::fgXercesSchemaFullChecking, false);
 
-  // Use the loaded grammar during parsing.
+  // Use the loaded xercesc::Grammar during parsing.
   //
-  conf->setParameter(XMLUni::fgXercesUseCachedGrammarInParse, true);
+  conf->setParameter(xercesc::XMLUni::fgXercesUseCachedGrammarInParse, true);
 
   // Don't load schemas from any other source (e.g., from XML document's
   // xsi:schemaLocation attributes).
   //
-  conf->setParameter(XMLUni::fgXercesLoadSchema, false);
+  conf->setParameter(xercesc::XMLUni::fgXercesLoadSchema, false);
 
   // Xerces-C++ 3.1.0 is the first version with working multi
   // import support.
   //
 #if _XERCES_VERSION >= 30100
-  conf->setParameter(XMLUni::fgXercesHandleMultipleImports, true);
+  conf->setParameter(xercesc::XMLUni::fgXercesHandleMultipleImports, true);
 #endif
 
   // We will release the DOM document ourselves.
   //
-  conf->setParameter(XMLUni::fgXercesUserAdoptsDOMDocument, true);
 
+  conf->setParameter(xercesc::XMLUni::fgXercesUserAdoptsDOMDocument, true);
+  // conf->setParameter(XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation, std::string("uri:/mil/tatrc/physiology/datamodel").c_str());
+#ifdef BIOGEARS_IO_PRESENT
+  conf->setParameter(xercesc::XMLUni::fgDOMResourceResolver, &g_embedded_resource_resolver);
+  //conf->setParameter(xercesc::XMLUni::fgXercesEntityResolver, &g_embedded_resource_resolver);
+#endif
   return parser;
 }
 //-----------------------------------------------------------------------------
@@ -172,6 +276,7 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const char* xmlFile, Logge
   return ReadFile(std::string { xmlFile }, logger);
 }
 //-----------------------------------------------------------------------------
+#pragma optimize("", off)
 std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile, Logger* logger)
 {
   if (m_me == nullptr) {
@@ -185,16 +290,18 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   }
   ErrorHandler eh;
   std::stringstream err;
-  std::unique_ptr<DOMLSParser> parser(m_me->CreateParser(logger));
-  parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, &eh);
+  std::unique_ptr<xercesc::DOMLSParser> parser(m_me->CreateParser(logger));
+  parser->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMErrorHandler, &eh);
 
   auto io = logger->GetIoManager().lock();
   size_t content_size = io->read_resource_file(xmlFile.c_str(), reinterpret_cast<char*>(&m_me->m_buffer[0]), m_me->m_buffer.size());
 
-  return ReadBuffer(&m_me->m_buffer[0], content_size,  logger);
+  return ReadBuffer(&m_me->m_buffer[0], content_size, logger);
 }
+#pragma optimize("", on)
 //-----------------------------------------------------------------------------
-std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const * buffer, size_t size, Logger* logger)
+std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, size_t size, Logger* logger)
+
 {
   if (m_me == nullptr) {
     m_me = new Serializer();
@@ -208,13 +315,13 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const * buffer, 
 
   ErrorHandler eh;
   std::stringstream err;
-  std::unique_ptr<DOMLSParser> parser(m_me->CreateParser(logger));
-  parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, &eh);
+  std::unique_ptr<xercesc::DOMLSParser> parser(m_me->CreateParser(logger));
+  parser->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMErrorHandler, &eh);
 
   //Cast: char const* -> unsigned char*
-  MemBufInputSource content((XMLByte*)buffer, size, "dummy", false);
-  Wrapper4InputSource content_wraper {&content, false};
-  std::unique_ptr<xercesc::DOMDocument> doc( parser->parse(&content_wraper));
+  xercesc::MemBufInputSource content((XMLByte*)buffer, size, "SeralizerBuffer", false);
+  xercesc::Wrapper4InputSource content_wraper { &content, false };
+  std::unique_ptr<xercesc::DOMDocument> doc(parser->parse(&content_wraper));
 
   if (eh.failed() || doc == nullptr) {
     // TODO Append parse error
@@ -225,7 +332,7 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const * buffer, 
     return std::unique_ptr<CDM::ObjectData>();
   }
   // Let's see what kind of object this is
-  DOMElement* root(doc->getDocumentElement());
+  xercesc::DOMElement* root(doc->getDocumentElement());
   std::string ns(xml::transcode<char>(root->getNamespaceURI()));
   std::string name(xml::transcode<char>(root->getLocalName()));
 

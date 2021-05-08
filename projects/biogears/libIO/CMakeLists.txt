@@ -214,7 +214,7 @@ target_compile_definitions(lib${PROJECT_NAME}_io  PUBLIC ${${PREFIX}_CPPFLAGS_IN
 target_compile_definitions(lib${PROJECT_NAME}_io  PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE)
 target_compile_options(lib${PROJECT_NAME}_io PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
 if(Biogears_IO_INCLUDE_STATES)
-  target_compile_definitions(lib${PROJECT_NAME}_io PRIVATE IO_EMBED_STATES)
+  target_compile_definitions(lib${PROJECT_NAME}_io PRIVATE BIOGEARS_IO_EMBED_STATES)
 endif()
 target_include_directories(lib${PROJECT_NAME}_io 
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include

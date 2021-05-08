@@ -36,6 +36,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Equipment/ECG.h>
+#if defined (BIOGEARS_IO_PRESENT) &&  defined(BIOGEARS_IO_EMBED_STATES)
+#include <biogears/io/directories/states.h>
+#endif
+
 #include <biogears/version.h>
 
 namespace BGE = mil::tatrc::physiology::biogears;
@@ -162,10 +166,10 @@ bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simT
   auto possible_path = io->FindStateFile(file.c_str());
   if (possible_path.empty()) {
     size_t content_size;
-
-    auto resource = filesystem::path { "states" } / filesystem::path(file).basename();
-    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+#if defined(BIOGEARS_IO_PRESENT) && defined(BIOGEARS_IO_EMBED_STATES)
+    auto content = io::get_embedded_states_file(file.c_str(), content_size);
     obj = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
   } else {
     obj = Serializer::ReadFile(possible_path.string(), m_Logger);
   }

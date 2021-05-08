@@ -118,14 +118,14 @@ bool SEAnesthesiaMachine::Load(const std::string& file)
   CDM::AnesthesiaMachineData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-    auto io = m_Logger->GetIoManager().lock();
+  auto io = m_Logger->GetIoManager().lock();
   auto possible_path = io->find_resource_file(file.c_str());
   if (possible_path.empty()) {
     size_t content_size;
-
-    auto resource = filesystem::path { "equipment" } / filesystem::path(file).basename();
-    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+#ifdef BIOGEARS_IO_PRESENT
+    auto content = io->get_embedded_resource_file(file.c_str(), content_size);
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
   } else {
     data = Serializer::ReadFile(possible_path, m_Logger);
   }
@@ -244,7 +244,7 @@ void SEAnesthesiaMachine::Unload(CDM::AnesthesiaMachineData& data) const
 //-----------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachine::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachine::GetScalar(const std::string& name)
@@ -638,7 +638,7 @@ void SEAnesthesiaMachine::RemoveOxygenBottleTwo()
 //-----------------------------------------------------------------------------
 Tree<const char*> SEAnesthesiaMachine::GetPhysiologyRequestGraph() const
 {
-  return {""};
+  return { "" };
 }
 //-----------------------------------------------------------------------------
 

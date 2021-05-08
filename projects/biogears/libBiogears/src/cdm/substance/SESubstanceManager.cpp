@@ -18,15 +18,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
-#include <biogears/io/directories/substances.h>
-#include <biogears/io/io-manager.h>
+#include <biogears/filesystem/path.h>
 #include <biogears/string/manipulation.h>
 
-#include <biogears/filesystem/path.h>
+#include <biogears/io/io-manager.h>
+
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/substances.h>
 #endif
-
 
 namespace biogears {
 SESubstanceManager::SESubstanceManager(Logger* logger)
@@ -319,7 +318,6 @@ bool SESubstanceManager::LoadSubstanceDirectory()
 
   std::map<std::string, std::unique_ptr<CDM::ObjectData>> definitions;
 
-
   std::string path_string;
   for (auto& filepath : io->FindAllSubstanceFiles()) {
     path_string = filepath.string();
@@ -344,7 +342,7 @@ bool SESubstanceManager::LoadSubstanceDirectory()
     }
   }
 #endif
-  for (auto& pair : definitions) {  
+  for (auto& pair : definitions) {
 
     auto subData = dynamic_cast<CDM::SubstanceData*>(pair.second.get());
     if (subData != nullptr) {
@@ -356,7 +354,7 @@ bool SESubstanceManager::LoadSubstanceDirectory()
       continue;
     }
     auto compoundData = dynamic_cast<CDM::SubstanceCompoundData*>(pair.second.get());
-    if (compoundData != nullptr) { 
+    if (compoundData != nullptr) {
       // Differ processing compounds, until after all substances are known
       // To prevent first pass errors.
       auto compound = new SESubstanceCompound(GetLogger());

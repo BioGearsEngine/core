@@ -12,7 +12,9 @@
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
-
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/config.h>
+#endif
 namespace biogears {
 namespace io {
   //class PhysiologyEngineConfiguration
@@ -43,13 +45,13 @@ namespace io {
     if (in.StabilizationCriteriaFile().present()) {
 
       auto io = out.GetLogger()->GetIoManager().lock();
-      auto possible_path = io->FindEnvironmentFile(in.StabilizationCriteriaFile().get().c_str());
+      auto possible_path = io->FindConfigFile(in.StabilizationCriteriaFile().get().c_str());
       if (possible_path.empty()) {
         size_t content_size;
-
-        auto resource = filesystem::path { "environments" } / filesystem::path(in.StabilizationCriteriaFile().get()).basename();
-        auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+#ifdef BIOGEARS_IO_PRESENT
+        auto content = io::get_embedded_config_file(in.StabilizationCriteriaFile().get().c_str(), content_size);
         sData = Serializer::ReadBuffer((XMLByte*)content, content_size, out.GetLogger());
+#endif
       } else {
         sData = Serializer::ReadFile(possible_path.string(), out.GetLogger());
       }

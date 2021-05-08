@@ -26,14 +26,7 @@ namespace biogears {
     BIOGEARS_IO_API char const *  get_embedded_xsd_file( const char* file, size_t& content_size);
     BIOGEARS_IO_API size_t  get_embedded_xsd_file_size( const char* file);
 
-        //biogears::filesystem::path overloads
-    BIOGEARS_IO_API bool  generate_xsd_directory(biogears::filesystem::path file);
-    BIOGEARS_IO_API bool does_embedded_xsd_file_exist(biogears::filesystem::path file);
-    
-    BIOGEARS_IO_API char const *  get_xsd_file_sha1 (biogears::filesystem::path file);
-
     BIOGEARS_IO_API char const *  get_default_xsd_directory();
-    BIOGEARS_IO_API char const *  get_embedded_xsd_file( biogears::filesystem::path file, size_t& content_size);
     BIOGEARS_IO_API size_t        get_embedded_xsd_file_size( const char *  file);
   }
 }

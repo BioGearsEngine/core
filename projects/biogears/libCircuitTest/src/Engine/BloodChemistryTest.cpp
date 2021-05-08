@@ -36,7 +36,7 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   Info("Setting Up");
 
   //Set up patient
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
 
   //Volume and pressure parameters for 4-element CV circuit (Brady2017Mathematical)

@@ -12,9 +12,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/filesystem/path.h>
-#include <biogears/io-exports.h>
 
+#include <biogears/io-exports.h>
+#include <biogears/filesystem/path.h>
 //!
 //!  Functions for finding resource files that were part of the current biogears release
 //!  These functions are encoded as part of libbiogears_io
@@ -35,14 +35,7 @@ namespace io {
 
   BIOGEARS_IO_API char const* get_embedded_override_file(const char* file, size_t& content_size);
 
-  //biogears::filesystem::path overloads
-  BIOGEARS_IO_API bool generate_override_directory(biogears::filesystem::path file);
-  BIOGEARS_IO_API bool does_embedded_override_file_exist(biogears::filesystem::path file);
-
-  BIOGEARS_IO_API char const* get_override_file_sha1(biogears::filesystem::path file);
-
   BIOGEARS_IO_API char const* get_default_override_directory();
-  BIOGEARS_IO_API char const* get_embedded_override_file(biogears::filesystem::path file, size_t& content_size);
   BIOGEARS_IO_API size_t      get_embedded_override_file_size( const char *  file);
 }
 }

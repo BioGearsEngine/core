@@ -14,7 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
+#ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/patients.h>
+#endif
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
 namespace biogears {
@@ -93,8 +95,8 @@ bool SEPatient::Load(const std::string& patientFile)
     size_t content_size;
 
     auto resource = filesystem::path(patientFile).basename();
-    auto content  = io::get_embedded_patients_file(resource.string().c_str(), content_size);
-    if ( content_size > 0 ){
+    auto content = io::get_embedded_patients_file(resource.string().c_str(), content_size);
+    if (content_size > 0) {
       data = Serializer::ReadBuffer(reinterpret_cast<XMLByte const*>(content), content_size, m_Logger);
     }
 #endif

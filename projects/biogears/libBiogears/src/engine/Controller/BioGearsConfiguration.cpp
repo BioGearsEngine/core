@@ -45,6 +45,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/config.h>
+#endif
 
 namespace biogears {
 
@@ -240,10 +243,10 @@ void BioGearsConfiguration::Initialize()
   m_WritePatientBaselineFile = CDM::enumOnOff::Off;
 
   // Reset to default values
-  GetECGInterpolator().LoadWaveforms("ecg/StandardECG.xml");
+  GetECGInterpolator().LoadWaveforms("StandardECG.xml");
   GetTimeStep().SetValue(1.0 / 50.0, TimeUnit::s);
-  GetDynamicStabilizationCriteria().Load("config/DynamicStabilization.xml");
-  //GetTimedStabilizationCriteria().Load("config/TimedStabilization.xml");
+  GetDynamicStabilizationCriteria().Load("DynamicStabilization.xml");
+  //GetTimedStabilizationCriteria().Load("TimedStabilization.xml");
 
   //Blood Chemistry
   GetMeanCorpuscularVolume().SetValue(9.e-8, VolumeUnit::uL); // Guyton p419
@@ -296,14 +299,14 @@ void BioGearsConfiguration::Initialize()
   GetAirSpecificHeat().SetValue(1.0035, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
   GetMolarMassOfDryAir().SetValue(0.028964, MassPerAmountUnit::kg_Per_mol);
   GetMolarMassOfWaterVapor().SetValue(0.018016, MassPerAmountUnit::kg_Per_mol);
-  GetInitialEnvironmentalConditions().Load("environments/StandardEnvironment.xml");
+  GetInitialEnvironmentalConditions().Load("StandardEnvironment.xml");
   GetWaterDensity().SetValue(1000, MassPerVolumeUnit::kg_Per_m3); //Because water density changes with temperature, and this refers to room temperature water, you should use GeneralMath::CalculateWaterDensity() instead
 
   // Gastrointestinal
   GetCalciumAbsorptionFraction().SetValue(0.25); // Net fractional calcium absorption is 24.9 ± 12.4% (Hunt and Johnson 2007)
   GetCalciumDigestionRate().SetValue(2.7, MassPerTimeUnit::mg_Per_min); // Wasserman1992Intestinal
   GetCarbohydrateAbsorptionFraction().SetValue(0.80); // Guyton p790
-  GetDefaultStomachContents().Load("nutrition/NoMacros.xml"); // Refs are in the data spreadsheet
+  GetDefaultStomachContents().Load("NoMacros.xml"); // Refs are in the data spreadsheet
   GetFatAbsorptionFraction().SetValue(0.248); // Guyton p797 and the recommended daily value for saturated fat intake according to the AHA //TODO: Add this reference
   // We should be making 30 grams of urea per 100 grams of protein haussinger1990nitrogen
   GetProteinToUreaFraction().SetValue(0.405); // BUT, We should excrete 24.3 g/day on average. Guyton p 328. With an average intake of 60 g/day, that works out to approximately 40%.
@@ -366,10 +369,10 @@ bool BioGearsConfiguration::Load(const std::string& file)
   auto possible_path = io->FindConfigFile(file.c_str());
   if (possible_path.empty()) {
     size_t content_size;
-
-    auto resource = filesystem::path { "config" } / filesystem::path(file).basename();
-    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+#ifdef BIOGEARS_IO_PRESENT
+    auto content = io::get_embedded_config_file(file.c_str(), content_size);
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
   } else {
     data = Serializer::ReadFile(possible_path.string(), m_Logger);
   }

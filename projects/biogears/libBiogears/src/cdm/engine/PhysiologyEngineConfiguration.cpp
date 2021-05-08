@@ -18,6 +18,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/config.h>
+#endif
 
 namespace biogears {
 PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
@@ -70,10 +73,10 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
   auto possible_path = io->FindConfigFile(file.c_str());
   if (possible_path.empty()) {
     size_t content_size;
-
-    auto resource = filesystem::path { "config" } / filesystem::path(file).basename();
-    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+#ifdef BIOGEARS_IO_PRESENT
+    auto content = io::get_embedded_config_file(file.c_str(), content_size);
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
   } else {
     data = Serializer::ReadFile(possible_path.string(), m_Logger);
   }
@@ -119,10 +122,10 @@ bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfiguratio
     auto possible_path = io->FindConfigFile(in.StabilizationCriteriaFile().get().c_str());
     if (possible_path.empty()) {
       size_t content_size;
-
-      auto resource = filesystem::path { "config" } / filesystem::path(in.StabilizationCriteriaFile().get()).basename();
-      auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+#ifdef BIOGEARS_IO_PRESENT
+      auto content = io::get_embedded_config_file(in.StabilizationCriteriaFile().get().c_str(), content_size);
       sData = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
     } else {
       sData = Serializer::ReadFile(possible_path.string(), m_Logger);
     }

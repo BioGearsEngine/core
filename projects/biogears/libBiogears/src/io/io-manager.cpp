@@ -9,10 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/io/io-manager.h>
+
 #include <biogears/filesystem/path.h>
 
 #include <biogears/version.h>
 
+#ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/constants.h>
 #include <biogears/io/directories/config.h>
 #include <biogears/io/directories/ecg.h>
@@ -21,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/directories/override.h>
 #include <biogears/io/directories/patients.h>
 #include <biogears/io/directories/xsd.h>
-#include <biogears/io/io-manager.h>
+#endif
 
 #include <biogears/io/sha1.h>
 
@@ -32,7 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <dirent.h>
 #endif
 
-#ifdef IO_EMBED_STATES
+#ifdef BIOGEARS_IO_EMBED_STATES
 #include <biogears/io/directories/states.h>
 #endif
 
@@ -91,8 +94,14 @@ std::string IOManager::ResolveEnvironmentFileLocation(std::string const& filenam
 std::string IOManager::ResolveNutritionFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.nutrition, m_biogears_working_directory); }
 std::string IOManager::ResolveOverrideFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.override, m_biogears_working_directory); }
 std::string IOManager::ResolvePatientFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.patients, m_biogears_working_directory); }
-std::string IOManager::ResolveStateFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.states, m_biogears_working_directory); }
-std::string IOManager::ResolveSubstanceFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.substances, m_biogears_working_directory); }
+std::string IOManager::ResolveStateFileLocation(std::string const& filename)
+{
+  return ResolveFileLocation(filename, m_dirs.states, m_biogears_working_directory);
+}
+std::string IOManager::ResolveSubstanceFileLocation(std::string const& filename)
+{
+  return ResolveFileLocation(filename, m_dirs.substances, m_biogears_working_directory);
+}
 std::string IOManager::ResolveScenarioFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.scenarios, m_biogears_working_directory); }
 std::string IOManager::ResolveLogFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.log, m_biogears_working_directory); }
 std::string IOManager::ResolveResultsFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.results, m_biogears_working_directory); }
@@ -371,7 +380,6 @@ filesystem::path IOManager::FindPatientFile(const char* file) const
   }
   return possible_path;
 }
-
 filesystem::path IOManager::FindStateFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
@@ -386,7 +394,6 @@ filesystem::path IOManager::FindStateFile(const char* file) const
   }
   return possible_path;
 }
-
 filesystem::path IOManager::FindSubstanceFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
@@ -575,11 +582,9 @@ void IOManager::SetResultsDirectory(std::string const& s)
 //!  //TODO: Optional temporary directory construction to prevent partial write
 //!  //TODO: Optional empty dir check with cleanup
 
-bool IOManager::generate_runtime_directory(const char* file) const
+bool IOManager::generate_runtime_directory(const char* runtime_directory) const
 {
-  biogears::filesystem::create_directories(file);
-
-  biogears::filesystem::path runtime_directory { file };
+  biogears::filesystem::create_directories(runtime_directory);
 
   bool result = io::generate_xsd_directory(runtime_directory);
   result &= io::generate_config_directory(runtime_directory);
@@ -588,7 +593,7 @@ bool IOManager::generate_runtime_directory(const char* file) const
   result &= io::generate_nutrition_directory(runtime_directory);
   result &= io::generate_override_directory(runtime_directory);
   result &= io::generate_patients_directory(runtime_directory);
-#ifdef IO_EMBED_STATES
+#ifdef BIOGEARS_IO_EMBED_STATES
   result &= generate_states_directory(runtime_directory);
 #endif
   result &= io::generate_substances_directory(runtime_directory);
@@ -596,11 +601,8 @@ bool IOManager::generate_runtime_directory(const char* file) const
   return result;
 }
 //---------------------------------------------------------------------------
-bool IOManager::does_embedded_file_exist(const char* file) const
+bool IOManager::does_embedded_file_exist(const char* embeded_path) const
 {
-
-  biogears::filesystem::path embeded_path { file };
-
   return io::does_embedded_xsd_file_exist(embeded_path)
     || io::does_embedded_config_file_exist(embeded_path)
     || io::does_embedded_ecg_file_exist(embeded_path)
@@ -608,7 +610,7 @@ bool IOManager::does_embedded_file_exist(const char* file) const
     || io::does_embedded_nutrition_file_exist(embeded_path)
     || io::does_embedded_override_file_exist(embeded_path)
     || io::does_embedded_patients_file_exist(embeded_path)
-#ifdef IO_EMBED_STATES
+#ifdef BIOGEARS_IO_EMBED_STATES
     || does_embedded_states_file_exist(embeded_path)
 #endif
     || io::does_embedded_substances_file_exist(embeded_path);
@@ -645,7 +647,7 @@ char const* IOManager::get_expected_sha1(const char* file) const
   if (*result) {
     return result;
   }
-#ifdef IO_EMBED_STATES
+#ifdef BIOGEARS_IO_EMBED_STATES
   result = get_states_file_sha1(file);
   if (*result) {
     return result;
@@ -669,7 +671,7 @@ size_t IOManager::get_directory_count() const
     + biogears::io::patients_file_count()
     + biogears::io::substances_file_count()
     + biogears::io::xsd_file_count();
-#ifdef IO_EMBED_STATES
+#ifdef BIOGEARS_IO_EMBED_STATES
   sum += states_file_count();
 #endif
   return sum;
@@ -734,7 +736,7 @@ char const* IOManager::get_embedded_resource_file(const char* file, std::size_t&
   if (size > 0) {
     return result;
   }
-#ifdef IO_EMBED_STATES
+#ifdef BIOGEARS_IO_EMBED_STATES
   result = get_embedded_states_file(file, size);
   if (size > 0) {
     return result;
@@ -778,7 +780,7 @@ size_t IOManager::get_embedded_resource_file_size(const char* file) const
   if (size > 0) {
     return size;
   }
-#ifdef IO_EMBED_STATES
+#ifdef BIOGEARS_IO_EMBED_STATES
   size = get_embedded_states_file_size(file);
   if (size > 0) {
     return size;

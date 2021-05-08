@@ -107,10 +107,10 @@ bool SEScenario::Load(const std::string& scenarioFile)
   auto possible_path = io->FindScenarioFile(scenarioFile.c_str());
   if (possible_path.empty()) {
     size_t content_size;
-
-    auto resource = filesystem::path { "Scenarios" } / filesystem::path(scenarioFile).basename();
-    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+#ifdef BIOGEARS_IO_PRESENT
+    auto content = io->get_embedded_resource_file(scenarioFile.c_str(), content_size);
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
   } else {
     data = Serializer::ReadFile(possible_path.string(), m_Logger);
   }

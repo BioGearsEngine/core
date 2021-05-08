@@ -29,7 +29,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 #include <biogears/container/Tree.tci.h>
-
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/environments.h>
+#endif
 namespace biogears {
 SEEnvironment::SEEnvironment(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
@@ -159,19 +161,19 @@ bool SEEnvironment::Load(const char* patientFile)
   return Load(std::string(patientFile));
 }
 //-------------------------------------------------------------------------------
-bool SEEnvironment::Load(const std::string& patientFile)
+bool SEEnvironment::Load(const std::string& given)
 {
   CDM::EnvironmentData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
   auto io = m_Logger->GetIoManager().lock();
-  auto possible_path = io->FindEnvironmentFile(patientFile.c_str());
+  auto possible_path = io->FindEnvironmentFile(given.c_str());
   if (possible_path.empty()) {
     size_t content_size;
-
-    auto resource = filesystem::path { "environments" } / filesystem::path(patientFile).basename();
-    auto content = io->get_embedded_resource_file(resource.string().c_str(), content_size);
+#ifdef BIOGEARS_IO_PRESENT
+    auto content = io::get_embedded_environments_file(given.c_str(), content_size);
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
   } else {
     data = Serializer::ReadFile(possible_path.string(), m_Logger);
   }
@@ -179,7 +181,7 @@ bool SEEnvironment::Load(const std::string& patientFile)
   pData = dynamic_cast<CDM::EnvironmentData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
-    ss << "Environment file could not be read : " << patientFile << std::endl;
+    ss << "Environment file could not be read : " << given << std::endl;
     Error(ss);
     return false;
   }

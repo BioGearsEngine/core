@@ -78,7 +78,7 @@ TEST_F(TEST_FIXTURE_NAME, Override_On_Off)
   eng = CreateBioGearsEngine(patientLog);
   DataTrack* trk = &eng->GetEngineTrack()->GetDataTrack();
   BioGearsScenario sce(eng->GetSubstanceManager());
-  sce.Load("./Scenarios/OverrideTest.xml");
+  sce.Load("OverrideTest.xml");
   sce.GetInitialParameters().SetPatientFile(patientXML);
   BioGearsScenarioExec* exec = new BioGearsScenarioExec(*eng);
   EXPECT_TRUE(exec->Execute(sce, patientResults, nullptr));

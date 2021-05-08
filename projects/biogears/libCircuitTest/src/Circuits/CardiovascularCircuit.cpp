@@ -181,7 +181,7 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   double binding_s = 0;
   BioGears bg(sTestDirectory + "/" + tName.str() + "CircuitAndTransportTest.log");
   bg.GetLogger()->Info("Running " + tName.str());
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   if (heartRate_bpm <= 0)
     heartRate_bpm = bg.GetPatient().GetHeartRateBaseline().GetValue(FrequencyUnit::Per_min);
