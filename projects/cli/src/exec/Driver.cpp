@@ -28,12 +28,14 @@
 
 #include "../utils/Executor.h"
 
+#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
+#include <biogears/io/io-manager.h>
 
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
 #include <biogears/cdm/test/CommonDataModelTest.h>
@@ -272,22 +274,26 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
 #else
   scenario_launch = [&](Executor ex, bool b) { this->async_execute(ex, b); };
 #endif
-  std::ifstream ifs { exec.Scenario() };
-  if (!ifs.is_open()) {
-    ifs.open("Scenarios/" + exec.Scenario());
-    if (!ifs.is_open()) {
-      std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
-      return;
-    }
+
+  biogears::IOManager io {};
+  biogears::Logger logger { "", io };
+
+  filesystem::path resolved_filepath = io.FindScenarioFile(exec.Scenario().c_str());
+  if (resolved_filepath.empty()) {
+    std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
+    return;
   }
-
-  std::unique_ptr<CDM::ScenarioData> scenario;
+  using biogears::filesystem::path;
+  using mil::tatrc::physiology::datamodel::ScenarioData;
+  std::unique_ptr<ScenarioData> scenario;
   try {
-    xml_schema::flags xml_flags;
-    xml_schema::properties xml_properties;
-
-    xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
-    scenario = CDM::Scenario(ifs, xml_flags, xml_properties);
+    std::cout << "Reading " << exec.Scenario() << std::endl;
+    auto obj = Serializer::ReadFile(resolved_filepath.string(path::posix_path),
+                                    &logger);
+    scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
+    if (scenario == nullptr) {
+      throw std::runtime_error(exec.Scenario() + " is not a valid Scenario file.");
+    }
   } catch (std::runtime_error e) {
     std::cout << "Error while processing " << exec.Scenario() << "\n";
     std::cout << e.what() << "\n\n";
@@ -297,6 +303,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     std::cout << e << "\n\n";
     return;
   }
+
   // The Biogears Schema states that ScenarioData supports the following boot strap tags
   // 1. EngineStateFile -- Overrides PatientFile and Patient tag and skips initialization using the state file
   // 2. PatientFile -- External file which will be read in with a patient definition
@@ -314,8 +321,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
       state_files.insert(state_files.end(), infection_state_files.begin(), infection_state_files.end());
       queue_from_sate_files(exec, state_files, scenario_launch);
       return;
-    }
-    else if (filesystem::exists(scenario->EngineStateFile().get())) {
+    } else if (filesystem::exists(scenario->EngineStateFile().get())) {
       if (filesystem::is_directory(scenario->EngineStateFile().get())) {
         auto state_files = biogears::ListFiles(scenario->EngineStateFile().get(), R"(.*\.xml)", false);
         queue_from_sate_files(exec, state_files, scenario_launch);
@@ -326,8 +332,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
         ++_total_work;
         return;
       }
-    } 
-    else if (filesystem::exists("states/" + scenario->EngineStateFile().get())) {
+    } else if (filesystem::exists("states/" + scenario->EngineStateFile().get())) {
       if (filesystem::is_directory("states/" + scenario->EngineStateFile().get())) {
         auto state_files = biogears::ListFiles("states/" + scenario->EngineStateFile().get(), R"(.*\.xml)", false);
         queue_from_sate_files(exec, state_files, scenario_launch);
@@ -338,8 +343,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
         ++_total_work;
         return;
       }
-    } 
-    else {
+    } else {
       auto matching_states = find_matching_files(scenario->EngineStateFile().get());
       if (matching_states.empty()) {
         matching_states = find_matching_files("states/" + scenario->EngineStateFile().get());
@@ -354,10 +358,9 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     if ("all" == nc_patient_file) {
       auto patient_files = biogears::ListFiles("patients", R"(.*\.xml)", false);
       queue_from_patient_files(exec, patient_files, scenario_launch);
-    } 
-    else if (filesystem::exists(scenario->InitialParameters()->PatientFile().get())) {
+    } else if (filesystem::exists(scenario->InitialParameters()->PatientFile().get())) {
       if (filesystem::is_directory(scenario->InitialParameters()->PatientFile().get())) {
-        auto patient_files = biogears::ListFiles(scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)",false);
+        auto patient_files = biogears::ListFiles(scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)", false);
         queue_from_patient_files(exec, patient_files, scenario_launch);
         return;
       } else {
@@ -366,8 +369,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
         ++_total_work;
         return;
       }
-    } 
-    else if (filesystem::exists("patients/" + scenario->InitialParameters()->PatientFile().get())) {
+    } else if (filesystem::exists("patients/" + scenario->InitialParameters()->PatientFile().get())) {
       if (filesystem::is_directory("patients/" + scenario->InitialParameters()->PatientFile().get())) {
         auto patient_files = biogears::ListFiles("patients/" + scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)", false);
         queue_from_patient_files(exec, patient_files, scenario_launch);
@@ -378,8 +380,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
         ++_total_work;
         return;
       }
-    } 
-    else {
+    } else {
       auto matching_patients = find_matching_files(scenario->InitialParameters()->PatientFile().get());
       if (matching_patients.empty()) {
         matching_patients = find_matching_files("patients/" + scenario->InitialParameters()->PatientFile().get());
@@ -465,22 +466,22 @@ void Driver::queue_from_patient_files(const Executor& exec, const std::vector<fi
 std::vector<filesystem::path> Driver::find_matching_files(const std::string& pattern)
 {
 
-      //
-      // Attempt to handle Regex based matching
-      // Example   Pattern  = "states/*/Billy*.xml"
-      //
-      // Steps:
-      // Insert first path segment in possible_paths
-      // Foreach segment
-      // Foreach possible_paths
-      //   Does possible_path/segment exists
-      //   If so possible_path = possible_path/segment
-      //   Else  Assume segment is a Regex and List all matches of possible_path/segment_regex
-      //         Remove current possible_path
-      //          Append result of Regex Step
-      // For each dir in possible_paths queue all *.xml files
-      // For each file in possible_paths queue file
-      // Queue Executors
+  //
+  // Attempt to handle Regex based matching
+  // Example   Pattern  = "states/*/Billy*.xml"
+  //
+  // Steps:
+  // Insert first path segment in possible_paths
+  // Foreach segment
+  // Foreach possible_paths
+  //   Does possible_path/segment exists
+  //   If so possible_path = possible_path/segment
+  //   Else  Assume segment is a Regex and List all matches of possible_path/segment_regex
+  //         Remove current possible_path
+  //          Append result of Regex Step
+  // For each dir in possible_paths queue all *.xml files
+  // For each file in possible_paths queue file
+  // Queue Executors
 
   auto path_parts = split(pattern, '/');
 
@@ -505,16 +506,15 @@ std::vector<filesystem::path> Driver::find_matching_files(const std::string& pat
       ++index;
     }
 
-
     auto end = possible_paths.end();
     for (auto& index : remove_queue) {
       std::swap(possible_paths[index], possible_paths.back());
       end = end - 1;
     }
-    if ( end != possible_paths.end()){
+    if (end != possible_paths.end()) {
       end = possible_paths.erase(end, possible_paths.end());
     }
-    if ( new_work.size() ){
+    if (new_work.size()) {
       possible_paths.insert(possible_paths.end(), new_work.begin(), new_work.end());
     }
     new_work.clear();
@@ -756,20 +756,26 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   } else if (!ex.Scenario().empty()) {
     sce.GetInitialParameters().SetPatientFile(ex.Scenario());
   } else {
-    std::ifstream ifs { ex.Scenario() };
-    if (!ifs.is_open()) {
+    auto logger = eng->GetLogger();
+    auto io = logger->GetIoManager().lock();
+
+    filesystem::path resolved_filepath = io->FindScenarioFile(ex.Scenario().c_str());
+    if (resolved_filepath.empty()) {
       console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
       _thread_count -= 1;
       return;
     }
-
-    std::unique_ptr<CDM::ScenarioData> scenario;
+    using biogears::filesystem::path;
+    using mil::tatrc::physiology::datamodel::ScenarioData;
+    std::unique_ptr<ScenarioData> scenario;
     try {
-      xml_schema::flags xml_flags;
-      xml_schema::properties xml_properties;
       std::cout << "Reading " << ex.Scenario() << std::endl;
-      xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
-      scenario = CDM::Scenario(ifs, xml_flags, xml_properties);
+      auto obj = Serializer::ReadFile(resolved_filepath.string(path::posix_path),
+                                      eng->GetLogger());
+      scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
+      if (scenario == nullptr) {
+        throw std::runtime_error(ex.Scenario() + " is not a valid Scenario file.");
+      }
     } catch (std::runtime_error e) {
       std::cout << "Error while processing " << ex.Scenario() << "\n";
       std::cout << e.what() << "\n"
@@ -785,6 +791,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       _thread_count -= 1;
       return;
     }
+
     biogears::SEPatient patient { sce.GetLogger() };
     ex.Patient(scenario->InitialParameters()->Patient().get().Name());
     patient.Load(scenario->InitialParameters()->Patient().get());

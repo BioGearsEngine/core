@@ -51,7 +51,7 @@ struct embedded_resource_resolver : DOMLSResourceResolver {
       normalized_path = systemId_str;
     }
 
-#ifdef DEBUG
+#ifdef _DEBUG
     std::cout << "embeded_resource_resolver::revolveResource(\n";
     std::cout << "\t" << xml::transcode<char>(resourceType) << "\n";
     std::cout << "\t," << xml::transcode<char>(namespaceUri) << "\n";

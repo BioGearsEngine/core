@@ -19,11 +19,13 @@
 #include "exec/Driver.h"
 #include "utils/Executor.h"
 
+#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #include <biogears/filesystem/path.h>
+#include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/string/manipulation.h>
 #include <biogears/version.h>
@@ -92,21 +94,23 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   } else if (!ex.State().empty()) {
     sce.SetEngineStateFile(ex.State());
   } else {
-    std::ifstream ifs { ex.Scenario() };
-    if (!ifs.is_open()) {
-      ifs.open("Scenarios/" + ex.Scenario());
-      if (!ifs.is_open()) {
-        std::cerr << "Unable to find " << ex.Scenario() << std::endl;
-        return static_cast<int>(ExecutionErrors::SCENARIO_IO_ERROR);
-      }
+    auto io = eng->GetLogger()->GetIoManager().lock();
+    filesystem::path resolved_filepath = io->FindScenarioFile(ex.Scenario().c_str());
+    if (resolved_filepath.empty()) {
+      std::cerr << "Unable to find " << ex.Scenario() << std::endl;
+      return static_cast<int>(ExecutionErrors::SCENARIO_IO_ERROR);
     }
-    std::unique_ptr<mil::tatrc::physiology::datamodel::ScenarioData> scenario;
+    using mil::tatrc::physiology::datamodel::ScenarioData;
+    using biogears::filesystem::path;
+    std::unique_ptr<ScenarioData> scenario;
     try {
-      xml_schema::flags xml_flags;
-      xml_schema::properties xml_properties;
       std::cout << "Reading " << ex.Scenario() << std::endl;
-      xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
-      scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
+      auto obj = Serializer::ReadFile(resolved_filepath.string(path::posix_path),
+                                      eng->GetLogger());
+      scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
+      if ( scenario == nullptr){
+         throw std::runtime_error( "Unable to load " + ex.Scenario());
+      }
     } catch (std::runtime_error e) {
       std::cout << e.what() << std::endl;
       return static_cast<int>(ExecutionErrors::SCENARIO_PARSE_ERROR);
@@ -209,17 +213,7 @@ int main(int argc, char* argv[])
   try {
     // Declare the supported options.
     options_description desc("Allowed options");
-    desc.add_options()
-      ("help,h", "produce help message")
-      ("name,n", value<std::string>(), "Set Scenario Name")
-      ("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")
-      ("group,g", value<std::string>(), "Set Name of Scenario Group")
-      ("patient,p", value<std::string>(), "Specifcy the Initial Patient File")
-      ("state,s", value<std::string>(), "Specifcy the Initial Patient State File")
-      ("results,r", value<std::string>(), "Specifcy the Results File")
-      ("quiet,q", bool_switch()->default_value(false), "Supress most log messages")
-      ("version,v", bool_switch()->default_value(false), "Print linked libBioGears version")
-      ("track-stabilization", bool_switch()->default_value(false), "Turn on stabilization tracking for the scenario");
+    desc.add_options()("help,h", "produce help message")("name,n", value<std::string>(), "Set Scenario Name")("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")("group,g", value<std::string>(), "Set Name of Scenario Group")("patient,p", value<std::string>(), "Specifcy the Initial Patient File")("state,s", value<std::string>(), "Specifcy the Initial Patient State File")("results,r", value<std::string>(), "Specifcy the Results File")("quiet,q", bool_switch()->default_value(false), "Supress most log messages")("version,v", bool_switch()->default_value(false), "Print linked libBioGears version")("track-stabilization", bool_switch()->default_value(false), "Turn on stabilization tracking for the scenario");
 
     options_description hidden;
     hidden.add_options()("scenario", value<std::string>(), "Specifcy the Scenario File");
