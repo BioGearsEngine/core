@@ -39,6 +39,7 @@ class SEChestCompressionForce;
 class SEChestCompressionForceScale;
 class SEChestOcclusiveDressing;
 class SEConsciousRespirationCommand;
+class SEEscharotomy;
 class SEForcedInhale;
 class SEForcedExhale;
 class SEBreathHold;
@@ -130,6 +131,9 @@ namespace io {
     //class SEConsciousRespirationCommand;
     static void Marshall(const CDM::ConsciousRespirationCommandData& in, SEConsciousRespirationCommand& out);
     static void UnMarshall(const SEConsciousRespirationCommand& in, CDM::ConsciousRespirationCommandData& out);
+    //SEEscharotomy
+    void PatientActions::Marshall(const CDM::EscharotomyData& in, SEEscharotomy& out);
+    void PatientActions::UnMarshall(const SEEscharotomy& in, CDM::EscharotomyData& out);
     //class SEForcedInhale;
     static void Marshall(const CDM::ForcedInhaleData& in, SEForcedInhale& out);
     static void UnMarshall(const SEForcedInhale& in, CDM::ForcedInhaleData& out);

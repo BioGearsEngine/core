@@ -378,10 +378,22 @@ For significant dehydration (> 5 percent) it is known that performance at submax
 
 Actions
 -------
-At this time, there are no insults or interventions associated with the %Tissue system. Other system actions can affect the diffusion properties or other transports by modifying the diffusion surface area. An example of this is found in the @ref RespiratoryMethodology for lobar pneumonia. As the alveoli fill with fluid, they are unable to participate in gas exchange. This reduces the alveoli surface area, which leads to a reduction of available oxygen in the @ref CardiovascularSystem and the @ref EnergySystem. 
+### Insults
+
+#### Burn Wound
+A burn wound is triggered in BioGears by specifying the total body surface area (TBSA) affected by the burn and any compartments (Trunk, Left Arm, Right Arm, Left Leg, Right Leg) affected. If no compartments are specified, the trunk will be assumed. Additionally, if multiple compartments are identified, then the TBSA is assumed to be split over the affected compartments. Once initiated, the burn model causes a cascade of reactions in the physiology engine through instantiating a a pain response and an inflammatory response through the inflammation model resulting in some hemorrhaging and numerous physiolgoical responses including decreased urine output, cardiovascular distress, respiratory distress, and increased skin temperatures. The changes in urine output are especially important in burn resuscitation protocols. The burn specific model responds by calculating the change in pressure (mmHg) of the muscle tissue to increase the resistance of blood flow into the affected compartments. The result is a decrease in flow and a pressure differential that can contribute to the decrease in cardiac output, renal blood flow, and urine output that is expected during a burn. This compartmental change can also lead to compartment syndrome based on the severity of the burn and the severity of any fluid creep present as a result of burn resuscitation. For additional infortmation on the burn model, please reference the BioGears paper detailing it at (insert link here).
+
+### Interventions
+
+#### Escharotomy
+If the compartment syndrome event has been triggered, an escharotomy can be performed on the affected compartment. In BioGears, an escharotomy action currently provides immediate pressure relief to the associated compartment by negating any resistance changes built up as a result of modifications to the tissue pressure and blood flow. The engine does not currently account for the changes in infection risk associated with this procedure. 
+
+Additionally, other system actions can affect the diffusion properties or other transports by modifying the diffusion surface area. An example of this is found in the @ref RespiratoryMethodology for lobar pneumonia. As the alveoli fill with fluid, they are unable to participate in gas exchange. This reduces the alveoli surface area, which leads to a reduction of available oxygen in the @ref CardiovascularSystem and the @ref EnergySystem. 
 
 Events
 ------
+
+- Compartment Syndrome: Triggered during a burn as a result of the pressure differential in an affected compartment 
 - Dehydration: Set when fluid loss exceeds 3% of body mass @cite who2005dehydration
 - Thirst: Set when plasma osmolarity increases 2% @cite cheuvront2014dehydration
 

@@ -26,6 +26,7 @@
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
+#include <biogears/cdm/patient/actions/SEEscharotomy.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
@@ -182,6 +183,13 @@ namespace io {
         auto burn = std::make_unique<SEBurnWound>();
         Scenario::Marshall(*burnData, *burn);
         return burn;
+      }
+
+      CDM::EscharotomyData* eschData = dynamic_cast<CDM::EscharotomyData*>(action);
+      if (eschData != nullptr) {
+        auto esch = std::make_unique<SEEscharotomy>();
+        Scenario::Marshall(*eschData, *esch);
+        return esch;
       }
 
       CDM::BronchoconstrictionData* bconData = dynamic_cast<CDM::BronchoconstrictionData*>(action);
@@ -611,6 +619,11 @@ namespace io {
     Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
 
     io::Property::Marshall(in.TotalBodySurfaceArea(), out.GetTotalBodySurfaceArea());
+
+    out.m_compartmentsAffected.clear();
+    for (const std::string compData : in.Compartments()) {
+      out.m_compartmentsAffected.push_back(compData);
+    }
   }
   //----------------------------------------------------------------------------------
   void PatientActions::UnMarshall(const SEBurnWound& in, CDM::BurnWoundData& out)
@@ -619,6 +632,11 @@ namespace io {
     if (in.m_TBSA != nullptr) {
       out.TotalBodySurfaceArea(std::make_unique<CDM::Scalar0To1Data>());
       io::Property::UnMarshall(*in.m_TBSA, out.TotalBodySurfaceArea());
+    }
+    if (!in.m_compartmentsAffected.empty()) {
+      for (std::string compData : in.m_compartmentsAffected) {
+        out.Compartments().push_back(compData);
+      }
     }
   }
   //----------------------------------------------------------------------------------
@@ -717,6 +735,22 @@ namespace io {
   void PatientActions::UnMarshall(const SEConsciousRespirationCommand& in, CDM::ConsciousRespirationCommandData& out)
   {
     out.Comment(in.m_Comment);
+  }
+  //----------------------------------------------------------------------------------
+  //class SEEscharotomy
+  void PatientActions::Marshall(const CDM::EscharotomyData& in, SEEscharotomy& out)
+  {
+    out.Clear();
+
+    Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
+
+    out.m_Location = in.Location();
+  }
+  //----------------------------------------------------------------------------------
+  void PatientActions::UnMarshall(const SEEscharotomy& in, CDM::EscharotomyData& out)
+  {
+    Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
+    out.Location(in.m_Location);
   }
   //----------------------------------------------------------------------------------
   //class SEForcedInhale
