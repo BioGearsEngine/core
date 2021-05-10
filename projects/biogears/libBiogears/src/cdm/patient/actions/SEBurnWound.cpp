@@ -22,12 +22,12 @@ SEBurnWound::SEBurnWound()
   m_Inflammation = false; //When the burn wound is constructed, the corresponding inflammation state has not been established
   m_TBSA = nullptr; //User input, size of wound measured by total body surface area
 }
-
+//-----------------------------------------------------------------------------
 SEBurnWound::~SEBurnWound()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEBurnWound::Clear()
 {
   SEPatientAction::Clear();
@@ -35,17 +35,17 @@ void SEBurnWound::Clear()
   m_compartmentsAffected.clear();
   SAFE_DELETE(m_TBSA);
 }
-
+//-----------------------------------------------------------------------------
 bool SEBurnWound::IsValid() const
 {
   return SEPatientAction::IsValid() && HasTotalBodySurfaceArea();
 }
-
+//-----------------------------------------------------------------------------
 bool SEBurnWound::IsActive() const
 {
   return IsValid() ? !(m_TBSA->GetValue() < ZERO_APPROX) : false;
 }
-
+//-----------------------------------------------------------------------------
 bool SEBurnWound::Load(const CDM::BurnWoundData& in)
 {
   SEPatientAction::Load(in);
@@ -71,14 +71,14 @@ bool SEBurnWound::Load(const CDM::BurnWoundData& in)
 
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::BurnWoundData* SEBurnWound::Unload() const
 {
   CDM::BurnWoundData* data(new CDM::BurnWoundData());
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEBurnWound::Unload(CDM::BurnWoundData& data) const
 {
   SEPatientAction::Unload(data);
@@ -88,34 +88,34 @@ void SEBurnWound::Unload(CDM::BurnWoundData& data) const
     data.Compartments().push_back(compData);
   }
 }
-
+//-----------------------------------------------------------------------------
 bool SEBurnWound::HasTotalBodySurfaceArea() const
 {
   return m_TBSA == nullptr ? false : m_TBSA->IsValid();
 }
-
+//-----------------------------------------------------------------------------
 SEScalar0To1& SEBurnWound::GetTotalBodySurfaceArea()
 {
   if (m_TBSA == nullptr)
     m_TBSA = new SEScalar0To1();
   return *m_TBSA;
 }
-
+//-----------------------------------------------------------------------------
 bool SEBurnWound::HasInflammation() const
 {
   return m_Inflammation;
 }
-
+//-----------------------------------------------------------------------------
 void SEBurnWound::SetInflammation(bool activate)
 {
   m_Inflammation = activate;
 }
-
-//!  Any string value can be used. Submitting the same value overwrites the previous event.
+//-----------------------------------------------------------------------------
 bool SEBurnWound::HasCompartment() const
 {
   return m_compartmentsAffected.size() == 0 ? false : true;
 }
+//-----------------------------------------------------------------------------
 bool SEBurnWound::HasCompartment(const std::string compartment) const
 {
   for (const std::string ca : m_compartmentsAffected) {
@@ -124,17 +124,12 @@ bool SEBurnWound::HasCompartment(const std::string compartment) const
   }
   return false;
 }
+//-----------------------------------------------------------------------------
 const std::vector<std::string>& SEBurnWound::GetCompartments()
 {
   return m_compartmentsAffected;
 }
-//std::string SEBurnWound::GetCompartment(std::string c)
-//{
-//  for (std::string ca : m_compartmentsAffected) {
-//    if (c == ca)
-//      return ca;
-//  }
-//}
+//-----------------------------------------------------------------------------
 const std::string SEBurnWound::GetCompartment(const std::string c) const
 {
   const std::string ca = "";
@@ -145,6 +140,7 @@ const std::string SEBurnWound::GetCompartment(const std::string c) const
   }
   return ca;
 }
+//-----------------------------------------------------------------------------
 void SEBurnWound::RemoveCompartment(const std::string c)
 {
   const std::string ca = "";
@@ -156,14 +152,11 @@ void SEBurnWound::RemoveCompartment(const std::string c)
     }
   }
 }
+//-----------------------------------------------------------------------------
 void SEBurnWound::RemoveCompartments()
 {
   m_compartmentsAffected.clear();
 }
-//-----------------------------------------------------------------------------
-/*void SEBurnWound::InvalidateCompartment()
-{
-}*/
 //-----------------------------------------------------------------------------
 
 void SEBurnWound::ToString(std::ostream& str) const
@@ -188,5 +181,27 @@ void SEBurnWound::ToString(std::ostream& str) const
     str << "No Compartment Set";
   }
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEBurnWound::operator==(const SEBurnWound& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_TBSA && rhs.m_TBSA) ? m_TBSA->operator==(*rhs.m_TBSA) : m_TBSA == rhs.m_TBSA;
+  equivilant &= m_compartmentsAffected == rhs.m_compartmentsAffected;
+  /*std::vector<std::string> lhs = m_compartmentsAffected;
+  if (lhs == rhs.m_compartmentsAffected) {
+    equivilant &= lhs == rhs.m_compartmentsAffected;
+  }*/
+  /*if (m_compartmentsAffected.size() == rhs.m_compartmentsAffected.size()) {
+    for (unsigned int i = 0; i < m_compartmentsAffected.size(); i++) {
+      equivilant &= m_compartmentsAffected[i] == rhs.m_compartmentsAffected[i];
+    }
+  }*/
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEBurnWound::operator!=(const SEBurnWound& rhs) const
+{
+  return !(*this == rhs);
 }
 }

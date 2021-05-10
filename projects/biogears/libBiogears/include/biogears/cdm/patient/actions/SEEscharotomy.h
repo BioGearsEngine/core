@@ -11,16 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/CommonDataModel.h>
-#include <biogears/exports.h>
-
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
-class SEScalar;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEEscharotomy : public SEPatientAction {
+  friend io::PatientActions;
 public:
   SEEscharotomy();
   virtual ~SEEscharotomy() override;
@@ -47,6 +46,9 @@ public:
   virtual void InvalidateLocation();
 
   virtual void ToString(std::ostream& str) const override;
+
+  bool operator==(const SEEscharotomy& rhs) const;
+  bool operator!=(const SEEscharotomy& rhs) const;
 
 protected:
   std::string m_Location;

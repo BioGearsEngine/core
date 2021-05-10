@@ -99,4 +99,16 @@ void SEEscharotomy::ToString(std::ostream& str) const
   HasLocation() ? str << GetLocation() : str << "No Location Set";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
+bool SEEscharotomy::operator==(const SEEscharotomy& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant = m_Location == rhs.m_Location;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEEscharotomy::operator!=(const SEEscharotomy& rhs) const
+{
+  return !(*this == rhs);
+}
 }
