@@ -412,7 +412,7 @@ void Tissue::SetUp()
   //m_rightLungDeltaCompliance_mL_Per_mmHG = 0.0;
   m_compartmentSyndromeCount = 0.0;
   //m_lastTissueMusleExtracellularVolume_mL = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::MuscleExtracellular)->GetVolume(VolumeUnit::mL);
-  m_baselineECFluidVolume_mL = m_data.GetTissue().GetExtracellularFluidVolume().GetValue(VolumeUnit::mL);
+  m_baselineECFluidVolume_mL = 0.0;
 
   m_trunkEscharotomy = false;
   m_leftArmEscharotomy = false;
@@ -586,6 +586,10 @@ void Tissue::CalculateCompartmentalBurn()
 {
   if (!m_data.GetActions().GetPatientActions().HasBurnWound()) {
     return;
+  }
+
+  if (m_baselineECFluidVolume_mL == 0.0) {
+    m_baselineECFluidVolume_mL = GetExtracellularFluidVolume().GetValue(VolumeUnit::mL); // May need to just initialize this in setup to norm value. Cannot GetValue in SetUp though as it is NaN there.
   }
 
   //Map the increased pressure in the muscle extracellular tissue compartment to the flow across the affected node

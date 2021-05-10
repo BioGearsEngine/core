@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-	<Name>BurnWoundDB30</Name>
-	<Description>Patient with burn covering 30% of body surface area</Description>
-	<InitialParameters>
-		<PatientFile>ALL</PatientFile>
-		<Configuration  xsi:type="BioGearsConfigurationData"> 
-			<WritePatientBaselineFile>On</WritePatientBaselineFile>
-		</Configuration>
-	</InitialParameters>
+	<Name>BurnWound20</Name>
+	<Description>Patient with burn covering 20% of body surface area</Description>
+	<EngineStateFile>./states/StandardMale@0s.xml</EngineStateFile>
 	<!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">
     <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
 		
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                         Unit="1/min"       Precision="2"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="L"          Precision="2"/>	
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="L"          Precision="1"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="mL"          Precision="1"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="IntracellularFluidVolume"          Unit="L"          Precision="1"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtracellularFluidVolume"          Unit="L"          Precision="1"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtracellularFluidVolume"          Unit="mL"          Precision="1"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalBodyFluidVolume"          Unit="L"          Precision="1"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure"                  Unit="mmHg"        Precision="1"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="1"/>
@@ -48,8 +43,14 @@
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/min"      Precision="3"/>
         <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanUrineOutput"               Unit="mL/hr"      Precision="3"/>
 		
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular"      Name="Pressure" Unit="mmHg" Precision="0"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"      Name="Pressure" Unit="mmHg" Precision="0"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular"      Name="Volume" Unit="mL" Precision="0"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"      Name="Volume" Unit="mL" Precision="0"/>
+		
 		
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
+
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
@@ -78,15 +79,81 @@
 		<DataRequest xsi:type="EnvironmentDataRequestData" Name="RadiativeHeatLoss" Unit="W" Precision="2"/>
 		<DataRequest xsi:type="EnvironmentDataRequestData" Name="ConvectiveHeatLoss" Unit="W" Precision="2"/>
 		<DataRequest xsi:type="EnvironmentDataRequestData" Name="EvaporativeHeatLoss" Unit="W" Precision="2"/>
+		
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="CarbonDioxideProductionRate" Unit="mL/min" Precision="3"/>  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenConsumptionRate" Unit="mL/min" Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespiratoryExchangeRatio" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="IntracellularFluidPH" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="IntracellularFluidVolume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LiverGlycogen" Unit="g" Precision="2"/>
+  
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueExtracellular"         Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueExtracellular"        Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueExtracellular"       Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueExtracellular"         Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueExtracellular"  Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueExtracellular" Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueExtracellular"       Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueExtracellular"    Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueExtracellular"   Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular"      Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueExtracellular"  Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueExtracellular"        Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueExtracellular"      Name="Volume" Unit="mL" Precision="0"/>
+ 
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular"         Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular"        Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular"       Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueIntracellular"         Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular"    Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular"   Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"      Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular"  Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular"        Name="Volume" Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular"      Name="Volume" Unit="mL" Precision="0"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular" Substance="Sodium" Name="Molarity" Unit="mmol/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular" Substance="Potassium" Name="Molarity" Unit="mmol/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular" Substance="Chloride" Name="Molarity" Unit="mmol/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular" Substance="Calcium" Name="Molarity" Unit="mmol/L" Precision="7"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular" Substance="Sodium" Name="Molarity" Unit="mmol/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular" Substance="Potassium" Name="Molarity" Unit="mmol/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular" Substance="Chloride" Name="Molarity" Unit="mmol/L" Precision="3"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular" Substance="Calcium" Name="Molarity" Unit="mmol/L" Precision="3"/>
 
 	  
 	</DataRequests>
 	
+
 	<Action xsi:type="BurnWoundData">
-		<TotalBodySurfaceArea value="0.3"/>
+		<TotalBodySurfaceArea value="0.1"/>
+		<Compartments>RightArm</Compartments>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="24" unit="hr"/>		
+		<Time value="1" unit="hr"/>		
 	</Action>
+	<Action xsi:type="SubstanceCompoundInfusionData">
+        <SubstanceCompound>RingersLactate</SubstanceCompound>
+        <BagVolume value="4400.0" unit="mL"/>
+        <Rate value="400.0" unit="mL/hr"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="2.5" unit="hr"/>		
+	</Action>
+	<Action xsi:type="EscharotomyData">
+		<Location>RightArm</Location>
+	</Action>
+
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="8.5" unit="hr"/>		
+	</Action>
+	<!--
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="21" unit="hr"/>		
+	</Action>
+	-->
 	
 </Scenario>
