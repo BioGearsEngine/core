@@ -10,9 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstanceManager.h>
-//External Includes
-#include <dirent.h>
-//Project Includes
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>

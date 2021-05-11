@@ -2,6 +2,7 @@
 
 using System;
 using biogears;
+using CDM = mil.tatrc.physiology.datamodel;
 
 namespace bio
 {
@@ -51,6 +52,12 @@ namespace bio
             severity.SetValue(0.5);
 
             engine.AdvanceModelTimeBy( 2.0, TimeUnit.s);
+
+
+            var patient = engine.GetPatient();
+            bool isTacycardia = patient.IsEventActive(CDM.enumPatientEvent.value.Tachycardia);
+            bool isAlive = patient.IsEventActive(CDM.enumPatientEvent.value.IrreversibleState);
+            bool isKetoacidosis = patient.IsEventActive(CDM.enumPatientEvent.value.Ketoacidosis);
 
             logger.Warning(String.Format("AcuteStress @ Severity {0}",acuteStress.GetSeverity().GetValue()));
 

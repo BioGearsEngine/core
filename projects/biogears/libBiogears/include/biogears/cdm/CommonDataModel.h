@@ -41,11 +41,6 @@ namespace tatrc {
 namespace CDM = mil::tatrc::physiology::datamodel;
 
 #include <stdexcept>
-#ifdef _MSC_VER
-#include <direct.h>
-#else
-#include <dirent.h>
-#endif
 
 #if defined(_MSC_VER)
 #include <unordered_map>

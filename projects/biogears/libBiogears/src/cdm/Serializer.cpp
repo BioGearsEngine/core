@@ -147,8 +147,9 @@ bool Serializer::Initialize(Logger* logger)
   std::string xsd_filepath = io->find_resource_file("xsd/BioGearsDataModel.xsd");
   ErrorHandler eh;
   if (!xsd_filepath.empty()) {
-    std::unique_ptr<xercesc::DOMLSParser> parser { CreateParser(logger) };
+    std::unique_ptr<xercesc::DOMLSParser> parser { CreateParser(logger, false) };
     parser->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMErrorHandler, &eh);
+
     if (!parser->loadGrammar(xsd_filepath.c_str(), xercesc::Grammar::SchemaGrammarType, true)) {
       err << "Error: unable to load : " << xsd_filepath << std::ends;
       /// \error Unable to recognize schema xercesc::Grammar
@@ -161,7 +162,7 @@ bool Serializer::Initialize(Logger* logger)
       logger->Error(err.str());
       return false;
     }
-    parser->release(); //Careful hear this is to call the DOMLSParser not the unique_ptr release
+    //parser->release(); //Careful hear this is to call the DOMLSParser not the unique_ptr release
 
     // Lock the xercesc::Grammar pool. This is necessary if we plan to use the
     // same xercesc::Grammar pool in multiple threads (this way we can reuse the
@@ -261,12 +262,12 @@ xercesc::DOMLSParser* Serializer::CreateParser(Logger* logger, bool embeddedXSD)
 
   // We will release the DOM document ourselves.
   //
-
   conf->setParameter(xercesc::XMLUni::fgXercesUserAdoptsDOMDocument, true);
-  // conf->setParameter(XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation, std::string("uri:/mil/tatrc/physiology/datamodel").c_str());
+
 #ifdef BIOGEARS_IO_PRESENT
-  conf->setParameter(xercesc::XMLUni::fgDOMResourceResolver, &g_embedded_resource_resolver);
-  //conf->setParameter(xercesc::XMLUni::fgXercesEntityResolver, &g_embedded_resource_resolver);
+  if (embeddedXSD) {
+    conf->setParameter(xercesc::XMLUni::fgDOMResourceResolver, &g_embedded_resource_resolver);
+  }
 #endif
   return parser;
 }

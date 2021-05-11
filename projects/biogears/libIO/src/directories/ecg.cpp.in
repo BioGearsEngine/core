@@ -26,7 +26,7 @@ namespace io {
 
    auto write_file = [&](biogears::filesystem::path path, char const* content, size_t content_size) {
       biogears::filesystem::create_directories((working_dir / path).parent_path());
-      output.open((working_dir / path).string(), std::fstream::binary | std::fstream::out);
+      output.open((working_dir / path).string(filesystem::path::posix_path), std::fstream::binary | std::fstream::out);
       if (output.good() && !output.is_open()) {
         return false;
       }
