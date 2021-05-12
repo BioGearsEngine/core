@@ -64,8 +64,8 @@ bool SEElectroCardioGramInterpolator::LoadWaveforms(const std::string& given_pat
 #ifdef BIOGEARS_IO_PRESENT
     std::string resource_id = filesystem::path(given_path).basename().string();
     auto content = io::get_embedded_ecg_file(resource_id.c_str(), content_size);
-#endif
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
   } else {
     data = Serializer::ReadFile(possible_path.string(), m_Logger);
   }

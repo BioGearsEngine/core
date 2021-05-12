@@ -155,11 +155,11 @@ bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string&
     auto io = m_Logger->GetIoManager().lock();
     auto possible_path = io->FindScenarioFile(scenarioFile.c_str());
     if (possible_path.empty()) {
-      size_t content_size;
 #ifdef BIOGEARS_IO_PRESENT
+      size_t content_size;
       auto content = io->get_embedded_resource_file(scenarioFile.c_str(), content_size);
-#endif
       bind = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
     } else {
       bind = Serializer::ReadFile(possible_path.string(), m_Logger);
     }

@@ -208,7 +208,8 @@ bool Serializer::Initialize(Logger* logger)
     m_Initialized = true;
     return true;
 #else
-    logger->Error("Unable to find xsd/BioGearsDataModel.xsd") return false;
+    logger->Error("Unable to find xsd/BioGearsDataModel.xsd");
+    return false;
 #endif
   }
 }
