@@ -74,48 +74,48 @@ public:
   BIOGEARS_API std::string ResolveConfigFileLocation(std::string const& filename); //! Use current state to determine the destination of a config file.
   BIOGEARS_API std::string GetConfigDirectory() const; //! The directory which contains CDM::PhysiologyEngine*StabilizationData files.
   BIOGEARS_API void SetConfigDirectory(std::string const& s); //! Defaults to config
-  BIOGEARS_PRIVATE_API filesystem::path FindConfigFile(char const*) const;
+  BIOGEARS_API filesystem::path FindConfigFile(char const*) const;
 
   BIOGEARS_API std::string ResolveEcgFileLocation(std::string const& filename); //! Use current state to determine the destination of a config file.
   BIOGEARS_API std::string GetEcgDirectory() const; //! The directory which contains  CDM::ElectroCardioGramWaveformInterpolatorData files.
   BIOGEARS_API void SetEcgDirectory(std::string const& s); //! Defaults to ecg
-  BIOGEARS_PRIVATE_API filesystem::path FindEcgFile(char const*) const;
+  BIOGEARS_API filesystem::path FindEcgFile(char const*) const;
 
   BIOGEARS_API std::string ResolveEnvironmentFileLocation(std::string const& filename); //! Use current state to determine the destination of a config file.
   BIOGEARS_API std::string GetEnvironmentsDirectory() const; //! The directory which contains  CDM::EnvironmentalConditionsData files.
   BIOGEARS_API void SetEnvironmentsDirectory(std::string const& s); //! Defaults to environments
-  BIOGEARS_PRIVATE_API filesystem::path FindEnvironmentFile(char const*) const;
+  BIOGEARS_API filesystem::path FindEnvironmentFile(char const*) const;
 
   BIOGEARS_API std::string ResolveNutritionFileLocation(std::string const& filename); //! Use current state to determine the destination of a config file.
   BIOGEARS_API std::string GetNutritionDirectory() const; //! The directory which contains  CDM::NutritionData files.
   BIOGEARS_API void SetNutritionDirectory(std::string const& s); //! Defaults to nutrition
-  BIOGEARS_PRIVATE_API filesystem::path FindNutritionFile(char const*) const;
+  BIOGEARS_API filesystem::path FindNutritionFile(char const*) const;
 
   BIOGEARS_API std::string ResolveOverrideFileLocation(std::string const& filename); //! Use current state to determine the destination of a config file.
   BIOGEARS_API std::string GetOverrideDirectory() const; //! The directory which contains  CDM::BioGearsOverrideData files.
   BIOGEARS_API void SetOverrideDirectory(std::string const& s); //! Defaults to override
-  BIOGEARS_PRIVATE_API filesystem::path FindOverrideFile(char const*) const;
+  BIOGEARS_API filesystem::path FindOverrideFile(char const*) const;
 
   BIOGEARS_API std::string ResolvePatientFileLocation(std::string const& filename); //! Use current state to determine the destination of a config file.
   BIOGEARS_API std::string GetPatientsDirectory() const; //! The directory which contains  CDM::PatientData files.
   BIOGEARS_API void SetPatientsDirectory(std::string const& s); //! Defaults to patients
-  BIOGEARS_PRIVATE_API filesystem::path FindPatientFile(char const*) const;
+  BIOGEARS_API filesystem::path FindPatientFile(char const*) const;
 
   BIOGEARS_API std::string ResolveStateFileLocation(std::string const& filename); //! Use current state to determine the destination of a config file.
   BIOGEARS_API std::string GetStatesDirectory() const; //! The directory which contains  CDM::BioGearsStateData files.
   BIOGEARS_API void SetStatesDirectory(std::string const& s); //! Defaults to states
-  BIOGEARS_PRIVATE_API filesystem::path FindStateFile(char const*) const;
+  BIOGEARS_API filesystem::path FindStateFile(char const*) const;
 
   BIOGEARS_API std::string ResolveSubstanceFileLocation(std::string const& filename); //! Use current state to determine the destination of a config file.
   BIOGEARS_API std::string GetSubstancesDirectory() const; //! The directory which contains  CDM::SubstanceData files.
   BIOGEARS_API void SetSubstancesDirectory(std::string const& s); //! Defaults to substances
-  BIOGEARS_PRIVATE_API std::vector<filesystem::path> FindAllSubstanceFiles() const;
-  BIOGEARS_PRIVATE_API filesystem::path FindSubstanceFile(const char*) const;
+  BIOGEARS_API std::vector<filesystem::path> FindAllSubstanceFiles() const;
+  BIOGEARS_API filesystem::path FindSubstanceFile(const char*) const;
 
   BIOGEARS_API std::string ResolveScenarioFileLocation(std::string const& filename); //! Use current state to determine the destination of a config file.
   BIOGEARS_API std::string GetScenariosDirectory() const; //! The directory which contains  CDM::ScenarioData files.
   BIOGEARS_API void SetScenariosDirectory(std::string const& s); //! Defaults to Scenarios
-  BIOGEARS_PRIVATE_API filesystem::path FindScenarioFile(const char*) const;
+  BIOGEARS_API filesystem::path FindScenarioFile(const char*) const;
 
   BIOGEARS_API std::string GetBioGearsDataRootDirectory() const; //! The root directory of pulled from ENV{BIOGEARS_DATA_ROOT} which all but xsd paths are appended. If it does not exist it will be set to the PWD.
   BIOGEARS_API void SetBioGearsDataRootDirectory(std::string const& s);
