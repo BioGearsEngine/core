@@ -24,7 +24,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/directories/nutrition.h>
 #include <biogears/io/directories/override.h>
 #include <biogears/io/directories/patients.h>
+#include <biogears/io/directories/substances.h>
 #include <biogears/io/directories/xsd.h>
+#ifdef BIOGEARS_IO_EMBED_STATES
+#include <biogears/io/directories/states.h>
+#endif
 #endif
 
 #ifndef _WIN32
@@ -35,12 +39,6 @@ specific language governing permissions and limitations under the License.
 
 #include <map>
 #include <regex>
-
-#ifdef BIOGEARS_IO_EMBED_STATES
-#include <biogears/io/directories/states.h>
-#endif
-
-#include <biogears/io/directories/substances.h>
 
 #include <fstream>
 
