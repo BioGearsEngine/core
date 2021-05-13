@@ -544,7 +544,7 @@ namespace filesystem {
   bool rmdir(const path& directory_path)
   {
 #if !defined(_WIN32)
-    return :std::remove(directory_path.ToString().c_str()) == 0;
+    return std::remove(directory_path.ToString().c_str()) == 0;
 #else
     return RemoveDirectoryW(directory_path.ToWString().c_str()) != 0;
 #endif
@@ -554,7 +554,7 @@ namespace filesystem {
   {
     
 #if !defined(_WIN32)
-    return :std::remove(directory.c_str()) == 0;
+    return std::remove(directory.c_str()) == 0;
 #else
     path p { directory };
     return RemoveDirectoryW(p.ToWString().c_str()) != 0;
