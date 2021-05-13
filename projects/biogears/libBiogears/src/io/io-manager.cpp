@@ -96,7 +96,7 @@ std::string IOManager::ResolveConfigFileLocation(std::string const& filename) { 
 std::string IOManager::ResolveEcgFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.ecg, m_biogears_working_directory); }
 std::string IOManager::ResolveEnvironmentFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.environments, m_biogears_working_directory); }
 std::string IOManager::ResolveNutritionFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.nutrition, m_biogears_working_directory); }
-std::string IOManager::ResolveOverrideFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.override, m_biogears_working_directory); }
+std::string IOManager::ResolveOverrideFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.override_dir, m_biogears_working_directory); }
 std::string IOManager::ResolvePatientFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.patients, m_biogears_working_directory); }
 std::string IOManager::ResolveStateFileLocation(std::string const& filename)
 {
@@ -364,7 +364,7 @@ filesystem::path IOManager::FindOverrideFile(const char* file) const
     if (possible_path.compare(0, prefix.size(), prefix) == 0) {
       possible_path = possible_path.substr(prefix.size());
     }
-    filesystem::path implied_path = m_dirs.override;
+    filesystem::path implied_path = m_dirs.override_dir;
     implied_path /= file;
     possible_path = find_resource_file(implied_path.c_str());
   }
@@ -478,12 +478,12 @@ void IOManager::SetNutritionDirectory(std::string const& s)
 //---------------------------------------------------------------------------
 std::string IOManager::GetOverrideDirectory() const
 {
-  return m_dirs.override;
+  return m_dirs.override_dir;
 }
 //---------------------------------------------------------------------------
 void IOManager::SetOverrideDirectory(std::string const& s)
 {
-  m_dirs.override = s;
+  m_dirs.override_dir = s;
 }
 //---------------------------------------------------------------------------
 std::string IOManager::GetPatientsDirectory() const

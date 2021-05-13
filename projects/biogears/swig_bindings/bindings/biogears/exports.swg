@@ -1,3 +1,9 @@
+%{
+   #include <stdexcept>
+   #include <string>
+   #include <vector>
+%}
+
 %import "windows.i"
 #if defined(SWIGCSHARP)
   %import "csharp/std_string.i"
@@ -27,3 +33,6 @@ namespace std
 %import <biogears/common-exports.h>
 %import <biogears/cdm-exports.h>
 %import <biogears/exports.h>
+
+%nspace std::vector<std::string>;
+%template (vector_string) std::vector<std::string>;

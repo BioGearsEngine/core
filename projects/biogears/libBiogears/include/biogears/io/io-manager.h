@@ -54,7 +54,7 @@ private:
     std::string ecg = "ecg/";
     std::string environments = "environments/";
     std::string nutrition = "nutrition/";
-    std::string override = "override/";
+    std::string override_dir = "override/"; //<! Override is a keyword in most languages so we break convention
     std::string patients = "patients/";
     std::string states = "states/";
     std::string substances = "substances/";

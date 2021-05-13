@@ -42,30 +42,6 @@ using namespace CDM;
 
 %nspace "biogears::PhysiologyEngine";
 
-// namespace biogears {
-
-// struct PhysiologyEngineException : public CommonDataModelException {
-//   PhysiologyEngineException(const char* _Message)
-//     : CommonDataModelException(_Message)
-//   {
-    
-//   }
-// };
-
-// class PhysiologyEngine {
-//   public:
-//   virtual ~PhysiologyEngine() {}; 
-//   virtual bool InitializeEngine(const char* patientFile) = 0;
-//   virtual void AdvanceModelTime(bool appendDataTrack = false) = 0;
-//   virtual void AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false) = 0;
-//   virtual bool GetPatientAssessment(SEPatientAssessment& assessment) = 0;
-
-//   virtual bool ProcessAction(const SEAction& action) = 0;
-
-// };
-
-// } // namespace biogears
-
 %ignore biogears::PhysiologyEngineException::PhysiologyEngineException(const std::string& _Message);
 
 %ignore biogears::PhysiologyEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);

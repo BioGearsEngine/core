@@ -162,7 +162,8 @@ namespace filesystem {
 
 #if defined(_WIN32)
     mutable std::wstring m_wstring_cashe;
-#endif();
+#endif
+
     path_type m_type;
     value_type m_path;
     bool m_absolute;
