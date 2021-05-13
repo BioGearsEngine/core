@@ -22,6 +22,7 @@ constexpr int _MINOR_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_MINOR};
 constexpr int _PATCH_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_PATCH};
 constexpr char const * _TWEAK_VERSION_NUMBER_  = "${${ROOT_PROJECT_NAME}_VERSION_TWEAK}";
 
+constexpr char const* _CMAKE_INSTALL_PREFIX_ = "${CMAKE_PREFIX_PATH}";
 
 using namespace std::string_literals;
 //-----------------------------------------------------------------------------
@@ -165,5 +166,13 @@ int biogears_patch_version()
 bool biogears_offical_release()
 {
   return _OFFICAL_RELEASE_;
+}
+//-----------------------------------------------------------------------------
+std::string biogears_original_install_dir(){
+  return _CMAKE_INSTALL_PREFIX_;
+}
+//-----------------------------------------------------------------------------
+const char* biogears_original_install_dir_str(){
+  return _CMAKE_INSTALL_PREFIX_;
 }
 }

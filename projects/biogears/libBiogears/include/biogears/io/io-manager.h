@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/filesystem/path.h>
 #include <vector>
+#include <array>
 //!
 //!  Functions for finding resource files that were part of the current biogears release
 //!  These functions are encoded as part of libbiogears_io
@@ -42,10 +43,16 @@ BIOGEARS_API std::vector<filesystem::path> ListFiles(std::string const& dir, std
 
 class IOManager {
 private:
-  std::string m_biogears_install_root;
-  std::string m_biogears_data_root;
-  std::string m_biogears_schema_root;
-  std::string m_biogears_working_directory;
+
+  enum Fallbacks {
+     CWD = 0,
+     DATA,
+     SCHEMA,
+     HOME,
+     INSTALL,
+     TOTAL_FALLBACKS
+  };
+  std::array<std::string, TOTAL_FALLBACKS> m_prefixs;
 
   struct IoConfig {
     std::string log = "./";
@@ -63,7 +70,7 @@ private:
 
 public:
   BIOGEARS_API IOManager();
-  BIOGEARS_API IOManager(char const* dataroot, char const* schemaroot = nullptr);
+  BIOGEARS_API IOManager(char const* working_directory);
   BIOGEARS_API ~IOManager();
   //!
   //!  Configuration Functions allow users to override directories which

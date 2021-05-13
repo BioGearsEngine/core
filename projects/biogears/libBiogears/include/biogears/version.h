@@ -50,4 +50,6 @@ namespace biogears {
  BIOGEARS_API std::string biogears_build_date();
  BIOGEARS_API const char* biogears_build_date_str();
 
+ BIOGEARS_API std::string biogears_original_install_dir();
+ BIOGEARS_API const char* biogears_original_install_dir_str();
 }

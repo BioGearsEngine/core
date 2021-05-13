@@ -29,7 +29,6 @@ namespace io {
   BIOGEARS_IO_API bool generate_config_directory(const char* file);
   BIOGEARS_IO_API bool does_embedded_config_file_exist(const char* file);
 
-  BIOGEARS_IO_API  size_t find_config_file(const char* file, const char* root, char* buffer, size_t buffer_length);
   BIOGEARS_IO_API char const* get_config_file_sha1(const char* file);
 
   BIOGEARS_IO_API char const** list_config_files();

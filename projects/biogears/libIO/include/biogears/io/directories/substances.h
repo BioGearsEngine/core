@@ -14,6 +14,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/io-exports.h>
    
+#include <string>
+#include <array>
 #include <cstddef>
 //!
 //!  Functions for finding resource files that were part of the current biogears release
@@ -27,7 +29,6 @@ namespace io {
   BIOGEARS_IO_API bool generate_substances_directory(const char* file);
   BIOGEARS_IO_API bool does_embedded_substances_file_exist(const char* file);
 
-  BIOGEARS_IO_API  size_t find_substances_file(const char* file, const char* root, char* buffer, size_t buffer_length);
   BIOGEARS_IO_API char const* get_substances_file_sha1(const char* file);
 
   BIOGEARS_IO_API char const** list_substances_files();

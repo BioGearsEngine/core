@@ -27,7 +27,6 @@ namespace io {
   BIOGEARS_IO_API bool generate_override_directory(const char* file);
   BIOGEARS_IO_API bool does_embedded_override_file_exist(const char* file);
 
-  BIOGEARS_IO_API  size_t find_override_file(const char* file, const char* root, char* buffer, size_t buffer_length);
   BIOGEARS_IO_API char const* get_override_file_sha1(const char* file);
 
   BIOGEARS_IO_API char const** list_override_files();
