@@ -59,7 +59,7 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
       bind = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
 #endif
     } else {
-      bind = Serializer::ReadFile(possible_path.string(), m_Logger);
+      bind = Serializer::ReadFile(possible_path, m_Logger);
     }
 
     if (bind == nullptr) {

@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/io/io-manager.h>
 
 namespace biogears {
 void CommonDataModelTest::TestSetup7SeriesRCDC()

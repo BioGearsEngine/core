@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/io/io-manager.h>
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/nutrition.h>
 #endif
@@ -165,7 +166,7 @@ bool SENutrition::Load(const std::string& given)
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
 #endif
   } else {
-    data = Serializer::ReadFile(possible_path.string(), m_Logger);
+    data = Serializer::ReadFile(possible_path, m_Logger);
   }
 
   pData = dynamic_cast<CDM::NutritionData*>(data.get());

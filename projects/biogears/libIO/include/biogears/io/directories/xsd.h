@@ -1,7 +1,6 @@
 #pragma once
 
 #include <biogears/io-exports.h>
-#include <biogears/filesystem/path.h>
 
 //!
 //!  Functions for finding resource files that were part of the current biogears release

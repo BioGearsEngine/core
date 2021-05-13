@@ -31,7 +31,12 @@ specific language governing permissions and limitations under the License.
 #endif
 #endif
 
-#ifndef _WIN32
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <ShlObj.h>
+#include <windows.h>
+#else
+#include <unistd.h>
 #include <dirent.h>
 #endif
 
@@ -75,16 +80,16 @@ inline std::string ResolveFileLocation(std::string const& given, std::string con
 {
   filesystem::path given_path { given };
   if (given_path.is_absolute()) {
-    return given_path.string(filesystem::path::posix_path);
+    return given_path;
   }
   filesystem::path config_path = { prefix };
   config_path /= given_path;
   if (config_path.is_absolute()) {
-    return config_path.string(filesystem::path::posix_path);
+    return config_path;
   }
   filesystem::path working_path = { working_dir };
   working_path /= config_path;
-  return working_path.string(filesystem::path::posix_path);
+  return working_path;
 }
 
 std::string IOManager::ResolveConfigFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.config, m_biogears_working_directory); }
@@ -114,7 +119,7 @@ std::vector<filesystem::path> ListFiles(std::string const& dir, std::string cons
 #ifdef _WIN32
   WIN32_FIND_DATAA data;
   filesystem::path pattern = dir + "\\*";
-  HANDLE hFind = FindFirstFileA(pattern.string(filesystem::path::posix_path).c_str(), &data);
+  HANDLE hFind = FindFirstFileA(pattern.c_str(), &data);
 
   if (INVALID_HANDLE_VALUE != hFind) {
     do {
@@ -179,11 +184,11 @@ std::vector<filesystem::path> IOManager::find_files(std::string suffix, std::str
   //Step 0 :
   test_location = suffix;
   if (test_location.is_absolute() && test_location.exists() && test_location.is_directory()) {
-    auto results = ListFiles(test_location.string(filesystem::path::posix_path), regex, recurse);
+    auto results = ListFiles(test_location, regex, recurse);
     for (auto& result : results) {
-      filesystem::path p { result };
-      if (known_files.find(p.basename().string(filesystem::path::posix_path)) == known_files.end()) {
-        known_files[p.basename().string(filesystem::path::posix_path)] = std::move(p);
+      filesystem::path p{ result };
+      if (known_files.find(p.basename()) == known_files.end()) {
+        known_files[p.basename()] = std::move(p);
       }
     }
   }
@@ -192,11 +197,11 @@ std::vector<filesystem::path> IOManager::find_files(std::string suffix, std::str
   test_location = m_biogears_working_directory;
   test_location /= suffix;
   if (test_location.exists() && test_location.is_directory()) {
-    auto results = ListFiles(test_location.string(filesystem::path::posix_path), regex, recurse);
+    auto results = ListFiles(test_location, regex, recurse);
     for (auto& result : results) {
       filesystem::path p { result };
-      if (known_files.find(p.basename().string(filesystem::path::posix_path)) == known_files.end()) {
-        known_files[p.basename().string(filesystem::path::posix_path)] = std::move(p);
+      if (known_files.find(p.basename()) == known_files.end()) {
+        known_files[p.basename()] = std::move(p);
       }
     }
   }
@@ -206,11 +211,11 @@ std::vector<filesystem::path> IOManager::find_files(std::string suffix, std::str
     test_location = m_biogears_data_root;
     test_location /= suffix;
     if (test_location.exists() && test_location.is_directory()) {
-      auto results = ListFiles(test_location.string(filesystem::path::posix_path), regex, recurse);
+      auto results = ListFiles(test_location, regex, recurse);
       for (auto& result : results) {
         filesystem::path p { result };
-        if (known_files.find(p.basename().string(filesystem::path::posix_path)) == known_files.end()) {
-          known_files[p.basename().string(filesystem::path::posix_path)] = std::move(p);
+        if (known_files.find(p.basename()) == known_files.end()) {
+          known_files[p.basename()] = std::move(p);
         }
       }
     }
@@ -221,11 +226,11 @@ std::vector<filesystem::path> IOManager::find_files(std::string suffix, std::str
     test_location = m_biogears_schema_root;
     test_location /= suffix;
     if (test_location.exists() && test_location.is_directory()) {
-      auto results = ListFiles(test_location.string(filesystem::path::posix_path), regex, recurse);
+      auto results = ListFiles(test_location, regex, recurse);
       for (auto& result : results) {
         filesystem::path p { result };
-        if (known_files.find(p.basename().string(filesystem::path::posix_path)) == known_files.end()) {
-          known_files[p.basename().string(filesystem::path::posix_path)] = std::move(p);
+        if (known_files.find(p.basename()) == known_files.end()) {
+          known_files[p.basename()] = std::move(p);
         }
       }
     }
@@ -237,11 +242,11 @@ std::vector<filesystem::path> IOManager::find_files(std::string suffix, std::str
     test_location = data_root;
     test_location /= suffix;
     if (test_location.exists() && test_location.is_directory()) {
-      auto results = ListFiles(test_location.string(filesystem::path::posix_path), regex, recurse);
+      auto results = ListFiles(test_location, regex, recurse);
       for (auto& result : results) {
         filesystem::path p { result };
-        if (known_files.find(p.basename().string(filesystem::path::posix_path)) == known_files.end()) {
-          known_files[p.basename().string(filesystem::path::posix_path)] = std::move(p);
+        if (known_files.find(p.basename()) == known_files.end()) {
+          known_files[p.basename()] = std::move(p);
         }
       }
     }
@@ -251,11 +256,11 @@ std::vector<filesystem::path> IOManager::find_files(std::string suffix, std::str
     test_location = schema_root;
     test_location /= suffix;
     if (test_location.exists() && test_location.is_directory()) {
-      auto results = ListFiles(test_location.string(filesystem::path::posix_path), regex, recurse);
+      auto results = ListFiles(test_location, regex, recurse);
       for (auto& result : results) {
         filesystem::path p { result };
-        if (known_files.find(p.basename().string(filesystem::path::posix_path)) == known_files.end()) {
-          known_files[p.basename().string(filesystem::path::posix_path)] = std::move(p);
+        if (known_files.find(p.basename()) == known_files.end()) {
+          known_files[p.basename()] = std::move(p);
         }
       }
     }
@@ -274,11 +279,11 @@ std::vector<filesystem::path> IOManager::find_files(std::string suffix, std::str
     test_location = install_root;
     test_location /= suffix;
     if (test_location.exists() && test_location.is_directory()) {
-      auto results = ListFiles(test_location.string(filesystem::path::posix_path), regex, recurse);
+      auto results = ListFiles(test_location, regex, recurse);
       for (auto& result : results) {
         filesystem::path p { result };
-        if (known_files.find(p.basename().string(filesystem::path::posix_path)) == known_files.end()) {
-          known_files[p.basename().string(filesystem::path::posix_path)] = std::move(p);
+        if (known_files.find(p.basename()) == known_files.end()) {
+          known_files[p.basename()] = std::move(p);
         }
       }
     }
@@ -286,7 +291,7 @@ std::vector<filesystem::path> IOManager::find_files(std::string suffix, std::str
 
   std::vector<filesystem::path> results;
   for (auto& pair : known_files) {
-    results.emplace_back(std::move(pair.second.string(filesystem::path::posix_path)));
+    results.emplace_back(std::move(pair.second));
   }
   return results;
 }
@@ -301,7 +306,7 @@ filesystem::path IOManager::FindConfigFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.config;
     implied_path /= file;
-    possible_path = find_resource_file(implied_path.string(filesystem::path::posix_path).c_str());
+    possible_path = find_resource_file(implied_path.c_str());
   }
   return possible_path;
 }
@@ -316,7 +321,7 @@ filesystem::path IOManager::FindEcgFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.ecg;
     implied_path /= file;
-    possible_path = find_resource_file(implied_path.string(filesystem::path::posix_path).c_str());
+    possible_path = find_resource_file(implied_path.c_str());
   }
   return possible_path;
 }
@@ -331,7 +336,7 @@ filesystem::path IOManager::FindEnvironmentFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.environments;
     implied_path /= file;
-    possible_path = find_resource_file(implied_path.string(filesystem::path::posix_path).c_str());
+    possible_path = find_resource_file(implied_path.c_str());
   }
   return possible_path;
 }
@@ -346,7 +351,7 @@ filesystem::path IOManager::FindNutritionFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.nutrition;
     implied_path /= file;
-    possible_path = find_resource_file(implied_path.string(filesystem::path::posix_path).c_str());
+    possible_path = find_resource_file(implied_path.c_str());
   }
   return possible_path;
 }
@@ -361,7 +366,7 @@ filesystem::path IOManager::FindOverrideFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.override;
     implied_path /= file;
-    possible_path = find_resource_file(implied_path.string(filesystem::path::posix_path).c_str());
+    possible_path = find_resource_file(implied_path.c_str());
   }
   return possible_path;
 }
@@ -376,7 +381,7 @@ filesystem::path IOManager::FindPatientFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.patients;
     implied_path /= file;
-    possible_path = find_resource_file(implied_path.string(filesystem::path::posix_path).c_str());
+    possible_path = find_resource_file(implied_path.c_str());
   }
   return possible_path;
 }
@@ -390,7 +395,7 @@ filesystem::path IOManager::FindStateFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.states;
     implied_path /= file;
-    possible_path = find_resource_file(implied_path.string(filesystem::path::posix_path).c_str());
+    possible_path = find_resource_file(implied_path.c_str());
   }
   return possible_path;
 }
@@ -404,7 +409,7 @@ filesystem::path IOManager::FindSubstanceFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.substances;
     implied_path /= file;
-    possible_path = find_resource_file(implied_path.string(filesystem::path::posix_path).c_str());
+    possible_path = find_resource_file(implied_path.c_str());
   }
   return possible_path;
 }
@@ -419,7 +424,7 @@ filesystem::path IOManager::FindScenarioFile(const char* file) const
     }
     filesystem::path implied_path = m_dirs.scenarios;
     implied_path /= file;
-    possible_path = find_resource_file(implied_path.string(filesystem::path::posix_path).c_str());
+    possible_path = find_resource_file(implied_path.c_str());
   }
   return possible_path;
 }
@@ -806,7 +811,7 @@ std::string IOManager::find_resource_file(char const* file) const
   filesystem::path test_location { m_biogears_working_directory };
   test_location /= file;
   if (test_location.exists() && test_location.is_file()) {
-    return test_location.string(filesystem::path::posix_path);
+    return test_location;
   }
 
   //Step 2 : Alternative CWD
@@ -814,7 +819,7 @@ std::string IOManager::find_resource_file(char const* file) const
     test_location = m_biogears_data_root;
     test_location /= file;
     if (test_location.exists() && test_location.is_file()) {
-      return test_location.string(filesystem::path::posix_path);
+      return test_location;
     }
   }
 
@@ -822,7 +827,7 @@ std::string IOManager::find_resource_file(char const* file) const
     test_location = m_biogears_schema_root;
     test_location /= file;
     if (test_location.exists() && test_location.is_file()) {
-      return test_location.string(filesystem::path::posix_path);
+      return test_location;
     }
   }
 
@@ -832,7 +837,7 @@ std::string IOManager::find_resource_file(char const* file) const
     test_location = data_root;
     test_location /= file;
     if (test_location.exists() && test_location.is_file()) {
-      return test_location.string(filesystem::path::posix_path);
+      return test_location;
     }
   }
   char* schema_root = getenv("BIOGEARS_SCHEMA_ROOT");
@@ -840,7 +845,7 @@ std::string IOManager::find_resource_file(char const* file) const
     test_location = schema_root;
     test_location /= file;
     if (test_location.exists() && test_location.is_file()) {
-      return test_location.string(filesystem::path::posix_path);
+      return test_location;
     }
   }
   //Step 3: BIOGEARS_INSTALL_ROOT
@@ -857,7 +862,7 @@ std::string IOManager::find_resource_file(char const* file) const
     test_location = install_root;
     test_location /= file;
     if (test_location.exists() && test_location.is_file()) {
-      return test_location.string(filesystem::path::posix_path);
+      return test_location;
     }
   }
 
@@ -876,7 +881,7 @@ size_t IOManager::read_resource_file(char const*
   size_t content_size = 0;
   biogears::filesystem::path test_location { find_resource_file(file) };
   if (test_location.exists() && test_location.is_file()) {
-    std::ifstream resource_file { test_location.str(), std::ios::in };
+    std::ifstream resource_file { test_location, std::ios::in };
     if (resource_file.is_open()) {
       resource_file.seekg(0, resource_file.end);
       content_size = resource_file.tellg();

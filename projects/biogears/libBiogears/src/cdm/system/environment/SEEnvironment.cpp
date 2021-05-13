@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 #include <biogears/container/Tree.tci.h>
+#include <biogears/io/io-manager.h>
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/environments.h>
 #endif
@@ -169,13 +170,13 @@ bool SEEnvironment::Load(const std::string& given)
   auto io = m_Logger->GetIoManager().lock();
   auto possible_path = io->FindEnvironmentFile(given.c_str());
   if (possible_path.empty()) {
-    size_t content_size;
 #ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
     auto content = io::get_embedded_environments_file(given.c_str(), content_size);
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
 #endif
   } else {
-    data = Serializer::ReadFile(possible_path.string(), m_Logger);
+    data = Serializer::ReadFile(possible_path, m_Logger);
   }
 
   pData = dynamic_cast<CDM::EnvironmentData*>(data.get());

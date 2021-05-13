@@ -16,6 +16,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/Serializer.h>
 
 #include <biogears/filesystem/path.h>
+#include <biogears/io/io-manager.h>
+
 #include <biogears/schema/biogears/BioGears.hxx>
 
 #include <xercesc/framework/MemBufInputSource.hpp>
@@ -64,7 +66,7 @@ struct embedded_resource_resolver : DOMLSResourceResolver {
 
     for (auto i = xsd_file_count(); i != 0; --i) {
       auto schema = xsd_files[i - 1];
-      std::string n_path_str = normalized_path.string(path::posix_path);
+      std::string n_path_str = normalized_path;
       if (std::strcmp(schema, n_path_str.c_str()) == 0) {
         size_t schema_size = 0;
         char const* schema_content = get_embedded_xsd_file(schema, schema_size);
@@ -175,7 +177,7 @@ bool Serializer::Initialize(Logger* logger)
   } else {
 #if BIOGEARS_IO_PRESENT
 
-    std::unique_ptr<xercesc::DOMLSParser> parser { CreateParser(logger) };
+    std::unique_ptr<xercesc::DOMLSParser> parser { CreateParser(logger, true) };
     parser->getDomConfig()->setParameter(xercesc::XMLUni::fgDOMErrorHandler, &eh);
     size_t schema_size = 0;
 

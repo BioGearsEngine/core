@@ -318,9 +318,9 @@ bool SESubstanceManager::LoadSubstanceDirectory()
 
   std::string path_string;
   for (auto& filepath : io->FindAllSubstanceFiles()) {
-    path_string = filepath.string();
+    path_string = filepath;
     Debug(asprintf("Reading substance file : %s", path_string.c_str()));
-    definitions[filepath.basename().string()] = Serializer::ReadFile(path_string, GetLogger());
+    definitions[filepath.basename()] = Serializer::ReadFile(path_string, GetLogger());
   }
 #ifdef BIOGEARS_IO_PRESENT
   auto substances = io::list_substances_files();

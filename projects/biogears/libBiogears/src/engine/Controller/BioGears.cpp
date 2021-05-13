@@ -37,10 +37,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Equipment/ECG.h>
 #include <biogears/engine/Systems/Environment.h>
 #include <biogears/engine/Systems/Gastrointestinal.h>
+#include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/EnvironmentConditions.hxx>
 #include <biogears/schema/cdm/Patient.hxx>
-#include <biogears/engine/BioGearsPhysiologyEngine.h>
-
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
@@ -95,7 +94,11 @@ void BioGears::SetUp()
   m_Logger->SetLogTime(m_SimulationTime.get());
 
   m_Substances = std::make_unique<BioGearsSubstances>(*this);
-  m_Substances->LoadSubstanceDirectory();
+
+  if (!m_Substances->LoadSubstanceDirectory()) {
+    m_Logger->Error("Unable to Load Substnace Directory! Engine is invalid and can not continue");
+    return;
+  }
 
   m_Patient = std::make_unique<SEPatient>(GetLogger());
 
@@ -163,10 +166,8 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   m_Config->Merge(cFile);
 
   // Now we can check the config
-  if (m_Config->WritePatientBaselineFile()) 
-  {
-    
-    
+  if (m_Config->WritePatientBaselineFile()) {
+
     auto io = m_Logger->GetIoManager().lock();
     std::string stableDir = io->GetBioGearsWorkingDirectory() += "/stable/";
     filesystem::create_directories(stableDir);
@@ -298,13 +299,13 @@ bool BioGears::SetupPatient()
 
   //Sleep Amount ---------------------------------------------------------------
   double sleepAmount_hr = 8.0;
-  if(!m_Patient->HasSleepAmount()) {
+  if (!m_Patient->HasSleepAmount()) {
     m_Patient->GetSleepAmount().SetValue(sleepAmount_hr, TimeUnit::hr);
-    m_Logger->Info(std::stringstream()<< "No patient sleep amount set " << sleepAmount_hr << " hr being used.");
+    m_Logger->Info(std::stringstream() << "No patient sleep amount set " << sleepAmount_hr << " hr being used.");
   }
 
-  //additional checks to ensure non-zero and negative values: 
-  if(m_Patient->GetSleepAmount().GetValue(TimeUnit::hr) < 0 || m_Patient->GetSleepAmount().GetValue(TimeUnit::hr) == 0) {
+  //additional checks to ensure non-zero and negative values:
+  if (m_Patient->GetSleepAmount().GetValue(TimeUnit::hr) < 0 || m_Patient->GetSleepAmount().GetValue(TimeUnit::hr) == 0) {
     m_Patient->GetSleepAmount().SetValue(sleepAmount_hr, TimeUnit::hr);
     m_Logger->Info(std::stringstream() << "Sleep amount must be a non-zero positive number, setting to default: " << sleepAmount_hr << " hr being used.");
   }

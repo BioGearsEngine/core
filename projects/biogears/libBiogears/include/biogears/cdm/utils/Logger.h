@@ -25,12 +25,11 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
-#include <biogears/io/io-manager.h>
-
 namespace biogears {
 
 class Logger;
 class SEScalarTime;
+class IOManager;
 
 class BIOGEARS_API Loggable {
 public:
@@ -90,7 +89,7 @@ class BIOGEARS_API Logger {
 public:
   explicit Logger(const std::string& logFilename = Loggable::empty);
   explicit Logger(const std::string& logFilename, IOManager const& io);
-  explicit Logger(const char* logFilename );
+  explicit Logger(const char* logFilename);
   explicit Logger(const char* logFilename, IOManager const& io);
 
   virtual ~Logger();
@@ -140,7 +139,6 @@ protected:
   const SEScalarTime* m_time;
   mutable std::stringstream m_ss;
   bool m_FormatMessages;
-
 };
 
 }

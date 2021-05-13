@@ -113,7 +113,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_Normalize)
 {
   using namespace biogears::filesystem;
 
-  auto cwd = path::getcwd();
+  auto cwd = biogears::filesystem::cwd();
   path_relative /= path("biogears") / "runtime" / path("..") / path("..");
   cwd /= path("biogears") / "runtime" / path("..") / path("..");
   auto absolute_root = path_absolute_root / path("biogears") / "runtime" / path("..") / path("..");
@@ -121,7 +121,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_Normalize)
   cwd = cwd.make_normal();
   path_relative = path_relative.make_normal();
 
-  EXPECT_EQ(cwd, path::getcwd());
+
   EXPECT_EQ(path_relative, path());
   EXPECT_EQ(absolute_root.make_normal(),path_absolute_root);
   EXPECT_EQ(path("./././../../biogears/././../first/second/../third/../../").make_normal(),

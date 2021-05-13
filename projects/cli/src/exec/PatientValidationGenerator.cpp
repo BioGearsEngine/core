@@ -9,16 +9,17 @@
 //CONDITIONS OF ANY KIND, either express or implied.See the License for the
 //specific language governing permissions and limitations under the License.
 //**************************************************************************************
+#include "PatientValidationGenerator.h"
+
+#include "biogears/string/manipulation.h"
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
-
-#include "PatientValidationGenerator.h"
+#include <biogears/io/io-manager.h>
 #include <iostream>
 #include <string>
-#include "biogears/string/manipulation.h"
 
 //
 namespace biogears {
@@ -36,13 +37,13 @@ PatientValidationGenerator::~PatientValidationGenerator()
 //-------------------------------------------------------------------------------
 //!
 //! \brief Iterates through patientFiles, creates a lambda function for each item, and passes those functions to a thread pool
-//! 
+//!
 void PatientValidationGenerator::GenPatientValidation()
 {
 
   auto patients = ListFiles("patients", R"(.*\.xml)");
   for (auto& patient : patients) {
-    std::function<void()> work = [=](){ biogears::runPatientScenario(patient.string(), std::string("Scenarios/Validation/Patient-Validation.xml")); };
+    std::function<void()> work = [=]() { biogears::runPatientScenario(patient, std::string("Scenarios/Validation/Patient-Validation.xml")); };
     _pool.queue_work(work);
   }
 }
@@ -90,7 +91,7 @@ int runPatientScenario(const std::string patient, std::string&& XMLString)
 //-------------------------------------------------------------------------------
 //!
 //! \brief thread pool begins execution of tasks in queue
-//! 
+//!
 void PatientValidationGenerator::run()
 {
   _pool.start();
@@ -98,7 +99,7 @@ void PatientValidationGenerator::run()
 //-------------------------------------------------------------------------------
 //!
 //! \brief stops execution of tasks in queue
-//! 
+//!
 void PatientValidationGenerator::stop()
 {
   _pool.stop();
@@ -107,15 +108,15 @@ void PatientValidationGenerator::stop()
 //!
 //! \brief stops the thread pool if the work queue is empty
 //! \return true if the work queue is empty, false otherwise
-//! 
+//!
 bool PatientValidationGenerator::stop_if_empty()
-{  
+{
   return _pool.stop_if_empty();
 }
 //-------------------------------------------------------------------------------
 //!
 //! \brief joins threads in thread pool
-//! 
+//!
 void PatientValidationGenerator::join()
 {
   _pool.join();

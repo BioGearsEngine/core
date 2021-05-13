@@ -91,7 +91,7 @@ Driver::Driver(char* exe_name, size_t thread_count)
   , _total_work(0)
 {
   biogears::filesystem::path p { exe_name };
-  _relative_path = p.parent_path().string();
+  _relative_path = p.parent_path();
 }
 //-----------------------------------------------------------------------------
 Driver::~Driver()
@@ -288,7 +288,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
   std::unique_ptr<ScenarioData> scenario;
   try {
     std::cout << "Reading " << exec.Scenario() << std::endl;
-    auto obj = Serializer::ReadFile(resolved_filepath.string(path::posix_path),
+    auto obj = Serializer::ReadFile(resolved_filepath,
                                     &logger);
     scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
     if (scenario == nullptr) {
@@ -402,7 +402,7 @@ void Driver::queue_from_sate_files(const Executor& exec, const std::vector<files
 {
   for (auto& state_file : state_files) {
     Executor stateEx { exec };
-    stateEx.State(state_file.string());
+    stateEx.State(state_file);
     std::string trimmed_state_path(trim(stateEx.State()));
     auto split_state_path = split(trimmed_state_path, '/');
     auto state_no_extension = split(split_state_path.back(), '.').front();
@@ -431,7 +431,7 @@ void Driver::queue_from_patient_files(const Executor& exec, const std::vector<fi
   for (auto& patient_file : patient_files) {
     std::cout << patient_file << std::endl;
     Executor patientEx { exec };
-    patientEx.Patient(patient_file.string());
+    patientEx.Patient(patient_file);
 
     ///----
     std::string trimmed_patient_path(trim(patientEx.Patient()));
@@ -497,9 +497,9 @@ std::vector<filesystem::path> Driver::find_matching_files(const std::string& pat
     for (auto& path : possible_paths) {
       auto temp = filesystem::path(path) / part;
       if (temp.exists()) {
-        path = temp.string();
+        path = temp;
       } else {
-        auto work = ListFiles(path.string(), part, false);
+        auto work = ListFiles(path, part, false);
         new_work.insert(new_work.begin(), work.begin(), work.end());
         remove_queue.push_back(index);
       }
@@ -770,7 +770,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
     std::unique_ptr<ScenarioData> scenario;
     try {
       std::cout << "Reading " << ex.Scenario() << std::endl;
-      auto obj = Serializer::ReadFile(resolved_filepath.string(path::posix_path),
+      auto obj = Serializer::ReadFile(resolved_filepath,
                                       eng->GetLogger());
       scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
       if (scenario == nullptr) {

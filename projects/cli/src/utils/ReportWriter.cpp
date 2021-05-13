@@ -217,15 +217,15 @@ std::string locateBaseline(biogears::filesystem::path path_s, std::string name)
   static const filesystem::path baseline_dir { Baseline_Directory };
   filesystem::path baseline = path_s / (name + "Results.csv");
   if (baseline.exists()) {
-    return baseline.string();
+    return baseline;
   }
   baseline = path_s / "baselines" / (name + "Results.zip");
   if (baseline.exists()) {
-    return baseline.string();
+    return baseline;
   }
   baseline = baseline_dir / path_s / "baselines" / (name + "Results.zip");
   if (baseline.exists()) {
-    return baseline.string();
+    return baseline;
   }
   return name + "-NOTFOUND";
 }
@@ -238,15 +238,15 @@ std::string resolveTestLocation(biogears::filesystem::path baseline, std::string
 
   auto ext = baseline.extension();
   if (ext == "zip") {
-    return baseline.str();
+    return baseline;
   } else {
     std::regex re { R"((.*Results)(.*))" };
     std::smatch m;
-    auto bl = baseline.string();
+    std::string bl = baseline;
     if (std::regex_match(bl, m, re)) {
       baseline = m[1].str() + test;
 
-      auto dir_list = biogears::filesystem::dirlist(baseline.parent_path().string(), baseline.filename().string() + ".*[.]xml");
+      auto dir_list = biogears::filesystem::dirlist(baseline.parent_path(), baseline.filename() + ".*[.]xml");
       if (dir_list.size()) {
         return dir_list[0];
       }
@@ -463,7 +463,7 @@ void ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector
 
     biogears::filesystem::path entry { filename };
     entry = entry.filename();
-    std::string internal_file = split(entry.string(), '.')[0] + ".csv";
+    std::string internal_file = split(entry, '.')[0] + ".csv";
     err = mz_zip_reader_locate_entry(reader, internal_file.c_str(), true);
 
     if (err != MZ_OK) {
@@ -623,7 +623,7 @@ void ReportWriter::ParseXML(const std::string& filename, std::string test)
     return;
   } else if (ext == "xml") {
     filesystem::path full_path { filename };
-    std::ifstream file { full_path.string() };
+    std::ifstream file { full_path };
     if (!file.is_open()) {
       throw std::runtime_error("Error opening: " + filename);
     }

@@ -12,6 +12,7 @@
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
+#include <biogears/io/io-manager.h>
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/config.h>
 #endif
@@ -53,7 +54,7 @@ namespace io {
         sData = Serializer::ReadBuffer((XMLByte*)content, content_size, out.GetLogger());
 #endif
       } else {
-        sData = Serializer::ReadFile(possible_path.string(), out.GetLogger());
+        sData = Serializer::ReadFile(possible_path, out.GetLogger());
       }
 
       if (sData == nullptr) {

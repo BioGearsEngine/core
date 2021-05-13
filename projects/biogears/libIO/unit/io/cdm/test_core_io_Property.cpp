@@ -20,7 +20,6 @@
 
 #include <gtest/gtest.h>
 
-#include <biogears/filesystem/path.h>
 #include <io/cdm/Property.h>
 
 #ifdef DISABLE_BIOGEARS_io_Property_TEST

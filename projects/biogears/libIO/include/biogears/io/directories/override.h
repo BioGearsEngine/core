@@ -12,9 +12,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
 #include <biogears/io-exports.h>
-#include <biogears/filesystem/path.h>
+
 //!
 //!  Functions for finding resource files that were part of the current biogears release
 //!  These functions are encoded as part of libbiogears_io

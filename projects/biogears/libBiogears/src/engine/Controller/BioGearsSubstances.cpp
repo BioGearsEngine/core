@@ -500,7 +500,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   concentrationExtracellular.SetValue(1.0, MassPerVolumeUnit::mg_Per_dL);
   molarity1.SetValue(20.0 / (m_albumin->GetMolarMass(MassPerAmountUnit::g_Per_mmol)), AmountPerVolumeUnit::mmol_Per_L);
   molarity2.SetValue(0.0, AmountPerVolumeUnit::mmol_Per_L);
- //SetSubstanceConcentration(*m_albumin, tissue, concentrationExtracellular, concentrationIntracellular);
+  //SetSubstanceConcentration(*m_albumin, tissue, concentrationExtracellular, concentrationIntracellular);
   SetSubstanceMolarity(*m_albumin, tissue, molarity1, molarity2);
   //Lymph - should be same as extracellular
   concentration.SetValue(2.0, MassPerVolumeUnit::g_Per_dL);
@@ -523,7 +523,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   concentration.SetValue(100.0, MassPerVolumeUnit::mg_Per_L);
   SetSubstanceConcentration(*m_calcium, vascular, concentration);
   // Tissue
-  molarity1.SetValue(2*(1.2), AmountPerVolumeUnit::mmol_Per_L);
+  molarity1.SetValue(2 * (1.2), AmountPerVolumeUnit::mmol_Per_L);
   molarity2.SetValue(0.0001, AmountPerVolumeUnit::mmol_Per_L);
   SetSubstanceMolarity(*m_calcium, tissue, molarity1, molarity2);
   //Lymph
@@ -554,7 +554,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   subQ->Balance(BalanceLiquidBy::Concentration);
 
   // CHLORIDE //
-  concentration.SetValue(1.2*0.362, MassPerVolumeUnit::g_Per_dL);
+  concentration.SetValue(1.2 * 0.362, MassPerVolumeUnit::g_Per_dL);
   SetSubstanceConcentration(*m_chloride, vascular, concentration);
   SetSubstanceConcentration(*m_chloride, urine, concentration);
   // Tissue
@@ -1023,38 +1023,55 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
   m_RBC = GetSubstance("RedBloodCell");
   m_WBC = GetSubstance("WhiteBloodCell");
 
-  if (m_O2 == nullptr)
+  bool substancesAreMissing = false;
+  if (m_O2 == nullptr) {
     Error("Oxygen Definition not found");
-  if (m_CO == nullptr)
+  }
+  if (m_CO == nullptr) {
     Error("CarbonMonoxide Definition not found");
-  if (m_CO2 == nullptr)
+  }
+  if (m_CO2 == nullptr) {
     Error("CarbonDioxide Definition not found");
-  if (m_N2 == nullptr)
+  }
+  if (m_N2 == nullptr) {
     Error("Nitrogen Definition not found");
-  if (m_Hb == nullptr)
+  }
+  if (m_Hb == nullptr) {
     Error("Hemoglobin Definition not found");
-  if (m_HbO2 == nullptr)
+  }
+  if (m_HbO2 == nullptr) {
     Error("Oxyhemoglobin Definition not found");
-  if (m_HbCO2 == nullptr)
+  }
+  if (m_HbCO2 == nullptr) {
     Error("Carbaminohemoglobin Definition not found");
-  if (m_HbCO == nullptr)
+  }
+  if (m_HbCO == nullptr) {
     Error("Carboxyhemoglobin Definition not found");
-  if (m_HbO2CO2 == nullptr)
+  }
+  if (m_HbO2CO2 == nullptr) {
     Error("OxyCarbaminohemoglobin Definition not found");
-  if (m_HCO3 == nullptr)
+  }
+  if (m_HCO3 == nullptr) {
     Error("Bicarbonate Definition not found");
-  if (m_epi == nullptr)
+  }
+  if (m_epi == nullptr) {
     Error("Epinephrine Definition not found");
-  if (m_platelets == nullptr)
+  }
+  if (m_platelets == nullptr) {
     Error("Platelets Definition not found");
-  if (m_AntigenA == nullptr)
+  }
+  if (m_AntigenA == nullptr) {
     Error("Antigen A Definition not found");
-  if (m_AntigenB == nullptr)
+  }
+  if (m_AntigenB == nullptr) {
     Error("Antigen B Definition not found");
-  if (m_RBC == nullptr)
+  }
+  if (m_RBC == nullptr) {
     Error("Red Blood Cell Definition not found");
-  if (m_WBC == nullptr)
+  }
+  if (m_WBC == nullptr) {
     Error("White Blood Cell Definition not found");
+  }
 
   if (m_O2 == nullptr || m_CO == nullptr || m_CO2 == nullptr || m_N2 == nullptr || m_Hb == nullptr || m_HbO2 == nullptr
       || m_HbCO2 == nullptr || m_HbCO == nullptr || m_HbO2CO2 == nullptr || m_epi == nullptr || m_HCO3 == nullptr)
@@ -1076,37 +1093,56 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
   m_triacylglycerol = GetSubstance("Triacylglycerol");
   m_urea = GetSubstance("Urea");
 
-  if (m_albumin == nullptr)
+  if (m_albumin == nullptr) {
     Error("Albumin Definition not found");
-  if (m_aminoAcids == nullptr)
+  }
+  if (m_aminoAcids == nullptr) {
     Error("AminoAcids Definition not found");
-  if (m_calcium == nullptr)
+  }
+  if (m_calcium == nullptr) {
     Error("Calcium Definition not found");
-  if (m_chloride == nullptr)
+  }
+  if (m_chloride == nullptr) {
     Error("Chloride Definition not found");
-  if (m_creatinine == nullptr)
+  }
+  if (m_creatinine == nullptr) {
     Error("Creatinine Definition not found");
-  if (m_globulin == nullptr)
+  }
+  if (m_globulin == nullptr) {
     Error("Globulin Definition not found");
-  if (m_glucagon == nullptr)
+  }
+  if (m_glucagon == nullptr) {
     Error("Glucagon Definition not found");
-  if (m_glucose == nullptr)
+  }
+  if (m_glucose == nullptr) {
     Error("Glucose Definition not found");
-  if (m_insulin == nullptr)
+  }
+  if (m_insulin == nullptr) {
     Error("Insulin Definition not found");
-  if (m_ketones == nullptr)
+  }
+  if (m_ketones == nullptr) {
     Error("Ketones Definition not found");
-  if (m_lactate == nullptr)
+  }
+  if (m_lactate == nullptr) {
     Error("Lactate Definition not found");
-  if (m_potassium == nullptr)
+  }
+  if (m_potassium == nullptr) {
     Error("Potassium Definition not found");
-  if (m_sodium == nullptr)
+  }
+  if (m_sodium == nullptr) {
     Error("Sodium Definition not found");
-  if (m_triacylglycerol == nullptr)
+  }
+  if (m_triacylglycerol == nullptr) {
     Error("Triacylglycerol Definition not found");
-  if (m_urea == nullptr)
+  }
+  if (m_urea == nullptr) {
     Error("Urea Definition not found");
+  }
   // These metabolites will be activated in initialization
+  if (m_albumin == nullptr       || m_aminoAcids == nullptr || m_calcium == nullptr  || m_chloride == nullptr   || m_creatinine == nullptr
+      || m_globulin == nullptr   || m_glucagon == nullptr || m_glucose == nullptr    || m_insulin == nullptr    || m_ketones == nullptr
+      || m_lactate == nullptr    || m_potassium == nullptr  || m_sodium == nullptr   || m_triacylglycerol == nullptr || m_urea == nullptr)
+    return false;
 
   // Check that drugs have what we need
   for (SESubstance* sub : m_Substances) {
@@ -1118,7 +1154,7 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
           Fatal(ss);
           return false;
         }
-      }  
+      }
     }
   }
   return true;

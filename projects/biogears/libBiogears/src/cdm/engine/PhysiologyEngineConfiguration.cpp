@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 
+#include <biogears/io-exports.h>
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
@@ -18,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
+#include <biogears/io/io-manager.h>
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/config.h>
 #endif
@@ -78,7 +80,7 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
 #endif
   } else {
-    data = Serializer::ReadFile(possible_path.string(), m_Logger);
+    data = Serializer::ReadFile(possible_path, m_Logger);
   }
 
   pData = dynamic_cast<CDM::PhysiologyEngineConfigurationData*>(data.get());
@@ -127,7 +129,7 @@ bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfiguratio
       sData = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
 #endif
     } else {
-      sData = Serializer::ReadFile(possible_path.string(), m_Logger);
+      sData = Serializer::ReadFile(possible_path, m_Logger);
     }
     if (sData == nullptr) {
       Error("Unable to load Stabilization Criteria file");

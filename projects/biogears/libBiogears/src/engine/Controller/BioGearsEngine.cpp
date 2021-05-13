@@ -165,13 +165,13 @@ bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simT
   auto io = m_Logger->GetIoManager().lock();
   auto possible_path = io->FindStateFile(file.c_str());
   if (possible_path.empty()) {
-    size_t content_size;
 #if defined(BIOGEARS_IO_PRESENT) && defined(BIOGEARS_IO_EMBED_STATES)
+    size_t content_size;
     auto content = io::get_embedded_states_file(file.c_str(), content_size);
     obj = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
 #endif
   } else {
-    obj = Serializer::ReadFile(possible_path.string(), m_Logger);
+    obj = Serializer::ReadFile(possible_path, m_Logger);
   }
 
   auto state = dynamic_cast<const CDM::BioGearsStateData*>(obj.get());

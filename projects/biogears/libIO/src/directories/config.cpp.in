@@ -30,7 +30,7 @@ namespace io {
 
    auto write_file = [&](biogears::filesystem::path path, char const* content, size_t content_size) {
       biogears::filesystem::create_directories((working_dir / path).parent_path());
-      output.open((working_dir / path).string(filesystem::path::posix_path), std::fstream::binary | std::fstream::out);
+      output.open( working_dir / path, std::fstream::binary | std::fstream::out);
       if (output.good() && !output.is_open()) {
         return false;
       }
@@ -99,7 +99,7 @@ namespace io {
     size_t content_size = 0;
     biogears::filesystem::path test_location { file };
     if (test_location.exists() && test_location.is_file()) {
-      std::ifstream config_file { test_location.str(), std::ios::in };
+      std::ifstream config_file { test_location, std::ios::in };
       if (config_file.is_open()) {
         config_file.seekg(0, config_file.end);
         content_size = config_file.tellg();
@@ -114,7 +114,7 @@ namespace io {
       test_location = root;
       test_location /= file;
       if (test_location.exists() && test_location.is_file()) {
-        std::ifstream config_file { test_location.str(), std::ios::in };
+        std::ifstream config_file { test_location, std::ios::in };
         if (config_file.is_open()) {
           config_file.seekg(0, config_file.end);
           content_size = config_file.tellg();

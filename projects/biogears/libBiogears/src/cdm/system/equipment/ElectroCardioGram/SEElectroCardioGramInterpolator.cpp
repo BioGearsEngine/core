@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
+#include <biogears/io/io-manager.h>
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/ecg.h>
 #endif
@@ -60,14 +61,14 @@ bool SEElectroCardioGramInterpolator::LoadWaveforms(const std::string& given_pat
   auto io = m_Logger->GetIoManager().lock();
   auto possible_path = io->FindEcgFile(given_path.c_str());
   if (possible_path.empty()) {
-    size_t content_size;
 #ifdef BIOGEARS_IO_PRESENT
-    std::string resource_id = filesystem::path(given_path).basename().string();
+    size_t content_size;
+    std::string resource_id = filesystem::path(given_path).basename();
     auto content = io::get_embedded_ecg_file(resource_id.c_str(), content_size);
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
 #endif
   } else {
-    data = Serializer::ReadFile(possible_path.string(), m_Logger);
+    data = Serializer::ReadFile(possible_path, m_Logger);
   }
 
   CDM::ElectroCardioGramWaveformInterpolatorData* pData = dynamic_cast<CDM::ElectroCardioGramWaveformInterpolatorData*>(data.get());

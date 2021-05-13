@@ -14,7 +14,7 @@ namespace filesystem {
   {
     std::vector<std::string> results;
     for ( auto& file : ::biogears::ListFiles(path,filter) ){
-         results.push_back(file.string());
+         results.push_back(file);
     }
     return results;
   }

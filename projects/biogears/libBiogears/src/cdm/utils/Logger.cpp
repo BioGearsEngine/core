@@ -19,6 +19,8 @@ governing permissions and limitations under the License.
 #include <log4cpp/Priority.hh>
 #pragma warning(pop)
 
+#include <biogears/io/io-manager.h>
+
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/filesystem/path.h>
 
@@ -92,14 +94,14 @@ void Logger::ResetLogFile(const std::string& logFilename)
     filesystem::create_directories(qualified_path.parent_path());
 
     // delete previous log contents if it exists
-    FILE* FilePointer = fopen(qualified_path.string().c_str(), "wt+");
+    FILE* FilePointer = fopen(qualified_path.ToString().c_str(), "wt+");
     if (FilePointer) {
       fclose(FilePointer);
     }
 
     m_FileAppender = log4cpp::Appender::getAppender(logFilename);
     if (m_FileAppender == nullptr && !logFilename.empty()) {
-      m_FileAppender = new log4cpp::FileAppender(logFilename, qualified_path.str().c_str());
+      m_FileAppender = new log4cpp::FileAppender(logFilename, qualified_path.ToString().c_str());
       log4cpp::PatternLayout* myLayout = new log4cpp::PatternLayout();
       myLayout->setConversionPattern("%d [%p] %m%n");
       m_FileAppender->setLayout(myLayout);

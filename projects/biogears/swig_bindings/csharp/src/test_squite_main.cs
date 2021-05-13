@@ -22,7 +22,7 @@ namespace bio
         static void Main(string[] args)
         {
             //stack_test();
-            var logger = new Logger("biogears_csharp.log");
+            var logger = new Logger("");
             logger.Warning("Perfect Now lets Try to compliate things with two modules!");
 
             var percent = new SEScalar0To1();

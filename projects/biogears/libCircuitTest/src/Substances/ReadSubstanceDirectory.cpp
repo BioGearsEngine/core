@@ -9,14 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
-#include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/test/CommonDataModelTest.h>
+
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/cdm/utils/testing/SETestReport.h>
 #include <biogears/cdm/utils/testing/SETestSuite.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/io/io-manager.h>
 
 namespace biogears {
 void CommonDataModelTest::ReadSubstanceDirectory(const std::string& rptDirectory)
@@ -36,12 +37,14 @@ void CommonDataModelTest::ReadSubstanceDirectory(const std::string& rptDirectory
   SETestCase& testCase = testSuite.CreateTestCase();
   pTimer.Start("Case");
   SESubstanceManager subMgr(m_Logger);
-  if (!subMgr.LoadSubstanceDirectory())
-    testCase.AddFailure("Unable to load substances");
-  testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Case"), TimeUnit::s);
-  testCase.SetName(obj.GetName());
-  // TODO would be nice to listen to errors on the logger and add them to the testCase failures...
+  if (subMgr.LoadSubstanceDirectory()) {
+    testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Case"), TimeUnit::s);
+    testCase.SetName(obj.GetName());
+    // TODO would be nice to listen to errors on the logger and add them to the testCase failures...
 
-  testReport.WriteFile(rptDirectory + "/" + testName + "Report.xml");
+    testReport.WriteFile(rptDirectory + "/" + testName + "Report.xml");
+  } else {
+    m_Logger->Error("Unable to load substances");
+  }
 }
 }

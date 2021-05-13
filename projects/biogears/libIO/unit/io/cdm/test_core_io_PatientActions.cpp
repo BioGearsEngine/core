@@ -22,7 +22,6 @@
 
 #include <biogears/cdm/utils/Logger.h>
 
-#include <biogears/filesystem/path.h>
 #include <io/cdm/PatientActions.h>
 #include <io/cdm/Property.h>
 
@@ -749,7 +748,7 @@ TEST_F(TEST_FIXTURE_NAME, MechanicalVentilation)
 
   biogears::Logger logger;
   biogears::SESubstanceManager mgr { &logger };
-  mgr.LoadSubstanceDirectory();
+  ASSERT_TRUE(mgr.LoadSubstanceDirectory());
   SEType source, sink;
   CDMType data;
 
@@ -880,7 +879,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceBolus)
 
   biogears::Logger logger;
   biogears::SESubstanceManager mgr { &logger };
-  mgr.LoadSubstanceDirectory();
+  ASSERT_TRUE(mgr.LoadSubstanceDirectory());
   auto oxygen = mgr.GetSubstance("Oxygen");
 
   SEType source { *oxygen }, sink { *oxygen };
@@ -912,7 +911,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceBolusState)
 
   biogears::Logger logger;
   biogears::SESubstanceManager mgr { &logger };
-  mgr.LoadSubstanceDirectory();
+  ASSERT_TRUE(mgr.LoadSubstanceDirectory());
   auto oxygen = mgr.GetSubstance("Oxygen");
 
   SEType source { *oxygen }, sink { *oxygen };
@@ -942,7 +941,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceCompoundInfusion)
 
   biogears::Logger logger;
   biogears::SESubstanceManager mgr { &logger };
-  mgr.LoadSubstanceDirectory();
+  ASSERT_TRUE(mgr.LoadSubstanceDirectory());
   auto oxygen = mgr.GetCompound("Saline");
   SEType source { *oxygen }, sink { *oxygen };
   CDMType data;
@@ -972,7 +971,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceInfusion)
 
   biogears::Logger logger;
   biogears::SESubstanceManager mgr { &logger };
-  mgr.LoadSubstanceDirectory();
+  ASSERT_TRUE(mgr.LoadSubstanceDirectory());
   auto oxygen = mgr.GetSubstance("Oxygen");
   SEType source { *oxygen }, sink { *oxygen };
   CDMType data;

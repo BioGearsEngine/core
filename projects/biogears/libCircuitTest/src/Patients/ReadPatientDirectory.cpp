@@ -9,14 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/test/CommonDataModelTest.h>
 
 #include <biogears/cdm/Serializer.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/cdm/utils/testing/SETestReport.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/io/io-manager.h>
 
 namespace biogears {
 void CommonDataModelTest::ReadPatientDirectory(const std::string& rptDirectory)
@@ -29,7 +30,6 @@ void CommonDataModelTest::ReadPatientDirectory(const std::string& rptDirectory)
   auto io = logger.GetIoManager().lock();
   std::string dir = io->ResolvePatientFileLocation("");
 
-
   SETestReport testReport(&logger);
   SETestSuite& testSuite = testReport.CreateTestSuite();
   testSuite.SetName(testName);
@@ -39,9 +39,9 @@ void CommonDataModelTest::ReadPatientDirectory(const std::string& rptDirectory)
     if (file.extension() == "xml") {
       pTimer.Start("Case");
       SETestCase& testCase = testSuite.CreateTestCase();
-      logger.Info(file.string());
-      if (!obj.Load(file.string()))
-        testCase.AddFailure("Unable to load patient " + file.string());
+      logger.Info(file);
+      if (!obj.Load(file))
+        testCase.AddFailure("Unable to load patient " + file.ToString());
       testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Case"), TimeUnit::s);
       testCase.SetName(obj.GetName());
     }

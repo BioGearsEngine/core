@@ -75,6 +75,7 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
     eng = CreateBioGearsEngine(&file_logger);
   } catch (std::exception e) {
     std::cout << e.what() << std::endl;
+    return 1;
   }
 
   BioGearsScenario sce(eng->GetSubstanceManager());
@@ -105,7 +106,7 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
     std::unique_ptr<ScenarioData> scenario;
     try {
       std::cout << "Reading " << ex.Scenario() << std::endl;
-      auto obj = Serializer::ReadFile(resolved_filepath.string(path::posix_path),
+      auto obj = Serializer::ReadFile(resolved_filepath,
                                       eng->GetLogger());
       scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
       if ( scenario == nullptr){
@@ -146,7 +147,7 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
 
 std::string basename_(const std::string& p)
 {
-  return filesystem::path(p).basename().string();
+  return filesystem::path(p).basename();
 }
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
