@@ -4,14 +4,11 @@
 #include <gtest/gtest.h>
 
 #include <biogears/io/io-manager.h>
-#ifdef BIOGEARS_IO_PRESENT
-#include <biogears/io/directories/xsd.h>
-#endif
 
-#ifdef DISABLE_BIOGEARS_BioGearsIO_TEST
-#define TEST_FIXTURE_NAME DISABLED_BioGearsIO_Fixture
+#ifdef DISABLE_BIOGEARS_IOManager_TEST
+#define TEST_FIXTURE_NAME DISABLED_IOManager_Fixture
 #else
-#define TEST_FIXTURE_NAME BioGearsIO_Fixture
+#define TEST_FIXTURE_NAME IOManager_Fixture
 #endif
 
 // The fixture for testing class Foo.
