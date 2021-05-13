@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/io-exports.h>
 
+#include <cstddef>
 //!
 //!  Functions for finding resource files that were part of the current biogears release
 //!  These functions are encoded as part of libbiogears_io
