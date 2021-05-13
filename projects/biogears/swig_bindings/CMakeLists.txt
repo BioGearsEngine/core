@@ -25,10 +25,10 @@ if( ${ROOT_PROJECT_NAME}_BUILD_SWIG_BINDINGS )
     set(UseSWIG_TARGET_NAME_PREFERENCE STANDARD)
 
   
-    add_subdirectory(csharp)
     option (${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS "Toggle the Genearting of languge bindings using SHARP (Experimental)"  ${SWIG_FOUND})
-    #add_subdirectory(python)
+    add_subdirectory(csharp)
     #option (${ROOT_PROJECT_NAME}_SWIG_PYTHON_BINDINGS "Toggle the building of Python Hooks. pybind11 is a dependency of this process (Experimental)"  ${SWIG_FOUND})
+    #add_subdirectory(python)
   endif()
 endif() #pybind11_FOUND
 
