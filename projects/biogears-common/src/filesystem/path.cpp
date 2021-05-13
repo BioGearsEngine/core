@@ -537,10 +537,14 @@ namespace filesystem {
 #endif
   }
   //-------------------------------------------------------------------------------
+  //!
+  //! std::remove will actually remove files or directories on posix systems
+  //! We could return an error if the path isn't the right time, but it seems like
+  //! an unncessary burden Maybe if we ever expand the functions to take operation modes
   bool rmdir(const path& directory_path)
   {
 #if !defined(_WIN32)
-    return rmdir(directory_path.ToString().c_str()) == 0;
+    return :std::remove(directory_path.ToString().c_str()) == 0;
 #else
     return RemoveDirectoryW(directory_path.ToWString().c_str()) != 0;
 #endif
@@ -548,8 +552,9 @@ namespace filesystem {
   //-------------------------------------------------------------------------------
   bool rmdir(const std::string& directory)
   {
+    
 #if !defined(_WIN32)
-    return rmdir(directory.c_str()) == 0;
+    return :std::remove(directory.c_str()) == 0;
 #else
     path p { directory };
     return RemoveDirectoryW(p.ToWString().c_str()) != 0;

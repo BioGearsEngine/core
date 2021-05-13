@@ -15,8 +15,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
-#include <biogears/schema/cdm/Compartment.hxx>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/io/io-manager.h>
+#include <biogears/schema/cdm/Compartment.hxx>
 
 namespace biogears {
 CommonDataModelTest::CommonDataModelTest()
@@ -43,7 +44,7 @@ CommonDataModelTest::~CommonDataModelTest()
 
 bool CommonDataModelTest::RunTest(const std::string& testName, const std::string& sOutputDirectory)
 {
-  const std::string variant_name = testName + "Test"; 
+  const std::string variant_name = testName + "Test";
   try {
     //If you find the test name, run it
     if (cdmMap.find(testName) != cdmMap.end()) {
@@ -51,9 +52,9 @@ bool CommonDataModelTest::RunTest(const std::string& testName, const std::string
       (this->*func)(sOutputDirectory);
       return true;
     } else if (cdmMap.find(variant_name) != cdmMap.end()) {
-        testFunction func = cdmMap.at(variant_name);
-        (this->*func)(sOutputDirectory);
-        return true;
+      testFunction func = cdmMap.at(variant_name);
+      (this->*func)(sOutputDirectory);
+      return true;
     } else {
       m_ss << "Could not find " << testName << " or " << testName << "Test in CommonDataModelTest." << std::endl;
       Error(m_ss);

@@ -160,8 +160,8 @@ bool SENutrition::Load(const std::string& given)
   auto io = m_Logger->GetIoManager().lock();
   auto possible_path = io->FindNutritionFile(given.c_str());
   if (possible_path.empty()) {
-    size_t content_size;
 #ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
     auto content = io::get_embedded_nutrition_file(given.c_str(), content_size);
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
 #endif

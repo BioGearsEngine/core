@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 
-#include <biogears/io-exports.h>
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
@@ -74,8 +73,8 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
   auto io = m_Logger->GetIoManager().lock();
   auto possible_path = io->FindConfigFile(file.c_str());
   if (possible_path.empty()) {
-    size_t content_size;
 #ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
     auto content = io::get_embedded_config_file(file.c_str(), content_size);
     data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
 #endif
@@ -123,8 +122,8 @@ bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfiguratio
     auto io = m_Logger->GetIoManager().lock();
     auto possible_path = io->FindConfigFile(in.StabilizationCriteriaFile().get().c_str());
     if (possible_path.empty()) {
-      size_t content_size;
 #ifdef BIOGEARS_IO_PRESENT
+      size_t content_size;
       auto content = io::get_embedded_config_file(in.StabilizationCriteriaFile().get().c_str(), content_size);
       sData = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
 #endif

@@ -36,7 +36,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Equipment/ECG.h>
-#if defined (BIOGEARS_IO_PRESENT) &&  defined(BIOGEARS_IO_EMBED_STATES)
+#include <biogears/io/io-manager.h>
+#if defined(BIOGEARS_IO_PRESENT) && defined(BIOGEARS_IO_EMBED_STATES)
 #include <biogears/io/directories/states.h>
 #endif
 
