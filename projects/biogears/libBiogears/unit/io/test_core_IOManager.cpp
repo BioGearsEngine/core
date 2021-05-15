@@ -1,7 +1,8 @@
 #include <cmath>
+#include <fstream>
+#include <functional>
 #include <stdlib.h>
 #include <thread>
-#include <functional>
 
 #include <gtest/gtest.h>
 
@@ -48,7 +49,11 @@ protected:
   char const* m_install_prefix = "test_core_IOManager/install";
   char const* m_cwd_prefix = "test_core_IOManager/cwd";
 };
-
+ //!
+ //! Most of these test true we should likely add some EXPECT FALSE Test
+ //! 
+ //! 
+ //! 
 void TEST_FIXTURE_NAME::SetUp()
 {
   biogears::filesystem::create_directory(m_prefix);
@@ -430,122 +435,72 @@ TEST_F(TEST_FIXTURE_NAME, SHA1_Calculations)
                iom.get_expected_sha1(embedded_path));
 }
 #endif
-//TEST_F(TEST_FIXTURE_NAME,GetEmbeddedResourceFileXSD)
-//{
-//  biogears::IOManager iom { m_cwd_prefix };
-//  size_t embeded_size;
-//  std::string s(iom.get_embedded_resource_file("xsd/BioGearsDataModel.xsd", embeded_size));
-//  EXPECT_EQ(embeded_size, s.size());
-//  if (s.size() > 1) {
-//    EXPECT_EQ(s[0],'<');
-//    EXPECT_LE(100,s.size());
-//  }
-//}
-//
-//TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileConfig)
-//{
-//
-//  biogears::IOManager iom { m_cwd_prefix };
-//  size_t embeded_size;
-//  std::string s(iom.get_embedded_resource_file("xsd/BioGearsDataModel.xsd", embeded_size));
-//  EXPECT_EQ(embeded_size, s.size());
-//  if (s.size() > 1) {
-//    EXPECT_EQ(s[0], '<');
-//    EXPECT_LE(100, s.size());
-//  }
-//}
-//
-//TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileECG)
-//{
-//
-//  biogears::IOManager iom { m_cwd_prefix };
-//  size_t embeded_size;
-//  std::string s(iom.get_embedded_resource_file("config/DynamicStabilization.xml", embeded_size));
-//  EXPECT_EQ(embeded_size, s.size());
-//  if (s.size() > 1) {
-//    EXPECT_EQ(s[0], '<');
-//    EXPECT_LE(100, s.size());
-//  }
-//}
-//
-//TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileEnvironments)
-//{
-//
-//  biogears::IOManager iom { m_cwd_prefix };
-//  size_t embeded_size;
-//  std::string s(iom.get_embedded_resource_file("environments/AnchorageDecember.xml", embeded_size));
-//  EXPECT_EQ(embeded_size, s.size());
-//  if (s.size() > 1) {
-//    EXPECT_EQ(s[0], '<');
-//    EXPECT_LE(100, s.size());
-//  }
-//}
-//
-//TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileNutrition)
-//{
-//
-//  biogears::IOManager iom { m_cwd_prefix };
-//  size_t embeded_size;
-//  std::string s(iom.get_embedded_resource_file("nutrition/NoMacros.xml", embeded_size));
-//  EXPECT_EQ(embeded_size, s.size());
-//  if (s.size() > 1) {
-//    EXPECT_EQ(s[0], '<');
-//    EXPECT_LE(100, s.size());
-//  }
-//}
-//
-//TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileOverride)
-//{
-//
-//  biogears::IOManager iom { m_cwd_prefix };
-//  size_t embeded_size;
-//  std::string s(iom.get_embedded_resource_file("override/BioGearsOverride.xml", embeded_size));
-//  EXPECT_EQ(embeded_size, s.size());
-//  if (s.size() > 1) {
-//    EXPECT_EQ(s[0], '<');
-//    EXPECT_LE(100, s.size());
-//  }
-//}
-//
-//TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFilePatients)
-//{
-//
-//  biogears::IOManager iom { m_cwd_prefix };
-//  size_t embeded_size;
-//  std::string s(iom.get_embedded_resource_file("patients/Bradycardic.xml", embeded_size));
-//  EXPECT_EQ(embeded_size, s.size());
-//  if (s.size() > 1) {
-//    EXPECT_EQ(s[0], '<');
-//    EXPECT_LE(100, s.size());
-//  }
-//}
-//
-//TEST_F(TEST_FIXTURE_NAME, GetEmbeddedResourceFileSubstances)
-//{
-//
-//  biogears::IOManager iom { m_cwd_prefix };
-//  size_t embeded_size;
-//  std::string s(iom.get_embedded_resource_file("substances/Acetaminophen.xml",embeded_size));
-//  EXPECT_EQ(embeded_size, s.size());
-//  if (s.size() > 1) {
-//    EXPECT_EQ(s[0], '<');
-//    EXPECT_LE(100, s.size());
-//  }
-//}
-//
-//TEST_F(TEST_FIXTURE_NAME,GetDirectoryCount)
-//{
-//  biogears::IOManager iom { m_cwd_prefix };
-//  //EXPECT_EQ(150,iom.get_directory_count());
-//}
-//
-//TEST_F(TEST_FIXTURE_NAME, GetDirectoryList)
-//{
-//  biogears::IOManager iom { m_cwd_prefix };
-// // char const** directoryList = iom.get_directory_list();
-// // int i = 0;
-// // for (;directoryList[i] != nullptr;++i) {
-//  //const char* ptr = directoryList[i];
-// // }
-// // EXPECT_GE(i,1);
-//}
+
+TEST_F(TEST_FIXTURE_NAME, Fallback_Routine)
+{
+  using namespace biogears::filesystem;
+  std::string current_directory = cwd();
+  path destination = current_directory;
+
+  destination /= path(m_cwd_prefix) / "DATA_ROOT";
+  setenv("BIOGEARS_DATA_ROOT", destination.c_str(), 1);
+  destination = destination.parent_path() / "SCHEMA_ROOT";
+  setenv("BIOGEARS_SCHEMA_ROOT", destination.c_str(), 1);
+
+  biogears::IOManager iom { m_cwd_prefix };
+  create_directory(iom.GetBioGearsDataRootDirectory() + "/" + iom.GetSubstancesDirectory());
+  create_directory(iom.GetBioGearsSchemaRootDirectory() + "/" + iom.GetSubstancesDirectory());
+
+  std::fstream file;
+  path moc_file = iom.GetBioGearsWorkingDirectory() + "/" + iom.GetSubstancesDirectory();
+
+  create_directories(moc_file);
+  file.open(moc_file / "Oxygen.xml", std::ios::out);
+  ASSERT_TRUE(file.is_open());
+  file << "Oxygen.xml PlaceHolder Text";
+  file.close();
+  file.open(moc_file / "Oxygen2.xml", std::ios::out);
+  ASSERT_TRUE(file.is_open());
+  file << "Oxygen2.xml PlaceHolder Text";
+  file.close();
+
+  moc_file = iom.GetBioGearsDataRootDirectory() + "/" + iom.GetSubstancesDirectory();
+  create_directories(moc_file);
+  file.open(moc_file / "Oxygen2.xml", std::ios::out);
+  ASSERT_TRUE(file.is_open());
+  file << "Oxygen2.xml PlaceHolder Text";
+  file.close();
+  file.open(moc_file / "Oxygen3.xml", std::ios::out);
+  ASSERT_TRUE(file.is_open());
+  file << "Oxygen3.xml PlaceHolder Text";
+  file.close();
+
+  moc_file = iom.GetBioGearsSchemaRootDirectory() + "/" + iom.GetSubstancesDirectory();
+  create_directories(moc_file);
+  file.open(moc_file / "Oxygen3.xml", std::ios::out);
+  ASSERT_TRUE(file.is_open());
+  file << "Oxygen3.xml PlaceHolder Text";
+  file.close();
+  file.open(moc_file / "Oxygen4.xml", std::ios::out);
+  ASSERT_TRUE(file.is_open());
+  file << "Oxygen4.xml PlaceHolder Text";
+  file.close();
+
+  path expected_return = iom.GetBioGearsWorkingDirectory() + "/" + iom.GetSubstancesDirectory();
+  EXPECT_EQ(expected_return / "Oxygen.xml", iom.FindSubstanceFile("Oxygen.xml"));
+  EXPECT_EQ(expected_return / "Oxygen2.xml",iom.FindSubstanceFile("Oxygen2.xml"));
+  expected_return = iom.GetBioGearsDataRootDirectory() + "/" + iom.GetSubstancesDirectory();
+  EXPECT_EQ(expected_return / "Oxygen3.xml",iom.FindSubstanceFile("Oxygen3.xml"));
+  expected_return = iom.GetBioGearsSchemaRootDirectory() + "/" + iom.GetSubstancesDirectory();
+  EXPECT_EQ(expected_return / "Oxygen4.xml",iom.FindSubstanceFile("Oxygen4.xml"));
+  EXPECT_EQ("",iom.FindSubstanceFile("Oxygen5.xml").ToString());
+
+  expected_return = iom.GetBioGearsWorkingDirectory() + "/" + iom.GetSubstancesDirectory();
+  EXPECT_EQ(expected_return / "Oxygen.xml",iom.find_resource_file("substances/Oxygen.xml"));
+  EXPECT_EQ(expected_return / "Oxygen2.xml",iom.find_resource_file("substances/Oxygen2.xml"));
+  expected_return = iom.GetBioGearsDataRootDirectory() + "/" + iom.GetSubstancesDirectory();
+  EXPECT_EQ(expected_return / "Oxygen3.xml",iom.find_resource_file("substances/Oxygen3.xml"));
+  expected_return = iom.GetBioGearsSchemaRootDirectory() + "/" + iom.GetSubstancesDirectory();
+  EXPECT_EQ(expected_return / "Oxygen4.xml",iom.find_resource_file("substances/Oxygen4.xml"));
+  EXPECT_EQ("",iom.find_resource_file("substances/Oxygen5.xml"));
+}
