@@ -280,7 +280,7 @@ void ReportWriter::generate_system_tables(TYPE table_type)
   for (int i = 0; i < SystemTables.size(); i++) {
     try {
       bool no_faults = false;
-      const std::string reference_value_file = SystemTables[i].first + ".csv";
+      const std::string reference_value_file = "validation/" + SystemTables[i].first + ".csv";
       const std::string library_baseline_file = locateBaseline(SystemTables[i].second, SystemTables[i].first);
       clear();
       logger->SetConsolesetConversionPattern(SystemTables[i].first + ".md %n");
