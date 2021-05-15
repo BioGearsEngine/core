@@ -1,6 +1,7 @@
 #include <cmath>
 #include <stdlib.h>
 #include <thread>
+#include <functional>
 
 #include <gtest/gtest.h>
 
@@ -69,7 +70,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
   SHFileOperation(&shfo);
 #else
-  auto rmrf = [](const char* dirname) {
+  std::function<int(const char*)> rmrf = [&rmrf](const char* dirname) {
     DIR* dir;
     struct dirent* entry;
     char path[PATH_MAX];
@@ -88,7 +89,7 @@ void TEST_FIXTURE_NAME::TearDown()
       if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, "..")) {
         snprintf(path, (size_t)PATH_MAX, "%s/%s", dirname, entry->d_name);
         if (entry->d_type == DT_DIR) {
-          removedirectoryrecursively(path);
+          rmrf(path);
         }
         printf("(not really) Deleting: %s\n", path);
       }
@@ -97,13 +98,13 @@ void TEST_FIXTURE_NAME::TearDown()
     printf("(not really) Deleting: %s\n", dirname);
     return 1;
   };
-  rmrf(prefix);
+  rmrf(m_prefix);
 
 #endif
 }
 
 #if defined(_WIN32)
-void setenv(char const* name, char const* value)
+void setenv(char const* name, char const* value, int /*overwrite*/)
 {
   _putenv_s(name, value);
 }
@@ -112,8 +113,8 @@ void setenv(char const* name, char const* value)
 TEST_F(TEST_FIXTURE_NAME, FallbackOverride)
 {
 
-  setenv("BIOGEARS_DATA_ROOT", m_data_prefix);
-  setenv("BIOGEARS_SCHEMA_ROOT", m_schema_prefix);
+  setenv("BIOGEARS_DATA_ROOT", m_data_prefix, 1);
+  setenv("BIOGEARS_SCHEMA_ROOT", m_schema_prefix, 1);
 
   biogears::IOManager iom { m_cwd_prefix };
 

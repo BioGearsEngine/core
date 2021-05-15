@@ -66,7 +66,7 @@ void TEST_FIXTURE_NAME::SetUp()
 #ifdef _WIN32
   path_absolute_root = path { "c:/" };
 #else
-  path_absolute_root = path { "/" };
+  path_absolute_root = path { "/opt" };
 #endif
 }
 
@@ -101,7 +101,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_Concatination)
 #ifdef _WIN32
   auto empty_absolute = path_empty / path("c:\\biogears");
 #else
-  auto empty_absolute = path_empty / path("biogears");
+  auto empty_absolute = path_empty / path("/opt/biogears");
 #endif
   auto empty_relative = path_empty / path("biogears");
 

@@ -55,7 +55,7 @@ std::string ConvertTemperatureUnit(std::string unit)
 }
 
 EnvironmentGenerator::EnvironmentGenerator(std::string path)
-  : CSVToXMLConvertor(path, "templates/Environment.csv")
+  : CSVToXMLConvertor(path, "templates/Environments.csv")
 {
 }
 //-----------------------------------------------------------------------------

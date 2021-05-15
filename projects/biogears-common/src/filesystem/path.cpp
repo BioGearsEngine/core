@@ -22,6 +22,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <functional>
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -415,7 +416,7 @@ namespace filesystem {
       }
       if (m_path.size() > 0 && m_path[0].size() > 1 && m_path[0][1] == ':') {
         oss << m_path[0];
-      } else {
+      } else if ( m_path.size() != 0 ) {
         oss << path_seperator << m_path[0];
       }
     } else {
@@ -604,7 +605,7 @@ namespace filesystem {
     return 0 == SHFileOperation(&shfo);
 #else
 
-    auto rmrf = [](const char* dirname) {
+    std::function <int(const char*)>  rmrf = [&rmrf](const char* dirname) {
       DIR* dir;
       struct dirent* entry;
       char path[PATH_MAX];
@@ -623,7 +624,7 @@ namespace filesystem {
         if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, "..")) {
           snprintf(path, (size_t)PATH_MAX, "%s/%s", dirname, entry->d_name);
           if (entry->d_type == DT_DIR) {
-            removedirectoryrecursively(path);
+            rmrf(path);
           }
           printf("(not really) Deleting: %s\n", path);
         }
@@ -632,7 +633,7 @@ namespace filesystem {
       printf("(not really) Deleting: %s\n", dirname);
       return 1;
     };
-    return rmrf(prefix);
+    return rmrf(directory.c_str());
 #endif
   }
   bool rmdirs(const path& p)
@@ -653,7 +654,7 @@ namespace filesystem {
     return SHFileOperation(&shfo) == 0;
 #else
 
-    auto rmrf = [](const char* dirname) {
+    std::function <int(const char*)> rmrf = [&rmrf](const char* dirname) {
       DIR* dir;
       struct dirent* entry;
       char path[PATH_MAX];
@@ -672,7 +673,7 @@ namespace filesystem {
         if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, "..")) {
           snprintf(path, (size_t)PATH_MAX, "%s/%s", dirname, entry->d_name);
           if (entry->d_type == DT_DIR) {
-            removedirectoryrecursively(path);
+            rmrf(path);
           }
           printf("(not really) Deleting: %s\n", path);
         }
@@ -681,7 +682,7 @@ namespace filesystem {
       printf("(not really) Deleting: %s\n", dirname);
       return 1;
     };
-    return rmrf(prefix);
+    return rmrf(p.c_str());
 #endif
   }
   //-------------------------------------------------------------------------------
@@ -710,7 +711,7 @@ namespace filesystem {
     for (auto segment : p) {
       tmp /= segment;
       auto result = mkdir(tmp.ToString(path::posix_path).c_str(), S_IRWXU);
-      sucess = success && (result == 0 || result == EEXIST);
+      success = success && (result == 0 || result == EEXIST);
       if (!success) {
         return success;
       }

@@ -19,7 +19,7 @@
 namespace biogears {
 //-----------------------------------------------------------------------------
 StabilizationGenerator::StabilizationGenerator(std::string path)
-  : CSVToXMLConvertor(path, "templates/Stabilization.csv")
+  : CSVToXMLConvertor(path, "templates/Stabilizations.csv")
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
 
@@ -95,7 +95,7 @@ void StabilizationGenerator::print() const
 
 //-----------------------------------------------------------------------------
 //!
-//! \brief Reads in resting resting stabilization data from Stabilization.csv
+//! \brief Reads in resting resting stabilization data from Stabilizations.csv
 //! \param itr 
 //! \return 
 //! 
@@ -192,7 +192,7 @@ bool StabilizationGenerator::process_FeedbackStabilizationCriteria(CSV_RowItr it
 }
 //-----------------------------------------------------------------------------
 //!
-//! \brief Reads in condition stabilization data from Stabilization.csv
+//! \brief Reads in condition stabilization data from Stabilizations.csv
 //! \param itr 
 //! \return 
 //! 

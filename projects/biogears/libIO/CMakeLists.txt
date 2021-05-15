@@ -26,6 +26,7 @@ function(generate_hex_header)
     
     get_filename_component( content_name ${_INPUT} NAME_WE)
     string (REPLACE "@" "_at_" content_name "${content_name}")
+    string(MAKE_C_IDENTIFIER "${content_name}" _c_safe_content_name)
     get_filename_component(_source_name ${_OUTPUT} NAME)
     get_filename_component(_source_directory ${_OUTPUT} DIRECTORY )
 
@@ -43,17 +44,17 @@ function(generate_hex_header)
     )
   
     if(_SHORT_NAMES)
-      add_custom_target( ${_c_safe_type}_${content_name}
+      add_custom_target( ${_c_safe_type}_${_c_safe_content_name}
         DEPENDS  "${_OUTPUT}.hxx" "${_OUTPUT}.cxx"
       )
-      set_target_properties(${_c_safe_type}_${content_name} PROPERTIES 
+      set_target_properties(${_c_safe_type}_${_c_safe_content_name} PROPERTIES 
         FOLDER ${_FOLDER}
       )
     else ()
-      add_custom_target( generate_${_c_safe_prefix}_${content_name}
+      add_custom_target( generate_${_c_safe_prefix}_${_c_safe_content_name}
         DEPENDS  "${_OUTPUT}.hxx" "${_OUTPUT}.cxx"
       )
-      set_target_properties(generate_${_c_safe_prefix}_${content_name} PROPERTIES 
+      set_target_properties(generate_${_c_safe_prefix}_${_c_safe_content_name} PROPERTIES 
         FOLDER ${_FOLDER}
       )
     endif()
@@ -80,7 +81,7 @@ function(configure_io_directory_file )
     get_filename_component(src_dir "${_true_source}" DIRECTORY)
     get_filename_component(src_dir_wle ${src} NAME_WLE  )
     string(REGEX REPLACE "@" "_at_" safe_src_dir_wle ${src_dir_wle})
-
+    string(MAKE_C_IDENTIFIER ${safe_src_dir_wle} safe_src_dir_wle)
     if(_SHORT_NAMES)
       set(ADDITIONAL_ARGS SHORT_NAMES)
     endif()

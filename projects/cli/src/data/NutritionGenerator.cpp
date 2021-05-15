@@ -22,7 +22,7 @@
 namespace biogears {
 
 NutritionGenerator::NutritionGenerator(std::string path)
-  : CSVToXMLConvertor(path, "templates/Nutrition.csv")
+  : CSVToXMLConvertor(path, "templates/Nutritions.csv")
 {
 }
 //-----------------------------------------------------------------------------

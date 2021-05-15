@@ -11,7 +11,7 @@
 namespace biogears {
 namespace io {
   static char default_directory[] = "scenarios/";
-  char const * substance_file_list[] = {
+  char const * scenario_file_list[] = {
 @RESOURCE_FILE_LIST@
   };
 
@@ -104,7 +104,7 @@ namespace io {
   //-----------------------------------------------------------------------------
   char const** list_scenarios_files()
   {
-    return substance_file_list;
+    return scenario_file_list;
   }
   //-----------------------------------------------------------------------------
   size_t scenarios_file_count()
