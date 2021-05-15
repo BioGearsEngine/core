@@ -364,6 +364,8 @@ bool SESubstanceManager::LoadSubstanceDirectory()
     Error("Unknown Type");
     succeeded = false;
   }
+  for (auto itr : m_OriginalCompoundData)
+    itr.first->Load((const CDM::SubstanceCompoundData&)*itr.second, *this);
 
   if (!succeeded) {
     ss << "Unable to read some substances definitions" << std::ends;

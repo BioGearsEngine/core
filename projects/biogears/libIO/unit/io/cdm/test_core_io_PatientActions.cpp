@@ -25,7 +25,7 @@
 #include <io/cdm/PatientActions.h>
 #include <io/cdm/Property.h>
 
-#ifdef DISABLE_BIOGEARS_io_Property_TEST
+#ifdef DISABLE_BIOGEARS_PatientActions_TEST
 #define TEST_FIXTURE_NAME DISABLED_PatientActionsFixture
 #else
 #define TEST_FIXTURE_NAME PatientActionsFixture
@@ -942,8 +942,9 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceCompoundInfusion)
   biogears::Logger logger;
   biogears::SESubstanceManager mgr { &logger };
   ASSERT_TRUE(mgr.LoadSubstanceDirectory());
-  auto oxygen = mgr.GetCompound("Saline");
-  SEType source { *oxygen }, sink { *oxygen };
+  auto saline = mgr.GetCompound("Saline");
+  ASSERT_TRUE(saline != nullptr);
+  SEType source { *saline }, sink { *saline };
   CDMType data;
 
   source.SetComment("Test Comment");

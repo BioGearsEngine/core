@@ -19,7 +19,7 @@
 namespace biogears {
 //-----------------------------------------------------------------------------
 StabilizationGenerator::StabilizationGenerator(std::string path)
-  : CSVToXMLConvertor(path, "Stabilization.csv")
+  : CSVToXMLConvertor(path, "templates/Stabilization.csv")
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
 

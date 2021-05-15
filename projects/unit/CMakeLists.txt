@@ -80,11 +80,55 @@ if(${PROJECT_NAME}_BUILD_TEST)
     ${UNITTEST_HEADERS}
   )
  
-  ##################################################################V#############
+
+
+  ###############################################################################
   # Step 3:     Define Disable Macros based on sub test variables
   #             TODO: Create a Macro to control this
   #                   import unit test from Project/cmake/unit.cmake
-  ##################################################################V#############
+  ###############################################################################
+  #
+  #  function( setup_unittest )
+  #  GROUP  : This Prefix of the option name used to control the Prerpcessor definition for enabling disabling test
+  #           I suggest a global option be added to cashe which wraps the call to this function to allow granular control of
+  #           groups and individual  fules of unittest. 
+  #
+  #  PREFIX : A consant string that appears in each file name after test_ and before the test name.
+  #           The PREFIX is teh frist glob group of the regex s/test_(.*)_(.*).cpp/ The name of the preprocessor
+  #           deffinition for disabiling the unit test will lacks the prefix argument from the filename 
+  #
+  #  TESTS  : List of files which will be added to as source files. Foreach file we will 
+  #           Setup a Cache Option to allow disabling of the unit test
+  #           All test files are assumed ot be of the form test_${_l_PREFIX}_(.*).cpp
+  #
+  #  This function assumes all unittest will start with the following code
+  #   
+  #  #ifdef DISABLE_BIOGEARS_${test_name}_TEST
+  #  #define TEST_FIXTURE_NAME DISABLED_<SOME_NAME>Fixture
+  #  #else
+  #  #define TEST_FIXTURE_NAME <SOME_NAME>Fixture
+  #  #endif
+  #  
+  #  // The fixture for testing class Foo.
+  #  class TEST_FIXTURE_NAME : public ::testing::Test {
+  #  protected:
+  #    // You can do set-up work for each test here.
+  #    TEST_FIXTURE_NAME() = default;
+  #  
+  #    // You can do clean-up work that doesn't throw exceptions here.
+  #    virtual ~TEST_FIXTURE_NAME() = default;
+  #  
+  #    // If the constructor and destructor are not enough for setting up
+  #    // and cleaning up each test, you can define the following methods:
+  #  
+  #    // Code here will be called immediately after the constructor (right
+  #    // before each test).
+  #    virtual void SetUp();
+  #  
+  #    // Code here will be called immediately after each test (right
+  #    // before the destructor).
+  #    virtual void TearDown();
+  #  };
   function( setup_unittest )
     cmake_parse_arguments( "_l" 
                           ""

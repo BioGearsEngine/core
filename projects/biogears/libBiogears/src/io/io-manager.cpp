@@ -129,6 +129,8 @@ std::string IOManager::ResolveSubstanceFileLocation(std::string const& filename)
   return ResolveFileLocation(filename, m_dirs.substances, m_prefixs[Fallbacks::CWD]);
 }
 std::string IOManager::ResolveScenarioFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.scenarios, m_prefixs[Fallbacks::CWD]); }
+std::string IOManager::ResolveTemplateFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.templates, m_prefixs[Fallbacks::CWD]); }
+std::string IOManager::ResolveSchemaFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.schema, m_prefixs[Fallbacks::CWD]); }
 std::string IOManager::ResolveLogFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.log, m_prefixs[Fallbacks::CWD]); }
 std::string IOManager::ResolveResultsFileLocation(std::string const& filename) { return ResolveFileLocation(filename, m_dirs.results, m_prefixs[Fallbacks::CWD]); }
 
@@ -302,9 +304,9 @@ filesystem::path IOManager::FindConfigFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    std::string prefix { "config/" };
-    if (possible_path.compare(0, prefix.size(), prefix) == 0) {
-      possible_path = possible_path.substr(prefix.size());
+    
+    if (possible_path.compare(0, m_dirs.config.size(), m_dirs.config) == 0) {
+      possible_path = possible_path.substr(m_dirs.config.size());
     }
     filesystem::path implied_path = m_dirs.config;
     implied_path /= file;
@@ -317,9 +319,9 @@ filesystem::path IOManager::FindEcgFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    std::string prefix { "ecg/" };
-    if (possible_path.compare(0, prefix.size(), prefix) == 0) {
-      possible_path = possible_path.substr(prefix.size());
+    
+    if (possible_path.compare(0, m_dirs.ecg.size(), m_dirs.ecg) == 0) {
+      possible_path = possible_path.substr(m_dirs.ecg.size());
     }
     filesystem::path implied_path = m_dirs.ecg;
     implied_path /= file;
@@ -332,9 +334,9 @@ filesystem::path IOManager::FindEnvironmentFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    std::string prefix { "environments/" };
-    if (possible_path.compare(0, prefix.size(), prefix) == 0) {
-      possible_path = possible_path.substr(prefix.size());
+    
+    if (possible_path.compare(0, m_dirs.environments.size(), m_dirs.environments) == 0) {
+      possible_path = possible_path.substr(m_dirs.environments.size());
     }
     filesystem::path implied_path = m_dirs.environments;
     implied_path /= file;
@@ -347,9 +349,9 @@ filesystem::path IOManager::FindNutritionFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    std::string prefix { "nutrition/" };
-    if (possible_path.compare(0, prefix.size(), prefix) == 0) {
-      possible_path = possible_path.substr(prefix.size());
+    
+    if (possible_path.compare(0, m_dirs.nutrition.size(), m_dirs.nutrition) == 0) {
+      possible_path = possible_path.substr(m_dirs.nutrition.size());
     }
     filesystem::path implied_path = m_dirs.nutrition;
     implied_path /= file;
@@ -362,9 +364,9 @@ filesystem::path IOManager::FindOverrideFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    std::string prefix { "override/" };
-    if (possible_path.compare(0, prefix.size(), prefix) == 0) {
-      possible_path = possible_path.substr(prefix.size());
+    
+    if (possible_path.compare(0, m_dirs.override_dir.size(), m_dirs.override_dir) == 0) {
+      possible_path = possible_path.substr(m_dirs.override_dir.size());
     }
     filesystem::path implied_path = m_dirs.override_dir;
     implied_path /= file;
@@ -377,9 +379,9 @@ filesystem::path IOManager::FindPatientFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    std::string prefix { "patients/" };
-    if (possible_path.compare(0, prefix.size(), prefix) == 0) {
-      possible_path = possible_path.substr(prefix.size());
+    
+    if (possible_path.compare(0, m_dirs.patients.size(), m_dirs.patients) == 0) {
+      possible_path = possible_path.substr(m_dirs.patients.size());
     }
     filesystem::path implied_path = m_dirs.patients;
     implied_path /= file;
@@ -391,9 +393,9 @@ filesystem::path IOManager::FindStateFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    std::string prefix { "states/" };
-    if (possible_path.compare(0, prefix.size(), prefix) == 0) {
-      possible_path = possible_path.substr(prefix.size());
+    
+    if (possible_path.compare(0, m_dirs.states.size(), m_dirs.states) == 0) {
+      possible_path = possible_path.substr(m_dirs.states.size());
     }
     filesystem::path implied_path = m_dirs.states;
     implied_path /= file;
@@ -405,9 +407,9 @@ filesystem::path IOManager::FindSubstanceFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    std::string prefix { "substances/" };
-    if (possible_path.compare(0, prefix.size(), prefix) == 0) {
-      possible_path = possible_path.substr(prefix.size());
+    
+    if (possible_path.compare(0, m_dirs.substances.size(), m_dirs.substances) == 0) {
+      possible_path = possible_path.substr(m_dirs.substances.size());
     }
     filesystem::path implied_path = m_dirs.substances;
     implied_path /= file;
@@ -420,9 +422,9 @@ filesystem::path IOManager::FindScenarioFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    std::string prefix { "Scenarios/" };
-    if (possible_path.compare(0, prefix.size(), prefix) == 0) {
-      possible_path = possible_path.substr(prefix.size());
+    
+    if (possible_path.compare(0, m_dirs.scenarios.size(), m_dirs.scenarios) == 0) {
+      possible_path = possible_path.substr(m_dirs.scenarios.size());
     }
     filesystem::path implied_path = m_dirs.scenarios;
     implied_path /= file;
@@ -431,6 +433,35 @@ filesystem::path IOManager::FindScenarioFile(const char* file) const
   return possible_path;
 }
 
+filesystem::path IOManager::FindTemplateFile(const char* file) const
+{
+  auto possible_path = find_resource_file(file);
+  if (possible_path.empty()) {
+
+    if (possible_path.compare(0, m_dirs.templates.size(), m_dirs.templates) == 0) {
+      possible_path = possible_path.substr(m_dirs.templates.size());
+    }
+    filesystem::path implied_path = m_dirs.scenarios;
+    implied_path /= file;
+    possible_path = find_resource_file(implied_path.c_str());
+  }
+  return possible_path;
+}
+
+filesystem::path IOManager::FindSchemaFile(const char* file) const
+{
+  auto possible_path = find_resource_file(file);
+  if (possible_path.empty()) {
+    
+    if (possible_path.compare(0, m_dirs.schema.size(), m_dirs.schema) == 0) {
+      possible_path = possible_path.substr(m_dirs.schema.size());
+    }
+    filesystem::path implied_path = m_dirs.scenarios;
+    implied_path /= file;
+    possible_path = find_resource_file(implied_path.c_str());
+  }
+  return possible_path;
+}
 std::vector<filesystem::path> IOManager::FindAllSubstanceFiles() const
 {
   return find_files(m_dirs.substances, R"(.*\.xml)", false);
@@ -528,6 +559,26 @@ void IOManager::SetScenariosDirectory(std::string const& s)
   m_dirs.scenarios = s;
 }
 //---------------------------------------------------------------------------
+std::string IOManager::GetTemplatesDirectory() const
+{
+  return m_dirs.scenarios;
+}
+//---------------------------------------------------------------------------
+void IOManager::SetTemplatesDirectory(std::string const& t)
+{
+  m_dirs.templates = t;
+}
+//---------------------------------------------------------------------------
+std::string IOManager::GetSchemasDirectory() const
+{
+  return m_dirs.schema;
+}
+//---------------------------------------------------------------------------
+void IOManager::SetSchemasDirectory(std::string const& x)
+{
+  m_dirs.schema = x;
+}
+//---------------------------------------------------------------------------
 std::string IOManager::GetBioGearsDataRootDirectory() const
 {
   return m_prefixs[Fallbacks::DATA];
@@ -538,12 +589,12 @@ void IOManager::SetBioGearsDataRootDirectory(std::string const& s)
   m_prefixs[Fallbacks::DATA] = s;
 }
 //---------------------------------------------------------------------------
-std::string IOManager::GetBioGearsSchemaDirectory() const
+std::string IOManager::GetBioGearsSchemaRootDirectory() const
 {
   return m_prefixs[Fallbacks::SCHEMA];
 }
 //---------------------------------------------------------------------------
-void IOManager::SetBioGearsSchemaDirectory(std::string const& s)
+void IOManager::SetBioGearsSchemaRootDirectory(std::string const& s)
 {
   m_prefixs[Fallbacks::SCHEMA] = s;
 }
@@ -604,6 +655,8 @@ bool IOManager::generate_runtime_directory(const char* runtime_directory) const
   result &= generate_states_directory(runtime_directory);
 #endif
   result &= io::generate_substances_directory(runtime_directory);
+  //result &= io::generate_scenarios_directory(runtime_directory);
+  //result &= io::generate_templates_directory(runtime_directory);
 
   return result;
 }
@@ -621,6 +674,8 @@ bool IOManager::does_embedded_file_exist(const char* embeded_path) const
     || does_embedded_states_file_exist(embeded_path)
 #endif
     || io::does_embedded_substances_file_exist(embeded_path);
+  //|| io::does_embedded_scenarios_file_exist(embeded_path)
+  //|| io::does_embedded_tempates_file_exist(embeded_path)
 }
 //---------------------------------------------------------------------------
 char const* IOManager::get_expected_sha1(const char* file) const
@@ -664,7 +719,14 @@ char const* IOManager::get_expected_sha1(const char* file) const
   if (*result) {
     return result;
   }
-
+  //result = io::get_scenarios_file_sha1(file);
+  //if (*result) {
+  //  return result;
+  //}
+  //result = io::get_templates_file_sha1(file);
+  //if (*result) {
+  //  return result;
+  //}
   return "";
 }
 //---------------------------------------------------------------------------
@@ -677,6 +739,8 @@ size_t IOManager::get_directory_count() const
     + biogears::io::override_file_count()
     + biogears::io::patients_file_count()
     + biogears::io::substances_file_count()
+    //+ biogears::io::scenarios_file_count()
+    //+ biogears::io::templates_file_count()
     + biogears::io::xsd_file_count();
 #ifdef BIOGEARS_IO_EMBED_STATES
   sum += states_file_count();
@@ -753,6 +817,14 @@ char const* IOManager::get_embedded_resource_file(const char* file, std::size_t&
   if (size > 0) {
     return result;
   }
+  //result = io::get_embedded_scenarios_file(file, size);
+  //if (size > 0) {
+  //  return result;
+  //}
+  //result = io::get_embedded_templates_file(file, size);
+  //if (size > 0) {
+  //  return result;
+  //}
   return nullptr;
 }
 //---------------------------------------------------------------------------
@@ -797,6 +869,14 @@ size_t IOManager::get_embedded_resource_file_size(const char* file) const
   if (size > 0) {
     return size;
   }
+  //size = io::get_embedded_scenarios_file_size(file);
+  //if (size > 0) {
+  //  return size;
+  //}
+  //size = io::get_embedded_templates_file_size(file);
+  //if (size > 0) {
+  //  return size;
+  //}
   return size;
 }
 #endif

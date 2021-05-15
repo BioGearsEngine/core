@@ -77,14 +77,14 @@ void print_help(int rc)
   std::cout << "\n         patients [template N]..| N : Generates a population of N patients for each patient tempalte file";
   std::cout << "\n         tables html|md|xml|web|all : Generates data tables based on prior run validation for patients and systems in one of the requested formats";
   std::cout << "\nValidate [mode]...                  : Runs preexisting BioGears scenarios with the linked engine to validate agianst baseline results";
-  std::cout << "\n         patient                    : Equivilant to bg-cli CONFIG ValidationPatient.config";
-  std::cout << "\n         drug                       : Equivilant to bg-cli CONFIG ValidationDrug.config";
-  std::cout << "\n         system                     : Equivilant to bg-cli CONFIG ValidationSystem.config";
+  std::cout << "\n         patient                    : Equivilant to bg-cli CONFIG config/ValidationPatient.config";
+  std::cout << "\n         drug                       : Equivilant to bg-cli CONFIG config/ValidationDrug.config";
+  std::cout << "\n         system                     : Equivilant to bg-cli CONFIG config/ValidationSystem.config";
   std::cout << "\n         all                        : Equivilant to bg-cli VALIDATE patient drug system VERIFY";
-  std::cout << "\nVerify                              : Equivilant to bg-cli CONFIG VerificatioNScenarios.config";
+  std::cout << "\nVerify                              : Equivilant to bg-cli CONFIG config/VerificatioNScenarios.config";
   std::cout << "\nTest                                : Runs a series of predetermined unit test and generates ar report";
-  std::cout << "\n         cdm                        : Equivilant to bg-cli CONFIG CDMUnitTest.config";
-  std::cout << "\n         bge                        : Equivilant to bg-cli CONFIG BGEUnitTest.config";
+  std::cout << "\n         cdm                        : Equivilant to bg-cli CONFIG config/CDMUnitTest.config";
+  std::cout << "\n         bge                        : Equivilant to bg-cli CONFIG config/BGEUnitTest.config";
 
   std::cout << "\n\nFlags:";
   std::cout << "\n-v, VERSION: Print Version.";
@@ -263,7 +263,7 @@ int main(int argc, char** argv)
   //
   //  This reads a predefined configuration file to setup email notification values
   //  TODO: Implement Email Notifications
-  const biogears::Config conf { "Email.config", true };
+  const biogears::Config conf { "config/Email.config", true };
   driver.configure(conf);
 
   bool as_subprocess = false;
@@ -315,11 +315,11 @@ int main(int argc, char** argv)
 #endif
 
   if (g_run_generate_patient_states) {
-    const biogears::Config runs { "GenStates.config" };
+    const biogears::Config runs { "config/GenStates.config" };
     driver.queue(runs, as_subprocess);
   }
   if (g_run_generate_sepsis_states) {
-    const biogears::Config runs { "GenSepsisStates.config" };
+    const biogears::Config runs { "config/GenSepsisStates.config" };
     driver.queue(runs, as_subprocess);
   }
   if (g_run_generate_populations) {
@@ -352,10 +352,10 @@ int main(int argc, char** argv)
     for (auto& test : tests) {
       std::transform(test.begin(), test.end(), test.begin(), ::tolower);
       if (test == "cdm") { // run-cdm-tests
-        biogears::Config runs { "CDMUnitTests.config" };
+        biogears::Config runs { "config/CDMUnitTests.config" };
         driver.queue(runs, as_subprocess);
       } else if (test == "bge") {
-        biogears::Config runs { "BGEUnitTests.config" };
+        biogears::Config runs { "config/BGEUnitTests.config" };
         driver.queue(runs, as_subprocess);
       } else {
         std::cout << "Warning: No Test known as " << test << " exists.\n";
@@ -383,19 +383,19 @@ int main(int argc, char** argv)
   }
 
   if (g_run_system_validation) { // run-system-validation
-    const auto runs = biogears::Config("ValidationSystems.config");
+    const auto runs = biogears::Config("config/ValidationSystems.config");
     driver.queue(runs, as_subprocess);
   }
   if (g_run_patient_validation) { //run-patient-validation
-    const auto runs = biogears::Config("ValidationPatients.config");
+    const auto runs = biogears::Config("config/ValidationPatients.config");
     driver.queue(runs, as_subprocess);
   }
   if (g_run_drug_validation) { // run-drug-validation
-    const auto runs = biogears::Config("ValidationDrugs.config");
+    const auto runs = biogears::Config("config/ValidationDrugs.config");
     driver.queue(runs, as_subprocess);
   }
   if (g_run_verification_routine) { // run-verification
-    const auto runs = biogears::Config("VerificationScenarios.config");
+    const auto runs = biogears::Config("config/VerificationScenarios.config");
     driver.queue(runs, as_subprocess);
   }
 

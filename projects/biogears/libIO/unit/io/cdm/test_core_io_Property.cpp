@@ -22,7 +22,7 @@
 
 #include <io/cdm/Property.h>
 
-#ifdef DISABLE_BIOGEARS_io_Property_TEST
+#ifdef DISABLE_BIOGEARS_Property_TEST
 #define TEST_FIXTURE_NAME DISABLED_PropertiesFixture
 #else
 #define TEST_FIXTURE_NAME PropertiesFixture

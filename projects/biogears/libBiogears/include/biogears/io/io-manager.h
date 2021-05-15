@@ -14,9 +14,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/exports.h>
 
+#include <array>
 #include <biogears/filesystem/path.h>
 #include <vector>
-#include <array>
 //!
 //!  Functions for finding resource files that were part of the current biogears release
 //!  These functions are encoded as part of libbiogears_io
@@ -43,14 +43,13 @@ BIOGEARS_API std::vector<filesystem::path> ListFiles(std::string const& dir, std
 
 class IOManager {
 private:
-
   enum Fallbacks {
-     CWD = 0,
-     DATA,
-     SCHEMA,
-     HOME,
-     INSTALL,
-     TOTAL_FALLBACKS
+    CWD = 0,
+    DATA,
+    SCHEMA,
+    HOME,
+    INSTALL,
+    TOTAL_FALLBACKS
   };
   std::array<std::string, TOTAL_FALLBACKS> m_prefixs;
 
@@ -66,6 +65,8 @@ private:
     std::string states = "states/";
     std::string substances = "substances/";
     std::string scenarios = "Scenarios/";
+    std::string templates = "templates/";
+    std::string schema = "xsd/";
   } m_dirs;
 
 public:
@@ -124,11 +125,21 @@ public:
   BIOGEARS_API void SetScenariosDirectory(std::string const& s); //! Defaults to Scenarios
   BIOGEARS_API filesystem::path FindScenarioFile(const char*) const;
 
+  BIOGEARS_API std::string ResolveSchemaFileLocation(std::string const& filename); //! Use current state to determine the destination of a config file.
+  BIOGEARS_API std::string GetSchemasDirectory() const; //! The directory which contains  CDM::SchemaData files.
+  BIOGEARS_API void SetSchemasDirectory(std::string const& s); //! Defaults to Schemas
+  BIOGEARS_API filesystem::path FindSchemaFile(const char*) const;
+
+  BIOGEARS_API std::string ResolveTemplateFileLocation(std::string const& filename); //! Use current state to determine the destination of a config file.
+  BIOGEARS_API std::string GetTemplatesDirectory() const; //! The directory which contains  CDM::TemplateData files.
+  BIOGEARS_API void SetTemplatesDirectory(std::string const& s); //! Defaults to Templates
+  BIOGEARS_API filesystem::path FindTemplateFile(const char*) const;
+
   BIOGEARS_API std::string GetBioGearsDataRootDirectory() const; //! The root directory of pulled from ENV{BIOGEARS_DATA_ROOT} which all but xsd paths are appended. If it does not exist it will be set to the PWD.
   BIOGEARS_API void SetBioGearsDataRootDirectory(std::string const& s);
 
-  BIOGEARS_API std::string GetBioGearsSchemaDirectory() const; //! The root directory of pulled from ENV{BIOGEARS_SCHEMA_ROOT} which all but xsd paths are appended.  If not existant will be set to DataRoot
-  BIOGEARS_API void SetBioGearsSchemaDirectory(std::string const& s);
+  BIOGEARS_API std::string GetBioGearsSchemaRootDirectory() const; //! The root directory of pulled from ENV{BIOGEARS_SCHEMA_ROOT} which all but xsd paths are appended.  If not existant will be set to DataRoot
+  BIOGEARS_API void SetBioGearsSchemaRootDirectory(std::string const& s);
 
   BIOGEARS_API std::string GetBioGearsWorkingDirectory() const; //! Sets the Working directory that all new files will be relative to if given relative directories
   BIOGEARS_API void SetBioGearsWorkingDirectory(std::string const& s); //! Defaults to ENV{PWD}

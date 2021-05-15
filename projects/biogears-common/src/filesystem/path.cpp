@@ -17,6 +17,7 @@
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
+#include <regex>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -25,8 +26,9 @@
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <ShlObj.h>
-#include <windows.h>
+#include <shellapi.h>
 #else
+#include <dirent.h>
 #include <unistd.h>
 #endif
 #include <sys/stat.h>
@@ -113,7 +115,18 @@ namespace filesystem {
     return m_path.end();
   }
   //-------------------------------------------------------------------------------
-
+  auto path::begin() const -> const_iterator
+  {
+    m_dirty = true;
+    return m_path.begin();
+  }
+  //-------------------------------------------------------------------------------
+  auto path::end() const -> const_iterator
+  {
+    m_dirty = true;
+    return m_path.end();
+  }
+  //-------------------------------------------------------------------------------
   //!
   //! Manipulation
   //!
@@ -160,26 +173,21 @@ namespace filesystem {
     m_type = type;
     if (str.empty() || std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); })) {
       m_absolute = false;
-    } else if (type == windows_path) {
-      std::string tmp = str;
+    } else {
 
-      // Long windows paths (sometimes) begin with the prefix \\?\. It should only
-      // be used when the path is >MAX_PATH characters long, so we remove it
-      // for convenience and add it back (if necessary) in ToString()/ToWString().
-      static const std::string PREFIX = R"(\\?\)";
-      if (tmp.length() >= PREFIX.length()
-          && std::mismatch(std::begin(PREFIX), std::end(PREFIX), std::begin(tmp)).first == std::end(PREFIX)) {
+      std::string windows_lpath_prefix = R"(^\\\\\?\\)";
+      auto tmp = str;
+      if (tmp.length() >= windows_lpath_prefix.length()
+          && std::mismatch(std::begin(windows_lpath_prefix), std::end(windows_lpath_prefix), std::begin(tmp)).first == std::end(windows_lpath_prefix)) {
         tmp.erase(0, 4);
       }
       m_path = tokenize(tmp, R"(/\)");
-      m_absolute = tmp.size() >= 2 && std::isalpha(tmp[0]) && tmp[1] == ':';
-    } else {
-      m_path = tokenize(str, R"(/\)");
-      m_absolute = !str.empty() && str[0] == '/';
+      std::regex absolute_regex { "^[a-zA-Z]:|^/" };
+      m_absolute = std::regex_search(tmp, absolute_regex);
     }
   }
   //-------------------------------------------------------------------------------
-  path::path_type path::mode()
+  path::path_type path::mode() const
   {
     return m_type;
   }
@@ -187,6 +195,7 @@ namespace filesystem {
   void path::mode(path_type type)
   {
     m_type = type;
+    m_dirty = true;
   }
   //-------------------------------------------------------------------------------
   //!
@@ -389,11 +398,11 @@ namespace filesystem {
   //-------------------------------------------------------------------------------
   std::string path::ToString(path_type type) const
   {
+    char const* path_seperator = (posix_path == type) ? "/" : "\\";
+
     std::ostringstream oss;
     if (m_absolute) {
-      if (type == posix_path)
-        oss << "/";
-      else {
+      if (type == windows_path) {
         size_t length = 0;
         for (size_t i = 0; i < m_path.size(); ++i)
           // No special case for the last segment to count the NULL character
@@ -404,16 +413,24 @@ namespace filesystem {
         if (length > MAX_PATH_WINDOWS_LEGACY)
           oss << R"(\\?\)";
       }
+      if (m_path.size() > 0 && m_path[0].size() > 1 && m_path[0][1] == ':') {
+        oss << m_path[0];
+      } else {
+        oss << path_seperator << m_path[0];
+      }
+    } else {
+      if (m_path.size() != 0) {
+        oss << m_path[0];
+      }
     }
 
-    for (size_t i = 0; i < m_path.size(); ++i) {
-      oss << m_path[i];
-      if (i + 1 < m_path.size()) {
-        if (type == posix_path)
-          oss << '/';
-        else
-          oss << '\\';
+    for (size_t i = 1; i < m_path.size(); ++i) {
+      if (type == posix_path) {
+        oss << '/';
+      } else {
+        oss << '\\';
       }
+      oss << m_path[i];
     }
     return oss.str();
   }
@@ -552,7 +569,7 @@ namespace filesystem {
   //-------------------------------------------------------------------------------
   bool rmdir(const std::string& directory)
   {
-    
+
 #if !defined(_WIN32)
     return std::remove(directory.c_str()) == 0;
 #else
@@ -564,6 +581,108 @@ namespace filesystem {
   {
     struct stat buffer;
     return (stat(name.c_str(), &buffer) == 0);
+  }
+  //-------------------------------------------------------------------------------
+  //!
+  //! rm -rf directory
+  //!
+  bool rmdirs(const std::string& directory)
+  {
+#if defined(_WIN32)
+    std::string path_list = directory + '\0';
+    SHFILEOPSTRUCT shfo = {
+      NULL,
+      FO_DELETE,
+      path_list.c_str(), //<! This is a list of strings so the last element is double \0 terminated.
+      NULL,
+      FOF_SILENT | FOF_NOERRORUI | FOF_NOCONFIRMATION,
+      FALSE,
+      NULL,
+      NULL
+    };
+
+    return 0 == SHFileOperation(&shfo);
+#else
+
+    auto rmrf = [](const char* dirname) {
+      DIR* dir;
+      struct dirent* entry;
+      char path[PATH_MAX];
+
+      if (path == NULL) {
+        fprintf(stderr, "Out of memory error\n");
+        return 0;
+      }
+      dir = opendir(dirname);
+      if (dir == NULL) {
+        perror("Error opendir()");
+        return 0;
+      }
+
+      while ((entry = readdir(dir)) != NULL) {
+        if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, "..")) {
+          snprintf(path, (size_t)PATH_MAX, "%s/%s", dirname, entry->d_name);
+          if (entry->d_type == DT_DIR) {
+            removedirectoryrecursively(path);
+          }
+          printf("(not really) Deleting: %s\n", path);
+        }
+      }
+      closedir(dir);
+      printf("(not really) Deleting: %s\n", dirname);
+      return 1;
+    };
+    return rmrf(prefix);
+#endif
+  }
+  bool rmdirs(const path& p)
+  {
+#if defined(_WIN32)
+    std::string path_list = p.ToString() + '\0';
+    SHFILEOPSTRUCT shfo = {
+      NULL,
+      FO_DELETE,
+      path_list.c_str(), //<! This is a list of strings so the last element is double \0 terminated.
+      NULL,
+      FOF_SILENT | FOF_NOERRORUI | FOF_NOCONFIRMATION,
+      FALSE,
+      NULL,
+      NULL
+    };
+
+    return SHFileOperation(&shfo) == 0;
+#else
+
+    auto rmrf = [](const char* dirname) {
+      DIR* dir;
+      struct dirent* entry;
+      char path[PATH_MAX];
+
+      if (path == NULL) {
+        fprintf(stderr, "Out of memory error\n");
+        return 0;
+      }
+      dir = opendir(dirname);
+      if (dir == NULL) {
+        perror("Error opendir()");
+        return 0;
+      }
+
+      while ((entry = readdir(dir)) != NULL) {
+        if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, "..")) {
+          snprintf(path, (size_t)PATH_MAX, "%s/%s", dirname, entry->d_name);
+          if (entry->d_type == DT_DIR) {
+            removedirectoryrecursively(path);
+          }
+          printf("(not really) Deleting: %s\n", path);
+        }
+      }
+      closedir(dir);
+      printf("(not really) Deleting: %s\n", dirname);
+      return 1;
+    };
+    return rmrf(prefix);
+#endif
   }
   //-------------------------------------------------------------------------------
   bool create_directory(const path& p)
@@ -578,7 +697,7 @@ namespace filesystem {
   bool create_directories(const path& p)
   {
 #if defined(_WIN32)
-    return SHCreateDirectory(nullptr, p.make_absolute().ToWString().c_str()) == ERROR_SUCCESS;
+    return SHCreateDirectory(nullptr, p.make_absolute().ToWString(path::windows_path).c_str()) == ERROR_SUCCESS;
 #else
     if (create_directory(p.ToString().c_str()))
       return true;
@@ -586,13 +705,17 @@ namespace filesystem {
     if (p.empty())
       return false;
 
-    if (errno == ENOENT) {
-      if (create_directory(p.parent_path()))
-        return mkdir(p.ToString().c_str(), S_IRWXU) == 0;
-      else
-        return false;
+    bool success = true;
+    path tmp;
+    for (auto segment : p) {
+      tmp /= segment;
+      auto result = mkdir(tmp.ToString(path::posix_path).c_str(), S_IRWXU);
+      sucess = success && (result == 0 || result == EEXIST);
+      if (!success) {
+        return success;
+      }
     }
-    return false;
+    return success;
 #endif
   }
   //-------------------------------------------------------------------------------

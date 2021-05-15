@@ -24,7 +24,7 @@ std::string ConvertBeatUnits(std::string unit){
   return unit;
 }
 PatientGenerator::PatientGenerator(std::string path)
-  : CSVToXMLConvertor(path, "Patients.csv")
+  : CSVToXMLConvertor(path, "templates/Patients.csv")
 {
 }
 //-----------------------------------------------------------------------------

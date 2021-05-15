@@ -21,7 +21,7 @@
 namespace biogears {
 
 CompoundGenerator::CompoundGenerator(std::string path)
-  : CSVToXMLConvertor(path, "Compounds.csv")
+  : CSVToXMLConvertor(path, "templates/Compounds.csv")
 {
 }
 //-----------------------------------------------------------------------------

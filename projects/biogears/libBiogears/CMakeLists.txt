@@ -139,10 +139,14 @@ else()
   target_link_libraries(lib${PROJECT_NAME}  PUBLIC ${${PREFIX}_LIBS} )
   if(TARGET Biogears::lib${PROJECT_NAME}_io)
     target_link_libraries(lib${PROJECT_NAME}  PUBLIC Biogears::lib${PROJECT_NAME}_io )
-    target_compile_definitions(lib${PROJECT_NAME} PUBLIC BIOGEARS_IO_PRESENT )
   endif()
   if(WIN32)
     install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}> DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
+    # lib//biogears.lib               #When Biogears_BREAKOUT_INSTALL == FAlSE AND Biogears_PLATFORM_PREFIX = ""
+    # lib//biogears_d.lib
+    # lib//Release/libbiogears.lib    #When Biogears_BREAKOUT_INSTALL == TRUE AND Biogears_PLATFORM_PREFIX = ""
+    # lib//Debug/libbiogears_d.lib
+    # lib/Win64/Debug/libbiogears_d.lib  #When Biogears_BREAKOUT_INSTALL == FAlSE AND Biogears_PLATFORM_PREFIX = "Win64"
   endif()
 endif() #NOT ${PREFIX}_BUILD_STATIC
 

@@ -23,7 +23,7 @@ namespace biogears {
 //! \param path -- std:string -- The Path to the CSV document folder will be appened with a delimiter.
 //!
 SubstanceGenerator::SubstanceGenerator(std::string path)
-  : CSVToXMLConvertor(path, "Substances.csv")
+  : CSVToXMLConvertor(path, "templates/Substances.csv")
 {
 }
 //-----------------------------------------------------------------------------

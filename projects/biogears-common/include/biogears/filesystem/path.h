@@ -94,14 +94,16 @@ namespace filesystem {
     //!
     auto begin() -> iterator;
     auto end() -> iterator;
+    auto begin() const -> const_iterator;
+    auto end() const -> const_iterator;
 
     //!
     //! Manipulation
     //!
     path make_absolute() const;
     path make_normal() const;
-    void set(const std::string& str, path_type type = native_path);
-    path_type mode();
+    void set(const std::string& str, path_type type = default_path);
+    path_type mode() const;
     void mode(path_type);
     //!
     //! Properties
@@ -119,11 +121,11 @@ namespace filesystem {
     //! Path Components
     //!
     std::string extension() const; //< Last Extension of the basename()
-    std::string basename() const;  //< Value of last path segment
-    std::string filename() const;  //< same as basename()
-    
-    path dirname() const;         //<  Returns all segments if is_directory else return parent_path
-    path parent_path() const;     //<  Returns the path suffixed by ..; For absulte paths this is resolved
+    std::string basename() const; //< Value of last path segment
+    std::string filename() const; //< same as basename()
+
+    path dirname() const; //<  Returns all segments if is_directory else return parent_path
+    path parent_path() const; //<  Returns the path suffixed by ..; For absulte paths this is resolved
 
     //!
     //! Operator Overloads
@@ -138,15 +140,15 @@ namespace filesystem {
     //!
     //! Stringification
     //!
-    char const * c_str()   const;                //< Calculates the string cashe and returns its c_str(). Valid until next non const function call 
-    std::string ToString() const;                //< Cashes the string of m_type 
-    std::string ToString(path_type type) const;  //< Produces a string of type and does not cashe results
-    operator std::string() const;                //< Cashes the string of m_type
+    char const* c_str() const; //< Calculates the string cashe and returns its c_str(). Valid until next non const function call
+    std::string ToString() const; //< Cashes the string of m_type
+    std::string ToString(path_type type) const; //< Produces a string of type and does not cashe results
+    operator std::string() const; //< Cashes the string of m_type
 
 #if defined(_WIN32)
-    std::wstring ToWString() const;             //< Cashes the string of m_type 
-    std::wstring ToWString(path_type type) const;   //< Produces a string of type and does not cashe results
-    explicit operator std::wstring() const;    //< Cashes the string of m_type
+    std::wstring ToWString() const; //< Cashes the string of m_type
+    std::wstring ToWString(path_type type) const; //< Produces a string of type and does not cashe results
+    explicit operator std::wstring() const; //< Cashes the string of m_type
 
     void set(const std::wstring& wstring, path_type type = default_path);
     path& operator=(const std::wstring& str);
@@ -154,8 +156,8 @@ namespace filesystem {
 
   private:
     static std::vector<std::string> tokenize(const std::string& string, const std::string& delim);
-    void   generate_string_cashe() const;
-    
+    void generate_string_cashe() const;
+
   private:
     mutable bool m_dirty = true;
     mutable std::string m_string_cashe;
@@ -177,6 +179,8 @@ namespace filesystem {
   bool rm(const std::string& p);
   bool rmdir(const path& p);
   bool rmdir(const std::string& p);
+  bool rmdirs(const path& p);           //<! Danger
+  bool rmdirs(const std::string& p);    //<! Danger
 
   bool exists(const std::string& name);
   bool create_directory(const path& p);
