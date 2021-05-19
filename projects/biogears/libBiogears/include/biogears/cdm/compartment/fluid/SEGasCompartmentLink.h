@@ -26,7 +26,7 @@ protected:
   SEGasCompartmentLink(SEGasCompartment& src, SEGasCompartment& tgt, const std::string& name);
 
 public:
-  SEGasCompartmentLink() = default;
+  SEGasCompartmentLink() = delete;
   ~SEGasCompartmentLink() = default;
 
   virtual CDM::GasCompartmentLinkData* Unload() override;

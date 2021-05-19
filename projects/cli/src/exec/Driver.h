@@ -30,7 +30,7 @@ class Driver : biogears::Runnable {
 public:
   Driver(char* exe_name, size_t thread_count);
   Driver(const Driver&) = delete;
-  Driver(Driver&&) = default;
+  Driver(Driver&&) = delete;
   ~Driver() override;
 
   void configure(const Config& config);

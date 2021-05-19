@@ -429,7 +429,7 @@ int main(int argc, char* argv[])
   }
 
   if (args.Option("quiet")) {
-    log_level = Logger::WARN;
+    log_level = Logger::WARNING;
   }
 
   if (args.KeywordFound("PATIENT") || args.KeywordFound("P")) {

@@ -473,31 +473,31 @@ void Logger::Fatal(std::string const& msg, std::string const& origin) const
   }
 }
 
-void Logger::Debug(std::ostream& msg) const
+void Logger::Debug(std::ostream const& msg) const
 {
   std::stringstream ss;
   ss << msg.rdbuf();
   Warning(ss.str());
 }
-void Logger::Info(std::ostream& msg) const
+void Logger::Info(std::ostream const& msg) const
 {
   std::stringstream ss;
   ss << msg.rdbuf();
   Warning(ss.str());
 }
-void Logger::Warning(std::ostream& msg) const
+void Logger::Warning(std::ostream const& msg) const
 {
   std::stringstream ss;
   ss << msg.rdbuf();
   Warning(ss.str());
 }
-void Logger::Error(std::ostream& msg) const
+void Logger::Error(std::ostream const& msg) const
 {
   std::stringstream ss;
   ss << msg.rdbuf();
   Warning(ss.str());
 }
-void Logger::Fatal(std::ostream& msg) const
+void Logger::Fatal(std::ostream const& msg) const
 {
   std::stringstream ss;
   ss << msg.rdbuf();
@@ -599,31 +599,31 @@ void Loggable::Debug(std::string const& message, std::string const& origin) cons
 //! varadic implementation. Such that all types have a ToString call but
 //! for now this is a good work around
 //!
-void Loggable::Debug(std::ostream& msg) const
+void Loggable::Debug(std::ostream const& msg) const
 {
   if (m_Logger) {
     m_Logger->Debug(msg);
   }
 }
-void Loggable::Info(std::ostream& msg) const
+void Loggable::Info(std::ostream const& msg) const
 {
   if (m_Logger) {
     m_Logger->Info(msg);
   }
 }
-void Loggable::Warning(std::ostream& msg) const
+void Loggable::Warning(std::ostream const& msg) const
 {
   if (m_Logger) {
     m_Logger->Warning(msg);
   }
 }
-void Loggable::Error(std::ostream& msg) const
+void Loggable::Error(std::ostream const& msg) const
 {
   if (m_Logger) {
     m_Logger->Error(msg);
   }
 }
-void Loggable::Fatal(std::ostream& msg) const
+void Loggable::Fatal(std::ostream const& msg) const
 {
   if (m_Logger) {
     m_Logger->Fatal(msg);
@@ -633,7 +633,7 @@ void Loggable::Fatal(std::ostream& msg) const
 void Loggable::Debug(std::ostream&& msg) const
 {
   if (m_Logger) {
-    m_Logger->Debug(std::move(msg));
+    m_Logger->Debug( std::move(msg));
   }
 }
 void Loggable::Info(std::ostream&& msg) const

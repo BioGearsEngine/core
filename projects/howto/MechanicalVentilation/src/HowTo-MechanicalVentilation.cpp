@@ -85,6 +85,8 @@ public:
         m_Logger->Info("Stop doing something for CardiogenicShock");
       break;
     }
+    default:
+      return; //Unhandled Event 
     }
   }
   virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr)

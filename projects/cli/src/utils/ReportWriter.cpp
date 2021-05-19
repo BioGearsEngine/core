@@ -779,8 +779,8 @@ void ReportWriter::Validate()
         const double warning_range_lower = reference_median * 0.75;
         const double warning_range_upper = reference_median * 1.25;
 
-        if (ref.reference_range.first > table_row.engine_value && warning_range_lower <= table_row.engine_value
-            || ref.reference_range.second < table_row.engine_value && warning_range_upper >= table_row.engine_value) {
+        if (   (ref.reference_range.first > table_row.engine_value && warning_range_lower <= table_row.engine_value)
+            || (ref.reference_range.second < table_row.engine_value && warning_range_upper >= table_row.engine_value)) {
           table_row.result = Yellow;
         } else {
           table_row.result = Red;
