@@ -475,31 +475,31 @@ void Logger::Fatal(std::string const& msg, std::string const& origin) const
 
 void Logger::Debug(std::ostream& msg) const
 {
-std::stringstream ss;
+  std::stringstream ss;
   ss << msg.rdbuf();
   Warning(ss.str());
 }
 void Logger::Info(std::ostream& msg) const
 {
-std::stringstream ss;
+  std::stringstream ss;
   ss << msg.rdbuf();
   Warning(ss.str());
 }
 void Logger::Warning(std::ostream& msg) const
 {
-std::stringstream ss;
+  std::stringstream ss;
   ss << msg.rdbuf();
   Warning(ss.str());
 }
 void Logger::Error(std::ostream& msg) const
 {
-std::stringstream ss;
+  std::stringstream ss;
   ss << msg.rdbuf();
   Warning(ss.str());
 }
 void Logger::Fatal(std::ostream& msg) const
 {
-std::stringstream ss;
+  std::stringstream ss;
   ss << msg.rdbuf();
   Warning(ss.str());
 }
@@ -627,6 +627,37 @@ void Loggable::Fatal(std::ostream& msg) const
 {
   if (m_Logger) {
     m_Logger->Fatal(msg);
+  }
+}
+
+void Loggable::Debug(std::ostream&& msg) const
+{
+  if (m_Logger) {
+    m_Logger->Debug(std::move(msg));
+  }
+}
+void Loggable::Info(std::ostream&& msg) const
+{
+  if (m_Logger) {
+    m_Logger->Info(std::move(msg));
+  }
+}
+void Loggable::Warning(std::ostream&& msg) const
+{
+  if (m_Logger) {
+    m_Logger->Warning(std::move(msg));
+  }
+}
+void Loggable::Error(std::ostream&& msg) const
+{
+  if (m_Logger) {
+    m_Logger->Error(std::move(msg));
+  }
+}
+void Loggable::Fatal(std::ostream&& msg) const
+{
+  if (m_Logger) {
+    m_Logger->Fatal(std::move(msg));
   }
 }
 

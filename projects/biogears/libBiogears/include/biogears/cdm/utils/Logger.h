@@ -49,11 +49,17 @@ protected:
   virtual void Error(std::string const& msg, std::string const& origin) const;
   virtual void Fatal(std::string const& msg, std::string const& origin) const;
 
-  virtual void Debug( std::ostream& msg) const;
-  virtual void Info( std::ostream& msg) const;
-  virtual void Warning( std::ostream& msg) const;
-  virtual void Error( std::ostream& msg) const;
-  virtual void Fatal( std::ostream& msg) const;
+  virtual void Debug(std::ostream& msg) const;
+  virtual void Info(std::ostream& msg) const;
+  virtual void Warning(std::ostream& msg) const;
+  virtual void Error(std::ostream& msg) const;
+  virtual void Fatal(std::ostream& msg) const;
+
+  virtual void Debug(std::ostream&& msg) const;
+  virtual void Info(std::ostream&& msg) const;
+  virtual void Warning(std::ostream&& msg) const;
+  virtual void Error(std::ostream&& msg) const;
+  virtual void Fatal(std::ostream&& msg) const;
 
   std::string m_origin;
   Logger* m_Logger;
@@ -123,11 +129,11 @@ public:
   virtual void Error(std::string const& msg, std::string const& origin = Loggable::empty) const;
   virtual void Fatal(std::string const& msg, std::string const& origin = Loggable::empty) const;
 
-  virtual void Debug(std::ostream & ss) const;
-  virtual void Info(std::ostream & ss) const;
-  virtual void Warning(std::ostream & ss) const;
-  virtual void Error(std::ostream & ss) const;
-  virtual void Fatal(std::ostream & ss) const;
+  virtual void Debug(std::ostream& ss) const;
+  virtual void Info(std::ostream& ss) const;
+  virtual void Warning(std::ostream& ss) const;
+  virtual void Error(std::ostream& ss) const;
+  virtual void Fatal(std::ostream& ss) const;
 
   std::weak_ptr<IOManager> GetIoManager() const;
   void SetIoManager(IOManager const&); //< Logger will setup a copy of the IOManager to distributed amongs the Engine components
