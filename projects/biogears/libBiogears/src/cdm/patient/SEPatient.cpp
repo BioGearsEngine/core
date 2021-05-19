@@ -513,6 +513,10 @@ void SEPatient::Unload(CDM::PatientData& data) const
     data.ActiveEvent().push_back(std::unique_ptr<CDM::ActivePatientEventData>(eData));
   }
 };
+void SEPatient::SetEventCallback(CDM::enumPatientEvent::value type, void (*callback)())
+{
+  m_EventCallbacks[type] = callback;
+}
 //-----------------------------------------------------------------------------
 void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time)
 {
@@ -816,6 +820,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
   m_EventDuration_s[type] = 0;
   if (m_EventHandler != nullptr) {
     m_EventHandler->HandlePatientEvent(type, active, &time);
+  }
+  if (m_EventCallbacks[type] != nullptr) {
+    m_EventCallbacks[type]();
   }
 }
 //-----------------------------------------------------------------------------
