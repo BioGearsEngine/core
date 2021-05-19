@@ -20,11 +20,13 @@
 #include <system_error>
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
+#define WIN32_LEAN_AND_MEAN
 #include <boost/asio.hpp>
 #include <boost/date_time.hpp>
 #include <boost/process.hpp>
 #include <boost/process/exception.hpp>
 #endif
+#undef ERROR
 
 #include "../utils/Executor.h"
 
@@ -404,11 +406,10 @@ void Driver::queue_from_sate_files(const Executor& exec, const std::vector<files
     Executor stateEx { exec };
     stateEx.State(state_file);
     std::string trimmed_state_path(trim(stateEx.State()));
-    auto split_state_path = split(trimmed_state_path, '/');
+    auto split_state_path = filesystem::path(trimmed_state_path);
     auto state_no_extension = split(split_state_path.back(), '.').front();
-
     std::string trimmed_scenario_path(trim(stateEx.Scenario()));
-    auto split_scenario_path = split(trimmed_scenario_path, '/');
+    auto split_scenario_path = filesystem::path(trimmed_scenario_path);
     auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
 
     if (stateEx.Name().empty()) {
@@ -699,21 +700,15 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   }
   scenario_stream.close();
 
-  auto split_scenario_path = split(trimed_scenario_path, '/');
+  auto split_scenario_path = filesystem::path(trimed_scenario_path);
   auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
 
   std::string trimed_patient_path(trim(ex.Patient()));
-  auto split_patient_path = split(trimed_patient_path, '/');
+  auto split_patient_path = filesystem::path(trimed_patient_path);
   auto patient_no_extension = split(split_patient_path.back(), '.').front();
 
   //NOTE: This loses non relative prefixes as the split will eat the leading path_separator
-  std::string parent_dir;
-  for (auto dir = split_scenario_path.begin(); dir != split_scenario_path.end(); ++dir) {
-    if (dir + 1 != split_scenario_path.end()) {
-      parent_dir.append(*dir);
-      parent_dir += "/";
-    }
-  }
+  filesystem::path parent_dir = split_scenario_path.parent_path();
 
   if (multi_patient_run) {
     ex.Name(ex.Name() + "-" + patient_no_extension);
@@ -726,11 +721,15 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
 
   std::unique_ptr<PhysiologyEngine> eng;
   Logger console_logger;
-  Logger file_logger(ex.Computed() + parent_dir + console_file);
+  if (filesystem::path(ex.Computed()) <= parent_dir) {
+    ex.Computed("");
+  }
+  filesystem::path logfilepath = filesystem::path(ex.Computed()) / parent_dir / console_file;
+  Logger file_logger(logfilepath);
   try {
-    file_logger.SetConsoleLogLevel(log4cpp::Priority::WARN);
-    file_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] " + ex.Name() + " %m%n");
-    console_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] %m%n");
+    file_logger.SetConsoleLogLevel(Logger::LogLevel::WARNING);
+    file_logger.SetConsoleConversionPattern("%H:%M [:priority:] " + ex.Name() + " :message:%n");
+    console_logger.SetConsoleConversionPattern("%H:%M [:priority:] :message:%n");
     console_logger.FormatMessages(false);
 
     eng = CreateBioGearsEngine(&file_logger);
@@ -798,13 +797,15 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
     sce.GetInitialParameters().SetPatient(patient);
   }
 
-  console_logger.Info("Starting " + ex.Name());
+  console_logger.Info("Starting " + ex.Name() + "\n");
   try {
     BioGearsScenarioExec bse { *eng };
-    bse.Execute(sce, ex.Computed() + parent_dir + results_file, nullptr);
-    console_logger.Info("Completed " + ex.Name());
+    filesystem::path resultsFilePath = ex.Computed();
+    resultsFilePath /= parent_dir / results_file;
+    bse.Execute(sce, resultsFilePath, nullptr);
+    console_logger.Info("Completed " + ex.Name() + "\n");
   } catch (...) {
-    console_logger.Error("Failed " + ex.Name());
+    console_logger.Error("Failed " + ex.Name() + "\n");
     _thread_count -= 1;
     return;
   }

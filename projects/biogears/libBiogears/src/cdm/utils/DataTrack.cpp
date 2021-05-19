@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <iostream>
 //Project Includes
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>

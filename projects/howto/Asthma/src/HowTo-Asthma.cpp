@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
+#include <sstream>
+
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 /// \brief

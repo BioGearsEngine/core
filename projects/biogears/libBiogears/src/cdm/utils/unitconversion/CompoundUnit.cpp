@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 #include <biogears/cdm/utils/unitconversion/UnitStringLexer.h>
+#include <iostream>
 //----------------------------------------------------------------------------
 namespace biogears {
 // Default ctor
@@ -29,11 +30,11 @@ CCompoundUnit::CCompoundUnit()
   , m_bDBFlag(false)
   , m_bExplicitDBFlag(false)
   , m_bExplicitNonDBFlag(false)
-  , m_strUnit (""){};
+  , m_strUnit("") {};
 //----------------------------------------------------------------------------
 // Construct directly from a unit string specification
 CCompoundUnit::CCompoundUnit(const char* unitString)
-  : CCompoundUnit(std::string{ unitString })
+  : CCompoundUnit(std::string { unitString })
 {
 }
 //----------------------------------------------------------------------------
@@ -77,7 +78,7 @@ CCompoundUnit::CCompoundUnit(const CCompoundUnit& src) // Copy constructor
 //----------------------------------------------------------------------------
 void CCompoundUnit::ParseString(const char* unitString)
 {
-  ParseString(std::string{ unitString });
+  ParseString(std::string { unitString });
 }
 //----------------------------------------------------------------------------
 void CCompoundUnit::ParseString(const std::string& unitString)
@@ -631,7 +632,7 @@ bool CCompoundUnit::IsOfType(int quantityTypeID)
 //----------------------------------------------------------------------------
 bool CCompoundUnit::IsOfType(const char* quantityName)
 {
-  return IsOfType(std::string{ quantityName });
+  return IsOfType(std::string { quantityName });
 }
 //----------------------------------------------------------------------------
 bool CCompoundUnit::IsOfType(const std::string& quantityName)

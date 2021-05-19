@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/TaskRunner/TaskProcessor.h>
 #include <biogears/cdm/utils/TaskRunner/TaskRunner.h>
 
+#include <iostream>
+
 #include <iomanip>
 #include <thread>
 

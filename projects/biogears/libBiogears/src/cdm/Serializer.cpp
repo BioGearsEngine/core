@@ -12,6 +12,10 @@ specific language governing permissions and limitations under the License.
 //Standard Includes
 #include <iostream>
 #include <map>
+#include <mutex>
+#include <type_traits>
+#include <fstream>
+
 //Project Includes
 #include <biogears/cdm/Serializer.h>
 
@@ -83,6 +87,9 @@ embedded_resource_resolver g_embedded_resource_resolver;
 XERCES_CPP_NAMESPACE_END
 
 namespace biogears {
+
+std::mutex g_serializer_mutex;
+
 Serializer* Serializer::m_me = nullptr;
 bool Serializer::m_Initialized = false;
 
@@ -283,6 +290,8 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const char* xmlFile, Logge
 #pragma optimize("", off)
 std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile, Logger* logger)
 {
+
+    std::lock_guard<std::mutex> thread_lock { g_serializer_mutex };
   if (m_me == nullptr) {
     m_me = new Serializer();
   }
@@ -299,14 +308,14 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
 
   auto io = logger->GetIoManager().lock();
   size_t content_size = io->read_resource_file(xmlFile.c_str(), reinterpret_cast<char*>(&m_me->m_buffer[0]), m_me->m_buffer.size());
-
+  m_me->m_buffer[content_size] =   std::ifstream::traits_type::eof(); 
   return ReadBuffer(&m_me->m_buffer[0], content_size, logger);
 }
 #pragma optimize("", on)
 //-----------------------------------------------------------------------------
 std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, size_t size, Logger* logger)
-
 {
+
   if (m_me == nullptr) {
     m_me = new Serializer();
   }

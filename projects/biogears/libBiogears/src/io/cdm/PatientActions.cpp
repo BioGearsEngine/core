@@ -317,7 +317,7 @@ namespace io {
         substance = substances.GetSubstance(bolusData->Substance());
         if (substance == nullptr) {
           ss << "Unknown substance : " << bolusData->Substance();
-          substances.GetLogger()->Fatal(ss, "SEScenario::Load");
+          substances.GetLogger()->Fatal(ss.str(), "SEScenario::Load");
         }
         auto a = std::make_unique<SESubstanceBolus>(*substance);
         Scenario::Marshall(*bolusData, *a);
@@ -329,7 +329,7 @@ namespace io {
         substance = substances.GetSubstance(oralData->Substance());
         if (substance == nullptr) {
           ss << "Unknown substance : " << oralData->Substance();
-          substances.GetLogger()->Fatal(ss, "SEScenario::Load");
+          substances.GetLogger()->Fatal(ss.str(), "SEScenario::Load");
         }
         auto od = std::make_unique<SESubstanceOralDose>(*substance);
         Scenario::Marshall(*oralData, *od);
@@ -341,7 +341,7 @@ namespace io {
         substance = substances.GetSubstance(subInfuzData->Substance());
         if (substance == nullptr) {
           ss << "Unknown substance : " << subInfuzData->Substance();
-          substances.GetLogger()->Fatal(ss, "SEScenario::Load");
+          substances.GetLogger()->Fatal(ss.str(), "SEScenario::Load");
         }
         auto a = std::make_unique<SESubstanceInfusion>(*substance);
         Scenario::Marshall(*subInfuzData, *a);
@@ -353,7 +353,7 @@ namespace io {
         compound = substances.GetCompound(subCInfuzData->SubstanceCompound());
         if (compound == nullptr) {
           ss << "Unknown substance : " << subCInfuzData->SubstanceCompound();
-          substances.GetLogger()->Fatal(ss, "SEScenario::Load");
+          substances.GetLogger()->Fatal(ss.str(), "SEScenario::Load");
         }
         auto a = std::make_unique<SESubstanceCompoundInfusion>(*compound);
         Scenario::Marshall(*subCInfuzData, *a);

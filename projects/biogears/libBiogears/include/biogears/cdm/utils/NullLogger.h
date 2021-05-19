@@ -13,12 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <sstream>
 
-#pragma warning(push)
-#pragma warning(disable : 4512) // assignment operator could not be generated
-#pragma warning(disable : 4290) // C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
-#include <log4cpp/Category.hh>
-#pragma warning(pop)
-
 #include <biogears/cdm/utils/Logger.h>
 #include <biogears/cdm/CommonDataModel.h>
 
@@ -38,8 +32,8 @@ public:
 
   void ResetLogFile(const std::string& logFilename = Loggable::empty);
 
-  void SetLogLevel(log4cpp::Priority::Value priority);
-  log4cpp::Priority::Value GetLogLevel();
+  void SetLogLevel(Logger::LogLevel priority);
+  Logger::LogLevel GetLogLevel();
 
   virtual void SetLogTime(const SEScalarTime* time);
 
@@ -69,12 +63,5 @@ public:
 
 protected:
   virtual std::string FormatLogMessage(const std::string& origin, const std::string& msg);
-
-  LoggerForward* m_Forward;
-  log4cpp::Category* m_Log;
-  log4cpp::Appender* m_FileAppender;
-  log4cpp::Appender* m_ConsoleAppender;
-  const SEScalarTime* m_time;
-  std::stringstream m_ss;
 };
 }

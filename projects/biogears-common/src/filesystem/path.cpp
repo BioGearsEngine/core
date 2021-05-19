@@ -17,12 +17,12 @@
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 #include <regex>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <functional>
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -116,6 +116,11 @@ namespace filesystem {
     return m_path.end();
   }
   //-------------------------------------------------------------------------------
+  auto path::back() const -> std::string
+  {
+    return (m_path.size()) ? m_path.back() : "";
+  }
+  //-------------------------------------------------------------------------------
   auto path::begin() const -> const_iterator
   {
     m_dirty = true;
@@ -160,7 +165,11 @@ namespace filesystem {
       } else if (segment == ".") {
 
       } else if (segment == "..") {
-        working_path = working_path.parent_path();
+        if (working_path.length() > 0 && working_path.back() != "..") {
+          working_path.m_path.pop_back();
+        } else {
+          working_path / "..";
+        }
       } else {
         working_path /= segment;
       }
@@ -389,6 +398,23 @@ namespace filesystem {
     return m_string_cashe.c_str();
   }
   //-------------------------------------------------------------------------------
+  bool path::operator<=(const path& rhs) const
+  {
+    path lhs_n = make_normal();
+    path rhs_n = rhs.make_normal();
+
+    if (lhs_n.length() < rhs_n.length()) {
+      for (auto ii = 0; ii < lhs_n.length(); ++ii) {
+        if (lhs_n.m_path[ii] != rhs_n.m_path[ii]) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    return false;
+  }
+  //-------------------------------------------------------------------------------
   std::string path::ToString() const
   {
     if (m_dirty) {
@@ -416,7 +442,7 @@ namespace filesystem {
       }
       if (m_path.size() > 0 && m_path[0].size() > 1 && m_path[0][1] == ':') {
         oss << m_path[0];
-      } else if ( m_path.size() != 0 ) {
+      } else if (m_path.size() != 0) {
         oss << path_seperator << m_path[0];
       }
     } else {
@@ -605,7 +631,7 @@ namespace filesystem {
     return 0 == SHFileOperation(&shfo);
 #else
 
-    std::function <int(const char*)>  rmrf = [&rmrf](const char* dirname) {
+    std::function<int(const char*)> rmrf = [&rmrf](const char* dirname) {
       DIR* dir;
       struct dirent* entry;
       char path[PATH_MAX];
@@ -654,7 +680,7 @@ namespace filesystem {
     return SHFileOperation(&shfo) == 0;
 #else
 
-    std::function <int(const char*)> rmrf = [&rmrf](const char* dirname) {
+    std::function<int(const char*)> rmrf = [&rmrf](const char* dirname) {
       DIR* dir;
       struct dirent* entry;
       char path[PATH_MAX];

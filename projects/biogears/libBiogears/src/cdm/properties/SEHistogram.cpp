@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEHistogram.h>
 
+#include <iostream>
+
 #include <biogears/cdm/properties/SEScalar.h> //Utils
 
 namespace biogears {

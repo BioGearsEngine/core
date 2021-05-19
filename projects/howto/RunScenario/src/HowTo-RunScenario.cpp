@@ -58,14 +58,14 @@ void HowToRunScenario()
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToRunScenario.log");
   bg->GetLogger()->Info("HowToRunScenario");
 
-  // This BioGearsEngine logger is based on log4cpp (which is based on log4j)
+  // This BioGearsEngine logger
   // BioGearsEngine logs to several distinct, ordered
   // category levels: DEBUG, INFO, WARN, ERROR, FATAL
   // These categories are orders, if your level is set to DEBUG you will recieve ALL messages.
   // If set to INFO, you will not recieve DEBUG, but everything else
   // If set to WARN, you will not recieve DEBUG and INFO, but everything else
   // You can specify which level you would like the engine to log
-  bg->GetLogger()->SetLogLevel(log4cpp::Priority::INFO);
+  bg->GetLogger()->SetLogLevel(Logger::INFO);
 
   // You can forward logs as demonstrated in HowTo-EngineUse
 

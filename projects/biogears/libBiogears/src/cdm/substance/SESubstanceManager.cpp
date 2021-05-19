@@ -288,9 +288,6 @@ SESubstance* SESubstanceManager::ReadSubstanceFile(const std::string& xmlFile)
   subData = nullptr;
 
   data = Serializer::ReadFile(xmlFile, GetLogger());
-  //ss.str("");
-  //ss<<"Reading substance file : ./substances/"<<xmlFile;
-  //Info(ss);
   obj = data.get();
 
   subData = dynamic_cast<CDM::SubstanceData*>(obj);
@@ -302,7 +299,7 @@ SESubstance* SESubstanceManager::ReadSubstanceFile(const std::string& xmlFile)
   ss.str("");
   /// \error Substance file could not be read in
   ss << "Substance file could not be read in : ./substances/" << xmlFile;
-  Error(ss, "SESubstanceManager::ReadSubstanceFile");
+  Error(ss.str(), "SESubstanceManager::ReadSubstanceFile");
   return nullptr;
 }
 //-----------------------------------------------------------------------------
@@ -319,7 +316,9 @@ bool SESubstanceManager::LoadSubstanceDirectory()
   std::string path_string;
   for (auto& filepath : io->FindAllSubstanceFiles()) {
     path_string = filepath;
+#ifdef _DEBUG
     Debug(asprintf("Reading substance file : %s", path_string.c_str()));
+#endif
     definitions[filepath.basename()] = Serializer::ReadFile(path_string, GetLogger());
   }
 #ifdef BIOGEARS_IO_PRESENT

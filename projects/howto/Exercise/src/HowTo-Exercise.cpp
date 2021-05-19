@@ -10,8 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
-
 // Include the various types you will be using in your code
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
@@ -21,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
+#include <sstream>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -41,7 +40,6 @@ void HowToExercise()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -85,7 +83,7 @@ void HowToExercise()
   // The increase in core temperature leads to an elevated sweat rate, which causes the patient’s skin temperature to drop due to evaporation.
   SEExercise::SEGeneric ge;
   ge.Intensity.SetValue(0.5);
-  SEExercise exG{ ge };
+  SEExercise exG { ge };
   bg->ProcessAction(exG);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
@@ -106,7 +104,7 @@ void HowToExercise()
   // Once exercise has ended, the patient is in a recovery period where the metabolic rate begins to return to its basal value.
   // The cardiac output, respiration rate and tidal volume follow this recovery trend towards their normal values.
   ge.Intensity.SetValue(0.0);
-  SEExercise exGStop{ ge };
+  SEExercise exGStop { ge };
   bg->ProcessAction(exGStop);
 
   // Advance some time while the medic gets the drugs ready
@@ -128,7 +126,7 @@ void HowToExercise()
   SEExercise::SECycling cyc;
   cyc.CadenceCycle.SetValue(60, FrequencyUnit::Per_min);
   cyc.PowerCycle.SetValue(100.0, PowerUnit::W);
-  SEExercise exC{ cyc };
+  SEExercise exC { cyc };
   bg->ProcessAction(exC);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
@@ -150,7 +148,7 @@ void HowToExercise()
   // The cardiac output, respiration rate and tidal volume follow this recovery trend towards their normal values.
   cyc.CadenceCycle.SetValue(0.0, FrequencyUnit::Per_min);
   cyc.PowerCycle.SetValue(0.0, PowerUnit::W);
-  SEExercise exCStop{ cyc };
+  SEExercise exCStop { cyc };
   bg->ProcessAction(exCStop);
 
   // Advance some time while the medic gets the drugs ready
@@ -172,7 +170,7 @@ void HowToExercise()
   SEExercise::SERunning run;
   run.SpeedRun.SetValue(5, LengthPerTimeUnit::m_Per_s);
   run.InclineRun.SetValue(0.1);
-  SEExercise exR{ run };
+  SEExercise exR { run };
   bg->ProcessAction(exR);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
@@ -194,7 +192,7 @@ void HowToExercise()
   // The cardiac output, respiration rate and tidal volume follow this recovery trend towards their normal values.
   run.SpeedRun.SetValue(0.0, LengthPerTimeUnit::m_Per_s);
   run.InclineRun.SetValue(0.0);
-  SEExercise exRStop{ run };
+  SEExercise exRStop { run };
   bg->ProcessAction(exRStop);
 
   // Advance some time while the medic gets the drugs ready
@@ -217,7 +215,7 @@ void HowToExercise()
   SEExercise::SEStrengthTraining str;
   str.WeightStrength.SetValue(20.0, MassUnit::kg);
   str.RepsStrength.SetValue(10.0);
-  SEExercise exS{ str };
+  SEExercise exS { str };
   bg->ProcessAction(exS);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
@@ -239,7 +237,7 @@ void HowToExercise()
   // The cardiac output, respiration rate and tidal volume follow this recovery trend towards their normal values.
   str.WeightStrength.SetValue(0.0, MassUnit::kg);
   str.RepsStrength.SetValue(0.0);
-  SEExercise exSStop{ str };
+  SEExercise exSStop { str };
   bg->ProcessAction(exSStop);
 
   // Advance some time while the medic gets the drugs ready
@@ -256,7 +254,6 @@ void HowToExercise()
   //bg->GetLogger()->Info(std::stringstream() <<"AchievedExerciseLevel : " << bg->GetEnergySystem()->GetAchievedExerciseLevel()); // This will be NaN as the patient is not doing any exercise
   //bg->GetLogger()->Info(std::stringstream() <<"FatigueLevel : " << bg->GetEnergySystem()->GetFatigueLevel()); // We are not working out but we are still fatigued
   bg->GetLogger()->Info(std::stringstream() << "TotalMetabolicRate : " << bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W) << PowerUnit::W); // We are still burning
-
 
   bg->GetLogger()->Info("Finished");
 }

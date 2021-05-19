@@ -135,7 +135,6 @@ add_custom_target( prepare_runtime_dir
 #         this list
 ###############################################################################
 
-verify_package(Log4cpp REQUIRED)
 add_subdirectory(unit)
 add_subdirectory(biogears-common)
 add_subdirectory(biogears)

@@ -78,7 +78,6 @@ if(${PREFIX}_BUILD_STATIC)
   set(${PREFIX}_LIBS
         Threads::Threads
         Eigen3::Eigen
-        Log4cpp::Log4cpp
         CodeSynthesis::XSD
         ${CMAKE_DL_LIBS}
   )
@@ -131,7 +130,6 @@ else()
   )  
   set(${PREFIX}_LIBS
             Eigen3::Eigen
-            Log4cpp::Log4cpp
             Biogears::lib${PROJECT_NAME}_common
             Biogears::lib${PROJECT_NAME}_cdm
   )

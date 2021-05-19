@@ -104,7 +104,7 @@ bool Gastrointestinal::Load(const CDM::BioGearsGastrointestinalSystemData& in)
     SESubstance* sub = m_data.GetSubstances().GetSubstance(transitData.Substance());
     if (sub == nullptr) {
       m_ss << "Unable to find substance" << transitData.Substance();
-      Error(m_ss, "Gastrointestinal: Load Transit Model");
+      Error(m_ss.str(), "Gastrointestinal: Load Transit Model");
       return false;
     }
     NewDrugTransitState(sub);

@@ -15,12 +15,6 @@ specific language governing permissions and limitations under the License.
 #include <memory>
 #include <sstream>
 
-#pragma warning(push)
-#pragma warning(disable : 4512) // assignment operator could not be generated
-#pragma warning(disable : 4290) // C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
-#include <log4cpp/Category.hh>
-#pragma warning(pop)
-
 #include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
@@ -37,32 +31,31 @@ public:
   static const char* empty_cStr;
 
   Loggable();
-  Loggable(Logger* log);
+  Loggable(Logger* log, std::string const& origin = Loggable::empty);
   virtual ~Loggable();
 
   virtual Logger* GetLogger() const;
 
 protected:
-  virtual void Debug(const char* msg, const char* origin = "") const;
-  virtual void Debug(const std::string& msg, const std::string& origin = empty) const;
-  virtual void Debug(std::ostream& msg, const std::string& origin = empty) const;
+  virtual void Debug(std::string const& msg) const;
+  virtual void Info(std::string const& msg) const;
+  virtual void Warning(std::string const& msg) const;
+  virtual void Error(std::string const& msg) const;
+  virtual void Fatal(std::string const& msg) const;
 
-  virtual void Info(const char* msg, const char* origin = "") const;
-  virtual void Info(const std::string& msg, const std::string& origin = empty) const;
-  virtual void Info(std::ostream& msg, const std::string& origin = empty) const;
+  virtual void Debug(std::string const& msg, std::string const& origin) const;
+  virtual void Info(std::string const& msg, std::string const& origin) const;
+  virtual void Warning(std::string const& msg, std::string const& origin) const;
+  virtual void Error(std::string const& msg, std::string const& origin) const;
+  virtual void Fatal(std::string const& msg, std::string const& origin) const;
 
-  virtual void Warning(const char* msg, const char* origin = "") const;
-  virtual void Warning(const std::string& msg, const std::string& origin = empty) const;
-  virtual void Warning(std::ostream& msg, const std::string& origin = empty) const;
+  virtual void Debug( std::ostream& msg) const;
+  virtual void Info( std::ostream& msg) const;
+  virtual void Warning( std::ostream& msg) const;
+  virtual void Error( std::ostream& msg) const;
+  virtual void Fatal( std::ostream& msg) const;
 
-  virtual void Error(const char* msg, const char* origin = "") const;
-  virtual void Error(const std::string msg, const std::string origin = empty) const;
-  virtual void Error(std::ostream& msg, const std::string& origin = empty) const;
-
-  virtual void Fatal(const char* msg, const char* origin = "") const;
-  virtual void Fatal(const std::string& msg, const std::string& origin = empty) const;
-  virtual void Fatal(std::ostream& msg, const std::string& origin = empty) const;
-
+  std::string m_origin;
   Logger* m_Logger;
 };
 }
@@ -72,11 +65,11 @@ namespace biogears {
 #pragma warning(disable : 4100)
 class BIOGEARS_API LoggerForward {
 public:
-  virtual void ForwardDebug(const std::string& msg, const std::string& origin) = 0;
-  virtual void ForwardInfo(const std::string& msg, const std::string& origin) = 0;
-  virtual void ForwardWarning(const std::string& msg, const std::string& origin) = 0;
-  virtual void ForwardError(const std::string& msg, const std::string& origin) = 0;
-  virtual void ForwardFatal(const std::string& msg, const std::string& origin) = 0;
+  virtual void Debug(std::string const& msg) const = 0;
+  virtual void Info(std::string const& msg) const = 0;
+  virtual void Warning(std::string const& msg) const = 0;
+  virtual void Error(std::string const& msg) const = 0;
+  virtual void Fatal(std::string const& msg) const = 0;
 };
 
 #pragma warning(pop)
@@ -87,8 +80,19 @@ class BIOGEARS_API Logger {
   friend Loggable;
 
 public:
-  explicit Logger(const std::string& logFilename = Loggable::empty);
-  explicit Logger(const std::string& logFilename, IOManager const& io);
+  enum LogLevel {
+    FATAL = 0,
+    DEBUG,
+    ERROR,
+    EXCEPTION,
+    WARNING,
+    INFO,
+    STABILIZATION,
+    ALL
+  };
+
+  explicit Logger(std::string const& logFilename = "biogears.log");
+  explicit Logger(std::string const& logFilename, IOManager const& io);
   explicit Logger(const char* logFilename);
   explicit Logger(const char* logFilename, IOManager const& io);
 
@@ -97,48 +101,66 @@ public:
   void LogToConsole(bool log_to_console);
   void FormatMessages(bool format_messages);
 
-  void ResetLogFile(const std::string& logFilename = Loggable::empty);
+  void ResetLogFile(std::string const& logFilename = Loggable::empty);
   void ResetLogFile(const char* logFilename);
 
-  void SetLogLevel(log4cpp::Priority::Value priority) const;
-  void SetConsoleLogLevel(log4cpp::Priority::Value priority) const;
-  log4cpp::Priority::Value GetLogLevel();
+  void SetLogLevel(LogLevel logLevel) const;
+  void SetConsoleLogLevel(LogLevel priority) const;
+
+  LogLevel GetLogLevel();
 
   virtual void SetLogTime(const SEScalarTime* time);
 
-  void SetsetConversionPattern(const std::string&);
-  void SetConsolesetConversionPattern(const std::string&);
+  void SetConversionPattern(std::string const&);
+  void SetConsoleConversionPattern(std::string const&);
 
   virtual void SetForward(LoggerForward* forward);
   virtual bool HasForward();
 
-  virtual void Debug(const std::string& msg, std::string const& origin = Loggable::empty) const;
-  virtual void Info(const std::string& msg, std::string const& origin = Loggable::empty) const;
-  virtual void Warning(const std::string& msg, std::string const& origin = Loggable::empty) const;
-  virtual void Error(const std::string& msg, std::string const& origin = Loggable::empty) const;
-  virtual void Fatal(const std::string& msg, std::string const& origin = Loggable::empty) const;
+  virtual void Debug(std::string const& msg, std::string const& origin = Loggable::empty) const;
+  virtual void Info(std::string const& msg, std::string const& origin = Loggable::empty) const;
+  virtual void Warning(std::string const& msg, std::string const& origin = Loggable::empty) const;
+  virtual void Error(std::string const& msg, std::string const& origin = Loggable::empty) const;
+  virtual void Fatal(std::string const& msg, std::string const& origin = Loggable::empty) const;
 
-  virtual void Debug(std::ostream const& msg, std::string const& origin = Loggable::empty) const;
-  virtual void Info(std::ostream const& msg, std::string const& origin = Loggable::empty) const;
-  virtual void Warning(std::ostream const& msg, std::string const& origin = Loggable::empty) const;
-  virtual void Error(std::ostream const& msg, std::string const& origin = Loggable::empty) const;
-  virtual void Fatal(std::ostream const& msg, std::string const& origin = Loggable::empty) const;
+  virtual void Debug(std::ostream & ss) const;
+  virtual void Info(std::ostream & ss) const;
+  virtual void Warning(std::ostream & ss) const;
+  virtual void Error(std::ostream & ss) const;
+  virtual void Fatal(std::ostream & ss) const;
 
   std::weak_ptr<IOManager> GetIoManager() const;
   void SetIoManager(IOManager const&); //< Logger will setup a copy of the IOManager to distributed amongs the Engine components
 
 protected:
-  virtual std::string FormatLogMessage(const std::string& origin, const std::string& msg) const;
+  virtual std::string FormatLogMessage(LogLevel priority, std::string const& pattern, std::string const& message, std::string const& origin_str) const;
 
-  std::shared_ptr<IOManager> m_io;
-
-  LoggerForward* m_Forward;
-  log4cpp::Category* m_Log;
-  log4cpp::Appender* m_FileAppender;
-  log4cpp::Appender* m_ConsoleAppender;
-  const SEScalarTime* m_time;
-  mutable std::stringstream m_ss;
-  bool m_FormatMessages;
+private:
+  struct Implementation;
+  std::unique_ptr<Implementation> m_impl;
 };
 
+inline std::string ToString(Logger::LogLevel level)
+{
+  return (Logger::ALL == level)    ? "ALL"
+    : (Logger::FATAL == level)     ? "FATAL"
+    : (Logger::DEBUG == level)     ? "DEBUG"
+    : (Logger::ERROR == level)     ? "ERROR"
+    : (Logger::EXCEPTION == level) ? "EXECPTION"
+    : (Logger::WARNING == level)   ? "WARNING"
+    : (Logger::INFO == level)      ? "INFO"
+                                   : "UNKNWON";
+}
+
+inline Logger::LogLevel FromString(std::string str)
+{
+  return ("ALL" == str)    ? Logger::ALL
+    : ("FATAL" == str)     ? Logger::FATAL
+    : ("DEBUG" == str)     ? Logger::DEBUG
+    : ("ERROR" == str)     ? Logger::ERROR
+    : ("EXECPTION" == str) ? Logger::EXCEPTION
+    : ("WARNING" == str)   ? Logger::WARNING
+    : ("INFO" == str)      ? Logger::INFO
+                           : Logger::ALL;
+}
 }

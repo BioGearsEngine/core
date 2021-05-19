@@ -123,7 +123,7 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
     if (sub == nullptr) {
       /// \error Error: Unable to find substance for IV bolus administration
       m_ss << "Unable to find substance " << bData.Substance();
-      Error(m_ss, "Drugs::Load::BolusAdministration");
+      Error(m_ss.str(), "Drugs::Load::BolusAdministration");
       return false;
     }
     SESubstanceBolusState* bolusState = new SESubstanceBolusState(*sub);
@@ -135,7 +135,7 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
     SESubstance* sub = m_data.GetSubstances().GetSubstance(otData.Substance());
     if (sub == nullptr) {
       m_ss << "Unable to find subtance " << otData.Substance();
-      Error(m_ss, "Drugs::Load::OralAdministration");
+      Error(m_ss.str(), "Drugs::Load::OralAdministration");
       return false;
     }
     SETransmucosalState* otState = new SETransmucosalState(*sub);
@@ -147,7 +147,7 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
     SESubstance* sub = m_data.GetSubstances().GetSubstance(nData.Substance());
     if (sub == nullptr) {
       m_ss << "Unable to find subtance " << nData.Substance();
-      Error(m_ss, "Drugs::Load::NasalAdministration");
+      Error(m_ss.str(), "Drugs::Load::NasalAdministration");
       return false;
     }
     SENasalState* nState = new SENasalState(*sub);

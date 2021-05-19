@@ -10,8 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
-
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
@@ -24,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+
+#include <sstream>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -48,7 +48,6 @@ void HowToHemorrhage()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -175,9 +174,9 @@ void ParseMCIS(SEHemorrhage& hem, std::vector<unsigned int>& mcis)
 
   std::string comp = "";
   enum region { Head = 1,
-    Torso = 2,
-    Arm = 3,
-    Leg = 4 }; //This will decide which region to look for compartment based on digit 2 of code
+                Torso = 2,
+                Arm = 3,
+                Leg = 4 }; //This will decide which region to look for compartment based on digit 2 of code
   std::map<std::vector<unsigned int>, std::string> torsoMap; //There are so many compartments in the torso, it is easier to map them
   //Populate torso map (codes with second digit = 2) so that digits 3-4 of code are key to correct compartment
   torsoMap[{ 6, 4 }] = "Aorta";

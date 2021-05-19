@@ -96,7 +96,7 @@ namespace filesystem {
     auto end() -> iterator;
     auto begin() const -> const_iterator;
     auto end() const -> const_iterator;
-
+    auto back() const -> std::string; 
     //!
     //! Manipulation
     //!
@@ -137,6 +137,9 @@ namespace filesystem {
     bool operator==(const path& p) const;
     bool operator!=(const path& p) const;
 
+    //! Is the lhs a parent path of the rhs
+    bool operator<=(const path& p) const;
+    
     //!
     //! Stringification
     //!

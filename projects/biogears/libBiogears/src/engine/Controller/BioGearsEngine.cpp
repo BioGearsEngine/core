@@ -474,7 +474,7 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
   }
 
   if (!m_ss.str().empty()) {
-    m_Logger->Error(m_ss);
+    m_Logger->Error(m_ss.str(), "BioGearsEngine");
     m_ss.str("");
     m_ss.clear();
     return false;
@@ -592,6 +592,9 @@ bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std:
 {
 
   auto io = m_Logger->GetIoManager().lock();
+  if ( m_Patient == nullptr ) {
+  
+  } 
   if (!m_Patient->Load(patientFile)) {
     return false;
   }
@@ -632,7 +635,7 @@ bool BioGearsEngine::InitializeEngine(const std::vector<const SECondition*>* con
   if (conditions != nullptr && !conditions->empty()) {
     for (const SECondition* c : *conditions) {
       m_ss << "[Condition] " << *c;
-      m_Logger->Info(m_ss);
+      m_Logger->Info(m_ss.str(), "BioGearsEngine");
       if (!m_Conditions->ProcessCondition(*c)) {
         return false;
       }
@@ -741,7 +744,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     return false;
   }
   m_ss << "[Action] " << *m_SimulationTime << ", " << action;
-  m_Logger->Info(m_ss);
+  m_Logger->Info(m_ss.str(), "BioGearsEngine");
   m_ss.str("");
   const SESerializeState* serialize = dynamic_cast<const SESerializeState*>(&action);
   if (serialize != nullptr) {
@@ -850,7 +853,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     }
     default: {
       m_ss << "Unsupported assessment request " << assessment->GetType();
-      m_Logger->Error(m_ss);
+      m_Logger->Error(m_ss.str(), "BioGearsEngine");
       return false;
     }
     }

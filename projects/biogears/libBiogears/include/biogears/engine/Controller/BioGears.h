@@ -84,7 +84,7 @@ class SEScalarTime;
 /**
 * @brief Manages and controls execution of all data/systems in %BioGears
 */
-class BIOGEARS_API BioGears {
+class BIOGEARS_API BioGears : public Loggable{
   friend class BioGearsEngineTest;
   friend class BioGearsScenarioExec;
 
@@ -241,9 +241,7 @@ protected:
 
   std::unique_ptr<SEPatient> m_Patient;
 
-  // Flag to destroy the logger or not
-  bool m_logger_self_managed;
-  Logger* m_Logger;
+  std::unique_ptr<Logger> m_managedLogger;
 
 };
 }

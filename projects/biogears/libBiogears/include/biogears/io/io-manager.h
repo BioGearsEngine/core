@@ -71,8 +71,13 @@ private:
 
 public:
   BIOGEARS_API IOManager();
+  BIOGEARS_API IOManager(IOManager const& iom);
+  BIOGEARS_API IOManager(IOManager&& iom);
   BIOGEARS_API IOManager(char const* working_directory);
   BIOGEARS_API ~IOManager();
+
+  BIOGEARS_API IOManager& operator=(IOManager&& rhs);
+  BIOGEARS_API IOManager& operator=(IOManager const& rhs);
   //!
   //!  Configuration Functions allow users to override directories which
   //!  contain various biogears required input files. If the directories

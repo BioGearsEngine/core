@@ -6,10 +6,10 @@ NullLogger::NullLogger(const std::string& logFilename) : Logger("NullLogger") {}
 NullLogger::~NullLogger() {}
 void NullLogger::LogToConsole(bool b) {}
 void NullLogger::ResetLogFile(const std::string& logFilename) {}
-void NullLogger::SetLogLevel(log4cpp::Priority::Value priority) {}
-log4cpp::Priority::Value NullLogger::GetLogLevel()
+void NullLogger::SetLogLevel(Logger::LogLevel priority) {}
+Logger::LogLevel NullLogger::GetLogLevel()
 {
-  return log4cpp::Priority::INFO;
+  return Logger::INFO;
 }
 void NullLogger::SetLogTime(const SEScalarTime* time) {}
 void NullLogger::SetForward(LoggerForward* forward) {}

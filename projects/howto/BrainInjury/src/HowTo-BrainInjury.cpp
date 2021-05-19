@@ -10,10 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
-
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEBrainInjury.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
@@ -22,9 +21,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
+#include <sstream>
 
 int GlasgowEstimator(double);
 
@@ -50,7 +49,6 @@ void HowToBrainInjury()
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects

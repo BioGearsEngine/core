@@ -10,8 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
-
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
@@ -21,12 +19,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEActiveHeating.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 #include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
+#include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
-#include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
+#include <sstream>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -73,7 +72,6 @@ void HowToEnvironmentChange()
   SESubstance* CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide");
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects

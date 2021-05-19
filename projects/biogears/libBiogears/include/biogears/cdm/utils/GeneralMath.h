@@ -13,8 +13,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <vector>
 
-#include <biogears/exports.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
+#include <biogears/exports.h>
+
+#include <biogears/cdm/utils/Logger.h>
 
 namespace biogears {
 

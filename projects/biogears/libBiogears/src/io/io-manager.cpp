@@ -84,6 +84,36 @@ IOManager::IOManager(char const* working_directory)
   }
 }
 //---------------------------------------------------------------------------
+IOManager::IOManager(IOManager const& obj)
+{
+  m_prefixs = obj.m_prefixs;
+  m_dirs = obj.m_dirs;
+}
+//---------------------------------------------------------------------------
+IOManager::IOManager(IOManager&& obj)
+{
+  m_prefixs = std::move(obj.m_prefixs);
+  m_dirs = std::move(obj.m_dirs);
+}
+//---------------------------------------------------------------------------
+IOManager& IOManager::operator=(IOManager const& rhs)
+{
+  if (this != &rhs) {
+    m_prefixs = rhs.m_prefixs;
+    m_dirs = rhs.m_dirs;
+  }
+  return *this;
+}
+//---------------------------------------------------------------------------
+IOManager& IOManager::operator=(IOManager&& rhs)
+{
+  if (this != &rhs) {
+    m_prefixs = std::move(rhs.m_prefixs);
+    m_dirs = std::move(rhs.m_dirs);
+  }
+  return *this;
+}
+//---------------------------------------------------------------------------
 IOManager::~IOManager()
 {
 }
@@ -304,7 +334,7 @@ filesystem::path IOManager::FindConfigFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    
+
     if (possible_path.compare(0, m_dirs.config.size(), m_dirs.config) == 0) {
       possible_path = possible_path.substr(m_dirs.config.size());
     }
@@ -319,7 +349,7 @@ filesystem::path IOManager::FindEcgFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    
+
     if (possible_path.compare(0, m_dirs.ecg.size(), m_dirs.ecg) == 0) {
       possible_path = possible_path.substr(m_dirs.ecg.size());
     }
@@ -334,7 +364,7 @@ filesystem::path IOManager::FindEnvironmentFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    
+
     if (possible_path.compare(0, m_dirs.environments.size(), m_dirs.environments) == 0) {
       possible_path = possible_path.substr(m_dirs.environments.size());
     }
@@ -349,7 +379,7 @@ filesystem::path IOManager::FindNutritionFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    
+
     if (possible_path.compare(0, m_dirs.nutrition.size(), m_dirs.nutrition) == 0) {
       possible_path = possible_path.substr(m_dirs.nutrition.size());
     }
@@ -364,7 +394,7 @@ filesystem::path IOManager::FindOverrideFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    
+
     if (possible_path.compare(0, m_dirs.override_dir.size(), m_dirs.override_dir) == 0) {
       possible_path = possible_path.substr(m_dirs.override_dir.size());
     }
@@ -379,7 +409,7 @@ filesystem::path IOManager::FindPatientFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    
+
     if (possible_path.compare(0, m_dirs.patients.size(), m_dirs.patients) == 0) {
       possible_path = possible_path.substr(m_dirs.patients.size());
     }
@@ -393,7 +423,7 @@ filesystem::path IOManager::FindStateFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    
+
     if (possible_path.compare(0, m_dirs.states.size(), m_dirs.states) == 0) {
       possible_path = possible_path.substr(m_dirs.states.size());
     }
@@ -407,7 +437,7 @@ filesystem::path IOManager::FindSubstanceFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    
+
     if (possible_path.compare(0, m_dirs.substances.size(), m_dirs.substances) == 0) {
       possible_path = possible_path.substr(m_dirs.substances.size());
     }
@@ -422,7 +452,7 @@ filesystem::path IOManager::FindScenarioFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    
+
     if (possible_path.compare(0, m_dirs.scenarios.size(), m_dirs.scenarios) == 0) {
       possible_path = possible_path.substr(m_dirs.scenarios.size());
     }
@@ -452,7 +482,7 @@ filesystem::path IOManager::FindSchemaFile(const char* file) const
 {
   auto possible_path = find_resource_file(file);
   if (possible_path.empty()) {
-    
+
     if (possible_path.compare(0, m_dirs.schema.size(), m_dirs.schema) == 0) {
       possible_path = possible_path.substr(m_dirs.schema.size());
     }

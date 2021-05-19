@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 //Standard Include
 #include <map>
 //Project Includes
+#include <iostream>
+
 #include <biogears/cdm/utils/TimingProfile.h>
 
 namespace biogears {

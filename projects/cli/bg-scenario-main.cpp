@@ -47,7 +47,7 @@ void signal_callback_handler(int signum)
 }
 
 
-int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
+int execute_scenario(Executor& ex, Logger::LogLevel log_level)
 {
   std::string trimed_scenario_path(trim(ex.Scenario()));
   auto split_scenario_path = split(trimed_scenario_path, '/');
@@ -77,8 +77,8 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   try {
 
     file_logger.SetConsoleLogLevel(log_level);
-    file_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] " + ex.Name() + "%m%n");
-    console_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] %m%n");
+    file_logger.SetConsoleConversionPattern("%H:%M [:priority:] " + ex.Name() + ":message:%n");
+    console_logger.SetConsoleConversionPattern("%H:%M [:priority:] :message:%n");
     console_logger.FormatMessages(false);
 
     eng = CreateBioGearsEngine(&file_logger);
@@ -222,7 +222,7 @@ int main(int argc, char* argv[])
 
   using namespace boost::program_options;
 
-  auto log_level = log4cpp::Priority::DEBUG;
+  auto log_level = Logger::DEBUG;
   std::string help_message;
 
   try {
@@ -283,7 +283,7 @@ int main(int argc, char* argv[])
     }
 
     if (vm["quiet"].as<bool>()) {
-      log_level = log4cpp::Priority::WARN;
+      log_level = Logger::WARNING;
     }
 
     if (vm.count("patient")) {
@@ -372,7 +372,7 @@ int main(int argc, char* argv[])
   signal(SIGINT, signal_callback_handler);
   signal(SIGABRT, signal_callback_handler);
 
-  auto log_level = log4cpp::Priority::DEBUG;
+  auto log_level = Logger::DEBUG;
   std::string help_message;
 
   biogears::Arguments args(
@@ -429,7 +429,7 @@ int main(int argc, char* argv[])
   }
 
   if (args.Option("quiet")) {
-    log_level = log4cpp::Priority::WARN;
+    log_level = Logger::WARN;
   }
 
   if (args.KeywordFound("PATIENT") || args.KeywordFound("P")) {

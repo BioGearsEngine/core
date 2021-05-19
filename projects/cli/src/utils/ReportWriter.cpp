@@ -152,7 +152,7 @@ void ReportWriter::gen_tables_single_sheet(std::string reference_file, std::stri
   //TODO: This is a great example on how SetConsoleSetConversionPattern should be pushConsoleSetCOnversionPattern and popConsoleSetConversionPattern
   //TODO: We should not expect people to know what conversion pattern it was before they changed it.
 
-  logger->SetConsolesetConversionPattern("\t%m%n");
+  logger->SetConsoleConversionPattern("\t:message::newline:");
 
   ParseReferenceCSV(reference_file);
   ParseResultsCSV(results_file);
@@ -176,7 +176,7 @@ void ReportWriter::gen_tables_single_sheet(std::string reference_file, std::stri
   to_table();
   logger->Debug("Successfully generated table: " + split(reference_file, '.')[0]);
   clear();
-  logger->SetConsolesetConversionPattern("%d [%p] %m%n");
+  logger->SetConsoleConversionPattern("%d [:priority:] :message::newline:");
 }
 
 //--------------------------------------------------------------------------------
@@ -283,9 +283,9 @@ void ReportWriter::generate_system_tables(TYPE table_type)
       const std::string reference_value_file = "validation/" + SystemTables[i].first + ".csv";
       const std::string library_baseline_file = locateBaseline(SystemTables[i].second, SystemTables[i].first);
       clear();
-      logger->SetConsolesetConversionPattern(SystemTables[i].first + ".md %n");
+      logger->SetConsoleConversionPattern(SystemTables[i].first + ".md :newline:");
       logger->Info("");
-      logger->SetConsolesetConversionPattern("\t[%p]%m%n");
+      logger->SetConsoleConversionPattern("\t[:priority:]:message::newline:");
       ParseReferenceCSV(reference_value_file);
       ParseResultsCSV(library_baseline_file);
       if (test_files[SystemTables[i].first].size()) {

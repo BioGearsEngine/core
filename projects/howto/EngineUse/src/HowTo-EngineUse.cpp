@@ -10,8 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
-
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
@@ -29,6 +27,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
+#include <iostream>
+#include <sstream>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -51,11 +51,11 @@ using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 class MyLogger : public LoggerForward {
 public:
-  virtual void ForwardDebug(const std::string& msg, const std::string& origin) {}
-  virtual void ForwardInfo(const std::string& msg, const std::string& origin) {}
-  virtual void ForwardWarning(const std::string& msg, const std::string& origin) {}
-  virtual void ForwardError(const std::string& msg, const std::string& origin) {}
-  virtual void ForwardFatal(const std::string& msg, const std::string& origin) {}
+  virtual void Debug( std::string const& msg) const override { std::cout << msg << "\n"; }
+  virtual void Info(std::string const& msg)  const override { std::cout << msg << "\n"; }
+  virtual void Warning(std::string const& msg)  const override { std::cout << msg << "\n"; }
+  virtual void Error(std::string const& msg)  const override { std::cerr << msg << "\n"; }
+  virtual void Fatal(std::string const& msg)  const override { std::cerr << msg << "\n"; }
 };
 
 //--------------------------------------------------------------------------------------------------
@@ -80,8 +80,8 @@ public:
     : SEEventHandler()
   {
   }
-  virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) {}
-  virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) {}
+  virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) { }
+  virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) { }
 };
 
 //--------------------------------------------------------------------------------------------------
@@ -103,7 +103,7 @@ void HowToEngineUse()
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToEngineUse.log");
   bg->GetLogger()->Info("HowToEngineUse");
 
-  // This BioGearsEngine logger is based on log4cpp (which is based on log4j)
+  // This BioGearsEngine logger 
   // BioGearsEngine logs to several distinct, ordered
   // category levels: DEBUG, INFO, WARN, ERROR, FATAL
   // These categories are orders, if your level is set to DEBUG you will recieve ALL messages.
@@ -111,7 +111,7 @@ void HowToEngineUse()
   // If set to WARN, you will not recieve DEBUG and INFO, but everything else
   // You can specify which level you would like the engine to log
   // By Default the LogLevel is INFO
-  // bg->GetLogger()->SetLogLevel(log4cpp::Priority::INFO);
+  // bg->GetLogger()->SetLogLevel(Logger::INFO);
 
   // You can tell the BioGearsEngine to also direct any output
   // to your own function. For example if you want to capture and process messages
@@ -158,7 +158,6 @@ void HowToEngineUse()
 
   // The tracker is responsible for advancing the engine time AND outputting the data requests below at each time step
   // If you do not wish to write data to a file, you do not need to make any data requests
-  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
