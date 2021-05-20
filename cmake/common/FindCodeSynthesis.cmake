@@ -197,7 +197,7 @@ function(REGISTER_XSD_FILE _filepath )
   set_target_properties(${_schema}
                         PROPERTIES
                         FOLDER "Code Generators"
-                        PROJECT_LABEL "XSD_Gen_${_safe_unique_name}")
+                        PROJECT_LABEL "${_schema}")
 
   list(APPEND ${_l_TARGETS} ${_schema})
   if(_l_STAGE)
@@ -214,7 +214,7 @@ function(REGISTER_XSD_FILE _filepath )
     set_target_properties(xsd_stage${_safe_unique_name}
                           PROPERTIES
                           FOLDER "Code Generators"
-                          PROJECT_LABEL "XSD_Move_${_safe_unique_name}")
+                          PROJECT_LABEL "stage_${_schema}")
 	list(APPEND ${_l_TARGETS} ${_schema})
   endif()
 
@@ -473,7 +473,7 @@ function(REGISTER_XSD_FILE _filepath )
   set_target_properties(${_schema}
                         PROPERTIES
                         FOLDER "Code Generators"
-                        PROJECT_LABEL "XSD_Gen_${_safe_unique_name}")
+                        PROJECT_LABEL "xsd_${_schema}")
 
   list(APPEND ${_l_TARGETS} ${_schema})
   if(_l_STAGE)
@@ -490,7 +490,7 @@ function(REGISTER_XSD_FILE _filepath )
     set_target_properties(xsd_stage${_safe_unique_name}
                           PROPERTIES
                           FOLDER "Code Generators"
-                          PROJECT_LABEL "XSD_Move_${_safe_unique_name}")
+                          PROJECT_LABEL "stage_${_schema}")
 	list(APPEND ${_l_TARGETS} ${_schema})
   endif()
 
