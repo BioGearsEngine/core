@@ -201,7 +201,7 @@ function(REGISTER_XSD_FILE _filepath )
 
   list(APPEND ${_l_TARGETS} ${_schema})
   if(_l_STAGE)
-    add_custom_target( xsd_stage${_safe_unique_name} DEPENDS  ${CMAKE_BINARY_DIR}/${_resource_path}/${_schema}.xsd
+    add_custom_target( mv_${_schema} DEPENDS  ${CMAKE_BINARY_DIR}/${_resource_path}/${_schema}.xsd
                        COMMENT "Checking if re-generation is required" )
 
     add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${_schema}.xsd    
@@ -211,10 +211,10 @@ function(REGISTER_XSD_FILE _filepath )
                         DEPENDS ${_config_file}
                         COMMENT "Staging XSD Template for runtime" )
     
-    set_target_properties(xsd_stage${_safe_unique_name}
+    set_target_properties(mv_${_schema}
                           PROPERTIES
                           FOLDER "Code Generators"
-                          PROJECT_LABEL "stage_${_schema}")
+                          PROJECT_LABEL "mv_${_schema}")
 	list(APPEND ${_l_TARGETS} ${_schema})
   endif()
 
@@ -477,7 +477,7 @@ function(REGISTER_XSD_FILE _filepath )
 
   list(APPEND ${_l_TARGETS} ${_schema})
   if(_l_STAGE)
-    add_custom_target( xsd_stage${_safe_unique_name} DEPENDS  ${CMAKE_BINARY_DIR}/${_resource_path}/${_schema}.xsd
+    add_custom_target( mv_${_schema} DEPENDS  ${CMAKE_BINARY_DIR}/${_resource_path}/${_schema}.xsd
                        COMMENT "Checking if re-generation is required" )
 
     add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${_schema}.xsd    
@@ -487,10 +487,10 @@ function(REGISTER_XSD_FILE _filepath )
                         DEPENDS ${_config_file}
                         COMMENT "Staging XSD Template for runtime" )
     
-    set_target_properties(xsd_stage${_safe_unique_name}
+    set_target_properties(mv_${_schema}
                           PROPERTIES
                           FOLDER "Code Generators"
-                          PROJECT_LABEL "stage_${_schema}")
+                          PROJECT_LABEL "mv_${_schema}")
 	list(APPEND ${_l_TARGETS} ${_schema})
   endif()
 
