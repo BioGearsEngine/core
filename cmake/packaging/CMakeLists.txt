@@ -1,3 +1,5 @@
+option (Biogears_BUILD_INSTALLER "Turns on CPack platform specifci bundling logic" OFF)
+if (Biogears_BUILD_INSTALLER )
 include(InstallRequiredSystemLibraries)
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "BioGears")
@@ -109,3 +111,4 @@ endif()
 set(CPACK_PACKAGE_EXECUTABLES "bg-cli;Command Line" "bg-scenario;Scenario Driver")
 
 include(CPack)
+endif()
