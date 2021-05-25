@@ -21,21 +21,21 @@
 #include <regex>
 #include <sstream>
 
-#ifdef ANDROID
-#include <cstdlib>
-namespace std {
-static double stod(const std::string& value, std::size_t* pos = 0)
-{
-  std::stringstream ss;
-  ss << value;
-  double result;
-  ss >> result;
-  if (pos)
-    *pos = ss.tellp();
-  return result;
-}
-}
-#endif
+//#ifdef ANDROID
+//#include <cstdlib>
+//namespace std {
+//static double stod(const std::string& value, std::size_t* pos = 0)
+//{
+//  stringstream ss;
+//  ss << value;
+//  double result;
+//  ss >> result;
+//  if (pos)
+//    *pos = ss.tellp();
+//  return result;
+//}
+//} //NAMESPACE std
+//#endif
 
 namespace biogears {
 
@@ -62,7 +62,7 @@ double parse_double_or(double alt, const std::string& txt)
   } catch (...) {
   }
 #else
-  std::std::stringstream ss;
+  std::stringstream ss;
   ss << txt;
   ss >> x;
 #endif
@@ -80,7 +80,7 @@ float parse_float_or(float alt, const std::string& txt)
   } catch (...) {
   }
 #else
-  std::std::stringstream ss;
+  std::stringstream ss;
   ss << txt;
   ss >> x;
 #endif
@@ -97,7 +97,7 @@ int parse_int_or(int alt, const std::string& txt)
   } catch (...) {
   }
 #else
-  std::std::stringstream ss;
+  std::stringstream ss;
   ss << txt;
   ss >> x;
 #endif
