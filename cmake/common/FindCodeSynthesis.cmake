@@ -249,7 +249,7 @@ find_path(CodeSynthesis_INCLUDE_DIR
 
 include(CMakeFindDependencyMacro)
 find_package(Xerces-c CONFIG QUIET)
-find_dependency(Xerces-c )
+find_dependency(Xerces-c)
 
 # handle the QUIETLY and REQUIRED arguments and set CodeSynthesis_FOUND to TRUE if
 # all listed variables are TRUE
