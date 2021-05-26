@@ -533,28 +533,8 @@ void Tissue::PreProcess()
   CalculateOncoticPressure();
   CalculateCompartmentalBurn();
 
-  double bladderPressure = m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetPressure().GetValue(PressureUnit::mmHg);
-  m_data.GetDataTrack().Probe("bladderPressure_mmHg", bladderPressure);
-
-  double testPressure = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetNode(BGE::CardiovascularNode::RightArm1)->GetPressure(PressureUnit::mmHg);
-  double testResistance = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Aorta1ToRightArm1)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-  double testFlow = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Aorta1ToRightArm1)->GetFlow(VolumePerTimeUnit::mL_Per_s);
-
-  double testPressure1 = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetNode(BGE::CardiovascularNode::Muscle1)->GetPressure(PressureUnit::mmHg);
-  double testResistance1 = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Aorta1ToMuscle1)->GetResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-  double testFlow1 = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CardiovascularPath::Aorta1ToMuscle1)->GetFlow(VolumePerTimeUnit::mL_Per_s);
-
-  m_data.GetDataTrack().Probe("AbdominalPressure", testPressure1);
-  m_data.GetDataTrack().Probe("AbdominalResistance", testResistance1);
-  m_data.GetDataTrack().Probe("AbdominalFlow", testFlow1);
-  m_data.GetDataTrack().Probe("RAPressure", testPressure);
-  m_data.GetDataTrack().Probe("RAResistance", testResistance);
-  m_data.GetDataTrack().Probe("RAFlow", testFlow);
-  m_data.GetDataTrack().Probe("FluidCreepTune", m_testing);
-  m_data.GetDataTrack().Probe("DeltaR", m_trunkDeltaResistance_mmHg_s_Per_mL);
-
-
-
+  //double bladderPressure = m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetPressure().GetValue(PressureUnit::mmHg);
+  //m_data.GetDataTrack().Probe("bladderPressure_mmHg", bladderPressure);
 }
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -629,7 +609,7 @@ void Tissue::CalculateCompartmentalBurn()
   double muscleTissueVolume_mL;
   double targetPathBloodFlow_mL_Per_s;
   double deltaR_mmHg_s_Per_mL = 0.0;
-  double csTuningFactor = 38500.0; // This value adjusts the effect of burn on the flow into affected compartment(s). Higher value means slower incidence of compartment syndrome. INitial is 20000
+  double csTuningFactor = 38500.0; // This value adjusts the effect of burn on the flow into affected compartment(s). Higher value means slower incidence of compartment syndrome. INitial is 38500 for full circumferential compartment syndrome around 8 hours
   double fluidCreepTuningFactor = 1.0;
   double burnSpread;
   std::string locale;
@@ -656,23 +636,23 @@ void Tissue::CalculateCompartmentalBurn()
   double tissueIntegrityPercent = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
 
   // As extracellular volume increases (particularly with fluid resuscitation), we would expect the resistance in the burned extremity to increase (less flow to extremity)
-  // 200 mL/kg is orange zone, correlates to approx. 157.6% ecf volume baseline
-  // 250 mL/kg is red zone, correlates to approx. 173.9% ecf volume baseline
+  // 200 mL/kg is orange zone, correlates to approx. 150% ecf volume baseline, risk of compartment syndrome
+  // 250 mL/kg is red zone, correlates to approx. 175% ecf volume baseline, extremely high risk of compartment syndrome
   double ecVolume_mL = m_data.GetTissue().GetExtracellularFluidVolume().GetValue(VolumeUnit::mL);
   //double fluidCreepIncidence_pct = 1.05; // can be used to set a starting point for fluid creep before orange zone if needed, check with SMEs
-  double fluidCreepOrange_pct = 1.576;
-  double fluidCreepRed_pct = 1.739;
+  double fluidCreepOrange_pct = 1.5;
+  double fluidCreepRed_pct = 1.75;
   if (ecVolume_mL > (m_baselineECFluidVolume_mL * fluidCreepRed_pct)) { // This if statement determines when fluid resuscitations enters "red zone" and compartment syndrome is highly likely 
-    fluidCreepTuningFactor = 0.75 * (ecVolume_mL / m_baselineECFluidVolume_mL);
-    BLIM(fluidCreepTuningFactor, 1.25, 1.5);
+    fluidCreepTuningFactor = 3.0 * (ecVolume_mL / m_baselineECFluidVolume_mL);
+    BLIM(fluidCreepTuningFactor, 3.5, 10.0);
   } else if (ecVolume_mL > (m_baselineECFluidVolume_mL * fluidCreepOrange_pct)) { // This if statement determines when fluid resuscitations enters "orange zone" and compartment syndrome is more likely
-    fluidCreepTuningFactor = 0.75 * (ecVolume_mL / m_baselineECFluidVolume_mL);
-    BLIM(fluidCreepTuningFactor, 1.0, 1.1);
+    fluidCreepTuningFactor = 1.5 * (ecVolume_mL / m_baselineECFluidVolume_mL);
+    BLIM(fluidCreepTuningFactor, 1.5, 1.75);
   }
 
   m_testing = fluidCreepTuningFactor;
 
-  for (std::string burnCompt : burnComptVector) { // Per Compartment
+  for (std::string burnCompt : burnComptVector) { // Per Compartment Affected
       std::string comptSyndromePath = "Aorta1To"; //Affected resistance path based on burn compartment
       muscleTissuePressure_mmHg = muscleExtracellularCompartment->GetPressure(PressureUnit::mmHg);
       muscleTissueVolume_mL = muscleExtracellularCompartment->GetVolume(VolumeUnit::mL);
@@ -700,10 +680,12 @@ void Tissue::CalculateCompartmentalBurn()
             bgPatient.SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal, true, m_data.GetSimulationTime());
             m_compartmentSyndromeCount += 1.0;
         }
-        // Change in bladder pressure for VIR testing. Needs to be tested to see how much it impacts burns in BG
+
+        // Change in bladder pressure for VIR testing. Needs to be tested to see how much it impacts burns in BG (ONLY ABDOMINAL CS)
         //double bladderPressure = m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetPressure().GetValue(PressureUnit::mmHg);
         //double bladderPressureMultiplier = ((-1.0 * m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue() + 1.0) * 6.25); //Asymptotic relation to tissue integirty, max increase of 6.25
         //m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetNextPressure().SetValue(bladderPressure * bladderPressureMultiplier, PressureUnit::mmHg);
+
       } else if (burnCompt == "LeftArm" && m_leftArmEscharotomy == false) {
         burnSpread = (burnTBSA) / (0.09 * numBurnLocations);
         ULIM(burnSpread, 1.0); // 1.0 represents a full circumferential burn
@@ -748,7 +730,7 @@ void Tissue::CalculateCompartmentalBurn()
       targetNodeCardio = "";
       targetPathCardio = nullptr;
   }
-    // Any "Per Burn" changes not affecting specific burn compartments would go here
+    // Any "Per Burn" changes not affecting specific burn compartments would go below
 
     // Compartment syndrome is known to cause decreased compliance in the lungs, though not touching the lungs still show this physiology effect, so this change has been left out for now
 
@@ -814,7 +796,7 @@ void Tissue::CalculateCompartmentalBurn()
             } else {
             Warning("There is no compartment syndrome where you wish to perform an escharotomy. Ignoring action request.");
             //If we do not remove the action, it will check every time step for the compartment syndrome to match the escharotomy
-            m_data.GetActions().GetPatientActions().RemoveEscharotomy(locale); //Could create a one time message then let the check continue in the background
+            m_data.GetActions().GetPatientActions().RemoveEscharotomy(locale);
             return;
             }
             targetPathCardio = activeCirculatoryCircuit->GetPath(eschPath);
