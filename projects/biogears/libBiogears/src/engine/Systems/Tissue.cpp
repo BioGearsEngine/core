@@ -749,7 +749,7 @@ void Tissue::CalculateCompartmentalBurn()
     //targetPathRespLeft->GetNextCompliance().SetValue(targetPathRespLeft->GetNextCompliance(FlowComplianceUnit::mL_Per_mmHg) - (csComplianceTuningFactor*deltaCLeft_mL_Per_mmHG), FlowComplianceUnit::mL_Per_mmHg);
 
 
-    if (m_data.GetActions().GetPatientActions().HasEscharotomy() && m_compartmentSyndromeCount > 0.0) {
+    if (m_data.GetActions().GetPatientActions().HasEscharotomy()) {
         //By placing within the Burn Check, an escharatomy will not happen without a burn; however, still needs to check for compartment compliance
         std::map<std::string, SEEscharotomy*> vectorEscharotomies = m_data.GetActions().GetPatientActions().GetEscharotomies();
         for (auto eschData : vectorEscharotomies) {
@@ -757,6 +757,10 @@ void Tissue::CalculateCompartmentalBurn()
             std::string eschPath = "Aorta1To";
             double releasedResistance = 0.0;
             locale = e->GetLocation();
+            if (m_compartmentSyndromeCount < 1.0) {
+                m_data.GetActions().GetPatientActions().RemoveEscharotomy(locale);
+                return;
+            }
             // Check to make sure escharotomy compartment matches compartment syndrome location
             if (locale == "Trunk" && bgPatient.IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal)) {
                 eschPath += "Muscle1";
