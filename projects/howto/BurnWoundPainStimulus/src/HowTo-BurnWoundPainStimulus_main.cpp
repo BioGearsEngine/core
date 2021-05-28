@@ -5,8 +5,19 @@
 
 int main( int argc, char* argv[] )
 {
-  //HowToBurnWoundPainStimulus();
-  std::string log = "./HowToBurnWound.log";
-  BurnThread burn(log, 25.0);
-  burn.FluidLoading();
+  // To run multiple TBSA values
+  double lowestTBSA = 20.0;
+  double highestTBSA = 40.0;
+  double tbsaIncrement = 1.0;
+  for (double tbsa = lowestTBSA; tbsa <= highestTBSA; tbsa += tbsaIncrement) {
+    //HowToBurnWoundPainStimulus();
+    int docTBSA = (int)(tbsa);
+    std::string strTBSA = std::to_string(docTBSA);
+    std::string logName = "./states/BurnWoundStates/HowToBurnWound";
+    logName.append(strTBSA);
+    logName.append(".log");
+    //std::string log = "./HowToBurnWound.log";
+    BurnThread burn(logName, tbsa);
+    burn.FluidLoading(tbsa);
+  }
 }
