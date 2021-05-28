@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 namespace biogears {
+class SEArterialBloodGasAnalysis;
 class SECompleteBloodCount;
 class SEComprehensiveMetabolicPanel;
 class SELiquidCompartment;
@@ -73,6 +74,7 @@ public:
   void Process() override;
   void PostProcess() override;
 
+  bool CalculateArterialBloodGasAnalysis(SEArterialBloodGasAnalysis& abga);
   bool CalculateCompleteBloodCount(SECompleteBloodCount& cbc);
   bool CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabolicPanel& cmp);
   SEScalar& CalculateCoagulationSOFA();

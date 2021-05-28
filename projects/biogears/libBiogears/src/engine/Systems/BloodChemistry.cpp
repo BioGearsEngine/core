@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/patient/assessments/SEArterialBloodGasAnalysis.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
@@ -720,7 +721,29 @@ bool BloodChemistry::CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabol
   cmp.GetTotalProtein().SetValue(TotalProtein_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
   return true;
 }
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Sets data on the arterial blood gas analysis.
+///
+/// \details
+/// Sets data on the arterial blood gas analysis object to create the [ABGA](@ref bloodchemistry-assessments).
+//--------------------------------------------------------------------------------------------------
+bool BloodChemistry::CalculateArterialBloodGasAnalysis(SEArterialBloodGasAnalysis& abga)
+{
+  abga.Reset();
+  double arterialpH = GetArterialBloodPH().GetValue();
+  double standardBicarbonate_mmol_Per_L = m_aorta->GetSubstanceQuantity(m_data.GetSubstances().GetHCO3())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
+  double baseExcess_mmol_Per_L = 0.9287 * (standardBicarbonate_mmol_Per_L - 24.4 + (14.83 * (arterialpH - 7.4)));
 
+  abga.GetpH().Set(arterialpH);
+  abga.GetPartialPressureOxygen().SetValue(GetArterialOxygenPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  abga.GetPartialPressureCarbonDioxide().SetValue(GetArterialCarbonDioxidePressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  abga.GetBaseExcess().SetValue(baseExcess_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
+  abga.GetStandardBicarbonate().SetValue(standardBicarbonate_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
+  abga.GetOxygenSaturation().Set(GetOxygenSaturation());
+
+  return true;
+}
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Sets data on the complete blood count object.
