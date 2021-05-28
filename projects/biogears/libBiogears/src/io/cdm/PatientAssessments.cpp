@@ -2,6 +2,7 @@
 
 #include "Property.h"
 
+#include <biogears/cdm/patient/assessments/SEArterialBloodGasAnalysis.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
@@ -26,6 +27,36 @@ namespace io {
   void PatientAssessments::UnMarshall(const SEPatientAssessment& in, CDM::PatientAssessmentData& out)
   {
     //Empty UnMarshall
+  }
+  //----------------------------------------------------------------------------------
+  //class SEArterialBloodGasAnalysis
+  void PatientAssessments::Marshall(const CDM::ArterialBloodGasAnalysisData& in, SEArterialBloodGasAnalysis& out)
+  {
+    Marshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
+    io::Property::Marshall(in.pH(), out.GetpH());
+    io::Property::Marshall(in.pO2(), out.GetPartialPressureOxygen());
+    io::Property::Marshall(in.pCO2(), out.GetPartialPressureCarbonDioxide());
+    io::Property::Marshall(in.BaseExcess(), out.GetBaseExcess());
+    io::Property::Marshall(in.StandardBicarbonate(), out.GetStandardBicarbonate());
+    io::Property::Marshall(in.OxygenSaturation(), out.GetOxygenSaturation());
+  }
+  //----------------------------------------------------------------------------------
+  void PatientAssessments::UnMarshall(const SEArterialBloodGasAnalysis& in, CDM::ArterialBloodGasAnalysisData& out)
+  {
+    UnMarshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
+
+    if (in.m_pH != nullptr)
+      io::Property::UnMarshall(*in.m_pH, out.pH());
+    if (in.m_PartialPressureOxygen != nullptr)
+      io::Property::UnMarshall(*in.m_PartialPressureOxygen, out.pO2());
+    if (in.m_PartialPressureCarbonDioxide != nullptr)
+      io::Property::UnMarshall(*in.m_PartialPressureCarbonDioxide, out.pCO2());
+    if (in.m_BaseExcess != nullptr)
+      io::Property::UnMarshall(*in.m_BaseExcess, out.BaseExcess());
+    if (in.m_StandardBicarbonate != nullptr)
+      io::Property::UnMarshall(*in.m_StandardBicarbonate, out.StandardBicarbonate());
+    if (in.m_OxygenSaturation != nullptr)
+      io::Property::UnMarshall(*in.m_OxygenSaturation, out.OxygenSaturation());
   }
   //----------------------------------------------------------------------------------
   //class SEPulmonaryFunctionTest

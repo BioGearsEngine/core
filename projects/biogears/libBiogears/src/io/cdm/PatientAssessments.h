@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEPatientAssessment;
+class SEArterialBloodGasAnalysis;
 class SEPulmonaryFunctionTest;
 class SECompleteBloodCount;
 class SEComprehensiveMetabolicPanel;
@@ -42,6 +43,9 @@ namespace io {
     //class SEPatientAssessment
     static void Marshall(const CDM::PatientAssessmentData& in, SEPatientAssessment& out);
     static void UnMarshall(const SEPatientAssessment& in, CDM::PatientAssessmentData& out);
+    //class SEArterialBloodGasAnalysis
+    static void Marshall(const CDM::ArterialBloodGasAnalysisData& in, SEArterialBloodGasAnalysis& out);
+    static void UnMarshall(const SEArterialBloodGasAnalysis& in, CDM::ArterialBloodGasAnalysisData& out);
     //class SEPulmonaryFunctionTest
     static void Marshall(const CDM::PulmonaryFunctionTestData& in, SEPulmonaryFunctionTest& out);
     static void UnMarshall(const SEPulmonaryFunctionTest& in, CDM::PulmonaryFunctionTestData& out);

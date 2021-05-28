@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
+#include <biogears/cdm/patient/assessments/SEArterialBloodGasAnalysis.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
@@ -773,6 +774,23 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
 
     switch (assessment->GetType()) {
+    case CDM::enumPatientAssessment::ArterialBloodGasAnalysis: {
+      SEArterialBloodGasAnalysis abga;
+      GetPatientAssessment(abga);
+      if (results_filepath.empty()) {
+        results_filepath = "ArterialBloodGasAnalysis";
+      }
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sABGA@%fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
+      // Write out the xml file
+      xml_schema::namespace_infomap map;
+      map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
+      std::unique_ptr<CDM::ArterialBloodGasAnalysisData> unloaded(abga.Unload());
+      unloaded->contentVersion(branded_version_string());
+      ArterialBloodGasAnalysis(stream, *unloaded, map);
+      stream.close();
+      break;
+    }
+
     case CDM::enumPatientAssessment::PulmonaryFunctionTest: {
       SEPulmonaryFunctionTest pft;
       GetPatientAssessment(pft);
@@ -790,6 +808,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       stream.close();
       break;
     }
+
     case CDM::enumPatientAssessment::Urinalysis: {
       SEUrinalysis upan;
       GetPatientAssessment(upan);

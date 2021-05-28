@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 	<!-- @brief -->
 	<xs:simpleType name="enumPatientAssessment">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="ArterialBloodGasAnalysis"/>
 			<xs:enumeration value="PulmonaryFunctionTest"/>
 			<xs:enumeration value="CompleteBloodCount"/>
 			<xs:enumeration value="ComprehensiveMetabolicPanel"/>

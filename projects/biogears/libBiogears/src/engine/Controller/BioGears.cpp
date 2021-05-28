@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/patient/assessments/SEArterialBloodGasAnalysis.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/patient/assessments/SEPsychomotorVigilanceTask.h>
@@ -966,6 +967,11 @@ void BioGears::PostProcess()
 
 bool BioGears::GetPatientAssessment(SEPatientAssessment& assessment)
 {
+  SEArterialBloodGasAnalysis* abga = dynamic_cast<SEArterialBloodGasAnalysis*>(&assessment);
+  if (abga != nullptr) {
+    return m_BloodChemistrySystem->CalculateArterialBloodGasAnalysis(*abga);
+  }
+
   SEPulmonaryFunctionTest* pft = dynamic_cast<SEPulmonaryFunctionTest*>(&assessment);
   if (pft != nullptr) {
     return m_RespiratorySystem->CalculatePulmonaryFunctionTest(*pft);
