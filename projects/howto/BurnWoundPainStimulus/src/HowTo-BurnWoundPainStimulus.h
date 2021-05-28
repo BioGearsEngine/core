@@ -21,6 +21,7 @@ void HowToBurnWoundPainStimulus();
 
 namespace biogears {
 class SEBurnWound;
+class SEEscharotomy;
 class SESubstance;
 class SESubstanceBolus;
 class SESubstanceCompoundInfusion;
@@ -35,7 +36,7 @@ public:
   void SetRingersInfusionRate(double& volume, double& rate);
   void SetAlbuminInfusionRate(double& volume, double& rate);
   void Status();
-  void FluidLoading();
+  void FluidLoading(double tbsa);
 
   enum fluidType
   {
@@ -58,6 +59,7 @@ public:
   std::unique_ptr<biogears::PhysiologyEngine> m_bg;
 
   biogears::SEBurnWound* m_burnWound;
+  biogears::SEEscharotomy* m_escharotomy;
   biogears::SESubstanceBolus* m_ketamineBolus;
   biogears::SESubstanceCompoundInfusion* m_ringers;
   biogears::SESubstanceCompoundInfusion* m_albumex;
