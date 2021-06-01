@@ -53,6 +53,10 @@ namespace bio
 
             engine.AdvanceModelTimeBy( 2.0, TimeUnit.s);
 
+		        SEBurnWound m_burnWound = new SEBurnWound();
+		        m_burnWound.GetTotalBodySurfaceArea().SetValue(50.0 / 100.0);
+		        engine.ProcessAction(m_burnWound);
+            engine.AdvanceModelTimeBy( 2.0, TimeUnit.s);
 
             var patient = engine.GetPatient();
             bool isTacycardia = patient.IsEventActive(CDM.enumPatientEvent.value.Tachycardia);
