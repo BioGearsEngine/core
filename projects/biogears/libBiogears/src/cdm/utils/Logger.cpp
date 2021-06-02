@@ -477,13 +477,13 @@ void Logger::Debug(std::ostream const& msg) const
 {
   std::stringstream ss;
   ss << msg.rdbuf();
-  Warning(ss.str());
+  Debug(ss.str());
 }
 void Logger::Info(std::ostream const& msg) const
 {
   std::stringstream ss;
   ss << msg.rdbuf();
-  Warning(ss.str());
+  Info(ss.str());
 }
 void Logger::Warning(std::ostream const& msg) const
 {
@@ -495,13 +495,13 @@ void Logger::Error(std::ostream const& msg) const
 {
   std::stringstream ss;
   ss << msg.rdbuf();
-  Warning(ss.str());
+  Error(ss.str());
 }
 void Logger::Fatal(std::ostream const& msg) const
 {
   std::stringstream ss;
   ss << msg.rdbuf();
-  Warning(ss.str());
+  Fatal(ss.str());
 }
 
 std::weak_ptr<IOManager> Logger::GetIoManager() const

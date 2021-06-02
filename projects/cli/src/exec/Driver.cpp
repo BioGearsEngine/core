@@ -727,7 +727,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   filesystem::path logfilepath = filesystem::path(ex.Computed()) / parent_dir / console_file;
   Logger file_logger(logfilepath);
   try {
-    file_logger.SetConsoleLogLevel(Logger::LogLevel::WARNING);
+    file_logger.SetConsoleLogLevel(Logger::LogLevel::EXCEPTION);
     file_logger.SetConsoleConversionPattern("%H:%M [:priority:] " + ex.Name() + " :message:%n");
     console_logger.SetConsoleConversionPattern("%H:%M [:priority:] :message:%n");
     console_logger.FormatMessages(false);
