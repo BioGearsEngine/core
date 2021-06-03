@@ -727,10 +727,10 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   filesystem::path logfilepath = filesystem::path(ex.Computed()) / parent_dir / console_file;
   Logger file_logger(logfilepath);
   try {
-    file_logger.SetConsoleLogLevel(Logger::LogLevel::EXCEPTION);
+    file_logger.SetConsoleLogLevel(Logger::LogLevel::WARNING);
     file_logger.SetConsoleConversionPattern("[{%H:%M}] <:priority:> " + ex.Name() + " :message::endline:");
-    console_logger.SetConsoleConversionPattern("[{%H:%M}] <:priority:> :message::endline:");
-    console_logger.FormatMessages(false);
+    console_logger.SetConsoleConversionPattern("[{%H:%M}] :message::endline:");
+    console_logger.FormatMessages(true);
 
     eng = CreateBioGearsEngine(&file_logger);
   } catch (std::exception e) {
@@ -746,8 +746,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
 
   BioGearsScenario sce(eng->GetSubstanceManager());
   if (!sce.Load(trim(trimed_scenario_path))) {
-    console_logger.Info(biogears::asprintf(
-      "Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
+    console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
   }
 
   if (!ex.Patient().empty()) {
@@ -797,15 +796,16 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
     sce.GetInitialParameters().SetPatient(patient);
   }
 
-  console_logger.Info("Starting " + ex.Name() + "\n");
+
+  console_logger.Info("Starting " + ex.Name() );
   try {
     BioGearsScenarioExec bse { *eng };
     filesystem::path resultsFilePath = ex.Computed();
     resultsFilePath /= parent_dir / results_file;
     bse.Execute(sce, resultsFilePath, nullptr);
-    console_logger.Info("Completed " + ex.Name() + "\n");
+    console_logger.Info("Completed " + ex.Name());
   } catch (...) {
-    console_logger.Error("Failed " + ex.Name() + "\n");
+    console_logger.Error("Failed " + ex.Name());
     _thread_count -= 1;
     return;
   }
