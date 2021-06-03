@@ -49,17 +49,17 @@ protected:
   virtual void Error(std::string const& msg, std::string const& origin) const;
   virtual void Fatal(std::string const& msg, std::string const& origin) const;
 
-  virtual void Debug(std::ostream const& msg) const;
-  virtual void Info(std::ostream const& msg) const;
-  virtual void Warning(std::ostream const& msg) const;
-  virtual void Error(std::ostream const& msg) const;
-  virtual void Fatal(std::ostream const& msg) const;
+  virtual void Debug(std::istream& msg) const;
+  virtual void Info(std::istream& msg) const;
+  virtual void Warning(std::istream& msg) const;
+  virtual void Error(std::istream& msg) const;
+  virtual void Fatal(std::istream& msg) const;
 
-  virtual void Debug(std::ostream&& msg) const;
-  virtual void Info(std::ostream&& msg) const;
-  virtual void Warning(std::ostream&& msg) const;
-  virtual void Error(std::ostream&& msg) const;
-  virtual void Fatal(std::ostream&& msg) const;
+  virtual void Debug(std::istream&& msg) const;
+  virtual void Info(std::istream&& msg) const;
+  virtual void Warning(std::istream&& msg) const;
+  virtual void Error(std::istream&& msg) const;
+  virtual void Fatal(std::istream&& msg) const;
 
   std::string m_origin;
   Logger* m_Logger;
@@ -129,17 +129,20 @@ public:
   virtual void Error(std::string const& msg, std::string const& origin = Loggable::empty) const;
   virtual void Fatal(std::string const& msg, std::string const& origin = Loggable::empty) const;
 
-  virtual void Debug(std::ostream const& ss) const;
-  virtual void Info(std::ostream const& ss) const;
-  virtual void Warning(std::ostream const& ss) const;
-  virtual void Error(std::ostream const& ss) const;
-  virtual void Fatal(std::ostream const& ss) const;
+  virtual void Debug(std::istream& ss) const;
+  virtual void Info(std::istream& ss) const;
+  virtual void Warning(std::istream& ss) const;
+  virtual void Error(std::istream& ss) const;
+  virtual void Fatal(std::istream& ss) const;
 
   std::weak_ptr<IOManager> GetIoManager() const;
   void SetIoManager(IOManager const&); //< Logger will setup a copy of the IOManager to distributed amongs the Engine components
 
 protected:
-  virtual std::string FormatLogMessage(LogLevel priority, std::string const& pattern, std::string const& message, std::string const& origin_str) const;
+  void LogMessage(std::istream&,  std::string const& origin, LogLevel) const;
+  void LogMessage(std::istream&&,  std::string const& origin, LogLevel) const;
+  void LogMessage(std::string const& msg, std::string const& origin, LogLevel priority) const;
+  void LogMessage(std::string&& msg, std::string const& origin, LogLevel priority) const;
 
 private:
   struct Implementation;

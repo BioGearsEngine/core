@@ -21,6 +21,8 @@ governing permissions and limitations under the License.
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <istream>
+#include <iterator>
 #include <ostream>
 #include <regex>
 
@@ -30,6 +32,8 @@ governing permissions and limitations under the License.
 namespace biogears {
 std::string const Loggable::empty("");
 const char* Loggable::empty_cStr("");
+
+constexpr auto MESSAGES_TO_FLUSH = 25;
 
 //!
 //! Logger Implementation member Functions
@@ -48,7 +52,7 @@ public:
 
   LogLevel volatile_filter_level = Logger::INFO;
   LogLevel persistant_filter_level = Logger::INFO;
-  mutable std::stringstream formatStream;
+  std::string format_buffer;
 
   std::string persistant_message_pattern = ":datetime: <:priority:> :origin: [:simtime:] :message: :endline:";
   std::string volatile_message_pattern = ":datetime: <:priority:> [:simtime:] :message: :endline:";
@@ -64,7 +68,7 @@ public:
   bool formatMessages = true;
   bool logToConsole = true;
 
-  std::atomic<unsigned int> message_count;
+  unsigned int message_count = 0;
 };
 
 Logger::Implementation::Implementation()
@@ -73,7 +77,9 @@ Logger::Implementation::Implementation()
 }
 Logger::Implementation::Implementation(IOManager const& t_io)
   : io(new IOManager(t_io))
+  , message_count(0)
 {
+  format_buffer.reserve(255);
 }
 
 //!
@@ -222,6 +228,7 @@ void Logger::SetForward(LoggerForward* forward) { m_impl->userDefinedLogger = fo
 //-------------------------------------------------------------------------
 //!  \return bool - Has a User defined LogFoward Impl been defined to this logger
 bool Logger::HasForward() { return m_impl->userDefinedLogger == nullptr ? false : true; }
+
 //-------------------------------------------------------------------------------
 //! \brief
 //! Currently the current long form placeholders are accepted
@@ -236,272 +243,497 @@ bool Logger::HasForward() { return m_impl->userDefinedLogger == nullptr ? false 
 //! If the presence of a %[a-zA-Z] is found it will be passed   to std::put_time for final processing.
 //! As this might cause a problem for some message formats. the longform alternatives are avaliable and
 //! will be expanded over time
-std::string Logger::FormatLogMessage(LogLevel priority, std::string const& pattern, std::string const& message, std::string const& origin_str) const
+
+void FormatLogMessage(std::string::const_iterator pattern_start, std::string::const_iterator pattern_end,
+                      std::istreambuf_iterator<char> message_start, std::istreambuf_iterator<char> message_end,
+                      Logger::LogLevel priority, std::string origin, SEScalarTime const* simtime,
+                      std::string& workspace, std::ostream& destination)
 {
 
-  auto processed_itr = pattern.begin();
-  auto current = pattern.begin();
-  auto end = pattern.end();
+  workspace.clear();
 
-  std::stringstream& message_stream = m_impl->formatStream;
-  message_stream.str("");
+  char time_buffer[80];
 
-  std::string token;
-  auto t_start = current;
-  auto t_end = current;
+  std::string::const_iterator scanner = pattern_start, processed = pattern_start;
+  std::string::const_iterator token_start, token_end, t_current;
+
+  std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  int t_seconds = 0;
+  int seconds = 0, minutes = 0, hours = 0, days = 0, weeks = 0;
 
   bool time_placeholders_found = false;
+  while (scanner != pattern_end) {
 
-  auto parse_token = [&](std::string::const_iterator t_start, std::string::const_iterator m_end) {
-    auto current = t_start + 1;
-    auto t_end = current;
-
-    while (t_start != m_end) {
-      if (*current == '%') {
-        time_placeholders_found = true;
-      }
-      if (!std::isalpha(*current)) {
-        return current;
-      }
-      ++current;
-    }
-    return t_start;
-  };
-
-  while (current != end) {
-    if (*current == '%') {
+    if (*scanner == '%') {
       time_placeholders_found = true;
     }
-    if (*current == ':') {
-      t_start = current;
-      t_end = parse_token(t_start, end);
-      if (t_start != t_end) {
-        if (processed_itr != t_start) {
-          message_stream << std::string(processed_itr, t_start);
-          processed_itr = t_start;
+    if (*scanner == ':') {
+      token_start = scanner;
+      t_current = token_start + 1;
+      auto token_end = t_current;
+
+      while (token_start != pattern_end) {
+        if (*t_current == '%') {
+          time_placeholders_found = true;
         }
-        token = std::string(t_start + 1, t_end);
+        if (!std::isalpha(*t_current)) {
+          token_end = t_current;
+          break;
+        }
+        ++t_current;
+      }
+
+      if (token_start != token_end) {
+        if (processed != token_start) {
+          workspace.append(processed, token_start);
+          processed = token_start;
+        }
+        auto token = std::string(token_start + 1, token_end);
         if (token == "datetime") {
-          current = t_end;
-          std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-          message_stream << std::put_time(std::localtime(&now), "%Y-%m-%d %H:%M");
-          current = t_end;
-          processed_itr = t_end + 1;
+          std::strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%d %H:%M", std::localtime(&now));
+          workspace += time_buffer;
+          scanner = token_end;
+          processed = scanner + 1;
         } else if (token == "origin") {
-          current = t_end;
-          message_stream << origin_str;
-          current = t_end;
-          processed_itr = t_end + 1;
+          workspace += origin;
+          scanner = token_end;
+          processed = scanner + 1;
         } else if (token == "priority") {
-          message_stream << ToString(priority);
-          current = t_end;
-          processed_itr = t_end + 1;
-        } else if (token == "datetime") {
-          message_stream << "stub";
-          current = t_end;
-          processed_itr = t_end + 1;
+          workspace += ToString(priority);
+          scanner = token_end;
+          processed = scanner + 1;
         } else if (token == "simseconds") {
-          if (m_impl->time) {
-            message_stream << m_impl->time->GetValue(TimeUnit::s) << "s";
+          if (&simtime != nullptr) {
+            workspace += std::to_string(simtime->GetValue(TimeUnit::s)) + "s";
           }
-          current = t_end;
-          processed_itr = t_end + 1;
+          scanner = token_end;
+          processed = scanner + 1;
         } else if (token == "simtime") {
-          if (m_impl->time) {
-            int t_seconds = static_cast<int>(m_impl->time->GetValue(TimeUnit::s));
-            int weeks = t_seconds / 604800;
-            int days = (t_seconds / 86400) % 7;
-            int hours = (t_seconds / 3600) % 24;
-            int minutes = (t_seconds / 60) % 60;
-            int seconds = t_seconds % 60;
-            if (weeks != 0) {
-              message_stream << weeks << "w";
-            }
-            current = t_end;
-            processed_itr = t_end + 1;
-            if (days != 0) {
-              message_stream << days << "d";
-            }
-            current = t_end;
-            if (hours != 0) {
-              message_stream << hours << "h";
-            }
-            current = t_end;
-            if (minutes != 0) {
-              message_stream << minutes << "m";
-            }
+          if (&simtime != nullptr) {
+            t_seconds = static_cast<int>(simtime->GetValue(TimeUnit::s));
 
-            message_stream << seconds << "s";
+            minutes = t_seconds / 60;
+            hours = minutes / 60;
 
-            current = t_end;
+            if (hours) {
+              workspace.append(std::to_string(hours % 24) + "h" + std::to_string(minutes % 60) + "m" + std::to_string(t_seconds % 60) + "s");
+            } else if (minutes) {
+              workspace.append(std::to_string(minutes % 60) + "m" + std::to_string(t_seconds % 60) + "s");
+            } else {
+              workspace.append(std::to_string(t_seconds % 60) + "s");
+            }
+            scanner = token_end;
+            processed = scanner + 1;
           }
         } else if (token == "message") {
-          message_stream << message;
-          current = t_end;
-          processed_itr = t_end + 1;
+          workspace.append(message_start, message_end);
+          scanner = token_end;
+          processed = scanner + 1;
         } else if (token == "space") {
-          message_stream << " ";
-          current = t_end;
-          processed_itr = t_end + 1;
+          workspace += " ";
+          scanner = token_end;
+          processed = scanner + 1;
         } else if (token == "tab") {
-          message_stream << "\t";
-          current = t_end;
-          processed_itr = t_end + 1;
+          workspace += "\t";
+          scanner = token_end;
+          processed = scanner + 1;
         } else if (token == "endline") {
-          message_stream << "\n";
-          current = t_end;
-          processed_itr = t_end + 1;
+          workspace += "\n";
+          scanner = token_end;
+          processed = scanner + 1;
+          ;
         }
       }
     }
-    ++current;
+    ++scanner;
   }
 
-  if (processed_itr != end) {
-    message_stream << std::string(processed_itr, end);
-    processed_itr = end;
+  if (scanner != pattern_end) {
+    workspace.append(scanner, pattern_end);
+    scanner = pattern_end;
   }
 
   if (time_placeholders_found) {
-    std::string processed_message = message_stream.str();
-    message_stream.str("");
-    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    message_stream << std::put_time(std::localtime(&now), processed_message.c_str());
+    destination << std::put_time(std::localtime(&now), workspace.c_str());
+  } else {
+    destination << workspace;
   }
-  return message_stream.str();
 }
 
-constexpr auto MESSAGES_TO_FLUSH = 25;
-void Logger::Debug(std::string const& msg, std::string const& origin) const
+void FormatLogMessage(std::string::const_iterator pattern_start, std::string::const_iterator pattern_end,
+                      std::string::const_iterator message_start, std::string::const_iterator message_end,
+                      Logger::LogLevel priority, std::string origin, SEScalarTime const* simtime,
+                      std::string& workspace, std::ostream& destination)
 {
-  m_impl->message_count += 1;
-  std::string message;
-  if (Logger::DEBUG <= m_impl->persistant_filter_level) {
-    message = (m_impl->formatMessages) ? FormatLogMessage(Logger::DEBUG, m_impl->persistant_message_pattern, msg, origin) : msg;
-    *m_impl->persistantStream << message;
-    if (m_impl->message_count % MESSAGES_TO_FLUSH == 0) {
-      m_impl->persistantStream->flush();
+
+  workspace.clear();
+
+  char time_buffer[80];
+
+  std::string::const_iterator scanner = pattern_start, processed = pattern_start;
+  std::string::const_iterator token_start, token_end, t_current;
+  std::string::const_iterator;
+
+  std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  int t_seconds = 0;
+  int seconds = 0, minutes = 0, hours = 0, days = 0, weeks = 0;
+
+  bool time_placeholders_found = false;
+  while (scanner != pattern_end) {
+
+    if (*scanner == '%') {
+      time_placeholders_found = true;
     }
-  }
-  if (Logger::DEBUG <= m_impl->volatile_filter_level) {
-    message = (m_impl->formatMessages) ? FormatLogMessage(Logger::DEBUG, m_impl->volatile_message_pattern, msg, origin) : msg;
-    *m_impl->volatileStream << message;
+    if (*scanner == ':') {
+      token_start = scanner;
+      t_current = token_start + 1;
+      auto token_end = t_current;
+
+      while (token_start != pattern_end) {
+        if (*t_current == '%') {
+          time_placeholders_found = true;
+        }
+        if (!std::isalpha(*t_current)) {
+          token_end = t_current;
+          break;
+        }
+        ++t_current;
+      }
+
+      if (token_start != token_end) {
+        if (processed != token_start) {
+          workspace.append(processed, token_start);
+          processed = token_start;
+        }
+        auto token = std::string(token_start + 1, token_end);
+        if (token == "datetime") {
+          std::strftime(&time_buffer[0], sizeof(time_buffer), "%Y-%m-%d %H:%M", std::localtime(&now));
+          workspace.append(&time_buffer[0]);
+          scanner = token_end;
+          processed = token_end + 1;
+        } else if (token == "origin") {
+          workspace += origin;
+          scanner = token_end;
+          processed = token_end + 1;
+        } else if (token == "priority") {
+          workspace += ToString(priority);
+          scanner = token_end;
+          processed = token_end + 1;
+        } else if (token == "simseconds") {
+          if (&simtime != nullptr) {
+            workspace += std::to_string(simtime->GetValue(TimeUnit::s)) + "s";
+          }
+          scanner = token_end;
+          processed = token_end + 1;
+        } else if (token == "simtime") {
+          if (&simtime != nullptr) {
+            t_seconds = static_cast<int>(simtime->GetValue(TimeUnit::s));
+
+            minutes = t_seconds / 60;
+            hours = minutes / 60;
+
+            if (hours) {
+              workspace.append(std::to_string(hours % 24) + "h" + std::to_string(minutes % 60) + "m" + std::to_string(t_seconds % 60) + "s");
+            } else if (minutes) {
+              workspace.append(std::to_string(minutes % 60) + "m" + std::to_string(t_seconds % 60) + "s");
+            } else {
+              workspace.append(std::to_string(t_seconds % 60) + "s");
+            }
+            scanner = token_end;
+            processed = token_end + 1;
+          }
+        } else if (token == "message") {
+          workspace.append(message_start, message_end);
+          scanner = token_end;
+          processed = token_end + 1;
+        } else if (token == "space") {
+          workspace += " ";
+          scanner = token_end;
+          processed = token_end + 1;
+        } else if (token == "tab") {
+          workspace += "\t";
+          scanner = token_end;
+          processed = token_end + 1;
+        } else if (token == "endline") {
+          workspace += "\n";
+          scanner = token_end;
+          processed = token_end + 1;
+        }
+      }
+    }
+    ++scanner;
   }
 
-  if (m_impl->userDefinedLogger != nullptr) {
-    m_impl->userDefinedLogger->Debug(message);
+  if (scanner != pattern_end) {
+    workspace.append(scanner, pattern_end);
+    scanner = pattern_end;
   }
+
+  if (time_placeholders_found) {
+    destination << std::put_time(std::localtime(&now), workspace.c_str());
+  } else {
+    destination << workspace;
+  }
+}
+
+void Logger::LogMessage(std::istream& msg, std::string const& origin, LogLevel priority) const
+{
+  auto& impl = *m_impl;
+  m_impl->message_count += 1;
+  std::string message;
+  if (priority <= impl.persistant_filter_level) {
+    if (impl.formatMessages) {
+      std::istreambuf_iterator<char> msg_start { msg }, msg_end;
+      FormatLogMessage(impl.persistant_message_pattern.begin(), impl.persistant_message_pattern.end(),
+                       msg_start, msg_end,
+                       priority, "", impl.time,
+                       impl.format_buffer, *impl.persistantStream);
+    } else {
+      *impl.persistantStream << msg.rdbuf();
+    }
+
+    *impl.persistantStream << message;
+    if (impl.message_count % MESSAGES_TO_FLUSH == 0) {
+      impl.persistantStream->flush();
+    }
+  }
+  if (priority <= impl.volatile_filter_level) {
+    if (impl.formatMessages) {
+      std::istreambuf_iterator<char> msg_start { msg }, msg_end;
+      FormatLogMessage(impl.volatile_message_pattern.begin(), impl.volatile_message_pattern.end(),
+                       msg_start, msg_end,
+                       priority, "", impl.time,
+                       impl.format_buffer, *impl.volatileStream);
+    } else {
+      *impl.volatileStream << msg.rdbuf();
+    }
+  }
+
+  if (impl.userDefinedLogger != nullptr) {
+    switch (priority) {
+    case Logger::DEBUG:
+      impl.userDefinedLogger->Debug(message);
+      break;
+    case Logger::ERROR:
+      impl.userDefinedLogger->Error(message);
+      break;
+    case Logger::EXCEPTION:
+      break;
+    case Logger::WARNING:
+      impl.userDefinedLogger->Warning(message);
+      break;
+    case Logger::INFO:
+      impl.userDefinedLogger->Info(message);
+      break;
+    case Logger::STABILIZATION:
+      break;
+    }
+  }
+}
+void Logger::LogMessage(std::istream&& msg, std::string const& origin, LogLevel priority) const
+{
+  auto& impl = *m_impl;
+  m_impl->message_count += 1;
+  std::string message;
+  if (priority <= impl.persistant_filter_level) {
+    if (impl.formatMessages) {
+      std::istreambuf_iterator<char> msg_start { msg }, msg_end;
+      FormatLogMessage(impl.persistant_message_pattern.begin(), impl.persistant_message_pattern.end(),
+                       msg_start, msg_end,
+                       priority, "", impl.time,
+                       impl.format_buffer, *impl.persistantStream);
+    } else {
+      *impl.persistantStream << msg.rdbuf();
+    }
+
+    *impl.persistantStream << message;
+    if (impl.message_count % MESSAGES_TO_FLUSH == 0) {
+      impl.persistantStream->flush();
+    }
+  }
+  if (priority <= impl.volatile_filter_level) {
+    if (impl.formatMessages) {
+      std::istreambuf_iterator<char> msg_start { msg }, msg_end;
+      FormatLogMessage(impl.volatile_message_pattern.begin(), impl.volatile_message_pattern.end(),
+                       msg_start, msg_end,
+                       priority, "", impl.time,
+                       impl.format_buffer, *impl.volatileStream);
+    } else {
+      *impl.volatileStream << msg.rdbuf();
+    }
+  }
+
+  if (impl.userDefinedLogger != nullptr) {
+    switch (priority) {
+    case Logger::DEBUG:
+      impl.userDefinedLogger->Debug(message);
+      break;
+    case Logger::ERROR:
+      impl.userDefinedLogger->Error(message);
+      break;
+    case Logger::EXCEPTION:
+      break;
+    case Logger::WARNING:
+      impl.userDefinedLogger->Warning(message);
+      break;
+    case Logger::INFO:
+      impl.userDefinedLogger->Info(message);
+      break;
+    case Logger::STABILIZATION:
+      break;
+    }
+  }
+}
+
+void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLevel priority) const
+{
+  auto& impl = *m_impl;
+  m_impl->message_count += 1;
+  std::string message;
+  if (priority <= impl.persistant_filter_level) {
+    if (impl.formatMessages) {
+
+      FormatLogMessage(impl.persistant_message_pattern.begin(), impl.persistant_message_pattern.end(),
+                       msg.begin(), msg.end(),
+                       priority, origin, impl.time,
+                       impl.format_buffer, *impl.persistantStream);
+    } else {
+      *impl.persistantStream << msg;
+    }
+
+    *impl.persistantStream << message;
+    if (impl.message_count % MESSAGES_TO_FLUSH == 0) {
+      impl.persistantStream->flush();
+    }
+  }
+  if (priority <= impl.volatile_filter_level) {
+    if (impl.formatMessages) {
+
+      FormatLogMessage(impl.volatile_message_pattern.begin(), impl.volatile_message_pattern.end(),
+                       msg.begin(), msg.end(),
+                       priority, origin, impl.time,
+                       impl.format_buffer, *impl.volatileStream);
+    } else {
+      *impl.volatileStream << msg;
+    }
+  }
+
+  if (impl.userDefinedLogger != nullptr) {
+    switch (priority) {
+    case Logger::DEBUG:
+      impl.userDefinedLogger->Debug(message);
+      break;
+    case Logger::ERROR:
+      impl.userDefinedLogger->Error(message);
+      break;
+    case Logger::EXCEPTION:
+      break;
+    case Logger::WARNING:
+      impl.userDefinedLogger->Warning(message);
+      break;
+    case Logger::INFO:
+      impl.userDefinedLogger->Info(message);
+      break;
+    case Logger::STABILIZATION:
+      break;
+    }
+  }
+}
+void Logger::LogMessage(std::string&& msg, std::string const& origin, LogLevel priority) const
+{
+  auto& impl = *m_impl;
+  m_impl->message_count += 1;
+  std::string message;
+  if (priority <= impl.persistant_filter_level) {
+    if (impl.formatMessages) {
+
+      FormatLogMessage(impl.persistant_message_pattern.begin(), impl.persistant_message_pattern.end(),
+                       msg.begin(), msg.end(),
+                       priority, origin, impl.time,
+                       impl.format_buffer, *impl.persistantStream);
+    } else {
+      *impl.persistantStream << msg;
+    }
+
+    *impl.persistantStream << message;
+    if (impl.message_count % MESSAGES_TO_FLUSH == 0) {
+      impl.persistantStream->flush();
+    }
+  }
+  if (priority <= impl.volatile_filter_level) {
+    if (impl.formatMessages) {
+
+      FormatLogMessage(impl.volatile_message_pattern.begin(), impl.volatile_message_pattern.end(),
+                       msg.begin(), msg.end(),
+                       priority, origin, impl.time,
+                       impl.format_buffer, *impl.volatileStream);
+    } else {
+      *impl.volatileStream << msg;
+    }
+  }
+
+  if (impl.userDefinedLogger != nullptr) {
+    switch (priority) {
+    case Logger::DEBUG:
+      impl.userDefinedLogger->Debug(message);
+      break;
+    case Logger::ERROR:
+      impl.userDefinedLogger->Error(message);
+      break;
+    case Logger::EXCEPTION:
+      break;
+    case Logger::WARNING:
+      impl.userDefinedLogger->Warning(message);
+      break;
+    case Logger::INFO:
+      impl.userDefinedLogger->Info(message);
+      break;
+    case Logger::STABILIZATION:
+      break;
+    }
+  }
+}
+
+void Logger::Debug(std::string const& msg, std::string const& origin) const
+{
+  LogMessage(msg, origin, LogLevel::DEBUG);
 }
 void Logger::Info(std::string const& msg, std::string const& origin) const
 {
-  m_impl->message_count += 1;
-  std::string message;
-  if (Logger::INFO <= m_impl->persistant_filter_level) {
-    message = (m_impl->formatMessages) ? FormatLogMessage(Logger::INFO, m_impl->persistant_message_pattern, msg, origin) : msg;
-    *m_impl->persistantStream << message;
-    if (m_impl->message_count % MESSAGES_TO_FLUSH == 0) {
-      m_impl->persistantStream->flush();
-    }
-  }
-  if (Logger::INFO <= m_impl->volatile_filter_level) {
-    message = (m_impl->formatMessages) ? FormatLogMessage(Logger::INFO, m_impl->volatile_message_pattern, msg, origin) : msg;
-    *m_impl->volatileStream << message;
-  }
-
-  if (m_impl->userDefinedLogger != nullptr) {
-    m_impl->userDefinedLogger->Info(message);
-  }
+  LogMessage(msg, origin, LogLevel::INFO);
 }
 void Logger::Warning(std::string const& msg, std::string const& origin) const
 {
-  m_impl->message_count += 1;
-  std::string message;
-  if (Logger::WARNING <= m_impl->persistant_filter_level) {
-    message = (m_impl->formatMessages) ? FormatLogMessage(Logger::WARNING, m_impl->persistant_message_pattern, msg, origin) : msg;
-    *m_impl->persistantStream << message;
-    if (m_impl->message_count % MESSAGES_TO_FLUSH == 0) {
-      m_impl->persistantStream->flush();
-    }
-  }
-  if (Logger::WARNING <= m_impl->volatile_filter_level) {
-    message = (m_impl->formatMessages) ? FormatLogMessage(Logger::WARNING, m_impl->volatile_message_pattern, msg, origin) : msg;
-    *m_impl->volatileStream << message;
-  }
-
-  if (m_impl->userDefinedLogger != nullptr) {
-    m_impl->userDefinedLogger->Warning(message);
-  }
+  LogMessage(msg, origin, LogLevel::WARNING);
 }
 void Logger::Error(std::string const& msg, std::string const& origin) const
 {
-  m_impl->message_count += 1;
-  std::string message;
-  if (Logger::ERROR <= m_impl->persistant_filter_level) {
-    message = (m_impl->formatMessages) ? FormatLogMessage(Logger::DEBUG, m_impl->persistant_message_pattern, msg, origin) : msg;
-    *m_impl->persistantStream << message;
-    if (m_impl->message_count % MESSAGES_TO_FLUSH == 0) {
-      m_impl->persistantStream->flush();
-    }
-  }
-  if (Logger::ERROR <= m_impl->volatile_filter_level) {
-    message = (m_impl->formatMessages) ? FormatLogMessage(Logger::DEBUG, m_impl->volatile_message_pattern, msg, origin) : msg;
-    *m_impl->volatileStream << message;
-  }
-
-  if (m_impl->userDefinedLogger != nullptr) {
-    m_impl->userDefinedLogger->Error(message);
-  }
+  LogMessage(msg, origin, LogLevel::ERROR);
 }
 void Logger::Fatal(std::string const& msg, std::string const& origin) const
 {
-  m_impl->message_count += 1;
-  std::string message;
-  if (Logger::FATAL <= m_impl->persistant_filter_level) {
-    message = (m_impl->formatMessages) ? FormatLogMessage(Logger::FATAL, m_impl->persistant_message_pattern, msg, origin) : msg;
-    *m_impl->persistantStream << message;
-    if (m_impl->message_count % MESSAGES_TO_FLUSH == 0) {
-      m_impl->persistantStream->flush();
-    }
-  }
-  if (Logger::FATAL <= m_impl->volatile_filter_level) {
-    message = (m_impl->formatMessages) ? FormatLogMessage(Logger::FATAL, m_impl->volatile_message_pattern, msg, origin) : msg;
-    *m_impl->volatileStream << message;
-  }
-
-  if (m_impl->userDefinedLogger != nullptr) {
-    m_impl->userDefinedLogger->Fatal(message);
-  }
+  LogMessage(msg, origin, LogLevel::FATAL);
 }
 
-void Logger::Debug(std::ostream const& msg) const
+void Logger::Debug(std::istream& msg) const
 {
-  std::stringstream ss;
-  ss << msg.rdbuf();
-  Debug(ss.str());
+  LogMessage(msg, "", LogLevel::DEBUG);
 }
-void Logger::Info(std::ostream const& msg) const
+void Logger::Info(std::istream& msg) const
 {
-  std::stringstream ss;
-  ss << msg.rdbuf();
-  Info(ss.str());
+  LogMessage(msg, "", LogLevel::INFO);
 }
-void Logger::Warning(std::ostream const& msg) const
+void Logger::Warning(std::istream& msg) const
 {
-  std::stringstream ss;
-  ss << msg.rdbuf();
-  Warning(ss.str());
+  LogMessage(msg, "", LogLevel::WARNING);
 }
-void Logger::Error(std::ostream const& msg) const
+void Logger::Error(std::istream& msg) const
 {
-  std::stringstream ss;
-  ss << msg.rdbuf();
-  Error(ss.str());
+  LogMessage(msg, "", LogLevel::ERROR);
 }
-void Logger::Fatal(std::ostream const& msg) const
+void Logger::Fatal(std::istream& msg) const
 {
-  std::stringstream ss;
-  ss << msg.rdbuf();
-  Fatal(ss.str());
+  LogMessage(msg, "", LogLevel::FATAL);
 }
 
 std::weak_ptr<IOManager> Logger::GetIoManager() const
@@ -595,69 +827,69 @@ void Loggable::Debug(std::string const& message, std::string const& origin) cons
 }
 
 //!
-//! OStream implementation I'm hoping we can replace this with a
+//! istream implementation I'm hoping we can replace this with a
 //! varadic implementation. Such that all types have a ToString call but
 //! for now this is a good work around
 //!
-void Loggable::Debug(std::ostream const& msg) const
+void Loggable::Debug(std::istream& msg) const
 {
   if (m_Logger) {
-    m_Logger->Debug(msg);
+    m_Logger->LogMessage(msg, "", Logger::DEBUG);
   }
 }
-void Loggable::Info(std::ostream const& msg) const
+void Loggable::Info(std::istream& msg) const
 {
   if (m_Logger) {
-    m_Logger->Info(msg);
+    m_Logger->LogMessage(msg, "", Logger::INFO);
   }
 }
-void Loggable::Warning(std::ostream const& msg) const
+void Loggable::Warning(std::istream& msg) const
 {
   if (m_Logger) {
-    m_Logger->Warning(msg);
+    m_Logger->LogMessage(msg, "", Logger::WARNING);
   }
 }
-void Loggable::Error(std::ostream const& msg) const
+void Loggable::Error(std::istream& msg) const
 {
   if (m_Logger) {
-    m_Logger->Error(msg);
+    m_Logger->LogMessage(msg, "", Logger::ERROR);
   }
 }
-void Loggable::Fatal(std::ostream const& msg) const
+void Loggable::Fatal(std::istream& msg) const
 {
   if (m_Logger) {
-    m_Logger->Fatal(msg);
+    m_Logger->LogMessage(msg, "", Logger::FATAL);
   }
 }
 
-void Loggable::Debug(std::ostream&& msg) const
+void Loggable::Debug(std::istream&& msg) const
 {
   if (m_Logger) {
-    m_Logger->Debug( std::move(msg));
+    m_Logger->LogMessage(std::move(msg), "", Logger::DEBUG);
   }
 }
-void Loggable::Info(std::ostream&& msg) const
+void Loggable::Info(std::istream&& msg) const
 {
   if (m_Logger) {
-    m_Logger->Info(std::move(msg));
+    m_Logger->LogMessage(std::move(msg), "", Logger::INFO);
   }
 }
-void Loggable::Warning(std::ostream&& msg) const
+void Loggable::Warning(std::istream&& msg) const
 {
   if (m_Logger) {
-    m_Logger->Warning(std::move(msg));
+    m_Logger->LogMessage(std::move(msg), "", Logger::WARNING);
   }
 }
-void Loggable::Error(std::ostream&& msg) const
+void Loggable::Error(std::istream&& msg) const
 {
   if (m_Logger) {
-    m_Logger->Error(std::move(msg));
+    m_Logger->LogMessage(std::move(msg), "", Logger::ERROR);
   }
 }
-void Loggable::Fatal(std::ostream&& msg) const
+void Loggable::Fatal(std::istream&& msg) const
 {
   if (m_Logger) {
-    m_Logger->Fatal(std::move(msg));
+    m_Logger->LogMessage(std::move(msg), "", Logger::FATAL);
   }
 }
 

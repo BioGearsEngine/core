@@ -36,7 +36,6 @@ namespace xml = xsd::cxx::xml;
 XERCES_CPP_NAMESPACE_BEGIN
 
 struct embedded_resource_resolver : DOMLSResourceResolver {
-#pragma optimize("", off)
   xercesc::DOMLSInput* resolveResource(XMLCh const* const resourceType,
                                        XMLCh const* const namespaceUri,
                                        XMLCh const* const publicId,
@@ -57,15 +56,6 @@ struct embedded_resource_resolver : DOMLSResourceResolver {
       normalized_path = systemId_str;
     }
 
-#ifdef _DEBUG
-    std::cout << "embeded_resource_resolver::revolveResource(\n";
-    std::cout << "\t" << xml::transcode<char>(resourceType) << "\n";
-    std::cout << "\t," << xml::transcode<char>(namespaceUri) << "\n";
-    std::cout << "\t," << xml::transcode<char>(publicId) << "\n";
-    std::cout << "\t," << systemId_str << "\n";
-    std::cout << "\t," << baseURI_str << "\n";
-    std::cout << ")" << std::endl;
-#endif
     auto xsd_files = list_xsd_files();
 
     for (auto i = xsd_file_count(); i != 0; --i) {
@@ -81,7 +71,6 @@ struct embedded_resource_resolver : DOMLSResourceResolver {
 #endif
     return nullptr;
   }
-#pragma optimize("", on)
 };
 embedded_resource_resolver g_embedded_resource_resolver;
 XERCES_CPP_NAMESPACE_END
@@ -141,7 +130,6 @@ Serializer::~Serializer()
   xercesc::XMLPlatformUtils::Terminate();
 }
 //-----------------------------------------------------------------------------
-#pragma optimize("", off)
 bool Serializer::Initialize(Logger* logger)
 {
   if (m_Initialized)
@@ -222,7 +210,6 @@ bool Serializer::Initialize(Logger* logger)
 #endif
   }
 }
-#pragma optimize("", on)
 //-----------------------------------------------------------------------------
 xercesc::DOMLSParser* Serializer::CreateParser(Logger* logger, bool embeddedXSD) const
 {
@@ -287,7 +274,6 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const char* xmlFile, Logge
   return ReadFile(std::string { xmlFile }, logger);
 }
 //-----------------------------------------------------------------------------
-#pragma optimize("", off)
 std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile, Logger* logger)
 {
 
@@ -311,7 +297,6 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   m_me->m_buffer[content_size] =   std::ifstream::traits_type::eof(); 
   return ReadBuffer(&m_me->m_buffer[0], content_size, logger);
 }
-#pragma optimize("", on)
 //-----------------------------------------------------------------------------
 std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, size_t size, Logger* logger)
 {
