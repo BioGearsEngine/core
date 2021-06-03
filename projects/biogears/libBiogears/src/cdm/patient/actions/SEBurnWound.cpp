@@ -132,20 +132,18 @@ const std::vector<std::string>& SEBurnWound::GetCompartments()
 //-----------------------------------------------------------------------------
 const std::string SEBurnWound::GetCompartment(const std::string c) const
 {
-  const std::string ca = "";
   for (unsigned int i = 0; i < m_compartmentsAffected.size(); i++) {
-    ca == m_compartmentsAffected[i];
-    if (c == ca)
-      return ca;
+    if (c == m_compartmentsAffected[i])
+      return c;
   }
-  return ca;
+  return "";
 }
 //-----------------------------------------------------------------------------
 void SEBurnWound::RemoveCompartment(const std::string c)
 {
-  const std::string ca = "";
+  std::string ca = "";
   for (unsigned int i = 0; i < m_compartmentsAffected.size(); i++) {
-    ca == m_compartmentsAffected[i];
+    ca = m_compartmentsAffected[i];
     if (c == ca) {
       m_compartmentsAffected.erase(m_compartmentsAffected.begin() + i);
       ca == "";
@@ -168,9 +166,7 @@ void SEBurnWound::ToString(std::ostream& str) const
   str << *m_TBSA;
   str << "\n\tCompartment(s): ";
   if (HasCompartment()) {
-    //const std::string ca = "";
     for (unsigned int i = 0; i < m_compartmentsAffected.size(); i++) {
-      //ca == m_compartmentsAffected[i];
       if (i == 0) {
         str << m_compartmentsAffected[i];
       } else {
@@ -188,15 +184,6 @@ bool SEBurnWound::operator==(const SEBurnWound& rhs) const
   bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_TBSA && rhs.m_TBSA) ? m_TBSA->operator==(*rhs.m_TBSA) : m_TBSA == rhs.m_TBSA;
   equivilant &= m_compartmentsAffected == rhs.m_compartmentsAffected;
-  /*std::vector<std::string> lhs = m_compartmentsAffected;
-  if (lhs == rhs.m_compartmentsAffected) {
-    equivilant &= lhs == rhs.m_compartmentsAffected;
-  }*/
-  /*if (m_compartmentsAffected.size() == rhs.m_compartmentsAffected.size()) {
-    for (unsigned int i = 0; i < m_compartmentsAffected.size(); i++) {
-      equivilant &= m_compartmentsAffected[i] == rhs.m_compartmentsAffected[i];
-    }
-  }*/
   return equivilant;
 }
 //-------------------------------------------------------------------------------
