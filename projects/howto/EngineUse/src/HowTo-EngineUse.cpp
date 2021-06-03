@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/string/manipulation.h>
 
 #include <iostream>
 #include <sstream>
@@ -51,11 +52,11 @@ using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 class MyLogger : public LoggerForward {
 public:
-  virtual void Debug( std::string const& msg) const override { std::cout << msg << "\n"; }
-  virtual void Info(std::string const& msg)  const override { std::cout << msg << "\n"; }
-  virtual void Warning(std::string const& msg)  const override { std::cout << msg << "\n"; }
-  virtual void Error(std::string const& msg)  const override { std::cerr << msg << "\n"; }
-  virtual void Fatal(std::string const& msg)  const override { std::cerr << msg << "\n"; }
+  virtual void Debug(std::string const& msg) const override { std::cout << msg << "\n"; }
+  virtual void Info(std::string const& msg) const override { std::cout << msg << "\n"; }
+  virtual void Warning(std::string const& msg) const override { std::cout << msg << "\n"; }
+  virtual void Error(std::string const& msg) const override { std::cerr << msg << "\n"; }
+  virtual void Fatal(std::string const& msg) const override { std::cerr << msg << "\n"; }
 };
 
 //--------------------------------------------------------------------------------------------------
@@ -103,7 +104,7 @@ void HowToEngineUse()
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToEngineUse.log");
   bg->GetLogger()->Info("HowToEngineUse");
 
-  // This BioGearsEngine logger 
+  // This BioGearsEngine logger
   // BioGearsEngine logs to several distinct, ordered
   // category levels: DEBUG, INFO, WARN, ERROR, FATAL
   // These categories are orders, if your level is set to DEBUG you will recieve ALL messages.
@@ -228,23 +229,23 @@ void HowToEngineUse()
 
   // Here we demostrate pulling data from various physiology systems
 
-  bg->GetLogger()->Info(std::stringstream() << "HeartRate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-  bg->GetLogger()->Info(std::stringstream() << "BloodVolume : " << bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL);
-  bg->GetLogger()->Info(std::stringstream() << "ArterialSystolicPressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "ArterialDiastolicPressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "MeanArterialPressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(asprintf( "HeartRate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf( "BloodVolume : %f %s", bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL), "mL"));
+  bg->GetLogger()->Info(asprintf( "ArterialSystolicPressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf( "ArterialDiastolicPressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf( "MeanArterialPressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
 
   // Here we demonstrate pulling data from a compartment
   // NOTE THAT WHEN YOU PULL A COMPARTMENT FROM THE COMPARTMENT MANAGER, THAT IS A STRING LOOK UP, TRY TO CACHE COMPARTMENTS OF INTEREST INTO YOUR OWN LIST/MAP
   // This allows a more direct access to the underlying data calculated by the methodology
   // For example, getting an Invasive Blood Pressure, any arterial compartment pressure can be pulled, i.e. femoral artery (right/left leg)
   // Since this is an arterial compartment, blood is flowing through this compartment, where as the carina compartment is air flow
-  bg->GetLogger()->Info(std::stringstream() << "Invasive Blood Pressure : " << bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
+  bg->GetLogger()->Info(asprintf( "Invasive Blood Pressure : %f %s", bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetPressure(PressureUnit::mmHg), "mmHg"));
 
-  bg->GetLogger()->Info(std::stringstream() << "RespirationRate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-  bg->GetLogger()->Info(std::stringstream() << "Total Lung Volume : " << bg->GetRespiratorySystem()->GetTotalLungVolume(VolumeUnit::mL) << VolumeUnit::mL);
-  bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-  bg->GetLogger()->Info(std::stringstream() << "End Tidal CarbonDioxide Fraction : " << bg->GetRespiratorySystem()->GetEndTidalCarbonDioxideFraction());
+  bg->GetLogger()->Info(asprintf( "RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf( "Total Lung Volume : %f %s", bg->GetRespiratorySystem()->GetTotalLungVolume(VolumeUnit::mL), "mL"));
+  bg->GetLogger()->Info(asprintf( "Tidal Volume : %f %s", bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
+  bg->GetLogger()->Info(asprintf( "End Tidal CarbonDioxide Fraction : %f", bg->GetRespiratorySystem()->GetEndTidalCarbonDioxideFraction()));
 
   // Using the compartment we can get more detailed respiratory information
   // Here we will test the flow of air in the carina compartment. A positive flow is an inhale and a negative flow is an exhale.
@@ -252,16 +253,16 @@ void HowToEngineUse()
 
   const SEGasCompartment* carina = bg->GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Trachea);
   if (carina->GetInFlow(VolumePerTimeUnit::L_Per_s) > 0) { // We are inhaling, so let's grab the amount of O2 coming into the body
-    bg->GetLogger()->Info(std::stringstream() << "O2 Inhaled " << carina->GetSubstanceQuantity(*O2)->GetVolume(VolumeUnit::mL) << VolumeUnit::mL);
+    bg->GetLogger()->Info(asprintf( "O2 Inhaled %f %s", carina->GetSubstanceQuantity(*O2)->GetVolume(VolumeUnit::mL), "mL"));
   } else { // We are exhaling, so let's grab the amount of CO2 that is leaving the body
-    bg->GetLogger()->Info(std::stringstream() << "CO2 Exhaled " << carina->GetSubstanceQuantity(*CO2)->GetVolume(VolumeUnit::mL) << VolumeUnit::mL);
+    bg->GetLogger()->Info(asprintf( "CO2 Exhaled %f %s", carina->GetSubstanceQuantity(*CO2)->GetVolume(VolumeUnit::mL), "mL"));
   }
 
-  bg->GetLogger()->Info(std::stringstream() << "OxygenSaturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
-  bg->GetLogger()->Info(std::stringstream() << "ArterialBlood pH : " << bg->GetBloodChemistrySystem()->GetArterialBloodPH());
+  bg->GetLogger()->Info(asprintf( "OxygenSaturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
+  bg->GetLogger()->Info(asprintf( "ArterialBlood pH : %f", bg->GetBloodChemistrySystem()->GetArterialBloodPH()));
   //  You should save off the SESubstanceQuantity* if you will need it more than once
-  bg->GetLogger()->Info(std::stringstream() << "Lactate Concentration : " << bg->GetSubstanceManager().GetSubstance("Lactate")->GetBloodConcentration(MassPerVolumeUnit::mg_Per_dL) << MassPerVolumeUnit::mg_Per_dL);
-  bg->GetLogger()->Info(std::stringstream() << "Core Body Temperature : " << bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << TemperatureUnit::C);
+  bg->GetLogger()->Info(asprintf( "Lactate Concentration : %f %s", bg->GetSubstanceManager().GetSubstance("Lactate")->GetBloodConcentration(MassPerVolumeUnit::mg_Per_dL), "mg_Per_dL"));
+  bg->GetLogger()->Info(asprintf( "Core Body Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
 
   // Save the state of the engine
   bg->SaveState("./states/FinalEngineUseState.xml");

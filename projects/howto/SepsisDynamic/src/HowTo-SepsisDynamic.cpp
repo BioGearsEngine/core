@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERenalSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
+#include <biogears/string/manipulation.h>
 
 using namespace biogears;
 //This method uses the Threaded BioGears functionality
@@ -197,19 +198,19 @@ void DynamicSepsis::Status()
 { // On demand call to print vitals to the screen
   m_mutex.lock();
   m_bg->GetLogger()->Info("");
-  m_bg->GetLogger()->Info(std::stringstream() << "Simulation Time  : " << m_bg->GetSimulationTime(TimeUnit::min) - m_StartTime_min << "min");
-  m_bg->GetLogger()->Info(std::stringstream() << "Time Since Infection Start  : " << m_bg->GetSimulationTime(TimeUnit::min) << "min");
-  m_bg->GetLogger()->Info(std::stringstream() << "Blood Volume : " << m_bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL);
-  m_bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << m_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  m_bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << m_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  m_bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << m_bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  m_bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << m_bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-  m_bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << m_bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-  m_bg->GetLogger()->Info(std::stringstream() << "Mean Urine Output : " << m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
-  m_bg->GetLogger()->Info(std::stringstream() << "Temperature : " << m_bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << "deg C");
-  m_bg->GetLogger()->Info(std::stringstream() << "Blood Lactate : " << m_bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L);
-  m_bg->GetLogger()->Info(std::stringstream() << "Bacteria Count (Blood) : " << m_bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue());
-  m_bg->GetLogger()->Info(std::stringstream() << "Antibiotic Activity : " << m_bg->GetDrugSystem()->GetAntibioticActivity());
+  m_bg->GetLogger()->Info(asprintf("Simulation Time  : %f %s", m_bg->GetSimulationTime(TimeUnit::min) - m_StartTime_min, "min"));
+  m_bg->GetLogger()->Info(asprintf("Time Since Infection Start  : %f %s", m_bg->GetSimulationTime(TimeUnit::min), "min"));
+  m_bg->GetLogger()->Info(asprintf("Blood Volume : %f %s", m_bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL), "mL"));
+  m_bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", m_bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  m_bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", m_bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  m_bg->GetLogger()->Info(asprintf("Mean Urine Output : %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  m_bg->GetLogger()->Info(asprintf("Temperature : %f %s", m_bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "deg C"));
+  m_bg->GetLogger()->Info(asprintf("Blood Lactate : %f %s", m_bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L), "mmol_Per_L"));
+  m_bg->GetLogger()->Info(asprintf("Bacteria Count (Blood) : %f", m_bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()));
+  m_bg->GetLogger()->Info(asprintf("Antibiotic Activity : %f", m_bg->GetDrugSystem()->GetAntibioticActivity()));
 
   std::cout << std::endl;
   m_mutex.unlock();

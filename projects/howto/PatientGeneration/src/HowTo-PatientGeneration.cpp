@@ -195,21 +195,23 @@ void PatientRun::refresh_treatment()
       && _time_to_full_assessment_min < 1.0) {
     _time_to_full_assessment_min = hours(3);
     _bg->GetLogger()->Info("");
-    _bg->GetLogger()->Info(std::stringstream() << "Patient Physiology"
-                                               << "\n\tSimulation Time  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
-                                               << "\n\tTime Since Infection Start  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
-                                               << "\n\tBlood Volume : " << _bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL
-                                               << "\n\tBlood Oxygen Saturation : " << _bg->GetBloodChemistrySystem()->GetOxygenSaturation() << "%"
-                                               << "\n\tMean Arterial Pressure : " << _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-                                               << "\n\tSystolic Pressure : " << _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-                                               << "\n\tDiastolic Pressure : " << _bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-                                               << "\n\tHeart Rate : " << _bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm"
-                                               << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
-                                               << "\n\tMean Urine Output : " << _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
-                                               << "\n\tTemperature : " << _bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << "deg C"
-                                               << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
-                                               << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()
-                                               << "\n\tAntibiotic Activity : " << _bg->GetDrugSystem()->GetAntibioticActivity());
+    std::stringstream ss ; 
+    ss << "Patient Physiology"
+       << "\n\tSimulation Time  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
+       << "\n\tTime Since Infection Start  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
+       << "\n\tBlood Volume : " << _bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL
+       << "\n\tBlood Oxygen Saturation : " << _bg->GetBloodChemistrySystem()->GetOxygenSaturation() << "%"
+       << "\n\tMean Arterial Pressure : " << _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tSystolic Pressure : " << _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tDiastolic Pressure : " << _bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tHeart Rate : " << _bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm"
+       << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
+       << "\n\tMean Urine Output : " << _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
+       << "\n\tTemperature : " << _bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << "deg C"
+       << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
+       << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()
+       << "\n\tAntibiotic Activity : " << _bg->GetDrugSystem()->GetAntibioticActivity();
+    _bg->GetLogger()->Info(ss);
   }
   _time_to_reassessment_min -= 1.;
   _time_to_full_assessment_min -= 1.;
@@ -391,21 +393,23 @@ void PatientRun::egdt_treatment()
       && _time_to_full_assessment_min < 1.0) {
     _time_to_full_assessment_min = hours(3);
     _bg->GetLogger()->Info("");
-    _bg->GetLogger()->Info(std::stringstream() << "Patient Physiology"
-                                               << "\n\tSimulation Time  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
-                                               << "\n\tTime Since Infection Start  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
-                                               << "\n\tBlood Volume : " << _bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL
-                                               << "\n\tBlood Oxygen Saturation : " << _bg->GetBloodChemistrySystem()->GetOxygenSaturation() << "%"
-                                               << "\n\tMean Arterial Pressure : " << _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-                                               << "\n\tSystolic Pressure : " << _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-                                               << "\n\tDiastolic Pressure : " << _bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-                                               << "\n\tHeart Rate : " << _bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm"
-                                               << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
-                                               << "\n\tMean Urine Output : " << _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
-                                               << "\n\tTemperature : " << _bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << "deg C"
-                                               << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
-                                               << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()
-                                               << "\n\tAntibiotic Activity : " << _bg->GetDrugSystem()->GetAntibioticActivity());
+    std::stringstream ss;
+    ss << "Patient Physiology"
+       << "\n\tSimulation Time  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
+       << "\n\tTime Since Infection Start  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
+       << "\n\tBlood Volume : " << _bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL
+       << "\n\tBlood Oxygen Saturation : " << _bg->GetBloodChemistrySystem()->GetOxygenSaturation() << "%"
+       << "\n\tMean Arterial Pressure : " << _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tSystolic Pressure : " << _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tDiastolic Pressure : " << _bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tHeart Rate : " << _bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm"
+       << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
+       << "\n\tMean Urine Output : " << _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
+       << "\n\tTemperature : " << _bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << "deg C"
+       << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
+       << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()
+       << "\n\tAntibiotic Activity : " << _bg->GetDrugSystem()->GetAntibioticActivity();
+    _bg->GetLogger()->Info(ss);
   }
   _time_to_reassessment_min -= 1.;
   _time_to_full_assessment_min -= 1.;
