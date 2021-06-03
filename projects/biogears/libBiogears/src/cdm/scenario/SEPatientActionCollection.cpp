@@ -467,10 +467,6 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
   const CDM::EscharotomyData* eschData = dynamic_cast<const CDM::EscharotomyData*>(&action);
   if (eschData != nullptr) {
     auto eItr = m_Escharotomies.find(eschData->Location());
-    //bool matchingCompartmentSyndrome = false;
-    //bool validCmpt = false;
-    //std::stringstream warn;
-    //Check for compartment syndrome relevance cannot be done here without access to conditions
     SEEscharotomy* escharotomy = std::make_unique<SEEscharotomy>().release();
     if (eItr != m_Escharotomies.end()) {
       escharotomy = m_Escharotomies[eschData->Location()];

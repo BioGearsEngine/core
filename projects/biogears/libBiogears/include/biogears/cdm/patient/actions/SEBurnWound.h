@@ -47,11 +47,9 @@ public:
   bool HasCompartment() const;
   bool HasCompartment(const std::string compartment) const;
   const std::vector<std::string>& GetCompartments();
- // std::string GetCompartment(std::string compartment);
   const std::string GetCompartment(const std::string compartment) const;
   void RemoveCompartment(const std::string compartment);
   void RemoveCompartments();
-  //virtual void InvalidateCompartment();
 
   virtual bool HasInflammation() const;
   virtual void SetInflammation(bool activate);
