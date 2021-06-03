@@ -558,8 +558,8 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   circuitFile.close();
   cvGraphFile.close();
 
-  ss << "It took " << tmr.GetElapsedTime_s("Test") << "s to run";
-  bg.GetLogger()->Info(ss, "CardiovascularCircuitAndTransportTest");
+  ss << "It took " << tmr.GetElapsedTime_s("Test") << "s to run CardiovascularCircuitAndTransportTest";
+  Info(ss);
 }
 
 void BioGearsEngineTest::SinusoidHeartDriver(double time_s, double heartFreq_Per_s, double& lHeartElastance, double& rHeartElastance)
