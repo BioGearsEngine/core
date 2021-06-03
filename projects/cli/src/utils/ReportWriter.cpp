@@ -176,7 +176,7 @@ void ReportWriter::gen_tables_single_sheet(std::string reference_file, std::stri
   to_table();
   logger->Debug("Successfully generated table: " + split(reference_file, '.')[0]);
   clear();
-  logger->SetConsoleConversionPattern("%d [:priority:] :message::newline:");
+  logger->SetConsoleConversionPattern("{%d} [:priority:] :message::newline:");
 }
 
 //--------------------------------------------------------------------------------

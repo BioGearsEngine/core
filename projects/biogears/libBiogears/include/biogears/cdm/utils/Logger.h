@@ -139,8 +139,8 @@ public:
   void SetIoManager(IOManager const&); //< Logger will setup a copy of the IOManager to distributed amongs the Engine components
 
 protected:
-  void LogMessage(std::istream&,  std::string const& origin, LogLevel) const;
-  void LogMessage(std::istream&&,  std::string const& origin, LogLevel) const;
+  void LogMessage(std::istream&, std::string const& origin, LogLevel) const;
+  void LogMessage(std::istream&&, std::string const& origin, LogLevel) const;
   void LogMessage(std::string const& msg, std::string const& origin, LogLevel priority) const;
   void LogMessage(std::string&& msg, std::string const& origin, LogLevel priority) const;
 
@@ -149,6 +149,18 @@ private:
   std::unique_ptr<Implementation> m_impl;
 };
 
+inline std::ostream& operator<<(std::ostream& os, Logger::LogLevel level)
+{
+  os << ((Logger::ALL == level)           ? "ALL"
+           : (Logger::FATAL == level)     ? "FATAL"
+           : (Logger::DEBUG == level)     ? "DEBUG"
+           : (Logger::ERROR == level)     ? "ERROR"
+           : (Logger::EXCEPTION == level) ? "EXECPTION"
+           : (Logger::WARNING == level)   ? "WARNING"
+           : (Logger::INFO == level)      ? "INFO"
+                                          : "UNKNWON");
+  return os;
+}
 inline std::string ToString(Logger::LogLevel level)
 {
   return (Logger::ALL == level)    ? "ALL"
