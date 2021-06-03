@@ -276,8 +276,7 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const char* xmlFile, Logge
 //-----------------------------------------------------------------------------
 std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile, Logger* logger)
 {
-
-    std::lock_guard<std::mutex> thread_lock { g_serializer_mutex };
+  std::lock_guard<std::mutex> thread_lock { g_serializer_mutex };
   if (m_me == nullptr) {
     m_me = new Serializer();
   }
