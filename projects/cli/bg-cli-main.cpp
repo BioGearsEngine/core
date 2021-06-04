@@ -199,7 +199,7 @@ int main(int argc, char** argv)
   args.append_keywords({ "SHA1", "GENRUNTIME" });
 #endif
 
-  unsigned int thread_count = std::thread::hardware_concurrency();
+  unsigned int thread_count = std::thread::hardware_concurrency() - 2;
   if (!args.parse(argc, argv) ) {
     std::cerr << args.error_msg() << "\n";
     print_help(BG_CLI_PARSE_ERROR);
