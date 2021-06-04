@@ -848,8 +848,6 @@ void ReportWriter::clear()
   report.clear();
 }
 
-//--------------------------------------------------------------------------------
-
 //-------------------------------------------------------------------------------
 /// \brief Takes a list of validation files and results files from biogears and produces
 /// validation tables for our documentation.
@@ -950,7 +948,7 @@ void ReportWriter::generate_patient_tables(TYPE table_type)
     }
     std::fstream file { XMLFile[current_file_index] };
     ParseXMLPatient(file, headers, values);
-    std::string Outputfile = system.first.substr(11, system.first.length());
+    std::string Outputfile = system.first.substr(strlen("PatientValidation-")  , system.first.length());
     generate_patient_table(Outputfile, headers, values);
     current_file_index++;
   }

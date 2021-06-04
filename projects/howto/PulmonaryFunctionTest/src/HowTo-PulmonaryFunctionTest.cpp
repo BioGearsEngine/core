@@ -83,7 +83,7 @@ void HowToPulmonaryFunction()
 	bg->GetLogger()->Info(asprintf("Forced Expiratory Volume %f", pft.GetForcedExpiratoryVolume().GetValue()));
 	bg->GetLogger()->Info(asprintf("Forced Expiratory Flow %f", pft.GetForcedExpiratoryFlow().GetValue()));
 	bg->GetLogger()->Info(asprintf("Maximum Voluntary Ventilation %f", pft.GetMaximumVoluntaryVentilation().GetValue()));
-	bg->GetLogger()->Info(asprintf("Peak Expiratory Flow %f", pft.GetPeakExpiratoryFlow()));
+	bg->GetLogger()->Info(asprintf("Peak Expiratory Flow %f", pft.GetPeakExpiratoryFlow().GetValue()));
 	bg->GetLogger()->Info(asprintf("Slow Vital Capacity %f", pft.GetSlowVitalCapacity().GetValue()));
 	
 	// BioGears does compute the LungVolumePlot Data

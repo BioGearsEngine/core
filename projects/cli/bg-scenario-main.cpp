@@ -77,9 +77,9 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
   try {
 
     file_logger.SetConsoleLogLevel(log_level);
-    file_logger.SetConsoleConversionPattern("%H:%M [:priority:] " + ex.Name() + ":message:%n");
-    console_logger.SetConsoleConversionPattern("%H:%M [:priority:] :message:%n");
-    console_logger.FormatMessages(false);
+    file_logger.SetConsoleConversionPattern("[{%H:%M}] " + ex.Name() + " <:priority:> :message::newline:");
+    console_logger.SetConsoleConversionPattern("[{%H:%M}] :message::newline:");
+    console_logger.FormatMessages(true);
 
     eng = CreateBioGearsEngine(&file_logger);
   } catch (std::exception e) {

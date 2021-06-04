@@ -752,7 +752,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       if (serialize->HasFilename()) {
         SaveState(serialize->GetFilename());
       } else {
-        SaveState(asprintf("%s@%fs.xml", m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));
+        SaveState(asprintf("%s@%.0fs.xml", m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));
       }
     } else {
       return LoadState(serialize->GetFilename());
@@ -774,7 +774,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       if (results_filepath.empty()) {
         results_filepath = "PulmonaryFunctionTest";
       }
-      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sPFT@%fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sPFT@%.0fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -791,7 +791,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       if (results_filepath.empty()) {
         results_filepath = "Urinalysis";
       }
-      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sUrinalysis@%fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sUrinalysis@%.0fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -808,7 +808,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       if (results_filepath.empty()) {
         results_filepath = "CompleteBloodCount";
       }
-      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sCBC@%fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sCBC@%.0fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -825,7 +825,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       if (results_filepath.empty()) {
         results_filepath = "ComprehensiveMetabolicPanel";
       }
-      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sCMP@%fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sCMP@%.0fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
@@ -841,7 +841,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       if (results_filepath.empty()) {
         results_filepath = "SequentialOrganFailureAssessment";
       }
-      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%s_SOF@%fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%s_SOF@%.0fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";

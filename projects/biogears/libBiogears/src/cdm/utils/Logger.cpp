@@ -46,6 +46,7 @@ void simseconds_handler(std::ostream& os, std::string const& message, std::strin
 void simtime_handler(std::ostream& os, std::string const& message, std::string const& origin, Logger::LogLevel /*prioriy*/, SEScalarTime const* /*simtime*/, tm const* /*timepoint*/);
 void message_handler(std::ostream& os, std::string const& message, std::string const& origin, Logger::LogLevel /*prioriy*/, SEScalarTime const* /*simtime*/, tm const* /*timepoint*/);
 void puttime_handler(std::ostream& os, std::string const& format, std::string const& /*message*/, std::string const& /*origin*/, Logger::LogLevel /*prioriy*/, SEScalarTime const* /*simtime*/, tm const* datetime);
+void flush_handler(std::ostream& os, std::string const& /*message*/, std::string const& /*origin*/, Logger::LogLevel /*prioriy*/, SEScalarTime const* /*simtime*/, tm const* /*datetime*/);
 
 auto process_message_pattern(std::string pattern) -> CallStack;
 auto process_message_pattern(std::string::const_iterator scanner, std::string::const_iterator pattern_end) -> CallStack;
@@ -148,6 +149,10 @@ void puttime_handler(std::ostream& os, std::string const& format, std::string co
 {
   os << std::put_time(datetime, format.c_str());
 };
+void flush_handler(std::ostream& os, std::string const& /*message*/, std::string const& /*origin*/, Logger::LogLevel /*prioriy*/, SEScalarTime const* /*simtime*/, tm const* /*datetime*/)
+{
+  os.flush();
+};
 // Call Stack Builder
 auto process_message_pattern(std::string pattern) -> CallStack
 {
@@ -241,11 +246,14 @@ auto process_message_pattern(std::string::const_iterator scanner, std::string::c
           call_stack.push_back(std::bind(string_handler, std::placeholders::_1, "\t", std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6));
           scanner = token_end;
           processed = scanner + 1;
-        } else if (token == "endline") {
+        } else if (token == "endline" || token == "newline") {
           call_stack.push_back(std::bind(string_handler, std::placeholders::_1, "\n", std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6));
           scanner = token_end;
           processed = scanner + 1;
-          ;
+        } else if (token == "flush") {
+          call_stack.push_back(flush_handler);
+          scanner = token_end;
+          processed = scanner + 1;
         }
       }
     }
@@ -375,7 +383,6 @@ void Logger::SetConsoleLogLevel(LogLevel logLevel) const
 
 void Logger::SetConversionPattern(std::string const& pattern)
 {
-
   m_impl->persistant_message_callstack = process_message_pattern(pattern.begin(), pattern.end());
 }
 //-------------------------------------------------------------------------

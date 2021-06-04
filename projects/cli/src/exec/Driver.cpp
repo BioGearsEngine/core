@@ -728,7 +728,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   Logger file_logger(logfilepath);
   try {
     file_logger.SetConsoleLogLevel(Logger::LogLevel::WARNING);
-    file_logger.SetConsoleConversionPattern("[{%H:%M}] <:priority:> " + ex.Name() + " :message::endline:");
+    file_logger.SetConsoleConversionPattern("[{%H:%M}] " + ex.Name() + " <:priority:> :message::endline:");
     console_logger.SetConsoleConversionPattern("[{%H:%M}] :message::endline:");
     console_logger.FormatMessages(true);
 
