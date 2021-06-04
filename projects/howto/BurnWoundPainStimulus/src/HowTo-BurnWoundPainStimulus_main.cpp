@@ -16,7 +16,6 @@ int main( int argc, char* argv[] )
     std::string logName = "./states/BurnWoundStates/HowToBurnWound";
     logName.append(strTBSA);
     logName.append(".log");
-    //std::string log = "./HowToBurnWound.log";
     BurnThread burn(logName, tbsa);
     burn.FluidLoading(tbsa);
   }
