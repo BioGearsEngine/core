@@ -122,8 +122,6 @@ protected:
   double m_maxProteinStorage_g;
   double m_lastFatigueTime;
 
-  double m_testing = 0.0;
-
   double m_leftArmDeltaResistance_mmHg_s_Per_mL;
   double m_rightArmDeltaResistance_mmHg_s_Per_mL;
   double m_leftLegDeltaResistance_mmHg_s_Per_mL;

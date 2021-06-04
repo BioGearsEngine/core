@@ -146,7 +146,7 @@ void SEBurnWound::RemoveCompartment(const std::string c)
     ca = m_compartmentsAffected[i];
     if (c == ca) {
       m_compartmentsAffected.erase(m_compartmentsAffected.begin() + i);
-      ca == "";
+      ca = "";
     }
   }
 }
