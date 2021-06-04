@@ -218,7 +218,7 @@ std::vector<filesystem::path> ListFiles(std::string const& dir, std::string cons
     }
   }
 #endif
-  return {};
+  return results;
 }
 
 //!
