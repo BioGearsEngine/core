@@ -52,11 +52,11 @@ using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 class MyLogger : public LoggerForward {
 public:
-  virtual void Debug(std::string const& msg) const override { std::cout << msg << "\n"; }
-  virtual void Info(std::string const& msg) const override { std::cout << msg << "\n"; }
-  virtual void Warning(std::string const& msg) const override { std::cout << msg << "\n"; }
-  virtual void Error(std::string const& msg) const override { std::cerr << msg << "\n"; }
-  virtual void Fatal(std::string const& msg) const override { std::cerr << msg << "\n"; }
+  virtual void Debug(char const* msg) const override { std::cout << msg << "\n"; }
+  virtual void Info(char const* msg) const override { std::cout << msg << "\n"; }
+  virtual void Warning(char const* msg) const override { std::cout << msg << "\n"; }
+  virtual void Error(char const* msg) const override { std::cerr << msg << "\n"; }
+  virtual void Fatal(char const* msg) const override { std::cerr << msg << "\n"; }
 };
 
 //--------------------------------------------------------------------------------------------------

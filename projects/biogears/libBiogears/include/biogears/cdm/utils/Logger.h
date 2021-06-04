@@ -71,11 +71,11 @@ namespace biogears {
 #pragma warning(disable : 4100)
 class BIOGEARS_API LoggerForward {
 public:
-  virtual void Debug(std::string const& msg) const = 0;
-  virtual void Info(std::string const& msg) const = 0;
-  virtual void Warning(std::string const& msg) const = 0;
-  virtual void Error(std::string const& msg) const = 0;
-  virtual void Fatal(std::string const& msg) const = 0;
+  virtual void Debug(char const* msg) const = 0;
+  virtual void Info(char const* msg) const = 0;
+  virtual void Warning(char const* msg) const = 0;
+  virtual void Error(char const* msg) const = 0;
+  virtual void Fatal(char const* msg) const = 0;
 };
 
 #pragma warning(pop)
