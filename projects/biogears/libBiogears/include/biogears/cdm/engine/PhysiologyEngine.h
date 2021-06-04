@@ -163,7 +163,7 @@ public:
   //! through the API at this time.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual void AdvanceModelTime(bool appendDataTrack = false) = 0;
+  virtual bool AdvanceModelTime(bool appendDataTrack = false) = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -174,7 +174,7 @@ public:
   //! through the API at this time.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual void AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false) = 0;
+  virtual bool AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false) = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief

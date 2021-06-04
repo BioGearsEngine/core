@@ -77,7 +77,7 @@ public:
   //!	physiology metrics at simulation times that would fall between a deltaT. Additionally advancing time by
   //! non multiples of deltaT can result in the true simtime being out of sync with the expected time sync
   //!-------------------------------------------------------------------------------------------------
-  virtual void AdvanceModelTime(bool appendDataTrack = false) override;
+  virtual bool AdvanceModelTime(bool appendDataTrack = false) override;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -86,7 +86,7 @@ public:
   //! See AdvanceModelTime(bool) for additional details.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual void AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s, bool appendDataTrack = false) override; //NOTE: Maynot compile on clang will evaluate
+  virtual bool AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s, bool appendDataTrack = false) override; //NOTE: Maynot compile on clang will evaluate
   virtual bool ProcessAction(const SEAction& action) override;
 
   virtual SESubstanceManager& GetSubstanceManager() override;

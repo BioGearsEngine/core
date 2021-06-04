@@ -78,7 +78,7 @@ public:
 
   virtual const std::map<CDM::enumPatientEvent::value, bool>& GetEventStates() const { return m_EventState; }
   virtual void SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time);
-  virtual void SetEventCallback(CDM::enumPatientEvent::value type, void (*callback)());
+  virtual void SetEventCallback(CDM::enumPatientEvent::value type, void (*callback)(bool));
   virtual bool IsEventActive(CDM::enumPatientEvent::value state) const;
   virtual double GetEventDuration(CDM::enumPatientEvent::value type, const TimeUnit& unit) const;
   virtual void UpdateEvents(const SEScalarTime& timeStep);
@@ -264,7 +264,7 @@ protected:
   std::stringstream m_ss;
   mutable SEEventHandler* m_EventHandler;
   std::map<CDM::enumPatientEvent::value, bool> m_EventState;
-  std::map<CDM::enumPatientEvent::value, void(*)()> m_EventCallbacks;
+  std::map<CDM::enumPatientEvent::value, void(*)(bool)> m_EventCallbacks;
   std::map<CDM::enumPatientEvent::value, double> m_EventDuration_s;
 
   std::string m_Name;

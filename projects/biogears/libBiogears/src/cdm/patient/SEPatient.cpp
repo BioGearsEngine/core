@@ -513,7 +513,7 @@ void SEPatient::Unload(CDM::PatientData& data) const
     data.ActiveEvent().push_back(std::unique_ptr<CDM::ActivePatientEventData>(eData));
   }
 };
-void SEPatient::SetEventCallback(CDM::enumPatientEvent::value type, void (*callback)())
+void SEPatient::SetEventCallback(CDM::enumPatientEvent::value type, void (*callback)(bool))
 {
   m_EventCallbacks[type] = callback;
 }
@@ -822,7 +822,7 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
     m_EventHandler->HandlePatientEvent(type, active, &time);
   }
   if (m_EventCallbacks[type] != nullptr) {
-    m_EventCallbacks[type]();
+    m_EventCallbacks[type](active);
   }
 }
 //-----------------------------------------------------------------------------

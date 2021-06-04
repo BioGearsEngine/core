@@ -691,14 +691,14 @@ double BioGearsEngine::GetSimulationTime(const TimeUnit& unit)
   return m_SimulationTime->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-void BioGearsEngine::AdvanceModelTime(bool appendDataTrack)
+bool BioGearsEngine::AdvanceModelTime(bool appendDataTrack)
 {
   //TODO: I am starting to think this should be a protected function
   if (!IsReady()) {
-    return;
+    return false;
   }
   if (m_Patient->IsEventActive(CDM::enumPatientEvent::IrreversibleState)) {
-    return;
+    return false;
   }
 
   PreProcess();
@@ -718,9 +718,11 @@ void BioGearsEngine::AdvanceModelTime(bool appendDataTrack)
       GetEngineTrack()->TrackData(time, appendDataTrack);
     }
   }
+
+  return true;
 }
 //-------------------------------------------------------------------------------
-void BioGearsEngine::AdvanceModelTime(double time, const TimeUnit& unit, bool appendDataTrack)
+bool BioGearsEngine::AdvanceModelTime(double time, const TimeUnit& unit, bool appendDataTrack)
 {
   double time_s = Convert(time, unit, TimeUnit::s);
   double remains = time_s / m_Config->GetTimeStep(TimeUnit::s);
@@ -734,8 +736,11 @@ void BioGearsEngine::AdvanceModelTime(double time, const TimeUnit& unit, bool ap
   }
 
   for (int i = 0; i < count; i++) {
-    AdvanceModelTime(appendDataTrack);
+    if ( !AdvanceModelTime(appendDataTrack) ) {
+       return false;
+    }
   }
+  return true;
 }
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::ProcessAction(const SEAction& action)
