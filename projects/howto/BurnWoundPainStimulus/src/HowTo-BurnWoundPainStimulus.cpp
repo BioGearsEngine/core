@@ -30,6 +30,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/string/manipulation.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -98,7 +99,7 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
 {
   //Create the engine and load patient state
   m_bg = CreateBioGearsEngine(logFile);
-  m_bg->GetLogger()->Info(std::stringstream() << "Initiating " << tbsa << "% TBSA burn wound");
+  m_bg->GetLogger()->Info(asprintf("Initiating %f %s", tbsa, "% TBSA burn wound"));
   if (!m_bg->LoadState("./states/StandardMale@0s.xml")) {
     m_bg->GetLogger()->Error("Could not load state, check the error");
     return;
@@ -241,18 +242,18 @@ void BurnThread::AdvanceTimeFluidsAlbumin()
 void BurnThread::Status()
 {
   m_mutex.lock();
-  m_bg->GetLogger()->Info(std::stringstream() << "The patient suffered a burn wound " << m_bg->GetSimulationTime(TimeUnit::min) << " min ago");
-  m_bg->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << m_bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << " " << VolumeUnit::mL);
-  m_bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << m_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << " " << PressureUnit::mmHg);
-  m_bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << m_bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << " " << PressureUnit::mmHg);
-  m_bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << m_bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << " bpm");
-  m_bg->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << m_bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << " bpm");
-  m_bg->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << m_bg->GetBloodChemistrySystem()->GetOxygenSaturation());
-  m_bg->GetLogger()->Info(std::stringstream() << "Blood Volume: " << m_bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << " " << VolumeUnit::mL);
-  m_bg->GetLogger()->Info(std::stringstream() << "Systemic Vascular Resistance : " << m_bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL) << " " << FlowResistanceUnit::mmHg_s_Per_mL);
-  m_bg->GetLogger()->Info(std::stringstream() << "Mean Urine Output : " << m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) << " " << VolumePerTimeUnit::mL_Per_hr);
+  m_bg->GetLogger()->Info(asprintf("The patient suffered a burn wound %f %s", m_bg->GetSimulationTime(TimeUnit::min), " min ago"));
+  m_bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", m_bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
+  m_bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", m_bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  m_bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", m_bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  m_bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", m_bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
+  m_bg->GetLogger()->Info(asprintf("Blood Volume: %f %s", m_bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL), "mL"));
+  m_bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", m_bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
+  m_bg->GetLogger()->Info(asprintf("Mean Urine Output : %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
   if (m_ringers->HasBagVolume()) {
-    m_bg->GetLogger()->Info(std::stringstream() << "Remaining LR Volume : " << m_ivBagVolume_mL << VolumeUnit::mL);
+    m_bg->GetLogger()->Info(asprintf("Remaining LR Volume : %f %s", m_ivBagVolume_mL, "mL"));
   }
 
   std::cout << std::endl;
@@ -322,28 +323,28 @@ void BurnThread::FluidLoading(double tbsa)
       //check urine every hour, reset the volume while we are at it
       if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) % checkTime_s == 0) {
         Status();
-        m_bg->GetLogger()->Info(std::stringstream() << "Checking urine production" << m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr));
+        m_bg->GetLogger()->Info(asprintf("Checking urine production %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
         urineProduction = m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr);
         if (fluid == ringers) {
           if (urineProduction < targetLowUrineProduction_mL_Per_Hr) {
-            m_bg->GetLogger()->Info(std::stringstream() << "Urine production is too low at " << urineProduction);
+            m_bg->GetLogger()->Info(asprintf("Urine production is too low at %f %s", urineProduction, "mL_Per_hr"));
             m_ringers->GetRate().SetValue((m_ringers->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 + titrate), VolumePerTimeUnit::mL_Per_hr);
             m_bg->ProcessAction(*m_ringers);
           }
           if ((m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) > targetHighUrineProduction_mL_Per_Hr)) {
-            m_bg->GetLogger()->Info(std::stringstream() << "Urine production is too high at" << m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr));
+            m_bg->GetLogger()->Info(asprintf("Urine production is too high at %f %s", urineProduction, "mL_Per_hr"));
             m_ringers->GetRate().SetValue((m_ringers->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 - titrate), VolumePerTimeUnit::mL_Per_hr);
             m_bg->ProcessAction(*m_ringers);
           }
         }
         if (fluid == albumin) {
           if (urineProduction < targetLowUrineProduction_mL_Per_Hr) {
-            m_bg->GetLogger()->Info(std::stringstream() << "Urine production is too low at " << urineProduction);
+            m_bg->GetLogger()->Info(asprintf("Urine production is too low at %f %s", urineProduction, "mL_Per_hr"));
             m_albumex->GetRate().SetValue((m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 + titrate), VolumePerTimeUnit::mL_Per_hr);
             m_bg->ProcessAction(*m_albumex);
           }
           if ((m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) > targetHighUrineProduction_mL_Per_Hr)) {
-            m_bg->GetLogger()->Info(std::stringstream() << "Urine production is too high at" << m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr));
+            m_bg->GetLogger()->Info(asprintf("Urine production is too high at %f %s", urineProduction, "mL_Per_hr"));
             m_albumex->GetRate().SetValue((m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 - titrate), VolumePerTimeUnit::mL_Per_hr);
             m_bg->ProcessAction(*m_albumex);
           }
@@ -404,13 +405,13 @@ void BurnThread::FluidLoading(double tbsa)
       }
 
       if (m_TotalVolume_mL > DayLimit_mL) {
-        m_bg->GetLogger()->Info(std::stringstream() << "We have given too many fluids, per guidelines: " << m_TotalVolume_mL);
+        m_bg->GetLogger()->Info(asprintf("We have given too many fluids, per guidelines: %f %s", m_TotalVolume_mL, "mL"));
         DayLimit_mL *= 2.0;
         //m_runThread = false;
       }
 
       if (m_bg->GetSimulationTime(TimeUnit::hr) > maxSimTime) {
-        m_bg->GetLogger()->Info(std::stringstream() << "This simulation has gone on too long");
+        m_bg->GetLogger()->Info("This simulation has gone on too long");
         m_runThread = false;
       }
 
