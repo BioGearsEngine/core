@@ -48,6 +48,8 @@ public:
   bool HasCompartment(const std::string compartment) const;
   const std::vector<std::string>& GetCompartments();
   const std::string GetCompartment(const std::string compartment) const;
+  void SetCompartment(const char* name);
+  void SetCompartment(const std::string& name);
   void RemoveCompartment(const std::string compartment);
   void RemoveCompartments();
 

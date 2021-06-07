@@ -51,7 +51,6 @@ protected:
   // before the destructor).
   virtual void TearDown() override;
   biogears::Logger* logger;
-  biogears::SESubstanceManager* substanceManager;
   biogears::SEEscharotomy* es;
 };
 
@@ -65,7 +64,45 @@ void TEST_FIXTURE_NAME::TearDown()
 
 }
 
-TEST_F(TEST_FIXTURE_NAME, placeholder)
+TEST_F(TEST_FIXTURE_NAME, Location)
 {
+  auto action1 = SEEscharotomy();
+  auto action2 = SEEscharotomy();
 
+  EXPECT_FALSE(action1.HasLocation());
+  EXPECT_FALSE(action2.HasLocation());
+
+  action1.SetLocation("RightLeg");
+  action2.SetLocation("RightPupil");
+
+  EXPECT_TRUE(action1.HasLocation());
+  EXPECT_TRUE(action2.HasLocation());
+
+  EXPECT_EQ(action1.IsValid(), true);
+  EXPECT_EQ(action2.IsValid(), false);
+
+  action2.InvalidateLocation();
+
+  EXPECT_FALSE(action2.HasLocation());
+
+  EXPECT_EQ(action1.GetLocation(), "RightLeg");
+  EXPECT_EQ(action2.GetLocation(), "");
+}
+
+TEST_F(TEST_FIXTURE_NAME, Comment)
+{
+  auto action1 = SEEscharotomy();
+  auto action2 = SEEscharotomy();
+
+  EXPECT_FALSE(action1.HasComment());
+  EXPECT_FALSE(action2.HasComment());
+
+  action1.SetComment("RightLeg Escharotomy");
+  action2.SetComment("");
+
+  EXPECT_TRUE(action1.HasComment());
+  EXPECT_FALSE(action2.HasComment());
+
+  EXPECT_EQ(action1.GetComment(), std::string("RightLeg Escharotomy"));
+  EXPECT_EQ(action2.GetComment(), std::string(""));
 }

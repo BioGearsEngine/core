@@ -138,6 +138,18 @@ const std::string SEBurnWound::GetCompartment(const std::string c) const
   }
   return "";
 }
+//-------------------------------------------------------------------------------
+void SEBurnWound::SetCompartment(const char* name)
+{
+  return SetCompartment(std::string { name });
+}
+//-------------------------------------------------------------------------------
+void SEBurnWound::SetCompartment(const std::string& name)
+{
+  //int nextComptAffected = m_compartmentsAffected.size();
+  //m_compartmentsAffected[nextComptAffected] = name;
+  m_compartmentsAffected.push_back(name);
+}
 //-----------------------------------------------------------------------------
 void SEBurnWound::RemoveCompartment(const std::string c)
 {
