@@ -13,4 +13,9 @@
 %ignore biogears::SEPatientAction::Unload;
 %ignore biogears::SEPatientAction::Load;
 
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEPatientAction::ToString() const "public override";
+%csmethodmodifiers biogears::SEPatientAction::ToString(std::ostream& str) const "public override";
+#endif 
+
 %include <biogears/cdm/patient/actions/SEPatientAction.h>

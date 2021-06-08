@@ -1,5 +1,4 @@
 
-
 %{
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 %}
@@ -16,6 +15,9 @@
 %ignore biogears::SEAcuteRespiratoryDistress::Unload;
 %ignore biogears::SEAcuteRespiratoryDistress::Load;
 
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEAcuteRespiratoryDistress::ToString() const "public override";
+%csmethodmodifiers biogears::SEAcuteRespiratoryDistress::ToString(std::ostream& str) const "public override";
+#endif  
+
 %include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
-
-

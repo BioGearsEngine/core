@@ -85,4 +85,16 @@ void SEAcuteRespiratoryDistress::ToString(std::ostream& str) const
   HasSeverity() ? str << *m_Severity : str << "Not Set";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
+bool SEAcuteRespiratoryDistress::operator==(const SEAcuteRespiratoryDistress& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEAcuteRespiratoryDistress::operator!=(const SEAcuteRespiratoryDistress& rhs) const
+{
+  return !(*this == rhs);
+}
 }

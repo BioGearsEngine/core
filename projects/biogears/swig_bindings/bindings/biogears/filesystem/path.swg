@@ -29,6 +29,10 @@
 %rename(Equals) operator==(const biogears::filesystem::path& p) const;
 %rename(NotEquals) operator!=(const biogears::filesystem::path& p) const;
 
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::filesystem::ToString() "public override";
+#endif
+
 %include <biogears/filesystem/path.h>
 
 %nsspace  std::vector<biogears::filesystem::path>;

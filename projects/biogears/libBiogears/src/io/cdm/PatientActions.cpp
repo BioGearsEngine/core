@@ -10,6 +10,8 @@
 #include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
+#include <biogears/cdm/patient/actions/PatientActionsEnums.h>
+#include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
@@ -38,7 +40,6 @@
 #include <biogears/cdm/patient/actions/SEOverride.h>
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/cdm/patient/actions/PatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
 #include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>
@@ -517,6 +518,21 @@ namespace io {
       out.Type(in.m_Type);
     }
   }
+  //class SEAcuteRespiratoryDistressStress;
+  void PatientActions::Marshall(const CDM::AcuteRespiratoryDistressData& in, SEAcuteRespiratoryDistress& out)
+  {
+    out.Clear();
+
+    Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
+
+    io::Property::Marshall(in.Severity(), out.GetSeverity());
+  }
+  void PatientActions::UnMarshall(const SEAcuteRespiratoryDistress& in, CDM::AcuteRespiratoryDistressData& out)
+  {
+    Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
+    out.Severity(std::make_unique<CDM::Scalar0To1Data>());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
+  }
   //----------------------------------------------------------------------------------
   //class SEAcuteStress
   void PatientActions::Marshall(const CDM::AcuteStressData& in, SEAcuteStress& out)
@@ -670,7 +686,6 @@ namespace io {
     out.Clear();
 
     Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
-
   }
   //----------------------------------------------------------------------------------
   void PatientActions::UnMarshall(const SEChestCompression& in, CDM::ChestCompressionData& out)
@@ -1208,7 +1223,6 @@ namespace io {
     out.Clear();
 
     Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
-
   }
   //----------------------------------------------------------------------------------
   void PatientActions::UnMarshall(const SESubstanceAdministration& in, CDM::SubstanceAdministrationData& out)
@@ -1294,7 +1308,6 @@ namespace io {
     out.Clear();
 
     Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
-
   }
   //----------------------------------------------------------------------------------
   void PatientActions::UnMarshall(const SEUrinate& in, CDM::UrinateData& out)

@@ -26,6 +26,7 @@ class SEAction;
 
 class SEPatientAction;
 class SEPatientAssessmentRequest;
+class SEAcuteRespiratoryDistress;
 class SEAcuteStress;
 class SEAirwayObstruction;
 class SEApnea;
@@ -64,24 +65,22 @@ class SESubstanceInfusion;
 class SEUrinate;
 class SEOverride;
 
-
 #define CDM_PATIENT_ACTIONS_UNMARSHAL_HELPER(xsd, func)                              \
   if (m_##func) {                                                                    \
     xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
     io::PatientActions::UnMarshall(*m_##func, xsd.func());                           \
   }
 
-#define CDM_OPTIONAL_PATIENT_ACTIONS_UNMARSHAL_HELPER(xsd, func)                     \
-  if (in.m_##func) {                                                                 \
-    io::PatientActions::UnMarshall(*in.m_##func, out.func());                        \
-  
+#define CDM_OPTIONAL_PATIENT_ACTIONS_UNMARSHAL_HELPER(xsd, func) \
+  if (in.m_##func) {                                             \
+    io::PatientActions::UnMarshall(*in.m_##func, out.func());
 
 namespace io {
   class BIOGEARS_PRIVATE_API PatientActions {
   public:
     //class SEActionList;
     static std::vector<std::unique_ptr<SEAction>> action_factory(const CDM::ActionListData& in, SESubstanceManager& substances);
-    static std::unique_ptr <SEAction> factory(const CDM::ActionData& data, SESubstanceManager& substances);
+    static std::unique_ptr<SEAction> factory(const CDM::ActionData& data, SESubstanceManager& substances);
     //template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
@@ -93,6 +92,9 @@ namespace io {
     //class SEPatientAssessmentRequest;
     static void Marshall(const CDM::PatientAssessmentRequestData& in, SEPatientAssessmentRequest& out);
     static void UnMarshall(const SEPatientAssessmentRequest& in, CDM::PatientAssessmentRequestData& out);
+    //class SEAcuteRespiratoryDistressStress;
+    static void Marshall(const CDM::AcuteRespiratoryDistressData& in, SEAcuteRespiratoryDistress& out);
+    static void UnMarshall(const SEAcuteRespiratoryDistress& in, CDM::AcuteRespiratoryDistressData& out);
     //class SEAcuteStress;
     static void Marshall(const CDM::AcuteStressData& in, SEAcuteStress& out);
     static void UnMarshall(const SEAcuteStress& in, CDM::AcuteStressData& out);
@@ -205,7 +207,6 @@ namespace io {
     static void Marshall(const CDM::OverrideData& in, SEOverride& out);
     static void UnMarshall(const SEOverride& in, CDM::OverrideData& out);
   };
-
 
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>

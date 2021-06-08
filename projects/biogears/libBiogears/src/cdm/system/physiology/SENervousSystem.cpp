@@ -476,7 +476,7 @@ bool SENervousSystem::HasLeftEyePupillaryResponse() const
 SEPupillaryResponse& SENervousSystem::GetLeftEyePupillaryResponse()
 {
   if (m_LeftEyePupillaryResponse == nullptr)
-    m_LeftEyePupillaryResponse = new SEPupillaryResponse(GetLogger());
+    m_LeftEyePupillaryResponse = new SEPupillaryResponse();
   return *m_LeftEyePupillaryResponse;
 }
 //-------------------------------------------------------------------------------
@@ -499,7 +499,7 @@ bool SENervousSystem::HasRightEyePupillaryResponse() const
 SEPupillaryResponse& SENervousSystem::GetRightEyePupillaryResponse()
 {
   if (m_RightEyePupillaryResponse == nullptr)
-    m_RightEyePupillaryResponse = new SEPupillaryResponse(GetLogger());
+    m_RightEyePupillaryResponse = new SEPupillaryResponse();
   return *m_RightEyePupillaryResponse;
 }
 //-------------------------------------------------------------------------------

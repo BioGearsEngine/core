@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -33,7 +34,6 @@ public:
   virtual bool Load(const CDM::ConsciousRespirationCommandData& in);
   virtual CDM::ConsciousRespirationCommandData* Unload() const = 0;
 
-public:
   virtual std::string GetComment() const;
   virtual const char* GetComment_cStr() const;
   virtual void SetComment(const char* comment);
@@ -49,7 +49,7 @@ public:
 protected:
   virtual void Unload(CDM::ConsciousRespirationCommandData& data) const;
 
-protected:
+
   std::string m_Comment;
 };
 

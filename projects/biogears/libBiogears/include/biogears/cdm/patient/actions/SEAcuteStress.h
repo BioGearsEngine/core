@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/Scenario.hxx>
 
 namespace biogears {
 class SEScalar0To1;
@@ -48,7 +47,7 @@ public:
 protected:
   virtual void Unload(CDM::AcuteStressData& data) const;
 
-protected:
+private:
   SEScalar0To1* m_Severity;
 };
 }
