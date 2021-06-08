@@ -83,7 +83,7 @@ namespace bio
             var m_Sleep = new SESleep();
 
             var m_substances = engine.GetSubstanceManager();
-            var m_albumine = m_substances.GetSubstance("Albumine");
+            var m_albumine = m_substances.GetSubstance("Albumin");
             var m_saline = m_substances.GetCompound("Saline");
 
             var m_SubstanceBolus = new SESubstanceBolus(m_albumine);
