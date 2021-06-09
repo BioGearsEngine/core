@@ -554,6 +554,21 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::CardiogenicShock:
         m_ss << " Patient has Cardiogenic Shock";
         break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_Abdominal:
+        m_ss << " Patient has Abdominal Compartment Syndrome";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_LeftArm:
+        m_ss << " Patient has Compartment Syndrome in the Left Arm";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg:
+        m_ss << " Patient has Compartment Syndrome in the Left Leg";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_RightArm:
+        m_ss << " Patient has Compartment Syndrome in the Right Arm";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_RightLeg:
+        m_ss << " Patient has Compartment Syndrome in the Right Leg";
+        break;
       case CDM::enumPatientEvent::CriticalBrainOxygenDeficit:
         m_ss << " Oxygen tension in the brain is critically low";
         break;
@@ -698,6 +713,21 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
         break;
       case CDM::enumPatientEvent::CardiogenicShock:
         m_ss << " Patient no longer has Cardiogenic Shock";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_Abdominal:
+        m_ss << " Patient no longer has Abdominal Compartment Syndrome";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_LeftArm:
+        m_ss << " Patient no longer has Compartment Syndrome in the Left Arm";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg:
+        m_ss << " Patient no longer has Compartment Syndrome in the Left Leg";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_RightArm:
+        m_ss << " Patient no longer has Compartment Syndrome in the Right Arm";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_RightLeg:
+        m_ss << " Patient no longer has Compartment Syndrome in the Right Leg";
         break;
       case CDM::enumPatientEvent::CriticalBrainOxygenDeficit:
         m_ss << " Oxygen tension in the brain has increased above the critical threshold";
