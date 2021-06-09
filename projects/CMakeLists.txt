@@ -135,6 +135,14 @@ add_custom_target( prepare_runtime_dir
 #         this list
 ###############################################################################
 
+SET(VS_DEBUGGER_ENV_PATH "PATH=")
+foreach ( dir IN LISTS CMAKE_PREFIX_PATH )
+  STRING(APPEND VS_DEBUGGER_ENV_PATH "${dir}/bin;${dir}/lib;")
+endforeach()
+STRING(APPEND VS_DEBUGGER_ENV_PATH "%PATH%")
+
+LIST(APPEND VS_DEBUGGER_ENVIRONMENT_LIST "${VS_DEBUGGER_ENV_PATH}")
+message(STATUS "VS_DEBUGGER_ENVIRONMENT_LIST=${VS_DEBUGGER_ENVIRONMENT_LIST}")
 add_subdirectory(unit)
 add_subdirectory(biogears-common)
 add_subdirectory(biogears)

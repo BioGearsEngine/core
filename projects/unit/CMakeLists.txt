@@ -84,7 +84,7 @@ if(${PROJECT_NAME}_BUILD_TEST)
 
   ###############################################################################
   # Step 3:     Define Disable Macros based on sub test variables
-  #             TODO: Create a Macro to control this
+  #             TO DO: Create a Macro to control this
   #                   import unit test from Project/cmake/unit.cmake
   ###############################################################################
   #
@@ -175,6 +175,7 @@ if(${PROJECT_NAME}_BUILD_TEST)
                         CXX_STANDARD 14
                         FOLDER UnitTest
                         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+                        VS_DEBUGGER_ENVIRONMENT "${VS_DEBUGGER_ENVIRONMENT_LIST}"
                       )
 
   target_include_directories(unittest
