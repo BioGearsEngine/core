@@ -839,6 +839,30 @@ TEST_F(TEST_FIXTURE_NAME, PericardialEffusion)
   EXPECT_EQ(source, sink);
 }
 
+#include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>
+//class SEPulmonaryShunt;
+//!
+//! TYPE PulmonaryShunt
+//! static void Marshall(const CDM::PulmonaryShuntData& in, SEPulmonaryShunt& out);
+//! static void UnMarshall(const SEPulmonaryShunt& in, CDM::PulmonaryShuntData& out);
+TEST_F(TEST_FIXTURE_NAME, PulmonaryShunt)
+{
+  USING_TYPES(PulmonaryShunt)
+
+  SEType source, sink;
+  CDMType data;
+
+  source.SetComment("Test Comment");
+  source.GetFlowRateScale().SetValue(0.6);
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+}
+
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
 //class SETensionPneumothorax;
 //!

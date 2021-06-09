@@ -954,7 +954,7 @@ void Drugs::CalculateDrugEffects()
       if (sub->GetClassification() == CDM::enumSubstanceClass::Opioid) {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * std::pow(1.0 + inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
       } else if (sub->GetName() == "Sarin") {
-        effect = 0.8 * (m_RbcAcetylcholinesteraseFractionInhibited);
+        effect = 0.8 * (m_RbcAcetylcholinesteraseFractionInhibited);   //0.8 is a tuning factor, validated by patient expected physiological response
       } else {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) + std::pow(ec50_ug_Per_mL, shapeParameter));
       }
@@ -1201,15 +1201,15 @@ void Drugs::SarinKinetics()
   double RbcAche_nM = RbcAcetylcholinesterase_nM;
   double SarinRbcAche_nM = m_SarinRbcAcetylcholinesteraseComplex_nM;
   double AgedSarin_nM = m_AgedRbcAcetylcholinesterase_nM;
-  double BaselineRbcAcetylcholinesterase_nM = 8.0;
+  const double BaselineRbcAcetylcholinesterase_nM = 8.0;
 
   //Rate constants
-  double RateRbcAcheInhibition_per_nM_s = 4.50e-4; /// \cite gupta2009handbook \cite rodriguez2015model
-  double RateRbcAcheAging_per_s = 4.83e-5; /// \cite gupta2009handbook \cite rodriguez2015model
-  double RateRbcAcheSynthesis_nM_per_s = 8*(9.33e-5); /// \cite grob1958effects
-  double RateRbcAcheDegredation_per_s = 1.17e-7; /// \cite rodriguez2015model
-  double RatePralidoximeReversal_per_s = 0.7*(4.22e-3); /// \cite rodriguez2015model
-  double PralidoximeDissociationConstant_nM = 27630.0; /// \cite rodriguez2015model
+  const double RateRbcAcheInhibition_per_nM_s = 4.50e-4; /// \cite gupta2009handbook \cite rodriguez2015model
+  const double RateRbcAcheAging_per_s = 4.83e-5; /// \cite gupta2009handbook \cite rodriguez2015model
+  const double RateRbcAcheSynthesis_nM_per_s = 8 * (9.33e-5); /// \cite grob1958effects
+  const double RateRbcAcheDegredation_per_s = 1.17e-7; /// \cite rodriguez2015model
+  const double RatePralidoximeReversal_per_s = 0.7 * (4.22e-3); /// \cite rodriguez2015model
+  const double PralidoximeDissociationConstant_nM = 27630.0; /// \cite rodriguez2015model
 
   //Michaelis-Menten expression for rate of pralidoxime interaction with bound sarin/rbc-ache complex
   double PralidoximeReversal = RatePralidoximeReversal_per_s * m_SarinRbcAcetylcholinesteraseComplex_nM * PralidoximeConcentration_nM / (PralidoximeDissociationConstant_nM + PralidoximeConcentration_nM); ///\cite rodriguez2015model

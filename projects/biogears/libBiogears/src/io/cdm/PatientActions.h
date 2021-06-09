@@ -177,7 +177,7 @@ namespace io {
     //class SEPericardialEffusion;
     static void Marshall(const CDM::PericardialEffusionData& in, SEPericardialEffusion& out);
     static void UnMarshall(const SEPericardialEffusion& in, CDM::PericardialEffusionData& out);
-    //class SEPulmonaryShutn;
+    //class SEPulmonaryShunt;
     static void Marshall(const CDM::PulmonaryShuntData& in, SEPulmonaryShunt& out);
     static void UnMarshall(const SEPulmonaryShunt& in, CDM::PulmonaryShuntData& out);
     //class SETensionPneumothorax;

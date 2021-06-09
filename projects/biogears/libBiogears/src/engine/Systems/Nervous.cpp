@@ -67,7 +67,7 @@ void Nervous::Clear()
   m_Patient = nullptr;
   m_Succinylcholine = nullptr;
   m_Sarin = nullptr;
-  m_atropine = nullptr;
+  m_Atropine = nullptr;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -273,7 +273,7 @@ void Nervous::SetUp()
   m_dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_Succinylcholine = m_data.GetSubstances().GetSubstance("Succinylcholine");
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
-  m_atropine = m_data.GetSubstances().GetSubstance("Atropine");
+  m_Atropine = m_data.GetSubstances().GetSubstance("Atropine");
   m_Patient = &m_data.GetPatient();
 
   m_DrugRespirationEffects = 0.0;
@@ -1095,7 +1095,6 @@ void Nervous::CheckNervousStatus()
 {
   //-----Check Brain Status-----------------
   double icp_mmHg = m_data.GetCardiovascular().GetIntracranialPressure().GetValue(PressureUnit::mmHg);
-  bool test = m_data.GetSubstances().IsActive(*m_atropine);
   //Intracranial Hypertension
   if (icp_mmHg > 25.0) // \cite steiner2006monitoring
   {
@@ -1126,7 +1125,7 @@ void Nervous::CheckNervousStatus()
   GetRichmondAgitationSedationScale().SetValue(rassScore);
 
   //------Fasciculations:-------------------------------------------
-
+  /// \todo: need to have fasciculations due to calcium deficiency, when we validate calcium a little more
   //----Fasciculations due to calcium deficiency (inactive)----------------------------------
   /*if (m_Muscleintracellular.GetSubstanceQuantity(*m_Calcium)->GetConcentration(MassPerVolumeUnit::g_Per_L) < 1.0)
     {
@@ -1134,7 +1133,7 @@ void Nervous::CheckNervousStatus()
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
     }
     else if (m_Muscleintracellular.GetSubstanceQuantity(*m_Calcium)->GetConcentration(MassPerVolumeUnit::g_Per_L) > 3.0)
-    {x
+    {
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
     }*/
 
@@ -1143,8 +1142,6 @@ void Nervous::CheckNervousStatus()
   double RbcAche_mol_Per_L
     = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
   double RbcFractionInhibited = 1.0 - RbcAche_mol_Per_L / (8e-9); //8 nM is the baseline activity of Rbc-Ache
-  //use the brain intracellular compartment for atropine reference
-  ;
   if (m_data.GetSubstances().IsActive(*m_Sarin)) {
       ///\cite nambda1971cholinesterase
       //The above study found that individuals exposed to the organophosphate parathion did not exhibit fasciculation until at least
@@ -1159,7 +1156,7 @@ void Nervous::CheckNervousStatus()
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildWeakness, false, m_data.GetSimulationTime());
       }
-      if (RbcFractionInhibited > 0.8 && !m_data.GetSubstances().IsActive(*m_atropine))  {
+      if (RbcFractionInhibited > 0.8 && !m_data.GetSubstances().IsActive(*m_Atropine))  {
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
       }
       if (0.4 < RbcFractionInhibited && RbcFractionInhibited < 0.65) {
@@ -1180,7 +1177,7 @@ void Nervous::CheckNervousStatus()
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, false, m_data.GetSimulationTime());
       }
       //Muscarinic/atropine patient events
-      if (!m_data.GetSubstances().IsActive(*m_atropine)) {
+      if (!m_data.GetSubstances().IsActive(*m_Atropine)) {
         if (0.2 < RbcFractionInhibited && RbcFractionInhibited < 0.45) {
           m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, true, m_data.GetSimulationTime());
           m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildSecretions, true, m_data.GetSimulationTime());
@@ -1204,8 +1201,9 @@ void Nervous::CheckNervousStatus()
       }
     }
    //Muscarinic reversals
-    if (m_data.GetSubstances().IsActive(*m_atropine)) {
-      double brainAtropine_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_atropine)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
+    if (m_data.GetSubstances().IsActive(*m_Atropine)) {
+      //use the brain intracellular compartment for atropine reference
+      double brainAtropine_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_Atropine)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
       if (0.2 < brainAtropine_mg_Per_L && brainAtropine_mg_Per_L < 0.3) {
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildSecretions, false, m_data.GetSimulationTime());
@@ -1257,8 +1255,8 @@ void Nervous::SetPupilEffects()
   // Get modifiers from Drugs
   double leftPupilSizeResponseLevel = GetLeftEyePupillaryResponse().GetSizeModifier().GetValue();
   double leftPupilReactivityResponseLevel = GetLeftEyePupillaryResponse().GetReactivityModifier().GetValue();
-  double rightPupilSizeResponseLevel = GetLeftEyePupillaryResponse().GetSizeModifier().GetValue();
-  double rightPupilReactivityResponseLevel = leftPupilReactivityResponseLevel;
+  double rightPupilSizeResponseLevel = GetRightEyePupillaryResponse().GetSizeModifier().GetValue();
+  double rightPupilReactivityResponseLevel = GetRightEyePupillaryResponse().GetSizeModifier().GetValue();
 
   // Calculate the TBI response
   if (m_data.GetActions().GetPatientActions().HasBrainInjury()) {
