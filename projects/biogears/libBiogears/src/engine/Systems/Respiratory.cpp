@@ -1561,8 +1561,8 @@ void Respiratory::PulmonaryShunt()
     rightResistance = GeneralMath::LinearInterpolator(0.0, 1.0, rightCapillaryResistance, rightResistance, flowScale);
 
     //apply
-    m_RightPulmonaryArteriesToRightPulmonaryVeins->GetNextResistance().SetValue(rightResistance * 0.11, FlowResistanceUnit::cmH2O_s_Per_L);
-    m_LeftPulmonaryArteriesToLeftPulmonaryVeins->GetNextResistance().SetValue(leftResistance * 0.11, FlowResistanceUnit::cmH2O_s_Per_L);
+    m_RightPulmonaryArteriesToRightPulmonaryVeins->GetNextResistance().SetValue(rightResistance * 0.065, FlowResistanceUnit::cmH2O_s_Per_L);
+    m_LeftPulmonaryArteriesToLeftPulmonaryVeins->GetNextResistance().SetValue(leftResistance * 0.065, FlowResistanceUnit::cmH2O_s_Per_L);
 
   }
 }

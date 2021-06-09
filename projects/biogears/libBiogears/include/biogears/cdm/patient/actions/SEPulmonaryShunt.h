@@ -45,6 +45,8 @@ public:
   virtual SEScalar0To1& GetFlowRateScale();
 
   virtual void ToString(std::ostream& str) const override;
+  bool operator==(const SEPulmonaryShunt& rhs) const;
+  bool operator!=(const SEPulmonaryShunt& rhs) const;
 
 protected:
   SEScalar0To1* m_FlowRateScaling;

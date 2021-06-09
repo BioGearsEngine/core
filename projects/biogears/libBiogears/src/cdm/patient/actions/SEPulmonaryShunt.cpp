@@ -76,6 +76,19 @@ SEScalar0To1& SEPulmonaryShunt::GetFlowRateScale()
   return *m_FlowRateScaling;
 }
 
+//-------------------------------------------------------------------------------
+bool SEPulmonaryShunt::operator==(const SEPulmonaryShunt& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_FlowRateScaling && rhs.m_FlowRateScaling) ? m_FlowRateScaling->operator==(*rhs.m_FlowRateScaling) : m_FlowRateScaling == rhs.m_FlowRateScaling;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEPulmonaryShunt::operator!=(const SEPulmonaryShunt& rhs) const
+{
+  return !(*this == rhs);
+}
+
 void SEPulmonaryShunt::ToString(std::ostream& str) const
 {
   str << "Patient Action : Pulmonary Shunt";
