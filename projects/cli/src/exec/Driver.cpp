@@ -430,7 +430,7 @@ void Driver::queue_from_sate_files(const Executor& exec, const std::vector<files
 void Driver::queue_from_patient_files(const Executor& exec, const std::vector<filesystem::path>& patient_files, std::function<void(Executor, bool)> scenario_launch_func)
 {
   for (auto& patient_file : patient_files) {
-    std::cout << patient_file << std::endl;
+    std::cout << "\t" << patient_file << std::endl;
     Executor patientEx { exec };
     patientEx.Patient(patient_file);
 

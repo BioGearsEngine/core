@@ -38,14 +38,12 @@ enum class PatientType {
   INLINE
 };
 
-
 void signal_callback_handler(int signum)
 {
   std::cout << "User Requested Termination " << signum << std::endl;
   // Terminate program
   exit(signum);
 }
-
 
 int execute_scenario(Executor& ex, Logger::LogLevel log_level)
 {
@@ -76,10 +74,14 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
   Logger file_logger(ex.Computed() + parent_dir + console_log_file);
   try {
 
-    file_logger.SetConsoleLogLevel(log_level);
     file_logger.SetConsoleConversionPattern("[{%H:%M}] " + ex.Name() + " <:priority:> :message::newline:");
+    file_logger.SetConsoleLogLevel(log_level);
+    file_logger.FormatMessages(true);
+    file_logger.LogToConsole(true);
+
     console_logger.SetConsoleConversionPattern("[{%H:%M}] :message::newline:");
     console_logger.FormatMessages(true);
+    console_logger.LogToConsole(true);
 
     eng = CreateBioGearsEngine(&file_logger);
   } catch (std::exception e) {
@@ -110,16 +112,16 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
       std::cerr << "Unable to find " << ex.Scenario() << std::endl;
       return static_cast<int>(ExecutionErrors::SCENARIO_IO_ERROR);
     }
-    using mil::tatrc::physiology::datamodel::ScenarioData;
     using biogears::filesystem::path;
+    using mil::tatrc::physiology::datamodel::ScenarioData;
     std::unique_ptr<ScenarioData> scenario;
     try {
       std::cout << "Reading " << ex.Scenario() << std::endl;
       auto obj = Serializer::ReadFile(resolved_filepath,
                                       eng->GetLogger());
       scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
-      if ( scenario == nullptr){
-         throw std::runtime_error( "Unable to load " + ex.Scenario());
+      if (scenario == nullptr) {
+        throw std::runtime_error("Unable to load " + ex.Scenario());
       }
     } catch (std::runtime_error e) {
       std::cout << e.what() << std::endl;
@@ -219,16 +221,26 @@ int main(int argc, char* argv[])
   signal(SIGINT, signal_callback_handler);
   signal(SIGABRT, signal_callback_handler);
 
-
   using namespace boost::program_options;
 
-  auto log_level = Logger::DEBUG;
+  auto log_level = Logger::INFO;
   std::string help_message;
 
   try {
     // Declare the supported options.
     options_description desc("Allowed options");
-    desc.add_options()("help,h", "produce help message")("name,n", value<std::string>(), "Set Scenario Name")("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")("group,g", value<std::string>(), "Set Name of Scenario Group")("patient,p", value<std::string>(), "Specifcy the Initial Patient File")("state,s", value<std::string>(), "Specifcy the Initial Patient State File")("results,r", value<std::string>(), "Specifcy the Results File")("quiet,q", bool_switch()->default_value(false), "Supress most log messages")("version,v", bool_switch()->default_value(false), "Print linked libBioGears version")("track-stabilization", bool_switch()->default_value(false), "Turn on stabilization tracking for the scenario");
+    desc.add_options() /**/
+      ("help,h", "produce help message") /**/
+      ("name,n", value<std::string>(), "Set Scenario Name") /**/
+      ("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver") /**/
+      ("group,g", value<std::string>(), "Set Name of Scenario Group") /**/
+      ("patient,p", value<std::string>(), "Specifcy the Initial Patient File") /**/
+      ("state,s", value<std::string>(), "Specifcy the Initial Patient State File") /**/
+      ("results,r", value<std::string>(), "Specifcy the Results File") /**/
+      ("quiet,q", bool_switch()->default_value(false), "Supress most log messages") /**/
+      ("loglevel,l", value<int>()->default_value(static_cast<int>(Logger::INFO)), "Set the log filter level to supress messages above the given.\n  0:FATAL\n  1:DEBUG\n  2:ERROR\n  3:EXCEPTION\n  4:WARNING\n(5:INFO)\n6:STABILIZATION\n7:ALL") /**/
+      ("version,v", bool_switch()->default_value(false), "Sets log level to WARNING") /**/
+      ("track-stabilization", bool_switch()->default_value(false), "Turn on stabilization tracking for the scenario");
 
     options_description hidden;
     hidden.add_options()("scenario", value<std::string>(), "Specifcy the Scenario File");
@@ -284,6 +296,16 @@ int main(int argc, char* argv[])
 
     if (vm["quiet"].as<bool>()) {
       log_level = Logger::WARNING;
+    } else {
+      int level = vm["loglevel"].as<int>();
+      log_level = (static_cast<int>(Logger::FATAL) == level) ? Logger::FATAL
+        : (static_cast<int>(Logger::DEBUG) == level)         ? Logger::DEBUG
+        : (static_cast<int>(Logger::ERROR) == level)         ? Logger::ERROR
+        : (static_cast<int>(Logger::EXCEPTION) == level)     ? Logger::EXCEPTION
+        : (static_cast<int>(Logger::WARNING) == level)       ? Logger::WARNING
+        : (static_cast<int>(Logger::INFO) == level)          ? Logger::INFO
+        : (static_cast<int>(Logger::STABILIZATION) == level) ? Logger::STABILIZATION
+                                                             : Logger::ALL;
     }
 
     if (vm.count("patient")) {
@@ -372,12 +394,12 @@ int main(int argc, char* argv[])
   signal(SIGINT, signal_callback_handler);
   signal(SIGABRT, signal_callback_handler);
 
-  auto log_level = Logger::DEBUG;
+  auto log_level = Logger::INFO;
   std::string help_message;
 
   biogears::Arguments args(
     { "H", "HELP", "V", "VERSION", "Q", "QUIET" }, /*Options*/
-    { "N", "NAME", "D", "DRIVER", "G", "GROUP", "P", "PATIENT", "S", "STATE", "R", "RESULTS", "SCENARIO" }, /*Keywords*/
+    { "N", "NAME", "D", "DRIVER", "G", "GROUP", "P", "PATIENT", "S", "STATE", "R", "RESULTS", "SCENARIO", "L", "LOGLEVEL" }, /*Keywords*/
     {} /*MultiWords*/
   );
   args.set_required_keywords({ "SCENARIO" });
@@ -426,6 +448,42 @@ int main(int argc, char* argv[])
     ex.Driver(EDriver::ScenarioTestDriver);
   } else {
     ex.Driver(EDriver::ScenarioTestDriver);
+  }
+
+  if (args.Option("LOGLEVEL")) {
+    try {
+      auto level = std::stoi(args.Keyword("LOGLEVEL"));
+      log_level = (static_cast<int>(Logger::FATAL) == level) ? Logger::FATAL
+        : (static_cast<int>(Logger::FATAL) == level)         ? Logger::FATAL
+        : (static_cast<int>(Logger::ERROR) == level)         ? Logger::ERROR
+        : (static_cast<int>(Logger::EXCEPTION) == level)     ? Logger::EXCEPTION
+        : (static_cast<int>(Logger::WARNING) == level)       ? Logger::WARNING
+        : (static_cast<int>(Logger::INFO) == level)          ? Logger::INFO
+        : (static_cast<int>(Logger::STABILIZATION) == level) ? Logger::STABILIZATION
+                                                             : Logger::ALL;
+    } catch (std::exception) {
+      std::cerr << "Error: LOGLEVEL given but " << args.Keyword("LOGLEVEL") << " is not a valid Integer.\n";
+      std::cerr << args.usuage_string();
+      return static_cast<int>(ExecutionErrors::ARGUMENT_ERROR);
+    }
+  }
+
+  if (args.Option("L")) {
+    try {
+      auto level = std::stoi(args.Keyword("L"));
+      log_level = (static_cast<int>(Logger::FATAL) == level) ? Logger::FATAL
+        : (static_cast<int>(Logger::FATAL) == level)         ? Logger::FATAL
+        : (static_cast<int>(Logger::ERROR) == level)         ? Logger::ERROR
+        : (static_cast<int>(Logger::EXCEPTION) == level)     ? Logger::EXCEPTION
+        : (static_cast<int>(Logger::WARNING) == level)       ? Logger::WARNING
+        : (static_cast<int>(Logger::INFO) == level)          ? Logger::INFO
+        : (static_cast<int>(Logger::STABILIZATION) == level) ? Logger::STABILIZATION
+                                                             : Logger::ALL;
+    } catch (std::exception) {
+      std::cerr << "Error: L given but " << args.Keyword("L") << " is not a valid Integer.\n";
+      std::cerr << args.usuage_string();
+      return static_cast<int>(ExecutionErrors::ARGUMENT_ERROR);
+    }
   }
 
   if (args.Option("quiet")) {
