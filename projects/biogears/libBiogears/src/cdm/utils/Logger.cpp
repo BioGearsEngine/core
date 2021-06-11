@@ -29,11 +29,13 @@ governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/filesystem/path.h>
 
+using namespace std::chrono_literals;
+
 namespace biogears {
 std::string const Loggable::empty("");
 const char* Loggable::empty_cStr("");
 
-constexpr auto MESSAGES_TO_FLUSH = 25;
+constexpr auto TIME_TO_FLUSH = 1s;
 
 using CallStack
   = std::vector<std::function<void(std::ostream& os, std::string const& message, std::string const& origin, Logger::LogLevel priority, SEScalarTime const* simtime, tm const* tp)>>;
@@ -84,7 +86,7 @@ public:
   bool formatMessages = true;
   bool logToConsole = true;
 
-  unsigned int message_count = 0;
+  std::chrono::steady_clock::time_point last_flush;
 };
 
 Logger::Implementation::Implementation()
@@ -95,7 +97,7 @@ Logger::Implementation::Implementation(IOManager const& t_io)
   : io(new IOManager(t_io))
   , persistant_message_callstack(process_message_pattern(":datetime: <:priority:> :origin: [:simtime:] :message: :endline:"))
   , volatile_message_callstack(process_message_pattern(":datetime: <:priority:> [:simtime:] :message: :endline:"))
-  , message_count(0)
+  , last_flush(std::chrono::steady_clock::now())
 
 {
   format_buffer.reserve(255);
@@ -186,7 +188,7 @@ auto process_message_pattern(std::string::const_iterator scanner, std::string::c
         processed = token_start;
       }
       if (token_start != token_end) {
-        auto const s = std::string(token_start+1, token_end);
+        auto const s = std::string(token_start + 1, token_end);
         call_stack.push_back(std::bind(puttime_handler, std::placeholders::_1, s, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6));
         scanner = token_end;
         processed = scanner + 1;
@@ -444,7 +446,6 @@ void FormatLogMessage(CallStack callstack,
 void Logger::LogMessage(std::istream& msg, std::string const& origin, LogLevel priority) const
 {
   auto& impl = *m_impl;
-  m_impl->message_count += 1;
 
   std::istreambuf_iterator<char> msg_start { msg }, msg_end;
   std::string message = std::string(msg_start, msg_end);
@@ -452,20 +453,23 @@ void Logger::LogMessage(std::istream& msg, std::string const& origin, LogLevel p
   if (priority <= impl.persistant_filter_level) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.persistant_message_callstack,
-                       message,  
+                       message,
                        priority, "", impl.time,
                        /*impl.format_buffer,*/ *impl.persistantStream);
     } else {
       *impl.persistantStream << msg.rdbuf();
     }
-    if (impl.message_count % MESSAGES_TO_FLUSH == 0) {
+
+    auto now = std::chrono::steady_clock::now();
+    if (now - impl.last_flush > TIME_TO_FLUSH) {
+      impl.last_flush = now;
       impl.persistantStream->flush();
     }
   }
   if (priority <= impl.volatile_filter_level) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.volatile_message_callstack,
-                       message,  
+                       message,
                        priority, "", impl.time,
                        /*impl.format_buffer,*/ *impl.volatileStream);
     } else {
@@ -497,15 +501,14 @@ void Logger::LogMessage(std::istream& msg, std::string const& origin, LogLevel p
 void Logger::LogMessage(std::istream&& msg, std::string const& origin, LogLevel priority) const
 {
   auto& impl = *m_impl;
-  m_impl->message_count += 1;
 
   std::istreambuf_iterator<char> msg_start { msg }, msg_end;
   std::string message = std::string(msg_start, msg_end);
-  
+
   if (priority <= impl.persistant_filter_level) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.persistant_message_callstack,
-                       message, 
+                       message,
                        priority, "", impl.time,
                        /*impl.format_buffer,*/ *impl.persistantStream);
     } else {
@@ -513,14 +516,16 @@ void Logger::LogMessage(std::istream&& msg, std::string const& origin, LogLevel 
     }
 
     *impl.persistantStream << message;
-    if (impl.message_count % MESSAGES_TO_FLUSH == 0) {
+    auto now = std::chrono::steady_clock::now();
+    if (now - impl.last_flush > TIME_TO_FLUSH) {
+      impl.last_flush = now;
       impl.persistantStream->flush();
     }
   }
   if (priority <= impl.volatile_filter_level) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.volatile_message_callstack,
-                       message, 
+                       message,
                        priority, "", impl.time,
                        /*impl.format_buffer,*/ *impl.volatileStream);
     } else {
@@ -553,7 +558,6 @@ void Logger::LogMessage(std::istream&& msg, std::string const& origin, LogLevel 
 void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLevel priority) const
 {
   auto& impl = *m_impl;
-  m_impl->message_count += 1;
   if (priority <= impl.persistant_filter_level) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.persistant_message_callstack,
@@ -563,7 +567,10 @@ void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLe
     } else {
       *impl.persistantStream << msg;
     }
-    if (impl.message_count % MESSAGES_TO_FLUSH == 0) {
+
+    auto now = std::chrono::steady_clock::now();
+    if (now - impl.last_flush > TIME_TO_FLUSH) {
+      impl.last_flush = now;
       impl.persistantStream->flush();
     }
   }
@@ -602,7 +609,6 @@ void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLe
 void Logger::LogMessage(std::string&& msg, std::string const& origin, LogLevel priority) const
 {
   auto& impl = *m_impl;
-  m_impl->message_count += 1;
   if (priority <= impl.persistant_filter_level) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.persistant_message_callstack,
@@ -612,7 +618,10 @@ void Logger::LogMessage(std::string&& msg, std::string const& origin, LogLevel p
     } else {
       *impl.persistantStream << msg;
     }
-    if (impl.message_count % MESSAGES_TO_FLUSH == 0) {
+
+    auto now = std::chrono::steady_clock::now();
+    if (now - impl.last_flush > TIME_TO_FLUSH) {
+      impl.last_flush = now;
       impl.persistantStream->flush();
     }
   }
