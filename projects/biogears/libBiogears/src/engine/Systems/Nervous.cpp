@@ -1192,6 +1192,7 @@ void Nervous::CheckNervousStatus()
           m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateDiaphoresis, true, m_data.GetSimulationTime());
         }
         if (RbcFractionInhibited > 0.8) {
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::FunctionalIncontinence, true, m_data.GetSimulationTime());
           m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateSecretions, false, m_data.GetSimulationTime());
           m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateDiaphoresis, false, m_data.GetSimulationTime());
           m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereSecretions, true, m_data.GetSimulationTime());

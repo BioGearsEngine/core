@@ -138,7 +138,9 @@
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sarin" Compartment="MyocardiumTissue" Name="PartitionCoefficient" Precision="4"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Sarin" Name="SystemicMassCleared" Unit="ug" Precision="4"/>
   
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Pralidoxime" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>		
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Pralidoxime" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Atropine" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>		
+
   <!-- Aerosol Compartments -->
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Mouth"          Substance="Sarin" Name="Concentration" Unit="ug/L" Precision="4"/>	  
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Trachea"         Substance="Sarin" Name="Concentration" Unit="ug/L" Precision="4"/>	
