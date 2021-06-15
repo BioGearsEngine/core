@@ -106,7 +106,6 @@ endif() #${PREFIX}_BUILD_STATIC
 install(DIRECTORY 
     libBiogears/include/biogears
     libCDM/include/biogears
-    libJNI/include/biogears
     libCircuitTest/include/biogears
 	  ${CMAKE_CURRENT_BINARY_DIR}/biogears
     DESTINATION include/
