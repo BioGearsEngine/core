@@ -101,7 +101,7 @@ namespace io {
     return get_states_file_sha1(resource_id);
   }
   //-----------------------------------------------------------------------------
-  char const* const* list_states_files()
+  char const** list_states_files()
   {
     return state_file_list;
   }
