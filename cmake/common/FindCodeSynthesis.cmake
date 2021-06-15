@@ -26,6 +26,7 @@
 
 
 if(NOT CodeSynthesis_FOUND)
+option (XSD_USE_SHORT_TARGET_NAMES "Reduces the name of targets to a minimum" OFF)
 #######################################################################################################################
 # list_directory
 #
@@ -183,6 +184,14 @@ function(REGISTER_XSD_FILE _filepath )
 
   string(REPLACE  "//" "/" _safe_unique_name ${_component}/${_schema}  )
   string(MAKE_C_IDENTIFIER   ${_component}/${_schema} _safe_unique_name)
+  if(XSD_USE_SHORT_TARGET_NAMES)
+    set ( _gen_target_name "xsd_${_schema}")
+    set ( _mv_target_name  "xsd_mv_${_schema}")
+  else ()
+    set ( _gen_target_name "xsd_gen${_safe_unique_name}")
+    set ( _mv_target_name  "${_mv_target_name}")
+  endif()
+
   add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.cxx ${_l_OUTPUTS}
                       WORKING_DIRECTORY ${_l_WORKING_DIR}
                       COMMAND ${CMAKE_COMMAND} -E env LD_LIBRARY_PATH=${${ROOT_PROJECT_NAME}_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree --show-sloc ${CodeSynthesis_FLAGS} 
@@ -191,19 +200,18 @@ function(REGISTER_XSD_FILE _filepath )
                       DEPENDS ${_l_DEPENDS}
                       COMMENT "Generating source code from XML ${_filepath}" )
 
-  add_custom_target( xsd_gen${_safe_unique_name} DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.cxx
+  add_custom_target( ${_gen_target_name} DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.cxx
                      COMMENT "Checking if re-generation is required" )
   
 get_filename_component(SOLUTION_FOLDER "${_component}${_schema}" DIRECTORY )
 
-  set_target_properties(xsd_gen${_safe_unique_name}
+  set_target_properties(${_gen_target_name}
                         PROPERTIES
-                        FOLDER "Code Generators/${SOLUTION_FOLDER}"
-                        PROJECT_LABEL "XSD_Gen_${_safe_unique_name}")
+                        FOLDER "Code Generators/${SOLUTION_FOLDER}")
 
-  list(APPEND ${_l_TARGETS} xsd_gen${_safe_unique_name})
+  list(APPEND ${_l_TARGETS} ${_gen_target_name})
   if(_l_STAGE)
-    add_custom_target( xsd_stage${_safe_unique_name} DEPENDS  ${CMAKE_BINARY_DIR}/${_resource_path}/${_schema}.xsd
+    add_custom_target( ${_mv_target_name} DEPENDS  ${CMAKE_BINARY_DIR}/${_resource_path}/${_schema}.xsd
                        COMMENT "Checking if re-generation is required" )
 
     add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${_schema}.xsd    
@@ -213,11 +221,10 @@ get_filename_component(SOLUTION_FOLDER "${_component}${_schema}" DIRECTORY )
                         DEPENDS ${_config_file}
                         COMMENT "Staging XSD Template for runtime" )
     
-    set_target_properties(xsd_stage${_safe_unique_name}
+    set_target_properties(${_mv_target_name}
                           PROPERTIES
-                          FOLDER "Code Generators"
-                          PROJECT_LABEL "XSD_Move_${_safe_unique_name}")
-	list(APPEND ${_l_TARGETS} xsd_gen${_safe_unique_name})
+                          FOLDER "Code Generators")
+	list(APPEND ${_l_TARGETS} ${_gen_target_name})
   endif()
 
   if(_l_INSTALL)

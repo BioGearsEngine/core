@@ -44,10 +44,10 @@ function(generate_hex_header)
     )
   
     if(_SHORT_NAMES)
-      add_custom_target( ${_c_safe_type}_${_c_safe_content_name}
+      add_custom_target( C_${_c_safe_content_name}
         DEPENDS  "${_OUTPUT}.hxx" "${_OUTPUT}.cxx"
       )
-      set_target_properties(${_c_safe_type}_${_c_safe_content_name} PROPERTIES 
+      set_target_properties(C_${_c_safe_content_name} PROPERTIES 
         FOLDER ${_FOLDER}
       )
     else ()
@@ -82,7 +82,7 @@ function(configure_io_directory_file )
     get_filename_component(src_dir_wle ${src} NAME_WLE  )
     string(REGEX REPLACE "@" "_at_" safe_src_dir_wle ${src_dir_wle})
     string(MAKE_C_IDENTIFIER ${safe_src_dir_wle} safe_src_dir_wle)
-    if(_SHORT_NAMES)
+    if(Biogears_IO_USE_SHORT_TARGET_NAMES)
       set(ADDITIONAL_ARGS SHORT_NAMES)
     endif()
     
