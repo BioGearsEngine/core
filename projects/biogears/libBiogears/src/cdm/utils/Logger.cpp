@@ -14,6 +14,7 @@ governing permissions and limitations under the License.
 
 #include <biogears/io/io-manager.h>
 
+#include <cctype>
 #include <atomic>
 #include <chrono>
 #include <cstdarg>
