@@ -682,7 +682,7 @@ bool IOManager::generate_runtime_directory(const char* runtime_directory) const
   result &= io::generate_override_directory(runtime_directory);
   result &= io::generate_patients_directory(runtime_directory);
 #ifdef BIOGEARS_IO_EMBED_STATES
-  result &= generate_states_directory(runtime_directory);
+  result &= io::generate_states_directory(runtime_directory);
 #endif
   result &= io::generate_substances_directory(runtime_directory);
   //result &= io::generate_scenarios_directory(runtime_directory);
@@ -701,7 +701,7 @@ bool IOManager::does_embedded_file_exist(const char* embeded_path) const
     || io::does_embedded_override_file_exist(embeded_path)
     || io::does_embedded_patients_file_exist(embeded_path)
 #ifdef BIOGEARS_IO_EMBED_STATES
-    || does_embedded_states_file_exist(embeded_path)
+    || io::does_embedded_states_file_exist(embeded_path)
 #endif
     || io::does_embedded_substances_file_exist(embeded_path);
   //|| io::does_embedded_scenarios_file_exist(embeded_path)
@@ -740,7 +740,7 @@ char const* IOManager::get_expected_sha1(const char* file) const
     return result;
   }
 #ifdef BIOGEARS_IO_EMBED_STATES
-  result = get_states_file_sha1(file);
+  result = io::get_states_file_sha1(file);
   if (*result) {
     return result;
   }
@@ -763,17 +763,17 @@ char const* IOManager::get_expected_sha1(const char* file) const
 size_t IOManager::get_directory_count() const
 {
   size_t sum = biogears::io::config_file_count()
-    + biogears::io::ecg_file_count()
-    + biogears::io::environments_file_count()
-    + biogears::io::nutrition_file_count()
-    + biogears::io::override_file_count()
-    + biogears::io::patients_file_count()
-    + biogears::io::substances_file_count()
-    //+ biogears::io::scenarios_file_count()
-    //+ biogears::io::templates_file_count()
+    + io::ecg_file_count()
+    + io::environments_file_count()
+    + io::nutrition_file_count()
+    + io::override_file_count()
+    + io::patients_file_count()
+    + io::substances_file_count()
+    //+ io::scenarios_file_count()
+    //+ io::templates_file_count()
     + biogears::io::xsd_file_count();
 #ifdef BIOGEARS_IO_EMBED_STATES
-  sum += states_file_count();
+  sum += io::states_file_count();
 #endif
   return sum;
 }
@@ -838,7 +838,7 @@ char const* IOManager::get_embedded_resource_file(const char* file, std::size_t&
     return result;
   }
 #ifdef BIOGEARS_IO_EMBED_STATES
-  result = get_embedded_states_file(file, size);
+  result = io::get_embedded_states_file(file, size);
   if (size > 0) {
     return result;
   }
@@ -890,7 +890,7 @@ size_t IOManager::get_embedded_resource_file_size(const char* file) const
     return size;
   }
 #ifdef BIOGEARS_IO_EMBED_STATES
-  size = get_embedded_states_file_size(file);
+  size = io::get_embedded_states_file_size(file);
   if (size > 0) {
     return size;
   }
