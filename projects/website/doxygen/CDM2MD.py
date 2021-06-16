@@ -48,6 +48,7 @@ class CDM2MD:
         Creates a minidom parser
         """
         for input_file in self.files_processed:
+            print("parsing", input_file)
             sc=minidom.parse(input_file)
             for child in sc.childNodes:
                 if child.nodeName == "xs:schema":
@@ -193,13 +194,17 @@ class CDM2MD:
                 files=i.getAttribute("schemaLocation")
                 if files.startswith("./"):
                     files=os.path.dirname(self.files_processed[0])+files[1:]
+                    print("first" , files)
                 elif files.startswith(".."):
                     files=os.path.dirname(self.files_processed[0])+files[2:]
+                    print("second" , files)
                 else:
                     if files=="CommonDataModel.xsd":
                         files=os.path.dirname(self.files_processed[0])+"/"+files
+                        print("commondatamodel" , files)
                     else:
-                        files=os.path.dirname(self.files_processed[0])+"/cdm/"+files
+                        files=os.path.dirname(self.files_processed[0])+"/"+files
+                        print("else" , files)
                 if files not in self.files_processed:
                     self.files_processed.append(files)
 

@@ -21,7 +21,7 @@ if(Biogears_BUILD_WEBSITE)
     # Requirements
     ###############################################################################
 
-    find_package(Perl REQUIRED)
+    #find_package(Perl REQUIRED)
     find_package(Doxygen REQUIRED)
     find_package (Python3 COMPONENTS Interpreter Development REQUIRED )
     find_package(LATEX COMPONENTS BIBTEX REQUIRED)  
