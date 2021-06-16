@@ -116,7 +116,6 @@ if(NOT  ${ROOT_PROJECT_NAME}_BUILD_IO_LIBRARY)
       FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
       FILES_MATCHING 
       PATTERN "*.xml"
-      PATTERN "log4j.properties"
       PATTERN "*.csv"
       PATTERN "*.xlsx"
   )

@@ -30,12 +30,14 @@ function(generate_hex_header)
     get_filename_component(_source_name ${_OUTPUT} NAME)
     get_filename_component(_source_directory ${_OUTPUT} DIRECTORY )
 
-    if( NOT EXISTS ${_header} OR NOT EXISTS ${_source} )
-
-      message(STATUS  "                   ${_source_name}.{hxx,cxx}")
-      file(WRITE ${_header} "//! THIS IS PLACEHOLDER DATA THAT WILL BE REPLACED BY THE FIRST RUN OF TARGET generate_${content_name}")
-      file(WRITE ${_source} "//! THIS IS PLACEHOLDER DATA THAT WILL BE REPLACED BY THE FIRST RUN OF TARGET generate_${content_name}")
-    endif()
+   if(NOT CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+   if( NOT EXISTS ${_header} OR NOT EXISTS ${_source} )
+   
+     message(STATUS  "                   ${_source_name}.{hxx,cxx}")
+     file(WRITE ${_header} "//! THIS IS PLACEHOLDER DATA THAT WILL BE REPLACED BY THE FIRST RUN OF TARGET generate_${content_name}")
+     file(WRITE ${_source} "//! THIS IS PLACEHOLDER DATA THAT WILL BE REPLACED BY THE FIRST RUN OF TARGET generate_${content_name}")
+   endif()
+   endif()
 
     add_custom_command(
       OUTPUT  "${_OUTPUT}.hxx" "${_OUTPUT}.cxx"

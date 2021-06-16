@@ -41,7 +41,7 @@ set(LIB${PREFIX}_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
   set( ${PREFIX}_CPPFLAGS $<$<PLATFORM_ID:Windows>:_SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX > )
   target_compile_definitions(lib${PROJECT_NAME}_cdm  PUBLIC ${${PREFIX}_CPPFLAGS_INTERFACE} $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},armv7-a>:XSD_NO_EXPORT>)
   target_compile_definitions(lib${PROJECT_NAME}_cdm  PRIVATE ${${PREFIX}_CPPFLAGS} )
-  target_compile_options(lib${PROJECT_NAME}_cdm PUBLIC $<$<PLATFORM_ID:Android>:-Wnonportable-system-include-path> PUBLIC  $<$<PLATFORM_ID:Android>:-Wnonportable-include-path>   PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
+  target_compile_options(lib${PROJECT_NAME}_cdm PUBLIC $<$<PLATFORM_ID:Android>:-w> PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
   
   target_include_directories(lib${PROJECT_NAME}_cdm 
       PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR} ${BIOGEARS_SOURCE_DIR}/libCDM/include
