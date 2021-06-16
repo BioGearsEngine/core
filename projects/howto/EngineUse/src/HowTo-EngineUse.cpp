@@ -112,7 +112,7 @@ void HowToEngineUse()
   // If set to WARN, you will not recieve DEBUG and INFO, but everything else
   // You can specify which level you would like the engine to log
   // By Default the LogLevel is INFO
-  // bg->GetLogger()->SetLogLevel(Logger::INFO);
+  // bg->GetLogger()->SetLogLevel(Logger::eInfo);
 
   // You can tell the BioGearsEngine to also direct any output
   // to your own function. For example if you want to capture and process messages

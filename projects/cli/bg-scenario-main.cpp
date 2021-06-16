@@ -223,7 +223,7 @@ int main(int argc, char* argv[])
 
   using namespace boost::program_options;
 
-  auto log_level = Logger::INFO;
+  auto log_level = Logger::eInfo;
   std::string help_message;
 
   try {
@@ -238,7 +238,7 @@ int main(int argc, char* argv[])
       ("state,s", value<std::string>(), "Specifcy the Initial Patient State File") /**/
       ("results,r", value<std::string>(), "Specifcy the Results File") /**/
       ("quiet,q", bool_switch()->default_value(false), "Supress most log messages") /**/
-      ("loglevel,l", value<int>()->default_value(static_cast<int>(Logger::INFO)), "Set the log filter level to supress messages above the given.\n  0:FATAL\n  1:DEBUG\n  2:ERROR\n  3:EXCEPTION\n  4:WARNING\n(5:INFO)\n6:STABILIZATION\n7:ALL") /**/
+      ("loglevel,l", value<int>()->default_value(static_cast<int>(Logger::eInfo)), "Set the log filter level to supress messages above the given.\n  0:FATAL\n  1:DEBUG\n  2:ERROR\n  3:EXCEPTION\n  4:WARNING\n(5:INFO)\n6:STABILIZATION\n7:ALL") /**/
       ("version,v", bool_switch()->default_value(false), "Sets log level to WARNING") /**/
       ("track-stabilization", bool_switch()->default_value(false), "Turn on stabilization tracking for the scenario");
 
@@ -295,17 +295,17 @@ int main(int argc, char* argv[])
     }
 
     if (vm["quiet"].as<bool>()) {
-      log_level = Logger::WARNING;
+      log_level = Logger::eWarning;
     } else {
       int level = vm["loglevel"].as<int>();
-      log_level = (static_cast<int>(Logger::FATAL) == level) ? Logger::FATAL
-        : (static_cast<int>(Logger::DEBUG) == level)         ? Logger::DEBUG
-        : (static_cast<int>(Logger::ERROR) == level)         ? Logger::ERROR
-        : (static_cast<int>(Logger::EXCEPTION) == level)     ? Logger::EXCEPTION
-        : (static_cast<int>(Logger::WARNING) == level)       ? Logger::WARNING
-        : (static_cast<int>(Logger::INFO) == level)          ? Logger::INFO
-        : (static_cast<int>(Logger::STABILIZATION) == level) ? Logger::STABILIZATION
-                                                             : Logger::ALL;
+      log_level = (static_cast<int>(Logger::eFatal) == level) ? Logger::eFatal
+        : (static_cast<int>(Logger::eDebug) == level)         ? Logger::eDebug
+        : (static_cast<int>(Logger::eError) == level)         ? Logger::eError
+        : (static_cast<int>(Logger::eException) == level)     ? Logger::eException
+        : (static_cast<int>(Logger::eWarning) == level)       ? Logger::eWarning
+        : (static_cast<int>(Logger::eInfo) == level)          ? Logger::eInfo
+        : (static_cast<int>(Logger::eStabilization) == level) ? Logger::eStabilization
+                                                             : Logger::eAll;
     }
 
     if (vm.count("patient")) {
@@ -394,7 +394,7 @@ int main(int argc, char* argv[])
   signal(SIGINT, signal_callback_handler);
   signal(SIGABRT, signal_callback_handler);
 
-  auto log_level = Logger::INFO;
+  auto log_level = Logger::eInfo;
   std::string help_message;
 
   biogears::Arguments args(
@@ -453,14 +453,14 @@ int main(int argc, char* argv[])
   if (args.Option("LOGLEVEL")) {
     try {
       auto level = std::stoi(args.Keyword("LOGLEVEL"));
-      log_level = (static_cast<int>(Logger::FATAL) == level) ? Logger::FATAL
-        : (static_cast<int>(Logger::FATAL) == level)         ? Logger::FATAL
-        : (static_cast<int>(Logger::ERROR) == level)         ? Logger::ERROR
-        : (static_cast<int>(Logger::EXCEPTION) == level)     ? Logger::EXCEPTION
-        : (static_cast<int>(Logger::WARNING) == level)       ? Logger::WARNING
-        : (static_cast<int>(Logger::INFO) == level)          ? Logger::INFO
-        : (static_cast<int>(Logger::STABILIZATION) == level) ? Logger::STABILIZATION
-                                                             : Logger::ALL;
+      log_level = (static_cast<int>(Logger::eFatal) == level) ? Logger::eFatal
+        : (static_cast<int>(Logger::eFatal) == level)         ? Logger::eFatal
+        : (static_cast<int>(Logger::eError) == level)         ? Logger::eError
+        : (static_cast<int>(Logger::eException) == level)     ? Logger::eException
+        : (static_cast<int>(Logger::eWarning) == level)       ? Logger::eWarning
+        : (static_cast<int>(Logger::eInfo) == level)          ? Logger::eInfo
+        : (static_cast<int>(Logger::eStabilization) == level) ? Logger::eStabilization
+                                                             : Logger::eAll;
     } catch (std::exception) {
       std::cerr << "Error: LOGLEVEL given but " << args.Keyword("LOGLEVEL") << " is not a valid Integer.\n";
       std::cerr << args.usuage_string();
@@ -471,14 +471,14 @@ int main(int argc, char* argv[])
   if (args.Option("L")) {
     try {
       auto level = std::stoi(args.Keyword("L"));
-      log_level = (static_cast<int>(Logger::FATAL) == level) ? Logger::FATAL
-        : (static_cast<int>(Logger::FATAL) == level)         ? Logger::FATAL
-        : (static_cast<int>(Logger::ERROR) == level)         ? Logger::ERROR
-        : (static_cast<int>(Logger::EXCEPTION) == level)     ? Logger::EXCEPTION
-        : (static_cast<int>(Logger::WARNING) == level)       ? Logger::WARNING
-        : (static_cast<int>(Logger::INFO) == level)          ? Logger::INFO
-        : (static_cast<int>(Logger::STABILIZATION) == level) ? Logger::STABILIZATION
-                                                             : Logger::ALL;
+      log_level = (static_cast<int>(Logger::eFatal) == level) ? Logger::eFatal
+        : (static_cast<int>(Logger::eFatal) == level)         ? Logger::eFatal
+        : (static_cast<int>(Logger::eError) == level)         ? Logger::eError
+        : (static_cast<int>(Logger::eException) == level)     ? Logger::eException
+        : (static_cast<int>(Logger::eWarning) == level)       ? Logger::eWarning
+        : (static_cast<int>(Logger::eInfo) == level)          ? Logger::eInfo
+        : (static_cast<int>(Logger::eStabilization) == level) ? Logger::eStabilization
+                                                             : Logger::eAll;
     } catch (std::exception) {
       std::cerr << "Error: L given but " << args.Keyword("L") << " is not a valid Integer.\n";
       std::cerr << args.usuage_string();
@@ -487,7 +487,7 @@ int main(int argc, char* argv[])
   }
 
   if (args.Option("quiet")) {
-    log_level = Logger::WARNING;
+    log_level = Logger::eWarning;
   }
 
   if (args.KeywordFound("PATIENT") || args.KeywordFound("P")) {

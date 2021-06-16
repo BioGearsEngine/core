@@ -9,7 +9,7 @@ void NullLogger::ResetLogFile(const std::string& logFilename) {}
 void NullLogger::SetLogLevel(Logger::LogLevel priority) {}
 Logger::LogLevel NullLogger::GetLogLevel()
 {
-  return Logger::INFO;
+  return Logger::eInfo;
 }
 void NullLogger::SetLogTime(const SEScalarTime* time) {}
 void NullLogger::SetForward(LoggerForward* forward) {}

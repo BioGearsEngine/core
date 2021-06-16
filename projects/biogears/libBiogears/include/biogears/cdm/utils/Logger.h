@@ -87,14 +87,14 @@ class BIOGEARS_API Logger {
 
 public:
   enum LogLevel {
-    FATAL = 0,
-    DEBUG,
-    ERROR,
-    EXCEPTION,
-    WARNING,
-    INFO,
-    STABILIZATION,
-    ALL
+    eFatal = 0,
+    eDebug,
+    eError,
+    eException,
+    eWarning,
+    eInfo,
+    eStabilization,
+    eAll
   };
 
   explicit Logger(std::string const& logFilename = "biogears.log");
@@ -151,37 +151,37 @@ private:
 
 inline std::ostream& operator<<(std::ostream& os, Logger::LogLevel level)
 {
-  os << ((Logger::ALL == level)           ? "ALL"
-           : (Logger::FATAL == level)     ? "FATAL"
-           : (Logger::DEBUG == level)     ? "DEBUG"
-           : (Logger::ERROR == level)     ? "ERROR"
-           : (Logger::EXCEPTION == level) ? "EXECPTION"
-           : (Logger::WARNING == level)   ? "WARNING"
-           : (Logger::INFO == level)      ? "INFO"
+  os << ((Logger::eAll == level)           ? "ALL"
+           : (Logger::eFatal== level)     ? "FATAL"
+           : (Logger::eDebug == level)     ? "DEBUG"
+           : (Logger::eError == level)     ? "ERROR"
+           : (Logger::eException== level) ? "EXECPTION"
+           : (Logger::eWarning == level)   ? "WARNING"
+           : (Logger::eInfo == level)      ? "INFO"
                                           : "UNKNWON");
   return os;
 }
 inline std::string ToString(Logger::LogLevel level)
 {
-  return (Logger::ALL == level)    ? "ALL"
-    : (Logger::FATAL == level)     ? "FATAL"
-    : (Logger::DEBUG == level)     ? "DEBUG"
-    : (Logger::ERROR == level)     ? "ERROR"
-    : (Logger::EXCEPTION == level) ? "EXECPTION"
-    : (Logger::WARNING == level)   ? "WARNING"
-    : (Logger::INFO == level)      ? "INFO"
+  return (Logger::eAll == level)    ? "ALL"
+    : (Logger::eFatal == level)     ? "FATAL"
+    : (Logger::eDebug == level)     ? "DEBUG"
+    : (Logger::eError == level)     ? "ERROR"
+    : (Logger::eException== level) ? "EXECPTION"
+    : (Logger::eWarning == level)   ? "WARNING"
+    : (Logger::eInfo == level)      ? "INFO"
                                    : "UNKNWON";
 }
 
 inline Logger::LogLevel FromString(std::string str)
 {
-  return ("ALL" == str)    ? Logger::ALL
-    : ("FATAL" == str)     ? Logger::FATAL
-    : ("DEBUG" == str)     ? Logger::DEBUG
-    : ("ERROR" == str)     ? Logger::ERROR
-    : ("EXECPTION" == str) ? Logger::EXCEPTION
-    : ("WARNING" == str)   ? Logger::WARNING
-    : ("INFO" == str)      ? Logger::INFO
-                           : Logger::ALL;
+  return ("ALL" == str)    ? Logger::eAll
+    : ("FATAL" == str)     ? Logger::eFatal
+    : ("DEBUG" == str)     ? Logger::eDebug
+    : ("ERROR" == str)     ? Logger::eError
+    : ("EXECPTION" == str) ? Logger::eException
+    : ("WARNING" == str)   ? Logger::eWarning
+    : ("INFO" == str)      ? Logger::eInfo
+                           : Logger::eAll;
 }
 }

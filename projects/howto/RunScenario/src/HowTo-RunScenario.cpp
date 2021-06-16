@@ -65,7 +65,7 @@ void HowToRunScenario()
   // If set to INFO, you will not recieve DEBUG, but everything else
   // If set to WARN, you will not recieve DEBUG and INFO, but everything else
   // You can specify which level you would like the engine to log
-  bg->GetLogger()->SetLogLevel(Logger::INFO);
+  bg->GetLogger()->SetLogLevel(Logger::eInfo);
 
   // You can forward logs as demonstrated in HowTo-EngineUse
 

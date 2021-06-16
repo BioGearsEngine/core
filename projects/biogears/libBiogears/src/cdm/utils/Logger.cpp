@@ -69,8 +69,8 @@ public:
   Implementation();
   Implementation(const IOManager& io);
 
-  LogLevel volatile_filter_level = Logger::INFO;
-  LogLevel persistant_filter_level = Logger::INFO;
+  LogLevel volatile_filter_level = Logger::eInfo;
+  LogLevel persistant_filter_level = Logger::eInfo;
   std::string format_buffer;
 
   CallStack persistant_message_callstack;
@@ -480,21 +480,21 @@ void Logger::LogMessage(std::istream& msg, std::string const& origin, LogLevel p
 
   if (impl.userDefinedLogger != nullptr) {
     switch (priority) {
-    case Logger::DEBUG:
+    case Logger::eDebug:
       impl.userDefinedLogger->Debug(message.c_str());
       break;
-    case Logger::ERROR:
+    case Logger::eError:
       impl.userDefinedLogger->Error(message.c_str());
       break;
-    case Logger::EXCEPTION:
+    case Logger::eException:
       break;
-    case Logger::WARNING:
+    case Logger::eWarning:
       impl.userDefinedLogger->Warning(message.c_str());
       break;
-    case Logger::INFO:
+    case Logger::eInfo:
       impl.userDefinedLogger->Info(message.c_str());
       break;
-    case Logger::STABILIZATION:
+    case Logger::eStabilization:
       break;
     }
   }
@@ -536,21 +536,21 @@ void Logger::LogMessage(std::istream&& msg, std::string const& origin, LogLevel 
 
   if (impl.userDefinedLogger != nullptr) {
     switch (priority) {
-    case Logger::DEBUG:
+    case Logger::eDebug:
       impl.userDefinedLogger->Debug(message.c_str());
       break;
-    case Logger::ERROR:
+    case Logger::eError:
       impl.userDefinedLogger->Error(message.c_str());
       break;
-    case Logger::EXCEPTION:
+    case Logger::eException:
       break;
-    case Logger::WARNING:
+    case Logger::eWarning:
       impl.userDefinedLogger->Warning(message.c_str());
       break;
-    case Logger::INFO:
+    case Logger::eInfo:
       impl.userDefinedLogger->Info(message.c_str());
       break;
-    case Logger::STABILIZATION:
+    case Logger::eStabilization:
       break;
     }
   }
@@ -588,21 +588,21 @@ void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLe
 
   if (impl.userDefinedLogger != nullptr) {
     switch (priority) {
-    case Logger::DEBUG:
+    case Logger::eDebug:
       impl.userDefinedLogger->Debug(msg.c_str());
       break;
-    case Logger::ERROR:
+    case Logger::eError:
       impl.userDefinedLogger->Error(msg.c_str());
       break;
-    case Logger::EXCEPTION:
+    case Logger::eException:
       break;
-    case Logger::WARNING:
+    case Logger::eWarning:
       impl.userDefinedLogger->Warning(msg.c_str());
       break;
-    case Logger::INFO:
+    case Logger::eInfo:
       impl.userDefinedLogger->Info(msg.c_str());
       break;
-    case Logger::STABILIZATION:
+    case Logger::eStabilization:
       break;
     }
   }
@@ -639,21 +639,21 @@ void Logger::LogMessage(std::string&& msg, std::string const& origin, LogLevel p
 
   if (impl.userDefinedLogger != nullptr) {
     switch (priority) {
-    case Logger::DEBUG:
+    case Logger::eDebug:
       impl.userDefinedLogger->Debug(msg.c_str());
       break;
-    case Logger::ERROR:
+    case Logger::eError:
       impl.userDefinedLogger->Error(msg.c_str());
       break;
-    case Logger::EXCEPTION:
+    case Logger::eException:
       break;
-    case Logger::WARNING:
+    case Logger::eWarning:
       impl.userDefinedLogger->Warning(msg.c_str());
       break;
-    case Logger::INFO:
+    case Logger::eInfo:
       impl.userDefinedLogger->Info(msg.c_str());
       break;
-    case Logger::STABILIZATION:
+    case Logger::eStabilization:
       break;
     }
   }
@@ -661,44 +661,44 @@ void Logger::LogMessage(std::string&& msg, std::string const& origin, LogLevel p
 
 void Logger::Debug(std::string const& msg, std::string const& origin) const
 {
-  LogMessage(msg, origin, LogLevel::DEBUG);
+  LogMessage(msg, origin, eDebug);
 }
 void Logger::Info(std::string const& msg, std::string const& origin) const
 {
-  LogMessage(msg, origin, LogLevel::INFO);
+  LogMessage(msg, origin, eInfo);
 }
 void Logger::Warning(std::string const& msg, std::string const& origin) const
 {
-  LogMessage(msg, origin, LogLevel::WARNING);
+  LogMessage(msg, origin, eWarning);
 }
 void Logger::Error(std::string const& msg, std::string const& origin) const
 {
-  LogMessage(msg, origin, LogLevel::ERROR);
+  LogMessage(msg, origin, eError);
 }
 void Logger::Fatal(std::string const& msg, std::string const& origin) const
 {
-  LogMessage(msg, origin, LogLevel::FATAL);
+  LogMessage(msg, origin, eFatal);
 }
 
 void Logger::Debug(std::istream& msg) const
 {
-  LogMessage(msg, "", LogLevel::DEBUG);
+  LogMessage(msg, "", eDebug);
 }
 void Logger::Info(std::istream& msg) const
 {
-  LogMessage(msg, "", LogLevel::INFO);
+  LogMessage(msg, "", eInfo);
 }
 void Logger::Warning(std::istream& msg) const
 {
-  LogMessage(msg, "", LogLevel::WARNING);
+  LogMessage(msg, "", eWarning);
 }
 void Logger::Error(std::istream& msg) const
 {
-  LogMessage(msg, "", LogLevel::ERROR);
+  LogMessage(msg, "", eError);
 }
 void Logger::Fatal(std::istream& msg) const
 {
-  LogMessage(msg, "", LogLevel::FATAL);
+  LogMessage(msg, "", eFatal);
 }
 
 std::weak_ptr<IOManager> Logger::GetIoManager() const
@@ -799,62 +799,62 @@ void Loggable::Debug(std::string const& message, std::string const& origin) cons
 void Loggable::Debug(std::istream& msg) const
 {
   if (m_Logger) {
-    m_Logger->LogMessage(msg, "", Logger::DEBUG);
+    m_Logger->LogMessage(msg, "", Logger::eDebug);
   }
 }
 void Loggable::Info(std::istream& msg) const
 {
   if (m_Logger) {
-    m_Logger->LogMessage(msg, "", Logger::INFO);
+    m_Logger->LogMessage(msg, "", Logger::eInfo);
   }
 }
 void Loggable::Warning(std::istream& msg) const
 {
   if (m_Logger) {
-    m_Logger->LogMessage(msg, "", Logger::WARNING);
+    m_Logger->LogMessage(msg, "", Logger::eWarning);
   }
 }
 void Loggable::Error(std::istream& msg) const
 {
   if (m_Logger) {
-    m_Logger->LogMessage(msg, "", Logger::ERROR);
+    m_Logger->LogMessage(msg, "", Logger::eError);
   }
 }
 void Loggable::Fatal(std::istream& msg) const
 {
   if (m_Logger) {
-    m_Logger->LogMessage(msg, "", Logger::FATAL);
+    m_Logger->LogMessage(msg, "", Logger::eFatal);
   }
 }
 
 void Loggable::Debug(std::istream&& msg) const
 {
   if (m_Logger) {
-    m_Logger->LogMessage(std::move(msg), "", Logger::DEBUG);
+    m_Logger->LogMessage(std::move(msg), "", Logger::eDebug);
   }
 }
 void Loggable::Info(std::istream&& msg) const
 {
   if (m_Logger) {
-    m_Logger->LogMessage(std::move(msg), "", Logger::INFO);
+    m_Logger->LogMessage(std::move(msg), "", Logger::eInfo);
   }
 }
 void Loggable::Warning(std::istream&& msg) const
 {
   if (m_Logger) {
-    m_Logger->LogMessage(std::move(msg), "", Logger::WARNING);
+    m_Logger->LogMessage(std::move(msg), "", Logger::eWarning);
   }
 }
 void Loggable::Error(std::istream&& msg) const
 {
   if (m_Logger) {
-    m_Logger->LogMessage(std::move(msg), "", Logger::ERROR);
+    m_Logger->LogMessage(std::move(msg), "", Logger::eError);
   }
 }
 void Loggable::Fatal(std::istream&& msg) const
 {
   if (m_Logger) {
-    m_Logger->LogMessage(std::move(msg), "", Logger::FATAL);
+    m_Logger->LogMessage(std::move(msg), "", Logger::eFatal);
   }
 }
 
