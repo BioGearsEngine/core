@@ -124,7 +124,7 @@ function(configure_io_directory_file )
     "    }\n"
     )
     string(APPEND GET_EMBEDED_CONTENTS_SIZE_PATH_BODY
-    "    if ( path == get_${safe_src_dir_wle}_path()) {\n"
+    "    if ( std::strcmp(path, get_${safe_src_dir_wle}_path()) ) {\n"
     "      return ${safe_src_dir_wle}_text_size();\n"
     "    }\n"
     )

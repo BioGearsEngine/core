@@ -11,11 +11,11 @@
 namespace biogears {
 namespace io {
   static char default_directory[] = "states/";
-  char const * state_file_list[] = {
+  char const * scenario_file_list[] = {
 @RESOURCE_FILE_LIST@
   };
 
-  constexpr size_t count_of_state_files = @RESOURCE_FILE_COUNT@;
+  constexpr size_t count_of_substance_files = @RESOURCE_FILE_COUNT@;
 
   //biogears::filesystem::path overloads
   bool generate_states_directory(biogears::filesystem::path path)
@@ -65,7 +65,7 @@ namespace io {
     return embedded_content;
   }
   //-----------------------------------------------------------------------------
-  size_t  get_embedded_states_file_size( const char* path, size_t& content_size) 
+  size_t  get_embedded_states_file_size( const char* path) 
   {
     size_t size_of_embedded_content = 0;
 
@@ -74,8 +74,9 @@ namespace io {
     return size_of_embedded_content ;
   }
   //-----------------------------------------------------------------------------
-  char const * get_default_states_directory() { return default_directory; }
+  char const * get_default_scenario_directory() { return default_directory; }
   //-----------------------------------------------------------------------------
+  
   bool generate_states_directory(const char* root)
   {
    biogears::filesystem::path working_dir { root };
@@ -91,7 +92,7 @@ namespace io {
     return does_embedded_states_file_exist(resource_id);
   }
   //-----------------------------------------------------------------------------
-  
+ 
   char const* get_states_file_sha1(const char* path)
   {
     std::string resource_id { path };
@@ -103,12 +104,12 @@ namespace io {
   //-----------------------------------------------------------------------------
   char const** list_states_files()
   {
-    return state_file_list;
+    return scenario_file_list;
   }
   //-----------------------------------------------------------------------------
   size_t states_file_count()
   {
-    return count_of_state_files;
+    return count_of_substance_files;
   }
   //-----------------------------------------------------------------------------
   char const* get_embedded_states_file(const char* path, size_t& content_size)
