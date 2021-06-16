@@ -188,7 +188,7 @@ void Renal::Initialize()
   GetRightGlomerularFiltrationSurfaceArea().SetValue(m_data.GetConfiguration().GetRightGlomerularFilteringSurfaceAreaBaseline(AreaUnit::m2), AreaUnit::m2);
   GetRightTubularReabsorptionFluidPermeability().SetValue(m_data.GetConfiguration().GetRightTubularReabsorptionFluidPermeabilityBaseline(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2), VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
   GetRightTubularReabsorptionFiltrationSurfaceArea().SetValue(m_data.GetConfiguration().GetRightTubularReabsorptionFilteringSurfaceAreaBaseline(AreaUnit::m2), AreaUnit::m2);
-
+  GetBladderPressure().SetValue(m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetPressure().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
   GetFiltrationFraction().SetValue(0.2);
   GetGlomerularFiltrationRate().SetValue(180.0, VolumePerTimeUnit::L_Per_day);
 
@@ -1423,6 +1423,13 @@ void Renal::CalculateVitalSigns()
         filtrationFraction = GetRightGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s) / renalPlasmaFlow_mL_Per_s;
       GetRightFiltrationFraction().SetValue(filtrationFraction);
     }
+  }
+
+  if (m_data.GetActions().GetPatientActions().HasBurnWound() && (m_data.GetActions().GetPatientActions().GetBurnWound()->HasCompartment("Trunk"))) {
+    double tissueIntegrity = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
+    double bladderPressure = m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetPressure().GetValue(PressureUnit::mmHg);
+    double bladderPressureMultiplier = (((-1.0 * tissueIntegrity) + 1.0) * 5.25) + 1.0; //Asymptotic relation to tissue integirty, max increase of 6.25 (5.25+1.0)
+    GetBladderPressure().SetValue(bladderPressure * bladderPressureMultiplier, PressureUnit::mmHg);
   }
 
   GetGlomerularFiltrationRate().SetValue(GetLeftGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s) + GetRightGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s), VolumePerTimeUnit::mL_Per_s);

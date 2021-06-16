@@ -91,6 +91,22 @@ public:
   SEScalarPressure& GetDiastolicArterialPressure();
   double GetDiastolicArterialPressure(const PressureUnit& unit) const;
 
+  bool HasExtremityPressureLeftArm() const;
+  SEScalarPressure& GetExtremityPressureLeftArm();
+  double GetExtremityPressureLeftArm(const PressureUnit& unit) const;
+
+  bool HasExtremityPressureLeftLeg() const;
+  SEScalarPressure& GetExtremityPressureLeftLeg();
+  double GetExtremityPressureLeftLeg(const PressureUnit& unit) const;
+
+  bool HasExtremityPressureRightArm() const;
+  SEScalarPressure& GetExtremityPressureRightArm();
+  double GetExtremityPressureRightArm(const PressureUnit& unit) const;
+
+  bool HasExtremityPressureRightLeg() const;
+  SEScalarPressure& GetExtremityPressureRightLeg();
+  double GetExtremityPressureRightLeg(const PressureUnit& unit) const;
+
   bool HasHeartEjectionFraction() const;
   SEScalarFraction& GetHeartEjectionFraction();
   double GetHeartEjectionFraction() const;
@@ -189,6 +205,10 @@ protected:
   SEScalarVolumePerTime* m_CerebralBloodFlow;
   SEScalarPressure* m_CerebralPerfusionPressure;
   SEScalarPressure* m_DiastolicArterialPressure;
+  SEScalarPressure* m_ExtremityPressureLeftArm;
+  SEScalarPressure* m_ExtremityPressureLeftLeg;
+  SEScalarPressure* m_ExtremityPressureRightArm;
+  SEScalarPressure* m_ExtremityPressureRightLeg;
   SEScalarFraction* m_HeartEjectionFraction;
   SEScalarFrequency* m_HeartRate;
   CDM::enumHeartRhythm::value m_HeartRhythm;
