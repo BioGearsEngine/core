@@ -34,6 +34,10 @@ namespace biogears {
   constexpr char idCerebralBloodFlow[] = "CerebralBloodFlow";
   constexpr char idCerebralPerfusionPressure[] = "CerebralPerfusionPressure";
   constexpr char idDiastolicArterialPressure[] = "DiastolicArterialPressure";
+  constexpr char idExtremityPressureLeftArm[] = "ExtremityPressure-LeftArm";
+  constexpr char idExtremityPressureLeftLeg[] = "ExtremityPressure-LeftLeg";
+  constexpr char idExtremityPressureRightArm[] = "ExtremityPressure-RightArm";
+  constexpr char idExtremityPressureRightLeg[] = "ExtremityPressure-RightLeg";
   constexpr char idHeartEjectionFraction[] = "HeartEjectionFraction";
   constexpr char idHeartRate[] = "HeartRate";
   constexpr char idHeartStrokeVolume[] = "HeartStrokeVolume";
@@ -67,6 +71,10 @@ SECardiovascularSystem::SECardiovascularSystem(Logger* logger)
   m_CerebralBloodFlow = nullptr;
   m_CerebralPerfusionPressure = nullptr;
   m_DiastolicArterialPressure = nullptr;
+  m_ExtremityPressureLeftArm = nullptr;
+  m_ExtremityPressureLeftLeg = nullptr;
+  m_ExtremityPressureRightArm = nullptr;
+  m_ExtremityPressureRightLeg = nullptr;
   m_HeartEjectionFraction = nullptr;
   m_HeartRate = nullptr;
   m_HeartRhythm = (CDM::enumHeartRhythm::value)-1;
@@ -110,6 +118,10 @@ void SECardiovascularSystem::Clear()
   SAFE_DELETE(m_CerebralBloodFlow);
   SAFE_DELETE(m_CerebralPerfusionPressure);
   SAFE_DELETE(m_DiastolicArterialPressure);
+  SAFE_DELETE(m_ExtremityPressureLeftArm);
+  SAFE_DELETE(m_ExtremityPressureLeftLeg);
+  SAFE_DELETE(m_ExtremityPressureRightArm);
+  SAFE_DELETE(m_ExtremityPressureRightLeg);
   SAFE_DELETE(m_HeartEjectionFraction);
   SAFE_DELETE(m_HeartRate);
   m_HeartRhythm = (CDM::enumHeartRhythm::value)-1;
@@ -157,6 +169,14 @@ const SEScalar* SECardiovascularSystem::GetScalar(const std::string& name)
     return &GetCerebralPerfusionPressure();
   if (name.compare(idDiastolicArterialPressure) == 0)
     return &GetDiastolicArterialPressure();
+  if (name.compare(idExtremityPressureLeftArm) == 0)
+    return &GetExtremityPressureLeftArm();
+  if (name.compare(idExtremityPressureLeftLeg) == 0)
+    return &GetExtremityPressureLeftLeg();
+  if (name.compare(idExtremityPressureRightArm) == 0)
+    return &GetExtremityPressureRightArm();
+  if (name.compare(idExtremityPressureRightLeg) == 0)
+    return &GetExtremityPressureRightLeg();
   if (name.compare(idHeartEjectionFraction) == 0)
     return &GetHeartEjectionFraction();
   if (name.compare(idHeartRate) == 0)
@@ -223,6 +243,14 @@ bool SECardiovascularSystem::Load(const CDM::CardiovascularSystemData& in)
     GetCerebralPerfusionPressure().Load(in.CerebralPerfusionPressure().get());
   if (in.DiastolicArterialPressure().present())
     GetDiastolicArterialPressure().Load(in.DiastolicArterialPressure().get());
+  if (in.ExtremityPressure_LeftArm().present())
+    GetExtremityPressureLeftArm().Load(in.ExtremityPressure_LeftArm().get());
+  if (in.ExtremityPressure_LeftLeg().present())
+    GetExtremityPressureLeftLeg().Load(in.ExtremityPressure_LeftLeg().get());
+  if (in.ExtremityPressure_RightArm().present())
+    GetExtremityPressureRightArm().Load(in.ExtremityPressure_RightArm().get());
+  if (in.ExtremityPressure_RightLeg().present())
+    GetExtremityPressureRightLeg().Load(in.ExtremityPressure_RightLeg().get());
   if (in.HeartEjectionFraction().present())
     GetHeartEjectionFraction().Load(in.HeartEjectionFraction().get());
   if (in.HeartRate().present())
@@ -300,6 +328,14 @@ void SECardiovascularSystem::Unload(CDM::CardiovascularSystemData& data) const
     data.CerebralPerfusionPressure(std::unique_ptr<CDM::ScalarPressureData>(m_CerebralPerfusionPressure->Unload()));
   if (m_DiastolicArterialPressure != nullptr)
     data.DiastolicArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_DiastolicArterialPressure->Unload()));
+  if (m_ExtremityPressureLeftArm != nullptr)
+    data.ExtremityPressure_LeftArm(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureLeftArm->Unload()));
+  if (m_ExtremityPressureLeftLeg != nullptr)
+    data.ExtremityPressure_LeftLeg(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureLeftLeg->Unload()));
+  if (m_ExtremityPressureRightArm != nullptr)
+    data.ExtremityPressure_RightArm(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureRightArm->Unload()));
+  if (m_ExtremityPressureRightLeg != nullptr)
+    data.ExtremityPressure_RightLeg(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureRightLeg->Unload()));
   if (m_HeartEjectionFraction != nullptr)
     data.HeartEjectionFraction(std::unique_ptr<CDM::ScalarFractionData>(m_HeartEjectionFraction->Unload()));
   if (m_HeartRate != nullptr)
@@ -504,6 +540,82 @@ double SECardiovascularSystem::GetDiastolicArterialPressure(const PressureUnit& 
   if (m_DiastolicArterialPressure == nullptr)
     return SEScalar::dNaN();
   return m_DiastolicArterialPressure->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
+bool SECardiovascularSystem::HasExtremityPressureLeftArm() const
+{
+  return m_ExtremityPressureLeftArm == nullptr ? false : m_ExtremityPressureLeftArm->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarPressure& SECardiovascularSystem::GetExtremityPressureLeftArm()
+{
+  if (m_ExtremityPressureLeftArm == nullptr)
+    m_ExtremityPressureLeftArm = new SEScalarPressure();
+  return *m_ExtremityPressureLeftArm;
+}
+//-------------------------------------------------------------------------------
+double SECardiovascularSystem::GetExtremityPressureLeftArm(const PressureUnit& unit) const
+{
+  if (m_ExtremityPressureLeftArm == nullptr)
+    return SEScalar::dNaN();
+  return m_ExtremityPressureLeftArm->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
+bool SECardiovascularSystem::HasExtremityPressureLeftLeg() const
+{
+  return m_ExtremityPressureLeftLeg == nullptr ? false : m_ExtremityPressureLeftLeg->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarPressure& SECardiovascularSystem::GetExtremityPressureLeftLeg()
+{
+  if (m_ExtremityPressureLeftLeg == nullptr)
+    m_ExtremityPressureLeftLeg = new SEScalarPressure();
+  return *m_ExtremityPressureLeftLeg;
+}
+//-------------------------------------------------------------------------------
+double SECardiovascularSystem::GetExtremityPressureLeftLeg(const PressureUnit& unit) const
+{
+  if (m_ExtremityPressureLeftLeg == nullptr)
+    return SEScalar::dNaN();
+  return m_ExtremityPressureLeftLeg->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
+bool SECardiovascularSystem::HasExtremityPressureRightArm() const
+{
+  return m_ExtremityPressureRightArm == nullptr ? false : m_ExtremityPressureRightArm->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarPressure& SECardiovascularSystem::GetExtremityPressureRightArm()
+{
+  if (m_ExtremityPressureRightArm == nullptr)
+    m_ExtremityPressureRightArm = new SEScalarPressure();
+  return *m_ExtremityPressureRightArm;
+}
+//-------------------------------------------------------------------------------
+double SECardiovascularSystem::GetExtremityPressureRightArm(const PressureUnit& unit) const
+{
+  if (m_ExtremityPressureRightArm == nullptr)
+    return SEScalar::dNaN();
+  return m_ExtremityPressureRightArm->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
+bool SECardiovascularSystem::HasExtremityPressureRightLeg() const
+{
+  return m_ExtremityPressureRightLeg == nullptr ? false : m_ExtremityPressureRightLeg->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarPressure& SECardiovascularSystem::GetExtremityPressureRightLeg()
+{
+  if (m_ExtremityPressureRightLeg == nullptr)
+    m_ExtremityPressureRightLeg = new SEScalarPressure();
+  return *m_ExtremityPressureRightLeg;
+}
+//-------------------------------------------------------------------------------
+double SECardiovascularSystem::GetExtremityPressureRightLeg(const PressureUnit& unit) const
+{
+  if (m_ExtremityPressureRightLeg == nullptr)
+    return SEScalar::dNaN();
+  return m_ExtremityPressureRightLeg->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
 

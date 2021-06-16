@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+constexpr char idBladderPressure[] = "BladderPressure";
   constexpr char idGlomerularFiltrationRate[] = "GlomerularFiltrationRate";
   constexpr char idFiltrationFraction[] = "FiltrationFraction";
   constexpr char idLeftAfferentArterioleResistance[] = "LeftAfferentArterioleResistance";
@@ -88,6 +89,7 @@ namespace biogears {
 SERenalSystem::SERenalSystem(Logger* logger)
   : SESystem(logger)
 {
+  m_BladderPressure = nullptr;
   m_GlomerularFiltrationRate = nullptr;
   m_FiltrationFraction = nullptr;
 
@@ -160,6 +162,7 @@ void SERenalSystem::Clear()
 {
   SESystem::Clear();
 
+  SAFE_DELETE(m_BladderPressure);
   SAFE_DELETE(m_GlomerularFiltrationRate);
   SAFE_DELETE(m_FiltrationFraction);
 
@@ -228,6 +231,8 @@ const SEScalar* SERenalSystem::GetScalar(const char* name)
 //-------------------------------------------------------------------------------
 const SEScalar* SERenalSystem::GetScalar(const std::string& name)
 {
+  if (name == idBladderPressure)
+    return &GetBladderPressure();
   if (name == idGlomerularFiltrationRate)
     return &GetGlomerularFiltrationRate();
   if (name == idFiltrationFraction)
@@ -351,6 +356,8 @@ bool SERenalSystem::Load(const CDM::RenalSystemData& in)
 {
   SESystem::Load(in);
 
+  if (in.BladderPressure().present())
+    GetBladderPressure().Load(in.BladderPressure().get());
   if (in.GlomerularFiltrationRate().present())
     GetGlomerularFiltrationRate().Load(in.GlomerularFiltrationRate().get());
   if (in.FiltrationFraction().present())
@@ -481,6 +488,8 @@ CDM::RenalSystemData* SERenalSystem::Unload() const
 void SERenalSystem::Unload(CDM::RenalSystemData& data) const
 {
   SESystem::Unload(data);
+  if (m_BladderPressure != nullptr)
+    data.BladderPressure(std::unique_ptr<CDM::ScalarPressureData>(m_BladderPressure->Unload()));
   if (m_GlomerularFiltrationRate != nullptr)
     data.GlomerularFiltrationRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_GlomerularFiltrationRate->Unload()));
   if (m_FiltrationFraction != nullptr)
@@ -595,6 +604,26 @@ void SERenalSystem::Unload(CDM::RenalSystemData& data) const
     data.UrineVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_UrineVolume->Unload()));
   if (m_UrineUreaNitrogenConcentration != nullptr)
     data.UrineUreaNitrogenConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_UrineUreaNitrogenConcentration->Unload()));
+}
+//-------------------------------------------------------------------------------
+
+bool SERenalSystem::HasBladderPressure() const
+{
+  return m_BladderPressure == nullptr ? false : m_BladderPressure->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarPressure& SERenalSystem::GetBladderPressure()
+{
+  if (m_BladderPressure == nullptr)
+    m_BladderPressure = new SEScalarPressure();
+  return *m_BladderPressure;
+}
+//-------------------------------------------------------------------------------
+double SERenalSystem::GetBladderPressure(const PressureUnit& unit) const
+{
+  if (m_BladderPressure == nullptr)
+    return SEScalar::dNaN();
+  return m_BladderPressure->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
 

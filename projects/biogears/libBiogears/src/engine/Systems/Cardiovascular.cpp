@@ -215,6 +215,11 @@ void Cardiovascular::Initialize()
   GetPulmonaryVascularResistance().SetValue(0.14, FlowResistanceUnit::mmHg_min_Per_mL);
   GetPulmonaryVascularResistanceIndex().SetValue(0.082, PressureTimePerVolumeAreaUnit::mmHg_min_Per_mL_m2);
 
+  GetExtremityPressureLeftArm().SetValue(m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::LeftArm1)->GetPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetExtremityPressureLeftLeg().SetValue(m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::LeftLeg1)->GetPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetExtremityPressureRightArm().SetValue(m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::RightArm1)->GetPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetExtremityPressureRightLeg().SetValue(m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::RightLeg1)->GetPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+
   m_CurrentCardiacCycleTime_s = 0.0;
 
   CalculateHeartElastance();
@@ -885,6 +890,11 @@ void Cardiovascular::CalculateVitalSigns()
     GetIntracranialPressure().Set(m_Brain->GetPressure());
     GetCerebralPerfusionPressure().SetValue(GetMeanArterialPressure(PressureUnit::mmHg) - GetIntracranialPressure(PressureUnit::mmHg), PressureUnit::mmHg);
   }
+
+  GetExtremityPressureLeftArm().SetValue(m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::LeftArm1)->GetPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetExtremityPressureLeftLeg().SetValue(m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::LeftLeg1)->GetPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetExtremityPressureRightArm().SetValue(m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::RightArm1)->GetPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetExtremityPressureRightLeg().SetValue(m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::RightLeg1)->GetPressure(PressureUnit::mmHg), PressureUnit::mmHg);
 
   if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
 

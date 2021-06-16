@@ -66,6 +66,10 @@ protected:
   void Unload(CDM::RenalSystemData& data) const;
 
 public:
+  bool HasBladderPressure() const;
+  SEScalarPressure& GetBladderPressure();
+  double GetBladderPressure(const PressureUnit& unit) const;
+
   bool HasGlomerularFiltrationRate() const;
   SEScalarVolumePerTime& GetGlomerularFiltrationRate();
   double GetGlomerularFiltrationRate(const VolumePerTimeUnit& unit) const;
@@ -287,6 +291,7 @@ public:
   double GetUrineUreaNitrogenConcentration(const MassPerVolumeUnit& unit) const;
 
 protected:
+  SEScalarPressure* m_BladderPressure;
   SEScalarVolumePerTime* m_GlomerularFiltrationRate;
   SEScalarFraction* m_FiltrationFraction;
 
