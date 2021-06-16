@@ -164,7 +164,7 @@ endif()
  
 install(DIRECTORY 
     include/biogears
-    ${CMAKE_CURRENT_BINARY_DIR}/generated/biogears
+    ${${PREFIX}_GENERATED_INCLUDE_DIR}/biogears
     DESTINATION include/
     FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
 )

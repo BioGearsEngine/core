@@ -104,29 +104,29 @@ endif() #${PREFIX}_BUILD_STATIC
 # INSTALL LOGIC
 ######################################################################################################
 if(NOT  ${ROOT_PROJECT_NAME}_BUILD_IO_LIBRARY)
-install(DIRECTORY 
-    ${PROJECT_SOURCE_DIR}/share/xsd 
-    DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}
-    FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-    )
-
-install(DIRECTORY 
-    ${PROJECT_SOURCE_DIR}/share/data
-    DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}
-    FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-	FILES_MATCHING 
-	  PATTERN "*.xml"
-	  PATTERN "log4j.properties"
-	  PATTERN "*.csv"
-	  PATTERN "*.xlsx"
-    )
-
-install(DIRECTORY 
-    ${PROJECT_SOURCE_DIR}/share/Scenarios
-    DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}/data/
-    FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-	FILES_MATCHING 
-	PATTERN "*.xml"
-    )
+  install(DIRECTORY 
+      ${PROJECT_SOURCE_DIR}/share/xsd 
+      DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}
+      FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+  )
+  
+  install(DIRECTORY 
+      ${PROJECT_SOURCE_DIR}/share/data
+      DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}
+      FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+      FILES_MATCHING 
+      PATTERN "*.xml"
+      PATTERN "log4j.properties"
+      PATTERN "*.csv"
+      PATTERN "*.xlsx"
+  )
+  
+  install(DIRECTORY 
+      ${PROJECT_SOURCE_DIR}/share/Scenarios
+      DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}/data/
+      FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+      FILES_MATCHING 
+      PATTERN "*.xml"
+  )
 endif()
 message(STATUS "")
