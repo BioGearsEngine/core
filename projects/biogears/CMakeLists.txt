@@ -103,15 +103,7 @@ endif() #${PREFIX}_BUILD_STATIC
 ######################################################################################################
 # INSTALL LOGIC
 ######################################################################################################
-install(DIRECTORY 
-    libBiogears/include/biogears
-    libCDM/include/biogears
-    libCircuitTest/include/biogears
-	  ${CMAKE_CURRENT_BINARY_DIR}/biogears
-    DESTINATION include/
-    FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-    )
-  
+if(NOT  ${ROOT_PROJECT_NAME}_BUILD_IO_LIBRARY)
 install(DIRECTORY 
     ${PROJECT_SOURCE_DIR}/share/xsd 
     DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}
@@ -136,4 +128,5 @@ install(DIRECTORY
 	FILES_MATCHING 
 	PATTERN "*.xml"
     )
+endif()
 message(STATUS "")
