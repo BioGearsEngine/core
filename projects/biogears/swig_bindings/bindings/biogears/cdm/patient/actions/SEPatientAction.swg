@@ -2,7 +2,7 @@
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 %}
 
-%include <biogears/exports.h>
+%import <biogears/exports.swg>
 
 %import <biogears/cdm/CommonDataModel.swg>
 %import <biogears/cdm/utils/Logger.swg>

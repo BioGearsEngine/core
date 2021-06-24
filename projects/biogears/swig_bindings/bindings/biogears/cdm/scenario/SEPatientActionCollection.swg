@@ -2,7 +2,7 @@
 #include <biogears/cdm/scenario/SEPatientActionCollection.h>
 %}
 
-%include <biogears/exports.h>
+%import<biogears/exports.swg>
 
 
 %import <biogears/cdm/utils/Logger.swg>
@@ -28,6 +28,7 @@
 %import <biogears/cdm/patient/actions/SEChestOcclusiveDressing.swg>
 %import <biogears/cdm/patient/actions/SEConsciousRespiration.swg>
 %import <biogears/cdm/patient/actions/SEConsumeNutrients.swg>
+%import <biogears/cdm/patient/actions/SEEscharotomy.swg>
 %import <biogears/cdm/patient/actions/SEExercise.swg>
 %import <biogears/cdm/patient/actions/SEHemorrhage.swg>
 %import <biogears/cdm/patient/actions/SEInfection.swg>
@@ -58,6 +59,7 @@
 %ignore biogears::SEPatientActionCollection::RemoveHemorrhage(std::string const &);
 %ignore biogears::SEPatientActionCollection::RemovePainStimulus(std::string const &);
 %ignore biogears::SEPatientActionCollection::RemoveTourniquet(std::string const &);
+%ignore biogears::SEPatientActionCollection::RemoveEscharotomy(std::string const&);
 
 %ignore biogears::SEPatientActionCollection::GetAnesthesiaMachineActions();
 %ignore biogears::SEPatientActionCollection::GetInhalerActions();
@@ -68,6 +70,8 @@
 %nspace std::map<std::string, biogears::SEHemorrhage*>;
 %nspace std::map<std::string, biogears::SETourniquet*>;
 %nspace std::map<std::string, biogears::SEPainStimulus*>;
+%nspace std::map<std::string, biogears::SEEscharotomy*>;
+
 %nspace std::map<const biogears::SESubstance*, biogears::SESubstanceBolus*> ;
 %nspace std::map<const biogears::SESubstance*, biogears::SESubstanceInfusion*> ;
 %nspace std::map<const biogears::SESubstance*, biogears::SESubstanceOralDose*> ;
@@ -75,8 +79,10 @@
 %nspace std::map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*> ;
 
 %template (map_string__SEHemorrhage_ptr) std::map<std::string, biogears::SEHemorrhage*> ;
+%template (map_string__SEEscharotomy_ptr) std::map<std::string, biogears::SEEscharotomy*> ;
 %template (map_string__SETourniquet_ptr) std::map<std::string, biogears::SETourniquet*> ;
 %template (map_string__SEPainStimulus_ptr) std::map<std::string, biogears::SEPainStimulus*> ;
+
 %template (map_SESubstance_ptr__SESubstanceBolus_ptr) std::map<const biogears::SESubstance*, biogears::SESubstanceBolus*> ;
 %template (map_SESubstance_ptr__SESubstanceInfusion_ptr) std::map<const biogears::SESubstance*, biogears::SESubstanceInfusion*> ;
 %template (map_SESubstance_ptr__SESubstanceOralDose_ptr) std::map<const biogears::SESubstance*, biogears::SESubstanceOralDose*> ;

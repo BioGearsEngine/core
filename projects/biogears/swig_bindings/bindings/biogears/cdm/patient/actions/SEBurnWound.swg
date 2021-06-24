@@ -4,8 +4,7 @@
 #include <biogears/cdm/patient/actions/SEBurnWound.h>
 %}
 
-%include <biogears/exports.h>
-
+%import <biogears/exports.swg>
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/CommonDataModel.swg>
 %import <biogears/cdm/properties/SEScalar0To1.swg>

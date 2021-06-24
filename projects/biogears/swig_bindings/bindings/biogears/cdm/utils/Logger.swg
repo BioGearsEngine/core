@@ -17,11 +17,11 @@ namespace biogears {
     Logger(const char* logFilename);
     virtual ~Logger();
 
-    virtual void Debug(const std::string& msg, std::string const& origin = Loggable::empty) const;
-    virtual void Info(const std::string& msg, std::string const& origin = Loggable::empty) const;
-    virtual void Warning(const std::string& msg, std::string const& origin = Loggable::empty) const;
-    virtual void Error(const std::string& msg, std::string const& origin = Loggable::empty) const;
-    virtual void Fatal(const std::string& msg, std::string const& origin = Loggable::empty) const;
+    virtual void Debug(const char* msg, const char* origin = "") const;
+    virtual void Info(const char* msg, const char* origin = "") const;
+    virtual void Warning(const char* msg, const char* origin = "") const;
+    virtual void Error(const char* msg, const char* origin = "") const;
+    virtual void Fatal(const char* msg, const char* origin = "") const;
   };
 
   class Loggable {
@@ -42,11 +42,11 @@ namespace biogears {
 
   class LoggerForward {
   public:
-    virtual void ForwardDebug(const std::string& msg, const std::string& origin) = 0;
-    virtual void ForwardInfo(const std::string& msg, const std::string& origin) = 0;
-    virtual void ForwardWarning(const std::string& msg, const std::string& origin) = 0;
-    virtual void ForwardError(const std::string& msg, const std::string& origin) = 0;
-    virtual void ForwardFatal(const std::string& msg, const std::string& origin) = 0;
+    virtual void Debug(const char* msg) = 0;
+    virtual void Info(const char* msg) = 0;
+    virtual void Warning(const char* msg) = 0;
+    virtual void Error(const char* msg) = 0;
+    virtual void Fatal(const char* msg) = 0;
   };
 
 

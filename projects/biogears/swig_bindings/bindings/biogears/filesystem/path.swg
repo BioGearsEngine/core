@@ -1,4 +1,5 @@
 
+
 %{
    #include <stdexcept>
    #include <string>
@@ -13,7 +14,6 @@
 
 %nspace biogears::filesystem::path;
 
-%csmethodmodifiers path::ToString() "public override";
 
 %ignore biogears::filesystem::path::begin;
 %ignore biogears::filesystem::path::end;
@@ -30,7 +30,8 @@
 %rename(NotEquals) operator!=(const biogears::filesystem::path& p) const;
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::filesystem::ToString() "public override";
+  %csmethodmodifiers   biogears::filesystem::path::ToString() const "public override";
+  %ignore   biogears::filesystem::path::ToString(path_type type) const;
 #endif
 
 %include <biogears/filesystem/path.h>

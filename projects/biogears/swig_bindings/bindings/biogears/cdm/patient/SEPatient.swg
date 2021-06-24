@@ -2,7 +2,7 @@
 #include <biogears/cdm/patient/SEPatient.h>
 %}
 
-%include <biogears/exports.h>
+%import <biogears/exports.swg>
 
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/CommonDataModel.swg>
@@ -31,6 +31,8 @@
 %ignore biogears::SEPatient::GetScalar(std::string const &);
 %ignore biogears::SEPatient::SetName(std::string const &);
 %ignore biogears::SEPatient::SetAnnotation(std::string const &);
+
+%ignore biogears::SEPatient::SetEventCallback;
 
 %rename(GetBodyFatFraction_const) biogears::SEPatient::GetBodyFatFraction() const;
 %rename(GetHyperhidrosis_const) biogears::SEPatient::GetHyperhidrosis() const;

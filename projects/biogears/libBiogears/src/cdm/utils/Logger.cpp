@@ -451,7 +451,7 @@ void Logger::LogMessage(std::istream& msg, std::string const& origin, LogLevel p
   std::istreambuf_iterator<char> msg_start { msg }, msg_end;
   std::string message = std::string(msg_start, msg_end);
 
-  if (priority <= impl.persistant_filter_level) {
+  if (priority <= impl.persistant_filter_level && impl.persistantStream) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.persistant_message_callstack,
                        message,
@@ -467,7 +467,7 @@ void Logger::LogMessage(std::istream& msg, std::string const& origin, LogLevel p
       impl.persistantStream->flush();
     }
   }
-  if (priority <= impl.volatile_filter_level) {
+  if (priority <= impl.volatile_filter_level && impl.volatileStream) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.volatile_message_callstack,
                        message,
@@ -506,7 +506,7 @@ void Logger::LogMessage(std::istream&& msg, std::string const& origin, LogLevel 
   std::istreambuf_iterator<char> msg_start { msg }, msg_end;
   std::string message = std::string(msg_start, msg_end);
 
-  if (priority <= impl.persistant_filter_level) {
+  if (priority <= impl.persistant_filter_level && impl.persistantStream) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.persistant_message_callstack,
                        message,
@@ -523,7 +523,7 @@ void Logger::LogMessage(std::istream&& msg, std::string const& origin, LogLevel 
       impl.persistantStream->flush();
     }
   }
-  if (priority <= impl.volatile_filter_level) {
+  if (priority <= impl.volatile_filter_level && impl.volatileStream) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.volatile_message_callstack,
                        message,
@@ -559,7 +559,7 @@ void Logger::LogMessage(std::istream&& msg, std::string const& origin, LogLevel 
 void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLevel priority) const
 {
   auto& impl = *m_impl;
-  if (priority <= impl.persistant_filter_level) {
+  if (priority <= impl.persistant_filter_level && impl.persistantStream) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.persistant_message_callstack,
                        msg,
@@ -575,7 +575,7 @@ void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLe
       impl.persistantStream->flush();
     }
   }
-  if (priority <= impl.volatile_filter_level) {
+  if (priority <= impl.volatile_filter_level && impl.volatileStream) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.volatile_message_callstack,
                        msg,
@@ -610,7 +610,7 @@ void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLe
 void Logger::LogMessage(std::string&& msg, std::string const& origin, LogLevel priority) const
 {
   auto& impl = *m_impl;
-  if (priority <= impl.persistant_filter_level) {
+  if (priority <= impl.persistant_filter_level && impl.persistantStream) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.persistant_message_callstack,
                        msg,
@@ -626,7 +626,7 @@ void Logger::LogMessage(std::string&& msg, std::string const& origin, LogLevel p
       impl.persistantStream->flush();
     }
   }
-  if (priority <= impl.volatile_filter_level) {
+  if (priority <= impl.volatile_filter_level && impl.volatileStream) {
     if (impl.formatMessages) {
       FormatLogMessage(impl.volatile_message_callstack,
                        msg,

@@ -28,10 +28,9 @@ class BIOGEARS_API SEDataRequest : public SEDecimalFormat {
   friend class SEDataRequestManager;
   friend io::Scenario;
 
-protected:
-  SEDataRequest(const SEDecimalFormat* dfault = nullptr);
 
 public:
+  SEDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEDataRequest() override;
 
   virtual void Clear(); //clear memory
