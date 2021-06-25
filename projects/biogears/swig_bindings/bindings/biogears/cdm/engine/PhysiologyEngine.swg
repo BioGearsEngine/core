@@ -20,6 +20,7 @@ using namespace CDM;
 %import <biogears/container/Tree.swg>
 
 %import <biogears/cdm/properties/SEScalarTime.swg>
+%import <biogears/cdm/properties/SEGenericScalar.swg>
 
 %import <biogears/cdm/scenario/SEAction.swg>
 
@@ -39,8 +40,11 @@ using namespace CDM;
 %import <biogears/cdm/system/physiology/SERenalSystem.swg>
 %import <biogears/cdm/system/physiology/SERespiratorySystem.swg>
 %import <biogears/cdm/system/physiology/SETissueSystem.swg>
+%import <biogears/cdm/utils/SEEventHandler.swg>
+%import <biogears/cdm/engine/PhysiologyEngineTrack.h>
 
 %nspace "biogears::PhysiologyEngine";
+%nspace "biogears::PhysiologyEngineTrack";
 
 %ignore biogears::PhysiologyEngineException::PhysiologyEngineException(const std::string& _Message);
 
@@ -51,7 +55,6 @@ using namespace CDM;
 %ignore biogears::PhysiologyEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions , const PhysiologyEngineConfiguration* config );
 %ignore biogears::PhysiologyEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
 %ignore biogears::PhysiologyEngine::InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
-%ignore biogears::PhysiologyEngine::GetEngineTrack();
 %ignore biogears::PhysiologyEngine::GetConfiguration();
 %ignore biogears::PhysiologyEngine::GetAnesthesiaMachine();
 %ignore biogears::PhysiologyEngine::GetElectroCardioGram();
@@ -59,6 +62,5 @@ using namespace CDM;
 %ignore biogears::PhysiologyEngine::GetCompartments();
 
 %rename (AdvanceModelTimeBy) AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false);
-%ignore SetEventHandler(SEEventHandler* handler);
 
 %include <biogears/cdm/engine/PhysiologyEngine.h>

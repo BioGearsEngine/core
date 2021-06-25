@@ -88,6 +88,14 @@ namespace bio
 
       logger.Warning(String.Format("AcuteStress @ Severity {0}", acuteStress.GetSeverity().GetValue()));
 
+      var HeartRate = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();HeartRate.Set("HeartRate", FrequencyUnit.Per_min);
+      var SystolicArterialPressure = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();SystolicArterialPressure.Set("SystolicArterialPressure", PressureUnit.mmHg);
+      var DiastolicArterialPressure = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();DiastolicArterialPressure.Set("DiastolicArterialPressure", PressureUnit.mmHg);
+      var RespirationRate = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();RespirationRate.Set("RespirationRate", FrequencyUnit.Per_min);
+      var TidalVolume = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();TidalVolume.Set("TidalVolume", VolumeUnit.mL);
+      var TotalLungVolume = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();TotalLungVolume.Set("TotalLungVolume", VolumeUnit.mL);
+      var OxygenSaturation = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();OxygenSaturation.Set("OxygenSaturation");
+
       apply_acute_respiratory_distress(engine);
       apply_acute_stress(engine);
       apply_airway_obstruction(engine);

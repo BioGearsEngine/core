@@ -1,3 +1,5 @@
+%feature("director") SEEventHandler; 
+
 %{
 #include <biogears/cdm/utils/SEEventHandler.h>
 %}

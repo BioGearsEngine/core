@@ -19,4 +19,8 @@
 %ignore Set(const char* cmpt, const char* name, const CCompoundUnit& unit);
 %ignore Set(const std::string& cmpt, const std::string& name, const CCompoundUnit& unit);
 
+#if defined(SWIGCSHARP)
+//%csmethodmodifiers biogears::SECompartmentDataRequest::Set(const char* cmpt, const char* name, const char* unit = "") "public";
+#endif  
+
 %include <biogears/cdm/scenario/requests/SECompartmentDataRequest.h>

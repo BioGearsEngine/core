@@ -41,7 +41,7 @@ public:
 
 
   virtual void Set(const char* name, const CCompoundUnit& unit);
-
+  virtual void Set(const char* name, const char* unit = "");
 };
 }
 
