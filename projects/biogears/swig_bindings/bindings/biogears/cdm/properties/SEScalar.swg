@@ -16,13 +16,16 @@
 %rename (GreaterThan)  biogears::SEScalar::operator>;
 %rename (GreaterThanEqual)  biogears::SEScalar::operator>=;
  
-%ignore  biogears::SEScalar::ToString(std::ostream& str);
 %ignore  biogears::SEScalar::operator>>;
 %ignore  biogears::SEScalar::operator<<;
 
 %ignore biogears::SEScalar::Load;
 %ignore biogears::SEScalar::Unload;
 %ignore unitless;
+
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEGenericScalar::ToString() const "public override";
+#endif 
 
 %include <biogears/cdm/properties/SEScalar.h>
 

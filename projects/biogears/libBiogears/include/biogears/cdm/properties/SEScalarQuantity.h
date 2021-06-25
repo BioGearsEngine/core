@@ -86,7 +86,7 @@ public:
 
   virtual bool Equals(const SEScalarQuantity<Unit>& to) const;
 
-  virtual void ToString(std::ostream& str) const override;
+  virtual std::string ToString() const override;
 
   const Unit* GetCompoundUnit(const char* unit) const override;
   const Unit* GetCompoundUnit(const std::string& unit) const override;

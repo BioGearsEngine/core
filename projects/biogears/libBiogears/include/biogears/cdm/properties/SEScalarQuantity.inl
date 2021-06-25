@@ -250,12 +250,12 @@ const Unit* SEScalarQuantity<Unit>::GetCompoundUnit(const std::string& unit) con
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
-void SEScalarQuantity<Unit>::ToString(std::ostream& str) const
+std::string SEScalarQuantity<Unit>::ToString() const
 {
   if (std::isnan(m_value) || std::isinf(m_value))
-    str << m_value;
+    return std::to_string(m_value);
   else
-    str << m_value << "(" << *m_unit << ")";
+    return std::to_string(m_value) + "(" + m_unit->ToString() + ")" ;
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>

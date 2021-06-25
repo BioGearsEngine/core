@@ -11,11 +11,14 @@
 %nspace biogears::SEScalarQuantity;
 %nspace biogears::QuantityUnit;
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
 %ignore biogears::SEScalarQuantity<TimeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const SEScalarQuantity&) const;
 %rename(NotEquals)  operator!=(const SEScalarQuantity&) const;
+
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEScalarQuantity::ToString() const "public override";
+#endif 
 
 %ignore  SEScalarQuantity::GetValue(std::string const &) const ;
 %ignore  SEScalarQuantity::IncrementValue(double,std::string const &) ;

@@ -98,7 +98,7 @@ public:
   //! Engine will be in a cleared state if this method fails.
   //!-------------------------------------------------------------------------------------------------
   virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const char* file = "") = 0;
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const std::string& file = "") = 0;
+  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const std::string& file) = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief

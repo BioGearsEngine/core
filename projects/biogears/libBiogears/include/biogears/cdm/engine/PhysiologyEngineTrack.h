@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
@@ -27,6 +26,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/system/environment/SEEnvironment.h>
 #include <biogears/cdm/utils/DataTrack.h>
+
+#include <string>
+#include <ostream>
 
 namespace biogears {
 
@@ -47,7 +49,7 @@ enum class CompartmentUpdate { None,
                                PartialPressure,
                                Saturation };
 
-class SEDataRequestScalar : public SEGenericScalar {
+class BIOGEARS_API SEDataRequestScalar : public SEGenericScalar {
 public:
   SEDataRequestScalar(Logger* logger)
     : SEGenericScalar(logger)
@@ -65,6 +67,8 @@ public:
   void UpdateScalar();
   void SetScalar(const SEScalar* s, SEDataRequest& dr); // SEScalar* in order to internnally throw error if the Track cannot find the requested property, it will pass in nullptr if it cannot find it
 
+  std::string ToString() const;
+
   std::string Heading;
 
   // Compartment related variables
@@ -77,6 +81,7 @@ public:
   // Tissue cmpts don't have children and they don't have computed data that changes on call (like flow)
 };
 
+std::ostream& operator<<(std::ostream& os, SEDataRequestScalar& v);
 class BIOGEARS_API PhysiologyEngineTrack : public Loggable {
 public:
   PhysiologyEngineTrack(PhysiologyEngine& engine);
@@ -98,11 +103,12 @@ public:
 
   bool ConnectRequest(SEDataRequest& dr, SEDataRequestScalar& ds);
 
-  virtual void SetupRequests(bool append = false);
-  virtual void TrackData(double currentTime_s, bool append = false);
-  virtual void PullData();
-  virtual bool TrackRequest(SEDataRequest& dr);
-  virtual void ForceConnection() { m_ForceConnection = true; }
+  SEDataRequestScalar* GetScalar(SEDataRequest* dr); 
+  void SetupRequests(bool append = false);
+  void TrackData(double currentTime_s, bool append = false);
+  void PullData();
+  bool TrackRequest(SEDataRequest& dr);
+  void ForceConnection() { m_ForceConnection = true; }
 
 protected:
   bool m_ForceConnection;

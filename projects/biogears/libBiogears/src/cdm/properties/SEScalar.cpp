@@ -290,9 +290,9 @@ bool SEScalar::Equals(const SEScalar& to) const
 }
 
 //-------------------------------------------------------------------------------
-void SEScalar::ToString(std::ostream& str) const
+std::string SEScalar::ToString() const
 {
-  str << m_value << std::flush;
+  return std::to_string(m_value);
 }
 
 //-------------------------------------------------------------------------------

@@ -49,7 +49,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
-
 namespace biogears {
 std::string Space2Underscore(const std::string& str)
 {
@@ -132,7 +131,7 @@ PhysiologyEngineTrack::PhysiologyEngineTrack(SEPatient& patient, SESubstanceMana
     m_PhysiologySystems.push_back(p);
   }
   for (auto* e : equipment) {
-    m_EquipmentSystems.push_back(e);   
+    m_EquipmentSystems.push_back(e);
   }
   m_ForceConnection = false;
 }
@@ -159,7 +158,7 @@ PhysiologyEngineTrack& PhysiologyEngineTrack::operator=(PhysiologyEngineTrack&& 
   m_ResultsStream = std::move(rhs.m_ResultsStream);
   m_DataRequestMgr = std::move(rhs.m_DataRequestMgr);
   m_Patient = rhs.m_Patient;
-  m_SubMgr  = rhs.m_SubMgr;
+  m_SubMgr = rhs.m_SubMgr;
   m_CmptMgr = rhs.m_CmptMgr;
   m_Environment = std::move(rhs.m_Environment);
   m_PhysiologySystems = std::move(rhs.m_PhysiologySystems);
@@ -182,13 +181,21 @@ void PhysiologyEngineTrack::Clear()
 void PhysiologyEngineTrack::ResetFile()
 {
   if (m_ResultsStream.is_open()) {
-    m_ResultsStream.close(); 
+    m_ResultsStream.close();
   }
 }
 
 DataTrack& PhysiologyEngineTrack::GetDataTrack()
 {
   return m_DataTrack;
+}
+
+SEDataRequestScalar* PhysiologyEngineTrack::GetScalar(SEDataRequest* dr)
+{
+  if (dr) {
+    return m_Request2Scalar[dr];
+  }
+  return nullptr;
 }
 
 void PhysiologyEngineTrack::SetupRequests(bool append)
@@ -206,11 +213,11 @@ void PhysiologyEngineTrack::SetupRequests(bool append)
   // Create the file now that all probes and requests have been added to the track
   // So we get columns for all of our data
   if (!isOpen) {
-    m_DataTrack.CreateFile(m_DataRequestMgr.GetResultsFilename(), m_ResultsStream, (append) ? std::ios_base::app : std::ios_base::trunc);  
+    m_DataTrack.CreateFile(m_DataRequestMgr.GetResultsFilename(), m_ResultsStream, (append) ? std::ios_base::app : std::ios_base::trunc);
   }
 }
 
-void PhysiologyEngineTrack::TrackData(double time_s, bool append )
+void PhysiologyEngineTrack::TrackData(double time_s, bool append)
 {
   if (!m_DataRequestMgr.HasDataRequests()) {
     return; // Nothing to do here...
@@ -227,7 +234,7 @@ void PhysiologyEngineTrack::PullData()
     ds = m_Request2Scalar[dr];
     if (ds == nullptr) {
       Error("You cannot modify CSV Results file data requests in the middle of a run.");
-      Error(std::string{ "Ignoring data request " } + dr->GetName());
+      Error(std::string { "Ignoring data request " } + dr->GetName());
       continue;
     }
     if (!ds->HasScalar()) {
@@ -387,7 +394,7 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
   const SEGasCompartmentDataRequest* gasDR = dynamic_cast<const SEGasCompartmentDataRequest*>(&dr);
   if (gasDR != nullptr) {
     if (!m_CmptMgr->HasGasCompartment(gasDR->GetCompartment())) {
-      Error(std::string{ "Unknown gas compartment : " } + gasDR->GetCompartment());
+      Error(std::string { "Unknown gas compartment : " } + gasDR->GetCompartment());
       return false;
     }
     // Removing const because I need to create objects in order to track those objects
@@ -428,7 +435,7 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
   const SELiquidCompartmentDataRequest* liquidDR = dynamic_cast<const SELiquidCompartmentDataRequest*>(&dr);
   if (liquidDR != nullptr) {
     if (!m_CmptMgr->HasLiquidCompartment(liquidDR->GetCompartment())) {
-      Error(std::string{ "Unknown liquid compartment : " } + liquidDR->GetCompartment());
+      Error(std::string { "Unknown liquid compartment : " } + liquidDR->GetCompartment());
       return false;
     }
     // Removing const because I need to create objects in order to track those objects
@@ -473,7 +480,7 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
   const SEThermalCompartmentDataRequest* thermalDR = dynamic_cast<const SEThermalCompartmentDataRequest*>(&dr);
   if (thermalDR != nullptr) {
     if (!m_CmptMgr->HasThermalCompartment(thermalDR->GetCompartment())) {
-      Error(std::string{ "Unknown thermal compartment : " } + thermalDR->GetCompartment());
+      Error(std::string { "Unknown thermal compartment : " } + thermalDR->GetCompartment());
       return false;
     }
     // Removing const because I need to create objects in order to track those objects
@@ -499,7 +506,7 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
   const SETissueCompartmentDataRequest* tissueDR = dynamic_cast<const SETissueCompartmentDataRequest*>(&dr);
   if (tissueDR != nullptr) {
     if (!m_CmptMgr->HasTissueCompartment(tissueDR->GetCompartment())) {
-      Error(std::string{ "Unknown tissue compartment : " } + tissueDR->GetCompartment());
+      Error(std::string { "Unknown tissue compartment : " } + tissueDR->GetCompartment());
       return false;
     }
     // Removing const because I need to create objects in order to track those objects
@@ -536,7 +543,7 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
 void SEDataRequestScalar::SetScalar(const SEScalar* s, SEDataRequest& dr)
 {
   if (s == nullptr) {
-    Fatal(std::string{ "Unknown Data Request : " } + dr.GetName());
+    Fatal(std::string { "Unknown Data Request : " } + dr.GetName());
     return;
   }
   SEGenericScalar::SetScalar(*s);
@@ -554,6 +561,16 @@ void SEDataRequestScalar::SetScalar(const SEScalar* s, SEDataRequest& dr)
     }
   }
 }
+
+std::string SEDataRequestScalar::ToString() const
+{
+  if (HasScalar()) {
+    return m_Scalar->ToString();
+  } else if (HasUnit()) {
+    return m_UnitScalar->ToString();
+  }
+  return "";
+};
 
 void SEDataRequestScalar::UpdateScalar()
 {

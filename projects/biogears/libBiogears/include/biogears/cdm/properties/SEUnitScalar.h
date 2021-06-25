@@ -22,7 +22,7 @@ public:
 
   ~SEUnitScalar() override;
 
-  void ToString(std::ostream& str) const override = 0;
+  std::string ToString() const override = 0;
 
   virtual const CCompoundUnit* GetUnit() const = 0;
   virtual const CCompoundUnit* GetCompoundUnit(const char* unit) const = 0;

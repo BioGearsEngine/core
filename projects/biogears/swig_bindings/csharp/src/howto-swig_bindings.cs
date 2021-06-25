@@ -88,46 +88,123 @@ namespace bio
 
       logger.Warning(String.Format("AcuteStress @ Severity {0}", acuteStress.GetSeverity().GetValue()));
 
-      var HeartRate = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();HeartRate.Set("HeartRate", FrequencyUnit.Per_min);
-      var SystolicArterialPressure = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();SystolicArterialPressure.Set("SystolicArterialPressure", PressureUnit.mmHg);
-      var DiastolicArterialPressure = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();DiastolicArterialPressure.Set("DiastolicArterialPressure", PressureUnit.mmHg);
-      var RespirationRate = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();RespirationRate.Set("RespirationRate", FrequencyUnit.Per_min);
-      var TidalVolume = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();TidalVolume.Set("TidalVolume", VolumeUnit.mL);
-      var TotalLungVolume = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();TotalLungVolume.Set("TotalLungVolume", VolumeUnit.mL);
-      var OxygenSaturation = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest();OxygenSaturation.Set("OxygenSaturation");
+      //!
+      //! Very Quick Example of how to use Data Tracks to Poll data
+      //! Performance wise this should really only be used for non PhysiologyDataRequest
+      //!
+      var HeartRateRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); HeartRateRequest.Set("HeartRate", FrequencyUnit.Per_min);
+      var SystolicArterialPressureRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); SystolicArterialPressureRequest.Set("SystolicArterialPressure", PressureUnit.mmHg);
+      var DiastolicArterialPressureRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); DiastolicArterialPressureRequest.Set("DiastolicArterialPressure", PressureUnit.mmHg);
+      var RespirationRateRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); RespirationRateRequest.Set("RespirationRate", FrequencyUnit.Per_min);
+      var TidalVolumeRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); TidalVolumeRequest.Set("TidalVolume", VolumeUnit.mL);
+      var TotalLungVolumeRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); TotalLungVolumeRequest.Set("TotalLungVolume", VolumeUnit.mL);
+      var OxygenSaturationRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); OxygenSaturationRequest.Set("OxygenSaturation");
+
+      engine.GetEngineTrack().SetupRequests();
+
+      var HeartRate = engine.GetEngineTrack().GetScalar(HeartRateRequest);
+      var SystolicArterialPressure = engine.GetEngineTrack().GetScalar(HeartRateRequest);
+      var DiastolicArterialPressure = engine.GetEngineTrack().GetScalar(DiastolicArterialPressureRequest);
+      var RespirationRate = engine.GetEngineTrack().GetScalar(RespirationRateRequest);
+      var TidalVolume = engine.GetEngineTrack().GetScalar(TidalVolumeRequest);
+      var TotalLungVolume = engine.GetEngineTrack().GetScalar(TotalLungVolumeRequest);
+      var OxygenSaturation = engine.GetEngineTrack().GetScalar(OxygenSaturationRequest);
 
       apply_acute_respiratory_distress(engine);
+
+      engine.GetEngineTrack().PullData();
+      logger.Info(HeartRate.ToString());
+      logger.Info(SystolicArterialPressure.ToString());
+      logger.Info(DiastolicArterialPressure.ToString());
+      logger.Info(RespirationRate.ToString());
+      logger.Info(TidalVolume.ToString());
+      logger.Info(TotalLungVolume.ToString());
+      logger.Info(OxygenSaturation.ToString());
       apply_acute_stress(engine);
+
+      engine.GetEngineTrack().PullData();
       apply_airway_obstruction(engine);
+      engine.GetEngineTrack().PullData();
       apply_apnea(engine);
+      engine.GetEngineTrack().PullData();
       apply_asthma_attack(engine);
+      engine.GetEngineTrack().PullData();
       apply_brain_injury(engine);
+      engine.GetEngineTrack().PullData();
       apply_breath_hold(engine);
+      engine.GetEngineTrack().PullData();
       apply_bronchoconstriction(engine);
+      engine.GetEngineTrack().PullData();
       apply_burn_wound(engine);
+      engine.GetEngineTrack().PullData();
       apply_cardiac_arrest(engine);
+      engine.GetEngineTrack().PullData();
+      logger.Info(HeartRate.ToString());
+      logger.Info(SystolicArterialPressure.ToString());
+      logger.Info(DiastolicArterialPressure.ToString());
+      logger.Info(RespirationRate.ToString());
+      logger.Info(TidalVolume.ToString());
+      logger.Info(TotalLungVolume.ToString());
+      logger.Info(OxygenSaturation.ToString());
+
       apply_chest_compression(engine);
+      engine.GetEngineTrack().PullData();
       apply_chest_compression_force(engine);
+      engine.GetEngineTrack().PullData();
       apply_chest_compression_force_scale(engine);
+      engine.GetEngineTrack().PullData();
       apply_chest_occlusive_dressing(engine);
+      engine.GetEngineTrack().PullData();
       apply_conscious_respiration(engine);
+      engine.GetEngineTrack().PullData();
       apply_consume_nutrients(engine);
+      engine.GetEngineTrack().PullData();
       apply_exercise(engine);
+      engine.GetEngineTrack().PullData();
       apply_cycling_exercise(engine);
+      engine.GetEngineTrack().PullData();
       apply_generic_exercise(engine);
+      engine.GetEngineTrack().PullData();
       apply_running_exercise(engine);
+      engine.GetEngineTrack().PullData();
       apply_strength_exercise(engine);
+      engine.GetEngineTrack().PullData();
       apply_hemorrhage(engine);
+      engine.GetEngineTrack().PullData();
       apply_infection(engine);
+      engine.GetEngineTrack().PullData();
       apply_intubation(engine);
+      engine.GetEngineTrack().PullData();
       apply_mechanical_ventilation(engine);
+      engine.GetEngineTrack().PullData();
       apply_needle_decompression(engine);
+      engine.GetEngineTrack().PullData();
       apply_override(engine);
+      engine.GetEngineTrack().PullData();
       apply_pain_stimulus(engine);
+      engine.GetEngineTrack().PullData();
       apply_patient_assessment_request(engine);
+      engine.GetEngineTrack().PullData();
       apply_pericadial_effusion(engine);
+      engine.GetEngineTrack().PullData();
+      logger.Info(HeartRate.ToString());
+      logger.Info(SystolicArterialPressure.ToString());
+      logger.Info(DiastolicArterialPressure.ToString());
+      logger.Info(RespirationRate.ToString());
+      logger.Info(TidalVolume.ToString());
+      logger.Info(TotalLungVolume.ToString());
+      logger.Info(OxygenSaturation.ToString());
       apply_pulmonary_shunt(engine);
+      engine.GetEngineTrack().PullData();
       apply_sleep(engine);
+      engine.GetEngineTrack().PullData();
+      logger.Info(HeartRate.ToString());
+      logger.Info(SystolicArterialPressure.ToString());
+      logger.Info(DiastolicArterialPressure.ToString());
+      logger.Info(RespirationRate.ToString());
+      logger.Info(TidalVolume.ToString());
+      logger.Info(TotalLungVolume.ToString());
+      logger.Info(OxygenSaturation.ToString());
     }
 
     //!
@@ -408,12 +485,12 @@ namespace bio
       var on = new SEMechanicalVentilation();
       var off = new SEMechanicalVentilation();
       on.SetState(CDM.enumOnOff.value.On);
-      on.GetFlow().SetValue(30,VolumePerTimeUnit.L_Per_day);
-      
+      on.GetFlow().SetValue(30, VolumePerTimeUnit.L_Per_day);
+
       //Only access gas fractiosn this way to avoid memory management issues
       var oxygenFraction = on.GetGasFraction(oxygen);
       oxygenFraction.GetFractionAmount().SetValue(.5);
-      
+
       on.GetPressure().SetValue(5, PressureUnit.mmHg);
 
       off.SetState(CDM.enumOnOff.value.Off);

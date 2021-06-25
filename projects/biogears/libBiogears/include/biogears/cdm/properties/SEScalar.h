@@ -91,7 +91,7 @@ public:
 
   bool Equals(const SEScalar& to) const;
 
-  virtual void ToString(std::ostream& str) const;
+  virtual std::string ToString() const;
 
   static double dNaN();
   static double NaN;
@@ -135,15 +135,15 @@ inline bool operator!=(double lhs, const SEScalar& rhs) { return rhs != lhs; }
 inline std::ostream& operator<<(std::ostream& out, const SEScalar* s)
 {
   if (s == nullptr)
-    out << SEScalar::NaN << std::flush;
+    out << SEScalar::NaN;
   else
-    (*s).ToString(out);
+    out << (*s).ToString();
   return out;
 }
 //-------------------------------------------------------------------------------
 inline std::ostream& operator<<(std::ostream& out, const SEScalar& s)
 {
-  s.ToString(out);
+  out << s.ToString();
   return out;
 }
 inline void Override(const SEScalar& from, SEScalar& to)

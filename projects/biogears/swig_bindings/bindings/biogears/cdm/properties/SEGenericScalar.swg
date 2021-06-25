@@ -22,4 +22,8 @@
 %ignore operator==(const SEGenericScalar&) const;
 %ignore operator!=(const SEGenericScalar&) const;
 
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SEGenericScalar::ToString() const "public override";
+#endif 
+
 %include <biogears/cdm/properties/SEGenericScalar.h>
