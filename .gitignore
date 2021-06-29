@@ -11,4 +11,5 @@ CMakeUserPresets.json
 
 .idea/*
 .vs/*
+.vscode/*
 worktrees/*
