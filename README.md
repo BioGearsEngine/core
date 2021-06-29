@@ -76,7 +76,38 @@ We have made available to the medical simulation community a large set of burn i
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4606078.svg)](https://doi.org/10.5281/zenodo.4606078)
 
+## What's new in ver 7.4.0 (Jun 13, 2021)
+- Created a series of burn scenarios 
+- Updates to support gcc 9 
+- Added new operators (== !=) for all properties 
+- New **Python language hooks **
+- New albumin fluid substances to support more complex burn care scenarios
+- Updated all utilities to python (website creation, rebase, testing, ect...)
+- Updated Cmake version to 3.18 
+- Created **embedded resource files** to support BioGears running with a generic runtime directory
+  - No knowledge needed for where .xml resources are 
+- Removed Log4Cpp dependencies (depreciated third party project) and created logging in the engine
+  - Supports call backs and custom logs
+  - Tested for timing and performance, at or surpassing previous implementation 
+- New Burn API how to that is complex and able to generate large sets of data 
+- New model for compartment syndrome complication during burn TBSA (for large burns)
+  - Interfaces with a new action, **escharotomy**  reversing tissue pressure
+  - Validated timing, pulse pressures, and reversal
+- Swig binding supports, including **new csharp (C#) hooks**
+  - extensible for other language bindings in the future
+- Major updates to Sarin validation 
+  - Tidal volume, patient events, reversal timings all validated with Madigan Army Medical Center
+- New pulmonary shunt action that is validated for cardiac output and oxygen saturation changes 
+- Added bladder pressure as a physiology data request
+  - interfaces with the new compartment syndrome model 
+- Patient population generation, able to generate large statistical populations over supported inputs
+- Minor bug fixes and validation changes to models and software
+- Updated release of the UI with performance and stability improvements
+- **New drug** Atropine, validated as a reversal agent for Sarin exposure
+  - Validated with Madigan Army Medical Center
 
+
+ 
 
 ## What's new in ver 7.3.2 and 7.3.1 (Dec 10, 2020)
 - **ver 1.0 release of the UI**
