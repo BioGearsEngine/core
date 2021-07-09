@@ -252,10 +252,18 @@ const Unit* SEScalarQuantity<Unit>::GetCompoundUnit(const std::string& unit) con
 template <typename Unit>
 std::string SEScalarQuantity<Unit>::ToString() const
 {
-  if (std::isnan(m_value) || std::isinf(m_value))
-    return std::to_string(m_value);
-  else
-    return std::to_string(m_value) + "(" + m_unit->ToString() + ")" ;
+  if (std::isnan(m_value) || std::isinf(m_value)) {
+    std::stringstream ss;
+    ss << m_value;
+    return ss.str();
+    //return std::to_string(m_value);
+  }
+  else {
+    std::stringstream ss;
+    ss << m_value << "(" <<  m_unit->ToString() << ")";
+    return ss.str();
+   //return std::to_string(m_value) + "(" + m_unit->ToString() + ")" ;
+  }
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>

@@ -14,8 +14,8 @@ governing permissions and limitations under the License.
 
 #include <biogears/io/io-manager.h>
 
-#include <cctype>
 #include <atomic>
+#include <cctype>
 #include <chrono>
 #include <cstdarg>
 #include <ctime>
@@ -135,6 +135,31 @@ void simtime_handler(std::ostream& os, std::string const& /*message*/, std::stri
     auto const minutes = t_seconds / 60;
     auto const hours = minutes / 60;
 
+#if defined(ANDROID)
+    std::stringstream ss;
+    if (hours) {
+      ss << hours % 24 << "h";
+      os << ss.str();
+      ss.str("");
+      ss << minutes % 60 << "m";
+      os << ss.str();
+      ss.str("");
+      ss << seconds % 60 << "s";
+      os << ss.str();
+      ss.str("");
+    } else if (minutes) {
+      ss << minutes % 60 << "m";
+      os << ss.str();
+      ss.str("");
+      ss << seconds % 60 << "s";
+      os << ss.str();
+      ss.str("");
+    } else {
+      ss << seconds % 60 << "s";
+      os << ss.str();
+      ss.str("");
+    }
+#else
     if (hours) {
       os << std::to_string(hours % 24) << "h" << std::to_string(minutes % 60) << "m" << std::to_string(t_seconds % 60) << "s";
     } else if (minutes) {
@@ -142,6 +167,7 @@ void simtime_handler(std::ostream& os, std::string const& /*message*/, std::stri
     } else {
       os << std::to_string(t_seconds % 60) << "s";
     }
+#endif
   }
 };
 void datetime_handler(std::ostream& os, std::string const& /*message*/, std::string const& /*origin*/, Logger::LogLevel /*prioriy*/, SEScalarTime const* /*simtime*/, tm const* datetime)
