@@ -144,18 +144,18 @@ void simtime_handler(std::ostream& os, std::string const& /*message*/, std::stri
       ss << minutes % 60 << "m";
       os << ss.str();
       ss.str("");
-      ss << seconds % 60 << "s";
+      ss << t_seconds % 60 << "s";
       os << ss.str();
       ss.str("");
     } else if (minutes) {
       ss << minutes % 60 << "m";
       os << ss.str();
       ss.str("");
-      ss << seconds % 60 << "s";
+      ss << t_seconds % 60 << "s";
       os << ss.str();
       ss.str("");
     } else {
-      ss << seconds % 60 << "s";
+      ss << t_seconds % 60 << "s";
       os << ss.str();
       ss.str("");
     }
