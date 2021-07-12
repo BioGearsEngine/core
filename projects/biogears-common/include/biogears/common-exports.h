@@ -29,7 +29,7 @@
   #define BIOGEARS_COMMON_PRIVATE_API
 #else
   #if defined _WIN32 || defined __CYGWIN__
-    #ifdef BIOGEARS_COMMON_EXPORTS
+    #ifdef biogears_common_EXPORTS
       #define BIOGEARS_COMMON_PUBLIC_API __declspec(dllexport)
       #define BIOGEARS_COMMON_PRIVATE_API
     #else

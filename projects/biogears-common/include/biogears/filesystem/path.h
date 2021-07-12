@@ -174,20 +174,20 @@ namespace filesystem {
     bool m_absolute;
   };
 
-  std::ostream& operator<<(std::ostream& os, const path& path);
+  BIOGEARS_COMMON_PUBLIC_API std::ostream&  operator<<(std::ostream& os, const path& path);
 
   //Quick Functions
-  path cwd();
-  bool rm(const path& p);
-  bool rm(const std::string& p);
-  bool rmdir(const path& p);
-  bool rmdir(const std::string& p);
-  bool rmdirs(const path& p);           //<! Danger
-  bool rmdirs(const std::string& p);    //<! Danger
+  path BIOGEARS_COMMON_PUBLIC_API cwd();
+  bool BIOGEARS_COMMON_PUBLIC_API rm(const path& p);
+  bool BIOGEARS_COMMON_PUBLIC_API rm(const std::string& p);
+  bool BIOGEARS_COMMON_PUBLIC_API rmdir(const path& p);
+  bool BIOGEARS_COMMON_PUBLIC_API rmdir(const std::string& p);
+  bool BIOGEARS_COMMON_PUBLIC_API rmdirs(const path& p);           //<! Danger
+  bool BIOGEARS_COMMON_PUBLIC_API rmdirs(const std::string& p);    //<! Danger
 
-  bool exists(const std::string& name);
-  bool create_directory(const path& p);
-  bool create_directories(const path& p);
+  bool BIOGEARS_COMMON_PUBLIC_API exists(const std::string& name);
+  bool BIOGEARS_COMMON_PUBLIC_API create_directory(const path& p);
+  bool BIOGEARS_COMMON_PUBLIC_API create_directories(const path& p);
 
   inline path absolute(const path p)
   {
