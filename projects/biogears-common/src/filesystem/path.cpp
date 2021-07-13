@@ -24,6 +24,10 @@
 #include <string>
 #include <vector>
 
+#if defined(ANDROID)
+#include <android/log.h>
+#endif
+
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <ShlObj.h>
@@ -80,7 +84,13 @@ namespace filesystem {
   //-------------------------------------------------------------------------------
   path::path(const char* string)
   {
-    set(string);
+
+    __android_log_print(ANDROID_LOG_VERBOSE, "BIOGEARS", "path::path(const char* string)");
+    if (string) {
+      set(string);
+    } else {
+      set("");
+    }
   }
   //-------------------------------------------------------------------------------
   path::path(const std::string& string)
@@ -96,7 +106,11 @@ namespace filesystem {
   //-------------------------------------------------------------------------------
   path::path(const wchar_t* wstring)
   {
-    set(wstring);
+    if (wstring) {
+      set(wstring);
+    } else {
+      set("");
+    }
   }
   //-------------------------------------------------------------------------------
 #endif
@@ -165,7 +179,7 @@ namespace filesystem {
       } else if (segment == ".") {
 
       } else if (segment == "..") {
-        if (working_path.length() > 0 && working_path.back() != "..") {
+        if (working_path.depth() > 0 && working_path.back() != "..") {
           working_path.m_path.pop_back();
         } else {
           working_path / "..";
@@ -179,6 +193,8 @@ namespace filesystem {
   //-------------------------------------------------------------------------------
   void path::set(const std::string& str, path_type type)
   {
+    __android_log_print(ANDROID_LOG_VERBOSE, "BIOGEARS", "path::set(const std::string& str, path_type type)");
+    __android_log_print(ANDROID_LOG_VERBOSE, "BIOGEARS", "%s", str.c_str());
     m_dirty = true;
     m_type = type;
     if (str.empty() || std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); })) {
@@ -211,9 +227,16 @@ namespace filesystem {
   //!
   //! Properties
   //!
-  size_t path::length() const
+  size_t path::depth() const
   {
     return m_path.size();
+  }
+  size_t path::length() const
+  {
+    if (m_dirty) {
+      generate_string_cashe();
+    }
+    return m_string_cashe.size();
   }
   //-------------------------------------------------------------------------------
   size_t path::file_size() const
@@ -403,8 +426,8 @@ namespace filesystem {
     path lhs_n = make_normal();
     path rhs_n = rhs.make_normal();
 
-    if (lhs_n.length() < rhs_n.length()) {
-      for (auto ii = 0; ii < lhs_n.length(); ++ii) {
+    if (lhs_n.depth() < rhs_n.depth()) {
+      for (auto ii = 0; ii < lhs_n.depth(); ++ii) {
         if (lhs_n.m_path[ii] != rhs_n.m_path[ii]) {
           return false;
         }

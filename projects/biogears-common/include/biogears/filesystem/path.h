@@ -108,7 +108,8 @@ namespace filesystem {
     //!
     //! Properties
     //!
-    size_t length() const;
+    size_t depth() const; // Number of segments in the path
+    size_t length() const; // length of the path string including sperators
     size_t file_size() const;
 
     bool empty() const;
