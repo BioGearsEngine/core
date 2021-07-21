@@ -95,11 +95,11 @@ void HowToAnesthesiaMachine()
 	config.GetInspiratoryExpiratoryRatio().SetValue(.5);
 	config.GetOxygenFraction().SetValue(.5);
 	config.SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
-	config.GetPositiveEndExpiredPressure().SetValue(0.0, PressureUnit::cmH2O);
+	config.GetPositiveEndExpiredPressure().SetValue(3.0, PressureUnit::cmH2O);
 	config.SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
 	config.GetReliefValvePressure().SetValue(20.0, PressureUnit::cmH2O);
 	config.GetRespiratoryRate().SetValue(12, FrequencyUnit::Per_min);
-	config.GetVentilatorPressure().SetValue(0.0, PressureUnit::cmH2O);
+	config.GetVentilatorPressure().SetValue(22.0, PressureUnit::cmH2O);
 	config.GetOxygenBottleOne().GetVolume().SetValue(660.0, VolumeUnit::L);
 	config.GetOxygenBottleTwo().GetVolume().SetValue(660.0, VolumeUnit::L);
 

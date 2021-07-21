@@ -60,6 +60,11 @@ void HowToBrainInjury()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", VolumeUnit::mL);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalLungVolume", VolumeUnit::mL);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("LeftEyePupillaryResponse-SizeModifier");
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("LeftEyePupillaryResponse-ReactivityModifier");
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-SizeModifier");
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-ReactivityModifier");
+
 
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToBrainInjury.csv");
 

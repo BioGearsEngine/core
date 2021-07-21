@@ -57,6 +57,14 @@ void HowToExercise()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("FatigueLevel");
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalMetabolicRate", PowerUnit::W);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalWorkRateLevel");
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SodiumLostToSweat", MassUnit::mg);
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("PotassiumLostToSweat", MassUnit::mg);
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("ChlorideLostToSweat", MassUnit::mg);
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SweatRate", MassPerTimeUnit::mg_Per_min);
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SkinTemperature", TemperatureUnit::C);
+
+
+
 
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToExercise.csv");
 
