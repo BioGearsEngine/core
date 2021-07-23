@@ -44,6 +44,19 @@
 namespace biogears {
 namespace filesystem {
 
+  struct path::Implementation {
+  public:
+    mutable bool dirty = true;
+    mutable std::string string_cashe;
+
+#if defined(_WIN32)
+    mutable std::wstring wstring_cashe;
+#endif
+
+    path_type type;
+    value_type path;
+    bool absolute;
+  };
 #if defined(_WIN32)
   static constexpr size_t MAX_PATH_WINDOWS = 32767;
 #endif
@@ -53,39 +66,41 @@ namespace filesystem {
   //! Path Constructors
   //!
   path::path()
-    : m_type(default_path)
-    , m_absolute(false)
+    : _impl(std::make_unique<Implementation>())
   {
+    _impl->type = default_path;
+    _impl->absolute = false;
   }
   //-------------------------------------------------------------------------------
   path::path(const path& path)
-    : m_type(path.m_type)
-    , m_path(path.m_path)
-    , m_absolute(path.m_absolute)
-    , m_dirty(path.m_dirty)
-    , m_string_cashe(path.m_string_cashe)
-#if defined(_WIN32)
-    , m_wstring_cashe(path.m_wstring_cashe)
-#endif
+    : _impl(std::make_unique<Implementation>())
   {
+    _impl->type = path._impl->type;
+    _impl->path = path._impl->path;
+    _impl->absolute = path._impl->absolute;
+    _impl->dirty = path._impl->dirty;
+    _impl->string_cashe = path._impl->string_cashe;
+#if defined(_WIN32)
+    _impl->wstring_cashe = path._impl->wstring_cashe;
+#endif
   }
   //-------------------------------------------------------------------------------
   path::path(path&& path)
-    : m_type(std::move(path.m_type))
-    , m_path(std::move(path.m_path))
-    , m_absolute(std::move(path.m_absolute))
-    , m_dirty(std::move(path.m_dirty))
-    , m_string_cashe(std::move(path.m_string_cashe))
-#if defined(_WIN32)
-    , m_wstring_cashe(std::move(path.m_wstring_cashe))
-#endif
+    : _impl(std::make_unique<Implementation>())
   {
+    _impl->type = (std::move(path._impl->type));
+    _impl->path = (std::move(path._impl->path));
+    _impl->absolute = (std::move(path._impl->absolute));
+    _impl->dirty = (std::move(path._impl->dirty));
+    _impl->string_cashe = (std::move(path._impl->string_cashe));
+#if defined(_WIN32)
+    _impl->wstring_cashe = (std::move(path._impl->wstring_cashe));
+#endif
   }
   //-------------------------------------------------------------------------------
   path::path(const char* string)
+    : _impl(std::make_unique<Implementation>())
   {
-
-    __android_log_print(ANDROID_LOG_VERBOSE, "BIOGEARS", "path::path(const char* string)");
     if (string) {
       set(string);
     } else {
@@ -94,17 +109,20 @@ namespace filesystem {
   }
   //-------------------------------------------------------------------------------
   path::path(const std::string& string)
+    : _impl(std::make_unique<Implementation>())
   {
     set(string);
   }
   //-------------------------------------------------------------------------------
 #if defined(_WIN32)
   path::path(const std::wstring& wstring)
+    : _impl(std::make_unique<Implementation>())
   {
     set(wstring);
   }
   //-------------------------------------------------------------------------------
   path::path(const wchar_t* wstring)
+    : _impl(std::make_unique<Implementation>())
   {
     if (wstring) {
       set(wstring);
@@ -114,37 +132,40 @@ namespace filesystem {
   }
   //-------------------------------------------------------------------------------
 #endif
-
+  path::~path()
+  {
+    _impl.reset();
+  }
   //!
   //! Path Iterators
   //!
   auto path::begin() -> iterator
   {
-    m_dirty = true;
-    return m_path.begin();
+    _impl->dirty = true;
+    return _impl->path.begin();
   }
   //-------------------------------------------------------------------------------
   auto path::end() -> iterator
   {
-    m_dirty = true;
-    return m_path.end();
+    _impl->dirty = true;
+    return _impl->path.end();
   }
   //-------------------------------------------------------------------------------
   auto path::back() const -> std::string
   {
-    return (m_path.size()) ? m_path.back() : "";
+    return (_impl->path.size()) ? _impl->path.back() : "";
   }
   //-------------------------------------------------------------------------------
   auto path::begin() const -> const_iterator
   {
-    m_dirty = true;
-    return m_path.begin();
+    _impl->dirty = true;
+    return _impl->path.begin();
   }
   //-------------------------------------------------------------------------------
   auto path::end() const -> const_iterator
   {
-    m_dirty = true;
-    return m_path.end();
+    _impl->dirty = true;
+    return _impl->path.end();
   }
   //-------------------------------------------------------------------------------
   //!
@@ -171,16 +192,16 @@ namespace filesystem {
   path path::make_normal() const
   {
     path working_path;
-    working_path.m_absolute = m_absolute;
-    working_path.m_type = m_type;
-    for (auto& segment : m_path) {
+    working_path._impl->absolute = _impl->absolute;
+    working_path._impl->type = _impl->type;
+    for (auto& segment : _impl->path) {
       if (segment.empty()) {
 
       } else if (segment == ".") {
 
       } else if (segment == "..") {
         if (working_path.depth() > 0 && working_path.back() != "..") {
-          working_path.m_path.pop_back();
+          working_path._impl->path.pop_back();
         } else {
           working_path / "..";
         }
@@ -193,12 +214,10 @@ namespace filesystem {
   //-------------------------------------------------------------------------------
   void path::set(const std::string& str, path_type type)
   {
-    __android_log_print(ANDROID_LOG_VERBOSE, "BIOGEARS", "path::set(const std::string& str, path_type type)");
-    __android_log_print(ANDROID_LOG_VERBOSE, "BIOGEARS", "%s", str.c_str());
-    m_dirty = true;
-    m_type = type;
+    _impl->dirty = true;
+    _impl->type = type;
     if (str.empty() || std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); })) {
-      m_absolute = false;
+      _impl->absolute = false;
     } else {
 
       std::string windows_lpath_prefix = R"(^\\\\\?\\)";
@@ -207,21 +226,21 @@ namespace filesystem {
           && std::mismatch(std::begin(windows_lpath_prefix), std::end(windows_lpath_prefix), std::begin(tmp)).first == std::end(windows_lpath_prefix)) {
         tmp.erase(0, 4);
       }
-      m_path = tokenize(tmp, R"(/\)");
+      _impl->path = tokenize(tmp, R"(/\)");
       std::regex absolute_regex { "^[a-zA-Z]:|^/" };
-      m_absolute = std::regex_search(tmp, absolute_regex);
+      _impl->absolute = std::regex_search(tmp, absolute_regex);
     }
   }
   //-------------------------------------------------------------------------------
   path::path_type path::mode() const
   {
-    return m_type;
+    return _impl->type;
   }
   //-------------------------------------------------------------------------------
   void path::mode(path_type type)
   {
-    m_type = type;
-    m_dirty = true;
+    _impl->type = type;
+    _impl->dirty = true;
   }
   //-------------------------------------------------------------------------------
   //!
@@ -229,14 +248,14 @@ namespace filesystem {
   //!
   size_t path::depth() const
   {
-    return m_path.size();
+    return _impl->path.size();
   }
   size_t path::length() const
   {
-    if (m_dirty) {
+    if (_impl->dirty) {
       generate_string_cashe();
     }
-    return m_string_cashe.size();
+    return _impl->string_cashe.size();
   }
   //-------------------------------------------------------------------------------
   size_t path::file_size() const
@@ -253,7 +272,7 @@ namespace filesystem {
     return (size_t)sb.st_size;
   }
   //-------------------------------------------------------------------------------
-  bool path::empty() const { return m_path.empty(); }
+  bool path::empty() const { return _impl->path.empty(); }
   //-------------------------------------------------------------------------------
   bool path::exists() const
   {
@@ -293,7 +312,7 @@ namespace filesystem {
 #endif
   }
   //-------------------------------------------------------------------------------
-  bool path::is_absolute() const { return m_absolute; }
+  bool path::is_absolute() const { return _impl->absolute; }
   //-------------------------------------------------------------------------------
 
   //!
@@ -321,28 +340,28 @@ namespace filesystem {
   {
     if (empty())
       return "";
-    return m_path[m_path.size() - 1];
+    return _impl->path[_impl->path.size() - 1];
   }
   //-------------------------------------------------------------------------------
   std::string path::filename() const
   {
     if (empty())
       return "";
-    return m_path[m_path.size() - 1];
+    return _impl->path[_impl->path.size() - 1];
   }
   //-------------------------------------------------------------------------------
   path path::parent_path() const
   {
     path result;
-    result.m_absolute = m_absolute;
+    result._impl->absolute = _impl->absolute;
 
-    if (m_path.empty()) {
-      if (!m_absolute)
-        result.m_path.push_back("..");
+    if (_impl->path.empty()) {
+      if (!_impl->absolute)
+        result._impl->path.push_back("..");
     } else {
-      size_t until = m_path.size() - 1;
+      size_t until = _impl->path.size() - 1;
       for (size_t i = 0; i < until; ++i)
-        result.m_path.push_back(m_path[i]);
+        result._impl->path.push_back(_impl->path[i]);
     }
     return result;
   }
@@ -353,15 +372,15 @@ namespace filesystem {
   //!
   path& path::operator/=(const path& other)
   {
-    m_dirty = true;
+    _impl->dirty = true;
     *this = *this / other;
     return *this;
   }
   //-------------------------------------------------------------------------------
   path path::operator/(const path& other) const
   {
-    if (other.m_absolute) {
-      if (m_path.empty()) {
+    if (other._impl->absolute) {
+      if (_impl->path.empty()) {
         return other;
       } else {
         throw std::runtime_error("path::operator/(): expected a relative path!");
@@ -369,21 +388,21 @@ namespace filesystem {
     }
     path result(*this);
 
-    for (size_t i = 0; i < other.m_path.size(); ++i)
-      result.m_path.push_back(other.m_path[i]);
+    for (size_t i = 0; i < other._impl->path.size(); ++i)
+      result._impl->path.push_back(other._impl->path[i]);
 
     return result;
   }
   //-------------------------------------------------------------------------------
   path& path::operator=(const path& path)
   {
-    m_type = path.m_type;
-    m_path = path.m_path;
-    m_absolute = path.m_absolute;
-    m_dirty = path.m_dirty;
-    m_string_cashe = path.m_string_cashe;
+    _impl->type = path._impl->type;
+    _impl->path = path._impl->path;
+    _impl->absolute = path._impl->absolute;
+    _impl->dirty = path._impl->dirty;
+    _impl->string_cashe = path._impl->string_cashe;
 #if defined(_WIN32)
-    m_wstring_cashe = path.m_wstring_cashe;
+    _impl->wstring_cashe = path._impl->wstring_cashe;
 #endif
     return *this;
   }
@@ -391,13 +410,13 @@ namespace filesystem {
   path& path::operator=(path&& path)
   {
     if (this != &path) {
-      m_type = path.m_type;
-      m_path = std::move(path.m_path);
-      m_absolute = path.m_absolute;
-      m_dirty = path.m_dirty;
-      m_string_cashe = std::move(path.m_string_cashe);
+      _impl->type = path._impl->type;
+      _impl->path = std::move(path._impl->path);
+      _impl->absolute = path._impl->absolute;
+      _impl->dirty = path._impl->dirty;
+      _impl->string_cashe = std::move(path._impl->string_cashe);
 #if defined(_WIN32)
-      m_wstring_cashe = std::move(path.m_wstring_cashe);
+      _impl->wstring_cashe = std::move(path._impl->wstring_cashe);
 #endif
     }
     return *this;
@@ -405,20 +424,20 @@ namespace filesystem {
   //-------------------------------------------------------------------------------
   bool path::operator==(const path& p) const
   {
-    return p.m_path == m_path;
+    return p._impl->path == _impl->path;
   }
   //-------------------------------------------------------------------------------
-  bool path::operator!=(const path& p) const { return p.m_path != m_path; }
+  bool path::operator!=(const path& p) const { return p._impl->path != _impl->path; }
 
   //!
   //! Stringification
   //!
   char const* path::c_str() const
   {
-    if (m_dirty) {
+    if (_impl->dirty) {
       generate_string_cashe();
     }
-    return m_string_cashe.c_str();
+    return _impl->string_cashe.c_str();
   }
   //-------------------------------------------------------------------------------
   bool path::operator<=(const path& rhs) const
@@ -428,7 +447,7 @@ namespace filesystem {
 
     if (lhs_n.depth() < rhs_n.depth()) {
       for (auto ii = 0; ii < lhs_n.depth(); ++ii) {
-        if (lhs_n.m_path[ii] != rhs_n.m_path[ii]) {
+        if (lhs_n._impl->path[ii] != rhs_n._impl->path[ii]) {
           return false;
         }
       }
@@ -440,10 +459,10 @@ namespace filesystem {
   //-------------------------------------------------------------------------------
   std::string path::ToString() const
   {
-    if (m_dirty) {
+    if (_impl->dirty) {
       generate_string_cashe();
     }
-    return m_string_cashe;
+    return _impl->string_cashe;
   }
   //-------------------------------------------------------------------------------
   std::string path::ToString(path_type type) const
@@ -451,36 +470,36 @@ namespace filesystem {
     char const* path_seperator = (posix_path == type) ? "/" : "\\";
 
     std::ostringstream oss;
-    if (m_absolute) {
+    if (_impl->absolute) {
       if (type == windows_path) {
         size_t length = 0;
-        for (size_t i = 0; i < m_path.size(); ++i)
+        for (size_t i = 0; i < _impl->path.size(); ++i)
           // No special case for the last segment to count the NULL character
-          length += m_path[i].length() + 1;
+          length += _impl->path[i].length() + 1;
         // Windows requires a \\?\ prefix to handle paths longer than MAX_PATH
         // (including their null character). NOTE: relative paths >MAX_PATH are
         // not supported at all in Windows.
         if (length > MAX_PATH_WINDOWS_LEGACY)
           oss << R"(\\?\)";
       }
-      if (m_path.size() > 0 && m_path[0].size() > 1 && m_path[0][1] == ':') {
-        oss << m_path[0];
-      } else if (m_path.size() != 0) {
-        oss << path_seperator << m_path[0];
+      if (_impl->path.size() > 0 && _impl->path[0].size() > 1 && _impl->path[0][1] == ':') {
+        oss << _impl->path[0];
+      } else if (_impl->path.size() != 0) {
+        oss << path_seperator << _impl->path[0];
       }
     } else {
-      if (m_path.size() != 0) {
-        oss << m_path[0];
+      if (_impl->path.size() != 0) {
+        oss << _impl->path[0];
       }
     }
 
-    for (size_t i = 1; i < m_path.size(); ++i) {
+    for (size_t i = 1; i < _impl->path.size(); ++i) {
       if (type == posix_path) {
         oss << '/';
       } else {
         oss << '\\';
       }
-      oss << m_path[i];
+      oss << _impl->path[i];
     }
     return oss.str();
   }
@@ -498,22 +517,22 @@ namespace filesystem {
   //-------------------------------------------------------------------------------
   void path::generate_string_cashe() const
   {
-    m_string_cashe = ToString(m_type);
+    _impl->string_cashe = ToString(_impl->type);
 #if defined(_WIN32)
-    int size = MultiByteToWideChar(CP_UTF8, 0, &m_string_cashe[0], (int)m_string_cashe.size(), NULL, 0);
+    int size = MultiByteToWideChar(CP_UTF8, 0, &_impl->string_cashe[0], (int)_impl->string_cashe.size(), NULL, 0);
     std::wstring result(size, 0);
-    MultiByteToWideChar(CP_UTF8, 0, &m_string_cashe[0], (int)m_string_cashe.size(), &result[0], size);
-    m_wstring_cashe = result;
+    MultiByteToWideChar(CP_UTF8, 0, &_impl->string_cashe[0], (int)_impl->string_cashe.size(), &result[0], size);
+    _impl->wstring_cashe = result;
 #endif
-    m_dirty = false;
+    _impl->dirty = false;
   }
 #if defined(_WIN32)
   std::wstring path::ToWString() const
   {
-    if (m_dirty) {
+    if (_impl->dirty) {
       generate_string_cashe();
     }
-    return m_wstring_cashe;
+    return _impl->wstring_cashe;
   }
   //-------------------------------------------------------------------------------
   std::wstring path::ToWString(path_type type) const

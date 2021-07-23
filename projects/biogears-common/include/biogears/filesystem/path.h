@@ -47,6 +47,7 @@ derivative works thereof, in binary and source code form.
 
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace biogears {
 namespace filesystem {
@@ -58,7 +59,7 @@ namespace filesystem {
  * dependency until boost::filesystem is integrated into the standard template
  * library at some point in the future.
  */
-  class BIOGEARS_COMMON_PUBLIC_API path {
+  class  path {
   public:
     using value_type = std::vector<std::string>;
     using iterator = value_type::iterator;
@@ -66,7 +67,7 @@ namespace filesystem {
     using reference = value_type::reference;
     using const_reference = value_type::const_reference;
 
-    enum path_type {
+  BIOGEARS_COMMON_PUBLIC_API  enum path_type {
       windows_path = 0,
       posix_path = 1,
       default_path = posix_path,
@@ -80,99 +81,92 @@ namespace filesystem {
     //!
     //! Constructors
     //!
-    path();
-    path(const path& path);
-    path(path&& path);
-    path(const char* string);
-    path(const std::string& string);
+  BIOGEARS_COMMON_PUBLIC_API  path();
+  BIOGEARS_COMMON_PUBLIC_API  path(const path& path);
+  BIOGEARS_COMMON_PUBLIC_API  path(path&& path);
+  BIOGEARS_COMMON_PUBLIC_API  path(const char* string);
+  BIOGEARS_COMMON_PUBLIC_API  path(const std::string& string);
 #if defined(_WIN32)
-    path(const std::wstring& wstring);
-    path(const wchar_t* wstring);
+  BIOGEARS_COMMON_PUBLIC_API  path(const std::wstring& wstring);
+  BIOGEARS_COMMON_PUBLIC_API  path(const wchar_t* wstring);
 #endif
+  BIOGEARS_COMMON_PUBLIC_API ~path();
     //!
     //! Path Iteration
     //!
-    auto begin() -> iterator;
-    auto end() -> iterator;
-    auto begin() const -> const_iterator;
-    auto end() const -> const_iterator;
-    auto back() const -> std::string; 
+  BIOGEARS_COMMON_PUBLIC_API  auto begin() -> iterator;
+  BIOGEARS_COMMON_PUBLIC_API  auto end() -> iterator;
+  BIOGEARS_COMMON_PUBLIC_API  auto begin() const -> const_iterator;
+  BIOGEARS_COMMON_PUBLIC_API  auto end() const -> const_iterator;
+  BIOGEARS_COMMON_PUBLIC_API  auto back() const -> std::string; 
     //!
     //! Manipulation
     //!
-    path make_absolute() const;
-    path make_normal() const;
-    void set(const std::string& str, path_type type = default_path);
-    path_type mode() const;
-    void mode(path_type);
+  BIOGEARS_COMMON_PUBLIC_API path make_absolute() const;
+  BIOGEARS_COMMON_PUBLIC_API path make_normal() const;
+  BIOGEARS_COMMON_PUBLIC_API void set(const std::string& str, path_type type = default_path);
+  BIOGEARS_COMMON_PUBLIC_API path_type mode() const;
+  BIOGEARS_COMMON_PUBLIC_API void mode(path_type);
     //!
     //! Properties
     //!
-    size_t depth() const; // Number of segments in the path
-    size_t length() const; // length of the path string including sperators
-    size_t file_size() const;
+  BIOGEARS_COMMON_PUBLIC_API size_t depth() const; // Number of segments in the path
+  BIOGEARS_COMMON_PUBLIC_API size_t length() const; // length of the path string including sperators
+  BIOGEARS_COMMON_PUBLIC_API size_t file_size() const;
 
-    bool empty() const;
-    bool exists() const;
-    bool is_directory() const;
-    bool is_file() const;
-    bool is_absolute() const;
+  BIOGEARS_COMMON_PUBLIC_API  bool empty() const;
+  BIOGEARS_COMMON_PUBLIC_API  bool exists() const;
+  BIOGEARS_COMMON_PUBLIC_API  bool is_directory() const;
+  BIOGEARS_COMMON_PUBLIC_API  bool is_file() const;
+  BIOGEARS_COMMON_PUBLIC_API  bool is_absolute() const;
 
     //!
     //! Path Components
     //!
-    std::string extension() const; //< Last Extension of the basename()
-    std::string basename() const; //< Value of last path segment
-    std::string filename() const; //< same as basename()
+  BIOGEARS_COMMON_PUBLIC_API   std::string extension() const; //< Last Extension of the basename()
+  BIOGEARS_COMMON_PUBLIC_API  std::string basename() const; //< Value of last path segment
+  BIOGEARS_COMMON_PUBLIC_API  std::string filename() const; //< same as basename()
 
-    path dirname() const; //<  Returns all segments if is_directory else return parent_path
-    path parent_path() const; //<  Returns the path suffixed by ..; For absulte paths this is resolved
+  BIOGEARS_COMMON_PUBLIC_API  path dirname() const; //<  Returns all segments if is_directory else return parent_path
+  BIOGEARS_COMMON_PUBLIC_API  path parent_path() const; //<  Returns the path suffixed by ..; For absulte paths this is resolved
 
     //!
     //! Operator Overloads
     //!
-    path& operator/=(const path& other);
-    path operator/(const path& other) const;
-    path& operator=(const path& path);
-    path& operator=(path&& path);
-    bool operator==(const path& p) const;
-    bool operator!=(const path& p) const;
+   BIOGEARS_COMMON_PUBLIC_API path& operator/=(const path& other);
+   BIOGEARS_COMMON_PUBLIC_API path operator/(const path& other) const;
+   BIOGEARS_COMMON_PUBLIC_API path& operator=(const path& path);
+   BIOGEARS_COMMON_PUBLIC_API path& operator=(path&& path);
+   BIOGEARS_COMMON_PUBLIC_API bool operator==(const path& p) const;
+   BIOGEARS_COMMON_PUBLIC_API bool operator!=(const path& p) const;
 
     //! Is the lhs a parent path of the rhs
-    bool operator<=(const path& p) const;
+   BIOGEARS_COMMON_PUBLIC_API bool operator<=(const path& p) const;
     
     //!
     //! Stringification
     //!
-    char const* c_str() const; //< Calculates the string cashe and returns its c_str(). Valid until next non const function call
-    std::string ToString() const; //< Cashes the string of m_type
-    std::string ToString(path_type type) const; //< Produces a string of type and does not cashe results
-    operator std::string() const; //< Cashes the string of m_type
+  BIOGEARS_COMMON_PUBLIC_API  char const* c_str() const; //< Calculates the string cashe and returns its c_str(). Valid until next non const function call
+  BIOGEARS_COMMON_PUBLIC_API  std::string ToString() const; //< Cashes the string of m_type
+  BIOGEARS_COMMON_PUBLIC_API  std::string ToString(path_type type) const; //< Produces a string of type and does not cashe results
+  BIOGEARS_COMMON_PUBLIC_API  operator std::string() const; //< Cashes the string of m_type
 
 #if defined(_WIN32)
-    std::wstring ToWString() const; //< Cashes the string of m_type
-    std::wstring ToWString(path_type type) const; //< Produces a string of type and does not cashe results
-    explicit operator std::wstring() const; //< Cashes the string of m_type
-
-    void set(const std::wstring& wstring, path_type type = default_path);
-    path& operator=(const std::wstring& str);
+  BIOGEARS_COMMON_PUBLIC_API  std::wstring ToWString() const; //< Cashes the string of m_type
+  BIOGEARS_COMMON_PUBLIC_API  std::wstring ToWString(path_type type) const; //< Produces a string of type and does not cashe results
+  BIOGEARS_COMMON_PUBLIC_API  explicit operator std::wstring() const; //< Cashes the string of m_type
+  
+  BIOGEARS_COMMON_PUBLIC_API  void set(const std::wstring& wstring, path_type type = default_path);
+  BIOGEARS_COMMON_PUBLIC_API  path& operator=(const std::wstring& str);
 #endif
 
   private:
     static std::vector<std::string> tokenize(const std::string& string, const std::string& delim);
     void generate_string_cashe() const;
 
-  private:
-    mutable bool m_dirty = true;
-    mutable std::string m_string_cashe;
-
-#if defined(_WIN32)
-    mutable std::wstring m_wstring_cashe;
-#endif
-
-    path_type m_type;
-    value_type m_path;
-    bool m_absolute;
+ 
+    struct Implementation;
+    std::unique_ptr<Implementation> _impl;
   };
 
   BIOGEARS_COMMON_PUBLIC_API std::ostream&  operator<<(std::ostream& os, const path& path);
