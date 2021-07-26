@@ -389,27 +389,7 @@ void BurnThread::FluidLoading(double tbsa)
             m_bg->ProcessAction(*m_escharotomy);
           }
       }
-      // escharotomy
-      /*if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal)
-                                           || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm)
-                                           || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg)
-                                           || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightArm)
-                                           || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg)) {
-        if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal)) {
-            m_escharotomy->SetLocation("Trunk");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm)) {
-          m_escharotomy->SetLocation("LeftArm");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg)) {
-          m_escharotomy->SetLocation("LeftLeg");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightArm)) {
-          m_escharotomy->SetLocation("RightArm");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg)) {
-          m_escharotomy->SetLocation("RightLeg");
-        } else {
-          return;
-        }
-        m_bg->ProcessAction(*m_escharotomy);
-      }*/
+
       if (fluid == ringers) {
         if (m_ivBagVolume_mL < 1.0) {
           m_ringers->GetBagVolume().SetValue(ringersVolume_mL, VolumeUnit::mL);
