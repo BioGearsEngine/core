@@ -89,7 +89,9 @@ void HowToSarinExposure()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RedBloodCellAcetylcholinesterase", AmountPerVolumeUnit::mol_Per_L);
-
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("LeftEyePupillaryResponse-ReactivityModifier");
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-SizeModifier");
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-ReactivityModifier");
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToSarinExposure.csv");
 
   // Advance some time to get some resting data
