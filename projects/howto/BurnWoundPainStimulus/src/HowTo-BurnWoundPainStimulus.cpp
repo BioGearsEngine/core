@@ -354,6 +354,14 @@ void BurnThread::FluidLoading(double tbsa)
         Status();
         //m_bg->GetLogger()->Info(asprintf("Checking urine production %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
         urineProduction = m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr);
+
+        //  to add "too high" and "too low" options for titrating
+        double scaleTitration = 1.0;
+        double errTitrate[] {0.9, 1.0, 1.1};
+        int errSelection = rand() % (3 - 1 + 1) + 1;
+        scaleTitration = errTitrate[errSelection - 1];
+        //m_bg->GetLogger()->Info(asprintf("Were they right? titrate percent is: %f %s", scaleTitration, "percent"));
+
         if (fluid == ringers && fluidOn == true) {
           if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) == ((int)hrsBeforeIntervention*3600)) {
             double beginningInfusion_mL_Per_hr = 10.0 * tbsa;
@@ -363,12 +371,12 @@ void BurnThread::FluidLoading(double tbsa)
           } else {
             if (urineProduction < targetLowUrineProduction_mL_Per_Hr) {
               m_bg->GetLogger()->Info(asprintf("Urine production is too low at %f %s", urineProduction, "mL_Per_hr"));
-              m_ringers->GetRate().SetValue((m_ringers->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 + titrate), VolumePerTimeUnit::mL_Per_hr);
+              m_ringers->GetRate().SetValue((m_ringers->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 + titrate) * scaleTitration, VolumePerTimeUnit::mL_Per_hr);
               m_bg->ProcessAction(*m_ringers);
             }
             if ((m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) > targetHighUrineProduction_mL_Per_Hr)) {
               m_bg->GetLogger()->Info(asprintf("Urine production is too high at %f %s", urineProduction, "mL_Per_hr"));
-              m_ringers->GetRate().SetValue((m_ringers->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 - titrate), VolumePerTimeUnit::mL_Per_hr);
+              m_ringers->GetRate().SetValue((m_ringers->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 - titrate) * scaleTitration, VolumePerTimeUnit::mL_Per_hr);
               m_bg->ProcessAction(*m_ringers);
             }
           }
@@ -407,27 +415,7 @@ void BurnThread::FluidLoading(double tbsa)
             m_bg->ProcessAction(*m_escharotomy);
           }
       }
-      // escharotomy
-      /*if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal)
-                                           || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm)
-                                           || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg)
-                                           || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightArm)
-                                           || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg)) {
-        if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal)) {
-            m_escharotomy->SetLocation("Trunk");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm)) {
-          m_escharotomy->SetLocation("LeftArm");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg)) {
-          m_escharotomy->SetLocation("LeftLeg");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightArm)) {
-          m_escharotomy->SetLocation("RightArm");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg)) {
-          m_escharotomy->SetLocation("RightLeg");
-        } else {
-          return;
-        }
-        m_bg->ProcessAction(*m_escharotomy);
-      }*/
+
       if (fluid == ringers) {
         if (m_ivBagVolume_mL < 1.0) {
           m_ringers->GetBagVolume().SetValue(ringersVolume_mL, VolumeUnit::mL);
