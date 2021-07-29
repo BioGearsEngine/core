@@ -68,6 +68,7 @@ void Nervous::Clear()
   m_Succinylcholine = nullptr;
   m_Sarin = nullptr;
   m_Atropine = nullptr;
+  m_Midazolam = nullptr;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -274,6 +275,7 @@ void Nervous::SetUp()
   m_Succinylcholine = m_data.GetSubstances().GetSubstance("Succinylcholine");
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
   m_Atropine = m_data.GetSubstances().GetSubstance("Atropine");
+  m_Midazolam = m_data.GetSubstances().GetSubstance("Midazolam");
   m_Patient = &m_data.GetPatient();
 
   m_DrugRespirationEffects = 0.0;
@@ -1142,6 +1144,8 @@ void Nervous::CheckNervousStatus()
   double RbcAche_mol_Per_L
     = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
   double RbcFractionInhibited = 1.0 - RbcAche_mol_Per_L / (8e-9); //8 nM is the baseline activity of Rbc-Ache
+  double brainAtropine_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_Atropine)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
+  double midazolam_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_Midazolam)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
   if (m_data.GetSubstances().IsActive(*m_Sarin)) {
       ///\cite nambda1971cholinesterase
       //The above study found that individuals exposed to the organophosphate parathion did not exhibit fasciculation until at least
@@ -1169,7 +1173,10 @@ void Nervous::CheckNervousStatus()
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildWeakness, false, m_data.GetSimulationTime());
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::FlaccidParalysis, false, m_data.GetSimulationTime());
       }
-      if (0.8 < RbcFractionInhibited && RbcFractionInhibited < 0.88) {
+      if (RbcFractionInhibited < 0.75 || midazolam_mg_Per_L > 0.25) {   //handle seizures in a special way to account for diazapam reversal agent
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, false, m_data.GetSimulationTime());
+      }
+      if (0.8 < RbcFractionInhibited && RbcFractionInhibited < 0.88 && midazolam_mg_Per_L < 0.25) {
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, true, m_data.GetSimulationTime());
       }
       if (RbcFractionInhibited > 0.9) {
@@ -1177,7 +1184,7 @@ void Nervous::CheckNervousStatus()
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, false, m_data.GetSimulationTime());
       }
       //Muscarinic/atropine patient events
-      if (!m_data.GetSubstances().IsActive(*m_Atropine)) {
+      if (brainAtropine_mg_Per_L == 0) {
         if (0.2 < RbcFractionInhibited && RbcFractionInhibited < 0.45) {
           m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, true, m_data.GetSimulationTime());
           m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildSecretions, true, m_data.GetSimulationTime());
@@ -1202,9 +1209,7 @@ void Nervous::CheckNervousStatus()
       }
     }
    //Muscarinic reversals
-    if (m_data.GetSubstances().IsActive(*m_Atropine)) {
       //use the brain intracellular compartment for atropine reference
-      double brainAtropine_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_Atropine)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
       if (0.2 < brainAtropine_mg_Per_L && brainAtropine_mg_Per_L < 0.3) {
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildSecretions, false, m_data.GetSimulationTime());
@@ -1219,7 +1224,6 @@ void Nervous::CheckNervousStatus()
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereSecretions, false, m_data.GetSimulationTime());
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiaphoresis, false, m_data.GetSimulationTime());
       }
-    }
 
   //----Fasciculations due to Succinylcholine administration.---------------------------------------------------
   //No evidence exists for a correlation between the plasma concentration of succinylcholine

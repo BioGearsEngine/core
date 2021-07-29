@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.1.0-beta" xsi:schemaLocation="">
     <Name>Sarin Moderate Long</Name>
     <Description>Exposure to low concentration of Sarin for an extended time period, provoking moderate physiological response</Description>
-    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+	<EngineStateFile>./states/StandardMale@0s.xml</EngineStateFile>
 	
 	<!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="3.0">
@@ -140,6 +140,7 @@
   
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Pralidoxime" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Atropine" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>		
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Midazolam" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>		
 
   <!-- Aerosol Compartments -->
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Mouth"          Substance="Sarin" Name="Concentration" Unit="ug/L" Precision="4"/>	  
@@ -159,7 +160,7 @@
 		<Conditions>
     <Name>LocalEnvironment</Name>
 			<AmbientAerosol Name="Sarin">
-				<Concentration value="4" unit="mg/m^3"/>
+				<Concentration value="8" unit="mg/m^3"/>
 			</AmbientAerosol>
 		</Conditions>
 	</Action>
@@ -176,7 +177,16 @@
 		</Conditions>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="15" unit="min"/>
+		<Time value="8" unit="min"/>
+	</Action>
+	<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Midazolam</Substance>
+        <Concentration value="1.0" unit="mg/mL"/>
+        <Dose value="10" unit="mL"/>
+		<AdminTime value="20" unit="s"/>
+    </Action>
+    	<Action xsi:type="AdvanceTimeData">
+		<Time value="1" unit="min"/>
 	</Action>
 	<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
         <Substance>Pralidoxime</Substance>

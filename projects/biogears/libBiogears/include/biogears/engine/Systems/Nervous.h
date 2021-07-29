@@ -142,6 +142,7 @@ protected:
   SESubstance* m_Succinylcholine;
   SESubstance* m_Sarin;
   SESubstance* m_Atropine;
+  SESubstance* m_Midazolam;
   SEPatient* m_Patient;
   bool m_blockActive;
   double m_painStimulusDuration_s;
