@@ -556,8 +556,8 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
   state->CircuitManager(std::unique_ptr<CDM::CircuitManagerData>(m_Circuits->Unload()));
 
   if (!file.empty()) {
-    auto qualified_path = m_Logger->GetIoManager().lock()->ResolveStateFileLocation(file);
-    filesystem::create_directories(qualified_path);
+    filesystem::path qualified_path = m_Logger->GetIoManager().lock()->ResolveStateFileLocation(file);
+    filesystem::create_directories(qualified_path.parent_path());
     // Write out the engine state
     std::ofstream stream(qualified_path);
     // Write out the xml file
