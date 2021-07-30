@@ -1141,11 +1141,17 @@ void Nervous::CheckNervousStatus()
 
   //-----patient events due to Sarin--------------------------------------------------
   //Occurs due to inhibition of acetylcholinesterase, the enzyme which breaks down the neurotransmitter acetylcholine
-  double RbcAche_mol_Per_L
-    = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
+  double RbcAche_mol_Per_L = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
+  double brainAtropine_mg_Per_L = 0.0;
+  double midazolam_mg_Per_L = 0.0;
   double RbcFractionInhibited = 1.0 - RbcAche_mol_Per_L / (8e-9); //8 nM is the baseline activity of Rbc-Ache
-  double brainAtropine_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_Atropine)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
-  double midazolam_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_Midazolam)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
+  //only update values if the substances are active
+  if (m_data.GetSubstances().IsActive(*m_Atropine)) {
+    double brainAtropine_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_Atropine)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
+  }
+  if (m_data.GetSubstances().IsActive(*m_Midazolam)) {
+    double midazolam_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_Midazolam)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
+  }
   if (m_data.GetSubstances().IsActive(*m_Sarin)) {
       ///\cite nambda1971cholinesterase
       //The above study found that individuals exposed to the organophosphate parathion did not exhibit fasciculation until at least
