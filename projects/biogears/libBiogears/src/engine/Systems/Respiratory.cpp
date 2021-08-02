@@ -986,6 +986,7 @@ void Respiratory::ProcessDriverActions()
   double DrugsTVChange_L = Drugs.GetTidalVolumeChange(VolumeUnit::L);
   double NMBModifier = 1.0;
   double SedationModifier = 1.0;
+  m_bNotBreathing = false;
 
   // Check drug modifiers for effect on driver actions
   if (Drugs.GetNeuromuscularBlockLevel().GetValue() > 0.135) {
@@ -1041,6 +1042,12 @@ void Respiratory::ProcessDriverActions()
   m_VentilationFrequency_Per_min *= painModifier;
   m_VentilationFrequency_Per_min *= NMBModifier;
   m_VentilationFrequency_Per_min += DrugRRChange_Per_min;
+
+  //check to see if they are still breathing, want to be careful here: 
+  if (m_VentilationFrequency_Per_min == 0 && m_bNotBreathing == false && NMBModifier == 0.0) {
+    m_bNotBreathing = true;
+  }
+
 
   //Make sure the the ventilation frequency is not negative or greater than maximum achievable based on ventilation
   m_VentilationFrequency_Per_min = BLIM(m_VentilationFrequency_Per_min, 0.0, maximumVentilationFrequency_Per_min);
@@ -1794,6 +1801,7 @@ void Respiratory::CalculateVitalSigns()
         && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
       RespirationRate_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min);
     }
+
     GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
 
     double dExpirationTime = m_ElapsedBreathingCycleTime_min - m_BreathTimeExhale_min;
@@ -1877,6 +1885,11 @@ void Respiratory::CalculateVitalSigns()
     GetTotalAlveolarVentilation().SetValue(0.0, VolumePerTimeUnit::L_Per_min);
     GetTotalPulmonaryVentilation().SetValue(0.0, VolumePerTimeUnit::L_Per_min);
     GetTidalVolume().SetValue(0.0, VolumeUnit::mL);
+  }
+
+  //at the end check to see if they are not breathing and update respiration rate
+   if (m_bNotBreathing) {
+    GetRespirationRate().SetValue(0.0, FrequencyUnit::Per_min);
   }
 
   /// \todo Move to blood chemistry
