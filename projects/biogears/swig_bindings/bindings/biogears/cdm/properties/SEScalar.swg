@@ -24,7 +24,7 @@
 %ignore unitless;
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEGenericScalar::ToString() const "public override";
+%csmethodmodifiers biogears::SEScalar::ToString() const "public override";
 #endif 
 
 %include <biogears/cdm/properties/SEScalar.h>

@@ -27,7 +27,7 @@ namespace io {
   class Anesthesia;
 }
 
-class BIOGEARS_API SEAnesthesiaMachineOxygenBottle : Loggable {
+class BIOGEARS_API SEAnesthesiaMachineOxygenBottle : public Loggable {
 protected:
   friend SEAnesthesiaMachine;
   friend io::Anesthesia;

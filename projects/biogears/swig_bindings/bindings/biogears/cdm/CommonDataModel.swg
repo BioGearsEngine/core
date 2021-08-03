@@ -116,6 +116,10 @@ namespace tatrc {
         Tube
       };
     };
+    //ElectroCardioGram.hxx
+    class ElectroCardioGramWaveformLeadNumber {
+    
+    };
     //Environment.hxx
     class enumSurroundingType {
     public:
@@ -433,6 +437,10 @@ namespace tatrc {
 %nspace std::vector<CDM::enumInflammationSource>;
 %template (vector_enumInflammationSource) std::vector<CDM::enumInflammationSource>;
 %nspace std::map<CDM::enumPatientEvent::value, bool>;
-%nspace std::map<CDM::enumPatientEvent::value, double>;
 %template (map_enumPatientEvent__bool) std::map<CDM::enumPatientEvent::value, bool>;
+%nspace std::map<CDM::enumPatientEvent::value, double>;
 %template (map_enumPatientEvent__double) std::map<CDM::enumPatientEvent::value, double>;
+%nspace std::map<CDM::enumAnesthesiaMachineEvent::value, bool>;
+%template (map_enumAnesthesiaMachineEvent__bool) std::map<CDM::enumAnesthesiaMachineEvent::value, bool>;
+%nspace std::map<CDM::enumAnesthesiaMachineEvent::value, double>;
+%template (map_enumAnesthesiaMachineEvent__double) std::map<CDM::enumAnesthesiaMachineEvent::value, double>;

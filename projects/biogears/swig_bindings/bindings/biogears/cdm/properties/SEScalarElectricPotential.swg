@@ -1,5 +1,6 @@
 
 %{
+#include <biogears/schema/cdm/ElectroCardioGram.hxx>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 %}
 
@@ -52,6 +53,5 @@ namespace biogears {
 
 %include <biogears/cdm/properties/SEScalarElectricPotential.h>
 
-
-
-
+%nspace std::map<CDM::ElectroCardioGramWaveformLeadNumber, biogears::SEScalarElectricPotential*>;
+%template (map_ElectroCardioGramWaveformLeadNumber__SEScalarElectricPotential_ptr) std::map<CDM::ElectroCardioGramWaveformLeadNumber, biogears::SEScalarElectricPotential*>;

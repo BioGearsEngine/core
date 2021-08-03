@@ -26,7 +26,7 @@ class SEScalarFraction;
 namespace io {
   class Anesthesia;
 }
-class BIOGEARS_API SEAnesthesiaMachineChamber : Loggable {
+class BIOGEARS_API SEAnesthesiaMachineChamber : public Loggable {
 protected:
   friend SEAnesthesiaMachine;
   friend io::Anesthesia;
