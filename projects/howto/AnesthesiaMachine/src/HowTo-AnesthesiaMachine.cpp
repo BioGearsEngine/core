@@ -68,7 +68,8 @@ void HowToAnesthesiaMachine()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalLungVolume", VolumeUnit::mL);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SedationLevel");
-
+																												// Create an Anesthesia Machine and configure it as needed
+	SEAnesthesiaMachineConfiguration AMConfig(bg->GetSubstanceManager());
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToAnesthesiaMachine.csv");
 
 	bg->GetLogger()->Info("The patient is nice and healthy");
@@ -82,8 +83,7 @@ void HowToAnesthesiaMachine()
 	bg->AdvanceModelTime(50, TimeUnit::s);
 
 	// Turn the anesthesia machine on and get it configured for spontaneous breathing
-	// Create an Anesthesia Machine and configure it as needed
-	SEAnesthesiaMachineConfiguration AMConfig(bg->GetSubstanceManager());
+
 
 	// You can set configuration by modifing the configuration class directly
 	// Or you can point to an XML with configuration data.

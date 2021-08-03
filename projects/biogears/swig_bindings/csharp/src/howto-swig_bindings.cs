@@ -120,8 +120,11 @@ namespace bio
       logger.Info(TidalVolume.ToString());
       logger.Info(TotalLungVolume.ToString());
       logger.Info(OxygenSaturation.ToString());
-      apply_acute_stress(engine);
 
+      //!
+      //!  Just to test most actions we will apply and unapply every action in 2 second sperts
+      //!
+      apply_acute_stress(engine);
       engine.GetEngineTrack().PullData();
       apply_airway_obstruction(engine);
       engine.GetEngineTrack().PullData();
@@ -139,6 +142,7 @@ namespace bio
       engine.GetEngineTrack().PullData();
       apply_cardiac_arrest(engine);
       engine.GetEngineTrack().PullData();
+
       logger.Info(HeartRate.ToString());
       logger.Info(SystolicArterialPressure.ToString());
       logger.Info(DiastolicArterialPressure.ToString());
@@ -187,6 +191,7 @@ namespace bio
       engine.GetEngineTrack().PullData();
       apply_pericadial_effusion(engine);
       engine.GetEngineTrack().PullData();
+
       logger.Info(HeartRate.ToString());
       logger.Info(SystolicArterialPressure.ToString());
       logger.Info(DiastolicArterialPressure.ToString());
@@ -194,9 +199,11 @@ namespace bio
       logger.Info(TidalVolume.ToString());
       logger.Info(TotalLungVolume.ToString());
       logger.Info(OxygenSaturation.ToString());
+
       apply_pulmonary_shunt(engine);
       engine.GetEngineTrack().PullData();
       apply_sleep(engine);
+
       engine.GetEngineTrack().PullData();
       logger.Info(HeartRate.ToString());
       logger.Info(SystolicArterialPressure.ToString());
@@ -205,7 +212,58 @@ namespace bio
       logger.Info(TidalVolume.ToString());
       logger.Info(TotalLungVolume.ToString());
       logger.Info(OxygenSaturation.ToString());
+
+      var AMConfig = new SEAnesthesiaMachineConfiguration(engine.GetSubstanceManager());
+      var config = AMConfig.GetConfiguration();
+
+      config.SetConnection(CDM.enumAnesthesiaMachineConnection.value.Mask);
+      config.GetInletFlow().SetValue(2.0, VolumePerTimeUnit.L_Per_min);
+      config.GetInspiratoryExpiratoryRatio().SetValue(.5);
+      config.GetOxygenFraction().SetValue(.5);
+      config.SetOxygenSource(CDM.enumAnesthesiaMachineOxygenSource.value.Wall);
+      config.GetPositiveEndExpiredPressure().SetValue(0.0, PressureUnit.cmH2O);
+      config.SetPrimaryGas(CDM.enumAnesthesiaMachinePrimaryGas.value.Nitrogen);
+      config.GetReliefValvePressure().SetValue(20.0, PressureUnit.cmH2O);
+      config.GetRespiratoryRate().SetValue(12, FrequencyUnit.Per_min);
+      config.GetVentilatorPressure().SetValue(0.0, PressureUnit.cmH2O);
+      config.GetOxygenBottleOne().GetVolume().SetValue(660.0, VolumeUnit.L);
+      config.GetOxygenBottleTwo().GetVolume().SetValue(660.0, VolumeUnit.L);
+      engine.ProcessAction(AMConfig);
+
+      engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
+      config.GetInletFlow().SetValue(5.0, VolumePerTimeUnit.L_Per_min);
+      config.GetPositiveEndExpiredPressure().SetValue(3.0, PressureUnit.cmH2O);
+      config.GetVentilatorPressure().SetValue(22.0, PressureUnit.cmH2O);
+      engine.ProcessAction(AMConfig);
+
+      engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
+      config.GetInspiratoryExpiratoryRatio().SetValue(1.0);
+      config.GetPositiveEndExpiredPressure().SetValue(1.0, PressureUnit.cmH2O);
+      config.GetRespiratoryRate().SetValue(18.0, FrequencyUnit.Per_min);
+      config.GetVentilatorPressure().SetValue(10.0, PressureUnit.cmH2O);
+      engine.ProcessAction(AMConfig);
+
+      engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
+      var AMleak = new SEMaskLeak();
+      AMleak.GetSeverity().SetValue(0.5);
+      engine.ProcessAction(AMleak);
+      engine.GetLogger().Info("Removing the mask leak.");
+
+      engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
+      var AMpressureloss = new SEOxygenWallPortPressureLoss();
+      AMpressureloss.SetActive(true);
+      engine.ProcessAction(AMpressureloss);
+      engine.GetLogger().Info("Testing the oxygen pressure loss failure mode. The oxygen pressure from the wall source is dropping.");
+
+      AMpressureloss.SetActive(false);
+      engine.ProcessAction(AMpressureloss);
+      engine.GetLogger().Info("Removing the wall oxygen pressure loss action.");
+      engine.AdvanceModelTimeBy(2, TimeUnit.s);
+
+      Console.Write("Simulation Finished Press any key to continue");
+			var testString = Console.ReadLine();
     }
+
 
     //!
     //! Testing BioGears Actions  Each Action will be applied then reversed when possible. 
