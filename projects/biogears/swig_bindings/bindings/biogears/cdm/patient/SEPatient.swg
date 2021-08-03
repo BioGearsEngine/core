@@ -32,6 +32,9 @@
 %ignore biogears::SEPatient::SetName(std::string const &);
 %ignore biogears::SEPatient::SetAnnotation(std::string const &);
 
+//
+//  Looks like SWIG can't handle trampoling CSharp code to C++  
+//
 %ignore biogears::SEPatient::SetEventCallback;
 
 %rename(GetBodyFatFraction_const) biogears::SEPatient::GetBodyFatFraction() const;

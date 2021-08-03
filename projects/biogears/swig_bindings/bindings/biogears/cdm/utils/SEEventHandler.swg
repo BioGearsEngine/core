@@ -1,4 +1,4 @@
-%feature("director") SEEventHandler; 
+%module(directors="1")SWIG_SEEventHandler
 
 %{
 #include <biogears/cdm/utils/SEEventHandler.h>
@@ -16,4 +16,6 @@
 %ignore biogears::SEBreathHold::Unload;
 %ignore biogears::SEBreathHold::Load;
 
+%feature("director") SEEventHandler; 
 %include <biogears/cdm/utils/SEEventHandler.h>
+%feature("director") SEEventHandler; 
