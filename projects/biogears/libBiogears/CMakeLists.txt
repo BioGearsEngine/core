@@ -87,7 +87,7 @@ if(${PREFIX}_BUILD_STATIC)
   if(ANDROID)
     target_link_libraries(lib${PUBLIC_NAME} PUBLIC android log)
   endif() 
-  add_dependencies(lib${PROJECT_NAME} ${XSD_TARGETS} prepare_runtime_dir)
+  add_dependencies(lib${PROJECT_NAME}  xsd_bindings prepare_runtime_dir)
 
 else()
   ###############################################################################

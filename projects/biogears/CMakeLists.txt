@@ -53,8 +53,13 @@ set (BIOGEARS_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 REGISTER_XSD_DIR(  "${PROJECT_SOURCE_DIR}/share/xsd/"
                     CONFIG "${PROJECT_SOURCE_DIR}/share/xsd/BioGearsDataModel.cfg"
                     PROJECT "generated/biogears" COMPONENT "schema" RESOURCE_FOLDER "resources/schema"
-                    TARGETS XSD_TARGETS VERBOSITY 1)
+                    NO_TARGETS SOURCES_VAR XSD_SRCS HEADERS_VAR XSD_HDRS VERBOSITY 1)
 
+add_custom_target(xsd_bindings 
+  COMMENT "Generates XML Bindings from XSD Files" 
+  DEPENDS ${XSD_SRCS} ${XSD_HDRS}
+)
+set_target_properties(xsd_bindings PROPERTIES Folder "Code Generators")
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src/version.cpp.in  ${CMAKE_CURRENT_BINARY_DIR}/libBiogears/src/version.cpp NEWLINE_STYLE LF)
 ###############################################################################
 #Sorce and Header Defines

@@ -33,7 +33,7 @@ set(LIB${PREFIX}_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
     CXX_STANDARD 14
     )
   set_target_properties(lib${PROJECT_NAME}_cdm PROPERTIES SOVERSION "${${ROOT_PROJECT_NAME}_LIB_VERSION}")
-  add_dependencies(lib${PROJECT_NAME}_cdm ${XSD_TARGETS})
+  add_dependencies(lib${PROJECT_NAME}_cdm xsd_bindings)
 
   ###############################################################################
   # libBiogears_cdm COMPILATION & LINKAGE MODIFICATIONS

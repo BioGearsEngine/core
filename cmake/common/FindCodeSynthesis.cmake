@@ -31,6 +31,7 @@ option (XSD_USE_SHORT_TARGET_NAMES "Reduces the name of targets to a minimum" OF
 # list_directory
 #
 # Utility function returns a list of all children in a directory for iteration
+
 function(list_directory _result _curdir)
   cmake_parse_arguments( "" 
                           "DEBUG"
@@ -52,7 +53,8 @@ function(list_directory _result _curdir)
   endforeach()
   set(${_result} ${_list} PARENT_SCOPE)
 endfunction()
-#######################################################################################################################
+
+#dd######################################################################################################################
 
 # Register All files ending XSD in a directory and its subdirectories
 #
@@ -81,20 +83,30 @@ endfunction()
 #  -- TARGETS
 #                Variable where generated targets will be stored for used in setting target_dependecies
 #                Defaults to _REGISTER_XSD_DIR_TARGETS
+#
+#  -- HEADERS_VAR
+#                Variable which all resulting .hxx files will be stored. DEfaults to _XSD_HEADERS
+#
+#   -- SOURCES_VAR 
+#                Variable which all resulting .cxx files will be stored. Defaults to _XSD_SOURCES
+#
 #  Multi arguments
 #
 #  -- DEPENDS
 #               List of targets which the generated targets depend on.
 function(REGISTER_XSD_DIR _directory)
   cmake_parse_arguments( "_l" 
-                          "STAGE;INSTALL"
-                          "WORKING_DIR;PROJECT;COMPONENT;RESOURCE_FOLDER;CONFIG;TARGETS"
+                          "STAGE;INSTALLi;NO_TARGETS"
+                          "WORKING_DIR;PROJECT;COMPONENT;RESOURCE_FOLDER;CONFIG;TARGETS;HEADERS_VAR;SOURCES_VAR"
                           "DEPENDS"
                           ${ARGN}
                           )
 
   if (NOT _directory)
     set (_directory "${PROJECT_SOURCE_DIR}/share/xsd")
+  endif()
+  if(_l_NO_TARGETS)
+    list(APPEND _flags NO_TARGETS)
   endif()
   if(_l_STAGE)
     list(APPEND _flags STAGE)
@@ -105,6 +117,12 @@ function(REGISTER_XSD_DIR _directory)
   if (NOT _l_TARGETS )
     set(_l_TARGETS  _REGISTER_XSD_DIR_TARGETS )
   endif()
+  if (NOT _l_HEADERS_VAR)
+   set(_l_HEADERS_VAR  _XSD_HEADERS )
+  endif()
+  if (NOT _l_SOURCES_VAR)
+    set(_l_SOURCES_VAR  _XSD_SOURCES )
+  endif()
   if( NOT _l_WORKING_DIR)
      set (_l_WORKING_DIR "${_directory}")
   endif()
@@ -113,7 +131,6 @@ function(REGISTER_XSD_DIR _directory)
   set(_component ${_l_COMPONENT} )
   set(_resource_path ${_l_RESOURCE_FOLDER})
   set(_working_directory ${_l_WORKING_DIR})
-
   if ( NOT EXISTS "${_directory}" )
      message(FATAL_ERROR "REGISTER_XSD_DIR called on non existant directory ${_directory}")
   endif()
@@ -123,23 +140,33 @@ function(REGISTER_XSD_DIR _directory)
         REGISTER_XSD_DIR(  ${_directory}/${_item}  CONFIG ${_config_file} 
               PROJECT ${_project} COMPONENT ${_component}/${_item} 
               RESOURCE_PATH ${_resource_path}/${_item} ${_flags} TARGETS ${_l_TARGETS} ${_verbose_Flag}
-              WORKING_DIR ${_working_directory} DEPENDS ${_DEPENDS} )
+              WORKING_DIR ${_working_directory} 
+              HEADERS_VAR ${_l_HEADERS_VAR}
+              SOURCES_VAR ${_l_SOURCES_VAR}
+              DEPENDS ${_DEPENDS} 
+         )
     elseif( _item MATCHES ".*\\.xsd")
         REGISTER_XSD_FILE(  ${_directory}/${_item} CONFIG ${_config_file} 
           PROJECT ${_project} COMPONENT ${_component}/
           RESOURCE_PATH ${_resource_path}/ ${_flags} TARGETS ${_l_TARGETS}
-          WORKING_DIR ${_working_directory} DEPENDS ${_DEPENDS} )
+          WORKING_DIR ${_working_directory} 
+          HEADERS_VAR ${_l_HEADERS_VAR}
+          SOURCES_VAR ${_l_SOURCES_VAR}
+          DEPENDS ${_DEPENDS} 
+        )
     endif()
   endforeach()
   set(${_l_TARGETS} ${${_l_TARGETS}} PARENT_SCOPE)
+  set(${_l_HEADERS_VAR} ${${_l_HEADERS_VAR}} PARENT_SCOPE)
+  set(${_l_SOURCES_VAR} ${${_l_SOURCES_VAR}} PARENT_SCOPE)
 endfunction(REGISTER_XSD_DIR)
 #######################################################################################################################
 #REGISTER_XSD_FILE
 #######################################################################################################################
 function(REGISTER_XSD_FILE _filepath )
   cmake_parse_arguments( "_l" 
-                          "STAGE;INSTALL"
-                          "WORKING_DIR;PROJECT;COMPONENT;RESOURCE_FOLDER;CONFIG;TARGETS"
+                          "STAGE;INSTALL;NO_TARGETS"
+                          "WORKING_DIR;PROJECT;COMPONENT;RESOURCE_FOLDER;CONFIG;TARGETS;HEADERS_VAR;SOURCES_VAR"
                           "DEPENDS"
                           ${ARGN}
                           )
@@ -184,12 +211,13 @@ function(REGISTER_XSD_FILE _filepath )
 
   string(REPLACE  "//" "/" _safe_unique_name ${_component}/${_schema}  )
   string(MAKE_C_IDENTIFIER   ${_component}/${_schema} _safe_unique_name)
+
   if(XSD_USE_SHORT_TARGET_NAMES)
-    set ( _gen_target_name "xsd_${_schema}")
-    set ( _mv_target_name  "xsd_mv_${_schema}")
+      set ( _gen_target_name "xsd_${_schema}")
+      set ( _mv_target_name  "xsd_mv_${_schema}")
   else ()
-    set ( _gen_target_name "xsd_gen${_safe_unique_name}")
-    set ( _mv_target_name  "${_mv_target_name}")
+      set ( _gen_target_name "xsd_gen${_safe_unique_name}")
+      set ( _mv_target_name  "${_mv_target_name}")
   endif()
 
   add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.cxx ${_l_OUTPUTS}
@@ -199,32 +227,37 @@ function(REGISTER_XSD_FILE _filepath )
                       DEPENDS ${CodeSynthesis_EXECUTABLE} ${_config_file}
                       DEPENDS ${_l_DEPENDS}
                       COMMENT "Generating source code from XML ${_filepath}" )
-
-  add_custom_target( ${_gen_target_name} DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.cxx
-                     COMMENT "Checking if re-generation is required" )
-  
-get_filename_component(SOLUTION_FOLDER "${_component}${_schema}" DIRECTORY )
-
-  set_target_properties(${_gen_target_name}
+  list(APPEND ${_l_HEADERS_VAR}  ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.hxx )
+  list(APPEND ${_l_SOURCES_VAR}  ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.cxx )
+  get_filename_component(SOLUTION_FOLDER "${_component}${_schema}" DIRECTORY )
+  if( NOT _l_NO_TARGETS )
+    add_custom_target( ${_gen_target_name} 
+                     COMMENT "Checking if re-generation is required" 
+                     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.hxx ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.cxx)
+    set_target_properties(${_gen_target_name}
                         PROPERTIES
                         FOLDER "Code Generators/${SOLUTION_FOLDER}")
+     list(APPEND ${_l_TARGETS} ${_gen_target_name})
+  endif()
 
-  list(APPEND ${_l_TARGETS} ${_gen_target_name})
+
   if(_l_STAGE)
-    add_custom_target( ${_mv_target_name} DEPENDS  ${CMAKE_BINARY_DIR}/${_resource_path}/${_schema}.xsd
-                       COMMENT "Checking if re-generation is required" )
-
     add_custom_command( OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${_schema}.xsd    
                         WORKING_DIRECTORY ${_l_WORKING_DIR}
                         COMMAND ${CMAKE_COMMAND} -E copy ${_filepath} ${CMAKE_BINARY_DIR}/${_resource_path}/   
                         DEPENDS ${_filepath}
                         DEPENDS ${_config_file}
                         COMMENT "Staging XSD Template for runtime" )
-    
-    set_target_properties(${_mv_target_name}
+    if (NOT _l_NO_TARGETS )
+      add_custom_target( ${_mv_target_name} 
+                         DEPENDS  ${CMAKE_BINARY_DIR}/${_resource_path}/${_schema}.xsd
+                         COMMENT "Checking if re-generation is required" 
+                       )
+      set_target_properties(${_mv_target_name}
                           PROPERTIES
                           FOLDER "Code Generators")
-	list(APPEND ${_l_TARGETS} ${_gen_target_name})
+	    list(APPEND ${_l_TARGETS} ${_gen_target_name})
+    endif()
   endif()
 
   if(_l_INSTALL)
@@ -234,6 +267,8 @@ get_filename_component(SOLUTION_FOLDER "${_component}${_schema}" DIRECTORY )
        )
   endif()
   set(${_l_TARGETS} ${${_l_TARGETS}} PARENT_SCOPE)
+  set(${_l_HEADERS_VAR} ${${_l_HEADERS_VAR}} PARENT_SCOPE)
+  set(${_l_SOURCES_VAR} ${${_l_SOURCES_VAR}} PARENT_SCOPE)
 endfunction(REGISTER_XSD_FILE)
 
 #################################################################################################################

@@ -6,9 +6,9 @@ option(Biogears_IO_USE_SHORT_TARGET_NAMES "Reduce the size of target names to ac
 ###############################################################################
 #Source files
 ###############################################################################
-function(generate_hex_header)
+function(generate_hex_header GENERATED_HDRS GENERATED_SRCS)
   set(options SHORT_NAMES)
-  set(oneValueArgs INPUT OUTPUT PREFIX FOLDER PATH)
+  set(oneValueArgs INPUT OUTPUT PREFIX PATH)
   set(multiValueArgs NAMESPACE)
 
   cmake_parse_arguments("" "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
@@ -21,23 +21,16 @@ function(generate_hex_header)
   set(_header ${_OUTPUT}.hxx)
   set(_source ${_OUTPUT}.cxx)
 
-
   if (_INPUT AND _OUTPUT)
-    
     get_filename_component( content_name ${_INPUT} NAME_WE)
     string (REPLACE "@" "_at_" content_name "${content_name}")
     string(MAKE_C_IDENTIFIER "${content_name}" _c_safe_content_name)
     get_filename_component(_source_name ${_OUTPUT} NAME)
     get_filename_component(_source_directory ${_OUTPUT} DIRECTORY )
 
-   if(NOT CMAKE_GENERATOR STREQUAL "Unix Makefiles")
-   if( NOT EXISTS ${_header} OR NOT EXISTS ${_source} )
-   
-     message(STATUS  "                   ${_source_name}.{hxx,cxx}")
-     file(WRITE ${_header} "//! THIS IS PLACEHOLDER DATA THAT WILL BE REPLACED BY THE FIRST RUN OF TARGET generate_${content_name}")
-     file(WRITE ${_source} "//! THIS IS PLACEHOLDER DATA THAT WILL BE REPLACED BY THE FIRST RUN OF TARGET generate_${content_name}")
-   endif()
-   endif()
+     if( NOT EXISTS ${_header} OR NOT EXISTS ${_source} )
+       message(STATUS  "                   ${_source_name}.{hxx,cxx}")
+     endif()
 
     add_custom_command(
       OUTPUT  "${_OUTPUT}.hxx" "${_OUTPUT}.cxx"
@@ -45,21 +38,6 @@ function(generate_hex_header)
       COMMAND ${CMAKE_COMMAND} -DIN="${_INPUT}" -DOUT="${_OUTPUT}" -DNS="${_NS_SAFE}"  -DPATH="${_PATH}" -P "${PROJECT_SOURCE_DIR}/cmake/common/c_encode_file.cmake"
     )
   
-    if(_SHORT_NAMES)
-      add_custom_target( C_${_c_safe_content_name}
-        DEPENDS  "${_OUTPUT}.hxx" "${_OUTPUT}.cxx"
-      )
-      set_target_properties(C_${_c_safe_content_name} PROPERTIES 
-        FOLDER ${_FOLDER}
-      )
-    else ()
-      add_custom_target( generate_${_c_safe_prefix}_${_c_safe_content_name}
-        DEPENDS  "${_OUTPUT}.hxx" "${_OUTPUT}.cxx"
-      )
-      set_target_properties(generate_${_c_safe_prefix}_${_c_safe_content_name} PROPERTIES 
-        FOLDER ${_FOLDER}
-      )
-    endif()
   else()    
     message(FATAL_ERROR "generate_hex_header requires arguments INPUT <file> and OUTPUT <file> ")
   endif()
@@ -89,7 +67,7 @@ function(configure_io_directory_file )
     endif()
     
     generate_hex_header( NAMESPACE biogears io INPUT ${_RESOURCE_PATH}/${_true_source} OUTPUT ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}
-                         FOLDER "Code Generators/IO/${src_dir}"  PATH ${src} PREFIX ${src_dir} ${ADDITIONAL_ARGS})
+                         PATH ${src} PREFIX ${src_dir} ${ADDITIONAL_ARGS})
    
     
     LIST(APPEND ${_HEADERS}  "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}.hxx")
@@ -156,7 +134,7 @@ set ( IO_VERSION "${${ROOT_PROJECT_NAME}_LIB_VERSION}")
 set ( IO_INCLUDE "c_encoded/${IO_VERSION}")
 
 message(STATUS "  Iterating over source files to be encoded as C strings. This is a long operation, but only on the initial pass or when the source file changes.")
-message(STATUS "  Encoding: runtime/")
+message(STATUS "  Registering file encoding")
 
 message(STATUS "            : xsd/")
 FILE(GLOB_RECURSE XSD_FILES RELATIVE "${PROJECT_SOURCE_DIR}/share/xsd" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd" )
@@ -219,7 +197,14 @@ add_source_files(INTERFACE_HEADERS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/include/
                REGEX "*.h" SOURCE_GROUP  "Headers\\Public\\")
 add_source_files(INTERFACE_SOURCES LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/
                REGEX "*.cpp" SOURCE_GROUP  "Sources\\")
-
+##############################################################################
+# Generator Target
+##############################################################################
+add_custom_target( hex_bindings 
+                   COMMENT "Generating hex encoding headers" 
+                   DEPENDS ${GEN_HDRS} ${GEN_SRCS} )
+set_target_properties( hex_bindings PROPERTIES 
+        FOLDER "Code Generators" )
 
 ###############################################################################
 # libBiogears_io
@@ -237,7 +222,7 @@ set_target_properties(lib${PROJECT_NAME}_io
   CXX_STANDARD 14
   )
 set_target_properties(lib${PROJECT_NAME}_io PROPERTIES SOVERSION "${${ROOT_PROJECT_NAME}_LIB_VERSION}")
-add_dependencies(lib${PROJECT_NAME}_io ${XSD_TARGETS})
+add_dependencies(lib${PROJECT_NAME}_io hex_bindings xsd_bindings)
 target_compile_definitions(lib${PROJECT_NAME}_io  PUBLIC BIOGEARS_IO_PRESENT
                                                          $<$<BOOL:${Biogears_IO_INCLUDE_STATES}>:BIOGEARS_IO_EMBED_STATES> 
                                                          $<$<BOOL:${Biogears_IO_INCLUDE_DATA_TEMPLATES}>:BIOGEARS_IO_EMBED_TEMPLATES> 
