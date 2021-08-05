@@ -61,6 +61,12 @@ constexpr int BG_CLI_SUCCESS = 0;
 constexpr int BG_CLI_PARSE_ERROR = 1;
 constexpr int BG_CLI_MISSING_ARGUMENT = 2;
 constexpr int BG_CLI_SHA_FAILURE = 3;
+constexpr int BG_CLI_THREAD_COUNT = 4;
+
+//!
+//! Prints the current valid help text which is manually maintained
+//! then exits with the Error code provided
+//!
 void print_help(int rc)
 {
   std::cout << "Usage bg-cli [FLAGS] COMMAND...\n";
@@ -107,11 +113,16 @@ bool genRuntime(std::string pathName)
   return iom.generate_runtime_directory(pathName.c_str());
 }
 #endif
-
+//
+//  This function parses the multword value list of a GENERATE
+//  keyword and proeprly queues the correct operations needed to process
+//  the command
 void parse_generate_arguments(biogears::Arguments::MultiwordValue&& args)
 {
 
-  auto is_keyword = [](const std::string& v) { return v == "data" || v == "patients" || v == "runtime" || v == "states" || v == "sepsis" || v == "tables"; };
+  auto is_keyword = [](const std::string& v) 
+           { return v == "data" || v == "patients" || v == "runtime" || v == "states" || v == "sepsis" || v == "tables"; };
+
   auto current = args.begin();
   auto end = args.end();
   for (; current != end;  ++current) {
@@ -200,7 +211,8 @@ int main(int argc, char** argv)
   args.append_keywords({ "SHA1", "GENRUNTIME" });
 #endif
 
-  unsigned int thread_count = std::thread::hardware_concurrency() - 2;
+  unsigned int thread_count = (std::thread::hardware_concurrency() > 2 ) ? std::thread::hardware_concurrency() - 2 : 1;
+
   if (!args.parse(argc, argv) ) {
     std::cerr << args.error_msg() << "\n";
     print_help(BG_CLI_PARSE_ERROR);
@@ -231,6 +243,10 @@ int main(int argc, char** argv)
       std::cerr << "Error: J given but " << args.Keyword("J") << " is not a valid Integer.\n";
       print_help(BG_CLI_MISSING_ARGUMENT);
     }
+  }
+  if (thread_count < 1) {
+     std::cerr << "Option J given" << thread_count << "but, must be given a number greater 0 \n";
+     print_help(BG_CLI_THREAD_COUNT);
   }
 #ifdef BIOGEARS_IO_PRESENT
   if (args.KeywordFound("SHA1")) {
