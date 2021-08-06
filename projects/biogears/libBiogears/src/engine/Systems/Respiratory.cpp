@@ -1887,8 +1887,8 @@ void Respiratory::CalculateVitalSigns()
     GetTidalVolume().SetValue(0.0, VolumeUnit::mL);
   }
 
-  //at the end check to see if they are not breathing and update respiration rate
-   if (m_bNotBreathing) {
+  //at the end check to see if they are not breathing and update respiration rate, dont update if anesthesia machine is connected
+  if (m_bNotBreathing && m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::Free) {
     GetRespirationRate().SetValue(0.0, FrequencyUnit::Per_min);
   }
 
