@@ -11,7 +11,7 @@
 %import <biogears/cdm/utils/unitconversion/CompoundUnit.swg>
 %import <biogears/cdm/properties/SEDecimalFormat.swg>
 
-%include <std_map.i>
+%import <std_map.i>
 
 %nspace biogears::SEDataRequest;
 

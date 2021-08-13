@@ -11,4 +11,6 @@
 
 %import <biogears/cdm/properties/SEScalarVolume.swg>
 
+%ignore GetScalar(std::string const &);
+
 %include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>

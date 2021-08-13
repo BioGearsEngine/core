@@ -15,4 +15,9 @@
 %import <biogears/cdm/substance/SESubstance.swg>
 %import <biogears/cdm/substance/SESubstanceManager.swg>
 
+%rename(GetSubstanceFraction_const)  GetSubstanceFraction() const;
+
+%ignore GetScalar(const std::string& name) override;
+
+
 %include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>

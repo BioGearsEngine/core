@@ -14,5 +14,10 @@
 %import <biogears/cdm/substance/SESubstanceManager.swg>
 
 %import <biogears/cdm/system/equipment/Inhaler/SEInhaler.swg>
+%import <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerAction.swg>
+
+
+%rename (GetConfiguration_const) biogears::SEInhalerConfiguration::GetConfiguration() const;
+%rename (SetConfigurationFile_const) biogears::SEInhalerConfiguration::SetConfigurationFile(std::string const &);
 
 %include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>

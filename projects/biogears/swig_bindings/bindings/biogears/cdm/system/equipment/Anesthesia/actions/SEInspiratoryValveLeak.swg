@@ -1,3 +1,4 @@
+
 // Add necessary symbols to generated header
 %{
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEInspiratoryValveLeak.h>
@@ -10,5 +11,8 @@
 %import <biogears/container/Tree.swg>
 
 %import <biogears/cdm/properties/SEScalar0To1.swg>
+
+%import <biogears/cdm/scenario/SEAction.swg>
+%import <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.swg>
 
 %include <biogears/cdm/system/equipment/Anesthesia/actions/SEInspiratoryValveLeak.h>

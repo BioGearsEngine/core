@@ -15,4 +15,6 @@
 %ignore biogears::SEBurnWound::Unload;
 %ignore biogears::SEBurnWound::Load;
 
+%ignore biogears::SEBurnWound::SetCompartment(std::string const &);
+
 %include <biogears/cdm/patient/actions/SEBurnWound.h>

@@ -1,3 +1,4 @@
+
 // Add necessary symbols to generated header
 %{
 #include<biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
@@ -18,5 +19,7 @@
 %import <biogears/cdm/substance/SESubstanceManager.swg>
 
 %import <biogears/cdm/system/SESystem.swg>
+
+%rename (GetNozzleLoss_const) biogears::SEInhaler::GetNozzleLoss() const;
 
 %include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>

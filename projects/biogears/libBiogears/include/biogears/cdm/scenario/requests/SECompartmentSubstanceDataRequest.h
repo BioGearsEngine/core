@@ -25,10 +25,8 @@ class BIOGEARS_API SECompartmentSubstanceDataRequest : public SECompartmentDataR
   friend class SEDataRequestManager;
   friend io::Scenario;
 
-protected:
-  SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
-
 public:
+  SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SECompartmentSubstanceDataRequest() override;
 
   virtual void Clear() override; //clear memory

@@ -8,7 +8,7 @@
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/CommonDataModel.swg>
 
-%include <std_map.i>
+%import <std_map.i>
 
 %import <biogears/cdm/substance/SESubstance.swg>
 

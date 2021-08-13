@@ -1,3 +1,4 @@
+
 %{
 #include <biogears/cdm/scenario/requests/SECompartmentSubstanceDataRequest.h>
 %}
@@ -8,29 +9,14 @@
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/CommonDataModel.swg>
 
-%include <std_map.i>
+%import <std_map.i>
 
-%import <biogears/cdm/substance/SESubstance.swg>
-%import <biogears/cdm/scenario/requests/SEDataRequest.swg>
+%import <biogears//cdm/substance/SESubstance.swg>
 %import <biogears/cdm/scenario/requests/SECompartmentDataRequest.swg>
 
 %nspace biogears::SECompartmentSubstanceDataRequest;
 
+%ignore Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const std::string& unit = "");
+%ignore Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const CCompoundUnit& unit);
 
-namespace biogears {
-class  SECompartmentSubstanceDataRequest : public SECompartmentDataRequest {
-
-protected:
-  SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
-
-
-  virtual SESubstance* GetSubstance() const;
-  virtual void SetSubstance(SESubstance* sub);
-  virtual bool HasSubstance() const;
-  virtual void InvalidateSubstance();
-  virtual void Set(const char* cmpt, SESubstance& substance, const char* name, const char* unit = "");
-
-
-};
-}
-
+%include <biogears/cdm/scenario/requests/SECompartmentSubstanceDataRequest.h>

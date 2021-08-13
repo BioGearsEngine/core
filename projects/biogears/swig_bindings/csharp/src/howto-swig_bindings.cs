@@ -288,7 +288,7 @@ namespace bio
         marquee_2.Remove((marquee_2.Length / 2) - (state.Length / 2), state.Length);
         marquee_2.Insert((marquee_2.Length / 2) - (state.Length / 2), state);
       } else {
-        marquee_1= new StringBuilder(state);
+        marquee_1= new StringBuilder(state) ;
       }
       Console.WriteLine(prefix_1 + marquee_1 + end_1);
       Console.WriteLine(prefix_2 + marquee_2 + end_2);
@@ -403,6 +403,10 @@ namespace bio
       var TotalLungVolumeRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); TotalLungVolumeRequest.Set("TotalLungVolume", VolumeUnit.mL);
       var OxygenSaturationRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); OxygenSaturationRequest.Set("OxygenSaturation");
 
+      //TODO: Get Substance and GetSubstanceCompound need better exception handeling
+      var oxygen = engine.GetSubstanceManager().GetSubstance("Oxygen");
+      var BrainVasculatureRequest = engine.GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest(); BrainVasculatureRequest.Set("BrainVasculature", oxygen, "PartialPressure", PressureUnit.mmHg);
+
       engine.GetEngineTrack().SetupRequests();
 
       var HeartRate = engine.GetEngineTrack().GetScalar(HeartRateRequest);
@@ -412,6 +416,7 @@ namespace bio
       var TidalVolume = engine.GetEngineTrack().GetScalar(TidalVolumeRequest);
       var TotalLungVolume = engine.GetEngineTrack().GetScalar(TotalLungVolumeRequest);
       var OxygenSaturation = engine.GetEngineTrack().GetScalar(OxygenSaturationRequest);
+      var PartialPressure = engine.GetEngineTrack().GetScalar(BrainVasculatureRequest);
 
       apply_acute_respiratory_distress(engine);
 
@@ -423,6 +428,7 @@ namespace bio
       logger.Info(TidalVolume.ToString());
       logger.Info(TotalLungVolume.ToString());
       logger.Info(OxygenSaturation.ToString());
+      logger.Info(PartialPressure.ToString());
 
       //!
       //!  Just to test most actions we will apply and unapply every action in 2 second sperts
@@ -565,6 +571,7 @@ namespace bio
 
       Console.Write("Simulation Finished Press any key to continue");
       var testString = Console.ReadLine();
+
     }
 
 

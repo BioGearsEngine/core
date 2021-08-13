@@ -1,4 +1,5 @@
 
+
 %{
 #include <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.h>
 %}
@@ -9,9 +10,9 @@
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/CommonDataModel.swg>
 
-%include <std_map.i>
+%import <std_map.i>
 
-%import <biogears/cdm/scenario/requests/SEDataRequest.swg>
+%import <biogears/cdm/scenario/requests/SECompartmentDataRequest.swg>
 
 %nspace biogears::SEThermalCompartmentDataRequest;
 

@@ -16,4 +16,6 @@
 %ignore biogears::SESubstanceTissuePharmacokinetics::Unload;
 %ignore biogears::SESubstanceTissuePharmacokinetics::Load;
 
+%rename (GetPartitionCoefficient_const) biogears::SESubstanceTissuePharmacokinetics::GetPartitionCoefficient() const;
+
 %include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>

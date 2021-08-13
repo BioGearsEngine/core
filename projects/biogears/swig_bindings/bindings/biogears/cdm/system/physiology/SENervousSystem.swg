@@ -1,3 +1,4 @@
+
 %{
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 %}
@@ -23,6 +24,7 @@
 %rename (GetComplianceScale_const) biogears::SENervousSystem::GetComplianceScale() const;
 %rename (GetHeartRateScale_const) biogears::SENervousSystem::GetHeartRateScale() const ;
 %rename (GetHeartElastanceScale_const) biogears::SENervousSystem::GetHeartElastanceScale() const;
+%rename (GetMentalStatus_const) biogears::SENervousSystem::GetMentalStatus() const;
 %rename (GetResistanceScaleExtrasplanchnic_const) biogears::SENervousSystem::GetResistanceScaleExtrasplanchnic() const;
 %rename (GetResistanceScaleMuscle_const) biogears::SENervousSystem::GetResistanceScaleMuscle() const ;
 %rename (GetResistanceScaleMyocardium_const) biogears::SENervousSystem::GetResistanceScaleMyocardium() const;
