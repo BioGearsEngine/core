@@ -35,9 +35,9 @@ governing permissions and limitations under the License.
 #endif
 
 #ifdef ANDROID
-#define logcat(LEVEL, CONTENT) __android_log_print(LEVEL, "BIOGEARS", CONTENT);
+#define forward_to_logcat(LEVEL, CONTENT) __android_log_print(LEVEL, "BIOGEARS", "%s", CONTENT);
 #else
-#define logcat(LEVEL,CONTENT)
+#define forward_to_logcat(LEVEL,CONTENT)
 #endif
 
 using namespace std::chrono_literals;
@@ -518,21 +518,21 @@ void Logger::LogMessage(std::istream& msg, std::string const& origin, LogLevel p
     switch (priority) {
     case Logger::eDebug:
       impl.userDefinedLogger->Debug(message.c_str());
-      logcat(ANDROID_LOG_DEBUG, message.c_str());
+      forward_to_logcat(ANDROID_LOG_DEBUG, message.c_str());
       break;
     case Logger::eError:
       impl.userDefinedLogger->Error(message.c_str());
-      logcat(ANDROID_LOG_ERROR, message.c_str());
+      forward_to_logcat(ANDROID_LOG_ERROR, message.c_str());
       break;
     case Logger::eException:
       break;
     case Logger::eWarning:
       impl.userDefinedLogger->Warning(message.c_str());
-      logcat(ANDROID_LOG_WARNING, message.c_str());
+      forward_to_logcat(ANDROID_LOG_WARN, message.c_str());
       break;
     case Logger::eInfo:
       impl.userDefinedLogger->Info(message.c_str());
-      logcat(ANDROID_LOG_INFO, message.c_str());
+      forward_to_logcat(ANDROID_LOG_INFO, message.c_str());
       break;
     case Logger::eStabilization:
       break;
@@ -577,21 +577,21 @@ void Logger::LogMessage(std::istream&& msg, std::string const& origin, LogLevel 
   if (impl.userDefinedLogger != nullptr) {
     switch (priority) {
     case Logger::eDebug:
-      logcat(ANDROID_LOG_DEBUG, message.c_str());
+      forward_to_logcat(ANDROID_LOG_DEBUG, message.c_str());
       impl.userDefinedLogger->Debug(message.c_str());
       break;
     case Logger::eError:
-      logcat(ANDROID_LOG_ERROR, message.c_str());
+      forward_to_logcat(ANDROID_LOG_ERROR, message.c_str());
       impl.userDefinedLogger->Error(message.c_str());
       break;
     case Logger::eException:
       break;
     case Logger::eWarning:
-      logcat(ANDROID_LOG_WARNING, message.c_str());
+      forward_to_logcat(ANDROID_LOG_WARN, message.c_str());
       impl.userDefinedLogger->Warning(message.c_str());
       break;
     case Logger::eInfo:
-      logcat(ANDROID_LOG_INFO, message.c_str());
+      forward_to_logcat(ANDROID_LOG_INFO, message.c_str());
       impl.userDefinedLogger->Info(message.c_str());
       break;
     case Logger::eStabilization:
@@ -633,21 +633,21 @@ void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLe
   if (impl.userDefinedLogger != nullptr) {
     switch (priority) {
     case Logger::eDebug:
-      logcat(ANDROID_LOG_DEBUG, message.c_str());
+      forward_to_logcat(ANDROID_LOG_DEBUG, msg.c_str());
       impl.userDefinedLogger->Debug(msg.c_str());
       break;
     case Logger::eError:
-      logcat(ANDROID_LOG_ERROR, message.c_str());
+      forward_to_logcat(ANDROID_LOG_ERROR, msg.c_str());
       impl.userDefinedLogger->Error(msg.c_str());
       break;
     case Logger::eException:
       break;
     case Logger::eWarning:
-      logcat(ANDROID_LOG_WARNING, message.c_str());
+      forward_to_logcat(ANDROID_LOG_WARN, msg.c_str());
       impl.userDefinedLogger->Warning(msg.c_str());
       break;
     case Logger::eInfo:
-      logcat(ANDROID_LOG_INFO, message.c_str());
+      forward_to_logcat(ANDROID_LOG_INFO, msg.c_str());
       impl.userDefinedLogger->Info(msg.c_str());
       break;
     case Logger::eStabilization:
@@ -688,21 +688,21 @@ void Logger::LogMessage(std::string&& msg, std::string const& origin, LogLevel p
   if (impl.userDefinedLogger != nullptr) {
     switch (priority) {
     case Logger::eDebug:
-      logcat(ANDROID_LOG_DEBUG, message.c_str());
+      forward_to_logcat(ANDROID_LOG_DEBUG, msg.c_str());
       impl.userDefinedLogger->Debug(msg.c_str());
       break;
     case Logger::eError:
-      logcat(ANDROID_LOG_ERROR, message.c_str());
+      forward_to_logcat(ANDROID_LOG_ERROR, msg.c_str());
       impl.userDefinedLogger->Error(msg.c_str());
       break;
     case Logger::eException:
       break;
     case Logger::eWarning:
-      logcat(ANDROID_LOG_WARNING, message.c_str());
+      forward_to_logcat(ANDROID_LOG_WARN, msg.c_str());
       impl.userDefinedLogger->Warning(msg.c_str());
       break;
     case Logger::eInfo:
-      logcat(ANDROID_LOG_INFO, message.c_str());
+      forward_to_logcat(ANDROID_LOG_INFO, msg.c_str());
       impl.userDefinedLogger->Info(msg.c_str());
       break;
     case Logger::eStabilization:
