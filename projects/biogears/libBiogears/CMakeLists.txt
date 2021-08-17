@@ -81,7 +81,10 @@ if(${PREFIX}_BUILD_STATIC)
         CodeSynthesis::XSD
         ${CMAKE_DL_LIBS}
   )
-  target_link_libraries(lib${PROJECT_NAME} Biogears::common ${${PREFIX}_LIBS} )
+  target_link_libraries(lib${PROJECT_NAME} PUBLIC Biogears::common ${${PREFIX}_LIBS} )
+  if(ANDROID)
+    target_link_libraries(lib${PUBLIC_NAME} PUBLIC android log)
+  endif() 
   add_dependencies(lib${PROJECT_NAME} ${XSD_TARGETS} prepare_runtime_dir)
 
 else()
@@ -135,6 +138,9 @@ else()
   )
 
   target_link_libraries(lib${PROJECT_NAME}  PUBLIC ${${PREFIX}_LIBS} )
+  if(ANDROID)
+    target_link_libraries(lib${PROJECT_NAME} PUBLIC android log)
+  endif() 
   if(TARGET Biogears::lib${PROJECT_NAME}_io)
     target_link_libraries(lib${PROJECT_NAME}  PUBLIC Biogears::lib${PROJECT_NAME}_io )
   endif()

@@ -108,8 +108,10 @@ set(${PREFIX}_LIBS
 )
 
 set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
-target_link_libraries(lib${PROJECT_NAME}  ${${PREFIX}_LIBS} )
- 
+target_link_libraries(lib${PROJECT_NAME} PUBLIC ${${PREFIX}_LIBS} )
+if(ANDROID)
+  target_link_libraries(lib${PROJECT_NAME} PUBLIC android log)
+endif() 
 if(TARGET prepare_runtime_dir AND ${ROOT_PROJECT_NAME}_PREPARE_RUNTIME_DIR) 
 	add_dependencies(lib${PROJECT_NAME} prepare_runtime_dir)
 endif()
