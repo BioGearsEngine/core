@@ -20,7 +20,7 @@ public:
   HeatResistanceUnit(const char* u);
   HeatResistanceUnit(const std::string& u);
 
-  virtual ~HeatResistanceUnit() = default;  
+  virtual ~HeatResistanceUnit();  
 
   bool operator==(const HeatResistanceUnit&) const;
   bool operator!=(const HeatResistanceUnit&) const;
