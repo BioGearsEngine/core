@@ -15,7 +15,9 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 AmountPerMassUnit AmountPerMassUnit::ct_Per_g("ct/g");
 AmountPerMassUnit AmountPerMassUnit::ct_Per_ug("ct/ug");
+
 template class SEScalarQuantity<AmountPerMassUnit>;
+
 //-----------------------------------------------------------------------------
 AmountPerMassUnit::AmountPerMassUnit(const char* u)
   : AmountPerMassUnit(std::string { u })

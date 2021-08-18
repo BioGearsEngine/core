@@ -67,7 +67,7 @@ namespace filesystem {
     using reference = value_type::reference;
     using const_reference = value_type::const_reference;
 
-  BIOGEARS_COMMON_PUBLIC_API  enum path_type {
+enum path_type {
       windows_path = 0,
       posix_path = 1,
       default_path = posix_path,

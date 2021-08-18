@@ -19,6 +19,8 @@ AmountPerVolumeUnit AmountPerVolumeUnit::mmol_Per_mL("mmol/mL");
 AmountPerVolumeUnit AmountPerVolumeUnit::ct_Per_L("ct/L");
 AmountPerVolumeUnit AmountPerVolumeUnit::ct_Per_uL("ct/uL");
 
+template class SEScalarQuantity<AmountPerVolumeUnit>;
+
 AmountPerVolumeUnit::AmountPerVolumeUnit(const char* u)
   : AmountPerVolumeUnit(std::string { u })
 {
