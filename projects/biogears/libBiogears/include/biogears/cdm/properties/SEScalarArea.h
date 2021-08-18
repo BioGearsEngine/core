@@ -34,10 +34,12 @@ public:
   static const AreaUnit m2;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<AreaUnit>;
+
 class BIOGEARS_API SEScalarArea : public SEScalarQuantity<AreaUnit> {
 public:
-  SEScalarArea() = default;
-  virtual ~SEScalarArea() = default;
+  SEScalarArea();
+  virtual ~SEScalarArea();
 
   CDM::ScalarAreaData* Unload() const override;   
 

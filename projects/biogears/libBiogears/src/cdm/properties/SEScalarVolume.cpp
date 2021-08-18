@@ -19,13 +19,27 @@ const VolumeUnit VolumeUnit::mL("mL");
 const VolumeUnit VolumeUnit::uL("uL");
 const VolumeUnit VolumeUnit::m3("m^3");
 
+template class SEScalarQuantity<VolumeUnit>;
+
 VolumeUnit::VolumeUnit(const char* u)
-  : VolumeUnit(std::string{ u })
+  : VolumeUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 VolumeUnit::VolumeUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+VolumeUnit::~VolumeUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarVolume::SEScalarVolume()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarVolume::~SEScalarVolume()
 {
 }
 //-------------------------------------------------------------------------------
@@ -40,15 +54,15 @@ CDM::ScalarVolumeData* SEScalarVolume::Unload() const
 //-------------------------------------------------------------------------------
 bool VolumeUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(L.GetString(),unit) == 0)
+  if (strcmp(L.GetString(), unit) == 0)
     return true;
-  if (strcmp(dL.GetString(),unit) == 0)
+  if (strcmp(dL.GetString(), unit) == 0)
     return true;
-  if (strcmp(mL.GetString(),unit) == 0)
+  if (strcmp(mL.GetString(), unit) == 0)
     return true;
-  if (strcmp(uL.GetString(),unit) == 0)
+  if (strcmp(uL.GetString(), unit) == 0)
     return true;
-  if (strcmp(m3.GetString(),unit) == 0)
+  if (strcmp(m3.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -60,15 +74,15 @@ bool VolumeUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const VolumeUnit& VolumeUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(L.GetString(),unit) == 0)
+  if (strcmp(L.GetString(), unit) == 0)
     return L;
-  if (strcmp(mL.GetString(),unit) == 0)
+  if (strcmp(mL.GetString(), unit) == 0)
     return mL;
-  if (strcmp(m3.GetString(),unit) == 0)
+  if (strcmp(m3.GetString(), unit) == 0)
     return m3;
-  if (strcmp(dL.GetString(),unit) == 0)
+  if (strcmp(dL.GetString(), unit) == 0)
     return dL;
-  if (strcmp(uL.GetString(),unit) == 0)
+  if (strcmp(uL.GetString(), unit) == 0)
     return uL;
   std::stringstream err;
   err << unit << " is not a valid Volume unit";

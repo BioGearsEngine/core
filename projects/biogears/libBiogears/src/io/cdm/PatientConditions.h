@@ -48,8 +48,10 @@ namespace io {
     static std::vector<std::unique_ptr<SECondition>> condition_factory(const CDM::ConditionListData& in, SESubstanceManager& substances);
     static std::unique_ptr<SECondition> factory(const CDM::ConditionData& data, SESubstanceManager& substances);
     //template <typename SE, typename XSD>  option
+    
     template <typename SE, typename XSD>
     static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    
     template <typename SE, typename XSD>
     static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
 

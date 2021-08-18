@@ -27,8 +27,8 @@ namespace io {
   class Circuit;
 }
 class SECircuitManager;
-template <CIRCUIT_LEDGER_TEMPLATE>
 
+template <CIRCUIT_LEDGER_TEMPLATE>
 class SECircuitLedger {
   friend class SECircuitManager;
   friend io::Circuit;
@@ -48,6 +48,11 @@ public:
   std::map<std::string, PathType*> paths;
   std::map<std::string, CircuitType*> circuits;
 };
+
+
+BG_EXT template class BIOGEARS_API SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit>;
+BG_EXT template class BIOGEARS_API SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit>;
+BG_EXT template class BIOGEARS_API SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit>;
 
 #define ELECTRICAL_LEDGER_TYPES SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit
 #define FLUID_LEDGER_TYPES SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit

@@ -20,7 +20,7 @@ public:
   ElectricChargeUnit(const char* u);
   ElectricChargeUnit(const std::string& u);
 
-  virtual ~ElectricChargeUnit() = default;  
+  virtual ~ElectricChargeUnit();  
 
   bool operator==(const ElectricChargeUnit&) const;
   bool operator!=(const ElectricChargeUnit&) const;
@@ -33,10 +33,12 @@ public:
   static const ElectricChargeUnit C;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<ElectricChargeUnit>;
+
 class BIOGEARS_API SEScalarElectricCharge : public SEScalarQuantity<ElectricChargeUnit> {
 public:
-  SEScalarElectricCharge() = default;
-  virtual ~SEScalarElectricCharge() = default;
+  SEScalarElectricCharge();
+  virtual ~SEScalarElectricCharge();
 
   CDM::ScalarElectricChargeData* Unload() const override;   
 

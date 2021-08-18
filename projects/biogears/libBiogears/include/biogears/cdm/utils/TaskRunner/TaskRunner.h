@@ -29,7 +29,7 @@ class BIOGEARS_API TaskRunner : public TaskQueue {
 public:
   TaskRunner();
   TaskRunner(unsigned int threadCount);
-  virtual ~TaskRunner() = default;
+  virtual ~TaskRunner();
 
   TaskRunner(const TaskRunner& other) = delete;
   TaskRunner& operator=(const TaskRunner& other) = delete;

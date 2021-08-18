@@ -20,7 +20,7 @@ public:
   TimeUnit(const char* u);
   TimeUnit(const std::string& u);
 
-  virtual ~TimeUnit() = default;      
+  virtual ~TimeUnit();
 
   bool operator==(const TimeUnit&) const;
   bool operator!=(const TimeUnit&) const;
@@ -37,10 +37,12 @@ public:
   static const TimeUnit yr;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<TimeUnit>;
+
 class BIOGEARS_API SEScalarTime : public SEScalarQuantity<TimeUnit> {
 public:
-  SEScalarTime() = default;
-  virtual ~SEScalarTime() = default;
+  SEScalarTime();
+  virtual ~SEScalarTime();
 
   CDM::ScalarTimeData* Unload() const override; 
 

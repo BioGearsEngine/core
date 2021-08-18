@@ -29,7 +29,7 @@ namespace biogears {
 class BIOGEARS_API SEGenericScalar : public Loggable {
 public:
   SEGenericScalar(Logger* logger);
-  virtual ~SEGenericScalar() {};
+  virtual ~SEGenericScalar();
 
   virtual bool HasScalar() const;
   virtual void SetScalar(const SEScalar& s);

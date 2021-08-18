@@ -20,7 +20,7 @@ public:
   VolumePerTimeUnit(const char* u);
   VolumePerTimeUnit(const std::string& u);
 
-  virtual ~VolumePerTimeUnit() = default;
+  virtual ~VolumePerTimeUnit();
 
   bool operator==(const VolumePerTimeUnit&) const;
   bool operator!=(const VolumePerTimeUnit&) const;
@@ -40,10 +40,12 @@ public:
   static const VolumePerTimeUnit mL_Per_hr;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<VolumePerTimeUnit>;
+
 class BIOGEARS_API SEScalarVolumePerTime : public SEScalarQuantity<VolumePerTimeUnit> {
 public:
-  SEScalarVolumePerTime() = default;
-  virtual ~SEScalarVolumePerTime() = default;
+  SEScalarVolumePerTime();
+  virtual ~SEScalarVolumePerTime();
 
   CDM::ScalarVolumePerTimeData* Unload() const override;
 

@@ -15,13 +15,27 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const HeatInductanceUnit HeatInductanceUnit::K_s_Per_W("K s/W");
 
+template class SEScalarQuantity<HeatInductanceUnit>;
+
 HeatInductanceUnit::HeatInductanceUnit(const char* u)
-  : HeatInductanceUnit(std::string{ u })
+  : HeatInductanceUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 HeatInductanceUnit::HeatInductanceUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+HeatInductanceUnit::~HeatInductanceUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarHeatInductance::SEScalarHeatInductance()
+{
+}
+//------------------------------------------------------------------------------
+SEScalarHeatInductance::~SEScalarHeatInductance()
 {
 }
 //-------------------------------------------------------------------------------
@@ -36,7 +50,7 @@ CDM::ScalarHeatInductanceData* SEScalarHeatInductance::Unload() const
 //-------------------------------------------------------------------------------
 bool HeatInductanceUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(K_s_Per_W.GetString(),unit) == 0)
+  if (strcmp(K_s_Per_W.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -48,7 +62,7 @@ bool HeatInductanceUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const HeatInductanceUnit& HeatInductanceUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(K_s_Per_W.GetString(),unit) == 0)
+  if (strcmp(K_s_Per_W.GetString(), unit) == 0)
     return K_s_Per_W;
   std::stringstream err;
   err << unit << " is not a valid HeatInductance unit";

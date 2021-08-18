@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SECircuitManager;
+
+BG_EXT template class BIOGEARS_API SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>;
 class BIOGEARS_API SEThermalCircuit : public SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData> {
   friend class SECircuitManager;
 

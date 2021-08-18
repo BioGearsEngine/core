@@ -12,16 +12,30 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricInductance.h>
 
+
 namespace biogears {
 const ElectricInductanceUnit ElectricInductanceUnit::H("H");
 
+template class SEScalarQuantity<ElectricInductanceUnit>;
 ElectricInductanceUnit::ElectricInductanceUnit(const char* u)
-  : ElectricInductanceUnit(std::string{ u })
+  : ElectricInductanceUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 ElectricInductanceUnit::ElectricInductanceUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+ElectricInductanceUnit ::~ElectricInductanceUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricInductance::SEScalarElectricInductance()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricInductance::~SEScalarElectricInductance()
 {
 }
 //-----------------------------------------------------------------------------
@@ -36,7 +50,7 @@ CDM::ScalarElectricInductanceData* SEScalarElectricInductance::Unload() const
 //-----------------------------------------------------------------------------
 bool ElectricInductanceUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(H.GetString(),unit) == 0)
+  if (strcmp(H.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -48,7 +62,7 @@ bool ElectricInductanceUnit::IsValidUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 const ElectricInductanceUnit& ElectricInductanceUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(H.GetString(),unit) == 0)
+  if (strcmp(H.GetString(), unit) == 0)
     return H;
   std::stringstream err;
   err << unit << " is not a valid ElectricInductance unit";
@@ -59,7 +73,7 @@ const ElectricInductanceUnit& ElectricInductanceUnit::GetCompoundUnit(const std:
 {
   return GetCompoundUnit(unit.c_str());
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool ElectricInductanceUnit::operator==(const ElectricInductanceUnit& obj) const
 {
   return CCompoundUnit::operator==(obj);

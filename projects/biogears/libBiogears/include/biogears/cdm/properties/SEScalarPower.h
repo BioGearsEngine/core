@@ -20,7 +20,7 @@ public:
   PowerUnit(const char* u);
   PowerUnit(const std::string& u);
 
-  virtual ~PowerUnit() = default;        
+  virtual ~PowerUnit();
 
   bool operator==(const PowerUnit&) const;
   bool operator!=(const PowerUnit&) const;
@@ -38,12 +38,14 @@ public:
   static const PowerUnit BTU_Per_hr;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<PowerUnit>;
+
 class BIOGEARS_API SEScalarPower : public SEScalarQuantity<PowerUnit> {
 public:
-  SEScalarPower() = default;
-  virtual ~SEScalarPower() = default;
+  SEScalarPower();
+  virtual ~SEScalarPower();
 
-  CDM::ScalarPowerData* Unload() const override ;
+  CDM::ScalarPowerData* Unload() const override;
 
   using SEScalarQuantity<PowerUnit>::SetValue;
   using SEScalarQuantity<PowerUnit>::GetValue;

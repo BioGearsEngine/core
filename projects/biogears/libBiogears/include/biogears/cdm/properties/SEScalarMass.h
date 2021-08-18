@@ -26,7 +26,7 @@ public:
   MassUnit(const char* u);
   MassUnit(const std::string& u);
 
-  virtual ~MassUnit() = default;     
+  virtual ~MassUnit();
 
   bool operator==(const MassUnit&) const;
   bool operator!=(const MassUnit&) const;
@@ -35,20 +35,20 @@ public:
   static bool IsValidUnit(const std::string& unit);
   static const MassUnit& GetCompoundUnit(const char* unit);
   static const MassUnit& GetCompoundUnit(const std::string& unit);
+};
+BG_EXT template class BIOGEARS_API SEScalarQuantity<MassUnit>;
 
-  };
+class BIOGEARS_API SEScalarMass : public SEScalarQuantity<MassUnit> {
+public:
+  SEScalarMass();
+  virtual ~SEScalarMass();
 
-  class BIOGEARS_API SEScalarMass : public SEScalarQuantity<MassUnit> {
-  public:
-    SEScalarMass() = default;
-    virtual ~SEScalarMass() = default;
-
-    CDM::ScalarMassData* Unload() const override;
+  CDM::ScalarMassData* Unload() const override;
 
   using SEScalarQuantity<MassUnit>::SetValue;
   using SEScalarQuantity<MassUnit>::GetValue;
 
   bool operator==(const SEScalarMass&) const;
   bool operator!=(const SEScalarMass&) const;
-  };
+};
 }

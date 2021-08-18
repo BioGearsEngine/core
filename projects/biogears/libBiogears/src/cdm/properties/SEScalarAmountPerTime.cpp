@@ -20,13 +20,28 @@ AmountPerTimeUnit AmountPerTimeUnit::mmol_Per_min("mmol/min");
 AmountPerTimeUnit AmountPerTimeUnit::pmol_Per_min("pmol/min");
 AmountPerTimeUnit AmountPerTimeUnit::umol_Per_min("umol/min");
 
+template class SEScalarQuantity<AmountPerTimeUnit>;
+;
+
 AmountPerTimeUnit::AmountPerTimeUnit(const char* u)
-  : AmountPerTimeUnit(std::string{ u })
+  : AmountPerTimeUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 AmountPerTimeUnit::AmountPerTimeUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+AmountPerTimeUnit::~AmountPerTimeUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarAmountPerTime::SEScalarAmountPerTime()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarAmountPerTime::~SEScalarAmountPerTime()
 {
 }
 //-------------------------------------------------------------------------------
@@ -41,17 +56,17 @@ CDM::ScalarAmountPerTimeData* SEScalarAmountPerTime::Unload() const
 //-------------------------------------------------------------------------------
 bool AmountPerTimeUnit::IsValidUnit(const char* unit)
 {
-  if ( strcmp(mol_Per_day.GetString(),unit) == 0)
+  if (strcmp(mol_Per_day.GetString(), unit) == 0)
     return true;
-  if (strcmp(mol_Per_s.GetString(),unit) == 0)
+  if (strcmp(mol_Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(umol_Per_s.GetString(),unit) == 0)
+  if (strcmp(umol_Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(mmol_Per_min.GetString(),unit) == 0)
+  if (strcmp(mmol_Per_min.GetString(), unit) == 0)
     return true;
-  if (strcmp(pmol_Per_min.GetString(),unit) == 0)
+  if (strcmp(pmol_Per_min.GetString(), unit) == 0)
     return true;
-  if (strcmp(umol_Per_min.GetString(),unit) == 0)
+  if (strcmp(umol_Per_min.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -63,17 +78,17 @@ bool AmountPerTimeUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const AmountPerTimeUnit& AmountPerTimeUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(mol_Per_day.GetString(),unit) == 0)
+  if (strcmp(mol_Per_day.GetString(), unit) == 0)
     return mol_Per_day;
-  if (strcmp(mol_Per_s.GetString(),unit) == 0)
+  if (strcmp(mol_Per_s.GetString(), unit) == 0)
     return mol_Per_s;
-  if (strcmp(umol_Per_s.GetString(),unit) == 0)
+  if (strcmp(umol_Per_s.GetString(), unit) == 0)
     return umol_Per_s;
-  if (strcmp(mmol_Per_min.GetString(),unit) == 0)
+  if (strcmp(mmol_Per_min.GetString(), unit) == 0)
     return mmol_Per_min;
-  if (strcmp(pmol_Per_min.GetString(),unit) == 0)
+  if (strcmp(pmol_Per_min.GetString(), unit) == 0)
     return pmol_Per_min;
-  if (strcmp(umol_Per_min.GetString(),unit) == 0)
+  if (strcmp(umol_Per_min.GetString(), unit) == 0)
     return umol_Per_min;
   std::stringstream err;
   err << unit << " is not a valid AmountPerTime unit";

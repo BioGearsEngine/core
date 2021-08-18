@@ -22,13 +22,27 @@ const TimeUnit TimeUnit::day("day");
 const TimeUnit TimeUnit::yr("yr");
 #pragma pop_macro("Time")
 
+template class SEScalarQuantity<TimeUnit>;
+
 TimeUnit::TimeUnit(const char* u)
-  : TimeUnit(std::string{ u })
+  : TimeUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 TimeUnit::TimeUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+TimeUnit::~TimeUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarTime::SEScalarTime()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarTime::~SEScalarTime()
 {
 }
 //-------------------------------------------------------------------------------
@@ -43,15 +57,15 @@ CDM::ScalarTimeData* SEScalarTime::Unload() const
 //-------------------------------------------------------------------------------
 bool TimeUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(s.GetString(),unit) == 0)
+  if (strcmp(s.GetString(), unit) == 0)
     return true;
-  if (strcmp(min.GetString(),unit) == 0)
+  if (strcmp(min.GetString(), unit) == 0)
     return true;
-  if (strcmp(hr.GetString(),unit) == 0)
+  if (strcmp(hr.GetString(), unit) == 0)
     return true;
-  if (strcmp(day.GetString(),unit) == 0)
+  if (strcmp(day.GetString(), unit) == 0)
     return true;
-  if (strcmp(yr.GetString(),unit) == 0)
+  if (strcmp(yr.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -63,15 +77,15 @@ bool TimeUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const TimeUnit& TimeUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(s.GetString(),unit) == 0)
+  if (strcmp(s.GetString(), unit) == 0)
     return s;
-  if (strcmp(min.GetString(),unit) == 0)
+  if (strcmp(min.GetString(), unit) == 0)
     return min;
-  if (strcmp(hr.GetString(),unit) == 0)
+  if (strcmp(hr.GetString(), unit) == 0)
     return hr;
-  if (strcmp(day.GetString(),unit) == 0)
+  if (strcmp(day.GetString(), unit) == 0)
     return day;
-  if (strcmp(yr.GetString(),unit) == 0)
+  if (strcmp(yr.GetString(), unit) == 0)
     return yr;
   std::stringstream err;
   err << unit << " is not a valid Amount unit";

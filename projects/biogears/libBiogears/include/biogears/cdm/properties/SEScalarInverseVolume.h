@@ -20,7 +20,7 @@ public:
   InverseVolumeUnit(const char* u);
   InverseVolumeUnit(const std::string& u);
 
-  virtual ~InverseVolumeUnit() = default;      
+  virtual ~InverseVolumeUnit();
 
   bool operator==(const InverseVolumeUnit&) const;
   bool operator!=(const InverseVolumeUnit&) const;
@@ -34,12 +34,14 @@ public:
   static const InverseVolumeUnit Inverse_mL;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<InverseVolumeUnit>;
+
 class BIOGEARS_API SEScalarInverseVolume : public SEScalarQuantity<InverseVolumeUnit> {
 public:
-  SEScalarInverseVolume() = default;
-  virtual ~SEScalarInverseVolume() = default;
+  SEScalarInverseVolume();
+  virtual ~SEScalarInverseVolume();
 
-  CDM::ScalarInverseVolumeData* Unload() const override;   
+  CDM::ScalarInverseVolumeData* Unload() const override;
 
   bool operator==(const SEScalarInverseVolume&) const;
   bool operator!=(const SEScalarInverseVolume&) const;

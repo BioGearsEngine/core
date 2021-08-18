@@ -17,13 +17,27 @@ const FlowElastanceUnit FlowElastanceUnit::cmH2O_Per_L("cmH2O/L");
 const FlowElastanceUnit FlowElastanceUnit::mmHg_Per_mL("mmHg/mL");
 const FlowElastanceUnit FlowElastanceUnit::Pa_Per_m3("Pa/m^3");
 
+template class SEScalarQuantity<FlowElastanceUnit>;
+
 FlowElastanceUnit::FlowElastanceUnit(const char* u)
-  : FlowElastanceUnit(std::string{ u })
+  : FlowElastanceUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 FlowElastanceUnit::FlowElastanceUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+FlowElastanceUnit::~FlowElastanceUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFlowElastance::SEScalarFlowElastance()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFlowElastance::~SEScalarFlowElastance()
 {
 }
 //-----------------------------------------------------------------------------
@@ -38,11 +52,11 @@ CDM::ScalarFlowElastanceData* SEScalarFlowElastance::Unload() const
 //-----------------------------------------------------------------------------
 bool FlowElastanceUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(cmH2O_Per_L.GetString(),unit) == 0)
+  if (strcmp(cmH2O_Per_L.GetString(), unit) == 0)
     return true;
-  if (strcmp(mmHg_Per_mL.GetString(),unit) == 0)
+  if (strcmp(mmHg_Per_mL.GetString(), unit) == 0)
     return true;
-  if (strcmp(Pa_Per_m3.GetString(),unit) == 0)
+  if (strcmp(Pa_Per_m3.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -54,11 +68,11 @@ bool FlowElastanceUnit::IsValidUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 const FlowElastanceUnit& FlowElastanceUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(cmH2O_Per_L.GetString(),unit) == 0)
+  if (strcmp(cmH2O_Per_L.GetString(), unit) == 0)
     return cmH2O_Per_L;
-  if (strcmp(mmHg_Per_mL.GetString(),unit) == 0)
+  if (strcmp(mmHg_Per_mL.GetString(), unit) == 0)
     return mmHg_Per_mL;
-  if (strcmp(Pa_Per_m3.GetString(),unit) == 0)
+  if (strcmp(Pa_Per_m3.GetString(), unit) == 0)
     return Pa_Per_m3;
   std::stringstream err;
   err << unit << " is not a valid FlowElastance unit";
@@ -69,7 +83,7 @@ const FlowElastanceUnit& FlowElastanceUnit::GetCompoundUnit(const std::string& u
 {
   return GetCompoundUnit(unit.c_str());
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool FlowElastanceUnit::operator==(const FlowElastanceUnit& obj) const
 {
   return CCompoundUnit::operator==(obj);

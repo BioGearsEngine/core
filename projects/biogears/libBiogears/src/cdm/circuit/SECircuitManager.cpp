@@ -17,6 +17,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Circuit.hxx>
 
 namespace biogears {
+
+template class SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit>;
+template class SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit>;
+template class SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit>;
+
 SECircuitManager::SECircuitManager(Logger* logger)
   : Loggable(logger)
 {

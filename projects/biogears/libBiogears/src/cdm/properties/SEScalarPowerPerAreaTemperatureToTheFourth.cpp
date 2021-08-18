@@ -15,13 +15,27 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const PowerPerAreaTemperatureToTheFourthUnit PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4("W/ m^2 K^4");
 
+template class SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>;
+
 PowerPerAreaTemperatureToTheFourthUnit::PowerPerAreaTemperatureToTheFourthUnit(const char* u)
-  : PowerPerAreaTemperatureToTheFourthUnit(std::string{ u })
+  : PowerPerAreaTemperatureToTheFourthUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 PowerPerAreaTemperatureToTheFourthUnit::PowerPerAreaTemperatureToTheFourthUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+PowerPerAreaTemperatureToTheFourthUnit::~PowerPerAreaTemperatureToTheFourthUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarPowerPerAreaTemperatureToTheFourth::SEScalarPowerPerAreaTemperatureToTheFourth()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarPowerPerAreaTemperatureToTheFourth::~SEScalarPowerPerAreaTemperatureToTheFourth()
 {
 }
 //-------------------------------------------------------------------------------
@@ -36,7 +50,7 @@ CDM::ScalarPowerPerAreaTemperatureToTheFourthData* SEScalarPowerPerAreaTemperatu
 //-------------------------------------------------------------------------------
 bool PowerPerAreaTemperatureToTheFourthUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(W_Per_m2_K4.GetString(),unit) == 0)
+  if (strcmp(W_Per_m2_K4.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -48,7 +62,7 @@ bool PowerPerAreaTemperatureToTheFourthUnit::IsValidUnit(const std::string& unit
 //-------------------------------------------------------------------------------
 const PowerPerAreaTemperatureToTheFourthUnit& PowerPerAreaTemperatureToTheFourthUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(W_Per_m2_K4.GetString(),unit) == 0)
+  if (strcmp(W_Per_m2_K4.GetString(), unit) == 0)
     return W_Per_m2_K4;
   std::stringstream err;
   err << unit << " is not a valid PowerPerAreaTemperatureToTheFourth unit";

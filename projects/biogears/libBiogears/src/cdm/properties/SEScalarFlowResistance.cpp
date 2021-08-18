@@ -19,6 +19,8 @@ const FlowResistanceUnit FlowResistanceUnit::mmHg_min_Per_mL("mmHg min/mL");
 const FlowResistanceUnit FlowResistanceUnit::mmHg_min_Per_L("mmHg min/L");
 const FlowResistanceUnit FlowResistanceUnit::Pa_s_Per_m3("Pa s/m^3");
 
+template class SEScalarQuantity<FlowResistanceUnit>;
+
 FlowResistanceUnit::FlowResistanceUnit(const char* u)
   : FlowResistanceUnit(std::string { u })
 {
@@ -26,6 +28,18 @@ FlowResistanceUnit::FlowResistanceUnit(const char* u)
 //-----------------------------------------------------------------------------
 FlowResistanceUnit::FlowResistanceUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+FlowResistanceUnit::~FlowResistanceUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFlowResistance::SEScalarFlowResistance()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFlowResistance::~SEScalarFlowResistance()
 {
 }
 //-----------------------------------------------------------------------------

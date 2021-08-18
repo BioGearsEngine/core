@@ -17,16 +17,10 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class BIOGEARS_API AreaPerTimePressureUnit : public CCompoundUnit {
 public:
-  AreaPerTimePressureUnit(const char* u)
-    : AreaPerTimePressureUnit(std::string{ u })
-  {
-  }
-  AreaPerTimePressureUnit(const std::string& u)
-    : CCompoundUnit(u)
-  {
-  }
+  AreaPerTimePressureUnit(const char* u);
+  AreaPerTimePressureUnit(const std::string& u);
 
-  virtual ~AreaPerTimePressureUnit() = default; 
+  virtual ~AreaPerTimePressureUnit(); 
 
   bool operator==(const AreaPerTimePressureUnit&) const;
   bool operator!=(const AreaPerTimePressureUnit&) const;
@@ -42,10 +36,12 @@ public:
   static const AreaPerTimePressureUnit cm2_Per_min_mmHg;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<AreaPerTimePressureUnit>;
+
 class BIOGEARS_API SEScalarAreaPerTimePressure : public SEScalarQuantity<AreaPerTimePressureUnit> {
 public:
-  SEScalarAreaPerTimePressure() = default;
-  virtual ~SEScalarAreaPerTimePressure() = default;
+  SEScalarAreaPerTimePressure();
+  virtual ~SEScalarAreaPerTimePressure();
 
   CDM::ScalarAreaPerTimePressureData* Unload() const override;   
 

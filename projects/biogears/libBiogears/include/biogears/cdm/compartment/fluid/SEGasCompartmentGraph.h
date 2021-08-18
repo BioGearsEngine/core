@@ -34,7 +34,7 @@ protected:
   SEGasCompartmentGraph(const std::string& name, Logger* logger);
 
 public:
-  virtual ~SEGasCompartmentGraph() = default;
+  virtual ~SEGasCompartmentGraph();
 
   void AddGraph(SEGasCompartmentGraph& graph);
 

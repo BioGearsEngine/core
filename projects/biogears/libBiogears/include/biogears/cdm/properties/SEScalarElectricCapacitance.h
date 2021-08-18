@@ -20,7 +20,7 @@ public:
   ElectricCapacitanceUnit(const char* u);
   ElectricCapacitanceUnit(const std::string& u);
 
-  virtual ~ElectricCapacitanceUnit() = default;      
+  virtual ~ElectricCapacitanceUnit();
 
   bool operator==(const ElectricCapacitanceUnit&) const;
   bool operator!=(const ElectricCapacitanceUnit&) const;
@@ -33,12 +33,14 @@ public:
   static const ElectricCapacitanceUnit F;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<ElectricCapacitanceUnit>;
+
 class BIOGEARS_API SEScalarElectricCapacitance : public SEScalarQuantity<ElectricCapacitanceUnit> {
 public:
-  SEScalarElectricCapacitance() = default;
-  virtual ~SEScalarElectricCapacitance() = default;
+  SEScalarElectricCapacitance();
+  virtual ~SEScalarElectricCapacitance();
 
-  CDM::ScalarElectricCapacitanceData* Unload() const override;   
+  CDM::ScalarElectricCapacitanceData* Unload() const override;
 
   using SEScalarQuantity<ElectricCapacitanceUnit>::SetValue;
   using SEScalarQuantity<ElectricCapacitanceUnit>::GetValue;

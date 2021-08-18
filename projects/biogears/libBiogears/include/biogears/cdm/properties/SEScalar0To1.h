@@ -18,7 +18,7 @@ class BIOGEARS_API SEScalar0To1 : public SEScalar {
 
 public:
   SEScalar0To1();
-  virtual ~SEScalar0To1() = default;
+  virtual ~SEScalar0To1();
 
   CDM::Scalar0To1Data* Unload() const;
 

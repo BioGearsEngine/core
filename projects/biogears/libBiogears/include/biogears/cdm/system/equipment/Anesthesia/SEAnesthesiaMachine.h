@@ -62,7 +62,7 @@ protected:
   *            Specically a new file has been loaded, configuration action, or the system reset
   *            Engine specific methodology can then update their logic.
   */
-  virtual void StateChange() {};
+  virtual void StateChange();
   void Merge(const SEAnesthesiaMachine& from);
   void ProcessConfiguration(const SEAnesthesiaMachineConfiguration& config);
 

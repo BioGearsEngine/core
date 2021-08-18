@@ -20,7 +20,7 @@ public:
   MassPerAmountUnit(const char* u);
   MassPerAmountUnit(const std::string& u);
 
-  virtual ~MassPerAmountUnit() = default;    
+  virtual ~MassPerAmountUnit();
 
   bool operator==(const MassPerAmountUnit&) const;
   bool operator!=(const MassPerAmountUnit&) const;
@@ -43,16 +43,17 @@ public:
   static const MassPerAmountUnit pg_Per_ct;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<MassPerAmountUnit>;
+
 class BIOGEARS_API SEScalarMassPerAmount : public SEScalarQuantity<MassPerAmountUnit> {
 public:
-  SEScalarMassPerAmount() = default;
-  virtual ~SEScalarMassPerAmount() = default;
+  SEScalarMassPerAmount();
+  virtual ~SEScalarMassPerAmount();
 
-  CDM::ScalarMassPerAmountData* Unload() const override; 
+  CDM::ScalarMassPerAmountData* Unload() const override;
 
   using SEScalarQuantity<MassPerAmountUnit>::SetValue;
   using SEScalarQuantity<MassPerAmountUnit>::GetValue;
-  
 
   bool operator==(const SEScalarMassPerAmount&) const;
   bool operator!=(const SEScalarMassPerAmount&) const;

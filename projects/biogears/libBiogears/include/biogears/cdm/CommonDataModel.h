@@ -12,8 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-
-
 #if (0)
 #define DEBUGOUT(x) x
 #else
@@ -41,37 +39,23 @@ namespace tatrc {
 namespace CDM = mil::tatrc::physiology::datamodel;
 
 #include <stdexcept>
-
-#if defined(_MSC_VER)
 #include <unordered_map>
-#else //if (__GCC__) || (__GNUC__)
-#include <unordered_map>
-#endif
 
 //Utilities
 
 #include <biogears/exports.h>
 namespace biogears {
 
-#pragma warning(disable : 4251)
-struct CommonDataModelException : public std::runtime_error {
-  CommonDataModelException()
-    : std::runtime_error("Common Data Model Error")
-  {
-  }
-
-  CommonDataModelException(const char* _Message)
-    : std::runtime_error(_Message)
-  {
-  }
-
-  CommonDataModelException(const std::string& _Message)
-    : std::runtime_error(_Message)
-  {
-  }
-
-  ~CommonDataModelException() override = default;
+#pragma warning(disable: 4251)
+#pragma warning(push,0)
+#pragma warning(disable: 4275)
+struct BIOGEARS_API CommonDataModelException : public std::runtime_error {
+  CommonDataModelException();
+  CommonDataModelException(const char* _Message);
+  CommonDataModelException(const std::string& _Message);
+  ~CommonDataModelException() override;
 };
+#pragma warning(pop)
 }
 // Basics
 #include <biogears/cdm/Macros.h>

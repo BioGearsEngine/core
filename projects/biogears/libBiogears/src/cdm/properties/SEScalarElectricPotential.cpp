@@ -16,6 +16,8 @@ namespace biogears {
 const ElectricPotentialUnit ElectricPotentialUnit::V("V");
 const ElectricPotentialUnit ElectricPotentialUnit::mV("mV");
 
+template class SEScalarQuantity<ElectricPotentialUnit>;
+
 ElectricPotentialUnit::ElectricPotentialUnit(const char* u)
   : ElectricPotentialUnit(std::string { u })
 {
@@ -23,6 +25,18 @@ ElectricPotentialUnit::ElectricPotentialUnit(const char* u)
 //-----------------------------------------------------------------------------
 ElectricPotentialUnit::ElectricPotentialUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+ElectricPotentialUnit::~ElectricPotentialUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricPotential::SEScalarElectricPotential()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricPotential::~SEScalarElectricPotential()
 {
 }
 //-----------------------------------------------------------------------------

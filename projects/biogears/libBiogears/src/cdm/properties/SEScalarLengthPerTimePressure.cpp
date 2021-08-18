@@ -18,13 +18,27 @@ const LengthPerTimePressureUnit LengthPerTimePressureUnit::cm_Per_s_mmHg("cm/s m
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::m_Per_min_mmHg("m/min mmHg");
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::cm_Per_min_mmHg("cm/min mmHg");
 
+template class SEScalarQuantity<LengthPerTimePressureUnit>;
+
 LengthPerTimePressureUnit::LengthPerTimePressureUnit(const char* u)
-  : LengthPerTimePressureUnit(std::string{ u })
+  : LengthPerTimePressureUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 LengthPerTimePressureUnit::LengthPerTimePressureUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+LengthPerTimePressureUnit::~LengthPerTimePressureUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarLengthPerTimePressure::SEScalarLengthPerTimePressure()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarLengthPerTimePressure::~SEScalarLengthPerTimePressure()
 {
 }
 //-------------------------------------------------------------------------------
@@ -39,13 +53,13 @@ CDM::ScalarLengthPerTimePressureData* SEScalarLengthPerTimePressure::Unload() co
 //-------------------------------------------------------------------------------
 bool LengthPerTimePressureUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(m_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(m_Per_s_mmHg.GetString(), unit) == 0)
     return true;
-  if (strcmp(cm_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(cm_Per_s_mmHg.GetString(), unit) == 0)
     return true;
-  if (strcmp(m_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(m_Per_min_mmHg.GetString(), unit) == 0)
     return true;
-  if (strcmp(cm_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(cm_Per_min_mmHg.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -57,13 +71,13 @@ bool LengthPerTimePressureUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const LengthPerTimePressureUnit& LengthPerTimePressureUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(m_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(m_Per_s_mmHg.GetString(), unit) == 0)
     return m_Per_s_mmHg;
-  if (strcmp(cm_Per_s_mmHg.GetString(),unit) == 0)
+  if (strcmp(cm_Per_s_mmHg.GetString(), unit) == 0)
     return cm_Per_s_mmHg;
-  if (strcmp(m_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(m_Per_min_mmHg.GetString(), unit) == 0)
     return m_Per_min_mmHg;
-  if (strcmp(cm_Per_min_mmHg.GetString(),unit) == 0)
+  if (strcmp(cm_Per_min_mmHg.GetString(), unit) == 0)
     return cm_Per_min_mmHg;
   std::stringstream err;
   err << unit << " is not a valid LengthPerTimePressure unit";

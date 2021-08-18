@@ -11,3 +11,22 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/substance/SESubstanceTransport.h>
+
+namespace biogears {
+
+template class SESubstanceTransportAmount<SEScalarVolume, SEScalarFraction>;
+template class SESubstanceTransportAmount<SEScalarMass, SEScalarMassPerVolume>;
+
+template class SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction>;
+template class SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
+
+template class SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
+template class SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
+
+template class SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
+template class SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
+
+template class SESubstanceTransporter<SEGasTransportGraph, VolumePerTimeUnit, VolumeUnit, VolumeUnit, NoUnit>;
+template class SESubstanceTransporter<SELiquidTransportGraph, VolumePerTimeUnit, VolumeUnit, MassUnit, MassPerVolumeUnit>;
+
+}

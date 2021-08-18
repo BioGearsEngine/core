@@ -20,7 +20,7 @@ public:
   TimeMassPerVolumeUnit(const char* u);
   TimeMassPerVolumeUnit(const std::string& u);
 
-  virtual ~TimeMassPerVolumeUnit() = default;   
+  virtual ~TimeMassPerVolumeUnit();   
 
   bool operator==(const TimeMassPerVolumeUnit&) const;
   bool operator!=(const TimeMassPerVolumeUnit&) const;
@@ -38,10 +38,12 @@ public:
   static const TimeMassPerVolumeUnit hr_ug_Per_mL;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<TimeMassPerVolumeUnit>;
+
 class BIOGEARS_API SEScalarTimeMassPerVolume : public SEScalarQuantity<TimeMassPerVolumeUnit> {
 public:
-  SEScalarTimeMassPerVolume() = default;
-  virtual ~SEScalarTimeMassPerVolume() = default;
+  SEScalarTimeMassPerVolume();
+  virtual ~SEScalarTimeMassPerVolume();
 
   CDM::ScalarTimeMassPerVolumeData* Unload() const override;
 

@@ -48,7 +48,10 @@ TaskRunner::TaskRunner(unsigned int threadCount)
   : m_threadCount(threadCount)
 {
 }
-
+//--------------------------------------------------------------------------------------------------
+TaskRunner::~TaskRunner()
+{
+}
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Adds a task to the task queue.  This should only be called from one thread.

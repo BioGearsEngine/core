@@ -18,8 +18,10 @@ const HeatResistanceAreaUnit HeatResistanceAreaUnit::clo("clo");
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::rValue("rValue");
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::tog("tog");
 
+template class SEScalarQuantity<HeatResistanceAreaUnit>;
+
 HeatResistanceAreaUnit::HeatResistanceAreaUnit(const char* u)
-  : HeatResistanceAreaUnit(std::string{ u })
+  : HeatResistanceAreaUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
@@ -27,6 +29,18 @@ HeatResistanceAreaUnit::HeatResistanceAreaUnit(const std::string& u)
   : CCompoundUnit(u)
 {
 }
+//-------------------------------------------------------------------------------
+HeatResistanceAreaUnit::~HeatResistanceAreaUnit(){
+}
+//-------------------------------------------------------------------------------
+SEScalarHeatResistanceArea::SEScalarHeatResistanceArea()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarHeatResistanceArea::~SEScalarHeatResistanceArea()
+{
+}
+
 //-------------------------------------------------------------------------------
 CDM::ScalarHeatResistanceAreaData* SEScalarHeatResistanceArea::Unload() const
 {
@@ -39,13 +53,13 @@ CDM::ScalarHeatResistanceAreaData* SEScalarHeatResistanceArea::Unload() const
 //-------------------------------------------------------------------------------
 bool HeatResistanceAreaUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(rsi.GetString(),unit) == 0)
+  if (strcmp(rsi.GetString(), unit) == 0)
     return true;
-  if (strcmp(clo.GetString(),unit) == 0)
+  if (strcmp(clo.GetString(), unit) == 0)
     return true;
-  if (strcmp(rValue.GetString(),unit) == 0)
+  if (strcmp(rValue.GetString(), unit) == 0)
     return true;
-  if (strcmp(tog.GetString(),unit) == 0)
+  if (strcmp(tog.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -57,13 +71,13 @@ bool HeatResistanceAreaUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const HeatResistanceAreaUnit& HeatResistanceAreaUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(rsi.GetString(),unit) == 0)
+  if (strcmp(rsi.GetString(), unit) == 0)
     return rsi;
-  if (strcmp(clo.GetString(),unit) == 0)
+  if (strcmp(clo.GetString(), unit) == 0)
     return clo;
-  if (strcmp(rValue.GetString(),unit) == 0)
+  if (strcmp(rValue.GetString(), unit) == 0)
     return rValue;
-  if (strcmp(tog.GetString(),unit) == 0)
+  if (strcmp(tog.GetString(), unit) == 0)
     return tog;
   std::stringstream err;
   err << unit << " is not a valid HeatResistanceArea unit";

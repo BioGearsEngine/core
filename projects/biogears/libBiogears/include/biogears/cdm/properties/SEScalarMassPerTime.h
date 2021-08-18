@@ -20,7 +20,7 @@ public:
   MassPerTimeUnit(const char* u);
   MassPerTimeUnit(const std::string& u);
 
-  virtual ~MassPerTimeUnit() = default;   
+  virtual ~MassPerTimeUnit();   
 
   bool operator==(const MassPerTimeUnit&) const;
   bool operator!=(const MassPerTimeUnit&) const;
@@ -40,10 +40,12 @@ public:
   static const MassPerTimeUnit kg_Per_s;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<MassPerTimeUnit>;
+
 class BIOGEARS_API SEScalarMassPerTime : public SEScalarQuantity<MassPerTimeUnit> {
 public:
-  SEScalarMassPerTime() = default;
-  virtual ~SEScalarMassPerTime() = default;
+  SEScalarMassPerTime();
+  virtual ~SEScalarMassPerTime();
 
   CDM::ScalarMassPerTimeData* Unload() const override;
 

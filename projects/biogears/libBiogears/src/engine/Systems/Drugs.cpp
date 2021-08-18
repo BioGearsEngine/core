@@ -260,7 +260,12 @@ void Drugs::Process()
     CalculateDrugEffects();
   }
 }
-
+//--------------------------------------------------------------------------------------------------
+/// \brief
+//  Dugs Postprocess functions
+void Drugs::PostProcess()
+{
+}
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Increments the mass of a substance to represent drug injection
@@ -314,7 +319,7 @@ void Drugs::AdministerSubstanceBolus()
       break;
     default:
       /// \error Error: Unavailable Administration Route
-      Error(std::string{ "Unavailable Bolus Administration Route for substance " } + b.first->GetName(), "Drugs::AdministerSubstanceBolus");
+      Error(std::string { "Unavailable Bolus Administration Route for substance " } + b.first->GetName(), "Drugs::AdministerSubstanceBolus");
       completedBolus.push_back(b.first); // Remove it
       continue;
     }
@@ -518,7 +523,7 @@ void Drugs::AdministerSubstanceNasal()
     //Rate of systemic absorption of the intact drug
     const double nasalSystemicAbsorptionRate_mg_Per_s = (nasalk4 * relMass[0]) + (nasalk8 * relMass[1]) + (nasalk10 * relMass[2]); // mg/s
     double totalDose_mg = unrelMass[0] + unrelMass[1] + unrelMass[2] + relMass[0] + relMass[1] + relMass[2];
-    
+
     //Systemic bioavailability of the intact drug
     const double nasalBioavailability = (nasalk4 * (nasalC5 / (nasalAlpha + nasalC6 / nasalDelta)) + nasalk8 * (nasalC7 / nasalAlpha + nasalC8 / nasalBeta + nasalC9 / nasalDelta + nasalCp2 / nasalEpsilon) + nasalk10 * (nasalC10 / nasalAlpha + nasalC11 / nasalBeta + nasalC12 / nasalGamma + nasalC13 / nasalDelta + nasalC14 / nasalEpsilon + nasalCp3 / nasalOmega)) / totalDose_mg;
 
@@ -898,7 +903,7 @@ void Drugs::CalculatePartitionCoefficients()
 //--------------------------------------------------------------------------------------------------
 void Drugs::CalculateDrugEffects()
 {
-  std::map<std::string, double> effects_unitless{
+  std::map<std::string, double> effects_unitless {
     { "Bronchodilation", 0 },
     { "CentralNervous", 0 },
     { "DiastolicPressure", 0 },
@@ -954,7 +959,7 @@ void Drugs::CalculateDrugEffects()
       if (sub->GetClassification() == CDM::enumSubstanceClass::Opioid) {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * std::pow(1.0 + inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
       } else if (sub->GetName() == "Sarin") {
-        effect = 0.8 * (m_RbcAcetylcholinesteraseFractionInhibited);   //0.8 is a tuning factor, validated by patient expected physiological response
+        effect = 0.8 * (m_RbcAcetylcholinesteraseFractionInhibited); //0.8 is a tuning factor, validated by patient expected physiological response
       } else {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) + std::pow(ec50_ug_Per_mL, shapeParameter));
       }

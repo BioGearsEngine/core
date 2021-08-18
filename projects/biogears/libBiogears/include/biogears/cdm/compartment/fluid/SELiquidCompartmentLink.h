@@ -27,7 +27,7 @@ protected:
   SELiquidCompartmentLink(SELiquidCompartment& src, SELiquidCompartment& tgt, const std::string& name);
 
 public:
-  ~SELiquidCompartmentLink() override = default;
+  ~SELiquidCompartmentLink() override;
 
   virtual CDM::LiquidCompartmentLinkData* Unload() override;
 };

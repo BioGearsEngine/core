@@ -14,12 +14,22 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 
 namespace biogears {
+SESubstanceQuantity::SESubstanceQuantity(SESubstance& sub)
+  : Loggable(sub.GetLogger())
+  , m_Substance(sub)
+{
+}
+//-------------------------------------------------------------------------------
+SESubstanceQuantity::~SESubstanceQuantity()
+{
+}
+//-------------------------------------------------------------------------------
 bool SESubstanceQuantity::Load(const CDM::SubstanceQuantityData& in)
 {
   Clear();
   return true;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceQuantity::Unload(CDM::SubstanceQuantityData& data)
 {
   data.Substance(m_Substance.GetName());

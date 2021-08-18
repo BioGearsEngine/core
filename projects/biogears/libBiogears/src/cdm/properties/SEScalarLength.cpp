@@ -20,13 +20,27 @@ const LengthUnit LengthUnit::um("um");
 const LengthUnit LengthUnit::inch("in");
 const LengthUnit LengthUnit::ft("ft");
 
+template class SEScalarQuantity<LengthUnit>;
+
 LengthUnit::LengthUnit(const char* u)
-  : LengthUnit(std::string{ u })
+  : LengthUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 LengthUnit::LengthUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+LengthUnit::~LengthUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarLength::SEScalarLength()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarLength::~SEScalarLength()
 {
 }
 //-------------------------------------------------------------------------------
@@ -41,17 +55,17 @@ CDM::ScalarLengthData* SEScalarLength::Unload() const
 //-------------------------------------------------------------------------------
 bool LengthUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(m.GetString(),unit) == 0)
+  if (strcmp(m.GetString(), unit) == 0)
     return true;
-  if (strcmp(cm.GetString(),unit) == 0)
+  if (strcmp(cm.GetString(), unit) == 0)
     return true;
-  if (strcmp(mm.GetString(),unit) == 0)
+  if (strcmp(mm.GetString(), unit) == 0)
     return true;
-  if (strcmp(um.GetString(),unit) == 0)
+  if (strcmp(um.GetString(), unit) == 0)
     return true;
-  if (strcmp(inch.GetString(),unit) == 0)
+  if (strcmp(inch.GetString(), unit) == 0)
     return true;
-  if (strcmp(ft.GetString(),unit) == 0)
+  if (strcmp(ft.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -63,17 +77,17 @@ bool LengthUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const LengthUnit& LengthUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(m.GetString(),unit) == 0)
+  if (strcmp(m.GetString(), unit) == 0)
     return m;
-  if (strcmp(cm.GetString(),unit) == 0)
+  if (strcmp(cm.GetString(), unit) == 0)
     return cm;
-  if (strcmp(mm.GetString(),unit) == 0)
+  if (strcmp(mm.GetString(), unit) == 0)
     return mm;
-  if (strcmp(um.GetString(),unit) == 0)
+  if (strcmp(um.GetString(), unit) == 0)
     return um;
-  if (strcmp(inch.GetString(),unit) == 0)
+  if (strcmp(inch.GetString(), unit) == 0)
     return inch;
-  if (strcmp(ft.GetString(),unit) == 0)
+  if (strcmp(ft.GetString(), unit) == 0)
     return ft;
   std::stringstream err;
   err << unit << " is not a valid Length unit";

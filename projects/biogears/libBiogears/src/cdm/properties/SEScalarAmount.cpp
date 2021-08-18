@@ -15,6 +15,17 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const AmountUnit AmountUnit::mol("mol");
 const AmountUnit AmountUnit::pmol("pmol");
+template class SEScalarQuantity<AmountUnit>;
+
+//-----------------------------------------------------------------------------
+SEScalarAmount::SEScalarAmount()
+  : SEScalarQuantity()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarAmount::~SEScalarAmount()  {
+
+}
 //-----------------------------------------------------------------------------
 AmountUnit::AmountUnit(const char* u)
   : AmountUnit(std::string{ u })
@@ -23,6 +34,10 @@ AmountUnit::AmountUnit(const char* u)
 //-----------------------------------------------------------------------------
 AmountUnit::AmountUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+AmountUnit::~AmountUnit()
 {
 }
 //-----------------------------------------------------------------------------

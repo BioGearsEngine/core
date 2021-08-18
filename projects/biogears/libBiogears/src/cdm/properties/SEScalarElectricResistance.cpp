@@ -15,13 +15,27 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const ElectricResistanceUnit ElectricResistanceUnit::Ohm("ohm");
 
+template class SEScalarQuantity<ElectricResistanceUnit>;
+
 ElectricResistanceUnit::ElectricResistanceUnit(const char* u)
-  : ElectricResistanceUnit(std::string{ u })
+  : ElectricResistanceUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 ElectricResistanceUnit::ElectricResistanceUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+ElectricResistanceUnit::~ElectricResistanceUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarElectricResistance::SEScalarElectricResistance()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarElectricResistance::~SEScalarElectricResistance()
 {
 }
 //-------------------------------------------------------------------------------
@@ -36,7 +50,7 @@ CDM::ScalarElectricResistanceData* SEScalarElectricResistance::Unload() const
 //-------------------------------------------------------------------------------
 bool ElectricResistanceUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(Ohm.GetString(),unit) == 0)
+  if (strcmp(Ohm.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -48,7 +62,7 @@ bool ElectricResistanceUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const ElectricResistanceUnit& ElectricResistanceUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(Ohm.GetString(),unit) == 0)
+  if (strcmp(Ohm.GetString(), unit) == 0)
     return Ohm;
   std::stringstream err;
   err << unit << " is not a valid ElectricResistance unit";

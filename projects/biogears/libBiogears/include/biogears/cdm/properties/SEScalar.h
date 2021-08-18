@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/circuit/SECircuit.inl>
 #include <biogears/cdm/properties/SEProperty.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
 
@@ -27,8 +26,8 @@ static constexpr double ZERO_APPROX = 1e-10;
 
 class BIOGEARS_API NoUnit {
 public:
-  NoUnit() = default;
-  virtual ~NoUnit() = default;
+  NoUnit();
+  virtual ~NoUnit();
 
   static const NoUnit unitless;
 };
@@ -73,7 +72,7 @@ public:
   bool IsPositive() const;
   bool IsNegative() const;
   bool IsZero(double limit = ZERO_APPROX) const;
-  
+
   void SetReadOnly(bool b);
   bool IsReadOnly() const;
 
@@ -121,14 +120,14 @@ protected:
   virtual void Unload(CDM::ScalarData& s) const;
 };
 //-------------------------------------------------------------------------------
-inline SEScalar operator+(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Increment(rhs); };
-inline SEScalar operator-(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Decrement(rhs); };
-inline SEScalar operator/(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Divide(rhs); };
-inline SEScalar operator*(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Multiply(rhs); };
-inline bool operator<(double lhs, const SEScalar& rhs) { return SEScalar{ lhs } < rhs; };
-inline bool operator<=(double lhs, const SEScalar& rhs) { return SEScalar{ lhs } <= rhs; };
-inline bool operator>(double lhs, const SEScalar& rhs) { return SEScalar{ lhs } > rhs; };
-inline bool operator>=(double lhs, const SEScalar& rhs) { return SEScalar{ lhs } >= rhs; };
+inline SEScalar operator+(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Increment(rhs); };
+inline SEScalar operator-(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Decrement(rhs); };
+inline SEScalar operator/(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Divide(rhs); };
+inline SEScalar operator*(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Multiply(rhs); };
+inline bool operator<(double lhs, const SEScalar& rhs) { return SEScalar { lhs } < rhs; };
+inline bool operator<=(double lhs, const SEScalar& rhs) { return SEScalar { lhs } <= rhs; };
+inline bool operator>(double lhs, const SEScalar& rhs) { return SEScalar { lhs } > rhs; };
+inline bool operator>=(double lhs, const SEScalar& rhs) { return SEScalar { lhs } >= rhs; };
 inline bool operator==(double lhs, const SEScalar& rhs) { return rhs == lhs; }
 inline bool operator!=(double lhs, const SEScalar& rhs) { return rhs != lhs; }
 //-------------------------------------------------------------------------------

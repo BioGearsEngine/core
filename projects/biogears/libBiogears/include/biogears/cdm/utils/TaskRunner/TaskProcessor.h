@@ -26,7 +26,7 @@ class TaskQueue;
 class TaskProcessor {
 public:
   TaskProcessor(TaskQueue* pTaskQueue);
-  ~TaskProcessor() = default;
+  ~TaskProcessor();
 
   void operator()();
 

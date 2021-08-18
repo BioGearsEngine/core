@@ -15,8 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <cmath>
 #include <fstream>
 #include <iomanip>
-#include <sstream>
 #include <iostream>
+#include <sstream>
 //Project Includes
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
@@ -39,6 +39,36 @@ DataTrack::DataTrack(Logger* logger)
   : Loggable(logger)
 {
   m_Delimiter = ',';
+}
+
+DataTrack::DataTrack(DataTrack&& obj)
+  : m_Track(std::move(obj.m_Track))
+  , m_Probe(std::move(obj.m_Probe))
+  , m_Formatting(std::move(obj.m_Formatting))
+  , m_Delimiter(std::move(obj.m_Delimiter))
+  , m_LastTime(std::move(obj.m_LastTime))
+  , m_Time(std::move(obj.m_Time))
+  , m_HeadingOrder(std::move(obj.m_HeadingOrder))
+  , m_DefaultPrecision(std::move(obj.m_DefaultPrecision))
+  , m_FileStream(std::move(obj.m_FileStream))
+{
+}
+
+DataTrack& DataTrack::operator=(DataTrack&& rhs)
+{
+  m_Track = std::move(rhs.m_Track);
+  m_Probe = std::move(rhs.m_Probe);
+  m_Formatting = std::move(rhs.m_Formatting);
+
+  m_Delimiter = std::move(rhs.m_Delimiter);
+  m_LastTime = std::move(rhs.m_LastTime);
+  m_Time = std::move(rhs.m_Time);
+  m_HeadingOrder = std::move(rhs.m_HeadingOrder);
+  m_DefaultPrecision = std::move(rhs.m_DefaultPrecision);
+
+  m_FileStream = std::move(rhs.m_FileStream);
+
+  return *this;
 }
 
 DataTrack::~DataTrack()

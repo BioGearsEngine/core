@@ -17,13 +17,27 @@ const ForceUnit ForceUnit::N("N");
 const ForceUnit ForceUnit::lbf("lbf");
 const ForceUnit ForceUnit::dyn("dyn");
 
+template class SEScalarQuantity<ForceUnit>;
+
 ForceUnit::ForceUnit(const char* u)
-  : ForceUnit(std::string{ u })
+  : ForceUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 ForceUnit::ForceUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+ForceUnit::~ForceUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarForce::SEScalarForce()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarForce::~SEScalarForce()
 {
 }
 //-----------------------------------------------------------------------------
@@ -38,11 +52,11 @@ CDM::ScalarForceData* SEScalarForce::Unload() const
 //-----------------------------------------------------------------------------
 bool ForceUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(N.GetString(),unit) == 0)
+  if (strcmp(N.GetString(), unit) == 0)
     return true;
-  if (strcmp(lbf.GetString(),unit) == 0)
+  if (strcmp(lbf.GetString(), unit) == 0)
     return true;
-  if (strcmp(dyn.GetString(),unit) == 0)
+  if (strcmp(dyn.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -54,11 +68,11 @@ bool ForceUnit::IsValidUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 const ForceUnit& ForceUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(N.GetString(),unit) == 0)
+  if (strcmp(N.GetString(), unit) == 0)
     return N;
-  if (strcmp(lbf.GetString(),unit) == 0)
+  if (strcmp(lbf.GetString(), unit) == 0)
     return lbf;
-  if (strcmp(dyn.GetString(),unit) == 0)
+  if (strcmp(dyn.GetString(), unit) == 0)
     return dyn;
   std::stringstream err;
   err << unit << " is not a valid Force unit";

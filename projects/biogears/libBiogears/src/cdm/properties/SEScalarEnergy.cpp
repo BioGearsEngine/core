@@ -18,8 +18,10 @@ const EnergyUnit EnergyUnit::mJ("mJ");
 const EnergyUnit EnergyUnit::kJ("kJ");
 const EnergyUnit EnergyUnit::kcal("kcal");
 
+template class SEScalarQuantity<EnergyUnit>;
+
 EnergyUnit::EnergyUnit(const char* u)
-  : EnergyUnit(std::string{ u })
+  : EnergyUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
@@ -27,6 +29,19 @@ EnergyUnit::EnergyUnit(const std::string& u)
   : CCompoundUnit(u)
 {
 }
+//-------------------------------------------------------------------------------
+EnergyUnit::~EnergyUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarEnergy::SEScalarEnergy()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarEnergy::~SEScalarEnergy()
+{
+}
+
 //-------------------------------------------------------------------------------
 CDM::ScalarEnergyData* SEScalarEnergy::Unload() const
 {
@@ -39,13 +54,13 @@ CDM::ScalarEnergyData* SEScalarEnergy::Unload() const
 //-------------------------------------------------------------------------------
 bool EnergyUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(J.GetString(),unit) == 0)
+  if (strcmp(J.GetString(), unit) == 0)
     return true;
-  if (strcmp(mJ.GetString(),unit) == 0)
+  if (strcmp(mJ.GetString(), unit) == 0)
     return true;
-  if (strcmp(kJ.GetString(),unit) == 0)
+  if (strcmp(kJ.GetString(), unit) == 0)
     return true;
-  if (strcmp(kcal.GetString(),unit) == 0)
+  if (strcmp(kcal.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -57,13 +72,13 @@ bool EnergyUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const EnergyUnit& EnergyUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(J.GetString(),unit) == 0)
+  if (strcmp(J.GetString(), unit) == 0)
     return J;
-  if (strcmp(mJ.GetString(),unit) == 0)
+  if (strcmp(mJ.GetString(), unit) == 0)
     return mJ;
-  if (strcmp(kJ.GetString(),unit) == 0)
+  if (strcmp(kJ.GetString(), unit) == 0)
     return kJ;
-  if (strcmp(kcal.GetString(),unit) == 0)
+  if (strcmp(kcal.GetString(), unit) == 0)
     return kcal;
   std::stringstream err;
   err << unit << " is not a valid Energy unit";

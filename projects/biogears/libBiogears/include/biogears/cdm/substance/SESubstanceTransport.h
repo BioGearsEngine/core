@@ -41,6 +41,9 @@ public:
   virtual bool HasIntensive() const = 0;
   virtual IntensiveScalar& GetIntensive() = 0;
 };
+BG_EXT template class BIOGEARS_API SESubstanceTransportAmount<SEScalarVolume, SEScalarFraction>;
+BG_EXT template class BIOGEARS_API SESubstanceTransportAmount<SEScalarMass, SEScalarMassPerVolume>;
+
 using SEGasTransportSubstance = SESubstanceTransportAmount<SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportSubstance = SESubstanceTransportAmount<SEScalarMass, SEScalarMassPerVolume>;
 
@@ -62,6 +65,10 @@ protected:
 
   virtual std::vector<SESubstanceTransportAmount<TRANSPORT_AMOUNT_TYPES>*>& GetTransportSubstances() = 0;
 };
+
+BG_EXT template class BIOGEARS_API SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction>;
+BG_EXT template class BIOGEARS_API SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
+
 using SEGasTransportVertex = SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportVertex = SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
@@ -84,6 +91,10 @@ protected:
   virtual SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES>& GetSourceVertex() = 0;
   virtual SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES>& GetTargetVertex() = 0;
 };
+
+BG_EXT template class BIOGEARS_API SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
+BG_EXT template class BIOGEARS_API SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
+
 using SEGasTransportEdge = SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportEdge = SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
@@ -102,6 +113,10 @@ protected:
   virtual const std::vector<SESubstanceTransportEdge<TRANSPORT_EDGE_TYPES>*>* GetSourceEdges(const SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES>& v) const = 0;
   virtual const std::vector<SESubstanceTransportEdge<TRANSPORT_EDGE_TYPES>*>* GetTargetEdges(const SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES>& v) const = 0;
 };
+
+BG_EXT template class BIOGEARS_API SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
+BG_EXT template class BIOGEARS_API SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
+
 using SEGasTransportGraph = SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportGraph = SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
@@ -119,6 +134,9 @@ protected:
   const ExtensiveUnit& m_ExtensiveUnit;
   const IntensiveUnit& m_IntensiveUnit;
 };
+
+BG_EXT template class BIOGEARS_API SESubstanceTransporter<SEGasTransportGraph, VolumePerTimeUnit, VolumeUnit, VolumeUnit, NoUnit>;
+BG_EXT template class BIOGEARS_API SESubstanceTransporter<SELiquidTransportGraph, VolumePerTimeUnit, VolumeUnit, MassUnit, MassPerVolumeUnit>;
 
 using SEGasTransporter = SESubstanceTransporter<SEGasTransportGraph, VolumePerTimeUnit, VolumeUnit, VolumeUnit, NoUnit>;
 using SELiquidTransporter = SESubstanceTransporter<SELiquidTransportGraph, VolumePerTimeUnit, VolumeUnit, MassUnit, MassPerVolumeUnit>;

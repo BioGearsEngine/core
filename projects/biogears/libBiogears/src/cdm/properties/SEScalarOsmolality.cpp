@@ -16,13 +16,27 @@ namespace biogears {
 const OsmolalityUnit OsmolalityUnit::Osm_Per_kg("Osm/kg");
 const OsmolalityUnit OsmolalityUnit::mOsm_Per_kg("mOsm/kg");
 
+template class SEScalarQuantity<OsmolalityUnit>;
+
 OsmolalityUnit::OsmolalityUnit(const char* u)
-  : OsmolalityUnit(std::string{ u })
+  : OsmolalityUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 OsmolalityUnit::OsmolalityUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+OsmolalityUnit::~OsmolalityUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarOsmolality::SEScalarOsmolality()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarOsmolality::~SEScalarOsmolality()
 {
 }
 //-------------------------------------------------------------------------------
@@ -37,9 +51,9 @@ CDM::ScalarOsmolalityData* SEScalarOsmolality::Unload() const
 //-------------------------------------------------------------------------------
 bool OsmolalityUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(Osm_Per_kg.GetString(),unit) == 0)
+  if (strcmp(Osm_Per_kg.GetString(), unit) == 0)
     return true;
-  if (strcmp(mOsm_Per_kg.GetString(),unit) == 0)
+  if (strcmp(mOsm_Per_kg.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -51,9 +65,9 @@ bool OsmolalityUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const OsmolalityUnit& OsmolalityUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(Osm_Per_kg.GetString(),unit) == 0)
+  if (strcmp(Osm_Per_kg.GetString(), unit) == 0)
     return Osm_Per_kg;
-  if (strcmp(mOsm_Per_kg.GetString(),unit) == 0)
+  if (strcmp(mOsm_Per_kg.GetString(), unit) == 0)
     return mOsm_Per_kg;
   std::stringstream err;
   err << unit << " is not a valid Osmolality unit";

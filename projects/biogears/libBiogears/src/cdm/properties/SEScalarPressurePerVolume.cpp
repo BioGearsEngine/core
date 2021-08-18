@@ -16,14 +16,28 @@ namespace biogears {
 const PressurePerVolumeUnit PressurePerVolumeUnit::mmHg_Per_mL("mmHg/mL");
 const PressurePerVolumeUnit PressurePerVolumeUnit::cmH2O_Per_mL("cmH2O/mL");
 
+template class SEScalarQuantity<PressurePerVolumeUnit>;
+
 PressurePerVolumeUnit::PressurePerVolumeUnit(const char* u)
-  : PressurePerVolumeUnit(std::string{ u })
+  : PressurePerVolumeUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 PressurePerVolumeUnit::PressurePerVolumeUnit(const std::string& u)
   : CCompoundUnit(u)
 {
+}
+//-------------------------------------------------------------------------------
+PressurePerVolumeUnit::~PressurePerVolumeUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarPressurePerVolume::SEScalarPressurePerVolume()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarPressurePerVolume::~SEScalarPressurePerVolume(){
+
 }
 //-------------------------------------------------------------------------------
 CDM::ScalarPressurePerVolumeData* SEScalarPressurePerVolume::Unload() const
@@ -37,9 +51,9 @@ CDM::ScalarPressurePerVolumeData* SEScalarPressurePerVolume::Unload() const
 //-------------------------------------------------------------------------------
 bool PressurePerVolumeUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(mmHg_Per_mL.GetString(),unit) == 0)
+  if (strcmp(mmHg_Per_mL.GetString(), unit) == 0)
     return true;
-  if (strcmp(cmH2O_Per_mL.GetString(),unit) == 0)
+  if (strcmp(cmH2O_Per_mL.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -51,9 +65,9 @@ bool PressurePerVolumeUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const PressurePerVolumeUnit& PressurePerVolumeUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(mmHg_Per_mL.GetString(),unit) == 0)
+  if (strcmp(mmHg_Per_mL.GetString(), unit) == 0)
     return mmHg_Per_mL;
-  if (strcmp(cmH2O_Per_mL.GetString(),unit) == 0)
+  if (strcmp(cmH2O_Per_mL.GetString(), unit) == 0)
     return cmH2O_Per_mL;
   std::stringstream err;
   err << unit << " is not a valid PressurePerVolume unit";

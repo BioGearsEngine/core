@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 
 namespace biogears {
+template class SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>;
 SEFluidCircuit::SEFluidCircuit(const char* name, SECircuitManager& mgr)
   : SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>(name, mgr.GetLogger())
   , m_Mgr(mgr)
@@ -33,7 +34,7 @@ SEFluidCircuit::~SEFluidCircuit()
 //-----------------------------------------------------------------------------
 SEFluidCircuitNode& SEFluidCircuit::CreateNode(const char* name)
 {
-  return CreateNode(std::string{ name });
+  return CreateNode(std::string { name });
 }
 //-----------------------------------------------------------------------------
 SEFluidCircuitNode& SEFluidCircuit::CreateNode(const std::string& name)
@@ -47,7 +48,7 @@ SEFluidCircuitNode& SEFluidCircuit::CreateNode(const std::string& name)
 //-----------------------------------------------------------------------------
 SEFluidCircuitPath& SEFluidCircuit::CreatePath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const char* name)
 {
-  return CreatePath(src, tgt, std::string{ name });
+  return CreatePath(src, tgt, std::string { name });
 }
 //-----------------------------------------------------------------------------
 SEFluidCircuitPath& SEFluidCircuit::CreatePath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const std::string& name)

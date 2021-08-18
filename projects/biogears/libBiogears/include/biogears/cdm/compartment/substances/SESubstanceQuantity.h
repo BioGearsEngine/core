@@ -22,11 +22,9 @@ class BIOGEARS_API SESubstanceQuantity : public Loggable {
   friend io::SubstanceQuantity;
 
 public:
-  SESubstanceQuantity(SESubstance& sub)
-    : Loggable(sub.GetLogger())
-    , m_Substance(sub) {};
+  SESubstanceQuantity(SESubstance& sub);
 
-  virtual ~SESubstanceQuantity() override = default;
+  virtual ~SESubstanceQuantity() override;
 
   virtual void Clear() = 0; //clear memory
   virtual void Invalidate() = 0;

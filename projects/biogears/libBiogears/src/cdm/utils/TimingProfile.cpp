@@ -19,6 +19,20 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
+TimingProfile::TimingProfile(){
+
+}
+
+TimingProfile::TimingProfile(Logger* logger)
+: Loggable(logger)
+{
+
+}
+
+TimingProfile::~TimingProfile(){
+
+}
+
 void TimingProfile::Clear()
 {
   m_timers.clear();

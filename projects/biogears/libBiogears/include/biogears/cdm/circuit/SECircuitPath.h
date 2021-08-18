@@ -15,6 +15,25 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+#include <biogears/cdm/properties/SEScalarElectricCapacitance.h>
+#include <biogears/cdm/properties/SEScalarElectricCharge.h>
+#include <biogears/cdm/properties/SEScalarElectricCurrent.h>
+#include <biogears/cdm/properties/SEScalarElectricInductance.h>
+#include <biogears/cdm/properties/SEScalarElectricPotential.h>
+#include <biogears/cdm/properties/SEScalarElectricResistance.h>
+#include <biogears/cdm/properties/SEScalarEnergy.h>
+#include <biogears/cdm/properties/SEScalarFlowCompliance.h>
+#include <biogears/cdm/properties/SEScalarFlowInertance.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
+#include <biogears/cdm/properties/SEScalarHeatInductance.h>
+#include <biogears/cdm/properties/SEScalarHeatResistance.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+
 #define CIRCUIT_PATH_TEMPLATE typename FluxScalar, typename ResistanceScalar, typename CapacitanceScalar, typename InductanceScalar, typename PotentialScalar, typename QuantityScalar
 #define CIRCUIT_PATH_TYPES FluxScalar, ResistanceScalar, CapacitanceScalar, InductanceScalar, PotentialScalar, QuantityScalar
 #define ELECTRICAL_CIRCUIT_PATH SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge
@@ -24,7 +43,8 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(CircuitPathData)
 
 namespace biogears {
-  namespace io {
+
+namespace io {
   class Circuit;
 }
 
@@ -33,6 +53,7 @@ class SECircuitPath : public Loggable {
   template <typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType>
   friend class SECircuit;
   friend io::Circuit;
+
 protected:
   SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const char* name);
   SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const std::string& name);
@@ -175,5 +196,10 @@ protected:
   PotentialScalar* m_PotentialSourceBaseline;
   PotentialScalar* m_ValveBreakdownPotential;
 };
+
+BG_EXT template class BIOGEARS_API SECircuitPath<ELECTRICAL_CIRCUIT_PATH>;
+BG_EXT template class BIOGEARS_API SECircuitPath<FLUID_CIRCUIT_PATH>;
+BG_EXT template class BIOGEARS_API SECircuitPath<THERMAL_CIRCUIT_PATH>;
+
 }
 #include <biogears/cdm/circuit/SECircuitPath.inl>

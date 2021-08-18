@@ -20,7 +20,7 @@ public:
   LengthPerTimePressureUnit(const char* u);
   LengthPerTimePressureUnit(const std::string& u);
 
-  virtual ~LengthPerTimePressureUnit() = default;    
+  virtual ~LengthPerTimePressureUnit();    
 
   bool operator==(const LengthPerTimePressureUnit&) const;
   bool operator!=(const LengthPerTimePressureUnit&) const;
@@ -36,10 +36,12 @@ public:
   static const LengthPerTimePressureUnit cm_Per_min_mmHg;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<LengthPerTimePressureUnit>;
+
 class BIOGEARS_API SEScalarLengthPerTimePressure : public SEScalarQuantity<LengthPerTimePressureUnit> {
 public:
-  SEScalarLengthPerTimePressure() = default;
-  virtual ~SEScalarLengthPerTimePressure() = default;
+  SEScalarLengthPerTimePressure();
+  virtual ~SEScalarLengthPerTimePressure();
 
   CDM::ScalarLengthPerTimePressureData* Unload() const override;
 

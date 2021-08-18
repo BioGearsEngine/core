@@ -20,7 +20,7 @@ public:
   MassPerAreaTimeUnit(const char* u);
   MassPerAreaTimeUnit(const std::string& u);
 
-  virtual ~MassPerAreaTimeUnit() = default;     
+  virtual ~MassPerAreaTimeUnit();
 
   bool operator==(const MassPerAreaTimeUnit&) const;
   bool operator!=(const MassPerAreaTimeUnit&) const;
@@ -33,10 +33,12 @@ public:
   static const MassPerAreaTimeUnit g_Per_cm2_s;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<MassPerAreaTimeUnit>;
+
 class BIOGEARS_API SEScalarMassPerAreaTime : public SEScalarQuantity<MassPerAreaTimeUnit> {
 public:
-  SEScalarMassPerAreaTime() = default;
-  virtual ~SEScalarMassPerAreaTime() = default;
+  SEScalarMassPerAreaTime();
+  virtual ~SEScalarMassPerAreaTime();
 
   CDM::ScalarMassPerAreaTimeData* Unload() const override;
 

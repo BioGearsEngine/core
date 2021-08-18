@@ -17,7 +17,10 @@ SEScalarFraction::SEScalarFraction()
   : SEScalar()
 {
 }
-
+//-------------------------------------------------------------------------------
+SEScalarFraction::~SEScalarFraction() {
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarFractionData* SEScalarFraction::Unload() const
 {
   if (!IsValid())
@@ -26,27 +29,25 @@ CDM::ScalarFractionData* SEScalarFraction::Unload() const
   SEScalar::Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 //double SEScalarFraction::GetValue() const {
 //  return SEScalar::GetValue();
 //}
-
+//-------------------------------------------------------------------------------
 double SEScalarFraction::GetValue(const NoUnit& unitless) const
 {
   return SEScalar::GetValue();
 }
-
+//-------------------------------------------------------------------------------
 //void SEScalarFraction::SetValue(double d)
 //{
 //  SEScalar::SetValue(d);
 //}
-
+//-------------------------------------------------------------------------------
 void SEScalarFraction::SetValue(double d, const NoUnit& unitless)
 {
   SEScalar::SetValue(d);
 }
-
-
 //-------------------------------------------------------------------------------
 bool SEScalarFraction::operator==(const SEScalarFraction& obj) const
 {

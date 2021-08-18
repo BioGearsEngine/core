@@ -16,6 +16,8 @@ namespace biogears {
 const AreaUnit AreaUnit::cm2("cm^2");
 const AreaUnit AreaUnit::m2("m^2");
 
+template class SEScalarQuantity<AreaUnit>;
+
 AreaUnit::AreaUnit(const char* u)
   : AreaUnit(std::string { u })
 {
@@ -23,6 +25,14 @@ AreaUnit::AreaUnit(const char* u)
 //-----------------------------------------------------------------------------
 AreaUnit::AreaUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarArea::SEScalarArea()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarArea::~SEScalarArea()
 {
 }
 //-----------------------------------------------------------------------------

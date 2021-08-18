@@ -18,13 +18,27 @@ const FrequencyUnit FrequencyUnit::Per_s("1/s");
 const FrequencyUnit FrequencyUnit::Hz("Hz");
 const FrequencyUnit FrequencyUnit::Per_hr("1/hr");
 
+template class SEScalarQuantity<FrequencyUnit>;
+
 FrequencyUnit::FrequencyUnit(const char* u)
-  : FrequencyUnit(std::string{ u })
+  : FrequencyUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 FrequencyUnit::FrequencyUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+FrequencyUnit::~FrequencyUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFrequency::SEScalarFrequency()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFrequency::~SEScalarFrequency()
 {
 }
 //-----------------------------------------------------------------------------
@@ -48,7 +62,7 @@ bool FrequencyUnit::IsValidUnit(const char* unit)
   if (strcmp(Per_hr.GetString(), unit) == 0)
     return true;
 
-    return false;
+  return false;
 }
 //-----------------------------------------------------------------------------
 bool FrequencyUnit::IsValidUnit(const std::string& unit)

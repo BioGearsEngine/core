@@ -20,7 +20,7 @@ public:
   FlowResistanceUnit(const char* u);
   FlowResistanceUnit(const std::string& u);
 
-  virtual ~FlowResistanceUnit() = default;   
+  virtual ~FlowResistanceUnit();
 
   bool operator==(const FlowResistanceUnit&) const;
   bool operator!=(const FlowResistanceUnit&) const;
@@ -37,12 +37,14 @@ public:
   static const FlowResistanceUnit Pa_s_Per_m3;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<FlowResistanceUnit>;
+
 class BIOGEARS_API SEScalarFlowResistance : public SEScalarQuantity<FlowResistanceUnit> {
 public:
-  SEScalarFlowResistance() = default;
-  virtual ~SEScalarFlowResistance() = default;
+  SEScalarFlowResistance();
+  virtual ~SEScalarFlowResistance();
 
-  CDM::ScalarFlowResistanceData* Unload() const override;   
+  CDM::ScalarFlowResistanceData* Unload() const override;
 
   using SEScalarQuantity<FlowResistanceUnit>::SetValue;
   using SEScalarQuantity<FlowResistanceUnit>::GetValue;

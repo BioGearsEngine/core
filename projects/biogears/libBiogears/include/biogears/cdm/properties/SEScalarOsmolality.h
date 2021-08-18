@@ -20,7 +20,7 @@ public:
   OsmolalityUnit(const char* u);
   OsmolalityUnit(const std::string& u);
 
-  virtual ~OsmolalityUnit() = default;    
+  virtual ~OsmolalityUnit();
 
   bool operator==(const OsmolalityUnit&) const;
   bool operator!=(const OsmolalityUnit&) const;
@@ -34,10 +34,12 @@ public:
   static const OsmolalityUnit mOsm_Per_kg;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<OsmolalityUnit>;
+
 class BIOGEARS_API SEScalarOsmolality : public SEScalarQuantity<OsmolalityUnit> {
 public:
-  SEScalarOsmolality() = default;
-  virtual ~SEScalarOsmolality() = default;
+  SEScalarOsmolality();
+  virtual ~SEScalarOsmolality();
 
   CDM::ScalarOsmolalityData* Unload() const override;
 

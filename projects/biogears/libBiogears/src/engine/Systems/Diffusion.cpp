@@ -22,14 +22,18 @@ auto DiffusionCalculator::make_unique(BioGears& bg) -> std::unique_ptr<Diffusion
 {
   return std::unique_ptr<DiffusionCalculator>(new DiffusionCalculator(bg));
 }
-
+//-------------------------------------------------------------------------------
 DiffusionCalculator::DiffusionCalculator(BioGears& bg)
   : Loggable(bg.GetLogger())
   , m_data(bg)
 {
   m_dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
 }
-
+//-------------------------------------------------------------------------------
+DiffusionCalculator::~DiffusionCalculator()
+{
+}
+//-------------------------------------------------------------------------------
 void DiffusionCalculator::Initialize(SESubstanceManager& subMgr)
 {
   for (auto sub : subMgr.GetActiveSubstances()) {
@@ -95,7 +99,7 @@ void DiffusionCalculator::Initialize(SESubstanceManager& subMgr)
     simpleSubCount++;
   }
 }
-
+//-------------------------------------------------------------------------------
 void DiffusionCalculator::SetDiffusionState()
 {
   ClearConcentrations();
@@ -128,7 +132,7 @@ void DiffusionCalculator::SetDiffusionState()
   m_SimpleSubMatrices.extracellular = Eigen::Map<Eigen::MatrixXd>(m_SimpleSubConcentrations.extracellular_ug_Per_mL.data(), simpleRows, columns);
   m_SimpleSubMatrices.intracellular = Eigen::Map<Eigen::MatrixXd>(m_SimpleSubConcentrations.intracellular_ug_Per_mL.data(), simpleRows, columns);
 }
-
+//-------------------------------------------------------------------------------
 void DiffusionCalculator::CalculateLinearDiffusionMethods()
 {
   Eigen::MatrixXd DeltaMassInstantVE_ug = (m_InstantSubMatrices.vascular - m_InstantSubMatrices.extracellular) * m_VolumeRatiosVascularExtra.asDiagonal();
@@ -264,7 +268,7 @@ void DiffusionCalculator::CalculateLinearDiffusionMethods()
     colNumber++;
   }
 }
-
+//-------------------------------------------------------------------------------
 void DiffusionCalculator::CalculateNonLinearDiffusionMethods()
 {
   SESubstance* albumin = &m_data.GetSubstances().GetAlbumin(); //Many albumin-specific calls, so make a variable for it
@@ -305,7 +309,7 @@ void DiffusionCalculator::CalculateNonLinearDiffusionMethods()
   m_data.GetCompartments().GetLiquidCompartment(BGE::LymphCompartment::Lymph)->GetSubstanceQuantity(*albumin)->Balance(BalanceLiquidBy::Mass);
   m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava)->GetSubstanceQuantity(*albumin)->Balance(BalanceLiquidBy::Mass);
 }
-
+//-------------------------------------------------------------------------------
 void DiffusionCalculator::CalculateFacilitatedDiffusion(DiffusionCompartmentSet& cmptSet, const SESubstance& sub, double combinedCoefficient_g_Per_s)
 {
   SELiquidCompartment& vascular = *cmptSet.vascular;
@@ -367,7 +371,7 @@ void DiffusionCalculator::CalculateFacilitatedDiffusion(DiffusionCompartmentSet&
   extracellularSubQ->Balance(BalanceLiquidBy::Mass);
   intracellularSubQ->Balance(BalanceLiquidBy::Mass);
 }
-
+//-------------------------------------------------------------------------------
 void DiffusionCalculator::CalculatePerfusionLimitedDiffusion(DiffusionCompartmentSet& cmptSet, const SESubstance& sub, double partitionCoeff)
 {
   SETissueCompartment& tissue = *cmptSet.tissue;
@@ -428,7 +432,7 @@ void DiffusionCalculator::CalculatePerfusionLimitedDiffusion(DiffusionCompartmen
   vSubQ->Balance(BalanceLiquidBy::Mass);
   tSubQ->Balance(BalanceLiquidBy::Mass);
 }
-
+//-------------------------------------------------------------------------------
 /// --------------------------------------------------------------------------------------------------
 /// \brief
 /// Calculates the mass transport of ionic species Na, K, Ca, Cl against their electrochemical gradient using active pumps and cotransport
@@ -573,7 +577,7 @@ void DiffusionCalculator::CalculateActiveIonDiffusion(DiffusionCompartmentSet& c
     intra.GetSubstanceQuantity(*ion)->Balance(BalanceLiquidBy::Mass);
   }
 }
-
+//-------------------------------------------------------------------------------
 void DiffusionCalculator::CalculateMacromoleculeDiffusion(DiffusionCompartmentSet& cmptSet, const SESubstance& sub)
 {
   SETissueCompartment& tissue = *cmptSet.tissue;
@@ -619,7 +623,7 @@ void DiffusionCalculator::CalculateMacromoleculeDiffusion(DiffusionCompartmentSe
     moved_ug = 0.0;
   }
 }
-
+//-------------------------------------------------------------------------------
 void DiffusionCalculator::CalculatePassiveLymphDiffusion(SELiquidCompartment& source, SELiquidCompartment& target, const SESubstance& sub)
 {
 
@@ -652,7 +656,7 @@ void DiffusionCalculator::CalculatePassiveLymphDiffusion(SELiquidCompartment& so
     massToMove_ug = 0.0;
   }
 }
-
+//-------------------------------------------------------------------------------
 void DiffusionCalculator::ClearConcentrations()
 {
   m_SimpleSubConcentrations.vascular_ug_Per_mL.clear();
@@ -663,7 +667,7 @@ void DiffusionCalculator::ClearConcentrations()
   m_InstantSubConcentrations.extracellular_ug_Per_mL.clear();
   m_InstantSubConcentrations.intracellular_ug_Per_mL.clear();
 }
-
+//-------------------------------------------------------------------------------
 void DiffusionCalculator::DistributeMassbyMassWeighted(SELiquidCompartment& cmpt, const SESubstance& sub, double mass, const MassUnit& unit)
 {
   SELiquidSubstanceQuantity* subQ = cmpt.GetSubstanceQuantity(sub);
@@ -691,7 +695,7 @@ void DiffusionCalculator::DistributeMassbyMassWeighted(SELiquidCompartment& cmpt
     }
   }
 }
-
+//-------------------------------------------------------------------------------
 void DiffusionCalculator::DistributeMassbyVolumeWeighted(SELiquidCompartment& cmpt, const SESubstance& sub, double mass, const MassUnit& unit)
 {
   SELiquidSubstanceQuantity* subQ = cmpt.GetSubstanceQuantity(sub);
@@ -719,7 +723,7 @@ void DiffusionCalculator::DistributeMassbyVolumeWeighted(SELiquidCompartment& cm
     }
   }
 }
-
+//-------------------------------------------------------------------------------
 double DiffusionCalculator::SodiumPotassiumPump(double intraNa_mM, double extraNa_mM, double extraK_mM, double potential_V)
 {
   //Formulation of Luo1994Dynamic used in Yi2002Mathematical
@@ -737,7 +741,7 @@ double DiffusionCalculator::SodiumPotassiumPump(double intraNa_mM, double extraN
 
   return pumpFlux_umol_Per_min;
 }
-
+//-------------------------------------------------------------------------------
 double DiffusionCalculator::CalciumPump(double intraCa_M)
 {
   double maxCurrent_A_Per_mL = 0.0033;

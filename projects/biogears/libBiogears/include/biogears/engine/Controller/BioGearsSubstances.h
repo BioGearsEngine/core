@@ -31,13 +31,13 @@ class BIOGEARS_API SizeIndependentDepositionEfficencyCoefficient {
   friend class BioGearsSubstances;
 
 public:
-  SizeIndependentDepositionEfficencyCoefficient(){};
-  ~SizeIndependentDepositionEfficencyCoefficient() {}
+  SizeIndependentDepositionEfficencyCoefficient();
+  ~SizeIndependentDepositionEfficencyCoefficient();
 
-  double GetMouth() const { return m_mouth; }
-  double GetTrachea() const { return m_trachea; }
-  double GetBronchi() const { return m_bronchi; }
-  double GetAlveoli() const { return m_alveoli; }
+  double GetMouth() const; 
+  double GetTrachea() const;
+  double GetBronchi() const;
+  double GetAlveoli() const;
 
 protected:
   double m_mouth = 0;
@@ -54,7 +54,7 @@ class BIOGEARS_API BioGearsSubstances : public SESubstanceManager {
 
 public:
   BioGearsSubstances(BioGears& data);
-  virtual ~BioGearsSubstances() = default;
+  virtual ~BioGearsSubstances();
 
   virtual void Clear();
 

@@ -17,7 +17,11 @@ SEScalar0To1::SEScalar0To1()
   : SEScalar()
 {
 }
-
+//-------------------------------------------------------------------------------
+SEScalar0To1::~SEScalar0To1()
+{
+}
+//-------------------------------------------------------------------------------
 CDM::Scalar0To1Data* SEScalar0To1::Unload() const
 {
   if (!IsValid())
@@ -26,26 +30,26 @@ CDM::Scalar0To1Data* SEScalar0To1::Unload() const
   SEScalar::Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEScalar0To1::SetValue(double d)
 {
   if (d > 1 || d < 0)
     throw CommonDataModelException("SEScalar0To1 must be between [0,1]");
   SEScalar::SetValue(d);
 }
-
+//-------------------------------------------------------------------------------
 void SEScalar0To1::SetValue(double d, const NoUnit& unitless)
 {
   SetValue(d);
 }
-
 //-------------------------------------------------------------------------------
-
-  bool SEScalar0To1::operator==(const SEScalar0To1& obj) const {
-    return m_value == obj.m_value;
-  }
+bool SEScalar0To1::operator==(const SEScalar0To1& obj) const
+{
+  return m_value == obj.m_value;
+}
 //-------------------------------------------------------------------------------
-  bool SEScalar0To1::operator!=(const SEScalar0To1& obj) const {
-    return !(*this == obj);
-  }
+bool SEScalar0To1::operator!=(const SEScalar0To1& obj) const
+{
+  return !(*this == obj);
+}
 }

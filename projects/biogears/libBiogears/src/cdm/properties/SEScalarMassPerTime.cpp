@@ -22,13 +22,27 @@ const MassPerTimeUnit MassPerTimeUnit::ug_Per_s("ug/s");
 const MassPerTimeUnit MassPerTimeUnit::kg_Per_s("kg/s");
 const MassPerTimeUnit MassPerTimeUnit::ug_Per_min("ug/min");
 
+template class SEScalarQuantity<MassPerTimeUnit>;
+
 MassPerTimeUnit::MassPerTimeUnit(const char* u)
-  : MassPerTimeUnit(std::string{ u })
+  : MassPerTimeUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 MassPerTimeUnit::MassPerTimeUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+MassPerTimeUnit::~MassPerTimeUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarMassPerTime::SEScalarMassPerTime()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarMassPerTime::~SEScalarMassPerTime()
 {
 }
 //-------------------------------------------------------------------------------
@@ -43,21 +57,21 @@ CDM::ScalarMassPerTimeData* SEScalarMassPerTime::Unload() const
 //-------------------------------------------------------------------------------
 bool MassPerTimeUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(g_Per_s.GetString(),unit) == 0)
+  if (strcmp(g_Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(g_Per_min.GetString(),unit) == 0)
+  if (strcmp(g_Per_min.GetString(), unit) == 0)
     return true;
-  if (strcmp(g_Per_day.GetString(),unit) == 0)
+  if (strcmp(g_Per_day.GetString(), unit) == 0)
     return true;
-  if (strcmp(mg_Per_s.GetString(),unit) == 0)
+  if (strcmp(mg_Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(mg_Per_min.GetString(),unit) == 0)
+  if (strcmp(mg_Per_min.GetString(), unit) == 0)
     return true;
-  if (strcmp(ug_Per_s.GetString(),unit) == 0)
+  if (strcmp(ug_Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(kg_Per_s.GetString(),unit) == 0)
+  if (strcmp(kg_Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(ug_Per_min.GetString(),unit) == 0)
+  if (strcmp(ug_Per_min.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -69,21 +83,21 @@ bool MassPerTimeUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const MassPerTimeUnit& MassPerTimeUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(g_Per_s.GetString(),unit) == 0)
+  if (strcmp(g_Per_s.GetString(), unit) == 0)
     return g_Per_s;
-  if (strcmp(g_Per_min.GetString(),unit) == 0)
+  if (strcmp(g_Per_min.GetString(), unit) == 0)
     return g_Per_min;
-  if (strcmp(g_Per_day.GetString(),unit) == 0)
+  if (strcmp(g_Per_day.GetString(), unit) == 0)
     return g_Per_day;
-  if (strcmp(mg_Per_s.GetString(),unit) == 0)
+  if (strcmp(mg_Per_s.GetString(), unit) == 0)
     return mg_Per_s;
-  if (strcmp(mg_Per_min.GetString(),unit) == 0)
+  if (strcmp(mg_Per_min.GetString(), unit) == 0)
     return mg_Per_min;
-  if (strcmp(ug_Per_s.GetString(),unit) == 0)
+  if (strcmp(ug_Per_s.GetString(), unit) == 0)
     return ug_Per_s;
-  if (strcmp(kg_Per_s.GetString(),unit) == 0)
+  if (strcmp(kg_Per_s.GetString(), unit) == 0)
     return kg_Per_s;
-  if (strcmp(ug_Per_min.GetString(),unit) == 0)
+  if (strcmp(ug_Per_min.GetString(), unit) == 0)
     return ug_Per_min;
   std::stringstream err;
   err << unit << " is not a valid MassPerTime unit";

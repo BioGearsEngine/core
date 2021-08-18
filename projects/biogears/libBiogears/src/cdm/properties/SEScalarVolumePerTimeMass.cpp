@@ -19,14 +19,30 @@ const VolumePerTimeMassUnit VolumePerTimeMassUnit::mL_Per_min_kg("mL/min kg");
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::mL_Per_s_kg("mL/s kg");
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::uL_Per_min_kg("uL/min kg");
 
+template class SEScalarQuantity<VolumePerTimeMassUnit>;
+
 VolumePerTimeMassUnit::VolumePerTimeMassUnit(const char* u)
   : VolumePerTimeMassUnit(std::string { u })
+{
+}
+//-------------------------------------------------------------------------------
+VolumePerTimeMassUnit::~VolumePerTimeMassUnit()
 {
 }
 //-------------------------------------------------------------------------------
 VolumePerTimeMassUnit::VolumePerTimeMassUnit(const std::string& u)
   : CCompoundUnit(u)
 {
+}
+//-------------------------------------------------------------------------------
+SEScalarVolumePerTimeMass::SEScalarVolumePerTimeMass()
+{
+
+}
+//-------------------------------------------------------------------------------
+SEScalarVolumePerTimeMass::~SEScalarVolumePerTimeMass()
+{
+
 }
 //-------------------------------------------------------------------------------
 CDM::ScalarVolumePerTimeMassData* SEScalarVolumePerTimeMass::Unload() const

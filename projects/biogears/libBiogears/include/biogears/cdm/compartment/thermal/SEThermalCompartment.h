@@ -26,6 +26,7 @@ class SECompartmentManager;
 namespace io {
   class Compartment;
 }
+
 class BIOGEARS_API SEThermalCompartment : public SECompartment {
   friend class SECompartmentManager;
   template <typename CompartmentType, typename CompartmentLinkType>

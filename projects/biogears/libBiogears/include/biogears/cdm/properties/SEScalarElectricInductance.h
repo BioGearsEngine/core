@@ -20,7 +20,7 @@ public:
   ElectricInductanceUnit(const char* u);
   ElectricInductanceUnit(const std::string& u);
 
-  virtual ~ElectricInductanceUnit() = default;
+  virtual ~ElectricInductanceUnit();
 
   bool operator==(const ElectricInductanceUnit&) const;
   bool operator!=(const ElectricInductanceUnit&) const;
@@ -33,10 +33,12 @@ public:
   static const ElectricInductanceUnit H;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<ElectricInductanceUnit>;
+
 class BIOGEARS_API SEScalarElectricInductance : public SEScalarQuantity<ElectricInductanceUnit> {
 public:
-  SEScalarElectricInductance() = default;
-  virtual ~SEScalarElectricInductance() = default;
+  SEScalarElectricInductance();
+  virtual ~SEScalarElectricInductance() ;
 
   CDM::ScalarElectricInductanceData* Unload() const override;   
 

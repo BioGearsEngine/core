@@ -20,7 +20,7 @@ public:
   AmountUnit(const char* u);
   AmountUnit(const std::string& u);
 
-  virtual ~AmountUnit() = default;        
+  virtual ~AmountUnit();
 
   bool operator==(const AmountUnit&) const;
   bool operator!=(const AmountUnit&) const;
@@ -35,10 +35,12 @@ public:
   static const AmountUnit pmol;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<AmountUnit>;
+
 class BIOGEARS_API SEScalarAmount : public SEScalarQuantity<AmountUnit> {
 public:
-  SEScalarAmount() = default;
-  virtual ~SEScalarAmount() = default;
+  SEScalarAmount();
+  virtual ~SEScalarAmount();
 
   virtual CDM::ScalarAmountData* Unload() const override;   
 

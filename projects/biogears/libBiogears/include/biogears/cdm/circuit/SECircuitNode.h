@@ -14,7 +14,16 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
+#include <biogears/cdm/properties/SEScalarElectricCharge.h>
+#include <biogears/cdm/properties/SEScalarElectricPotential.h>
+#include <biogears/cdm/properties/SEScalarEnergy.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+
 CDM_BIND_DECL(CircuitNodeData);
+
+namespace biogears {
 
 #define CIRCUIT_NODE_TEMPLATE typename PotentialScalar, typename QuantityScalar
 #define CIRCUIT_NODE_TYPES PotentialScalar, QuantityScalar
@@ -22,12 +31,11 @@ CDM_BIND_DECL(CircuitNodeData);
 #define FLUID_CIRCUIT_NODE SEScalarPressure, SEScalarVolume
 #define THERMAL_CIRCUIT_NODE SEScalarTemperature, SEScalarEnergy
 
-namespace biogears {
 namespace io {
   class Circuit;
 }
 
-template <CIRCUIT_NODE_TEMPLATE>
+template <typename PotentialScalar, typename QuantityScalar>
 class SECircuitNode : public Loggable {
   template <typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType>
   friend class SECircuit;
@@ -77,6 +85,12 @@ protected:
   QuantityScalar* m_NextQuantity;
   QuantityScalar* m_QuantityBaseline;
 };
-}
 
+}
 #include <biogears/cdm/circuit/SECircuitNode.inl>
+
+namespace biogears{
+BG_EXT template class SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>;
+BG_EXT template class SECircuitNode<SEScalarPressure, SEScalarVolume>;
+BG_EXT template class SECircuitNode<SEScalarTemperature, SEScalarEnergy>;
+}

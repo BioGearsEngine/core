@@ -20,7 +20,7 @@ class BIOGEARS_API SEScalarFraction : public SEScalar {
 public:
   SEScalarFraction();
 
-  virtual ~SEScalarFraction() = default; 
+  virtual ~SEScalarFraction(); 
 
   bool operator==(const SEScalarFraction&) const;
   bool operator!=(const SEScalarFraction&) const;

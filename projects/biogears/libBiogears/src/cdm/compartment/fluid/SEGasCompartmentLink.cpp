@@ -15,8 +15,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 
 namespace biogears {
+//-----------------------------------------------------------------------------
+SEGasCompartmentLink::~SEGasCompartmentLink()
+{
+}
+//-----------------------------------------------------------------------------
 SEGasCompartmentLink::SEGasCompartmentLink(SEGasCompartment& src, SEGasCompartment& tgt, const char* name)
-  : SEFluidCompartmentLink(src, tgt, std::string{ name })
+  : SEFluidCompartmentLink(src, tgt, std::string { name })
 {
 }
 //-----------------------------------------------------------------------------

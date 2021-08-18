@@ -76,6 +76,8 @@ void SEAnesthesiaMachine::Clear()
   SAFE_DELETE(m_OxygenBottleTwo);
 }
 //-----------------------------------------------------------------------------
+void SEAnesthesiaMachine::StateChange(){}
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::Merge(const SEAnesthesiaMachine& from)
 {
   if (from.HasConnection())

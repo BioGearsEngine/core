@@ -19,7 +19,7 @@ public:
   MassPerMassUnit(const char* u);
   MassPerMassUnit(const std::string& u);
 
-  virtual ~MassPerMassUnit() = default;   
+  virtual ~MassPerMassUnit();
 
   bool operator==(const MassPerMassUnit&) const;
   bool operator!=(const MassPerMassUnit&) const;
@@ -33,10 +33,12 @@ public:
   static const MassPerMassUnit mg_Per_g;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<MassPerMassUnit>;
+
 class BIOGEARS_API SEScalarMassPerMass : public SEScalarQuantity<MassPerMassUnit> {
 public:
-  SEScalarMassPerMass() = default;
-  virtual ~SEScalarMassPerMass() = default;
+  SEScalarMassPerMass();
+  virtual ~SEScalarMassPerMass();
 
   CDM::ScalarMassPerMassData* Unload() const override;
 

@@ -22,13 +22,27 @@ const VolumePerTimeUnit VolumePerTimeUnit::m3_Per_s("m^3/s");
 const VolumePerTimeUnit VolumePerTimeUnit::mL_Per_min("mL/min");
 const VolumePerTimeUnit VolumePerTimeUnit::mL_Per_hr("mL/hr");
 
+template class SEScalarQuantity<VolumePerTimeUnit>;
+
 VolumePerTimeUnit::VolumePerTimeUnit(const char* u)
-  : VolumePerTimeUnit(std::string{ u })
+  : VolumePerTimeUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 VolumePerTimeUnit::VolumePerTimeUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+VolumePerTimeUnit::~VolumePerTimeUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarVolumePerTime::SEScalarVolumePerTime()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarVolumePerTime::~SEScalarVolumePerTime()
 {
 }
 //-------------------------------------------------------------------------------
@@ -43,21 +57,21 @@ CDM::ScalarVolumePerTimeData* SEScalarVolumePerTime::Unload() const
 //-------------------------------------------------------------------------------
 bool VolumePerTimeUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(L_Per_s.GetString(),unit) == 0)
+  if (strcmp(L_Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(mL_Per_s.GetString(),unit) == 0)
+  if (strcmp(mL_Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(mL_Per_day.GetString(),unit) == 0)
+  if (strcmp(mL_Per_day.GetString(), unit) == 0)
     return true;
-  if (strcmp(L_Per_day.GetString(),unit) == 0)
+  if (strcmp(L_Per_day.GetString(), unit) == 0)
     return true;
-  if (strcmp(L_Per_min.GetString(),unit) == 0)
+  if (strcmp(L_Per_min.GetString(), unit) == 0)
     return true;
-  if (strcmp(m3_Per_s.GetString(),unit) == 0)
+  if (strcmp(m3_Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(mL_Per_min.GetString(),unit) == 0)
+  if (strcmp(mL_Per_min.GetString(), unit) == 0)
     return true;
-  if (strcmp(mL_Per_hr.GetString(),unit) == 0)
+  if (strcmp(mL_Per_hr.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -69,21 +83,21 @@ bool VolumePerTimeUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const VolumePerTimeUnit& VolumePerTimeUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(L_Per_s.GetString(),unit) == 0)
+  if (strcmp(L_Per_s.GetString(), unit) == 0)
     return L_Per_s;
-  if (strcmp(mL_Per_s.GetString(),unit) == 0)
+  if (strcmp(mL_Per_s.GetString(), unit) == 0)
     return mL_Per_s;
-  if (strcmp(mL_Per_day.GetString(),unit) == 0)
+  if (strcmp(mL_Per_day.GetString(), unit) == 0)
     return mL_Per_day;
-  if (strcmp(L_Per_day.GetString(),unit) == 0)
+  if (strcmp(L_Per_day.GetString(), unit) == 0)
     return L_Per_day;
-  if (strcmp(L_Per_min.GetString(),unit) == 0)
+  if (strcmp(L_Per_min.GetString(), unit) == 0)
     return L_Per_min;
-  if (strcmp(m3_Per_s.GetString(),unit) == 0)
+  if (strcmp(m3_Per_s.GetString(), unit) == 0)
     return m3_Per_s;
-  if (strcmp(mL_Per_min.GetString(),unit) == 0)
+  if (strcmp(mL_Per_min.GetString(), unit) == 0)
     return mL_Per_min;
-  if (strcmp(mL_Per_hr.GetString(),unit) == 0)
+  if (strcmp(mL_Per_hr.GetString(), unit) == 0)
     return mL_Per_hr;
   std::stringstream err;
   err << unit << " is not a valid VolumePerTime unit";

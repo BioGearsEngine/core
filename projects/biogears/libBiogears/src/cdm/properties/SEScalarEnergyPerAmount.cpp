@@ -16,13 +16,27 @@ namespace biogears {
 const EnergyPerAmountUnit EnergyPerAmountUnit::kcal_Per_mol("kcal/mol");
 const EnergyPerAmountUnit EnergyPerAmountUnit::kJ_Per_mol("kJ/mol");
 
+template class SEScalarQuantity<EnergyPerAmountUnit>;
+
 EnergyPerAmountUnit::EnergyPerAmountUnit(const char* u)
-  : EnergyPerAmountUnit(std::string{ u })
+  : EnergyPerAmountUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 EnergyPerAmountUnit::EnergyPerAmountUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+EnergyPerAmountUnit::~EnergyPerAmountUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarEnergyPerAmount::SEScalarEnergyPerAmount()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarEnergyPerAmount::~SEScalarEnergyPerAmount()
 {
 }
 //-----------------------------------------------------------------------------

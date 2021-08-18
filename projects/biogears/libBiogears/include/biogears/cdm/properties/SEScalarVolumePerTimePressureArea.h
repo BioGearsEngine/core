@@ -20,7 +20,7 @@ public:
   VolumePerTimePressureAreaUnit(const char* u);
   VolumePerTimePressureAreaUnit(const std::string& u);
 
-  virtual ~VolumePerTimePressureAreaUnit() = default;
+  virtual ~VolumePerTimePressureAreaUnit();
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -34,10 +34,12 @@ public:
   bool operator!=(const VolumePerTimePressureAreaUnit&) const;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<VolumePerTimePressureAreaUnit>;
+
 class BIOGEARS_API SEScalarVolumePerTimePressureArea : public SEScalarQuantity<VolumePerTimePressureAreaUnit> {
 public:
-  SEScalarVolumePerTimePressureArea() = default;
-  virtual ~SEScalarVolumePerTimePressureArea() = default;
+  SEScalarVolumePerTimePressureArea();
+  virtual ~SEScalarVolumePerTimePressureArea();
 
   CDM::ScalarVolumePerTimePressureAreaData* Unload() const override; 
 

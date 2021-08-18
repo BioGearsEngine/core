@@ -16,13 +16,26 @@ namespace biogears {
 const MassPerMassUnit MassPerMassUnit::ug_Per_kg("ug/kg");
 const MassPerMassUnit MassPerMassUnit::mg_Per_g("mg/g");
 
+template class SEScalarQuantity<MassPerMassUnit>;
+
 MassPerMassUnit::MassPerMassUnit(const char* u)
-  : MassPerMassUnit(std::string{ u })
+  : MassPerMassUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 MassPerMassUnit::MassPerMassUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+MassPerMassUnit::~MassPerMassUnit()
+{
+} //-------------------------------------------------------------------------------
+SEScalarMassPerMass::SEScalarMassPerMass()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarMassPerMass::~SEScalarMassPerMass()
 {
 }
 //-------------------------------------------------------------------------------
@@ -37,9 +50,9 @@ CDM::ScalarMassPerMassData* SEScalarMassPerMass::Unload() const
 //-------------------------------------------------------------------------------
 bool MassPerMassUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(ug_Per_kg.GetString(),unit) == 0)
+  if (strcmp(ug_Per_kg.GetString(), unit) == 0)
     return true;
-  if (strcmp(mg_Per_g.GetString(),unit) == 0)
+  if (strcmp(mg_Per_g.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -51,9 +64,9 @@ bool MassPerMassUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const MassPerMassUnit& MassPerMassUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(ug_Per_kg.GetString(),unit) == 0)
+  if (strcmp(ug_Per_kg.GetString(), unit) == 0)
     return ug_Per_kg;
-  if (strcmp(mg_Per_g.GetString(),unit) == 0)
+  if (strcmp(mg_Per_g.GetString(), unit) == 0)
     return mg_Per_g;
   std::stringstream err;
   err << unit << " is not a valid MassPerMass unit";

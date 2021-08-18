@@ -20,7 +20,7 @@ public:
   FlowComplianceUnit(const char* u);
   FlowComplianceUnit(const std::string& u);
 
-  virtual ~FlowComplianceUnit() = default;      
+  virtual ~FlowComplianceUnit();
 
   bool operator==(const FlowComplianceUnit&) const;
   bool operator!=(const FlowComplianceUnit&) const;
@@ -36,12 +36,14 @@ public:
   static const FlowComplianceUnit m3_Per_Pa;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<FlowComplianceUnit>;
+
 class BIOGEARS_API SEScalarFlowCompliance : public SEScalarQuantity<FlowComplianceUnit> {
 public:
-  SEScalarFlowCompliance() = default;
-  virtual ~SEScalarFlowCompliance() = default;
+  SEScalarFlowCompliance();
+  virtual ~SEScalarFlowCompliance();
 
-  CDM::ScalarFlowComplianceData* Unload() const override;   
+  CDM::ScalarFlowComplianceData* Unload() const override;
 
   using SEScalarQuantity<FlowComplianceUnit>::SetValue;
   using SEScalarQuantity<FlowComplianceUnit>::GetValue;

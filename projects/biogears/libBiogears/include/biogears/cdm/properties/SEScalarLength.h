@@ -20,7 +20,7 @@ public:
   LengthUnit(const char* u);
   LengthUnit(const std::string& u);
 
-  virtual ~LengthUnit() = default;   
+  virtual ~LengthUnit();
 
   bool operator==(const LengthUnit&) const;
   bool operator!=(const LengthUnit&) const;
@@ -38,10 +38,12 @@ public:
   static const LengthUnit ft;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<LengthUnit>;
+
 class BIOGEARS_API SEScalarLength : public SEScalarQuantity<LengthUnit> {
 public:
-  SEScalarLength() = default;
-  virtual ~SEScalarLength() = default;
+  SEScalarLength();
+  virtual ~SEScalarLength();
 
   CDM::ScalarLengthData* Unload() const override;
 

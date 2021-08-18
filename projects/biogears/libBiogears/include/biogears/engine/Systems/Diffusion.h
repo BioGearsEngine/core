@@ -61,7 +61,7 @@ protected:
   };
 
 public:
-  ~DiffusionCalculator() = default;
+  ~DiffusionCalculator();
   void Initialize(SESubstanceManager& subMgr);
   void SetDiffusionState();
   void CalculateLinearDiffusionMethods();

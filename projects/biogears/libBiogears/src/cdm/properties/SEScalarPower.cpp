@@ -20,13 +20,27 @@ const PowerUnit PowerUnit::kcal_Per_day("kcal/day");
 const PowerUnit PowerUnit::J_Per_s("J/s");
 const PowerUnit PowerUnit::BTU_Per_hr("BTU/hr");
 
+template class SEScalarQuantity<PowerUnit>;
+
 PowerUnit::PowerUnit(const char* u)
-  : PowerUnit(std::string{ u })
+  : PowerUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 PowerUnit::PowerUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+PowerUnit::~PowerUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarPower::SEScalarPower()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarPower::~SEScalarPower()
 {
 }
 //-------------------------------------------------------------------------------
@@ -41,17 +55,17 @@ CDM::ScalarPowerData* SEScalarPower::Unload() const
 //-------------------------------------------------------------------------------
 bool PowerUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(W.GetString(),unit) == 0)
+  if (strcmp(W.GetString(), unit) == 0)
     return true;
-  if (strcmp(kcal_Per_s.GetString(),unit) == 0)
+  if (strcmp(kcal_Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(kcal_Per_hr.GetString(),unit) == 0)
+  if (strcmp(kcal_Per_hr.GetString(), unit) == 0)
     return true;
-  if (strcmp(kcal_Per_day.GetString(),unit) == 0)
+  if (strcmp(kcal_Per_day.GetString(), unit) == 0)
     return true;
-  if (strcmp(J_Per_s.GetString(),unit) == 0)
+  if (strcmp(J_Per_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(BTU_Per_hr.GetString(),unit) == 0)
+  if (strcmp(BTU_Per_hr.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -63,17 +77,17 @@ bool PowerUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const PowerUnit& PowerUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(W.GetString(),unit) == 0)
+  if (strcmp(W.GetString(), unit) == 0)
     return W;
-  if (strcmp(kcal_Per_s.GetString(),unit) == 0)
+  if (strcmp(kcal_Per_s.GetString(), unit) == 0)
     return kcal_Per_s;
-  if (strcmp(kcal_Per_hr.GetString(),unit) == 0)
+  if (strcmp(kcal_Per_hr.GetString(), unit) == 0)
     return kcal_Per_hr;
-  if (strcmp(kcal_Per_day.GetString(),unit) == 0)
+  if (strcmp(kcal_Per_day.GetString(), unit) == 0)
     return kcal_Per_day;
-  if (strcmp(J_Per_s.GetString(),unit) == 0)
+  if (strcmp(J_Per_s.GetString(), unit) == 0)
     return J_Per_s;
-  if (strcmp(BTU_Per_hr.GetString(),unit) == 0)
+  if (strcmp(BTU_Per_hr.GetString(), unit) == 0)
     return BTU_Per_hr;
   std::stringstream err;
   err << unit << " is not a valid Power unit";

@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const ElectricChargeUnit ElectricChargeUnit::C("C");
 
+template class SEScalarQuantity<ElectricChargeUnit>;
+
 ElectricChargeUnit::ElectricChargeUnit(const char* u)
   : ElectricChargeUnit(std::string(u))
 {
@@ -23,6 +25,18 @@ ElectricChargeUnit::ElectricChargeUnit(const char* u)
 ElectricChargeUnit::ElectricChargeUnit(const std::string& u)
   : CCompoundUnit(u)
 {
+}
+//-----------------------------------------------------------------------------
+ElectricChargeUnit::~ElectricChargeUnit(){
+
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricCharge::SEScalarElectricCharge(){
+
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricCharge::~SEScalarElectricCharge(){
+
 }
 //-----------------------------------------------------------------------------
 CDM::ScalarElectricChargeData* SEScalarElectricCharge::Unload() const

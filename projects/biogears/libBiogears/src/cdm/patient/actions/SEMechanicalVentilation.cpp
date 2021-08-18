@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+
 namespace biogears {
 SEMechanicalVentilation::SEMechanicalVentilation()
   : SEPatientAction()

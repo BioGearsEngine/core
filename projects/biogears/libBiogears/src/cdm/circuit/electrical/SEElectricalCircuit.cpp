@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 
 namespace biogears {
+
+template class SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
+
 SEElectricalCircuit::SEElectricalCircuit(const std::string& name, SECircuitManager& mgr)
   : SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>(name, mgr.GetLogger())
   , m_Mgr(mgr)
@@ -32,7 +35,7 @@ SEElectricalCircuit::~SEElectricalCircuit()
 //-------------------------------------------------------------------------------
 SEElectricalCircuitNode& SEElectricalCircuit::CreateNode(const char* name)
 {
-  return CreateNode(std::string{ name });
+  return CreateNode(std::string { name });
 }
 //-------------------------------------------------------------------------------
 SEElectricalCircuitNode& SEElectricalCircuit::CreateNode(const std::string& name)
@@ -46,7 +49,7 @@ SEElectricalCircuitNode& SEElectricalCircuit::CreateNode(const std::string& name
 //-------------------------------------------------------------------------------
 SEElectricalCircuitPath& SEElectricalCircuit::CreatePath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const char* name)
 {
-  return CreatePath(src, tgt, std::string{ name });
+  return CreatePath(src, tgt, std::string { name });
 }
 //-------------------------------------------------------------------------------
 SEElectricalCircuitPath& SEElectricalCircuit::CreatePath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const std::string& name)

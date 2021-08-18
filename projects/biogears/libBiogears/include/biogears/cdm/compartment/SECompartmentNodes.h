@@ -28,6 +28,7 @@ namespace io {
 template <COMPARTMENT_NODE_TEMPLATE>
 class SECompartmentNodes : public Loggable {
   friend io::Compartment;
+
 public:
   SECompartmentNodes(Logger* logger);
   virtual ~SECompartmentNodes();
@@ -60,5 +61,10 @@ protected:
   QuantityScalar* m_Quantity;
   PotentialScalar* m_Potential;
 };
+
+BG_EXT template class BIOGEARS_API SECompartmentNodes<ELECTRICAL_COMPARTMENT_NODE>;
+BG_EXT template class BIOGEARS_API SECompartmentNodes<FLUID_COMPARTMENT_NODE>;
+BG_EXT template class BIOGEARS_API SECompartmentNodes<THERMAL_COMPARTMENT_NODE>;
+
 }
 #include <biogears/cdm/compartment/SECompartmentNodes.inl>

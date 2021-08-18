@@ -20,6 +20,7 @@ class SECircuitManager;
 namespace io {
   class Circuit;
 }
+BG_EXT template class BIOGEARS_API SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>;
 class BIOGEARS_API SEFluidCircuit : public SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData> {
   friend class SECircuitManager;
   friend io::Circuit;

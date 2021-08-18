@@ -20,7 +20,7 @@ public:
   VolumePerPressureUnit(const char* u);
   VolumePerPressureUnit(const std::string& u);
 
-  virtual ~VolumePerPressureUnit() = default;
+  virtual ~VolumePerPressureUnit();
 
   bool operator==(const VolumePerPressureUnit&) const;
   bool operator!=(const VolumePerPressureUnit&) const;
@@ -34,10 +34,12 @@ public:
   static const VolumePerPressureUnit L_Per_cmH2O;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<VolumePerPressureUnit>;
+
 class BIOGEARS_API SEScalarVolumePerPressure : public SEScalarQuantity<VolumePerPressureUnit> {
 public:
-  SEScalarVolumePerPressure() = default;
-  virtual ~SEScalarVolumePerPressure() = default;
+  SEScalarVolumePerPressure();
+  virtual ~SEScalarVolumePerPressure();
 
   CDM::ScalarVolumePerPressureData* Unload() const;
 

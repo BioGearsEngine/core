@@ -16,6 +16,7 @@ namespace biogears {
 const VolumePerTimePressureAreaUnit VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2("mL/min mmHg m^2");
 const VolumePerTimePressureAreaUnit VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2("mL/s mmHg m^2");
 
+template class SEScalarQuantity<VolumePerTimePressureAreaUnit>;
 VolumePerTimePressureAreaUnit::VolumePerTimePressureAreaUnit(const char* u)
   : VolumePerTimePressureAreaUnit(std::string { u })
 {
@@ -23,6 +24,17 @@ VolumePerTimePressureAreaUnit::VolumePerTimePressureAreaUnit(const char* u)
 //-------------------------------------------------------------------------------
 VolumePerTimePressureAreaUnit::VolumePerTimePressureAreaUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+VolumePerTimePressureAreaUnit::~VolumePerTimePressureAreaUnit(){
+}
+//-------------------------------------------------------------------------------
+SEScalarVolumePerTimePressureArea::SEScalarVolumePerTimePressureArea()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarVolumePerTimePressureArea::~SEScalarVolumePerTimePressureArea()
 {
 }
 //-------------------------------------------------------------------------------

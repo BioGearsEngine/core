@@ -20,7 +20,7 @@ public:
   EnergyPerMassUnit(const char* u);
   EnergyPerMassUnit(const std::string& u);
 
-  virtual ~EnergyPerMassUnit() = default; 
+  virtual ~EnergyPerMassUnit(); 
 
   bool operator==(const EnergyPerMassUnit&) const;
   bool operator!=(const EnergyPerMassUnit&) const;
@@ -36,10 +36,12 @@ public:
   static const EnergyPerMassUnit kcal_Per_kg;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<EnergyPerMassUnit>;
+
 class BIOGEARS_API SEScalarEnergyPerMass : public SEScalarQuantity<EnergyPerMassUnit> {
 public:
-  SEScalarEnergyPerMass() = default;
-  virtual ~SEScalarEnergyPerMass() = default;
+  SEScalarEnergyPerMass();
+  virtual ~SEScalarEnergyPerMass();
 
   CDM::ScalarEnergyPerMassData* Unload() const override;   
 

@@ -25,10 +25,19 @@ double SEScalar::dNaN()
 {
   return NaN;
 }
-
+//-------------------------------------------------------------------------------
 const NoUnit NoUnit::unitless = NoUnit();
+
 const std::string unitless = "unitless";
 
+NoUnit::NoUnit()
+{
+}
+//-------------------------------------------------------------------------------
+NoUnit::~NoUnit()
+{
+}
+//-------------------------------------------------------------------------------
 SEScalar::SEScalar(double v)
   : SEScalar()
 

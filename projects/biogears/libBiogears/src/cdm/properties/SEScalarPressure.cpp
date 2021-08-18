@@ -19,13 +19,27 @@ const PressureUnit PressureUnit::cmH2O("cmH2O");
 const PressureUnit PressureUnit::psi("psi");
 const PressureUnit PressureUnit::atm("atm");
 
+template class SEScalarQuantity<PressureUnit>;
+
 PressureUnit::PressureUnit(const char* u)
-  : PressureUnit(std::string{ u })
+  : PressureUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 PressureUnit::PressureUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+PressureUnit::~PressureUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarPressure::SEScalarPressure()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarPressure::~SEScalarPressure()
 {
 }
 //-------------------------------------------------------------------------------
@@ -40,15 +54,15 @@ CDM::ScalarPressureData* SEScalarPressure::Unload() const
 //-------------------------------------------------------------------------------
 bool PressureUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(Pa.GetString(),unit) == 0)
+  if (strcmp(Pa.GetString(), unit) == 0)
     return true;
-  if (strcmp(mmHg.GetString(),unit) == 0)
+  if (strcmp(mmHg.GetString(), unit) == 0)
     return true;
-  if (strcmp(cmH2O.GetString(),unit) == 0)
+  if (strcmp(cmH2O.GetString(), unit) == 0)
     return true;
-  if (strcmp(psi.GetString(),unit) == 0)
+  if (strcmp(psi.GetString(), unit) == 0)
     return true;
-  if (strcmp(atm.GetString(),unit) == 0)
+  if (strcmp(atm.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -60,15 +74,15 @@ bool PressureUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const PressureUnit& PressureUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(Pa.GetString(),unit) == 0)
+  if (strcmp(Pa.GetString(), unit) == 0)
     return Pa;
-  if (strcmp(mmHg.GetString(),unit) == 0)
+  if (strcmp(mmHg.GetString(), unit) == 0)
     return mmHg;
-  if (strcmp(cmH2O.GetString(),unit) == 0)
+  if (strcmp(cmH2O.GetString(), unit) == 0)
     return cmH2O;
-  if (strcmp(psi.GetString(),unit) == 0)
+  if (strcmp(psi.GetString(), unit) == 0)
     return psi;
-  if (strcmp(atm.GetString(),unit) == 0)
+  if (strcmp(atm.GetString(), unit) == 0)
     return atm;
   std::stringstream err;
   err << unit << " is not a valid Pressure unit";

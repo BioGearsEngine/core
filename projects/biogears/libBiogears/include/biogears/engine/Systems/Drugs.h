@@ -74,7 +74,7 @@ public:
   void AtSteadyState() override;
   void PreProcess() override;
   void Process() override;
-  void PostProcess() override {}
+  void PostProcess() override;
 
 protected:
   void AdministerSubstanceBolus();

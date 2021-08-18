@@ -20,7 +20,7 @@ public:
   LengthPerTimeUnit(const char* u);
   LengthPerTimeUnit(const std::string& u);
 
-  virtual ~LengthPerTimeUnit() = default;  
+  virtual ~LengthPerTimeUnit();
 
   bool operator==(const LengthPerTimeUnit&) const;
   bool operator!=(const LengthPerTimeUnit&) const;
@@ -37,11 +37,12 @@ public:
   static const LengthPerTimeUnit ft_Per_s;
   static const LengthPerTimeUnit ft_Per_min;
 };
+BG_EXT template class BIOGEARS_API SEScalarQuantity<LengthPerTimeUnit>;
 
 class BIOGEARS_API SEScalarLengthPerTime : public SEScalarQuantity<LengthPerTimeUnit> {
 public:
-  SEScalarLengthPerTime() = default;
-  virtual ~SEScalarLengthPerTime() = default;
+  SEScalarLengthPerTime();
+  virtual ~SEScalarLengthPerTime();
 
   CDM::ScalarLengthPerTimeData* Unload() const override;
 

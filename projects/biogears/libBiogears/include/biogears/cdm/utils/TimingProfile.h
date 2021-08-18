@@ -34,12 +34,9 @@ struct Timer {
 
 class BIOGEARS_API TimingProfile : public Loggable {
 public:
-  TimingProfile() {}
-  TimingProfile(Logger* logger)
-    : Loggable(logger)
-  {
-  }
-  virtual ~TimingProfile() {}
+  TimingProfile();
+  TimingProfile(Logger* logger);
+  virtual ~TimingProfile();
 
   void Clear();
 

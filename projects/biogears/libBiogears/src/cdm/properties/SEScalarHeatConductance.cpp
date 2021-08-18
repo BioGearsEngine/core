@@ -18,13 +18,27 @@ const HeatConductanceUnit HeatConductanceUnit::W_Per_C("W/degC");
 const HeatConductanceUnit HeatConductanceUnit::kcal_Per_K_s("kcal/K s");
 const HeatConductanceUnit HeatConductanceUnit::kcal_Per_C_s("kcal/degC s");
 
+template class SEScalarQuantity<HeatConductanceUnit>;
+
 HeatConductanceUnit::HeatConductanceUnit(const char* u)
-  : HeatConductanceUnit(std::string{ u })
+  : HeatConductanceUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 HeatConductanceUnit::HeatConductanceUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+HeatConductanceUnit::~HeatConductanceUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarHeatConductance::SEScalarHeatConductance()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarHeatConductance::~SEScalarHeatConductance()
 {
 }
 //-------------------------------------------------------------------------------
@@ -39,13 +53,13 @@ CDM::ScalarHeatConductanceData* SEScalarHeatConductance::Unload() const
 //-------------------------------------------------------------------------------
 bool HeatConductanceUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(W_Per_K.GetString(),unit) == 0)
+  if (strcmp(W_Per_K.GetString(), unit) == 0)
     return true;
-  if (strcmp(W_Per_C.GetString(),unit) == 0)
+  if (strcmp(W_Per_C.GetString(), unit) == 0)
     return true;
-  if (strcmp(kcal_Per_K_s.GetString(),unit) == 0)
+  if (strcmp(kcal_Per_K_s.GetString(), unit) == 0)
     return true;
-  if (strcmp(kcal_Per_C_s.GetString(),unit) == 0)
+  if (strcmp(kcal_Per_C_s.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -57,13 +71,13 @@ bool HeatConductanceUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const HeatConductanceUnit& HeatConductanceUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(W_Per_K.GetString(),unit) == 0)
+  if (strcmp(W_Per_K.GetString(), unit) == 0)
     return W_Per_K;
-  if (strcmp(W_Per_C.GetString(),unit) == 0)
+  if (strcmp(W_Per_C.GetString(), unit) == 0)
     return W_Per_C;
-  if (strcmp(kcal_Per_K_s.GetString(),unit) == 0)
+  if (strcmp(kcal_Per_K_s.GetString(), unit) == 0)
     return kcal_Per_K_s;
-  if (strcmp(kcal_Per_C_s.GetString(),unit) == 0)
+  if (strcmp(kcal_Per_C_s.GetString(), unit) == 0)
     return kcal_Per_C_s;
   std::stringstream err;
   err << unit << " is not a valid HeatConductance unit";
