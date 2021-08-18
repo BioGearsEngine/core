@@ -18,10 +18,15 @@ const TemperatureUnit TemperatureUnit::C("degC");
 const TemperatureUnit TemperatureUnit::K("K");
 const TemperatureUnit TemperatureUnit::R("degR");
 
+template class SEScalarQuantity<TemperatureUnit>;
+
 TemperatureUnit::TemperatureUnit(const char* u)
   : TemperatureUnit(std::string{ u })
 {
 }
+//-------------------------------------------------------------------------------
+TemperatureUnit::~TemperatureUnit()
+{}
 //-------------------------------------------------------------------------------
 TemperatureUnit::TemperatureUnit(const std::string& u)
   : CCompoundUnit(u)
@@ -96,7 +101,9 @@ bool TemperatureUnit::operator!=(const TemperatureUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
+SEScalarTemperature::SEScalarTemperature(){}
+SEScalarTemperature::~SEScalarTemperature(){}
+//-------------------------------------------------------------------------------
 bool SEScalarTemperature::operator==(const SEScalarTemperature& obj) const
 {
   return m_unit == obj.m_unit

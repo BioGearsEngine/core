@@ -20,7 +20,7 @@ public:
   TemperatureUnit(const char* u);
   TemperatureUnit(const std::string& u);
 
-  virtual ~TemperatureUnit() = default;  
+  virtual ~TemperatureUnit();
 
   bool operator==(const TemperatureUnit&) const;
   bool operator!=(const TemperatureUnit&) const;
@@ -36,10 +36,12 @@ public:
   static const TemperatureUnit R;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<TemperatureUnit>;
+
 class BIOGEARS_API SEScalarTemperature : public SEScalarQuantity<TemperatureUnit> {
 public:
-  SEScalarTemperature() = default;
-  virtual ~SEScalarTemperature() = default;
+  SEScalarTemperature();
+  virtual ~SEScalarTemperature();
 
   CDM::ScalarTemperatureData* Unload() const override;
 

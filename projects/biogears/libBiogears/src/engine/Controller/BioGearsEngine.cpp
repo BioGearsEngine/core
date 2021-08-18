@@ -490,6 +490,7 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
 
   // Good to go, save it off and carry on!
   m_State = EngineState::Active;
+  m_Logger->Info("Biogears has sucesfully loaded the given statefile");
   return true; // return CheckDataRequirements/IsValid() or something
 }
 //-------------------------------------------------------------------------------

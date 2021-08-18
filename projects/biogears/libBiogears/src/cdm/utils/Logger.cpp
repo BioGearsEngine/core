@@ -518,26 +518,40 @@ void Logger::LogMessage(std::istream& msg, std::string const& origin, LogLevel p
     switch (priority) {
     case Logger::eDebug:
       impl.userDefinedLogger->Debug(message.c_str());
-      forward_to_logcat(ANDROID_LOG_DEBUG, message.c_str());
       break;
     case Logger::eError:
       impl.userDefinedLogger->Error(message.c_str());
-      forward_to_logcat(ANDROID_LOG_ERROR, message.c_str());
       break;
     case Logger::eException:
       break;
     case Logger::eWarning:
       impl.userDefinedLogger->Warning(message.c_str());
-      forward_to_logcat(ANDROID_LOG_WARN, message.c_str());
       break;
     case Logger::eInfo:
-      impl.userDefinedLogger->Info(message.c_str());
-      forward_to_logcat(ANDROID_LOG_INFO, message.c_str());
+      impl.userDefinedLogger->Info(message.c_str());      
       break;
     case Logger::eStabilization:
       break;
     }
   }
+  switch (priority) {
+    case Logger::eDebug:
+      forward_to_logcat(ANDROID_LOG_DEBUG, message.c_str());
+      break;
+    case Logger::eError:
+      forward_to_logcat(ANDROID_LOG_ERROR, message.c_str());
+      break;
+    case Logger::eException:
+      break;
+    case Logger::eWarning:
+      forward_to_logcat(ANDROID_LOG_WARN, message.c_str());
+      break;
+    case Logger::eInfo:
+      forward_to_logcat(ANDROID_LOG_INFO, message.c_str());
+      break;
+    case Logger::eStabilization:
+      break;
+    }
 }
 void Logger::LogMessage(std::istream&& msg, std::string const& origin, LogLevel priority) const
 {
@@ -598,6 +612,24 @@ void Logger::LogMessage(std::istream&& msg, std::string const& origin, LogLevel 
       break;
     }
   }
+    switch (priority) {
+    case Logger::eDebug:
+      forward_to_logcat(ANDROID_LOG_DEBUG, message.c_str());
+      break;
+    case Logger::eError:
+      forward_to_logcat(ANDROID_LOG_ERROR, message.c_str());
+      break;
+    case Logger::eException:
+      break;
+    case Logger::eWarning:
+      forward_to_logcat(ANDROID_LOG_WARN, message.c_str());
+      break;
+    case Logger::eInfo:
+      forward_to_logcat(ANDROID_LOG_INFO, message.c_str());
+      break;
+    case Logger::eStabilization:
+      break;
+    }
 }
 
 void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLevel priority) const
@@ -654,6 +686,24 @@ void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLe
       break;
     }
   }
+    switch (priority) {
+    case Logger::eDebug:
+      forward_to_logcat(ANDROID_LOG_DEBUG, msg.c_str());
+      break;
+    case Logger::eError:
+      forward_to_logcat(ANDROID_LOG_ERROR, msg.c_str());
+      break;
+    case Logger::eException:
+      break;
+    case Logger::eWarning:
+      forward_to_logcat(ANDROID_LOG_WARN, msg.c_str());
+      break;
+    case Logger::eInfo:
+      forward_to_logcat(ANDROID_LOG_INFO, msg.c_str());
+      break;
+    case Logger::eStabilization:
+      break;
+    }
 }
 void Logger::LogMessage(std::string&& msg, std::string const& origin, LogLevel priority) const
 {
@@ -709,6 +759,24 @@ void Logger::LogMessage(std::string&& msg, std::string const& origin, LogLevel p
       break;
     }
   }
+      switch (priority) {
+    case Logger::eDebug:
+      forward_to_logcat(ANDROID_LOG_DEBUG, msg.c_str());
+      break;
+    case Logger::eError:
+      forward_to_logcat(ANDROID_LOG_ERROR, msg.c_str());
+      break;
+    case Logger::eException:
+      break;
+    case Logger::eWarning:
+      forward_to_logcat(ANDROID_LOG_WARN, msg.c_str());
+      break;
+    case Logger::eInfo:
+      forward_to_logcat(ANDROID_LOG_INFO, msg.c_str());
+      break;
+    case Logger::eStabilization:
+      break;
+    }
 }
 
 void Logger::Debug(std::string const& msg, std::string const& origin) const

@@ -171,7 +171,7 @@ if(${PROJECT_NAME}_BUILD_TEST)
                  TESTS  ${CIRCUIT_TEST_LIST})
  
   set_target_properties(unittest PROPERTIES
-                        DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+                        DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
                         CXX_STANDARD 14
                         FOLDER UnitTest
                         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime

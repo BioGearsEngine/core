@@ -48,7 +48,7 @@ function(add_howto name)
         FOLDER Examples
         OUTPUT_NAME "${TARGET_NAME}"
         PROJECT_LABEL "${TARGET_NAME}"
-        DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+        DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
         CXX_STANDARD 14
         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
         )
@@ -118,7 +118,7 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
         FOLDER Examples
         OUTPUT_NAME "howto-common"
         PROJECT_LABEL "howto-common"
-        DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+        DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
         CXX_STANDARD 14
         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )

@@ -1,4 +1,5 @@
-if( NOT CMAKE_DEBUG_POSTFIX )
+
+if( NOT CMAKE_DEBUG_POSTFIX AND NOT Biogears_NO_DEBUG_POSTIFX)
   set( CMAKE_DEBUG_POSTFIX "_d" CACHE STRING "This string is appended to target names in debug mode." FORCE )
 endif()
 if( NOT CMAKE_BUILD_TYPE )
