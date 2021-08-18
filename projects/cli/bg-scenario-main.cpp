@@ -150,7 +150,7 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
     bse.Execute(sce, ex.Computed() + parent_dir + results_csv_file, nullptr);
   } catch (...) {
     console_logger.Error("Failed " + ex.Name());
-    static_cast<int>(ExecutionErrors::BIOGEARS_RUNTIME_ERROR);
+    return static_cast<int>(ExecutionErrors::BIOGEARS_RUNTIME_ERROR);
   }
 
   return static_cast<int>(ExecutionErrors::NONE);
