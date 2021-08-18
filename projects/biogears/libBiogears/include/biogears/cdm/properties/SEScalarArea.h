@@ -20,7 +20,7 @@ public:
   AreaUnit(const char* u);
   AreaUnit(const std::string& u);
 
-  virtual ~AreaUnit() = default;     
+  virtual ~AreaUnit();     
 
   bool operator==(const AreaUnit&) const;
   bool operator!=(const AreaUnit&) const;

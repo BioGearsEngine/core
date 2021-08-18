@@ -36,10 +36,12 @@ public:
   static const HeatResistanceUnit C_s_Per_kcal;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<HeatResistanceUnit>;
+
 class BIOGEARS_API SEScalarHeatResistance : public SEScalarQuantity<HeatResistanceUnit> {
 public:
-  SEScalarHeatResistance() = default;
-  virtual ~SEScalarHeatResistance() = default;
+  SEScalarHeatResistance();
+  virtual ~SEScalarHeatResistance();
 
   CDM::ScalarHeatResistanceData* Unload() const override;
 
