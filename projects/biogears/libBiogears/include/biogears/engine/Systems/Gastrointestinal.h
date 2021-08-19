@@ -25,9 +25,13 @@ class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
 class SEFluidCircuitPath;
 class BioGears;
+}
 
+namespace std {
+BG_EXT template class BIOGEARS_API map<biogears::SELiquidSubstanceQuantity*, double>;
+}
 
-BG_EXT template class BIOGEARS_API std::map<SELiquidSubstanceQuantity*, double>;
+namespace biogears {
 /**
 * @brief @copydoc Physiology_GastrointestinalSystemData
 */

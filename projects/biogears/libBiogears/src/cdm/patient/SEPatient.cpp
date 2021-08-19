@@ -23,12 +23,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace std {
+template class map<CDM::enumPatientEvent::value, bool>;
+template class map<CDM::enumPatientEvent::value, void (*)(bool)>;
+template class map<CDM::enumPatientEvent::value, double>;
+}
 namespace biogears {
-
-template class std::map<CDM::enumPatientEvent::value, bool>;
-template class std::map<CDM::enumPatientEvent::value, void (*)(bool)>;
-template class std::map<CDM::enumPatientEvent::value, double>;
-
 SEPatient::SEPatient(Logger* logger)
   : Loggable(logger)
 {

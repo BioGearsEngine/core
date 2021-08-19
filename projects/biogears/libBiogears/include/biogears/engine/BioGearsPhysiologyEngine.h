@@ -12,13 +12,18 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 #include <biogears/version.h>
-#include <biogears/cdm/CommonDataModel.h>
 // CDM Features in use
 #include <biogears/cdm/engine/PhysiologyEngine.h>
- 
+
 #include <memory>
+
+namespace std {
+  BG_EXT template class BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine>;
+  BG_EXT template class BIOGEARS_API std::shared_ptr<biogears::PhysiologyEngine>;
+}
 
 namespace biogears {
 BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(biogears::Logger* logger = nullptr);

@@ -49,11 +49,13 @@ class VolumePerTimeUnit;
 namespace io {
   class Patient;
 }
-
-BG_EXT template class BIOGEARS_API std::map<CDM::enumPatientEvent::value, bool>;
-BG_EXT template class BIOGEARS_API std::map<CDM::enumPatientEvent::value, void(*)(bool)>;
-BG_EXT template class BIOGEARS_API std::map<CDM::enumPatientEvent::value, double>;
-
+} //namespace biogears
+namespace std {
+BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, bool>;
+BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, void (*)(bool)>;
+BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, double>;
+}
+namespace biogears {
 class BIOGEARS_API SEPatient : public Loggable {
   friend io::Patient;
 
@@ -269,7 +271,7 @@ protected:
   std::stringstream m_ss;
   mutable SEEventHandler* m_EventHandler;
   std::map<CDM::enumPatientEvent::value, bool> m_EventState;
-  std::map<CDM::enumPatientEvent::value, void(*)(bool)> m_EventCallbacks;
+  std::map<CDM::enumPatientEvent::value, void (*)(bool)> m_EventCallbacks;
   std::map<CDM::enumPatientEvent::value, double> m_EventDuration_s;
 
   std::string m_Name;

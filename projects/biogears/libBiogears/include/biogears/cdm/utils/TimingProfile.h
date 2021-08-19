@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
-
 enum class State {
   Ready, // Timer has no data and is not running
   Running, // Timer is currently running
@@ -33,9 +32,12 @@ struct Timer {
   std::chrono::high_resolution_clock::time_point end;
   State state = State::Ready;
 };
+} //namespace biogearsK
 
-BG_EXT template class BIOGEARS_API std::map<std::string, biogears::Timer>;
-
+namespace std {
+BG_EXT template class BIOGEARS_API map<string, biogears::Timer>;
+}
+namespace biogears {
 class BIOGEARS_API TimingProfile : public Loggable {
 public:
   TimingProfile();

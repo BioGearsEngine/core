@@ -42,6 +42,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Tissue.h>
 #include <biogears/schema/biogears/BioGears.hxx>
 
+#include <memory>
+
 namespace biogears {
 class SEPatientAssessment;
 class BioGearsScenarioExec;
@@ -80,11 +82,13 @@ class BioGearsCircuits;
 class BioGearsCompartments;
 class BioGearsConfiguration;
 class SEScalarTime;
+} //namespace biogears
 
+namespace biogears {
 /**
 * @brief Manages and controls execution of all data/systems in %BioGears
 */
-class BIOGEARS_API BioGears : public Loggable{
+class BIOGEARS_API BioGears : public Loggable {
   friend class BioGearsEngineTest;
   friend class BioGearsScenarioExec;
 
@@ -173,6 +177,7 @@ public:
   void SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode);
 
   Logger* GetLogger() const;
+
 protected:
   void SetupCardiovascular();
   void SetupCerebral();
@@ -185,7 +190,6 @@ protected:
   void SetupMechanicalVentilator();
   void SetupExternalTemperature();
   void SetupInternalTemperature();
-
 
   bool Initialize(const PhysiologyEngineConfiguration* config);
   bool SetupPatient();
@@ -201,7 +205,6 @@ protected:
   void ForwardFatal(const std::string& msg, const std::string& origin);
 
   DataTrack* m_DataTrack;
-
 
   std::unique_ptr<SEScalarTime> m_CurrentTime;
   std::unique_ptr<SEScalarTime> m_SimulationTime;
@@ -242,6 +245,10 @@ protected:
   std::unique_ptr<SEPatient> m_Patient;
 
   std::unique_ptr<Logger> m_managedLogger;
-
 };
+} //namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API std::shared_ptr<biogears::BioGears>;
+BG_EXT template class BIOGEARS_API std::unique_ptr<biogears::BioGears>;
 }

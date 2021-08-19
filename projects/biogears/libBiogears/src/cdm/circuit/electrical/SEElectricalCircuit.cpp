@@ -13,14 +13,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 
+namespace std {
+ template class vector<biogears::SEElectricalCircuitNode*>;
+ template class vector<biogears::SEElectricalCircuitPath*>;
+ template class map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
+ template class map<const biogears::SEElectricalCircuitNode*, size_t>;
+}
 namespace biogears {
 
 template class SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
-
- template class std::vector<SEElectricalCircuitNode*>;
- template class std::vector<SEElectricalCircuitPath*>;
- template class std::map<const SEElectricalCircuitNode*, std::vector<SEElectricalCircuitPath*>*>;
- template class std::map<const SEElectricalCircuitNode*, size_t>;
 
 SEElectricalCircuit::SEElectricalCircuit(const std::string& name, SECircuitManager& mgr)
   : SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>(name, mgr.GetLogger())

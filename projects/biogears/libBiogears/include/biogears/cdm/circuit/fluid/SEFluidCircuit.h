@@ -19,17 +19,19 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
 
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SEFluidCircuitNode*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, vector<biogears::SEFluidCircuitPath*>*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, size_t>;
+}
+
 namespace biogears {
 class SECircuitManager;
 namespace io {
   class Circuit;
 }
 BG_EXT template class BIOGEARS_API SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>;
-
-BG_EXT template class BIOGEARS_API std::vector<SEFluidCircuitNode*>;
-BG_EXT template class BIOGEARS_API std::vector<SEFluidCircuitPath*>;
-BG_EXT template class BIOGEARS_API std::map<const SEFluidCircuitNode*, std::vector<SEFluidCircuitPath*>*>;
-BG_EXT template class BIOGEARS_API std::map<const SEFluidCircuitNode*, size_t>;
 
 class BIOGEARS_API SEFluidCircuit : public SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData> {
   friend class SECircuitManager;

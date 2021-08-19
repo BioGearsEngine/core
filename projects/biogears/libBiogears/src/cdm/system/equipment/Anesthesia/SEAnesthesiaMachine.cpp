@@ -26,10 +26,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 #include <biogears/io/io-manager.h>
 
+namespace std {
+template class map<CDM::enumAnesthesiaMachineEvent::value, bool>;
+template class map<CDM::enumAnesthesiaMachineEvent::value, double>;
+}
 namespace biogears {
-  
-template class std::map<CDM::enumAnesthesiaMachineEvent::value, bool>;
-template class std::map<CDM::enumAnesthesiaMachineEvent::value, double>;
 
 SEAnesthesiaMachine::SEAnesthesiaMachine(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
@@ -80,7 +81,7 @@ void SEAnesthesiaMachine::Clear()
   SAFE_DELETE(m_OxygenBottleTwo);
 }
 //-----------------------------------------------------------------------------
-void SEAnesthesiaMachine::StateChange(){}
+void SEAnesthesiaMachine::StateChange() { }
 //-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::Merge(const SEAnesthesiaMachine& from)
 {

@@ -30,9 +30,10 @@ specific language governing permissions and limitations under the License.
 #include <ostream>
 #include <string>
 
+namespace std {
+  BG_EXT template class BIOGEARS_API vector<biogears::SESystem*>;
+}
 namespace biogears {
-
-BG_EXT template class BIOGEARS_API std::vector<SESystem*>;
 
 enum class CompartmentUpdate { None,
                                InFlow,
@@ -83,8 +84,13 @@ public:
   // Tissue cmpts don't have children and they don't have computed data that changes on call (like flow)
 };
 
-BG_EXT template class BIOGEARS_API std::map<const SEDataRequest*, SEDataRequestScalar*>;
+} //namespac biogears
 
+namespace std {
+BG_EXT template class BIOGEARS_API map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
+} // Namespace std
+
+namespace biogears {
 std::ostream& operator<<(std::ostream& os, SEDataRequestScalar& v);
 class BIOGEARS_API PhysiologyEngineTrack : public Loggable {
 public:

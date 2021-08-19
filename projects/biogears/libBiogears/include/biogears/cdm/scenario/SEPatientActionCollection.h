@@ -52,18 +52,18 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 
+namespace std {
+BG_EXT template class BIOGEARS_API map<string, biogears::SEHemorrhage*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SETourniquet*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SEEscharotomy*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SEPainStimulus*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceBolus*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceInfusion*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceOralDose*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
+}
 namespace biogears {
-
-BG_EXT template class BIOGEARS_API std::map<std::string, SEHemorrhage*>;
-BG_EXT template class BIOGEARS_API std::map<std::string, SETourniquet*>;
-BG_EXT template class BIOGEARS_API std::map<std::string, SEEscharotomy*>;
-BG_EXT template class BIOGEARS_API std::map<std::string, SEPainStimulus*>;
-BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SESubstanceBolus*>;
-BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SESubstanceInfusion*>;
-BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SESubstanceOralDose*>;
-BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SESubstanceNasalDose*>;
-BG_EXT template class BIOGEARS_API std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
-
 class BIOGEARS_API SEPatientActionCollection : public Loggable {
 public:
   SEPatientActionCollection(SESubstanceManager&);

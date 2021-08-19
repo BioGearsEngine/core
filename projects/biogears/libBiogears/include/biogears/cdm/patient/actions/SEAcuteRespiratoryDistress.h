@@ -18,8 +18,11 @@ class SEScalar0To1;
 namespace io {
   class PatientActions;
 }
+} //namespace biogears
+
+namespace biogears {
 class BIOGEARS_API SEAcuteRespiratoryDistress : public SEPatientAction {
-    friend io::PatientActions;
+  friend io::PatientActions;
 
 public:
   SEAcuteRespiratoryDistress();

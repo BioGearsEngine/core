@@ -24,9 +24,12 @@ namespace biogears {
 namespace io {
   class Substance;
 }
+} //namespace biogears
 
-BG_EXT template class BIOGEARS_API std::map<std::string, SESubstanceTissuePharmacokinetics*>;
-
+namespace std {
+BG_EXT template class BIOGEARS_API map<string, biogears::SESubstanceTissuePharmacokinetics*>;
+}
+namespace biogears {
 class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {
   friend io::Substance;
 
@@ -56,9 +59,9 @@ public:
   virtual const SESubstanceTissuePharmacokinetics* GetTissueKinetics(const std::string& name) const;
   virtual void RemoveTissueKinetics(const char* name);
   virtual void RemoveTissueKinetics(const std::string& name);
- 
-  bool operator==( const SESubstancePharmacokinetics& rhs) const;
-  bool operator!=( const SESubstancePharmacokinetics& rhs) const;
+
+  bool operator==(const SESubstancePharmacokinetics& rhs) const;
+  bool operator!=(const SESubstancePharmacokinetics& rhs) const;
 
 protected:
   virtual void Unload(CDM::SubstancePharmacokineticsData& data) const;

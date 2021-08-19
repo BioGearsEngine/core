@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-#include <vector>
 #include <map>
+#include <vector>
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
@@ -34,14 +34,16 @@ class SEPatientActionCollection;
 class SEPatient;
 class SEEnergySystem;
 class BioGears;
+}
 
-BG_EXT template class BIOGEARS_API std::map<SETissueCompartment*, SELiquidCompartment*>;
-BG_EXT template class BIOGEARS_API std::map<SELiquidCompartment*, SEFluidCircuitPath*>;
-BG_EXT template class BIOGEARS_API std::map<SETissueCompartment*, SEFluidCircuitPath*>;
-BG_EXT template class BIOGEARS_API std::map<SETissueCompartment*, SEFluidCircuitPath*>;
-BG_EXT template class BIOGEARS_API std::map<SETissueCompartment*, SEFluidCircuitPath*>;
-BG_EXT template class BIOGEARS_API std::vector<SETissueCompartment*>;
+namespace std {
+BG_EXT template class BIOGEARS_API map<biogears::SETissueCompartment*, biogears::SELiquidCompartment*>;
+BG_EXT template class BIOGEARS_API map<biogears::SELiquidCompartment*, biogears::SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API map<biogears::SETissueCompartment*, biogears::SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*>;
+}
 
+namespace biogears {
 /**
  * @brief This class encapsulates logic necessary to connect independent systems together.
  * @details Each system calculates the behavior that occurs within its individual physiology function; 

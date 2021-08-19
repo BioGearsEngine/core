@@ -21,7 +21,6 @@ CDM_BIND_DECL(SubstancePharmacodynamicsData)
 CDM_BIND_DECL(PharmacodynamicModifierData)
 
 namespace biogears {
-
 class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarMassPerVolume;
@@ -32,9 +31,13 @@ class SEPharmacodynamicModifier;
 namespace io {
   class Substance;
 }
+} //namespace biogears
 
-BG_EXT template class BIOGEARS_API std::map<std::string, SEPharmacodynamicModifier*>;
+namespace std {
+  BG_EXT template class BIOGEARS_API map<string, biogears::SEPharmacodynamicModifier*>;
+}
 
+namespace biogears {
 class BIOGEARS_API SESubstancePharmacodynamics : public Loggable {
   friend io::Substance;
 
@@ -126,8 +129,8 @@ public:
 
   virtual std::map<std::string, SEPharmacodynamicModifier*> GetPharmacodynamicModifiers() const;
 
-  bool operator==( const SESubstancePharmacodynamics& rhs) const;
-  bool operator!=( const SESubstancePharmacodynamics& rhs) const;
+  bool operator==(const SESubstancePharmacodynamics& rhs) const;
+  bool operator!=(const SESubstancePharmacodynamics& rhs) const;
 
 protected:
   virtual void Unload(CDM::SubstancePharmacodynamicsData& data) const;
@@ -177,8 +180,8 @@ public:
   virtual SEScalarMassPerVolume& GetEC50();
   virtual double GetEC50(const MassPerVolumeUnit& unit) const;
 
-  bool operator==( const SEPharmacodynamicModifier& rhs) const;
-  bool operator!=( const SEPharmacodynamicModifier& rhs) const;
+  bool operator==(const SEPharmacodynamicModifier& rhs) const;
+  bool operator!=(const SEPharmacodynamicModifier& rhs) const;
 
 protected:
   virtual void Unload(CDM::PharmacodynamicModifierData& data) const;

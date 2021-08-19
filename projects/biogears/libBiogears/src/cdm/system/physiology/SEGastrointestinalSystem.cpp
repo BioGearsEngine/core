@@ -19,6 +19,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace std{
+template class map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
+}
+
 namespace biogears {
 constexpr char idChymeAbsorptionRate[] = "ChymeAbsorptionRate";
 constexpr char idStomachContents[] = "StomachContents";

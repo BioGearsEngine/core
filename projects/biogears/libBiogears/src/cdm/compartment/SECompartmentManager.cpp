@@ -19,31 +19,31 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+namespace std {
+  template class vector<biogears::SEGasCompartment*> ;
+  template class map<string, biogears::SEGasCompartment*> ;
+  template class vector<biogears::SEGasCompartmentLink*> ;
+  template class map<string, biogears::SEGasCompartmentLink*> ;
+  template class vector<biogears::SEGasCompartmentGraph*> ;
+  template class map<string, biogears::SEGasCompartmentGraph*> ;
+  template class vector<biogears::SESubstance*> ;
+  
+  template class vector<biogears::SELiquidCompartment*> ;
+  template class map<string, biogears::SELiquidCompartment*> ;
+  template class vector<biogears::SELiquidCompartmentLink*> ;
+  template class map<string, biogears::SELiquidCompartmentLink*> ;
+  template class vector<biogears::SELiquidCompartmentGraph*> ;
+  template class map<string, biogears::SELiquidCompartmentGraph*> ;
+  
+  template class vector<biogears::SEThermalCompartment*> ;
+  template class map<string, biogears::SEThermalCompartment*> ;
+  template class vector<biogears::SEThermalCompartmentLink*> ;
+  template class map<string, biogears::SEThermalCompartmentLink*> ;
+  
+  template class vector<biogears::SETissueCompartment*> ;
+  template class map<string, biogears::SETissueCompartment*> ;
+}
 namespace biogears {
-
-template class std::vector<SEGasCompartment*>;
-template class std::map<std::string, SEGasCompartment*>;
-template class std::vector<SEGasCompartmentLink*>;
-template class std::map<std::string, SEGasCompartmentLink*>;
-template class std::vector<SEGasCompartmentGraph*>;
-template class std::map<std::string, SEGasCompartmentGraph*>;
-template class std::vector<SESubstance*>;
-               
-template class std::vector<SELiquidCompartment*>;
-template class std::map<std::string, SELiquidCompartment*>;
-template class std::vector<SELiquidCompartmentLink*>;
-template class std::map<std::string, SELiquidCompartmentLink*>;
-template class std::vector<SELiquidCompartmentGraph*>;
-template class std::map<std::string, SELiquidCompartmentGraph*>;
-template class std::vector<SESubstance*>;
-               
-template class std::vector<SEThermalCompartment*>;
-template class std::map<std::string, SEThermalCompartment*>;
-template class std::vector<SEThermalCompartmentLink*>;
-template class std::map<std::string, SEThermalCompartmentLink*>;
-               
-template class std::vector<SETissueCompartment*>;
-template class std::map<std::string, SETissueCompartment*>;
 
 SECompartmentManager::SECompartmentManager(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())

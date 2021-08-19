@@ -46,6 +46,11 @@ specific language governing permissions and limitations under the License.
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace std {
+template class std::shared_ptr<biogears::BioGearsEngine>;
+template class std::unique_ptr<biogears::BioGearsEngine>;
+}
+
 namespace biogears {
 
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
@@ -599,9 +604,8 @@ bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std:
 {
 
   auto io = m_Logger->GetIoManager().lock();
-  if ( m_Patient == nullptr ) {
-  
-  } 
+  if (m_Patient == nullptr) {
+  }
   if (!m_Patient->Load(patientFile)) {
     return false;
   }
@@ -743,8 +747,8 @@ bool BioGearsEngine::AdvanceModelTime(double time, const TimeUnit& unit, bool ap
   }
 
   for (int i = 0; i < count; i++) {
-    if ( !AdvanceModelTime(appendDataTrack) ) {
-       return false;
+    if (!AdvanceModelTime(appendDataTrack)) {
+      return false;
     }
   }
   return true;

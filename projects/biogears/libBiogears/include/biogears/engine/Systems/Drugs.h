@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-
 namespace biogears {
 class SETissueCompartment;
 class SEFluidCircuitPath;
@@ -29,12 +28,15 @@ class SESubstanceBolusState;
 class SENasalState;
 class SETransmucosalState;
 class SELiquidCompartment;
+}
 
+namespace std {
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceBolusState*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SENasalState*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SETransmucosalState*>;
+}
 
-BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SESubstanceBolusState*>;
-BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SENasalState*>;
-BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SETransmucosalState*>;
-
+namespace biogears {
 class BioGears;
 /**
  * @brief
@@ -99,7 +101,7 @@ protected:
   std::map<const SESubstance*, SESubstanceBolusState*> m_BolusAdministrations;
   std::map<const SESubstance*, SENasalState*> m_NasalStates;
   std::map<const SESubstance*, SETransmucosalState*> m_TransmucosalStates;
-  
+
   double m_SarinRbcAcetylcholinesteraseComplex_nM;
   double m_AgedRbcAcetylcholinesterase_nM;
 

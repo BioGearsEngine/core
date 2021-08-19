@@ -29,9 +29,11 @@ specific language governing permissions and limitations under the License.
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
-namespace biogears {
+namespace std {
+template class map<biogears::SESubstance*, biogears::SizeIndependentDepositionEfficencyCoefficient*>;
+}
 
-template class std::map<SESubstance*, SizeIndependentDepositionEfficencyCoefficient*>;
+namespace biogears {
 
 SizeIndependentDepositionEfficencyCoefficient::SizeIndependentDepositionEfficencyCoefficient()
 {

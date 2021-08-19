@@ -15,18 +15,19 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 
+namespace std {
+template class map<string, biogears::SEHemorrhage*>;
+template class map<string, biogears::SETourniquet*>;
+template class map<string, biogears::SEEscharotomy*>;
+template class map<string, biogears::SEPainStimulus*>;
+template class map<const biogears::SESubstance*, biogears::SESubstanceBolus*>;
+template class map<const biogears::SESubstance*, biogears::SESubstanceInfusion*>;
+template class map<const biogears::SESubstance*, biogears::SESubstanceOralDose*>;
+template class map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*>;
+template class map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
+}
+
 namespace biogears {
-
-template class std::map<std::string, SEHemorrhage*>;
-template class std::map<std::string, SETourniquet*>;
-template class std::map<std::string, SEEscharotomy*>;
-template class std::map<std::string, SEPainStimulus*>;
-template class std::map<const SESubstance*, SESubstanceBolus*>;
-template class std::map<const SESubstance*, SESubstanceInfusion*>;
-template class std::map<const SESubstance*, SESubstanceOralDose*>;
-template class std::map<const SESubstance*, SESubstanceNasalDose*>;
-template class std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
-
 SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)

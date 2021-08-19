@@ -13,14 +13,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 
+namespace std {
+template class vector<biogears::SEFluidCircuitNode*>;
+template class vector<biogears::SEFluidCircuitPath*>;
+template class map<const biogears::SEFluidCircuitNode*, vector<biogears::SEFluidCircuitPath*>*>;
+template class map<const biogears::SEFluidCircuitNode*, size_t>;
+}
 namespace biogears {
 template class SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>;
-
-template class std::vector<SEFluidCircuitNode*>;
-template class std::vector<SEFluidCircuitPath*>;
-template class std::map<const SEFluidCircuitNode*, std::vector<SEFluidCircuitPath*>*>;
-template class std::map<const SEFluidCircuitNode*, size_t>;
-
 
 SEFluidCircuit::SEFluidCircuit(const char* name, SECircuitManager& mgr)
   : SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>(name, mgr.GetLogger())

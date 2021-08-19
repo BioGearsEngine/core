@@ -28,9 +28,13 @@ class SEDrugTransitState;
 namespace io {
   class Physiology;
 }
+} //namespace biogears
 
-BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SEDrugTransitState*>;
+namespace std {
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
+}
 
+namespace biogears {
 class BIOGEARS_API SEGastrointestinalSystem : public SESystem {
   friend io::Physiology;
 

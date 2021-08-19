@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 #pragma warning(pop)
 
+
 namespace biogears {
 //--------------------------------------------------------------------------------------------------
 /// @brief
@@ -143,4 +144,9 @@ protected:
   bool m_areTrackingStabilization = false;
 
 };
+}   //namespace biogears
+
+namespace std{
+   BG_EXT template class BIOGEARS_API std::shared_ptr<biogears::BioGearsEngine>;
+   BG_EXT template class BIOGEARS_API std::unique_ptr<biogears::BioGearsEngine>;
 }

@@ -23,14 +23,17 @@ CDM_BIND_DECL(SubstanceData);
 CDM_BIND_DECL(SubstanceCompoundData);
 
 namespace biogears {
-
 namespace io {
   class Scenario;
 }
+} //namespace biogears
 
-BG_EXT template class BIOGEARS_API std::map<SESubstance*, const CDM::SubstanceData*>;
-BG_EXT template class BIOGEARS_API std::map<SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
+namespace std {
+BG_EXT template class BIOGEARS_API map<biogears::SESubstance*, const CDM::SubstanceData*>;
+BG_EXT template class BIOGEARS_API map<biogears::SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
+}
 
+namespace biogears {
 class BIOGEARS_API SESubstanceManager : public Loggable {
   friend io::Scenario;
 

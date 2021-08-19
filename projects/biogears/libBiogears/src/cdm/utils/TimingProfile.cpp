@@ -17,22 +17,22 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/TimingProfile.h>
 
+namespace std {
+template class map<string, biogears::Timer>;
+}
+
 namespace biogears {
-
-template class std::map<std::string, biogears::Timer>;
-
-TimingProfile::TimingProfile(){
-
+TimingProfile::TimingProfile()
+{
 }
 
 TimingProfile::TimingProfile(Logger* logger)
-: Loggable(logger)
+  : Loggable(logger)
 {
-
 }
 
-TimingProfile::~TimingProfile(){
-
+TimingProfile::~TimingProfile()
+{
 }
 
 void TimingProfile::Clear()

@@ -19,16 +19,18 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(GasCompartmentGraphData)
 
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportVertex*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportEdge*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, size_t>;
+BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, vector<biogears::SEGasTransportEdge*>*>;
+}
+
 namespace biogears {
 class SECompartmentManager;
 namespace io {
   class Compartment;
 }
-
-BG_EXT template class BIOGEARS_API std::vector<SEGasTransportVertex*>;
-BG_EXT template class BIOGEARS_API std::map<const SEGasTransportVertex*, size_t>;
-BG_EXT template class BIOGEARS_API std::map<const SEGasTransportVertex*, std::vector<SEGasTransportEdge*>*>;
-BG_EXT template class BIOGEARS_API std::map<const SEGasTransportVertex*, std::vector<SEGasTransportEdge*>*>;
 
 class BIOGEARS_API SEGasCompartmentGraph : public SECompartmentTransportGraph<SEGasTransportGraph, SEGasTransportVertex, SEGasTransportEdge, SEGasCompartment, SEGasCompartmentLink> {
   friend class SECompartmentManager;

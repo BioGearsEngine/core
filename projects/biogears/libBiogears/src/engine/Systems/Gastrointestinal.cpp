@@ -36,10 +36,11 @@ namespace BGE = mil::tatrc::physiology::biogears;
 #pragma warning(disable : 4275)
 
 //#define logMeal
+namespace std {
+template class map<biogears::SELiquidSubstanceQuantity*, double>;
+}
+
 namespace biogears {
-
-template class std::map<SELiquidSubstanceQuantity*, double>;
-
 auto Gastrointestinal::make_unique(BioGears& bg) -> std::unique_ptr<Gastrointestinal>
 {
   return std::unique_ptr<Gastrointestinal>(new Gastrointestinal(bg));

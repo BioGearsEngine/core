@@ -18,10 +18,6 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
-namespace io {
-  class Anesthesia;
-}
-
 class SEEventHandler;
 class SESubstanceManager;
 class SEAnesthesiaMachineChamber;
@@ -37,9 +33,17 @@ class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarFraction;
 
-BG_EXT template class BIOGEARS_API std::map<CDM::enumAnesthesiaMachineEvent::value, bool>;
-BG_EXT template class BIOGEARS_API std::map<CDM::enumAnesthesiaMachineEvent::value, double>;
+namespace io {
+  class Anesthesia;
+}
+} //namespace biogears
 
+namespace std {
+BG_EXT template class BIOGEARS_API map<CDM::enumAnesthesiaMachineEvent::value, bool>;
+BG_EXT template class BIOGEARS_API map<CDM::enumAnesthesiaMachineEvent::value, double>;
+}
+
+namespace biogears {
 class BIOGEARS_API SEAnesthesiaMachine : public SESystem {
 protected:
   friend SEAnesthesiaMachineConfiguration;

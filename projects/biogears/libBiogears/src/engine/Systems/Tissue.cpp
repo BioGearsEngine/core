@@ -65,15 +65,14 @@ namespace BGE = mil::tatrc::physiology::biogears;
 //#define PROBE_BLOOD_GASES
 #define GAS_ONLY_PRODCOM
 
+namespace std{
+template class map<biogears::SETissueCompartment*, biogears::SELiquidCompartment*>;
+template class map<biogears::SELiquidCompartment*, biogears::SEFluidCircuitPath*>;
+template class map<biogears::SETissueCompartment*, biogears::SEFluidCircuitPath*>;
+template class vector<biogears::SETissueCompartment*>;
+}
+
 namespace biogears {
-
-template class std::map<SETissueCompartment*, SELiquidCompartment*>;
-template class std::map<SELiquidCompartment*, SEFluidCircuitPath*>;
-template class std::map<SETissueCompartment*, SEFluidCircuitPath*>;
-template class std::map<SETissueCompartment*, SEFluidCircuitPath*>;
-template class std::map<SETissueCompartment*, SEFluidCircuitPath*>;
-template class std::vector<SETissueCompartment*>;
-
 double Tissue::m_hepaticCO2Produced_mol;
 double Tissue::m_hepaticO2Consumed_mol;
 

@@ -34,7 +34,7 @@ public:
   SizeIndependentDepositionEfficencyCoefficient();
   ~SizeIndependentDepositionEfficencyCoefficient();
 
-  double GetMouth() const; 
+  double GetMouth() const;
   double GetTrachea() const;
   double GetBronchi() const;
   double GetAlveoli() const;
@@ -46,7 +46,13 @@ protected:
   double m_alveoli = 0;
 };
 
-BG_EXT template class BIOGEARS_API std::map<SESubstance*, SizeIndependentDepositionEfficencyCoefficient*>;
+} //namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API map<biogears::SESubstance*, biogears::SizeIndependentDepositionEfficencyCoefficient*>;
+}
+
+namespace biogears {
 
 /**
 * @brief Manages and initializes all systems with substances needed by %BioGears

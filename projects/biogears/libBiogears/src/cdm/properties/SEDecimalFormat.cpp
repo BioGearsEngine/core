@@ -17,10 +17,11 @@ specific language governing permissions and limitations under the License.
 //Project Includes
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace std {
+template class map<string, biogears::SEDecimalFormat>;
+}
+
 namespace biogears {
-
-template class std::map<std::string, SEDecimalFormat>;
-
 SEDecimalFormat::SEDecimalFormat(const SEDecimalFormat* dfault)
 {
   Reset();

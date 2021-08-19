@@ -17,10 +17,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/cdm/Substance.hxx>
 
-
+namespace std {
+template class map<string, biogears::SEPharmacodynamicModifier*>;
+}
 namespace biogears {
-
-template class std::map<std::string, SEPharmacodynamicModifier*>;
 
 SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   : Loggable(logger)

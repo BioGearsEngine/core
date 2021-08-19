@@ -49,10 +49,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
-namespace biogears {
+namespace std {
+template class vector<biogears::SESystem*>;
+template class map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
+}
 
-template class std::vector<SESystem*>;
-template class std::map<const SEDataRequest*, SEDataRequestScalar*>;
+namespace biogears {
 
 std::string Space2Underscore(const std::string& str)
 {
