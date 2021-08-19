@@ -17,8 +17,6 @@ specific language governing permissions and limitations under the License.
 
 namespace std {
 template class map<string, biogears::SEHemorrhage*>;
-template class map<string, biogears::SEHemorrhage*>::iterator;
-template class map<string, biogears::SEHemorrhage*>::const_iterator;
 template class map<string, biogears::SETourniquet*>;
 template class map<string, biogears::SEEscharotomy*>;
 template class map<string, biogears::SEPainStimulus*>;

@@ -54,8 +54,6 @@ specific language governing permissions and limitations under the License.
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<string, biogears::SEHemorrhage*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEHemorrhage*>::iterator;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEHemorrhage*>::const_iterator;
 BG_EXT template class BIOGEARS_API map<string, biogears::SETourniquet*>;
 BG_EXT template class BIOGEARS_API map<string, biogears::SEEscharotomy*>;
 BG_EXT template class BIOGEARS_API map<string, biogears::SEPainStimulus*>;
