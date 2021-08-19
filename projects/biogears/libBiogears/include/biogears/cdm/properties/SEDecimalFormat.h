@@ -14,12 +14,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+#include <string>
+#include <map>
+
 CDM_BIND_DECL(DecimalFormatData)
 
 namespace biogears {
 namespace io {
   class Property;
 }
+
 enum class DecimalNotation { Default,
                              Fixed,
                              Scientific };
@@ -55,4 +59,6 @@ protected:
   std::streamsize m_Precision;
   DecimalNotation m_Notation;
 };
+
+BG_EXT template class BIOGEARS_API std::map<std::string, SEDecimalFormat>;
 }

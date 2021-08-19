@@ -27,10 +27,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEEnvironment.h>
 #include <biogears/cdm/utils/DataTrack.h>
 
-#include <string>
 #include <ostream>
+#include <string>
 
 namespace biogears {
+
+BG_EXT template class BIOGEARS_API std::vector<SESystem*>;
 
 enum class CompartmentUpdate { None,
                                InFlow,
@@ -81,6 +83,8 @@ public:
   // Tissue cmpts don't have children and they don't have computed data that changes on call (like flow)
 };
 
+BG_EXT template class BIOGEARS_API std::map<const SEDataRequest*, SEDataRequestScalar*>;
+
 std::ostream& operator<<(std::ostream& os, SEDataRequestScalar& v);
 class BIOGEARS_API PhysiologyEngineTrack : public Loggable {
 public:
@@ -103,7 +107,7 @@ public:
 
   bool ConnectRequest(SEDataRequest& dr, SEDataRequestScalar& ds);
 
-  SEDataRequestScalar* GetScalar(SEDataRequest* dr); 
+  SEDataRequestScalar* GetScalar(SEDataRequest* dr);
   void SetupRequests(bool append = false);
   void TrackData(double currentTime_s, bool append = false);
   void PullData();

@@ -16,6 +16,17 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 
 namespace biogears {
+
+template class std::map<std::string, SEHemorrhage*>;
+template class std::map<std::string, SETourniquet*>;
+template class std::map<std::string, SEEscharotomy*>;
+template class std::map<std::string, SEPainStimulus*>;
+template class std::map<const SESubstance*, SESubstanceBolus*>;
+template class std::map<const SESubstance*, SESubstanceInfusion*>;
+template class std::map<const SESubstance*, SESubstanceOralDose*>;
+template class std::map<const SESubstance*, SESubstanceNasalDose*>;
+template class std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
+
 SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
@@ -156,7 +167,7 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   if (HasHemorrhage()) {
     for (auto itr : GetHemorrhages()) {
       to.push_back(itr.second->Unload());
-  }
+    }
   }
   if (HasInfection()) {
     to.push_back(GetInfection()->Unload());
@@ -176,7 +187,7 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   if (HasPainStimulus()) {
     for (auto itr : GetPainStimuli()) {
       to.push_back(itr.second->Unload());
-  }
+    }
   }
   if (HasPericardialEffusion()) {
     to.push_back(GetPericardialEffusion()->Unload());
@@ -365,9 +376,9 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
   const CDM::CardiacArrestData* cardiacarrest = dynamic_cast<const CDM::CardiacArrestData*>(&action);
   if (cardiacarrest != nullptr) {
 
-    if ( m_CardiacArrest == nullptr && cardiacarrest->State() == CDM::enumOnOff::Off) {
+    if (m_CardiacArrest == nullptr && cardiacarrest->State() == CDM::enumOnOff::Off) {
       return true; //Ignore :CardiacArrest::Off request when no :CardiacArrest Event exist.
-    } 
+    }
 
     if (m_CardiacArrest == nullptr) {
       m_CardiacArrest = new SECardiacArrest();
@@ -582,7 +593,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return IsValid(*m_RightNeedleDecompression);
     } else {
       return false;
-  }
+    }
   }
 
   const CDM::PainStimulusData* pain = dynamic_cast<const CDM::PainStimulusData*>(&action);
@@ -629,14 +640,14 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
 
   const CDM::SleepData* sleep = dynamic_cast<const CDM::SleepData*>(&action);
   if (sleep != nullptr) {
-      if (m_Sleep == nullptr)
-          m_Sleep = new SESleep();
-      m_Sleep->Load(*sleep);
-      if (!m_Sleep->IsActive()) {
-          RemoveSleepState();
-          return true;
-      }
-      return IsValid(*m_Sleep);
+    if (m_Sleep == nullptr)
+      m_Sleep = new SESleep();
+    m_Sleep->Load(*sleep);
+    if (!m_Sleep->IsActive()) {
+      RemoveSleepState();
+      return true;
+    }
+    return IsValid(*m_Sleep);
   }
 
   const CDM::SubstanceAdministrationData* admin = dynamic_cast<const CDM::SubstanceAdministrationData*>(&action);
@@ -1196,20 +1207,20 @@ void SEPatientActionCollection::RemovePulmonaryShunt()
 {
   SAFE_DELETE(m_PulmonaryShunt);
 }
-//-------------------------------------------------------------------------------  
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasSleepState() const
 {
-    return m_Sleep == nullptr ? false : true;
+  return m_Sleep == nullptr ? false : true;
 }
 //-------------------------------------------------------------------------------
 SESleep* SEPatientActionCollection::GetSleepState() const
 {
-    return m_Sleep;
+  return m_Sleep;
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSleepState()
 {
-    SAFE_DELETE(m_Sleep);
+  SAFE_DELETE(m_Sleep);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasTensionPneumothorax() const

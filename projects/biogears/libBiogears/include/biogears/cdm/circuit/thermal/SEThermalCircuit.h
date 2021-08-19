@@ -11,6 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+
+#include <vector>
+#include <map>
+
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
@@ -19,6 +23,12 @@ namespace biogears {
 class SECircuitManager;
 
 BG_EXT template class BIOGEARS_API SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>;
+
+BG_EXT template class BIOGEARS_API std::vector<SEThermalCircuitNode*>;
+BG_EXT template class BIOGEARS_API std::vector<SEThermalCircuitPath*>;
+BG_EXT template class BIOGEARS_API std::map<const SEThermalCircuitNode*, std::vector<SEThermalCircuitPath*>*>;
+BG_EXT template class BIOGEARS_API std::map<const SEThermalCircuitNode*, size_t>;
+
 class BIOGEARS_API SEThermalCircuit : public SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData> {
   friend class SECircuitManager;
 

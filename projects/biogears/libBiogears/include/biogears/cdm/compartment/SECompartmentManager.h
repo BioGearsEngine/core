@@ -33,6 +33,30 @@ namespace biogears {
   class Compartment;
 }
 
+  BG_EXT template class BIOGEARS_API std::vector<SEGasCompartment*> ;
+  BG_EXT template class BIOGEARS_API std::map<std::string, SEGasCompartment*> ;
+  BG_EXT template class BIOGEARS_API std::vector<SEGasCompartmentLink*> ;
+  BG_EXT template class BIOGEARS_API std::map<std::string, SEGasCompartmentLink*> ;
+  BG_EXT template class BIOGEARS_API std::vector<SEGasCompartmentGraph*> ;
+  BG_EXT template class BIOGEARS_API std::map<std::string, SEGasCompartmentGraph*> ;
+  BG_EXT template class BIOGEARS_API std::vector<SESubstance*> ;
+  
+  BG_EXT template class BIOGEARS_API std::vector<SELiquidCompartment*> ;
+  BG_EXT template class BIOGEARS_API std::map<std::string, SELiquidCompartment*> ;
+  BG_EXT template class BIOGEARS_API std::vector<SELiquidCompartmentLink*> ;
+  BG_EXT template class BIOGEARS_API std::map<std::string, SELiquidCompartmentLink*> ;
+  BG_EXT template class BIOGEARS_API std::vector<SELiquidCompartmentGraph*> ;
+  BG_EXT template class BIOGEARS_API std::map<std::string, SELiquidCompartmentGraph*> ;
+  BG_EXT template class BIOGEARS_API std::vector<SESubstance*> ;
+  
+  BG_EXT template class BIOGEARS_API std::vector<SEThermalCompartment*> ;
+  BG_EXT template class BIOGEARS_API std::map<std::string, SEThermalCompartment*> ;
+  BG_EXT template class BIOGEARS_API std::vector<SEThermalCompartmentLink*> ;
+  BG_EXT template class BIOGEARS_API std::map<std::string, SEThermalCompartmentLink*> ;
+  
+  BG_EXT template class BIOGEARS_API std::vector<SETissueCompartment*> ;
+  BG_EXT template class BIOGEARS_API std::map<std::string, SETissueCompartment*> ;
+
 class BIOGEARS_API SECompartmentManager : public Loggable {
   friend io::Compartment;
 public:

@@ -28,9 +28,13 @@ class SEScalarMassPerVolume;
 class MassPerVolumeUnit;
 class SEScalarFraction;
 class SEPharmacodynamicModifier;
+
 namespace io {
   class Substance;
 }
+
+BG_EXT template class BIOGEARS_API std::map<std::string, SEPharmacodynamicModifier*>;
+
 class BIOGEARS_API SESubstancePharmacodynamics : public Loggable {
   friend io::Substance;
 

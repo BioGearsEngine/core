@@ -53,6 +53,17 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 
 namespace biogears {
+
+BG_EXT template class BIOGEARS_API std::map<std::string, SEHemorrhage*>;
+BG_EXT template class BIOGEARS_API std::map<std::string, SETourniquet*>;
+BG_EXT template class BIOGEARS_API std::map<std::string, SEEscharotomy*>;
+BG_EXT template class BIOGEARS_API std::map<std::string, SEPainStimulus*>;
+BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SESubstanceBolus*>;
+BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SESubstanceInfusion*>;
+BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SESubstanceOralDose*>;
+BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SESubstanceNasalDose*>;
+BG_EXT template class BIOGEARS_API std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
+
 class BIOGEARS_API SEPatientActionCollection : public Loggable {
 public:
   SEPatientActionCollection(SESubstanceManager&);
@@ -194,7 +205,6 @@ public:
   bool HasRightOpenTensionPneumothorax() const;
   SETensionPneumothorax* GetRightOpenTensionPneumothorax() const;
   void RemoveRightOpenTensionPneumothorax();
-
 
   const std::map<const SESubstance*, SESubstanceBolus*>& GetSubstanceBoluses() const;
   void RemoveSubstanceBolus(const SESubstance& sub);

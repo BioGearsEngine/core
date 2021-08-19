@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <biogears/cdm/compartment/SECompartmentGraph.h>
 
@@ -20,6 +20,8 @@ specific language governing permissions and limitations under the License.
 #define COMPARTMENT_TRANSPORT_GRAPH_TYPES GraphType, GraphVertexType, GraphEdgeType, CompartmentType, CompartmentLinkType
 
 namespace biogears {
+
+
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 class SECompartmentTransportGraph : public GraphType, public SECompartmentGraph<COMPARTMENT_GRAPH_TYPES> {
 public:
@@ -42,7 +44,7 @@ public:
   virtual void StateChange();
 
 protected:
-  virtual void BalanceByIntensive() override= 0;
+  virtual void BalanceByIntensive() override = 0;
   virtual size_t GetVertexIndex(const GraphVertexType& v) const override;
   virtual const std::vector<GraphVertexType*>& GetVerticies() const override;
   virtual const std::vector<GraphEdgeType*>* GetSourceEdges(const GraphVertexType& v) const override;

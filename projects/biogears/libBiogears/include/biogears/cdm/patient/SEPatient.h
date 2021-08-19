@@ -50,6 +50,10 @@ namespace io {
   class Patient;
 }
 
+BG_EXT template class BIOGEARS_API std::map<CDM::enumPatientEvent::value, bool>;
+BG_EXT template class BIOGEARS_API std::map<CDM::enumPatientEvent::value, void(*)(bool)>;
+BG_EXT template class BIOGEARS_API std::map<CDM::enumPatientEvent::value, double>;
+
 class BIOGEARS_API SEPatient : public Loggable {
   friend io::Patient;
 

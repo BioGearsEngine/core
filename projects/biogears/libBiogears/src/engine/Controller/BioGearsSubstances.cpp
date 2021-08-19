@@ -31,26 +31,34 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
 
-SizeIndependentDepositionEfficencyCoefficient::SizeIndependentDepositionEfficencyCoefficient(){
+template class std::map<SESubstance*, SizeIndependentDepositionEfficencyCoefficient*>;
+
+SizeIndependentDepositionEfficencyCoefficient::SizeIndependentDepositionEfficencyCoefficient()
+{
 }
 //-------------------------------------------------------------------------------
-SizeIndependentDepositionEfficencyCoefficient::~SizeIndependentDepositionEfficencyCoefficient(){
+SizeIndependentDepositionEfficencyCoefficient::~SizeIndependentDepositionEfficencyCoefficient()
+{
 }
 //-------------------------------------------------------------------------------
-double SizeIndependentDepositionEfficencyCoefficient::GetMouth() const { 
-  return m_mouth; 
+double SizeIndependentDepositionEfficencyCoefficient::GetMouth() const
+{
+  return m_mouth;
 }
 //-------------------------------------------------------------------------------
-double SizeIndependentDepositionEfficencyCoefficient::GetTrachea() const {
-  return m_trachea; 
+double SizeIndependentDepositionEfficencyCoefficient::GetTrachea() const
+{
+  return m_trachea;
 }
 //-------------------------------------------------------------------------------
-double SizeIndependentDepositionEfficencyCoefficient::GetBronchi() const {
-  return m_bronchi; 
+double SizeIndependentDepositionEfficencyCoefficient::GetBronchi() const
+{
+  return m_bronchi;
 }
 //-------------------------------------------------------------------------------
-double SizeIndependentDepositionEfficencyCoefficient::GetAlveoli() const {
-  return m_alveoli; 
+double SizeIndependentDepositionEfficencyCoefficient::GetAlveoli() const
+{
+  return m_alveoli;
 }
 //-------------------------------------------------------------------------------
 BioGearsSubstances::BioGearsSubstances(BioGears& data)
@@ -331,9 +339,9 @@ void BioGearsSubstances::InitializeLiquidCompartmentGases()
   SetSubstanceConcentration(*m_HCO3, cmpts.GetUrineLeafCompartments(), concentration);
 }
 //-------------------------------------------------------------------------------
-void BioGearsSubstances::InitializeBloodGases(SELiquidCompartment& cmpt, double Hb_total_mM, double O2_sat, double O2_mmol_Per_L, 
-                                                                         double CO2_sat, double CO2_mmol_Per_L, double HCO3_mmol_Per_L, 
-                                                                         double pH, bool distribute)
+void BioGearsSubstances::InitializeBloodGases(SELiquidCompartment& cmpt, double Hb_total_mM, double O2_sat, double O2_mmol_Per_L,
+                                              double CO2_sat, double CO2_mmol_Per_L, double HCO3_mmol_Per_L,
+                                              double pH, bool distribute)
 {
   // N2 is inert
   SEGasCompartment* Ambient = m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient);

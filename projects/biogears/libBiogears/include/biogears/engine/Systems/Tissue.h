@@ -11,6 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+
+#include <vector>
+#include <map>
+
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
@@ -30,6 +34,14 @@ class SEPatientActionCollection;
 class SEPatient;
 class SEEnergySystem;
 class BioGears;
+
+BG_EXT template class BIOGEARS_API std::map<SETissueCompartment*, SELiquidCompartment*>;
+BG_EXT template class BIOGEARS_API std::map<SELiquidCompartment*, SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API std::map<SETissueCompartment*, SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API std::map<SETissueCompartment*, SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API std::map<SETissueCompartment*, SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API std::vector<SETissueCompartment*>;
+
 /**
  * @brief This class encapsulates logic necessary to connect independent systems together.
  * @details Each system calculates the behavior that occurs within its individual physiology function; 
@@ -46,12 +58,11 @@ protected:
   Tissue(BioGears& bg);
   BioGears& m_data;
 
-
 public:
   virtual ~Tissue() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "Tissue"; }
+  static constexpr char const* const TypeTag() { return "Tissue"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -92,7 +103,6 @@ protected:
   void CalculateVitals();
   void CheckGlycogenLevels();
   void ManageSubstancesAndSaturation();
-
 
   //conditions
   void Dehydrate();
@@ -136,7 +146,6 @@ protected:
   bool m_leftLegEscharotomy = false;
   bool m_rightArmEscharotomy = false;
   bool m_rightLegEscharotomy = false;
-
 
   std::stringstream m_ss;
   SESubstance* m_Albumin;

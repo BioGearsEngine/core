@@ -27,6 +27,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/io-manager.h>
 
 namespace biogears {
+  
+template class std::map<CDM::enumAnesthesiaMachineEvent::value, bool>;
+template class std::map<CDM::enumAnesthesiaMachineEvent::value, double>;
+
 SEAnesthesiaMachine::SEAnesthesiaMachine(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
   , m_Substances(substances)

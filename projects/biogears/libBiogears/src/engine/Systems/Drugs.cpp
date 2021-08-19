@@ -49,6 +49,11 @@ specific language governing permissions and limitations under the License.
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
+
+template class std::map<const SESubstance*, SESubstanceBolusState*>;
+template class std::map<const SESubstance*, SENasalState*>;
+template class std::map<const SESubstance*, SETransmucosalState*>;
+
 auto Drugs::make_unique(BioGears& bg) -> std::unique_ptr<Drugs>
 {
   return std::unique_ptr<Drugs>(new Drugs(bg));

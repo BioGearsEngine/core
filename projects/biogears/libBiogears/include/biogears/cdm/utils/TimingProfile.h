@@ -16,8 +16,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/Logger.h>
 
 #include <chrono>
+#include <map>
+#include <string>
 
-namespace biogears{
+namespace biogears {
+
 
 enum class State {
   Ready, // Timer has no data and is not running
@@ -31,6 +34,7 @@ struct Timer {
   State state = State::Ready;
 };
 
+BG_EXT template class BIOGEARS_API std::map<std::string, biogears::Timer>;
 
 class BIOGEARS_API TimingProfile : public Loggable {
 public:

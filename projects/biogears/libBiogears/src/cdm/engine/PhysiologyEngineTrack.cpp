@@ -50,6 +50,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 namespace biogears {
+
+template class std::vector<SESystem*>;
+template class std::map<const SEDataRequest*, SEDataRequestScalar*>;
+
 std::string Space2Underscore(const std::string& str)
 {
   std::string s = str;

@@ -22,6 +22,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 
 namespace biogears {
+
+template class std::vector<SEGasTransportVertex*>;
+template class std::map<const SEGasTransportVertex*, size_t>;
+template class std::map<const SEGasTransportVertex*, std::vector<SEGasTransportEdge*>*>;
+template class std::map<const SEGasTransportVertex*, std::vector<SEGasTransportEdge*>*>;
+
 SEGasCompartmentGraph::SEGasCompartmentGraph(const char* name, Logger* logger)
   : SEGasCompartmentGraph(std::string { name }, logger)
 {

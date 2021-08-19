@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
 namespace biogears {
+  
+template class std::map<std::string, SESubstanceTissuePharmacokinetics*>;
+
 SESubstancePharmacokinetics::SESubstancePharmacokinetics(Logger* logger)
   : Loggable(logger)
 {

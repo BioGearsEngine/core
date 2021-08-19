@@ -25,6 +25,7 @@ class SECircuitManager;
 namespace io {
   class Circuit;
 }
+
 class BIOGEARS_API SEThermalCircuitPath : public SECircuitPath<THERMAL_CIRCUIT_PATH> {
   friend class SECircuitManager;
   friend io::Circuit;

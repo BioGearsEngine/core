@@ -26,6 +26,10 @@ specific language governing permissions and limitations under the License.
 #endif
 
 namespace biogears {
+  
+template class std::map<SESubstance*, const CDM::SubstanceData*>;
+template class std::map<SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
+
 SESubstanceManager::SESubstanceManager(Logger* logger)
   : Loggable(logger)
 {

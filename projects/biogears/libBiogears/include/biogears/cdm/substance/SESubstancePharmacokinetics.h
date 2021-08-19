@@ -24,6 +24,9 @@ namespace biogears {
 namespace io {
   class Substance;
 }
+
+BG_EXT template class BIOGEARS_API std::map<std::string, SESubstanceTissuePharmacokinetics*>;
+
 class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {
   friend io::Substance;
 

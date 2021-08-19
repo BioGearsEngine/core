@@ -21,6 +21,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/directories/ecg.h>
 #endif
 namespace biogears {
+
+template class std::map<CDM::enumHeartRhythm, SEElectroCardioGramInterpolatorWaveform*>;
+template class std::map<CDM::ElectroCardioGramWaveformLeadNumber, SEScalarElectricPotential*>;
+template class std::map<CDM::ElectroCardioGramWaveformLeadNumber, std::map<CDM::enumHeartRhythm, SEElectroCardioGramInterpolatorWaveform*>>;
+
 SEElectroCardioGramInterpolator::SEElectroCardioGramInterpolator(Logger* logger)
   : Loggable(logger)
 {

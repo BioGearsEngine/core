@@ -15,12 +15,20 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/io/io-manager.h>
+
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/patients.h>
 #endif
+
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
+
 namespace biogears {
+
+template class std::map<CDM::enumPatientEvent::value, bool>;
+template class std::map<CDM::enumPatientEvent::value, void (*)(bool)>;
+template class std::map<CDM::enumPatientEvent::value, double>;
+
 SEPatient::SEPatient(Logger* logger)
   : Loggable(logger)
 {

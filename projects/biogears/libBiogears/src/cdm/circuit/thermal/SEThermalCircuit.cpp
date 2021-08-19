@@ -14,10 +14,18 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 
 namespace biogears {
+
 template class SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>;
+
+template class std::vector<SEThermalCircuitNode*>;
+template class std::vector<SEThermalCircuitPath*>;
+template class std::map<const SEThermalCircuitNode*, std::vector<SEThermalCircuitPath*>*>;
+template class std::map<const SEThermalCircuitNode*, size_t>;
+
 SEThermalCircuit::SEThermalCircuit(const char* name, SECircuitManager& mgr)
-  :SEThermalCircuit(std::string{name},mgr)
-  {}
+  : SEThermalCircuit(std::string { name }, mgr)
+{
+}
 //-------------------------------------------------------------------------------
 SEThermalCircuit::SEThermalCircuit(const std::string& name, SECircuitManager& mgr)
   : SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>(name, mgr.GetLogger())
@@ -32,7 +40,7 @@ SEThermalCircuit::~SEThermalCircuit()
 //-------------------------------------------------------------------------------
 SEThermalCircuitNode& SEThermalCircuit::CreateNode(const char* name)
 {
-  return CreateNode(std::string{ name });
+  return CreateNode(std::string { name });
 }
 //-------------------------------------------------------------------------------
 SEThermalCircuitNode& SEThermalCircuit::CreateNode(const std::string& name)
@@ -46,7 +54,7 @@ SEThermalCircuitNode& SEThermalCircuit::CreateNode(const std::string& name)
 //-------------------------------------------------------------------------------
 SEThermalCircuitPath& SEThermalCircuit::CreatePath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const char* name)
 {
-  return CreatePath(src, tgt, std::string{ name });
+  return CreatePath(src, tgt, std::string { name });
 }
 //-------------------------------------------------------------------------------
 SEThermalCircuitPath& SEThermalCircuit::CreatePath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const std::string& name)

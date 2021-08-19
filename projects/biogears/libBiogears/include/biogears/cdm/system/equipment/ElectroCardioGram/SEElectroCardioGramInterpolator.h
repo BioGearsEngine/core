@@ -20,9 +20,15 @@ CDM_BIND_DECL(ElectroCardioGramWaveformInterpolatorData)
 namespace biogears {
 class SEElectroCardioGramInterpolatorWaveform;
 class SEScalarElectricPotential;
+
+BG_EXT template class BIOGEARS_API std::map<CDM::enumHeartRhythm, SEElectroCardioGramInterpolatorWaveform*>;
+BG_EXT template class BIOGEARS_API std::map<CDM::ElectroCardioGramWaveformLeadNumber, SEScalarElectricPotential*>;
+BG_EXT template class BIOGEARS_API std::map<CDM::ElectroCardioGramWaveformLeadNumber, std::map<CDM::enumHeartRhythm, SEElectroCardioGramInterpolatorWaveform*>>;
+
 namespace io {
   class ElectroCardioGram;
 }
+
 class  SEElectroCardioGramInterpolator : public Loggable {
   friend io::ElectroCardioGram;
 

@@ -37,6 +37,9 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 //#define logMeal
 namespace biogears {
+
+template class std::map<SELiquidSubstanceQuantity*, double>;
+
 auto Gastrointestinal::make_unique(BioGears& bg) -> std::unique_ptr<Gastrointestinal>
 {
   return std::unique_ptr<Gastrointestinal>(new Gastrointestinal(bg));
@@ -991,7 +994,6 @@ void Gastrointestinal::ProcessDrugCAT()
     cat->GetTotalMassMetabolized().IncrementValue(totalMetabolized_ug_Per_s * dT_s, MassUnit::ug);
     cat->GetTotalMassExcreted().IncrementValue((lumenSolidMasses_ug[8] + lumenDissolvedMasses_ug[8]) * m_TransitRate_Per_s[8] * dT_s, MassUnit::ug);
     m_vSmallIntestine->GetSubstanceQuantity(*sub)->GetMass().IncrementValue(totalEffluxToPortal_ug_Per_s * dT_s, MassUnit::ug);
-
   }
 }
 }

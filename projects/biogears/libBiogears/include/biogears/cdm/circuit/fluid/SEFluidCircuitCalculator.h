@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 BG_EXT template class BIOGEARS_API SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit>;
+
 class BIOGEARS_API SEFluidCircuitCalculator : public SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit> {
 public:
   SEFluidCircuitCalculator(Logger* logger);

@@ -30,6 +30,11 @@ class SENasalState;
 class SETransmucosalState;
 class SELiquidCompartment;
 
+
+BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SESubstanceBolusState*>;
+BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SENasalState*>;
+BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SETransmucosalState*>;
+
 class BioGears;
 /**
  * @brief
@@ -94,6 +99,7 @@ protected:
   std::map<const SESubstance*, SESubstanceBolusState*> m_BolusAdministrations;
   std::map<const SESubstance*, SENasalState*> m_NasalStates;
   std::map<const SESubstance*, SETransmucosalState*> m_TransmucosalStates;
+  
   double m_SarinRbcAcetylcholinesteraseComplex_nM;
   double m_AgedRbcAcetylcholinesterase_nM;
 

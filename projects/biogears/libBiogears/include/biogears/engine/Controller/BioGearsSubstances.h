@@ -46,6 +46,8 @@ protected:
   double m_alveoli = 0;
 };
 
+BG_EXT template class BIOGEARS_API std::map<SESubstance*, SizeIndependentDepositionEfficencyCoefficient*>;
+
 /**
 * @brief Manages and initializes all systems with substances needed by %BioGears
 */

@@ -25,6 +25,11 @@ namespace io {
   class Compartment;
 }
 
+template class std::vector<SEGasTransportVertex*>;
+template class std::map<const SEGasTransportVertex*, size_t>;
+template class std::map<const SEGasTransportVertex*, std::vector<SEGasTransportEdge*>*>;
+template class std::map<const SEGasTransportVertex*, std::vector<SEGasTransportEdge*>*>;
+
 class BIOGEARS_API SELiquidCompartmentGraph : public SECompartmentTransportGraph<SELiquidTransportGraph, SELiquidTransportVertex, SELiquidTransportEdge, SELiquidCompartment, SELiquidCompartmentLink> {
   friend class SECompartmentManager;
   friend io::Compartment;

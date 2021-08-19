@@ -17,9 +17,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 namespace biogears {
+
 namespace io {
   class Anesthesia;
 }
+
 class SEEventHandler;
 class SESubstanceManager;
 class SEAnesthesiaMachineChamber;
@@ -35,16 +37,20 @@ class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarFraction;
 
+BG_EXT template class BIOGEARS_API std::map<CDM::enumAnesthesiaMachineEvent::value, bool>;
+BG_EXT template class BIOGEARS_API std::map<CDM::enumAnesthesiaMachineEvent::value, double>;
+
 class BIOGEARS_API SEAnesthesiaMachine : public SESystem {
 protected:
   friend SEAnesthesiaMachineConfiguration;
   friend io::Anesthesia;
+
 public:
   SEAnesthesiaMachine(SESubstanceManager& substances);
   ~SEAnesthesiaMachine() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SEAnesthesiaMachine"; }
+  static constexpr char const* const TypeTag() { return "SEAnesthesiaMachine"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -54,6 +60,7 @@ public:
   CDM::AnesthesiaMachineData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::AnesthesiaMachineData& data) const;
 

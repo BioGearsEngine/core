@@ -16,6 +16,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
+
+#include <map>
+
 CDM_BIND_DECL(SubstanceData);
 CDM_BIND_DECL(SubstanceCompoundData);
 
@@ -24,6 +27,9 @@ namespace biogears {
 namespace io {
   class Scenario;
 }
+
+BG_EXT template class BIOGEARS_API std::map<SESubstance*, const CDM::SubstanceData*>;
+BG_EXT template class BIOGEARS_API std::map<SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
 
 class BIOGEARS_API SESubstanceManager : public Loggable {
   friend io::Scenario;

@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
+template class std::map<std::string, biogears::Timer>;
+
 TimingProfile::TimingProfile(){
 
 }

@@ -17,6 +17,11 @@ namespace biogears {
 
 template class SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
 
+ template class std::vector<SEElectricalCircuitNode*>;
+ template class std::vector<SEElectricalCircuitPath*>;
+ template class std::map<const SEElectricalCircuitNode*, std::vector<SEElectricalCircuitPath*>*>;
+ template class std::map<const SEElectricalCircuitNode*, size_t>;
+
 SEElectricalCircuit::SEElectricalCircuit(const std::string& name, SECircuitManager& mgr)
   : SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>(name, mgr.GetLogger())
   , m_Mgr(mgr)

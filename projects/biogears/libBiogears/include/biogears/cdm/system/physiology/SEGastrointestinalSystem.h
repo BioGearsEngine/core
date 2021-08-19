@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
+#include <map>
+
 namespace biogears {
 class SEScalarMass;
 class MassUnit;
@@ -26,6 +28,9 @@ class SEDrugTransitState;
 namespace io {
   class Physiology;
 }
+
+BG_EXT template class BIOGEARS_API std::map<const SESubstance*, SEDrugTransitState*>;
+
 class BIOGEARS_API SEGastrointestinalSystem : public SESystem {
   friend io::Physiology;
 
@@ -106,4 +111,5 @@ protected:
   SEScalarMass* m_TotalMassExcreted;
   size_t m_NumTransitMasses;
 };
+
 }
