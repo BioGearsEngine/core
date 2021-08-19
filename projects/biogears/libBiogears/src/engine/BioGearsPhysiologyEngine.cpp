@@ -1,4 +1,4 @@
-#include <biogears/engine/BiogearsPhysiologyEngine.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 #include <memory>
 

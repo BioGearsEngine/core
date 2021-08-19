@@ -27,10 +27,10 @@ namespace io {
 } //namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportVertex*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportEdge*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, size_t>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, vector<biogears::SEGasTransportEdge*>*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SELiquidTransportVertex*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SELiquidTransportEdge*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SELiquidTransportVertex*, size_t>;
+BG_EXT template class BIOGEARS_API map<const biogears::SELiquidTransportVertex*, vector<biogears::SELiquidTransportEdge*>*>;
 }
 
 namespace biogears {
