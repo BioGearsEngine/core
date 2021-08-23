@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 
+#include <map>
+#include <vector>
+
 namespace std {
 template class map<string, biogears::SEHemorrhage*>;
 template class map<string, biogears::SETourniquet*>;
@@ -26,6 +29,234 @@ template class map<const biogears::SESubstance*, biogears::SESubstanceOralDose*>
 template class map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*>;
 template class map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
 }
+
+namespace biogears {
+
+//!
+//!  Pair Wrapper
+//!
+template <typename KeyType, typename ValueType>
+PairWrapper<KeyType, ValueType>::PairWrapper(typename std::pair<const KeyType, ValueType>* pair)
+  : _ptr(pair)
+{
+}
+
+template <typename KeyType, typename ValueType>
+PairWrapper<KeyType, ValueType>::~PairWrapper()
+{
+}
+
+template <typename KeyType, typename ValueType>
+KeyType const& PairWrapper<KeyType, ValueType>::first()
+{
+  return _ptr->first;
+}
+
+template <typename KeyType, typename ValueType>
+ValueType& PairWrapper<KeyType, ValueType>::second()
+{
+  return _ptr->second;
+}
+//!
+//! MapIteratorWrapper
+//!
+template <typename KeyType, typename ValueType>
+MapIteratorWrapper<KeyType, ValueType>::MapIteratorWrapper(typename std::map<KeyType, ValueType>::iterator itr)
+  : _iterator(itr)
+{
+}
+
+template <typename KeyType, typename ValueType>
+MapIteratorWrapper<KeyType, ValueType>::~MapIteratorWrapper()
+{
+}
+
+template <typename KeyType, typename ValueType>
+bool MapIteratorWrapper<KeyType, ValueType>::operator==(MapIteratorWrapper const& rhs) const
+{
+  return _iterator == rhs._iterator;
+}
+
+template <typename KeyType, typename ValueType>
+bool MapIteratorWrapper<KeyType, ValueType>::operator!=(MapIteratorWrapper const& rhs) const
+{
+  return _iterator != rhs._iterator;
+}
+
+
+template <typename KeyType, typename ValueType>
+auto MapIteratorWrapper<KeyType, ValueType>::operator()() const ->  PairWrapper<KeyType, ValueType> 
+{
+  return PairWrapper<KeyType, ValueType>(_iterator.operator->());
+}
+
+template <typename KeyType, typename ValueType>
+auto MapIteratorWrapper<KeyType, ValueType>::operator*() const -> PairWrapper<KeyType, ValueType>
+{
+  //Prefix  Operator
+
+  return PairWrapper<KeyType, ValueType>(_iterator.operator->());
+}
+
+template <typename KeyType, typename ValueType>
+auto MapIteratorWrapper<KeyType, ValueType>::operator++() -> MapIteratorWrapper&
+{
+  //Prefix  Operator                                         ~
+  ++_iterator;
+  return *this;
+}
+
+template <typename KeyType, typename ValueType>
+auto MapIteratorWrapper<KeyType, ValueType>::operator++(int) -> MapIteratorWrapper
+{
+  //Postfix Operator
+  MapIteratorWrapper temp { this->_iterator };
+  ++_iterator;
+  return temp;
+}
+
+//!
+//! MapWrapper
+//!
+template <typename KeyType, typename ValueType>
+MapWrapper<KeyType, ValueType>::MapWrapper(std::map<KeyType, ValueType>& given)
+  : _map(given)
+{
+}
+
+template <typename KeyType, typename ValueType>
+MapWrapper<KeyType, ValueType>::~MapWrapper() { }
+
+template <typename KeyType, typename ValueType>
+auto MapWrapper<KeyType, ValueType>::begin() const -> MapIteratorWrapper<KeyType, ValueType>
+{
+  return { _map.begin() };
+}
+template <typename KeyType, typename ValueType>
+auto MapWrapper<KeyType, ValueType>::end() const -> MapIteratorWrapper<KeyType, ValueType>
+{
+  return { _map.end() };
+}
+
+//!
+//! VectorIteratorWrapper
+//!
+template <typename ValueType>
+VectorIteratorWrapper<ValueType>::VectorIteratorWrapper(typename std::vector<ValueType>::iterator itr)
+  : _iterator(itr)
+{
+}
+template <typename ValueType>
+VectorIteratorWrapper<ValueType>::~VectorIteratorWrapper()
+{
+}
+
+template <typename ValueType>
+ValueType const& VectorIteratorWrapper<ValueType>::value() const
+{
+  return *_iterator;
+}
+
+template <typename ValueType>
+ValueType const& VectorIteratorWrapper<ValueType>::operator()() const
+{
+  return *_iterator;
+}
+
+template <typename ValueType>
+bool VectorIteratorWrapper<ValueType>::operator==(VectorIteratorWrapper const& rhs) const
+{
+  return _iterator == rhs._iterator;
+}
+
+template <typename ValueType>
+bool VectorIteratorWrapper<ValueType>::operator!=(VectorIteratorWrapper const& rhs) const
+{
+  return _iterator != rhs._iterator;
+}
+
+template <typename ValueType>
+auto VectorIteratorWrapper<ValueType>::operator->() -> ValueType const*
+{
+  return _iterator.operator->();
+}
+
+template <typename ValueType>
+auto VectorIteratorWrapper<ValueType>::operator*() -> ValueType const&
+{
+  return _iterator.operator*();
+}
+
+template <typename ValueType>
+auto VectorIteratorWrapper<ValueType>::operator++() -> VectorIteratorWrapper&
+{
+  //Prefix  Operator
+  ++_iterator;
+  return { _iterator };
+}
+template <typename ValueType>
+auto VectorIteratorWrapper<ValueType>::operator++(int) -> VectorIteratorWrapper
+{
+  //Postfix Operator
+  VectorIteratorWrapper<ValueType> temp { _iterator };
+  ++_iterator;
+  return temp;
+}
+
+//!
+//! VectorWrapper
+//!
+template <typename ValueType>
+VectorWrapper<ValueType>::VectorWrapper(std::vector<ValueType>& given)
+  : _vector { given }
+{
+}
+template <typename ValueType>
+VectorWrapper<ValueType>::~VectorWrapper()
+{
+}
+template <typename ValueType>
+auto VectorWrapper<ValueType>::begin() const -> VectorIteratorWrapper<ValueType>
+{
+  return { _vector.begin() };
+}
+template <typename ValueType>
+auto VectorWrapper<ValueType>::end() const -> VectorIteratorWrapper<ValueType>
+{
+  return { _vector.end() };
+}
+
+//Template Specializations
+template class PairWrapper<std::string, SEHemorrhage*>;
+template class PairWrapper<std::string, SETourniquet*>;
+template class PairWrapper<std::string, SEEscharotomy*>;
+template class PairWrapper<std::string, SEPainStimulus*>;
+template class PairWrapper<const SESubstance*, SESubstanceBolus*>;
+template class PairWrapper<const SESubstance*, SESubstanceInfusion*>;
+template class PairWrapper<const SESubstance*, SESubstanceOralDose*>;
+template class PairWrapper<const SESubstance*, SESubstanceNasalDose*>;
+template class PairWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
+
+template class MapIteratorWrapper<std::string, SEHemorrhage*>;
+template class MapIteratorWrapper<std::string, SETourniquet*>;
+template class MapIteratorWrapper<std::string, SEEscharotomy*>;
+template class MapIteratorWrapper<std::string, SEPainStimulus*>;
+template class MapIteratorWrapper<const SESubstance*, SESubstanceBolus*>;
+template class MapIteratorWrapper<const SESubstance*, SESubstanceInfusion*>;
+template class MapIteratorWrapper<const SESubstance*, SESubstanceOralDose*>;
+template class MapIteratorWrapper<const SESubstance*, SESubstanceNasalDose*>;
+template class MapIteratorWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
+
+template class MapWrapper<std::string, SEHemorrhage*>;
+template class MapWrapper<std::string, SETourniquet*>;
+template class MapWrapper<std::string, SEEscharotomy*>;
+template class MapWrapper<std::string, SEPainStimulus*>;
+template class MapWrapper<const SESubstance*, SESubstanceBolus*>;
+template class MapWrapper<const SESubstance*, SESubstanceInfusion*>;
+template class MapWrapper<const SESubstance*, SESubstanceOralDose*>;
+template class MapWrapper<const SESubstance*, SESubstanceNasalDose*>;
+template class MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
+} //namespace biogears
 
 namespace biogears {
 SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substances)
@@ -1025,6 +1256,11 @@ const std::map<std::string, SEEscharotomy*>& SEPatientActionCollection::GetEscha
   return m_Escharotomies;
 }
 //-------------------------------------------------------------------------------
+const MapWrapper<std::string, SEEscharotomy*> SEPatientActionCollection::GetEscharotomiesWrapper() const
+{
+  return MapWrapper<std::string, SEEscharotomy*>(const_cast<SEPatientActionCollection*>(this)->m_Escharotomies);
+}
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveEscharotomy(const char* cmpt)
 {
   RemoveEscharotomy(std::string { cmpt });
@@ -1061,6 +1297,42 @@ const std::map<std::string, SEHemorrhage*>& SEPatientActionCollection::GetHemorr
 {
   return m_Hemorrhages;
 }
+const MapWrapper<std::string, SEHemorrhage*> SEPatientActionCollection::GetHemorrhageWrapper() const
+{
+  return MapWrapper<std::string, SEHemorrhage*>(const_cast<SEPatientActionCollection*>(this)->m_Hemorrhages);
+}
+//!
+//! API usuage for UE4 do not use internally
+//!
+SEHemorrhage const* SEPatientActionCollection::GetFirstHemorrhage() const
+{
+  if (m_Hemorrhages.begin() == m_Hemorrhages.end() || m_Hemorrhages.size() == 0) {
+    return nullptr;
+  }
+
+  m_HemorrhageItr = m_Hemorrhages.begin();
+
+  return m_HemorrhageItr->second;
+}
+
+//!
+//! API usuage for UE4 do not use internally
+//!
+SEHemorrhage const* SEPatientActionCollection::GetNextHemorrhage() const
+{
+  if (m_Hemorrhages.begin() == m_Hemorrhages.end() || m_Hemorrhages.size() == 0) {
+    return nullptr;
+  }
+
+  if (m_HemorrhageItr == m_Hemorrhages.end()) {
+    return nullptr;
+  }
+
+  m_HemorrhageItr++;
+
+  return (m_HemorrhageItr == m_Hemorrhages.end()) ? nullptr : m_HemorrhageItr->second;
+}
+
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveHemorrhage(const char* cmpt)
 {
@@ -1165,6 +1437,10 @@ bool SEPatientActionCollection::HasPainStimulus() const
 const std::map<std::string, SEPainStimulus*>& SEPatientActionCollection::GetPainStimuli() const
 {
   return m_PainStimuli;
+}
+const MapWrapper<std::string, SEPainStimulus*> SEPatientActionCollection::GetPainStimuliWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_PainStimuli;
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemovePainStimulus(const char* cmpt)
@@ -1310,6 +1586,11 @@ const std::map<const SESubstance*, SESubstanceBolus*>& SEPatientActionCollection
   return m_SubstanceBolus;
 }
 //-------------------------------------------------------------------------------
+const MapWrapper<const SESubstance*, SESubstanceBolus*> SEPatientActionCollection::GetSubstanceBolusesWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_SubstanceBolus;
+}
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceBolus(const SESubstance& sub)
 {
   SESubstanceBolus* b = m_SubstanceBolus[&sub];
@@ -1320,6 +1601,11 @@ void SEPatientActionCollection::RemoveSubstanceBolus(const SESubstance& sub)
 const std::map<const SESubstance*, SESubstanceInfusion*>& SEPatientActionCollection::GetSubstanceInfusions() const
 {
   return m_SubstanceInfusions;
+}
+//-------------------------------------------------------------------------------
+const MapWrapper<const SESubstance*, SESubstanceInfusion*> SEPatientActionCollection::GetSubstanceInfusionsWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_SubstanceInfusions;
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceInfusion(const SESubstance& sub)
@@ -1334,6 +1620,11 @@ const std::map<const SESubstance*, SESubstanceOralDose*>& SEPatientActionCollect
   return m_SubstanceOralDoses;
 }
 //-------------------------------------------------------------------------------
+const MapWrapper<const SESubstance*, SESubstanceOralDose*> SEPatientActionCollection::GetSubstanceOralDosesWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_SubstanceOralDoses;
+}
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceOralDose(const SESubstance& sub)
 {
   SESubstanceOralDose* od = m_SubstanceOralDoses[&sub];
@@ -1344,6 +1635,11 @@ void SEPatientActionCollection::RemoveSubstanceOralDose(const SESubstance& sub)
 const std::map<const SESubstance*, SESubstanceNasalDose*>& SEPatientActionCollection::GetSubstanceNasalDoses() const
 {
   return m_SubstanceNasalDoses;
+}
+//-------------------------------------------------------------------------------
+const MapWrapper<const SESubstance*, SESubstanceNasalDose*> SEPatientActionCollection::GetSubstanceNasalDosesWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_SubstanceNasalDoses;
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceNasalDose(const SESubstance& sub)
@@ -1357,6 +1653,11 @@ void SEPatientActionCollection::RemoveSubstanceNasalDose(const SESubstance& sub)
 const std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>& SEPatientActionCollection::GetSubstanceCompoundInfusions() const
 {
   return m_SubstanceCompoundInfusions;
+}
+//-------------------------------------------------------------------------------
+const MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*> SEPatientActionCollection::GetSubstanceCompoundInfusionsWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_SubstanceCompoundInfusions;
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceCompoundInfusion(const SESubstanceCompound& cSub)
@@ -1493,6 +1794,10 @@ bool SEPatientActionCollection::HasTourniquet() const
 const std::map<std::string, SETourniquet*>& SEPatientActionCollection::GetTourniquets() const
 {
   return m_Tourniquets;
+}
+const MapWrapper<std::string, SETourniquet*> SEPatientActionCollection::GetTourniquetsWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_Tourniquets;
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveTourniquet(const char* cmpt)

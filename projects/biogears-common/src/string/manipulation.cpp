@@ -17,6 +17,9 @@
 
 #include <biogears/string/manipulation.h>
 
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 #include <algorithm>
 #include <regex>
 #include <sstream>
@@ -242,7 +245,11 @@ std::vector<double> vstod(const std::vector<std::string>& input)
 {
   std::vector<double> result(input.size());
   std::transform(input.begin(), input.end(), result.begin(), [](const std::string& val) {
+#ifndef ANDROID
     return std::stod(val);
+#else
+   return std::strtod (val.c_str(), nullptr);
+#endif
   });
   return result;
 }

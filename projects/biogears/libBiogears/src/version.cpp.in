@@ -6,6 +6,9 @@
 #include <cstring>
 #include <cmath>
 
+#ifdef ANDROID
+#include<errno.h>
+#endif
 namespace biogears {
 
 

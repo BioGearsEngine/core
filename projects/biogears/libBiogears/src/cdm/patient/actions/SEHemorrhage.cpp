@@ -190,6 +190,12 @@ SEScalarVolumePerTime& SEHemorrhage::GetInitialRate()
     m_InitialRate = new SEScalarVolumePerTime();
   return *m_InitialRate;
 }
+SEScalarVolumePerTime const & SEHemorrhage::GetInitialRate() const
+{
+  if (m_InitialRate == nullptr)
+    const_cast<SEHemorrhage*>(this)->m_InitialRate = new SEScalarVolumePerTime();
+  return *m_InitialRate;
+}
 //-----------------------------------------------------------------------------
 bool SEHemorrhage::HasBleedResistance() const
 {
@@ -200,6 +206,13 @@ SEScalarFlowResistance& SEHemorrhage::GetBleedResistance()
 {
   if (m_BleedResistance == nullptr) {
     m_BleedResistance = new SEScalarFlowResistance();
+  }
+  return *m_BleedResistance;
+}
+SEScalarFlowResistance const& SEHemorrhage::GetBleedResistance() const
+{
+  if (m_BleedResistance == nullptr) {
+    const_cast<SEHemorrhage*>(this)->m_BleedResistance = new SEScalarFlowResistance();
   }
   return *m_BleedResistance;
 }

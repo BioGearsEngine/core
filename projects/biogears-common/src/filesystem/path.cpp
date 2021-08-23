@@ -607,7 +607,10 @@ namespace filesystem {
   bool rm(const path& filepath)
   {
 #if !defined(_WIN32)
-    return std::remove(filepath.ToString().c_str()) == 0;
+#ifndef ANDROID
+    return remove(filepath.ToString().c_str()) == 0;
+#endif
+    return false;
 #else
     return DeleteFileW(filepath.ToWString().c_str()) != 0;
 #endif
@@ -616,7 +619,10 @@ namespace filesystem {
   bool rm(const std::string& file)
   {
 #if !defined(_WIN32)
-    return std::remove(file.c_str()) == 0;
+#ifndef ANDROID
+    return remove(file.c_str()) == 0;
+#endif
+    return false;
 #else
     path pp { file };
     return DeleteFileW(pp.ToWString().c_str()) != 0;
@@ -630,7 +636,10 @@ namespace filesystem {
   bool rmdir(const path& directory_path)
   {
 #if !defined(_WIN32)
-    return std::remove(directory_path.ToString().c_str()) == 0;
+#ifndef ANDROID
+    return remove(directory_path.ToString().c_str()) == 0;
+#endif
+    return false;
 #else
     return RemoveDirectoryW(directory_path.ToWString().c_str()) != 0;
 #endif
@@ -640,7 +649,10 @@ namespace filesystem {
   {
 
 #if !defined(_WIN32)
-    return std::remove(directory.c_str()) == 0;
+#ifndef ANDROID
+    return remove(directory.c_str()) == 0;
+#endif
+    return false;
 #else
     path p { directory };
     return RemoveDirectoryW(p.ToWString().c_str()) != 0;
@@ -678,10 +690,6 @@ namespace filesystem {
       struct dirent* entry;
       char path[PATH_MAX];
 
-      if (path == NULL) {
-        fprintf(stderr, "Out of memory error\n");
-        return 0;
-      }
       dir = opendir(dirname);
       if (dir == NULL) {
         perror("Error opendir()");
@@ -727,10 +735,6 @@ namespace filesystem {
       struct dirent* entry;
       char path[PATH_MAX];
 
-      if (path == NULL) {
-        fprintf(stderr, "Out of memory error\n");
-        return 0;
-      }
       dir = opendir(dirname);
       if (dir == NULL) {
         perror("Error opendir()");

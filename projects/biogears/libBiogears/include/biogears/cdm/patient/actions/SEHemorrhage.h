@@ -55,13 +55,16 @@ public:
 
   virtual bool HasMCIS() const;
   virtual std::vector<unsigned int>& GetMCIS() { return m_MCIS; }
+  virtual std::vector<unsigned int> const & GetMCIS() const { return m_MCIS; };
   virtual void SetMCIS();
 
   virtual bool HasInitialRate() const;
   virtual SEScalarVolumePerTime& GetInitialRate();
+  virtual SEScalarVolumePerTime const& GetInitialRate() const;
 
   virtual bool HasBleedResistance() const;
   virtual SEScalarFlowResistance& GetBleedResistance();
+  virtual SEScalarFlowResistance const& GetBleedResistance() const;
 
   virtual void ToString(std::ostream& str) const override;
 

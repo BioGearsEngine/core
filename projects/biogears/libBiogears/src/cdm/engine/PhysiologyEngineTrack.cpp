@@ -144,8 +144,10 @@ PhysiologyEngineTrack::PhysiologyEngineTrack(SEPatient& patient, SESubstanceMana
 PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngineTrack&& obj)
   : m_ForceConnection(std::move(obj.m_ForceConnection))
   , m_DataTrack(std::move(obj.m_DataTrack))
+  #ifndef ANDROID
   , m_ss(std::move(obj.m_ss))
   , m_ResultsStream(std::move(obj.m_ResultsStream))
+  #endif
   , m_DataRequestMgr(std::move(obj.m_DataRequestMgr))
   , m_Patient(obj.m_Patient)
   , m_SubMgr(obj.m_SubMgr)
@@ -160,8 +162,13 @@ PhysiologyEngineTrack& PhysiologyEngineTrack::operator=(PhysiologyEngineTrack&& 
 {
   m_ForceConnection = std::move(rhs.m_ForceConnection);
   m_DataTrack = std::move(rhs.m_DataTrack);
+  #ifndef ANDROID
   m_ss = std::move(rhs.m_ss);
   m_ResultsStream = std::move(rhs.m_ResultsStream);
+  #else 
+    //TODO: Reduce this condition to an NDK revision check. 
+    //      THis very much breaks DataTracks on NDK builds.
+  #endif
   m_DataRequestMgr = std::move(rhs.m_DataRequestMgr);
   m_Patient = rhs.m_Patient;
   m_SubMgr = rhs.m_SubMgr;

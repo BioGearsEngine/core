@@ -50,7 +50,9 @@ DataTrack::DataTrack(DataTrack&& obj)
   , m_Time(std::move(obj.m_Time))
   , m_HeadingOrder(std::move(obj.m_HeadingOrder))
   , m_DefaultPrecision(std::move(obj.m_DefaultPrecision))
+#ifndef ANDROID
   , m_FileStream(std::move(obj.m_FileStream))
+#endif
 {
 }
 
@@ -65,8 +67,9 @@ DataTrack& DataTrack::operator=(DataTrack&& rhs)
   m_Time = std::move(rhs.m_Time);
   m_HeadingOrder = std::move(rhs.m_HeadingOrder);
   m_DefaultPrecision = std::move(rhs.m_DefaultPrecision);
-
+#ifndef ANDROID
   m_FileStream = std::move(rhs.m_FileStream);
+#endif
 
   return *this;
 }
@@ -139,10 +142,13 @@ void DataTrack::Probe(const std::string& name, double value)
 
 void DataTrack::Probe(const ::std::string& name, std::vector<double>& values)
 {
+  std::stringstream ss;
   std::string header;
   int valCount = 1;
   for (auto val : values) {
-    header = name + " - " + std::to_string(valCount);
+    ss.str("");
+    ss << name << " - "  << valCount;
+    header = ss.str();
     if (std::find(m_HeadingOrder.begin(), m_HeadingOrder.end(), header) == m_HeadingOrder.end()) {
       m_HeadingOrder.push_back(header);
     }

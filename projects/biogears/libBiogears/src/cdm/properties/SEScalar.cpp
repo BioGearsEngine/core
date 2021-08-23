@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <cassert>
 #include <cmath>
 #include <limits>
+#include <sstream>
 
 #include <biogears/cdm/utils/GeneralMath.h>
 
@@ -301,7 +302,13 @@ bool SEScalar::Equals(const SEScalar& to) const
 //-------------------------------------------------------------------------------
 std::string SEScalar::ToString() const
 {
+  #ifndef ANDROID
   return std::to_string(m_value);
+  #else
+  std::stringstream ss;
+  ss << m_value;
+  return ss.str();
+  #endif
 }
 
 //-------------------------------------------------------------------------------

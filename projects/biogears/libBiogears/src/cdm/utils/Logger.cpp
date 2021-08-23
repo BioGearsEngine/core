@@ -182,11 +182,15 @@ void simtime_handler(std::ostream& os, std::string const& /*message*/, std::stri
 };
 void datetime_handler(std::ostream& os, std::string const& /*message*/, std::string const& /*origin*/, Logger::LogLevel /*prioriy*/, SEScalarTime const* /*simtime*/, tm const* datetime)
 {
+  #ifndef ANDROID
   os << std::put_time(datetime, "%Y-%m-%d %H:%M");
+  #endif
 };
 void puttime_handler(std::ostream& os, std::string const& format, std::string const& /*message*/, std::string const& /*origin*/, Logger::LogLevel /*prioriy*/, SEScalarTime const* /*simtime*/, tm const* datetime)
 {
+  #ifndef ANDROID
   os << std::put_time(datetime, format.c_str());
+  #endif
 };
 void flush_handler(std::ostream& os, std::string const& /*message*/, std::string const& /*origin*/, Logger::LogLevel /*prioriy*/, SEScalarTime const* /*simtime*/, tm const* /*datetime*/)
 {

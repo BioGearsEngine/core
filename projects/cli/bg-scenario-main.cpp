@@ -22,6 +22,7 @@
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/controller/BioGearsEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #include <biogears/filesystem/path.h>
@@ -69,7 +70,7 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
   std::string results_log_file = base_file_name + "Results.log";
   std::string results_csv_file = base_file_name + "Results.csv";
 
-  std::unique_ptr<PhysiologyEngine> eng;
+  std::unique_ptr<BioGearsEngine> eng;
   Logger console_logger;
   Logger file_logger(ex.Computed() + parent_dir + console_log_file);
   try {
@@ -83,7 +84,7 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
     console_logger.FormatMessages(true);
     console_logger.LogToConsole(true);
 
-    eng = CreateBioGearsEngine(&file_logger);
+    eng = std::make_unique<BioGearsEngine>(&file_logger);
   } catch (std::exception e) {
     std::cout << e.what() << std::endl;
     return 1;
@@ -117,7 +118,7 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
     std::unique_ptr<ScenarioData> scenario;
     try {
       std::cout << "Reading " << ex.Scenario() << std::endl;
-      auto obj = Serializer::ReadFile(resolved_filepath,
+      auto obj = biogears::Serializer::ReadFile(resolved_filepath,
                                       eng->GetLogger());
       scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
       if (scenario == nullptr) {

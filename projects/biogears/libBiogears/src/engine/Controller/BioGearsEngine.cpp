@@ -52,41 +52,6 @@ template class std::unique_ptr<biogears::BioGearsEngine>;
 }
 
 namespace biogears {
-
-std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
-{
-  return std::make_unique<BioGearsEngine>(logger);
-}
-//-------------------------------------------------------------------------------
-std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const std::string logfile)
-{
-  return std::make_unique<BioGearsEngine>(logfile);
-}
-//-------------------------------------------------------------------------------
-std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(const char* logfile)
-{
-  return std::make_unique<BioGearsEngine>(logfile);
-}
-//-------------------------------------------------------------------------------
-std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, const std::string logfile)
-{
-  return std::make_unique<BioGearsEngine>(logfile, working_dir);
-}
-//-------------------------------------------------------------------------------
-std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const char* working_dir, const char* logfile)
-{
-  return std::make_unique<BioGearsEngine>(logfile, working_dir);
-}
-//-------------------------------------------------------------------------------
-std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, biogears::Logger* logger)
-{
-  return std::make_unique<BioGearsEngine>(logger, working_dir);
-}
-//-------------------------------------------------------------------------------
-std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const char* working_dir, biogears::Logger* logger)
-{
-  return std::make_unique<BioGearsEngine>(logger, working_dir);
-}
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(Logger* logger)
   : BioGears(logger)
@@ -1054,5 +1019,13 @@ void BioGearsEngine::SetTrackStabilizationFlag(bool flag)
 {
   m_areTrackingStabilization = flag;
 }
+
 //-------------------------------------------------------------------------------
+biogears::BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir){
+  return  new BioGearsEngine(logger, working_dir);
+}
+void destroy_biogears_engine(BioGearsEngine** engine){
+  delete (&engine);
+  (*engine) = nullptr;
+}
 }

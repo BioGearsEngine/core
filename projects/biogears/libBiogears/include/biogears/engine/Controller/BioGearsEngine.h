@@ -25,7 +25,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 #pragma warning(pop)
 
-
 namespace biogears {
 //--------------------------------------------------------------------------------------------------
 /// @brief
@@ -39,14 +38,14 @@ class BIOGEARS_API BioGearsEngine : public PhysiologyEngine, public BioGears {
 public:
   //-------------------------------------------------------------------------------
   BioGearsEngine(Logger* logger);
-  
+
   BioGearsEngine(const std::string& logFileName);
   BioGearsEngine(const char* logFileName);
   BioGearsEngine(Logger* logger, const std::string& working_dir);
   BioGearsEngine(Logger* logger, const char* working_dir);
   BioGearsEngine(const std::string&, const std::string& working_dir);
   BioGearsEngine(const char*, const char*);
-  
+
   virtual ~BioGearsEngine() override;
 
   virtual bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) override;
@@ -61,7 +60,7 @@ public:
   virtual PhysiologyEngineTrack* GetEngineTrack() override;
 
   virtual bool InitializeEngine(const char* patientFile) override;
-  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions)  override;
+  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions) override;
   virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config) override;
   virtual bool InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
   virtual bool InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
@@ -136,17 +135,18 @@ protected:
   double m_timeSinceLastDataTrack = 0.0;
   SEEventHandler* m_EventHandler;
   PhysiologyEngineTrack m_EngineTrack;
-#pragma warning(push,0)
+#pragma warning(push, 0)
   std::stringstream m_ss;
 #pragma warning(pop)
 
   bool m_isAutoTracking = true;
   bool m_areTrackingStabilization = false;
-
 };
-}   //namespace biogears
+BIOGEARS_API biogears::BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir);
+BIOGEARS_API void destroy_biogears_engine(BioGearsEngine** engine);
+} //namespace biogears
 
-namespace std{
-   BG_EXT template class BIOGEARS_API std::shared_ptr<biogears::BioGearsEngine>;
-   BG_EXT template class BIOGEARS_API std::unique_ptr<biogears::BioGearsEngine>;
+namespace std {
+BG_EXT template class BIOGEARS_API std::shared_ptr<biogears::BioGearsEngine>;
+BG_EXT template class BIOGEARS_API std::unique_ptr<biogears::BioGearsEngine>;
 }

@@ -35,6 +35,7 @@
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #include <biogears/io/io-manager.h>
@@ -719,7 +720,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   std::string log_file = base_file_name + "Results.log";
   std::string results_file = base_file_name + "Results.csv";
 
-  std::unique_ptr<PhysiologyEngine> eng;
+  std::unique_ptr<BioGearsEngine> eng;
   Logger console_logger;
   if (filesystem::path(ex.Computed()) <= parent_dir) {
     ex.Computed("");
@@ -732,7 +733,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
     console_logger.SetConsoleConversionPattern("[{%H:%M}] :message::endline:");
     console_logger.FormatMessages(true);
 
-    eng = CreateBioGearsEngine(&file_logger);
+    eng = std::make_unique<BioGearsEngine>(&file_logger);
   } catch (std::exception e) {
     std::cout << e.what();
     _thread_count -= 1;
