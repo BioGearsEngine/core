@@ -22,7 +22,7 @@
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/controller/BioGearsEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #include <biogears/filesystem/path.h>
