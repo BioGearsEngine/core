@@ -4,10 +4,6 @@
 
 #include <memory>
 
-namespace std {
-template class std::unique_ptr<biogears::PhysiologyEngine>;
-template class std::shared_ptr<biogears::PhysiologyEngine>;
-}
 
 namespace biogears {
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)

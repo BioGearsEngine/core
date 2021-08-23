@@ -17,6 +17,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+#include <vector>
+#include <map>
+#include <string>
+
+
 CDM_BIND_DECL(LiquidCompartmentGraphData)
 
 namespace biogears {
@@ -56,4 +61,9 @@ protected:
 protected:
   void BalanceByIntensive() override;
 };
+} //namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartmentGraph*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartmentGraph*>;
 }

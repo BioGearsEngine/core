@@ -17,7 +17,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
-CDM_BIND_DECL(GasCompartmentGraphData)
+#include <vector>
+#include <map>
+
+CDM_BIND_DECL(GasCompartmentGraphData);
+
 
 namespace std {
 BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportVertex*>;
@@ -54,4 +58,9 @@ protected:
 protected:
   void BalanceByIntensive() override;
 };
+}
+
+namespace std {
+  BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentGraph*> ;
+  BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentGraph*> ;
 }

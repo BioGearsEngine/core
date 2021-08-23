@@ -21,6 +21,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
+#include <vector>
+
 CDM_BIND_DECL(SubstanceData)
 
 namespace biogears {
@@ -182,7 +184,7 @@ public:
   virtual SESubstancePharmacodynamics& GetPD();
   virtual const SESubstancePharmacodynamics* GetPD() const;
   virtual void RemovePD();
-    
+
   bool operator==(const SESubstance& rhs) const;
   bool operator!=(const SESubstance& rhs) const;
 
@@ -222,4 +224,8 @@ protected:
   SESubstancePharmacokinetics* m_PK;
   SESubstancePharmacodynamics* m_PD;
 };
+} //namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SESubstance*>;
 }

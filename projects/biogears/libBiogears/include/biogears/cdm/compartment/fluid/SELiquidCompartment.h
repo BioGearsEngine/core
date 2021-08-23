@@ -20,6 +20,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+#include <vector>
+#include <map>
+#include <string>
+
 namespace biogears {
 class SETissueCompartment;
 class SECompartmentManager;
@@ -78,4 +82,9 @@ protected:
   std::vector<SELiquidCompartment*> m_Children;
   std::vector<SELiquidCompartment*> m_Leaves;
 };
+}      //namespace biogears
+
+namespace std{
+BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartment*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartment*>;
 }

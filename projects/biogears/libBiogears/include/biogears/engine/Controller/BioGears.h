@@ -247,8 +247,3 @@ protected:
   std::unique_ptr<Logger> m_managedLogger;
 };
 } //namespace biogears
-
-namespace std {
-BG_EXT template class BIOGEARS_API std::shared_ptr<biogears::BioGears>;
-BG_EXT template class BIOGEARS_API std::unique_ptr<biogears::BioGears>;
-}

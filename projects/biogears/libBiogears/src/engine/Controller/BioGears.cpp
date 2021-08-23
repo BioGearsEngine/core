@@ -45,11 +45,6 @@ specific language governing permissions and limitations under the License.
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
-namespace std{
-   template class std::shared_ptr<biogears::BioGears>;
-   template class std::unique_ptr<biogears::BioGears>;
-}
-
 namespace biogears {
 BioGears::BioGears(const std::string& logFileName)
   : BioGears(new Logger(logFileName))

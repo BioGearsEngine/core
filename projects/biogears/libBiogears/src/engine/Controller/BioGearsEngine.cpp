@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/filesystem/path.h>
 #include <biogears/string/manipulation.h>
 
+#include <biogears/cdm/utils/Logger.h>
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -45,11 +46,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/version.h>
 
 namespace BGE = mil::tatrc::physiology::biogears;
-
-namespace std {
-template class std::shared_ptr<biogears::BioGearsEngine>;
-template class std::unique_ptr<biogears::BioGearsEngine>;
-}
 
 namespace biogears {
 //-------------------------------------------------------------------------------
@@ -1021,6 +1017,13 @@ void BioGearsEngine::SetTrackStabilizationFlag(bool flag)
 }
 
 //-------------------------------------------------------------------------------
+biogears::Logger* create_logger(const char* logfile){
+  return  new Logger(logfile);
+}
+void destroy_logger(Logger** logger){
+  delete (&logger);
+  (*logger) = nullptr;
+}
 biogears::BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir){
   return  new BioGearsEngine(logger, working_dir);
 }

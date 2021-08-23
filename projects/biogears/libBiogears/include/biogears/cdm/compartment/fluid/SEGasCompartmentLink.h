@@ -11,8 +11,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
 #include "biogears/cdm/substance/SESubstanceTransport.h"
+#include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
+
+#include <map>
+#include <vector>
 
 namespace biogears {
 class SEGasCompartment;
@@ -30,4 +33,9 @@ public:
 
   virtual CDM::GasCompartmentLinkData* Unload() override;
 };
+} //namespace bigoears
+
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentLink*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentLink*>;
 }
