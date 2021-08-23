@@ -1021,14 +1021,18 @@ biogears::Logger* create_logger(const char* logfile){
   return  new Logger(logfile);
 }
 void destroy_logger(Logger** logger){
-  delete (&logger);
+  if(logger) {
+  delete (*logger);
   (*logger) = nullptr;
+  }
 }
 biogears::BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir){
   return  new BioGearsEngine(logger, working_dir);
 }
 void destroy_biogears_engine(BioGearsEngine** engine){
-  delete (&engine);
-  (*engine) = nullptr;
+  if (engine) {
+    delete (*engine);
+    (*engine) = nullptr;
+  }
 }
 }
