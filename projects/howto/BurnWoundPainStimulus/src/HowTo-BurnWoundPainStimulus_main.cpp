@@ -6,7 +6,7 @@
 int main( int argc, char* argv[] )
 {
   // To run multiple TBSA values
-  double lowestTBSA = 20.0;
+  double lowestTBSA = 30.0;
   double highestTBSA = 40.0;
   double tbsaIncrement = 5.0;
   for (double tbsa = lowestTBSA; tbsa <= highestTBSA; tbsa += tbsaIncrement) {
