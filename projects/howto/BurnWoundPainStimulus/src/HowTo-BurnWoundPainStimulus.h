@@ -64,7 +64,10 @@ public:
   biogears::SESubstanceCompoundInfusion* m_ringers;
   biogears::SESubstanceCompoundInfusion* m_albumex;
   double m_ivBagVolume_mL;
+  double m_ivBagVolumeAlbumin_mL;
+  double m_TotalVolumeAlbumin_mL = 0.0;
   double m_TotalVolume_mL = 0.0;
+  fluidType fluid = ringers; //set the type of fluid here
 
 
 };

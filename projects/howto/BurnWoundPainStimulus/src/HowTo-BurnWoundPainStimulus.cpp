@@ -135,6 +135,7 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
   m_albumex = new SESubstanceCompoundInfusion(*albumex);
   m_escharotomy = new SEEscharotomy();
   m_ivBagVolume_mL = 0.0;
+  m_ivBagVolumeAlbumin_mL = 0.0;
   m_ketamineBolus = new SESubstanceBolus(*ketamine);
   //m_genState = new SESerializeState();
   m_burnWound = new SEBurnWound();
@@ -216,9 +217,26 @@ void BurnThread::AdvanceTimeFluids()
   }
   m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluid_mL", m_TotalVolume_mL);
   m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolume_mL", m_ivBagVolume_mL);
+  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluidAlbumin_mL", m_TotalVolumeAlbumin_mL);
+  m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolumeAlbumin_mL", m_ivBagVolumeAlbumin_mL);
   m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
   m_mutex.unlock();
   std::this_thread::sleep_for(std::chrono::milliseconds(25));
+
+  if (fluid == albumin) {
+    m_mutex.lock();
+    m_bg->AdvanceModelTime(1.0, TimeUnit::s);
+    if (m_albumex->HasBagVolume() && m_albumex->HasRate()) {
+      m_TotalVolumeAlbumin_mL += (m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_s));
+      m_ivBagVolumeAlbumin_mL += (-m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_s));
+      if (m_ivBagVolume_mL < 0.0) {
+        m_bg->GetLogger()->Info("Albumex_4PCT IV bag is empty \n");
+      }
+    }
+    m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
+    m_mutex.unlock();
+    std::this_thread::sleep_for(std::chrono::milliseconds(25));
+  }
 }
 
 void BurnThread::AdvanceTimeFluidsAlbumin()
@@ -226,14 +244,14 @@ void BurnThread::AdvanceTimeFluidsAlbumin()
   m_mutex.lock();
   m_bg->AdvanceModelTime(1.0, TimeUnit::s);
   if (m_albumex->HasBagVolume() && m_albumex->HasRate()) {
-    m_TotalVolume_mL += (m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_s));
-    m_ivBagVolume_mL += (-m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_s));
+    m_TotalVolumeAlbumin_mL += (m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_s));
+    m_ivBagVolumeAlbumin_mL += (-m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_s));
     if (m_ivBagVolume_mL < 0.0) {
       m_bg->GetLogger()->Info("Albumex_4PCT IV bag is empty \n");
     }
   }
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluid_mL", m_TotalVolume_mL);
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolume_mL", m_ivBagVolume_mL);
+  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluidAlbumin_mL", m_TotalVolumeAlbumin_mL);
+  m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolumeAlbumin_mL", m_ivBagVolumeAlbumin_mL);
   m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
   m_mutex.unlock();
   std::this_thread::sleep_for(std::chrono::milliseconds(25));
@@ -265,7 +283,6 @@ void BurnThread::FluidLoading(double tbsa)
 {
     //fluidType fluid = ringers;
     // auto fluid = albumin;   //set the type of fluid here
-    auto fluid = ringers; //set the type of fluid here
     //double tbsa = tbsa;
     double urineProduction = 0.0;
     int checkTime_s = 3600;
@@ -283,6 +300,7 @@ void BurnThread::FluidLoading(double tbsa)
     double targetHighUrineProduction_mL_Per_Hr = 1.0 * weight_kg; //average of around 50ml/hr
     double DayLimit_mL = 4.0 * weight_kg * tbsa;
     double initialInfustion_mL_Per_hr = 0.0; //tbsa * 10.0; // Should start at 10*tbsa // (DayLimit_mL / 0.5) / 8.0; //half of the fluid should be loaded in the first 8 hours;
+    double initialInfustionAlbumin_mL_Per_hr = 40.0; //tbsa * 10.0; // Should start at 10*tbsa // (DayLimit_mL / 0.5) / 8.0; //half of the fluid should be loaded in the first 8 hours;
     double hrsBeforeIntervention = 1.0;
     double DayLimit_Hr = DayLimit_mL / 25.0;
     double temp = 0.0;
@@ -295,7 +313,8 @@ void BurnThread::FluidLoading(double tbsa)
     }
     //same volume and rate
     if (fluid == albumin) {
-      SetAlbuminInfusionRate(ringersVolume_mL, initialInfustion_mL_Per_hr);
+      m_bg->GetLogger()->Info(asprintf("Beginning Intervention with infusion at %f %s", initialInfustionAlbumin_mL_Per_hr, "mL_Per_hr"));
+      SetAlbuminInfusionRate(ringersVolume_mL, initialInfustionAlbumin_mL_Per_hr);
     }
 
     while (m_runThread) {
@@ -310,8 +329,9 @@ void BurnThread::FluidLoading(double tbsa)
         fname.append(std::to_string(simTime_min));
         fname.append("min_");
         int ringersRate_mL_Per_hr = 0;
-        if (m_ringers->HasRate())
-            ringersRate_mL_Per_hr = (int)(m_ringers->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr));
+        if (m_ringers->HasRate()) {
+          ringersRate_mL_Per_hr = (int)(m_ringers->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr));
+        }
         //ringersRate_mL_Per_hr = (int)(floor(ringersRate_mL_Per_hr * 100.0) / 100.0);
         fname.append(std::to_string(ringersRate_mL_Per_hr));
         fname.append("Ringers_");
@@ -323,6 +343,13 @@ void BurnThread::FluidLoading(double tbsa)
         fname.append("Albumin.xml");
         m_bg->SaveStateToFile(fname);
       }
+
+      //set fluid to albumin at the 8 hour mark 
+      if ((int)m_bg->GetSimulationTime(TimeUnit::min) == (int)120) {
+        fluid = albumin;
+        m_bg->GetLogger()->Info(asprintf("adding albumin"));
+      }
+
       //check urine every hour, reset the volume while we are at it
       if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) % checkTime_s == 0) {
         Status();
@@ -410,11 +437,11 @@ void BurnThread::FluidLoading(double tbsa)
       }
 
       if (fluid == albumin) {
-        if (m_ivBagVolume_mL < 1.0) {
+        if (m_ivBagVolumeAlbumin_mL < 1.0) {
           m_albumex->GetBagVolume().SetValue(ringersVolume_mL, VolumeUnit::mL);
           m_bg->GetLogger()->Info("albumin IV bag is low, refilling bag \n");
           m_bg->ProcessAction(*m_albumex);
-          m_ivBagVolume_mL = ringersVolume_mL; //tracking purposes
+          m_ivBagVolumeAlbumin_mL = ringersVolume_mL; //tracking purposes
         }
       }
 
