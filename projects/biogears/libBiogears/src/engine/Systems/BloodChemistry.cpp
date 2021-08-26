@@ -850,8 +850,8 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
 
   double D1 = 1.4e-11; //cm2 per s and is diffusion coefficient of one rbc
   double R1 = 3.5e-4; //cm and is radius of one rbc
-  double R2 = R1 * std::cbrt(2);
-  double R3 = R1 * std::cbrt(3);
+  double R2 = R1 * cbrt(2);
+  double R3 = R1 * cbrt(3);
   double D2 = (D1 * R1) / (R2);
   double D3 = (D1 * R1) / (R3);
 
