@@ -108,6 +108,7 @@ BioGearsEngine::BioGearsEngine(const char* logFileName, const char* working_dir)
 //-------------------------------------------------------------------------------
 BioGearsEngine::~BioGearsEngine()
 {
+  m_Logger->Debug("biogears::BioGearsEngine Deconstructor Finished");
 }
 //-------------------------------------------------------------------------------
 Logger* BioGearsEngine::GetLogger()
@@ -456,7 +457,12 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
 
   // Good to go, save it off and carry on!
   m_State = EngineState::Active;
-  m_Logger->Info("Biogears has sucesfully loaded the given statefile");
+  if(state.Patient().present()){
+    m_Logger->Info("Biogears has sucesfully loaded "+ state.Patient()->Name()+ ".");
+  } else {
+    m_Logger->Info("Biogears has sucesfully loaded the given statefile");
+  }
+  
   return true; // return CheckDataRequirements/IsValid() or something
 }
 //-------------------------------------------------------------------------------
@@ -731,7 +737,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       } else {
         SaveStateToFile(asprintf("%s@%.0fs.xml", m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));
       }
-    } else {
+    } else {   
       return LoadState(serialize->GetFilename());
     }
     return true;
@@ -1028,6 +1034,9 @@ void destroy_logger(Logger** logger){
 }
 biogears::BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir){
   return  new BioGearsEngine(logger, working_dir);
+}
+biogears::BioGearsEngine* create_biogears_engine(const char* log_file, const char* working_dir){
+  return  new BioGearsEngine(log_file, working_dir);
 }
 void destroy_biogears_engine(BioGearsEngine** engine){
   if (engine) {

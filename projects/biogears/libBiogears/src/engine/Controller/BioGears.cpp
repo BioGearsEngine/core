@@ -823,7 +823,44 @@ bool BioGears::SetupPatient()
 
 BioGears::~BioGears()
 {
+  m_CurrentTime = nullptr;
+  m_SimulationTime = nullptr;
+  
+  m_Config = nullptr;
+  m_SaturationCalculator = nullptr;
+  m_DiffusionCalculator = nullptr;
+
+  m_Substances;
+
+  m_Actions = nullptr;
+  m_Conditions = nullptr;
+  m_Circuits = nullptr;
+  m_Compartments= nullptr;
+
+  m_Environment = nullptr;
+
+  m_BloodChemistrySystem = nullptr;
+  m_CardiovascularSystem= nullptr;
+  m_EndocrineSystem= nullptr;
+  m_EnergySystem= nullptr;
+  m_GastrointestinalSystem= nullptr;
+  m_HepaticSystem= nullptr;
+  m_NervousSystem= nullptr;
+  m_RenalSystem= nullptr;
+  m_RespiratorySystem= nullptr;
+  m_DrugSystem= nullptr;
+  m_TissueSystem= nullptr;
+
+  m_ECG = nullptr;
+
+  m_AnesthesiaMachine = nullptr;
+
+  m_Inhaler = nullptr;
+
+  m_Patient = nullptr;
+
   m_managedLogger = nullptr;
+  Debug("biogears::BioGears Deconstructor Finished");
 }
 
 EngineState BioGears::GetState() { return m_State; }
