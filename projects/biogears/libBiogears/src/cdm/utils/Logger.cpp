@@ -385,7 +385,7 @@ void Logger::ResetLogFile(const char* filepath)
 //!
 Logger::~Logger()
 {
-  Debug("biogears::Logger Deconstructor finished");
+  m_impl->formatMessages = false;
 }
 
 void Logger::SetLogTime(const SEScalarTime* time) { m_impl->time = time; }

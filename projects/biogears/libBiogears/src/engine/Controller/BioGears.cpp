@@ -823,14 +823,12 @@ bool BioGears::SetupPatient()
 
 BioGears::~BioGears()
 {
-  m_CurrentTime = nullptr;
-  m_SimulationTime = nullptr;
   
+  m_Logger->FormatMessages(false);
   m_Config = nullptr;
   m_SaturationCalculator = nullptr;
   m_DiffusionCalculator = nullptr;
 
-  m_Substances;
 
   m_Actions = nullptr;
   m_Conditions = nullptr;
@@ -859,8 +857,11 @@ BioGears::~BioGears()
 
   m_Patient = nullptr;
 
+  m_Substances;
+
+  m_CurrentTime = nullptr;
+  m_SimulationTime = nullptr;
   m_managedLogger = nullptr;
-  Debug("biogears::BioGears Deconstructor Finished");
 }
 
 EngineState BioGears::GetState() { return m_State; }
