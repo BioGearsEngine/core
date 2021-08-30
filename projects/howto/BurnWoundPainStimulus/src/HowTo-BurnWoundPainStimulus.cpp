@@ -125,6 +125,8 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanUrineOutput", "mL/hr");
   m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluid_mL", m_TotalVolume_mL);
   m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolume_mL", m_ivBagVolume_mL);
+  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluidAlbumin_mL", m_TotalVolumeAlbumin_mL);
+  m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolumeAlbumin_mL", m_ivBagVolumeAlbumin_mL);
 
   //Load substances and compounds
   SESubstanceCompound* ringers = m_bg->GetSubstanceManager().GetCompound("RingersLactate");
@@ -296,7 +298,7 @@ void BurnThread::FluidLoading(double tbsa)
     //compute urine production and max fluid requirements, per parkland formula
     const SEPatient& patient = m_bg->GetPatient();
     double weight_kg = patient.GetWeight(MassUnit::kg);
-    double targetLowUrineProduction_mL_Per_Hr = 0.5 * weight_kg;
+    double targetLowUrineProduction_mL_Per_Hr = 30.0;
     double targetHighUrineProduction_mL_Per_Hr = 1.0 * weight_kg; //average of around 50ml/hr
     double DayLimit_mL = 4.0 * weight_kg * tbsa;
     double initialInfustion_mL_Per_hr = 0.0; //tbsa * 10.0; // Should start at 10*tbsa // (DayLimit_mL / 0.5) / 8.0; //half of the fluid should be loaded in the first 8 hours;
@@ -344,9 +346,11 @@ void BurnThread::FluidLoading(double tbsa)
       }
 
       //set fluid to albumin at the 8 hour mark 
-      if ((int)m_bg->GetSimulationTime(TimeUnit::min) == (int)120) {
+      if ((int)m_bg->GetSimulationTime(TimeUnit::s) == (int)28800) {
         fluid = albumin;
         m_bg->GetLogger()->Info(asprintf("adding albumin"));
+        m_bg->GetLogger()->Info(asprintf("Beginning Intervention with infusion at %f %s", initialInfustionAlbumin_mL_Per_hr, "mL_Per_hr"));
+        SetAlbuminInfusionRate(ringersVolume_mL, initialInfustionAlbumin_mL_Per_hr);
       }
 
       //check urine every hour, reset the volume while we are at it
@@ -362,7 +366,7 @@ void BurnThread::FluidLoading(double tbsa)
         scaleTitration = errTitrate[errSelection - 1];
         //m_bg->GetLogger()->Info(asprintf("Were they right? titrate percent is: %f %s", scaleTitration, "percent"));
 
-        if (fluid == ringers && fluidOn == true) {
+        if (fluidOn == true) {
           if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) == ((int)hrsBeforeIntervention*3600)) {
             double beginningInfusion_mL_Per_hr = 10.0 * tbsa;
             m_bg->GetLogger()->Info(asprintf("Beginning Intervention with infusion at %f %s", beginningInfusion_mL_Per_hr, "mL_Per_hr"));
@@ -383,13 +387,13 @@ void BurnThread::FluidLoading(double tbsa)
         }
         if (fluid == albumin && fluidOn == true) {
           if (urineProduction < targetLowUrineProduction_mL_Per_Hr) {
-            m_bg->GetLogger()->Info(asprintf("Urine production is too low at %f %s", urineProduction, "mL_Per_hr"));
-            m_albumex->GetRate().SetValue((m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 + titrate) * scaleTitration, VolumePerTimeUnit::mL_Per_hr);
+            m_bg->GetLogger()->Info(asprintf("Albumin staying at the same rate"));
+            m_albumex->GetRate().SetValue((m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)), VolumePerTimeUnit::mL_Per_hr);
             m_bg->ProcessAction(*m_albumex);
           }
           if ((m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) > targetHighUrineProduction_mL_Per_Hr)) {
-            m_bg->GetLogger()->Info(asprintf("Urine production is too high at %f %s", urineProduction, "mL_Per_hr"));
-            m_albumex->GetRate().SetValue((m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 - titrate) * scaleTitration, VolumePerTimeUnit::mL_Per_hr);
+            m_bg->GetLogger()->Info(asprintf("Albumin staying at the same rate"));
+            m_albumex->GetRate().SetValue((m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)), VolumePerTimeUnit::mL_Per_hr);
             m_bg->ProcessAction(*m_albumex);
           }
         }
@@ -425,14 +429,12 @@ void BurnThread::FluidLoading(double tbsa)
         }
       }
       // make sure that the bag is full
-      if (fluid == ringers) {
         if (m_ivBagVolume_mL < 1.0) {
           m_ringers->GetBagVolume().SetValue(ringersVolume_mL, VolumeUnit::mL);
           m_bg->GetLogger()->Info("ringers IV bag is low, refilling bag \n");
           m_bg->ProcessAction(*m_ringers);
           m_ivBagVolume_mL = ringersVolume_mL; //tracking purposes
         }
-      }
 
       if (fluid == albumin) {
         if (m_ivBagVolumeAlbumin_mL < 1.0) {
@@ -462,12 +464,8 @@ void BurnThread::FluidLoading(double tbsa)
       }
 
       //advance time
-      if (fluid == ringers) {
-        AdvanceTimeFluids();
-      }
 
-      if (fluid == albumin) {
-        AdvanceTimeFluidsAlbumin();
-      }
+      AdvanceTimeFluids();
+
     }
 }
