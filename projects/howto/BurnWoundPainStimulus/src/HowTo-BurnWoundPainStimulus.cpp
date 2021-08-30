@@ -302,6 +302,7 @@ void BurnThread::FluidLoading(double tbsa)
     double targetHighUrineProduction_mL_Per_Hr = 1.0 * weight_kg; //average of around 50ml/hr
     double DayLimit_mL = 4.0 * weight_kg * tbsa;
     double initialInfustion_mL_Per_hr = 0.0; //tbsa * 10.0; // Should start at 10*tbsa // (DayLimit_mL / 0.5) / 8.0; //half of the fluid should be loaded in the first 8 hours;
+    double initialInfustionAlbumin_mL_Per_hr = 40.0; //tbsa * 10.0; // Should start at 10*tbsa // (DayLimit_mL / 0.5) / 8.0; //half of the fluid should be loaded in the first 8 hours;
     double hrsBeforeIntervention = 1.0;
     double DayLimit_Hr = DayLimit_mL / 25.0;
     double temp = 0.0;
@@ -364,6 +365,7 @@ void BurnThread::FluidLoading(double tbsa)
         double errTitrate[] {0.9, 1.0, 1.1};
         int errSelection = rand() % (3 - 1 + 1) + 1;
         scaleTitration = errTitrate[errSelection - 1];
+        scaleTitration = 1.0;
         //m_bg->GetLogger()->Info(asprintf("Were they right? titrate percent is: %f %s", scaleTitration, "percent"));
 
         if (fluidOn == true) {
