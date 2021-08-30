@@ -78,6 +78,7 @@ public:
   //!-------------------------------------------------------------------------------------------------
   virtual bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) = 0;
   virtual bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr) = 0;
+  virtual bool LoadState(char const* buffer, size_t size) = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief

@@ -151,6 +151,18 @@ bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simT
   return false;
 }
 //-------------------------------------------------------------------------------
+bool BioGearsEngine::LoadState(char const* buffer, size_t size)
+{
+
+  std::unique_ptr<CDM::ObjectData> obj = Serializer::ReadBuffer((XMLByte const*)buffer,size,GetLogger());
+  auto state = dynamic_cast<const CDM::BioGearsStateData*>(obj.get());
+  if (state != nullptr) {
+    return LoadState(*state, nullptr);
+  }
+  m_Logger->Error("File does not contain a valid PhysiologyEngineState");
+  return false;
+}
+//-------------------------------------------------------------------------------
 bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime)
 {
   auto requests = GetEngineTrack()->GetDataRequestManager().GetDataRequests();
