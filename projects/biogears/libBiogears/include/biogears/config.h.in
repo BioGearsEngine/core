@@ -1,0 +1,22 @@
+#pragma once
+
+#cmakedefine01 Biogears_BUILD_IO_LIBRARY 
+#if Biogears_BUILD_IO_LIBRARY
+#define BIOGEARS_IO_PRESENT 1
+#endif
+
+#cmakedefine01 Biogears_IO_INCLUDE_STATES
+#if Biogears_BUILD_IO_LIBRARY
+#define BIOGEARS_IO_EMBED_STATES 1
+#endif
+
+#cmakedefine01 Biogears_IO_INCLUDE_SCENARIOS
+#if Biogears_IO_INCLUDE_SCENARIOS 
+#define BIOGEARS_IO_EMBED_TEMPLATES 1
+#endif
+
+#cmakedefine01 Biogears_IO_INCLUDE_DATA_TEMPLATES
+#if Biogears_IO_INCLUDE_DATA_TEMPLATES 
+#define BIOGEARS_IO_EMBED_TEMPLATES 1
+#endif
+

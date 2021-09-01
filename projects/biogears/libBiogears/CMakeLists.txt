@@ -3,6 +3,8 @@
 ###############################################################################
 message(STATUS "  Configuring libbiogears")
 
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/config.h.in  ${CMAKE_CURRENT_BINARY_DIR}/../generated/biogears/config.h NEWLINE_STYLE LF)
+
 #Biogears CDM
 add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
 add_source_files(CDM_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/biogears REGEX "*.hxx" SOURCE_GROUP "Headers\\Public\\")
