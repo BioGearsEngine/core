@@ -56,7 +56,7 @@ void HowToPainStimulus()
 
   //set up the configuration of the pain stimulus
   location = "Arm";
-  severity = 0.5;
+  severity = 0.6;
   PainStimulus.SetLocation(location);
   PainStimulus.GetSeverity().SetValue(severity);
 
@@ -103,7 +103,7 @@ void HowToPainStimulus()
   }
 
   bg->GetLogger()->Info("Giving the patient Morphine.");
-  bg->ProcessAction(bolus);
+  //bg->ProcessAction(bolus);
 
 
   bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));

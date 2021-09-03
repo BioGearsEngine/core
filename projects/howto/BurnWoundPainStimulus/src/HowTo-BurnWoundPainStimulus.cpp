@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERenalSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
+#include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/string/manipulation.h>
 
@@ -104,6 +105,8 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
     m_bg->GetLogger()->Error("Could not load state, check the error");
     return;
   }
+  SESubstance* epi = m_bg->GetSubstanceManager().GetSubstance("Epinephrine");
+
   //Create CSV results file and set up data that we want to be tracked (tracking done in AdvanceModelTime)
   int docTBSA = (int)(tbsa);
   std::string resultsFileTBSA = std::to_string(docTBSA);
@@ -112,6 +115,7 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
   resultsFile.append(".csv");
   m_bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile); //deposits in build/runtime
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", "1/min");
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*epi, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("ArterialBloodPH", "unitless");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", "mL/min");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("InflammatoryResponse-TissueIntegrity");
@@ -123,6 +127,7 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystemicVascularResistance", "mmHg s/mL");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("BloodVolume", "mL");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanUrineOutput", "mL/hr");
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("PainVisualAnalogueScale");
   m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluid_mL", m_TotalVolume_mL);
   m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolume_mL", m_ivBagVolume_mL);
   m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluidAlbumin_mL", m_TotalVolumeAlbumin_mL);
@@ -294,6 +299,17 @@ void BurnThread::FluidLoading(double tbsa)
     double titrate = 0.25; //how much to adjust each hour
     double maxSimTime = 24.0; 
     m_runThread = true;
+    //Create variables for scenario
+    SEPainStimulus PainStimulus; //pain object
+    std::string location; //location of pain stimulus, examples "Arm", "Leg"
+    double severity; //severity (scale 0-1)
+
+      //set up the configuration of the pain stimulus
+    location = "Arm";
+    severity = 0.1;
+    PainStimulus.SetLocation(location);
+    PainStimulus.GetSeverity().SetValue(severity);
+   // m_bg->ProcessAction(PainStimulus);
 
     //compute urine production and max fluid requirements, per parkland formula
     const SEPatient& patient = m_bg->GetPatient();
@@ -321,6 +337,7 @@ void BurnThread::FluidLoading(double tbsa)
 
     while (m_runThread) {
       // Generate State Every X amount of time
+      m_bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
       if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) % stateTime_s == 0 && saveState == true) {
         int intTBSA = (int)tbsa;
         std::string stringTBSA = std::to_string(intTBSA);
@@ -343,7 +360,10 @@ void BurnThread::FluidLoading(double tbsa)
         //albuminRate_mL_Per_hr = (int)(floor(albuminRate_mL_Per_hr * 100.0) / 100.0);
         fname.append(std::to_string(albuminRate_mL_Per_hr));
         fname.append("Albumin.xml");
+
+        m_bg->GetLogger()->Info(asprintf("Saved state"));
         m_bg->SaveStateToFile(fname);
+
       }
 
       //set fluid to albumin at the 8 hour mark 
@@ -422,14 +442,6 @@ void BurnThread::FluidLoading(double tbsa)
           }
       }
 
-      if (fluid == ringers) {
-        if (m_ivBagVolume_mL < 1.0) {
-          m_ringers->GetBagVolume().SetValue(ringersVolume_mL, VolumeUnit::mL);
-          m_bg->GetLogger()->Info("ringers IV bag is low, refilling bag \n");
-          m_bg->ProcessAction(*m_ringers);
-          m_ivBagVolume_mL = ringersVolume_mL; //tracking purposes
-        }
-      }
       // make sure that the bag is full
         if (m_ivBagVolume_mL < 1.0) {
           m_ringers->GetBagVolume().SetValue(ringersVolume_mL, VolumeUnit::mL);
