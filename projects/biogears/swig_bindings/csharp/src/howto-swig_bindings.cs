@@ -405,7 +405,13 @@ namespace bio
 
       //TODO: Get Substance and GetSubstanceCompound need better exception handeling
       var oxygen = engine.GetSubstanceManager().GetSubstance("Oxygen");
+      var carbonDioxide = engine.GetSubstanceManager().GetSubstance("CarbonDioxide");
+
+      //Final exonicus data requests
+      var ecg = engine.GetEngineTrack().GetDataRequestManager().CreateEquipmentDataRequest(); ecg.SetDataRequestType("ECG"); ecg.Set("Lead3ElectricPotential", ElectricPotentialUnit.mV);
+      var MeanUrineRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); MeanUrineRequest.Set("MeanUrineOutput", VolumePerTimeUnit.mL_Per_hr);
       var BrainVasculatureRequest = engine.GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest(); BrainVasculatureRequest.Set("BrainVasculature", oxygen, "PartialPressure", PressureUnit.mmHg);
+      var TracheaPartialPressure = engine.GetEngineTrack().GetDataRequestManager().CreateGasCompartmentDataRequest(); TracheaPartialPressure.Set("Trachea", carbonDioxide, "PartialPressure", PressureUnit.mmHg);
 
       engine.GetEngineTrack().SetupRequests();
 
@@ -417,6 +423,10 @@ namespace bio
       var TotalLungVolume = engine.GetEngineTrack().GetScalar(TotalLungVolumeRequest);
       var OxygenSaturation = engine.GetEngineTrack().GetScalar(OxygenSaturationRequest);
       var PartialPressure = engine.GetEngineTrack().GetScalar(BrainVasculatureRequest);
+      var CO2PartialPressure = engine.GetEngineTrack().GetScalar(TracheaPartialPressure);
+      var Urine = engine.GetEngineTrack().GetScalar(MeanUrineRequest);
+      var ecgData = engine.GetEngineTrack().GetScalar(ecg);
+
 
       apply_acute_respiratory_distress(engine);
 
@@ -429,6 +439,12 @@ namespace bio
       logger.Info(TotalLungVolume.ToString());
       logger.Info(OxygenSaturation.ToString());
       logger.Info(PartialPressure.ToString());
+      logger.Info(CO2PartialPressure.ToString());
+      logger.Info(Urine.ToString());
+      logger.Info("ecg: \n");
+      logger.Info(ecgData.ToString());
+
+
 
       //!
       //!  Just to test most actions we will apply and unapply every action in 2 second sperts
