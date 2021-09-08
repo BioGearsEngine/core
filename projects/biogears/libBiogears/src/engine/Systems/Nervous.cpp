@@ -34,7 +34,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-#include "units.h"
+
 #include "biogears/math/angles.h"
 namespace BGE = mil::tatrc::physiology::biogears;
 
@@ -1147,10 +1147,10 @@ void Nervous::CheckNervousStatus()
   double RbcFractionInhibited = 1.0 - RbcAche_mol_Per_L / (8e-9); //8 nM is the baseline activity of Rbc-Ache
   //only update values if the substances are active
   if (m_data.GetSubstances().IsActive(*m_Atropine)) {
-    double brainAtropine_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_Atropine)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
+    brainAtropine_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_Atropine)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
   }
   if (m_data.GetSubstances().IsActive(*m_Midazolam)) {
-    double midazolam_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_Midazolam)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
+    midazolam_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_Midazolam)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
   }
   if (m_data.GetSubstances().IsActive(*m_Sarin)) {
       ///\cite nambda1971cholinesterase
@@ -1179,10 +1179,10 @@ void Nervous::CheckNervousStatus()
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildWeakness, false, m_data.GetSimulationTime());
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::FlaccidParalysis, false, m_data.GetSimulationTime());
       }
-      if (RbcFractionInhibited < 0.75 || midazolam_mg_Per_L > 0.25) {   //handle seizures in a special way to account for diazapam reversal agent
+      if (midazolam_mg_Per_L > 0.4) {   //handle seizures in a special way to account for diazapam reversal agent
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, false, m_data.GetSimulationTime());
       }
-      if (0.8 < RbcFractionInhibited && RbcFractionInhibited < 0.88 && midazolam_mg_Per_L < 0.25) {
+      if (0.8 < RbcFractionInhibited && RbcFractionInhibited < 0.88 && midazolam_mg_Per_L < 0.4) {
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, true, m_data.GetSimulationTime());
       }
       if (RbcFractionInhibited > 0.9) {
