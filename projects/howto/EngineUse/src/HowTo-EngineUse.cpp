@@ -265,7 +265,7 @@ void HowToEngineUse()
   bg->GetLogger()->Info(asprintf( "Core Body Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
 
   // Save the state of the engine
-  bg->SaveState("./states/FinalEngineUseState.xml");
+  bg->SaveStateToFile("./states/FinalEngineUseState.xml");
 
   bg->GetLogger()->Info("Finished");
 }

@@ -4,9 +4,12 @@
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
+#include <biogears/schema/biogears/BioGears.hxx>
+
 %}
 
-%ignore   biogears::PhysiologyEngine::SaveState(const std::string& file = "");
+%ignore   biogears::PhysiologyEngine::GetStateData();
+%ignore   biogears::PhysiologyEngine::SaveStateToFile(const std::string& file = "");
 %ignore   biogears::PhysiologyEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
 
 %import <biogears/cdm/patient/SEPatient.swg>
@@ -31,7 +34,8 @@
 
 %ignore biogears::BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
 %ignore biogears::BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr);
-%ignore biogears::BioGearsEngine::SaveState;
+%ignore biogears::BioGearsEngine::GetStateData();
+%ignore biogears::BioGearsEngine::SaveStateToFile(const std::string& file);
 %ignore biogears::BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions);
 %ignore biogears::BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions , const PhysiologyEngineConfiguration* config );
 %ignore biogears::BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);

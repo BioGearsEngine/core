@@ -269,10 +269,10 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
               if (scenario.GetAutoSerialization().GetPeriodTimeStamps() == CDM::enumOnOff::On)
                 serializationFileName << "@" << m_Engine.GetSimulationTime(TimeUnit::s);
               serializationFileName << ".xml";
-              std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str()));
+              m_Engine.SaveStateToFile(serializationFileName.str());
               if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
-                m_Engine.LoadState(*state);
-                std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str() + ".Reloaded.xml"));
+                m_Engine.LoadState(*m_Engine.GetStateData());
+                m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
               }
             }
           }
@@ -280,10 +280,10 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
             serializeAction = false;
             serializationFileName.str("");
             serializationFileName << serializationFileNameBase << "-" << actionName << "-@" << m_Engine.GetSimulationTime(TimeUnit::s) << ".xml";
-            std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str()));
+            m_Engine.SaveStateToFile(serializationFileName.str());
             if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
-              m_Engine.LoadState(*state);
-              std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str() + ".Reloaded.xml"));
+              m_Engine.LoadState(*m_Engine.GetStateData());
+              m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
             }
           }
         }
@@ -324,10 +324,10 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
 
       serializationFileName.str("");
       serializationFileName << serializationFileNameBase << "-" << actionName << "-@" << m_Engine.GetSimulationTime(TimeUnit::s) << ".xml";
-      std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str()));
+      m_Engine.SaveStateToFile(serializationFileName.str());
       if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
-        m_Engine.LoadState(*state);
-        std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str() + ".Reloaded.xml"));
+        m_Engine.LoadState(*m_Engine.GetStateData());
+        m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
       }
       serializeAction = true; // Serialize after the next time step
     }

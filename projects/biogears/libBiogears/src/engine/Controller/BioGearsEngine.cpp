@@ -486,20 +486,15 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
   m_Compartments->GetActiveAerosolGraph();
 
   // It helps to unload what you just loaded and to a compare if you have issues
-  //SaveState("WhatIJustLoaded.xml");
+  //SaveStateToFile("WhatIJustLoaded.xml");
 
   // Good to go, save it off and carry on!
   m_State = EngineState::Active;
   return true; // return CheckDataRequirements/IsValid() or something
 }
 //-------------------------------------------------------------------------------
-std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const char* file)
-{
-  return SaveState(std::string { file });
-}
-//-------------------------------------------------------------------------------
-std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const std::string& file)
-{
+std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData(){
+
   std::unique_ptr<CDM::PhysiologyEngineStateData> state(new CDM::BioGearsStateData());
 
   state->contentVersion(branded_version_string());
@@ -555,7 +550,19 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
   // Circuitsk
   state->CircuitManager(std::unique_ptr<CDM::CircuitManagerData>(m_Circuits->Unload()));
 
-  if (!file.empty()) {
+  return state;
+}
+//-------------------------------------------------------------------------------
+void BioGearsEngine::SaveStateToFile(const char* file)
+{
+  SaveStateToFile(std::string { file });
+}
+//-------------------------------------------------------------------------------
+void BioGearsEngine::SaveStateToFile(const std::string& file)
+{
+  auto state = GetStateData();
+
+    if (!file.empty()) {
     filesystem::path qualified_path = m_Logger->GetIoManager().lock()->ResolveStateFileLocation(file);
     filesystem::create_directories(qualified_path.parent_path());
     // Write out the engine state
@@ -570,8 +577,6 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::SaveState(const 
     }
     stream.close();
   }
-
-  return state;
 }
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const char* patientFile)
@@ -756,9 +761,9 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
   if (serialize != nullptr) {
     if (serialize->GetType() == CDM::enumSerializationType::Save) {
       if (serialize->HasFilename()) {
-        SaveState(serialize->GetFilename());
+        SaveStateToFile(serialize->GetFilename());
       } else {
-        SaveState(asprintf("%s@%.0fs.xml", m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));
+        SaveStateToFile(asprintf("%s@%.0fs.xml", m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));
       }
     } else {
       return LoadState(serialize->GetFilename());

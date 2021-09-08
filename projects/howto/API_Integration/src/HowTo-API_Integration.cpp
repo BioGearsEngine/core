@@ -614,7 +614,7 @@ void BioGearsPlugin::run()
           action_get_urine_color(_pimpl->engine);
           action_urinate(_pimpl->engine);
           try {
-          _pimpl->engine->SaveState("HowTo-API_Integration_FinalState.xml");
+          _pimpl->engine->SaveStateToFile("HowTo-API_Integration_FinalState.xml");
             
           } catch ( xsd::cxx::exception e) {
             std::cout << e.what();

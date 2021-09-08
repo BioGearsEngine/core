@@ -318,7 +318,7 @@ void BurnThread::FluidLoading(double tbsa)
         //albuminRate_mL_Per_hr = (int)(floor(albuminRate_mL_Per_hr * 100.0) / 100.0);
         fname.append(std::to_string(albuminRate_mL_Per_hr));
         fname.append("Albumin.xml");
-        m_bg->SaveState(fname);
+        m_bg->SaveStateToFile(fname);
       }
       //check urine every hour, reset the volume while we are at it
       if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) % checkTime_s == 0) {

@@ -585,6 +585,8 @@ namespace bio
       engine.GetLogger().Info("Removing the wall oxygen pressure loss action.");
       engine.AdvanceModelTimeBy(2, TimeUnit.s);
 
+      engine.SaveStateToFile("SwigStandardMale@2m.xml");
+
       Console.Write("Simulation Finished Press any key to continue");
       var testString = Console.ReadLine();
 

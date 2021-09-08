@@ -69,5 +69,5 @@ void HowToCreateAPatient()
   }
 
   // You can save off the initial patient state if you want to use it later
-  bg->SaveState("./states/HowToCreateAPatient@0s.xml");
+  bg->SaveStateToFile("./states/HowToCreateAPatient@0s.xml");
 }

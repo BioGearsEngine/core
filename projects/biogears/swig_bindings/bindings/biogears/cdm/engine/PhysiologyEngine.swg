@@ -50,7 +50,8 @@ using namespace CDM;
 
 %ignore biogears::PhysiologyEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
 %ignore biogears::PhysiologyEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr);
-%ignore biogears::PhysiologyEngine::SaveState;
+%ignore biogears::PhysiologyEngine::GetStateData();
+%ignore biogears::PhysiologyEngine::SaveStateToFile(const std::string& file);
 %ignore biogears::PhysiologyEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions);
 %ignore biogears::PhysiologyEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions , const PhysiologyEngineConfiguration* config );
 %ignore biogears::PhysiologyEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
