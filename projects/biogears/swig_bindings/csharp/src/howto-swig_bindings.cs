@@ -49,7 +49,16 @@ namespace bio
       case CDM.enumPatientEvent.value.Dehydration:
         return "Dehydration";
 
-      case CDM.enumPatientEvent.value.Diuresis:
+      case CDM.enumPatientEvent.value.MildDiaphoresis:
+        return "MildDiaphoresis";
+
+      case CDM.enumPatientEvent.value.ModerateDiaphoresis:
+        return "ModerateDiaphoresis";
+
+      case CDM.enumPatientEvent.value.SevereDiaphoresis:
+        return "SevereDiaphoresis";
+
+        case CDM.enumPatientEvent.value.Diuresis:
         return "AcuteLungInjury";
 
       case CDM.enumPatientEvent.value.Fasciculation:
@@ -58,7 +67,10 @@ namespace bio
       case CDM.enumPatientEvent.value.Fatigue:
         return "Fatigue";
 
-      case CDM.enumPatientEvent.value.FunctionalIncontinence:
+      case CDM.enumPatientEvent.value.FlaccidParalysis:
+        return "FlaccidParalysis";
+
+        case CDM.enumPatientEvent.value.FunctionalIncontinence:
         return "FunctionalIncontinence";
 
       case CDM.enumPatientEvent.value.HemolyticTransfusionReaction:
@@ -154,7 +166,10 @@ namespace bio
       case CDM.enumPatientEvent.value.Natriuresis:
         return "Natriuresis";
 
-      case CDM.enumPatientEvent.value.NutritionDepleted:
+      case CDM.enumPatientEvent.value.Nausea:
+        return "Nausea";
+
+        case CDM.enumPatientEvent.value.NutritionDepleted:
         return "NutritionDepleted";
 
       case CDM.enumPatientEvent.value.PulselessRhythm:
@@ -181,6 +196,18 @@ namespace bio
       case CDM.enumPatientEvent.value.StartOfInhale:
         return "StartOfInhale";
 
+      case CDM.enumPatientEvent.value.MildSecretions:
+        return "MildSecretions";
+
+      case CDM.enumPatientEvent.value.ModerateSecretions:
+        return "ModerateSecretions";
+
+      case CDM.enumPatientEvent.value.SevereSecretions:
+        return "SevereSecretions";
+
+        case CDM.enumPatientEvent.value.Seizures:
+        return "Seizures";
+
       case CDM.enumPatientEvent.value.SevereSepsis:
         return "SevereSepsis";
 
@@ -193,7 +220,16 @@ namespace bio
       case CDM.enumPatientEvent.value.TotalPatientEvents:
         return "TotalPatientevs";
 
-      default:
+      case CDM.enumPatientEvent.value.MildWeakness:
+        return "MildWeakness";
+
+      case CDM.enumPatientEvent.value.ModerateWeakness:
+        return "ModerateWeakness";
+
+      case CDM.enumPatientEvent.value.Vomiting:
+        return "Vomiting";
+
+        default:
         return "";
 
       }
