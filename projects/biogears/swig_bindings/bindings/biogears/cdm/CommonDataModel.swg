@@ -259,8 +259,7 @@ namespace tatrc {
         SevereSepsis,
         Tachycardia,
         Tachypnea,
-        Vomiting,
-        TotalPatientEvents
+        Vomiting
       };
     };
     //PatientActions.hxx

@@ -217,9 +217,6 @@ namespace bio
       case CDM.enumPatientEvent.value.Tachypnea:
         return "Tachypnea";
 
-      case CDM.enumPatientEvent.value.TotalPatientEvents:
-        return "TotalPatientevs";
-
       case CDM.enumPatientEvent.value.MildWeakness:
         return "MildWeakness";
 
