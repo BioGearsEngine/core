@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.3.2+113" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.4.0+67" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>DefaultTemplateFemale</Name>
@@ -391,7 +391,7 @@
     <State>Liquid</State>
     <MembraneResistance readOnly="false" unit="ohm" value="248"/>
     <BloodConcentration readOnly="false" unit="ug/mL" value="94.4727719913285"/>
-    <MassInBody readOnly="false" unit="ug" value="1075122.46758126"/>
+    <MassInBody readOnly="false" unit="ug" value="1075122.46758125"/>
     <MassInBlood readOnly="false" unit="ug" value="392532.372798895"/>
     <MassInTissue readOnly="false" unit="ug" value="682590.09478236"/>
     <SystemicMassCleared readOnly="false" unit="ug" value="100.393325457218"/>
@@ -864,6 +864,10 @@
     <CerebralBloodFlow readOnly="false" unit="mL/s" value="11.8702537869423"/>
     <CerebralPerfusionPressure readOnly="false" unit="mmHg" value="81.9539435650571"/>
     <DiastolicArterialPressure readOnly="false" unit="mmHg" value="73.201609976006"/>
+    <ExtremityPressure-LeftArm readOnly="false" unit="mmHg" value="31.7081225266204"/>
+    <ExtremityPressure-LeftLeg readOnly="false" unit="mmHg" value="31.7081603518637"/>
+    <ExtremityPressure-RightArm readOnly="false" unit="mmHg" value="31.7081225266204"/>
+    <ExtremityPressure-RightLeg readOnly="false" unit="mmHg" value="31.7081603518637"/>
     <HeartEjectionFraction readOnly="false" value="0.556826553527899"/>
     <HeartRate readOnly="false" unit="1/min" value="72"/>
     <HeartRhythm>NormalSinus</HeartRhythm>
@@ -979,6 +983,7 @@
   <System xsi:type="BioGearsNervousSystemData">
     <HeartRateScale readOnly="false" value="1.00791531622297"/>
     <HeartElastanceScale readOnly="false" value="1.00293812131054"/>
+    <MentalStatus readOnly="false" value="0"/>
     <ResistanceScaleExtrasplanchnic readOnly="false" value="0.994280311463434"/>
     <ResistanceScaleMuscle readOnly="false" value="0.994278820593139"/>
     <ResistanceScaleMyocardium readOnly="false" value="1"/>
@@ -1047,6 +1052,7 @@
     <VagalSignalBaseline>5.80861475235014</VagalSignalBaseline>
   </System>
   <System xsi:type="BioGearsRenalSystemData">
+    <BladderPressure readOnly="false" unit="mmHg" value="4"/>
     <FiltrationFraction readOnly="false" value="0.209761887406127"/>
     <GlomerularFiltrationRate readOnly="false" unit="mL/s" value="2.37200977159535"/>
     <LeftAfferentArterioleResistance readOnly="false" unit="mmHg s/mL" value="2.2"/>

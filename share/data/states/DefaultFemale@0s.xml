@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.3.2+113" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.4.0+67" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>DefaultFemale</Name>
@@ -864,6 +864,10 @@
     <CerebralBloodFlow readOnly="false" unit="mL/s" value="11.6943697045784"/>
     <CerebralPerfusionPressure readOnly="false" unit="mmHg" value="82.6135061604673"/>
     <DiastolicArterialPressure readOnly="false" unit="mmHg" value="73.4615011703308"/>
+    <ExtremityPressure-LeftArm readOnly="false" unit="mmHg" value="31.7539947270575"/>
+    <ExtremityPressure-LeftLeg readOnly="false" unit="mmHg" value="31.7539869915275"/>
+    <ExtremityPressure-RightArm readOnly="false" unit="mmHg" value="31.7539947270575"/>
+    <ExtremityPressure-RightLeg readOnly="false" unit="mmHg" value="31.7539869915275"/>
     <HeartEjectionFraction readOnly="false" value="0.556322824177516"/>
     <HeartRate readOnly="false" unit="1/min" value="72"/>
     <HeartRhythm>NormalSinus</HeartRhythm>
@@ -979,6 +983,7 @@
   <System xsi:type="BioGearsNervousSystemData">
     <HeartRateScale readOnly="false" value="1.00538862791214"/>
     <HeartElastanceScale readOnly="false" value="1.00398037905285"/>
+    <MentalStatus readOnly="false" value="0"/>
     <ResistanceScaleExtrasplanchnic readOnly="false" value="1.0035652791458"/>
     <ResistanceScaleMuscle readOnly="false" value="1.00356622678453"/>
     <ResistanceScaleMyocardium readOnly="false" value="1"/>
@@ -1047,6 +1052,7 @@
     <VagalSignalBaseline>5.8797842737486</VagalSignalBaseline>
   </System>
   <System xsi:type="BioGearsRenalSystemData">
+    <BladderPressure readOnly="false" unit="mmHg" value="4"/>
     <FiltrationFraction readOnly="false" value="0.216546428523254"/>
     <GlomerularFiltrationRate readOnly="false" unit="mL/s" value="2.58905122660821"/>
     <LeftAfferentArterioleResistance readOnly="false" unit="mmHg s/mL" value="2.2"/>
