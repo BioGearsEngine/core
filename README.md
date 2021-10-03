@@ -76,7 +76,18 @@ We have made available to the medical simulation community a large set of burn i
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4606078.svg)](https://doi.org/10.5281/zenodo.4606078)
 
-## What's new in ver 7.4.0 (Jun 13, 2021)
+## Rielease Notes 
+
+### 7.5.0 (October 3rd 2021)
+- SWIG support can now generate C# bindings for Unity. 
+- Experimental Python hooks have been removed. A future 7.5.X update will include Pyhton bindings using the new SWIG templates.
+- Most STL templates using BioGears types have been specialized and exported in the API. This is intended to assist UE4 developers and other C++ integrators.
+- A new header makes it easier to test if libBiogears_IO was part of the current build
+- Changes to how code generation occurs reduces the number of named targets in the build system
+- Major Model additions realted to Burncare and some CBRN scenarios
+- Minor Bug Fixes
+
+### 7.4.0 (Jun 13, 2021)
 - Created a series of burn scenarios 
 - Updates to support gcc 9 
 - Added new operators (== !=) for all properties 
@@ -109,7 +120,7 @@ We have made available to the medical simulation community a large set of burn i
 
  
 
-## What's new in ver 7.3.2 and 7.3.1 (Dec 10, 2020)
+### 7.3.2 and 7.3.1 (Dec 10, 2020)
 - **ver 1.0 release of the UI**
 - **ver 1.0 release of BioGears Lite**
 - Plasma Lyte compound substance added 
