@@ -31,7 +31,7 @@ using namespace biogears;
 /// \details
 /// Refer to the SEAsthmaAttack class
 //--------------------------------------------------------------------------------------------------
-void HowToAsthma()
+int HowToAsthma()
 {
   // Create the engine and load the patient
   Logger logger("HowToAsthma.log");
@@ -61,7 +61,7 @@ void HowToAsthma()
 
   if (!bg->InitializeEngine("patients/StandardMale.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // Advance some time to get some healthy data
@@ -118,6 +118,11 @@ void HowToAsthma()
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("InspiratoryExpiratoryRatio : %f", bg->GetRespiratorySystem()->GetInspiratoryExpiratoryRatio()));
   bg->GetLogger()->Info(asprintf("Carina InFlow : %f %s", carina->GetInFlow(VolumePerTimeUnit::L_Per_s), "L_Per_s"));
-  ;
+
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToAsthma();
 }

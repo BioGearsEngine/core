@@ -37,7 +37,7 @@ using namespace biogears;
 /// Refer to the SEEnvironmentChange class
 /// Refer to the SEEnvironmentHeating class
 //--------------------------------------------------------------------------------------------------
-void HowToEnvironmentChange()
+int HowToEnvironmentChange()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToEnvironmentChange.log");
@@ -64,7 +64,7 @@ void HowToEnvironmentChange()
 
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // Get some substances out we will use
@@ -180,6 +180,12 @@ void HowToEnvironmentChange()
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W"));
   bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
-  ;
+
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+
+
+int main ( int argc, char* argv[] ) {
+  return HowToEnvironmentChange();
 }

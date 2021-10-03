@@ -25,7 +25,7 @@ namespace biogears{
   class PhysiologyEngine;
 }
 
-void HowToThreadedBioGears();
+int HowToThreadedBioGears();
 
 class BioGearsThread
 {

@@ -95,7 +95,7 @@ public:
 /// Advancing time
 /// Retrieving data from a Physiology Engine
 //--------------------------------------------------------------------------------------------------
-void HowToEngineUse()
+int HowToEngineUse()
 {
   // Create an engine object
   // BioGearsEngines will always output log messages to stdout and a log file
@@ -138,7 +138,7 @@ void HowToEngineUse()
   startTime.SetValue(0, TimeUnit::s);
   if (!bg->LoadState("./states/StandardMale@0s.xml", &startTime)) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
   // See below on how to save a state
 
@@ -268,4 +268,9 @@ void HowToEngineUse()
   bg->SaveStateToFile("./states/FinalEngineUseState.xml");
 
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToEngineUse();
 }

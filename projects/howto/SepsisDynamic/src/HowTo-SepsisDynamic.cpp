@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include "HowTo-SepsisDynamic.h"
 
 #include <iostream>
+#include <stdexcept>
 
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
@@ -35,7 +36,7 @@ specific language governing permissions and limitations under the License.
 
 using namespace biogears;
 //This method uses the Threaded BioGears functionality
-void HowToDynamicSepsis()
+int HowToDynamicSepsis()
 {
   int infectionState;
   std::cout << "This function loads a BioGears engine state generated from an active infection action." << std::endl;
@@ -47,7 +48,14 @@ void HowToDynamicSepsis()
 
   // Create the engine and load the infection state selected:  1 = InfectionSevere_36hr, 2 = InfectionSevere_48hr
   // This call will block while the engine stabilizes
-  DynamicSepsis sepThread("./DynamicSepsis.log", infectionState);
+  std::unique_ptr<DynamicSepsis> sepThread;
+  
+  try{
+    sepThread = std::make_unique<DynamicSepsis>("./DynamicSepsis.log", infectionState);
+  } catch (std::runtime_error e) {
+    std::cerr << e.what() << std::endl;
+    return 1;
+  }
   // When it comes back, the engine will be running, waiting for your input
 
   int action;
@@ -58,44 +66,45 @@ void HowToDynamicSepsis()
   double mic;
 
   do {
-    sepThread.GetLogger()->Info("Enter Integer for Action to Perform : \n\t[1] Status \n\t[2] IVFluids \n\t[3] Antibiotic (Piperacillin/Tazobactam) Admin \n\t[4] Norepinephrine Admin \n\t[5] Update bacteria minimum inhibitory concentration (MIC) \n\t[6] Quit \n");
+    sepThread->GetLogger()->Info("Enter Integer for Action to Perform : \n\t[1] Status \n\t[2] IVFluids \n\t[3] Antibiotic (Piperacillin/Tazobactam) Admin \n\t[4] Norepinephrine Admin \n\t[5] Update bacteria minimum inhibitory concentration (MIC) \n\t[6] Quit \n");
     std::cin >> action;
     switch (action) {
     case 1:
-      sepThread.Status();
+      sepThread->Status();
       break;
     case 2:
-      sepThread.GetLogger()->Info("Type 1 for Saline or 2 for Ringers Lactate, followed by ENTER : ");
+      sepThread->GetLogger()->Info("Type 1 for Saline or 2 for Ringers Lactate, followed by ENTER : ");
       std::cin >> fluid;
       if (fluid < 1 || fluid > 2) {
-        sepThread.GetLogger()->Info("Invalid selection, select 1 or 2 \n");
+        sepThread->GetLogger()->Info("Invalid selection, select 1 or 2 \n");
         break;
       }
-      sepThread.GetLogger()->Info("Enter IV Fluids Rate in mL/min (bag volume is 500 mL), followed by ENTER : ");
+      sepThread->GetLogger()->Info("Enter IV Fluids Rate in mL/min (bag volume is 500 mL), followed by ENTER : ");
       std::cin >> rate;
-      sepThread.SetIVFluids(fluid, rate);
+      sepThread->SetIVFluids(fluid, rate);
       break;
     case 3:
-      sepThread.GetLogger()->Info("Administering piperacillin/tazobactam (4.5 g over 30 min \n");
-      sepThread.SetAntibiotic();
+      sepThread->GetLogger()->Info("Administering piperacillin/tazobactam (4.5 g over 30 min \n");
+      sepThread->SetAntibiotic();
       break;
     case 4:
-      sepThread.GetLogger()->Info("Enter a concentration in ug/mL (will be delivered at 1 mL/min), followed by ENTER : ");
+      sepThread->GetLogger()->Info("Enter a concentration in ug/mL (will be delivered at 1 mL/min), followed by ENTER : ");
       std::cin >> concentration;
-      sepThread.SetNorepinephrine(concentration);
+      sepThread->SetNorepinephrine(concentration);
       break;
     case 5:
-      sepThread.GetLogger()->Info("Default bactera MIC is 8.0 mg/L.  Increase or decrease bacteria resistance to antibiotics by entering a new MIC (in mg/L), followed by ENTER : ");
+      sepThread->GetLogger()->Info("Default bactera MIC is 8.0 mg/L.  Increase or decrease bacteria resistance to antibiotics by entering a new MIC (in mg/L), followed by ENTER : ");
       std::cin >> mic;
-      sepThread.UpdateMIC(mic);
+      sepThread->UpdateMIC(mic);
       break;
     case 6:
       active = false;
       break;
     default:
-      sepThread.GetLogger()->Info("Not a valid choice \n");
+      sepThread->GetLogger()->Info("Not a valid choice \n");
     }
   } while (active);
+  return 0;
 }
 
 DynamicSepsis::DynamicSepsis(const std::string& logfile, int infectionInput)
@@ -114,7 +123,7 @@ DynamicSepsis::DynamicSepsis(const std::string& logfile, int infectionInput)
   }
   if (!m_bg->LoadState(patientState)) {
     m_bg->GetLogger()->Error("Could not load state, check to make sure it exists");
-    return;
+    throw std::runtime_error("Could not load state, check to make sure it exists");
   }
 
   //Create CSV results file and set up data that we want to be tracked (tracking done in AdvanceModelTime)
@@ -226,3 +235,8 @@ void DynamicSepsis::AdvanceTime()
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
   }
 }
+
+int main ( int argc, char* argv[] ) {
+  return HowToDynamicSepsis();
+}
+

@@ -32,14 +32,14 @@ using namespace biogears;
 /// \details
 /// Refer to the SEConsumeNutrients class
 //--------------------------------------------------------------------------------------------------
-void HowToConsumeNutrients()
+int HowToConsumeNutrients()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToConsumeNutrients.log");
   bg->GetLogger()->Info("HowToConsumeNutrients");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -87,4 +87,10 @@ void HowToConsumeNutrients()
   bg->GetLogger()->Info(asprintf("Stomach Water : %f %s", bg->GetGastrointestinalSystem()->GetStomachContents()->GetWater(VolumeUnit::mL), "mL"));
   ;
   bg->GetLogger()->Info("Finished");
+  return 0;
 }
+
+int main ( int argc, char* argv[] ) {
+  return HowToConsumeNutrients();
+}
+

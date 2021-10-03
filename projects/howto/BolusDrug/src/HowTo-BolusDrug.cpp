@@ -32,14 +32,14 @@ using namespace biogears;
 /// Refer to the SESubstanceBolus class
 /// Refer to the SESubstanceManager class
 //--------------------------------------------------------------------------------------------------
-void HowToBolusDrug()
+int HowToBolusDrug()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToBolusDrug.log");
   bg->GetLogger()->Info("HowToBolusDrug");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -90,4 +90,9 @@ void HowToBolusDrug()
   bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return  HowToBolusDrug();
 }

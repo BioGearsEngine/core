@@ -49,7 +49,7 @@ public:
 ///
 /// \details
 //--------------------------------------------------------------------------------------------------
-void HowToRunScenario()
+int HowToRunScenario()
 {
   // Create an engine object
   // BioGearsEngines will always output log messages to stdout and a log file
@@ -97,4 +97,9 @@ void HowToRunScenario()
   sce.AddAction(adv);
 
   executor.Execute(sce, "./HowTo-RunScenarioResults.csv", new MyCustomExec());
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToRunScenario();
 }

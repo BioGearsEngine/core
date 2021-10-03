@@ -10,8 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowTo-PatientEvents.h"
-
 #include <iostream>
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -527,7 +525,7 @@ __________________        ____________________________________________
   << std::endl;
 };
 
-void HowToPatientEvents()
+int HowToPatientEvents()
 {
   // Create the engine and load the patient
   std::unique_ptr<BioGearsEngine> bg = std::make_unique<BioGearsEngine>("HowToPain.log"
@@ -535,7 +533,7 @@ void HowToPatientEvents()
   bg->GetLogger()->Info("HowToPain");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   auto biogears = dynamic_cast<BioGears*>(bg.get());
@@ -582,4 +580,8 @@ void HowToPatientEvents()
   bg->AdvanceModelTime(2, TimeUnit::hr);
 
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+int main ( int argc, char* argv[] ) {
+  return HowToPatientEvents();
 }

@@ -30,7 +30,7 @@ using namespace biogears;
 /// Refer to the SEPatient class
 /// Refer to the SERespiratory class
 //--------------------------------------------------------------------------------------------------
-void HowToPulmonaryFunction()
+int HowToPulmonaryFunction()
 {
   // Create the engine and load the patient
 	std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToPulmonaryFunctionTest.log");
@@ -38,7 +38,7 @@ void HowToPulmonaryFunction()
 	if (!bg->LoadState("./states/StandardMale@0s.xml"))
   {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
 	// Let's analyze the respiratory system more specifically by performing a Pulmonary Function Test (PFT)
@@ -95,4 +95,9 @@ void HowToPulmonaryFunction()
 	lungVolumePlot.GetVolume(); //This is the lung volume component of the pulmonary function test
 	// This is intended to be a a data form that can easily be plotted.
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToPulmonaryFunction();
 }

@@ -10,9 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowTo-PainStimulus.h"
-
-
 #include <iostream>
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -36,14 +33,14 @@ using namespace biogears;
 /// \details
 ///
 //--------------------------------------------------------------------------------------------------
-void HowToPainStimulus()
+int HowToPainStimulus()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToPain.log");
   bg->GetLogger()->Info("HowToPain");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 0;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -132,4 +129,9 @@ void HowToPainStimulus()
 
   bg->AdvanceModelTime(400, TimeUnit::s);
   bg->GetLogger()->Info("Finished");
+  return 1;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToPainStimulus();
 }

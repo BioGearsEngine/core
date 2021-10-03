@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
-void HowToBurnWoundPainStimulus();
+int HowToBurnWoundPainStimulus();
 
 namespace biogears {
 class SEBurnWound;

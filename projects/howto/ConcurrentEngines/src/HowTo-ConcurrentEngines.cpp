@@ -69,8 +69,7 @@ void RunScenarioTask::Run()
   ms_constructionMutex.unlock();
 
   if (!bioGears) {
-    std::cerr << "Unable to create BioGearsEngine\n";
-    return;
+    throw std::runtime_error("Unable to create BioGearsEngine\n");
   }
 
   // Run the scenario
@@ -82,7 +81,7 @@ void RunScenarioTask::Run()
 /// \brief
 /// Usage for running concurrent engines
 //--------------------------------------------------------------------------------------------------
-void HowToConcurrentEngines()
+int HowToConcurrentEngines()
 {
   // Create the task runner, this is the object that will handle running tasks in parallel.
   // By default it attempts to determine the number of cores on the system and creates a thread
@@ -97,5 +96,15 @@ void HowToConcurrentEngines()
 
   // Run the tasks.  This will launch the desired number of threads which will pull and execute tasks
   // until there are none left.  Run() blocks until all task threads are finished executing.
-  runner.Run();
+  try {
+    runner.Run();
+  } catch ( std::runtime_error e){
+    std::cerr << e.what() << std::endl;
+    return 1;
+  }
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToConcurrentEngines();
 }

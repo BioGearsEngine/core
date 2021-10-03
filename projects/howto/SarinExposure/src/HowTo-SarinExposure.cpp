@@ -40,7 +40,7 @@ using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 void OutputState(std::unique_ptr<PhysiologyEngine>& bgOut);
 
-void HowToSarinExposure()
+int HowToSarinExposure()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToSarinExposure.log");
@@ -48,7 +48,7 @@ void HowToSarinExposure()
 
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   //---Initialize all variables needed for scenario
@@ -153,6 +153,7 @@ void HowToSarinExposure()
   bg->AdvanceModelTime(60, TimeUnit::s);
 
   bg->GetLogger()->Info("Finished");
+  return 0;
 }
 
 void OutputState(std::unique_ptr<PhysiologyEngine>& bgOut)
@@ -165,4 +166,9 @@ void OutputState(std::unique_ptr<PhysiologyEngine>& bgOut)
   bgOut->GetLogger()->Info(asprintf( "Oxygen Saturation : %f%%" , bgOut->GetBloodChemistrySystem()->GetOxygenSaturation()));
   bgOut->GetLogger()->Info(asprintf( "Heart Rate : %f %s", bgOut->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bgOut->GetLogger()->Info(asprintf( "Red Blood Cell Acetylcholinesterase Level : %f %s", bgOut->GetBloodChemistrySystem()->GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L), "mol_Per_L"));
+}
+
+
+int main ( int argc, char* argv[] ) {
+  return HowToSarinExposure();
 }

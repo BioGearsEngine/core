@@ -70,14 +70,14 @@ private:
 /// Refer to the SESubstanceManager class
 /// This example also shows how to listen to patient events.
 //--------------------------------------------------------------------------------------------------
-void HowToCPR()
+int HowToCPR()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToCPR.log");
   bg->GetLogger()->Info("HowToCPR");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -231,4 +231,10 @@ void HowToCPR()
   bg->GetLogger()->Info(asprintf("Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Ejection Fraction : %f", bg->GetCardiovascularSystem()->GetHeartEjectionFraction()));
   bg->GetLogger()->Info("Finished");
+  return 0;
 }
+
+int main ( int argc, char* argv[] ) {
+  return HowToCPR();
+}
+

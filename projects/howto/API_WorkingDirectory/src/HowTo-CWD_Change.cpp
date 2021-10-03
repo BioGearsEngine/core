@@ -10,7 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowTo-CWD_Change.h"
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -25,6 +24,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/string/manipulation.h>
 
 using namespace biogears;
+
+int using_scenario_exec();
+int using_direct_control();
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Usage for applying an Asthma Attack insult to the patient
@@ -32,13 +34,16 @@ using namespace biogears;
 /// \details
 /// Refer to the SEAsthmaAttack class
 //--------------------------------------------------------------------------------------------------
-void HowToCWD_Change()
+int  HowToCWD_Change()
 {
-  using_scenario_exec();
-  using_direct_control();
+  int rc = using_scenario_exec();
+  if ( rc == 0 ) {
+    return using_direct_control();
+  } 
+  return rc;
 }
 
-void using_direct_control()
+int using_direct_control()
 {
   constexpr const char* logfile_path = "C:/biogears/direct_control/HowTo_CWD_Change.log";
   constexpr const char* working_dir_path = "C:/biogears/runtime/";
@@ -49,7 +54,7 @@ void using_direct_control()
   bg->GetLogger()->Info("HowToAsthmaAttack");
   if (!bg->LoadState("states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -122,9 +127,10 @@ void using_direct_control()
   bg->GetLogger()->Info(asprintf("InspiratoryExpiratoryRatio : %f", bg->GetRespiratorySystem()->GetInspiratoryExpiratoryRatio()));
   bg->GetLogger()->Info(asprintf("Carina InFlow : %f %s", carina->GetInFlow(VolumePerTimeUnit::L_Per_s), "L_Per_s"));
   bg->GetLogger()->Info("Finished");
+  return 0;
 }
 
-void using_scenario_exec()
+int using_scenario_exec()
 {
 
   constexpr const char* working_dir_path = "C:/biogears/runtime/";
@@ -138,14 +144,21 @@ void using_scenario_exec()
   std::unique_ptr<PhysiologyEngine> bioGears = CreateBioGearsEngine(working_dir_path, log_file);
   if (!bioGears) {
     std::cerr << "Unable to create BioGearsEngine" << std::endl;
-    return;
+    return 1;
   }
   try {
     BioGearsScenarioExec exec(*bioGears);
     exec.Execute(scenario_file, results_file, nullptr);
   } catch (std::exception ex) {
     std::cerr << ex.what() << std::endl;
+    return 2;
   } catch (...) {
     std::cerr << "Unable to run scenario " << working_dir_path << scenario_file << std::endl;
+    return 3;
   }
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToCWD_Change();
 }

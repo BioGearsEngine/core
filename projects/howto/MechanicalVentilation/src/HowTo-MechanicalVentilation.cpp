@@ -101,7 +101,7 @@ public:
 /// \details
 /// Refer to the SEMechanicalVentilation class
 //--------------------------------------------------------------------------------------------------
-void HowToMechanicalVentialtion()
+int HowToMechanicalVentialtion()
 {
   //Note: Setting circuit values (resistance/compliances/etc.) needs to be done in the engine code - they currently are not directly exposed
 
@@ -120,7 +120,7 @@ void HowToMechanicalVentialtion()
     if (!bg->LoadState("./states/StandardMale@0s.xml")) //Select which patient
     {
       bg->GetLogger()->Error("Could not load state, check the error");
-      return;
+      return 0;
     }
   } else {
     if (false) //COPD
@@ -149,7 +149,7 @@ void HowToMechanicalVentialtion()
     //You can optionally define the patient here - see HowTo-CreateAPatient.cpp
     if (!bg->InitializeEngine("StandardMale.xml", &conditions)) {
       bg->GetLogger()->Error("Could not load initialize engine, check the error");
-      return;
+      return 1;
     }
   }
 
@@ -359,4 +359,9 @@ void HowToMechanicalVentialtion()
   }
 
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToMechanicalVentialtion();
 }

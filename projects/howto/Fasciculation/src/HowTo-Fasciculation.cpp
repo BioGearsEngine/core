@@ -34,7 +34,7 @@ using namespace biogears;
 /// Refer to the SEDrug Class
 //--------------------------------------------------------------------------------------------------
 
-void HowToFaciculation()
+int HowToFaciculation()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToFasciculation.log");
@@ -42,7 +42,7 @@ void HowToFaciculation()
 
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   //---Initialize all variables needed for scenario
@@ -87,4 +87,10 @@ void HowToFaciculation()
   K->GetMembraneResistance().SetValue(0.248, ElectricResistanceUnit::Ohm);
 
   bg->AdvanceModelTime(300, TimeUnit::s);
+  return 0;
 }
+
+int main ( int argc, char* argv[] ) {
+  return HowToFaciculation();
+}
+

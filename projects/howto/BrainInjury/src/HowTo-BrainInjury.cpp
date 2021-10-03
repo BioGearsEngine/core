@@ -37,7 +37,7 @@ using namespace biogears;
 /// \details
 /// Refer to the SEBrainInjury class
 //--------------------------------------------------------------------------------------------------
-void HowToBrainInjury()
+int HowToBrainInjury()
 {
   std::stringstream ss;
   // Create a BioGears Engine and load the standard patient
@@ -46,7 +46,7 @@ void HowToBrainInjury()
   bg->GetLogger()->Info("HowToBrainInjury");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -180,6 +180,7 @@ void HowToBrainInjury()
   bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem()->GetRightEyePupillaryResponse()->GetReactivityModifier()));
 
   bg->GetLogger()->Info("Finished");
+  return 0;
 }
 
 // The Glasgow Coma Scale (GCS) is commonly used to classify patient consciousness after traumatic brain injury.
@@ -238,4 +239,8 @@ int GlasgowEstimator(double cbf)
     return 14;
   else
     return 15;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToBrainInjury();
 }

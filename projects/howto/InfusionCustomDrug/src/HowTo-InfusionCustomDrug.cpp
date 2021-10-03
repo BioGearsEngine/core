@@ -37,6 +37,7 @@ std::unique_ptr<SESubstanceCompound> makeSubstanceCompound(std::unique_ptr<bioge
   ss << "Substance_" << ++counter;
   return std::make_unique<SESubstanceCompound>(ss.str().c_str(), engine->GetLogger());
 }
+
 bool mixSubstanceCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine, std::unique_ptr<SESubstanceCompound>& compound, const char* substance, double concentration, MassPerVolumeUnit unit)
 {
   SESubstance* new_substance = engine->GetSubstanceManager().GetSubstance(substance);
@@ -51,6 +52,7 @@ bool mixSubstanceCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine, s
   }
   return false;
 }
+
 std::string registerCompoundbiogears(std::unique_ptr<biogears::PhysiologyEngine>& engine, std::unique_ptr<SESubstanceCompound>&& compound)
 {
   std::string compound_name = compound->GetName_cStr();
@@ -66,7 +68,7 @@ bool infuseCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine, std::st
   infusion.GetRate().SetValue(rate, rate_unit);
   return engine->ProcessAction(infusion);
 }
-\
+
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Framework for creating custom SESubstanceCompounds with the BioGears API. Allows Testing
@@ -77,14 +79,14 @@ bool infuseCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine, std::st
 /// Refer to the SESubstanceInfusion class
 /// Refer to the SESubstanceManager class
 //--------------------------------------------------------------------------------------------------
-void HowToInfusionDrug()
+int HowToInfusionDrug()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowTo-InfusionCustomDrug.log");
   bg->GetLogger()->Info("HowTo-InfusionCustomDrug");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
    // Create data requests for each value that should be written to the output log as the engine is executing
@@ -119,4 +121,9 @@ void HowToInfusionDrug()
   } else {
     bg->GetLogger()->Error("Saline,Albumin, and Morphine definitions required for this HowTo please ensure they exist and try again.");
   }
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToInfusionDrug();
 }

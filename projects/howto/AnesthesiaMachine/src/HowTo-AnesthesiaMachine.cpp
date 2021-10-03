@@ -42,7 +42,7 @@ using biogears::asprintf;
 /// Use an SEAnesthesiaMachineVentilatorMask action to place the mash and allow the machine to breath for the patient
 /// End of example shows how to turn things off
 //---------------------------------------------------------------------------------------------------------------------
-void HowToAnesthesiaMachine()
+int HowToAnesthesiaMachine()
 {
   // Create the engine and load the patient
 	std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToAnesthesiaMachine.log");
@@ -50,7 +50,7 @@ void HowToAnesthesiaMachine()
 	if (!bg->LoadState("./states/StandardMale@0s.xml"))
   {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
     // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -222,4 +222,8 @@ void HowToAnesthesiaMachine()
 	bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
 	bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+int main ( int argc, char* argv[] ) {
+  return HowToAnesthesiaMachine();
 }

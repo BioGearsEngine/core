@@ -36,7 +36,7 @@ using namespace biogears;
 /// \details
 /// Refer to the SEEnvironmentChange class
 //--------------------------------------------------------------------------------------------------
-void HowToSmoke()
+int HowToSmoke()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToSmoke.log");
@@ -56,13 +56,13 @@ void HowToSmoke()
   if (!bg->InitializeEngine("StandardMale.xml", &conditions))
   {
     bg->GetLogger()->Error("Could not load initialize engine, check the error");
-    return;
+    return 2;
   }
   */
 
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // Get some substances out we will use
@@ -141,9 +141,14 @@ void HowToSmoke()
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W"));
   bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
-  ;
 
   // Here is the amount of particulate
 
   bg->GetLogger()->Info("Finished");
+  return 0;
 }
+
+int main ( int argc, char* argv[] ) {
+  return HowToSmoke();
+}
+

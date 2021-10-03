@@ -29,7 +29,7 @@ using namespace biogears;
 /// \details
 /// Refer to the SELobarPneumonia class
 //--------------------------------------------------------------------------------------------------
-void HowToLobarPneumonia()
+int HowToLobarPneumonia()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToLobarPneumonia.log");
@@ -48,7 +48,7 @@ void HowToLobarPneumonia()
 
   if (!bg->InitializeEngine("StandardMale.xml", &conditions)) {
     bg->GetLogger()->Error("Could not load initialize engine, check the error");
-    return;
+    return 1;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -79,6 +79,11 @@ void HowToLobarPneumonia()
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("InspiratoryExpiratoryRatio : %f", bg->GetRespiratorySystem()->GetInspiratoryExpiratoryRatio()));
   bg->GetLogger()->Info(asprintf("Carina InFlow : %f %s", bg->GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Trachea)->GetInFlow(VolumePerTimeUnit::L_Per_s), "L_Per_s"));
-  ;
+  
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToLobarPneumonia();
 }

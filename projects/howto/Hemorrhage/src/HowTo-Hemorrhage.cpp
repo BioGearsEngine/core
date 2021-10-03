@@ -38,14 +38,14 @@ using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 void ParseMCIS(SEHemorrhage& hem, std::vector<unsigned int>& mcis);
 
-void HowToHemorrhage()
+int HowToHemorrhage()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToHemorrhage.log");
   bg->GetLogger()->Info("HowToHemorrhage");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -71,7 +71,8 @@ void HowToHemorrhage()
   bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  ;
+
+  return 0;
 
   //We are going to create a hemorrhage in two different ways.  One way will be to specify the location and a severity on a scale of 0-1.
   //The other way will be to parse an injury code and derive the location and severity
@@ -215,4 +216,8 @@ void ParseMCIS(SEHemorrhage& hem, std::vector<unsigned int>& mcis)
 
   hem.SetCompartment(comp);
   hem.SetMCIS();
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToHemorrhage();
 }

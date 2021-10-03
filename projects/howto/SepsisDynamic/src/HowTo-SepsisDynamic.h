@@ -25,7 +25,7 @@ class SESubstanceInfusion;
 class SESubstanceCompoundInfusion;
 }
 
-void HowToDynamicSepsis();
+int HowToDynamicSepsis();
 
 class DynamicSepsis {
 public:

@@ -33,14 +33,14 @@ using namespace biogears;
 /// Refer to the SENeedleDecompression class for pneumothorax intervention
 /// Refer to the SEChestOcclusiveDressing class for pneumothorax intervention
 //--------------------------------------------------------------------------------------------------
-void HowToTensionPneumothorax()
+int HowToTensionPneumothorax()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToTensionPneumothorax.log");
   bg->GetLogger()->Info("HowToTensionPneumothorax");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
 
@@ -125,4 +125,10 @@ void HowToTensionPneumothorax()
   bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
   bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+
+
+int main ( int argc, char* argv[] ) {
+  return HowToTensionPneumothorax();
 }

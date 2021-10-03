@@ -31,7 +31,7 @@ using namespace biogears;
 /// \details
 /// Creating a customized patient in BioGears
 //--------------------------------------------------------------------------------------------------
-void HowToCreateAPatient()
+int HowToCreateAPatient()
 {
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToEngineUse.log");
   bg->GetLogger()->Info("HowToCreateAPatient");
@@ -65,9 +65,14 @@ void HowToCreateAPatient()
 
   if (!bg->InitializeEngine(patient)) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // You can save off the initial patient state if you want to use it later
   bg->SaveStateToFile("./states/HowToCreateAPatient@0s.xml");
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToCreateAPatient();
 }

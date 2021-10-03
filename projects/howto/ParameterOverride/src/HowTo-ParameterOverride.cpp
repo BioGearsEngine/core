@@ -34,7 +34,7 @@ using namespace biogears;
 /// Usage for the Parameter Override Insult
 ///
 //--------------------------------------------------------------------------------------------------
-void HowToParameterOverride()
+int HowToParameterOverride()
 {
   std::stringstream ss;
   // Create a BioGears Engine and load the standard patient
@@ -43,7 +43,7 @@ void HowToParameterOverride()
   bg->GetLogger()->Info("HowToParameterOverride");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -144,4 +144,9 @@ void HowToParameterOverride()
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToParameterOverride();
 }

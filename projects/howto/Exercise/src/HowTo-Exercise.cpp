@@ -30,14 +30,14 @@ using namespace biogears;
 /// \details
 /// Refer to the SEExercise class
 //--------------------------------------------------------------------------------------------------
-void HowToExercise()
+int HowToExercise()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToExercise.log");
   bg->GetLogger()->Info("HowToExercise");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -265,4 +265,9 @@ void HowToExercise()
   bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
 
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToExercise();
 }
