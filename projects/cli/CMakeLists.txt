@@ -163,12 +163,13 @@ set_property(INSTALL "$<TARGET_FILE_NAME:bg-cli>"
     set( Biogears_ARCHIVE_DESTINATION \"\${INSTALL_PATH}/lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
 
     EXELIST(TARGET \"\${INSTALL_PATH}/bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>/\" )
-
+if(NOT APPLE)
     fixup_bundle(\"\${TARGET}\"
         \"\"
         \"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\;\${INSTALL_PATH}/bin;\${INSTALL_PATH}/lib;\${Biogears_RUNTIME_DESTINATION};\${Biogears_LIBRARY_DESTINATION};\${Biogears_ARCHIVE_DESTINATION}\"
    
     )
+endif()
   ")
 ###
 message(STATUS "")
