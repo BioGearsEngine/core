@@ -92,8 +92,8 @@ public:
   auto operator()() const -> PairWrapper<KeyType, ValueType>;
   auto operator*()  const -> PairWrapper<KeyType, ValueType>;
 
-  auto operator++() -> MapIteratorWrapper&; //Prefix  Operator
-  auto operator++(int) -> MapIteratorWrapper; //Postfix Operator
+  MapIteratorWrapper& operator++(); //Prefix  Operator
+  MapIteratorWrapper  operator++(int); //Postfix Operator
 
 private:
   typename std::map<KeyType, ValueType>::iterator _iterator;
@@ -123,12 +123,12 @@ public:
   bool operator==(VectorIteratorWrapper const& rhs) const;
   bool operator!=(VectorIteratorWrapper const& rhs) const;
 
-  auto operator()() const -> ValueType const&;
-  auto operator->() -> ValueType const*;
-  auto operator*() -> ValueType const&;
+  ValueType const& operator()() const;
+  ValueType const* operator->();
+  ValueType const& operator*();
 
-  auto operator++() -> VectorIteratorWrapper&; //Prefix  Operator
-  auto operator++(int) -> VectorIteratorWrapper; //Postfix Operator
+  VectorIteratorWrapper& operator++(); //Prefix  Operator
+  VectorIteratorWrapper operator++(int); //Postfix Operator
 private:
   typename std::vector<ValueType>::iterator _iterator;
 };

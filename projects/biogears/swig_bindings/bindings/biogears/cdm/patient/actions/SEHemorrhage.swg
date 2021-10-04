@@ -18,4 +18,9 @@
 
 %ignore biogears::SEHemorrhage::SetCompartment(std::string const &);
 
+
+%rename(GetMCIS_Const) biogears::SEHemorrhage::GetMCIS() const;
+%rename(GetInitialRate_Const) biogears::SEHemorrhage::GetInitialRate() const;
+%rename(GetBleedResistance_Const) biogears::SEHemorrhage::GetBleedResistance() const;
+
 %include <biogears/cdm/patient/actions/SEHemorrhage.h>

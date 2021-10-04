@@ -1,4 +1,7 @@
 %import "windows.i"
+
+#pragma SWIG nowarn=320
+
 #if defined(SWIGCSHARP)
   %import "csharp/std_string.i"
   %import "csharp/std_vector.i"
