@@ -14,6 +14,8 @@
 
 #include <fstream>
 #include <iostream>
+
+#include <biogears/version.h>
 #include <biogears/string/manipulation.h>
 
 namespace biogears {
@@ -71,6 +73,7 @@ bool PatientGenerator::parse()
       for (auto name : lineItr->second) {
         CDM::PatientData data;
         data.Name(name);
+        data.contentVersion(branded_version_string());
         _patients.push_back(std::move(data));
       }
     } else {

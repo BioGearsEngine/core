@@ -17,6 +17,7 @@
 #include <iostream>
 
 #include <biogears/string/manipulation.h>
+#include <biogears/version.h>
 
 namespace biogears {
 
@@ -42,7 +43,6 @@ bool CompoundGenerator::save() const
     xml_schema::namespace_infomap info;
     info[""].name = "uri:/mil/tatrc/physiology/datamodel";
     info[""].schema = "BioGearsDataModel.xsd";
-
     try {
       std::ofstream file;
       file.open("substances/" + compound.Name() + ".xml");
@@ -73,6 +73,7 @@ bool CompoundGenerator::parse()
       for (auto name : lineItr->second) {
         CDM::SubstanceCompoundData data;
         data.Name(name);
+        data.contentVersion(branded_version_string());
         _compounds.push_back(std::move(data));
       }
     } else if ("Classification" == lineItr->first) {

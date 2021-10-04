@@ -13,6 +13,7 @@
 #include "SubstanceGenerator.h"
 
 #include <biogears/string/manipulation.h>
+#include <biogears/version.h>
 #include <fstream>
 #include <iostream>
 
@@ -47,6 +48,7 @@ bool SubstanceGenerator::parse()
       for (auto name : lineItr->second) {
         CDM::SubstanceData data;
         data.Name(name);
+        data.contentVersion(branded_version_string());
         _substances.push_back(std::move(data));
       }
     } else if ("Aerosolization (all or none)" == lineItr->first) {

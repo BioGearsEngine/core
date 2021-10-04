@@ -16,6 +16,7 @@
 #include <iostream>
 #include <cstdlib>
 
+#include <biogears/version.h>
 #include <biogears/string/manipulation.h>
 
 #ifdef ANDROID
@@ -104,6 +105,7 @@ bool EnvironmentGenerator::parse()
       for (auto name : lineItr->second) {
         CDM::EnvironmentalConditionsData data;
         data.Name(name);
+        data.contentVersion(branded_version_string());
         _environments.push_back(std::move(data));
       }
     } else if ("AmbientGasData" == lineItr->first) {

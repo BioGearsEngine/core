@@ -17,6 +17,7 @@
 #include <fstream>
 #include <iostream>
 
+#include <biogears/version.h>
 #include <biogears/string/manipulation.h>
 
 namespace biogears {
@@ -69,6 +70,7 @@ bool NutritionGenerator::parse()
       for (auto name : lineItr->second) {
         CDM::NutritionData data;
         data.Name(name);
+        data.contentVersion(branded_version_string());
         _nutrients.push_back(std::move(data));
       }
     } else {
