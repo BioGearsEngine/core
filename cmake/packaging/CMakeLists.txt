@@ -114,8 +114,8 @@ if(Biogears_BUILD_INSTALLER)
           list(APPEND THIRD_PARTY_LIB \"\${_dir}/lib\")
           list(APPEND THIRD_PARTY_BIN \"\${_dir}/bin\")
         endforeach()
-        message(\"\${CMAKE_INSTALL_PREFIX}/bin/$<TARGET_FILE_NAME:bg-cli>\")
-        fixup_bundle(\${CMAKE_INSTALL_PREFIX}/bin/$<TARGET_FILE_NAME:bg-cli>
+        message(\"\${CMAKE_INSTALL_PREFIX}/$<TARGET_FILE_NAME:bg-cli>\")
+        fixup_bundle(\${CMAKE_INSTALL_PREFIX}/$<TARGET_FILE_NAME:bg-cli>
                     \"\"
                     \"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\"
         )
