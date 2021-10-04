@@ -1,4 +1,4 @@
-<Patient xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+<Patient xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_7.5" xsi:schemaLocation="">
     <Name>Roy</Name>
     <Sex>Male</Sex>
     <Age value="44.0" unit="yr"/>
