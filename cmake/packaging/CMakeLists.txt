@@ -21,7 +21,7 @@ if(Biogears_BUILD_INSTALLER)
   if(WIN32 AND NOT UNIX)
     # There is a bug in NSI that does not handle full UNIX paths properly.
     # Make sure there is at least one set of four backlashes.
-  set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}\\\\BioGearsLogo.bmp")
+    set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}\\\\BioGearsLogo.bmp")
     set(CPACK_NSIS_INSTALLED_ICON_NAME "${CMAKE_CURRENT_SOURCE_DIR}/biogearslogo_XoQ_icon.ico")
     set(CPACK_NSIS_DISPLAY_NAME "BioGears")
     set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.biogearsengine.com")
@@ -98,7 +98,7 @@ if(Biogears_BUILD_INSTALLER)
     if(TARGET bg-cli) 
       install(CODE "
         include(BundleUtilities)
-  
+        message(STATUS \"Remember to set CMAKE_PREFIX_PATH to something eneding in .app\") 
         string(TOUPPER \${CMAKE_INSTALL_CONFIG_NAME} CONFIG)
         if( NOT UNIX )
           set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY \${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_\${CONFIG}} )
