@@ -66,6 +66,18 @@ BG_EXT template class BIOGEARS_API map<const biogears::SESubstanceCompound*, bio
 
 namespace biogears {
 
+
+//!
+//! This is an emergency fix for working with UE4
+//! If this stays around until 7.6 this code will
+//! be renamed and refactoredto its own file
+//! The problem is that standard_iterator is a 
+//! derived type and is very hard to properly export 
+//! to a DLL but our clients need access to iterative substances
+//! So this code and its wonderful I wrote this in an hourness is an emergcy fix
+//! To avoid crashes when different sides of the DLL boundry disagree on the size of std_iterator
+//! When executing foreach loops
+  
 template <typename KeyType, typename ValueType>
 class PairWrapper {
 public:
@@ -177,6 +189,9 @@ BG_EXT template class BIOGEARS_API MapWrapper<const SESubstance*, SESubstanceNas
 BG_EXT template class BIOGEARS_API MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
 
 }
+
+//Marks the end of Wrapper Code
+
 
 namespace biogears {
 class BIOGEARS_API SEPatientActionCollection : public Loggable {

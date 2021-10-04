@@ -12,6 +12,7 @@
 %ignore   biogears::PhysiologyEngine::SaveStateToFile(const std::string& file = "");
 %ignore   biogears::PhysiologyEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
 
+%import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/patient/SEPatient.swg>
 %import <biogears/cdm/substance/SESubstanceManager.swg>
 %import <biogears/cdm/patient/assessments/SEPatientAssessment.swg>
@@ -31,6 +32,7 @@
 %import <biogears/cdm/properties/SEScalarTime.swg>
 
 %nspace "biogears::BioGearsEngine"
+%nspace "biogears::Logger"
 
 %ignore biogears::BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
 %ignore biogears::BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr);
@@ -54,4 +56,13 @@
 %rename (AdvanceModelTimeBy) AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false);
 
 %warnfilter(401) biogears::BioGearsEngine;
+
+#if defined(SWIGCSHARP)
+  %ignore create_logger(const char* logfile);
+  %ignore destroy_logger(Logger** engine);
+  %ignore create_biogears_engine(biogears::Logger* logger, const char* working_dir);
+  %ignore create_biogears_engine(const char* logger, const char* working_dir);
+  %ignore destroy_biogears_engine(BioGearsEngine** engine);
+#endif 
+ 
 %include <biogears/engine/controller/BioGearsEngine.h>

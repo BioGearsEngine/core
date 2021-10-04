@@ -65,6 +65,16 @@
 %ignore biogears::SEPatientActionCollection::GetInhalerActions();
 %ignore biogears::SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& in);
 
+%ignore GetEscharotomiesWrapper() const;
+%ignore GetHemorrhageWrapper() const;
+%ignore GetPainStimuliWrapper() const;
+%ignore GetSubstanceBolusesWrapper() const;
+%ignore GetSubstanceInfusionsWrapper() const;
+%ignore GetSubstanceNasalDosesWrapper() const;
+%ignore GetSubstanceOralDosesWrapper() const;
+%ignore GetSubstanceCompoundInfusionsWrapper() const;
+%ignore GetTourniquetsWrapper() const;
+
 %include <biogears/cdm/scenario/SEPatientActionCollection.h>
 
 %nspace std::map<std::string, biogears::SEHemorrhage*>;
