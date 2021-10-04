@@ -98,7 +98,8 @@ if(Biogears_BUILD_INSTALLER)
     if(TARGET bg-cli) 
       install(CODE "
         include(BundleUtilities)
-        message(STATUS \"Remember to set CMAKE_PREFIX_PATH to something eneding in .app\") 
+        message(STATUS \"Remember to set CMAKE_INSTALL_PATH to something eneding in .app\") 
+ 
         string(TOUPPER \${CMAKE_INSTALL_CONFIG_NAME} CONFIG)
         if( NOT UNIX )
           set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY \${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_\${CONFIG}} )
