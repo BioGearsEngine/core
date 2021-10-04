@@ -33,7 +33,7 @@ project( ${ROOT_PROJECT_NAME}  LANGUAGES CXX C )
     ")
 
 find_package(Git QUIET)
-configure_version_information(GIT_SUCESS MAJOR 7 MINOR 4 PATCH 0 TWEAK "Source" )
+configure_version_information(GIT_SUCESS MAJOR 7 MINOR 5 PATCH 0 TWEAK "Source" )
 if(GIT_FOUND AND NOT GIT_SUCESS)
   # Update these variables to ensure out of source build have some sane tags
   message(WARNING "GIT_EXECUTABLE was not found or no corresponding GIT_REPO is available." 
