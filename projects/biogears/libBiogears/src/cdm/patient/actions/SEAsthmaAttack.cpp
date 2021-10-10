@@ -20,60 +20,61 @@ SEAsthmaAttack::SEAsthmaAttack()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEAsthmaAttack::~SEAsthmaAttack()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEAsthmaAttack::Clear()
 {
   SEPatientAction::Clear();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAsthmaAttack::IsValid() const
 {
   return SEPatientAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SEAsthmaAttack::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEAsthmaAttack::Load(const CDM::AsthmaAttackData& in)
 {
   SEPatientAction::Load(in);
   GetSeverity().Load(in.Severity());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::AsthmaAttackData* SEAsthmaAttack::Unload() const
 {
   CDM::AsthmaAttackData* data(new CDM::AsthmaAttackData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEAsthmaAttack::Unload(CDM::AsthmaAttackData& data) const
 {
   SEPatientAction::Unload(data);
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEAsthmaAttack::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEAsthmaAttack::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SEAsthmaAttack::ToString(std::ostream& str) const
 {
   str << "Patient Action : AsthmaAttack";
@@ -82,5 +83,17 @@ void SEAsthmaAttack::ToString(std::ostream& str) const
   str << "\n\tSeverity: ";
   HasSeverity() ? str << *m_Severity : str << "NaN";
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEAsthmaAttack::operator==( const SEAsthmaAttack& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEAsthmaAttack::operator!=( const SEAsthmaAttack& rhs) const
+{
+  return !(*this == rhs);
 }
 }

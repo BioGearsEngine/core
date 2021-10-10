@@ -21,6 +21,23 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	
+	<!-- @brief A diagnostic assessment of arterial blood gases -->
+	<xs:complexType name="ArterialBloodGasAnalysisData">
+		<xs:complexContent>
+			<xs:extension base="PatientAssessmentData">
+				<xs:sequence>
+					<xs:element name="pH" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief Blood pH -->
+					<xs:element name="pO2" type="ScalarPressureData" minOccurs="1" maxOccurs="1"/><!--<< @brief Partial Pressure of Oxygen -->
+					<xs:element name="pCO2" type="ScalarPressureData" minOccurs="1" maxOccurs="1"/><!--<< @brief Partial Pressure of Carbon Dioxide -->
+					<xs:element name="BaseExcess" type="ScalarAmountPerVolumeData" minOccurs="1" maxOccurs="1"/><!--<< @brief Amount of base present in blood -->
+					<xs:element name="StandardBicarbonate" type="ScalarAmountPerVolumeData" minOccurs="1" maxOccurs="1"/><!--<< @brief  -->
+					<xs:element name="OxygenSaturation" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief  -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="ArterialBloodGasAnalysis" type="ArterialBloodGasAnalysisData"/>
+	
 	<!-- @brief A group of tests that measure how well the lungs take in and release air, and how well they move gases from the atmosphere into the body's circulation. -->
 	<xs:complexType name="PulmonaryFunctionTestData">
 		<xs:complexContent>

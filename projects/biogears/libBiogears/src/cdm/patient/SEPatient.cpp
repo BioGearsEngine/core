@@ -14,9 +14,20 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
+#include <biogears/io/io-manager.h>
+
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/patients.h>
+#endif
+
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
 
+namespace std {
+template class map<CDM::enumPatientEvent::value, bool>;
+template class map<CDM::enumPatientEvent::value, void (*)(bool)>;
+template class map<CDM::enumPatientEvent::value, double>;
+}
 namespace biogears {
 SEPatient::SEPatient(Logger* logger)
   : Loggable(logger)
@@ -62,7 +73,6 @@ SEPatient::SEPatient(Logger* logger)
   m_TotalLungCapacity = nullptr;
   m_VitalCapacity = nullptr;
 
-
   for (CDM::enumPatientEvent::value key = static_cast<CDM::enumPatientEvent::value>(0); key < CDM::enumPatientEvent::TotalPatientEvents; key = static_cast<CDM::enumPatientEvent::value>(key + 1)) {
     //CDM::enumPatientEvent::value is a code generated C style enum.
     //To my knowladge it must be conitnguous as XSD does not support assinigng manual values to XML Enums that are use dto generated C++ counterpart
@@ -70,7 +80,6 @@ SEPatient::SEPatient(Logger* logger)
     m_EventState[key] = false;
     m_EventDuration_s[key] = 0;
   }
-
 }
 //-----------------------------------------------------------------------------
 SEPatient::~SEPatient()
@@ -88,7 +97,21 @@ bool SEPatient::Load(const std::string& patientFile)
   CDM::PatientData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  data = Serializer::ReadFile(patientFile, GetLogger());
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindPatientFile(patientFile.c_str());
+  if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
+    auto resource = filesystem::path(patientFile).basename();
+    auto content = io::get_embedded_patients_file(resource.c_str(), content_size);
+    if (content_size > 0) {
+      data = Serializer::ReadBuffer(reinterpret_cast<XMLByte const*>(content), content_size, m_Logger);
+    }
+#endif
+  } else {
+    data = Serializer::ReadFile(possible_path, m_Logger);
+  }
+
   pData = dynamic_cast<CDM::PatientData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
@@ -498,13 +521,16 @@ void SEPatient::Unload(CDM::PatientData& data) const
     data.ActiveEvent().push_back(std::unique_ptr<CDM::ActivePatientEventData>(eData));
   }
 };
+void SEPatient::SetEventCallback(CDM::enumPatientEvent::value type, void (*callback)(bool))
+{
+  m_EventCallbacks[type] = callback;
+}
 //-----------------------------------------------------------------------------
 void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time)
 {
-  if (m_EventState[type] == active)
-  {
+  if (m_EventState[type] == active) {
     return; //No Change
-  } else  {
+  } else {
     m_ss.str("");
     m_ss << "[Event] " << time << ", ";
     if (active) {
@@ -536,6 +562,21 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::CardiogenicShock:
         m_ss << " Patient has Cardiogenic Shock";
         break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_Abdominal:
+        m_ss << " Patient has Abdominal Compartment Syndrome";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_LeftArm:
+        m_ss << " Patient has Compartment Syndrome in the Left Arm";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg:
+        m_ss << " Patient has Compartment Syndrome in the Left Leg";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_RightArm:
+        m_ss << " Patient has Compartment Syndrome in the Right Arm";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_RightLeg:
+        m_ss << " Patient has Compartment Syndrome in the Right Leg";
+        break;
       case CDM::enumPatientEvent::CriticalBrainOxygenDeficit:
         m_ss << " Oxygen tension in the brain is critically low";
         break;
@@ -547,6 +588,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
         break;
       case CDM::enumPatientEvent::Fasciculation:
         m_ss << "Patient has Fasciculation";
+        break;
+      case CDM::enumPatientEvent::FlaccidParalysis:
+        m_ss << "Patient has Flaccid Paralysis";
         break;
       case CDM::enumPatientEvent::FunctionalIncontinence:
         m_ss << " Patient has involuntarily emptied their bladder";
@@ -608,6 +652,27 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::MetabolicAlkalosis:
         m_ss << " The patient is in a state of metabolic alkalosis";
         break;
+      case CDM::enumPatientEvent::MildDiaphoresis:
+        m_ss << " Patient has Mild Diaphoresis";
+        break;
+      case CDM::enumPatientEvent::ModerateDiaphoresis:
+        m_ss << " Patient has Moderate Diaphoresis";
+        break;
+      case CDM::enumPatientEvent::SevereDiaphoresis:
+        m_ss << " Patient has Severe Diaphoresis";
+        break;
+      case CDM::enumPatientEvent::MildSecretions:
+        m_ss << " Patient has Mild Secretions";
+        break;
+      case CDM::enumPatientEvent::ModerateSecretions:
+        m_ss << " Patient has Moderate Secretions";
+        break;
+      case CDM::enumPatientEvent::MildWeakness:
+        m_ss << " Patient has Mild Weakness";
+        break;
+      case CDM::enumPatientEvent::ModerateWeakness:
+        m_ss << " Patient has Moderate Weakness";
+        break;
       case CDM::enumPatientEvent::MuscleCatabolism:
         m_ss << " Patient has begun muscle catabolism";
         break;
@@ -620,6 +685,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::Natriuresis:
         m_ss << " Patient has Natriuresis";
         break;
+      case CDM::enumPatientEvent::Nausea:
+        m_ss << " Patient is Nauseous";
+        break;
       case CDM::enumPatientEvent::NutritionDepleted:
         m_ss << " Patient has depleted all nutrition in body";
         break;
@@ -629,8 +697,14 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::RenalHypoperfusion:
         m_ss << " Patient has Renal Hypoperfusion";
         break;
+      case CDM::enumPatientEvent::Seizures:
+        m_ss << " The patient is having a seizure";
+        break;
       case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress:
         m_ss << " Carrico Index < 100 : Patient has Severe Acute Respiratory Distress";
+        break;
+      case CDM::enumPatientEvent::SevereSecretions:
+        m_ss << " The patient has severe Secretions";
         break;
       case CDM::enumPatientEvent::SevereSepsis:
         m_ss << " The patient has severe sepsis";
@@ -643,6 +717,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
         break;
       case CDM::enumPatientEvent::Fatigue:
         m_ss << " Patient has fatigue";
+        break;
+      case CDM::enumPatientEvent::Vomiting:
+        m_ss << " Patient is Vomiting";
         break;
       case CDM::enumPatientEvent::StartOfCardiacCycle:
       case CDM::enumPatientEvent::StartOfExhale:
@@ -680,6 +757,21 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
         break;
       case CDM::enumPatientEvent::CardiogenicShock:
         m_ss << " Patient no longer has Cardiogenic Shock";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_Abdominal:
+        m_ss << " Patient no longer has Abdominal Compartment Syndrome";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_LeftArm:
+        m_ss << " Patient no longer has Compartment Syndrome in the Left Arm";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg:
+        m_ss << " Patient no longer has Compartment Syndrome in the Left Leg";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_RightArm:
+        m_ss << " Patient no longer has Compartment Syndrome in the Right Arm";
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_RightLeg:
+        m_ss << " Patient no longer has Compartment Syndrome in the Right Leg";
         break;
       case CDM::enumPatientEvent::CriticalBrainOxygenDeficit:
         m_ss << " Oxygen tension in the brain has increased above the critical threshold";
@@ -802,6 +894,9 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
   m_EventDuration_s[type] = 0;
   if (m_EventHandler != nullptr) {
     m_EventHandler->HandlePatientEvent(type, active, &time);
+  }
+  if (m_EventCallbacks[type] != nullptr) {
+    m_EventCallbacks[type](active);
   }
 }
 //-----------------------------------------------------------------------------

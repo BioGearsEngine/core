@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/SEAction.h>
+#include <biogears/schema/cdm/Scenario.hxx>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
@@ -31,6 +32,7 @@ protected:
   virtual void Unload(CDM::PatientActionData& data) const;
 
 public:
+  using SEAction::ToString;
   virtual void ToString(std::ostream& str) const = 0;
 };
 }

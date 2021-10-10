@@ -19,7 +19,10 @@ public:
   AmountPerVolumeUnit(const char* u);
   AmountPerVolumeUnit(const std::string& u);
 
-  virtual ~AmountPerVolumeUnit() = default;
+  virtual ~AmountPerVolumeUnit();
+
+  bool operator==(const AmountPerVolumeUnit&) const;
+  bool operator!=(const AmountPerVolumeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -34,12 +37,20 @@ public:
   static AmountPerVolumeUnit ct_Per_uL;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<AmountPerVolumeUnit>;
+
 class BIOGEARS_API SEScalarAmountPerVolume : public SEScalarQuantity<AmountPerVolumeUnit> {
 
 public:
-  SEScalarAmountPerVolume() = default;
-  virtual ~SEScalarAmountPerVolume() = default;
+  SEScalarAmountPerVolume();
+  virtual ~SEScalarAmountPerVolume();
 
-  CDM::ScalarAmountPerVolumeData* Unload() const override;
+  CDM::ScalarAmountPerVolumeData* Unload() const override;   
+
+  using SEScalarQuantity<AmountPerVolumeUnit>::SetValue;
+  using SEScalarQuantity<AmountPerVolumeUnit>::GetValue;
+
+  bool operator==(const SEScalarAmountPerVolume&) const;
+  bool operator!=(const SEScalarAmountPerVolume&) const;
 };
 }

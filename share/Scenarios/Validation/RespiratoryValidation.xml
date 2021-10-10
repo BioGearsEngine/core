@@ -55,7 +55,12 @@
 	
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightBronchi" Name="Volume" Unit="mL" Precision="4"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightBronchi" Name="PartialPressure" Substance="Oxygen" Unit="mmHg" Precision="4"/>
-	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightBronchi" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>  
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightBronchi" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>
+
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftDeadSpace" Name="Volume" Unit="L" Precision="4"/> 
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightDeadSpace" Name="Volume" Unit="L" Precision="4"/> 
+	
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Carina" Name="PartialPressure" Substance="CarbonDioxide" Unit="mmHg" Precision="4"/>  	
 
   </DataRequests> 
 	

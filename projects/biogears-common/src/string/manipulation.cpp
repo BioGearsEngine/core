@@ -17,25 +17,12 @@
 
 #include <biogears/string/manipulation.h>
 
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 #include <algorithm>
 #include <regex>
 #include <sstream>
-
-#ifdef ANDROID
-#include <cstdlib>
-namespace std {
-static double stod(const std::string& value, std::size_t* pos = 0)
-{
-  std::stringstream ss;
-  ss << value;
-  double result;
-  ss >> result;
-  if (pos)
-    *pos = ss.tellp();
-  return result;
-}
-}
-#endif
 
 namespace biogears {
 
@@ -62,7 +49,7 @@ double parse_double_or(double alt, const std::string& txt)
   } catch (...) {
   }
 #else
-  std::std::stringstream ss;
+  std::stringstream ss;
   ss << txt;
   ss >> x;
 #endif
@@ -80,7 +67,7 @@ float parse_float_or(float alt, const std::string& txt)
   } catch (...) {
   }
 #else
-  std::std::stringstream ss;
+  std::stringstream ss;
   ss << txt;
   ss >> x;
 #endif
@@ -97,7 +84,7 @@ int parse_int_or(int alt, const std::string& txt)
   } catch (...) {
   }
 #else
-  std::std::stringstream ss;
+  std::stringstream ss;
   ss << txt;
   ss >> x;
 #endif
@@ -258,7 +245,11 @@ std::vector<double> vstod(const std::vector<std::string>& input)
 {
   std::vector<double> result(input.size());
   std::transform(input.begin(), input.end(), result.begin(), [](const std::string& val) {
+#ifndef ANDROID
     return std::stod(val);
+#else
+   return std::strtod (val.c_str(), nullptr);
+#endif
   });
   return result;
 }

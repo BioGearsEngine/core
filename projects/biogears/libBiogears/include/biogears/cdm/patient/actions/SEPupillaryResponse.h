@@ -13,16 +13,22 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Physiology.hxx>
 #include <biogears/cdm/utils/Logger.h>
+#include <biogears/schema/cdm/Physiology.hxx>
 
 namespace biogears {
 class SEScalar;
 class SEScalarNeg1To1;
 
+namespace io {
+  class Physiology;
+}
+
 class BIOGEARS_API SEPupillaryResponse {
+friend io::Physiology;
+
 public:
-  SEPupillaryResponse(Logger* logger);
+  SEPupillaryResponse();
   virtual ~SEPupillaryResponse();
 
   virtual void Clear(); // Deletes all members
@@ -33,10 +39,6 @@ public:
   virtual bool Load(const CDM::PupillaryResponseData& in);
   virtual CDM::PupillaryResponseData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::PupillaryResponseData& data) const;
-
-public:
   virtual bool HasReactivityModifier() const;
   virtual SEScalarNeg1To1& GetReactivityModifier();
   virtual double GetReactivityModifier() const;
@@ -50,6 +52,9 @@ public:
   virtual double GetSizeModifier() const;
 
 protected:
+  virtual void Unload(CDM::PupillaryResponseData& data) const;
+
+private:
   SEScalarNeg1To1* m_ReactivityModifier;
   SEScalarNeg1To1* m_ShapeModifier;
   SEScalarNeg1To1* m_SizeModifier;

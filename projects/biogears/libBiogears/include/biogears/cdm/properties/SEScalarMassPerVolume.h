@@ -20,7 +20,10 @@ public:
   MassPerVolumeUnit(const char* u);
   MassPerVolumeUnit(const std::string& u);
 
-  virtual ~MassPerVolumeUnit() = default;
+  virtual ~MassPerVolumeUnit();
+
+  bool operator==(const MassPerVolumeUnit&) const;
+  bool operator!=(const MassPerVolumeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -43,13 +46,21 @@ public:
   static const MassPerVolumeUnit kg_Per_L;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<MassPerVolumeUnit>;
+
 class BIOGEARS_API SEScalarMassPerVolume : public SEScalarQuantity<MassPerVolumeUnit> {
 public:
-  SEScalarMassPerVolume() = default;
+  SEScalarMassPerVolume();
   SEScalarMassPerVolume(const SEScalarMassPerVolume& obj);
   SEScalarMassPerVolume(double, const MassPerVolumeUnit&);
-  virtual ~SEScalarMassPerVolume() = default;
+  virtual ~SEScalarMassPerVolume();
 
   CDM::ScalarMassPerVolumeData* Unload() const override;
+
+  using SEScalarQuantity<MassPerVolumeUnit>::SetValue;
+  using SEScalarQuantity<MassPerVolumeUnit>::GetValue;
+
+  bool operator==(const SEScalarMassPerVolume&) const;
+  bool operator!=(const SEScalarMassPerVolume&) const;
 };
 }

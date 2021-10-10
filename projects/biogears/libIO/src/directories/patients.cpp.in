@@ -1,0 +1,124 @@
+#include <biogears/io/directories/patients.h>
+
+#include <cstring>
+#include <string>
+#include <fstream>
+
+#include <biogears/filesystem/path.h>
+
+@RESOURCE_INCLUDE_LIST@
+
+namespace biogears {
+namespace io {
+  static char default_directory[] = "patients/";
+  char const * patient_file_list[] = {
+@RESOURCE_FILE_LIST@
+  };
+
+  constexpr size_t count_of_patient_files = @RESOURCE_FILE_COUNT@;
+
+
+  //biogears::filesystem::path overloads
+  bool generate_patients_directory(biogears::filesystem::path path)
+  {
+   biogears::filesystem::path working_dir  = path;
+   std::ofstream output;
+
+   bool result = true;
+
+   auto write_file = [&](biogears::filesystem::path path, char const* content, size_t content_size) {
+      biogears::filesystem::create_directories((working_dir / path).parent_path());
+      output.open( working_dir / path, std::fstream::binary | std::fstream::out);
+      if (output.good() && !output.is_open()) {
+        return false;
+      }
+      output.write(content, content_size);
+      output.close();
+      return true;
+   };
+   biogears::filesystem::path dir {default_directory};
+@GENERATE_DIRECTORY_BODY@
+
+   return true;
+  }
+  //-----------------------------------------------------------------------------
+  bool does_embedded_patients_file_exist(biogears::filesystem::path path)
+  {
+     return @DOES_EMBEDDED_FILE_EXIST_PATH_BODY@false;
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_patients_file_sha1(biogears::filesystem::path path)
+  {
+     char const* file_sha1 = "";
+     
+@GET_FILE_SHA1_PATH_BODY@
+
+     return file_sha1;
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_embedded_patients_file(biogears::filesystem::path path, size_t& content_size)
+  {
+    char const * embedded_content = "";
+
+@GET_EMBEDED_CONTENTS_PATH_BODY@
+
+    return embedded_content;
+  }
+  //-----------------------------------------------------------------------------
+  size_t  get_embedded_patients_file_size( const char* path) 
+  {
+    size_t size_of_embedded_content = 0;
+
+@GET_EMBEDED_CONTENTS_SIZE_PATH_BODY@
+
+    return size_of_embedded_content ;
+  }
+  //-----------------------------------------------------------------------------
+  char const * get_default_patients_directory() { return default_directory; }
+  //-----------------------------------------------------------------------------
+  bool generate_patients_directory(const char* root)
+  {
+   biogears::filesystem::path working_dir { root };
+   return generate_patients_directory(working_dir);
+  }
+  //-----------------------------------------------------------------------------
+  bool does_embedded_patients_file_exist(const char* path)
+  {
+    std::string resource_id { path };
+    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
+      resource_id = resource_id.substr(sizeof(default_directory));
+    }
+    return does_embedded_patients_file_exist(resource_id);
+  }
+  //-----------------------------------------------------------------------------
+  
+  char const* get_patients_file_sha1(const char* path)
+  {
+    std::string resource_id { path };
+    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
+      resource_id = resource_id.substr(sizeof(default_directory));
+    }
+    return get_patients_file_sha1(resource_id);
+  }
+  //-----------------------------------------------------------------------------
+  char const** list_patients_files()
+  {
+    return patient_file_list;
+  }
+  //-----------------------------------------------------------------------------
+  size_t patients_file_count()
+  {
+    return count_of_patient_files;
+  }
+  //-----------------------------------------------------------------------------
+  char const* get_embedded_patients_file(const char* path, size_t& content_size)
+  {
+    std::string resource_id { path };
+    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
+      resource_id = resource_id.substr(sizeof(default_directory));
+    }
+    return get_embedded_patients_file(resource_id, content_size);
+  }
+  //-----------------------------------------------------------------------------
+}
+}

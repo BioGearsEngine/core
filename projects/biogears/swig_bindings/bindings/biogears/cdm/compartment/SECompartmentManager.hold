@@ -1,0 +1,24 @@
+%{
+#include <biogears/cdm/compartment/SECompartmentManager.h>
+%}
+
+%include <biogears/exports.h>
+
+%import <biogears/cdm/CommonDataModel.swg>
+%import <biogears/cdm/utils/Logger.swg>
+
+%import <biogears/cdm/properties/SEScalar.swg>
+
+%nspace biogears::SECompartmentManager;
+
+%ignore biogears::SECompartmentManager::Unload;
+%ignore biogears::SECompartmentManager::Load;
+
+%import <include <biogears/cdm/circuit/SECircuitManager.swg>
+%import <include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.swg>
+%import <include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.swg>
+%import <include <biogears/cdm/compartment/thermal/SEThermalCompartment.swg>
+%import <include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.swg>
+%import <include <biogears/cdm/compartment/tissue/SETissueCompartment.swg>
+
+%include <biogears/cdm/compartment/SECompartmentManager.h>

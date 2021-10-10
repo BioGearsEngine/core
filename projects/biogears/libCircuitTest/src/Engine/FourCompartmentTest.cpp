@@ -50,7 +50,7 @@ double TotalHbMols(SELiquidCompartmentGraph& Graph, SESubstance& Hb, SESubstance
 
 void BioGearsEngineTest::FourCompartmentTest(bool usingAcidBase, bool usingProductionConsumption, bool usingDiffusion, bool activeDiffusion, const std::string& rptDirectory)
 {
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   std::string outputName;
   if (!usingAcidBase && !usingProductionConsumption && !usingDiffusion && !activeDiffusion) {
     outputName = "/FourCompartmentTestSimple";
@@ -73,7 +73,7 @@ void BioGearsEngineTest::FourCompartmentTest(bool usingAcidBase, bool usingProdu
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, m_Logger);
   BioGears bg(m_Logger);
   Tissue& tsu = (Tissue&)bg.GetTissue();
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);

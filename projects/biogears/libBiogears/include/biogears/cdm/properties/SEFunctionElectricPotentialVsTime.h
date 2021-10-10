@@ -17,9 +17,12 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class TimeUnit;
 class ElectricPotentialUnit;
-
+namespace io {
+  class Property;
+}
 class BIOGEARS_API SEFunctionElectricPotentialVsTime : public SEFunction {
 public:
+  friend io::Property;
   SEFunctionElectricPotentialVsTime();
   virtual ~SEFunctionElectricPotentialVsTime();
 
@@ -46,6 +49,8 @@ public:
 
   virtual SEFunctionElectricPotentialVsTime* InterpolateToTime(std::vector<double>& Independent, const TimeUnit& unit);
 
+  bool operator==(const SEFunctionElectricPotentialVsTime&) const ;
+  bool operator!=(const SEFunctionElectricPotentialVsTime&) const;
 protected:
   const TimeUnit* m_TimeUnit;
   const ElectricPotentialUnit* m_ElectricPotentialUnit;

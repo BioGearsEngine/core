@@ -21,29 +21,29 @@ SEForcedInhale::SEForcedInhale()
   m_InspiratoryCapacityFraction = nullptr;
   m_Period = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEForcedInhale::~SEForcedInhale()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEForcedInhale::Clear()
 {
   SEConsciousRespirationCommand::Clear();
   SAFE_DELETE(m_InspiratoryCapacityFraction);
   SAFE_DELETE(m_Period);
 }
-
+//-------------------------------------------------------------------------------
 bool SEForcedInhale::IsValid() const
 {
   return SEConsciousRespirationCommand::IsValid() && HasInspiratoryCapacityFraction() && HasPeriod();
 }
-
+//-------------------------------------------------------------------------------
 bool SEForcedInhale::IsActive() const
 {
   return SEConsciousRespirationCommand::IsActive();
 }
-
+//-------------------------------------------------------------------------------
 bool SEForcedInhale::Load(const CDM::ForcedInhaleData& in)
 {
   SEConsciousRespirationCommand::Load(in);
@@ -51,14 +51,14 @@ bool SEForcedInhale::Load(const CDM::ForcedInhaleData& in)
   GetPeriod().Load(in.Period());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ForcedInhaleData* SEForcedInhale::Unload() const
 {
   CDM::ForcedInhaleData* data(new CDM::ForcedInhaleData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEForcedInhale::Unload(CDM::ForcedInhaleData& data) const
 {
   SEConsciousRespirationCommand::Unload(data);
@@ -67,29 +67,31 @@ void SEForcedInhale::Unload(CDM::ForcedInhaleData& data) const
   if (m_Period != nullptr)
     data.Period(std::unique_ptr<CDM::ScalarTimeData>(m_Period->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEForcedInhale::HasInspiratoryCapacityFraction() const
 {
   return m_InspiratoryCapacityFraction == nullptr ? false : m_InspiratoryCapacityFraction->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEForcedInhale::GetInspiratoryCapacityFraction()
 {
   if (m_InspiratoryCapacityFraction == nullptr)
     m_InspiratoryCapacityFraction = new SEScalar0To1();
   return *m_InspiratoryCapacityFraction;
 }
-
+//-------------------------------------------------------------------------------
 bool SEForcedInhale::HasPeriod() const
 {
   return m_Period == nullptr ? false : m_Period->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarTime& SEForcedInhale::GetPeriod()
 {
   if (m_Period == nullptr)
     m_Period = new SEScalarTime();
   return *m_Period;
 }
-
+//-------------------------------------------------------------------------------
 void SEForcedInhale::ToString(std::ostream& str) const
 {
   str << "Forced Inhale";
@@ -100,5 +102,18 @@ void SEForcedInhale::ToString(std::ostream& str) const
   str << "\n\tPeriod: ";
   HasPeriod() ? str << *m_Period : str << "NaN";
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEForcedInhale::operator==( const SEForcedInhale& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_InspiratoryCapacityFraction && rhs.m_InspiratoryCapacityFraction) ? m_InspiratoryCapacityFraction->operator==(*rhs.m_InspiratoryCapacityFraction) : m_InspiratoryCapacityFraction == rhs.m_InspiratoryCapacityFraction;
+  equivilant &= (m_Period && rhs.m_Period) ? m_Period->operator==(*rhs.m_Period) : m_Period == rhs.m_Period;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEForcedInhale::operator!=( const SEForcedInhale& rhs) const
+{
+  return !(*this == rhs);
 }
 }

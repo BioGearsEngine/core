@@ -18,20 +18,23 @@ namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
+namespace io {
+  class Scenario;
+}
 
 class BIOGEARS_API SESubstanceDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
+  friend io::Scenario;
 
-protected:
-  SESubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
 
 public:
+  SESubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SESubstanceDataRequest();
 
-  virtual void Clear(); //clear memory
-  
+  virtual void Clear() override; //clear memory
+
   virtual bool Load(const CDM::SubstanceDataRequestData& in, const SESubstanceManager& substances);
-  virtual CDM::SubstanceDataRequestData* Unload() const;
+  virtual CDM::SubstanceDataRequestData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::SubstanceDataRequestData& data) const;

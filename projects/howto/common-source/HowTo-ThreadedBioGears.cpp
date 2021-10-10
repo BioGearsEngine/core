@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 using namespace biogears;
 
-void HowToThreadedBioGears()
+int HowToThreadedBioGears()
 {
   // Create the engine and have it run in it's own thread
   // This call will block while the engine stabilizes
@@ -67,6 +67,7 @@ void HowToThreadedBioGears()
       active = false;
     }
   } while (active);
+  return 0;
 }
 
 BioGearsThread::BioGearsThread(const std::string& logfile)

@@ -18,13 +18,27 @@ const FlowComplianceUnit FlowComplianceUnit::mL_Per_mmHg("mL/mmHg");
 const FlowComplianceUnit FlowComplianceUnit::mL_Per_cmH2O("mL/cmH2O");
 const FlowComplianceUnit FlowComplianceUnit::m3_Per_Pa("m^3/Pa");
 
+template class SEScalarQuantity<FlowComplianceUnit>;
+
 FlowComplianceUnit::FlowComplianceUnit(const char* u)
-  : FlowComplianceUnit(std::string{ u })
+  : FlowComplianceUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 FlowComplianceUnit::FlowComplianceUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+FlowComplianceUnit::~FlowComplianceUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFlowCompliance::SEScalarFlowCompliance()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFlowCompliance::~SEScalarFlowCompliance()
 {
 }
 //-----------------------------------------------------------------------------
@@ -75,4 +89,25 @@ const FlowComplianceUnit& FlowComplianceUnit::GetCompoundUnit(const std::string&
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool FlowComplianceUnit::operator==(const FlowComplianceUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool FlowComplianceUnit::operator!=(const FlowComplianceUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarFlowCompliance::operator==(const SEScalarFlowCompliance& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarFlowCompliance::operator!=(const SEScalarFlowCompliance& obj) const
+{
+  return !(*this == obj);
+}
 }

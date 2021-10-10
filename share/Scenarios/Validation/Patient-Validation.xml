@@ -49,8 +49,7 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure" Unit="mmHg" Precision="4"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume" Unit="mL" Precision="0"/>
   </DataRequests>
-	
-	
+
     <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>	  
     </Action>

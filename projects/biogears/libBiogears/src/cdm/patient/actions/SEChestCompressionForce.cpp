@@ -20,61 +20,61 @@ SEChestCompressionForce::SEChestCompressionForce()
 {
   m_Force = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEChestCompressionForce::~SEChestCompressionForce()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEChestCompressionForce::Clear()
 {
   SEChestCompression::Clear();
   SAFE_DELETE(m_Force);
 }
-
+//-------------------------------------------------------------------------------
 bool SEChestCompressionForce::IsValid() const
 {
   return SEChestCompression::IsValid() && HasForce();
 }
-
+//-------------------------------------------------------------------------------
 bool SEChestCompressionForce::IsActive() const
 {
   return IsValid() ? !m_Force->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEChestCompressionForce::Load(const CDM::ChestCompressionForceData& in)
 {
   SEChestCompression::Load(in);
   GetForce().Load(in.Force());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ChestCompressionForceData* SEChestCompressionForce::Unload() const
 {
   CDM::ChestCompressionForceData* data(new CDM::ChestCompressionForceData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEChestCompressionForce::Unload(CDM::ChestCompressionForceData& data) const
 {
   SEChestCompression::Unload(data);
   if (m_Force != nullptr)
     data.Force(std::unique_ptr<CDM::ScalarForceData>(m_Force->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEChestCompressionForce::HasForce() const
 {
   return m_Force == nullptr ? false : m_Force->IsValid();
 }
-
+//-------------------------------------------------------------------------------
 SEScalarForce& SEChestCompressionForce::GetForce()
 {
   if (m_Force == nullptr)
     m_Force = new SEScalarForce();
   return *m_Force;
 }
-
+//-------------------------------------------------------------------------------
 void SEChestCompressionForce::ToString(std::ostream& str) const
 {
   str << "Patient Action : Chest Compression";
@@ -83,5 +83,17 @@ void SEChestCompressionForce::ToString(std::ostream& str) const
   str << "\n\tForce: ";
   HasForce() ? str << *m_Force : str << "NaN";
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEChestCompressionForce::operator==( const SEChestCompressionForce& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_Force && rhs.m_Force) ? m_Force->operator==(*rhs.m_Force) : m_Force == rhs.m_Force;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEChestCompressionForce::operator!=( const SEChestCompressionForce& rhs) const
+{
+  return !(*this == rhs);
 }
 }

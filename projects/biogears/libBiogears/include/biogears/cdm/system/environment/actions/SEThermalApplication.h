@@ -17,8 +17,12 @@ namespace biogears {
 class SEActiveHeating;
 class SEActiveCooling;
 class SEAppliedTemperature;
-
+namespace io {
+  class EnvironmentActions;
+}
 class BIOGEARS_API SEThermalApplication : public SEEnvironmentAction {
+  friend io::EnvironmentActions;
+
 public:
   SEThermalApplication();
   virtual ~SEThermalApplication() override;
@@ -54,7 +58,6 @@ public:
   virtual void SetAppendToPrevious(bool toAppend);
 
   virtual void ToString(std::ostream& str) const override;
-
 
 protected:
   bool m_AppendToPrevious;

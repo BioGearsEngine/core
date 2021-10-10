@@ -19,16 +19,24 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-
 namespace biogears {
 class SETissueCompartment;
 class SEFluidCircuitPath;
 class SETissueCompartment;
 class SESubstance;
 class SESubstanceBolusState;
+class SENasalState;
 class SETransmucosalState;
 class SELiquidCompartment;
+}
 
+namespace std {
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceBolusState*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SENasalState*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SETransmucosalState*>;
+}
+
+namespace biogears {
 class BioGears;
 /**
  * @brief
@@ -73,12 +81,13 @@ public:
   void AtSteadyState() override;
   void PreProcess() override;
   void Process() override;
-  void PostProcess() override {}
+  void PostProcess() override;
 
 protected:
   void AdministerSubstanceBolus();
   void AdministerSubstanceInfusion();
   void AdministerSubstanceCompoundInfusion();
+  void AdministerSubstanceNasal();
   void AdministerSubstanceOral();
 
   void CalculatePartitionCoefficients();
@@ -90,13 +99,14 @@ protected:
 
   // Serializable member variables (Set in Initialize and in schema)
   std::map<const SESubstance*, SESubstanceBolusState*> m_BolusAdministrations;
+  std::map<const SESubstance*, SENasalState*> m_NasalStates;
   std::map<const SESubstance*, SETransmucosalState*> m_TransmucosalStates;
+
   double m_SarinRbcAcetylcholinesteraseComplex_nM;
   double m_AgedRbcAcetylcholinesterase_nM;
 
   // Stateless member variable (Set in SetUp())
   double m_dt_s;
-  double m_totalAdministered_uL;
 
   double m_RbcAcetylcholinesteraseFractionInhibited;
   SELiquidCompartment* m_aortaVascular;
@@ -108,5 +118,6 @@ protected:
   SETissueCompartment* m_fatTissue;
   SESubstance* m_Sarin;
   SESubstance* m_Pralidoxime;
+  SESubstance* m_Atropine;
 };
 }

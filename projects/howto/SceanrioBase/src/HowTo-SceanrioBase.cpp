@@ -30,7 +30,7 @@ using namespace biogears;
 /// \details
 /// Read a scenario file and pull things out for your use case
 //--------------------------------------------------------------------------------------------------
-void HowToScenarioBase()
+int HowToScenarioBase()
 {
   // Create our engine
 	std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToScenarioBase.log");
@@ -46,7 +46,7 @@ void HowToScenarioBase()
     if (!bg->LoadState(sce.GetEngineStateFile()))
     {
       bg->GetLogger()->Error("Could not load state, check the error");
-      return;
+      return 1;
     }
   }
   else if (sce.HasInitialParameters())
@@ -60,7 +60,7 @@ void HowToScenarioBase()
       if (!bg->InitializeEngine(sip.GetPatientFile(), &conditions, &sip.GetConfiguration()))
       {
         bg->GetLogger()->Error("Could not load state, check the error");
-        return;
+        return 2;
       }
     }
     else if (sip.HasPatient())
@@ -71,7 +71,7 @@ void HowToScenarioBase()
       if (!bg->InitializeEngine(sip.GetPatient(), &conditions, &sip.GetConfiguration()))
       {
         bg->GetLogger()->Error("Could not load state, check the error");
-        return;
+        return 3;
       }
     }
   }
@@ -90,9 +90,9 @@ void HowToScenarioBase()
   bg->GetEngineTrack()->GetDataRequestManager().Load(*drData, bg->GetSubstanceManager());
   delete drData;
 
-  if (!bg->GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
+  if (!bg->GetEngineTrack()->GetDataRequestManager().HasResultsFilename()) {
     bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("./ResultsFileName.csv");
-
+  }
   // Let's request data do be tracked that is in the scenario	
   
 	SEAdvanceTime* adv;
@@ -111,4 +111,11 @@ void HowToScenarioBase()
 	// You could read in a new scenario and run it's actions 
 	// or programatically add actions as your applications sees fit
 
+  return 0;
+
+}
+
+
+int main ( int argc, char* argv[] ) {
+  return HowToScenarioBase();
 }

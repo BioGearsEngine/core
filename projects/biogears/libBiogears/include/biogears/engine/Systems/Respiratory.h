@@ -109,6 +109,7 @@ private:
   void BronchoDilation();
   void Intubation();
   void Pneumothorax();
+  void PulmonaryShunt();
   void ConsciousRespiration();
   /**/ void ProcessConsciousRespiration(SEConsciousRespirationCommand& cmd);
   void MechanicalVentilation();
@@ -198,6 +199,7 @@ private:
   // Configuration parameters
   double m_dDefaultOpenResistance_cmH2O_s_Per_L;
   double m_dDefaultClosedResistance_cmH2O_s_Per_L;
+  double m_meanShuntFlow_L_Per_s;
   double m_PleuralComplianceSensitivity_Per_L;
   double m_dRespOpenResistance_cmH2O_s_Per_L;
   double m_dRespClosedResistance_cmH2O_s_Per_L;
@@ -234,10 +236,15 @@ private:
   SEGasCompartment* m_MechanicalVentilatorConnection;
   //Circuits
   SEFluidCircuit* m_RespiratoryCircuit;
+  SEFluidCircuit* m_CardiovascularCircuit;
   //Nodes
   SEFluidCircuitNode* m_LeftAlveoli;
   SEFluidCircuitNode* m_LeftBronchi;
   SEFluidCircuitNode* m_LeftPleuralCavity;
+  SEFluidCircuitNode* m_LeftPulmonaryArteries;
+  SEFluidCircuitNode* m_LeftPulmonaryVeins;
+  SEFluidCircuitNode* m_RightPulmonaryArteries;
+  SEFluidCircuitNode* m_RightPulmonaryVeins;
   SEFluidCircuitNode* m_RespiratoryMuscle;
   SEFluidCircuitNode* m_RightAlveoli;
   SEFluidCircuitNode* m_RightBronchi;
@@ -259,6 +266,8 @@ private:
   SEFluidCircuitPath* m_EnvironmentToRightChestLeak;
   SEFluidCircuitPath* m_LeftAlveoliLeakToLeftPleuralCavity;
   SEFluidCircuitPath* m_RightAlveoliLeakToRightPleuralCavity;
+  SEFluidCircuitPath* m_LeftPulmonaryArteriesToLeftPulmonaryVeins;
+  SEFluidCircuitPath* m_RightPulmonaryArteriesToRightPulmonaryVeins;
   SEFluidCircuitPath* m_LeftPleuralCavityToEnvironment;
   SEFluidCircuitPath* m_RightPleuralCavityToEnvironment;
   SEFluidCircuitPath* m_RightAlveoliToRightPleuralConnection;

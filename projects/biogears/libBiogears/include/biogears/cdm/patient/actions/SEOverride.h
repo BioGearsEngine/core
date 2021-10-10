@@ -13,27 +13,31 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 
-#include <biogears/schema/cdm/PatientActions.hxx>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarTemperature.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
-#include <biogears/cdm/properties/SEScalarMassPerTime.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
-#include <biogears/cdm/properties/SEScalarOsmolality.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarOsmolality.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/schema/cdm/PatientActions.hxx>
 
 class Serializer;
 
 namespace biogears {
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEOverride : public SEPatientAction {
+  friend io::PatientActions;
+
 public:
   SEOverride();
   virtual ~SEOverride();
@@ -281,73 +285,76 @@ public:
   bool HasTissueOverride() const;
 
   virtual void ToString(std::ostream& str) const override;
+  
+  bool operator==( const SEOverride& rhs) const;
+  bool operator!=( const SEOverride& rhs) const;
 
 protected:
   CDM::enumOnOff m_OverrideState;
   CDM::enumOnOff m_OverrideConformance;
-  SEScalar* m_ArterialPHOR;
-  SEScalar* m_VenousPHOR;
-  SEScalarFraction* m_CO2SaturationOR;
-  SEScalarFraction* m_COSaturationOR;
-  SEScalarFraction* m_O2SaturationOR;
-  SEScalarAmountPerVolume* m_PhosphateOR;
-  SEScalarAmountPerVolume* m_WBCCountOR;
-  SEScalarMassPerVolume* m_TotalBilirubinOR;
-  SEScalarMassPerVolume* m_CalciumConcentrationOR;
-  SEScalarMassPerVolume* m_GlucoseConcentrationOR;
-  SEScalarMassPerVolume* m_LactateConcentrationOR;
-  SEScalarMassPerVolume* m_PotassiumConcentrationOR;
-  SEScalarMassPerVolume* m_SodiumConcentrationOR;
-  SEScalarVolume* m_BloodVolumeOR;
-  SEScalarVolumePerTime* m_CardiacOutputOR;
-  SEScalarPressure* m_DiastolicArtPressureOR;
-  SEScalarPressure* m_MeanArtPressureOR;
-  SEScalarFrequency* m_HeartRateOR;
-  SEScalarVolume* m_HeartStrokeVolumeOR;
-  SEScalarPressure* m_SystolicArtPressureOR;
-  SEScalarAmountPerTime* m_InsulinSynthesisRateOR;
-  SEScalarAmountPerTime* m_GlucagonSynthesisRateOR;
-  SEScalarFraction* m_AcheivedExerciseLevelOR;
-  SEScalarTemperature* m_CoreTemperatureOR;
-  SEScalarAmountPerTime* m_CreatinineProductionRateOR;
-  SEScalarPressure* m_ExerciseMeanArterialPressureDeltaOR;
-  SEScalarFraction* m_FatigueLevelOR;
-  SEScalarAmountPerTime* m_LactateProductionRateOR;
-  SEScalarTemperature* m_SkinTemperatureOR;
-  SEScalarMassPerTime* m_SweatRateOR;
-  SEScalarPower* m_TotalMetabolicOR;
-  SEScalarFraction* m_TotalWorkRateLevelOR;
-  SEScalarMass* m_SodiumLostToSweatOR;
-  SEScalarMass* m_PotassiumLostToSweatOR;
-  SEScalarMass* m_ChlorideLostToSweatOR;
-  SEScalarFlowResistance* m_LAfferentArterioleResistOR;
-  SEScalarVolumePerTime* m__LeftGlomerularFiltrationOR;
-  SEScalarVolumePerTime* m_LReabsorptionRateOR;
-  SEScalarVolumePerTime* m_RenalBloodFlowOR;
-  SEScalarVolumePerTime* m_RenalPlasmaOR;
-  SEScalarFlowResistance* m_RAfferentArterioleResistOR;
-  SEScalarVolumePerTime* m__RightGlomerularFiltrationOR;
-  SEScalarVolumePerTime* m_RReabsorptionRateOR;
-  SEScalarVolumePerTime* m_UrinationRateOR;
-  SEScalarVolumePerTime* m_UrineProductionRateOR;
-  SEScalarOsmolality* m_UrineOsmolalityOR;
-  SEScalarVolume* m_UrineVolumeOR;
-  SEScalarMassPerVolume* m_UrineUreaNitrogenConcentrationOverrideOR;
-  SEScalarVolumePerTime* m_ExpiratoryFlowOR;
-  SEScalarVolumePerTime* m_InspiratoryFlowOR;
-  SEScalarFlowCompliance* m_PulmonaryComplianceOR;
-  SEScalarFlowResistance* m_PulmonaryResistanceOR;
-  SEScalarFrequency* m_RespirationRateOR;
-  SEScalarVolume* m_TidalVolumeOR;
-  SEScalarVolumePerTime* m_TargetPulmonaryVentilationOR;
-  SEScalarVolumePerTime* m_TotalAlveolarVentilationOR;
-  SEScalarVolume* m_TotalLungVolumeOR;
-  SEScalarVolumePerTime* m_TotalPulmonaryVentilationOR;
-  SEScalarVolume* m_ExtravascularFluidVolumeOR;
-  SEScalarVolume* m_IntracellularFluidVolumeOR;
-  SEScalarMass* m_LiverGlycogenOR;
-  SEScalarMass* m_MuscleGlycogenOR;
-  SEScalarMass* m_StoredProteinOR;
-  SEScalarMass* m_StoredFatOR;
+  SEScalar* m_ArterialBloodPHOverride;
+  SEScalar* m_VenousBloodPHOverride;
+  SEScalarFraction* m_CarbonDioxideSaturationOverride;
+  SEScalarFraction* m_CarbonMonoxideSaturationOverride;
+  SEScalarFraction* m_OxygenSaturationOverride;
+  SEScalarAmountPerVolume* m_PhosphateOverride;
+  SEScalarAmountPerVolume* m_WhiteBloodCellCountOverride;
+  SEScalarMassPerVolume* m_TotalBilirubinOverride;
+  SEScalarMassPerVolume* m_CalciumConcentrationOverride;
+  SEScalarMassPerVolume* m_GlucoseConcentrationOverride;
+  SEScalarMassPerVolume* m_LactateConcentrationOverride;
+  SEScalarMassPerVolume* m_PotassiumConcentrationOverride;
+  SEScalarMassPerVolume* m_SodiumConcentrationOverride;
+  SEScalarVolume* m_BloodVolumeOverride;
+  SEScalarVolumePerTime* m_CardiacOutputOverride;
+  SEScalarPressure* m_DiastolicArterialPressureOverride;
+  SEScalarPressure* m_MeanArterialPressureOverride;
+  SEScalarFrequency* m_HeartRateOverride;
+  SEScalarVolume* m_HeartStrokeVolumeOverride;
+  SEScalarPressure* m_SystolicArterialPressureOverride;
+  SEScalarAmountPerTime* m_InsulinSynthesisRateOverride;
+  SEScalarAmountPerTime* m_GlucagonSynthesisRateOverride;
+  SEScalarFraction* m_AchievedExerciseLevelOverride;
+  SEScalarTemperature* m_CoreTemperatureOverride;
+  SEScalarAmountPerTime* m_CreatinineProductionRateOverride;
+  SEScalarPressure* m_ExerciseMeanArterialPressureDeltaOverride;
+  SEScalarFraction* m_FatigueLevelOverride;
+  SEScalarAmountPerTime* m_LactateProductionRateOverride;
+  SEScalarTemperature* m_SkinTemperatureOverride;
+  SEScalarMassPerTime* m_SweatRateOverride;
+  SEScalarPower* m_TotalMetabolicRateOverride;
+  SEScalarFraction* m_TotalWorkRateLevelOverride;
+  SEScalarMass* m_SodiumLostToSweatOverride;
+  SEScalarMass* m_PotassiumLostToSweatOverride;
+  SEScalarMass* m_ChlorideLostToSweatOverride;
+  SEScalarFlowResistance* m_LeftAfferentArterioleResistanceOverride;
+  SEScalarVolumePerTime* m_LeftGlomerularFiltrationRateOverride;
+  SEScalarVolumePerTime* m_LeftReabsorptionRateOverride;
+  SEScalarVolumePerTime* m_RenalBloodFlowOverride;
+  SEScalarVolumePerTime* m_RenalPlasmaFlowOverride;
+  SEScalarFlowResistance* m_RightAfferentArterioleResistanceOverride;
+  SEScalarVolumePerTime* m_RightGlomerularFiltrationRateOverride;
+  SEScalarVolumePerTime* m_RightReabsorptionRateOverride;
+  SEScalarVolumePerTime* m_UrinationRateOverride;
+  SEScalarVolumePerTime* m_UrineProductionRateOverride;
+  SEScalarOsmolality* m_UrineOsmolalityOverride;
+  SEScalarVolume* m_UrineVolumeOverride;
+  SEScalarMassPerVolume* m_UrineUreaNitrogenConcentrationOverride;
+  SEScalarVolumePerTime* m_ExpiratoryFlowOverride;
+  SEScalarVolumePerTime* m_InspiratoryFlowOverride;
+  SEScalarFlowCompliance* m_PulmonaryComplianceOverride;
+  SEScalarFlowResistance* m_PulmonaryResistanceOverride;
+  SEScalarFrequency* m_RespirationRateOverride;
+  SEScalarVolume* m_TidalVolumeOverride;
+  SEScalarVolumePerTime* m_TargetPulmonaryVentilationOverride;
+  SEScalarVolumePerTime* m_TotalAlveolarVentilationOverride;
+  SEScalarVolume* m_TotalLungVolumeOverride;
+  SEScalarVolumePerTime* m_TotalPulmonaryVentilationOverride;
+  SEScalarVolume* m_ExtravascularFluidVolumeOverride;
+  SEScalarVolume* m_IntracellularFluidVolumeOverride;
+  SEScalarMass* m_LiverGlycogenOverride;
+  SEScalarMass* m_MuscleGlycogenOverride;
+  SEScalarMass* m_StoredProteinOverride;
+  SEScalarMass* m_StoredFatOverride;
 };
 }

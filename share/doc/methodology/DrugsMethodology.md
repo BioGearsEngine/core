@@ -43,7 +43,7 @@ The Post Process step moves everything calculated in Process from the next time 
 
 Features, Capabilities, and Dependencies
 ----------------------------------------
-Pharmacokinetic models quantify the time evolution of drug distribution from the administration of a dose. Pharmacodynamic models, on the other hand, characterize the events from the arrival of the drug at the site of action to the “onset, magnitude and duration of the biological response" @cite rosenbaum2012basic. The %BioGears %Drug system contains both pharmacokinetic and pharmacodynamic models.
+Pharmacokinetic models quantify the time evolution of drug distribution from the administration of a dose. Pharmacodynamic models, on the other hand, characterize the events from the arrival of the drug at the site of action to the "onset, magnitude and duration of the biological response" @cite rosenbaum2012basic. The %BioGears %Drug system contains both pharmacokinetic and pharmacodynamic models.
 
 @anchor pharmacokinetics
 ### Pharmacokinetics
@@ -264,6 +264,16 @@ The pharmacodynamic effects of diuretics locally target the renal system's funct
 ### %Substances
 The full list of drugs available in the %BioGears library can be found in Table&nbsp;5 in the Validation section. Additional substances, such as oxygen, carbon dioxide, and hemoglobin that are available in the %BioGears Engine can be found in the @ref BloodChemistryMethodology.
 
+@anchor drugs-compounds
+### %Compounds
+BioGears compounds allow a user to administer a specific combination of substances (see above) at the same time. In most cases, compounds (or solutions) used in BioGears can be represented by their ionic components.c Currently, BioGears supports the following compounds:
+- Piperacillin TazobactamL A combination of piperacillin, tazobactam, and sodium.
+- Plasma: Plasma contains components similar to whole blood but without any blood cells. The plasma compound contains sodium, albumin, urea, glucose, triacylglycerol, calcium, creatinine, chloride, and potassium.
+- Plasma Lyte A: A buffered solution made up of sodium, potassium, magnesium, chloride, acetoacetate, and glucose. 
+- Ringers Lactate: A sodium lactate solution consisting of sodium, chloride, lactate, potassium, calcium, oxygen, carbon dioxide.
+- Saline: A combination of sodium, chloride, oxygen, and carbon dioxide.
+- Whole Blood: BioGears supports all eight primary blood types (A, B, AB, and O each either Rh positive or negative). Each whole blood compound contains hemoglobin, oxyhemoglobin, oxygen, carbon dioxide, sodium, albumin, urea, glucose, triacylglycerol, calcium, creatinine, chloride, potassium, red blood cells, white blood cells, platelets, and the appropriate antigens corresponding to blood type.
+
 @anchor drugs-variability
 ### Patient Variability
 It is possible to customize the body that is simulated by %BioGears. For a detailed discussion of patient variability in %BioGears please see the @ref PatientMethodology report. Variability in body morphology will obviously have an effect on the pharmacokinetics of a drug. For example, a larger body may have a larger plasma volume, and thus the plasma concentration for a specific dose of a drug will be less than the same dose administered to a smaller body. Additionally, the partitioning of drugs is dependent on the relative masses of the physiological compartments, and storage is affected by distribution. Lipophilic drugs may appear to remain longer in the %BioGears plasma in patients who are configured with a higher body fat fraction. Patient configuration will also impact the pharmacodynamics. Maximum drug effects are computed as a fraction of baseline physiology. Changing a patient's baseline parameter (e.g. heart rate baseline) will also change the maximum effect (e.g. maximum heart rate) at a specific concentration of a drug. All drug validation is performed on a %BioGears Standard Male.
@@ -429,7 +439,7 @@ The PK model was validated by comparing the plasma concentration calculated by t
 
 <img src="./plots/Drugs/TranexamicAcid.jpg" width="1100">
 <center>
-<i>Figure 17. The TXA pharmacokinetics were initially calculated using physiochemical propertioes found in literature with slight adjustments made over time to allow for BioGears plasma concentration to account for proper clearance @cite nilsson1980clinical</i>
+<i>Figure 17. The TXA pharmacokinetics were initially calculated using physiochemical properties found in literature with slight adjustments made over time to allow for BioGears plasma concentration to account for proper clearance @cite nilsson1980clinical</i>
 </center><br>
 
 <img src="./plots/Drugs/Vasopressin.jpg" width="1100">
@@ -474,6 +484,7 @@ The pharmacodynamic effects of the drugs were validated by comparing the effects
 <center>
 <i>Table 6. The validation results for liquid-modeled drugs.</i>
 </center>
+
 
 |	Event	|	Notes	|	Action Occurrence Time (s)	|	Sample Scenario Time (s)	|	Heart Rate  (beats/min)	|	Systolic Pressure  (mmHg)	|	Diastolic Pressure  (mmHg)	|	Respiration Rate  (breaths/min)	|	Oxygen Saturation	|
 |	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|
@@ -650,9 +661,9 @@ Figures 23-24 demonstrate the effect of administering naloxone after respiratory
 
 The Chemical Weapons Convention (CWC) was initiated in 1993 to ban the synthesis of chemical warfare agents and outline a plan for the destruction of existing chemical stockpiles @romano2008chemical.  Though certainly a positive development, chemical weapons, particularly nerve gases, remain of considerable interest due to their potential use as agents of terror.  Perhaps the most well-known instance of chemical terrorism is the 1995 attack perpetrated by the extremist group Aum Shinrikyo on the Tokyo subway using the nerve agent Sarin @cite gupta2009handbook.  That same compound, Sarin, has been more recently implicated in chemical attacks in Syria (a relatively new member to the CWC) in 2013 and 2017 @cite davenport2017sarin.  We thus have selected Sarin as our model nerve agent. 
 
-Sarin belongs to a class of chemicals called organophosphates which exert their physiological effects by inhibiting the activity of the enzyme acetylcholinesterase.  Acetylcholinesterase (AChE) catalyzes the breakdown of the neurotransmitter acetylcholine (ACh) in the peripheral and central nervous systems @cite black1996chemistry.  In the absence of AChE, ACh remains in high concentrations in synaptic junctions and continues to stimulate nerve signal transduction.  Neural overstimulation leads to hyperactivity at receptors associated with muscle tissue, secretory glands, and the respiratory center (though seemingly disparate symptoms can occur as a result of ACh’s role in both the sympathetic and parasympathetic nervous responses) @cite goodman1996goodman.  Prolonged exposure leads to death induced by central respiratory failure and paralysis of diaphragm muscles @cite black1996chemistry. 
+Sarin belongs to a class of chemicals called organophosphates which exert their physiological effects by inhibiting the activity of the enzyme acetylcholinesterase.  Acetylcholinesterase (AChE) catalyzes the breakdown of the neurotransmitter acetylcholine (ACh) in the peripheral and central nervous systems @cite black1996chemistry.  In the absence of AChE, ACh remains in high concentrations in synaptic junctions and continues to stimulate nerve signal transduction.  Neural overstimulation leads to hyperactivity at receptors associated with muscle tissue, secretory glands, and the respiratory center (though seemingly disparate symptoms can occur as a result of ACh's role in both the sympathetic and parasympathetic nervous responses) @cite goodman1996goodman.  Prolonged exposure leads to death induced by central respiratory failure and paralysis of diaphragm muscles @cite black1996chemistry. 
 
-To compound matters, the bound Sarin-AChE complex does not spontaneously reverse; rather, it undergoes a subsequent reaction—called “aging”—which permanently deactivates AChE @cite delfino2009organophosphorus.  The aging process is the target of efforts to identify organophosphate-induced toxicity reversal agents.  If the initial binding of Sarin to AChE can be reversed prior to aging, the functionality of the enzyme can be salvaged and the Sarin eliminated from the body.  One class of compounds that has received close attention is the oximes, of which Pralidoxime (2-PAM) is the most frequently cited @cite luo2007vitro.  As Pralidoxime is also in the %BioGears library, we easily incorporate it in our model.
+To compound matters, the bound Sarin-AChE complex does not spontaneously reverse; rather, it undergoes a subsequent reaction-called "aging"-which permanently deactivates AChE @cite delfino2009organophosphorus.  The aging process is the target of efforts to identify organophosphate-induced toxicity reversal agents.  If the initial binding of Sarin to AChE can be reversed prior to aging, the functionality of the enzyme can be salvaged and the Sarin eliminated from the body.  One class of compounds that has received close attention is the oximes, of which Pralidoxime (2-PAM) is the most frequently cited @cite luo2007vitro.  As Pralidoxime is also in the %BioGears library, we easily incorporate it in our model.
 
 Since it is so toxic at low concentrations, the generic Emax model applied to other %BioGears drugs is not readily extendable to Sarin.  We instead model the interaction of Sarin with acetylcholinesterase directly.  In particular, we describe the binding of Sarin to red blood cell acetylcholinesterase (RBC-AChE).  Erythrocyte-bound AChE plays no role in the nervous system and is instead thought to act as a buffer for anti-acetylcholinesterase agents @cite gupta2009handbook.  However, RBC-AChE is easier to assay than neuromuscular AChE and the relative activity of RBC-AChE has been reported to be moderately correlated with organophosphate symptomology @cite voicu2010toxicokinetics.  Thus, we can feed the fraction of RBC-AChE inhibited to our pharmacodynamics model.  It should be noted that, in practice, high variability in RBC-AChE activity in humans limits the effectiveness of this approach from a diagnostic viewpoint.  Symptoms can appear without apparent RBC-AChE inhibition and 100% inhibition can occur with only mild symptoms @cite voicu2010toxicokinetics.  However, such a caveat is not as concerning from a pure modeling standpoint.
 
@@ -722,6 +733,15 @@ For reasons that are hopefully obvious, the validation metrics for Sarin exposur
 |	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|
 |	 Severe Sarin Aerosol, Concentration = 20 mg/m^3	|	2 minute exposure; CT = 40 mg-min/m^3	|	30	|	1530	|<span class="success">	75-80% inhibited @cite gupta2009handbook	</span>| <span class="success">	Maximum constriction	</span>| <span class="success">	Depressed ventilation; decreased tidal volume @cite zhuang2008inhalation	</span>| <span class="warning">	Bradycardia and decreased MAP	</span>| <span class="success">	Increased increased PCO2 and decreased P02	</span>|
 |	Pralidoxime 15mg/kg Iv @cite gupta2009handbook	|		|	1530	|	2430	|<span class="success">	Increase in activity @cite sidell1997medical	</span>| <span class="success">	No change	</span>| <span class="success">	Increased respiration rate @cite rxlist	</span>| <span class="success">	Increased heart rate @cite rxlist	</span>| <span class="success">	Decreased PCO2 and increased PO2	</span>|
+
+<center>
+<i>Table 14:  A severe inhaled dose of Sarin followed by intravenous administration of Atropine. Muscarinic patient reactions are recorded and shown to reverse as a function of Artopine administration. </i>
+</center>
+
+|	Action	|	Notes	|	Occurrence Time (s)	|	Sampled Scenario Time (s)	|	Red Blood Cell Acetylcholinesterase Activity	|	Nausea and Vomiting	|	Secretions	|	Diaphoresis	|	Urination and Diarrhea	|
+|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|	---	|
+|	 Severe Sarin Aerosol, Concentration = 4 mg/m^3	|	10 minute exposure; CT = 40 mg-min/m^3	|	30	|	1530	|<span class="success">	70-80% inhibited @cite leikin2002review	</span>| <span class="success">	Vomiting (at 50% ACHE inhibited @cite lee2003clinical)	</span>| <span class="success">	Moderate Rhinorrhea, Salivation @cite lee2003clinical	</span>| <span class="success">	Moderate Diaphoresis @cite lee2003clinical	</span>| <span class="success">	Urinary Incontinence and Diarrhea (at 75% ACHE inhibited) @cite lee2003clinical	</span>|
+|	Atropine 4 mg Iv @cite gupta2009handbook	|		|	1530	|	2430	|<span class="success">	no change	</span>| <span class="success">	Reversal 	</span>| <span class="success">	Reversal	</span>| <span class="success">	Reversal	</span>| <span class="success">	Reversal	</span>|
 
 
 <center>

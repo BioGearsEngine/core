@@ -16,6 +16,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
+#include <biogears/io/io-manager.h>
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/ecg.h>
+#endif
+
+namespace std {
+template class map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>;
+template class map<CDM::ElectroCardioGramWaveformLeadNumber, biogears::SEScalarElectricPotential*>;
+template class map<CDM::ElectroCardioGramWaveformLeadNumber, map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>>;
+}
 
 namespace biogears {
 SEElectroCardioGramInterpolator::SEElectroCardioGramInterpolator(Logger* logger)
@@ -39,28 +49,43 @@ void SEElectroCardioGramInterpolator::Clear()
 //-------------------------------------------------------------------------------
 bool SEElectroCardioGramInterpolator::LoadWaveforms(const char* file, const SEScalarTime* timeStep)
 {
-  return LoadWaveforms(std::string{ file }, timeStep);
+  return LoadWaveforms(std::string { file }, timeStep);
 }
 //-------------------------------------------------------------------------------
-bool SEElectroCardioGramInterpolator::LoadWaveforms(const std::string& file, const SEScalarTime* timeStep)
+bool SEElectroCardioGramInterpolator::LoadWaveforms(const std::string& given_path, const SEScalarTime* timeStep)
 {
   Clear();
   std::stringstream ss;
-  if (file.empty()) {
-    ss << "Waveform file not provided: " << file << std::endl;
+  if (given_path.empty()) {
+    ss << "Waveform file not provided: " << given_path << std::endl;
     Error(ss);
     return false;
   }
   Clear();
-  std::unique_ptr<CDM::ObjectData> data = Serializer::ReadFile(file, GetLogger());
+
+  std::unique_ptr<CDM::ObjectData> data;
+
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindEcgFile(given_path.c_str());
+  if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
+    std::string resource_id = filesystem::path(given_path).basename();
+    auto content = io::get_embedded_ecg_file(resource_id.c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+  } else {
+    data = Serializer::ReadFile(possible_path, m_Logger);
+  }
+
   CDM::ElectroCardioGramWaveformInterpolatorData* pData = dynamic_cast<CDM::ElectroCardioGramWaveformInterpolatorData*>(data.get());
   if (pData == nullptr) {
-    ss << "Waveform data file could not be read : " << file << std::endl;
+    ss << "Waveform data file could not be read : " << given_path << std::endl;
     Error(ss);
     return false;
   }
   if (!Load(*pData)) {
-    ss << "Unable to load waveform file: " << file << std::endl;
+    ss << "Unable to load waveform file: " << given_path << std::endl;
     Error(ss);
     return false;
   }

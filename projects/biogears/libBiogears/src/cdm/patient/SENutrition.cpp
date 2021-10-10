@@ -17,7 +17,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
-#include <biogears/cdm/utils/FileUtils.h>
+#include <biogears/io/io-manager.h>
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/nutrition.h>
+#endif
+
 namespace biogears {
 SENutrition::SENutrition(Logger* logger)
   : Loggable(logger)
@@ -54,7 +58,6 @@ double ComputeWeightedRate(double amt1, double amt2, double rate1, double rate2)
 //-----------------------------------------------------------------------------
 void SENutrition::Increment(const SENutrition& from)
 {
-  double weightedRate; //Unit independent
   if (from.HasCarbohydrate()) {
     GetCarbohydrate().Increment(*from.m_Carbohydrate);
   }
@@ -124,7 +127,7 @@ void SENutrition::Unload(CDM::NutritionData& data) const
 //-----------------------------------------------------------------------------
 const SEScalar* SENutrition::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SENutrition::GetScalar(const std::string& name)
@@ -146,7 +149,7 @@ const SEScalar* SENutrition::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SENutrition::Load(const char* nutritionFile)
 {
-  return Load(std::string{ nutritionFile });
+  return Load(std::string { nutritionFile });
 }
 //-----------------------------------------------------------------------------
 bool SENutrition::Load(const std::string& given)
@@ -154,17 +157,22 @@ bool SENutrition::Load(const std::string& given)
   CDM::NutritionData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  std::string filepath = given;
-  if ( !IsAbsolutePath(given) && !TestFirstDirName(given,"nutrition")) {
-    filepath = "nutrition/";
-    filepath += given;
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindNutritionFile(given.c_str());
+  if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
+    auto content = io::get_embedded_nutrition_file(given.c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+  } else {
+    data = Serializer::ReadFile(possible_path, m_Logger);
   }
 
-  data = Serializer::ReadFile(filepath, GetLogger());
   pData = dynamic_cast<CDM::NutritionData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
-    ss << "Nutrition file could not be read : " << ResolvePath(given) << std::endl;
+    ss << "Nutrition file could not be read : " << io->find_resource_file(given.c_str()) << std::endl;
     Error(ss);
     return false;
   }
@@ -183,7 +191,7 @@ const char* SENutrition::GetName_cStr() const
 //-----------------------------------------------------------------------------
 void SENutrition::SetName(const char* name)
 {
-  return SetName(std::string{ name });
+  return SetName(std::string { name });
 }
 //-----------------------------------------------------------------------------
 void SENutrition::SetName(const std::string& name)
@@ -351,4 +359,21 @@ void SENutrition::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SENutrition::operator==(const SENutrition& rhs) const
+{
+  bool equivilant = m_Name == rhs.m_Name;
+  equivilant &= (m_Carbohydrate && rhs.m_Carbohydrate) ? m_Carbohydrate->operator==(*rhs.m_Carbohydrate) : m_Carbohydrate == rhs.m_Carbohydrate;
+  equivilant &= (m_Fat && rhs.m_Fat) ? m_Fat->operator==(*rhs.m_Fat) : m_Fat == rhs.m_Fat;
+  equivilant &= (m_Protein && rhs.m_Protein) ? m_Protein->operator==(*rhs.m_Protein) : m_Protein == rhs.m_Protein;
+  equivilant &= (m_Calcium && rhs.m_Calcium) ? m_Calcium->operator==(*rhs.m_Calcium) : m_Calcium == rhs.m_Calcium;
+  equivilant &= (m_Sodium && rhs.m_Sodium) ? m_Sodium->operator==(*rhs.m_Sodium) : m_Sodium == rhs.m_Sodium;
+  equivilant &= (m_Water && rhs.m_Water) ? m_Water->operator==(*rhs.m_Water) : m_Water == rhs.m_Water;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SENutrition::operator!=(const SENutrition& rhs) const
+{
+  return !(*this == rhs);
+}
 }

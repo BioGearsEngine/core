@@ -5,7 +5,7 @@
 #                         schmieder.matthias@gmail.com
 #***************************************************************************
 
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.8.0)
 
 message(STATUS "Using CMake version ${CMAKE_VERSION}")
 
@@ -25,9 +25,6 @@ option(MZ_BUILD_TEST "Builds minizip test executable" OFF)
 option(MZ_BUILD_UNIT_TEST "Builds minizip unit test project" OFF)
 option(MZ_BUILD_FUZZ_TEST "Builds minizip fuzzer executables" OFF)
 
-if(POLICY CMP0074)
-    cmake_policy(SET CMP0074 OLD)
-endif()
 # ZLIB_ROOT - Parent directory of zlib installation
 # BZIP2_ROOT - Parent directory of BZip2 installation
 # OPENSSL_ROOT - Parent directory of OpenSSL installation

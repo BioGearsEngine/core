@@ -15,10 +15,11 @@ Executor::Executor(std::string n, EDriver d)
   , driver(d)
   , plot_style(EPlotStyle::FastPlot)
   , no_compare(false)
+  , track_stabilization(false)
   , group("Other")
   , patient("")
   , state("")
-  , scenario("Scenarios/BasicStandard.xml")
+  , scenario("Scenarios/Patient/BasicStandard.xml")
 {
 }
 //-----------------------------------------------------------------------------
@@ -31,6 +32,11 @@ EPlotStyle Executor::PlotStyle() const { return plot_style; }
 bool Executor::NoCompare() const
 {
   return no_compare;
+}
+//-----------------------------------------------------------------------------
+bool Executor::TrackStabilization() const
+{
+  return track_stabilization;
 }
 //-----------------------------------------------------------------------------
 std::string Executor::Baselines() const { return baselines; }
@@ -66,6 +72,11 @@ void Executor::PlotStyle(EPlotStyle p)
 void Executor::NoCompare(bool nc)
 {
   no_compare = nc;
+}
+//-----------------------------------------------------------------------------
+void Executor::TrackStabilization(bool t)
+{
+  track_stabilization = t;
 }
 //-----------------------------------------------------------------------------
 void Executor::Baselines(const std::string& b)

@@ -20,9 +20,14 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(FunctionData)
 
 namespace biogears {
+namespace io {
+  class Property;
+}
 class BIOGEARS_API SEFunction : public SEProperty {
 public:
+  friend io::Property;
   SEFunction();
+
   virtual ~SEFunction();
 
   virtual void Clear(); //clear memory
@@ -30,10 +35,6 @@ public:
   virtual bool Load(const CDM::FunctionData& in);
   virtual CDM::FunctionData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::FunctionData& data) const;
-
-public:
   virtual bool IsValid() const;
   virtual void Invalidate();
 
@@ -44,6 +45,13 @@ public:
 
   double GetIndependentValue(unsigned int index);
   std::vector<double>& GetIndependent();
+
+  bool operator==(const SEFunction&) const;
+  bool operator!=(const SEFunction&) const;
+
+protected:
+  virtual void Unload(CDM::FunctionData& data) const;
+
 
 protected:
   std::vector<double> m_Dependent;

@@ -46,6 +46,10 @@ public:
   bool KeywordFound(std::string) const;
   bool MultiWordFound(std::string) const;
 
+  bool append_options(std::vector<std::string> opts);
+  bool append_keywords(std::vector<std::string> keys);
+  bool append_multiword(std::vector<std::string> words);
+
   void set_required_keywords(std::vector<std::string> keys);
   std::vector<std::string> required_keywords() const;
 

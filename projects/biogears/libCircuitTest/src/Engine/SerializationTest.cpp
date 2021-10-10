@@ -41,7 +41,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
-#include <biogears/cdm/utils/FileUtils.h>
 
 namespace biogears {
 class HowToTracker {
@@ -107,7 +106,7 @@ void BioGearsEngineTest::InhalerState(PhysiologyEngine* bg, HowToTracker& tracke
   SEScalarTime now; // Make sure to tell the engine that we are at the same time
   // Save and Load the Engine State
   bg->GetLogger()->Info("Serializing");
-  bg->SaveState("./MidInhalerState.xml");
+  bg->SaveStateToFile("./MidInhalerState.xml");
   now.SetValue(bg->GetSimulationTime(TimeUnit::s), TimeUnit::s);
   bg->LoadState("./MidInhalerState.xml", &now);
 
@@ -142,7 +141,7 @@ void BioGearsEngineTest::InjectSuccsState(PhysiologyEngine* bg, HowToTracker& tr
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("InjectSuccsSerialization.csv");
 
   // Save and Load the Engine State
-  bg->SaveState("./MidBolusState.xml");
+  bg->SaveStateToFile("./MidBolusState.xml");
   now.SetValue(bg->GetSimulationTime(TimeUnit::s), TimeUnit::s);
   bg->LoadState("./MidBolusState.xml", &now);
 
@@ -164,7 +163,7 @@ void BioGearsEngineTest::InjectSuccsState(PhysiologyEngine* bg, HowToTracker& tr
   bg->ProcessAction(amConfig);
   tracker.AdvanceModelTime(5);
 
-  bg->SaveState("./AnesthesiaMachineState.xml");
+  bg->SaveStateToFile("./AnesthesiaMachineState.xml");
   now.SetValue(bg->GetSimulationTime(TimeUnit::s), TimeUnit::s);
   bg->LoadState("./AnesthesiaMachineState.xml", &now);
 
@@ -291,7 +290,7 @@ void BioGearsEngineTest::SerializationTest(const std::string& sTestDirectory)
         return;
       }
       tracker.AdvanceModelTime(60);
-      bg->SaveState("./BasicStandardState@60s.xml");
+      bg->SaveStateToFile("./BasicStandardState@60s.xml");
     }*/
 
     // Run Basic Standard State
@@ -319,6 +318,6 @@ void BioGearsEngineTest::SerializationTest(const std::string& sTestDirectory)
     bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("BrainTissueExtracellular", *Succs, "Concentration", MassPerVolumeUnit::ug_Per_mL);
     InjectSuccsState(bg.get(), tracker, *Succs);
   }
-  bg->SaveState("./FinalEngineState.xml");
+  bg->SaveStateToFile("./FinalEngineState.xml");
 }
 }

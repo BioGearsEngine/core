@@ -10,14 +10,25 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstanceManager.h>
-//External Includes
-#include <dirent.h>
-//Project Includes
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
+
+#include <biogears/filesystem/path.h>
+#include <biogears/string/manipulation.h>
+
+#include <biogears/io/io-manager.h>
+
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/substances.h>
+#endif
+
+namespace std {
+template class map<biogears::SESubstance*, const CDM::SubstanceData*>;
+template class map<biogears::SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
+}
 
 namespace biogears {
 SESubstanceManager::SESubstanceManager(Logger* logger)
@@ -72,7 +83,7 @@ void SESubstanceManager::AddSubstance(SESubstance& substance)
 //-----------------------------------------------------------------------------
 SESubstance* SESubstanceManager::GetSubstance(const char* name) const
 {
-  return GetSubstance(std::string{ name });
+  return GetSubstance(std::string { name });
 }
 //-----------------------------------------------------------------------------
 SESubstance* SESubstanceManager::GetSubstance(const std::string& name) const
@@ -198,7 +209,7 @@ void SESubstanceManager::AddCompound(SESubstanceCompound& compound)
 //-----------------------------------------------------------------------------
 SESubstanceCompound* SESubstanceManager::GetCompound(const char* name) const
 {
-  return GetCompound(std::string{ name });
+  return GetCompound(std::string { name });
 }
 //-----------------------------------------------------------------------------
 SESubstanceCompound* SESubstanceManager::GetCompound(const std::string& name) const
@@ -264,7 +275,7 @@ void SESubstanceManager::RemoveActiveCompounds(const std::vector<SESubstanceComp
 //-----------------------------------------------------------------------------
 SESubstance* SESubstanceManager::ReadSubstanceFile(const char* xmlFile)
 {
-  return ReadSubstanceFile(std::string{ xmlFile });
+  return ReadSubstanceFile(std::string { xmlFile });
 }
 //-----------------------------------------------------------------------------
 SESubstance* SESubstanceManager::ReadSubstanceFile(const std::string& xmlFile)
@@ -282,9 +293,6 @@ SESubstance* SESubstanceManager::ReadSubstanceFile(const std::string& xmlFile)
   subData = nullptr;
 
   data = Serializer::ReadFile(xmlFile, GetLogger());
-  //ss.str("");
-  //ss<<"Reading substance file : ./substances/"<<xmlFile;
-  //Info(ss);
   obj = data.get();
 
   subData = dynamic_cast<CDM::SubstanceData*>(obj);
@@ -296,80 +304,78 @@ SESubstance* SESubstanceManager::ReadSubstanceFile(const std::string& xmlFile)
   ss.str("");
   /// \error Substance file could not be read in
   ss << "Substance file could not be read in : ./substances/" << xmlFile;
-  Error(ss, "SESubstanceManager::ReadSubstanceFile");
+  Error(ss.str(), "SESubstanceManager::ReadSubstanceFile");
   return nullptr;
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceManager::LoadSubstanceDirectory()
 {
-  bool succeed = true;
+  bool succeeded = true;
   Clear();
   std::stringstream ss;
-  DIR* dir;
-  struct dirent* ent;
 
-  ScopedFileSystemLock lock;
+  auto io = m_Logger->GetIoManager().lock();
 
-  std::string workingDirectory = GetCurrentWorkingDirectory();
-  std::string resolved_path = ResolvePath(std::string("substances/")) + "/";
-  dir = opendir(resolved_path.c_str());
+  std::map<std::string, std::unique_ptr<CDM::ObjectData>> definitions;
 
-  if (dir != nullptr) {
-    CDM::ObjectData* obj;
-
-    SESubstance* sub;
-    CDM::SubstanceData* subData;
-
-    SESubstanceCompound* compound;
-    CDM::SubstanceCompoundData* compoundData;
-
-    std::unique_ptr<CDM::ObjectData> data;
-
-    while ((ent = readdir(dir)) != nullptr) {
-      obj = nullptr;
-      sub = nullptr;
-      subData = nullptr;
-      ss.str("");
-      ss << resolved_path  << ent->d_name;
-      if (!IsDirectory(ent) && strlen(ent->d_name) > 2) {
-        data = Serializer::ReadFile(ss.str(), GetLogger());
-        ss.str("");
-        ss << "Reading substance file : ./substances/" << ent->d_name;
-        Debug(ss);
-        obj = data.release();
-        subData = dynamic_cast<CDM::SubstanceData*>(obj);
-        if (subData != nullptr) {
-          sub = new SESubstance(GetLogger());
-          sub->Load(*subData);
-          AddSubstance(*sub);
-          m_OriginalSubstanceData[sub] = subData;
-          continue;
-        }
-        compoundData = dynamic_cast<CDM::SubstanceCompoundData*>(obj);
-        if (compoundData != nullptr) { // Save this off and process it till later, once all substances are read
-          compound = new SESubstanceCompound(GetLogger());
-          m_OriginalCompoundData[compound] = compoundData;
-          AddCompound(*compound);
-          continue;
-        }
-        Error("Unknown Type");
-        succeed = false;
-      }
-    } // Done with directory search
-    // Ok, now let's load up our compounds
-    for (auto itr : m_OriginalCompoundData)
-      itr.first->Load((const CDM::SubstanceCompoundData&)*itr.second, *this);
-
-    return succeed;
-
-    closedir(dir);
-    return succeed;
-  } else {
-    ss << "Unable to read files" << std::ends;
-    Error(ss);
-    succeed = false;
-    return succeed;
+  std::string path_string;
+  for (auto& filepath : io->FindAllSubstanceFiles()) {
+    path_string = filepath;
+#ifdef _DEBUG
+    Debug(asprintf("Reading substance file : %s", path_string.c_str()));
+#endif
+    definitions[filepath.basename()] = Serializer::ReadFile(path_string, GetLogger());
   }
+#ifdef BIOGEARS_IO_PRESENT
+  auto substances = io::list_substances_files();
+  auto substances_count = io::substances_file_count();
+
+  std::vector<char> buffer;
+  char const* substance = "";
+
+  size_t content_size = 0;
+  for (auto ii = 0; ii != substances_count; ++ii) {
+    if (definitions.find(substances[ii]) == definitions.end()) {
+      substance = substances[ii];
+      content_size = io::get_embedded_substances_file_size(substance);
+      buffer.resize(content_size);
+      substance = io::get_embedded_substances_file(substance, content_size);
+      definitions[substances[ii]] = Serializer::ReadBuffer((XMLByte*)substance, content_size, GetLogger());
+    }
+  }
+#endif
+  for (auto& pair : definitions) {
+
+    auto subData = dynamic_cast<CDM::SubstanceData*>(pair.second.get());
+    if (subData != nullptr) {
+      auto sub = new SESubstance(GetLogger());
+      sub->Load(*subData);
+      AddSubstance(*sub);
+      m_OriginalSubstanceData[sub] = subData;
+      pair.second.release();
+      continue;
+    }
+    auto compoundData = dynamic_cast<CDM::SubstanceCompoundData*>(pair.second.get());
+    if (compoundData != nullptr) {
+      // Differ processing compounds, until after all substances are known
+      // To prevent first pass errors.
+      auto compound = new SESubstanceCompound(GetLogger());
+      m_OriginalCompoundData[compound] = compoundData;
+      AddCompound(*compound);
+      pair.second.release();
+      continue;
+    }
+    Error("Unknown Type");
+    succeeded = false;
+  }
+  for (auto itr : m_OriginalCompoundData)
+    itr.first->Load((const CDM::SubstanceCompoundData&)*itr.second, *this);
+
+  if (!succeeded) {
+    ss << "Unable to read some substances definitions" << std::ends;
+    Error(ss);
+  }
+  return succeeded;
 }
 //-----------------------------------------------------------------------------
 }

@@ -26,14 +26,18 @@ class SEScalarMassPerVolume;
 class MassPerVolumeUnit;
 class SEScalarMass;
 class MassUnit;
-
+namespace io {
+  class Physiology;
+}
 class BIOGEARS_API SETissueSystem : public SESystem {
+  friend io::Physiology;
+
 public:
   SETissueSystem(Logger* logger);
   ~SETissueSystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SETissueSystem"; }
+  static constexpr char const* const TypeTag() { return "SETissueSystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -46,6 +50,7 @@ public:
   CDM::TissueSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::TissueSystemData& data) const;
 

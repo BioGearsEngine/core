@@ -16,9 +16,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalar0To1;
-
+namespace io {
+class  AnesthesiaActions;
+}
 class BIOGEARS_API SEInspiratoryValveLeak : public SEAnesthesiaMachineAction {
 public:
+  friend io::AnesthesiaActions;
   SEInspiratoryValveLeak();
   virtual ~SEInspiratoryValveLeak() override;
 

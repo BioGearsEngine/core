@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Magnesium</Name>
+  <Classification>Ion</Classification>
+  <MolarMass readOnly="false" unit="g/mol" value="24.31"/>
+  <State>Liquid</State>
+  <MembraneResistance readOnly="false" unit="ohm" value="20.1"/>
+  <Clearance>
+    <RenalDynamics>
+      <Regulation>
+        <ChargeInBlood>Positive</ChargeInBlood>
+        <FractionUnboundInPlasma readOnly="false" value="1"/>
+        <ReabsorptionRatio readOnly="false" value="0.96"/>
+        <TransportMaximum readOnly="false" unit="mg/min" value="INF"/>
+      </Regulation>
+    </RenalDynamics>
+  </Clearance>
+</Substance>

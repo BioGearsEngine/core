@@ -15,7 +15,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
+namespace io {
+  class PatientConditions;
+}
 class BIOGEARS_API SEStarvation : public SEPatientCondition {
+  friend io::PatientConditions;
+
 public:
   SEStarvation();
   virtual ~SEStarvation();

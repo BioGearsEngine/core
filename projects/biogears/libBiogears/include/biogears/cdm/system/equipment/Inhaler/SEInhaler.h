@@ -12,8 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/schema/biogears/BioGearsEquipment.hxx>
+#include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
 class Serializer;
@@ -26,14 +26,20 @@ class SEScalarMass;
 class MassUnit;
 class SEScalarFraction;
 
+namespace io {
+  class Inhaler;
+}
+
 class BIOGEARS_API SEInhaler : public SESystem {
+  friend io::Inhaler;
+
 protected:
 public:
   SEInhaler(SESubstanceManager& substances);
   ~SEInhaler() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SEInhaler"; }
+  static constexpr char const* const TypeTag() { return "SEInhaler"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -53,6 +59,7 @@ public:
   bool Load(const CDM::InhalerData& in);
   CDM::InhalerData* Unload() const override;
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::InhalerData& data) const;
 
@@ -61,7 +68,7 @@ protected:
   *            Specically a new file has been loaded, configuration action, or the system reset
   *            Engine specific methodology can then update their logic.
   */
-  virtual void StateChange()  {} //TODO: Refactor the need for this definiiton;
+  virtual void StateChange() { } //TODO: Refactor the need for this definiiton;
   void Merge(const SEInhaler& from);
   void ProcessConfiguration(const SEInhalerConfiguration& config);
 

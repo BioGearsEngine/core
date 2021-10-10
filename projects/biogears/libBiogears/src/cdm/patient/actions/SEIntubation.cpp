@@ -18,66 +18,69 @@ SEIntubation::SEIntubation()
 {
   m_Type = (CDM::enumIntubationType::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 SEIntubation::~SEIntubation()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEIntubation::Clear()
 {
   SEPatientAction::Clear();
   m_Type = (CDM::enumIntubationType::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 bool SEIntubation::IsValid() const
 {
   return HasType();
 }
-
+//-------------------------------------------------------------------------------
 bool SEIntubation::IsActive() const
 {
   return HasType() && GetType() != CDM::enumIntubationType::Off;
 }
-
+//-------------------------------------------------------------------------------
 bool SEIntubation::Load(const CDM::IntubationData& in)
 {
   SEPatientAction::Load(in);
   m_Type = in.Type();
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::IntubationData* SEIntubation::Unload() const
 {
   CDM::IntubationData* data(new CDM::IntubationData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEIntubation::Unload(CDM::IntubationData& data) const
 {
   SEPatientAction::Unload(data);
   if (HasType())
     data.Type(m_Type);
 }
-
+//-------------------------------------------------------------------------------
 CDM::enumIntubationType::value SEIntubation::GetType() const
 {
   return m_Type;
 }
+//-------------------------------------------------------------------------------
 void SEIntubation::SetType(CDM::enumIntubationType::value Type)
 {
   m_Type = Type;
 }
+//-------------------------------------------------------------------------------
 bool SEIntubation::HasType() const
 {
   return m_Type == ((CDM::enumIntubationType::value)-1) ? false : true;
 }
+//-------------------------------------------------------------------------------
 void SEIntubation::InvalidateType()
 {
   m_Type = (CDM::enumIntubationType::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 void SEIntubation::ToString(std::ostream& str) const
 {
   str << "Patient Action : Intubation";
@@ -86,5 +89,17 @@ void SEIntubation::ToString(std::ostream& str) const
   str << "\n\tType: ";
   HasType() ? str << GetType() : str << "Not Set";
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEIntubation::operator==(const SEIntubation& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= m_Type == rhs.m_Type;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEIntubation::operator!=(const SEIntubation& rhs) const
+{
+  return !(*this == rhs);
 }
 }

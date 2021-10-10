@@ -20,8 +20,11 @@ class SERespiratorySystem;
 class SEScalarVolume;
 class SEScalarVolumePerTime;
 class SEFunctionVolumeVsTime;
-
+namespace io {
+  class PatientAssessments;
+}
 class BIOGEARS_API SEPulmonaryFunctionTest : public SEPatientAssessment {
+friend io::PatientAssessments;
 public:
   SEPulmonaryFunctionTest();
   virtual ~SEPulmonaryFunctionTest();
@@ -29,11 +32,11 @@ public:
   static constexpr const char* TypeTag() { return "SEPulmonaryFunctionTest"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset();
-  virtual void Clear();
+  virtual void Reset() override;
+  virtual void Clear() override;
 
   virtual bool Load(const CDM::PulmonaryFunctionTestData& in);
-  virtual CDM::PulmonaryFunctionTestData* Unload();
+  virtual CDM::PulmonaryFunctionTestData* Unload() override;
 
 protected:
   virtual void Unload(CDM::PulmonaryFunctionTestData& data);

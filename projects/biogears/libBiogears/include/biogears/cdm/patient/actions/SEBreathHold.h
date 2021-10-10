@@ -16,12 +16,17 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalar0To1;
+class SEScalarTime;
 class SEConsciousRespiration;
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEBreathHold : public SEConsciousRespirationCommand {
   friend class SEConsciousRespiration;
-  SEBreathHold();
+  friend io::PatientActions;
 
 public:
+  SEBreathHold();
   virtual ~SEBreathHold();
 
   virtual void Clear(); //clear memory
@@ -32,17 +37,19 @@ public:
   virtual bool Load(const CDM::BreathHoldData& in);
   virtual CDM::BreathHoldData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::BreathHoldData& data) const;
-
-public:
   virtual bool HasPeriod() const;
   virtual SEScalarTime& GetPeriod();
 
   virtual void ToString(std::ostream& str) const;
 
+  bool operator==( const SEBreathHold& rhs) const;
+  bool operator!=( const SEBreathHold& rhs) const;
+
 protected:
-  SEScalar0To1* m_InspiratoryCapacity0To1;
+  virtual void Unload(CDM::BreathHoldData& data) const;
+
+protected:
+
   SEScalarTime* m_Period;
 };
 }

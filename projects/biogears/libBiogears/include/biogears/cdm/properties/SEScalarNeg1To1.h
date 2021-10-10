@@ -19,7 +19,10 @@ class BIOGEARS_API SEScalarNeg1To1 : public SEScalar {
 
 public:
   SEScalarNeg1To1();
-  virtual ~SEScalarNeg1To1() = default;
+  virtual ~SEScalarNeg1To1();    
+
+  bool operator==(const SEScalarNeg1To1&) const;
+  bool operator!=(const SEScalarNeg1To1&) const;
 
   CDM::ScalarNeg1To1Data* Unload() const override;
 

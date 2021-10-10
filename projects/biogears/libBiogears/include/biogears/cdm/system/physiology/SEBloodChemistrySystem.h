@@ -36,9 +36,15 @@ class SEScalarPressure;
 class PressureUnit;
 class SEInflammatoryResponse;
 
+namespace io {
+  class Physiology;
+}
+
 /** @copydoc Physiology_BloodChemistrySystemData
   @nosubgrouping */
 class BIOGEARS_API SEBloodChemistrySystem : public SESystem {
+  friend io::Physiology;
+
 public:
   SEBloodChemistrySystem(Logger* logger);
   ~SEBloodChemistrySystem() override;
@@ -301,7 +307,7 @@ public:
   double GetVolumeFractionNeutralLipidInPlasma() const;
   //@}
 
- /** @name WhiteBloodCellCount
+  /** @name WhiteBloodCellCount
   *  @brief @copybrief Physiology_BloodChemistrySystemData_WhiteBloodCellCount
   *  @{*/
   /// %Test if member has been allocated
@@ -422,7 +428,6 @@ protected:
   SEScalarFraction* m_VolumeFractionNeutralLipidInPlasma;
   SEScalarAmountPerVolume* m_WhiteBloodCellCount;
 
-
   SEScalarPressure* m_ArterialCarbonDioxidePressure;
   SEScalarPressure* m_ArterialOxygenPressure;
   SEScalarPressure* m_PulmonaryArterialCarbonDioxidePressure;
@@ -435,14 +440,16 @@ protected:
 };
 
 class BIOGEARS_API SEInflammatoryResponse {
+  friend io::Physiology;
+
 public:
   SEInflammatoryResponse();
   ~SEInflammatoryResponse();
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
   static constexpr char const* const TypeTag() { return "SEInflammatoryResponse"; }
-  const char* classname() const  { return TypeTag(); }
-  size_t hash_code() const  { return TypeHash(); }
+  const char* classname() const { return TypeTag(); }
+  size_t hash_code() const { return TypeHash(); }
 
   void Clear();
 
@@ -474,7 +481,7 @@ public:
   SEScalar& GetLocalNeutrophil();
   double GetLocalNeutrophil() const;
 
-  bool HasActiveTLR() const {return m_ActiveTLR == CDM::enumOnOff::value(-1) ? false : true;};
+  bool HasActiveTLR() const { return m_ActiveTLR == CDM::enumOnOff::value(-1) ? false : true; };
   CDM::enumOnOff GetActiveTLR() { return m_ActiveTLR; };
   void SetActiveTLR(CDM::enumOnOff value) { m_ActiveTLR = value; };
 

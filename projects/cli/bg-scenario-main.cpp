@@ -11,19 +11,22 @@
 #define NOMINMAX
 
 #include <cmath>
+#include <csignal>
 #include <cstdlib>
-#include <sys/stat.h>
-
 #include <iostream>
+#include <sys/stat.h>
 
 #include "exec/Driver.h"
 #include "utils/Executor.h"
 
+#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #include <biogears/filesystem/path.h>
+#include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/string/manipulation.h>
 #include <biogears/version.h>
@@ -36,7 +39,14 @@ enum class PatientType {
   INLINE
 };
 
-int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
+void signal_callback_handler(int signum)
+{
+  std::cout << "User Requested Termination " << signum << std::endl;
+  // Terminate program
+  exit(signum);
+}
+
+int execute_scenario(Executor& ex, Logger::LogLevel log_level)
 {
   std::string trimed_scenario_path(trim(ex.Scenario()));
   auto split_scenario_path = split(trimed_scenario_path, '/');
@@ -60,49 +70,60 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
   std::string results_log_file = base_file_name + "Results.log";
   std::string results_csv_file = base_file_name + "Results.csv";
 
-  std::unique_ptr<PhysiologyEngine> eng;
+  std::unique_ptr<BioGearsEngine> eng;
   Logger console_logger;
   Logger file_logger(ex.Computed() + parent_dir + console_log_file);
   try {
 
+    file_logger.SetConsoleConversionPattern("[{%H:%M}] " + ex.Name() + " <:priority:> :message::newline:");
     file_logger.SetConsoleLogLevel(log_level);
-    file_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] " + ex.Name() + "%m%n");
-    console_logger.SetConsolesetConversionPattern("%d{%H:%M} [%p] %m%n");
-    console_logger.FormatMessages(false);
+    file_logger.FormatMessages(true);
+    file_logger.LogToConsole(true);
 
-    eng = CreateBioGearsEngine(&file_logger);
+    console_logger.SetConsoleConversionPattern("[{%H:%M}] :message::newline:");
+    console_logger.FormatMessages(true);
+    console_logger.LogToConsole(true);
+
+    eng = std::make_unique<BioGearsEngine>(&file_logger);
   } catch (std::exception e) {
     std::cout << e.what() << std::endl;
+    return 1;
   }
 
   BioGearsScenario sce(eng->GetSubstanceManager());
+
   if (!sce.Load(trim(trimed_scenario_path))) {
     if (!sce.Load("Scenarios/" + trim(trimed_scenario_path))) {
       console_logger.Error("Unable to find  " + trim(trimed_scenario_path));
     }
   }
 
+  if (ex.TrackStabilization()) {
+    eng->SetTrackStabilizationFlag(true);
+  }
   //-----------------------------------------------------------------------------------
   if (!ex.Patient().empty()) {
     sce.GetInitialParameters().SetPatientFile(ex.Patient());
   } else if (!ex.State().empty()) {
     sce.SetEngineStateFile(ex.State());
   } else {
-    std::ifstream ifs { ex.Scenario() };
-    if (!ifs.is_open()) {
-      ifs.open("Scenarios/" + ex.Scenario());
-      if (!ifs.is_open()) {
-        std::cerr << "Unable to find " << ex.Scenario() << std::endl;
-        return static_cast<int>(ExecutionErrors::SCENARIO_IO_ERROR);
-      }
+    auto io = eng->GetLogger()->GetIoManager().lock();
+    filesystem::path resolved_filepath = io->FindScenarioFile(ex.Scenario().c_str());
+    if (resolved_filepath.empty()) {
+      std::cerr << "Unable to find " << ex.Scenario() << std::endl;
+      return static_cast<int>(ExecutionErrors::SCENARIO_IO_ERROR);
     }
-    std::unique_ptr<mil::tatrc::physiology::datamodel::ScenarioData> scenario;
+    using biogears::filesystem::path;
+    using mil::tatrc::physiology::datamodel::ScenarioData;
+    std::unique_ptr<ScenarioData> scenario;
     try {
-      xml_schema::flags xml_flags;
-      xml_schema::properties xml_properties;
       std::cout << "Reading " << ex.Scenario() << std::endl;
-      xml_properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
-      scenario = mil::tatrc::physiology::datamodel::Scenario(ifs, xml_flags, xml_properties);
+      auto obj = biogears::Serializer::ReadFile(resolved_filepath,
+                                      eng->GetLogger());
+      scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
+      if (scenario == nullptr) {
+        throw std::runtime_error("Unable to load " + ex.Scenario());
+      }
     } catch (std::runtime_error e) {
       std::cout << e.what() << std::endl;
       return static_cast<int>(ExecutionErrors::SCENARIO_PARSE_ERROR);
@@ -130,7 +151,7 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
     bse.Execute(sce, ex.Computed() + parent_dir + results_csv_file, nullptr);
   } catch (...) {
     console_logger.Error("Failed " + ex.Name());
-    static_cast<int>(ExecutionErrors::BIOGEARS_RUNTIME_ERROR);
+    return static_cast<int>(ExecutionErrors::BIOGEARS_RUNTIME_ERROR);
   }
 
   return static_cast<int>(ExecutionErrors::NONE);
@@ -138,7 +159,7 @@ int execute_scenario(Executor& ex, log4cpp::Priority::Value log_level)
 
 std::string basename_(const std::string& p)
 {
-  return filesystem::path(p).basename().string();
+  return filesystem::path(p).basename();
 }
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
@@ -197,24 +218,30 @@ std::string make_usage_string_(const std::string& program_name, const boost::pro
 
 int main(int argc, char* argv[])
 {
+
+  signal(SIGINT, signal_callback_handler);
+  signal(SIGABRT, signal_callback_handler);
+
   using namespace boost::program_options;
 
-  auto log_level = log4cpp::Priority::DEBUG;
+  auto log_level = Logger::eInfo;
   std::string help_message;
 
   try {
     // Declare the supported options.
     options_description desc("Allowed options");
-    desc.add_options()
-        ("help,h", "produce help message")
-        ("name,n", value<std::string>(), "Set Scenario Name")
-        ("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver")
-        ("group,g", value<std::string>(), "Set Name of Scenario Group")
-        ("patient,p", value<std::string>(), "Specifcy the Initial Patient File")
-        ("state,s", value<std::string>(), "Specifcy the Initial Patient State File")
-        ("results,r", value<std::string>(), "Specifcy the Results File")
-        ("quiet,q", bool_switch()->default_value(false), "Supress most log messages")
-        ("version,v", bool_switch()->default_value(false), "Print linked libBioGears version");
+    desc.add_options() /**/
+      ("help,h", "produce help message") /**/
+      ("name,n", value<std::string>(), "Set Scenario Name") /**/
+      ("driver,d", value<std::string>()->default_value("ScenarioTestDriver"), "Set Scenario Driver \n  BGEUnitTestDriver\n  CDMUnitTestDriver\n  ScenarioTestDriver") /**/
+      ("group,g", value<std::string>(), "Set Name of Scenario Group") /**/
+      ("patient,p", value<std::string>(), "Specifcy the Initial Patient File") /**/
+      ("state,s", value<std::string>(), "Specifcy the Initial Patient State File") /**/
+      ("results,r", value<std::string>(), "Specifcy the Results File") /**/
+      ("quiet,q", bool_switch()->default_value(false), "Supress most log messages") /**/
+      ("loglevel,l", value<int>()->default_value(static_cast<int>(Logger::eInfo)), "Set the log filter level to supress messages above the given.\n  0:FATAL\n  1:DEBUG\n  2:ERROR\n  3:EXCEPTION\n  4:WARNING\n(5:INFO)\n6:STABILIZATION\n7:ALL") /**/
+      ("version,v", bool_switch()->default_value(false), "Sets log level to WARNING") /**/
+      ("track-stabilization", bool_switch()->default_value(false), "Turn on stabilization tracking for the scenario");
 
     options_description hidden;
     hidden.add_options()("scenario", value<std::string>(), "Specifcy the Scenario File");
@@ -231,14 +258,13 @@ int main(int argc, char* argv[])
     store(command_line_parser(argc, argv).options(all_options).positional(p).run(), vm);
     notify(vm);
 
-
     if (vm.count("help") || argc < 2) {
       std::cout << help_message << std::endl;
       return static_cast<int>(ExecutionErrors::NONE);
     }
 
     if (vm["version"].as<bool>()) {
-      std::cout << biogears::project_name() << "-" << biogears::version_string() << std::endl;
+      std::cout << branded_version_string_str() << std::endl;
       return static_cast<int>(ExecutionErrors::NONE);
     }
 
@@ -255,6 +281,10 @@ int main(int argc, char* argv[])
       ex.Name(name);
     }
 
+    if (vm["track-stabilization"].as<bool>()) {
+      ex.TrackStabilization(true);
+    }
+
     if (vm["driver"].as<std::string>() == "BGEUnitTestDriver") {
       ex.Driver(EDriver::BGEUnitTestDriver);
     } else if (vm["driver"].as<std::string>() == "CDMUnitTestDriver") {
@@ -266,7 +296,17 @@ int main(int argc, char* argv[])
     }
 
     if (vm["quiet"].as<bool>()) {
-      log_level = log4cpp::Priority::WARN;
+      log_level = Logger::eWarning;
+    } else {
+      int level = vm["loglevel"].as<int>();
+      log_level = (static_cast<int>(Logger::eFatal) == level) ? Logger::eFatal
+        : (static_cast<int>(Logger::eDebug) == level)         ? Logger::eDebug
+        : (static_cast<int>(Logger::eError) == level)         ? Logger::eError
+        : (static_cast<int>(Logger::eException) == level)     ? Logger::eException
+        : (static_cast<int>(Logger::eWarning) == level)       ? Logger::eWarning
+        : (static_cast<int>(Logger::eInfo) == level)          ? Logger::eInfo
+        : (static_cast<int>(Logger::eStabilization) == level) ? Logger::eStabilization
+                                                             : Logger::eAll;
     }
 
     if (vm.count("patient")) {
@@ -341,7 +381,7 @@ int main(int argc, char* argv[])
     return execute_scenario(ex, log_level);
 
   } catch (boost::program_options::required_option /*e*/) {
-      std::cerr << "\n";
+    std::cerr << "\n";
     //<< e.what() << "\n\n";
     std::cout << help_message << std::endl;
   } catch (std::exception& e) {
@@ -352,12 +392,15 @@ int main(int argc, char* argv[])
 #include "utils/Arguments.h"
 int main(int argc, char* argv[])
 {
-  auto log_level = log4cpp::Priority::DEBUG;
+  signal(SIGINT, signal_callback_handler);
+  signal(SIGABRT, signal_callback_handler);
+
+  auto log_level = Logger::eInfo;
   std::string help_message;
 
   biogears::Arguments args(
     { "H", "HELP", "V", "VERSION", "Q", "QUIET" }, /*Options*/
-    { "N", "NAME", "D", "DRIVER", "G", "GROUP", "P", "PATIENT", "S", "STATE", "R", "RESULTS", "SCENARIO" }, /*Keywords*/
+    { "N", "NAME", "D", "DRIVER", "G", "GROUP", "P", "PATIENT", "S", "STATE", "R", "RESULTS", "SCENARIO", "L", "LOGLEVEL" }, /*Keywords*/
     {} /*MultiWords*/
   );
   args.set_required_keywords({ "SCENARIO" });
@@ -408,8 +451,44 @@ int main(int argc, char* argv[])
     ex.Driver(EDriver::ScenarioTestDriver);
   }
 
+  if (args.Option("LOGLEVEL")) {
+    try {
+      auto level = std::stoi(args.Keyword("LOGLEVEL"));
+      log_level = (static_cast<int>(Logger::eFatal) == level) ? Logger::eFatal
+        : (static_cast<int>(Logger::eFatal) == level)         ? Logger::eFatal
+        : (static_cast<int>(Logger::eError) == level)         ? Logger::eError
+        : (static_cast<int>(Logger::eException) == level)     ? Logger::eException
+        : (static_cast<int>(Logger::eWarning) == level)       ? Logger::eWarning
+        : (static_cast<int>(Logger::eInfo) == level)          ? Logger::eInfo
+        : (static_cast<int>(Logger::eStabilization) == level) ? Logger::eStabilization
+                                                             : Logger::eAll;
+    } catch (std::exception) {
+      std::cerr << "Error: LOGLEVEL given but " << args.Keyword("LOGLEVEL") << " is not a valid Integer.\n";
+      std::cerr << args.usuage_string();
+      return static_cast<int>(ExecutionErrors::ARGUMENT_ERROR);
+    }
+  }
+
+  if (args.Option("L")) {
+    try {
+      auto level = std::stoi(args.Keyword("L"));
+      log_level = (static_cast<int>(Logger::eFatal) == level) ? Logger::eFatal
+        : (static_cast<int>(Logger::eFatal) == level)         ? Logger::eFatal
+        : (static_cast<int>(Logger::eError) == level)         ? Logger::eError
+        : (static_cast<int>(Logger::eException) == level)     ? Logger::eException
+        : (static_cast<int>(Logger::eWarning) == level)       ? Logger::eWarning
+        : (static_cast<int>(Logger::eInfo) == level)          ? Logger::eInfo
+        : (static_cast<int>(Logger::eStabilization) == level) ? Logger::eStabilization
+                                                             : Logger::eAll;
+    } catch (std::exception) {
+      std::cerr << "Error: L given but " << args.Keyword("L") << " is not a valid Integer.\n";
+      std::cerr << args.usuage_string();
+      return static_cast<int>(ExecutionErrors::ARGUMENT_ERROR);
+    }
+  }
+
   if (args.Option("quiet")) {
-    log_level = log4cpp::Priority::WARN;
+    log_level = Logger::eWarning;
   }
 
   if (args.KeywordFound("PATIENT") || args.KeywordFound("P")) {

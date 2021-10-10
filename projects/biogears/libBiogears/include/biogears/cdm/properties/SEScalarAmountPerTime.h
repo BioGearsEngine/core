@@ -20,11 +20,14 @@ public:
   AmountPerTimeUnit(const char* u);
   AmountPerTimeUnit(const std::string& u);
 
-  virtual ~AmountPerTimeUnit() override = default;
+  virtual ~AmountPerTimeUnit() override;
+
+  bool operator==(const AmountPerTimeUnit&) const;
+  bool operator!=(const AmountPerTimeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
-  static const AmountPerTimeUnit& GetCompoundUnit(const  char* unit);
+  static const AmountPerTimeUnit& GetCompoundUnit(const char* unit);
   static const AmountPerTimeUnit& GetCompoundUnit(const std::string& unit);
 
   static AmountPerTimeUnit mol_Per_day;
@@ -35,12 +38,20 @@ public:
   static AmountPerTimeUnit umol_Per_min;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<AmountPerTimeUnit>;
+
 class BIOGEARS_API SEScalarAmountPerTime : public SEScalarQuantity<AmountPerTimeUnit> {
 
 public:
-  SEScalarAmountPerTime() = default;
-  virtual ~SEScalarAmountPerTime() = default;
+  SEScalarAmountPerTime();
+  virtual ~SEScalarAmountPerTime();
 
   CDM::ScalarAmountPerTimeData* Unload() const override;
+
+  using SEScalarQuantity<AmountPerTimeUnit>::SetValue;
+  using SEScalarQuantity<AmountPerTimeUnit>::GetValue;
+
+  bool operator==(const SEScalarAmountPerTime&) const;
+  bool operator!=(const SEScalarAmountPerTime&) const;
 };
 }

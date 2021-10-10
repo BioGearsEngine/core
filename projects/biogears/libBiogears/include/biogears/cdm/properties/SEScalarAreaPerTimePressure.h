@@ -17,15 +17,13 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class BIOGEARS_API AreaPerTimePressureUnit : public CCompoundUnit {
 public:
-  AreaPerTimePressureUnit(const char* u)
-    : AreaPerTimePressureUnit(std::string{ u })
-  {
-  }
-  AreaPerTimePressureUnit(const std::string& u)
-    : CCompoundUnit(u)
-  {
-  }
-  virtual ~AreaPerTimePressureUnit() = default;
+  AreaPerTimePressureUnit(const char* u);
+  AreaPerTimePressureUnit(const std::string& u);
+
+  virtual ~AreaPerTimePressureUnit(); 
+
+  bool operator==(const AreaPerTimePressureUnit&) const;
+  bool operator!=(const AreaPerTimePressureUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -38,11 +36,19 @@ public:
   static const AreaPerTimePressureUnit cm2_Per_min_mmHg;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<AreaPerTimePressureUnit>;
+
 class BIOGEARS_API SEScalarAreaPerTimePressure : public SEScalarQuantity<AreaPerTimePressureUnit> {
 public:
-  SEScalarAreaPerTimePressure() = default;
-  virtual ~SEScalarAreaPerTimePressure() = default;
+  SEScalarAreaPerTimePressure();
+  virtual ~SEScalarAreaPerTimePressure();
 
-  CDM::ScalarAreaPerTimePressureData* Unload() const override;
+  CDM::ScalarAreaPerTimePressureData* Unload() const override;   
+
+  using SEScalarQuantity<AreaPerTimePressureUnit>::SetValue;
+  using SEScalarQuantity<AreaPerTimePressureUnit>::GetValue;
+
+  bool operator==(const SEScalarAreaPerTimePressure&) const;
+  bool operator!=(const SEScalarAreaPerTimePressure&) const;
 };
 }

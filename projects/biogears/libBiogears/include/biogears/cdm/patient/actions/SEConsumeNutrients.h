@@ -18,7 +18,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEConsumeNutrients : public SEPatientAction {
+  friend io::PatientActions;
+
 public:
   SEConsumeNutrients();
   virtual ~SEConsumeNutrients() override;
@@ -34,10 +39,6 @@ public:
   virtual bool Load(const CDM::ConsumeNutrientsData& in);
   virtual CDM::ConsumeNutrientsData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::ConsumeNutrientsData& data) const;
-
-public:
   bool HasNutrition() const;
   SENutrition& GetNutrition();
   const SENutrition* GetNutrition() const;
@@ -50,6 +51,13 @@ public:
   virtual void InvalidateNutritionFile();
 
   virtual void ToString(std::ostream& str) const override;
+   
+  bool operator==( const SEConsumeNutrients& rhs) const;
+  bool operator!=( const SEConsumeNutrients& rhs) const;
+
+protected:
+  virtual void Unload(CDM::ConsumeNutrientsData& data) const;
+
 
 protected:
   SENutrition* m_Nutrition;

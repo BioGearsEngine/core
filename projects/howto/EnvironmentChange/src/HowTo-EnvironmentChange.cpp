@@ -10,8 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
-
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
@@ -21,12 +19,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEActiveHeating.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 #include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
+#include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
-#include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/string/manipulation.h>
 
+#include <sstream>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ using namespace biogears;
 /// Refer to the SEEnvironmentChange class
 /// Refer to the SEEnvironmentHeating class
 //--------------------------------------------------------------------------------------------------
-void HowToEnvironmentChange()
+int HowToEnvironmentChange()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToEnvironmentChange.log");
@@ -64,7 +64,7 @@ void HowToEnvironmentChange()
 
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // Get some substances out we will use
@@ -73,7 +73,6 @@ void HowToEnvironmentChange()
   SESubstance* CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide");
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
@@ -94,15 +93,15 @@ void HowToEnvironmentChange()
   bg->AdvanceModelTime(50, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient is nice and healthy");
-  bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
-  bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-  bg->GetLogger()->Info(std::stringstream() << "Skin Temperature : " << bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C) << TemperatureUnit::C);
-  bg->GetLogger()->Info(std::stringstream() << "Core Temperature : " << bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << TemperatureUnit::C);
-  bg->GetLogger()->Info(std::stringstream() << "Total Metabolic Rate : " << bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W) << PowerUnit::W);
-  bg->GetLogger()->Info(std::stringstream() << "Systemic Vascular Resistance : " << bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL) << FlowResistanceUnit::mmHg_s_Per_mL);
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature : %f %s", bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W"));
+  bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
   ;
 
   // EnvironmentChange Starts - instantiate a EnvironmentChange action and have the engine process it
@@ -126,15 +125,15 @@ void HowToEnvironmentChange()
   bg->ProcessAction(env);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
-  bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
-  bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-  bg->GetLogger()->Info(std::stringstream() << "Skin Temperature : " << bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C) << TemperatureUnit::C);
-  bg->GetLogger()->Info(std::stringstream() << "Core Temperature : " << bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << TemperatureUnit::C);
-  bg->GetLogger()->Info(std::stringstream() << "Total Metabolic Rate : " << bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W) << PowerUnit::W);
-  bg->GetLogger()->Info(std::stringstream() << "Systemic Vascular Resistance : " << bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL) << FlowResistanceUnit::mmHg_s_Per_mL);
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature : %f %s", bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W"));
+  bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
   ;
 
   // The patient is removed from the water and returns to the normal environment.
@@ -154,15 +153,15 @@ void HowToEnvironmentChange()
   bg->ProcessAction(env);
   bg->AdvanceModelTime(60, TimeUnit::s);
 
-  bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
-  bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-  bg->GetLogger()->Info(std::stringstream() << "Skin Temperature : " << bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C) << TemperatureUnit::C);
-  bg->GetLogger()->Info(std::stringstream() << "Core Temperature : " << bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << TemperatureUnit::C);
-  bg->GetLogger()->Info(std::stringstream() << "Total Metabolic Rate : " << bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W) << PowerUnit::W);
-  bg->GetLogger()->Info(std::stringstream() << "Systemic Vascular Resistance : " << bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL) << FlowResistanceUnit::mmHg_s_Per_mL);
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature : %f %s", bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W"));
+  bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
   bg->GetLogger()->Info("");
 
   //The patient’s skin temperature continues to rise as they are actively heated at 340 btu/hr. Both core temperature and skin
@@ -172,15 +171,21 @@ void HowToEnvironmentChange()
   bg->ProcessAction(heat);
   bg->AdvanceModelTime(120, TimeUnit::s);
 
-  bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
-  bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-  bg->GetLogger()->Info(std::stringstream() << "Skin Temperature : " << bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C) << TemperatureUnit::C);
-  bg->GetLogger()->Info(std::stringstream() << "Core Temperature : " << bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << TemperatureUnit::C);
-  bg->GetLogger()->Info(std::stringstream() << "Total Metabolic Rate : " << bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W) << PowerUnit::W);
-  bg->GetLogger()->Info(std::stringstream() << "Systemic Vascular Resistance : " << bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL) << FlowResistanceUnit::mmHg_s_Per_mL);
-  ;
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature : %f %s", bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W"));
+  bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
+
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+
+
+int main ( int argc, char* argv[] ) {
+  return HowToEnvironmentChange();
 }

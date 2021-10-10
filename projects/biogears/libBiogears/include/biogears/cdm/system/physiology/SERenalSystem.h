@@ -11,9 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include "biogears/cdm/properties/SEScalarVolumePerTimePressure.h"
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
-#include "biogears/cdm/properties/SEScalarVolumePerTimePressure.h"
 
 namespace biogears {
 class SEScalarPressure;
@@ -21,12 +21,8 @@ class PressureUnit;
 class SEScalarFraction;
 class SEScalarVolumePerTime;
 class VolumePerTimeUnit;
-class SEScalarFlowCompliance;
-class FlowComplianceUnit;
 class SEScalarFlowResistance;
 class FlowResistanceUnit;
-class SEScalarFrequency;
-class FrequencyUnit;
 class SEScalarVolume;
 class VolumeUnit;
 class SEScalarVolumePerTimePressure;
@@ -35,17 +31,24 @@ class SEScalarArea;
 class AreaUnit;
 class SEScalarVolumePerTimePressureArea;
 class VolumePerTimePressureAreaUnit;
+class SEScalarOsmolarity;
 class OsmolarityUnit;
+class SEScalarOsmolality;
 class OsmolalityUnit;
+class SEScalarMassPerVolume;
 class MassPerVolumeUnit;
-
+namespace io {
+  class Physiology;
+}
 class BIOGEARS_API SERenalSystem : public SESystem {
+  friend io::Physiology;
+
 public:
   SERenalSystem(Logger* logger);
   ~SERenalSystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SERenalSystem"; }
+  static constexpr char const* const TypeTag() { return "SERenalSystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -58,10 +61,15 @@ public:
   CDM::RenalSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::RenalSystemData& data) const;
 
 public:
+  bool HasBladderPressure() const;
+  SEScalarPressure& GetBladderPressure();
+  double GetBladderPressure(const PressureUnit& unit) const;
+
   bool HasGlomerularFiltrationRate() const;
   SEScalarVolumePerTime& GetGlomerularFiltrationRate();
   double GetGlomerularFiltrationRate(const VolumePerTimeUnit& unit) const;
@@ -283,6 +291,7 @@ public:
   double GetUrineUreaNitrogenConcentration(const MassPerVolumeUnit& unit) const;
 
 protected:
+  SEScalarPressure* m_BladderPressure;
   SEScalarVolumePerTime* m_GlomerularFiltrationRate;
   SEScalarFraction* m_FiltrationFraction;
 

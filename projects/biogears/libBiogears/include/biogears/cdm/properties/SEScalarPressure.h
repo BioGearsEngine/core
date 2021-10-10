@@ -20,7 +20,10 @@ public:
   PressureUnit(const char* u);
   PressureUnit(const std::string& u);
 
-  virtual ~PressureUnit() = default;
+  virtual ~PressureUnit();
+
+  bool operator==(const PressureUnit&) const;
+  bool operator!=(const PressureUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -34,11 +37,19 @@ public:
   static const PressureUnit atm;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<PressureUnit>;
+
 class BIOGEARS_API SEScalarPressure : public SEScalarQuantity<PressureUnit> {
 public:
-  SEScalarPressure() = default;
-  virtual ~SEScalarPressure() = default;
+  SEScalarPressure();
+  virtual ~SEScalarPressure();
 
   CDM::ScalarPressureData* Unload() const override;
+
+  using SEScalarQuantity<PressureUnit>::SetValue;
+  using SEScalarQuantity<PressureUnit>::GetValue;
+
+  bool operator==(const SEScalarPressure&) const;
+  bool operator!=(const SEScalarPressure&) const;
 };
 }

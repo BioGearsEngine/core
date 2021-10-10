@@ -21,6 +21,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
+#include <vector>
+
 CDM_BIND_DECL(SubstanceData)
 
 namespace biogears {
@@ -45,8 +47,12 @@ class SEScalarPressure;
 class PressureUnit;
 class SEScalarTimeMassPerVolume;
 class TimeMassPerVolumeUnit;
-
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstance : public Loggable {
+  friend io::Substance;
+
 public:
   SESubstance(Logger* logger);
   virtual ~SESubstance();
@@ -59,10 +65,6 @@ public:
   virtual bool Load(const CDM::SubstanceData& in);
   virtual CDM::SubstanceData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstanceData& data) const;
-
-public:
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;
   virtual void SetName(const char* name);
@@ -183,6 +185,12 @@ public:
   virtual const SESubstancePharmacodynamics* GetPD() const;
   virtual void RemovePD();
 
+  bool operator==(const SESubstance& rhs) const;
+  bool operator!=(const SESubstance& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstanceData& data) const;
+
 protected:
   std::string m_Name;
   CDM::enumSubstanceClass::value m_Classification;
@@ -216,4 +224,8 @@ protected:
   SESubstancePharmacokinetics* m_PK;
   SESubstancePharmacodynamics* m_PD;
 };
+} //namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SESubstance*>;
 }

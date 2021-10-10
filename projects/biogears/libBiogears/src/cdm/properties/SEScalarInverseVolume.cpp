@@ -16,13 +16,27 @@ namespace biogears {
 const InverseVolumeUnit InverseVolumeUnit::Inverse_L("1/L");
 const InverseVolumeUnit InverseVolumeUnit::Inverse_mL("1/mL");
 
+template class SEScalarQuantity<InverseVolumeUnit>;
+
 InverseVolumeUnit::InverseVolumeUnit(const char* u)
-  : InverseVolumeUnit(std::string{ u })
+  : InverseVolumeUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 InverseVolumeUnit::InverseVolumeUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+InverseVolumeUnit::~InverseVolumeUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarInverseVolume::SEScalarInverseVolume()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarInverseVolume::~SEScalarInverseVolume()
 {
 }
 //-------------------------------------------------------------------------------
@@ -37,9 +51,9 @@ CDM::ScalarInverseVolumeData* SEScalarInverseVolume::Unload() const
 //-------------------------------------------------------------------------------
 bool InverseVolumeUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(Inverse_L.GetString(),unit) == 0)
+  if (strcmp(Inverse_L.GetString(), unit) == 0)
     return true;
-  if (strcmp(Inverse_mL.GetString(),unit) == 0)
+  if (strcmp(Inverse_mL.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -51,9 +65,9 @@ bool InverseVolumeUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const InverseVolumeUnit& InverseVolumeUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(Inverse_L.GetString(),unit) == 0)
+  if (strcmp(Inverse_L.GetString(), unit) == 0)
     return Inverse_L;
-  if (strcmp(Inverse_mL.GetString(),unit) == 0)
+  if (strcmp(Inverse_mL.GetString(), unit) == 0)
     return Inverse_mL;
   std::stringstream err;
   err << unit << " is not a valid Volume unit";
@@ -65,4 +79,24 @@ const InverseVolumeUnit& InverseVolumeUnit::GetCompoundUnit(const std::string& u
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool InverseVolumeUnit::operator==(const InverseVolumeUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool InverseVolumeUnit::operator!=(const InverseVolumeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarInverseVolume::operator==(const SEScalarInverseVolume& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarInverseVolume::operator!=(const SEScalarInverseVolume& obj) const
+{
+  return !(*this == obj);
+}
 }

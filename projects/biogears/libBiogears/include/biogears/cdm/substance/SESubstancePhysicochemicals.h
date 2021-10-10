@@ -11,15 +11,22 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/schema/cdm/Substance.hxx>
 
 CDM_BIND_DECL(SubstancePhysicochemicalData)
 
 namespace biogears {
+  class SEScalar;
+  class SEScalarFraction;
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstancePhysicochemicals : public Loggable {
+  friend io::Substance;
+
 public:
   SESubstancePhysicochemicals(Logger* logger);
   virtual ~SESubstancePhysicochemicals();
@@ -33,18 +40,13 @@ public:
   virtual bool Load(const CDM::SubstancePhysicochemicalData& in);
   virtual CDM::SubstancePhysicochemicalData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstancePhysicochemicalData& data) const;
+  virtual bool HasPrimaryPKA() const;
+  virtual SEScalar& GetPrimaryPKA();
+  virtual double GetPrimaryPKA() const;
 
-public:
-  
-   virtual bool HasPrimaryPKA() const;
-   virtual SEScalar& GetPrimaryPKA();
-   virtual double GetPrimaryPKA() const;
- 
-   virtual bool HasSecondaryPKA() const;
-   virtual SEScalar& GetSecondaryPKA();
-   virtual double GetSecondaryPKA() const;
+  virtual bool HasSecondaryPKA() const;
+  virtual SEScalar& GetSecondaryPKA();
+  virtual double GetSecondaryPKA() const;
 
   virtual CDM::enumSubstanceBindingProtein::value GetBindingProtein() const;
   virtual void SetBindingProtein(CDM::enumSubstanceBindingProtein::value state);
@@ -74,7 +76,13 @@ public:
 
   virtual bool HasPolarSurfaceArea() const;
   virtual SEScalar& GetPolarSurfaceArea();
-  virtual double GetPolarSurfaceArea() const;
+  virtual double GetPolarSurfaceArea() const;       
+  
+  bool operator==( const SESubstancePhysicochemicals& rhs) const;
+  bool operator!=( const SESubstancePhysicochemicals& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstancePhysicochemicalData& data) const;
 
 protected:
   std::vector<SEScalar*> m_AcidDissociationConstants;
@@ -85,6 +93,5 @@ protected:
   SEScalar* m_LogP;
   SEScalar* m_HydrogenBondCount;
   SEScalar* m_PolarSurfaceArea;
-
 };
 }

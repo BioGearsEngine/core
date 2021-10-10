@@ -13,7 +13,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
+namespace std {
+template class map<string, biogears::SESubstanceTissuePharmacokinetics*>;
+}
+
 namespace biogears {
+
 SESubstancePharmacokinetics::SESubstancePharmacokinetics(Logger* logger)
   : Loggable(logger)
 {
@@ -43,7 +48,7 @@ bool SESubstancePharmacokinetics::IsValid() const
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstancePharmacokinetics::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstancePharmacokinetics::GetScalar(const std::string& name)
@@ -116,7 +121,7 @@ bool SESubstancePharmacokinetics::HasTissueKinetics() const
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacokinetics::HasTissueKinetics(const char* name) const
 {
-  return HasTissueKinetics(std::string{ name });
+  return HasTissueKinetics(std::string { name });
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacokinetics::HasTissueKinetics(const std::string& name) const
@@ -129,7 +134,7 @@ bool SESubstancePharmacokinetics::HasTissueKinetics(const std::string& name) con
 //-----------------------------------------------------------------------------
 SESubstanceTissuePharmacokinetics& SESubstancePharmacokinetics::GetTissueKinetics(const char* name)
 {
-  return GetTissueKinetics(std::string{ name });
+  return GetTissueKinetics(std::string { name });
 }
 //-----------------------------------------------------------------------------
 SESubstanceTissuePharmacokinetics& SESubstancePharmacokinetics::GetTissueKinetics(const std::string& name)
@@ -144,7 +149,7 @@ SESubstanceTissuePharmacokinetics& SESubstancePharmacokinetics::GetTissueKinetic
 //-----------------------------------------------------------------------------
 const SESubstanceTissuePharmacokinetics* SESubstancePharmacokinetics::GetTissueKinetics(const char* name) const
 {
-  return GetTissueKinetics(std::string{ name });
+  return GetTissueKinetics(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SESubstanceTissuePharmacokinetics* SESubstancePharmacokinetics::GetTissueKinetics(const std::string& name) const
@@ -165,4 +170,24 @@ void SESubstancePharmacokinetics::RemoveTissueKinetics(const std::string& name)
   m_TissueKinetics.erase(name);
 }
 //-----------------------------------------------------------------------------
+bool SESubstancePharmacokinetics::operator==(const SESubstancePharmacokinetics& rhs) const
+{
+  bool equivilant = (m_Physicochemicals && rhs.m_Physicochemicals) ? m_Physicochemicals->operator==(*rhs.m_Physicochemicals) : m_Physicochemicals == rhs.m_Physicochemicals;
+  equivilant &= m_TissueKinetics.size() == rhs.m_TissueKinetics.size();
+  if (equivilant) {
+    for (auto& pair : m_TissueKinetics) {
+      //auto lh = m_TissueKinetics.find(pair.first);
+      auto rh = rhs.m_TissueKinetics.find(pair.first);
+      if (rh != rhs.m_TissueKinetics.end()) {
+        equivilant &= (pair.second && rh->second) ? *pair.second == *rh->second : pair.second == rh->second;
+      }
+    }
+  }
+  return equivilant;
+}
+//-----------------------------------------------------------------------------
+bool SESubstancePharmacokinetics::operator!=(const SESubstancePharmacokinetics& rhs) const
+{
+  return !(*this == rhs);
+}
 }

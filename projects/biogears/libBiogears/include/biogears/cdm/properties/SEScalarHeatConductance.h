@@ -20,7 +20,10 @@ public:
   HeatConductanceUnit(const char* u);
   HeatConductanceUnit(const std::string& u);
 
-  virtual ~HeatConductanceUnit() = default;
+  virtual ~HeatConductanceUnit();    
+
+  bool operator==(const HeatConductanceUnit&) const;
+  bool operator!=(const HeatConductanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -33,11 +36,19 @@ public:
   static const HeatConductanceUnit kcal_Per_C_s;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<HeatConductanceUnit>;
+
 class BIOGEARS_API SEScalarHeatConductance : public SEScalarQuantity<HeatConductanceUnit> {
 public:
-  SEScalarHeatConductance() = default;
-  virtual ~SEScalarHeatConductance() = default;
+  SEScalarHeatConductance();
+  virtual ~SEScalarHeatConductance();
 
   CDM::ScalarHeatConductanceData* Unload() const override;
+
+  using SEScalarQuantity<HeatConductanceUnit>::SetValue;
+  using SEScalarQuantity<HeatConductanceUnit>::GetValue;
+
+  bool operator==(const SEScalarHeatConductance&) const;
+  bool operator!=(const SEScalarHeatConductance&) const;
 };
 }

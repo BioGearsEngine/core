@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const ElectricChargeUnit ElectricChargeUnit::C("C");
 
+template class SEScalarQuantity<ElectricChargeUnit>;
+
 ElectricChargeUnit::ElectricChargeUnit(const char* u)
   : ElectricChargeUnit(std::string(u))
 {
@@ -23,6 +25,18 @@ ElectricChargeUnit::ElectricChargeUnit(const char* u)
 ElectricChargeUnit::ElectricChargeUnit(const std::string& u)
   : CCompoundUnit(u)
 {
+}
+//-----------------------------------------------------------------------------
+ElectricChargeUnit::~ElectricChargeUnit(){
+
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricCharge::SEScalarElectricCharge(){
+
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricCharge::~SEScalarElectricCharge(){
+
 }
 //-----------------------------------------------------------------------------
 CDM::ScalarElectricChargeData* SEScalarElectricCharge::Unload() const
@@ -60,4 +74,25 @@ const ElectricChargeUnit& ElectricChargeUnit::GetCompoundUnit(const std::string&
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool ElectricChargeUnit::operator==(const ElectricChargeUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool ElectricChargeUnit::operator!=(const ElectricChargeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarElectricCharge::operator==(const SEScalarElectricCharge& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarElectricCharge::operator!=(const SEScalarElectricCharge& obj) const
+{
+  return !(*this == obj);
+}
 }

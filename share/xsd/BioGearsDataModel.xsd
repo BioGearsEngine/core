@@ -2,6 +2,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
   
   <xs:include schemaLocation="CommonDataModel.xsd"/>
-  <xs:include schemaLocation="./biogears/BioGears.xsd"/>
+  <xs:include schemaLocation="biogears/BioGears.xsd"/>
 
 </xs:schema>

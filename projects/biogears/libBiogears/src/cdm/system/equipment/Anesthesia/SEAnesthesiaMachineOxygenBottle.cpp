@@ -16,6 +16,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
+namespace io {
+  class Anesthesia;
+}
 SEAnesthesiaMachineOxygenBottle::SEAnesthesiaMachineOxygenBottle(Logger* logger)
   : Loggable(logger)
 {
@@ -65,7 +68,7 @@ void SEAnesthesiaMachineOxygenBottle::Merge(const SEAnesthesiaMachineOxygenBottl
 //-------------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachineOxygenBottle::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachineOxygenBottle::GetScalar(const std::string& name)

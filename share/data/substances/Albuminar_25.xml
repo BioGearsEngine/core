@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+  <Name>Albuminar_25</Name>
+  <Component Name="Albumin">
+    <Concentration readOnly="false" unit="g/dL" value="25.0"/>
+  </Component>
+  <Component Name="Sodium">
+    <Concentration readOnly="false" unit="g/dL" value="0.32"/>
+  </Component>
+</SubstanceCompound>

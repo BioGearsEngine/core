@@ -48,6 +48,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
+namespace std {
+template class std::map<const biogears::SESubstance*, biogears::SESubstanceBolusState*>;
+template class std::map<const biogears::SESubstance*, biogears::SENasalState*>;
+template class std::map<const biogears::SESubstance*, biogears::SETransmucosalState*>;
+}
+
 namespace biogears {
 auto Drugs::make_unique(BioGears& bg) -> std::unique_ptr<Drugs>
 {
@@ -77,7 +83,6 @@ void Drugs::Clear()
   m_IVToVenaCava = nullptr;
   m_Sarin = nullptr;
   m_Pralidoxime = nullptr;
-  m_totalAdministered_uL = 0.0;
   DELETE_MAP_SECOND(m_BolusAdministrations);
 }
 
@@ -105,7 +110,6 @@ void Drugs::Initialize()
   m_data.GetBloodChemistry().GetHemoglobinLostToUrine().SetValue(0.0, MassUnit::g); //Need to initialize here since Drugs processed before BloodChemistry
   m_data.GetBloodChemistry().GetRhTransfusionReactionVolume().SetValue(0.0, VolumeUnit::uL);
 
-  m_totalAdministered_uL = 0.0;
   m_SarinRbcAcetylcholinesteraseComplex_nM = 0.0;
   m_AgedRbcAcetylcholinesterase_nM = 0.0;
 }
@@ -125,7 +129,7 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
     if (sub == nullptr) {
       /// \error Error: Unable to find substance for IV bolus administration
       m_ss << "Unable to find substance " << bData.Substance();
-      Error(m_ss, "Drugs::Load::BolusAdministration");
+      Error(m_ss.str(), "Drugs::Load::BolusAdministration");
       return false;
     }
     SESubstanceBolusState* bolusState = new SESubstanceBolusState(*sub);
@@ -137,12 +141,24 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
     SESubstance* sub = m_data.GetSubstances().GetSubstance(otData.Substance());
     if (sub == nullptr) {
       m_ss << "Unable to find subtance " << otData.Substance();
-      Error(m_ss, "Drugs::Load::OralAdministration");
+      Error(m_ss.str(), "Drugs::Load::OralAdministration");
       return false;
     }
     SETransmucosalState* otState = new SETransmucosalState(*sub);
     m_TransmucosalStates[sub] = otState;
     otState->Load(otData);
+  }
+
+  for (const CDM::NasalStateData& nData : in.NasalStates()) {
+    SESubstance* sub = m_data.GetSubstances().GetSubstance(nData.Substance());
+    if (sub == nullptr) {
+      m_ss << "Unable to find subtance " << nData.Substance();
+      Error(m_ss.str(), "Drugs::Load::NasalAdministration");
+      return false;
+    }
+    SENasalState* nState = new SENasalState(*sub);
+    m_NasalStates[sub] = nState;
+    nState->Load(nData);
   }
 
   return true;
@@ -168,6 +184,11 @@ void Drugs::Unload(CDM::BioGearsDrugSystemData& data) const
     if (itr.second != nullptr)
       data.TransmucosalStates().push_back(std::unique_ptr<CDM::TransmucosalStateData>(itr.second->Unload()));
   }
+
+  for (auto itr : m_NasalStates) {
+    if (itr.second != nullptr)
+      data.NasalStates().push_back(std::unique_ptr<CDM::NasalStateData>(itr.second->Unload()));
+  }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -191,7 +212,7 @@ void Drugs::SetUp()
   //Need to set up pointers for Sarin and Pralidoxime to handle nerve agent events since they use a different method to calculate effects
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
   m_Pralidoxime = m_data.GetSubstances().GetSubstance("Pralidoxime");
-  m_totalAdministered_uL = 0.0;
+  m_Atropine = m_data.GetSubstances().GetSubstance("Atropine");
   DELETE_MAP_SECOND(m_BolusAdministrations);
 }
 
@@ -217,6 +238,7 @@ void Drugs::AtSteadyState()
 void Drugs::PreProcess()
 {
   AdministerSubstanceBolus();
+  AdministerSubstanceNasal();
   AdministerSubstanceOral();
   AdministerSubstanceInfusion();
   AdministerSubstanceCompoundInfusion();
@@ -244,7 +266,12 @@ void Drugs::Process()
     CalculateDrugEffects();
   }
 }
-
+//--------------------------------------------------------------------------------------------------
+/// \brief
+//  Dugs Postprocess functions
+void Drugs::PostProcess()
+{
+}
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Increments the mass of a substance to represent drug injection
@@ -384,6 +411,140 @@ void Drugs::AdministerSubstanceInfusion()
 
 //-------------------------------------------------------------------------------------------------
 /// \brief
+/// Administer drugs via nasal route
+///
+/// \details
+/// This function administers drug into the nose as substance that can interact with three different
+/// sections: anterior, posterior, and gastrointestinal. Drug is initially deposited in the anterior
+/// and posterior sections and goes through rate constant-determined translocation into either uptake
+/// or excretion through the GI section. This administration path is generalized and assumes that the
+/// drug has a carrier, however, adjustment of drug release constants allows for administration with
+/// non-carrier drugs
+//-------------------------------------------------------------------------------------------------
+void Drugs::AdministerSubstanceNasal()
+{
+  const std::map<const SESubstance*, SESubstanceNasalDose*>& nasalDoses = m_data.GetActions().GetPatientActions().GetSubstanceNasalDoses();
+  if (nasalDoses.empty())
+    return;
+
+  SESubstanceNasalDose* nDose;
+  const SESubstance* nSub;
+  std::vector<const SESubstance*> deactiveSubs;
+  for (auto nd : nasalDoses) {
+    nSub = nd.first;
+    nDose = nd.second;
+
+    SENasalState* nState = m_NasalStates[nSub];
+    if (nState == nullptr) {
+      //If it doesn't exist yet, make a new model state for the substance and initialize it
+      nState = new SENasalState(*nSub);
+      if (!nState->Initialize(nDose->GetDose())) {
+        Error("SENasalState::Probable vector length mismatch");
+      }
+      m_NasalStates[nSub] = nState;
+    }
+
+    double newNasalDose_mg = nDose->GetDose().GetValue(MassUnit::mg);
+
+    //Rate constants in 1/s
+    const double nasalk1 = 0.00001736111; //translocation rate constant of unreleased substance from the anterior to the posterior section
+    const double nasalk2 = 1000000; // rate constant of release from drug carrier in anterior section
+    const double nasalk3 = 0.00001736111; // translocation rate constant of released substance from the anterior to the posterior section
+    const double nasalk4 = 0.000173; // absorption rate constant in anterior section
+    const double nasalk5 = 0.0011575; // translocation rate constant of unreleased substance from the posterior to the gastrointestinal section
+    const double nasalk6 = 1000000; // rate constant of release from drug carrier in posterior section
+    const double nasalk7 = 0.0011575; // translocation rate constant of released substance from the posterior to the gastrointestinal section
+    const double nasalk8 = 0.0000260; // absorption rate constant in posterior section
+    const double nasalk9 = 1000000; // rate constant of release from drug carrier in gastrointestinal section
+    const double nasalk10 = 0.000000027; // absorption rate constant in gastrointestinal section
+    const double nasalk11 = 0.00001; // rate constant of released drug degradation in anterior section
+    const double nasalk12 = 0.00001; // rate constant of released drug degradation in posterior section
+    const double nasalk13 = 0.00001; // rate constant of released drug degradation in gastrointestinal section
+    const double nasalk14 = 0.000027777; // transit rate constant of unreleased drug through gastrointestinal section
+    const double nasalk15 = 0.000027777; // transit rate constant of released drug through gastrointestinal section
+
+    //Initial Drug Distribution
+    std::vector<double> unrelMass = nState->GetUnreleasedNasalMasses(MassUnit::mg);
+    std::vector<double> relMass = nState->GetReleasedNasalMasses(MassUnit::mg);
+
+    if (0.0 != nDose->GetDose().GetValue(MassUnit::mg)) {
+      relMass[0] += (0.6 * newNasalDose_mg); // initial amount of released drug in anterior section
+      relMass[1] += (0.4 * newNasalDose_mg); // initial amount of released drug in posterior section
+    }
+    double nasalAnteriorUnreleasedInitial_mg = unrelMass[0]; // initial amount of unreleased drug in anterior section
+    double nasalAnteriorReleasedInitial_mg = relMass[0];
+    double nasalPosteriorUnreleasedInitial_mg = unrelMass[1]; // initial amount of unreleased drug in posterior section
+    double nasalPosteriorReleasedInitial_mg = relMass[1];
+    double nasalGastroUnreleasedInitial_mg = unrelMass[2]; // initial amount of unreleased drug in gastrointestinal section
+    double nasalGastroReleasedInitial_mg = relMass[2]; // initial amount of released drug in gastrointestinal section
+
+    //Intermediate Values
+    const double nasalAlpha = nasalk1 + nasalk2; //alpha
+    const double nasalBeta = nasalk5 + nasalk6; //beta
+    const double nasalGamma = nasalk9 + nasalk14; //gamma
+    const double nasalDelta = nasalk3 + nasalk4 + nasalk11; //delta
+    const double nasalEpsilon = nasalk7 + nasalk8 + nasalk12; //epsilon
+    const double nasalOmega = nasalk10 + nasalk13 + nasalk15; //omega
+
+    //Differential Equation Solution Constants
+    const double nasalC1 = (nasalk1 * nasalAnteriorUnreleasedInitial_mg) / (nasalBeta - nasalAlpha);
+    const double nasalC2 = nasalPosteriorUnreleasedInitial_mg - nasalC1;
+    const double nasalC3 = (nasalk5 * nasalC1) / (nasalGamma - nasalAlpha);
+    const double nasalC4 = (nasalk5 * nasalC2) / (nasalGamma - nasalBeta);
+    const double nasalC5 = nasalk2 * nasalAnteriorUnreleasedInitial_mg * (nasalDelta - nasalAlpha);
+    const double nasalC6 = nasalAnteriorReleasedInitial_mg - nasalk2 * nasalAnteriorUnreleasedInitial_mg * (nasalDelta - nasalAlpha);
+    const double nasalC7 = (nasalk6 * nasalC1 + nasalk3 * nasalC5) / (nasalEpsilon - nasalAlpha);
+    const double nasalC8 = (nasalk6 * nasalC2) / (nasalEpsilon - nasalBeta);
+    const double nasalC9 = (nasalk3 * nasalC6) / (nasalEpsilon - nasalDelta);
+    const double nasalC10 = (nasalk7 * nasalC7 + nasalk9 * nasalC3) / (nasalOmega - nasalAlpha);
+    const double nasalC11 = (nasalk7 * nasalC8 + nasalk9 * nasalC4) / (nasalOmega - nasalBeta);
+    const double nasalC12 = (nasalk9 * (nasalGastroUnreleasedInitial_mg - nasalC3 - nasalC4)) / (nasalOmega - nasalDelta);
+    const double nasalC13 = (nasalk7 * nasalC9) / (nasalOmega - nasalDelta);
+    const double nasalC14 = (nasalk7 * (nasalC7 - nasalC8 - nasalC9)) / (nasalOmega - nasalEpsilon);
+
+    const double nasalCp1 = nasalGastroUnreleasedInitial_mg - nasalC3 - nasalC4;
+    const double nasalCp2 = nasalPosteriorReleasedInitial_mg - nasalC7 - nasalC8 - nasalC9;
+    const double nasalCp3 = nasalGastroReleasedInitial_mg - nasalC10 - nasalC11 - nasalC12 - nasalC13 - nasalC14;
+
+    //Amounts of Unreleased Drug - ODE style
+    double dNasal_Anterior_Unreleased_Per_dt = -nasalAlpha * unrelMass[0];
+    unrelMass[0] += (dNasal_Anterior_Unreleased_Per_dt * m_dt_s);
+    double dNasal_Posterior_Unreleased_Per_dt = (nasalk1 * unrelMass[0]) - (nasalBeta * unrelMass[1]);
+    unrelMass[1] += (dNasal_Posterior_Unreleased_Per_dt * m_dt_s);
+    double dNasal_Gastro_Unreleased_Per_dt = (nasalk5 * unrelMass[1]) - (nasalGamma * unrelMass[2]);
+    unrelMass[2] += (dNasal_Gastro_Unreleased_Per_dt * m_dt_s);
+    //Amounts of Released Drug - ODE style
+    double dNasal_Anterior_Released_Per_dt = (nasalk2 * unrelMass[0]) - (nasalDelta * relMass[0]);
+    relMass[0] += (dNasal_Anterior_Released_Per_dt * m_dt_s);
+    double dNasal_Posterior_Released_Per_dt = (nasalk6 * unrelMass[1]) + (nasalk3 * relMass[0]) - (nasalEpsilon * relMass[1]);
+    relMass[1] += (dNasal_Posterior_Released_Per_dt * m_dt_s);
+    double dNasal_Gastro_Released_Per_dt = (nasalk9 * unrelMass[2]) + (nasalk7 * relMass[1]) - (nasalOmega * relMass[2]);
+    relMass[2] += (dNasal_Gastro_Released_Per_dt * m_dt_s);
+
+    // Set new released/unreleased values
+    nState->SetUnreleasedNasalMasses(unrelMass, MassUnit::mg);
+    nState->SetReleasedNasalMasses(relMass, MassUnit::mg);
+    nDose->GetDose().SetValue(0.0, MassUnit::mg); // Once dose is distributed in model, set initial dose to zero. This allows for multiple doses.
+
+    //Rate of systemic absorption of the intact drug
+    const double nasalSystemicAbsorptionRate_mg_Per_s = (nasalk4 * relMass[0]) + (nasalk8 * relMass[1]) + (nasalk10 * relMass[2]); // mg/s
+    double totalDose_mg = unrelMass[0] + unrelMass[1] + unrelMass[2] + relMass[0] + relMass[1] + relMass[2];
+
+    //Systemic bioavailability of the intact drug
+    const double nasalBioavailability = (nasalk4 * (nasalC5 / (nasalAlpha + nasalC6 / nasalDelta)) + nasalk8 * (nasalC7 / nasalAlpha + nasalC8 / nasalBeta + nasalC9 / nasalDelta + nasalCp2 / nasalEpsilon) + nasalk10 * (nasalC10 / nasalAlpha + nasalC11 / nasalBeta + nasalC12 / nasalGamma + nasalC13 / nasalDelta + nasalC14 / nasalEpsilon + nasalCp3 / nasalOmega)) / totalDose_mg;
+
+    m_venaCavaVascular->GetSubstanceQuantity(*nSub)->GetMass().IncrementValue(nasalSystemicAbsorptionRate_mg_Per_s * m_dt_s, MassUnit::mg);
+
+    if ((relMass[0] + relMass[1]) <= ZERO_APPROX) {
+      deactiveSubs.emplace_back(nSub);
+    }
+  }
+  for (auto deSub : deactiveSubs) {
+    m_data.GetActions().GetPatientActions().RemoveSubstanceNasalDose(*deSub);
+  }
+}
+//-------------------------------------------------------------------------------------------------
+/// \brief
 /// Administer drugs via transmucosal and gastrointestinal routes
 ///
 /// \details
@@ -392,7 +553,7 @@ void Drugs::AdministerSubstanceInfusion()
 /// dissolved drug that is swallowed and enters circulation through the GI and thus intitiates a GI drug state.
 /// This function intiates the transmucosal and oral states--other functions (Drugs::ProcessOralTransmucosalModel,
 /// Gastrointestinal::ProcessCATModel) handle the actual substance transport and absorption.
-
+//--------------------------------------------------------------------------------------------------
 void Drugs::AdministerSubstanceOral()
 {
   //Need to loop over oral dose Objects
@@ -495,7 +656,6 @@ void Drugs::AdministerSubstanceCompoundInfusion()
     totalRate_mL_Per_s += rate_mL_Per_s;
     volumeRemaining_mL = infusion->GetBagVolume().GetValue(VolumeUnit::mL);
     volumeToAdminister_mL = rate_mL_Per_s * m_dt_s;
-    m_totalAdministered_uL = m_totalAdministered_uL + (volumeToAdminister_mL * 1000.0);
 
     if (volumeRemaining_mL < volumeToAdminister_mL) {
       volumeToAdminister_mL = volumeRemaining_mL;
@@ -805,7 +965,7 @@ void Drugs::CalculateDrugEffects()
       if (sub->GetClassification() == CDM::enumSubstanceClass::Opioid) {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * std::pow(1.0 + inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
       } else if (sub->GetName() == "Sarin") {
-        effect = m_RbcAcetylcholinesteraseFractionInhibited;
+        effect = 0.8 * (m_RbcAcetylcholinesteraseFractionInhibited); //0.8 is a tuning factor, validated by patient expected physiological response
       } else {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) + std::pow(ec50_ug_Per_mL, shapeParameter));
       }
@@ -1052,15 +1212,15 @@ void Drugs::SarinKinetics()
   double RbcAche_nM = RbcAcetylcholinesterase_nM;
   double SarinRbcAche_nM = m_SarinRbcAcetylcholinesteraseComplex_nM;
   double AgedSarin_nM = m_AgedRbcAcetylcholinesterase_nM;
-  double BaselineRbcAcetylcholinesterase_nM = 8.0;
+  const double BaselineRbcAcetylcholinesterase_nM = 8.0;
 
   //Rate constants
-  double RateRbcAcheInhibition_per_nM_s = 4.50e-4; /// \cite gupta2009handbook \cite rodriguez2015model
-  double RateRbcAcheAging_per_s = 4.83e-5; /// \cite gupta2009handbook \cite rodriguez2015model
-  double RateRbcAcheSynthesis_nM_per_s = 9.33e-7; /// \cite grob1958effects
-  double RateRbcAcheDegredation_per_s = 1.17e-7; /// \cite rodriguez2015model
-  double RatePralidoximeReversal_per_s = 4.22e-3; /// \cite rodriguez2015model
-  double PralidoximeDissociationConstant_nM = 27630.0; /// \cite rodriguez2015model
+  const double RateRbcAcheInhibition_per_nM_s = 4.50e-4; /// \cite gupta2009handbook \cite rodriguez2015model
+  const double RateRbcAcheAging_per_s = 4.83e-5; /// \cite gupta2009handbook \cite rodriguez2015model
+  const double RateRbcAcheSynthesis_nM_per_s = 8 * (9.33e-5); /// \cite grob1958effects
+  const double RateRbcAcheDegredation_per_s = 1.17e-7; /// \cite rodriguez2015model
+  const double RatePralidoximeReversal_per_s = 0.7 * (4.22e-3); /// \cite rodriguez2015model
+  const double PralidoximeDissociationConstant_nM = 27630.0; /// \cite rodriguez2015model
 
   //Michaelis-Menten expression for rate of pralidoxime interaction with bound sarin/rbc-ache complex
   double PralidoximeReversal = RatePralidoximeReversal_per_s * m_SarinRbcAcetylcholinesteraseComplex_nM * PralidoximeConcentration_nM / (PralidoximeDissociationConstant_nM + PralidoximeConcentration_nM); ///\cite rodriguez2015model

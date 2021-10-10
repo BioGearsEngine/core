@@ -24,11 +24,13 @@ SEConsciousRespiration::SEConsciousRespiration()
 {
   m_ClearCommands = true;
 }
+//-------------------------------------------------------------------------------
 
 SEConsciousRespiration::~SEConsciousRespiration()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
 
 void SEConsciousRespiration::Clear()
 {
@@ -36,16 +38,19 @@ void SEConsciousRespiration::Clear()
   if (m_ClearCommands)
     DELETE_VECTOR(m_Commands);
 }
+//-------------------------------------------------------------------------------
 
 bool SEConsciousRespiration::IsValid() const
 {
   return SEPatientAction::IsValid() && !m_Commands.empty();
 }
+//-------------------------------------------------------------------------------
 
 bool SEConsciousRespiration::IsActive() const
 {
   return SEPatientAction::IsActive();
 }
+//-------------------------------------------------------------------------------
 
 bool SEConsciousRespiration::Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances)
 {
@@ -83,6 +88,7 @@ bool SEConsciousRespiration::Load(const CDM::ConsciousRespirationData& in, const
   }
   return true;
 }
+//-------------------------------------------------------------------------------
 
 CDM::ConsciousRespirationData* SEConsciousRespiration::Unload() const
 {
@@ -90,6 +96,7 @@ CDM::ConsciousRespirationData* SEConsciousRespiration::Unload() const
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 
 void SEConsciousRespiration::Unload(CDM::ConsciousRespirationData& data) const
 {
@@ -98,6 +105,7 @@ void SEConsciousRespiration::Unload(CDM::ConsciousRespirationData& data) const
   for (SEConsciousRespirationCommand* cmd : m_Commands)
     data.Command().push_back(std::unique_ptr<CDM::ConsciousRespirationCommandData>(cmd->Unload()));
 }
+//-------------------------------------------------------------------------------
 
 SEConsciousRespirationCommand* SEConsciousRespiration::GetActiveCommand()
 {
@@ -105,6 +113,8 @@ SEConsciousRespirationCommand* SEConsciousRespiration::GetActiveCommand()
     return m_Commands[0];
   return nullptr;
 }
+//-------------------------------------------------------------------------------
+
 void SEConsciousRespiration::RemoveActiveCommand()
 {
   SEConsciousRespirationCommand* c = GetActiveCommand();
@@ -113,6 +123,7 @@ void SEConsciousRespiration::RemoveActiveCommand()
     SAFE_DELETE(c);
   }
 }
+//-------------------------------------------------------------------------------
 
 SEForcedExhale& SEConsciousRespiration::AddForcedExhale()
 {
@@ -120,6 +131,7 @@ SEForcedExhale& SEConsciousRespiration::AddForcedExhale()
   m_Commands.push_back(myEx);
   return *myEx;
 }
+//-------------------------------------------------------------------------------
 
 SEForcedInhale& SEConsciousRespiration::AddForcedInhale()
 {
@@ -127,6 +139,7 @@ SEForcedInhale& SEConsciousRespiration::AddForcedInhale()
   m_Commands.push_back(myIn);
   return *myIn;
 }
+//-------------------------------------------------------------------------------
 
 SEBreathHold& SEConsciousRespiration::AddBreathHold()
 {
@@ -134,6 +147,7 @@ SEBreathHold& SEConsciousRespiration::AddBreathHold()
   m_Commands.push_back(myHold);
   return *myHold;
 }
+//-------------------------------------------------------------------------------
 
 SEUseInhaler& SEConsciousRespiration::AddUseInhaler()
 {
@@ -141,6 +155,7 @@ SEUseInhaler& SEConsciousRespiration::AddUseInhaler()
   m_Commands.push_back(myUse);
   return *myUse;
 }
+//-------------------------------------------------------------------------------
 
 void SEConsciousRespiration::ToString(std::ostream& str) const
 {
@@ -152,5 +167,28 @@ void SEConsciousRespiration::ToString(std::ostream& str) const
     c->ToString(str);
   }
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEConsciousRespiration::operator==( const SEConsciousRespiration& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= m_ClearCommands == rhs.m_ClearCommands;
+  equivilant &= m_Commands.size() == rhs.m_Commands.size();
+  
+  if(equivilant){
+    for ( auto i = 0; i < m_Commands.size(); i++) {
+      //NOTE: Other definitions of equivilance might be resonable
+       if(m_Commands[i] && rhs.m_Commands[i]){
+         m_Commands[i]->operator==(*rhs.m_Commands[i]);
+       }
+    }
+  }
+
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEConsciousRespiration::operator!=( const SEConsciousRespiration& rhs) const
+{
+  return !(*this == rhs);
 }
 }

@@ -21,60 +21,61 @@ SEBreathHold::SEBreathHold()
 {
   m_Period = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEBreathHold::~SEBreathHold()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEBreathHold::Clear()
 {
   SEConsciousRespirationCommand::Clear();
   SAFE_DELETE(m_Period);
 }
-
+//-------------------------------------------------------------------------------
 bool SEBreathHold::IsValid() const
 {
   return SEConsciousRespirationCommand::IsValid() && HasPeriod();
 }
-
+//-------------------------------------------------------------------------------
 bool SEBreathHold::IsActive() const
 {
   return SEConsciousRespirationCommand::IsActive();
 }
-
+//-------------------------------------------------------------------------------
 bool SEBreathHold::Load(const CDM::BreathHoldData& in)
 {
   SEConsciousRespirationCommand::Load(in);
   GetPeriod().Load(in.Period());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::BreathHoldData* SEBreathHold::Unload() const
 {
   CDM::BreathHoldData* data(new CDM::BreathHoldData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEBreathHold::Unload(CDM::BreathHoldData& data) const
 {
   SEConsciousRespirationCommand::Unload(data);
   if (m_Period != nullptr)
     data.Period(std::unique_ptr<CDM::ScalarTimeData>(m_Period->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEBreathHold::HasPeriod() const
 {
   return m_Period == nullptr ? false : m_Period->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarTime& SEBreathHold::GetPeriod()
 {
   if (m_Period == nullptr)
     m_Period = new SEScalarTime();
   return *m_Period;
 }
-
+//-------------------------------------------------------------------------------
 void SEBreathHold::ToString(std::ostream& str) const
 {
   str << "Breath Hold";
@@ -83,5 +84,17 @@ void SEBreathHold::ToString(std::ostream& str) const
   str << "\n\tPeriod: ";
   HasPeriod() ? str << *m_Period : str << "NaN";
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEBreathHold::operator==( const SEBreathHold& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_Period && rhs.m_Period) ? m_Period->operator==(*rhs.m_Period) : m_Period == rhs.m_Period;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEBreathHold::operator!=( const SEBreathHold& rhs) const
+{
+  return !(*this == rhs);
 }
 }

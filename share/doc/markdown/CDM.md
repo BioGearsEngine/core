@@ -10,7 +10,7 @@ These structures provide discrete properties for specific definitions and the fl
 The CDM classes are small, lightweight (not much code in them), property-bag objects intended to only contain data for simple I/O and message passing.
 
 You can access the CDM data dictionary via the modules link provided in the above header. 
-You can also view @ref CDM Tables associated with some of key objects associated with the @ref physeng . 
+You can also view @ref CDMTables associated with some of key objects associated with the @ref physeng . 
 This dictionary documents the conceptual structure, organization, relationships, and property definitions. 
 A set of base types, known as Properties, is defined to hold the actual discrete values of various objects. 
 The CDM then encapsulates and organizes these properties into various physiology-related data objects, such as Systems, Anatomy, Equipment, Patients, Actions, etc.

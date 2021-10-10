@@ -11,8 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarQuantity.h>
+
+#include <ostream>
+#include <string>
 
 namespace biogears {
 //-------------------------------------------------------------------------------
@@ -25,15 +29,15 @@ namespace biogears {
 class BIOGEARS_API SEGenericScalar : public Loggable {
 public:
   SEGenericScalar(Logger* logger);
-  virtual ~SEGenericScalar(){};
+  virtual ~SEGenericScalar();
 
-  virtual bool HasScalar();
+  virtual bool HasScalar() const;
   virtual void SetScalar(const SEScalar& s);
 
-  virtual bool IsValid();
-  virtual bool IsInfinity();
+  virtual bool IsValid() const;
+  virtual bool IsInfinity() const;
 
-  virtual bool HasUnit();
+  virtual bool HasUnit() const;
   virtual const CCompoundUnit* GetUnit();
   virtual bool IsValidUnit(const CCompoundUnit& unit) const;
   virtual const CCompoundUnit* GetCompoundUnit(const char* unit) const;
@@ -43,9 +47,15 @@ public:
   virtual double GetValue(const char* unit) const;
   virtual double GetValue(const std::string& unit) const;
 
+  std::string ToString() const;
+
+  bool operator==(const SEGenericScalar&) const;
+  bool operator!=(const SEGenericScalar&) const;
+
 protected:
   const SEScalar* m_Scalar;
   const SEUnitScalar* m_UnitScalar;
 };
 
+std::ostream& operator<<(std::ostream& os, SEGenericScalar const& v);
 }

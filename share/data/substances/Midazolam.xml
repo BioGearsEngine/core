@@ -49,8 +49,8 @@
       <EC50 readOnly="false" unit="ug/mL" value="0"/>
     </FeverModifier>
     <HeartRateModifier>
-      <EMax readOnly="false" value="0.6"/>
-      <EC50 readOnly="false" unit="ug/mL" value="0.5"/>
+      <EMax readOnly="false" value="0"/>
+      <EC50 readOnly="false" unit="ug/mL" value="0"/>
     </HeartRateModifier>
     <HemorrhageModifier>
       <EMax readOnly="false" value="0"/>

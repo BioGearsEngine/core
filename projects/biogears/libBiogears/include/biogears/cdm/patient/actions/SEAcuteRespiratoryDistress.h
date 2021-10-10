@@ -12,16 +12,22 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/Scenario.hxx>
 
 namespace biogears {
 class SEScalar0To1;
+namespace io {
+  class PatientActions;
+}
+} //namespace biogears
 
+namespace biogears {
 class BIOGEARS_API SEAcuteRespiratoryDistress : public SEPatientAction {
+  friend io::PatientActions;
+
 public:
   SEAcuteRespiratoryDistress();
   virtual ~SEAcuteRespiratoryDistress() override;
-  
+
   static constexpr const char* TypeTag() { return "SEAcuteRespiratoryDistress"; };
   const char* classname() const override { return TypeTag(); }
 
@@ -33,16 +39,18 @@ public:
   virtual bool Load(const CDM::AcuteRespiratoryDistressData& in);
   virtual CDM::AcuteRespiratoryDistressData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::AcuteRespiratoryDistressData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
   virtual void ToString(std::ostream& str) const override;
 
+  bool operator==(const SEAcuteRespiratoryDistress& rhs) const;
+  bool operator!=(const SEAcuteRespiratoryDistress& rhs) const;
+
 protected:
+  virtual void Unload(CDM::AcuteRespiratoryDistressData& data) const;
+
+private:
   SEScalar0To1* m_Severity;
 };
 }

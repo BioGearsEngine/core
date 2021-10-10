@@ -29,14 +29,14 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   SECircuitManager circuits(m_Logger);
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, m_Logger);
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, m_Logger);
-  DataTrack circuitTrk;
-  DataTrack circuitTrk2;
-  DataTrack stateTrk;
-  DataTrack cvTrk;
+  DataTrack circuitTrk{m_Logger};
+  DataTrack circuitTrk2{m_Logger};
+  DataTrack stateTrk{m_Logger};
+  DataTrack cvTrk{m_Logger};
   Info("Setting Up");
 
   //Set up patient
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
 
   //Volume and pressure parameters for 4-element CV circuit (Brady2017Mathematical)

@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -41,6 +42,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Tissue.h>
 #include <biogears/schema/biogears/BioGears.hxx>
 
+#include <memory>
+
 namespace biogears {
 class SEPatientAssessment;
 class BioGearsScenarioExec;
@@ -79,11 +82,13 @@ class BioGearsCircuits;
 class BioGearsCompartments;
 class BioGearsConfiguration;
 class SEScalarTime;
+} //namespace biogears
 
+namespace biogears {
 /**
 * @brief Manages and controls execution of all data/systems in %BioGears
 */
-class BIOGEARS_API BioGears {
+class BIOGEARS_API BioGears : public Loggable {
   friend class BioGearsEngineTest;
   friend class BioGearsScenarioExec;
 
@@ -172,6 +177,7 @@ public:
   void SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode);
 
   Logger* GetLogger() const;
+
 protected:
   void SetupCardiovascular();
   void SetupCerebral();
@@ -184,7 +190,6 @@ protected:
   void SetupMechanicalVentilator();
   void SetupExternalTemperature();
   void SetupInternalTemperature();
-
 
   bool Initialize(const PhysiologyEngineConfiguration* config);
   bool SetupPatient();
@@ -200,7 +205,6 @@ protected:
   void ForwardFatal(const std::string& msg, const std::string& origin);
 
   DataTrack* m_DataTrack;
-
 
   std::unique_ptr<SEScalarTime> m_CurrentTime;
   std::unique_ptr<SEScalarTime> m_SimulationTime;
@@ -240,9 +244,6 @@ protected:
 
   std::unique_ptr<SEPatient> m_Patient;
 
-  // Flag to destroy the logger or not
-  bool m_logger_self_managed;
-  Logger* m_Logger;
-
+  std::unique_ptr<Logger> m_managedLogger;
 };
-}
+} //namespace biogears

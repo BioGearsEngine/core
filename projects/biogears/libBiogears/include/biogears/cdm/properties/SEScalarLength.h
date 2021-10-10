@@ -20,7 +20,10 @@ public:
   LengthUnit(const char* u);
   LengthUnit(const std::string& u);
 
-  virtual ~LengthUnit() = default;
+  virtual ~LengthUnit();
+
+  bool operator==(const LengthUnit&) const;
+  bool operator!=(const LengthUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -31,15 +34,23 @@ public:
   static const LengthUnit cm;
   static const LengthUnit mm;
   static const LengthUnit um;
-  static const LengthUnit in;
+  static const LengthUnit inch;
   static const LengthUnit ft;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<LengthUnit>;
+
 class BIOGEARS_API SEScalarLength : public SEScalarQuantity<LengthUnit> {
 public:
-  SEScalarLength() = default;
-  virtual ~SEScalarLength() = default;
+  SEScalarLength();
+  virtual ~SEScalarLength();
 
   CDM::ScalarLengthData* Unload() const override;
+
+  using SEScalarQuantity<LengthUnit>::SetValue;
+  using SEScalarQuantity<LengthUnit>::GetValue;
+
+  bool operator==(const SEScalarLength&) const;
+  bool operator!=(const SEScalarLength&) const;
 };
 }

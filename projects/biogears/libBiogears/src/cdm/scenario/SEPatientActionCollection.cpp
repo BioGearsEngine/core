@@ -15,6 +15,249 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 
+#include <map>
+#include <vector>
+
+namespace std {
+template class map<string, biogears::SEHemorrhage*>;
+template class map<string, biogears::SETourniquet*>;
+template class map<string, biogears::SEEscharotomy*>;
+template class map<string, biogears::SEPainStimulus*>;
+template class map<const biogears::SESubstance*, biogears::SESubstanceBolus*>;
+template class map<const biogears::SESubstance*, biogears::SESubstanceInfusion*>;
+template class map<const biogears::SESubstance*, biogears::SESubstanceOralDose*>;
+template class map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*>;
+template class map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
+}
+
+namespace biogears {
+
+//!
+//!  Pair Wrapper
+//!
+template <typename KeyType, typename ValueType>
+PairWrapper<KeyType, ValueType>::PairWrapper(typename std::pair<const KeyType, ValueType>* pair)
+  : _ptr(pair)
+{
+}
+
+template <typename KeyType, typename ValueType>
+PairWrapper<KeyType, ValueType>::~PairWrapper()
+{
+}
+
+template <typename KeyType, typename ValueType>
+KeyType const& PairWrapper<KeyType, ValueType>::first()
+{
+  return _ptr->first;
+}
+
+template <typename KeyType, typename ValueType>
+ValueType& PairWrapper<KeyType, ValueType>::second()
+{
+  return _ptr->second;
+}
+//!
+//! MapIteratorWrapper
+//!
+template <typename KeyType, typename ValueType>
+MapIteratorWrapper<KeyType, ValueType>::MapIteratorWrapper(typename std::map<KeyType, ValueType>::iterator itr)
+  : _iterator(itr)
+{
+}
+
+template <typename KeyType, typename ValueType>
+MapIteratorWrapper<KeyType, ValueType>::~MapIteratorWrapper()
+{
+}
+
+template <typename KeyType, typename ValueType>
+bool MapIteratorWrapper<KeyType, ValueType>::operator==(MapIteratorWrapper const& rhs) const
+{
+  return _iterator == rhs._iterator;
+}
+
+template <typename KeyType, typename ValueType>
+bool MapIteratorWrapper<KeyType, ValueType>::operator!=(MapIteratorWrapper const& rhs) const
+{
+  return _iterator != rhs._iterator;
+}
+
+
+template <typename KeyType, typename ValueType>
+auto MapIteratorWrapper<KeyType, ValueType>::operator()() const ->  PairWrapper<KeyType, ValueType> 
+{
+  return PairWrapper<KeyType, ValueType>(_iterator.operator->());
+}
+
+template <typename KeyType, typename ValueType>
+auto MapIteratorWrapper<KeyType, ValueType>::operator*() const -> PairWrapper<KeyType, ValueType>
+{
+  //Prefix  Operator
+
+  return PairWrapper<KeyType, ValueType>(_iterator.operator->());
+}
+
+template <typename KeyType, typename ValueType>
+auto MapIteratorWrapper<KeyType, ValueType>::operator++() -> MapIteratorWrapper&
+{
+  //Prefix  Operator                                         ~
+  ++_iterator;
+  return *this;
+}
+
+template <typename KeyType, typename ValueType>
+auto MapIteratorWrapper<KeyType, ValueType>::operator++(int) -> MapIteratorWrapper
+{
+  //Postfix Operator
+  MapIteratorWrapper temp { this->_iterator };
+  ++_iterator;
+  return temp;
+}
+
+//!
+//! MapWrapper
+//!
+template <typename KeyType, typename ValueType>
+MapWrapper<KeyType, ValueType>::MapWrapper(std::map<KeyType, ValueType>& given)
+  : _map(given)
+{
+}
+
+template <typename KeyType, typename ValueType>
+MapWrapper<KeyType, ValueType>::~MapWrapper() { }
+
+template <typename KeyType, typename ValueType>
+auto MapWrapper<KeyType, ValueType>::begin() const -> MapIteratorWrapper<KeyType, ValueType>
+{
+  return { _map.begin() };
+}
+template <typename KeyType, typename ValueType>
+auto MapWrapper<KeyType, ValueType>::end() const -> MapIteratorWrapper<KeyType, ValueType>
+{
+  return { _map.end() };
+}
+
+//!
+//! VectorIteratorWrapper
+//!
+template <typename ValueType>
+VectorIteratorWrapper<ValueType>::VectorIteratorWrapper(typename std::vector<ValueType>::iterator itr)
+  : _iterator(itr)
+{
+}
+template <typename ValueType>
+VectorIteratorWrapper<ValueType>::~VectorIteratorWrapper()
+{
+}
+
+template <typename ValueType>
+ValueType const& VectorIteratorWrapper<ValueType>::value() const
+{
+  return *_iterator;
+}
+
+template <typename ValueType>
+ValueType const& VectorIteratorWrapper<ValueType>::operator()() const
+{
+  return *_iterator;
+}
+
+template <typename ValueType>
+bool VectorIteratorWrapper<ValueType>::operator==(VectorIteratorWrapper const& rhs) const
+{
+  return _iterator == rhs._iterator;
+}
+
+template <typename ValueType>
+bool VectorIteratorWrapper<ValueType>::operator!=(VectorIteratorWrapper const& rhs) const
+{
+  return _iterator != rhs._iterator;
+}
+
+template <typename ValueType>
+auto VectorIteratorWrapper<ValueType>::operator->() -> ValueType const*
+{
+  return _iterator.operator->();
+}
+
+template <typename ValueType>
+auto VectorIteratorWrapper<ValueType>::operator*() -> ValueType const&
+{
+  return _iterator.operator*();
+}
+
+template <typename ValueType>
+auto VectorIteratorWrapper<ValueType>::operator++() -> VectorIteratorWrapper&
+{
+  //Prefix  Operator
+  ++_iterator;
+  return { _iterator };
+}
+template <typename ValueType>
+auto VectorIteratorWrapper<ValueType>::operator++(int) -> VectorIteratorWrapper
+{
+  //Postfix Operator
+  VectorIteratorWrapper<ValueType> temp { _iterator };
+  ++_iterator;
+  return temp;
+}
+
+//!
+//! VectorWrapper
+//!
+template <typename ValueType>
+VectorWrapper<ValueType>::VectorWrapper(std::vector<ValueType>& given)
+  : _vector { given }
+{
+}
+template <typename ValueType>
+VectorWrapper<ValueType>::~VectorWrapper()
+{
+}
+template <typename ValueType>
+auto VectorWrapper<ValueType>::begin() const -> VectorIteratorWrapper<ValueType>
+{
+  return { _vector.begin() };
+}
+template <typename ValueType>
+auto VectorWrapper<ValueType>::end() const -> VectorIteratorWrapper<ValueType>
+{
+  return { _vector.end() };
+}
+
+//Template Specializations
+template class PairWrapper<std::string, SEHemorrhage*>;
+template class PairWrapper<std::string, SETourniquet*>;
+template class PairWrapper<std::string, SEEscharotomy*>;
+template class PairWrapper<std::string, SEPainStimulus*>;
+template class PairWrapper<const SESubstance*, SESubstanceBolus*>;
+template class PairWrapper<const SESubstance*, SESubstanceInfusion*>;
+template class PairWrapper<const SESubstance*, SESubstanceOralDose*>;
+template class PairWrapper<const SESubstance*, SESubstanceNasalDose*>;
+template class PairWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
+
+template class MapIteratorWrapper<std::string, SEHemorrhage*>;
+template class MapIteratorWrapper<std::string, SETourniquet*>;
+template class MapIteratorWrapper<std::string, SEEscharotomy*>;
+template class MapIteratorWrapper<std::string, SEPainStimulus*>;
+template class MapIteratorWrapper<const SESubstance*, SESubstanceBolus*>;
+template class MapIteratorWrapper<const SESubstance*, SESubstanceInfusion*>;
+template class MapIteratorWrapper<const SESubstance*, SESubstanceOralDose*>;
+template class MapIteratorWrapper<const SESubstance*, SESubstanceNasalDose*>;
+template class MapIteratorWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
+
+template class MapWrapper<std::string, SEHemorrhage*>;
+template class MapWrapper<std::string, SETourniquet*>;
+template class MapWrapper<std::string, SEEscharotomy*>;
+template class MapWrapper<std::string, SEPainStimulus*>;
+template class MapWrapper<const SESubstance*, SESubstanceBolus*>;
+template class MapWrapper<const SESubstance*, SESubstanceInfusion*>;
+template class MapWrapper<const SESubstance*, SESubstanceOralDose*>;
+template class MapWrapper<const SESubstance*, SESubstanceNasalDose*>;
+template class MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
+} //namespace biogears
+
 namespace biogears {
 SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
@@ -41,6 +284,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_LeftNeedleDecompression = nullptr;
   m_RightNeedleDecompression = nullptr;
   m_PericardialEffusion = nullptr;
+  m_PulmonaryShunt = nullptr;
   m_Sleep = nullptr;
   m_LeftOpenTensionPneumothorax = nullptr;
   m_LeftClosedTensionPneumothorax = nullptr;
@@ -78,6 +322,7 @@ void SEPatientActionCollection::Clear()
   RemoveLeftNeedleDecompression();
   RemoveRightNeedleDecompression();
   RemovePericardialEffusion();
+  RemovePulmonaryShunt();
   RemoveSleepState();
   RemoveLeftOpenTensionPneumothorax();
   RemoveLeftClosedTensionPneumothorax();
@@ -86,6 +331,7 @@ void SEPatientActionCollection::Clear()
   RemoveUrinate();
   RemoveOverride();
 
+  DELETE_MAP_SECOND(m_Escharotomies);
   DELETE_MAP_SECOND(m_Hemorrhages);
   DELETE_MAP_SECOND(m_PainStimuli);
   DELETE_MAP_SECOND(m_SubstanceBolus);
@@ -142,13 +388,18 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   if (HasConsumeNutrients()) {
     to.push_back(GetConsumeNutrients()->Unload());
   }
+  if (HasEscharotomy()) {
+    for (auto itr : GetEscharotomies()) {
+      to.push_back(itr.second->Unload());
+    }
+  }
   if (HasExercise()) {
     to.push_back(GetExercise()->Unload());
   }
   if (HasHemorrhage()) {
     for (auto itr : GetHemorrhages()) {
       to.push_back(itr.second->Unload());
-  }
+    }
   }
   if (HasInfection()) {
     to.push_back(GetInfection()->Unload());
@@ -168,13 +419,18 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   if (HasPainStimulus()) {
     for (auto itr : GetPainStimuli()) {
       to.push_back(itr.second->Unload());
-  }
+    }
   }
   if (HasPericardialEffusion()) {
     to.push_back(GetPericardialEffusion()->Unload());
-  if (HasSleepState())
-      to.push_back(GetSleepState()->Unload());
-  if (HasLeftClosedTensionPneumothorax())
+  }
+  if (HasPulmonaryShunt()) {
+    to.push_back(GetPulmonaryShunt()->Unload());
+  }
+  if (HasSleepState()) {
+    to.push_back(GetSleepState()->Unload());
+  }
+  if (HasLeftClosedTensionPneumothorax()) {
     to.push_back(GetLeftClosedTensionPneumothorax()->Unload());
   }
   if (HasLeftOpenTensionPneumothorax()) {
@@ -352,9 +608,9 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
   const CDM::CardiacArrestData* cardiacarrest = dynamic_cast<const CDM::CardiacArrestData*>(&action);
   if (cardiacarrest != nullptr) {
 
-    if ( m_CardiacArrest == nullptr && cardiacarrest->State() == CDM::enumOnOff::Off) {
+    if (m_CardiacArrest == nullptr && cardiacarrest->State() == CDM::enumOnOff::Off) {
       return true; //Ignore :CardiacArrest::Off request when no :CardiacArrest Event exist.
-    } 
+    }
 
     if (m_CardiacArrest == nullptr) {
       m_CardiacArrest = new SECardiacArrest();
@@ -451,6 +707,31 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
     return IsValid(*m_ConsumeNutrients);
   }
 
+  const CDM::EscharotomyData* eschData = dynamic_cast<const CDM::EscharotomyData*>(&action);
+  if (eschData != nullptr) {
+    auto eItr = m_Escharotomies.find(eschData->Location());
+    SEEscharotomy* escharotomy = std::make_unique<SEEscharotomy>().release();
+    if (eItr != m_Escharotomies.end()) {
+      escharotomy = m_Escharotomies[eschData->Location()];
+      escharotomy->Load(*eschData);
+    } else {
+      escharotomy->Load(*eschData);
+      if (escharotomy->IsValid()) {
+        m_Escharotomies[eschData->Location()] = escharotomy;
+        eItr = m_Escharotomies.find(eschData->Location());
+      } else {
+        escharotomy->Clear();
+      }
+    }
+    auto escharotomy2 = eItr->second;
+    escharotomy2->Load(*eschData);
+    if (!escharotomy2->IsActive()) {
+      RemoveEscharotomy(escharotomy2->GetLocation());
+      return true;
+    }
+    return IsValid(*escharotomy2);
+  }
+
   const CDM::ExerciseData* exercise = dynamic_cast<const CDM::ExerciseData*>(&action);
   if (exercise != nullptr) {
     if (m_Exercise == nullptr) {
@@ -544,7 +825,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return IsValid(*m_RightNeedleDecompression);
     } else {
       return false;
-  }
+    }
   }
 
   const CDM::PainStimulusData* pain = dynamic_cast<const CDM::PainStimulusData*>(&action);
@@ -576,16 +857,29 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
     return IsValid(*m_PericardialEffusion);
   }
 
+  const CDM::PulmonaryShuntData* pulmonaryShunt = dynamic_cast<const CDM::PulmonaryShuntData*>(&action);
+  if (pulmonaryShunt != nullptr) {
+    if (m_PulmonaryShunt == nullptr) {
+      m_PulmonaryShunt = new SEPulmonaryShunt();
+    }
+    m_PulmonaryShunt->Load(*pulmonaryShunt);
+    if (!m_PulmonaryShunt->IsActive()) {
+      RemovePulmonaryShunt();
+      return true;
+    }
+    return IsValid(*m_PulmonaryShunt);
+  }
+
   const CDM::SleepData* sleep = dynamic_cast<const CDM::SleepData*>(&action);
   if (sleep != nullptr) {
-      if (m_Sleep == nullptr)
-          m_Sleep = new SESleep();
-      m_Sleep->Load(*sleep);
-      if (!m_Sleep->IsActive()) {
-          RemoveSleepState();
-          return true;
-      }
-      return IsValid(*m_Sleep);
+    if (m_Sleep == nullptr)
+      m_Sleep = new SESleep();
+    m_Sleep->Load(*sleep);
+    if (!m_Sleep->IsActive()) {
+      RemoveSleepState();
+      return true;
+    }
+    return IsValid(*m_Sleep);
   }
 
   const CDM::SubstanceAdministrationData* admin = dynamic_cast<const CDM::SubstanceAdministrationData*>(&action);
@@ -952,6 +1246,33 @@ void SEPatientActionCollection::RemoveConsumeNutrients()
   SAFE_DELETE(m_ConsumeNutrients);
 }
 //-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasEscharotomy() const
+{
+  return !m_Escharotomies.empty();
+}
+//-------------------------------------------------------------------------------
+const std::map<std::string, SEEscharotomy*>& SEPatientActionCollection::GetEscharotomies() const
+{
+  return m_Escharotomies;
+}
+//-------------------------------------------------------------------------------
+const MapWrapper<std::string, SEEscharotomy*> SEPatientActionCollection::GetEscharotomiesWrapper() const
+{
+  return MapWrapper<std::string, SEEscharotomy*>(const_cast<SEPatientActionCollection*>(this)->m_Escharotomies);
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveEscharotomy(const char* cmpt)
+{
+  RemoveEscharotomy(std::string { cmpt });
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveEscharotomy(const std::string& cmpt)
+{
+  SEEscharotomy* h = m_Escharotomies[cmpt];
+  m_Escharotomies.erase(cmpt);
+  SAFE_DELETE(h);
+}
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasExercise() const
 {
   return m_Exercise == nullptr ? false : true;
@@ -976,6 +1297,42 @@ const std::map<std::string, SEHemorrhage*>& SEPatientActionCollection::GetHemorr
 {
   return m_Hemorrhages;
 }
+const MapWrapper<std::string, SEHemorrhage*> SEPatientActionCollection::GetHemorrhageWrapper() const
+{
+  return MapWrapper<std::string, SEHemorrhage*>(const_cast<SEPatientActionCollection*>(this)->m_Hemorrhages);
+}
+//!
+//! API usuage for UE4 do not use internally
+//!
+SEHemorrhage const* SEPatientActionCollection::GetFirstHemorrhage() const
+{
+  if (m_Hemorrhages.begin() == m_Hemorrhages.end() || m_Hemorrhages.size() == 0) {
+    return nullptr;
+  }
+
+  m_HemorrhageItr = m_Hemorrhages.begin();
+
+  return m_HemorrhageItr->second;
+}
+
+//!
+//! API usuage for UE4 do not use internally
+//!
+SEHemorrhage const* SEPatientActionCollection::GetNextHemorrhage() const
+{
+  if (m_Hemorrhages.begin() == m_Hemorrhages.end() || m_Hemorrhages.size() == 0) {
+    return nullptr;
+  }
+
+  if (m_HemorrhageItr == m_Hemorrhages.end()) {
+    return nullptr;
+  }
+
+  m_HemorrhageItr++;
+
+  return (m_HemorrhageItr == m_Hemorrhages.end()) ? nullptr : m_HemorrhageItr->second;
+}
+
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveHemorrhage(const char* cmpt)
 {
@@ -1081,6 +1438,10 @@ const std::map<std::string, SEPainStimulus*>& SEPatientActionCollection::GetPain
 {
   return m_PainStimuli;
 }
+const MapWrapper<std::string, SEPainStimulus*> SEPatientActionCollection::GetPainStimuliWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_PainStimuli;
+}
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemovePainStimulus(const char* cmpt)
 {
@@ -1108,20 +1469,35 @@ void SEPatientActionCollection::RemovePericardialEffusion()
 {
   SAFE_DELETE(m_PericardialEffusion);
 }
-//-------------------------------------------------------------------------------  
+//-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasPulmonaryShunt() const
+{
+  return m_PulmonaryShunt == nullptr ? false : true;
+}
+//-------------------------------------------------------------------------------
+SEPulmonaryShunt* SEPatientActionCollection::GetPulmonaryShunt() const
+{
+  return m_PulmonaryShunt;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemovePulmonaryShunt()
+{
+  SAFE_DELETE(m_PulmonaryShunt);
+}
+//-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasSleepState() const
 {
-    return m_Sleep == nullptr ? false : true;
+  return m_Sleep == nullptr ? false : true;
 }
 //-------------------------------------------------------------------------------
 SESleep* SEPatientActionCollection::GetSleepState() const
 {
-    return m_Sleep;
+  return m_Sleep;
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSleepState()
 {
-    SAFE_DELETE(m_Sleep);
+  SAFE_DELETE(m_Sleep);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasTensionPneumothorax() const
@@ -1210,6 +1586,11 @@ const std::map<const SESubstance*, SESubstanceBolus*>& SEPatientActionCollection
   return m_SubstanceBolus;
 }
 //-------------------------------------------------------------------------------
+const MapWrapper<const SESubstance*, SESubstanceBolus*> SEPatientActionCollection::GetSubstanceBolusesWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_SubstanceBolus;
+}
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceBolus(const SESubstance& sub)
 {
   SESubstanceBolus* b = m_SubstanceBolus[&sub];
@@ -1220,6 +1601,11 @@ void SEPatientActionCollection::RemoveSubstanceBolus(const SESubstance& sub)
 const std::map<const SESubstance*, SESubstanceInfusion*>& SEPatientActionCollection::GetSubstanceInfusions() const
 {
   return m_SubstanceInfusions;
+}
+//-------------------------------------------------------------------------------
+const MapWrapper<const SESubstance*, SESubstanceInfusion*> SEPatientActionCollection::GetSubstanceInfusionsWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_SubstanceInfusions;
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceInfusion(const SESubstance& sub)
@@ -1234,6 +1620,11 @@ const std::map<const SESubstance*, SESubstanceOralDose*>& SEPatientActionCollect
   return m_SubstanceOralDoses;
 }
 //-------------------------------------------------------------------------------
+const MapWrapper<const SESubstance*, SESubstanceOralDose*> SEPatientActionCollection::GetSubstanceOralDosesWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_SubstanceOralDoses;
+}
+//-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceOralDose(const SESubstance& sub)
 {
   SESubstanceOralDose* od = m_SubstanceOralDoses[&sub];
@@ -1241,9 +1632,32 @@ void SEPatientActionCollection::RemoveSubstanceOralDose(const SESubstance& sub)
   SAFE_DELETE(od);
 }
 //-------------------------------------------------------------------------------
+const std::map<const SESubstance*, SESubstanceNasalDose*>& SEPatientActionCollection::GetSubstanceNasalDoses() const
+{
+  return m_SubstanceNasalDoses;
+}
+//-------------------------------------------------------------------------------
+const MapWrapper<const SESubstance*, SESubstanceNasalDose*> SEPatientActionCollection::GetSubstanceNasalDosesWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_SubstanceNasalDoses;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveSubstanceNasalDose(const SESubstance& sub)
+{
+  SESubstanceNasalDose* od = m_SubstanceNasalDoses[&sub];
+  m_SubstanceNasalDoses.erase(&sub);
+  SAFE_DELETE(od);
+}
+
+//-------------------------------------------------------------------------------
 const std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>& SEPatientActionCollection::GetSubstanceCompoundInfusions() const
 {
   return m_SubstanceCompoundInfusions;
+}
+//-------------------------------------------------------------------------------
+const MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*> SEPatientActionCollection::GetSubstanceCompoundInfusionsWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_SubstanceCompoundInfusions;
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveSubstanceCompoundInfusion(const SESubstanceCompound& cSub)
@@ -1297,6 +1711,28 @@ bool SEPatientActionCollection::AdministerSubstance(const CDM::SubstanceAdminist
       return true;
     }
     return IsValid(*mySubInfuse);
+  }
+
+  const CDM::SubstanceNasalDoseData* NasalDose = dynamic_cast<const CDM::SubstanceNasalDoseData*>(&subAdmin);
+  if (NasalDose != nullptr) {
+    SESubstance* sub = m_Substances.GetSubstance(NasalDose->Substance());
+    if (sub == nullptr) {
+      m_ss << "Unknown substance : " << NasalDose->Substance();
+      Error(m_ss);
+      return false;
+    }
+    SESubstanceNasalDose* myNasalDose = m_SubstanceNasalDoses[sub];
+    if (myNasalDose == nullptr) {
+      myNasalDose = new SESubstanceNasalDose(*sub);
+      m_SubstanceNasalDoses[sub] = myNasalDose;
+      m_Substances.AddActiveSubstance(*sub);
+    }
+    myNasalDose->Load(*NasalDose);
+    if (!myNasalDose->IsActive()) {
+      RemoveSubstanceNasalDose(*sub);
+      return true;
+    }
+    return IsValid(*myNasalDose);
   }
 
   const CDM::SubstanceOralDoseData* oralDose = dynamic_cast<const CDM::SubstanceOralDoseData*>(&subAdmin);
@@ -1358,6 +1794,10 @@ bool SEPatientActionCollection::HasTourniquet() const
 const std::map<std::string, SETourniquet*>& SEPatientActionCollection::GetTourniquets() const
 {
   return m_Tourniquets;
+}
+const MapWrapper<std::string, SETourniquet*> SEPatientActionCollection::GetTourniquetsWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_Tourniquets;
 }
 //-------------------------------------------------------------------------------
 void SEPatientActionCollection::RemoveTourniquet(const char* cmpt)

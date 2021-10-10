@@ -55,7 +55,7 @@ std::string SEConsciousRespirationCommand::GetComment() const
 {
   return m_Comment;
 }
-  //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 const char* SEConsciousRespirationCommand::GetComment_cStr() const
 {
   return m_Comment.c_str();
@@ -81,4 +81,14 @@ void SEConsciousRespirationCommand::InvalidateComment()
   m_Comment = "";
 }
 //-------------------------------------------------------------------------------
+bool SEConsciousRespirationCommand::operator==( const SEConsciousRespirationCommand& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEConsciousRespirationCommand::operator!=( const SEConsciousRespirationCommand& rhs) const
+{
+  return !(*this == rhs);
+}
 }

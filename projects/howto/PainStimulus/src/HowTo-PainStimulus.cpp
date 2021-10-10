@@ -10,9 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include "HowTo-PainStimulus.h"
-
-
 #include <iostream>
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -26,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-
+#include <biogears/string/manipulation.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -36,14 +33,14 @@ using namespace biogears;
 /// \details
 ///
 //--------------------------------------------------------------------------------------------------
-void HowToPainStimulus()
+int HowToPainStimulus()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToPain.log");
   bg->GetLogger()->Info("HowToPain");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 0;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -56,7 +53,7 @@ void HowToPainStimulus()
 
   //set up the configuration of the pain stimulus
   location = "Arm";
-  severity = 0.5;
+  severity = 0.6;
   PainStimulus.SetLocation(location);
   PainStimulus.GetSeverity().SetValue(severity);
 
@@ -103,13 +100,13 @@ void HowToPainStimulus()
   }
 
   bg->GetLogger()->Info("Giving the patient Morphine.");
-  bg->ProcessAction(bolus);
+  //bg->ProcessAction(bolus);
 
 
-  bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
 
   // Advance some time until patient is comfortable
   while (pain > 1.0) {
@@ -121,15 +118,20 @@ void HowToPainStimulus()
   //after we get out of the while loop patient should be happy now
   bg->GetLogger()->Info("The patient is comfortable, morphine administration buffered effects");
 
-  bg->GetLogger()->Info(std::stringstream() << "Cardiac Output : " << bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min);
-  bg->GetLogger()->Info(std::stringstream() << "Hemoglobin Content : " << bg->GetBloodChemistrySystem()->GetHemoglobinContent(MassUnit::g) << MassUnit::g);
-  bg->GetLogger()->Info(std::stringstream() << "Blood Volume : " << bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL);
-  bg->GetLogger()->Info(std::stringstream() << "Mean Arterial Pressure : " << bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bg->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Hemoglobin Content : %f %s", bg->GetBloodChemistrySystem()->GetHemoglobinContent(MassUnit::g), "g"));
+  bg->GetLogger()->Info(asprintf("Blood Volume : %f %s", bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL), "mL"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   ;
 
   bg->AdvanceModelTime(400, TimeUnit::s);
   bg->GetLogger()->Info("Finished");
+  return 1;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToPainStimulus();
 }

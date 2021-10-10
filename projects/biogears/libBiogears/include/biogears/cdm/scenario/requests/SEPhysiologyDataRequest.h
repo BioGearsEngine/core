@@ -16,20 +16,21 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEDataRequestManager;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SEPhysiologyDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
-
-protected:
-  SEPhysiologyDataRequest(const SEDecimalFormat* dfault = nullptr);
+  friend io::Scenario;
 
 public:
+  SEPhysiologyDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEPhysiologyDataRequest();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
   size_t HashCode() const override;
   virtual bool Load(const CDM::PhysiologyDataRequestData& in);
-  virtual CDM::PhysiologyDataRequestData* Unload() const;
+  virtual CDM::PhysiologyDataRequestData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::PhysiologyDataRequestData& data) const;

@@ -17,10 +17,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
-void HowToBurnWoundPainStimulus();
+int HowToBurnWoundPainStimulus();
 
 namespace biogears {
 class SEBurnWound;
+class SEEscharotomy;
 class SESubstance;
 class SESubstanceBolus;
 class SESubstanceCompoundInfusion;
@@ -28,17 +29,28 @@ class SESubstanceCompoundInfusion;
 
 class BurnThread {
 public:
-  BurnThread(const std::string& logFile, double &tbsa);
+  BurnThread(const std::string logFile, double tbsa);
   virtual ~BurnThread();
 
   void AdministerKetamine(double &bolus);
   void SetRingersInfusionRate(double& volume, double& rate);
+  void SetAlbuminInfusionRate(double& volume, double& rate);
   void Status();
+  void FluidLoading(double tbsa);
+
+  enum fluidType
+  {
+    ringers, ///< Label vessels with radius size
+    albumin ///< Label vessels by region (serviced by the anterior, middle, or posterior cerebral artery)
+  };
 
   biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
 
   protected:
   void AdvanceTime();
+  void AdvanceTimeFluids();
+  void AdvanceTimeFluidsAlbumin();
+
 
   std::thread m_burnThread;
   std::mutex m_mutex;
@@ -47,8 +59,15 @@ public:
   std::unique_ptr<biogears::PhysiologyEngine> m_bg;
 
   biogears::SEBurnWound* m_burnWound;
+  biogears::SEEscharotomy* m_escharotomy;
   biogears::SESubstanceBolus* m_ketamineBolus;
   biogears::SESubstanceCompoundInfusion* m_ringers;
+  biogears::SESubstanceCompoundInfusion* m_albumex;
   double m_ivBagVolume_mL;
+  double m_ivBagVolumeAlbumin_mL;
+  double m_TotalVolumeAlbumin_mL = 0.0;
+  double m_TotalVolume_mL = 0.0;
+  fluidType fluid = ringers; //set the type of fluid here
+
 
 };

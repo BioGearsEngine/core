@@ -15,7 +15,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEPatientAssessmentRequest : public SEPatientAction {
+  friend io::PatientActions;
 public:
   SEPatientAssessmentRequest();
   virtual ~SEPatientAssessmentRequest() override;
@@ -31,6 +35,8 @@ public:
   virtual bool Load(const CDM::PatientAssessmentRequestData& in);
   virtual CDM::PatientAssessmentRequestData* Unload() const override;
 
+  bool operator==( const SEPatientAssessmentRequest& rhs) const;
+  bool operator!=( const SEPatientAssessmentRequest& rhs) const;
 protected:
   virtual void Unload(CDM::PatientAssessmentRequestData& data) const;
 

@@ -25,29 +25,29 @@ SESubstanceInfusion::SESubstanceInfusion(const SESubstance& substance)
   m_Rate = nullptr;
   m_Concentration = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SESubstanceInfusion::~SESubstanceInfusion()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceInfusion::Clear()
 {
   SESubstanceAdministration::Clear();
   m_Rate = nullptr;
   m_Concentration = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceInfusion::IsValid() const
 {
   return SESubstanceAdministration::IsValid() && HasRate() && HasConcentration();
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceInfusion::IsActive() const
 {
   return IsValid() ? !m_Rate->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceInfusion::Load(const CDM::SubstanceInfusionData& in)
 {
   SESubstanceAdministration::Load(in);
@@ -55,14 +55,14 @@ bool SESubstanceInfusion::Load(const CDM::SubstanceInfusionData& in)
   GetConcentration().Load(in.Concentration());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::SubstanceInfusionData* SESubstanceInfusion::Unload() const
 {
   CDM::SubstanceInfusionData* data(new CDM::SubstanceInfusionData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceInfusion::Unload(CDM::SubstanceInfusionData& data) const
 {
   SESubstanceAdministration::Unload(data);
@@ -72,34 +72,36 @@ void SESubstanceInfusion::Unload(CDM::SubstanceInfusionData& data) const
     data.Concentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Concentration->Unload()));
   data.Substance(m_Substance.GetName());
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceInfusion::HasRate() const
 {
   return m_Rate == nullptr ? false : m_Rate->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolumePerTime& SESubstanceInfusion::GetRate()
 {
   if (m_Rate == nullptr)
     m_Rate = new SEScalarVolumePerTime();
   return *m_Rate;
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceInfusion::HasConcentration() const
 {
   return m_Concentration == nullptr ? false : m_Concentration->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstanceInfusion::GetConcentration()
 {
   if (m_Concentration == nullptr)
     m_Concentration = new SEScalarMassPerVolume();
   return *m_Concentration;
 }
-
+//-------------------------------------------------------------------------------
 SESubstance& SESubstanceInfusion::GetSubstance() const
 {
   return (SESubstance&)m_Substance;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceInfusion::ToString(std::ostream& str) const
 {
   str << "Patient Action : Substance Infusion";
@@ -111,5 +113,19 @@ void SESubstanceInfusion::ToString(std::ostream& str) const
   HasConcentration() ? str << *m_Concentration : str << "NaN";
   str << "\n\tSubstance: " << m_Substance.GetName();
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceInfusion::operator==(const SESubstanceInfusion& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_Concentration && rhs.m_Concentration) ? m_Concentration->operator==(*rhs.m_Concentration) : m_Concentration == rhs.m_Concentration;
+  equivilant &= (m_Rate && rhs.m_Rate) ? m_Rate->operator==(*rhs.m_Rate) : m_Rate == rhs.m_Rate;
+  equivilant &= m_Substance == rhs.m_Substance;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceInfusion::operator!=(const SESubstanceInfusion& rhs) const
+{
+  return !(*this == rhs);
 }
 }

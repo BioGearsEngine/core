@@ -18,11 +18,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
 namespace biogears {
-class SEPatient;
-class SERenalSystem;
-class SEAnatomy;
+
+namespace io {
+  class PatientAssessments;
+}
 
 class BIOGEARS_API SEUrinalysis : public SEPatientAssessment {
+  friend io::PatientAssessments;
+
 public:
   SEUrinalysis();
   virtual ~SEUrinalysis();
@@ -30,11 +33,11 @@ public:
   static constexpr const char* TypeTag() { return "SEUrinalysis"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset();
-  virtual void Clear();
+  virtual void Reset() override;
+  virtual void Clear() override;
 
   virtual bool Load(const CDM::UrinalysisData& in);
-  virtual CDM::UrinalysisData* Unload();
+  virtual CDM::UrinalysisData* Unload() override;
 
 protected:
   virtual void Unload(CDM::UrinalysisData& data);

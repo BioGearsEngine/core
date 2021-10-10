@@ -15,6 +15,17 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const AmountUnit AmountUnit::mol("mol");
 const AmountUnit AmountUnit::pmol("pmol");
+template class SEScalarQuantity<AmountUnit>;
+
+//-----------------------------------------------------------------------------
+SEScalarAmount::SEScalarAmount()
+  : SEScalarQuantity()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarAmount::~SEScalarAmount()  {
+
+}
 //-----------------------------------------------------------------------------
 AmountUnit::AmountUnit(const char* u)
   : AmountUnit(std::string{ u })
@@ -23,6 +34,10 @@ AmountUnit::AmountUnit(const char* u)
 //-----------------------------------------------------------------------------
 AmountUnit::AmountUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+AmountUnit::~AmountUnit()
 {
 }
 //-----------------------------------------------------------------------------
@@ -65,4 +80,25 @@ const AmountUnit& AmountUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(  unit.c_str() );
 }
 //-----------------------------------------------------------------------------
+bool AmountUnit::operator==(const AmountUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool AmountUnit::operator!=(const AmountUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarAmount::operator==(const SEScalarAmount& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarAmount::operator!=(const SEScalarAmount& obj) const
+{
+  return !(*this == obj);
+}
 }

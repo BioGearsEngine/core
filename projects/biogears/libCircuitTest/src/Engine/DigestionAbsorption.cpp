@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 void BioGearsEngineTest::DigestionTest(const std::string& rptDirectory, MealType mealType)
 {
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   std::string outputName;
 
   if (mealType == CarbsOnly)
@@ -48,7 +48,7 @@ void BioGearsEngineTest::DigestionTest(const std::string& rptDirectory, MealType
   BioGears bg(m_Logger);
   Gastrointestinal& gi = (Gastrointestinal&)bg.GetGastrointestinal();
 
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   SEPatient* patient = (SEPatient*)&bg.GetPatient();
 
@@ -330,7 +330,7 @@ void BioGearsEngineTest::DigestionTest(const std::string& rptDirectory, MealType
 
 void BioGearsEngineTest::AbsorptionTest(const std::string& rptDirectory, MealType mealType)
 {
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   std::string outputName;
 
   if (mealType == CarbsOnly)
@@ -349,7 +349,7 @@ void BioGearsEngineTest::AbsorptionTest(const std::string& rptDirectory, MealTyp
   BioGears bg(m_Logger);
   Gastrointestinal& gi = (Gastrointestinal&)bg.GetGastrointestinal();
 
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   SEPatient* patient = (SEPatient*)&bg.GetPatient();
 

@@ -12,22 +12,28 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
+#include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
+#include <biogears/cdm/engine/PhysiologyEngine.h>
+#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/properties/SEGenericScalar.h>
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/SESystem.h>
+#include <biogears/cdm/system/environment/SEEnvironment.h>
 #include <biogears/cdm/utils/DataTrack.h>
 
+#include <ostream>
+#include <string>
+
+namespace std {
+  BG_EXT template class BIOGEARS_API vector<biogears::SESystem*>;
+}
 namespace biogears {
-class SESystem;
-class SEPatient;
-class SEEnvironment;
-class PhysiologyEngine;
-class SESubstanceManager;
-class SECompartmentManager;
 
 enum class CompartmentUpdate { None,
                                InFlow,
@@ -46,7 +52,7 @@ enum class CompartmentUpdate { None,
                                PartialPressure,
                                Saturation };
 
-class SEDataRequestScalar : public SEGenericScalar {
+class BIOGEARS_API SEDataRequestScalar : public SEGenericScalar {
 public:
   SEDataRequestScalar(Logger* logger)
     : SEGenericScalar(logger)
@@ -64,6 +70,8 @@ public:
   void UpdateScalar();
   void SetScalar(const SEScalar* s, SEDataRequest& dr); // SEScalar* in order to internnally throw error if the Track cannot find the requested property, it will pass in nullptr if it cannot find it
 
+  std::string ToString() const;
+
   std::string Heading;
 
   // Compartment related variables
@@ -76,6 +84,14 @@ public:
   // Tissue cmpts don't have children and they don't have computed data that changes on call (like flow)
 };
 
+} //namespac biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
+} // Namespace std
+
+namespace biogears {
+std::ostream& operator<<(std::ostream& os, SEDataRequestScalar& v);
 class BIOGEARS_API PhysiologyEngineTrack : public Loggable {
 public:
   PhysiologyEngineTrack(PhysiologyEngine& engine);
@@ -83,8 +99,7 @@ public:
                         SESubstanceManager& subMgr,
                         SECompartmentManager& cmptMgr,
                         const std::vector<SESystem*>& physiology,
-                        const std::vector<SESystem*>& equipment
-                       );
+                        const std::vector<SESystem*>& equipment);
   PhysiologyEngineTrack(PhysiologyEngineTrack&&);
   PhysiologyEngineTrack& operator=(PhysiologyEngineTrack&& rhs);
   virtual ~PhysiologyEngineTrack();
@@ -98,11 +113,12 @@ public:
 
   bool ConnectRequest(SEDataRequest& dr, SEDataRequestScalar& ds);
 
-  virtual void SetupRequests(bool append = false);
-  virtual void TrackData(double currentTime_s, bool append = false);
-  virtual void PullData();
-  virtual bool TrackRequest(SEDataRequest& dr);
-  virtual void ForceConnection() { m_ForceConnection = true; }
+  SEDataRequestScalar* GetScalar(SEDataRequest* dr);
+  void SetupRequests(bool append = false);
+  void TrackData(double currentTime_s, bool append = false);
+  void PullData();
+  bool TrackRequest(SEDataRequest& dr);
+  void ForceConnection() { m_ForceConnection = true; }
 
 protected:
   bool m_ForceConnection;

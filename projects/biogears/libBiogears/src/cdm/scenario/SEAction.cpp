@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
+#include <biogears/cdm/patient/actions/SEEscharotomy.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
@@ -36,10 +37,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
+#include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>
 #include <biogears/cdm/patient/actions/SESleep.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+#include <biogears/cdm/patient/actions/SESubstanceNasalDose.h>
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
 #include <biogears/cdm/patient/actions/SETourniquet.h>
@@ -63,6 +66,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVentilatorPressureLoss.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
+
+namespace std {
+template class vector<biogears::SEAction*>;
+}
 
 namespace biogears {
 SEAction::SEAction()
@@ -240,6 +247,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       return a;
     }
 
+    CDM::EscharotomyData* escharotomyData = dynamic_cast<CDM::EscharotomyData*>(action);
+    if (escharotomyData != nullptr) {
+      SEEscharotomy* escharotomy = new SEEscharotomy();
+      escharotomy->Load(*escharotomyData);
+      return escharotomy;
+    }
+
     CDM::ExerciseData* exerciseData = dynamic_cast<CDM::ExerciseData*>(action);
     if (exerciseData != nullptr) {
       SEExercise* a = new SEExercise();
@@ -303,6 +317,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       return a;
     }
 
+    CDM::PulmonaryShuntData* pulmData = dynamic_cast<CDM::PulmonaryShuntData*>(action);
+    if (pulmData != nullptr) {
+      SEPulmonaryShunt* a = new SEPulmonaryShunt();
+      a->Load(*pulmData);
+      return a;
+    }
+
     CDM::TensionPneumothoraxData* pneumoData = dynamic_cast<CDM::TensionPneumothoraxData*>(action);
     if (pneumoData != nullptr) {
       SETensionPneumothorax* a = new SETensionPneumothorax();
@@ -320,6 +341,18 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       SESubstanceBolus* a = new SESubstanceBolus(*substance);
       a->Load(*bolusData);
       return a;
+    }
+
+    CDM::SubstanceNasalDoseData* nasalData = dynamic_cast<CDM::SubstanceNasalDoseData*>(action);
+    if (nasalData != nullptr) {
+      substance = substances.GetSubstance(nasalData->Substance());
+      if (substance == nullptr) {
+        ss << "Unknown substance : " << nasalData->Substance();
+        substances.GetLogger()->Fatal(ss.str(), "SEScenario::Load");
+      }
+      SESubstanceNasalDose* nd = new SESubstanceNasalDose(*substance);
+      nd->Load(*nasalData);
+      return nd;
     }
 
     CDM::SubstanceOralDoseData* oralData = dynamic_cast<CDM::SubstanceOralDoseData*>(action);

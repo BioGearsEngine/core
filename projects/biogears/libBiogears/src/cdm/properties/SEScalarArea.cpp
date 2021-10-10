@@ -16,13 +16,26 @@ namespace biogears {
 const AreaUnit AreaUnit::cm2("cm^2");
 const AreaUnit AreaUnit::m2("m^2");
 
+template class SEScalarQuantity<AreaUnit>;
+
 AreaUnit::AreaUnit(const char* u)
-  : AreaUnit(std::string{ u })
+  : AreaUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 AreaUnit::AreaUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+AreaUnit::~AreaUnit(){
+}
+//-----------------------------------------------------------------------------
+SEScalarArea::SEScalarArea()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarArea::~SEScalarArea()
 {
 }
 //-----------------------------------------------------------------------------
@@ -65,4 +78,25 @@ const AreaUnit& AreaUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool AreaUnit::operator==(const AreaUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool AreaUnit::operator!=(const AreaUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarArea::operator==(const SEScalarArea& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarArea::operator!=(const SEScalarArea& obj) const
+{
+  return !(*this == obj);
+}
 }

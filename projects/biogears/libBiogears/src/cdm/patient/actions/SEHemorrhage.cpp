@@ -18,11 +18,26 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 SEHemorrhage::SEHemorrhage()
   : SEPatientAction()
+  , m_InitialRate(new SEScalarVolumePerTime())
+  , m_BleedResistance(nullptr)
+
 {
   m_Compartment = ""; //User input, location of hemorrhage
   //m_MCIS;
-  m_InitialRate = nullptr; //User input, initial rate of bleeding
-  m_BleedResistance = nullptr; //Maps input to resistance on bleeding path from specified compartment
+  m_InitialRate->SetValue(0.0, biogears::VolumePerTimeUnit::mL_Per_min); //User input, initial rate of bleeding
+
+  //Place compartments in torso in a map so that we don't get too messy with nested conditionals.  Each vector is digits 2-4 of the MCIS code
+  m_OrganMap["VenaCava"] = std::vector<unsigned int> { 6, 6, 0 };
+  m_OrganMap["LeftLung"] = std::vector<unsigned int> { 7, 1, 0 };
+  m_OrganMap["RightLung"] = std::vector<unsigned int> { 7, 1, 0 };
+  m_OrganMap["Myocardium"] = std::vector<unsigned int> { 7, 2, 0 };
+  m_OrganMap["Liver"] = std::vector<unsigned int> { 8, 1, 0 };
+  m_OrganMap["Spleen"] = std::vector<unsigned int> { 8, 2, 0 };
+  m_OrganMap["Splanchnic"] = std::vector<unsigned int> { 8, 3, 0 };
+  m_OrganMap["LeftKidney"] = std::vector<unsigned int> { 8, 4, 0 };
+  m_OrganMap["RightKidney"] = std::vector<unsigned int> { 8, 4, 0 };
+  m_OrganMap["SmallIntestine"] = std::vector<unsigned int> { 8, 5, 0 };
+  m_OrganMap["LargeIntestine"] = std::vector<unsigned int> { 8, 6, 0 };
 }
 //-----------------------------------------------------------------------------
 SEHemorrhage::~SEHemorrhage()
@@ -35,9 +50,7 @@ void SEHemorrhage::Clear()
   SEPatientAction::Clear();
   m_Compartment = "";
   m_MCIS.clear();
-  organMap.clear();
   SAFE_DELETE(m_InitialRate);
-  SAFE_DELETE(m_BleedResistance);
 }
 //-----------------------------------------------------------------------------
 bool SEHemorrhage::IsValid() const
@@ -55,18 +68,9 @@ bool SEHemorrhage::Load(const CDM::HemorrhageData& in)
   SEPatientAction::Load(in);
   m_Compartment = in.Compartment();
   GetInitialRate().Load(in.InitialRate());
-  //Place compartments in torso in a map so that we don't get too messy with nested conditionals.  Each vector is digits 2-4 of the MCIS code
-  organMap["VenaCava"] = std::vector<unsigned int>{ 6, 6, 0 };
-  organMap["LeftLung"] = std::vector<unsigned int>{ 7, 1, 0 };
-  organMap["RightLung"] = std::vector<unsigned int>{ 7, 1, 0 };
-  organMap["Myocardium"] = std::vector<unsigned int>{ 7, 2, 0 };
-  organMap["Liver"] = std::vector<unsigned int>{ 8, 1, 0 };
-  organMap["Spleen"] = std::vector<unsigned int>{ 8, 2, 0 };
-  organMap["Splanchnic"] = std::vector<unsigned int>{ 8, 3, 0 };
-  organMap["LeftKidney"] = std::vector<unsigned int>{ 8, 4, 0 };
-  organMap["RightKidney"] = std::vector<unsigned int>{ 8, 4, 0 };
-  organMap["SmallIntestine"] = std::vector<unsigned int>{ 8, 5, 0 };
-  organMap["LargeIntestine"] = std::vector<unsigned int>{ 8, 6, 0 };
+  if ( in.BleedResistance().present() ){
+    GetBleedResistance().Load(in.BleedResistance().get());  
+  }
   SetMCIS();
 
   return true;
@@ -86,10 +90,13 @@ void SEHemorrhage::Unload(CDM::HemorrhageData& data) const
     data.Compartment(m_Compartment);
   if (HasInitialRate())
     data.InitialRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_InitialRate->Unload()));
+  if (HasBleedResistance())
+    data.BleedResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_BleedResistance->Unload()));
 }
 //-----------------------------------------------------------------------------
 void SEHemorrhage::SetMCIS()
 {
+  m_MCIS.clear();
   bool found = false;
   //Scale initial bleeding rate by a max value of 250 mL/min-->this would cause hypovolemic shock in 10 minutes assuming blood volume = 5L
   //Max this our "worst case"
@@ -114,10 +121,10 @@ void SEHemorrhage::SetMCIS()
   } else if (m_Compartment == "LeftLeg" || m_Compartment == "RightLeg") {
     m_MCIS.insert(m_MCIS.end(), { 4, 0, 0, 0 });
     found = true;
-  } else {
+  } else if (m_OrganMap.find(m_Compartment) != m_OrganMap.end()) {
     m_MCIS.push_back(2);
     //This inserts the code of integers stored in the organ map (associated with the compartment) at the end of the mcis vector
-    m_MCIS.insert(m_MCIS.end(), organMap[m_Compartment].begin(), organMap[m_Compartment].end());
+    m_MCIS.insert(m_MCIS.end(), m_OrganMap[m_Compartment].begin(), m_OrganMap[m_Compartment].end());
     found = true;
   }
   if (!found) {
@@ -154,12 +161,13 @@ bool SEHemorrhage::HasCompartment() const
 //-----------------------------------------------------------------------------
 void SEHemorrhage::SetCompartment(const char* name)
 {
-  return SetCompartment(std::string{ name });
+  return SetCompartment(std::string { name });
 }
 //-----------------------------------------------------------------------------
 void SEHemorrhage::SetCompartment(const std::string& name)
 {
   m_Compartment = name;
+  SetMCIS();
 }
 //-----------------------------------------------------------------------------
 void SEHemorrhage::InvalidateCompartment()
@@ -182,6 +190,12 @@ SEScalarVolumePerTime& SEHemorrhage::GetInitialRate()
     m_InitialRate = new SEScalarVolumePerTime();
   return *m_InitialRate;
 }
+SEScalarVolumePerTime const & SEHemorrhage::GetInitialRate() const
+{
+  if (m_InitialRate == nullptr)
+    const_cast<SEHemorrhage*>(this)->m_InitialRate = new SEScalarVolumePerTime();
+  return *m_InitialRate;
+}
 //-----------------------------------------------------------------------------
 bool SEHemorrhage::HasBleedResistance() const
 {
@@ -192,6 +206,13 @@ SEScalarFlowResistance& SEHemorrhage::GetBleedResistance()
 {
   if (m_BleedResistance == nullptr) {
     m_BleedResistance = new SEScalarFlowResistance();
+  }
+  return *m_BleedResistance;
+}
+SEScalarFlowResistance const& SEHemorrhage::GetBleedResistance() const
+{
+  if (m_BleedResistance == nullptr) {
+    const_cast<SEHemorrhage*>(this)->m_BleedResistance = new SEScalarFlowResistance();
   }
   return *m_BleedResistance;
 }
@@ -219,5 +240,18 @@ void SEHemorrhage::ToString(std::ostream& str) const
   }
   str << std::flush;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEHemorrhage::operator==(const SEHemorrhage& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= m_MCIS == rhs.m_MCIS;
+  equivilant &= (m_InitialRate && rhs.m_InitialRate) ? m_InitialRate->operator==(*rhs.m_InitialRate) : m_InitialRate == rhs.m_InitialRate;
+  equivilant &= (m_BleedResistance && rhs.m_BleedResistance) ? m_BleedResistance->operator==(*rhs.m_BleedResistance) : m_BleedResistance == rhs.m_BleedResistance;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEHemorrhage::operator!=(const SEHemorrhage& rhs) const
+{
+  return !(*this == rhs);
+}
 }

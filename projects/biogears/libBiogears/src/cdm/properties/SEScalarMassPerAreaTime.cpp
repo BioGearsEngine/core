@@ -15,13 +15,27 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const MassPerAreaTimeUnit MassPerAreaTimeUnit::g_Per_cm2_s("g/cm^2 s");
 
+template class SEScalarQuantity<MassPerAreaTimeUnit>;
+
 MassPerAreaTimeUnit::MassPerAreaTimeUnit(const char* u)
-  : MassPerAreaTimeUnit(std::string{ u })
+  : MassPerAreaTimeUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 MassPerAreaTimeUnit::MassPerAreaTimeUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+MassPerAreaTimeUnit::~MassPerAreaTimeUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarMassPerAreaTime::SEScalarMassPerAreaTime()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarMassPerAreaTime::~SEScalarMassPerAreaTime()
 {
 }
 //-------------------------------------------------------------------------------
@@ -36,7 +50,7 @@ CDM::ScalarMassPerAreaTimeData* SEScalarMassPerAreaTime::Unload() const
 //-------------------------------------------------------------------------------
 bool MassPerAreaTimeUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(g_Per_cm2_s.GetString(),unit) == 0)
+  if (strcmp(g_Per_cm2_s.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -48,7 +62,7 @@ bool MassPerAreaTimeUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const MassPerAreaTimeUnit& MassPerAreaTimeUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(g_Per_cm2_s.GetString(),unit) == 0)
+  if (strcmp(g_Per_cm2_s.GetString(), unit) == 0)
     return g_Per_cm2_s;
   std::stringstream err;
   err << unit << " is not a valid MassPerAreaTime unit";
@@ -60,4 +74,25 @@ const MassPerAreaTimeUnit& MassPerAreaTimeUnit::GetCompoundUnit(const std::strin
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool MassPerAreaTimeUnit::operator==(const MassPerAreaTimeUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool MassPerAreaTimeUnit::operator!=(const MassPerAreaTimeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarMassPerAreaTime::operator==(const SEScalarMassPerAreaTime& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarMassPerAreaTime::operator!=(const SEScalarMassPerAreaTime& obj) const
+{
+  return !(*this == obj);
+}
 }

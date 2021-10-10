@@ -17,9 +17,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
-
 namespace biogears {
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEPainStimulus : public SEPatientAction {
+  friend io::PatientActions;
 public:
   SEPainStimulus();
   virtual ~SEPainStimulus() override;
@@ -35,10 +38,6 @@ public:
   virtual bool Load(const CDM::PainStimulusData& in);
   virtual CDM::PainStimulusData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::PainStimulusData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
@@ -52,6 +51,12 @@ public:
   virtual void SetLocation(const std::string& name);
 
   virtual void ToString(std::ostream& str) const override;
+     
+  bool operator==( const SEPainStimulus& rhs) const;
+  bool operator!=( const SEPainStimulus& rhs) const;
+
+protected:
+  virtual void Unload(CDM::PainStimulusData& data) const;
 
 protected:
   SEScalar0To1* m_Severity;

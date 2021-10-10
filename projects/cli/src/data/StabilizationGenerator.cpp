@@ -12,14 +12,16 @@
 
 #include "StabilizationGenerator.h"
 #include <biogears/schema/cdm/EngineConfiguration.hxx>
+
 #include <fstream>
 #include <iostream>
 
+#include <biogears/version.h>
 #include <biogears/string/manipulation.h>
 namespace biogears {
 //-----------------------------------------------------------------------------
 StabilizationGenerator::StabilizationGenerator(std::string path)
-  : CSVToXMLConvertor(path, "Stabilization.csv")
+  : CSVToXMLConvertor(path, "templates/Stabilizations.csv")
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
 
@@ -61,7 +63,7 @@ bool StabilizationGenerator::save() const
   namespace CDM = mil::tatrc::physiology::datamodel;
   xml_schema::namespace_infomap info;
   info[""].name = "uri:/mil/tatrc/physiology/datamodel";
-  info[""].schema = "BioGears.xsd";
+  info[""].schema = "BioGearsDataModel.xsd";
 
   try {
     std::ofstream file;
@@ -95,7 +97,7 @@ void StabilizationGenerator::print() const
 
 //-----------------------------------------------------------------------------
 //!
-//! \brief Reads in resting resting stabilization data from Stabilization.csv
+//! \brief Reads in resting resting stabilization data from Stabilizations.csv
 //! \param itr 
 //! \return 
 //! 
@@ -138,6 +140,7 @@ bool StabilizationGenerator::process_RestingStabilizationCriteria(CSV_RowItr itr
   } catch (std::exception e) {
     rValue = false;
   }
+  _dynamic.contentVersion(branded_version_string());
   _dynamic.RestingStabilizationCriteria(data);
 
   return rValue;
@@ -187,12 +190,12 @@ bool StabilizationGenerator::process_FeedbackStabilizationCriteria(CSV_RowItr it
     rValue = false;
   }
   _dynamic.FeedbackStabilizationCriteria(data);
-
+  _dynamic.contentVersion(branded_version_string());
   return rValue;
 }
 //-----------------------------------------------------------------------------
 //!
-//! \brief Reads in condition stabilization data from Stabilization.csv
+//! \brief Reads in condition stabilization data from Stabilizations.csv
 //! \param itr 
 //! \return 
 //! 
@@ -205,6 +208,7 @@ bool StabilizationGenerator::process_ConditionStabilization(CSV_RowItr itr)
   auto condition_name = itr++->first;
   CDM::PhysiologyEngineDynamicStabilizationData::ConditionStabilization_type data;
   CDM::PhysiologyEngineDynamicStabilizationData::ConditionStabilization_type::Criteria_type criteria;
+  
   auto value = itr->first;
   try {
     for (size_t count = 0; count < 15; ++count, ++itr) {
@@ -233,6 +237,7 @@ bool StabilizationGenerator::process_ConditionStabilization(CSV_RowItr itr)
         cs_data.Name(condition_name);
         cs_data.Time(std::stod(value, &pos));
         cs_data.Time().unit(trim(value.substr(pos)));
+        cs_data.contentVersion(branded_version_string());
         _timed.ConditionStabilization().push_back(cs_data);
       }
     }
@@ -242,6 +247,7 @@ bool StabilizationGenerator::process_ConditionStabilization(CSV_RowItr itr)
 
   data.Name(condition_name);
   data.Criteria(criteria);
+  data.contentVersion(branded_version_string());
   _dynamic.ConditionStabilization().push_back(data);
   return rValue;
 }

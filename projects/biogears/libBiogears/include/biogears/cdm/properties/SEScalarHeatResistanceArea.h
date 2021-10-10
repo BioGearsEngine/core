@@ -20,7 +20,10 @@ public:
   HeatResistanceAreaUnit(const char* u);
   HeatResistanceAreaUnit(const std::string& u);
 
-  virtual ~HeatResistanceAreaUnit() = default;
+  virtual ~HeatResistanceAreaUnit(); 
+
+  bool operator==(const HeatResistanceAreaUnit&) const;
+  bool operator!=(const HeatResistanceAreaUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -33,11 +36,19 @@ public:
   static const HeatResistanceAreaUnit tog;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<HeatResistanceAreaUnit>;
+
 class BIOGEARS_API SEScalarHeatResistanceArea : public SEScalarQuantity<HeatResistanceAreaUnit> {
 public:
-  SEScalarHeatResistanceArea() = default;
-  virtual ~SEScalarHeatResistanceArea() = default;
+  SEScalarHeatResistanceArea();
+  virtual ~SEScalarHeatResistanceArea();
 
   CDM::ScalarHeatResistanceAreaData* Unload() const override;
+
+  using SEScalarQuantity<HeatResistanceAreaUnit>::SetValue;
+  using SEScalarQuantity<HeatResistanceAreaUnit>::GetValue;
+
+  bool operator==(const SEScalarHeatResistanceArea&) const;
+  bool operator!=(const SEScalarHeatResistanceArea&) const;
 };
 }

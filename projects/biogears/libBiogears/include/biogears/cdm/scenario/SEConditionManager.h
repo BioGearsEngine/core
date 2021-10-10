@@ -11,28 +11,27 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/patient/conditions/SEChronicAnemia.h>
+#include <biogears/cdm/patient/conditions/SEChronicObstructivePulmonaryDisease.h>
+#include <biogears/cdm/patient/conditions/SEChronicPericardialEffusion.h>
+#include <biogears/cdm/patient/conditions/SEChronicRenalStenosis.h>
+#include <biogears/cdm/patient/conditions/SEChronicVentricularSystolicDysfunction.h>
+#include <biogears/cdm/patient/conditions/SEDehydration.h>
+#include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
+#include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
+#include <biogears/cdm/patient/conditions/SEImpairedAlveolarExchange.h>
+#include <biogears/cdm/patient/conditions/SELobarPneumonia.h>
+#include <biogears/cdm/patient/conditions/SEPatientCondition.h>
+#include <biogears/cdm/patient/conditions/SEStarvation.h>
+#include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
+
+#include <biogears/schema/cdm/Scenario.hxx>
 CDM_BIND_DECL(ConditionData);
 
 namespace biogears {
-class SECondition;
-class SEChronicAnemia;
-class SEChronicHeartFailure;
-class SEChronicObstructivePulmonaryDisease;
-class SEChronicPericardialEffusion;
-class SEChronicVentricularSystolicDysfunction;
-class SEChronicRenalStenosis;
-class SEStarvation;
-class SEDehydration;
-class SEDiabetesType1;
-class SEDiabetesType2;
-class SEFasting;
-class SEImpairedAlveolarExchange;
-class SELobarPneumonia;
-class SEInitialEnvironment;
-class SESubstanceManager;
 
 class BIOGEARS_API SEConditionManager : public Loggable {
 public:

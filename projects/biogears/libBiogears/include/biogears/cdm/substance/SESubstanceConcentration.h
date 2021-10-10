@@ -21,8 +21,12 @@ namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEEnvironmentalConditions;
-
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstanceConcentration : public Loggable {
+  friend io::Substance;
+
 protected:
   friend SEEnvironmentalConditions; // So it can add substances to the manager
 public:
@@ -46,8 +50,8 @@ public:
 
   virtual SESubstance& GetSubstance() const;
 
-  bool operator==(SESubstanceConcentration const& rhs) const;
-  bool operator!=(SESubstanceConcentration const& rhs) const;
+  bool operator==( const SESubstanceConcentration& rhs) const;
+  bool operator!=( const SESubstanceConcentration& rhs) const;
   SESubstanceConcentration& operator=(SESubstanceConcentration const& rhs);
 
 protected:

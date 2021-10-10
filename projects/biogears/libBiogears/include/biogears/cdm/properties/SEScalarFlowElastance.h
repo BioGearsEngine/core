@@ -20,7 +20,10 @@ public:
   FlowElastanceUnit(const char* u);
   FlowElastanceUnit(const std::string& u);
 
-  virtual ~FlowElastanceUnit() = default;
+  virtual ~FlowElastanceUnit();
+
+  bool operator==(const FlowElastanceUnit&) const;
+  bool operator!=(const FlowElastanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -32,11 +35,19 @@ public:
   static const FlowElastanceUnit Pa_Per_m3;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<FlowElastanceUnit>;
+
 class BIOGEARS_API SEScalarFlowElastance : public SEScalarQuantity<FlowElastanceUnit> {
 public:
-  SEScalarFlowElastance() = default;
-  virtual ~SEScalarFlowElastance() = default;
+  SEScalarFlowElastance();
+  virtual ~SEScalarFlowElastance();
 
   CDM::ScalarFlowElastanceData* Unload() const override;
+
+  using SEScalarQuantity<FlowElastanceUnit>::SetValue;
+  using SEScalarQuantity<FlowElastanceUnit>::GetValue;
+
+  bool operator==(const SEScalarFlowElastance&) const;
+  bool operator!=(const SEScalarFlowElastance&) const;
 };
 }

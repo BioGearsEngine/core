@@ -31,13 +31,13 @@ class BIOGEARS_API SizeIndependentDepositionEfficencyCoefficient {
   friend class BioGearsSubstances;
 
 public:
-  SizeIndependentDepositionEfficencyCoefficient(){};
-  ~SizeIndependentDepositionEfficencyCoefficient() {}
+  SizeIndependentDepositionEfficencyCoefficient();
+  ~SizeIndependentDepositionEfficencyCoefficient();
 
-  double GetMouth() const { return m_mouth; }
-  double GetTrachea() const { return m_trachea; }
-  double GetBronchi() const { return m_bronchi; }
-  double GetAlveoli() const { return m_alveoli; }
+  double GetMouth() const;
+  double GetTrachea() const;
+  double GetBronchi() const;
+  double GetAlveoli() const;
 
 protected:
   double m_mouth = 0;
@@ -45,6 +45,14 @@ protected:
   double m_bronchi = 0;
   double m_alveoli = 0;
 };
+
+} //namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API map<biogears::SESubstance*, biogears::SizeIndependentDepositionEfficencyCoefficient*>;
+}
+
+namespace biogears {
 
 /**
 * @brief Manages and initializes all systems with substances needed by %BioGears
@@ -54,7 +62,7 @@ class BIOGEARS_API BioGearsSubstances : public SESubstanceManager {
 
 public:
   BioGearsSubstances(BioGears& data);
-  virtual ~BioGearsSubstances() = default;
+  virtual ~BioGearsSubstances();
 
   virtual void Clear();
 
@@ -78,7 +86,6 @@ public:
 
   inline SESubstance& GetAlbumin() { return *m_albumin; }
   inline SESubstance& GetAminoAcids() { return *m_aminoAcids; }
-  inline SESubstance& GetBicarbonate() { return *m_HCO3; }
   inline SESubstance& GetCalcium() { return *m_calcium; }
   inline SESubstance& GetChloride() { return *m_chloride; }
   inline SESubstance& GetCreatinine() { return *m_creatinine; }

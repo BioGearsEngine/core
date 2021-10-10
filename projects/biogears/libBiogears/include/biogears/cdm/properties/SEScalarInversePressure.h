@@ -20,7 +20,10 @@ public:
   InversePressureUnit(const char* u);
   InversePressureUnit(const std::string& u);
 
-  virtual ~InversePressureUnit() = default;
+  virtual ~InversePressureUnit();
+
+  bool operator==(const InversePressureUnit&) const;
+  bool operator!=(const InversePressureUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -33,11 +36,19 @@ public:
   static const InversePressureUnit Inverse_atm;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<InversePressureUnit>;
+
 class BIOGEARS_API SEScalarInversePressure : public SEScalarQuantity<InversePressureUnit> {
 public:
-  SEScalarInversePressure() = default;
-  virtual ~SEScalarInversePressure() = default;
+  SEScalarInversePressure();
+  virtual ~SEScalarInversePressure();
 
   CDM::ScalarInversePressureData* Unload() const override;
+
+  using SEScalarQuantity<InversePressureUnit>::SetValue;
+  using SEScalarQuantity<InversePressureUnit>::GetValue;
+
+  bool operator==(const SEScalarInversePressure&) const;
+  bool operator!=(const SEScalarInversePressure&) const;
 };
 }

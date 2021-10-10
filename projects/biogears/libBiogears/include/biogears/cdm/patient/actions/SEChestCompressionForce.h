@@ -16,28 +16,34 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalarForce;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEChestCompressionForce : public SEChestCompression {
+  friend io::PatientActions;
+
 public:
   SEChestCompressionForce();
   virtual ~SEChestCompressionForce();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
-  virtual bool IsActive() const;
+  virtual bool IsValid() const override;
+  virtual bool IsActive() const override;
 
   virtual bool Load(const CDM::ChestCompressionForceData& in);
-  virtual CDM::ChestCompressionForceData* Unload() const;
+  virtual CDM::ChestCompressionForceData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::ChestCompressionForceData& data) const;
-
-public:
   virtual bool HasForce() const;
   virtual SEScalarForce& GetForce();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
+
+  bool operator==( const SEChestCompressionForce& rhs) const;
+  bool operator!=( const SEChestCompressionForce& rhs) const;
+
+protected:
+  virtual void Unload(CDM::ChestCompressionForceData& data) const;
 
 protected:
   SEScalarForce* m_Force;

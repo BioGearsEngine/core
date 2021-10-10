@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 
+#include <biogears/filesystem/path.h>
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
@@ -23,8 +25,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/TimingProfile.h>
+#include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
 namespace biogears {
@@ -88,7 +90,7 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
 
       //if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
       m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
-      
+
       auto& params = memory_safe_scenario->GetInitialParameters();
       m_Engine.SetTrackStabilizationFlag(params.TrackingStabilization() == CDM::enumOnOff::On);
 
@@ -121,7 +123,7 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
     }
 
     if (scenarioData->AutoSerialization().present()) {
-      CreateFilePath(scenarioData->AutoSerialization()->Directory()); // Note method assumes you have a file and it ignores it
+      filesystem::create_directories(scenarioData->AutoSerialization()->Directory()); // Note method assumes you have a file and it ignores it
     }
     return ProcessActions(*memory_safe_scenario);
   } catch (CommonDataModelException& ex) {
@@ -150,7 +152,19 @@ bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string&
     m_Cancel = false;
     m_CustomExec = cExec;
 
-    std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(scenarioFile, GetLogger());
+    std::unique_ptr<CDM::ObjectData> bind;
+    auto io = m_Logger->GetIoManager().lock();
+    auto possible_path = io->FindScenarioFile(scenarioFile.c_str());
+    if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+      size_t content_size;
+      auto content = io->get_embedded_resource_file(scenarioFile.c_str(), content_size);
+      bind = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+    } else {
+      bind = Serializer::ReadFile(possible_path, m_Logger);
+    }
+
     if (bind == nullptr) {
       m_ss << "Unable to load scenario file : " << scenarioFile << std::endl;
       Error(m_ss);
@@ -255,10 +269,10 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
               if (scenario.GetAutoSerialization().GetPeriodTimeStamps() == CDM::enumOnOff::On)
                 serializationFileName << "@" << m_Engine.GetSimulationTime(TimeUnit::s);
               serializationFileName << ".xml";
-              std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str()));
+              m_Engine.SaveStateToFile(serializationFileName.str());
               if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
-                m_Engine.LoadState(*state);
-                std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str() + ".Reloaded.xml"));
+                m_Engine.LoadState(*m_Engine.GetStateData());
+                m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
               }
             }
           }
@@ -266,21 +280,17 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
             serializeAction = false;
             serializationFileName.str("");
             serializationFileName << serializationFileNameBase << "-" << actionName << "-@" << m_Engine.GetSimulationTime(TimeUnit::s) << ".xml";
-            std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str()));
+            m_Engine.SaveStateToFile(serializationFileName.str());
             if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
-              m_Engine.LoadState(*state);
-              std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str() + ".Reloaded.xml"));
+              m_Engine.LoadState(*m_Engine.GetStateData());
+              m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
             }
           }
         }
 
         // Pull data from the engine
         scenarioTime_s = m_Engine.GetSimulationTime(TimeUnit::s);
-        currentSampleTime_s += dT_s;
-        if (currentSampleTime_s >= sampleTime_s) {
-          currentSampleTime_s = 0;
-          m_Engine.GetEngineTrack()->TrackData(scenarioTime_s);
-        }
+
         // Call any custom callback provided
         if (m_CustomExec != nullptr) {
           m_CustomExec->CustomExec(scenarioTime_s, &m_Engine);
@@ -314,10 +324,10 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
 
       serializationFileName.str("");
       serializationFileName << serializationFileNameBase << "-" << actionName << "-@" << m_Engine.GetSimulationTime(TimeUnit::s) << ".xml";
-      std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str()));
+      m_Engine.SaveStateToFile(serializationFileName.str());
       if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
-        m_Engine.LoadState(*state);
-        std::unique_ptr<CDM::PhysiologyEngineStateData> state(m_Engine.SaveState(serializationFileName.str() + ".Reloaded.xml"));
+        m_Engine.LoadState(*m_Engine.GetStateData());
+        m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
       }
       serializeAction = true; // Serialize after the next time step
     }

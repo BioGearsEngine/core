@@ -18,8 +18,12 @@ namespace biogears {
 class SEScalarVolume;
 class SEScalarVolumePerTime;
 class SESubstanceCompound;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SESubstanceCompoundInfusion : public SESubstanceAdministration {
+  friend io::PatientActions;
+
 public:
   SESubstanceCompoundInfusion(const SESubstanceCompound& compound);
   virtual ~SESubstanceCompoundInfusion();
@@ -32,10 +36,6 @@ public:
   virtual bool Load(const CDM::SubstanceCompoundInfusionData& in);
   virtual CDM::SubstanceCompoundInfusionData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstanceCompoundInfusionData& data) const;
-
-public:
   virtual bool HasBagVolume() const;
   virtual SEScalarVolume& GetBagVolume();
 
@@ -45,6 +45,12 @@ public:
   virtual SESubstanceCompound& GetSubstanceCompound() const;
 
   virtual void ToString(std::ostream& str) const;
+
+  bool operator==( const SESubstanceCompoundInfusion& rhs) const;
+  bool operator!=( const SESubstanceCompoundInfusion& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstanceCompoundInfusionData& data) const;
 
 protected:
   SEScalarVolume* m_BagVolume;

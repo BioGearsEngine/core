@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>HemorrhageClass2Saline</Name>
     <Description>Bleed occurring in the aorta, with intravenous saline administration occurring afterwards</Description>
-    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>Soldier.xml</PatientFile></InitialParameters>
     
 	<!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">

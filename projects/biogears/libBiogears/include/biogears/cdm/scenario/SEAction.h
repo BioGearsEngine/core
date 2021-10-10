@@ -11,15 +11,24 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/utils/Logger.h>
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(ActionData);
 
 namespace biogears {
 class SESubstanceManager;
+namespace io {
+  class Scenario;
+}
+} //namespace biogears
 
+namespace biogears{
 class BIOGEARS_API SEAction : public Loggable {
+  friend io::Scenario;
+
 public:
   virtual const char* classname() const = 0;
 
@@ -51,7 +60,7 @@ public:
 
   virtual void ToString(std::ostream& str) const = 0;
   virtual const char* ToString() const;
- 
+
 protected:
   std::string m_Comment;
   mutable std::string m_StringRepresnetation; //<Cached Value of the last called to ToString();
@@ -62,4 +71,8 @@ inline std::ostream& operator<<(std::ostream& out, const SEAction& a)
   a.ToString(out);
   return out;
 }
+}//namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SEAction*>;
 }

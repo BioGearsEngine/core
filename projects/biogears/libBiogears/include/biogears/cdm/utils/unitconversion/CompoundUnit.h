@@ -237,7 +237,10 @@ public:
 
   const char* GetString() const;
 
-  operator std::string() {
+  std::string ToString() const{
+    return GetString();
+  }
+  operator std::string() const {
     return GetString();
   }
   // Auxiliary output routine

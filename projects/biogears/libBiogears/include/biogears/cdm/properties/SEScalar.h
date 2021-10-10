@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/circuit/SECircuit.inl>
 #include <biogears/cdm/properties/SEProperty.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
 
@@ -19,13 +18,16 @@ CDM_BIND_DECL(ScalarData)
 
 namespace biogears {
 class SEGenericScalar;
+namespace io {
+  class Property;
+}
 
 static constexpr double ZERO_APPROX = 1e-10;
 
 class BIOGEARS_API NoUnit {
 public:
-  NoUnit() = default;
-  virtual ~NoUnit() = default;
+  NoUnit();
+  virtual ~NoUnit();
 
   static const NoUnit unitless;
 };
@@ -36,6 +38,7 @@ protected:
   bool m_readOnly;
 
 public:
+  friend io::Property;
   SEScalar();
   SEScalar(double);
 
@@ -69,7 +72,7 @@ public:
   bool IsPositive() const;
   bool IsNegative() const;
   bool IsZero(double limit = ZERO_APPROX) const;
-  
+
   void SetReadOnly(bool b);
   bool IsReadOnly() const;
 
@@ -87,7 +90,7 @@ public:
 
   bool Equals(const SEScalar& to) const;
 
-  virtual void ToString(std::ostream& str) const;
+  virtual std::string ToString() const;
 
   static double dNaN();
   static double NaN;
@@ -117,29 +120,29 @@ protected:
   virtual void Unload(CDM::ScalarData& s) const;
 };
 //-------------------------------------------------------------------------------
-inline SEScalar operator+(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Increment(rhs); };
-inline SEScalar operator-(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Decrement(rhs); };
-inline SEScalar operator/(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Divide(rhs); };
-inline SEScalar operator*(double lhs, const SEScalar& rhs) { return SEScalar{ lhs }.Multiply(rhs); };
-inline bool operator<(double lhs, const SEScalar& rhs) { return SEScalar{ lhs } < rhs; };
-inline bool operator<=(double lhs, const SEScalar& rhs) { return SEScalar{ lhs } <= rhs; };
-inline bool operator>(double lhs, const SEScalar& rhs) { return SEScalar{ lhs } > rhs; };
-inline bool operator>=(double lhs, const SEScalar& rhs) { return SEScalar{ lhs } >= rhs; };
+inline SEScalar operator+(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Increment(rhs); };
+inline SEScalar operator-(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Decrement(rhs); };
+inline SEScalar operator/(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Divide(rhs); };
+inline SEScalar operator*(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Multiply(rhs); };
+inline bool operator<(double lhs, const SEScalar& rhs) { return SEScalar { lhs } < rhs; };
+inline bool operator<=(double lhs, const SEScalar& rhs) { return SEScalar { lhs } <= rhs; };
+inline bool operator>(double lhs, const SEScalar& rhs) { return SEScalar { lhs } > rhs; };
+inline bool operator>=(double lhs, const SEScalar& rhs) { return SEScalar { lhs } >= rhs; };
 inline bool operator==(double lhs, const SEScalar& rhs) { return rhs == lhs; }
 inline bool operator!=(double lhs, const SEScalar& rhs) { return rhs != lhs; }
 //-------------------------------------------------------------------------------
 inline std::ostream& operator<<(std::ostream& out, const SEScalar* s)
 {
   if (s == nullptr)
-    out << SEScalar::NaN << std::flush;
+    out << SEScalar::NaN;
   else
-    (*s).ToString(out);
+    out << (*s).ToString();
   return out;
 }
 //-------------------------------------------------------------------------------
 inline std::ostream& operator<<(std::ostream& out, const SEScalar& s)
 {
-  s.ToString(out);
+  out << s.ToString();
   return out;
 }
 inline void Override(const SEScalar& from, SEScalar& to)

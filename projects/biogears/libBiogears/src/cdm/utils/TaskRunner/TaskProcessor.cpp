@@ -26,7 +26,9 @@ TaskProcessor::TaskProcessor(TaskQueue* pTaskQueue)
   : m_pTaskQueue(pTaskQueue)
 {
 }
-
+//--------------------------------------------------------------------------------------------------
+TaskProcessor::~TaskProcessor(){
+}
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Parenthesis operator that draws and runs Tasks until the TaskQueue is empty

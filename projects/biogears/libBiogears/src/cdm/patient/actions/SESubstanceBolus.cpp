@@ -25,12 +25,12 @@ SESubstanceBolus::SESubstanceBolus(const SESubstance& substance)
   m_Dose = nullptr;
   m_Concentration = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SESubstanceBolus::~SESubstanceBolus()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceBolus::Clear()
 {
   SESubstanceAdministration::Clear();
@@ -40,17 +40,17 @@ void SESubstanceBolus::Clear()
   SAFE_DELETE(m_Concentration);
   // m_Substance=nullptr; Keeping mapping!!
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceBolus::IsValid() const
 {
   return SESubstanceAdministration::IsValid() && HasDose() && HasConcentration() && HasAdminRoute();
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceBolus::IsActive() const
 {
   return IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceBolus::Load(const CDM::SubstanceBolusData& in)
 {
   SESubstanceAdministration::Load(in);
@@ -62,14 +62,14 @@ bool SESubstanceBolus::Load(const CDM::SubstanceBolusData& in)
   m_AdminRoute = in.AdminRoute();
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::SubstanceBolusData* SESubstanceBolus::Unload() const
 {
   CDM::SubstanceBolusData* data(new CDM::SubstanceBolusData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceBolus::Unload(CDM::SubstanceBolusData& data) const
 {
   SESubstanceAdministration::Unload(data);
@@ -83,62 +83,68 @@ void SESubstanceBolus::Unload(CDM::SubstanceBolusData& data) const
     data.AdminTime(std::unique_ptr<CDM::ScalarTimeData>(m_AdminTime->Unload()));
   data.Substance(m_Substance.GetName());
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceBolus::HasAdminTime() const
 {
   return m_AdminTime == nullptr ? false : m_AdminTime->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarTime& SESubstanceBolus::GetAdminTime()
 {
   if (m_AdminTime == nullptr)
     m_AdminTime = new SEScalarTime();
   return *m_AdminTime;
 }
-
+//-------------------------------------------------------------------------------
 CDM::enumBolusAdministration::value SESubstanceBolus::GetAdminRoute() const
 {
   return m_AdminRoute;
 }
+//-------------------------------------------------------------------------------
 void SESubstanceBolus::SetAdminRoute(CDM::enumBolusAdministration::value route)
 {
   m_AdminRoute = route;
 }
+//-------------------------------------------------------------------------------
 bool SESubstanceBolus::HasAdminRoute() const
 {
   return m_AdminRoute == ((CDM::enumBolusAdministration::value)-1) ? false : true;
 }
+//-------------------------------------------------------------------------------
 void SESubstanceBolus::InvalidateAdminRoute()
 {
   m_AdminRoute = (CDM::enumBolusAdministration::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceBolus::HasDose() const
 {
   return m_Dose == nullptr ? false : m_Dose->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolume& SESubstanceBolus::GetDose()
 {
   if (m_Dose == nullptr)
     m_Dose = new SEScalarVolume();
   return *m_Dose;
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceBolus::HasConcentration() const
 {
   return m_Concentration == nullptr ? false : m_Concentration->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstanceBolus::GetConcentration()
 {
   if (m_Concentration == nullptr)
     m_Concentration = new SEScalarMassPerVolume();
   return *m_Concentration;
 }
-
+//-------------------------------------------------------------------------------
 SESubstance& SESubstanceBolus::GetSubstance() const
 {
   return (SESubstance&)m_Substance;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceBolus::ToString(std::ostream& str) const
 {
   str << "Patient Action : Substance Bolus";
@@ -151,35 +157,68 @@ void SESubstanceBolus::ToString(std::ostream& str) const
   str << "\n\tSubstance: " << m_Substance.GetName();
   str << "\n\tAdministration Route: ";
   HasAdminRoute() ? str << GetAdminRoute() : str << "Not Set";
-  HasAdminTime() ? str << "\n\tAdminTime: " << *m_AdminTime : str<<"";
+  HasAdminTime() ? str << "\n\tAdminTime: " << *m_AdminTime : str << "";
   str << std::flush;
 }
-
+//-------------------------------------------------------------------------------
 SESubstanceBolusState::SESubstanceBolusState(const SESubstance& sub)
-  : m_substance(sub)
+  : m_Substance(sub)
 {
-  m_elapsedTime.SetValue(0, TimeUnit::s);
-  m_administeredDose.SetValue(0, VolumeUnit::mL);
+  m_ElapsedTime.SetValue(0, TimeUnit::s);
+  m_AdministeredDose.SetValue(0, VolumeUnit::mL);
 }
+//-------------------------------------------------------------------------------
 SESubstanceBolusState::~SESubstanceBolusState()
 {
 }
+//-------------------------------------------------------------------------------
 bool SESubstanceBolusState::Load(const CDM::SubstanceBolusStateData& in)
 {
-  m_elapsedTime.Load(in.ElapsedTime());
-  m_administeredDose.Load(in.AdministeredDose());
+  m_ElapsedTime.Load(in.ElapsedTime());
+  m_AdministeredDose.Load(in.AdministeredDose());
   return true;
 }
+//-------------------------------------------------------------------------------
 CDM::SubstanceBolusStateData* SESubstanceBolusState::Unload() const
 {
   CDM::SubstanceBolusStateData* data = new CDM::SubstanceBolusStateData();
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 void SESubstanceBolusState::Unload(CDM::SubstanceBolusStateData& data) const
 {
-  data.Substance(m_substance.GetName());
-  data.ElapsedTime(std::unique_ptr<CDM::ScalarTimeData>(m_elapsedTime.Unload()));
-  data.AdministeredDose(std::unique_ptr<CDM::ScalarVolumeData>(m_administeredDose.Unload()));
+  data.Substance(m_Substance.GetName());
+  data.ElapsedTime(std::unique_ptr<CDM::ScalarTimeData>(m_ElapsedTime.Unload()));
+  data.AdministeredDose(std::unique_ptr<CDM::ScalarVolumeData>(m_AdministeredDose.Unload()));
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceBolus::operator==(const SESubstanceBolus& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant = m_AdminRoute == rhs.m_AdminRoute;
+  equivilant &= (m_AdminTime && rhs.m_AdminTime) ? m_AdminTime->operator==(*rhs.m_AdminTime) : m_AdminTime == rhs.m_AdminTime;
+  equivilant &= (m_Concentration && rhs.m_Concentration) ? m_Concentration->operator==(*rhs.m_Concentration) : m_Concentration == rhs.m_Concentration;
+  equivilant &= (m_Dose && rhs.m_Dose) ? m_Dose->operator==(*rhs.m_Dose) : m_Dose == rhs.m_Dose;
+  equivilant &= m_Substance == rhs.m_Substance;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceBolus::operator!=(const SESubstanceBolus& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceBolusState::operator==(const SESubstanceBolusState& rhs) const
+{
+  bool equivilant =  m_ElapsedTime == rhs.m_ElapsedTime;
+  equivilant &=  m_AdministeredDose == rhs.m_AdministeredDose;
+  equivilant &=  m_Substance == rhs.m_Substance;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceBolusState::operator!=(const SESubstanceBolusState& rhs) const
+{
+  return !(*this == rhs);
 }
 }

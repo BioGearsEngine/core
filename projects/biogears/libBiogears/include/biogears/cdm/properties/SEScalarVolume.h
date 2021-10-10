@@ -20,7 +20,10 @@ public:
   VolumeUnit(const char* u);
   VolumeUnit(const std::string& u);
 
-  virtual ~VolumeUnit() = default;
+  virtual ~VolumeUnit();   
+
+  bool operator==(const VolumeUnit&) const;
+  bool operator!=(const VolumeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -34,11 +37,19 @@ public:
   static const VolumeUnit uL;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<VolumeUnit>;
+
 class BIOGEARS_API SEScalarVolume : public SEScalarQuantity<VolumeUnit> {
 public:
-  SEScalarVolume() = default;
-  virtual ~SEScalarVolume() = default;
+  SEScalarVolume();
+  virtual ~SEScalarVolume();
 
   CDM::ScalarVolumeData* Unload() const override;
+
+  using SEScalarQuantity<VolumeUnit>::SetValue;
+  using SEScalarQuantity<VolumeUnit>::GetValue;
+
+  bool operator==(const SEScalarVolume&) const;
+  bool operator!=(const SEScalarVolume&) const;
 };
 }

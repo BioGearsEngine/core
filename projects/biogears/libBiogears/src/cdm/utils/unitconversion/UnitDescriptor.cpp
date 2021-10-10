@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 #include <biogears/cdm/utils/unitconversion/UnitDescriptor.h>
 
+#include <iostream>
 //Project Includes
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
@@ -24,8 +25,8 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 CUnitDescriptor::CUnitDescriptor(const std::string& name, const std::string& symbol, unsigned int quantityTypeId,
-  const std::string& targetCompoundUnit, const double& convFac, const double& bias,
-  PrefixModeType mode, const std::string& prefixSet)
+                                 const std::string& targetCompoundUnit, const double& convFac, const double& bias,
+                                 PrefixModeType mode, const std::string& prefixSet)
   : m_strName(name)
   , m_strSymbol(symbol)
   , m_uiQuantityTypeId(quantityTypeId)

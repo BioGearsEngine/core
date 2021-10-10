@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEExercise.h>
 
-#include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
@@ -22,33 +22,36 @@ namespace biogears {
 SEExercise::SEExercise()
   : m_mode(NONE)
 {
-  
 }
+//-------------------------------------------------------------------------------
 SEExercise::SEExercise(SEGeneric ex)
   : m_mode(GENERIC)
   , m_genericExercise(ex)
 {
 }
+//-------------------------------------------------------------------------------
 SEExercise::SEExercise(SECycling ex)
   : m_mode(CYCLING)
   , m_cyclingExercise(ex)
 {
 }
+//-------------------------------------------------------------------------------
 SEExercise::SEExercise(SERunning ex)
   : m_mode(RUNNING)
   , m_runningExercise(ex)
 {
 }
+//-------------------------------------------------------------------------------
 SEExercise::SEExercise::SEExercise(SEStrengthTraining ex)
   : m_mode(STRENGTH_TRAINING)
   , m_strengthExercise(ex)
 {
 }
-
+//-------------------------------------------------------------------------------
 SEExercise::~SEExercise()
 {
 }
-
+//-------------------------------------------------------------------------------
 void SEExercise::Clear()
 {
   m_mode = NONE;
@@ -69,13 +72,13 @@ void SEExercise::Clear()
   str.WeightStrength.Clear();
   str.RepsStrength.Clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SEExercise::IsValid() const
 {
   return SEPatientAction::IsValid()
     && m_mode != NONE;
 }
-
+//-------------------------------------------------------------------------------
 bool SEExercise::IsActive() const
 {
   if (HasGenericExercise()) {
@@ -94,8 +97,7 @@ bool SEExercise::IsActive() const
     return IsValid();
   }
 }
-
-
+//-------------------------------------------------------------------------------
 bool SEExercise::Load(const CDM::ExerciseData& in)
 {
   SEPatientAction::Load(in);
@@ -110,13 +112,13 @@ bool SEExercise::Load(const CDM::ExerciseData& in)
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 SEExercise::ExerciseType SEExercise::GetExerciseType() const
 {
   return m_mode;
 }
-
-bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in) 
+//-------------------------------------------------------------------------------
+bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in)
 {
   SEPatientAction::Load(in);
   m_mode = GENERIC;
@@ -127,7 +129,7 @@ bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in)
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 bool SEExercise::LoadCycling(const CDM::CyclingExerciseData& in)
 {
   SEPatientAction::Load(in);
@@ -141,7 +143,7 @@ bool SEExercise::LoadCycling(const CDM::CyclingExerciseData& in)
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 bool SEExercise::LoadRunning(const CDM::RunningExerciseData& in)
 {
   SEPatientAction::Load(in);
@@ -155,7 +157,7 @@ bool SEExercise::LoadRunning(const CDM::RunningExerciseData& in)
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 bool SEExercise::LoadStrength(const CDM::StrengthExerciseData& in)
 {
   SEPatientAction::Load(in);
@@ -164,14 +166,14 @@ bool SEExercise::LoadStrength(const CDM::StrengthExerciseData& in)
   m_strengthExercise.RepsStrength.Load(in.Repetitions());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ExerciseData* SEExercise::Unload() const
 {
   CDM::ExerciseData* data(new CDM::ExerciseData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEExercise::Unload(CDM::ExerciseData& data) const
 {
   SEPatientAction::Unload(data);
@@ -184,9 +186,8 @@ void SEExercise::Unload(CDM::ExerciseData& data) const
     }
   } else if (HasCyclingExercise()) {
     data.CyclingExercise(std::make_unique<CDM::ExerciseData::CyclingExercise_type>(
-std::unique_ptr<CDM::ExerciseData::CyclingExercise_type::Cadence_type>(),
-std::unique_ptr<CDM::ExerciseData::CyclingExercise_type::Power_type>()
-));
+      std::unique_ptr<CDM::ExerciseData::CyclingExercise_type::Cadence_type>(),
+      std::unique_ptr<CDM::ExerciseData::CyclingExercise_type::Power_type>()));
     data.CyclingExercise()->Cadence(std::unique_ptr<CDM::ScalarFrequencyData>(m_cyclingExercise.CadenceCycle.Unload()));
     data.CyclingExercise()->Power(std::unique_ptr<CDM::ScalarPowerData>(m_cyclingExercise.PowerCycle.Unload()));
     if (m_cyclingExercise.AddedWeight.IsValid()) {
@@ -209,58 +210,79 @@ std::unique_ptr<CDM::ExerciseData::CyclingExercise_type::Power_type>()
     data.StrengthExercise()->Repetitions(std::unique_ptr<CDM::ScalarData>(m_strengthExercise.RepsStrength.Unload()));
   }
 }
-
+//-------------------------------------------------------------------------------
 bool SEExercise::HasGenericExercise() const { return m_mode == GENERIC; };
+//-------------------------------------------------------------------------------
 bool SEExercise::HasRunningExercise() const { return m_mode == RUNNING; };
+//-------------------------------------------------------------------------------
 bool SEExercise::HasCyclingExercise() const { return m_mode == CYCLING; };
+//-------------------------------------------------------------------------------
 bool SEExercise::HasStrengthExercise() const { return m_mode == STRENGTH_TRAINING; };
-
-SEExercise::SEGeneric& SEExercise::GetGenericExercise() {
+//-------------------------------------------------------------------------------
+SEExercise::SEGeneric& SEExercise::GetGenericExercise()
+{
   return m_genericExercise;
 }
-SEExercise::SERunning& SEExercise::GetRunningExercise() {
+//-------------------------------------------------------------------------------
+SEExercise::SERunning& SEExercise::GetRunningExercise()
+{
   return m_runningExercise;
 }
-SEExercise::SECycling& SEExercise::GetCyclingExercise() {
+//-------------------------------------------------------------------------------
+SEExercise::SECycling& SEExercise::GetCyclingExercise()
+{
   return m_cyclingExercise;
 }
-SEExercise::SEStrengthTraining& SEExercise::GetStrengthExercise() {
+//-------------------------------------------------------------------------------
+SEExercise::SEStrengthTraining& SEExercise::GetStrengthExercise()
+{
   return m_strengthExercise;
 }
+//-------------------------------------------------------------------------------
 SEExercise::SEGeneric SEExercise::GetGenericExercise() const
 {
   return m_genericExercise;
 }
-SEExercise::SERunning SEExercise::GetRunningExercise() const {
+//-------------------------------------------------------------------------------
+SEExercise::SERunning SEExercise::GetRunningExercise() const
+{
   return m_runningExercise;
 }
-SEExercise::SECycling SEExercise::GetCyclingExercise() const {
+//-------------------------------------------------------------------------------
+SEExercise::SECycling SEExercise::GetCyclingExercise() const
+{
   return m_cyclingExercise;
 }
-SEExercise::SEStrengthTraining SEExercise::GetStrengthExercise() const {
+//-------------------------------------------------------------------------------
+SEExercise::SEStrengthTraining SEExercise::GetStrengthExercise() const
+{
   return m_strengthExercise;
 }
+//-------------------------------------------------------------------------------
 void SEExercise::SetGenericExercise(SEGeneric exercise)
 {
   m_mode = GENERIC;
   m_genericExercise = exercise;
 }
+//-------------------------------------------------------------------------------
 void SEExercise::SetRunningExercise(SERunning exercise)
 {
   m_mode = RUNNING;
   m_runningExercise = exercise;
 }
+//-------------------------------------------------------------------------------
 void SEExercise::SetCyclingExercise(SECycling exercise)
 {
   m_mode = CYCLING;
   m_cyclingExercise = exercise;
 }
+//-------------------------------------------------------------------------------
 void SEExercise::SetStrengthExercise(SEStrengthTraining exercise)
 {
   m_mode = STRENGTH_TRAINING;
   m_strengthExercise = exercise;
 }
-
+//-------------------------------------------------------------------------------
 void SEExercise::ToString(std::ostream& str) const
 {
   str << "Patient Action : Exercise";
@@ -281,7 +303,7 @@ void SEExercise::ToString(std::ostream& str) const
     (m_cyclingExercise.PowerCycle.IsValid()) ? str << m_cyclingExercise.PowerCycle : str << "NaN";
     if (m_cyclingExercise.AddedWeight.IsValid()) {
       str << "\n\tAdded Weight: ";
-     str << m_cyclingExercise.AddedWeight;
+      str << m_cyclingExercise.AddedWeight;
     }
 
   } else if (HasRunningExercise()) {
@@ -305,5 +327,83 @@ void SEExercise::ToString(std::ostream& str) const
     str << "No input for exercise";
   }
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEExercise::SEGeneric::operator==(const SEGeneric& rhs) const
+{
+  return DesiredWorkRate == rhs.DesiredWorkRate
+    && Intensity == rhs.Intensity;
+}
+//-------------------------------------------------------------------------------
+bool SEExercise::SEGeneric::operator!=(const SEGeneric& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+bool SEExercise::SECycling::operator==(const SECycling& rhs) const
+{
+
+  return CadenceCycle == rhs.CadenceCycle
+    && PowerCycle == rhs.PowerCycle
+    && AddedWeight == rhs.AddedWeight;
+}
+//-------------------------------------------------------------------------------
+bool SEExercise::SECycling::operator!=(const SECycling& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+bool SEExercise::SERunning::operator==(const SERunning& rhs) const
+{
+
+  return SpeedRun == rhs.SpeedRun
+    && InclineRun == rhs.InclineRun
+    && AddedWeight == rhs.AddedWeight;
+}
+//-------------------------------------------------------------------------------
+bool SEExercise::SERunning::operator!=(const SERunning& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+bool SEExercise::SEStrengthTraining::operator==(const SEStrengthTraining& rhs) const
+{
+  return WeightStrength == rhs.WeightStrength
+    && RepsStrength == rhs.RepsStrength;
+}
+//-------------------------------------------------------------------------------
+bool SEExercise::SEStrengthTraining::operator!=(const SEStrengthTraining& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+bool SEExercise::operator==(const SEExercise& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= m_mode == rhs.m_mode;
+  if (equivilant) {
+    switch (m_mode) {
+    case SEExercise::GENERIC:
+      equivilant &= m_genericExercise == rhs.m_genericExercise;
+      break;
+    case SEExercise::CYCLING:
+      equivilant &= m_cyclingExercise == rhs.m_cyclingExercise;
+      break;
+    case SEExercise::RUNNING:
+      equivilant &= m_runningExercise == rhs.m_runningExercise;
+      break;
+    case SEExercise::STRENGTH_TRAINING:
+      equivilant &= m_strengthExercise == rhs.m_strengthExercise;
+      break;
+    default:
+      equivilant = false;
+    }
+  }
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEExercise::operator!=(const SEExercise& rhs) const
+{
+  return !(*this == rhs);
 }
 }

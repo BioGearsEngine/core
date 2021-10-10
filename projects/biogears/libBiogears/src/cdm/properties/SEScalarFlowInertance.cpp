@@ -19,13 +19,27 @@ const FlowInertanceUnit FlowInertanceUnit::cmH2O_s2_Per_mL("cmH2O s^2/mL");
 const FlowInertanceUnit FlowInertanceUnit::cmH2O_s2_Per_L("cmH2O s^2/L");
 const FlowInertanceUnit FlowInertanceUnit::Pa_s2_Per_m3("Pa s^2/m^3");
 
+template class SEScalarQuantity<FlowInertanceUnit>;
+
 FlowInertanceUnit::FlowInertanceUnit(const char* u)
-  : FlowInertanceUnit(std::string{ u })
+  : FlowInertanceUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 FlowInertanceUnit::FlowInertanceUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+FlowInertanceUnit::~FlowInertanceUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFlowInertance::SEScalarFlowInertance()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFlowInertance::~SEScalarFlowInertance()
 {
 }
 //-----------------------------------------------------------------------------
@@ -80,4 +94,25 @@ const FlowInertanceUnit& FlowInertanceUnit::GetCompoundUnit(const std::string& u
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool FlowInertanceUnit::operator==(const FlowInertanceUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool FlowInertanceUnit::operator!=(const FlowInertanceUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarFlowInertance::operator==(const SEScalarFlowInertance& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarFlowInertance::operator!=(const SEScalarFlowInertance& obj) const
+{
+  return !(*this == obj);
+}
 }

@@ -16,13 +16,27 @@ namespace biogears {
 const ElectricPotentialUnit ElectricPotentialUnit::V("V");
 const ElectricPotentialUnit ElectricPotentialUnit::mV("mV");
 
+template class SEScalarQuantity<ElectricPotentialUnit>;
+
 ElectricPotentialUnit::ElectricPotentialUnit(const char* u)
-  : ElectricPotentialUnit(std::string{ u })
+  : ElectricPotentialUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 ElectricPotentialUnit::ElectricPotentialUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+ElectricPotentialUnit::~ElectricPotentialUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricPotential::SEScalarElectricPotential()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricPotential::~SEScalarElectricPotential()
 {
 }
 //-----------------------------------------------------------------------------
@@ -37,9 +51,9 @@ CDM::ScalarElectricPotentialData* SEScalarElectricPotential::Unload() const
 //-----------------------------------------------------------------------------
 bool ElectricPotentialUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(V.GetString(),unit) == 0)
+  if (strcmp(V.GetString(), unit) == 0)
     return true;
-  if (strcmp(mV.GetString(),unit) == 0)
+  if (strcmp(mV.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -51,9 +65,9 @@ bool ElectricPotentialUnit::IsValidUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 const ElectricPotentialUnit& ElectricPotentialUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(V.GetString(),unit) == 0)
+  if (strcmp(V.GetString(), unit) == 0)
     return V;
-  if (strcmp(mV.GetString(),unit) == 0)
+  if (strcmp(mV.GetString(), unit) == 0)
     return mV;
   std::stringstream err;
   err << unit << " is not a valid Electric Potential unit";
@@ -64,5 +78,26 @@ const ElectricPotentialUnit& ElectricPotentialUnit::GetCompoundUnit(const std::s
 {
   return GetCompoundUnit(unit.c_str());
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool ElectricPotentialUnit::operator==(const ElectricPotentialUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool ElectricPotentialUnit::operator!=(const ElectricPotentialUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarElectricPotential::operator==(const SEScalarElectricPotential& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarElectricPotential::operator!=(const SEScalarElectricPotential& obj) const
+{
+  return !(*this == obj);
+}
 }

@@ -75,6 +75,11 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineOsmolality"            Unit="mOsm/kg" Precision="1"/>
 	<DataRequest Substance="Insulin" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/mL" Precision="2"/>
 	<DataRequest Substance="Sodium" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/mL" Precision="2"/>
+	<DataRequest Substance="Globulin" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="g/dL" Precision="1"/>
+	<DataRequest Substance="Glucagon" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/dL" Precision="3"/>
+	<DataRequest Substance="Glucose" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/dL" Precision="1"/>
+	<DataRequest Substance="Hemoglobin" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="g/dL" Precision="2"/>
+	<DataRequest Substance="Lactate" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/L" Precision="3"/>
 		
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutVasculature" Name="InFlow"  Unit="mL/s" Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature" Name="InFlow"  Unit="mL/s" Precision="0"/>

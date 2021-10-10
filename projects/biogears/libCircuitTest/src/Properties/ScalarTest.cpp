@@ -49,7 +49,7 @@ void CommonDataModelTest::ScalarTest(const std::string& sOutputDirectory)
   dfault.SetNotation(DecimalNotation::Scientific);
   dfault.SetPrecision(4);
 
-  DataTrack track;
+  DataTrack track{m_Logger};
   track.SetFormatting("Default", dfault);
   track.SetFormatting("Fixed", fixed);
   track.SetFormatting("Scientific", sci);

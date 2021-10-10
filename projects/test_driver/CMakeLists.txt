@@ -6,7 +6,7 @@ cmake_policy(VERSION 3.8.0)
 ###############################################################################
 # Options
 ###############################################################################
-option(${ROOT_PROJECT_NAME}_BUILD_TEST_DRIVER "Toggle building of test driver tools" ON)
+option(${ROOT_PROJECT_NAME}_BUILD_TEST_DRIVER "Toggle building of test driver tools" ${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS)
 if(${ROOT_PROJECT_NAME}_BUILD_TEST_DRIVER)
 if(NOT ${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS)
   message(FATAL_ERROR "Fatal Error: test_driver requires BUILD_CIRCUIT_TESTS enabled to continue")
@@ -40,14 +40,13 @@ endif()
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################
-message(STATUS "")
 message(STATUS "Configuring ${PROJECT_NAME}")
 
 #Scenario Driver
-add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.h"   "Headers\\Private\\")
-add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.hpp"   "Headers\\Private\\")
-add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.cpp" "Sources\\")
-add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.c" "Sources\\")
+add_source_files(HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.h"   SOURCE_GROUP  "Headers\\Private\\")
+add_source_files(HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.hpp" SOURCE_GROUP  "Headers\\Private\\")
+add_source_files(SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.cpp" SOURCE_GROUP  "Sources\\")
+add_source_files(SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.c"   SOURCE_GROUP  "Sources\\")
 
 set(${PREFIX}_HEADERS ${HDRS} ${PUBLIC_HDRS} ${GEN_HDRS})
 set(${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS})
@@ -75,9 +74,10 @@ set_target_properties(${PROJECT_NAME}
   OUTPUT_NAME "${PROJECT_NAME}"
   COMPILE_PDB_NAME "${PROJECT_NAME}"
   PROJECT_LABEL "${PROJECT_NAME}"
-  DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+  DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
   CXX_STANDARD 14
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+  VS_DEBUGGER_ENVIRONMENT "${VS_DEBUGGER_ENVIRONMENT_LIST}"
   )
    
   target_compile_definitions(${PROJECT_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} )
@@ -93,9 +93,6 @@ list(APPEND ${PREFIX}_INCLUDES
 )
 list(REMOVE_DUPLICATES ${PREFIX}_INCLUDES)
 
-foreach( ITEM IN LISTS ${PREFIX}_INCLUDES)
-  message(STATUS "  ${${ITEM}}")
-endforeach()
 set(${PREFIX}_LIBS
       ${CMAKE_THREAD_LIBS_INIT}
       ${CMAKE_DL_LIBS}
@@ -124,5 +121,4 @@ endif()
      ARCHIVE DESTINATION lib
   )
 
-message(STATUS "")
 endif()

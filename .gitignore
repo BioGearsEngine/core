@@ -6,9 +6,10 @@ build*/
 **/__pycache__
 #Linux
 *.swp
-
+CMakeUserPresets.json
 *~*.TMP
 
 .idea/*
 .vs/*
+.vscode/*
 worktrees/*

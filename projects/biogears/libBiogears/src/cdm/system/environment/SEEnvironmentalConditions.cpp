@@ -23,8 +23,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/utils/FileUtils.h>
-
+#include <biogears/io/io-manager.h>
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/environments.h>
+#endif
 namespace biogears {
 SEEnvironmentalConditions::SEEnvironmentalConditions(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
@@ -70,7 +72,7 @@ void SEEnvironmentalConditions::Clear()
 //-----------------------------------------------------------------------------
 const SEScalar* SEEnvironmentalConditions::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SEEnvironmentalConditions::GetScalar(const std::string& name)
@@ -255,7 +257,7 @@ void SEEnvironmentalConditions::Merge(const SEEnvironmentalConditions& from)
 //-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::Load(const char* environmentFile)
 {
-  return Load(std::string{ environmentFile });
+  return Load(std::string { environmentFile });
 }
 //-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::Load(const std::string& given)
@@ -263,12 +265,18 @@ bool SEEnvironmentalConditions::Load(const std::string& given)
   CDM::EnvironmentalConditionsData* eData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  std::string filepath = given;
-  if (!IsAbsolutePath(given) && !TestFirstDirName(given,"environments")) {
-    filepath = "environments/";
-    filepath += given;
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindEnvironmentFile(given.c_str());
+  if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
+    auto content = io::get_embedded_environments_file(given.c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+  } else {
+    data = Serializer::ReadFile(possible_path, m_Logger);
   }
-  data = Serializer::ReadFile(filepath, GetLogger());
+
   eData = dynamic_cast<CDM::EnvironmentalConditionsData*>(data.get());
   if (eData == nullptr) {
     std::stringstream ss;

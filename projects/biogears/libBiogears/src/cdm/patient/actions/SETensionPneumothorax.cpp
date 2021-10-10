@@ -22,12 +22,12 @@ SETensionPneumothorax::SETensionPneumothorax()
   m_Side = (CDM::enumSide::value)-1;
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SETensionPneumothorax::~SETensionPneumothorax()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SETensionPneumothorax::Clear()
 {
   SEPatientAction::Clear();
@@ -35,7 +35,7 @@ void SETensionPneumothorax::Clear()
   m_Side = (CDM::enumSide::value)-1;
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SETensionPneumothorax::Load(const CDM::TensionPneumothoraxData& in)
 {
   SEPatientAction::Load(in);
@@ -44,14 +44,14 @@ bool SETensionPneumothorax::Load(const CDM::TensionPneumothoraxData& in)
   m_Side = in.Side();
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::TensionPneumothoraxData* SETensionPneumothorax::Unload() const
 {
   CDM::TensionPneumothoraxData* data(new CDM::TensionPneumothoraxData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SETensionPneumothorax::Unload(CDM::TensionPneumothoraxData& data) const
 {
   SEPatientAction::Unload(data);
@@ -62,38 +62,42 @@ void SETensionPneumothorax::Unload(CDM::TensionPneumothoraxData& data) const
   if (HasSide())
     data.Side(m_Side);
 }
-
+//-------------------------------------------------------------------------------
 bool SETensionPneumothorax::IsValid() const
 {
   return SEPatientAction::IsValid() && HasType() && HasSide() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SETensionPneumothorax::IsActive() const
-{ 
+{
   return IsValid();
 }
-
+//-------------------------------------------------------------------------------
 CDM::enumPneumothoraxType::value SETensionPneumothorax::GetType() const
 {
   return m_Type;
 }
+//-------------------------------------------------------------------------------
 void SETensionPneumothorax::SetType(CDM::enumPneumothoraxType::value Type)
 {
   m_Type = Type;
 }
+//-------------------------------------------------------------------------------
 bool SETensionPneumothorax::HasType() const
 {
   return m_Type == ((CDM::enumPneumothoraxType::value)-1) ? false : true;
 }
+//-------------------------------------------------------------------------------
 void SETensionPneumothorax::InvalidateType()
 {
   m_Type = (CDM::enumPneumothoraxType::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 CDM::enumSide::value SETensionPneumothorax::GetSide() const
 {
   return m_Side;
 }
+//-------------------------------------------------------------------------------
 void SETensionPneumothorax::SetSide(CDM::enumSide::value Side)
 {
   m_Side = Side;
@@ -102,22 +106,24 @@ bool SETensionPneumothorax::HasSide() const
 {
   return m_Side == ((CDM::enumSide::value)-1) ? false : true;
 }
+//-------------------------------------------------------------------------------
 void SETensionPneumothorax::InvalidateSide()
 {
   m_Side = (CDM::enumSide::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 bool SETensionPneumothorax::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SETensionPneumothorax::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SETensionPneumothorax::ToString(std::ostream& str) const
 {
   str << "Patient Action : Tension Pneumothorax";
@@ -130,5 +136,19 @@ void SETensionPneumothorax::ToString(std::ostream& str) const
   str << "\n\tSide: ";
   HasSide() ? str << GetSide() : str << "Not Set";
   str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SETensionPneumothorax::operator==( const SETensionPneumothorax& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= m_Side == rhs.m_Side;
+  equivilant &= m_Type == rhs.m_Type;
+  equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SETensionPneumothorax::operator!=( const SETensionPneumothorax& rhs) const
+{
+  return !(*this == rhs);
 }
 }

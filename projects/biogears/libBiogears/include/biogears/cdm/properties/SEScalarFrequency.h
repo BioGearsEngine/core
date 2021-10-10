@@ -20,7 +20,10 @@ public:
   FrequencyUnit(const char* u);
   FrequencyUnit(const std::string& u);
 
-  virtual ~FrequencyUnit() = default;
+  virtual ~FrequencyUnit();
+
+  bool operator==(const FrequencyUnit&) const;
+  bool operator!=(const FrequencyUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -33,11 +36,19 @@ public:
   static const FrequencyUnit Per_hr;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<FrequencyUnit>;
+
 class BIOGEARS_API SEScalarFrequency : public SEScalarQuantity<FrequencyUnit> {
 public:
-  SEScalarFrequency() = default;
-  virtual ~SEScalarFrequency() = default;
+  SEScalarFrequency();
+  virtual ~SEScalarFrequency();
 
   CDM::ScalarFrequencyData* Unload() const override;
+
+  using SEScalarQuantity<FrequencyUnit>::SetValue;
+  using SEScalarQuantity<FrequencyUnit>::GetValue;
+
+  bool operator==(const SEScalarFrequency&) const;
+  bool operator!=(const SEScalarFrequency&) const;
 };
 }

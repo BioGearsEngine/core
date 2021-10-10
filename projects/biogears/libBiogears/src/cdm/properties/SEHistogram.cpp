@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEHistogram.h>
 
+#include <iostream>
+
 #include <biogears/cdm/properties/SEScalar.h> //Utils
 
 namespace biogears {
@@ -126,4 +128,16 @@ const std::vector<double>& SEHistogram::GetIndependent() const
 {
   return m_Independent;
 }
+//-------------------------------------------------------------------------------
+bool SEHistogram::operator==(const SEHistogram& obj) const
+{
+  return m_Independent == obj.m_Independent
+    &&  m_Dependent == obj.m_Dependent;
+}
+//-------------------------------------------------------------------------------
+bool SEHistogram::operator!=(const SEHistogram& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
 }

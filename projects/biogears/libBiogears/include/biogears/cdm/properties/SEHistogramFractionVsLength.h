@@ -16,9 +16,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class LengthUnit;
-
+namespace io {
+  class Property;
+}
 class BIOGEARS_API SEHistogramFractionVsLength : public SEHistogram {
 public:
+  friend io::Property;
   SEHistogramFractionVsLength();
   virtual ~SEHistogramFractionVsLength();
 
@@ -28,6 +31,9 @@ public:
 
   virtual bool Load(const CDM::HistogramFractionVsLengthData& in);
   virtual CDM::HistogramFractionVsLengthData* Unload() const override;
+        
+  bool operator==(const SEHistogramFractionVsLength&) const;
+  bool operator!=(const SEHistogramFractionVsLength&) const;
 
 protected:
   virtual void Unload(CDM::HistogramFractionVsLengthData& data) const;

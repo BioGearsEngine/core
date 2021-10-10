@@ -16,13 +16,27 @@ namespace biogears {
 const PressureTimePerAreaUnit PressureTimePerAreaUnit::mmHg_Per_mL_m2("mmHg/mL m^2");
 const PressureTimePerAreaUnit PressureTimePerAreaUnit::cmH2O_Per_mL_m2("cmH2O/mL m^2");
 
+template class SEScalarQuantity<PressureTimePerAreaUnit>;
+
+PressureTimePerAreaUnit::~PressureTimePerAreaUnit(){
+
+}
+//-------------------------------------------------------------------------------
 PressureTimePerAreaUnit::PressureTimePerAreaUnit(const char* u)
-  : PressureTimePerAreaUnit(std::string{ u })
+  : PressureTimePerAreaUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 PressureTimePerAreaUnit::PressureTimePerAreaUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarPressureTimePerArea::SEScalarPressureTimePerArea()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarPressureTimePerArea::~SEScalarPressureTimePerArea()
 {
 }
 //-------------------------------------------------------------------------------
@@ -37,9 +51,9 @@ CDM::ScalarPressureTimePerAreaData* SEScalarPressureTimePerArea::Unload() const
 //-------------------------------------------------------------------------------
 bool PressureTimePerAreaUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(mmHg_Per_mL_m2.GetString(),unit) == 0)
+  if (strcmp(mmHg_Per_mL_m2.GetString(), unit) == 0)
     return true;
-  if (strcmp(cmH2O_Per_mL_m2.GetString(),unit) == 0)
+  if (strcmp(cmH2O_Per_mL_m2.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -51,9 +65,9 @@ bool PressureTimePerAreaUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const PressureTimePerAreaUnit& PressureTimePerAreaUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(mmHg_Per_mL_m2.GetString(),unit) == 0)
+  if (strcmp(mmHg_Per_mL_m2.GetString(), unit) == 0)
     return mmHg_Per_mL_m2;
-  if (strcmp(cmH2O_Per_mL_m2.GetString(),unit) == 0)
+  if (strcmp(cmH2O_Per_mL_m2.GetString(), unit) == 0)
     return cmH2O_Per_mL_m2;
   std::stringstream err;
   err << unit << " is not a valid PressureTimePerArea unit";
@@ -65,4 +79,25 @@ const PressureTimePerAreaUnit& PressureTimePerAreaUnit::GetCompoundUnit(const st
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool PressureTimePerAreaUnit::operator==(const PressureTimePerAreaUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool PressureTimePerAreaUnit::operator!=(const PressureTimePerAreaUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarPressureTimePerArea::operator==(const SEScalarPressureTimePerArea& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarPressureTimePerArea::operator!=(const SEScalarPressureTimePerArea& obj) const
+{
+  return !(*this == obj);
+}
 }

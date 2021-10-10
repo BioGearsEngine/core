@@ -61,7 +61,24 @@ CUnitConversionEngine::CUnitConversionEngine()
   m_QCMap = new QuantityConversionMap();
   m_D2QMap = new DimensionToQuantityMap();
 }
+//----------------------------------------------------------------------------
+CUnitConversionEngine::CUnitConversionEngine(const CUnitConversionEngine& obj)
+  :  m_wrkDir(obj.m_wrkDir)
+  ,  m_iNumFundamentalQuantities(obj.m_iNumFundamentalQuantities)
+  ,  m_iNumQuantities (obj.m_iNumQuantities)
+  ,  m_QTList ( new QuantityTypeList(*obj.m_QTList))
+  ,  m_UList ( new UnitList(*obj.m_UList))
+  ,  m_PList ( new PrefixList(*obj.m_PList))
+  ,  m_QCList ( new QuantityConversionList(*obj.m_QCList))
+  ,  m_PMap ( new PrefixMap(*obj.m_PMap))
+  ,  m_USMap ( new UnitSymbolMap(*obj.m_USMap))
+  ,  m_QNMap ( new QuantityNameMap(*obj.m_QNMap))
+  ,  m_QCMap ( new QuantityConversionMap(*obj.m_QCMap))
+  ,  m_D2QMap ( new DimensionToQuantityMap(*obj.m_D2QMap))
 
+{
+
+}
 //----------------------------------------------------------------------------
 CUnitConversionEngine::~CUnitConversionEngine()
 {

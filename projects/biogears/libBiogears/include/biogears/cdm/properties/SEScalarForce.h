@@ -20,7 +20,10 @@ public:
   ForceUnit(const char* u);
   ForceUnit(const std::string& u);
 
-  virtual ~ForceUnit() {}
+  virtual ~ForceUnit();
+
+  bool operator==(const ForceUnit&) const;
+  bool operator!=(const ForceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -32,11 +35,19 @@ public:
   static const ForceUnit dyn;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<ForceUnit>;
+
 class BIOGEARS_API SEScalarForce : public SEScalarQuantity<ForceUnit> {
 public:
-  SEScalarForce() = default;
-  virtual ~SEScalarForce() = default;
+  SEScalarForce();
+  virtual ~SEScalarForce();
 
   CDM::ScalarForceData* Unload() const override;
+
+  using SEScalarQuantity<ForceUnit>::SetValue;
+  using SEScalarQuantity<ForceUnit>::GetValue;
+
+  bool operator==(const SEScalarForce&) const;
+  bool operator!=(const SEScalarForce&) const;
 };
 }

@@ -22,7 +22,7 @@ public:
 
   ~SEUnitScalar() override;
 
-  void ToString(std::ostream& str) const override = 0;
+  std::string ToString() const override = 0;
 
   virtual const CCompoundUnit* GetUnit() const = 0;
   virtual const CCompoundUnit* GetCompoundUnit(const char* unit) const = 0;
@@ -36,5 +36,7 @@ public:
   virtual SEUnitScalar& DecrementValue(double d, const char* unit) = 0;
   virtual SEUnitScalar& DecrementValue(double d, const std::string& unit) = 0;
   
+  bool operator==(const SEUnitScalar&) const;
+  bool operator!=(const SEUnitScalar&) const;
 };
 }

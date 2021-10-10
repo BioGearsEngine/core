@@ -21,15 +21,27 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/Logger.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+namespace std {
+template class vector<biogears::SEGasTransportVertex*>;
+template class vector<biogears::SEGasTransportEdge*>;
+template class map<const biogears::SEGasTransportVertex*, size_t>;
+template class map<const biogears::SEGasTransportVertex*, vector<biogears::SEGasTransportEdge*>*>;
+}
 namespace biogears {
+
 SEGasCompartmentGraph::SEGasCompartmentGraph(const char* name, Logger* logger)
-  : SEGasCompartmentGraph(std::string{ name }, logger)
+  : SEGasCompartmentGraph(std::string { name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
 SEGasCompartmentGraph::SEGasCompartmentGraph(const std::string& name, Logger* logger)
-
-  : SECompartmentTransportGraph(name, logger){};
+  : SECompartmentTransportGraph(name, logger)
+{
+}
+//-----------------------------------------------------------------------------
+SEGasCompartmentGraph::~SEGasCompartmentGraph()
+{
+}
 //-----------------------------------------------------------------------------
 bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {
@@ -37,7 +49,7 @@ bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompa
   for (auto name : in.Compartment()) {
     SEGasCompartment* cmpt = cmptMgr.GetGasCompartment(name);
     if (cmpt == nullptr) {
-      Error("Could not find compartment " + std::string{ name } +" for graph " + m_Name);
+      Error("Could not find compartment " + std::string { name } + " for graph " + m_Name);
       return false;
     }
     AddCompartment(*cmpt);
@@ -45,7 +57,7 @@ bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompa
   for (auto name : in.Link()) {
     SEGasCompartmentLink* link = cmptMgr.GetGasLink(name);
     if (link == nullptr) {
-      Error("Could not find link " + std::string{ name } +" for graph " + m_Name);
+      Error("Could not find link " + std::string { name } + " for graph " + m_Name);
       return false;
     }
     AddLink(*link);

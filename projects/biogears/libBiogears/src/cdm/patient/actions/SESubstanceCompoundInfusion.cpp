@@ -24,12 +24,12 @@ SESubstanceCompoundInfusion::SESubstanceCompoundInfusion(const SESubstanceCompou
   m_Rate = nullptr;
   m_BagVolume = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SESubstanceCompoundInfusion::~SESubstanceCompoundInfusion()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceCompoundInfusion::Clear()
 {
   SESubstanceAdministration::Clear();
@@ -37,7 +37,7 @@ void SESubstanceCompoundInfusion::Clear()
   m_BagVolume = nullptr;
   // m_Compound=nullptr; Keeping mapping!!
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::Load(const CDM::SubstanceCompoundInfusionData& in)
 {
   SESubstanceAdministration::Load(in);
@@ -45,24 +45,24 @@ bool SESubstanceCompoundInfusion::Load(const CDM::SubstanceCompoundInfusionData&
   GetBagVolume().Load(in.BagVolume());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::IsValid() const
 {
   return SESubstanceAdministration::IsValid() && HasRate() && HasBagVolume();
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::IsActive() const
 {
   return IsValid() ? !m_Rate->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 CDM::SubstanceCompoundInfusionData* SESubstanceCompoundInfusion::Unload() const
 {
   CDM::SubstanceCompoundInfusionData* data(new CDM::SubstanceCompoundInfusionData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceCompoundInfusion::Unload(CDM::SubstanceCompoundInfusionData& data) const
 {
   SESubstanceAdministration::Unload(data);
@@ -72,34 +72,36 @@ void SESubstanceCompoundInfusion::Unload(CDM::SubstanceCompoundInfusionData& dat
     data.BagVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_BagVolume->Unload()));
   data.SubstanceCompound(m_Compound.GetName());
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::HasRate() const
 {
   return m_Rate == nullptr ? false : m_Rate->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolumePerTime& SESubstanceCompoundInfusion::GetRate()
 {
   if (m_Rate == nullptr)
     m_Rate = new SEScalarVolumePerTime();
   return *m_Rate;
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::HasBagVolume() const
 {
   return m_BagVolume == nullptr ? false : m_BagVolume->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarVolume& SESubstanceCompoundInfusion::GetBagVolume()
 {
   if (m_BagVolume == nullptr)
     m_BagVolume = new SEScalarVolume();
   return *m_BagVolume;
 }
-
+//-------------------------------------------------------------------------------
 SESubstanceCompound& SESubstanceCompoundInfusion::GetSubstanceCompound() const
 {
   return (SESubstanceCompound&)m_Compound;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceCompoundInfusion::ToString(std::ostream& str) const
 {
   str << "Patient Action : Compound Infusion";
@@ -112,5 +114,18 @@ void SESubstanceCompoundInfusion::ToString(std::ostream& str) const
   str << "\n\tSubstance Compound: " << m_Compound.GetName();
   str << std::flush;
 }
-
+//-------------------------------------------------------------------------------
+bool SESubstanceCompoundInfusion::operator==(const SESubstanceCompoundInfusion& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_BagVolume && rhs.m_BagVolume) ? m_BagVolume->operator==(*rhs.m_BagVolume) : m_BagVolume == rhs.m_BagVolume;
+  equivilant &= (m_Rate && rhs.m_Rate) ? m_Rate->operator==(*rhs.m_Rate) : m_Rate == rhs.m_Rate;
+  equivilant &= m_Compound == rhs.m_Compound;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceCompoundInfusion::operator!=(const SESubstanceCompoundInfusion& rhs) const
+{
+  return !(*this == rhs);
+}
 }

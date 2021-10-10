@@ -20,7 +20,10 @@ public:
   OsmolarityUnit(const char* u);
   OsmolarityUnit(const std::string& u);
 
-  virtual ~OsmolarityUnit() = default;
+  virtual ~OsmolarityUnit();   
+
+  bool operator==(const OsmolarityUnit&) const;
+  bool operator!=(const OsmolarityUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -31,11 +34,19 @@ public:
   static const OsmolarityUnit mOsm_Per_L;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<OsmolarityUnit>;
+
 class BIOGEARS_API SEScalarOsmolarity : public SEScalarQuantity<OsmolarityUnit> {
 public:
-  SEScalarOsmolarity() = default;
-  virtual ~SEScalarOsmolarity() = default;
+  SEScalarOsmolarity();
+  virtual ~SEScalarOsmolarity();
 
   CDM::ScalarOsmolarityData* Unload() const override;
+
+  using SEScalarQuantity<OsmolarityUnit>::SetValue;
+  using SEScalarQuantity<OsmolarityUnit>::GetValue;
+
+  bool operator==(const SEScalarOsmolarity&) const;
+  bool operator!=(const SEScalarOsmolarity&) const;
 };
 }

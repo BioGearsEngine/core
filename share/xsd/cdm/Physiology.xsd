@@ -149,7 +149,11 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="CerebralBloodFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The rate of blood flow into the skull, thus supplying the brain.-->
                     <xs:element name="CerebralPerfusionPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The difference between the mean arterial pressure and the cerebral blood pressure. Defines the hydrostatic diffusion gradient.-->
                     <xs:element name="DiastolicArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The minimum pressure in the aorta over the course of a cardiac cycle.-->
-                    <xs:element name="HeartEjectionFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The current pressure in the aorta.-->
+                    <xs:element name="ExtremityPressure-LeftArm" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pulse pressure observable in specified extremity.-->
+                    <xs:element name="ExtremityPressure-LeftLeg" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pulse pressure observable in specified extremity.-->
+                    <xs:element name="ExtremityPressure-RightArm" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pulse pressure observable in specified extremity.-->
+                    <xs:element name="ExtremityPressure-RightLeg" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pulse pressure observable in specified extremity.-->                   
+					<xs:element name="HeartEjectionFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The current pressure in the aorta.-->
                     <xs:element name="HeartRate" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The fraction of the blood that is pumped out of the ventricle during a cardiac cycle.-->
                     <xs:element name="HeartRhythm" type="enumHeartRhythm" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Current heart rhythm -->			
                     <xs:element name="HeartStrokeVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of blood pumped from the left ventricle in one contraction.-->
@@ -314,6 +318,7 @@ specific language governing permissions and limitations under the License.
                 <xs:sequence>    
                     <xs:element name="HeartRateScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart rate multiplier used to scale the heart rate due to baroreceptor feedback-->
                     <xs:element name="HeartElastanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart elastance multiplier used to scale the heart rate due to baroreceptor feedback-->
+                    <xs:element name="MentalStatus" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief mental status of the patient from 0 to 1, 1 indicating fully comatose, used in CBRNE exposure models-->
                     <xs:element name="ResistanceScaleExtrasplanchnic" type="ScalarData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="ResistanceScaleMuscle" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Cardiovascular resistance multiplier used to scale the heart rate due to baroreceptor feedback-->
                     <xs:element name="ResistanceScaleMyocardium" type="ScalarData" minOccurs="0" maxOccurs="1"/>
@@ -344,6 +349,7 @@ specific language governing permissions and limitations under the License.
         <xs:complexContent>
             <xs:extension base="SystemData">
                 <xs:sequence>    
+				    <xs:element name="BladderPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure of bladder iwth changes marked due to compartment syndrome. -->
                     <xs:element name="FiltrationFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Scalar used to compute reabsorption for substances-->
                     <xs:element name="GlomerularFiltrationRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Flow rate of filtrate into the tubules -->
                     

@@ -16,8 +16,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class TimeUnit;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SEAdvanceTime : public SEAction {
+  friend io::Scenario;
+
 public:
   SEAdvanceTime();
   virtual ~SEAdvanceTime() override;
@@ -30,7 +34,7 @@ public:
   virtual bool IsValid() const override;
 
   virtual bool Load(const CDM::AdvanceTimeData& in);
-  virtual CDM::AdvanceTimeData* Unload() const;
+  virtual CDM::AdvanceTimeData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::AdvanceTimeData& data) const;

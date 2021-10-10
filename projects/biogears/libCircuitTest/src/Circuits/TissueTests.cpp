@@ -298,7 +298,7 @@ void BioGearsEngineTest::AlveolarOxygenDiffusionTest(const std::string& rptDirec
   SELiquidCompartment& lcmpt = bg.GetCompartments().CreateLiquidCompartment("lcmpt");
   SEGasCompartment& gcmpt = bg.GetCompartments().CreateGasCompartment("gcmpt");
 
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   std::string rptFile = rptDirectory + "/AlveolarOxygenDiffusionTest.csv";
   double time = 0.0;
 
@@ -353,7 +353,7 @@ void BioGearsEngineTest::AlveolarCarbonDioxideDiffusionTest(const std::string& r
   BioGears bg(m_Logger);
   Tissue& tsu = (Tissue&)bg.GetTissue();
 
-  DataTrack trk2;
+  DataTrack trk2{m_Logger};
   std::string rptFile = rptDirectory + "/AlveolarCarbonDioxideDiffusionTest.csv";
 
   double timestep_s = 1.0 / 90;
@@ -416,14 +416,14 @@ void BioGearsEngineTest::EigenDiffusionTest(const std::string& rptDirectory)
   m_Logger->ResetLogFile(rptDirectory + "/EigenDiffusionTest.log");
   BioGears bg(m_Logger);
   Tissue& tsu = (Tissue&)bg.GetTissue();
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::On);
   bg.CreateCircuitsAndCompartments();
 
   std::string matrixFile = rptDirectory + "/EigenDiffusionTest.csv";
-  DataTrack matrixTrk;
+  DataTrack matrixTrk{m_Logger};
 
   //Use sodium, potassium, and chloride as model substances
   SESubstance* Na = &bg.GetSubstances().GetSodium();
@@ -561,7 +561,7 @@ void BioGearsEngineTest::FacilitatedDiffusionTest(const std::string& rptDirector
   SELiquidCompartment& tissueIntracellular = bg.GetCompartments().CreateLiquidCompartment("Intracellular");
   SELiquidCompartment& vascular = bg.GetCompartments().CreateLiquidCompartment("Vascular");
 
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   std::string rptFile = rptDirectory + "/FacilitatedDiffusionTest.csv";
   double time = 0.0;
 
@@ -684,14 +684,14 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   SECircuitManager circuits(m_Logger);
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, m_Logger);
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, m_Logger);
-  DataTrack circuitTrk;
-  DataTrack stabilization;
-  DataTrack testTrk;
-  DataTrack trk;
+  DataTrack circuitTrk{m_Logger};
+  DataTrack stabilization{m_Logger};
+  DataTrack testTrk{m_Logger};
+  DataTrack trk{m_Logger};
 
   Tissue& tsu = (Tissue&)bg.GetTissue();
   DiffusionCalculator& diffCalc = (DiffusionCalculator&)bg.GetDiffusionCalculator();
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);

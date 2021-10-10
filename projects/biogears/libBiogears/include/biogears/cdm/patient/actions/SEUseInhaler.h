@@ -19,9 +19,9 @@ class SESubstance;
 class SEConsciousRespiration;
 class BIOGEARS_API SEUseInhaler : public SEConsciousRespirationCommand {
   friend class SEConsciousRespiration;
-  SEUseInhaler();
 
 public:
+  SEUseInhaler();
   virtual ~SEUseInhaler();
 
   virtual void Clear(); //clear memory
@@ -32,11 +32,13 @@ public:
   virtual bool Load(const CDM::UseInhalerData& in);
   virtual CDM::UseInhalerData* Unload() const;
 
+  virtual void ToString(std::ostream& str) const;
+
+  bool operator==( const SEUseInhaler& rhs) const;
+  bool operator!=( const SEUseInhaler& rhs) const;
+
 protected:
   virtual void Unload(CDM::UseInhalerData& data) const;
-
-public:
-  virtual void ToString(std::ostream& str) const;
 
 protected:
 };

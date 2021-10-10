@@ -52,8 +52,8 @@ public:
   SEOxygenTankPressureLoss* GetOxygenTankPressureLoss() const;
   void RemoveOxygenTankPressureLoss();
 
-  bool HasOxygenWallPortPressureLoss();
-  SEOxygenWallPortPressureLoss* GetOxygenWallPortPressureLoss();
+  bool HasOxygenWallPortPressureLoss() const;
+  SEOxygenWallPortPressureLoss* GetOxygenWallPortPressureLoss() const;
   void RemoveOxygenWallPortPressureLoss();
 
   // FAILURE ACTIONS

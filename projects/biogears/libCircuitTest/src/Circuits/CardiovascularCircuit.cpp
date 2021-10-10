@@ -181,7 +181,7 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   double binding_s = 0;
   BioGears bg(sTestDirectory + "/" + tName.str() + "CircuitAndTransportTest.log");
   bg.GetLogger()->Info("Running " + tName.str());
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   if (heartRate_bpm <= 0)
     heartRate_bpm = bg.GetPatient().GetHeartRateBaseline().GetValue(FrequencyUnit::Per_min);
@@ -228,9 +228,9 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   SEFluidCircuit& cvCircuit = bg.GetCircuits().GetActiveCardiovascularCircuit();
 
   // Make a file with all the resistances and compliances
-  DataTrack cvCompBaseTrk;
+  DataTrack cvCompBaseTrk{m_Logger};
   std::ofstream cvCompBaseFile;
-  DataTrack cvResBaseTrk;
+  DataTrack cvResBaseTrk{m_Logger};
   std::ofstream cvResBaseFile;
   for (SEFluidCircuitPath* p : cvCircuit.GetPaths()) {
     if (p->HasComplianceBaseline()) {
@@ -248,33 +248,33 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   //if (connectRenal)
   //  ((Renal&)bg.GetRenal());
 
-  DataTrack cvGraphTrk;
+  DataTrack cvGraphTrk{m_Logger};
   std::ofstream cvGraphFile;
-  DataTrack cvGraphPresTrk;
+  DataTrack cvGraphPresTrk{m_Logger};
   std::ofstream cvGraphPresFile;
-  DataTrack cvGraphVolTrk;
+  DataTrack cvGraphVolTrk{m_Logger};
   std::ofstream cvGraphVolFile;
-  DataTrack cvGraphFlowTrk;
+  DataTrack cvGraphFlowTrk{m_Logger};
   std::ofstream cvGraphFlowFile;
-  DataTrack circiutTrk;
+  DataTrack circiutTrk{m_Logger};
   std::ofstream circuitFile;
-  DataTrack cvPressureTrk;
+  DataTrack cvPressureTrk{m_Logger};
   std::ofstream cvPressureFile;
-  DataTrack cvVolumeTrk;
+  DataTrack cvVolumeTrk{m_Logger};
   std::ofstream cvVolumeFile;
-  DataTrack cvNormVolumeTrk;
+  DataTrack cvNormVolumeTrk{m_Logger};
   std::ofstream cvNormVolumeFile;
-  DataTrack cvFlowTrk;
+  DataTrack cvFlowTrk{m_Logger};
   std::ofstream cvFlowFile;
-  DataTrack cvCompFlowTrk;
+  DataTrack cvCompFlowTrk{m_Logger};
   std::ofstream cvCompFlowFile;
-  DataTrack cvResFlowTrk;
+  DataTrack cvResFlowTrk{m_Logger};
   std::ofstream cvResFlowFile;
-  DataTrack cvHDTrk;
+  DataTrack cvHDTrk{m_Logger};
   std::ofstream cvHDFile;
-  DataTrack cvCompTrk;
+  DataTrack cvCompTrk{m_Logger};
   std::ofstream cvCompFile;
-  DataTrack cvResTrk;
+  DataTrack cvResTrk{m_Logger};
   std::ofstream cvResFile;
 
   double time_s = 0.0;
@@ -558,8 +558,8 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
   circuitFile.close();
   cvGraphFile.close();
 
-  ss << "It took " << tmr.GetElapsedTime_s("Test") << "s to run";
-  bg.GetLogger()->Info(ss, "CardiovascularCircuitAndTransportTest");
+  ss << "It took " << tmr.GetElapsedTime_s("Test") << "s to run CardiovascularCircuitAndTransportTest";
+  Info(ss);
 }
 
 void BioGearsEngineTest::SinusoidHeartDriver(double time_s, double heartFreq_Per_s, double& lHeartElastance, double& rHeartElastance)
@@ -596,7 +596,7 @@ void BioGearsEngineTest::SinusoidHeartDriver(double time_s, double heartFreq_Per
 
 void BioGearsEngineTest::CardiovascularCircuitScaleTests(const std::string& sTestDirectory)
 {
-  DataTrack cvLastMeanPressureTrk;
+  DataTrack cvLastMeanPressureTrk{m_Logger};
   std::ofstream cvLastMeanPressureFile;
   std::ostringstream ss;
   bool firstTest = true;

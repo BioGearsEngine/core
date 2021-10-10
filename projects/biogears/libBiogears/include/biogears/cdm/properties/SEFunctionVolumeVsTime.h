@@ -12,13 +12,17 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEFunction.h>
-#include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
+namespace io {
+  class Property;
+}
 class BIOGEARS_API SEFunctionVolumeVsTime : public SEFunction {
 public:
+  friend io::Property;
   SEFunctionVolumeVsTime();
   virtual ~SEFunctionVolumeVsTime();
 
@@ -42,6 +46,9 @@ public:
   virtual std::vector<double>& GetVolume();
   virtual const VolumeUnit* GetVolumeUnit();
   virtual void SetVolumeUnit(const VolumeUnit& unit);
+     
+  bool operator==(const SEFunctionVolumeVsTime&) const;
+  bool operator!=(const SEFunctionVolumeVsTime&) const;
 
 protected:
   const TimeUnit* m_TimeUnit;

@@ -102,4 +102,17 @@ void SEChestCompressionForceScale::ToString(std::ostream& str) const
   HasForcePeriod() ? str << *m_ForcePeriod : str << "NaN";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
+bool SEChestCompressionForceScale::operator==( const SEChestCompressionForceScale& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= (m_ForceScale && rhs.m_ForceScale) ? m_ForceScale->operator==(*rhs.m_ForceScale) : m_ForceScale == rhs.m_ForceScale;
+  equivilant &= (m_ForcePeriod && rhs.m_ForcePeriod) ? m_ForcePeriod->operator==(*rhs.m_ForcePeriod) : m_ForcePeriod == rhs.m_ForcePeriod;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEChestCompressionForceScale::operator!=( const SEChestCompressionForceScale& rhs) const
+{
+  return !(*this == rhs);
+}
 }

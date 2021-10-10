@@ -18,8 +18,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
-namespace biogears {
+#include <vector>
+#include <map>
+#include <string>
 
+namespace biogears {
+class SEScalar0To1;
 class SESubstance;
 class SESubstanceManager;
 class SELiquidCompartment;
@@ -27,10 +31,16 @@ class SEScalarMassPerMass;
 class MassPerMassUnit;
 class SEScalarElectricPotential;
 class ElectricPotentialUnit;
-
+class SEScalarMass;
+class MassUnit;
 class SECompartmentManager;
+
+namespace io {
+  class Compartment;
+}
 class BIOGEARS_API SETissueCompartment : public SECompartment {
   friend class SECompartmentManager;
+  friend io::Compartment;
 
 protected:
   SETissueCompartment(const char* name, Logger* logger);
@@ -112,4 +122,9 @@ protected:
   std::vector<SETissueCompartment*> m_Children;
   std::vector<SETissueCompartment*> m_Leaves;
 };
+}                                     //namespac biogears
+
+namespace std {
+  BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*> ;
+  BG_EXT template class BIOGEARS_API map<string, biogears::SETissueCompartment*> ;
 }

@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-
+#include <biogears/string/manipulation.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ using namespace biogears;
 /// Refer to the SEPatient class
 /// Refer to the SERespiratory class
 //--------------------------------------------------------------------------------------------------
-void HowToPulmonaryFunction()
+int HowToPulmonaryFunction()
 {
   // Create the engine and load the patient
 	std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToPulmonaryFunctionTest.log");
@@ -38,7 +38,7 @@ void HowToPulmonaryFunction()
 	if (!bg->LoadState("./states/StandardMale@0s.xml"))
   {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
 	// Let's analyze the respiratory system more specifically by performing a Pulmonary Function Test (PFT)
@@ -69,22 +69,22 @@ void HowToPulmonaryFunction()
 
 	bg->GetLogger()->Info("Performing PFT at time 0s");
 	bg->GetLogger()->Info("Currently these are the PFT properties computed by the BioGears engine");
-	bg->GetLogger()->Info(std::stringstream() <<"Expiratory Reserve Volume"    << pft.GetExpiratoryReserveVolume()  ); 
-	bg->GetLogger()->Info(std::stringstream() <<"Functional Residual Capacity" << pft.GetFunctionalResidualCapacity());
-	bg->GetLogger()->Info(std::stringstream() <<"Inspiratory Capacity"         << pft.GetInspiratoryCapacity()      );
-	bg->GetLogger()->Info(std::stringstream() <<"Inspiratory Reserve Volume"   << pft.GetInspiratoryReserveVolume() );
-	bg->GetLogger()->Info(std::stringstream() <<"Residual Volume"              << pft.GetResidualVolume()           );
-	bg->GetLogger()->Info(std::stringstream() <<"Total Lung Capacity"          << pft.GetTotalLungCapacity()        );
-	bg->GetLogger()->Info(std::stringstream() <<"Vital Capacity"               << pft.GetVitalCapacity()            );
+	bg->GetLogger()->Info(asprintf("Expiratory Reserve Volume %f", pft.GetExpiratoryReserveVolume().GetValue())); 
+	bg->GetLogger()->Info(asprintf("Functional Residual Capacity %f", pft.GetFunctionalResidualCapacity().GetValue()));
+	bg->GetLogger()->Info(asprintf("Inspiratory Capacity %f", pft.GetInspiratoryCapacity().GetValue()));
+	bg->GetLogger()->Info(asprintf("Inspiratory Reserve Volume %f", pft.GetInspiratoryReserveVolume().GetValue()));
+	bg->GetLogger()->Info(asprintf("Residual Volume %f", pft.GetResidualVolume().GetValue()));
+	bg->GetLogger()->Info(asprintf("Total Lung Capacity %f", pft.GetTotalLungCapacity().GetValue()));
+	bg->GetLogger()->Info(asprintf("Vital Capacity %f", pft.GetVitalCapacity().GetValue()));
 	bg->GetLogger()->Info("Currently, BioGears does not support calculation of the following values:");
 
 	// Values will be NaN
-	bg->GetLogger()->Info(std::stringstream() <<"Forced Vital Capacity"        << pft.GetForcedVitalCapacity()       );
-	bg->GetLogger()->Info(std::stringstream() <<"Forced Expiratory Volume"     << pft.GetForcedExpiratoryVolume()    );
-	bg->GetLogger()->Info(std::stringstream() <<"Forced Expiratory Flow"       << pft.GetForcedExpiratoryFlow()      );
-	bg->GetLogger()->Info(std::stringstream() <<"Maximum Voluntary Ventilation"<< pft.GetMaximumVoluntaryVentilation());
-	bg->GetLogger()->Info(std::stringstream() <<"Peak Expiratory Flow"         << pft.GetPeakExpiratoryFlow()        );
-	bg->GetLogger()->Info(std::stringstream() <<"Slow Vital Capacity"          << pft.GetSlowVitalCapacity()         );
+	bg->GetLogger()->Info(asprintf("Forced Vital Capacity %f", pft.GetForcedVitalCapacity().GetValue()));
+	bg->GetLogger()->Info(asprintf("Forced Expiratory Volume %f", pft.GetForcedExpiratoryVolume().GetValue()));
+	bg->GetLogger()->Info(asprintf("Forced Expiratory Flow %f", pft.GetForcedExpiratoryFlow().GetValue()));
+	bg->GetLogger()->Info(asprintf("Maximum Voluntary Ventilation %f", pft.GetMaximumVoluntaryVentilation().GetValue()));
+	bg->GetLogger()->Info(asprintf("Peak Expiratory Flow %f", pft.GetPeakExpiratoryFlow().GetValue()));
+	bg->GetLogger()->Info(asprintf("Slow Vital Capacity %f", pft.GetSlowVitalCapacity().GetValue()));
 	
 	// BioGears does compute the LungVolumePlot Data
 	//The resulting plot is obtained which displays lung volume as a function of time 
@@ -95,4 +95,9 @@ void HowToPulmonaryFunction()
 	lungVolumePlot.GetVolume(); //This is the lung volume component of the pulmonary function test
 	// This is intended to be a a data form that can easily be plotted.
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToPulmonaryFunction();
 }

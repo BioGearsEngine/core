@@ -9,12 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#pragma once
+
 #include <string>
 #include <vector>
 
 #include <biogears/cdm/CommonDataModel.h>
-
-#pragma once
+#include<biogears/cdm/circuit/SECircuitManager.h>
+#include <biogears/cdm/utils/Logger.h>
+#include <biogears/schema/cdm/Compartment.hxx>
 
 CDM_BIND_DECL(CompartmentData)
 
@@ -27,8 +30,11 @@ class SEThermalCompartment;
 class SETissueCompartment;
 class SESubstance;
 class SECircuitManager;
-
+namespace io {
+  class Compartment;
+}
 class BIOGEARS_API SECompartment : public Loggable {
+  friend io::Compartment;
 protected:
   SECompartment(const char* name, Logger* logger);
   SECompartment(const std::string& name, Logger* logger);

@@ -16,8 +16,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalar0To1;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEApnea : public SEPatientAction {
+  friend io::PatientActions;
+
 public:
   SEApnea();
   virtual ~SEApnea() override;
@@ -33,14 +37,15 @@ public:
   virtual bool Load(const CDM::ApneaData& in);
   virtual CDM::ApneaData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::ApneaData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
   virtual void ToString(std::ostream& str) const override;
+
+  bool operator==( const SEApnea& rhs) const;
+  bool operator!=( const SEApnea& rhs) const;
+protected:
+  virtual void Unload(CDM::ApneaData& data) const;
 
 protected:
   SEScalar0To1* m_Severity;

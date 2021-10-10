@@ -4,19 +4,12 @@
   <MolarMass readOnly="false" unit="g/mol" value="66500"/>
   <State>Liquid</State>
   <Clearance>
-    <Systemic>
-      <FractionExcretedInFeces readOnly="false" value="0"/>
-      <FractionUnboundInPlasma readOnly="false" value="1"/>
-      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="0"/>
-      <RenalClearance readOnly="false" unit="mL/min kg" value="0"/>
-      <SystemicClearance readOnly="false" unit="mL/min kg" value="0.00241"/>
-    </Systemic>
     <RenalDynamics>
       <Regulation>
         <ChargeInBlood>Negative</ChargeInBlood>
         <FractionUnboundInPlasma readOnly="false" value="1"/>
         <ReabsorptionRatio readOnly="false" value="INF"/>
-        <TransportMaximum readOnly="false" unit="mg/min" value="30"/>
+        <TransportMaximum readOnly="false" unit="mg/min" value="INF"/>
       </Regulation>
     </RenalDynamics>
   </Clearance>

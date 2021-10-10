@@ -14,9 +14,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/container/Tree.h>
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/EngineState.hxx>
-#include <biogears/container/Tree.h>
 
 namespace biogears {
 class SEEventHandler;
@@ -57,7 +57,6 @@ struct PhysiologyEngineException : public CommonDataModelException {
   PhysiologyEngineException(const char* _Message)
     : CommonDataModelException(_Message)
   {
-    
   }
   PhysiologyEngineException(const std::string& _Message)
     : CommonDataModelException(_Message)
@@ -67,7 +66,7 @@ struct PhysiologyEngineException : public CommonDataModelException {
 
 class BIOGEARS_API PhysiologyEngine {
 public:
-  virtual ~PhysiologyEngine() {}
+  virtual ~PhysiologyEngine() { }
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -79,6 +78,7 @@ public:
   //!-------------------------------------------------------------------------------------------------
   virtual bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) = 0;
   virtual bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr) = 0;
+  virtual bool LoadState(char const* buffer, size_t size) = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -92,13 +92,18 @@ public:
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
-  //! Save the current state of the engine.
-  //! State will be written to a file if provided.
   //! State object will be returned.
   //! Engine will be in a cleared state if this method fails.
   //!-------------------------------------------------------------------------------------------------
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const char* file = "") = 0;
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const std::string& file = "") = 0;
+  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> GetStateData() = 0;
+  //!-------------------------------------------------------------------------------------------------
+  //! \brief
+  //! Save the current state of the engine.
+  //! State will be written to a file.
+  //! Engine will be in a cleared state if this method fails.
+  //!-------------------------------------------------------------------------------------------------
+  virtual void SaveStateToFile(const char* file) = 0;
+  virtual void SaveStateToFile(const std::string& file) = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -109,7 +114,9 @@ public:
   //! Some combinations of patients and conditions may prevent the engine from stabilizing
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) = 0;
+  virtual bool InitializeEngine(const char* patientFile) = 0;
+  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions) = 0;
+  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config) = 0;
   virtual bool InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) = 0;
 
   //!-------------------------------------------------------------------------------------------------
@@ -161,7 +168,7 @@ public:
   //! through the API at this time.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual void AdvanceModelTime(bool appendDataTrack = false) = 0;
+  virtual bool AdvanceModelTime(bool appendDataTrack = false) = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -172,7 +179,7 @@ public:
   //! through the API at this time.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual void AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false) = 0;
+  virtual bool AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s, bool appendDataTrack = false) = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -333,7 +340,7 @@ public:
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the AutoTracking Property. True implies for each time advance
-  //! All DataRequest will be tracked if the current simulation time is a multiple of 
+  //! All DataRequest will be tracked if the current simulation time is a multiple of
   //! GetDataRequestManager().GetSamplesPerSecond();
   //!-------------------------------------------------------------------------------------------------
   virtual bool IsAutoTracking() const = 0;
@@ -344,7 +351,7 @@ public:
   virtual void SetAutoTrackFlag(bool flag) = 0;
   //!-------------------------------------------------------------------------------------------------
   //! \brief
-  //! Returns the current state of the Track Stabilization Property. 
+  //! Returns the current state of the Track Stabilization Property.
   //! When true the user expects the Results file to include engine values during stabilization routines
   //! When false the user expects the 0 time index to be the first engine readout post stabilization.
   //!-------------------------------------------------------------------------------------------------

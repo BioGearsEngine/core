@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -37,26 +38,31 @@ class BIOGEARS_API BioGearsEngine : public PhysiologyEngine, public BioGears {
 public:
   //-------------------------------------------------------------------------------
   BioGearsEngine(Logger* logger);
-  
+
   BioGearsEngine(const std::string& logFileName);
   BioGearsEngine(const char* logFileName);
   BioGearsEngine(Logger* logger, const std::string& working_dir);
   BioGearsEngine(Logger* logger, const char* working_dir);
   BioGearsEngine(const std::string&, const std::string& working_dir);
   BioGearsEngine(const char*, const char*);
-  
+
   virtual ~BioGearsEngine() override;
 
   virtual bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) override;
   virtual bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr) override;
   virtual bool LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr) override;
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const char* file) override;
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const std::string& file = "") override;
+  virtual bool LoadState(char const* buffer, size_t size) override;
+
+  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> GetStateData() override;
+  virtual void SaveStateToFile(const char* file) override;
+  virtual void SaveStateToFile(const std::string& file = "") override;
 
   virtual Logger* GetLogger() override;
   virtual PhysiologyEngineTrack* GetEngineTrack() override;
 
-  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
+  virtual bool InitializeEngine(const char* patientFile) override;
+  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions) override;
+  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config) override;
   virtual bool InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
   virtual bool InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
 
@@ -65,8 +71,25 @@ public:
   virtual double GetTimeStep(const TimeUnit& unit) override;
   virtual double GetSimulationTime(const TimeUnit& unit) override;
 
-  virtual void AdvanceModelTime(bool appendDataTrack = false) override;
-  virtual void AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s, bool appendDataTrack = false) override; //NOTE: Maynot compile on clang will evaluate
+  //!-------------------------------------------------------------------------------------------------
+  //! \brief
+  //! Advances the model time by one deltaT.
+  //!
+  //! BioGears updates at the rate set in BioGearsConfiguration.xml which defaults to 0.02 or 50hz
+  //! This is the resolution of the underlying simulation. That is to say you can not record
+  //!	physiology metrics at simulation times that would fall between a deltaT. Additionally advancing time by
+  //! non multiples of deltaT can result in the true simtime being out of sync with the expected time sync
+  //!-------------------------------------------------------------------------------------------------
+  virtual bool AdvanceModelTime(bool appendDataTrack = false) override;
+
+  //!-------------------------------------------------------------------------------------------------
+  //! \brief
+  //! Subdivdes the time provided by deltaT and calls AdvanceModelTime() for each subdivision
+  //!
+  //! See AdvanceModelTime(bool) for additional details.
+  //!
+  //!-------------------------------------------------------------------------------------------------
+  virtual bool AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s, bool appendDataTrack = false) override; //NOTE: Maynot compile on clang will evaluate
   virtual bool ProcessAction(const SEAction& action) override;
 
   virtual SESubstanceManager& GetSubstanceManager() override;
@@ -113,12 +136,17 @@ protected:
   double m_timeSinceLastDataTrack = 0.0;
   SEEventHandler* m_EventHandler;
   PhysiologyEngineTrack m_EngineTrack;
-#pragma warning(push,0)
+#pragma warning(push, 0)
   std::stringstream m_ss;
 #pragma warning(pop)
 
   bool m_isAutoTracking = true;
   bool m_areTrackingStabilization = false;
-
 };
-}
+
+BIOGEARS_API Logger* create_logger(const char* logfile);
+BIOGEARS_API void destroy_logger(Logger** engine);
+BIOGEARS_API BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir);
+BIOGEARS_API BioGearsEngine* create_biogears_engine(const char* logger, const char* working_dir);
+BIOGEARS_API void destroy_biogears_engine(BioGearsEngine** engine);
+} //namespace biogears

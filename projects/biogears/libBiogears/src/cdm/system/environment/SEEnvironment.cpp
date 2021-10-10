@@ -29,7 +29,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 #include <biogears/container/Tree.tci.h>
-
+#include <biogears/io/io-manager.h>
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/environments.h>
+#endif
 namespace biogears {
 SEEnvironment::SEEnvironment(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
@@ -71,7 +74,7 @@ void SEEnvironment::Clear()
 //-------------------------------------------------------------------------------
 const SEScalar* SEEnvironment::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEEnvironment::GetScalar(const std::string& name)
@@ -159,16 +162,27 @@ bool SEEnvironment::Load(const char* patientFile)
   return Load(std::string(patientFile));
 }
 //-------------------------------------------------------------------------------
-bool SEEnvironment::Load(const std::string& patientFile)
+bool SEEnvironment::Load(const std::string& given)
 {
   CDM::EnvironmentData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  data = Serializer::ReadFile(patientFile, GetLogger());
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindEnvironmentFile(given.c_str());
+  if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
+    auto content = io::get_embedded_environments_file(given.c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+  } else {
+    data = Serializer::ReadFile(possible_path, m_Logger);
+  }
+
   pData = dynamic_cast<CDM::EnvironmentData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
-    ss << "Environment file could not be read : " << patientFile << std::endl;
+    ss << "Environment file could not be read : " << given << std::endl;
     Error(ss);
     return false;
   }
@@ -192,7 +206,6 @@ void SEEnvironment::Unload(CDM::EnvironmentData& data) const
   } else {
     data.Name("Unknown Environment");
   }
-
 
   if (HasConditions()) {
     data.Conditions(std::unique_ptr<CDM::EnvironmentalConditionsData>(m_Conditions->Unload()));

@@ -97,7 +97,7 @@ void SECompleteBloodCount::Unload(CDM::CompleteBloodCountData& data)
     data.WhiteBloodCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_WhiteBloodCellCount->Unload()));
 }
 
-bool SECompleteBloodCount::HasHematocrit()
+bool SECompleteBloodCount::HasHematocrit() const
 {
   return m_Hematocrit == nullptr ? false : m_Hematocrit->IsValid();
 }
@@ -108,7 +108,7 @@ SEScalarFraction& SECompleteBloodCount::GetHematocrit()
   return *m_Hematocrit;
 }
 
-bool SECompleteBloodCount::HasHemoglobin()
+bool SECompleteBloodCount::HasHemoglobin() const
 {
   return m_Hemoglobin == nullptr ? false : m_Hemoglobin->IsValid();
 }
@@ -119,7 +119,7 @@ SEScalarMassPerVolume& SECompleteBloodCount::GetHemoglobin()
   return *m_Hemoglobin;
 }
 
-bool SECompleteBloodCount::HasPlateletCount()
+bool SECompleteBloodCount::HasPlateletCount() const
 {
   return m_PlateletCount == nullptr ? false : m_PlateletCount->IsValid();
 }
@@ -130,7 +130,7 @@ SEScalarAmountPerVolume& SECompleteBloodCount::GetPlateletCount()
   return *m_PlateletCount;
 }
 
-bool SECompleteBloodCount::HasMeanCorpuscularHemoglobin()
+bool SECompleteBloodCount::HasMeanCorpuscularHemoglobin() const
 {
   return m_MeanCorpuscularHemoglobin == nullptr ? false : m_MeanCorpuscularHemoglobin->IsValid();
 }
@@ -141,7 +141,7 @@ SEScalarMassPerAmount& SECompleteBloodCount::GetMeanCorpuscularHemoglobin()
   return *m_MeanCorpuscularHemoglobin;
 }
 
-bool SECompleteBloodCount::HasMeanCorpuscularHemoglobinConcentration()
+bool SECompleteBloodCount::HasMeanCorpuscularHemoglobinConcentration() const
 {
   return m_MeanCorpuscularHemoglobinConcentration == nullptr ? false : m_MeanCorpuscularHemoglobinConcentration->IsValid();
 }
@@ -152,7 +152,7 @@ SEScalarMassPerVolume& SECompleteBloodCount::GetMeanCorpuscularHemoglobinConcent
   return *m_MeanCorpuscularHemoglobinConcentration;
 }
 
-bool SECompleteBloodCount::HasMeanCorpuscularVolume()
+bool SECompleteBloodCount::HasMeanCorpuscularVolume() const
 {
   return m_MeanCorpuscularVolume == nullptr ? false : m_MeanCorpuscularVolume->IsValid();
 }
@@ -163,7 +163,7 @@ SEScalarVolume& SECompleteBloodCount::GetMeanCorpuscularVolume()
   return *m_MeanCorpuscularVolume;
 }
 
-bool SECompleteBloodCount::HasRedBloodCellCount()
+bool SECompleteBloodCount::HasRedBloodCellCount() const
 {
   return m_RedBloodCellCount == nullptr ? false : m_RedBloodCellCount->IsValid();
 }
@@ -174,7 +174,7 @@ SEScalarAmountPerVolume& SECompleteBloodCount::GetRedBloodCellCount()
   return *m_RedBloodCellCount;
 }
 
-bool SECompleteBloodCount::HasWhiteBloodCellCount()
+bool SECompleteBloodCount::HasWhiteBloodCellCount() const
 {
   return m_WhiteBloodCellCount == nullptr ? false : m_WhiteBloodCellCount->IsValid();
 }

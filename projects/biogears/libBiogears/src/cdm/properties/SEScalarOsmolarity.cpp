@@ -16,8 +16,10 @@ namespace biogears {
 const OsmolarityUnit OsmolarityUnit::Osm_Per_L("Osm/L");
 const OsmolarityUnit OsmolarityUnit::mOsm_Per_L("mOsm/L");
 
+template class SEScalarQuantity<OsmolarityUnit>;
+
 OsmolarityUnit::OsmolarityUnit(const char* u)
-  : OsmolarityUnit(std::string{ u })
+  : OsmolarityUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
@@ -25,6 +27,16 @@ OsmolarityUnit::OsmolarityUnit(const std::string& u)
   : CCompoundUnit(u)
 {
 }
+//-------------------------------------------------------------------------------
+OsmolarityUnit::~OsmolarityUnit()
+{
+}
+//-------------------------------------------------------------------------------
+ SEScalarOsmolarity::SEScalarOsmolarity(){
+ }
+ //-------------------------------------------------------------------------------
+  SEScalarOsmolarity::~SEScalarOsmolarity(){
+  }
 //-------------------------------------------------------------------------------
 CDM::ScalarOsmolarityData* SEScalarOsmolarity::Unload() const
 {
@@ -37,9 +49,9 @@ CDM::ScalarOsmolarityData* SEScalarOsmolarity::Unload() const
 //-------------------------------------------------------------------------------
 bool OsmolarityUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(Osm_Per_L.GetString(),unit) == 0)
+  if (strcmp(Osm_Per_L.GetString(), unit) == 0)
     return true;
-  if (strcmp(mOsm_Per_L.GetString(),unit) == 0)
+  if (strcmp(mOsm_Per_L.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -51,9 +63,9 @@ bool OsmolarityUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const OsmolarityUnit& OsmolarityUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(Osm_Per_L.GetString(),unit) == 0)
+  if (strcmp(Osm_Per_L.GetString(), unit) == 0)
     return Osm_Per_L;
-  if (strcmp(mOsm_Per_L.GetString(),unit) == 0)
+  if (strcmp(mOsm_Per_L.GetString(), unit) == 0)
     return mOsm_Per_L;
   std::stringstream err;
   err << unit << " is not a valid Osmolarity unit";
@@ -65,4 +77,25 @@ const OsmolarityUnit& OsmolarityUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool OsmolarityUnit::operator==(const OsmolarityUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool OsmolarityUnit::operator!=(const OsmolarityUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarOsmolarity::operator==(const SEScalarOsmolarity& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarOsmolarity::operator!=(const SEScalarOsmolarity& obj) const
+{
+  return !(*this == obj);
+}
 }

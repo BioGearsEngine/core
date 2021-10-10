@@ -16,35 +16,61 @@ SEChestCompression::SEChestCompression()
   : SEPatientAction()
 {
 }
-
+//-------------------------------------------------------------------------------
 SEChestCompression::~SEChestCompression()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEChestCompression::Clear()
 {
   SEPatientAction::Clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SEChestCompression::IsValid() const
 {
   return SEPatientAction::IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SEChestCompression::IsActive() const
 {
   return IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SEChestCompression::Load(const CDM::ChestCompressionData& in)
 {
   SEPatientAction::Load(in);
   return true;
 }
-
+//-------------------------------------------------------------------------------
+CDM::ChestCompressionData* SEChestCompression::Unload() const
+{
+  CDM::ChestCompressionData* data(new CDM::ChestCompressionData());
+  Unload(*data);
+  return data;
+}
+//-------------------------------------------------------------------------------
 void SEChestCompression::Unload(CDM::ChestCompressionData& data) const
 {
   SEPatientAction::Unload(data);
+}
+//-------------------------------------------------------------------------------
+void SEChestCompression::ToString(std::ostream& str) const
+{
+  str << "Patient Action : Chest Compression";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << "\nIsActive: " << ((IsActive()) ? "True" : "False");
+  str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEChestCompression::operator==( const SEChestCompression& rhs) const
+{
+  return m_Comment == rhs.m_Comment;
+}
+//-------------------------------------------------------------------------------
+bool SEChestCompression::operator!=( const SEChestCompression& rhs) const
+{
+  return !(*this == rhs);
 }
 }

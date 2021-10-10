@@ -6,7 +6,9 @@
 @date:   2018-06-05
 @brief:  A small plotter tool
 """
+import matplotlib
 import matplotlib.pyplot as plt
+matplotlib.use("Agg")
 import sys
 import os
 import re

@@ -28,14 +28,18 @@ class SEScalarMassPerTime;
 class MassPerTimeUnit;
 class SEScalarPower;
 class PowerUnit;
-
+namespace io {
+  class Physiology;
+}
 class BIOGEARS_API SEEndocrineSystem : public SESystem {
+  friend io::Physiology;
+
 public:
   SEEndocrineSystem(Logger* logger);
   ~SEEndocrineSystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SEEndocrineSystem"; }
+  static constexpr char const* const TypeTag() { return "SEEndocrineSystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -48,6 +52,7 @@ public:
   CDM::EndocrineSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::EndocrineSystemData& data) const;
 

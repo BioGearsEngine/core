@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -13,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/CommonDataModel.h>
-CDM_BIND_DECL(PropertyData)
+#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API SEProperty {

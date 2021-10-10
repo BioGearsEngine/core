@@ -27,6 +27,10 @@ if(Xerces-c_USE_STATIC_LIBRARY)
         libxerces-c_static_3
         xerces-c_static_3_2
         libxerces-c_static_3_2
+        xerces-c_static.3
+        libxerces-c_static.3
+        xerces-c_static.3.2
+        libxerces-c_static.3.2
         xerces-c
         libxerces-c
     DOC "Xerces Release Library. Prefered over DLL"
@@ -44,6 +48,17 @@ if(Xerces-c_USE_STATIC_LIBRARY)
         libxerces-c_static_3_2_d
         xerces-c_static_3_2
         libxerces-c_static_3_2
+        xerces-c_static.3D
+        libxerces-c_static.3D
+        xerces-c-3_static_d
+        libxerces-c_static.3_d
+        xerces-c_static.3
+        libxerces-c_static.3
+        libxerces-c_static.3.2D
+        xerces-c-3.2_static_d
+        libxerces-c_static.3.2_d
+        xerces-c_static.3.2
+        libxerces-c_static.3.2
         xerces-c_static_d
         libxerces-c_static_D
         xerces-c
@@ -62,6 +77,10 @@ else()
         libxerces-c_3
         xerces-c_3_2
         libxerces-c_3_2
+        xerces-c-3
+        libxerces-c-3
+        xerces-c-3.2
+        libxerces-c-3.2
         xerces-c
         libxerces-c
       PATH_SUFFIX  release
@@ -87,6 +106,16 @@ else()
         libxerces-c_3_2_d
         xerces-c_3_2
         libxerces-c_3_2
+        xerces-c-3D
+        libxerces-c-3D
+        xerces-c-3_d
+        libxerces-c-3_d
+        xerces-c-3.2D
+        libxerces-c-3.2D
+        xerces-c-3.2_d
+        libxerces-c-3.2_d
+        xerces-c-3.2
+        libxerces-c-3.2
       PATH_SUFFIX  debug
                    lib
                    lib/debug

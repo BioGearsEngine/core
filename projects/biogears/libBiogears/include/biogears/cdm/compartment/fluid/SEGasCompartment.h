@@ -16,13 +16,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
+#include <vector>
+#include <map>
+
 namespace biogears {
+namespace io {
+  class Compartment;
+}
+
 enum class BalanceGasBy { Volume,
-  VolumeFraction };
+                          VolumeFraction };
 
 class SECompartmentManager;
 class BIOGEARS_API SEGasCompartment : public SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity> {
   friend class SECompartmentManager;
+  friend io::Compartment;
 
 protected:
   SEGasCompartment(const char* name, Logger* logger);
@@ -52,4 +60,9 @@ protected:
   std::vector<SEGasCompartment*> m_Children;
   std::vector<SEGasCompartment*> m_Leaves;
 };
+} //namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartment*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartment*>;
 }

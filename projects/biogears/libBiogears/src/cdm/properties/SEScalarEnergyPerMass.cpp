@@ -18,13 +18,26 @@ const EnergyPerMassUnit EnergyPerMassUnit::kJ_Per_kg("kJ/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::mJ_Per_kg("mJ/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::kcal_Per_kg("kcal/kg");
 
+template class SEScalarQuantity<EnergyPerMassUnit>;
+
 EnergyPerMassUnit::EnergyPerMassUnit(const char* u)
-  : EnergyPerMassUnit(std::string{ u })
+  : EnergyPerMassUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 EnergyPerMassUnit::EnergyPerMassUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+EnergyPerMassUnit::~EnergyPerMassUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarEnergyPerMass::SEScalarEnergyPerMass()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarEnergyPerMass::~SEScalarEnergyPerMass()
 {
 }
 //-----------------------------------------------------------------------------
@@ -75,4 +88,25 @@ const EnergyPerMassUnit& EnergyPerMassUnit::GetCompoundUnit(const std::string& u
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool EnergyPerMassUnit::operator==(const EnergyPerMassUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool EnergyPerMassUnit::operator!=(const EnergyPerMassUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarEnergyPerMass::operator==(const SEScalarEnergyPerMass& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarEnergyPerMass::operator!=(const SEScalarEnergyPerMass& obj) const
+{
+  return !(*this == obj);
+}
 }

@@ -1,4 +1,5 @@
-if( NOT CMAKE_DEBUG_POSTFIX )
+
+if( NOT CMAKE_DEBUG_POSTFIX AND NOT Biogears_NO_DEBUG_POSTIFX)
   set( CMAKE_DEBUG_POSTFIX "_d" CACHE STRING "This string is appended to target names in debug mode." FORCE )
 endif()
 if( NOT CMAKE_BUILD_TYPE )
@@ -11,8 +12,8 @@ if( NOT CMAKE_BUILD_TYPE )
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${BUILD_OPTIONS_STRINGS})
 endif()
 
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set (CMAKE_INSTALL_PREFIX "${_ROOT}/usr" CACHE PATH "default install path" FORCE )
+if (WIN32 AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set (CMAKE_INSTALL_PREFIX "install" CACHE PATH "default install path" FORCE )
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -80,20 +81,39 @@ function(CHILDLIST result curdir)
 endfunction()
 
 
-function(add_source_files var prefix regex source_group)
-#    message(STATUS "add_source_files( ${var} \"${prefix}\" ${regex} \"${source_group}\")")
-    file(GLOB TEMP "${prefix}/${regex}")
-
-    source_group("${source_group}" FILES ${TEMP})
-
-    CHILDLIST( result ${prefix})
+function(add_source_files var)
+  set(__prefix "_l")
+  set(__options "DEBUG")
+  set(__one_value "LOCATION;SOURCE_GROUP")
+  set(__multi_value "REGEX")
+  cmake_parse_arguments( "_l" "DEBUG" "LOCATION;SOURCE_GROUP" "REGEX" ${ARGN})
+    if(_l_DEBUG)
+      message(STATUS "add_source_files( ${var} LOCATION \"${_l_LOCATION}\" REGEX \"${_l_REGEX}\" SOURCE_GROUP \"${_l_SOURCE_GROUP}\")")
+    endif()
+    set(TEMP "")
+    set(__new_entries "")
+    foreach(regex IN LISTS _l_REGEX)
+      file(GLOB TEMP "${_l_LOCATION}/${regex}")
+      list(APPEND __new_entries ${TEMP})
+    endforeach()
+    if(_l_SOURCE_GROUP)
+      source_group("${_l_SOURCE_GROUP}" FILES ${__new_entries})
+    endif()
+    if(_l_DEBUG)
+      message(STATUS "CHILDLIST( result ${_l_LOCATION})")
+    endif()
+    CHILDLIST( result ${_l_LOCATION})
     
+
     foreach( dir IN LISTS result)
-#     message(STATUS "add_source_files( ${var} \"${prefix}/${dir}\" ${regex} \"${source_group}\\${dir}\")")
-      add_source_files( ${var} "${prefix}/${dir}" ${regex} "${source_group}${dir}\\")
+      if( _l_DEBUG)
+        add_source_files( ${var} LOCATION "${_l_LOCATION}/${dir}" REGEX ${_l_REGEX} SOURCE_GROUP "${_l_SOURCE_GROUP}\\${dir}" DEBUG)
+      else()
+        add_source_files( ${var} LOCATION "${_l_LOCATION}/${dir}" REGEX ${_l_REGEX} SOURCE_GROUP "${_l_SOURCE_GROUP}\\${dir}")
+      endif()
     endforeach()
 
-    set(${var} ${${var}} ${TEMP} PARENT_SCOPE)
+    set(${var} ${${var}} ${__new_entries} PARENT_SCOPE)
 endfunction()
 
 
@@ -165,14 +185,14 @@ function(create_cache_file)
 endfunction()
 
 function(create_stage)
-  add_custom_target(STAGE 
+  add_custom_target(gather_runtime_dependencies
     ${CMAKE_COMMAND} 
     -DCMAKE_INSTALL_CONFIG_NAME=$<CONFIG> -P "${CMAKE_SOURCE_DIR}/cmake/cmake-common_stage.cmake"
     )
-  set_target_properties(STAGE
+  set_target_properties(gather_runtime_dependencies
       PROPERTIES
-      FOLDER "CMakePredefinedTargets"
-      PROJECT_LABEL "STAGE"
+      FOLDER ""
+      PROJECT_LABEL "gather_runtime_dependencies"
   )
 endfunction() 
 ########################################################################################################

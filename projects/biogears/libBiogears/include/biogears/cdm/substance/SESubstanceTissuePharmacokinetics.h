@@ -18,8 +18,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalar;
-
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstanceTissuePharmacokinetics : public Loggable {
+  friend io::Substance;
+
 public:
   SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger);
   virtual ~SESubstanceTissuePharmacokinetics();
@@ -28,10 +32,6 @@ public:
 
   virtual bool Load(const CDM::SubstanceTissuePharmacokineticsData& in);
   virtual CDM::SubstanceTissuePharmacokineticsData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::SubstanceTissuePharmacokineticsData& data) const;
-
 public:
   const SEScalar* GetScalar(const char* name);
   const SEScalar* GetScalar(const std::string& name);
@@ -42,6 +42,12 @@ public:
   virtual bool HasPartitionCoefficient() const;
   virtual SEScalar& GetPartitionCoefficient();
   virtual double GetPartitionCoefficient() const;
+
+  bool operator==( const SESubstanceTissuePharmacokinetics& rhs) const;
+  bool operator!=( const SESubstanceTissuePharmacokinetics& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstanceTissuePharmacokineticsData& data) const;
 
 protected:
   std::string m_Name;

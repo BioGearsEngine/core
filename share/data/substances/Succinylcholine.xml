@@ -77,8 +77,8 @@
       <EC50 readOnly="false" unit="ug/mL" value="0"/>
     </RespirationRateModifier>
     <Sedation>
-      <EMax readOnly="false" value="0"/>
-      <EC50 readOnly="false" unit="ug/mL" value="0"/>
+      <EMax readOnly="false" value="1"/>
+      <EC50 readOnly="false" unit="ug/mL" value="0.7"/>
     </Sedation>
     <SystolicPressureModifier>
       <EMax readOnly="false" value="-0.15"/>

@@ -31,7 +31,7 @@ using namespace biogears;
 /// \details
 /// Creating a customized patient in BioGears
 //--------------------------------------------------------------------------------------------------
-void HowToCreateAPatient()
+int HowToCreateAPatient()
 {
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToEngineUse.log");
   bg->GetLogger()->Info("HowToCreateAPatient");
@@ -44,7 +44,7 @@ void HowToCreateAPatient()
   patient.SetGender(CDM::enumSex::Male);
   patient.GetAge().SetValue(44, TimeUnit::yr);
   patient.GetWeight().SetValue(170, MassUnit::lb);
-  patient.GetHeight().SetValue(71, LengthUnit::in);
+  patient.GetHeight().SetValue(71, LengthUnit::inch);
   patient.GetBodyFatFraction().SetValue(0.21);
   patient.GetDiastolicArterialPressureBaseline().SetValue(74, PressureUnit::mmHg);
   patient.GetHeartRateBaseline().SetValue(72, FrequencyUnit::Per_min);
@@ -65,9 +65,14 @@ void HowToCreateAPatient()
 
   if (!bg->InitializeEngine(patient)) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   // You can save off the initial patient state if you want to use it later
-  bg->SaveState("./states/HowToCreateAPatient@0s.xml");
+  bg->SaveStateToFile("./states/HowToCreateAPatient@0s.xml");
+  return 0;
+}
+
+int main ( int argc, char* argv[] ) {
+  return HowToCreateAPatient();
 }

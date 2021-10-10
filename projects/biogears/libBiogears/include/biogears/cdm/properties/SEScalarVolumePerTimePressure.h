@@ -20,7 +20,10 @@ public:
   VolumePerTimePressureUnit(const char* u);
   VolumePerTimePressureUnit(const std::string& u);
 
-  virtual ~VolumePerTimePressureUnit() = default;
+  virtual ~VolumePerTimePressureUnit();
+
+  bool operator==(const VolumePerTimePressureUnit&) const;
+  bool operator!=(const VolumePerTimePressureUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -33,11 +36,19 @@ public:
   static const VolumePerTimePressureUnit mL_Per_min_mmHg;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<VolumePerTimePressureUnit>;
+
 class BIOGEARS_API SEScalarVolumePerTimePressure : public SEScalarQuantity<VolumePerTimePressureUnit> {
 public:
-  SEScalarVolumePerTimePressure() = default;
-  virtual ~SEScalarVolumePerTimePressure() = default;
+  SEScalarVolumePerTimePressure();
+  virtual ~SEScalarVolumePerTimePressure();
 
   CDM::ScalarVolumePerTimePressureData* Unload() const override;
+
+  using SEScalarQuantity<VolumePerTimePressureUnit>::SetValue;
+  using SEScalarQuantity<VolumePerTimePressureUnit>::GetValue;
+
+  bool operator==(const SEScalarVolumePerTimePressure&) const;
+  bool operator!=(const SEScalarVolumePerTimePressure&) const;
 };
 }

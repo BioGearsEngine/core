@@ -21,7 +21,10 @@ public:
   PressureTimePerVolumeAreaUnit(const char* u);
   PressureTimePerVolumeAreaUnit(const std::string& u);
 
-  virtual ~PressureTimePerVolumeAreaUnit() = default;
+  virtual ~PressureTimePerVolumeAreaUnit();    
+
+  bool operator==(const PressureTimePerVolumeAreaUnit&) const;
+  bool operator!=(const PressureTimePerVolumeAreaUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -33,11 +36,19 @@ public:
   static const PressureTimePerVolumeAreaUnit dyn_s_Per_cm5_m2;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<PressureTimePerVolumeAreaUnit>;
+
 class BIOGEARS_API SEScalarPressureTimePerVolumeArea : public SEScalarQuantity<PressureTimePerVolumeAreaUnit> {
 public:
-  SEScalarPressureTimePerVolumeArea() = default;
-  virtual ~SEScalarPressureTimePerVolumeArea() = default;
+  SEScalarPressureTimePerVolumeArea();
+  virtual ~SEScalarPressureTimePerVolumeArea();
 
   CDM::ScalarPressureTimePerVolumeAreaData* Unload() const override;
+
+  using SEScalarQuantity<PressureTimePerVolumeAreaUnit>::SetValue;
+  using SEScalarQuantity<PressureTimePerVolumeAreaUnit>::GetValue;
+
+  bool operator==(const SEScalarPressureTimePerVolumeArea&) const;
+  bool operator!=(const SEScalarPressureTimePerVolumeArea&) const;
 };
 }

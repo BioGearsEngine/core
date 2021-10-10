@@ -16,13 +16,27 @@ namespace biogears {
 const EnergyPerAmountUnit EnergyPerAmountUnit::kcal_Per_mol("kcal/mol");
 const EnergyPerAmountUnit EnergyPerAmountUnit::kJ_Per_mol("kJ/mol");
 
+template class SEScalarQuantity<EnergyPerAmountUnit>;
+
 EnergyPerAmountUnit::EnergyPerAmountUnit(const char* u)
-  : EnergyPerAmountUnit(std::string{ u })
+  : EnergyPerAmountUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 EnergyPerAmountUnit::EnergyPerAmountUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+EnergyPerAmountUnit::~EnergyPerAmountUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarEnergyPerAmount::SEScalarEnergyPerAmount()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarEnergyPerAmount::~SEScalarEnergyPerAmount()
 {
 }
 //-----------------------------------------------------------------------------
@@ -65,4 +79,25 @@ const EnergyPerAmountUnit& EnergyPerAmountUnit::GetCompoundUnit(const std::strin
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool EnergyPerAmountUnit::operator==(const EnergyPerAmountUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool EnergyPerAmountUnit::operator!=(const EnergyPerAmountUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarEnergyPerAmount::operator==(const SEScalarEnergyPerAmount& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarEnergyPerAmount::operator!=(const SEScalarEnergyPerAmount& obj) const
+{
+  return !(*this == obj);
+}
 }

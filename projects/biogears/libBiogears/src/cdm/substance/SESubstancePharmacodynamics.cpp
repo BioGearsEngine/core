@@ -17,7 +17,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/cdm/Substance.hxx>
 
+namespace std {
+template class map<string, biogears::SEPharmacodynamicModifier*>;
+}
 namespace biogears {
+
 SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   : Loggable(logger)
 {
@@ -39,7 +43,6 @@ SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   m_TubularPermeabilityModifier = nullptr;
   m_CentralNervousModifier = nullptr;
   m_EffectSiteRateConstant = nullptr;
-
 }
 //-----------------------------------------------------------------------------
 SESubstancePharmacodynamics::~SESubstancePharmacodynamics()
@@ -157,6 +160,7 @@ const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name)
     return GetPupilReactivityModifier().GetScalar(name);
   if (name.find("PupilSizeModifier") != std::string::npos)
     return GetPupilSizeModifier().GetScalar(name);
+  return nullptr;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData& in)
@@ -197,7 +201,6 @@ bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData&
   m_Modifiers["SystolicPressure"] = m_SystolicPressureModifier;
   m_Modifiers["TidalVolume"] = m_TidalVolumeModifier;
   m_Modifiers["TubularPermeability"] = m_TubularPermeabilityModifier;
-
 
   return true;
 }
@@ -249,7 +252,6 @@ void SESubstancePharmacodynamics::Unload(CDM::SubstancePharmacodynamicsData& dat
     data.AntibacterialEffect(std::unique_ptr<CDM::ScalarFrequencyData>(m_AntibacterialEffect->Unload()));
   if (HasEffectSiteRateConstant())
     data.EffectSiteRateConstant(std::unique_ptr<CDM::ScalarFrequencyData>(m_EffectSiteRateConstant->Unload()));
-
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasAntibacterialEffect() const
@@ -636,10 +638,13 @@ const SEScalar* SEPharmacodynamicModifier::GetScalar(const char* name)
 //-----------------------------------------------------------------------------
 const SEScalar* SEPharmacodynamicModifier::GetScalar(const std::string& name)
 {
-  if (name.find("EMax") != std::string::npos)
+  if (name.find("EMax") != std::string::npos) {
     return &GetEMax();
-  if (name.find("EC50") != std::string::npos)
+  }
+  if (name.find("EC50") != std::string::npos) {
     return &GetEC50();
+  }
+  return nullptr;
 }
 //-----------------------------------------------------------------------------
 bool SEPharmacodynamicModifier::Load(const CDM::PharmacodynamicModifierData& in)
@@ -712,5 +717,53 @@ double SEPharmacodynamicModifier::GetEC50(const MassPerVolumeUnit& unit) const
   return m_EC50->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------
+bool SESubstancePharmacodynamics::operator==(const SESubstancePharmacodynamics& rhs) const
+{
+  bool equivilant = (m_AntibacterialEffect && rhs.m_AntibacterialEffect) ? m_AntibacterialEffect->operator==(*rhs.m_AntibacterialEffect) : m_AntibacterialEffect == rhs.m_AntibacterialEffect;
+  equivilant &= (m_Bronchodilation && rhs.m_Bronchodilation) ? m_Bronchodilation->operator==(*rhs.m_Bronchodilation) : m_Bronchodilation == rhs.m_Bronchodilation;
+  equivilant &= (m_DiastolicPressureModifier && rhs.m_DiastolicPressureModifier) ? m_DiastolicPressureModifier->operator==(*rhs.m_DiastolicPressureModifier) : m_DiastolicPressureModifier == rhs.m_DiastolicPressureModifier;
+  equivilant &= (m_EMaxShapeParameter && rhs.m_EMaxShapeParameter) ? m_EMaxShapeParameter->operator==(*rhs.m_EMaxShapeParameter) : m_EMaxShapeParameter == rhs.m_EMaxShapeParameter;
+  equivilant &= (m_FeverModifier && rhs.m_FeverModifier) ? m_FeverModifier->operator==(*rhs.m_FeverModifier) : m_FeverModifier == rhs.m_FeverModifier;
+  equivilant &= (m_HeartRateModifier && rhs.m_HeartRateModifier) ? m_HeartRateModifier->operator==(*rhs.m_HeartRateModifier) : m_HeartRateModifier == rhs.m_HeartRateModifier;
+  equivilant &= (m_HemorrhageModifier && rhs.m_HemorrhageModifier) ? m_HemorrhageModifier->operator==(*rhs.m_HemorrhageModifier) : m_HemorrhageModifier == rhs.m_HemorrhageModifier;
+  equivilant &= (m_NeuromuscularBlock && rhs.m_NeuromuscularBlock) ? m_NeuromuscularBlock->operator==(*rhs.m_NeuromuscularBlock) : m_NeuromuscularBlock == rhs.m_NeuromuscularBlock;
+  equivilant &= (m_PainModifier && rhs.m_PainModifier) ? m_PainModifier->operator==(*rhs.m_PainModifier) : m_PainModifier == rhs.m_PainModifier;
+  equivilant &= (m_PupilReactivityModifier && rhs.m_PupilReactivityModifier) ? m_PupilReactivityModifier->operator==(*rhs.m_PupilReactivityModifier) : m_PupilReactivityModifier == rhs.m_PupilReactivityModifier;
+  equivilant &= (m_PupilSizeModifier && rhs.m_PupilSizeModifier) ? m_PupilSizeModifier->operator==(*rhs.m_PupilSizeModifier) : m_PupilSizeModifier == rhs.m_PupilSizeModifier;
+  equivilant &= (m_RespirationRateModifier && rhs.m_RespirationRateModifier) ? m_RespirationRateModifier->operator==(*rhs.m_RespirationRateModifier) : m_RespirationRateModifier == rhs.m_RespirationRateModifier;
+  equivilant &= (m_Sedation && rhs.m_Sedation) ? m_Sedation->operator==(*rhs.m_Sedation) : m_Sedation == rhs.m_Sedation;
+  equivilant &= (m_SystolicPressureModifier && rhs.m_SystolicPressureModifier) ? m_SystolicPressureModifier->operator==(*rhs.m_SystolicPressureModifier) : m_SystolicPressureModifier == rhs.m_SystolicPressureModifier;
+  equivilant &= (m_TidalVolumeModifier && rhs.m_TidalVolumeModifier) ? m_TidalVolumeModifier->operator==(*rhs.m_TidalVolumeModifier) : m_TidalVolumeModifier == rhs.m_TidalVolumeModifier;
+  equivilant &= (m_TubularPermeabilityModifier && rhs.m_TubularPermeabilityModifier) ? m_TubularPermeabilityModifier->operator==(*rhs.m_TubularPermeabilityModifier) : m_TubularPermeabilityModifier == rhs.m_TubularPermeabilityModifier;
+  equivilant &= (m_CentralNervousModifier && rhs.m_CentralNervousModifier) ? m_CentralNervousModifier->operator==(*rhs.m_CentralNervousModifier) : m_CentralNervousModifier == rhs.m_CentralNervousModifier;
+  equivilant &= (m_EffectSiteRateConstant && rhs.m_EffectSiteRateConstant) ? m_EffectSiteRateConstant->operator==(*rhs.m_EffectSiteRateConstant) : m_EffectSiteRateConstant == rhs.m_EffectSiteRateConstant;
+  if (equivilant) {
+    for (auto& pair : m_Modifiers) {
+      //auto lh = m_TissueKinetics.find(pair.first);
+      auto rh = rhs.m_Modifiers.find(pair.first);
+      if (rh != rhs.m_Modifiers.end()) {
+        equivilant &= (pair.second && rh->second) ? *pair.second == *rh->second : pair.second == rh->second;
+      }
+    }
+  }
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstancePharmacodynamics::operator!=(const SESubstancePharmacodynamics& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+bool SEPharmacodynamicModifier::operator==(const SEPharmacodynamicModifier& rhs) const
+{
+  bool equivilant = (m_EMax && rhs.m_EMax) ? m_EMax->operator==(*rhs.m_EMax) : m_EMax == rhs.m_EMax;
+  equivilant &= (m_EC50 && rhs.m_EC50) ? m_EC50->operator==(*rhs.m_EC50) : m_EC50 == rhs.m_EC50;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEPharmacodynamicModifier::operator!=(const SEPharmacodynamicModifier& rhs) const
+{
+  return !(*this == rhs);
+}
 }

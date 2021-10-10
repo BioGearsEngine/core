@@ -143,6 +143,7 @@ void Renal::Clear()
   m_rightUreterLactate = nullptr;
   m_rightUreterPotassium = nullptr;
 
+  m_bladderAlbumin = nullptr;
   m_bladderGlucose = nullptr;
   m_bladderPotassium = nullptr;
   m_bladderSodium = nullptr;
@@ -187,7 +188,7 @@ void Renal::Initialize()
   GetRightGlomerularFiltrationSurfaceArea().SetValue(m_data.GetConfiguration().GetRightGlomerularFilteringSurfaceAreaBaseline(AreaUnit::m2), AreaUnit::m2);
   GetRightTubularReabsorptionFluidPermeability().SetValue(m_data.GetConfiguration().GetRightTubularReabsorptionFluidPermeabilityBaseline(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2), VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
   GetRightTubularReabsorptionFiltrationSurfaceArea().SetValue(m_data.GetConfiguration().GetRightTubularReabsorptionFilteringSurfaceAreaBaseline(AreaUnit::m2), AreaUnit::m2);
-
+  GetBladderPressure().SetValue(m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetPressure().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
   GetFiltrationFraction().SetValue(0.2);
   GetGlomerularFiltrationRate().SetValue(180.0, VolumePerTimeUnit::L_Per_day);
 
@@ -316,6 +317,7 @@ void Renal::SetUp()
   m_patient = &m_data.GetPatient();
 
   //Substances
+  m_albumin = &m_data.GetSubstances().GetAlbumin();
   m_sodium = &m_data.GetSubstances().GetSodium();
   m_urea = &m_data.GetSubstances().GetUrea();
   m_glucose = &m_data.GetSubstances().GetGlucose();
@@ -418,6 +420,7 @@ void Renal::SetUp()
   m_rightUreterLactate = m_rightUreter->GetSubstanceQuantity(*m_lactate);
   m_rightUreterPotassium = m_rightUreter->GetSubstanceQuantity(*m_potassium);
 
+  m_bladderAlbumin = m_bladder->GetSubstanceQuantity(*m_albumin);
   m_bladderGlucose = m_bladder->GetSubstanceQuantity(*m_glucose);
   m_bladderPotassium = m_bladder->GetSubstanceQuantity(*m_potassium);
   m_bladderSodium = m_bladder->GetSubstanceQuantity(*m_sodium);
@@ -577,12 +580,12 @@ void Renal::CalculateUltrafiltrationFeedback()
     filterResistance_mmHg_s_Per_mL = std::min(filterResistance_mmHg_s_Per_mL, m_CVOpenResistance_mmHg_s_Per_mL);
 
     filterResistancePath->GetNextResistance().SetValue(filterResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-
+    glomerularCapillaries->GetSubstanceQuantity(m_data.GetSubstances().GetAlbumin())->GetConcentration();
     //Modify the pressure on both sides of the filter based on the protein (Albumin) concentration
     //This is the osmotic pressure effect
     ///\todo turn on colloid osmotic pressure once substances have been handled properly (and GI)
     // CACHE THIS SUBSTANCE QUANTITY IN SETUP
-    //CalculateColloidOsmoticPressure(glomerularCapillaries->GetSubstanceQuantity(m_data.GetSubstances().GetAlbumin())->GetConcentration(), glomerularOsmoticSourcePath->GetNextPressureSource());
+    CalculateColloidOsmoticPressure(glomerularCapillaries->GetSubstanceQuantity(m_data.GetSubstances().GetAlbumin())->GetConcentration(), glomerularOsmoticSourcePath->GetNextPressureSource());
     //CalculateColloidOsmoticPressure(bowmansNode->GetSubstanceQuantity(m_albumin)->GetNextConcentration(), bowmansOsmoticSourcePath->GetNextPressureSource());
   }
 }
@@ -785,6 +788,9 @@ void Renal::CalculateActiveTransport()
 
   unsigned int i = 0;
   for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
+    if (sub->GetClassification()==mil::tatrc::physiology::datamodel::enumSubstanceClass::WholeBlood) {
+      CalculateGolmerularReabsorption(*sub);
+    }
     if (!sub->HasClearance())
       continue;
     if (!sub->GetClearance().HasRenalDynamic())
@@ -999,6 +1005,51 @@ void Renal::CalculateFilterability(SESubstance& sub)
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
+/// Calculates reabsorption mass back into the vasculature from the bomans capsule
+///
+/// \param  sub Substance to be calculated
+///
+/// \details
+/// This function determines how much of a substance is reabsorbed each time step back into the vasculature. 
+/// Because of the way the generic substance transporter runs, it will move substance mass into some spaces
+/// it shouldn't be, this routine fixes this minor error. May get depricated in future re-design of the substance
+/// transporter.
+//--------------------------------------------------------------------------------------------------
+void Renal::CalculateGolmerularReabsorption(SESubstance& sub)
+{
+  SELiquidSubstanceQuantity* bowmansSubQ = nullptr;
+  SELiquidSubstanceQuantity* glomerularSubQ = nullptr;
+
+  for (unsigned int kidney = 0; kidney < 2; kidney++) {
+    if (kidney == 0) {
+      //LEFT
+      bowmansSubQ = m_leftTubules->GetSubstanceQuantity(sub);
+      glomerularSubQ = m_leftPeritubular->GetSubstanceQuantity(sub);
+    }
+    else {
+      //RIGHT
+      bowmansSubQ = m_rightTubules->GetSubstanceQuantity(sub);
+      glomerularSubQ = m_rightPeritubular->GetSubstanceQuantity(sub);
+    }
+
+   //we can assume the check for whole blood already happened in active transport routine
+
+        //Increment & decrement, again we are move all the mass from the bomans space, and moving it into the glomerular cappilaries
+    bowmansSubQ->GetMass().IncrementValue(-bowmansSubQ->GetMass().GetValue(MassUnit::mg), MassUnit::mg);
+    glomerularSubQ->GetMass().IncrementValue(bowmansSubQ->GetMass().GetValue(MassUnit::mg), MassUnit::mg);
+
+    //double check for negative mass
+    if (bowmansSubQ->GetMass().IsNegative())
+      bowmansSubQ->GetMass().SetValue(0.0, MassUnit::mg);
+
+    //Calculate new concentrations
+    bowmansSubQ->Balance(BalanceLiquidBy::Mass);
+    glomerularSubQ->Balance(BalanceLiquidBy::Mass);
+  }
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
 /// Calculates reabsorption mass flow
 ///
 /// \param  sub Substance to be calculated
@@ -1077,8 +1128,6 @@ void Renal::CalculateReabsorptionTransport(SESubstance& sub)
       reabsorptionRate_mg_Per_s = std::min(reabsorptionRate_mg_Per_s, transportMaximum_mg_Per_s);
     }
 
-    massToMove_mg = reabsorptionRate_mg_Per_s * m_dt;
-
     //Store information about glucose to be used later in Gluconeogenesis
     if (&sub == m_glucose) {
       if (kidney == 0) {
@@ -1145,6 +1194,7 @@ void Renal::CalculateExcretion(SESubstance& sub)
     double tubulesConcentration_mg_Per_mL = tubules->GetSubstanceQuantity(sub)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
     double excretionFlow_mL_Per_s = excretionPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
     double excretionRate_mg_Per_s = tubulesConcentration_mg_Per_mL * excretionFlow_mL_Per_s;
+
     //Make sure it's not a super small negative number
     totalExcretionRate_mg_Per_s += std::max(excretionRate_mg_Per_s, 0.0);
 
@@ -1375,6 +1425,13 @@ void Renal::CalculateVitalSigns()
     }
   }
 
+  if (m_data.GetActions().GetPatientActions().HasBurnWound() && (m_data.GetActions().GetPatientActions().GetBurnWound()->HasCompartment("Trunk"))) {
+    double tissueIntegrity = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
+    double bladderPressure = m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetPressure().GetValue(PressureUnit::mmHg);
+    double bladderPressureMultiplier = (((-1.0 * tissueIntegrity) + 1.0) * 5.25) + 1.0; //Asymptotic relation to tissue integirty, max increase of 6.25 (5.25+1.0)
+    GetBladderPressure().SetValue(bladderPressure * bladderPressureMultiplier, PressureUnit::mmHg);
+  }
+
   GetGlomerularFiltrationRate().SetValue(GetLeftGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s) + GetRightGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s), VolumePerTimeUnit::mL_Per_s);
 
   double renalBloodFlow_mL_Per_s = m_rightAfferentArteriolePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s) + m_leftAfferentArteriolePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
@@ -1409,10 +1466,9 @@ void Renal::CalculateVitalSigns()
   GeneralMath::CalculateSpecificGravity(substanceMass, GetUrineVolume(), GetUrineSpecificGravity());
 
   // Urine osmolality is the osmotic pressure of sodium, glucose and urea over the weight of the fluid
-
+  
   GeneralMath::CalculateOsmolality(m_bladderSodium->GetMolarity(), m_bladderPotassium->GetMolarity(), m_bladderGlucose->GetMolarity(), m_bladderUrea->GetMolarity(), GetUrineSpecificGravity(), GetUrineOsmolality());
   GeneralMath::CalculateOsmolarity(m_bladderSodium->GetMolarity(), m_bladderPotassium->GetMolarity(), m_bladderGlucose->GetMolarity(), m_bladderUrea->GetMolarity(), GetUrineOsmolarity());
-
   double urineUreaConcentration_g_Per_L = m_bladderUrea->GetConcentration(MassPerVolumeUnit::g_Per_L);
   //2.14 = MW Urea(60) / MW N2 (2*14)
   GetUrineUreaNitrogenConcentration().SetValue(urineUreaConcentration_g_Per_L / 2.14, MassPerVolumeUnit::g_Per_L);
@@ -1567,10 +1623,6 @@ void Renal::Urinate()
 void Renal::UpdateBladderVolume()
 {
   /// \todo Eventually replace this entire thing with a compliance and model peristaltic flow
-
-  //Don't fill the bladder during stabilization
-  if (m_data.GetState() != EngineState::Active)
-    return;
 
   //Manually modify the bladder volume based on flow
   //This will work for both filling the bladder and urinating

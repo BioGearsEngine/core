@@ -19,14 +19,30 @@ const VolumePerTimeMassUnit VolumePerTimeMassUnit::mL_Per_min_kg("mL/min kg");
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::mL_Per_s_kg("mL/s kg");
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::uL_Per_min_kg("uL/min kg");
 
+template class SEScalarQuantity<VolumePerTimeMassUnit>;
+
 VolumePerTimeMassUnit::VolumePerTimeMassUnit(const char* u)
-  : VolumePerTimeMassUnit(std::string{ u })
+  : VolumePerTimeMassUnit(std::string { u })
+{
+}
+//-------------------------------------------------------------------------------
+VolumePerTimeMassUnit::~VolumePerTimeMassUnit()
 {
 }
 //-------------------------------------------------------------------------------
 VolumePerTimeMassUnit::VolumePerTimeMassUnit(const std::string& u)
   : CCompoundUnit(u)
 {
+}
+//-------------------------------------------------------------------------------
+SEScalarVolumePerTimeMass::SEScalarVolumePerTimeMass()
+{
+
+}
+//-------------------------------------------------------------------------------
+SEScalarVolumePerTimeMass::~SEScalarVolumePerTimeMass()
+{
+
 }
 //-------------------------------------------------------------------------------
 CDM::ScalarVolumePerTimeMassData* SEScalarVolumePerTimeMass::Unload() const
@@ -40,15 +56,15 @@ CDM::ScalarVolumePerTimeMassData* SEScalarVolumePerTimeMass::Unload() const
 //-------------------------------------------------------------------------------
 bool VolumePerTimeMassUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(L_Per_s_g.GetString(),unit) == 0)
+  if (strcmp(L_Per_s_g.GetString(), unit) == 0)
     return true;
-  if (strcmp(mL_Per_s_g.GetString(),unit) == 0)
+  if (strcmp(mL_Per_s_g.GetString(), unit) == 0)
     return true;
-  if (strcmp(mL_Per_min_kg.GetString(),unit) == 0)
+  if (strcmp(mL_Per_min_kg.GetString(), unit) == 0)
     return true;
-  if (strcmp(mL_Per_s_kg.GetString(),unit) == 0)
+  if (strcmp(mL_Per_s_kg.GetString(), unit) == 0)
     return true;
-  if (strcmp(uL_Per_min_kg.GetString(),unit) == 0)
+  if (strcmp(uL_Per_min_kg.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -60,15 +76,15 @@ bool VolumePerTimeMassUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const VolumePerTimeMassUnit& VolumePerTimeMassUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(L_Per_s_g.GetString(),unit) == 0)
+  if (strcmp(L_Per_s_g.GetString(), unit) == 0)
     return L_Per_s_g;
-  if (strcmp(mL_Per_s_g.GetString(),unit) == 0)
+  if (strcmp(mL_Per_s_g.GetString(), unit) == 0)
     return mL_Per_s_g;
-  if (strcmp(mL_Per_min_kg.GetString(),unit) == 0)
+  if (strcmp(mL_Per_min_kg.GetString(), unit) == 0)
     return mL_Per_min_kg;
-  if (strcmp(mL_Per_s_kg.GetString(),unit) == 0)
+  if (strcmp(mL_Per_s_kg.GetString(), unit) == 0)
     return mL_Per_s_kg;
-  if (strcmp(uL_Per_min_kg.GetString(),unit) == 0)
+  if (strcmp(uL_Per_min_kg.GetString(), unit) == 0)
     return uL_Per_min_kg;
   std::stringstream err;
   err << unit << " is not a valid VolumePerTimeMass unit";
@@ -80,4 +96,26 @@ const VolumePerTimeMassUnit& VolumePerTimeMassUnit::GetCompoundUnit(const std::s
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+
+bool VolumePerTimeMassUnit::operator==(const VolumePerTimeMassUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool VolumePerTimeMassUnit::operator!=(const VolumePerTimeMassUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarVolumePerTimeMass::operator==(const SEScalarVolumePerTimeMass& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarVolumePerTimeMass::operator!=(const SEScalarVolumePerTimeMass& obj) const
+{
+  return !(*this == obj);
+}
 }

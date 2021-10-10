@@ -15,7 +15,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/EnvironmentConditions.hxx>
 
 namespace biogears {
+namespace io {
+  class EnvironmentConditions;
+}
 class BIOGEARS_API SEInitialEnvironment : public SEEnvironmentCondition {
+  friend io::EnvironmentConditions;
+
 public:
   SEInitialEnvironment(SESubstanceManager& substances);
   virtual ~SEInitialEnvironment();

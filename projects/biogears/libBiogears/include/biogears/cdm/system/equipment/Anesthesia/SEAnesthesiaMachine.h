@@ -33,16 +33,28 @@ class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarFraction;
 
+namespace io {
+  class Anesthesia;
+}
+} //namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API map<CDM::enumAnesthesiaMachineEvent::value, bool>;
+BG_EXT template class BIOGEARS_API map<CDM::enumAnesthesiaMachineEvent::value, double>;
+}
+
+namespace biogears {
 class BIOGEARS_API SEAnesthesiaMachine : public SESystem {
 protected:
   friend SEAnesthesiaMachineConfiguration;
+  friend io::Anesthesia;
 
 public:
   SEAnesthesiaMachine(SESubstanceManager& substances);
   ~SEAnesthesiaMachine() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SEAnesthesiaMachine"; }
+  static constexpr char const* const TypeTag() { return "SEAnesthesiaMachine"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -52,6 +64,7 @@ public:
   CDM::AnesthesiaMachineData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::AnesthesiaMachineData& data) const;
 
@@ -60,7 +73,7 @@ protected:
   *            Specically a new file has been loaded, configuration action, or the system reset
   *            Engine specific methodology can then update their logic.
   */
-  virtual void StateChange() {};
+  virtual void StateChange();
   void Merge(const SEAnesthesiaMachine& from);
   void ProcessConfiguration(const SEAnesthesiaMachineConfiguration& config);
 

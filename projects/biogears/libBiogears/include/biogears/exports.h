@@ -14,20 +14,37 @@ specific language governing permissions and limitations under the License.
 
 #if defined(__clang__)
   #define BIOGEARS_API
-  #define BG_EXT
+  #define BIOGEARS_PRIVATE_API 
+  #define BG_EXT extern
 #elif defined(__gnu_linux__)
   #define BIOGEARS_API __attribute__((visibility("default")))
+    #ifdef ENABLE_UNIT_TEST_API
+      #define BIOGEARS_PRIVATE_API __attribute__((visibility("default")))
+    #else 
+      #define BIOGEARS_PRIVATE_API __attribute__((visibility("hidden")))
+    #endif 
   #define BG_EXT extern
 #elif defined(_WIN32)
   //#include <biogears/string-exports.h>
   #ifdef biogears_EXPORTS
     #define BIOGEARS_API __declspec(dllexport)
+    #ifdef ENABLE_UNIT_TEST_API
+      #define BIOGEARS_PRIVATE_API  __declspec(dllexport)
+    #else 
+      #define BIOGEARS_PRIVATE_API 
+    #endif 
     #define BG_EXT
   #else
     #define BIOGEARS_API __declspec(dllimport)
+    #ifdef ENABLE_UNIT_TEST_API
+      #define BIOGEARS_PRIVATE_API  __declspec(dllimport)
+    #else 
+      #define BIOGEARS_PRIVATE_API 
+    #endif 
     #define BG_EXT extern
   #endif
 #else 
   #define BIOGEARS_API
+  #define BIOGEARS_PRIVATE_API 
   #define BG_EXT extern
 #endif

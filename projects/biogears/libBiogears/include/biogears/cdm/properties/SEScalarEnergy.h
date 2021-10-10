@@ -20,7 +20,10 @@ public:
   EnergyUnit(const char* u);
   EnergyUnit(const std::string& u);
 
-  virtual ~EnergyUnit() = default;
+  virtual ~EnergyUnit();
+
+  bool operator==(const EnergyUnit&) const;
+  bool operator!=(const EnergyUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -33,11 +36,19 @@ public:
   static const EnergyUnit kcal;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<EnergyUnit>;
+
 class BIOGEARS_API SEScalarEnergy : public SEScalarQuantity<EnergyUnit> {
 public:
-  SEScalarEnergy() = default;
-  virtual ~SEScalarEnergy() = default;
+  SEScalarEnergy();
+  virtual ~SEScalarEnergy();
 
   CDM::ScalarEnergyData* Unload() const override;
+
+  using SEScalarQuantity<EnergyUnit>::SetValue;
+  using SEScalarQuantity<EnergyUnit>::GetValue;
+
+  bool operator==(const SEScalarEnergy&) const;
+  bool operator!=(const SEScalarEnergy&) const;
 };
 }

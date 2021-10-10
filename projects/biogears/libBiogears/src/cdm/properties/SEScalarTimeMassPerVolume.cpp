@@ -15,18 +15,32 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::s_g_Per_L("s g/L");
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::min_g_Per_L("min g/L");
-const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::hr_g_Per_L("hr g/L");    
+const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::hr_g_Per_L("hr g/L");
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::s_ug_Per_mL("s ug/mL");
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::min_ug_Per_mL("min ug/mL");
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::hr_ug_Per_mL("hr ug/mL");
 
+template class SEScalarQuantity<TimeMassPerVolumeUnit>;
+
 TimeMassPerVolumeUnit::TimeMassPerVolumeUnit(const char* u)
-  : TimeMassPerVolumeUnit(std::string{ u })
+  : TimeMassPerVolumeUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 TimeMassPerVolumeUnit::TimeMassPerVolumeUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+TimeMassPerVolumeUnit::~TimeMassPerVolumeUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarTimeMassPerVolume::SEScalarTimeMassPerVolume()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarTimeMassPerVolume::~SEScalarTimeMassPerVolume()
 {
 }
 //-------------------------------------------------------------------------------
@@ -85,4 +99,25 @@ const TimeMassPerVolumeUnit& TimeMassPerVolumeUnit::GetCompoundUnit(const std::s
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool TimeMassPerVolumeUnit::operator==(const TimeMassPerVolumeUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool TimeMassPerVolumeUnit::operator!=(const TimeMassPerVolumeUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarTimeMassPerVolume::operator==(const SEScalarTimeMassPerVolume& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarTimeMassPerVolume::operator!=(const SEScalarTimeMassPerVolume& obj) const
+{
+  return !(*this == obj);
+}
 }

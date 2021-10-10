@@ -12,10 +12,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
 
 #include <biogears/cdm/Serializer.h>
-#include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
-
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
+#include <biogears/io/io-manager.h>
+
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -48,8 +49,20 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
     Info(m_ss);
     m_Cancel = false;
     m_CustomExec = cExec;
+    std::unique_ptr<CDM::ObjectData> bind;
 
-    std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(scenarioFile, GetLogger());
+    auto io = m_Logger->GetIoManager().lock();
+    auto possible_path = io->FindScenarioFile(scenarioFile.c_str());
+    if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+      size_t content_size;
+      auto content = io->get_embedded_resource_file(scenarioFile.c_str(), content_size);
+      bind = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+    } else {
+      bind = Serializer::ReadFile(possible_path, m_Logger);
+    }
+
     if (bind == nullptr) {
       m_ss << "Unable to load scenario file : " << scenarioFile << std::endl;
       Error(m_ss);
@@ -64,7 +77,7 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
     BioGearsScenario scenario(m_Engine.GetSubstanceManager());
     scenario.Load(*sceData);
     std::string rFile = resultsFile;
- 
+
     bool success = SEScenarioExec::Execute(scenario, rFile, cExec);
     return success;
   } catch (CommonDataModelException& ex) {

@@ -15,15 +15,19 @@ specific language governing permissions and limitations under the License.
 #include <memory>
 
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/Substance.hxx>
-#include <biogears/cdm/substance/SESubstanceConcentration.h>
 
 namespace biogears {
 class SESubstance;
 class SESubstanceManager;
-
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstanceCompound : public Loggable {
+  friend io::Substance;
+
 public:
   explicit SESubstanceCompound(const std::string& name, Logger* logger);
   explicit SESubstanceCompound(const char* name, Logger* logger);
@@ -35,9 +39,6 @@ public:
 
   virtual bool Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr);
   virtual CDM::SubstanceCompoundData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::SubstanceCompoundData& data) const;
 
 public:
   virtual std::string GetName() const;
@@ -62,6 +63,12 @@ public:
   SESubstanceConcentration& GetComponent(SESubstance& substance);
   const SESubstanceConcentration GetComponent(SESubstance& substance) const;
   void RemoveComponent(const SESubstance& substance);
+   
+  bool operator==( const SESubstanceCompound& rhs) const;
+  bool operator!=( const SESubstanceCompound& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstanceCompoundData& data) const;
 
 protected:
   std::string m_Name;

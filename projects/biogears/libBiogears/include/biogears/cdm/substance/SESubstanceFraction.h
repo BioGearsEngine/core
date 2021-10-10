@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License..
 
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/schema/cdm/Substance.hxx>
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(SubstanceFractionData)
@@ -21,8 +22,12 @@ class SESubstance;
 class SESubstanceManager;
 class SEEnvironmentalConditions;
 class SEScalarFraction;
-
+namespace io {
+  class Substance;
+}
 class BIOGEARS_API SESubstanceFraction : public Loggable {
+  friend io::Substance;
+
 protected:
   friend SEEnvironmentalConditions; // So it can add substances to the manager
 public:
@@ -34,15 +39,17 @@ public:
   virtual bool Load(const CDM::SubstanceFractionData& in);
   virtual CDM::SubstanceFractionData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstanceFractionData& data) const;
-
-public:
   virtual bool HasFractionAmount() const;
   virtual SEScalarFraction& GetFractionAmount();
   virtual double GetFractionAmount() const;
 
   virtual SESubstance& GetSubstance() const;
+  
+  bool operator==( const SESubstanceFraction& rhs) const;
+  bool operator!=( const SESubstanceFraction& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstanceFractionData& data) const;
 
 protected:
   SESubstance& m_Substance;

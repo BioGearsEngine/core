@@ -21,8 +21,14 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(CircuitData)
 
 namespace biogears {
+namespace io {
+  class Circuit;
+}
+
 template <CIRCUIT_TEMPLATE>
 class SECircuit : public Loggable {
+  friend io::Circuit;
+
 public:
   SECircuit(const char* name, Logger* logger);
   SECircuit(const std::string& name, Logger* logger);

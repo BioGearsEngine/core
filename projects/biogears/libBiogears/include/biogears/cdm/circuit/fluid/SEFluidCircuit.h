@@ -11,18 +11,36 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+
+#include <map>
+#include <vector>
+
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
 
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SEFluidCircuitNode*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, vector<biogears::SEFluidCircuitPath*>*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, size_t>;
+}
+
 namespace biogears {
 class SECircuitManager;
+namespace io {
+  class Circuit;
+}
+BG_EXT template class BIOGEARS_API SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>;
+
 class BIOGEARS_API SEFluidCircuit : public SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData> {
   friend class SECircuitManager;
+  friend io::Circuit;
 
 protected:
   SEFluidCircuit(const std::string& name, SECircuitManager& mgr);
   SEFluidCircuit(const char* name, SECircuitManager& mgr);
+
 public:
   virtual ~SEFluidCircuit();
 

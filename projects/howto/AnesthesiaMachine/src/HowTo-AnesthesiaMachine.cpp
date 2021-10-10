@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 
 // Include the various types you will be using in your code
+#include <biogears/string/manipulation.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
@@ -27,7 +28,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
+#include <sstream>
+
 using namespace biogears;
+using biogears::asprintf;
 //---------------------------------------------------------------------------------------------------------------------
 /// \brief
 /// Usage for connecting the anesthesia machine to a patient
@@ -38,7 +42,7 @@ using namespace biogears;
 /// Use an SEAnesthesiaMachineVentilatorMask action to place the mash and allow the machine to breath for the patient
 /// End of example shows how to turn things off
 //---------------------------------------------------------------------------------------------------------------------
-void HowToAnesthesiaMachine()
+int HowToAnesthesiaMachine()
 {
   // Create the engine and load the patient
 	std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToAnesthesiaMachine.log");
@@ -46,7 +50,7 @@ void HowToAnesthesiaMachine()
 	if (!bg->LoadState("./states/StandardMale@0s.xml"))
   {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
     // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -64,22 +68,22 @@ void HowToAnesthesiaMachine()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalLungVolume", VolumeUnit::mL);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SedationLevel");
-
+																												// Create an Anesthesia Machine and configure it as needed
+	SEAnesthesiaMachineConfiguration AMConfig(bg->GetSubstanceManager());
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToAnesthesiaMachine.csv");
 
 	bg->GetLogger()->Info("The patient is nice and healthy");
-	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());;
+	bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
+	bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
 
 	bg->AdvanceModelTime(50, TimeUnit::s);
 
 	// Turn the anesthesia machine on and get it configured for spontaneous breathing
-	// Create an Anesthesia Machine and configure it as needed
-	SEAnesthesiaMachineConfiguration AMConfig(bg->GetSubstanceManager());
+
 
 	// You can set configuration by modifing the configuration class directly
 	// Or you can point to an XML with configuration data.
@@ -91,27 +95,27 @@ void HowToAnesthesiaMachine()
 	config.GetInspiratoryExpiratoryRatio().SetValue(.5);
 	config.GetOxygenFraction().SetValue(.5);
 	config.SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
-	config.GetPositiveEndExpiredPressure().SetValue(0.0, PressureUnit::cmH2O);
+	config.GetPositiveEndExpiredPressure().SetValue(3.0, PressureUnit::cmH2O);
 	config.SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
 	config.GetReliefValvePressure().SetValue(20.0, PressureUnit::cmH2O);
 	config.GetRespiratoryRate().SetValue(12, FrequencyUnit::Per_min);
-	config.GetVentilatorPressure().SetValue(0.0, PressureUnit::cmH2O);
+	config.GetVentilatorPressure().SetValue(22.0, PressureUnit::cmH2O);
 	config.GetOxygenBottleOne().GetVolume().SetValue(660.0, VolumeUnit::L);
 	config.GetOxygenBottleTwo().GetVolume().SetValue(660.0, VolumeUnit::L);
 
 	// Process the action to propagate state into the engine
 	bg->ProcessAction(AMConfig);
-	bg->GetLogger()->Info(std::stringstream() <<"Turning on the Anesthesia Machine and placing mask on patient for spontaneous breathing with machine connection.");;
+	bg->GetLogger()->Info(asprintf("Turning on the Anesthesia Machine and placing mask on patient for spontaneous breathing with machine connection."));
 
 	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("The patient is attempting to breath normally with Anesthesia Machine connected");
-	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());;
+	bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
+	bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f" , bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
 
     // Get the Succinylcholine substance from the substance manager
 	const SESubstance* succs = bg->GetSubstanceManager().GetSubstance("Succinylcholine");
@@ -128,12 +132,12 @@ void HowToAnesthesiaMachine()
 	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("It has been 60s since the Succinylcholine administration.");
-	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());;
+	bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
+	bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
 
 	config.GetInletFlow().SetValue(5.0, VolumePerTimeUnit::L_Per_min);
 	config.GetPositiveEndExpiredPressure().SetValue(3.0, PressureUnit::cmH2O);
@@ -144,12 +148,12 @@ void HowToAnesthesiaMachine()
 	bg->AdvanceModelTime(60, TimeUnit::s);
 	 
 	bg->GetLogger()->Info("Patient breathing is being controlled by the machine.");
-	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());;
+	bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
+	bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
 
 	config.GetInspiratoryExpiratoryRatio().SetValue(1.0);
 	config.GetPositiveEndExpiredPressure().SetValue(1.0, PressureUnit::cmH2O);
@@ -161,12 +165,12 @@ void HowToAnesthesiaMachine()
 	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("Patient breathing is being controlled by the machine.");
-	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());;
+	bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
+	bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
 
 	SEMaskLeak AMleak;
 	AMleak.GetSeverity().SetValue(0.5);
@@ -176,12 +180,12 @@ void HowToAnesthesiaMachine()
 	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("Patient breathing is being controlled by the machine. The mask has been leaking for 60 seconds.");
-	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());;
+	bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
+	bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
 
 	AMleak.GetSeverity().SetValue(0.0);
 	bg->ProcessAction(AMleak);
@@ -197,12 +201,12 @@ void HowToAnesthesiaMachine()
 	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("Patient breathing is being controlled by the machine. The wall oxygen pressure loss occurred 60 seconds ago.");
-	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
+	bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
+	bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
 
 	AMpressureloss.SetActive(false);
 	bg->ProcessAction(AMpressureloss);
@@ -211,11 +215,15 @@ void HowToAnesthesiaMachine()
 	bg->AdvanceModelTime(60, TimeUnit::s);
 
 	bg->GetLogger()->Info("The anesthesia machine is operating normally");
-	bg->GetLogger()->Info(std::stringstream() <<"Tidal Volume : " << bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-	bg->GetLogger()->Info(std::stringstream() <<"Systolic Pressure : " << bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Diastolic Pressure : " << bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-	bg->GetLogger()->Info(std::stringstream() <<"Heart Rate : " << bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Respiration Rate : " << bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm");
-	bg->GetLogger()->Info(std::stringstream() <<"Oxygen Saturation : " << bg->GetBloodChemistrySystem()->GetOxygenSaturation());
+	bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
+	bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+	bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+	bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
   bg->GetLogger()->Info("Finished");
+  return 0;
+}
+int main ( int argc, char* argv[] ) {
+  return HowToAnesthesiaMachine();
 }

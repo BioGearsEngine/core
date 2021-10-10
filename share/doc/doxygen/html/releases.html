@@ -81,49 +81,45 @@
         <div class='container'>
             <div class='row'>
                 <div>
-                    <h1 class='thin'> <a href="https://github.com/BioGearsEngine/core/releases/tag/7.2.1">Biogears 7.2.1 (April 9th, 2019)</a></h1>
+                    <h1 class='thin'> <a href="https://github.com/BioGearsEngine/core/releases/tag/7.4.0">Biogears 7.4.0 (June 13th, 2021)</a></h1>
                     <ul>
-                        <li>General bug fixes and updates
-                            <ul>
-                                <li>Finalization for testing and implementation to BioGears override functionality with full physiology request data support</li>
-                            </ul>
-                        </li>
-                        <li>Arterial and Venous PH data requests</li>
-                        <li>Inflammation state data to support sepsis model serialization</li>
-                        <li>Generalized sepsis model to a more generic inflammation model
-                            <ul>
-                                <li>Will be critical to future modeling efforts (hemorrhage, burn, infection)
-                            </ul>
-                        </li>
-                        <li>New example sepsis xml files (SepsisSevere_Gut.xml</li>
-                        <li>New lymph circuit
-                            <ul>
-                                <li>Handles Albumin transport and re-circulation</li>
-                                <li>Creates realistic oncotic pressure sources for substance transport</li>
-                                <li>Transport from tissue systems back into the vasculature via lymph</li>
-                            </ul>
-                        </li>
-                        <li>New command line utility project (cmd_bio) for native c++ runtime, driver, batch run organizer/manager</li>
-                        <li>Optional name value for xml actions meal and environment</li>
+                        <li>General bug fixes and updates</li>
+                        <li>Created a series of burn scenarios</li>
+                        <li>Updates to support gcc 9</li>
+                        <li>Added new operators (== !=) for all properties </li>
+                        <li>New Python language hooks </li>
+                        <li>New albumin fluid substances to support more complex burn care scenarios</li>
+                        <li>Updated all utilities to python (website creation, rebase, testing, ect...)</li>
+                        <li>Updated Cmake version to 3.18 </li>
                         <li>New burn model
+                        <li>Created embedded resource files to support BioGears running with a generic runtime directory
                             <ul>
-                                <li>User defined total body surface area input</li>
-                                <li>Inflammation cascade validated for long running scenarios (24 hr+)</li>
-                                <li>Validated for traditional treatment protocols with USISR SMEs
+                                <li>BioGears can run without knowledge of where .xml resources are</li>
                             </ul>
                         </li>
-                        <li>New unit testing framework (Google Test) to better support multiplatform functionality
+                        <li>Removed Log4Cpp dependencies (depreciated third party project) and created logging in the engine</li>
                             <ul>
-                                <li>Unit Test harness is a separate project in CMAKE which can be controlled with Biogears_BUILD_TEST variable</li>
+                                <li>Supports call backs and custom logs</li>
+                                <li>Tested for timing and performance, at or surpassing previous implementation</li>
                             </ul>
                         </li>
-                        <li>Introduced const char* DLL interfaces for all functions dealing with std::string to avoid windows related issues dealing with XSD implicitly exporting string through inheritance</li>
-                        <li>Updated functionality to tension pneumothorax to fix bug in bilateral behavior</li>
-                        <li>Updated hemorrhage bugs to update blood gas levels in metabolic requirements
+                        <li>New Burn API how to that is complex and able to generate large sets of data </li>
+                        <li>New model for compartment syndrome complication during burn TBSA (for large burns)
                             <ul>
-                                <li>Validated with University of Washington</li>
+                                <li>Interfaces with a new action, **escharotomy**  reversing tissue pressure</li>
+                                <li>Validated timing, pulse pressures, and reversal</li>
                             </ul>
                         </li>
+                        <li>Swig binding supports, including **new csharp (C#) hooks** </li>
+                        <li>Major updates to Sarin validation  </li>
+                            <ul>
+                                <li>Tidal volume, patient events, reversal timings all validated with Madigan Army Medical Center</li>
+                            </ul>
+                        <li>New pulmonary shunt action that is validated for cardiac output and oxygen saturation changes </li>
+                        <li>Added bladder pressure as a physiology data request </li>
+                        <li>Patient population generation, able to generate large statistical populations over supported inputs </li>
+                        <li> Minor bug fixes and validation changes to models and software  </li>
+                        <li>New drug Atropine, validated as a reversal agent for Sarin exposure </li>
                     </ul>
                     <h1 class='thin'><a href="https://github.com/BioGearsEngine/core/releases/tag/7.1.1">Biogears 7.1.1 (October 1st, 2018)</a></h1>
                     <ul>

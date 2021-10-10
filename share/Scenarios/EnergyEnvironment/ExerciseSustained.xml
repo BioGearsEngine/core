@@ -91,6 +91,11 @@
 	
 	<DataRequest Substance="Insulin" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/mL" Precision="2"/>
 	<DataRequest Substance="Sodium" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/mL" Precision="2"/>
+	<DataRequest Substance="Globulin" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="g/dL" Precision="1"/>
+	<DataRequest Substance="Glucagon" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/dL" Precision="3"/>
+	<DataRequest Substance="Glucose" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/dL" Precision="1"/>
+	<DataRequest Substance="Hemoglobin" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="g/dL" Precision="2"/>
+	<DataRequest Substance="Lactate" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="mg/L" Precision="3"/>
 	
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutVasculature" Name="InFlow"  Unit="mL/s" Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature" Name="InFlow"  Unit="mL/s" Precision="0"/>
@@ -107,11 +112,11 @@
 	<!-- Exercise at a moderate level for an hour -->
 	<Action xsi:type="ExerciseData">
 		<GenericExercise>
-			<Intensity value="0.4"></Intensity>
+			<Intensity value="0.3"></Intensity>
 		</GenericExercise>
     </Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="60" unit="min"/>       
+        <Time value="180" unit="min"/>       
     </Action>
 	<Action xsi:type="ExerciseData">
 		<GenericExercise>

@@ -12,17 +12,21 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
 class SEScalar;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEExercise : public SEPatientAction {
+  friend io::PatientActions;
+
 public:
   enum ExerciseType {
     GENERIC,
@@ -34,20 +38,32 @@ public:
   struct SEGeneric {
     SEScalarPower DesiredWorkRate;
     SEScalar0To1 Intensity;
+
+    bool operator==( const SEGeneric& rhs) const;
+    bool operator!=( const SEGeneric& rhs) const;
   };
   struct SECycling {
     SEScalarFrequency CadenceCycle;
     SEScalarPower PowerCycle;
     SEScalarMass AddedWeight;
+
+    bool operator==( const SECycling& rhs) const;
+    bool operator!=( const SECycling& rhs) const;
   };
   struct SERunning {
     SEScalarLengthPerTime SpeedRun;
     SEScalar0To1 InclineRun;
     SEScalarMass AddedWeight;
+
+    bool operator==( const SERunning& rhs) const;
+    bool operator!=( const SERunning& rhs) const;
   };
   struct SEStrengthTraining {
     SEScalarMass WeightStrength;
     SEScalar RepsStrength;
+
+    bool operator==( const SEStrengthTraining& rhs) const;
+    bool operator!=( const SEStrengthTraining& rhs) const;
   };
 
   SEExercise();
@@ -93,6 +109,9 @@ public:
 
   virtual void ToString(std::ostream& str) const override;
 
+  bool operator==( const SEExercise& rhs) const;
+  bool operator!=( const SEExercise& rhs) const;
+
 protected:
   virtual void Unload(CDM::ExerciseData& data) const;
   virtual bool LoadGeneric(const CDM::GenericExerciseData& in);
@@ -106,6 +125,5 @@ private:
   SECycling m_cyclingExercise;
   SERunning m_runningExercise;
   SEStrengthTraining m_strengthExercise;
-
 };
 }

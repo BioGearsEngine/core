@@ -15,13 +15,27 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const ElectricCurrentUnit ElectricCurrentUnit::A("A");
 
+template class SEScalarQuantity<ElectricCurrentUnit>;
+
 ElectricCurrentUnit::ElectricCurrentUnit(const char* u)
-  : ElectricCurrentUnit(std::string{ u })
+  : ElectricCurrentUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 ElectricCurrentUnit::ElectricCurrentUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+ElectricCurrentUnit::~ElectricCurrentUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricCurrent::SEScalarElectricCurrent()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricCurrent::~SEScalarElectricCurrent()
 {
 }
 //-----------------------------------------------------------------------------
@@ -60,4 +74,25 @@ const ElectricCurrentUnit& ElectricCurrentUnit::GetCompoundUnit(const std::strin
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool ElectricCurrentUnit::operator==(const ElectricCurrentUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool ElectricCurrentUnit::operator!=(const ElectricCurrentUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarElectricCurrent::operator==(const SEScalarElectricCurrent& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarElectricCurrent::operator!=(const SEScalarElectricCurrent& obj) const
+{
+  return !(*this == obj);
+}
 }

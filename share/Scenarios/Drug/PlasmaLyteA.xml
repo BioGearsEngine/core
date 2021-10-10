@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>PlasmaLyteAScenario</Name>
+    <Description>PLasma Lyte A as a stabilizer after a propofol injection!</Description>	
+    <InitialParameters>
+		<PatientFile>StandardMale.xml</PatientFile>
+		<Configuration xsi:type="BioGearsConfigurationData">
+			<DrugsConfiguration>
+        <PDModel>On</PDModel>
+      </DrugsConfiguration>
+		</Configuration>
+	</InitialParameters>
+    
+  <DataRequests SamplesPerSecond="1">
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest Name="ArterialBloodPH" xsi:type="PhysiologyDataRequestData" Precision="2"/>
+
+  </DataRequests>
+	
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+	<Action xsi:type="SubstanceInfusionData">
+        <Substance>Propofol</Substance>
+        <Concentration value="4" unit="mg/mL"/>
+        <Rate value="1" unit="mL/s"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="27" unit="s"/>       
+    </Action>
+	<Action xsi:type="SubstanceInfusionData">
+        <Substance>Propofol</Substance>
+        <Concentration value="0" unit="ug/mL"/>
+        <Rate value="0" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="SubstanceCompoundInfusionData">
+        <SubstanceCompound>PlasmaLyteA</SubstanceCompound>
+        <BagVolume value="420.0" unit="mL"/>
+        <Rate value="1.0" unit="mL/min"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="4" unit="hr"/>       
+    </Action>
+</Scenario>

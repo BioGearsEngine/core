@@ -12,10 +12,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 
 //Standard Includes
-#include <iomanip>
 #include <fstream>
+#include <iomanip>
 //Project Includes
 #include <biogears/schema/cdm/Properties.hxx>
+
+namespace std {
+template class map<string, biogears::SEDecimalFormat>;
+}
 
 namespace biogears {
 SEDecimalFormat::SEDecimalFormat(const SEDecimalFormat* dfault)
@@ -63,7 +67,7 @@ CDM::DecimalFormatData* SEDecimalFormat::Unload()
 }
 void SEDecimalFormat::Unload(CDM::DecimalFormatData& data) const
 {
-  data.Precision( static_cast<CDM::DecimalFormatData::Precision_type>(m_Precision));
+  data.Precision(static_cast<CDM::DecimalFormatData::Precision_type>(m_Precision));
   switch (m_Notation) {
   case DecimalNotation::Default:
   case DecimalNotation::Fixed: {
@@ -99,10 +103,10 @@ void SEDecimalFormat::SetStream(std::ofstream& s)
 {
   switch (m_Notation) {
   case DecimalNotation::Default:
-    s 
-    #ifndef ANDROID
-      << std::defaultfloat 
-    #endif
+    s
+#ifndef ANDROID
+      << std::defaultfloat
+#endif
       << std::setprecision(m_Precision);
     break;
   case DecimalNotation::Fixed:
@@ -112,4 +116,16 @@ void SEDecimalFormat::SetStream(std::ofstream& s)
     s << std::scientific << std::setprecision(m_Precision);
   }
 }
+
+bool SEDecimalFormat::operator==(const SEDecimalFormat& rhs) const
+{
+
+  return m_Precision == rhs.m_Precision
+    && m_Notation == rhs.m_Notation;
+}
+bool SEDecimalFormat::operator!=(const SEDecimalFormat& rhs) const
+{
+  return !(*this == rhs);
+}
+
 }

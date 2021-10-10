@@ -252,7 +252,7 @@ void BioGearsEngineTest::DepositionFractionTest(SETestSuite& suite, SESubstance&
   tc.SetName(std::string{substance.GetName()} + "DepositionFraction");
 
   BioGears bg(m_Logger);
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
@@ -303,7 +303,7 @@ void BioGearsEngineTest::DepositionFractionTest(SETestSuite& suite, SESubstance&
   double yOffset = -12.0;
   double sinusoid = 0;
 
-  DataTrack trk;
+  DataTrack trk{m_Logger};
   std::ofstream file;
   double totalInspiredAir_mL = 0;
   double totalExspiredAir_mL = 0;

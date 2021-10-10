@@ -73,7 +73,7 @@ At any point during the life of an engine, you create your own state object for 
   /// State object will be returned.
   /// Engine will be in a cleared state if this method fails.
   //--------------------------------------------------------------------------------------------------
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveState(const std::string& file = "") = 0;
+  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> SaveStateToFile(const std::string& file = "") = 0;
 @endcode
 
 @anchor PatientCreation

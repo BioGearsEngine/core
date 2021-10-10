@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
+#include <biogears/schema/cdm/Substance.hxx>
 
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 
@@ -20,14 +21,26 @@ CDM_BIND_DECL(SubstancePharmacodynamicsData)
 CDM_BIND_DECL(PharmacodynamicModifierData)
 
 namespace biogears {
-
 class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarMassPerVolume;
 class MassPerVolumeUnit;
+class SEScalarFraction;
 class SEPharmacodynamicModifier;
 
-class BIOGEARS_API SESubstancePharmacodynamics : Loggable {
+namespace io {
+  class Substance;
+}
+} //namespace biogears
+
+namespace std {
+  BG_EXT template class BIOGEARS_API map<string, biogears::SEPharmacodynamicModifier*>;
+}
+
+namespace biogears {
+class BIOGEARS_API SESubstancePharmacodynamics : public Loggable {
+  friend io::Substance;
+
 public:
   SESubstancePharmacodynamics(Logger* logger);
   virtual ~SESubstancePharmacodynamics();
@@ -40,9 +53,6 @@ public:
 
   virtual bool Load(const CDM::SubstancePharmacodynamicsData& in);
   virtual CDM::SubstancePharmacodynamicsData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::SubstancePharmacodynamicsData& data) const;
 
 public:
   virtual bool HasAntibacterialEffect() const;
@@ -119,6 +129,12 @@ public:
 
   virtual std::map<std::string, SEPharmacodynamicModifier*> GetPharmacodynamicModifiers() const;
 
+  bool operator==(const SESubstancePharmacodynamics& rhs) const;
+  bool operator!=(const SESubstancePharmacodynamics& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstancePharmacodynamicsData& data) const;
+
 private:
   std::map<std::string, SEPharmacodynamicModifier*> m_Modifiers;
   SEScalarFrequency* m_AntibacterialEffect;
@@ -142,6 +158,8 @@ private:
 };
 
 class BIOGEARS_API SEPharmacodynamicModifier {
+  friend io::Substance;
+
 public:
   SEPharmacodynamicModifier();
   virtual ~SEPharmacodynamicModifier();
@@ -161,6 +179,9 @@ public:
   virtual bool HasEC50() const;
   virtual SEScalarMassPerVolume& GetEC50();
   virtual double GetEC50(const MassPerVolumeUnit& unit) const;
+
+  bool operator==(const SEPharmacodynamicModifier& rhs) const;
+  bool operator!=(const SEPharmacodynamicModifier& rhs) const;
 
 protected:
   virtual void Unload(CDM::PharmacodynamicModifierData& data) const;

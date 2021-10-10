@@ -13,14 +13,18 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <string>
 
-#include <biogears/exports.h>
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
+#include <biogears/exports.h>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class SEScalar0To1;
-
+namespace io {
+  class PatientConditions;
+}
 class BIOGEARS_API SEChronicObstructivePulmonaryDisease : public SEPatientCondition {
+  friend io::PatientConditions;
+
 public:
   SEChronicObstructivePulmonaryDisease();
   virtual ~SEChronicObstructivePulmonaryDisease();

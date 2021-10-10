@@ -15,8 +15,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
 
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SEElectricalCircuitNode*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SEElectricalCircuitPath*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, size_t>;
+}
 namespace biogears {
 class SECircuitManager;
+
+BG_EXT template class BIOGEARS_API SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
 
 class BIOGEARS_API SEElectricalCircuit : public SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData> {
   friend class SECircuitManager;
@@ -24,6 +32,7 @@ class BIOGEARS_API SEElectricalCircuit : public SECircuit<CDM::ElectricalCircuit
 protected:
   SEElectricalCircuit(const std::string& name, SECircuitManager& mgr);
   SEElectricalCircuit(const char* name, SECircuitManager& mgr);
+
 public:
   virtual ~SEElectricalCircuit();
 

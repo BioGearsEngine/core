@@ -18,6 +18,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
+#include <biogears/io/io-manager.h>
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/config.h>
+#endif
 
 namespace biogears {
 PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
@@ -56,7 +60,7 @@ void PhysiologyEngineConfiguration::Merge(const PhysiologyEngineConfiguration& f
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::Load(const char* file)
 {
-  return Load(std::string{ file });
+  return Load(std::string { file });
 }
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::Load(const std::string& file)
@@ -66,7 +70,18 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
   CDM::PhysiologyEngineConfigurationData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  data = Serializer::ReadFile(file, GetLogger());
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindConfigFile(file.c_str());
+  if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
+    auto content = io::get_embedded_config_file(file.c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+  } else {
+    data = Serializer::ReadFile(possible_path, m_Logger);
+  }
+
   pData = dynamic_cast<CDM::PhysiologyEngineConfigurationData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
@@ -104,7 +119,17 @@ bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfiguratio
   const CDM::PhysiologyEngineTimedStabilizationData* tData = nullptr;
   const CDM::PhysiologyEngineDynamicStabilizationData* dData = nullptr;
   if (in.StabilizationCriteriaFile().present()) {
-    sData = Serializer::ReadFile(in.StabilizationCriteriaFile().get(), GetLogger());
+    auto io = m_Logger->GetIoManager().lock();
+    auto possible_path = io->FindConfigFile(in.StabilizationCriteriaFile().get().c_str());
+    if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+      size_t content_size;
+      auto content = io::get_embedded_config_file(in.StabilizationCriteriaFile().get().c_str(), content_size);
+      sData = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+    } else {
+      sData = Serializer::ReadFile(possible_path, m_Logger);
+    }
     if (sData == nullptr) {
       Error("Unable to load Stabilization Criteria file");
       return false;

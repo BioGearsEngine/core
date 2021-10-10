@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
+
 SELiquidCompartment::SELiquidCompartment(const char* name, Logger* logger)
   : SELiquidCompartment(std::string{ name }, logger)
 {

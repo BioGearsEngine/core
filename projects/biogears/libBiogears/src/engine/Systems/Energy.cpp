@@ -599,8 +599,6 @@ void Energy::CalculateSweatRate()
   GeneralMath::CalculateWaterDensity(m_skinNode->GetTemperature(), sweatDensity);
   double dehydrationFraction = m_data.GetTissue().GetDehydrationFraction().GetValue();
 
-  //m_data.GetDataTrack().Probe("DehydrationPercent", dehydrationFraction*100);
-
   //Calculate sweat rate (in kg/s) from core temperature feedback.
   //The sweat rate heat transfer is determined from a control equation that attempts to keep the core temperature in line
   /// \cite herman2008physics
@@ -644,9 +642,6 @@ void Energy::CalculateSweatRate()
   //Set the flow source on the extravascular circuit to begin removing the fluid that is excreted
   double sweatRate_mL_Per_s = sweatRate_kg_Per_s / sweatDensity.GetValue(MassPerVolumeUnit::kg_Per_mL);
   m_skinExtravascularToSweatingGroundPath->GetNextFlowSource().SetValue(sweatRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
-
-  //totalSweatLost_mL += sweatRate_mL_Per_s * m_dT_s;
-  //m_data.GetDataTrack().Probe("CumulativeSweatLost_mL", totalSweatLost_mL);
 }
 
 //--------------------------------------------------------------------------------------------------

@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/exports.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
+#include <biogears/exports.h>
 #include <biogears/schema/cdm/Environment.hxx>
 
 namespace biogears {
@@ -22,9 +22,12 @@ class SEScalarPower;
 class PowerUnit;
 class SEScalarArea;
 class AreaUnit;
-
+namespace io {
+  class Environment;
+}
 class BIOGEARS_API SEActiveCooling : public Loggable {
 public:
+  friend io::Environment;
   SEActiveCooling(Logger* logger);
   virtual ~SEActiveCooling();
 

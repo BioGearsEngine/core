@@ -34,15 +34,14 @@ find_package(Threads REQUIRED)
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################
-message(STATUS "")
 message(STATUS "Configuring ${PROJECT_NAME}")
 
 #Scenario Driver
 
-add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/include "*.h"   "Headers\\Public\\")
+add_source_files(PUBLIC_HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
 
-add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.cpp" "Sources\\")
-add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src "*.c" "Sources\\")
+add_source_files(SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.cpp" SOURCE_GROUP "Sources\\")
+add_source_files(SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.c" SOURCE_GROUP "Sources\\")
 
 set(${PREFIX}_HEADERS ${HDRS} ${PUBLIC_HDRS} ${GEN_HDRS})
 set(${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS})
@@ -73,8 +72,9 @@ set_target_properties(lib${PROJECT_NAME}
   COMPILE_PDB_NAME "${PROJECT_NAME}"
   OUTPUT_NAME "${PROJECT_NAME}"
   PROJECT_LABEL "lib${PROJECT_NAME}"
-  DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+  DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
   CXX_STANDARD 14
+  POSITION_INDEPENDENT_CODE TRUE
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
   target_compile_definitions(lib${PROJECT_NAME} PUBLIC  ${${PREFIX}_INTERFACE_CPPFLAGS} PRIVATE ${${PREFIX}_CPPFLAGS} )
@@ -102,17 +102,16 @@ list(APPEND ${PREFIX}_INCLUDES
 )
 list(REMOVE_DUPLICATES ${PREFIX}_INCLUDES)
 
-foreach( ITEM IN LISTS ${PREFIX}_INCLUDES)
-  message(STATUS "  ${${ITEM}}")
-endforeach()
 set(${PREFIX}_LIBS
       ${CMAKE_THREAD_LIBS_INIT}
       ${CMAKE_DL_LIBS}
 )
 
 set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
-target_link_libraries(lib${PROJECT_NAME}  ${${PREFIX}_LIBS} )
- 
+target_link_libraries(lib${PROJECT_NAME} PUBLIC ${${PREFIX}_LIBS} )
+if(ANDROID)
+  target_link_libraries(lib${PROJECT_NAME} PUBLIC android log)
+endif() 
 if(TARGET prepare_runtime_dir AND ${ROOT_PROJECT_NAME}_PREPARE_RUNTIME_DIR) 
 	add_dependencies(lib${PROJECT_NAME} prepare_runtime_dir)
 endif()
@@ -137,5 +136,3 @@ endif()
     "include/units.h"
     DESTINATION include/
     )
-
-message(STATUS "")

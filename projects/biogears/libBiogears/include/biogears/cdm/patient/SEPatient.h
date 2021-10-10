@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -19,7 +20,7 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(PatientData)
 
 namespace biogears {
-  
+
 class SEEventHandler;
 class SENutrition;
 class SEScalar;
@@ -45,7 +46,19 @@ class SEScalarNeg1To1;
 class SEScalarVolumePerTime;
 class VolumePerTimeUnit;
 
+namespace io {
+  class Patient;
+}
+} //namespace biogears
+namespace std {
+BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, bool>;
+BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, void (*)(bool)>;
+BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, double>;
+}
+namespace biogears {
 class BIOGEARS_API SEPatient : public Loggable {
+  friend io::Patient;
+
 public:
   SEPatient(Logger* logger);
   virtual ~SEPatient();
@@ -72,6 +85,7 @@ public:
 
   virtual const std::map<CDM::enumPatientEvent::value, bool>& GetEventStates() const { return m_EventState; }
   virtual void SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time);
+  virtual void SetEventCallback(CDM::enumPatientEvent::value type, void (*callback)(bool));
   virtual bool IsEventActive(CDM::enumPatientEvent::value state) const;
   virtual double GetEventDuration(CDM::enumPatientEvent::value type, const TimeUnit& unit) const;
   virtual void UpdateEvents(const SEScalarTime& timeStep);
@@ -257,6 +271,7 @@ protected:
   std::stringstream m_ss;
   mutable SEEventHandler* m_EventHandler;
   std::map<CDM::enumPatientEvent::value, bool> m_EventState;
+  std::map<CDM::enumPatientEvent::value, void (*)(bool)> m_EventCallbacks;
   std::map<CDM::enumPatientEvent::value, double> m_EventDuration_s;
 
   std::string m_Name;

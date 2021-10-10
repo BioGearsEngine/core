@@ -47,7 +47,7 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
   bool showAllOutput = true; //toggle this to show all Info outputs for all circuits, which will show first-pass solve times and fail rates
 
   BioGears bg(tsSolverSpeed.GetLogger());
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::On);
   bg.m_Config->EnableTissue(CDM::enumOnOff::On);

@@ -13,14 +13,17 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/exports.h>
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/exports.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
 class SEScalarMassPerVolume;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEInfection : public SEPatientAction {
+  friend io::PatientActions;
 public:
   SEInfection();
   virtual ~SEInfection() override;
@@ -36,10 +39,6 @@ public:
   virtual bool Load(const CDM::InfectionData& in);
   virtual CDM::InfectionData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::InfectionData& data) const;
-
-public:
   virtual const char* GetLocation_cStr() const;
   virtual std::string GetLocation() const;
   virtual bool HasLocation() const;
@@ -57,11 +56,15 @@ public:
 
   virtual void ToString(std::ostream& str) const override;
 
+  bool operator==( const SEInfection& rhs) const;
+  bool operator!=( const SEInfection& rhs) const;
+
+protected:
+  virtual void Unload(CDM::InfectionData& data) const;
+
 protected:
   std::string m_Location;
   CDM::enumInfectionSeverity::value m_Severity;
   SEScalarMassPerVolume* m_MinimumInhibitoryConcentration;
-
-
-}; 
+};
 }

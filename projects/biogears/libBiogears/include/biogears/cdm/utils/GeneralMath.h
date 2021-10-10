@@ -14,7 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <vector>
 
 #include <biogears/exports.h>
-#include <biogears/cdm/circuit/SECircuitNode.h>
+
+#include <biogears/cdm/utils/Logger.h>
 
 namespace biogears {
 

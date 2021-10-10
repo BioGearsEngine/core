@@ -18,7 +18,9 @@ specific language governing permissions and limitations under the License.
 
 	<!-- @brief Base Patient Action type -->
 	<xs:complexType name="PatientActionData" abstract="true">
-    <xs:annotation><xs:documentation>Base Patient Action Type</xs:documentation></xs:annotation>
+    <xs:annotation>
+      <xs:documentation>Base Patient Action Type</xs:documentation>
+    </xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="ActionData"/>
 		</xs:complexContent>
@@ -27,6 +29,7 @@ specific language governing permissions and limitations under the License.
 	<!-- @brief -->
 	<xs:simpleType name="enumPatientAssessment">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="ArterialBloodGasAnalysis"/>
 			<xs:enumeration value="PulmonaryFunctionTest"/>
 			<xs:enumeration value="CompleteBloodCount"/>
 			<xs:enumeration value="ComprehensiveMetabolicPanel"/>
@@ -38,7 +41,8 @@ specific language governing permissions and limitations under the License.
 	<xs:complexType name="PatientAssessmentRequestData">
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
-				<xs:attribute name="Type" type="enumPatientAssessment" use="required"/><!--<< @brief Assesment to run. -->
+        <xs:attribute name="Type" type="enumPatientAssessment" use="required"/>
+        <!--<< @brief Assesment to run. -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>	
@@ -48,7 +52,8 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
 				</xs:sequence>                      
 			</xs:extension>
 		</xs:complexContent>
@@ -59,7 +64,8 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
 				</xs:sequence>                      
 			</xs:extension>
 		</xs:complexContent>
@@ -70,7 +76,8 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
 				</xs:sequence>			
 			</xs:extension>
 		</xs:complexContent>
@@ -81,7 +88,8 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -93,7 +101,8 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
 				</xs:sequence>              
 			</xs:extension>
 		</xs:complexContent>
@@ -112,9 +121,11 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
 				</xs:sequence>						
-				<xs:attribute name="Type" type="enumBrainInjuryType" use="required"/><!--<< @brief -->
+        <xs:attribute name="Type" type="enumBrainInjuryType" use="required"/>
+        <!--<< @brief -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -124,7 +135,8 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
 				</xs:sequence>				
 			</xs:extension>
 		</xs:complexContent>
@@ -136,6 +148,7 @@ specific language governing permissions and limitations under the License.
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
 					<xs:element name="TotalBodySurfaceArea" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Compartments" type="xs:string" minOccurs="0" maxOccurs="5"/> <!--Primarily used in calculating comaprtment syndrome. Not specifying will assume trunk-->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -161,7 +174,8 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="ChestCompressionData">
 				<xs:sequence>
-					<xs:element name="Force" type="ScalarForceData" minOccurs="1" maxOccurs="1"/><!--<< @brief The actual force value applied to the chest -->
+          <xs:element name="Force" type="ScalarForceData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief The actual force value applied to the chest -->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -171,8 +185,10 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="ChestCompressionData">
 				<xs:sequence>
-					<xs:element name="ForceScale" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief A fractional representation of the maximum force that can be applied to the chest: 0.0 is no force applied, 1.0 is maximum force applied -->
-					<xs:element name="ForcePeriod" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The specified length of time the force is applied -->
+          <xs:element name="ForceScale" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief A fractional representation of the maximum force that can be applied to the chest: 0.0 is no force applied, 1.0 is maximum force applied -->
+          <xs:element name="ForcePeriod" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The specified length of time the force is applied -->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -182,8 +198,10 @@ specific language governing permissions and limitations under the License.
 	<xs:complexType name="ChestOcclusiveDressingData">
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
-				<xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief -->
-				<xs:attribute name="Side" type="enumSide" use="required"/><!--<< @brief -->
+        <xs:attribute name="State" type="enumOnOff" use="required"/>
+        <!--<< @brief -->
+        <xs:attribute name="Side" type="enumSide" use="required"/>
+        <!--<< @brief -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -198,13 +216,25 @@ specific language governing permissions and limitations under the License.
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<!-- @brief Applies an escharotomy during a burn to the specified limb. -->
+	<xs:complexType name="EscharotomyData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:sequence>
+					<xs:element name="Location" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- @brief Force air into the lungs. -->
 	<xs:complexType name="ForcedInhaleData">
 		<xs:complexContent>
 			<xs:extension base="ConsciousRespirationCommandData">
 				<xs:sequence>
-					<xs:element name="InspiratoryCapacityFraction" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief The fraction of the Inspiratory capacity that will be filled by the breath. -->
-					<xs:element name="Period" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief Duration of the inhale. -->
+          <xs:element name="InspiratoryCapacityFraction" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief The fraction of the Inspiratory capacity that will be filled by the breath. -->
+          <xs:element name="Period" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Duration of the inhale. -->
 				</xs:sequence>              
 			</xs:extension>
 		</xs:complexContent>
@@ -214,8 +244,10 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="ConsciousRespirationCommandData">
 				<xs:sequence>
-					<xs:element name="ExpiratoryReserveVolumeFraction" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief The fraction of the Expiratory Reserve Volume that is forced out of the body. -->
-					<xs:element name="Period" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief Duration of the exhale. -->
+          <xs:element name="ExpiratoryReserveVolumeFraction" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief The fraction of the Expiratory Reserve Volume that is forced out of the body. -->
+          <xs:element name="Period" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Duration of the exhale. -->
 				</xs:sequence>              
 			</xs:extension>
 		</xs:complexContent>
@@ -225,7 +257,8 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="ConsciousRespirationCommandData">
 				<xs:sequence>
-					<xs:element name="Period" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief Duration of the breath hold. -->
+          <xs:element name="Period" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Duration of the breath hold. -->
 				</xs:sequence>              
 			</xs:extension>
 		</xs:complexContent>
@@ -241,9 +274,11 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Command" type="ConsciousRespirationCommandData" minOccurs="1" maxOccurs="unbounded"/><!--<< @brief -->
+          <xs:element name="Command" type="ConsciousRespirationCommandData" minOccurs="1" maxOccurs="unbounded"/>
+          <!--<< @brief -->
 				</xs:sequence>              
-				<xs:attribute name="AppendToPrevious" type="xs:boolean" use="required"/><!--<< @brief Appends commands provided to the engine without removing currect commands. --> 
+        <xs:attribute name="AppendToPrevious" type="xs:boolean" use="required"/>
+        <!--<< @brief Appends commands provided to the engine without removing currect commands. -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -253,8 +288,10 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:choice minOccurs="1"  maxOccurs="1">
-					<xs:element name="NutritionFile" type="xs:string"/><!--<< @brief A file to use for a nutrients. -->
-					<xs:element name="Nutrition" type="NutritionData"/><!--<< @brief Specific nutrient data to use. -->
+          <xs:element name="NutritionFile" type="xs:string"/>
+          <!--<< @brief A file to use for a nutrients. -->
+          <xs:element name="Nutrition" type="NutritionData"/>
+          <!--<< @brief Specific nutrient data to use. -->
 				</xs:choice>
 			</xs:extension>
 		</xs:complexContent>
@@ -264,8 +301,10 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:choice minOccurs = "1" maxOccurs="1" >
-					<xs:element name="Intensity" type="Scalar0To1Data"/><!--<< @brief Fractional representation of the maximum patient exertion -->
-					<xs:element name="DesiredWorkRate" type="ScalarPowerData"/><!--<< @brief Desired achieved work rate up to the maximum patient exertion -->
+          <xs:element name="Intensity" type="Scalar0To1Data"/>
+          <!--<< @brief Fractional representation of the maximum patient exertion -->
+          <xs:element name="DesiredWorkRate" type="ScalarPowerData"/>
+          <!--<< @brief Desired achieved work rate up to the maximum patient exertion -->
 				</xs:choice>               
 			</xs:extension>
 		</xs:complexContent>
@@ -275,9 +314,12 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Speed" type="ScalarLengthPerTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief Speed -->
-					<xs:element name="Incline" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief fractional repreentation of incline percentage -->
-					<xs:element name="AddedWeight" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief weighted pack capability -->
+          <xs:element name="Speed" type="ScalarLengthPerTimeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Speed -->
+          <xs:element name="Incline" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief fractional repreentation of incline percentage -->
+          <xs:element name="AddedWeight" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief weighted pack capability -->
 				</xs:sequence>               
 			</xs:extension>
 		</xs:complexContent>
@@ -287,9 +329,12 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Cadence" type="ScalarFrequencyData" minOccurs="1" maxOccurs="1"/><!--<< @brief Rotations of pedals per time -->
-					<xs:element name="Power" type="ScalarPowerData" minOccurs="1" maxOccurs="1"/><!--<< @brief Power produced -->
-					<xs:element name="AddedWeight" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief weighted pack capability -->
+          <xs:element name="Cadence" type="ScalarFrequencyData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Rotations of pedals per time -->
+          <xs:element name="Power" type="ScalarPowerData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Power produced -->
+          <xs:element name="AddedWeight" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief weighted pack capability -->
 				</xs:sequence>               
 			</xs:extension>
 		</xs:complexContent>
@@ -299,8 +344,10 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Weight" type="ScalarMassData" minOccurs="1" maxOccurs="1"/><!--<< @brief Speed -->
-					<xs:element name="Repetitions" type="ScalarData" minOccurs="1" maxOccurs="1"/><!--<< @brief fractional repreentation of incline percentage -->
+          <xs:element name="Weight" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Speed -->
+          <xs:element name="Repetitions" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief fractional repreentation of incline percentage -->
 				</xs:sequence>               
 			</xs:extension>
 		</xs:complexContent>
@@ -311,10 +358,14 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:choice minOccurs = "1" maxOccurs="1" >
-					<xs:element name="GenericExercise" type="GenericExerciseData"/><!--<< @brief Fractional representation of the maximum patient exertion -->
-					<xs:element name="RunningExercise" type="RunningExerciseData"/><!--<< @brief Running with desired speed and incline -->
-					<xs:element name="CyclingExercise" type="CyclingExerciseData"/><!--<< @brief Cycling with desired cadence and power -->
-					<xs:element name="StrengthExercise" type="StrengthExerciseData"/><!--<< @brief Strength exercises with desired weight and reps -->
+          <xs:element name="GenericExercise" type="GenericExerciseData"/>
+          <!--<< @brief Fractional representation of the maximum patient exertion -->
+          <xs:element name="RunningExercise" type="RunningExerciseData"/>
+          <!--<< @brief Running with desired speed and incline -->
+          <xs:element name="CyclingExercise" type="CyclingExerciseData"/>
+          <!--<< @brief Cycling with desired cadence and power -->
+          <xs:element name="StrengthExercise" type="StrengthExerciseData"/>
+          <!--<< @brief Strength exercises with desired weight and reps -->
 				</xs:choice>               
 			</xs:extension>
 		</xs:complexContent>
@@ -325,9 +376,13 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-						<xs:element name="InitialRate" type="ScalarVolumePerTimeData" minOccurs="1" maxOccurs="1"/> <!--<< @brief The initial bleeding rate of the hemorrhage used to set circuit resistance change-->
+          <xs:element name="InitialRate" type="ScalarVolumePerTimeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief The initial bleeding rate of the hemorrhage used to set circuit resistance change-->
+          <xs:element name="BleedResistance" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief <Read-Only> Value calculated by TXA Drug model-->
 				</xs:sequence>
-				<xs:attribute name="Compartment" type="xs:string" use="required"/><!--<<@brief The compartment in which the hemorrhage occurs, maps to specific circuit path -->               
+        <xs:attribute name="Compartment" type="xs:string" use="required"/>
+        <!--<<@brief The compartment in which the hemorrhage occurs, maps to specific circuit path -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -335,7 +390,8 @@ specific language governing permissions and limitations under the License.
 	<!--Infection action types, including sepsis-->
 	<xs:simpleType name="enumInfectionSeverity">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="Eliminated"/>	<!--Will use this tag to deactive infection-->
+      <xs:enumeration value="Eliminated"/>
+      <!--Will use this tag to deactive infection-->
 			<xs:enumeration value="Mild"/>
 			<xs:enumeration value="Moderate"/>
 			<xs:enumeration value="Severe"/>
@@ -369,7 +425,8 @@ specific language governing permissions and limitations under the License.
 	<xs:complexType name="IntubationData">
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
-				<xs:attribute name="Type" type="enumIntubationType" use="required"/><!--<< @brief -->
+        <xs:attribute name="Type" type="enumIntubationType" use="required"/>
+        <!--<< @brief -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>	
@@ -379,11 +436,15 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Pressure" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Pressure produced. -->
-					<xs:element name="Flow" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Flow produced. -->       
-					<xs:element name="GasFraction" type="SubstanceFractionData" minOccurs="0" maxOccurs="unbounded"/><!--<< @brief Break down of the gasses in the equipment, fractions must add up to 1. -->                  					
+          <xs:element name="Pressure" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Pressure produced. -->
+          <xs:element name="Flow" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Flow produced. -->
+          <xs:element name="GasFraction" type="SubstanceFractionData" minOccurs="0" maxOccurs="unbounded"/>
+          <!--<< @brief Break down of the gasses in the equipment, fractions must add up to 1. -->
 				</xs:sequence>  
-				<xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief Is the adminstering is on or not. -->
+        <xs:attribute name="State" type="enumOnOff" use="required"/>
+        <!--<< @brief Is the adminstering is on or not. -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -392,8 +453,24 @@ specific language governing permissions and limitations under the License.
 	<xs:complexType name="NeedleDecompressionData">
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
-				<xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief -->
-				<xs:attribute name="Side" type="enumSide" use="required"/><!--<< @brief -->
+        <xs:attribute name="State" type="enumOnOff" use="required"/>
+        <!--<< @brief -->
+        <xs:attribute name="Side" type="enumSide" use="required"/>
+        <!--<< @brief -->
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<!--@brief The state variables of a drug administered nasally.-->
+	<xs:complexType name="NasalStateData">
+		<xs:complexContent>
+			<xs:extension base="ObjectData">
+				<xs:sequence>
+					<xs:element name="TotalNasalDose" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="UnreleasedDrugMasses" type="ScalarMassData" minOccurs="0" maxOccurs="3"/>
+					<xs:element name="ReleasedDrugMasses" type="ScalarMassData" minOccurs="0" maxOccurs="3"/>
+				</xs:sequence>
+				<xs:attribute name="Substance" type="xs:string" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -403,10 +480,13 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-						<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief The severity of a pain stimulus on a scale of 0 to 1 -->
-						<xs:element name="HalfLife" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of decay of pain score -->
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief The severity of a pain stimulus on a scale of 0 to 1 -->
+          <xs:element name="HalfLife" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The frequency of decay of pain score -->
 				</xs:sequence>
-				<xs:attribute name="Location" type="xs:string" use="required"/><!--<<@brief The compartment in which the hemorrhage occurs, maps to specific circuit path -->               
+        <xs:attribute name="Location" type="xs:string" use="required"/>
+        <!--<<@brief The compartment in which the hemorrhage occurs, maps to specific circuit path -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -416,7 +496,8 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="EffusionRate" type="ScalarVolumePerTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief The flow rate of fluid associated with the effusion. Set to zero to stop. -->
+          <xs:element name="EffusionRate" type="ScalarVolumePerTimeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief The flow rate of fluid associated with the effusion. Set to zero to stop. -->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -434,14 +515,27 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
-					<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
 				</xs:sequence>         
-				<xs:attribute name="Type"  type="enumPneumothoraxType" use="required"/><!--<< @brief -->
-				<xs:attribute name="Side"  type="enumSide" use="required"/><!--<< @brief -->
+        <xs:attribute name="Type"  type="enumPneumothoraxType" use="required"/>
+        <!--<< @brief -->
+        <xs:attribute name="Side"  type="enumSide" use="required"/>
+        <!--<< @brief -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>	
 
+	<!--@brief Pulmonary shunt adjustments, severity of which alters the baseline flow rate up to 100%-->
+	<xs:complexType name="PulmonaryShuntData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:sequence>
+					<xs:element name="FlowRateScaling" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
 	<!-- @brief put the patient into a sleep state. Can also be used to awaken the patient from a sleep state. -->
     <xs:complexType name="SleepData">
@@ -455,16 +549,26 @@ specific language governing permissions and limitations under the License.
 	<!-- @brief Various methods of substance administration. Currently unsupported methods are commented out.-->
 	<xs:simpleType name="enumBolusAdministration">
 		<xs:restriction base="xs:string">			
-			<!--<xs:enumeration value="Epidural"/>--> <!-- @brief Injection into a epidural space -->
-			<!--<xs:enumeration value="Intraosseous"/>--> <!-- @brief Injection into the bone marrow -->
-			<xs:enumeration value="Intraarterial"/><!-- @brief Injection into an artery -->
-			<!--<xs:enumeration value="Intracardiac"/>--> <!-- @brief Injection into the heart -->
-			<!--<xs:enumeration value="Intracerebral"/>--> <!-- @brief Injection into the brain -->
-			<!--<xs:enumeration value="Intracerebroventricular"/>--> <!-- @brief Injection into the cerebral ventricles -->		
-			<!--<xs:enumeration value="Intradermal"/>--> <!-- @brief Injection into the skin -->
-			<xs:enumeration value="Intramuscular"/><!-- @brief Injection into the muscle -->			
-			<xs:enumeration value="Intravenous"/><!-- @brief Injection into a vein -->					
-			<!--<xs:enumeration value="Subcutaneous"/>--> <!-- @brief Injection under the skin -->			
+      <!--<xs:enumeration value="Epidural"/>-->
+      <!-- @brief Injection into a epidural space -->
+      <!--<xs:enumeration value="Intraosseous"/>-->
+      <!-- @brief Injection into the bone marrow -->
+      <xs:enumeration value="Intraarterial"/>
+      <!-- @brief Injection into an artery -->
+      <!--<xs:enumeration value="Intracardiac"/>-->
+      <!-- @brief Injection into the heart -->
+      <!--<xs:enumeration value="Intracerebral"/>-->
+      <!-- @brief Injection into the brain -->
+      <!--<xs:enumeration value="Intracerebroventricular"/>-->
+      <!-- @brief Injection into the cerebral ventricles -->
+      <!--<xs:enumeration value="Intradermal"/>-->
+      <!-- @brief Injection into the skin -->
+      <xs:enumeration value="Intramuscular"/>
+      <!-- @brief Injection into the muscle -->
+      <xs:enumeration value="Intravenous"/>
+      <!-- @brief Injection into a vein -->
+      <!--<xs:enumeration value="Subcutaneous"/>-->
+      <!-- @brief Injection under the skin -->
 		</xs:restriction>
 	</xs:simpleType>
 	
@@ -488,12 +592,16 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="SubstanceAdministrationData">
 				<xs:sequence>
-					<xs:element name="Substance" type="xs:string" minOccurs="1" maxOccurs="1"/>	<!--<< @brief -->
-					<xs:element name="Concentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
-					<xs:element name="Dose" type="ScalarVolumeData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
+          <xs:element name="Substance" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="Concentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="Dose" type="ScalarVolumeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
 					<xs:element name="AdminTime" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
-				<xs:attribute name="AdminRoute" type="enumBolusAdministration" use="required"/><!--<< @brief -->
+        <xs:attribute name="AdminRoute" type="enumBolusAdministration" use="required"/>
+        <!--<< @brief -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -511,9 +619,12 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="SubstanceAdministrationData">
 				<xs:sequence>
-					<xs:element name="SubstanceCompound" type="xs:string" minOccurs="1" maxOccurs="1"/><!--<< @brief -->	
-					<xs:element name="BagVolume" type="ScalarVolumeData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
-					<xs:element name="Rate" type="ScalarVolumePerTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->					
+          <xs:element name="SubstanceCompound" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="BagVolume" type="ScalarVolumeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="Rate" type="ScalarVolumePerTimeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -524,9 +635,28 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="SubstanceAdministrationData">
 				<xs:sequence>
-					<xs:element name="Substance" type="xs:string" minOccurs="1" maxOccurs="1"/><!--<< @brief --> 
-					<xs:element name="Concentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
-					<xs:element name="Rate" type="ScalarVolumePerTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->										
+          <xs:element name="Substance" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="Concentration" type="ScalarMassPerVolumeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="Rate" type="ScalarVolumePerTimeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- @brief The nasal administration of a substance or other compound that is given to raise its concentration in blood to an effective level. -->
+	<xs:complexType name="SubstanceNasalDoseData">
+		<xs:complexContent>
+			<xs:extension base="SubstanceAdministrationData">
+				<xs:sequence>
+          <xs:element name="Substance" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="Dose" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="ElapsedTime" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief -->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -537,10 +667,13 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="SubstanceAdministrationData">
 				<xs:sequence>
-					<xs:element name="Substance" type="xs:string" minOccurs="1" maxOccurs="1"/>	<!--<< @brief -->
-					<xs:element name="Dose" type="ScalarMassData" minOccurs="1" maxOccurs="1"/><!--<< @brief -->													
+          <xs:element name="Substance" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="Dose" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
 				</xs:sequence>
-				<xs:attribute name="AdminRoute" type="enumOralAdministration" use="required"/><!--<< @brief -->
+        <xs:attribute name="AdminRoute" type="enumOralAdministration" use="required"/>
+        <!--<< @brief -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -581,7 +714,8 @@ specific language governing permissions and limitations under the License.
 	<!-- @brief Empty the bladder of its contents. -->
 	<xs:complexType name="UrinateData">
 		<xs:complexContent>
-			<xs:extension base="PatientActionData"/><!--<< @brief -->
+      <xs:extension base="PatientActionData"/>
+      <!--<< @brief -->
 		</xs:complexContent>
 	</xs:complexType>
 	
@@ -592,79 +726,140 @@ specific language governing permissions and limitations under the License.
 			<xs:extension base="PatientActionData">
 				<xs:sequence>
 					<!-- Blood Chemistry Overrides. -->
-					<xs:element name="ArterialBloodPHOverride" type="ScalarData" minOccurs="0" maxOccurs="1"/><!-- @brief Measure of acidity or basicity of the arterial blood. -->
+          <xs:element name="ArterialBloodPHOverride" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <!-- @brief Measure of acidity or basicity of the arterial blood. -->
 					<xs:element name="CalciumConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="CarbonDioxideSaturationOverride" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin that is carbon dioxide bound.-->					
-                    <xs:element name="CarbonMonoxideSaturationOverride" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin that is carbon monoxide bound.-->
+          <xs:element name="CarbonDioxideSaturationOverride" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The fraction of hemoglobin that is carbon dioxide bound.-->
+          <xs:element name="CarbonMonoxideSaturationOverride" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The fraction of hemoglobin that is carbon monoxide bound.-->
 					<xs:element name="GlucoseConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="LactateConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="OxygenSaturationOverride" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin that is oxygen bound.-->
-					<xs:element name="PhosphateOverride" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Sum of all inorganic phosphate in the blood.-->
+          <xs:element name="OxygenSaturationOverride" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The fraction of hemoglobin that is oxygen bound.-->
+          <xs:element name="PhosphateOverride" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Sum of all inorganic phosphate in the blood.-->
 					<xs:element name="PotassiumConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="SodiumConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="TotalBilirubinOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--@brief Concentration of bilirubin in plasma in indicative of progression of sepsis-->
-					<xs:element name="VenousBloodPHOverride" type="ScalarData" minOccurs="0" maxOccurs="1"/><!-- @brief Measure of acidity or basicity of the venous blood. -->
-					<xs:element name="WhiteBloodCellCountOverride" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of white blood cells in the blood.-->
+          <xs:element name="TotalBilirubinOverride" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--@brief Concentration of bilirubin in plasma in indicative of progression of sepsis-->
+          <xs:element name="VenousBloodPHOverride" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <!-- @brief Measure of acidity or basicity of the venous blood. -->
+          <xs:element name="WhiteBloodCellCountOverride" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total number of white blood cells in the blood.-->
 					<!-- Cardiovascular Overrides. -->
-					<xs:element name="BloodVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total volume of fluid within the cardiovascular system.-->
-					<xs:element name="CardiacOutputOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!-- @brief The volume of blood being pumped from the heart in a given time interval. -->
-					<xs:element name="DiastolicArterialPressureOverride" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The minimum pressure in the aorta over the course of a cardiac cycle.--> 
-					<xs:element name="HeartRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of heart beat. -->	
-					<xs:element name="HeartStrokeVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of blood pumped from the left ventricle in one contraction.-->
-					<xs:element name="MeanArterialPressureOverride" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Pressure produced. --> 
-					<xs:element name="SystolicArterialPressureOverride" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The maximum pressure in the aorta over the course of a cardiac cycle.-->
+          <xs:element name="BloodVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total volume of fluid within the cardiovascular system.-->
+          <xs:element name="CardiacOutputOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!-- @brief The volume of blood being pumped from the heart in a given time interval. -->
+          <xs:element name="DiastolicArterialPressureOverride" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The minimum pressure in the aorta over the course of a cardiac cycle.-->
+          <xs:element name="HeartRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The frequency of heart beat. -->
+          <xs:element name="HeartStrokeVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The volume of blood pumped from the left ventricle in one contraction.-->
+          <xs:element name="MeanArterialPressureOverride" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Pressure produced. -->
+          <xs:element name="SystolicArterialPressureOverride" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The maximum pressure in the aorta over the course of a cardiac cycle.-->
 					<!-- Endocrine Overrides. -->
-					<xs:element name="InsulinSynthesisRateOverride" type="ScalarAmountPerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Insulin production rate. -->
-                    <xs:element name="GlucagonSynthesisRateOverride" type="ScalarAmountPerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Glucagon production rate. -->
+          <xs:element name="InsulinSynthesisRateOverride" type="ScalarAmountPerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Insulin production rate. -->
+          <xs:element name="GlucagonSynthesisRateOverride" type="ScalarAmountPerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Glucagon production rate. -->
 					<!-- Energy Overrides. -->
-					<xs:element name="AchievedExerciseLevelOverride" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief The fraction of how much of the requested exercise the patient is able to achieve. 1.0 means the the patient is performing at the requested level. Nan is the patient is not exercising (no Action)-->
-                    <xs:element name="ChlorideLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of chloride lost while sweating during exercise -->
-					<xs:element name="CoreTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The internal body temperature.-->
-                    <xs:element name="CreatinineProductionRateOverride" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The generation of creatinine in the muscle tissue per -->                    
-                    <xs:element name="ExerciseMeanArterialPressureDeltaOverride" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief The pressure delta that occurs during exercise. Used to modify the baroreceptor set-point -->
-                    <xs:element name="FatigueLevelOverride" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The exhaustion level of the body, or inability to perform physical exercise @details The amount of energy available for activity divided by the normal rested energy -->                            
-                    <xs:element name="LactateProductionRateOverride" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The molar amount of lactate generated on the tissue level from anaerobic metabolism -->
-                    <xs:element name="PotassiumLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of potassium lost while sweating during exercise -->
-					<xs:element name="SkinTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The skin surface temperature.-->
-					<xs:element name="SodiumLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of sodium lost while sweating during exercise -->
-                    <xs:element name="SweatRateOverride" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Mass of sweat generated per unit time due to elevated core temperature -->
-                    <xs:element name="TotalMetabolicRateOverride" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The basal metabolic rate plus additional energy expenditure rates due to activity.-->
-                    <xs:element name="TotalWorkRateLevelOverride" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The current patient work rate above basal over the maximum work rate capable by the patient -->         
+          <xs:element name="AchievedExerciseLevelOverride" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The fraction of how much of the requested exercise the patient is able to achieve. 1.0 means the the patient is performing at the requested level. Nan is the patient is not exercising (no Action)-->
+          <xs:element name="ChlorideLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Tracks the total amount of chloride lost while sweating during exercise -->
+          <xs:element name="CoreTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The internal body temperature.-->
+          <xs:element name="CreatinineProductionRateOverride" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The generation of creatinine in the muscle tissue per -->
+          <xs:element name="ExerciseMeanArterialPressureDeltaOverride" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The pressure delta that occurs during exercise. Used to modify the baroreceptor set-point -->
+          <xs:element name="FatigueLevelOverride" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The exhaustion level of the body, or inability to perform physical exercise @details The amount of energy available for activity divided by the normal rested energy -->
+          <xs:element name="LactateProductionRateOverride" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The molar amount of lactate generated on the tissue level from anaerobic metabolism -->
+          <xs:element name="PotassiumLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Tracks the total amount of potassium lost while sweating during exercise -->
+          <xs:element name="SkinTemperatureOverride" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The skin surface temperature.-->
+          <xs:element name="SodiumLostToSweatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Tracks the total amount of sodium lost while sweating during exercise -->
+          <xs:element name="SweatRateOverride" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Mass of sweat generated per unit time due to elevated core temperature -->
+          <xs:element name="TotalMetabolicRateOverride" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The basal metabolic rate plus additional energy expenditure rates due to activity.-->
+          <xs:element name="TotalWorkRateLevelOverride" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The current patient work rate above basal over the maximum work rate capable by the patient -->
 					<!-- Renal Overrides. -->
-					<xs:element name="LeftAfferentArterioleResistanceOverride" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief resistance to flow going into the glomerular capillaries in the left Kidney-->
-					<xs:element name="LeftGlomerularFiltrationRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
-					<xs:element name="LeftReabsorptionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Rate at which fluid or a substance is transported into the peritubular capillaries in the left Kidney -->
-					<xs:element name="RenalBloodFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Blood flow into the kidney that is not filtered into the tubules -->
-					<xs:element name="RenalPlasmaFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Plasma flow into the kidney that is not filtered into the tubules -->    
-					<xs:element name="RightAfferentArterioleResistanceOverride" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief resistance to flow going into the glomerular capillaries in the left Kidney-->
-					<xs:element name="RightGlomerularFiltrationRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
-					<xs:element name="RightReabsorptionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Rate at which fluid or a substance is transported into the peritubular capillaries in the left Kidney -->
-					<xs:element name="UrinationRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Rate that fluid exits the bladder  -->
-					<xs:element name="UrineProductionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The urine production rate. -->
-					<xs:element name="UrineOsmolalityOverride" type="ScalarOsmolalityData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the mass of the fluid -->
-					<xs:element name="UrineVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of the urine in the bladder --> 
-					<xs:element name="UrineUreaNitrogenConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Scaled concentration of Urea in the bladder  -->
+          <xs:element name="LeftAfferentArterioleResistanceOverride" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief resistance to flow going into the glomerular capillaries in the left Kidney-->
+          <xs:element name="LeftGlomerularFiltrationRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
+          <xs:element name="LeftReabsorptionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Rate at which fluid or a substance is transported into the peritubular capillaries in the left Kidney -->
+          <xs:element name="RenalBloodFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Blood flow into the kidney that is not filtered into the tubules -->
+          <xs:element name="RenalPlasmaFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Plasma flow into the kidney that is not filtered into the tubules -->
+          <xs:element name="RightAfferentArterioleResistanceOverride" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief resistance to flow going into the glomerular capillaries in the left Kidney-->
+          <xs:element name="RightGlomerularFiltrationRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
+          <xs:element name="RightReabsorptionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Rate at which fluid or a substance is transported into the peritubular capillaries in the left Kidney -->
+          <xs:element name="UrinationRateOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Rate that fluid exits the bladder  -->
+          <xs:element name="UrineProductionRateOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The urine production rate. -->
+          <xs:element name="UrineOsmolalityOverride" type="ScalarOsmolalityData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the mass of the fluid -->
+          <xs:element name="UrineVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The volume of the urine in the bladder -->
+          <xs:element name="UrineUreaNitrogenConcentrationOverride" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Scaled concentration of Urea in the bladder  -->
 					<!-- Respiratory Overrides. -->
-					<xs:element name="ExpiratoryFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Instantaneous airflow out of the lungs (negative value when inhaling)-->
-                    <xs:element name="InspiratoryFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief TInstantaneous airflow into the lungs (negative value when exhaling).-->
-                    <xs:element name="PulmonaryComplianceOverride" type="ScalarFlowComplianceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total compliance of the lungs.-->
-                    <xs:element name="PulmonaryResistanceOverride" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total resistance to airflow through the lungs.-->             
-					<xs:element name="RespirationRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief The frequency of respiration. -->
-					<xs:element name="TargetPulmonaryVentilationOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief The target ventilation determined by the chemoreceptor method in the Nervous system, used by Respiratory to drive Respiration-->
-					<xs:element name="TidalVolumeOverride" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The volume of air moved into or out of the lungs during normal respiration. -->
-                    <xs:element name="TotalAlveolarVentilationOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The air flow to the alveoli.-->
-                    <xs:element name="TotalLungVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total volume of air within the lungs at any given time.-->
-                    <xs:element name="TotalPulmonaryVentilationOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The flow rate representing the exchange of air between the lungs and ambient air.-->
+          <xs:element name="ExpiratoryFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Instantaneous airflow out of the lungs (negative value when inhaling)-->
+          <xs:element name="InspiratoryFlowOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief TInstantaneous airflow into the lungs (negative value when exhaling).-->
+          <xs:element name="PulmonaryComplianceOverride" type="ScalarFlowComplianceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total compliance of the lungs.-->
+          <xs:element name="PulmonaryResistanceOverride" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total resistance to airflow through the lungs.-->
+          <xs:element name="RespirationRateOverride" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The frequency of respiration. -->
+          <xs:element name="TargetPulmonaryVentilationOverride" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief The target ventilation determined by the chemoreceptor method in the Nervous system, used by Respiratory to drive Respiration-->
+          <xs:element name="TidalVolumeOverride" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The volume of air moved into or out of the lungs during normal respiration. -->
+          <xs:element name="TotalAlveolarVentilationOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The air flow to the alveoli.-->
+          <xs:element name="TotalLungVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total volume of air within the lungs at any given time.-->
+          <xs:element name="TotalPulmonaryVentilationOverride" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The flow rate representing the exchange of air between the lungs and ambient air.-->
 					<!-- Tissue Overrides. -->
-					<xs:element name="ExtravascularFluidVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total fluid volume outside of the blood vessels. -->
-					<xs:element name="IntracellularFluidVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume of fluid in the cells outside of the blood vessels. --> 
-					<xs:element name="LiverGlycogenOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The glucose stored as glycogen in the liver tissue. -->
-                    <xs:element name="MuscleGlycogenOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The glucose stored as glycogen in the muscle tissue. -->
-                    <xs:element name="StoredFatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The triacylglycerol stored in the fat tissue. -->
-					<xs:element name="StoredProteinOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The amino acids stored as protein in the muscle tissue. -->
-				</xs:sequence>  
-				<xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief Is the override on or off. -->
-				<xs:attribute name="Conformant" type="enumOnOff" use="required"/><!--<< @brief Is the resulting phusiology conformant. -->
+          <xs:element name="ExtravascularFluidVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total fluid volume outside of the blood vessels. -->
+          <xs:element name="IntracellularFluidVolumeOverride" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Volume of fluid in the cells outside of the blood vessels. -->
+          <xs:element name="LiverGlycogenOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The glucose stored as glycogen in the liver tissue. -->
+          <xs:element name="MuscleGlycogenOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The glucose stored as glycogen in the muscle tissue. -->
+          <xs:element name="StoredFatOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The triacylglycerol stored in the fat tissue. -->
+          <xs:element name="StoredProteinOverride" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amino acids stored as protein in the muscle tissue. -->
+        </xs:sequence>
+        <xs:attribute name="State" type="enumOnOff" use="required"/>
+        <!--<< @brief Is the override on or off. -->
+        <xs:attribute name="Conformant" type="enumOnOff" use="required"/>
+        <!--<< @brief Is the resulting phusiology conformant. -->
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

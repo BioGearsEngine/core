@@ -31,14 +31,17 @@ class SEScalarFlowResistance;
 class FlowResistanceUnit;
 class SEScalarPressureTimePerVolumeArea;
 class PressureTimePerVolumeAreaUnit;
-
+namespace io {
+  class Physiology;
+}
 class BIOGEARS_API SECardiovascularSystem : public SESystem {
+  friend io::Physiology;
 public:
   SECardiovascularSystem(Logger* logger);
   ~SECardiovascularSystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "SECardiovascularSystem"; }
+  static constexpr char const* const TypeTag() { return "SECardiovascularSystem"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -51,6 +54,7 @@ public:
   CDM::CardiovascularSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
 protected:
   void Unload(CDM::CardiovascularSystemData& data) const;
 
@@ -86,6 +90,22 @@ public:
   bool HasDiastolicArterialPressure() const;
   SEScalarPressure& GetDiastolicArterialPressure();
   double GetDiastolicArterialPressure(const PressureUnit& unit) const;
+
+  bool HasExtremityPressureLeftArm() const;
+  SEScalarPressure& GetExtremityPressureLeftArm();
+  double GetExtremityPressureLeftArm(const PressureUnit& unit) const;
+
+  bool HasExtremityPressureLeftLeg() const;
+  SEScalarPressure& GetExtremityPressureLeftLeg();
+  double GetExtremityPressureLeftLeg(const PressureUnit& unit) const;
+
+  bool HasExtremityPressureRightArm() const;
+  SEScalarPressure& GetExtremityPressureRightArm();
+  double GetExtremityPressureRightArm(const PressureUnit& unit) const;
+
+  bool HasExtremityPressureRightLeg() const;
+  SEScalarPressure& GetExtremityPressureRightLeg();
+  double GetExtremityPressureRightLeg(const PressureUnit& unit) const;
 
   bool HasHeartEjectionFraction() const;
   SEScalarFraction& GetHeartEjectionFraction();
@@ -185,6 +205,10 @@ protected:
   SEScalarVolumePerTime* m_CerebralBloodFlow;
   SEScalarPressure* m_CerebralPerfusionPressure;
   SEScalarPressure* m_DiastolicArterialPressure;
+  SEScalarPressure* m_ExtremityPressureLeftArm;
+  SEScalarPressure* m_ExtremityPressureLeftLeg;
+  SEScalarPressure* m_ExtremityPressureRightArm;
+  SEScalarPressure* m_ExtremityPressureRightLeg;
   SEScalarFraction* m_HeartEjectionFraction;
   SEScalarFrequency* m_HeartRate;
   CDM::enumHeartRhythm::value m_HeartRhythm;

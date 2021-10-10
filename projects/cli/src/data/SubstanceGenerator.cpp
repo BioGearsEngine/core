@@ -13,6 +13,7 @@
 #include "SubstanceGenerator.h"
 
 #include <biogears/string/manipulation.h>
+#include <biogears/version.h>
 #include <fstream>
 #include <iostream>
 
@@ -23,7 +24,7 @@ namespace biogears {
 //! \param path -- std:string -- The Path to the CSV document folder will be appened with a delimiter.
 //!
 SubstanceGenerator::SubstanceGenerator(std::string path)
-  : CSVToXMLConvertor(path, "Substances.csv")
+  : CSVToXMLConvertor(path, "templates/Substances.csv")
 {
 }
 //-----------------------------------------------------------------------------
@@ -47,6 +48,7 @@ bool SubstanceGenerator::parse()
       for (auto name : lineItr->second) {
         CDM::SubstanceData data;
         data.Name(name);
+        data.contentVersion(branded_version_string());
         _substances.push_back(std::move(data));
       }
     } else if ("Aerosolization (all or none)" == lineItr->first) {
@@ -82,7 +84,7 @@ bool SubstanceGenerator::save() const
   for (auto& substance : _substances) {
     xml_schema::namespace_infomap info;
     info[""].name = "uri:/mil/tatrc/physiology/datamodel";
-    info[""].schema = "BioGears.xsd";
+    info[""].schema = "BioGearsDataModel.xsd";
 
     try {
       std::ofstream file;

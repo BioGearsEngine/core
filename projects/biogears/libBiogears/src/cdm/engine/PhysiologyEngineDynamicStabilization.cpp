@@ -25,8 +25,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-
-
+#include <biogears/io/io-manager.h>
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/config.h>
+#endif
 namespace biogears {
 bool PhysiologyEngineDynamicStabilization::StabilizeRestingState(PhysiologyEngine& engine)
 {
@@ -409,7 +411,18 @@ bool PhysiologyEngineDynamicStabilization::Load(const std::string& file)
   CDM::PhysiologyEngineDynamicStabilizationData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  data = Serializer::ReadFile(file, GetLogger());
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindConfigFile(file.c_str());
+  if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
+    auto content = io::get_embedded_config_file(file.c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+  } else {
+    data = Serializer::ReadFile(possible_path, m_Logger);
+  }
+
   pData = dynamic_cast<CDM::PhysiologyEngineDynamicStabilizationData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;

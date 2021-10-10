@@ -18,6 +18,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/cdm/utils/TimingProfile.h>
+#include <biogears/io/io-manager.h>
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/config.h>
+#endif
 
 namespace biogears {
 bool PhysiologyEngineTimedStabilization::StabilizeRestingState(PhysiologyEngine& engine)
@@ -69,7 +73,7 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
     profiler.Start("Total");
     profiler.Start("Status");
   }
- 
+
   ss.precision(3);
   double statusTime_s = 0; // Current time of this status cycle
   double statusStep_s = 50; //How long did it take to simulate this much time
@@ -168,7 +172,7 @@ void PhysiologyEngineTimedStabilization::Unload(CDM::PhysiologyEngineTimedStabil
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const char* file)
 {
-  return Load(std::string{ file });
+  return Load(std::string { file });
 }
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const std::string& file)
@@ -176,7 +180,18 @@ bool PhysiologyEngineTimedStabilization::Load(const std::string& file)
   CDM::PhysiologyEngineTimedStabilizationData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  data = Serializer::ReadFile(file, GetLogger());
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindConfigFile(file.c_str());
+  if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
+    auto content = io::get_embedded_config_file(file.c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+  } else {
+    data = Serializer::ReadFile(possible_path, m_Logger);
+  }
+
   pData = dynamic_cast<CDM::PhysiologyEngineTimedStabilizationData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
@@ -218,7 +233,7 @@ double PhysiologyEngineTimedStabilization::GetFeedbackStabilizationTime(const Ti
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::HasConditionCriteria(const char* name) const
 {
-  return HasConditionCriteria(std::string{ name });
+  return HasConditionCriteria(std::string { name });
 }
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::HasConditionCriteria(const std::string& name) const
@@ -232,7 +247,7 @@ bool PhysiologyEngineTimedStabilization::HasConditionCriteria(const std::string&
 //-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilization::RemoveConditionCriteria(const char* name)
 {
-  return RemoveConditionCriteria(std::string{ name });
+  return RemoveConditionCriteria(std::string { name });
 }
 //-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilization::RemoveConditionCriteria(const std::string& name)
@@ -249,7 +264,7 @@ void PhysiologyEngineTimedStabilization::RemoveConditionCriteria(const std::stri
 //-------------------------------------------------------------------------------
 PhysiologyEngineTimedStabilizationCriteria& PhysiologyEngineTimedStabilization::GetConditionCriteria(const char* name)
 {
-  return GetConditionCriteria(std::string{ name });
+  return GetConditionCriteria(std::string { name });
 }
 //-------------------------------------------------------------------------------
 PhysiologyEngineTimedStabilizationCriteria& PhysiologyEngineTimedStabilization::GetConditionCriteria(const std::string& name)
@@ -266,7 +281,7 @@ PhysiologyEngineTimedStabilizationCriteria& PhysiologyEngineTimedStabilization::
 //-------------------------------------------------------------------------------
 PhysiologyEngineTimedStabilizationCriteria* PhysiologyEngineTimedStabilization::GetConditionCriteria(const char* name) const
 {
-  return GetConditionCriteria(std::string{ name });
+  return GetConditionCriteria(std::string { name });
 }
 //-------------------------------------------------------------------------------
 PhysiologyEngineTimedStabilizationCriteria* PhysiologyEngineTimedStabilization::GetConditionCriteria(const std::string& name) const
@@ -347,7 +362,7 @@ void PhysiologyEngineTimedStabilizationCriteria::SetName(const std::string& name
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilizationCriteria::HasName() const
 {
-  return  m_Name.empty() ? false : true;
+  return m_Name.empty() ? false : true;
 }
 //-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilizationCriteria::InvalidateName()

@@ -63,12 +63,12 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
 {
   std::string tName = "BrainInjuryTest";
 
-  DataTrack outTrk;
+  DataTrack outTrk{m_Logger};
   std::ofstream file;
 
   BioGears bg(sTestDirectory + "/" + tName + ".log");
   bg.GetLogger()->Info("Running " + tName);
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
 
   //Renal and Tissue are on

@@ -14,7 +14,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/EnvironmentActions.hxx>
 
 namespace biogears {
+namespace io {
+  class EnvironmentActions;
+}
 class BIOGEARS_API SEEnvironmentAction : public SEAction {
+  friend io::EnvironmentActions;
+
 public:
   SEEnvironmentAction();
   virtual ~SEEnvironmentAction();

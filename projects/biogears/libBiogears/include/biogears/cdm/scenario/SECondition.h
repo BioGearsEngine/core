@@ -18,8 +18,15 @@ CDM_BIND_DECL(ConditionData);
 
 namespace biogears {
 class SESubstanceManager;
+namespace io {
+  class Scenario;
+}
+}//namespace biogears
 
+namespace biogears {
 class BIOGEARS_API SECondition : public Loggable {
+  friend io::Scenario;
+
 public:
   SECondition();
   virtual ~SECondition();
@@ -59,4 +66,9 @@ inline std::ostream& operator<<(std::ostream& out, const SECondition& a)
   a.ToString(out);
   return out;
 }
+}//namespace biogears
+
+
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SECondition*>;
 }

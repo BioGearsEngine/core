@@ -17,12 +17,15 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEScalar0To1;
 class SEConsciousRespiration;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEForcedInhale : public SEConsciousRespirationCommand {
   friend class SEConsciousRespiration;
-  SEForcedInhale();
+  friend io::PatientActions;
 
 public:
+  SEForcedInhale();
   virtual ~SEForcedInhale();
 
   virtual void Clear(); //clear memory
@@ -33,10 +36,6 @@ public:
   virtual bool Load(const CDM::ForcedInhaleData& in);
   virtual CDM::ForcedInhaleData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::ForcedInhaleData& data) const;
-
-public:
   virtual bool HasInspiratoryCapacityFraction() const;
   virtual SEScalar0To1& GetInspiratoryCapacityFraction();
 
@@ -44,6 +43,12 @@ public:
   virtual SEScalarTime& GetPeriod();
 
   virtual void ToString(std::ostream& str) const;
+  
+  bool operator==( const SEForcedInhale& rhs) const;
+  bool operator!=( const SEForcedInhale& rhs) const;
+
+protected:
+  virtual void Unload(CDM::ForcedInhaleData& data) const;
 
 protected:
   SEScalar0To1* m_InspiratoryCapacityFraction;

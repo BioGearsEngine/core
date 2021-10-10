@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -15,7 +16,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEConsciousRespirationCommand {
+  friend io::PatientActions;
+
 public:
   SEConsciousRespirationCommand();
   virtual ~SEConsciousRespirationCommand();
@@ -28,10 +34,6 @@ public:
   virtual bool Load(const CDM::ConsciousRespirationCommandData& in);
   virtual CDM::ConsciousRespirationCommandData* Unload() const = 0;
 
-protected:
-  virtual void Unload(CDM::ConsciousRespirationCommandData& data) const;
-
-public:
   virtual std::string GetComment() const;
   virtual const char* GetComment_cStr() const;
   virtual void SetComment(const char* comment);
@@ -41,7 +43,13 @@ public:
 
   virtual void ToString(std::ostream& str) const = 0;
 
+  bool operator==( const SEConsciousRespirationCommand& rhs) const;
+  bool operator!=( const SEConsciousRespirationCommand& rhs) const;
+
 protected:
+  virtual void Unload(CDM::ConsciousRespirationCommandData& data) const;
+
+
   std::string m_Comment;
 };
 

@@ -20,7 +20,10 @@ public:
   ElectricPotentialUnit(const char* u);
   ElectricPotentialUnit(const std::string& u);
 
-  virtual ~ElectricPotentialUnit() = default;
+  virtual ~ElectricPotentialUnit();
+
+  bool operator==(const ElectricPotentialUnit&) const;
+  bool operator!=(const ElectricPotentialUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -31,11 +34,19 @@ public:
   static const ElectricPotentialUnit mV;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<ElectricPotentialUnit>;
+
 class BIOGEARS_API SEScalarElectricPotential : public SEScalarQuantity<ElectricPotentialUnit> {
 public:
-  SEScalarElectricPotential() = default;
-  virtual ~SEScalarElectricPotential() = default;
+  SEScalarElectricPotential();
+  virtual ~SEScalarElectricPotential();
 
   CDM::ScalarElectricPotentialData* Unload() const override;
+
+  using SEScalarQuantity<ElectricPotentialUnit>::SetValue;
+  using SEScalarQuantity<ElectricPotentialUnit>::GetValue;
+
+  bool operator==(const SEScalarElectricPotential&) const;
+  bool operator!=(const SEScalarElectricPotential&) const;
 };
 }

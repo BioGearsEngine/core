@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #ifndef TEST_DRIVER_VERIFICATION_H
 #define TEST_DRIVER_VERIFICATION_H
 
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/ConfigParser.h>
 #include <biogears/cdm/utils/TaskRunner/TaskRunner.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>

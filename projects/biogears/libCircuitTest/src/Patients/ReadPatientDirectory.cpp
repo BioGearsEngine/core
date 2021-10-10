@@ -9,15 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/test/CommonDataModelTest.h>
 
 #include <biogears/cdm/Serializer.h>
+#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/patient/SEPatient.h>
-#include <biogears/cdm/test/CommonDataModelTest.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/cdm/utils/testing/SETestReport.h>
-#include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/io/io-manager.h>
 
 namespace biogears {
 void CommonDataModelTest::ReadPatientDirectory(const std::string& rptDirectory)
@@ -27,22 +27,21 @@ void CommonDataModelTest::ReadPatientDirectory(const std::string& rptDirectory)
   Logger logger(rptDirectory + "/" + testName + ".log");
   SEPatient obj(&logger);
 
-  std::string dir = GetCurrentWorkingDirectory();
-  dir.append("/patients");
+  auto io = logger.GetIoManager().lock();
+  std::string dir = io->ResolvePatientFileLocation("");
 
   SETestReport testReport(&logger);
   SETestSuite& testSuite = testReport.CreateTestSuite();
   testSuite.SetName(testName);
 
-  std::vector<std::string> files;
-  ListFiles(dir, files, R"(\.xml)");
-  for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it) {
-    if (it->find("xml") != std::string::npos) {
+  auto files = ListFiles(dir, R"(.*\.xml)");
+  for (auto& file : files) {
+    if (file.extension() == "xml") {
       pTimer.Start("Case");
       SETestCase& testCase = testSuite.CreateTestCase();
-      logger.Info(it->c_str());
-      if (!obj.Load(*it))
-        testCase.AddFailure("Unable to load patient " + *it);
+      logger.Info(file);
+      if (!obj.Load(file))
+        testCase.AddFailure("Unable to load patient " + file.ToString());
       testCase.GetDuration().SetValue(pTimer.GetElapsedTime_s("Case"), TimeUnit::s);
       testCase.SetName(obj.GetName());
     }

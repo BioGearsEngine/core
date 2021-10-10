@@ -13,6 +13,12 @@ find_path (
         ${PROJECT_SOURCE_DIR}/../verification  
         ${PROJECT_SOURCE_DIR}/../validation 
         ${PROJECT_SOURCE_DIR}/../baselines
+        ${PROJECT_SOURCE_DIR}/../../../verification/core  
+        ${PROJECT_SOURCE_DIR}/../../../validation/core 
+        ${PROJECT_SOURCE_DIR}/../../../baselines/core
+        ${PROJECT_SOURCE_DIR}/../../../verification  
+        ${PROJECT_SOURCE_DIR}/../../../validation 
+        ${PROJECT_SOURCE_DIR}/../../../baselines
   DOC "Optional directory path to hiarchial filetree of baseline archives. This will be used by Python Plotters to find Baselines"
 )
 find_path (
@@ -56,7 +62,7 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/etc/UCEDefs.conf  ${${ROOT_PROJECT_NAME}_RUNTIME_DIR}/
 )
 
-file(GLOB_RECURSE source_xsd_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd")
+file(GLOB_RECURSE source_xsd_list LIST_DIRECTORIES false CONFIGURE_DEPENDS  "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd")
 foreach(_file IN LISTS  source_xsd_list)
   string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${${ROOT_PROJECT_NAME}_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_xsd_list ${runtime_file})
@@ -67,18 +73,8 @@ foreach(_file IN LISTS  source_xsd_list)
   )
 endforeach()
 
-file(GLOB_RECURSE source_jar_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/jar/*.jar")
-foreach(_file IN LISTS  source_jar_list)
-  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${${ROOT_PROJECT_NAME}_RUNTIME_DIR}" runtime_file "${_file}" )
-  list(APPEND runtime_jar_list ${runtime_file})
-  add_custom_command(
-    OUTPUT  ${runtime_file}
-    DEPENDS ${_file}
-    COMMAND ${CMAKE_COMMAND} -E copy ${_file} ${runtime_file}
-  )
-endforeach()
 
-file(GLOB_RECURSE source_data_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/data/*")
+file(GLOB_RECURSE source_data_list LIST_DIRECTORIES false CONFIGURE_DEPENDS  "${PROJECT_SOURCE_DIR}/share/data/*")
 foreach(_file IN LISTS  source_data_list)
   string(REPLACE "${PROJECT_SOURCE_DIR}/share/data" "${${ROOT_PROJECT_NAME}_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_data_list ${runtime_file})
@@ -89,7 +85,8 @@ foreach(_file IN LISTS  source_data_list)
   )
 endforeach()
 
-file(GLOB_RECURSE source_doc_list LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/doc/*")
+if(Biogears_BUILD_WEBSITE)
+file(GLOB_RECURSE source_doc_list LIST_DIRECTORIES false CONFIGURE_DEPENDS  "${PROJECT_SOURCE_DIR}/share/doc/*")
 foreach(_file IN LISTS  source_doc_list)
   string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${${ROOT_PROJECT_NAME}_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_doc_list ${runtime_file})
@@ -99,8 +96,9 @@ foreach(_file IN LISTS  source_doc_list)
     COMMAND ${CMAKE_COMMAND} -E copy ${_file} ${runtime_file}
   )
 endforeach()
+endif()
 
-file(GLOB_RECURSE source_scenario_list   LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/Scenarios/*" )
+file(GLOB_RECURSE source_scenario_list   LIST_DIRECTORIES false  CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/Scenarios/*" )
 foreach(_file IN LISTS  source_scenario_list)
   string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${${ROOT_PROJECT_NAME}_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_scenario_list ${runtime_file})
@@ -112,7 +110,7 @@ foreach(_file IN LISTS  source_scenario_list)
 endforeach()
 ########################################################################################################################################################
 if(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
-  file(GLOB_RECURSE source_website_list   LIST_DIRECTORIES false "${PROJECT_SOURCE_DIR}/share/website/*" )
+  file(GLOB_RECURSE source_website_list   LIST_DIRECTORIES false CONFIGURE_DEPENDS  "${PROJECT_SOURCE_DIR}/share/website/*" )
   foreach(_file IN LISTS  source_website_list)
     string(REPLACE "${PROJECT_SOURCE_DIR}/share/website" "${${ROOT_PROJECT_NAME}_RUNTIME_DIR}" runtime_file "${_file}" )
     list(APPEND runtime_scenario_list ${runtime_file})
@@ -124,7 +122,7 @@ if(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
   endforeach()
 endif()
 ########################################################################################################################################################
-list(APPEND runtime_glob_list   "${runtime_xsd_list}" "${runtime_jar_list}"   "${runtime_data_list}"  "${runtime_doc_list}"   "${runtime_scenario_list}")
+list(APPEND runtime_glob_list   "${runtime_xsd_list}"  "${runtime_data_list}"  "${runtime_doc_list}"   "${runtime_scenario_list}")
 
 add_custom_target( prepare_runtime_dir
   DEPENDS 
@@ -137,12 +135,19 @@ add_custom_target( prepare_runtime_dir
 #         this list
 ###############################################################################
 
-verify_package(Log4cpp REQUIRED)
+SET(VS_DEBUGGER_ENV_PATH "PATH=")
+foreach ( dir IN LISTS CMAKE_PREFIX_PATH )
+  STRING(APPEND VS_DEBUGGER_ENV_PATH "${dir}/bin;${dir}/lib;")
+endforeach()
+STRING(APPEND VS_DEBUGGER_ENV_PATH "%PATH%")
+
+LIST(APPEND VS_DEBUGGER_ENVIRONMENT_LIST "${VS_DEBUGGER_ENV_PATH}")
+message(STATUS "VS_DEBUGGER_ENVIRONMENT_LIST=${VS_DEBUGGER_ENVIRONMENT_LIST}")
+add_subdirectory(unit)
 add_subdirectory(biogears-common)
 add_subdirectory(biogears)
 add_subdirectory(test_driver)
 add_subdirectory(howto)
-add_subdirectory(unit)
 add_subdirectory(circuit_profiler)
 add_subdirectory(zip)
 add_subdirectory(cli)

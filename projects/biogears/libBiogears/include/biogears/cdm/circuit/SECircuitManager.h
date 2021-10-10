@@ -23,15 +23,18 @@ CDM_BIND_DECL(CircuitManagerData);
 #define CIRCUIT_LEDGER_TYPES NodeType, PathType, CircuitType
 
 namespace biogears {
-
+namespace io {
+  class Circuit;
+}
 class SECircuitManager;
-template <CIRCUIT_LEDGER_TEMPLATE>
 
+template <CIRCUIT_LEDGER_TEMPLATE>
 class SECircuitLedger {
   friend class SECircuitManager;
+  friend io::Circuit;
 
 protected:
-  SECircuitLedger(){};
+  SECircuitLedger() {};
 
 public:
   virtual ~SECircuitLedger() { Clear(); };
@@ -46,11 +49,18 @@ public:
   std::map<std::string, CircuitType*> circuits;
 };
 
+
+BG_EXT template class BIOGEARS_API SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit>;
+BG_EXT template class BIOGEARS_API SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit>;
+BG_EXT template class BIOGEARS_API SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit>;
+
 #define ELECTRICAL_LEDGER_TYPES SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit
 #define FLUID_LEDGER_TYPES SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit
 #define THERMAL_LEDGER_TYPES SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit
 
 class BIOGEARS_API SECircuitManager : public Loggable {
+  friend io::Circuit;
+
 public:
   SECircuitManager(Logger* logger);
   virtual ~SECircuitManager();
@@ -232,13 +242,12 @@ protected:
   SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit> m_ElectricalLedger;
   SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit> m_FluidLedger;
   SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit> m_ThermalLedger;
-
 };
 
 template <CIRCUIT_LEDGER_TEMPLATE>
 NodeType& SECircuitManager::CreateNode(const char* name, SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger)
 {
-  return CreateNode(std::string{ name }, ledger);
+  return CreateNode(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -257,7 +266,7 @@ NodeType& SECircuitManager::CreateNode(const std::string& name, SECircuitLedger<
 template <CIRCUIT_LEDGER_TEMPLATE>
 void SECircuitManager::DeleteNode(const char* name, SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger)
 {
-  DeleteNode(std::string{name}, ledger);
+  DeleteNode(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -289,7 +298,7 @@ void SECircuitManager::DeleteNode(const std::string& name, SECircuitLedger<CIRCU
 template <CIRCUIT_LEDGER_TEMPLATE>
 bool SECircuitManager::HasNode(const char* name, const SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger) const
 {
-  return HasNode(std::string{ name }, ledger);
+  return HasNode(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -301,10 +310,10 @@ bool SECircuitManager::HasNode(const std::string& name, const SECircuitLedger<CI
 template <CIRCUIT_LEDGER_TEMPLATE>
 NodeType* SECircuitManager::GetNode(const char* name, SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger)
 {
-  return GetNode(std::string{ name }, ledger);
+  return GetNode(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
-  template <CIRCUIT_LEDGER_TEMPLATE>
+template <CIRCUIT_LEDGER_TEMPLATE>
 NodeType* SECircuitManager::GetNode(const std::string& name, SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger)
 {
   auto itr = ledger.nodes.find(name);
@@ -316,7 +325,7 @@ NodeType* SECircuitManager::GetNode(const std::string& name, SECircuitLedger<CIR
 template <CIRCUIT_LEDGER_TEMPLATE>
 const NodeType* SECircuitManager::GetNode(const char* name, const SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger) const
 {
-  return GetNode(std::string{name}, ledger);
+  return GetNode(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -331,7 +340,7 @@ const NodeType* SECircuitManager::GetNode(const std::string& name, const SECircu
 template <CIRCUIT_LEDGER_TEMPLATE>
 PathType& SECircuitManager::CreatePath(NodeType& src, NodeType& tgt, const char* name, SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger)
 {
-  return CreatePath(src, tgt, std::string{ name }, ledger);
+  return CreatePath(src, tgt, std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -350,7 +359,7 @@ PathType& SECircuitManager::CreatePath(NodeType& src, NodeType& tgt, const std::
 template <CIRCUIT_LEDGER_TEMPLATE>
 void SECircuitManager::DeletePath(const char* name, SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger)
 {
-  DeletePath(std::string{ name }, ledger);
+  DeletePath(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -368,7 +377,7 @@ void SECircuitManager::DeletePath(const std::string& name, SECircuitLedger<CIRCU
 template <CIRCUIT_LEDGER_TEMPLATE>
 bool SECircuitManager::HasPath(const char* name, const SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger) const
 {
-  return HasPath(std::string{ name }, ledger);
+  return HasPath(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -380,7 +389,7 @@ bool SECircuitManager::HasPath(const std::string& name, const SECircuitLedger<CI
 template <CIRCUIT_LEDGER_TEMPLATE>
 PathType* SECircuitManager::GetPath(const char* name, SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger)
 {
-  return GetPath(std::string{ name }, ledger);
+  return GetPath(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -395,7 +404,7 @@ PathType* SECircuitManager::GetPath(const std::string& name, SECircuitLedger<CIR
 template <CIRCUIT_LEDGER_TEMPLATE>
 const PathType* SECircuitManager::GetPath(const char* name, const SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger) const
 {
-  return GetPath(std::string{ name }, ledger);
+  return GetPath(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -410,7 +419,7 @@ const PathType* SECircuitManager::GetPath(const std::string& name, const SECircu
 template <CIRCUIT_LEDGER_TEMPLATE>
 CircuitType& SECircuitManager::CreateCircuit(const char* name, SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger)
 {
-  return CreateCircuit(std::string{ name }, ledger);
+  return CreateCircuit(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -429,7 +438,7 @@ CircuitType& SECircuitManager::CreateCircuit(const std::string& name, SECircuitL
 template <CIRCUIT_LEDGER_TEMPLATE>
 void SECircuitManager::DeleteCircuit(const char* name, SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger)
 {
-  return DeleteCircuit(std::string{ name }, ledger);
+  return DeleteCircuit(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -445,7 +454,7 @@ void SECircuitManager::DeleteCircuit(const std::string& name, SECircuitLedger<CI
 template <CIRCUIT_LEDGER_TEMPLATE>
 bool SECircuitManager::HasCircuit(const char* name, const SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger) const
 {
-  return HasCircuit(std::string{ name }, ledger);
+  return HasCircuit(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -457,7 +466,7 @@ bool SECircuitManager::HasCircuit(const std::string& name, const SECircuitLedger
 template <CIRCUIT_LEDGER_TEMPLATE>
 CircuitType* SECircuitManager::GetCircuit(const char* name, SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger)
 {
-  return GetCircuit(std::string{ name }, ledger);
+  return GetCircuit(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>
@@ -472,7 +481,7 @@ CircuitType* SECircuitManager::GetCircuit(const std::string& name, SECircuitLedg
 template <CIRCUIT_LEDGER_TEMPLATE>
 const CircuitType* SECircuitManager::GetCircuit(const char* name, const SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger) const
 {
-  return GetCircuit(std::string{ name }, ledger);
+  return GetCircuit(std::string { name }, ledger);
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_LEDGER_TEMPLATE>

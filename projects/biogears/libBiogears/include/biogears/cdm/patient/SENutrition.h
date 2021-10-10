@@ -13,11 +13,12 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
+#include <biogears/schema/cdm/PatientNutrition.hxx>
 
 CDM_BIND_DECL(NutritionData)
 
 namespace biogears {
-class SEPatient;
+
 class SEScalar;
 class SEScalarMass;
 class MassUnit;
@@ -26,7 +27,13 @@ class MassPerTimeUnit;
 class SEScalarVolume;
 class VolumeUnit;
 
+namespace io {
+  class PatientNutrition;
+}
+
 class BIOGEARS_API SENutrition : public Loggable {
+  friend io::PatientNutrition;
+
 public:
   SENutrition(Logger* logger);
   virtual ~SENutrition();
@@ -35,9 +42,6 @@ public:
 
   virtual bool Load(const CDM::NutritionData& in);
   virtual CDM::NutritionData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::NutritionData& data) const;
 
 public:
   const SEScalar* GetScalar(const char* name);
@@ -82,6 +86,12 @@ public:
   virtual double GetWeight(const MassUnit& unit) const;
 
   virtual void ToString(std::ostream& str) const;
+
+  bool operator==( const SENutrition& rhs) const;
+  bool operator!=( const SENutrition& rhs) const;
+
+protected:
+  virtual void Unload(CDM::NutritionData& data) const;
 
 protected:
   std::string m_Name;

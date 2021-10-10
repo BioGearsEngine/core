@@ -20,7 +20,10 @@ public:
   ElectricResistanceUnit(const char* u);
   ElectricResistanceUnit(const std::string& u);
 
-  virtual ~ElectricResistanceUnit() = default;
+  virtual ~ElectricResistanceUnit();
+
+  bool operator==(const ElectricResistanceUnit&) const;
+  bool operator!=(const ElectricResistanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -30,11 +33,19 @@ public:
   static const ElectricResistanceUnit Ohm;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<ElectricResistanceUnit>;
+
 class BIOGEARS_API SEScalarElectricResistance : public SEScalarQuantity<ElectricResistanceUnit> {
 public:
-  SEScalarElectricResistance() = default;
-  virtual ~SEScalarElectricResistance() = default;
+  SEScalarElectricResistance();
+  virtual ~SEScalarElectricResistance();
 
   CDM::ScalarElectricResistanceData* Unload() const override;
+
+  using SEScalarQuantity<ElectricResistanceUnit>::SetValue;
+  using SEScalarQuantity<ElectricResistanceUnit>::GetValue;
+
+  bool operator==(const SEScalarElectricResistance&) const;
+  bool operator!=(const SEScalarElectricResistance&) const;
 };
 }

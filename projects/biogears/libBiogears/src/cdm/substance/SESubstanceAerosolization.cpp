@@ -51,7 +51,7 @@ bool SESubstanceAerosolization::IsValid() const
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstanceAerosolization::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstanceAerosolization::GetScalar(const std::string& name)
@@ -145,5 +145,17 @@ const SEHistogramFractionVsLength* SESubstanceAerosolization::GetParticulateSize
 {
   return m_ParticulateSizeDistribution;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SESubstanceAerosolization::operator==( const SESubstanceAerosolization& rhs) const
+{
+  bool equivilant = (m_BronchioleModifier && rhs.m_BronchioleModifier) ? m_BronchioleModifier->operator==(*rhs.m_BronchioleModifier) : m_BronchioleModifier == rhs.m_BronchioleModifier;
+  equivilant &= (m_InflammationCoefficient && rhs.m_InflammationCoefficient) ? m_InflammationCoefficient->operator==(*rhs.m_InflammationCoefficient) : m_InflammationCoefficient == rhs.m_InflammationCoefficient;
+  equivilant &= (m_ParticulateSizeDistribution && rhs.m_ParticulateSizeDistribution) ? m_ParticulateSizeDistribution->operator==(*rhs.m_ParticulateSizeDistribution) : m_ParticulateSizeDistribution == rhs.m_ParticulateSizeDistribution;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceAerosolization::operator!=( const SESubstanceAerosolization& rhs) const
+{
+  return !(*this == rhs);
+}
 }

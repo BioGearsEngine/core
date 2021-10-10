@@ -178,7 +178,7 @@ protected:
 private:
   // Only want one unit conversion engine, so declare constructors private
   CUnitConversionEngine();
-  CUnitConversionEngine(const CUnitConversionEngine&){};
+  CUnitConversionEngine(const CUnitConversionEngine& obj);
   ~CUnitConversionEngine();
 
   // Make these pointers rather than the actual vectors to avoid compiler warnings

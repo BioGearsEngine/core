@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Substance.hxx>
 #include "biogears/cdm/properties/SEScalarFrequency.h"
+#include <biogears/schema/cdm/Substance.hxx>
 
 CDM_BIND_DECL(SubstanceClearanceData)
 
@@ -29,10 +29,13 @@ class SESubstanceClearanceAnatomyEffect;
 class SEScalarVolumePerTimeMass;
 class SEScalarFraction;
 
-
+namespace io {
+  class Substance;
+}
 enum class RenalDynamic { Clearance,
-  Regulation };
+                          Regulation };
 class BIOGEARS_API SESubstanceClearance : public Loggable {
+  friend io::Substance;
 public:
   SESubstanceClearance(Logger* logger);
   virtual ~SESubstanceClearance();
@@ -45,17 +48,13 @@ public:
 
   virtual bool Load(const CDM::SubstanceClearanceData& in);
   virtual CDM::SubstanceClearanceData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::SubstanceClearanceData& data) const;
-
 public:
   virtual bool HasSystemic() const { return m_hasSystemic; }
   virtual void SetSystemic(bool b) { m_hasSystemic = b; }
 
   virtual bool HasCellular() const { return m_hasCellular; }
   virtual void SetCellular(bool b) { m_hasCellular = b; }
-  
+
   virtual bool HasCellBirthRate() const;
   virtual SEScalarFrequency& GetCellBirthRate();
   virtual double GetCellBirthRate(const FrequencyUnit& unit) const;
@@ -125,6 +124,13 @@ public:
   virtual bool HasSystemicClearance() const;
   virtual SEScalarVolumePerTimeMass& GetSystemicClearance();
   virtual double GetSystemicClearance(const VolumePerTimeMassUnit& unit) const;
+    
+  bool operator==( const SESubstanceClearance& rhs) const;
+  bool operator!=( const SESubstanceClearance& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstanceClearanceData& data) const;
+
 
 protected:
   bool m_hasSystemic;

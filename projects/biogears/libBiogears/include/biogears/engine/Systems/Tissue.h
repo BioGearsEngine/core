@@ -11,6 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+
+#include <map>
+#include <vector>
+
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
@@ -30,6 +34,16 @@ class SEPatientActionCollection;
 class SEPatient;
 class SEEnergySystem;
 class BioGears;
+}
+
+namespace std {
+BG_EXT template class BIOGEARS_API map<biogears::SETissueCompartment*, biogears::SELiquidCompartment*>;
+BG_EXT template class BIOGEARS_API map<biogears::SELiquidCompartment*, biogears::SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API map<biogears::SETissueCompartment*, biogears::SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*>;
+}
+
+namespace biogears {
 /**
  * @brief This class encapsulates logic necessary to connect independent systems together.
  * @details Each system calculates the behavior that occurs within its individual physiology function; 
@@ -46,12 +60,11 @@ protected:
   Tissue(BioGears& bg);
   BioGears& m_data;
 
-
 public:
   virtual ~Tissue() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "Tissue"; }
+  static constexpr char const* const TypeTag() { return "Tissue"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -85,13 +98,13 @@ protected:
   void FatStorageAndRelease();
 
   // Process Methods
+  void CalculateCompartmentalBurn();
   void CalculateDiffusion();
   void CalculatePulmonaryCapillarySubstanceTransfer();
   void AlveolarPartialPressureGradientDiffusion(SEGasCompartment& pulmonary, SELiquidCompartment& vascular, SESubstance& sub, double DiffusingCapacityO2_mL_Per_s_mmHg, double timestep_s);
   void CalculateVitals();
   void CheckGlycogenLevels();
   void ManageSubstancesAndSaturation();
-
 
   //conditions
   void Dehydrate();
@@ -120,6 +133,21 @@ protected:
   double m_Dt_s;
   double m_maxProteinStorage_g;
   double m_lastFatigueTime;
+
+  double m_leftArmDeltaResistance_mmHg_s_Per_mL;
+  double m_rightArmDeltaResistance_mmHg_s_Per_mL;
+  double m_leftLegDeltaResistance_mmHg_s_Per_mL;
+  double m_rightLegDeltaResistance_mmHg_s_Per_mL;
+  double m_trunkDeltaResistance_mmHg_s_Per_mL;
+
+  double m_compartmentSyndromeCount;
+  double m_baselineECFluidVolume_mL;
+
+  bool m_trunkEscharotomy = false;
+  bool m_leftArmEscharotomy = false;
+  bool m_leftLegEscharotomy = false;
+  bool m_rightArmEscharotomy = false;
+  bool m_rightLegEscharotomy = false;
 
   std::stringstream m_ss;
   SESubstance* m_Albumin;

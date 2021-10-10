@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -11,13 +12,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
-
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
+#include <biogears/version.h>
 // CDM Features in use
 #include <biogears/cdm/engine/PhysiologyEngine.h>
-#include <biogears/cdm/utils/FileUtils.h>
- 
+
 #include <memory>
 
 namespace biogears {
@@ -34,9 +34,6 @@ namespace mil {
 namespace tatrc {
   namespace physiology {
     namespace biogears {
-
-      DEFINE_STATIC_STRING_EX(Version, BioGears_6 .1.1_beta);
-
       namespace Graph {
 
         DEFINE_STATIC_STRING(ActiveCardiovascular);

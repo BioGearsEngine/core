@@ -17,8 +17,12 @@ namespace biogears {
 class SEScalarArea;
 class AreaUnit;
 class SEScalar0To1;
-
+namespace io {
+  class PatientConditions;
+}
 class BIOGEARS_API SEImpairedAlveolarExchange : public SEPatientCondition {
+  friend io::PatientConditions;
+
 public:
   SEImpairedAlveolarExchange();
   virtual ~SEImpairedAlveolarExchange();

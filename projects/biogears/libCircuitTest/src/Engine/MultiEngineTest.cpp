@@ -13,9 +13,9 @@ specific language governing permissions and limitations under the License.
 
 //Standad Includes
 #include <iomanip>
+#include <regex>
 //Project Includes
 #include <biogears/cdm/scenario/SEScenarioExec.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/cdm/utils/TaskRunner/Task.h>
 #include <biogears/cdm/utils/TaskRunner/TaskRunner.h>
 
@@ -64,12 +64,12 @@ void RunScenarioTask::Run()
 {
   // Set up the log file
   std::string logFile = m_scenarioFile;
-  logFile = Replace(logFile, "verification", "bin");
-  logFile = Replace(logFile, ".xml", ".log");
+  logFile = std::regex_replace(logFile, std::regex(R"(verification)"), "bin");
+  logFile = std::regex_replace(logFile, std::regex(R"(\.xml)"), ".log");
   // Set up the verification output file
   std::string dataFile = m_scenarioFile;
-  dataFile = Replace(dataFile, "verification", "bin");
-  dataFile = Replace(dataFile, ".xml", "Results.csv");
+  dataFile = std::regex_replace(dataFile, std::regex(R"(verification)"), "bin");
+  dataFile = std::regex_replace(dataFile, std::regex(R"(\.xml)"), "Results.csv");
   // Delete any results file that may be there
   remove(dataFile.c_str());
 

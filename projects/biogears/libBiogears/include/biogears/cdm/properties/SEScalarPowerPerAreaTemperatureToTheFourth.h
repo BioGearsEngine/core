@@ -20,7 +20,10 @@ public:
   PowerPerAreaTemperatureToTheFourthUnit(const char* u);
   PowerPerAreaTemperatureToTheFourthUnit(const std::string& u);
 
-  virtual ~PowerPerAreaTemperatureToTheFourthUnit() = default;
+  virtual ~PowerPerAreaTemperatureToTheFourthUnit();  
+
+  bool operator==(const PowerPerAreaTemperatureToTheFourthUnit&) const;
+  bool operator!=(const PowerPerAreaTemperatureToTheFourthUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -30,11 +33,19 @@ public:
   static const PowerPerAreaTemperatureToTheFourthUnit W_Per_m2_K4;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>;
+
 class BIOGEARS_API SEScalarPowerPerAreaTemperatureToTheFourth : public SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit> {
 public:
-  SEScalarPowerPerAreaTemperatureToTheFourth() = default;
-  virtual ~SEScalarPowerPerAreaTemperatureToTheFourth() = default;
+  SEScalarPowerPerAreaTemperatureToTheFourth();
+  virtual ~SEScalarPowerPerAreaTemperatureToTheFourth();
 
   CDM::ScalarPowerPerAreaTemperatureToTheFourthData* Unload() const override;
+
+  using SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::SetValue;
+  using SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::GetValue;
+
+  bool operator==(const SEScalarPowerPerAreaTemperatureToTheFourth&) const;
+  bool operator!=(const SEScalarPowerPerAreaTemperatureToTheFourth&) const;
 };
 }

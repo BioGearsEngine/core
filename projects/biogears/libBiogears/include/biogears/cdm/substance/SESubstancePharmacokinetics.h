@@ -21,7 +21,18 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(SubstancePharmacokineticsData)
 
 namespace biogears {
+namespace io {
+  class Substance;
+}
+} //namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API map<string, biogears::SESubstanceTissuePharmacokinetics*>;
+}
+namespace biogears {
 class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {
+  friend io::Substance;
+
 public:
   SESubstancePharmacokinetics(Logger* logger);
   virtual ~SESubstancePharmacokinetics();
@@ -35,10 +46,6 @@ public:
   virtual bool Load(const CDM::SubstancePharmacokineticsData& in);
   virtual CDM::SubstancePharmacokineticsData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstancePharmacokineticsData& data) const;
-
-public:
   virtual bool HasPhysicochemicals() const;
   virtual SESubstancePhysicochemicals& GetPhysicochemicals();
   virtual const SESubstancePhysicochemicals* GetPhysicochemicals() const;
@@ -52,6 +59,12 @@ public:
   virtual const SESubstanceTissuePharmacokinetics* GetTissueKinetics(const std::string& name) const;
   virtual void RemoveTissueKinetics(const char* name);
   virtual void RemoveTissueKinetics(const std::string& name);
+
+  bool operator==(const SESubstancePharmacokinetics& rhs) const;
+  bool operator!=(const SESubstancePharmacokinetics& rhs) const;
+
+protected:
+  virtual void Unload(CDM::SubstancePharmacokineticsData& data) const;
 
 protected:
   SESubstancePhysicochemicals* m_Physicochemicals;

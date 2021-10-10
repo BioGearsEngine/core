@@ -481,7 +481,7 @@ BioGearsPlugin::BioGearsPlugin(std::string name)
       patient.SetGender(CDM::enumSex::Male);
       patient.GetAge().SetValue(44, biogears::TimeUnit::yr);
       patient.GetWeight().SetValue(170, biogears::MassUnit::lb);
-      patient.GetHeight().SetValue(71, biogears::LengthUnit::in);
+      patient.GetHeight().SetValue(71, biogears::LengthUnit::inch);
       patient.GetBodyFatFraction().SetValue(0.21);
       patient.SetBloodType(CDM::enumBloodType::AB);
       patient.SetBloodRh(true);
@@ -614,7 +614,7 @@ void BioGearsPlugin::run()
           action_get_urine_color(_pimpl->engine);
           action_urinate(_pimpl->engine);
           try {
-          _pimpl->engine->SaveState("HowTo-API_Integration_FinalState.xml");
+          _pimpl->engine->SaveStateToFile("HowTo-API_Integration_FinalState.xml");
             
           } catch ( xsd::cxx::exception e) {
             std::cout << e.what();

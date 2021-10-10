@@ -16,6 +16,7 @@
 #include <iostream>
 #include <cstdlib>
 
+#include <biogears/version.h>
 #include <biogears/string/manipulation.h>
 
 #ifdef ANDROID
@@ -55,7 +56,7 @@ std::string ConvertTemperatureUnit(std::string unit)
 }
 
 EnvironmentGenerator::EnvironmentGenerator(std::string path)
-  : CSVToXMLConvertor(path, "Environment.csv")
+  : CSVToXMLConvertor(path, "templates/Environments.csv")
 {
 }
 //-----------------------------------------------------------------------------
@@ -73,7 +74,7 @@ bool EnvironmentGenerator::save() const
   for (auto& env : _environments) {
     xml_schema::namespace_infomap info;
     info[""].name = "uri:/mil/tatrc/physiology/datamodel";
-    info[""].schema = "BioGears.xsd";
+    info[""].schema = "BioGearsDataModel.xsd";
 
     try {
       std::ofstream file;
@@ -104,6 +105,7 @@ bool EnvironmentGenerator::parse()
       for (auto name : lineItr->second) {
         CDM::EnvironmentalConditionsData data;
         data.Name(name);
+        data.contentVersion(branded_version_string());
         _environments.push_back(std::move(data));
       }
     } else if ("AmbientGasData" == lineItr->first) {

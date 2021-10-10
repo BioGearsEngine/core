@@ -18,13 +18,27 @@ const FrequencyUnit FrequencyUnit::Per_s("1/s");
 const FrequencyUnit FrequencyUnit::Hz("Hz");
 const FrequencyUnit FrequencyUnit::Per_hr("1/hr");
 
+template class SEScalarQuantity<FrequencyUnit>;
+
 FrequencyUnit::FrequencyUnit(const char* u)
-  : FrequencyUnit(std::string{ u })
+  : FrequencyUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 FrequencyUnit::FrequencyUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+FrequencyUnit::~FrequencyUnit()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFrequency::SEScalarFrequency()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarFrequency::~SEScalarFrequency()
 {
 }
 //-----------------------------------------------------------------------------
@@ -48,7 +62,7 @@ bool FrequencyUnit::IsValidUnit(const char* unit)
   if (strcmp(Per_hr.GetString(), unit) == 0)
     return true;
 
-    return false;
+  return false;
 }
 //-----------------------------------------------------------------------------
 bool FrequencyUnit::IsValidUnit(const std::string& unit)
@@ -76,4 +90,24 @@ const FrequencyUnit& FrequencyUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
+bool FrequencyUnit::operator==(const FrequencyUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool FrequencyUnit::operator!=(const FrequencyUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarFrequency::operator==(const SEScalarFrequency& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarFrequency::operator!=(const SEScalarFrequency& obj) const
+{
+  return !(*this == obj);
+}
 }

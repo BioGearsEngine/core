@@ -16,8 +16,12 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(RunningAverageData);
 
 namespace biogears {
+namespace io {
+  class Property;
+}
 class BIOGEARS_API RunningAverage {
 public:
+  friend io::Property;
   RunningAverage();
   virtual ~RunningAverage();
 

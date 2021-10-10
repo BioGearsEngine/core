@@ -86,8 +86,8 @@ class MultiPlotter():
                     self.plotting(job,input_zip,output_file,df,my_dpi)
                 except IOError:
                     logging.error("File Not found at:"+input_zip)
-                except Exception:
-                    logging.error("Headers not found at:"+input_zip)
+                except Exception as e:
+                    logging.error("Exception occured when plotting header \"" + job.headers[0] + "\": " + str(e))
 
             elif input_zip.endswith(".zip"):
                 zf=zipfile.ZipFile(input_zip)
@@ -98,8 +98,8 @@ class MultiPlotter():
                             self.plotting(job,input_zip,output_file,df,my_dpi)
                         except IOError:
                             logging.error("File Not found at:"+input_zip)
-                        except Exception:
-                            logging.error("Headers Not found in:"+input_zip)
+                        except Exception as e:
+                            logging.error("Exception occured when plotting header \"" + job.headers[0] + "\": " + str(e))
         except IOError:
             logging.info("Zip file Not found at :"+input_zip)
         

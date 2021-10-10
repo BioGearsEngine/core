@@ -17,14 +17,16 @@ namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
+namespace io {
+  class Scenario;
+}
 
 class BIOGEARS_API SECompartmentSubstanceDataRequest : public SECompartmentDataRequest {
   friend class SEDataRequestManager;
-
-protected:
-  SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
+  friend io::Scenario;
 
 public:
+  SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SECompartmentSubstanceDataRequest() override;
 
   virtual void Clear() override; //clear memory
@@ -48,6 +50,7 @@ public:
   virtual void Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const std::string& unit = "");
   virtual void Set(const char* cmpt, SESubstance& substance, const char* name, const CCompoundUnit& unit);
   virtual void Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const CCompoundUnit& unit);
+
 protected:
   SESubstance* m_Substance;
 };

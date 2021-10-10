@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/patient/assessments/SEArterialBloodGasAnalysis.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
@@ -194,7 +195,7 @@ void BloodChemistry::SetUp()
   //Substance
   SESubstance* albumin = &m_data.GetSubstances().GetAlbumin();
   SESubstance* aminoAcids = &m_data.GetSubstances().GetAminoAcids();
-  SESubstance* bicarbonate = &m_data.GetSubstances().GetBicarbonate();
+  SESubstance* bicarbonate = &m_data.GetSubstances().GetHCO3();
   SESubstance* calcium = &m_data.GetSubstances().GetCalcium();
   SESubstance* chloride = &m_data.GetSubstances().GetChloride();
   SESubstance* creatinine = &m_data.GetSubstances().GetCreatinine();
@@ -346,7 +347,7 @@ void BloodChemistry::Process()
   double albuminConcentration_ug_Per_mL = m_venaCavaAlbumin->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
   m_data.GetSubstances().GetAlbumin().GetBloodConcentration().Set(m_venaCavaAlbumin->GetConcentration());
   m_data.GetSubstances().GetAminoAcids().GetBloodConcentration().Set(m_venaCavaAminoAcids->GetConcentration());
-  m_data.GetSubstances().GetBicarbonate().GetBloodConcentration().Set(m_venaCavaBicarbonate->GetConcentration());
+  m_data.GetSubstances().GetHCO3().GetBloodConcentration().Set(m_venaCavaBicarbonate->GetConcentration());
   GetBloodUreaNitrogenConcentration().SetValue(m_venaCavaUrea->GetConcentration(MassPerVolumeUnit::ug_Per_mL) / 2.14, MassPerVolumeUnit::ug_Per_mL);
   m_data.GetSubstances().GetCalcium().GetBloodConcentration().Set(m_venaCavaCalcium->GetConcentration());
   m_data.GetSubstances().GetChloride().GetBloodConcentration().Set(m_venaCavaChloride->GetConcentration());
@@ -443,7 +444,7 @@ void BloodChemistry::CheckBloodSubstanceLevels()
   double hypoglycemiaLevel_mg_Per_dL = 70;
   double hypoglycemicShockLevel_mg_Per_dL = 50;
   double hypoglycemicComaLevel_mg_Per_dL = 20;
-  double hyperglycemiaLevel_mg_Per_dL = 200;
+  double hyperglycemiaLevel_mg_Per_dL = 140;   //anything over 140 is considered abnormal, especially during a fasting state
   double lacticAcidosisLevel_mg_Per_dL = 44;
   double ketoacidosisLevel_mg_Per_dL = 122;
 
@@ -692,29 +693,57 @@ void BloodChemistry::CheckBloodSubstanceLevels()
 //--------------------------------------------------------------------------------------------------
 bool BloodChemistry::CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabolicPanel& cmp)
 {
+  //for now the units on this are going to be hardcoded to be consistent with our validation data 
+  /// \todo: update this to take in generic units, then allow the user to configure units on data call in the API or scenario files
   cmp.Reset();
-  cmp.GetAlbumin().Set(m_data.GetSubstances().GetAlbumin().GetBloodConcentration());
+  double Albumin_g_Per_dL = m_data.GetSubstances().GetAlbumin().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL);
+  cmp.GetAlbumin().SetValue(Albumin_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
   //cmp.GetALP().SetValue();
   //cmp.GetALT().SetValue();
   //cmp.GetAST().SetValue();
-  cmp.GetBUN().Set(GetBloodUreaNitrogenConcentration());
+  double BUN_mg_Per_dL = GetBloodUreaNitrogenConcentration(MassPerVolumeUnit::mg_Per_dL);
+  cmp.GetBUN().SetValue(BUN_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
   cmp.GetCalcium().Set(m_data.GetSubstances().GetCalcium().GetBloodConcentration());
   double CL_mmol_Per_L = m_data.GetSubstances().GetChloride().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetChloride().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetChloride().SetValue(CL_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   // CO2 is predominantly Bicarbonate, so going to put that in this slot
-  double HCO3_mmol_Per_L = m_data.GetSubstances().GetBicarbonate().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetHCO3().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
+  double HCO3_mmol_Per_L = m_data.GetSubstances().GetHCO3().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetHCO3().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetCO2().SetValue(HCO3_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   cmp.GetCreatinine().Set(m_data.GetSubstances().GetCreatinine().GetBloodConcentration());
-  cmp.GetGlucose().Set(m_data.GetSubstances().GetGlucose().GetBloodConcentration());
+  double Glucose_mg_Per_dL = m_data.GetSubstances().GetGlucose().GetBloodConcentration(MassPerVolumeUnit::mg_Per_dL);
+  cmp.GetGlucose().SetValue(Glucose_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
   double K_mmol_Per_L = m_data.GetSubstances().GetPotassium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetPotassium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetPotassium().SetValue(K_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   double Sodium_mmol_Per_L = m_data.GetSubstances().GetSodium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetSodium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetSodium().SetValue(Sodium_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   //cmp.GetTotalBelirubin().SetValue();
-  cmp.GetTotalProtein().Set(GetTotalProteinConcentration());
+  double TotalProtein_g_Per_dL = GetTotalProteinConcentration(MassPerVolumeUnit::g_Per_dL);
+  cmp.GetTotalProtein().SetValue(TotalProtein_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
   return true;
 }
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Sets data on the arterial blood gas analysis.
+///
+/// \details
+/// Sets data on the arterial blood gas analysis object to create the [ABGA](@ref bloodchemistry-assessments).
+//--------------------------------------------------------------------------------------------------
+bool BloodChemistry::CalculateArterialBloodGasAnalysis(SEArterialBloodGasAnalysis& abga)
+{
+  abga.Reset();
+  double arterialpH = GetArterialBloodPH().GetValue();
+  double standardBicarbonate_mmol_Per_L = m_aorta->GetSubstanceQuantity(m_data.GetSubstances().GetHCO3())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
+  double baseExcess_mmol_Per_L = 0.9287 * (standardBicarbonate_mmol_Per_L - 24.4 + (14.83 * (arterialpH - 7.4)));
 
+  abga.GetpH().Set(arterialpH);
+  abga.GetPartialPressureOxygen().SetValue(GetArterialOxygenPressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  abga.GetPartialPressureCarbonDioxide().SetValue(GetArterialCarbonDioxidePressure(PressureUnit::mmHg), PressureUnit::mmHg);
+  abga.GetBaseExcess().SetValue(baseExcess_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
+  abga.GetStandardBicarbonate().SetValue(standardBicarbonate_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
+  abga.GetOxygenSaturation().Set(GetOxygenSaturation());
+
+  return true;
+}
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Sets data on the complete blood count object.
@@ -821,8 +850,8 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
 
   double D1 = 1.4e-11; //cm2 per s and is diffusion coefficient of one rbc
   double R1 = 3.5e-4; //cm and is radius of one rbc
-  double R2 = R1 * std::cbrt(2);
-  double R3 = R1 * std::cbrt(3);
+  double R2 = R1 * cbrt(2);
+  double R3 = R1 * cbrt(3);
   double D2 = (D1 * R1) / (R2);
   double D3 = (D1 * R1) / (R3);
 
@@ -1163,9 +1192,9 @@ void BloodChemistry::InflammatoryResponse()
   //------------------Inflammation source specific modifications and/or actions --------------------------------
   if (burnTotalBodySurfaceArea != 0) {
     //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
-    kDTR = 10.0 * burnTotalBodySurfaceArea; //We assume that larger burns inflict damage more rapidly
-    kTr = 0.35 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
-    tiMin = 0.005; //Promotes faster damage accumulation
+    kDTR = 11.0 * burnTotalBodySurfaceArea; //We assume that larger burns inflict damage more rapidly
+    kTr = 0.45 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
+    tiMin = 0.008; //Promotes faster damage accumulation
     kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
   }

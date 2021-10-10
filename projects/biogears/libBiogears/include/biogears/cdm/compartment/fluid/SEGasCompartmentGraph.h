@@ -17,20 +17,35 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
-CDM_BIND_DECL(GasCompartmentGraphData)
+#include <vector>
+#include <map>
+
+CDM_BIND_DECL(GasCompartmentGraphData);
+
+
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportVertex*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportEdge*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, size_t>;
+BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, vector<biogears::SEGasTransportEdge*>*>;
+}
 
 namespace biogears {
 class SECompartmentManager;
+namespace io {
+  class Compartment;
+}
 
 class BIOGEARS_API SEGasCompartmentGraph : public SECompartmentTransportGraph<SEGasTransportGraph, SEGasTransportVertex, SEGasTransportEdge, SEGasCompartment, SEGasCompartmentLink> {
   friend class SECompartmentManager;
+  friend io::Compartment;
 
 protected:
   SEGasCompartmentGraph(const char* name, Logger* logger);
   SEGasCompartmentGraph(const std::string& name, Logger* logger);
 
 public:
-  virtual ~SEGasCompartmentGraph() = default;
+  virtual ~SEGasCompartmentGraph();
 
   void AddGraph(SEGasCompartmentGraph& graph);
 
@@ -43,4 +58,9 @@ protected:
 protected:
   void BalanceByIntensive() override;
 };
+}
+
+namespace std {
+  BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentGraph*> ;
+  BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentGraph*> ;
 }

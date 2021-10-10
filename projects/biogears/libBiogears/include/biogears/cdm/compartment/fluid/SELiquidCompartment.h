@@ -15,19 +15,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
-#include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/cdm/Compartment.hxx>
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/substance/SESubstanceTransport.h>
+#include <biogears/schema/cdm/Compartment.hxx>
+
+#include <vector>
+#include <map>
+#include <string>
 
 namespace biogears {
 class SETissueCompartment;
 class SECompartmentManager;
 class SELiquidSubstanceQuantity;
+namespace io {
+  class Compartment;
+}
 class BIOGEARS_API SELiquidCompartment : public SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity> {
   friend class SETissueCompartment;
   friend class SECompartmentManager;
   friend class SELiquidSubstanceQuantity;
+  friend io::Compartment;
+
 
 protected:
   SELiquidCompartment(const char* name, Logger* logger);
@@ -73,4 +82,9 @@ protected:
   std::vector<SELiquidCompartment*> m_Children;
   std::vector<SELiquidCompartment*> m_Leaves;
 };
+}      //namespace biogears
+
+namespace std{
+BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartment*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartment*>;
 }

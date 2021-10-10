@@ -20,7 +20,10 @@ public:
   FlowInertanceUnit(const char* u);
   FlowInertanceUnit(const std::string& u);
 
-  virtual ~FlowInertanceUnit() = default;
+  virtual ~FlowInertanceUnit();
+
+  bool operator==(const FlowInertanceUnit&) const;
+  bool operator!=(const FlowInertanceUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -34,11 +37,19 @@ public:
   static const FlowInertanceUnit Pa_s2_Per_m3;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<FlowInertanceUnit>;
+
 class BIOGEARS_API SEScalarFlowInertance : public SEScalarQuantity<FlowInertanceUnit> {
 public:
-  SEScalarFlowInertance() = default;
-  virtual ~SEScalarFlowInertance() = default;
+  SEScalarFlowInertance();
+  virtual ~SEScalarFlowInertance();
 
   CDM::ScalarFlowInertanceData* Unload() const override;
+
+  using SEScalarQuantity<FlowInertanceUnit>::SetValue;
+  using SEScalarQuantity<FlowInertanceUnit>::GetValue;
+
+  bool operator==(const SEScalarFlowInertance&) const;
+  bool operator!=(const SEScalarFlowInertance&) const;
 };
 }

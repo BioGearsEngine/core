@@ -18,13 +18,26 @@ const InversePressureUnit InversePressureUnit::Inverse_mmHg("1/mmHg");
 const InversePressureUnit InversePressureUnit::Inverse_cmH2O("1/cmH2O");
 const InversePressureUnit InversePressureUnit::Inverse_atm("1/atm");
 
+template class SEScalarQuantity<InversePressureUnit>;
+
 InversePressureUnit::InversePressureUnit(const char* u)
-  : InversePressureUnit(std::string{ u })
+  : InversePressureUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 InversePressureUnit::InversePressureUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+} //-------------------------------------------------------------------------------
+InversePressureUnit::~InversePressureUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarInversePressure::SEScalarInversePressure()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarInversePressure::~SEScalarInversePressure()
 {
 }
 //-------------------------------------------------------------------------------
@@ -39,13 +52,13 @@ CDM::ScalarInversePressureData* SEScalarInversePressure::Unload() const
 //-------------------------------------------------------------------------------
 bool InversePressureUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(Inverse_Pa.GetString(),unit) == 0)
+  if (strcmp(Inverse_Pa.GetString(), unit) == 0)
     return true;
-  if (strcmp(Inverse_mmHg.GetString(),unit) == 0)
+  if (strcmp(Inverse_mmHg.GetString(), unit) == 0)
     return true;
-  if (strcmp(Inverse_cmH2O.GetString(),unit) == 0)
+  if (strcmp(Inverse_cmH2O.GetString(), unit) == 0)
     return true;
-  if (strcmp(Inverse_atm.GetString(),unit) == 0)
+  if (strcmp(Inverse_atm.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -57,13 +70,13 @@ bool InversePressureUnit::IsValidUnit(const std::string& unit)
 //-------------------------------------------------------------------------------
 const InversePressureUnit& InversePressureUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(Inverse_Pa.GetString(),unit) == 0)
+  if (strcmp(Inverse_Pa.GetString(), unit) == 0)
     return Inverse_Pa;
-  if (strcmp(Inverse_mmHg.GetString(),unit) == 0)
+  if (strcmp(Inverse_mmHg.GetString(), unit) == 0)
     return Inverse_mmHg;
-  if (strcmp(Inverse_cmH2O.GetString(),unit) == 0)
+  if (strcmp(Inverse_cmH2O.GetString(), unit) == 0)
     return Inverse_cmH2O;
-  if (strcmp(Inverse_atm.GetString(),unit) == 0)
+  if (strcmp(Inverse_atm.GetString(), unit) == 0)
     return Inverse_atm;
   std::stringstream err;
   err << unit << " is not a valid InversePressure unit";
@@ -75,4 +88,24 @@ const InversePressureUnit& InversePressureUnit::GetCompoundUnit(const std::strin
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool InversePressureUnit::operator==(const InversePressureUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool InversePressureUnit::operator!=(const InversePressureUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarInversePressure::operator==(const SEScalarInversePressure& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarInversePressure::operator!=(const SEScalarInversePressure& obj) const
+{
+  return !(*this == obj);
+}
 }

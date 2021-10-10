@@ -19,7 +19,11 @@ class BIOGEARS_API AreaUnit : public CCompoundUnit {
 public:
   AreaUnit(const char* u);
   AreaUnit(const std::string& u);
-  virtual ~AreaUnit() = default;
+
+  virtual ~AreaUnit();     
+
+  bool operator==(const AreaUnit&) const;
+  bool operator!=(const AreaUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -30,11 +34,19 @@ public:
   static const AreaUnit m2;
 };
 
+BG_EXT template class BIOGEARS_API SEScalarQuantity<AreaUnit>;
+
 class BIOGEARS_API SEScalarArea : public SEScalarQuantity<AreaUnit> {
 public:
-  SEScalarArea() = default;
-  virtual ~SEScalarArea() = default;
+  SEScalarArea();
+  virtual ~SEScalarArea();
 
-  CDM::ScalarAreaData* Unload() const override;
+  CDM::ScalarAreaData* Unload() const override;   
+
+  using SEScalarQuantity<AreaUnit>::SetValue;
+  using SEScalarQuantity<AreaUnit>::GetValue;
+
+  bool operator==(const SEScalarArea&) const;
+  bool operator!=(const SEScalarArea&) const;
 };
 }

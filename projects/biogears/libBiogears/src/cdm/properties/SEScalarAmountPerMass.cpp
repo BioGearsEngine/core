@@ -16,13 +16,28 @@ namespace biogears {
 AmountPerMassUnit AmountPerMassUnit::ct_Per_g("ct/g");
 AmountPerMassUnit AmountPerMassUnit::ct_Per_ug("ct/ug");
 
+template class SEScalarQuantity<AmountPerMassUnit>;
+
+//-----------------------------------------------------------------------------
 AmountPerMassUnit::AmountPerMassUnit(const char* u)
-  : AmountPerMassUnit(std::string{ u })
+  : AmountPerMassUnit(std::string { u })
 {
 }
 //-----------------------------------------------------------------------------
 AmountPerMassUnit::AmountPerMassUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-----------------------------------------------------------------------------
+AmountPerMassUnit::~AmountPerMassUnit(){
+}
+//-----------------------------------------------------------------------------
+SEScalarAmountPerMass::SEScalarAmountPerMass()
+  : SEScalarQuantity()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarAmountPerMass::~SEScalarAmountPerMass()
 {
 }
 //-----------------------------------------------------------------------------
@@ -37,7 +52,7 @@ CDM::ScalarAmountPerMassData* SEScalarAmountPerMass::Unload() const
 //-----------------------------------------------------------------------------
 bool AmountPerMassUnit::IsValidUnit(const char* unit)
 {
-  return IsValidUnit(std::string{ unit });
+  return IsValidUnit(std::string { unit });
 }
 //-----------------------------------------------------------------------------
 bool AmountPerMassUnit::IsValidUnit(const std::string& unit)
@@ -53,7 +68,7 @@ bool AmountPerMassUnit::IsValidUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 const AmountPerMassUnit& AmountPerMassUnit::GetCompoundUnit(const char* unit)
 {
-  return GetCompoundUnit(std::string{ unit });
+  return GetCompoundUnit(std::string { unit });
 }
 //-----------------------------------------------------------------------------
 const AmountPerMassUnit& AmountPerMassUnit::GetCompoundUnit(const std::string& unit)
@@ -69,4 +84,25 @@ const AmountPerMassUnit& AmountPerMassUnit::GetCompoundUnit(const std::string& u
   throw CommonDataModelException(err.str());
 }
 //-----------------------------------------------------------------------------
+bool AmountPerMassUnit::operator==(const AmountPerMassUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool AmountPerMassUnit::operator!=(const AmountPerMassUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+
+bool SEScalarAmountPerMass::operator==(const SEScalarAmountPerMass& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarAmountPerMass::operator!=(const SEScalarAmountPerMass& obj) const
+{
+  return !(*this == obj);
+}
 }

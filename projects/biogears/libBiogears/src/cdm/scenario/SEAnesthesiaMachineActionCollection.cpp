@@ -294,7 +294,7 @@ bool SEAnesthesiaMachineActionCollection::HasOxygenTankPressureLoss() const
   return m_OxygenTankPressureLoss == nullptr ? false : true;
 }
 //-------------------------------------------------------------------------------
-SEOxygenTankPressureLoss* SEAnesthesiaMachineActionCollection::GetOxygenTankPressureLoss() const
+SEOxygenTankPressureLoss* SEAnesthesiaMachineActionCollection::GetOxygenTankPressureLoss()   const
 {
   return m_OxygenTankPressureLoss;
 }
@@ -304,12 +304,12 @@ void SEAnesthesiaMachineActionCollection::RemoveOxygenTankPressureLoss()
   SAFE_DELETE(m_OxygenTankPressureLoss);
 }
 //-------------------------------------------------------------------------------
-bool SEAnesthesiaMachineActionCollection::HasOxygenWallPortPressureLoss()
+bool SEAnesthesiaMachineActionCollection::HasOxygenWallPortPressureLoss()  const
 {
   return m_OxygenWallPortPressureLoss == nullptr ? false : true;
 }
 //-------------------------------------------------------------------------------
-SEOxygenWallPortPressureLoss* SEAnesthesiaMachineActionCollection::GetOxygenWallPortPressureLoss()
+SEOxygenWallPortPressureLoss* SEAnesthesiaMachineActionCollection::GetOxygenWallPortPressureLoss()  const
 {
   return m_OxygenWallPortPressureLoss;
 }

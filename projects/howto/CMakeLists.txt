@@ -1,5 +1,6 @@
 option(${ROOT_PROJECT_NAME}_BUILD_HOWTOS     "Select to build sdk how to examples." ON)
 cmake_policy(SET CMP0087 NEW)
+message(STATUS "Configuring Examples")
 function(add_howto name)
   ###############################################################################
   # Step 1:  Set the name of this example to a unique identifier
@@ -26,11 +27,11 @@ function(add_howto name)
     ###############################################################################
     #Sorce and Header Defines
     ###############################################################################
-    message(STATUS "Configuring ${EXAMPLE_NAME}")
+    message(STATUS "           : ${EXAMPLE_NAME}")
     
-    add_source_files(HDRS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src/ "*.h"   "Headers\\Private\\")
-    add_source_files(SRCS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src "*.cpp" "Sources\\")
-    add_source_files(PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/${name}/include "*.h"  "Headers\\Public\\")
+    add_source_files(HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src/ REGEX "*.h" SOURCE_GROUP "Headers\\Private\\")
+    add_source_files(SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/${name}/src REGEX "*.cpp" SOURCE_GROUP "Sources\\")
+    add_source_files(PUBLIC_HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/${name}/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
     
     set(${EXAMPLE_NAME}_HEADERS ${HDRS} ${PUBLIC_HDRS} )
     set(${EXAMPLE_NAME}_SOURCES ${SRCS} ) 
@@ -47,7 +48,7 @@ function(add_howto name)
         FOLDER Examples
         OUTPUT_NAME "${TARGET_NAME}"
         PROJECT_LABEL "${TARGET_NAME}"
-        DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+        DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
         CXX_STANDARD 14
         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
         )
@@ -84,13 +85,21 @@ function(add_howto name)
       add_dependencies(${TARGET_NAME} prepare_runtime_dir)
     endif()
    
-    add_dependencies(howtos ${TARGET_NAME})
-     
-  install(TARGETS ${TARGET_NAME} EXPORT howtos
-	 RUNTIME DESTINATION bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>/howtos
+    add_dependencies(all_howtos ${TARGET_NAME})
+    
+if (NOT (${ROOT_PROJECT_NAME}_BUILD_INSTALLER AND APPLE)) 
+  install(TARGETS ${TARGET_NAME} EXPORT all_howtos
+     RUNTIME DESTINATION bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>/howtos
      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
      ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
   )
+else()
+  install(TARGETS ${TARGET_NAME} EXPORT all_howtos
+     RUNTIME DESTINATION "./"
+     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+     ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+  )
+endif()
 
   endif(BUILD_EX_${EXAMPLE_NAME})
 endfunction(add_howto)
@@ -106,9 +115,9 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
   find_package(Threads REQUIRED)
 
 
-  add_source_files(COMMON_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.h"   "Headers\\Private\\")
-  add_source_files(COMMON_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common-source "*.cpp" "Sources\\")
-  add_source_files(COMMON_PUBLIC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/common-source/include "*.h"  "Headers\\Public\\")
+  add_source_files(COMMON_HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/common-source REGEX "*.h"   SOURCE_GROUP "Headers\\Private\\")
+  add_source_files(COMMON_SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/common-source REGEX "*.cpp" SOURCE_GROUP "Sources\\")
+  add_source_files(COMMON_PUBLIC_HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/common-source/include REGEX  "*.h" SOURCE_GROUP  "Headers\\Public\\")
   add_library(howto-common OBJECT ${COMMON_HDRS} ${COMMON_SRCS} ${COMMON_PUBLIC_HDRS} )
   add_library(howto::common ALIAS howto-common)
    
@@ -117,7 +126,7 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
         FOLDER Examples
         OUTPUT_NAME "howto-common"
         PROJECT_LABEL "howto-common"
-        DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+        DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
         CXX_STANDARD 14
         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
@@ -129,24 +138,26 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
   target_compile_definitions(howto-common  PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
   target_compile_options(howto-common  PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
   
-  add_custom_target(howtos COMMENT "Meta Target for compiling all howtos")
-  
+  add_custom_target(all_howtos COMMENT "Meta Target for compiling all howtos")
+  set_target_properties(all_howtos PROPERTIES FOLDER "Examples" )
+
   childlist( dir_list ${CMAKE_CURRENT_SOURCE_DIR} )
   foreach( dir IN LISTS dir_list )
   if(NOT dir MATCHES "common-source")
     add_howto( ${dir} )
   endif()
   endforeach()
-if(NOT CMAKE_CROSSCOMPILING AND NOT APPLE)
+if(NOT (CMAKE_CROSSCOMPILING OR APPLE))
   install(CODE "
     include(BundleUtilities)
 
     function(EXELIST result curdir)
-    file(GLOB children RELATIVE \${curdir} \${curdir}/*)
+    file(REAL_PATH \${curdir} absolute_path BASE_DIRECTORY ${PROJECT_BINARY_DIR})
+    file(GLOB children RELATIVE \"\${absolute_path}/\" \"\${absolute_path}/*\")
     set(dirlist \"\")
     foreach(child \${children})
-      if(NOT IS_DIRECTORY \${curdir}/\${child} AND \${child} MATCHES \".*${CMAKE_EXECUTABLE_SUFFIX}\" )
-      list(APPEND dirlist \${curdir}/\${child})
+      if(NOT IS_DIRECTORY \${absolute_path}/\${child} AND \${child} MATCHES \".*${CMAKE_EXECUTABLE_SUFFIX}\" )
+      list(APPEND dirlist \${absolute_path}/\${child})
       set(\${result} \${dirlist} PARENT_SCOPE)
       return()
       endif()
@@ -170,13 +181,13 @@ if(NOT CMAKE_CROSSCOMPILING AND NOT APPLE)
     set( Biogears_ARCHIVE_DESTINATION \"\${INSTALL_PATH}/lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
 
     EXELIST(TARGET \"\${INSTALL_PATH}/bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>/howtos/\" )
-
-    fixup_bundle(\"\${TARGET}\"
+    if(NOT APPLE)
+      fixup_bundle(\"\${TARGET}\"
         \"\"
         \"\${THIRD_PARTY_LIB};\${THIRD_PARTY_BIN}\;\${INSTALL_PATH}/bin;\${INSTALL_PATH}/lib;\${Biogears_RUNTIME_DESTINATION};\${Biogears_LIBRARY_DESTINATION};\${Biogears_ARCHIVE_DESTINATION}\"
    
-    )
+      )
+    endif()
   ")
 endif()
 endif()
-message(STATUS "")

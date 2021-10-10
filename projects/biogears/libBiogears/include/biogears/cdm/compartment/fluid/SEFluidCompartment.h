@@ -17,17 +17,22 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/cdm/compartment/SECompartmentNodes.h>
-#include <biogears/schema/cdm/Compartment.hxx>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/schema/cdm/Compartment.hxx>
 
 namespace biogears {
+
 class SESubstance;
 class SEScalarPressure;
 class PressureUnit;
 class SEScalarVolumePerTime;
 class VolumePerTimeUnit;
+
+namespace io {
+  class Compartment;
+}
 
 template <typename EdgeType, typename VertexType, typename CompartmentType>
 class SEFluidCompartmentLink;
@@ -37,6 +42,7 @@ class SEFluidCompartmentLink;
 
 template <FLUID_COMPARTMENT_TEMPLATE>
 class SEFluidCompartment : public SECompartment, public VertexType {
+  friend io::Compartment;
 
   template <typename CompartmentType, typename CompartmentLinkType>
   friend class SECompartmentGraph;
@@ -102,20 +108,20 @@ public:
 protected:
   virtual void RemoveSubstanceQuantity(const SESubstance& substance);
 
-  virtual bool HasQuantity() const  override{ return HasVolume(); }
+  virtual bool HasQuantity() const override { return HasVolume(); }
   virtual SEScalarVolume& GetQuantity() override { return GetVolume(); }
 
   virtual double CalculateInFlow_mL_Per_s() const;
   virtual double CalculateOutFlow_mL_Per_s() const;
 
-  virtual std::vector<TransportSubstanceType*>& GetTransportSubstances()  override { return m_TransportSubstances; }
+  virtual std::vector<TransportSubstanceType*>& GetTransportSubstances() override { return m_TransportSubstances; }
 
   SEScalarVolumePerTime* m_InFlow;
   SEScalarVolumePerTime* m_OutFlow;
   SEScalarPressure* m_Pressure;
   SEScalarVolume* m_Volume;
 
-  std::vector<SubstanceQuantityType*>  m_SubstanceQuantities;
+  std::vector<SubstanceQuantityType*> m_SubstanceQuantities;
   std::vector<TransportSubstanceType*> m_TransportSubstances;
 
   std::vector<LinkType*> m_Links;

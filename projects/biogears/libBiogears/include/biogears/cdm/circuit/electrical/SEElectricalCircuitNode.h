@@ -18,8 +18,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SECircuitManager;
+namespace io {
+  class Circuit;
+}
 class BIOGEARS_API SEElectricalCircuitNode : public SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge> {
   friend class SECircuitManager;
+  friend io::Circuit;
 
 protected:
   SEElectricalCircuitNode(const char* name, Logger* logger);

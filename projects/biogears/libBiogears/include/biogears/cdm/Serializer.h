@@ -31,23 +31,27 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(ObjectData)
+
 namespace biogears {
-class BIOGEARS_API Serializer {
+class  Serializer {
 public:
-  static void Destroy() { SAFE_DELETE(m_me); }
-  static std::unique_ptr<CDM::ObjectData> ReadFile(const char* xmlFile, Logger* logger);
-  static std::unique_ptr<CDM::ObjectData> ReadFile(const std::string& xmlFile, Logger* logger);
+  BIOGEARS_API static void Destroy() { SAFE_DELETE(m_me); }
+  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadFile(const char* xmlFile, Logger* logger);
+  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadFile(const std::string& xmlFile, Logger* logger);
+  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadBuffer(XMLByte const * buffer, size_t size, Logger* logger);
 private:
   Serializer();
   virtual ~Serializer();
 
   bool Initialize(Logger* logger);
-  xercesc::DOMLSParser* CreateParser(Logger* logger) const;
+  xercesc::DOMLSParser* CreateParser(Logger* logger, bool embeddedResolver = false) const;
 
   static Serializer* m_me;
 
   static bool m_Initialized;
-  static std::unique_ptr<xercesc::XMLGrammarPool> m_GrammerPool;
+  std::unique_ptr<xercesc::XMLGrammarPool> m_GrammerPool;
+  std::vector<XMLByte> m_buffer;
+  size_t m_buffer_size;
 };
 
 class ErrorHandler : public xercesc::DOMErrorHandler {

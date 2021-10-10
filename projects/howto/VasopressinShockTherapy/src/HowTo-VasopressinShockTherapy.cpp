@@ -9,8 +9,6 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include "HowTo-VasopressinShockTherapy.h"
-
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
@@ -23,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 using namespace biogears;
-void HowToVasopressinShockTherapy()
+int HowToVasopressinShockTherapy()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HemorrhageScenario_Control.log");
@@ -32,7 +30,7 @@ void HowToVasopressinShockTherapy()
   if (!bg->InitializeEngine("StandardMale.xml")) {
     //See Patients folder for other possible patient configurations
     bg->GetLogger()->Error("Could not load initialize engine, check the error");
-    return;
+    return 1;
   } else {
     bg->GetLogger()->Info("Engine stabilization complete");
   }
@@ -115,4 +113,10 @@ void HowToVasopressinShockTherapy()
   bg->AdvanceModelTime(1800, TimeUnit::s);
 
   bg->GetLogger()->Info("Finished");
+  return 0;
 }
+
+int main ( int argc, char* argv[] ) {
+  return HowToVasopressinShockTherapy();
+}
+

@@ -33,13 +33,13 @@ void BioGearsEngineTest::RenalCircuitAndTransportTest(const std::string& sTestDi
   TimingProfile tmr;
   tmr.Start("Test");
   //Output files
-  DataTrack circiutTrk;
+  DataTrack circiutTrk { m_Logger };
   std::ofstream circuitFile;
-  DataTrack graphTrk;
+  DataTrack graphTrk { m_Logger };
   std::ofstream graphFile;
 
   BioGears bg(sTestDirectory + "/RenalCircuitAndTransportTest.log");
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::On);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
@@ -162,8 +162,8 @@ void BioGearsEngineTest::RenalFeedbackTest(RenalFeedback feedback, const std::st
 {
   TimingProfile tmr;
   tmr.Start("Test");
-  BioGears bg(sTestDirectory + "/RenalFeedbackTest.log");
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  BioGears bg(sTestDirectory + "/" + "RenalFeedbackTest.log");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::On);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
@@ -238,7 +238,7 @@ void BioGearsEngineTest::RenalFeedbackTest(RenalFeedback feedback, const std::st
   SELiquidTransporter txpt(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, bg.GetLogger());
   SEFluidCircuitCalculator calc(FlowComplianceUnit::mL_Per_mmHg, VolumePerTimeUnit::mL_Per_s, FlowInertanceUnit::mmHg_s2_Per_mL, PressureUnit::mmHg, VolumeUnit::mL, FlowResistanceUnit::mmHg_s_Per_mL, bg.GetLogger());
 
-  DataTrack trk;
+  DataTrack trk { m_Logger };
   double time_s = 0.0;
   double deltaT_s = 1.0 / 90.0;
   double aortaPressure_mmHg = 100.0;
@@ -464,8 +464,8 @@ void BioGearsEngineTest::RenalSystemTest(RenalSystems systemtest, const std::str
 
   TimingProfile tmr;
   tmr.Start("Test");
-  BioGears bg(sTestDirectory + "/RenalSystemTest.log");
-  bg.GetPatient().Load("./patients/StandardMale.xml");
+  BioGears bg(sTestDirectory + "/" + "RenalSystemTest.log");
+  bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
   bg.m_Config->EnableRenal(CDM::enumOnOff::On);
   bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
@@ -551,7 +551,7 @@ void BioGearsEngineTest::RenalSystemTest(RenalSystems systemtest, const std::str
   double deltaT_s = 1.0 / 90.0;
   double time_s = 0.0;
 
-  DataTrack trk;
+  DataTrack trk { m_Logger };
 
   double initialPotassiumConcentration_g_Per_dL = 0.0;
   double aortaPressure_mmHg = 100.0;

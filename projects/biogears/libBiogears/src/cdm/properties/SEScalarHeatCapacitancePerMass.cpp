@@ -17,13 +17,27 @@ const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kJ_Per_K_kg("kJ/K k
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kcal_Per_K_kg("kcal/K kg");
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kcal_Per_C_kg("kcal/degC kg");
 
+template class SEScalarQuantity<HeatCapacitancePerMassUnit>;
+
 HeatCapacitancePerMassUnit::HeatCapacitancePerMassUnit(const char* u)
-  : HeatCapacitancePerMassUnit(std::string{ u })
+  : HeatCapacitancePerMassUnit(std::string { u })
 {
 }
 //-------------------------------------------------------------------------------
 HeatCapacitancePerMassUnit::HeatCapacitancePerMassUnit(const std::string& u)
   : CCompoundUnit(u)
+{
+}
+//-------------------------------------------------------------------------------
+HeatCapacitancePerMassUnit::~HeatCapacitancePerMassUnit()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarHeatCapacitancePerMass::SEScalarHeatCapacitancePerMass()
+{
+}
+//-------------------------------------------------------------------------------
+SEScalarHeatCapacitancePerMass::~SEScalarHeatCapacitancePerMass()
 {
 }
 //-------------------------------------------------------------------------------
@@ -74,4 +88,24 @@ const HeatCapacitancePerMassUnit& HeatCapacitancePerMassUnit::GetCompoundUnit(co
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
+bool HeatCapacitancePerMassUnit::operator==(const HeatCapacitancePerMassUnit& obj) const
+{
+  return CCompoundUnit::operator==(obj);
+}
+//-------------------------------------------------------------------------------
+bool HeatCapacitancePerMassUnit::operator!=(const HeatCapacitancePerMassUnit& obj) const
+{
+  return !(*this == obj);
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatCapacitancePerMass::operator==(const SEScalarHeatCapacitancePerMass& obj) const
+{
+  return m_unit == obj.m_unit
+    && m_value == obj.m_value;
+}
+//-------------------------------------------------------------------------------
+bool SEScalarHeatCapacitancePerMass::operator!=(const SEScalarHeatCapacitancePerMass& obj) const
+{
+  return !(*this == obj);
+}
 }

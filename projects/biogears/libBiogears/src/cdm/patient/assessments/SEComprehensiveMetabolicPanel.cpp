@@ -125,7 +125,7 @@ void SEComprehensiveMetabolicPanel::Unload(CDM::ComprehensiveMetabolicPanelData&
     data.TotalProtein(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TotalProtein->Unload()));
 }
 
-bool SEComprehensiveMetabolicPanel::HasAlbumin()
+bool SEComprehensiveMetabolicPanel::HasAlbumin() const
 {
   return m_Albumin == nullptr ? false : m_Albumin->IsValid();
 }
@@ -136,7 +136,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetAlbumin()
   return *m_Albumin;
 }
 
-bool SEComprehensiveMetabolicPanel::HasALP()
+bool SEComprehensiveMetabolicPanel::HasALP() const
 {
   return m_ALP == nullptr ? false : m_ALP->IsValid();
 }
@@ -147,7 +147,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetALP()
   return *m_ALP;
 }
 
-bool SEComprehensiveMetabolicPanel::HasALT()
+bool SEComprehensiveMetabolicPanel::HasALT() const
 {
   return m_ALT == nullptr ? false : m_ALT->IsValid();
 }
@@ -158,7 +158,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetALT()
   return *m_ALT;
 }
 
-bool SEComprehensiveMetabolicPanel::HasAST()
+bool SEComprehensiveMetabolicPanel::HasAST() const
 {
   return m_AST == nullptr ? false : m_AST->IsValid();
 }
@@ -169,7 +169,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetAST()
   return *m_AST;
 }
 
-bool SEComprehensiveMetabolicPanel::HasBUN()
+bool SEComprehensiveMetabolicPanel::HasBUN() const
 {
   return m_BUN == nullptr ? false : m_BUN->IsValid();
 }
@@ -180,7 +180,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetBUN()
   return *m_BUN;
 }
 
-bool SEComprehensiveMetabolicPanel::HasCalcium()
+bool SEComprehensiveMetabolicPanel::HasCalcium() const
 {
   return m_Calcium == nullptr ? false : m_Calcium->IsValid();
 }
@@ -191,7 +191,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetCalcium()
   return *m_Calcium;
 }
 
-bool SEComprehensiveMetabolicPanel::HasChloride()
+bool SEComprehensiveMetabolicPanel::HasChloride() const
 {
   return m_Chloride == nullptr ? false : m_Chloride->IsValid();
 }
@@ -202,7 +202,7 @@ SEScalarAmountPerVolume& SEComprehensiveMetabolicPanel::GetChloride()
   return *m_Chloride;
 }
 
-bool SEComprehensiveMetabolicPanel::HasCO2()
+bool SEComprehensiveMetabolicPanel::HasCO2() const
 {
   return m_CO2 == nullptr ? false : m_CO2->IsValid();
 }
@@ -213,7 +213,7 @@ SEScalarAmountPerVolume& SEComprehensiveMetabolicPanel::GetCO2()
   return *m_CO2;
 }
 
-bool SEComprehensiveMetabolicPanel::HasCreatinine()
+bool SEComprehensiveMetabolicPanel::HasCreatinine() const
 {
   return m_Creatinine == nullptr ? false : m_Creatinine->IsValid();
 }
@@ -224,7 +224,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetCreatinine()
   return *m_Creatinine;
 }
 
-bool SEComprehensiveMetabolicPanel::HasGlucose()
+bool SEComprehensiveMetabolicPanel::HasGlucose() const
 {
   return m_Glucose == nullptr ? false : m_Glucose->IsValid();
 }
@@ -235,7 +235,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetGlucose()
   return *m_Glucose;
 }
 
-bool SEComprehensiveMetabolicPanel::HasPotassium()
+bool SEComprehensiveMetabolicPanel::HasPotassium() const
 {
   return m_Potassium == nullptr ? false : m_Potassium->IsValid();
 }
@@ -246,7 +246,7 @@ SEScalarAmountPerVolume& SEComprehensiveMetabolicPanel::GetPotassium()
   return *m_Potassium;
 }
 
-bool SEComprehensiveMetabolicPanel::HasSodium()
+bool SEComprehensiveMetabolicPanel::HasSodium() const
 {
   return m_Sodium == nullptr ? false : m_Sodium->IsValid();
 }
@@ -257,7 +257,7 @@ SEScalarAmountPerVolume& SEComprehensiveMetabolicPanel::GetSodium()
   return *m_Sodium;
 }
 
-bool SEComprehensiveMetabolicPanel::HasTotalBilirubin()
+bool SEComprehensiveMetabolicPanel::HasTotalBilirubin() const
 {
   return m_TotalBilirubin == nullptr ? false : m_TotalBilirubin->IsValid();
 }
@@ -268,7 +268,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetTotalBilirubin()
   return *m_TotalBilirubin;
 }
 
-bool SEComprehensiveMetabolicPanel::HasTotalProtein()
+bool SEComprehensiveMetabolicPanel::HasTotalProtein() const
 {
   return m_TotalProtein == nullptr ? false : m_TotalProtein->IsValid();
 }

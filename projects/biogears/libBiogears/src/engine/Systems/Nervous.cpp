@@ -34,7 +34,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-#include "units.h"
+
 #include "biogears/math/angles.h"
 namespace BGE = mil::tatrc::physiology::biogears;
 
@@ -67,6 +67,8 @@ void Nervous::Clear()
   m_Patient = nullptr;
   m_Succinylcholine = nullptr;
   m_Sarin = nullptr;
+  m_Atropine = nullptr;
+  m_Midazolam = nullptr;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -272,6 +274,8 @@ void Nervous::SetUp()
   m_dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
   m_Succinylcholine = m_data.GetSubstances().GetSubstance("Succinylcholine");
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
+  m_Atropine = m_data.GetSubstances().GetSubstance("Atropine");
+  m_Midazolam = m_data.GetSubstances().GetSubstance("Midazolam");
   m_Patient = &m_data.GetPatient();
 
   m_DrugRespirationEffects = 0.0;
@@ -413,6 +417,10 @@ void Nervous::CentralSignalProcess()
   const double tauIschemia = 30.0;
   const double tauCO2 = 20.0;
 
+  // Exercise Signal Modifiers
+  double fExerciseSympathetic = 0.0;
+  double fExerciseVagal = 0.0;
+
   //As hypoxia or hypercapnia deepens, the ischemic CNS response leads to increased sympathetic outflow.
   //This is modeled as a reduction on the threshold required to cause sympathetic firing.
   //See Magosso2001Mathematical for more detail
@@ -453,8 +461,21 @@ void Nervous::CentralSignalProcess()
   const double wSH_ACP = -1.38;
   const double afferentCardiopulmonaryBaseline_Hz = 10.0;
 
+  // Exercise -- reproduce the activation of the autonomic nervous system by motor central command @Magasso2001Theoretical
+  if (m_data.GetActions().GetPatientActions().HasExercise()) {
+    SEExercise* exercise = m_data.GetActions().GetPatientActions().GetExercise();
+    double exerciseIntensity = exercise->GetGenericExercise().Intensity.GetValue();
+
+    fExerciseSympathetic = (15 * exerciseIntensity) - 0.333;
+    fExerciseVagal = (3.5 * exerciseIntensity) + 0.0167;
+
+    BLIM(fExerciseSympathetic, 0., 15.);
+    BLIM(fExerciseVagal, 0., 3.5);
+  }
+
   const double exponentSH = kS * (wSH_ABC * m_AfferentBaroreceptorCarotid_Hz + wSH_ABA * m_AfferentBaroreceptorAortic_Hz + wSH_AC * m_AfferentChemoreceptor_Hz + wSH_ACP * (m_AfferentCardiopulmonary_Hz - afferentCardiopulmonaryBaseline_Hz) - firingThresholdSH);
-  m_SympatheticSinoatrialSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSH);
+  m_SympatheticSinoatrialSignal_Hz = fSInf + (fS0 - fSInf) * std::exp(exponentSH) + fExerciseSympathetic;
+
   // m_SympatheticSinoatrialSignal_Hz = std::min(60.0, m_SympatheticSinoatrialSignal_Hz);
   //Weights of sympathetic signal to peripheral vascular beds--AB, AC, AT as before, AP = Afferent pulmonary stretch receptors, AA = Afferent atrial stretch receptors
   const double wSP_ABA = -0.452;
@@ -498,9 +519,10 @@ void Nervous::CentralSignalProcess()
 
   const double exponentCarotid = (m_AfferentBaroreceptorCarotid_Hz - baroreceptorBaseline_Hz) / kV;
   const double exponentAortic = (m_AfferentBaroreceptorAortic_Hz - baroreceptorBaseline_Hz) / kV;
-  m_VagalSignal_Hz = 0.5 * (fV0 + fVInf * std::exp(exponentCarotid)) / (1.0 + std::exp(exponentCarotid)) + 0.5 * (fV0 + fVInf * std::exp(exponentAortic)) / (1.0 + std::exp(exponentAortic));
+  m_VagalSignal_Hz = 0.5 * (fV0 + fVInf * std::exp(exponentCarotid)) / (1.0 + std::exp(exponentCarotid)) + 0.5 * (fV0 + fVInf * std::exp(exponentAortic)) / (1.0 + std::exp(exponentAortic)) - fExerciseVagal;
   m_VagalSignal_Hz += (wV_AC * m_AfferentChemoreceptor_Hz + wV_AP * m_AfferentPulmonaryStretchReceptor_Hz - hypoxiaThresholdV);
   m_VagalSignal_Hz = std::max(m_VagalSignal_Hz, 0.0);
+
 }
 
 void Nervous::EfferentResponse()
@@ -731,6 +753,9 @@ void Nervous::LocalAutoregulation()
   const double kCO2 = 20.0;
   const double bCO2 = 10.0;
 
+  double largePialResistanceMultiplier;
+  double smallPialResistanceMultiplier;
+
   //Determine cerebral blood flow (filtered for noise)
   double filterConstant = m_FeedbackActive ? 0.5 : 0.02; //Lower during initial stabilization so that our baseline we derive from this output is not noisy
   const double cerebralBloodFlow_mL_Per_s = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralVeins2ToNeckVeins)->GetFlow(VolumePerTimeUnit::mL_Per_s);
@@ -791,8 +816,27 @@ void Nervous::LocalAutoregulation()
     resistanceWidthSmall = maxResistanceMultiplierSmall - 1.0;
     resistanceSlopeSmall = (maxResistanceMultiplierSmall - 1.0) / 4.0;
   }
-  const double largePialResistanceMultiplier = ((1.0 + resistanceWidthLarge) + (1.0 - resistanceWidthLarge) * std::exp(-combinedLargePialRegulator / resistanceSlopeLarge)) / (1.0 + std::exp(-combinedLargePialRegulator / resistanceSlopeLarge));
-  const double smallPialResistanceMultiplier = ((1.0 + resistanceWidthSmall) + (1.0 - resistanceWidthSmall) * std::exp(-combinedSmallPialRegulator / resistanceSlopeSmall)) / (1.0 + std::exp(-combinedSmallPialRegulator / resistanceSlopeSmall));
+
+  double large_ex = std::exp(-combinedLargePialRegulator / resistanceSlopeLarge);
+  double small_ex = std::exp(-combinedSmallPialRegulator / resistanceSlopeSmall);
+
+
+  //check the exponentials, if they are too big set them to a large number
+  if(!std::isinf(large_ex)) {
+    largePialResistanceMultiplier = ((1.0 + resistanceWidthLarge) + (1.0 - resistanceWidthLarge) * large_ex) / (1.0 + large_ex);
+  }
+  else {
+    large_ex = 1000000.0;
+    largePialResistanceMultiplier = ((1.0 + resistanceWidthLarge) + (1.0 - resistanceWidthLarge) * large_ex) / (1.0 + large_ex);
+  }
+
+  if(!std::isinf(small_ex)) {
+    smallPialResistanceMultiplier = ((1.0 + resistanceWidthSmall) + (1.0 - resistanceWidthSmall) * small_ex) / (1.0 + small_ex);
+  }
+  else {
+    small_ex = 1000000.0;
+    smallPialResistanceMultiplier = ((1.0 + resistanceWidthSmall) + (1.0 - resistanceWidthSmall) * small_ex) / (1.0 + small_ex);
+  }
 
   if (!m_FeedbackActive) {
     m_CerebralBloodFlowBaseline_mL_Per_s = m_CerebralBloodFlowInput_mL_Per_s;
@@ -1053,13 +1097,12 @@ void Nervous::CheckNervousStatus()
 {
   //-----Check Brain Status-----------------
   double icp_mmHg = m_data.GetCardiovascular().GetIntracranialPressure().GetValue(PressureUnit::mmHg);
-
   //Intracranial Hypertension
   if (icp_mmHg > 25.0) // \cite steiner2006monitoring
   {
     /// \event Patient: Intracranial Hypertension. The intracranial pressure has risen above 25 mmHg.
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, true, m_data.GetSimulationTime());
-  } else if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::IntracranialHypertension) && icp_mmHg < 24.0) {
+  } else if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::IntracranialHypertension) && icp_mmHg < 23.0) {
     /// \event Patient: End Intracranial Hypertension. The intracranial pressure has fallen below 24 mmHg.
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, false, m_data.GetSimulationTime());
   }
@@ -1084,7 +1127,7 @@ void Nervous::CheckNervousStatus()
   GetRichmondAgitationSedationScale().SetValue(rassScore);
 
   //------Fasciculations:-------------------------------------------
-
+  /// \todo: need to have fasciculations due to calcium deficiency, when we validate calcium a little more
   //----Fasciculations due to calcium deficiency (inactive)----------------------------------
   /*if (m_Muscleintracellular.GetSubstanceQuantity(*m_Calcium)->GetConcentration(MassPerVolumeUnit::g_Per_L) < 1.0)
     {
@@ -1096,24 +1139,98 @@ void Nervous::CheckNervousStatus()
     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
     }*/
 
-  //-----Fasciculations due to Sarin--------------------------------------------------
+  //-----patient events due to Sarin--------------------------------------------------
   //Occurs due to inhibition of acetylcholinesterase, the enzyme which breaks down the neurotransmitter acetylcholine
-  double RbcAche_mol_Per_L
-    = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
+  double RbcAche_mol_Per_L = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
+  double brainAtropine_mg_Per_L = 0.0;
+  double midazolam_mg_Per_L = 0.0;
   double RbcFractionInhibited = 1.0 - RbcAche_mol_Per_L / (8e-9); //8 nM is the baseline activity of Rbc-Ache
-  if (m_data.GetSubstances().IsActive(*m_Sarin)) {
-    ///\cite nambda1971cholinesterase
-    //The above study found that individuals exposed to the organophosphate parathion did not exhibit fasciculation until at least
-    //80% of Rbc-Ache was inhibited.  This was relaxed to 70% because BioGears is calibrated to throw an irreversible state at
-    //100% inhibition when, in actuality, a patient with 100% rbc-ache inhibition will likely survive (rbc-ache thought to act as a buffer
-    //for neuromuscular ache)
-    if (RbcFractionInhibited > 0.7)
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
-    else if ((m_data.GetSubstances().IsActive(*m_Sarin)) && (RbcFractionInhibited < 0.68)) {
-      //Oscillations around 70% rbc-ache inhibition are highly unlikely but give some leeway for reversal just in case
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
-    }
+  //only update values if the substances are active
+  if (m_data.GetSubstances().IsActive(*m_Atropine)) {
+    brainAtropine_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_Atropine)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
   }
+  if (m_data.GetSubstances().IsActive(*m_Midazolam)) {
+    midazolam_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_Midazolam)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
+  }
+  if (m_data.GetSubstances().IsActive(*m_Sarin)) {
+      ///\cite nambda1971cholinesterase
+      //The above study found that individuals exposed to the organophosphate parathion did not exhibit fasciculation until at least
+      //80% of Rbc-Ache was inhibited.  This was relaxed to 70% because BioGears is calibrated to throw an irreversible state at
+      //100% inhibition when, in actuality, a patient with 100% rbc-ache inhibition will likely survive (rbc-ache thought to act as a buffer
+      //for neuromuscular ache)
+      if (0.4 < RbcFractionInhibited && RbcFractionInhibited < 0.75) {
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
+      }
+      if (RbcFractionInhibited < 0.38) {
+        //Oscillations around 70% rbc-ache inhibition are highly unlikely but give some leeway for reversal just in case
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildWeakness, false, m_data.GetSimulationTime());
+      }
+      if (RbcFractionInhibited > 0.8 && !m_data.GetSubstances().IsActive(*m_Atropine))  {
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
+      }
+      if (0.4 < RbcFractionInhibited && RbcFractionInhibited < 0.65) {
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildWeakness, true, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateWeakness, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::FlaccidParalysis, false, m_data.GetSimulationTime());
+      }
+      if (0.7 < RbcFractionInhibited && RbcFractionInhibited < 0.85) {
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateWeakness, true, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildWeakness, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::FlaccidParalysis, false, m_data.GetSimulationTime());
+      }
+      if (midazolam_mg_Per_L > 0.4) {   //handle seizures in a special way to account for diazapam reversal agent
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, false, m_data.GetSimulationTime());
+      }
+      if (0.8 < RbcFractionInhibited && RbcFractionInhibited < 0.88 && midazolam_mg_Per_L < 0.4) {
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, true, m_data.GetSimulationTime());
+      }
+      if (RbcFractionInhibited > 0.9) {
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::FlaccidParalysis, true, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, false, m_data.GetSimulationTime());
+      }
+      //Muscarinic/atropine patient events
+      if (brainAtropine_mg_Per_L == 0) {
+        if (0.2 < RbcFractionInhibited && RbcFractionInhibited < 0.45) {
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildSecretions, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiaphoresis, true, m_data.GetSimulationTime());
+        }
+        if (0.5 < RbcFractionInhibited && RbcFractionInhibited < 0.75) {
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildSecretions, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiaphoresis, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateSecretions, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateDiaphoresis, true, m_data.GetSimulationTime());
+        }
+        if (RbcFractionInhibited > 0.8) {
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::FunctionalIncontinence, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateSecretions, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateDiaphoresis, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereSecretions, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiaphoresis, true, m_data.GetSimulationTime());
+        }
+      }
+    }
+   //Muscarinic reversals
+      //use the brain intracellular compartment for atropine reference
+      if (0.2 < brainAtropine_mg_Per_L && brainAtropine_mg_Per_L < 0.3) {
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildSecretions, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiaphoresis, false, m_data.GetSimulationTime());
+      }
+      if (0.4 < brainAtropine_mg_Per_L && brainAtropine_mg_Per_L < 0.5) {
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateSecretions, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateDiaphoresis, false, m_data.GetSimulationTime());
+      }
+      if (0.6 < brainAtropine_mg_Per_L) {
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereSecretions, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiaphoresis, false, m_data.GetSimulationTime());
+      }
+
   //----Fasciculations due to Succinylcholine administration.---------------------------------------------------
   //No evidence exists for a correlation between the plasma concentration of succinylcholine
   //and the degree or presence of fasciculation.  Rather, it has been observed that transient fasciculation tends to occur in most patients after initial dosing
@@ -1131,6 +1248,8 @@ void Nervous::CheckNervousStatus()
       m_blockActive = true;
     }
   }
+  //this is just tracking fraction inhibited, could be updated with more input
+  GetMentalStatus().SetValue(RbcFractionInhibited);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1145,12 +1264,10 @@ void Nervous::CheckNervousStatus()
 void Nervous::SetPupilEffects()
 {
   // Get modifiers from Drugs
-  double leftPupilSizeResponseLevel = 0.0;
-   //m_data.GetDrugs().GetPupillaryResponse().GetSizeModifier().GetValue();
-  double leftPupilReactivityResponseLevel = 0.0;
-  //m_data.GetDrugs().GetPupillaryResponse().GetReactivityModifier().GetValue();
-  double rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
-  double rightPupilReactivityResponseLevel = leftPupilReactivityResponseLevel;
+  double leftPupilSizeResponseLevel = GetLeftEyePupillaryResponse().GetSizeModifier().GetValue();
+  double leftPupilReactivityResponseLevel = GetLeftEyePupillaryResponse().GetReactivityModifier().GetValue();
+  double rightPupilSizeResponseLevel = GetRightEyePupillaryResponse().GetSizeModifier().GetValue();
+  double rightPupilReactivityResponseLevel = GetRightEyePupillaryResponse().GetSizeModifier().GetValue();
 
   // Calculate the TBI response
   if (m_data.GetActions().GetPatientActions().HasBrainInjury()) {
@@ -1228,10 +1345,10 @@ void Nervous::CalculateSleepEffects()
   double simTime_hr = m_data.GetSimulationTime().GetValue(TimeUnit::hr);
 
   //consts involved in the ODE 
-  const double pw = 0.3;//0.13;
+  const double pw = 0.2;
   const double pb1 = 1.9;
   double rwt = 0.05;
-  double rbt = 0.018;//0.018; //0.28
+  double rbt = 0.018;
   double rwSleepScale = 0.4;
   double rbSleepScale = 1.1;
 

@@ -13,16 +13,35 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/compartment/SECompartmentTransportGraph.h>
-#include <biogears/schema/cdm/Compartment.hxx>
-#include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
+#include <biogears/cdm/substance/SESubstanceTransport.h>
+#include <biogears/schema/cdm/Compartment.hxx>
+
+#include <vector>
+#include <map>
+#include <string>
+
 
 CDM_BIND_DECL(LiquidCompartmentGraphData)
 
 namespace biogears {
 class SECompartmentManager;
+namespace io {
+  class Compartment;
+}
+} //namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SELiquidTransportVertex*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SELiquidTransportEdge*>;
+BG_EXT template class BIOGEARS_API map<const biogears::SELiquidTransportVertex*, size_t>;
+BG_EXT template class BIOGEARS_API map<const biogears::SELiquidTransportVertex*, vector<biogears::SELiquidTransportEdge*>*>;
+}
+
+namespace biogears {
 class BIOGEARS_API SELiquidCompartmentGraph : public SECompartmentTransportGraph<SELiquidTransportGraph, SELiquidTransportVertex, SELiquidTransportEdge, SELiquidCompartment, SELiquidCompartmentLink> {
   friend class SECompartmentManager;
+  friend io::Compartment;
 
 protected:
   SELiquidCompartmentGraph(const char* name, Logger* logger);
@@ -42,4 +61,9 @@ protected:
 protected:
   void BalanceByIntensive() override;
 };
+} //namespace biogears
+
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartmentGraph*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartmentGraph*>;
 }

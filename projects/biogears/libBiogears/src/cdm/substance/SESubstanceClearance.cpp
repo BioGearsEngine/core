@@ -41,7 +41,6 @@ SESubstanceClearance::SESubstanceClearance(Logger* logger)
   m_RenalReabsorptionRate = nullptr;
   m_RenalExcretionRate = nullptr;
   m_SystemicClearance = nullptr;
-
 }
 //-----------------------------------------------------------------------------
 SESubstanceClearance::~SESubstanceClearance()
@@ -115,7 +114,7 @@ bool SESubstanceClearance::IsValid() const
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstanceClearance::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstanceClearance::GetScalar(const std::string& name)
@@ -607,5 +606,35 @@ double SESubstanceClearance::GetSystemicClearance(const VolumePerTimeMassUnit& u
     return SEScalar::dNaN();
   return m_SystemicClearance->GetValue(unit);
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SESubstanceClearance::operator==( const SESubstanceClearance& rhs) const
+{
+  bool equivilant = m_hasSystemic == rhs.m_hasSystemic;
+  equivilant &= m_hasCellular == rhs.m_hasCellular;
+  equivilant &= (m_CellBirthRate && rhs.m_CellBirthRate) ? m_CellBirthRate->operator==(*rhs.m_CellBirthRate) : m_CellBirthRate == rhs.m_CellBirthRate;
+  equivilant &= (m_CellDeathRate && rhs.m_CellDeathRate) ? m_CellDeathRate->operator==(*rhs.m_CellDeathRate) : m_CellDeathRate == rhs.m_CellDeathRate;
+
+  equivilant &= m_ChargeInBlood == rhs.m_ChargeInBlood;
+  
+  equivilant &= (m_FractionExcretedInFeces && rhs.m_FractionExcretedInFeces) ? m_FractionExcretedInFeces->operator==(*rhs.m_FractionExcretedInFeces) : m_FractionExcretedInFeces == rhs.m_FractionExcretedInFeces;
+  equivilant &= (m_FractionExcretedInUrine && rhs.m_FractionExcretedInUrine) ? m_FractionExcretedInUrine->operator==(*rhs.m_FractionExcretedInUrine) : m_FractionExcretedInUrine == rhs.m_FractionExcretedInUrine;
+  equivilant &= (m_FractionMetabolizedInGut && rhs.m_FractionMetabolizedInGut) ? m_FractionMetabolizedInGut->operator==(*rhs.m_FractionMetabolizedInGut) : m_FractionMetabolizedInGut == rhs.m_FractionMetabolizedInGut;
+  equivilant &= (m_FractionUnboundInPlasma && rhs.m_FractionUnboundInPlasma) ? m_FractionUnboundInPlasma->operator==(*rhs.m_FractionUnboundInPlasma) : m_FractionUnboundInPlasma == rhs.m_FractionUnboundInPlasma;
+  equivilant &= (m_IntrinsicClearance && rhs.m_IntrinsicClearance) ? m_IntrinsicClearance->operator==(*rhs.m_IntrinsicClearance) : m_IntrinsicClearance == rhs.m_IntrinsicClearance;
+  equivilant &= m_RenalDynamic == rhs.m_RenalDynamic;
+  equivilant &= (m_RenalClearance && rhs.m_RenalClearance) ? m_RenalClearance->operator==(*rhs.m_RenalClearance) : m_RenalClearance == rhs.m_RenalClearance;
+  equivilant &= (m_RenalReabsorptionRatio && rhs.m_RenalReabsorptionRatio) ? m_RenalReabsorptionRatio->operator==(*rhs.m_RenalReabsorptionRatio) : m_RenalReabsorptionRatio == rhs.m_RenalReabsorptionRatio;
+  equivilant &= (m_RenalTransportMaximum && rhs.m_RenalTransportMaximum) ? m_RenalTransportMaximum->operator==(*rhs.m_RenalTransportMaximum) : m_RenalTransportMaximum == rhs.m_RenalTransportMaximum;
+  equivilant &= (m_RenalFiltrationRate && rhs.m_RenalFiltrationRate) ? m_RenalFiltrationRate->operator==(*rhs.m_RenalFiltrationRate) : m_RenalFiltrationRate == rhs.m_RenalFiltrationRate;
+  equivilant &= (m_RenalReabsorptionRate && rhs.m_RenalReabsorptionRate) ? m_RenalReabsorptionRate->operator==(*rhs.m_RenalReabsorptionRate) : m_RenalReabsorptionRate == rhs.m_RenalReabsorptionRate;
+  equivilant &= (m_RenalExcretionRate && rhs.m_RenalExcretionRate) ? m_RenalExcretionRate->operator==(*rhs.m_RenalExcretionRate) : m_RenalExcretionRate == rhs.m_RenalExcretionRate;
+  equivilant &= (m_GlomerularFilterability && rhs.m_GlomerularFilterability) ? m_GlomerularFilterability->operator==(*rhs.m_GlomerularFilterability) : m_GlomerularFilterability == rhs.m_GlomerularFilterability;
+  equivilant &= (m_SystemicClearance && rhs.m_SystemicClearance) ? m_SystemicClearance->operator==(*rhs.m_SystemicClearance) : m_SystemicClearance == rhs.m_SystemicClearance;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceClearance::operator!=( const SESubstanceClearance& rhs) const
+{
+  return !(*this == rhs);
+}
 }

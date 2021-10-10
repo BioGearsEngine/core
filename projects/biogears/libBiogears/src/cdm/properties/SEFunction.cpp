@@ -107,4 +107,13 @@ std::vector<double>& SEFunction::GetIndependent()
 {
   return m_Independent;
 }
+
+  bool SEFunction::operator==(const SEFunction& obj) const {
+    return m_Dependent == obj.m_Dependent
+       &&  m_Independent == obj.m_Independent;
+  }
+  
+  bool SEFunction::operator!=(const SEFunction& obj) const {
+    return !(*this == obj);
+  }
 }

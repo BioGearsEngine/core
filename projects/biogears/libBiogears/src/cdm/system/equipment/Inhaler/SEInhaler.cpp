@@ -11,14 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 
-#include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 #include <biogears/container/Tree.tci.h>
+#include <biogears/io/io-manager.h>
 
 namespace biogears {
 SEInhaler::SEInhaler(SESubstanceManager& substances)
@@ -93,7 +94,7 @@ void SEInhaler::Unload(CDM::InhalerData& data) const
 //-------------------------------------------------------------------------------
 const SEScalar* SEInhaler::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEInhaler::GetScalar(const std::string& name)
@@ -144,7 +145,18 @@ bool SEInhaler::Load(const std::string& file)
   CDM::InhalerData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  data = Serializer::ReadFile(file, GetLogger());
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->find_resource_file(file.c_str());
+  if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
+    auto content = io->get_embedded_resource_file(file.c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+  } else {
+    data = Serializer::ReadFile(possible_path.c_str(), m_Logger);
+  }
+
   pData = dynamic_cast<CDM::InhalerData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
@@ -256,6 +268,6 @@ SESubstance* SEInhaler::GetSubstance() const
 //-------------------------------------------------------------------------------
 Tree<const char*> SEInhaler::GetPhysiologyRequestGraph() const
 {
-  return {""};
+  return { "" };
 }
 }

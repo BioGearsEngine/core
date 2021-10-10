@@ -27,7 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-
+#include <biogears/string/manipulation.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 void OutputState(std::unique_ptr<PhysiologyEngine>& bgOut);
 
-void HowToSarinExposure()
+int HowToSarinExposure()
 {
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToSarinExposure.log");
@@ -48,7 +48,7 @@ void HowToSarinExposure()
 
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
-    return;
+    return 1;
   }
 
   //---Initialize all variables needed for scenario
@@ -89,7 +89,9 @@ void HowToSarinExposure()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RedBloodCellAcetylcholinesterase", AmountPerVolumeUnit::mol_Per_L);
-
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("LeftEyePupillaryResponse-ReactivityModifier");
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-SizeModifier");
+  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-ReactivityModifier");
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToSarinExposure.csv");
 
   // Advance some time to get some resting data
@@ -116,7 +118,7 @@ void HowToSarinExposure()
     if ((bg->GetSimulationTime(TimeUnit::min) > exposureTime + 1) && (SarinActive == CDM::enumOnOff::On)) {
       conditions.RemoveAmbientAerosol(*Sarin);
       bg->ProcessAction(env);
-      bg->GetLogger()->Info(std::stringstream() << std::string{ Sarin->GetName() } +" removed from environment");
+      bg->GetLogger()->Info(std::string{ Sarin->GetName() } +" removed from environment");
       SarinActive = CDM::enumOnOff::Off;
     }
 
@@ -131,12 +133,12 @@ void HowToSarinExposure()
     for (auto e : eventList) {
       if ((FractionRbcAcheInhibited > eventMap[e].first) && (eventMap[e].second == CDM::enumOnOff::Off)) //Only display state when it is triggered, not every time point when the event is active
       {
-        bg->GetLogger()->Info(std::stringstream() << "Patient is exhibiting " + e);
+        bg->GetLogger()->Info("Patient is exhibiting " + e);
         eventMap[e].second = CDM::enumOnOff::On;
       }
       if ((FractionRbcAcheInhibited < eventMap[e].first) && (eventMap[e].second == CDM::enumOnOff::On)) //Remove state if levels drop below threshold.  Probably won't happen for Sarin because the red blood cell acetylcholinesterase is inhibited for a very long time (days to weeks)
       {
-        bg->GetLogger()->Info(std::stringstream() << "Patient no longer exhibiting " + e);
+        bg->GetLogger()->Info( "Patient no longer exhibiting " + e);
         eventMap[e].second = CDM::enumOnOff::Off;
       }
     }
@@ -151,16 +153,22 @@ void HowToSarinExposure()
   bg->AdvanceModelTime(60, TimeUnit::s);
 
   bg->GetLogger()->Info("Finished");
+  return 0;
 }
 
 void OutputState(std::unique_ptr<PhysiologyEngine>& bgOut)
 {
   //Since we'll want this data repeatedly, make a function call so that we don't copy and paste like crazy
-  bgOut->GetLogger()->Info(std::stringstream() << "Respiration Rate : " << bgOut->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "breaths/min");
-  bgOut->GetLogger()->Info(std::stringstream() << "Tidal Volume : " << bgOut->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL) << VolumeUnit::mL);
-  bgOut->GetLogger()->Info(std::stringstream() << "C02 Partial Pressure in Aorta : " << bgOut->GetBloodChemistrySystem()->GetArterialCarbonDioxidePressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bgOut->GetLogger()->Info(std::stringstream() << "O2 Partial Pressure in Aorta : " << bgOut->GetBloodChemistrySystem()->GetArterialOxygenPressure(PressureUnit::mmHg) << PressureUnit::mmHg);
-  bgOut->GetLogger()->Info(std::stringstream() << "Oxygen Saturation : " << bgOut->GetBloodChemistrySystem()->GetOxygenSaturation() << "%");
-  bgOut->GetLogger()->Info(std::stringstream() << "Heart Rate : " << bgOut->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm");
-  bgOut->GetLogger()->Info(std::stringstream() << "Red Blood Cell Acetylcholinesterase Level : " << bgOut->GetBloodChemistrySystem()->GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L) << AmountPerVolumeUnit::mol_Per_L);
+  bgOut->GetLogger()->Info(asprintf( "Respiration Rate : %f %s", bgOut->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "breaths/min"));
+  bgOut->GetLogger()->Info(asprintf( "Tidal Volume : %f %s", bgOut->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
+  bgOut->GetLogger()->Info(asprintf( "C02 Partial Pressure in Aorta : %f %s", bgOut->GetBloodChemistrySystem()->GetArterialCarbonDioxidePressure(PressureUnit::mmHg), "mmHg"));
+  bgOut->GetLogger()->Info(asprintf( "O2 Partial Pressure in Aorta : %f %s", bgOut->GetBloodChemistrySystem()->GetArterialOxygenPressure(PressureUnit::mmHg), "mmHg"));
+  bgOut->GetLogger()->Info(asprintf( "Oxygen Saturation : %f%%" , bgOut->GetBloodChemistrySystem()->GetOxygenSaturation()));
+  bgOut->GetLogger()->Info(asprintf( "Heart Rate : %f %s", bgOut->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bgOut->GetLogger()->Info(asprintf( "Red Blood Cell Acetylcholinesterase Level : %f %s", bgOut->GetBloodChemistrySystem()->GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L), "mol_Per_L"));
+}
+
+
+int main ( int argc, char* argv[] ) {
+  return HowToSarinExposure();
 }

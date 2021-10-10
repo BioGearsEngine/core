@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 			<xs:extension base="ConditionData"/>
 		</xs:complexContent>
 	</xs:complexType>
-	
 	<!-- @brief Condition characterized by reduced red blood cells, which leads to reduced oxygen carrying capacity. Implemented by reducing the amount of hemoglobin in the blood. -->
 	<xs:complexType name="ChronicAnemiaData">
 		<xs:complexContent>
@@ -32,7 +31,6 @@ specific language governing permissions and limitations under the License.
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
 	<!-- @brief Any condition causing the heart muscle not to pump sufficient blood. -->
 	<xs:complexType name="ChronicHeartFailureData" abstract="true">
 		<xs:complexContent>

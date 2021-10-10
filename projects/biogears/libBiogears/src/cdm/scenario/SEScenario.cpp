@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEPatientActionCollection.h>
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
-
+#include <biogears/io/io-manager.h>
 namespace biogears {
 SEScenario::SEScenario(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())
@@ -95,7 +95,7 @@ void SEScenario::Unload(CDM::ScenarioData& data) const
 //-----------------------------------------------------------------------------
 bool SEScenario::Load(const char* scenarioFile)
 {
-  return Load(std::string{ scenarioFile });
+  return Load(std::string { scenarioFile });
 }
 //-----------------------------------------------------------------------------
 bool SEScenario::Load(const std::string& scenarioFile)
@@ -103,7 +103,18 @@ bool SEScenario::Load(const std::string& scenarioFile)
   CDM::ScenarioData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  data = Serializer::ReadFile(scenarioFile, GetLogger());
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->FindScenarioFile(scenarioFile.c_str());
+  if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
+    auto content = io->get_embedded_resource_file(scenarioFile.c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+  } else {
+    data = Serializer::ReadFile(possible_path, m_Logger);
+  }
+
   pData = dynamic_cast<CDM::ScenarioData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;

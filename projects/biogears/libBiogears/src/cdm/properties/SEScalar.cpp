@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <cassert>
 #include <cmath>
 #include <limits>
+#include <sstream>
 
 #include <biogears/cdm/utils/GeneralMath.h>
 
@@ -25,10 +26,19 @@ double SEScalar::dNaN()
 {
   return NaN;
 }
-
+//-------------------------------------------------------------------------------
 const NoUnit NoUnit::unitless = NoUnit();
+
 const std::string unitless = "unitless";
 
+NoUnit::NoUnit()
+{
+}
+//-------------------------------------------------------------------------------
+NoUnit::~NoUnit()
+{
+}
+//-------------------------------------------------------------------------------
 SEScalar::SEScalar(double v)
   : SEScalar()
 
@@ -290,9 +300,15 @@ bool SEScalar::Equals(const SEScalar& to) const
 }
 
 //-------------------------------------------------------------------------------
-void SEScalar::ToString(std::ostream& str) const
+std::string SEScalar::ToString() const
 {
-  str << m_value << std::flush;
+  #ifndef ANDROID
+  return std::to_string(m_value);
+  #else
+  std::stringstream ss;
+  ss << m_value;
+  return ss.str();
+  #endif
 }
 
 //-------------------------------------------------------------------------------

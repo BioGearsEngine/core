@@ -24,9 +24,12 @@ class PhysiologyEngineDynamicStabilization;
 class SEPatient;
 class SEScalarTime;
 class TimeUnit;
-
+namespace io {
+  class EngineConfiguration;
+}
 class BIOGEARS_API PhysiologyEngineConfiguration : public Loggable {
 public:
+  friend io::EngineConfiguration;
   PhysiologyEngineConfiguration(Logger* logger);
 
   virtual ~PhysiologyEngineConfiguration();
@@ -75,7 +78,6 @@ protected:
 protected:
   bool m_Merge;
   SEElectroCardioGramInterpolator* m_ECGInterpolator;
-
 
   PhysiologyEngineStabilization* m_StabilizationCriteria;
   PhysiologyEngineTimedStabilization* m_TimedStabilizationCriteria;

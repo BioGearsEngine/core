@@ -31,9 +31,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/utils/DataTrack.h>
-#include <biogears/cdm/utils/FileUtils.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/io/io-manager.h>
 
 namespace biogears {
 void CommonDataModelTest::TestSetup7SeriesRCDC()
@@ -4326,7 +4326,7 @@ void CommonDataModelTest::BasicCircuitTest(const std::string& outputDirectory)
   m_Logger = new Logger(outputDirectory + "/BasicCircuit.log");
   double timeStep_s = 1.0 / 165.0;
   double currentTime_s = 0.0;
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
 
   //Test Circuit
@@ -5067,7 +5067,7 @@ void CommonDataModelTest::RunTest(const std::string& outputDirectory, const std:
   m_Logger = new Logger(outputDirectory + "/" + testName + ".log");
   double timeStep_s = 1.0 / 165.0;
   double currentTime_s = 0.0;
-  DataTrack trk1;
+  DataTrack trk1{m_Logger};
   SEFluidCircuitCalculator fluidCalculator(m_Logger);
   SEFluidCircuit* fluidCircuit = m_Circuits.GetFluidCircuit("Fluid");
 
@@ -5130,9 +5130,8 @@ void CommonDataModelTest::RunTest(const std::string& outputDirectory, const std:
 
 void CommonDataModelTest::TestCircuitSerialization(const std::string& fileName)
 {
-  ScopedFileSystemLock lock;
-
-  std::ofstream stream(ResolvePath(fileName));
+  auto io = m_Logger->GetIoManager().lock();
+  std::ofstream stream(io->ResolveResultsFileLocation(fileName));
   xml_schema::namespace_infomap map;
   map[""].name = "uri:/mil/tatrc/physiology/datamodel";
 

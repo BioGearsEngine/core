@@ -24,8 +24,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/container/Tree.tci.h>
+#include <biogears/io/io-manager.h>
 
+namespace std {
+template class map<CDM::enumAnesthesiaMachineEvent::value, bool>;
+template class map<CDM::enumAnesthesiaMachineEvent::value, double>;
+}
 namespace biogears {
+
 SEAnesthesiaMachine::SEAnesthesiaMachine(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
   , m_Substances(substances)
@@ -75,6 +81,8 @@ void SEAnesthesiaMachine::Clear()
   SAFE_DELETE(m_OxygenBottleTwo);
 }
 //-----------------------------------------------------------------------------
+void SEAnesthesiaMachine::StateChange() { }
+//-----------------------------------------------------------------------------
 void SEAnesthesiaMachine::Merge(const SEAnesthesiaMachine& from)
 {
   if (from.HasConnection())
@@ -118,7 +126,18 @@ bool SEAnesthesiaMachine::Load(const std::string& file)
   CDM::AnesthesiaMachineData* pData;
   std::unique_ptr<CDM::ObjectData> data;
 
-  data = Serializer::ReadFile(file, GetLogger());
+  auto io = m_Logger->GetIoManager().lock();
+  auto possible_path = io->find_resource_file(file.c_str());
+  if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+    size_t content_size;
+    auto content = io->get_embedded_resource_file(file.c_str(), content_size);
+    data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
+#endif
+  } else {
+    data = Serializer::ReadFile(possible_path, m_Logger);
+  }
+
   pData = dynamic_cast<CDM::AnesthesiaMachineData*>(data.get());
   if (pData == nullptr) {
     std::stringstream ss;
@@ -233,7 +252,7 @@ void SEAnesthesiaMachine::Unload(CDM::AnesthesiaMachineData& data) const
 //-----------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachine::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachine::GetScalar(const std::string& name)
@@ -627,7 +646,7 @@ void SEAnesthesiaMachine::RemoveOxygenBottleTwo()
 //-----------------------------------------------------------------------------
 Tree<const char*> SEAnesthesiaMachine::GetPhysiologyRequestGraph() const
 {
-  return {""};
+  return { "" };
 }
 //-----------------------------------------------------------------------------
 

@@ -1,0 +1,43 @@
+%{
+#include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
+%}
+
+%include <biogears/exports.h>
+
+%import <biogears/cdm/CommonDataModel.swg>
+%import <biogears/cdm/utils/Logger.swg>
+%import <biogears/cdm/compartment/SECompartment.swg>
+
+%import <biogears/cdm/properties/SEScalar.swg>
+%import <biogears/cdm/properties/SEScalarPower.swg>
+%import <biogears/cdm/properties/SEScalarEnergy.swg>
+%import <biogears/cdm/properties/SEScalarTemperature.swg>
+
+
+%nspace biogears::SEThermalCompartment;
+
+%ignore biogears::SEThermalCompartment::Unload;
+%ignore biogears::SEThermalCompartment::Load;
+
+%ignore biogears::SEThermalCompartment::GetScalar(const std::string& name);
+
+%ignore biogears::SEThermalCompartment::HasNodeMapping() const;
+%ignore biogears::SEThermalCompartment::GetNodeMapping();
+%ignore biogears::SEThermalCompartment::MapNode(SEThermalCircuitNode& node);
+
+%rename (GetHeatTransferRateIn_const) biogears::SEThermalCompartment::GetHeatTransferRateIn(const PowerUnit& unit) const;
+%rename (GetHeatTransferRateOut_const) biogears::SEThermalCompartment::GetHeatTransferRateOut(const PowerUnit& unit) const;
+%rename (GetHeat_const) biogears::SEThermalCompartment::GetHeat(const EnergyUnit& unit) const;
+%rename (GetTemperature_const) biogears::SEThermalCompartment::GetTemperature(const TemperatureUnit& unit) const;
+
+%rename (HasChild_const) biogears::SEThermalCompartment::HasChild(std::string const &);
+
+%ignore biogears::SEThermalCompartment::AddLink(SEThermalCompartmentLink& link);
+%ignore biogears::SEThermalCompartment::RemoveLink(SEThermalCompartmentLink& link);
+%ignore biogears::SEThermalCompartment::RemoveLinks();
+%ignore biogears::SEThermalCompartment::GetLinks();
+
+%include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
+
+%nspace std::vector<biogears::SEThermalCompartment*>;
+%template (vector_SEThermalCompartment_ptr) std::vector<biogears::SEThermalCompartment*>;

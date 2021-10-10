@@ -13,14 +13,13 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <string>
 
+#include <biogears/cdm/engine/PhysiologyEngine.h>
+#include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/CommonDataModel.h>
 
 CDM_BIND_DECL(ScenarioData)
 
 namespace biogears {
-class SEAction;
-class SEScenario;
-class PhysiologyEngine;
 
 class BIOGEARS_API SEScenarioCustomExec {
 public:

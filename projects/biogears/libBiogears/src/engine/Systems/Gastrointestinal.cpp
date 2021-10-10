@@ -36,6 +36,10 @@ namespace BGE = mil::tatrc::physiology::biogears;
 #pragma warning(disable : 4275)
 
 //#define logMeal
+namespace std {
+template class map<biogears::SELiquidSubstanceQuantity*, double>;
+}
+
 namespace biogears {
 auto Gastrointestinal::make_unique(BioGears& bg) -> std::unique_ptr<Gastrointestinal>
 {
@@ -104,7 +108,7 @@ bool Gastrointestinal::Load(const CDM::BioGearsGastrointestinalSystemData& in)
     SESubstance* sub = m_data.GetSubstances().GetSubstance(transitData.Substance());
     if (sub == nullptr) {
       m_ss << "Unable to find substance" << transitData.Substance();
-      Error(m_ss, "Gastrointestinal: Load Transit Model");
+      Error(m_ss.str(), "Gastrointestinal: Load Transit Model");
       return false;
     }
     NewDrugTransitState(sub);
@@ -991,7 +995,6 @@ void Gastrointestinal::ProcessDrugCAT()
     cat->GetTotalMassMetabolized().IncrementValue(totalMetabolized_ug_Per_s * dT_s, MassUnit::ug);
     cat->GetTotalMassExcreted().IncrementValue((lumenSolidMasses_ug[8] + lumenDissolvedMasses_ug[8]) * m_TransitRate_Per_s[8] * dT_s, MassUnit::ug);
     m_vSmallIntestine->GetSubstanceQuantity(*sub)->GetMass().IncrementValue(totalEffluxToPortal_ug_Per_s * dT_s, MassUnit::ug);
-
   }
 }
 }

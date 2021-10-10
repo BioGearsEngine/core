@@ -14,6 +14,8 @@
 
 #include <fstream>
 #include <iostream>
+
+#include <biogears/version.h>
 #include <biogears/string/manipulation.h>
 
 namespace biogears {
@@ -24,7 +26,7 @@ std::string ConvertBeatUnits(std::string unit){
   return unit;
 }
 PatientGenerator::PatientGenerator(std::string path)
-  : CSVToXMLConvertor(path, "Patients.csv")
+  : CSVToXMLConvertor(path, "templates/Patients.csv")
 {
 }
 //-----------------------------------------------------------------------------
@@ -41,7 +43,7 @@ bool PatientGenerator::save() const
   for (auto& patient : _patients) {
     xml_schema::namespace_infomap info;
     info[""].name = "uri:/mil/tatrc/physiology/datamodel";
-    info[""].schema = "BioGears.xsd";
+    info[""].schema = "BioGearsDataModel.xsd";
 
     try {
       std::ofstream file;
@@ -71,6 +73,7 @@ bool PatientGenerator::parse()
       for (auto name : lineItr->second) {
         CDM::PatientData data;
         data.Name(name);
+        data.contentVersion(branded_version_string());
         _patients.push_back(std::move(data));
       }
     } else {

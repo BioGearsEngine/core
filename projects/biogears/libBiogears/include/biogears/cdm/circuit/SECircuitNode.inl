@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
+#pragma once
 //Project Includes
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/schema/cdm/Circuit.hxx>
@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 template <CIRCUIT_NODE_TEMPLATE>
 SECircuitNode<CIRCUIT_NODE_TYPES>::SECircuitNode(const char* name, Logger* logger)
-  : SECircuitNode(std::string{ name }, logger)
+  : SECircuitNode(std::string { name }, logger)
 {
 }
 //-------------------------------------------------------------------------------

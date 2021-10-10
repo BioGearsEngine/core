@@ -15,10 +15,14 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(TestSuite)
 
-namespace biogears{
+namespace biogears {
 class SETestReport;
+namespace io {
+  class TestReport;
+}
 class BIOGEARS_API SETestSuite : public Loggable {
   friend SETestReport;
+  friend io::TestReport;
 
 protected:
   SETestSuite(Logger* logger);

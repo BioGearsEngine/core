@@ -1,5 +1,5 @@
 ###############################################################################
-# CMAKE DEFINITIONS AND setTINGS
+# CMAKE DEFINITIONS AND SETTINGS
 #
 # Requires the following environmental variables:
 #
@@ -21,7 +21,7 @@ include(cmake/cmake-common_logic.cmake)
 # STEP 1: 
 # Change this to custimize your project
 ################################################################################
-project( ${ROOT_PROJECT_NAME}  LANGUAGES CXX C)
+project( ${ROOT_PROJECT_NAME}  LANGUAGES CXX C )
 
  list(APPEND CMAKE_MODULE_PATH   ${PROJECT_SOURCE_DIR}/cmake  ${PROJECT_SOURCE_DIR}/cmake/common )
 
@@ -33,10 +33,10 @@ project( ${ROOT_PROJECT_NAME}  LANGUAGES CXX C)
     ")
 
 find_package(Git QUIET)
-configure_version_information(GIT_SUCESS MAJOR 7 MINOR 3 PATCH 1 TWEAK "Source" )
+configure_version_information(GIT_SUCESS MAJOR 7 MINOR 5 PATCH 0 TWEAK "Source" )
 if(GIT_FOUND AND NOT GIT_SUCESS)
   # Update these variables to ensure out of source build have some sane tags
-  message(WARNING "GIT_EXECUTABLE was not found or no corrisponding GIT_REPO is avaliable." 
+  message(WARNING "GIT_EXECUTABLE was not found or no corresponding GIT_REPO is available." 
   "If you are building with in a git repo you should ensure GIT is in your current path." 
 	"If you are building outside of a repo ignore this message.")
 endif()
@@ -49,7 +49,7 @@ if(TARGET bg-cli)
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT bg-cli)
 endif()
 
-if(NOT TARGET STAGE)
+if(NOT TARGET gather_runtime_dependencies)
   ###############################################################################
   # Stage Code for IDE Testing
   ###############################################################################
@@ -61,13 +61,13 @@ if(NOT TARGET STAGE)
   # to stage (AKA move dep DLLs to the run folder for debugging.
   ################################################################################
   if(TARGET  scenario_driver)
-    add_dependencies(STAGE scenario_driver)
+    add_dependencies(gather_runtime_dependencies scenario_driver)
   endif()
-  if( TARGET scenario_driver)
-    add_dependencies(STAGE test_driver)
+  if( TARGET test_driver)
+    add_dependencies(gather_runtime_dependencies test_driver)
   endif()
   if(TARGET  unittest)
-    add_dependencies(STAGE test_driver)
+    add_dependencies(gather_runtime_dependencies unittest)
   endif()
 endif()
 
@@ -115,5 +115,10 @@ install(FILES
   ${Packages}
   DESTINATION lib/cmake/${ROOT_PROJECT_NAME}
 )
+
+if( PROJECT_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
+  message(STATUS "Preparing Installer Packages")
+  add_subdirectory(cmake/packaging)
+endif()
 
 generate_project_suffix()

@@ -11,21 +11,23 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/exports.h>
 #include <biogears/cdm/scenario/requests/SECompartmentDataRequest.h>
+#include <biogears/exports.h>
 
 namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
-
+namespace io {
+  class Scenario;
+}
 class BIOGEARS_API SETissueCompartmentDataRequest : public SECompartmentDataRequest {
   friend class SEDataRequestManager;
+  friend io::Scenario;
 
-protected:
-  SETissueCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
 
 public:
+  SETissueCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SETissueCompartmentDataRequest();
 
   virtual void Clear(); //clear memory

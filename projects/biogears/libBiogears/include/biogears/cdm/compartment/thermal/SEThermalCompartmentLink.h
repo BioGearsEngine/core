@@ -17,10 +17,19 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+#include <vector>
+#include <map>
+#include <string>
+
+
 namespace biogears {
 class SECompartmentManager;
+namespace io {
+  class Compartment;
+}
 class BIOGEARS_API SEThermalCompartmentLink : public SECompartmentLink {
   friend class SECompartmentManager;
+  friend io::Compartment;
 
 protected:
   SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const char* name);
@@ -65,6 +74,11 @@ protected:
 };
 }
 
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartmentLink*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartmentLink*>;
+}
+
 #include <biogears/cdm/compartment/SECompartmentGraph.h>
 namespace biogears {
 class SEThermalCompartmentGraph : public SECompartmentGraph<SEThermalCompartment, SEThermalCompartmentLink> {
@@ -73,4 +87,4 @@ public:
   SEThermalCompartmentGraph(const std::string& name, Logger* logger);
   virtual ~SEThermalCompartmentGraph() override;
 };
-}
+} //namespace biogears

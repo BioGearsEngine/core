@@ -20,8 +20,12 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEScalar0To1;
 class SEScalar;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SEBurnWound : public SEPatientAction {
+  friend io::PatientActions;
+
 public:
   SEBurnWound();
   virtual ~SEBurnWound() override;
@@ -37,20 +41,33 @@ public:
   virtual bool Load(const CDM::BurnWoundData& in);
   virtual CDM::BurnWoundData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::BurnWoundData& data) const;
-
-public:
   virtual bool HasTotalBodySurfaceArea() const;
   virtual SEScalar0To1& GetTotalBodySurfaceArea();
+
+  bool HasCompartment() const;
+  bool HasCompartment(const std::string compartment) const;
+  const std::vector<std::string>& GetCompartments();
+  const std::string GetCompartment(const std::string compartment) const;
+  void SetCompartment(const char* name);
+  void SetCompartment(const std::string& name);
+  void RemoveCompartment(const std::string compartment);
+  void RemoveCompartments();
 
   virtual bool HasInflammation() const;
   virtual void SetInflammation(bool activate);
 
   virtual void ToString(std::ostream& str) const override;
 
+  bool operator==( const SEBurnWound& rhs) const;
+  bool operator!=( const SEBurnWound& rhs) const;
+
+protected:
+  virtual void Unload(CDM::BurnWoundData& data) const;
+
+
 protected:
   bool m_Inflammation;
   SEScalar0To1* m_TBSA;
+  std::vector<std::string> m_compartmentsAffected;
 };
 }
