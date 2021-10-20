@@ -12,35 +12,35 @@
 
 #include "EnvironmentGenerator.h"
 
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <cstdlib>
+#include <string>
 
-#include <biogears/version.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/version.h>
 
 #ifdef ANDROID
-  namespace std {
-    static double stod(const std::string& value, std::size_t* pos = 0){
-      char **end = value.c_str();
-      double result= std::strold(value.c_str(), end); 
-      *pos = *end - value.c_str();
-      return result;
-    }
-  }
+namespace std {
+static double stod(const std::string& value, std::size_t* pos = 0)
+{
+  char** end = value.c_str();
+  double result = std::strold(value.c_str(), end);
+  *pos = *end - value.c_str();
+  return result;
+}
+}
 #endif
 namespace biogears {
 std::string ConvertTemperatureUnit(std::string unit);
 
-
-
 //!
 //! \brief converts string std::string unit into appropriate representation of the unit it represents
-//! \param unit 
-//! \return 
+//! \param unit
+//! \return
 //! \details for the purpose of running scenarios, the units "C", "F", and "R" are not recognized. This
 //!          converts them into units that are accepted by the scenario executor.
-//! 
+//!
 std::string ConvertTemperatureUnit(std::string unit)
 {
   if (unit == "C") {
@@ -66,8 +66,8 @@ EnvironmentGenerator::~EnvironmentGenerator()
 //-----------------------------------------------------------------------------
 //!
 //! \brief saves xml file for  each environment
-//! \return bool, true if no exceptions were thrown, false otherwise 
-//! 
+//! \return bool, true if no exceptions were thrown, false otherwise
+//!
 bool EnvironmentGenerator::save() const
 {
   bool rValue = true;
@@ -81,7 +81,8 @@ bool EnvironmentGenerator::save() const
       file.open("environments/" + env.Name().get() + ".xml");
       EnvironmentalConditions(file, env, info);
       file.close();
-      std::cout << "Saved environments/" + env.Name().get() + ".xml" << "\n";
+      std::cout << "Saved environments/" + env.Name().get() + ".xml"
+                << "\n";
 
     } catch (std::exception e) {
       rValue = false;
@@ -94,7 +95,7 @@ bool EnvironmentGenerator::save() const
 //!
 //! \brief populates _environments with EnvironmentalDataObjects to be read into xml's
 //! \return bool
-//! 
+//!
 bool EnvironmentGenerator::parse()
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -112,7 +113,7 @@ bool EnvironmentGenerator::parse()
       process_ambientgasdata(lineItr);
       lineItr += 2;
     } else if ("AmbientAerosolData" == lineItr->first) {
-	      process_ambientaerosoldata(lineItr);
+      process_ambientaerosoldata(lineItr);
       lineItr += 2;
     } else {
       for (size_t index = 0; index < _environments.size() && index < lineItr->second.size(); ++index) {
@@ -131,12 +132,12 @@ void EnvironmentGenerator::print() const
 }
 //-----------------------------------------------------------------------------
 //!
-//! \brief Checks first cell of csv row and sets corresponding data of EnvironmentalConditionsObject 
+//! \brief Checks first cell of csv row and sets corresponding data of EnvironmentalConditionsObject
 //! \param name first cell of row
 //! \param value another cell of the same row
 //! \param environment EnvironmentalConditionsData object
-//! \return 
-//! 
+//! \return
+//!
 bool EnvironmentGenerator::process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::EnvironmentalConditionsData& environment)
 {
   using namespace mil::tatrc::physiology::datamodel;
@@ -155,7 +156,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
     size_t pos = 0;
     try {
       av_data.value(stod(value, &pos));
-	    av_data.unit(ConvertTemperatureUnit(trim(value.substr(pos))));
+      av_data.unit(ConvertTemperatureUnit(trim(value.substr(pos))));
       environment.AirVelocity(av_data);
     } catch (std::exception e) {
       rValue = false;
@@ -250,7 +251,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
 //!
 //! \brief Reads in data for the xml tags nested inside the aerosolization tag
 //! \param itr, iterator for data structure representation of CSV rows
-//! \return 
+//! \return
 //! \details since nested tags are dependent on multiple rows of the csv document it is necessary to write a method such as this one
 //!          for all tags which nest other xml tags.
 bool EnvironmentGenerator::process_ambientgasdata(CSV_RowItr itr)
@@ -284,7 +285,7 @@ bool EnvironmentGenerator::process_ambientgasdata(CSV_RowItr itr)
 //! \brief Reads in data for the xml tags nested inside the ambientaerosoldata tag
 //! \param itr, iterator for data structure representation of CSV rows
 //! \return bool, true if no exceptions were thrown, false otherwise
-//! 
+//!
 bool EnvironmentGenerator::process_ambientaerosoldata(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -310,7 +311,5 @@ bool EnvironmentGenerator::process_ambientaerosoldata(CSV_RowItr itr)
   }
   return rValue;
 }
-
-
 
 } //Namespace

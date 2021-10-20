@@ -3,15 +3,15 @@
 #include <functional>
 #include <iostream>
 #include <sstream>
+#include <string>
 #include <thread>
 
 #include "Arguments.h"
 #include "HowTo-PatientGeneration.h"
 
-
+#include <biogears/filesystem/path.h>
 #include <biogears/string/manipulation.h>
 #include <biogears/threading/thread_pool.h>
-#include <biogears/filesystem/path.h>
 void print_help()
 {
 
@@ -113,7 +113,7 @@ auto read_csv(std::string path, std::string filename) -> csv
 {
 
   auto filePath = (path.empty()) ? filename : path + "/" + filename;
-  std::ifstream input{ filePath };
+  std::ifstream input { filePath };
   std::string line = "";
   std::string token = "";
 
@@ -128,7 +128,7 @@ auto read_csv(std::string path, std::string filename) -> csv
     }
     return result;
   } else {
-    throw std::runtime_error{ "Error opening given file " + filePath };
+    throw std::runtime_error { "Error opening given file " + filePath };
   }
 }
 
@@ -230,12 +230,12 @@ int main(int argc, char** argv)
       }
 
       if (trials[1].size() > 0) {
-          trial_patient = trials[1][0];
+        trial_patient = trials[1][0];
       }
 
-      trials.erase(trials.begin(), trials.begin()+2);
+      trials.erase(trials.begin(), trials.begin() + 2);
 
-      biogears::ThreadPool pool{ thread_count };
+      biogears::ThreadPool pool { thread_count };
       auto channel = pool.get_source();
 
       auto count = 1; //Danger 1 Indexed
@@ -284,7 +284,7 @@ int main(int argc, char** argv)
     }
   } else if (args.MultiWordFound("TRIALS")) {
     auto trials = args.MultiWord("TRIALS");
-    biogears::ThreadPool pool{ thread_count };
+    biogears::ThreadPool pool { thread_count };
     auto channel = pool.get_source();
 
     auto count = 1; //Danger 1 Indexed

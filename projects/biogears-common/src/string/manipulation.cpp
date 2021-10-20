@@ -17,12 +17,13 @@
 
 #include <biogears/string/manipulation.h>
 
-#include <cstring>
-#include <cstdlib>
-#include <cstdio>
 #include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <regex>
 #include <sstream>
+#include <string>
 
 namespace biogears {
 
@@ -248,7 +249,7 @@ std::vector<double> vstod(const std::vector<std::string>& input)
 #ifndef ANDROID
     return stod(val);
 #else
-   return std::strtod (val.c_str(), nullptr);
+      return std::strtod(val.c_str(), nullptr);
 #endif
   });
   return result;

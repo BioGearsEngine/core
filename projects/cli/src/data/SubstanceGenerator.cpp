@@ -14,8 +14,10 @@
 
 #include <biogears/string/manipulation.h>
 #include <biogears/version.h>
+
 #include <fstream>
 #include <iostream>
+#include <string>
 
 namespace biogears {
 //-----------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 #include "ReportWriter.h"
 #include "Tokenizer.h"
+
 #include <cmath>
 #include <fstream>
 #include <iomanip>
@@ -7,6 +8,7 @@
 #include <numeric>
 #include <regex>
 #include <sstream>
+#include <string>
 
 #include "mz.h"
 #include "mz_os.h"
@@ -184,20 +186,20 @@ void ReportWriter::gen_tables_single_sheet(std::string reference_file, std::stri
 //
 inline bool file_exists(const std::string& name)
 {
-  #ifndef _CRT_SECURE_NO_WARNINGS
-  #define UNDEF__CRT_SECURE_NO_WARNINGS
-  #define _CRT_SECURE_NO_WARNINGS
-  #endif
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define UNDEF__CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
   if (FILE* file = fopen(name.c_str(), "r")) {
     fclose(file);
     return true;
   } else {
     return false;
   }
-  #ifdef  UNDEF__CRT_SECURE_NO_WARNINGS
-  #undef  UNDEF__CRT_SECURE_NO_WARNINGS
-  #undef _CRT_SECURE_NO_WARNINGS
-  #endif
+#ifdef UNDEF__CRT_SECURE_NO_WARNINGS
+#undef UNDEF__CRT_SECURE_NO_WARNINGS
+#undef _CRT_SECURE_NO_WARNINGS
+#endif
 }
 //--------------------------------------------------------------------------------
 //
@@ -264,11 +266,11 @@ void ReportWriter::generate_system_tables(TYPE table_type)
   std::vector<std::pair<std::string, std::string>> SystemTables {
     { "BloodChemistryValidation", "Scenarios/Validation" },
     { "CardiovascularValidation", "Scenarios/Validation" },
-    { "EnergyValidation",         "Scenarios/Validation" },
-    { "EndocrineValidation",      "Scenarios/Validation" },
-    { "RenalValidation",          "Scenarios/Validation" },
-    { "RespiratoryValidation",    "Scenarios/Validation" },
-    { "TissueValidation",         "Scenarios/Validation" }
+    { "EnergyValidation", "Scenarios/Validation" },
+    { "EndocrineValidation", "Scenarios/Validation" },
+    { "RenalValidation", "Scenarios/Validation" },
+    { "RespiratoryValidation", "Scenarios/Validation" },
+    { "TissueValidation", "Scenarios/Validation" }
   };
 
   //Map of SystemTables to required test. Second paramater i
@@ -449,7 +451,7 @@ void ReportWriter::ParseCSV(const std::string& filename, std::vector<std::vector
     uint32_t ratio = 0;
     int16_t level = 0;
     int32_t err = MZ_OK;
-  
+
     const char* string_method = NULL;
     char crypt = ' ';
     void* reader = NULL;
@@ -779,7 +781,7 @@ void ReportWriter::Validate()
         const double warning_range_lower = reference_median * 0.75;
         const double warning_range_upper = reference_median * 1.25;
 
-        if (   (ref.reference_range.first > table_row.engine_value && warning_range_lower <= table_row.engine_value)
+        if ((ref.reference_range.first > table_row.engine_value && warning_range_lower <= table_row.engine_value)
             || (ref.reference_range.second < table_row.engine_value && warning_range_upper >= table_row.engine_value)) {
           table_row.result = Yellow;
         } else {
@@ -900,7 +902,6 @@ void ReportWriter::generate_patient_tables(TYPE table_type)
     }
   }
 
-  
   bool success = true;
   for (auto& system : SystemTables) {
     std::vector<std::pair<std::string, PatientValidationRow>> values(34);
@@ -948,7 +949,7 @@ void ReportWriter::generate_patient_tables(TYPE table_type)
     }
     std::fstream file { XMLFile[current_file_index] };
     ParseXMLPatient(file, headers, values);
-    std::string Outputfile = system.first.substr(strlen("PatientValidation-")  , system.first.length());
+    std::string Outputfile = system.first.substr(strlen("PatientValidation-"), system.first.length());
     generate_patient_table(Outputfile, headers, values);
     current_file_index++;
   }

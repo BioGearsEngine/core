@@ -15,6 +15,7 @@
 #include <biogears/schema/cdm/Substance.hxx>
 #include <fstream>
 #include <iostream>
+#include <string> 
 
 #include <biogears/string/manipulation.h>
 #include <biogears/version.h>

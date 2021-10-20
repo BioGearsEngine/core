@@ -14,13 +14,15 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 
-#include <biogears/version.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/version.h>
 
 namespace biogears {
-std::string ConvertBeatUnits(std::string unit){
-  if(unit == "bpm"){
+std::string ConvertBeatUnits(std::string unit)
+{
+  if (unit == "bpm") {
     return "1/min";
   }
   return unit;
@@ -37,7 +39,7 @@ PatientGenerator::~PatientGenerator()
 //!
 //! \brief Saves xml file for each patient
 //! \return bool, true if no exceptions are thrown, false otherwise
-//! 
+//!
 bool PatientGenerator::save() const
 {
   for (auto& patient : _patients) {
@@ -50,7 +52,8 @@ bool PatientGenerator::save() const
       file.open("patients/" + patient.Name() + ".xml");
       mil::tatrc::physiology::datamodel::Patient(file, patient, info);
       file.close();
-      std::cout << "Saved patients/" + patient.Name() + ".xml" << "\n";
+      std::cout << "Saved patients/" + patient.Name() + ".xml"
+                << "\n";
 
     } catch (std::exception e) {
       std::cout << e.what() << std::endl;
@@ -62,7 +65,7 @@ bool PatientGenerator::save() const
 //!
 //! \brief Populates _patients with PatientData objects to be read into xml's
 //! \return bool
-//! 
+//!
 bool PatientGenerator::parse()
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -98,8 +101,8 @@ void PatientGenerator::print() const
 //! \param name first cell of row
 //! \param value another cell of the same row
 //! \param patient PatientData object
-//! \return 
-//! 
+//! \return
+//!
 bool PatientGenerator::process(const std::string& name, const std::string& value, mil::tatrc::physiology::datamodel::PatientData& patient)
 {
   using namespace mil::tatrc::physiology::datamodel;

@@ -15,16 +15,16 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 
-#include <biogears/version.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/version.h>
 namespace biogears {
 //-----------------------------------------------------------------------------
 StabilizationGenerator::StabilizationGenerator(std::string path)
   : CSVToXMLConvertor(path, "templates/Stabilizations.csv")
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
-
 }
 //-----------------------------------------------------------------------------
 StabilizationGenerator::~StabilizationGenerator()
@@ -56,8 +56,8 @@ bool StabilizationGenerator::parse()
 //-----------------------------------------------------------------------------
 //!
 //! \brief Saves xml for timed and dynamic stabilization object
-//! \return 
-//! 
+//! \return
+//!
 bool StabilizationGenerator::save() const
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -70,7 +70,8 @@ bool StabilizationGenerator::save() const
     file.open("config/DynamicStabilization.xml");
     CDM::PhysiologyEngineDynamicStabilization(file, _dynamic, info);
     file.close();
-    std::cout << "Saved config/DynamicStabilization.xml" << "\n";
+    std::cout << "Saved config/DynamicStabilization.xml"
+              << "\n";
 
   } catch (std::exception e) {
     std::cout << e.what() << std::endl;
@@ -81,7 +82,8 @@ bool StabilizationGenerator::save() const
     file.open("config/TimedStabilization.xml");
     CDM::PhysiologyEngineTimedStabilization(file, _timed, info);
     file.close();
-    std::cout << "Saved config/TimedStabilization.xml" << "\n";
+    std::cout << "Saved config/TimedStabilization.xml"
+              << "\n";
   } catch (std::exception e) {
     std::cout << e.what() << std::endl;
   }
@@ -98,9 +100,9 @@ void StabilizationGenerator::print() const
 //-----------------------------------------------------------------------------
 //!
 //! \brief Reads in resting resting stabilization data from Stabilizations.csv
-//! \param itr 
-//! \return 
-//! 
+//! \param itr
+//! \return
+//!
 bool StabilizationGenerator::process_RestingStabilizationCriteria(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -148,9 +150,9 @@ bool StabilizationGenerator::process_RestingStabilizationCriteria(CSV_RowItr itr
 //-----------------------------------------------------------------------------
 //!
 //! \brief Reads in feedback stabilization data from Stabilization.csv
-//! \param itr 
-//! \return 
-//! 
+//! \param itr
+//! \return
+//!
 bool StabilizationGenerator::process_FeedbackStabilizationCriteria(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -196,9 +198,9 @@ bool StabilizationGenerator::process_FeedbackStabilizationCriteria(CSV_RowItr it
 //-----------------------------------------------------------------------------
 //!
 //! \brief Reads in condition stabilization data from Stabilizations.csv
-//! \param itr 
-//! \return 
-//! 
+//! \param itr
+//! \return
+//!
 bool StabilizationGenerator::process_ConditionStabilization(CSV_RowItr itr)
 {
   namespace CDM = mil::tatrc::physiology::datamodel;
@@ -208,7 +210,7 @@ bool StabilizationGenerator::process_ConditionStabilization(CSV_RowItr itr)
   auto condition_name = itr++->first;
   CDM::PhysiologyEngineDynamicStabilizationData::ConditionStabilization_type data;
   CDM::PhysiologyEngineDynamicStabilizationData::ConditionStabilization_type::Criteria_type criteria;
-  
+
   auto value = itr->first;
   try {
     for (size_t count = 0; count < 15; ++count, ++itr) {
