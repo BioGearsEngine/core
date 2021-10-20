@@ -21,7 +21,7 @@
 
 #ifdef ANDROID
   namespace std {
-    static double std::stod(const std::string& value, std::size_t* pos = 0){
+    static double stod(const std::string& value, std::size_t* pos = 0){
       char **end = value.c_str();
       double result= std::strold(value.c_str(), end); 
       *pos = *end - value.c_str();
@@ -154,7 +154,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
     EnvironmentalConditionsData::AirVelocity_type av_data;
     size_t pos = 0;
     try {
-      av_data.value(std::stod(value, &pos));
+      av_data.value(stod(value, &pos));
 	    av_data.unit(ConvertTemperatureUnit(trim(value.substr(pos))));
       environment.AirVelocity(av_data);
     } catch (std::exception e) {
@@ -164,7 +164,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
     EnvironmentalConditionsData::AmbientTemperature_type at_data;
     size_t pos;
     try {
-      double v = std::stod(value, &pos);
+      double v = stod(value, &pos);
       std::string u = value.substr(pos);
       at_data.value(v);
       at_data.unit(ConvertTemperatureUnit(trim(u)));
@@ -176,7 +176,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
     EnvironmentalConditionsData::AtmosphericPressure_type ap_data;
     size_t pos;
     try {
-      double v = std::stod(value, &pos);
+      double v = stod(value, &pos);
       std::string u = value.substr(pos);
       ap_data.value(v);
       ap_data.unit(ConvertTemperatureUnit(trim(u)));
@@ -188,7 +188,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
     EnvironmentalConditionsData::ClothingResistance_type cr_data;
     size_t pos;
     try {
-      double v = std::stod(value, &pos);
+      double v = stod(value, &pos);
       std::string u = value.substr(pos);
       cr_data.value(v);
       cr_data.unit(ConvertTemperatureUnit(trim(u)));
@@ -199,7 +199,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
   } else if ("Emissivity" == name) {
     EnvironmentalConditionsData::Emissivity_type e_data;
     try {
-      double v = std::stod(value);
+      double v = stod(value);
       e_data.value(v);
       environment.Emissivity(e_data);
     } catch (std::exception e) {
@@ -209,7 +209,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
     EnvironmentalConditionsData::MeanRadiantTemperature_type mrt_data;
     size_t pos;
     try {
-      double v = std::stod(value, &pos);
+      double v = stod(value, &pos);
       std::string u = value.substr(pos);
       mrt_data.value(v);
       mrt_data.unit(ConvertTemperatureUnit(trim(u)));
@@ -221,7 +221,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
     EnvironmentalConditionsData::RelativeHumidity_type rh_data;
     size_t pos;
     try {
-      double v = std::stod(value, &pos);
+      double v = stod(value, &pos);
       std::string u = value.substr(pos);
       rh_data.value(v);
       rh_data.unit(ConvertTemperatureUnit(trim(u)));
@@ -233,7 +233,7 @@ bool EnvironmentGenerator::process(const std::string& name, const std::string& v
     EnvironmentalConditionsData::RespirationAmbientTemperature_type rat_data;
     size_t pos;
     try {
-      double v = std::stod(value, &pos);
+      double v = stod(value, &pos);
       std::string u = value.substr(pos);
       rat_data.value(v);
       rat_data.unit(ConvertTemperatureUnit(trim(u)));
@@ -267,7 +267,7 @@ bool EnvironmentGenerator::process_ambientgasdata(CSV_RowItr itr)
         CDM::EnvironmentalConditionsData::AmbientGas_type ag_data;
         CDM::EnvironmentalConditionsData::AmbientGas_type::FractionAmount_type fa_data;
         ag_data.Name(value1);
-        fa_data.value(std::stod(value2));
+        fa_data.value(stod(value2));
         ag_data.FractionAmount(fa_data);
         environment.AmbientGas().push_back(ag_data);
       } catch (std::exception e) {
@@ -299,7 +299,7 @@ bool EnvironmentGenerator::process_ambientaerosoldata(CSV_RowItr itr)
       try {
         size_t pos = 0;
         ae_data.Name(value1);
-        ae_data.Concentration(std::stod(value2, &pos));
+        ae_data.Concentration(stod(value2, &pos));
         ae_data.Concentration().unit(ConvertTemperatureUnit(trim(value2.substr(pos))));
         environment.AmbientAerosol().push_back(ae_data);
       } catch (std::exception e) {

@@ -157,7 +157,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     SubstanceData::Density_type density;
     size_t pos = 0;
     try {
-      density.value(std::stod(value, &pos));
+      density.value(stod(value, &pos));
       density.unit(trim(value.substr(pos)));
       substance.Density(density);
     } catch (std::exception e) {
@@ -168,7 +168,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     SubstanceData::MaximumDiffusionFlux_type diffusion;
     size_t pos = 0;
     try {
-      diffusion.value(std::stod(value, &pos));
+      diffusion.value(stod(value, &pos));
       diffusion.unit(trim(value.substr(pos)));
       substance.MaximumDiffusionFlux(diffusion);
     } catch (std::exception e) {
@@ -178,7 +178,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     SubstanceData::MichaelisCoefficient_type type;
     size_t pos = 0;
     try {
-      type.value(std::stod(value, &pos));
+      type.value(stod(value, &pos));
       //type.unit(trim(value.substr(pos)));
       substance.MichaelisCoefficient(type);
     } catch (std::exception e) {
@@ -188,7 +188,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     SubstanceData::MembraneResistance_type type;
     size_t pos = 0;
     try {
-      type.value(std::stod(value, &pos));
+      type.value(stod(value, &pos));
       type.unit(trim(value.substr(pos)));
       substance.MembraneResistance(type);
     } catch (std::exception e) {
@@ -198,7 +198,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     SubstanceData::MolarMass_type type;
     size_t pos = 0;
     try {
-      type.value(std::stod(value, &pos));
+      type.value(stod(value, &pos));
       type.unit(trim(value.substr(pos)));
       substance.MolarMass(type);
     } catch (std::exception e) {
@@ -208,7 +208,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     SubstanceData::RelativeDiffusionCoefficient_type type;
     size_t pos = 0;
     try {
-      type.value(std::stod(value, &pos));
+      type.value(stod(value, &pos));
       //type.unit(trim(value.substr(pos))); //No Unit
       substance.RelativeDiffusionCoefficient(type);
     } catch (std::exception e) {
@@ -219,7 +219,7 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
     size_t pos = 0;
     try {
 
-      type.value(std::stod(value, &pos));
+      type.value(stod(value, &pos));
       type.unit(trim(value.substr(pos)));
       substance.SolubilityCoefficient(type);
     } catch (std::exception e) {
@@ -253,7 +253,7 @@ bool SubstanceGenerator::process_aerosol(CSV_RowItr itr)
       CDM::SubstanceAerosolizationData::BronchioleModifier_type bron_data;
       try {
 
-        bron_data.value(std::stod(value));
+        bron_data.value(stod(value));
         data.BronchioleModifier(bron_data);
       } catch (std::exception e) {
         rValue = false;
@@ -265,7 +265,7 @@ bool SubstanceGenerator::process_aerosol(CSV_RowItr itr)
       CDM::SubstanceAerosolizationData::InflammationCoefficient_type infl_data;
       try {
 
-        infl_data.value(std::stod(value));
+        infl_data.value(stod(value));
         data.InflammationCoefficient(infl_data);
       } catch (std::exception e) {
         rValue = false;
@@ -348,25 +348,25 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
       CDM::SubstanceClearanceData::Systemic_type::RenalClearance_type rc_data;
       CDM::SubstanceClearanceData::Systemic_type::SystemicClearance_type sc_data;
       try {
-        feif_data.value(std::stod(value));
+        feif_data.value(stod(value));
         systemic_data.FractionExcretedInFeces(feif_data);
 
         value = (itr + 1)->second[index];
-        fuip_data.value(std::stod(value));
+        fuip_data.value(stod(value));
         systemic_data.FractionUnboundInPlasma(fuip_data);
 
         value = (itr + 2)->second[index];
-        ic_data.value(std::stod(value, &pos));
+        ic_data.value(stod(value, &pos));
         ic_data.unit(trim(value.substr(pos)));
         systemic_data.IntrinsicClearance(ic_data);
 
         value = (itr + 3)->second[index];
-        rc_data.value(std::stod(value, &pos));
+        rc_data.value(stod(value, &pos));
         rc_data.unit(trim(value.substr(pos)));
         systemic_data.RenalClearance(rc_data);
 
         value = (itr + 4)->second[index];
-        sc_data.value(std::stod(value, &pos));
+        sc_data.value(stod(value, &pos));
         sc_data.unit(trim(value.substr(pos)));
         systemic_data.SystemicClearance(sc_data);
 
@@ -381,7 +381,7 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
     if (!value.empty()) {
       default_clearance = false;
       try {
-        renal_data.Clearance(std::stod(value, &pos));
+        renal_data.Clearance(stod(value, &pos));
         renal_data.Clearance()->unit(trim(value.substr(pos)));
         data.RenalDynamics(renal_data);
       } catch (std::exception e) {
@@ -395,14 +395,14 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
         regulation_data.ChargeInBlood(value);
         try {
           value = (itr + 9)->second[index];
-          regulation_data.FractionUnboundInPlasma(std::stod(value));
+          regulation_data.FractionUnboundInPlasma(stod(value));
           value = (itr + 10)->second[index];
-          regulation_data.ReabsorptionRatio(std::stod(value));
+          regulation_data.ReabsorptionRatio(stod(value));
           value = (itr + 11)->second[index];
 
           CDM::SubstanceClearanceData::RenalDynamics_type::Regulation_type::TransportMaximum_type transport_data;
           regulation_data.TransportMaximum(transport_data);
-          regulation_data.TransportMaximum().value(std::stod(value, &pos));
+          regulation_data.TransportMaximum().value(stod(value, &pos));
           regulation_data.TransportMaximum().unit(trim(value.substr(pos)));
 
           renal_data.Regulation(regulation_data);
@@ -420,12 +420,12 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
       CDM::SubstanceClearanceData::CellRegulation_type::CellDeathRate_type crDeathRate_data;
       CDM::SubstanceClearanceData::CellRegulation_type::CellBirthRate_type crBirthRate_data;
       try {
-        crDeathRate_data.value(std::stod(value, &pos));
+        crDeathRate_data.value(stod(value, &pos));
         crDeathRate_data.unit(trim(value.substr(pos)));
         cellregulation_data.CellDeathRate(crDeathRate_data);
 
         value = (itr + 14)->second[index];
-        crBirthRate_data.value(std::stod(value, &pos));
+        crBirthRate_data.value(stod(value, &pos));
         crBirthRate_data.unit(trim(value.substr(pos)));
         cellregulation_data.CellBirthRate(crBirthRate_data);
 
@@ -470,27 +470,27 @@ bool SubstanceGenerator::process_pharmacokinetics(CSV_RowItr itr)
       try {
         size_t secondPKA = value.find(';'); //If two pKa's are present, they will be separated by a ;
         if (secondPKA == value.npos) {
-          phys_type.AcidDissociationConstant().push_back(std::stod(value));
+          phys_type.AcidDissociationConstant().push_back(stod(value));
         } else {
           std::string pKA1 = trim(value.substr(0, secondPKA));
           std::string pKA2 = trim(value.substr(secondPKA + 1, value.npos));
-          phys_type.AcidDissociationConstant().push_back(std::stod(pKA1));
-          phys_type.AcidDissociationConstant().push_back(std::stod(pKA2));
+          phys_type.AcidDissociationConstant().push_back(stod(pKA1));
+          phys_type.AcidDissociationConstant().push_back(stod(pKA2));
         }
         value = (itr + 1)->second[index];
         phys_type.BindingProtein(value);
         value = (itr + 2)->second[index];
-        phys_type.BloodPlasmaRatio(std::stod(value));
+        phys_type.BloodPlasmaRatio(stod(value));
         value = (itr + 3)->second[index];
-        phys_type.FractionUnboundInPlasma(std::stod(value));
+        phys_type.FractionUnboundInPlasma(stod(value));
         value = (itr + 4)->second[index];
         phys_type.IonicState(value);
         value = (itr + 5)->second[index];
-        phys_type.LogP(std::stod(value));
+        phys_type.LogP(stod(value));
         value = (itr + 6)->second[index];
-        phys_type.HydrogenBondCount(std::stod(value));
+        phys_type.HydrogenBondCount(stod(value));
         value = (itr + 7)->second[index];
-        phys_type.PolarSurfaceArea(std::stod(value));
+        phys_type.PolarSurfaceArea(stod(value));
 
         data.Physicochemicals(phys_type);
         substance.Pharmacokinetics(data);
@@ -527,14 +527,14 @@ bool SubstanceGenerator::process_pharmacodynamics(CSV_RowItr itr)
         CDM::PharmacodynamicModifierData pdMod;
 
         CDM::SubstanceData::Pharmacodynamics_type::EffectSiteRateConstant_type esrc_type;
-        esrc_type.value(std::stod(value, &pos));
+        esrc_type.value(stod(value, &pos));
         esrc_type.unit(trim(value.substr(pos)));
         data.EffectSiteRateConstant(esrc_type);
         value = (itr + 1)->second[index];
-        data.EMaxShapeParameter(std::stod(value));
+        data.EMaxShapeParameter(stod(value));
         value = (itr + 2)->second[index];
         CDM::SubstanceData::Pharmacodynamics_type::AntibacterialEffect_type anti;
-        anti.value(std::stod(value, &pos));
+        anti.value(stod(value, &pos));
         anti.unit(trim(value.substr(pos)));
         data.AntibacterialEffect(anti);
         value = (itr + 3)->second[index];
@@ -610,7 +610,7 @@ bool SubstanceGenerator::process_tissues(CSV_RowItr itr)
         auto name = split(itr->first, ' ');
         tissue_data.Name(name[0]);
         value = (itr + 1)->second[index];
-        tissue_data.PartitionCoefficient(std::stod(value));
+        tissue_data.PartitionCoefficient(stod(value));
         data->TissueKinetics().push_back(tissue_data);
         substance.Pharmacokinetics(std::move(data));
       } catch (std::exception e) {
@@ -633,11 +633,11 @@ PDMod_Type SubstanceGenerator::set_PDModifier(PDMod_Type modifier, std::string v
   //Split string at token (;)
   auto modifier_data = split(value, ';');
   //Set EMax to first element
-  modifier.EMax(std::stod(modifier_data[0]));
+  modifier.EMax(stod(modifier_data[0]));
   //Set EC50 value and unit
   CDM::ScalarMassPerVolumeData ec50;
   size_t pos = 0;
-  ec50.value(std::stod(trim(modifier_data[1]), &pos));
+  ec50.value(stod(trim(modifier_data[1]), &pos));
   ec50.unit(trim(modifier_data[1].substr(pos)));
   modifier.EC50(ec50);
 

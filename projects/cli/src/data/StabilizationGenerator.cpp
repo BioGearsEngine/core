@@ -114,26 +114,26 @@ bool StabilizationGenerator::process_RestingStabilizationCriteria(CSV_RowItr itr
       if ("Criteria" == itr->first) {
         CDM::PhysiologyEngineDynamicStabilizationData::RestingStabilizationCriteria_type::PropertyConvergence_type property_data;
         value = itr->second[0];
-        property_data.PercentDifference(std::stod(value, &pos));
+        property_data.PercentDifference(stod(value, &pos));
         value = itr->second[1];
         property_data.Name(value);
         data.PropertyConvergence().push_back(property_data);
       } else if ("ConvergenceTime" == itr->first) {
         value = itr->second[0];
 
-        data.ConvergenceTime(std::stod(value, &pos));
+        data.ConvergenceTime(stod(value, &pos));
         data.ConvergenceTime().unit(trim(value.substr(pos)));
       } else if ("MinimumReactionTime" == itr->first) {
         value = itr->second[0];
-        data.MinimumReactionTime(std::stod(value, &pos));
+        data.MinimumReactionTime(stod(value, &pos));
         data.MinimumReactionTime().unit(trim(value.substr(pos)));
       } else if ("MaxAllowedStabilizationTime" == itr->first) {
         value = itr->second[0];
-        data.MaximumAllowedStabilizationTime(std::stod(value, &pos));
+        data.MaximumAllowedStabilizationTime(stod(value, &pos));
         data.MaximumAllowedStabilizationTime().unit(trim(value.substr(pos)));
       } else if ("TimedStabilizationLength" == itr->first) {
         value = itr->second[0];
-        _timed.RestingStabilizationTime(std::stod(value, &pos));
+        _timed.RestingStabilizationTime(stod(value, &pos));
         _timed.RestingStabilizationTime().unit(trim(value.substr(pos)));
       }
     }
@@ -164,25 +164,25 @@ bool StabilizationGenerator::process_FeedbackStabilizationCriteria(CSV_RowItr it
       if ("Criteria" == itr->first) {
         CDM::PhysiologyEngineDynamicStabilizationData::FeedbackStabilizationCriteria_type::PropertyConvergence_type property_data;
         value = itr->second[0];
-        property_data.PercentDifference(std::stod(value, &pos));
+        property_data.PercentDifference(stod(value, &pos));
         value = itr->second[1];
         property_data.Name(value);
         data.PropertyConvergence().push_back(property_data);
       } else if ("ConvergenceTime" == itr->first) {
         value = itr->second[0];
-        data.ConvergenceTime(std::stod(value, &pos));
+        data.ConvergenceTime(stod(value, &pos));
         data.ConvergenceTime().unit(trim(value.substr(pos)));
       } else if ("MinimumReactionTime" == itr->first) {
         value = itr->second[0];
-        data.MinimumReactionTime(std::stod(value, &pos));
+        data.MinimumReactionTime(stod(value, &pos));
         data.MinimumReactionTime().unit(trim(value.substr(pos)));
       } else if ("MaxAllowedStabilizationTime" == itr->first) {
         value = itr->second[0];
-        data.MaximumAllowedStabilizationTime(std::stod(value, &pos));
+        data.MaximumAllowedStabilizationTime(stod(value, &pos));
         data.MaximumAllowedStabilizationTime().unit(trim(value.substr(pos)));
       } else if ("TimedStabilizationLength" == itr->first) {
         value = itr->second[0];
-        _timed.FeedbackStabilizationTime(std::stod(value, &pos));
+        _timed.FeedbackStabilizationTime(stod(value, &pos));
         _timed.FeedbackStabilizationTime().get().unit(trim(value.substr(pos)));
       }
     }
@@ -215,27 +215,27 @@ bool StabilizationGenerator::process_ConditionStabilization(CSV_RowItr itr)
       if ("Criteria" == itr->first) {
         CDM::PhysiologyEngineDynamicStabilizationData::FeedbackStabilizationCriteria_type::PropertyConvergence_type property_data;
         value = itr->second[0];
-        property_data.PercentDifference(std::stod(value, &pos));
+        property_data.PercentDifference(stod(value, &pos));
         value = itr->second[1];
         property_data.Name(value);
         criteria.PropertyConvergence().push_back(property_data);
       } else if ("ConvergenceTime" == itr->first) {
         value = itr->second[0];
-        criteria.ConvergenceTime(std::stod(value, &pos));
+        criteria.ConvergenceTime(stod(value, &pos));
         criteria.ConvergenceTime().unit(trim(value.substr(pos)));
       } else if ("MinimumReactionTime" == itr->first) {
         value = itr->second[0];
-        criteria.MinimumReactionTime(std::stod(value, &pos));
+        criteria.MinimumReactionTime(stod(value, &pos));
         criteria.MinimumReactionTime().unit(trim(value.substr(pos)));
       } else if ("MaxAllowedStabilizationTime" == itr->first) {
         value = itr->second[0];
-        criteria.MaximumAllowedStabilizationTime(std::stod(value, &pos));
+        criteria.MaximumAllowedStabilizationTime(stod(value, &pos));
         criteria.MaximumAllowedStabilizationTime().unit(trim(value.substr(pos)));
       } else if ("TimedStabilizationLength" == itr->first) {
         value = itr->second[0];
         CDM::PhysiologyEngineTimedStabilizationData::ConditionStabilization_type cs_data;
         cs_data.Name(condition_name);
-        cs_data.Time(std::stod(value, &pos));
+        cs_data.Time(stod(value, &pos));
         cs_data.Time().unit(trim(value.substr(pos)));
         cs_data.contentVersion(branded_version_string());
         _timed.ConditionStabilization().push_back(cs_data);

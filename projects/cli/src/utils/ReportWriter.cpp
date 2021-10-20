@@ -536,7 +536,7 @@ void ReportWriter::ParseXML(std::istream& stream)
     std::string value = trim(line.substr(value_index, value_end - value_index));
     xmlRow.field_name = name + "(" + unit + ")";
     xmlRow.expected_value = "0.0";
-    xmlRow.engine_value = std::stod(value);
+    xmlRow.engine_value = stod(value);
     table_row_map.insert(std::pair<std::string, biogears::TableRow>(name, xmlRow));
   }
 }
@@ -655,13 +655,13 @@ void ReportWriter::CalculateAverages()
     for (int k = 0; k < biogears_results[i].size(); k++) { // of the second row
       try {
         if (trim(biogears_results[i][k]) != "") { //if trim returns an empty string, it means the cell is empty
-          double engineValue = std::stod(biogears_results[i][k]);
+          double engineValue = stod(biogears_results[i][k]);
           rows[k].engine_value += engineValue;
           rows[k].max_value = engineValue > rows[k].max_value ? engineValue : rows[k].max_value;
           rows[k].min_value = engineValue < rows[k].min_value ? engineValue : rows[k].min_value;
           ++row_items[k]; // Further down we'll calculate the average of these values by dividing engine_value by row_items
         }
-      } catch (std::exception& e) { // This usually occurs if one of the cells contains non-numeric characters, std::stod will throw an exception
+      } catch (std::exception& e) { // This usually occurs if one of the cells contains non-numeric characters, stod will throw an exception
         throw std::runtime_error(std::string(e.what()) + "\n\t" + "Cell Contents: " + biogears_results[i][k]);
       }
     }
@@ -693,7 +693,7 @@ void ReportWriter::ExtractValues()
       // Then it splits the first vector element into a vector where the first two elements are num1 and num2
       std::vector<std::string> value_range = split(split(validation_data[i][2].substr(1), ']')[0], ',');
       try {
-        ref.reference_range = std::pair<double, double>(std::stod(value_range[0]), std::stod(value_range[1]));
+        ref.reference_range = std::pair<double, double>(stod(value_range[0]), stod(value_range[1]));
       } catch (std::exception& e) {
         throw std::runtime_error(std::string("Error: ") + e.what() + "\n\tCell Contents: [" + value_range[0] + "," + value_range[1] + "]");
         ;
@@ -702,7 +702,7 @@ void ReportWriter::ExtractValues()
       ref.is_range = false;
       std::vector<std::string> value = split(validation_data[i][2], ',');
       try {
-        ref.reference_value = std::stod(value[0]);
+        ref.reference_value = stod(value[0]);
       } catch (std::exception& e) {
         throw std::runtime_error(std::string("Error: ") + e.what() + "\n\t" + "Cell Contents: " + value[0]);
       }
@@ -731,7 +731,7 @@ void ReportWriter::ExtractValuesList()
           eod++;
         }
         try {
-          ref.reference_values.push_back(std::stod(values.substr(j, eod - j)));
+          ref.reference_values.push_back(stod(values.substr(j, eod - j)));
           j += ((eod - j) + 1);
         } catch (std::exception& e) {
           throw std::runtime_error(std::string("Error: ") + e.what() + "\n\t" + "Cell Contents: " + values.substr(j, eod - j));
@@ -739,7 +739,7 @@ void ReportWriter::ExtractValuesList()
       } else if (values[j] == '[') {
         std::vector<std::string> value_range = split(values.substr(j + 1, values.find_first_of(']', j + 1) - (1 + j)), ',');
         try {
-          ref.reference_ranges.push_back(std::pair<double, double>(std::stod(value_range[0]), std::stod(value_range[1])));
+          ref.reference_ranges.push_back(std::pair<double, double>(stod(value_range[0]), stod(value_range[1])));
         } catch (std::exception& e) {
           throw std::runtime_error(std::string("Error: ") + e.what() + "\n\t" + "Cell Contents: [" + value_range[0] + "," + value_range[1] + "]");
         }
@@ -925,7 +925,7 @@ void ReportWriter::generate_patient_tables(TYPE table_type)
         for (auto i = 1; i < validation_rows.size(); ++i) {
           try {
             values[i - 1].first = validation_rows[i - 1];
-            values[i - 1].second.mean += std::stod(columns.at(headers[i].second));
+            values[i - 1].second.mean += stod(columns.at(headers[i].second));
 
           } catch (std::runtime_error e) {
             std::cout << "Runtime Error";
@@ -983,8 +983,8 @@ void ReportWriter::ParseXMLPatient(std::istream& stream, std::vector<std::pair<s
         size_t value_index = tmp.find("value=\"") + 7;
         size_t value_end = tmp.find("\"/", value_index);
         std::string value = trim(tmp.substr(value_index, value_end - value_index));
-        values[j].second.engine_value = std::stod(value);
-        values[j].second.expected_value = std::stod(value);
+        values[j].second.engine_value = stod(value);
+        values[j].second.expected_value = stod(value);
         j++;
       }
     }

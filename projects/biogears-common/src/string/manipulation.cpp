@@ -45,7 +45,7 @@ double parse_double_or(double alt, const std::string& txt)
   double x = alt;
 #ifndef ANDROID
   try {
-    x = std::stod(txt);
+    x = stod(txt);
   } catch (...) {
   }
 #else
@@ -246,7 +246,7 @@ std::vector<double> vstod(const std::vector<std::string>& input)
   std::vector<double> result(input.size());
   std::transform(input.begin(), input.end(), result.begin(), [](const std::string& val) {
 #ifndef ANDROID
-    return std::stod(val);
+    return stod(val);
 #else
    return std::strtod (val.c_str(), nullptr);
 #endif

@@ -710,7 +710,7 @@ bool handle_bool_string(const std::string& token, bool& result)
 bool handle_double_string(const std::string& token, double& result)
 {
   try {
-    result = std::stod(token);
+    result = stod(token);
   } catch (const std::invalid_argument& e) {
     std::cerr << "Error: Unable to parse double near " << error_context << e.what() << "\n";
     return false;

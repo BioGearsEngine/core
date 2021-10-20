@@ -110,7 +110,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     NutritionData::Carbohydrate_type c_data;
     try {
-      c_data.value(std::stod(value, &pos));
+      c_data.value(stod(value, &pos));
       c_data.unit(trim(value.substr(pos)));
       nutrient.Carbohydrate(c_data);
     } catch (std::exception e) {
@@ -120,7 +120,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     NutritionData::Fat_type type_data;
     try {
-      type_data.value(std::stod(value, &pos));
+      type_data.value(stod(value, &pos));
       type_data.unit(trim(value.substr(pos)));
       nutrient.Fat(type_data);
     } catch (std::exception e) {
@@ -130,7 +130,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     NutritionData::Protein_type type_data;
     try {
-      type_data.value(std::stod(value, &pos));
+      type_data.value(stod(value, &pos));
       type_data.unit(trim(value.substr(pos)));
       nutrient.Protein(type_data);
     } catch (std::exception e) {
@@ -140,7 +140,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     NutritionData::Calcium_type type_data;
     try {
-      type_data.value(std::stod(value, &pos));
+      type_data.value(stod(value, &pos));
       type_data.unit(trim(value.substr(pos)));
       nutrient.Calcium(type_data);
     } catch (std::exception e) {
@@ -150,7 +150,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     NutritionData::Sodium_type type_data;
     try {
-      type_data.value(std::stod(value, &pos));
+      type_data.value(stod(value, &pos));
       type_data.unit(trim(value.substr(pos)));
       nutrient.Sodium(type_data);
     } catch (std::exception e) {
@@ -160,7 +160,7 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
     size_t pos;
     NutritionData::Water_type type_data;
     try {
-      type_data.value(std::stod(value, &pos));
+      type_data.value(stod(value, &pos));
       type_data.unit(trim(value.substr(pos)));
       nutrient.Water(type_data);
     } catch (std::exception e) {

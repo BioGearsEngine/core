@@ -138,7 +138,7 @@ bool CompoundGenerator::process_substance(CSV_RowItr itr)
       CDM::SubstanceCompoundData::Component_type::Concentration_type con_data;
       try {
         com_data.Name(value1);
-        con_data.value(std::stod(value2, &pos));
+        con_data.value(stod(value2, &pos));
         con_data.unit(trim(value2.substr(pos)));
         com_data.Concentration(con_data);
         compound.Component().push_back(com_data);

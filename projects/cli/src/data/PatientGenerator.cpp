@@ -114,7 +114,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::Age_type a_data;
     try {
-      a_data.value(std::stod(value, &pos));
+      a_data.value(stod(value, &pos));
       a_data.unit(biogears::trim(value.substr(pos)));
       patient.Age(a_data);
     } catch (std::exception e) {
@@ -124,7 +124,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::Weight_type w_data;
     try {
-      w_data.value(std::stod(value, &pos));
+      w_data.value(stod(value, &pos));
       w_data.unit(biogears::trim(value.substr(pos)));
       patient.Weight(w_data);
     } catch (std::exception e) {
@@ -134,7 +134,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::Height_type h_data;
     try {
-      h_data.value(std::stod(value, &pos));
+      h_data.value(stod(value, &pos));
       h_data.unit(biogears::trim(value.substr(pos)));
       patient.Height(h_data);
     } catch (std::exception e) {
@@ -143,7 +143,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
   } else if ("BodyFatFraction" == name) {
     PatientData::BodyFatFraction_type bff_data;
     try {
-      bff_data.value(std::stod(value));
+      bff_data.value(stod(value));
       patient.BodyFatFraction(bff_data);
     } catch (std::exception e) {
       rValue = false;
@@ -151,7 +151,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
   } else if ("RightLungFraction" == name) {
     PatientData::RightLungRatio_type rlr_data;
     try {
-      rlr_data.value(std::stod(value));
+      rlr_data.value(stod(value));
       patient.RightLungRatio(rlr_data);
     } catch (std::exception e) {
       rValue = false;
@@ -160,7 +160,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::SkinSurfaceArea_type ssa_data;
     try {
-      ssa_data.value(std::stod(value, &pos));
+      ssa_data.value(stod(value, &pos));
       ssa_data.unit(biogears::trim(value.substr(pos)));
       patient.SkinSurfaceArea(ssa_data);
     } catch (std::exception e) {
@@ -170,7 +170,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::BasalMetabolicRate_type bmr_data;
     try {
-      bmr_data.value(std::stod(value, &pos));
+      bmr_data.value(stod(value, &pos));
       bmr_data.unit(biogears::trim(value.substr(pos)));
       patient.BasalMetabolicRate(bmr_data);
     } catch (std::exception e) {
@@ -180,7 +180,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::BloodVolumeBaseline_type bvb_data;
     try {
-      bvb_data.value(std::stod(value, &pos));
+      bvb_data.value(stod(value, &pos));
       bvb_data.unit(biogears::trim(value.substr(pos)));
       patient.BloodVolumeBaseline(bvb_data);
     } catch (std::exception e) {
@@ -190,7 +190,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::DiastolicArterialPressureBaseline_type dapb_data;
     try {
-      dapb_data.value(std::stod(value, &pos));
+      dapb_data.value(stod(value, &pos));
       dapb_data.unit(biogears::trim(value.substr(pos)));
       patient.DiastolicArterialPressureBaseline(dapb_data);
     } catch (std::exception e) {
@@ -200,7 +200,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::HeartRateBaseline_type hrb_data;
     try {
-      hrb_data.value(std::stod(value, &pos));
+      hrb_data.value(stod(value, &pos));
       hrb_data.unit(ConvertBeatUnits(biogears::trim(value.substr(pos))));
       patient.HeartRateBaseline(hrb_data);
     } catch (std::exception e) {
@@ -210,7 +210,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::RespirationRateBaseline_type rrb_data;
     try {
-      rrb_data.value(std::stod(value, &pos));
+      rrb_data.value(stod(value, &pos));
       rrb_data.unit(ConvertBeatUnits(biogears::trim(value.substr(pos))));
       patient.RespirationRateBaseline(rrb_data);
     } catch (std::exception e) {
@@ -220,7 +220,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::SystolicArterialPressureBaseline_type sapb_data;
     try {
-      sapb_data.value(std::stod(value, &pos));
+      sapb_data.value(stod(value, &pos));
       sapb_data.unit(biogears::trim(value.substr(pos)));
       patient.SystolicArterialPressureBaseline(sapb_data);
     } catch (std::exception e) {
@@ -230,7 +230,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::HeartRateMaximum_type hrm_data;
     try {
-      hrm_data.value(std::stod(value, &pos));
+      hrm_data.value(stod(value, &pos));
       hrm_data.unit(ConvertBeatUnits(biogears::trim(value.substr(pos))));
       patient.HeartRateMaximum(hrm_data);
     } catch (std::exception e) {
@@ -240,7 +240,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::HeartRateMinimum_type hrm_data;
     try {
-      hrm_data.value(std::stod(value, &pos));
+      hrm_data.value(stod(value, &pos));
       hrm_data.unit(ConvertBeatUnits(biogears::trim(value.substr(pos))));
       patient.HeartRateMinimum(hrm_data);
     } catch (std::exception e) {
@@ -250,7 +250,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::FunctionalResidualCapacity_type frc_data;
     try {
-      frc_data.value(std::stod(value, &pos));
+      frc_data.value(stod(value, &pos));
       frc_data.unit(biogears::trim(value.substr(pos)));
       patient.FunctionalResidualCapacity(frc_data);
     } catch (std::exception e) {
@@ -260,7 +260,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::TotalLungCapacity_type tlc_data;
     try {
-      tlc_data.value(std::stod(value, &pos));
+      tlc_data.value(stod(value, &pos));
       tlc_data.unit(biogears::trim(value.substr(pos)));
       patient.TotalLungCapacity(tlc_data);
     } catch (std::exception e) {
@@ -270,7 +270,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::AlveoliSurfaceArea_type asa_data;
     try {
-      asa_data.value(std::stod(value, &pos));
+      asa_data.value(stod(value, &pos));
       asa_data.unit(biogears::trim(value.substr(pos)));
       patient.AlveoliSurfaceArea(asa_data);
     } catch (std::exception e) {
@@ -280,7 +280,7 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     size_t pos;
     PatientData::ResidualVolume_type rv_data;
     try {
-      rv_data.value(std::stod(value, &pos));
+      rv_data.value(stod(value, &pos));
       rv_data.unit(biogears::trim(value.substr(pos)));
       patient.ResidualVolume(rv_data);
     } catch (std::exception e) {

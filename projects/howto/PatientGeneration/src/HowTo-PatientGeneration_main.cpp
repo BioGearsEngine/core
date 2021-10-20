@@ -245,11 +245,11 @@ int main(int argc, char** argv)
           try {
             std::string severity = params[0];
             std::string plan = params[1];
-            double mic = std::stod(params[2]);
-            double apply_at = std::stod(params[3]);
-            double application_interval = std::stod(params[4]);
+            double mic = stod(params[2]);
+            double apply_at = stod(params[3]);
+            double application_interval = stod(params[4]);
 
-            double duration = (params.size() > 4) ? std::stod(params[5])
+            double duration = (params.size() > 4) ? stod(params[5])
                                                   : trial_duration;
             auto patient = (params.size() > 5) ? params[6]
                                                : trial_patient;
@@ -295,11 +295,11 @@ int main(int argc, char** argv)
         try {
           std::string severity = params[0];
           std::string plan = params[1];
-          double mic = std::stod(params[2]);
-          double apply_at = std::stod(params[3]);
-          double application_interval = std::stod(params[4]);
+          double mic = stod(params[2]);
+          double apply_at = stod(params[3]);
+          double application_interval = stod(params[4]);
 
-          double duration = (params.size() > 4) ? std::stod(params[5])
+          double duration = (params.size() > 4) ? stod(params[5])
                                                 : trial_duration;
           auto patient = (params.size() > 5) ? params[6]
                                              : trial_patient;
