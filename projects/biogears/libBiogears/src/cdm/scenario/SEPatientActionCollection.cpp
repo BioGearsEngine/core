@@ -285,6 +285,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_RightNeedleDecompression = nullptr;
   m_PericardialEffusion = nullptr;
   m_PulmonaryShunt = nullptr;
+  m_RadiationAbsorbedDose = nullptr;
   m_Sleep = nullptr;
   m_LeftOpenTensionPneumothorax = nullptr;
   m_LeftClosedTensionPneumothorax = nullptr;
@@ -323,6 +324,7 @@ void SEPatientActionCollection::Clear()
   RemoveRightNeedleDecompression();
   RemovePericardialEffusion();
   RemovePulmonaryShunt();
+  RemoveRadiationAbsorbedDose();
   RemoveSleepState();
   RemoveLeftOpenTensionPneumothorax();
   RemoveLeftClosedTensionPneumothorax();
@@ -426,6 +428,9 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   }
   if (HasPulmonaryShunt()) {
     to.push_back(GetPulmonaryShunt()->Unload());
+  }
+  if (HasRadiationAbsorbedDose()) {
+    to.push_back(GetRadiationAbsorbedDose()->Unload());
   }
   if (HasSleepState()) {
     to.push_back(GetSleepState()->Unload());
@@ -868,6 +873,18 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return true;
     }
     return IsValid(*m_PulmonaryShunt);
+  }
+
+  const CDM::RadiationAbsorbedDoseData* radabs = dynamic_cast<const CDM::RadiationAbsorbedDoseData*>(&action);
+  if (radabs != nullptr) {
+    if (m_RadiationAbsorbedDose == nullptr)
+      m_RadiationAbsorbedDose = new SERadiationAbsorbedDose();
+    m_RadiationAbsorbedDose->Load(*radabs);
+    if (!m_RadiationAbsorbedDose->IsActive()) {
+      RemoveRadiationAbsorbedDose();
+      return true;
+    }
+    return IsValid(*m_RadiationAbsorbedDose);
   }
 
   const CDM::SleepData* sleep = dynamic_cast<const CDM::SleepData*>(&action);
@@ -1483,6 +1500,21 @@ SEPulmonaryShunt* SEPatientActionCollection::GetPulmonaryShunt() const
 void SEPatientActionCollection::RemovePulmonaryShunt()
 {
   SAFE_DELETE(m_PulmonaryShunt);
+}
+//-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasRadiationAbsorbedDose() const
+{
+  return m_RadiationAbsorbedDose == nullptr ? false : true;
+}
+//-------------------------------------------------------------------------------
+SERadiationAbsorbedDose* SEPatientActionCollection::GetRadiationAbsorbedDose() const
+{
+  return m_RadiationAbsorbedDose;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveRadiationAbsorbedDose()
+{
+  SAFE_DELETE(m_RadiationAbsorbedDose);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasSleepState() const
