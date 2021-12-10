@@ -13,8 +13,8 @@
 
 %ignore biogears::SEGenericScalar::GetCompoundUnit(std::string const &) const ;
 
-%ignore biogears::SEGenericScalar::GetValue() const;
-%rename (GetValueAs) biogears::SEGenericScalar::GetValue(const char* unit) const;
+//%ignore biogears::SEGenericScalar::GetValue() const;
+//%rename (GetValueAs) biogears::SEGenericScalar::GetValue(const char* unit) const;
 %ignore biogears::SEGenericScalar::GetValue(std::string const &) const ;
 %ignore biogears::SEGenericScalar::IncrementValue(double,std::string const &) ;
 %ignore biogears::SEGenericScalar::DecrementValue(double,std::string const &) ;

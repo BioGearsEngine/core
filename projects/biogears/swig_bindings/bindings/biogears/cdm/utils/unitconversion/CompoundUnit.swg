@@ -34,10 +34,17 @@
 %nspace biogears::CUnitDimension;
 %nspace biogears::CCompoundUnit;
 
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::CCompoundUnit::ToString() const "public override";
+#endif 
 
 namespace biogears {
    class CCompoundUnit {
    
+   public:
+     std::string ToString() const{
+        return GetString();
+      }
    };
 }
 
