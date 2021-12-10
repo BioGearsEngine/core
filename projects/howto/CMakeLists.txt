@@ -51,6 +51,7 @@ function(add_howto name)
         DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
         CXX_STANDARD 14
         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        VS_DEBUGGER_ENVIRONMENT "${VS_DEBUGGER_ENVIRONMENT_LIST}"
         )
 
      target_compile_definitions(${TARGET_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
@@ -129,6 +130,7 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
         DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
         CXX_STANDARD 14
         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+        VS_DEBUGGER_ENVIRONMENT "${VS_DEBUGGER_ENVIRONMENT_LIST}"
   )
   target_link_libraries(howto-common Biogears::libbiogears)
   target_include_directories(howto-common
