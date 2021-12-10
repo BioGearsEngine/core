@@ -460,6 +460,14 @@ namespace bio
       var Urine = engine.GetEngineTrack().GetScalar(MeanUrineRequest);
       var ecgData = engine.GetEngineTrack().GetScalar(ecg);
 
+      
+      //!
+      //!  Testing format outputs of using DataRequest
+      //!  UrineOutput is stored in ml/Day in biogears but we want it in ml/hr
+      logger.Info(Urine.ToString());
+      logger.Info(String.Format("Urine Value {0} {1}", Urine.GetValue(MeanUrineRequest.GetUnit().ToString()), MeanUrineRequest.GetUnit().ToString()));
+      logger.Info(String.Format("Urine Value {0} {1}", Urine.GetValue(), Urine.GetUnit().ToString()));
+
 
       apply_acute_respiratory_distress(engine);
 

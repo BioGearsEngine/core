@@ -164,7 +164,7 @@ void SEDataRequest::Set(const std::string& name, const std::string& unit)
 void SEDataRequest::Set(const char* name, const CCompoundUnit& unit)
 {
   m_Name = name;
-  m_RequestedUnit = "";
+  m_RequestedUnit = unit.ToString();
   m_Unit = &unit;
   m_Hash = 0;
 }
@@ -172,7 +172,7 @@ void SEDataRequest::Set(const char* name, const CCompoundUnit& unit)
 void SEDataRequest::Set(const std::string& name, const CCompoundUnit& unit)
 {
   m_Name = name;
-  m_RequestedUnit = "";
+  m_RequestedUnit = unit.ToString();
   m_Unit = &unit;
   m_Hash = 0;
 }

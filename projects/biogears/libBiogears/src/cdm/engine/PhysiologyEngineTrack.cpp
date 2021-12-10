@@ -553,6 +553,11 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
   return false;
 }
 
+
+//  Set the DataRequestScalar based on the Connected SEScalar and Configured DataRequest
+//
+//  When the DataRequest Unit differs from the SEScalar Unit we want to output
+//  Values in the DataRequest format.  
 void SEDataRequestScalar::SetScalar(const SEScalar* s, SEDataRequest& dr)
 {
   if (s == nullptr) {
