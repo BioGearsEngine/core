@@ -426,6 +426,55 @@ void BloodChemistry::PostProcess()
     }
   }
 }
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Computes the physiological impact of acute radiation exposure.
+///
+/// \details
+/// Computes the bone marrow impacts due to radiation exposure in a human. This impact will be 
+/// reflected in the complete blood count. We are mechanistically modeling bone marrow lymphopoiesis
+/// The other cell types are going to be scaled on this model in an appropriate way. Enums that impact 
+/// the patient will be flagged in a separate function
+//--------------------------------------------------------------------------------------------------
+void BloodChemistry::AcuteRadiationSyndrome()
+{
+  //make sure we have the appropriate action:
+  if (!m_PatientActions->HasRadiationAbsorbedDose()) {
+    return;
+  }
+
+
+  //define parameters
+  //control parameters  
+  const double alpha_Per_Day = 0.8;
+  const double gamma_Per_Day = 0.2;
+  const double delta_Per_Day = 0.8;
+  const double nu_Per_Day = 0.02;   //capital gamma in the model
+  const double sigma1 = 1.0;
+  const double sigma2 = 0.06;
+  const double sigma3 = 0.01;
+  const double phi = 1.01;
+  //radiobiological paramters
+  const double D1_J_Per_Kg = 1.4;
+  const double Dc_J_Per_Kg = 0.5;
+  const double Dm1_J_Per_Kg = 13.0;
+  const double D2_J_Per_Kg = 1.4;
+  const double Dm2_J_Per_Kg = 13.0;
+  const double D3_J_Per_Kg = 1.6;
+  const double Dm3_J_Per_Kg = 6.5;
+  const double v1_Per_Day = 0.6;
+  const double v2_Per_Day = 7.0;
+
+
+
+
+
+
+
+
+
+
+}
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
