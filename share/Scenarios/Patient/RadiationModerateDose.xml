@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+  <Name>InfectionSevere</Name>
+  <Description>Load patient who has had severe infection for 24 hrs and is showing symptoms of Sepsis. </Description>
+  <EngineStateFile>./states/InfectionStates/SevereInfection@24hr.xml</EngineStateFile>
+  <DataRequests SamplesPerSecond="0.05">
+    <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
+
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                         Unit="1/min"       Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"                 Unit="mL"          Precision="1"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="L"          Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="L"          Precision="1"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure"                  Unit="mmHg"        Precision="1"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="1"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"          Unit="mmHg"        Precision="0"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure"         Unit="mmHg"        Precision="1"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"                     Unit="L/min"      Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="HemoglobinContent"                 Unit="g"           Precision="0"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralVenousPressure"             Unit="mmHg"        Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystemicVascularResistance" Unit="mmHg s/mL" Precision="3"/>
+
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                       Unit="mL"          Precision="3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"                   Unit="1/min"       Precision="2"/>
+
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
+
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespiratoryExchangeRatio"          Unit="unitless"    Precision="3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenConsumptionRate"             Unit="mL/min"      Precision="3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="CarbonDioxideProductionRate"       Unit="mL/min"      Precision="3"/>
+
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="GlomerularFiltrationRate"          Unit="mL/min"      Precision="0"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/min"      Precision="3"/>
+
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="MassInBody" Unit="mg" Precision="2"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="MassInBlood" Unit="mg" Precision="2"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="MassInTissue" Unit="mg" Precision="2"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="Clearance-RenalFiltrationRate" Unit="mg/min" Precision="2"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="Clearance-RenalReabsorptionRate" Unit="mg/min" Precision="2"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="BloodConcentration" Unit="mg/L" Precision="2"/>
+    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular" Substance="Lactate"    Name="Concentration" Unit="mg/L" Precision="2"/>
+    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular" Substance="Lactate"    Name="Concentration" Unit="mg/L" Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanUrineOutput"               Unit="mL/min"      Precision="3"/>
+    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Albumin"       Name="Concentration" Unit="g/dL"    Precision="2"/>
+    <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Lactate"       Name="Molarity" Unit="mmol/L"    Precision="2"/>
+
+    <DataRequest Substance="Epinephrine" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/L" Precision="6"/>
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="BloodConcentration" Unit="mg/dL" Precision="3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalBilirubin" Unit="mg/dL" Precision="3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="EnergyDeficit" Unit="W" Precision="3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-TissueIntegrity" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-BloodPathogen" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-LocalPathogen" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-LocalMacrophage" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-LocalNeutrophil" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-LocalBarrier" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-Trauma" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-ConstitutiveNOS" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-InducibleNOSPre" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-InducibleNOS" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-MacrophageResting" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-MacrophageActive" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-NeutrophilActive" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-NeutrophilResting" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-Interleukin6" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-Interleukin10" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-Interleukin12" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-Nitrate" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-NitricOxide" Precision = "3"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-TumorNecrosisFactor" Precision = "3"/>
+
+    <!-- Specific to this scenario -->
+
+  </DataRequests>
+
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Food</Name>
+      <Carbohydrate value="130.0" unit="g"/>
+      <Fat value="27.0" unit="g"/>
+      <Protein value="20.0" unit="g"/>
+      <Calcium value="0.5" unit="g"/>
+      <Sodium value="0.75" unit="g"/>
+      <Water value="0.5" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Agua</Name>
+      <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Agua</Name>
+      <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Agua</Name>
+      <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Food</Name>
+      <Carbohydrate value="130.0" unit="g"/>
+      <Fat value="27.0" unit="g"/>
+      <Protein value="20.0" unit="g"/>
+      <Calcium value="0.5" unit="g"/>
+      <Sodium value="0.75" unit="g"/>
+      <Water value="0.5" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Agua</Name>
+      <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Agua</Name>
+      <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Agua</Name>
+      <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Agua</Name>
+      <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Food</Name>
+      <Carbohydrate value="130.0" unit="g"/>
+      <Fat value="27.0" unit="g"/>
+      <Protein value="20.0" unit="g"/>
+      <Calcium value="0.5" unit="g"/>
+      <Sodium value="0.75" unit="g"/>
+      <Water value="0.5" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Agua</Name>
+      <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="ConsumeNutrientsData">
+    <Nutrition>
+      <Name>Agua</Name>
+      <Water value="0.15" unit="L"/>
+    </Nutrition>
+  </Action>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="hr"/>
+  </Action>
+  <Action xsi:type="SerializeStateData" Type="Save">
+    <Filename>./states/InfectionStates/SevereInfection@36hr.xml</Filename>
+  </Action>
+</Scenario>
