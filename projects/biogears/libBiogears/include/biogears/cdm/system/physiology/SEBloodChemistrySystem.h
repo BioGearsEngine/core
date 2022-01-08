@@ -172,7 +172,15 @@ public:
   SEScalarMass& GetHemoglobinLostToUrine();
   double GetHemoglobinLostToUrine(const MassUnit& unit) const;
   //@}
-
+  /** @name LymphocyteCellCount
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_LymphocyteCellCount
+  *  @{*/
+  /// %Test if member has been allocated
+  bool HasLymphocyteCellCount() const;
+  /// Get member class, allocate if nullptr
+  SEScalarAmountPerVolume& GetLymphocyteCellCount();
+  double GetLymphocyteCellCount(const AmountPerVolumeUnit& unit) const;
+  //@}
   /** @name OxygenSaturation
    *  @brief @copybrief Physiology_BloodChemistrySystemData_OxygenSaturation
    *  @{*/
@@ -412,6 +420,7 @@ protected:
   SEScalarFraction* m_Hematocrit;
   SEScalarMass* m_HemoglobinContent;
   SEScalarMass* m_HemoglobinLostToUrine;
+  SEScalarAmountPerVolume* m_LymphocyteCellCount;
   SEScalarFraction* m_OxygenSaturation;
   SEScalarFraction* m_OxygenVenousSaturation;
   SEScalarAmountPerVolume* m_Phosphate;

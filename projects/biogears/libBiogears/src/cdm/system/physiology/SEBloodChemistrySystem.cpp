@@ -51,6 +51,7 @@ constexpr char idVenousBloodPH[] = "VenousBloodPH";
 constexpr char idVolumeFractionNeutralPhospholipidInPlasma[] = "VolumeFractionNeutralPhospholipidInPlasma";
 constexpr char idVolumeFractionNeutralLipidInPlasma[] = "VolumeFractionNeutralLipidInPlasma";
 constexpr char idWhiteBloodCellCount[] = "WhiteBloodCellCount";
+constexpr char idLymphocyteCellCount[] = "LymphocyteCellCount";
 constexpr char idArterialCarbonDioxidePressure[] = "ArterialCarbonDioxidePressure";
 constexpr char idArterialOxygenPressure[] = "ArterialOxygenPressure";
 constexpr char idPulmonaryArterialCarbonDioxidePressure[] = "PulmonaryArterialCarbonDioxidePressure";
@@ -76,6 +77,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_Hematocrit = nullptr;
   m_HemoglobinContent = nullptr;
   m_HemoglobinLostToUrine = nullptr;
+  m_LymphocyteCellCount = nullptr;
   m_OxygenSaturation = nullptr;
   m_OxygenVenousSaturation = nullptr;
   m_Phosphate = nullptr;
@@ -125,6 +127,7 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_Hematocrit);
   SAFE_DELETE(m_HemoglobinContent);
   SAFE_DELETE(m_HemoglobinLostToUrine);
+  SAFE_DELETE(m_LymphocyteCellCount);
   SAFE_DELETE(m_OxygenSaturation);
   SAFE_DELETE(m_OxygenVenousSaturation);
   SAFE_DELETE(m_Phosphate);
@@ -189,6 +192,9 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
   }
   if (name == idHemoglobinLostToUrine) {
     return &GetHemoglobinLostToUrine();
+  }
+  if (name == idLymphocyteCellCount) {
+    return &GetLymphocyteCellCount();
   }
   if (name == idOxygenSaturation) {
     return &GetOxygenSaturation();
@@ -311,6 +317,9 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
   if (in.HemoglobinLostToUrine().present()) {
     GetHemoglobinLostToUrine().Load(in.HemoglobinLostToUrine().get());
   }
+  if (in.LymphocyteCellCount().present()) {
+    GetLymphocyteCellCount().Load(in.LymphocyteCellCount().get());
+  }
   if (in.OxygenSaturation().present()) {
     GetOxygenSaturation().Load(in.OxygenSaturation().get());
   }
@@ -431,6 +440,9 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
   }
   if (m_HemoglobinLostToUrine != nullptr) {
     data.HemoglobinLostToUrine(std::unique_ptr<CDM::ScalarMassData>(m_HemoglobinLostToUrine->Unload()));
+  }
+  if (m_LymphocyteCellCount != nullptr) {
+    data.LymphocyteCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_LymphocyteCellCount->Unload()));
   }
   if (m_OxygenSaturation != nullptr) {
     data.OxygenSaturation(std::unique_ptr<CDM::ScalarFractionData>(m_OxygenSaturation->Unload()));
@@ -751,6 +763,27 @@ double SEBloodChemistrySystem::GetHemoglobinLostToUrine(const MassUnit& unit) co
   }
   return m_HemoglobinLostToUrine->GetValue(unit);
 }
+//-------------------------------------------------------------------------------
+
+bool SEBloodChemistrySystem::HasLymphocyteCellCount() const
+{
+  return m_LymphocyteCellCount == nullptr ? false : m_LymphocyteCellCount->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarAmountPerVolume& SEBloodChemistrySystem::GetLymphocyteCellCount()
+{
+  if (m_LymphocyteCellCount == nullptr)
+    m_LymphocyteCellCount = new SEScalarAmountPerVolume();
+  return *m_LymphocyteCellCount;
+}
+//-------------------------------------------------------------------------------
+double SEBloodChemistrySystem::GetLymphocyteCellCount(const AmountPerVolumeUnit& unit) const
+{
+  if (m_LymphocyteCellCount == nullptr)
+    return SEScalar::dNaN();
+  return m_LymphocyteCellCount->GetValue(unit);
+}
+
 //-------------------------------------------------------------------------------
 
 bool SEBloodChemistrySystem::HasOxygenSaturation() const
@@ -1284,6 +1317,7 @@ Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idCarbonMonoxideSaturation)
     .emplace_back(idHematocrit)
     .emplace_back(idHemoglobinContent)
+    .emplace_back(idLymphocyteCellCount)
     .emplace_back(idOxygenSaturation)
     .emplace_back(idPhosphate)
     .emplace_back(idPlasmaVolume)
@@ -1297,6 +1331,7 @@ Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idVenousBloodPH)
     .emplace_back(idVolumeFractionNeutralPhospholipidInPlasma)
     .emplace_back(idVolumeFractionNeutralLipidInPlasma)
+    .emplace_back(idWhiteBloodCellCount)
     .emplace_back(idArterialCarbonDioxidePressure)
     .emplace_back(idArterialOxygenPressure)
     .emplace_back(idPulmonaryArterialCarbonDioxidePressure)
