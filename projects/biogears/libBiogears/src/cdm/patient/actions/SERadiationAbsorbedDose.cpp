@@ -11,14 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>
 
-#include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
+#include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 SERadiationAbsorbedDose::SERadiationAbsorbedDose()
   : SEPatientAction()
 {
-  m_Dose = nullptr;
+  m_RadiationDose = nullptr;
 }
 //-------------------------------------------------------------------------------
 SERadiationAbsorbedDose::~SERadiationAbsorbedDose()
@@ -30,7 +30,7 @@ void SERadiationAbsorbedDose::Clear()
 {
 
   SEPatientAction::Clear();
-  SAFE_DELETE(m_Dose);
+  SAFE_DELETE(m_RadiationDose);
 }
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::IsValid() const
@@ -40,13 +40,13 @@ bool SERadiationAbsorbedDose::IsValid() const
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::IsActive() const
 {
-  return IsValid() ? !m_Dose->IsZero() : false;
+  return IsValid() ? !m_RadiationDose->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::Load(const CDM::RadiationAbsorbedDoseData& in)
 {
   SEPatientAction::Load(in);
-  GetDose().Load(in.Dose());
+  GetDose().Load(in.RadiationDose());
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -60,20 +60,20 @@ CDM::RadiationAbsorbedDoseData* SERadiationAbsorbedDose::Unload() const
 void SERadiationAbsorbedDose::Unload(CDM::RadiationAbsorbedDoseData& data) const
 {
   SEPatientAction::Unload(data);
-  if (m_Dose != nullptr)
-    data.Dose(std::unique_ptr<CDM::ScalarEnergyPerMassData>(m_Dose->Unload()));
+  if (m_RadiationDose != nullptr)
+    data.RadiationDose(std::unique_ptr<CDM::SEScalar0To1>(m_RadiationDose->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::HasDose() const
 {
-  return m_Dose == nullptr ? false : m_Dose->IsValid();
+  return m_RadiationDose == nullptr ? false : m_RadiationDose->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalarEnergyPerMass& SERadiationAbsorbedDose::GetDose()
+SEScalar0To1& SERadiationAbsorbedDose::GetDose()
 {
-  if (m_Dose == nullptr)
-    m_Dose = new SEScalarEnergyPerMass();
-  return *m_Dose;
+  if (m_RadiationDose == nullptr)
+    m_RadiationDose = new SEScalar0To1();
+  return *m_RadiationDose;
 }
 //-------------------------------------------------------------------------------
 void SERadiationAbsorbedDose::ToString(std::ostream& str) const
@@ -82,14 +82,14 @@ void SERadiationAbsorbedDose::ToString(std::ostream& str) const
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
   str << "\n\tDose: ";
-  HasDose() ? str << *m_Dose : str << "Not Set";
+  HasDose() ? str << *m_RadiationDose : str << "Not Set";
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::operator==(const SERadiationAbsorbedDose& rhs) const
 {
   bool equivilant = m_Comment == rhs.m_Comment;
-  equivilant &= (m_Dose && rhs.m_Dose) ? m_Dose->operator==(*rhs.m_Dose) : m_Dose == rhs.m_Dose;
+  equivilant &= (m_RadiationDose && rhs.m_RadiationDose) ? m_RadiationDose->operator==(*rhs.m_RadiationDose) : m_RadiationDose == rhs.m_RadiationDose;
   return equivilant;
 }
 //-------------------------------------------------------------------------------

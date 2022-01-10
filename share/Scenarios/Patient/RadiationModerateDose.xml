@@ -52,7 +52,7 @@
   </Action>
 
   <Action xsi:type="RadiationAbsorbedDose">
-    <Dose value="3" unit="J/kg"/>
+    <RadiationDose value="3" unit="J/kg"/>
   </Action>
 
   <Action xsi:type="AdvanceTimeData">

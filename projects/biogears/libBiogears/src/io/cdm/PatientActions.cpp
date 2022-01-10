@@ -1212,13 +1212,13 @@ namespace io {
 
     Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
 
-    io::Property::Marshall(in.Dose(), out.GetDose());
+    io::Property::Marshall(in.RadiationDose(), out.GetDose());
   }
   //----------------------------------------------------------------------------------
   void PatientActions::UnMarshall(const SERadiationAbsorbedDose& in, CDM::RadiationAbsorbedDoseData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Dose)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, RadiationDose)
   }
   //----------------------------------------------------------------------------------
   //class SETensionPneumothorax
