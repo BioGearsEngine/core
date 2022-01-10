@@ -96,6 +96,21 @@ void BloodChemistry::Clear()
   m_d3Agglutinate_ct = 0.0;
   m_4Agglutinate_ct = 0.0;
   m_RemovedRBC_ct = 0.0;
+
+    //radiation model parameters, first sets are growing within the marrow and thymus
+  m_progenitorLymphocytes_ct = 0.0;
+  m_progenitorLymphocytes_wd_ct = 0.0;
+  m_progenitorLymphocytes_d_ct = 0.0;
+  m_progenitorLymphocytes_hd_ct = 0.0;
+
+  m_maturingLymphocytes_ct = 0.0;
+  m_maturingLymphocytes_d_ct = 0.0;
+  m_maturingLymphocytes_hd_ct = 0.0;
+
+  //circulating counts
+  m_Lymphocytes_ct = 0.0;
+  m_Lymphocytes_d_ct = 0.0;
+  m_Lymphocytes_hd_ct = 0.0;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -129,6 +144,21 @@ void BloodChemistry::Initialize()
   m_4Agglutinate_ct = 0.0;
   m_RemovedRBC_ct = 0.0;
 
+    //radiation model parameters, first sets are growing within the marrow and thymus
+  m_progenitorLymphocytes_ct = 0.0;
+  m_progenitorLymphocytes_wd_ct = 0.0;
+  m_progenitorLymphocytes_d_ct = 0.0;
+  m_progenitorLymphocytes_hd_ct = 0.0;
+
+  m_maturingLymphocytes_ct = 0.0;
+  m_maturingLymphocytes_d_ct = 0.0;
+  m_maturingLymphocytes_hd_ct = 0.0;
+
+  //circulating counts
+  m_Lymphocytes_ct = 0.0;
+  m_Lymphocytes_d_ct = 0.0;
+  m_Lymphocytes_hd_ct = 0.0;
+
   Process(); // Calculate the initial system values
 }
 
@@ -147,6 +177,18 @@ bool BloodChemistry::Load(const CDM::BioGearsBloodChemistrySystemData& in)
   m_d3Agglutinate_ct = in.ThreeCellDonAgglutinates_ct();
   m_4Agglutinate_ct = in.FourCellAgglutinates_ct();
   m_RemovedRBC_ct = in.RemovedRBC_ct();
+
+  //radiation model values 
+  m_progenitorLymphocytes_ct = in.progenitorLymphocytes();
+  m_progenitorLymphocytes_wd_ct = in.progenitorLymphocytes_wd();
+  m_progenitorLymphocytes_d_ct = in.progenitorLymphocytes_d();
+  m_progenitorLymphocytes_hd_ct = in.progenitorLymphocytes_hd();
+  m_maturingLymphocytes_ct = in.maturingLymphocytes();
+  m_maturingLymphocytes_d_ct = in.maturingLymphocytes_d();
+  m_maturingLymphocytes_hd_ct = in.maturingLymphocytes_hd();
+  m_Lymphocytes_ct = in.Lymphocytes();
+  m_Lymphocytes_d_ct = in.Lymphocytes_d();
+  m_Lymphocytes_hd_ct = in.Lymphocytes_hd();
 
   BioGearsSystem::LoadState();
 

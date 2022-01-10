@@ -151,7 +151,7 @@ protected:
   //circulating counts
   double m_Lymphocytes_ct;
   double m_Lymphocytes_d_ct;
-  double m_pLymphocytes_hd_ct;
+  double m_Lymphocytes_hd_ct;
 
 
 
