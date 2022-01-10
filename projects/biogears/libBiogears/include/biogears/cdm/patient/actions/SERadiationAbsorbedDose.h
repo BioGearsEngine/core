@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
-class SEScalar0To1;
+class SEScalarEnergyPerMass;
 namespace io {
   class PatientActions;
 }
@@ -38,7 +38,7 @@ public:
   virtual CDM::RadiationAbsorbedDoseData* Unload() const override;
 
   virtual bool HasDose() const;
-  virtual SEScalar0To1& GetDose();
+  virtual SEScalarEnergyPerMass& GetDose();
 
   virtual void ToString(std::ostream& str) const override;
   
@@ -49,6 +49,6 @@ protected:
   virtual void Unload(CDM::RadiationAbsorbedDoseData& data) const;
 
 protected:
-  SEScalar0To1* m_RadiationDose;
+  SEScalarEnergyPerMass* m_RadiationDose;
 };
 }

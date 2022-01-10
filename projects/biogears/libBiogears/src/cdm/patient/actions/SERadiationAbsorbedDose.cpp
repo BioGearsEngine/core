@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>
 
-#include <biogears/cdm/properties/SEScalar0To1.h>
+#include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
@@ -61,7 +61,7 @@ void SERadiationAbsorbedDose::Unload(CDM::RadiationAbsorbedDoseData& data) const
 {
   SEPatientAction::Unload(data);
   if (m_RadiationDose != nullptr)
-    data.RadiationDose(std::unique_ptr<CDM::SEScalar0To1>(m_RadiationDose->Unload()));
+    data.RadiationDose(std::unique_ptr<CDM::ScalarEnergyPerMassData>(m_RadiationDose->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::HasDose() const
@@ -69,10 +69,10 @@ bool SERadiationAbsorbedDose::HasDose() const
   return m_RadiationDose == nullptr ? false : m_RadiationDose->IsValid();
 }
 //-------------------------------------------------------------------------------
-SEScalar0To1& SERadiationAbsorbedDose::GetDose()
+SEScalarEnergyPerMass& SERadiationAbsorbedDose::GetDose()
 {
   if (m_RadiationDose == nullptr)
-    m_RadiationDose = new SEScalar0To1();
+    m_RadiationDose = new SEScalarEnergyPerMass();
   return *m_RadiationDose;
 }
 //-------------------------------------------------------------------------------

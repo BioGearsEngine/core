@@ -51,7 +51,7 @@
     <Time value="1" unit="min"/>
   </Action>
 
-  <Action xsi:type="RadiationAbsorbedDose">
+  <Action xsi:type="RadiationAbsorbedDoseData">
     <RadiationDose value="3" unit="J/kg"/>
   </Action>
 
