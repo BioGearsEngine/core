@@ -49,6 +49,6 @@ protected:
   virtual void Unload(CDM::RadiationAbsorbedDoseData& data) const;
 
 protected:
-  SEScalarEnergyPerMass* m_dose;
+  SEScalarEnergyPerMass* m_Dose;
 };
 }

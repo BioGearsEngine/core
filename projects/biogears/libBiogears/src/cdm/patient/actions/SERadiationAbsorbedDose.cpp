@@ -18,7 +18,7 @@ namespace biogears {
 SERadiationAbsorbedDose::SERadiationAbsorbedDose()
   : SEPatientAction()
 {
-  m_dose = nullptr;
+  m_Dose = nullptr;
 }
 //-------------------------------------------------------------------------------
 SERadiationAbsorbedDose::~SERadiationAbsorbedDose()
@@ -30,7 +30,7 @@ void SERadiationAbsorbedDose::Clear()
 {
 
   SEPatientAction::Clear();
-  SAFE_DELETE(m_dose);
+  SAFE_DELETE(m_Dose);
 }
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::IsValid() const
@@ -40,7 +40,7 @@ bool SERadiationAbsorbedDose::IsValid() const
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::IsActive() const
 {
-  return IsValid() ? !m_dose->IsZero() : false;
+  return IsValid() ? !m_Dose->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::Load(const CDM::RadiationAbsorbedDoseData& in)
@@ -60,20 +60,20 @@ CDM::RadiationAbsorbedDoseData* SERadiationAbsorbedDose::Unload() const
 void SERadiationAbsorbedDose::Unload(CDM::RadiationAbsorbedDoseData& data) const
 {
   SEPatientAction::Unload(data);
-  if (m_dose != nullptr)
-    data.Dose(std::unique_ptr<CDM::ScalarEnergyPerMassData>(m_dose->Unload()));
+  if (m_Dose != nullptr)
+    data.Dose(std::unique_ptr<CDM::ScalarEnergyPerMassData>(m_Dose->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::HasDose() const
 {
-  return m_dose == nullptr ? false : m_dose->IsValid();
+  return m_Dose == nullptr ? false : m_Dose->IsValid();
 }
 //-------------------------------------------------------------------------------
 SEScalarEnergyPerMass& SERadiationAbsorbedDose::GetDose()
 {
-  if (m_dose == nullptr)
-    m_dose = new SEScalarEnergyPerMass();
-  return *m_dose;
+  if (m_Dose == nullptr)
+    m_Dose = new SEScalarEnergyPerMass();
+  return *m_Dose;
 }
 //-------------------------------------------------------------------------------
 void SERadiationAbsorbedDose::ToString(std::ostream& str) const
@@ -82,14 +82,14 @@ void SERadiationAbsorbedDose::ToString(std::ostream& str) const
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
   str << "\n\tDose: ";
-  HasDose() ? str << *m_dose : str << "Not Set";
+  HasDose() ? str << *m_Dose : str << "Not Set";
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::operator==(const SERadiationAbsorbedDose& rhs) const
 {
   bool equivilant = m_Comment == rhs.m_Comment;
-  equivilant &= (m_dose && rhs.m_dose) ? m_dose->operator==(*rhs.m_dose) : m_dose == rhs.m_dose;
+  equivilant &= (m_Dose && rhs.m_Dose) ? m_Dose->operator==(*rhs.m_Dose) : m_Dose == rhs.m_Dose;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
