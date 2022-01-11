@@ -214,6 +214,18 @@ void BloodChemistry::Unload(CDM::BioGearsBloodChemistrySystemData& data) const
   data.ThreeCellDonAgglutinates_ct(m_d3Agglutinate_ct);
   data.FourCellAgglutinates_ct(m_4Agglutinate_ct);
   data.RemovedRBC_ct(m_RemovedRBC_ct);
+
+    //radiation model values
+  data.progenitorLymphocytes(m_progenitorLymphocytes_ct);
+  data.progenitorLymphocytes_wd(m_progenitorLymphocytes_wd_ct);
+  data.progenitorLymphocytes_d(m_progenitorLymphocytes_d_ct);
+  data.progenitorLymphocytes_hd(m_progenitorLymphocytes_hd_ct);
+  data.maturingLymphocytes(m_maturingLymphocytes_ct);
+  data.maturingLymphocytes_d(m_maturingLymphocytes_d_ct);
+  data.maturingLymphocytes_hd(m_maturingLymphocytes_hd_ct);
+  data.Lymphocytes(m_Lymphocytes_ct);
+  data.Lymphocytes_d(m_Lymphocytes_d_ct);
+  data.Lymphocytes_hd(m_Lymphocytes_hd_ct);
 }
 
 //--------------------------------------------------------------------------------------------------
