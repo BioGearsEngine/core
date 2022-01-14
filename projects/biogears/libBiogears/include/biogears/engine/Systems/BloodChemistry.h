@@ -100,6 +100,8 @@ protected:
   SEPatientActionCollection* m_PatientActions;
 
   // Stateless member variable (Set in SetUp())
+  double m_dt_s;
+  double m_dt_hr;
   double m_redBloodCellVolume_mL;
   double m_HbLostToUrine_g;
   double m_RhTransfusionReactionVolume_mL;
