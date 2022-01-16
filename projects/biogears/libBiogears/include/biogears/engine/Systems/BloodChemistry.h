@@ -154,7 +154,8 @@ protected:
   double m_Lymphocytes_ct;
   double m_Lymphocytes_d_ct;
   double m_Lymphocytes_hd_ct;
-
+  //track radiation
+  double m_radAbsorbed_Gy;
 
 
   //Initialize HTR concentrations

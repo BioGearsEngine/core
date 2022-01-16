@@ -41,6 +41,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="Lymphocytes" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="Lymphocytes_d" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="Lymphocytes_hd" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="RadiationAbsorbed" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
