@@ -97,6 +97,8 @@ specific language governing permissions and limitations under the License.
 					<xs:element name="MeanCorpuscularVolume" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief (MCV) Average red blood cell size.-->
 					<xs:element name="RedBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/>	<!--<< @brief  Number of red blood cells per volume of blood.-->
 					<xs:element name="WhiteBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Number of white blood cells per volume of blood.-->
+					<xs:element name="LymphocyteCellCount" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Number of lymphocytes blood cells per volume of blood.-->
+					<xs:element name="NeutrophilCellCount" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Number of lymphocytes blood cells per volume of blood.-->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

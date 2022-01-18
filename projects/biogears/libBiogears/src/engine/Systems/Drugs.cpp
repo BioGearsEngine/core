@@ -1023,32 +1023,38 @@ void Drugs::CalculateDrugEffects()
   GetTubularPermeabilityChange().SetValue(effects_unitless["TubularPermeability"]);
   GetAntibioticActivity().SetValue(antibioticEffect_Per_hr);
 
-  //Assume drugs affecing pupil behavior do so equally on left/right sides
+  //Assume drugs affecing pupil behavior do so equally on left/right sides (this might need to be deleted, logic is all wrong)
   const SEPupillaryResponse& leftPupillaryResponse = m_data.GetNervous().GetLeftEyePupillaryResponse();
   const SEPupillaryResponse& rightPupillaryResponse = m_data.GetNervous().GetRightEyePupillaryResponse();
   double leftPupilReactivityResponseLevel = leftPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
   double rightPupilReactivityResponseLevel = rightPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
-  double leftPupilSizeResponseLevel = leftPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
-  double rightPupilSizeResponseLevel = rightPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
+  //double leftPupilSizeResponseLevel = leftPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
+  //double rightPupilSizeResponseLevel = rightPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
 
   //We need to handle Sarin pupil effects (if Sarin is active) separately because technically they stem from contact and not systemic levels, meaning that they
   //do not depend on the Sarin plasma concentration in the same way as other PD effects.  We still perform the calculation here because
   //we cannot "contact" the eye, but scale them differently.  Sarin pupil effects are large and fast, so it's reasonable to
   //overwrite other drug pupil effects (and we probably aren't modeling opioid addicts inhaling Sarin)
-  if (m_data.GetSubstances().IsActive(*m_data.GetSubstances().GetSubstance("Sarin"))) {
-    leftPupilSizeResponseLevel = GeneralMath::LogisticFunction(-1, 0.0475, 250, m_data.GetSubstances().GetSubstance("Sarin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_L));
-    rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
-  }
-  //Bound pupil modifiers
-  BLIM(leftPupilReactivityResponseLevel, -1, 1);
-  BLIM(rightPupilReactivityResponseLevel, -1, 1);
-  BLIM(leftPupilSizeResponseLevel, -1, 1);
-  BLIM(rightPupilSizeResponseLevel, -1, 1);
+  // ///TODO: minor patch to fix sarin pupil effects, logic is a bit wrong
+  //if (m_data.GetSubstances().IsActive(*m_data.GetSubstances().GetSubstance("Sarin"))) {
+  //  leftPupilSizeResponseLevel = GeneralMath::LogisticFunction(-1, 0.0475, 250, m_data.GetSubstances().GetSubstance("Sarin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_L));
+  //  rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
+  //}
+  ////Bound pupil modifiers
+  //BLIM(leftPupilReactivityResponseLevel, -1, 1);
+  //BLIM(rightPupilReactivityResponseLevel, -1, 1);
+  //BLIM(leftPupilSizeResponseLevel, -1, 1);
+  //BLIM(rightPupilSizeResponseLevel, -1, 1);
 
-  m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
-  m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(leftPupilSizeResponseLevel);
-  m_data.GetNervous().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
-  m_data.GetNervous().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
+  m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
+  m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
+  m_data.GetNervous().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
+  m_data.GetNervous().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
+
+  //m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
+  //m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(leftPupilSizeResponseLevel);
+  //m_data.GetNervous().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
+  //m_data.GetNervous().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
 
   //Account for cardiovascular override actions
   if (m_data.GetActions().GetPatientActions().HasOverride()

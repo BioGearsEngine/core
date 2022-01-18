@@ -119,6 +119,17 @@ SEScalarMassPerVolume& SECompleteBloodCount::GetHemoglobin()
   return *m_Hemoglobin;
 }
 
+bool SECompleteBloodCount::HasLymphocyteCellCount() const
+{
+  return m_LymphocyteCellCount == nullptr ? false : m_LymphocyteCellCount->IsValid();
+}
+SEScalarAmountPerVolume& SECompleteBloodCount::GetLymphocyteCellCount()
+{
+  if (m_LymphocyteCellCount == nullptr)
+    m_LymphocyteCellCount = new SEScalarAmountPerVolume();
+  return *m_LymphocyteCellCount;
+}
+
 bool SECompleteBloodCount::HasPlateletCount() const
 {
   return m_PlateletCount == nullptr ? false : m_PlateletCount->IsValid();
@@ -161,6 +172,17 @@ SEScalarVolume& SECompleteBloodCount::GetMeanCorpuscularVolume()
   if (m_MeanCorpuscularVolume == nullptr)
     m_MeanCorpuscularVolume = new SEScalarVolume();
   return *m_MeanCorpuscularVolume;
+}
+
+bool SECompleteBloodCount::HasNeutrophilCount() const
+{
+  return m_NeutrophilCellCount == nullptr ? false : m_NeutrophilCellCount->IsValid();
+}
+SEScalarAmountPerVolume& SECompleteBloodCount::GetNeutrophilCount()
+{
+  if (m_NeutrophilCellCount == nullptr)
+    m_NeutrophilCellCount = new SEScalarAmountPerVolume();
+  return *m_NeutrophilCellCount;
 }
 
 bool SECompleteBloodCount::HasRedBloodCellCount() const

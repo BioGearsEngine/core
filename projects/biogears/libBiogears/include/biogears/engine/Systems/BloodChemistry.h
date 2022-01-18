@@ -81,9 +81,12 @@ public:
   void CalculateHemolyticTransfusionReaction(bool rhMismatch = false);
 
 protected:
+  void AcuteRadiationSyndrome();
+  void CheckRadiationSymptoms();
   void CheckBloodSubstanceLevels();
   void InflammatoryResponse();
   void ManageSIRS();		//SIRS = Systemic Inflammatory Response Syndrome
+
 
   //Override
   void ProcessOverride();
@@ -98,6 +101,8 @@ protected:
   SEPatientActionCollection* m_PatientActions;
 
   // Stateless member variable (Set in SetUp())
+  double m_dt_s;
+  double m_dt_hr;
   double m_redBloodCellVolume_mL;
   double m_HbLostToUrine_g;
   double m_RhTransfusionReactionVolume_mL;
@@ -135,6 +140,24 @@ protected:
   SELiquidSubstanceQuantity* m_venaCavaSodium;
   SELiquidSubstanceQuantity* m_venaCavaTriacylglycerol;
   SELiquidSubstanceQuantity* m_venaCavaUrea;
+
+  //radiation model parameters, first sets are growing within the marrow and thymus
+  double m_progenitorLymphocytes_ct;
+  double m_progenitorLymphocytes_wd_ct;
+  double m_progenitorLymphocytes_d_ct;
+  double m_progenitorLymphocytes_hd_ct;
+
+  double m_maturingLymphocytes_ct;
+  double m_maturingLymphocytes_d_ct;
+  double m_maturingLymphocytes_hd_ct;
+
+  //circulating counts
+  double m_Lymphocytes_ct;
+  double m_Lymphocytes_d_ct;
+  double m_Lymphocytes_hd_ct;
+  //track radiation
+  double m_radAbsorbed_Gy;
+
 
   //Initialize HTR concentrations
   double m_donorRBC_ct;

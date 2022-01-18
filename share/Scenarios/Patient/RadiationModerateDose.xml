@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+  <Name>RadiationModerateDose</Name>
+  <Description>Moderate radiation exposure </Description>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+  <DataRequests SamplesPerSecond="50">
+  
+    <DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="BloodConcentration" Unit="mg/L" Precision="2"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="LymphocyteCellCount" Unit="ct/uL" Precision="5"/>
+
+
+    <!-- Specific to this scenario -->
+
+  </DataRequests>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="min"/>
+  </Action>
+
+  <Action xsi:type="RadiationAbsorbedDoseData">
+    <RadiationDose value="3" unit="J/kg"/>
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="15" unit="min"/>
+  </Action>
+</Scenario>
