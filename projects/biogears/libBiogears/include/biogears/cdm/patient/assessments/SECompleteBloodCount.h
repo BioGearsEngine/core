@@ -50,6 +50,9 @@ public:
   virtual bool HasHemoglobin() const;
   virtual SEScalarMassPerVolume& GetHemoglobin();
 
+  virtual bool HasLymphocyteCellCount() const;
+  virtual SEScalarAmountPerVolume& GetLymphocyteCellCount();
+
   virtual bool HasPlateletCount() const;
   virtual SEScalarAmountPerVolume& GetPlateletCount();
 
@@ -62,6 +65,9 @@ public:
   virtual bool HasMeanCorpuscularVolume() const;
   virtual SEScalarVolume& GetMeanCorpuscularVolume();
 
+  virtual bool HasNeutrophilCount() const;
+  virtual SEScalarAmountPerVolume& GetNeutrophilCount();
+
   virtual bool HasRedBloodCellCount() const;
   virtual SEScalarAmountPerVolume& GetRedBloodCellCount();
 
@@ -71,10 +77,12 @@ public:
 protected:
   SEScalarFraction* m_Hematocrit;
   SEScalarMassPerVolume* m_Hemoglobin;
+  SEScalarAmountPerVolume* m_LymphocyteCellCount;
   SEScalarAmountPerVolume* m_PlateletCount;
   SEScalarMassPerAmount* m_MeanCorpuscularHemoglobin;
   SEScalarMassPerVolume* m_MeanCorpuscularHemoglobinConcentration;
   SEScalarVolume* m_MeanCorpuscularVolume;
+  SEScalarAmountPerVolume* m_NeutrophilCellCount;
   SEScalarAmountPerVolume* m_RedBloodCellCount;
   SEScalarAmountPerVolume* m_WhiteBloodCellCount;
 };

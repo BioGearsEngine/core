@@ -82,6 +82,7 @@ public:
 
 protected:
   void AcuteRadiationSyndrome();
+  void CheckRadiationSymptoms();
   void CheckBloodSubstanceLevels();
   void InflammatoryResponse();
   void ManageSIRS();		//SIRS = Systemic Inflammatory Response Syndrome

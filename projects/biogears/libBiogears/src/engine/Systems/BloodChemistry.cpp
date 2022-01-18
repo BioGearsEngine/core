@@ -346,6 +346,7 @@ void BloodChemistry::PreProcess()
 {
   InflammatoryResponse();
   AcuteRadiationSyndrome();
+  CheckRadiationSymptoms();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -526,7 +527,7 @@ void BloodChemistry::AcuteRadiationSyndrome()
   //control parameters  
   const double alpha_Per_Day = 0.8 / 86400.0;   //scale to our timescale
   const double gamma_Per_Day = 0.2 / 86400.0;
-  const double delta_Per_Day = 0.8 / 86400.0;
+  const double delta_Per_Day = 0.2 / 86400.0;
   const double kappa_Per_Day = 0.1 / 86400.0;
   const double sigma1 = 1.0;
   const double sigma2 = 0.06;
@@ -535,7 +536,7 @@ void BloodChemistry::AcuteRadiationSyndrome()
   //const double rho1 = 0.1;    //this number is not defined in the literature, transfer ratio from healthy to heavily damaged cells
   //const double rho2 = 0.1;
   //const double rho3 = 0.1;
-  double speed = 1.0;
+  double speed = 5.0;
 
   //radiobiological paramters
   const double D1_J_Per_Kg = 1.4;
@@ -543,10 +544,10 @@ void BloodChemistry::AcuteRadiationSyndrome()
   const double Dm1_J_Per_Kg = 13.0;
   const double D2_J_Per_Kg = 1.4;
   const double Dm2_J_Per_Kg = 13.0;
-  const double D3_J_Per_Kg = 1.6;
+  const double D3_J_Per_Kg = 0.2;   //this value has been adjusted for physiological response
   const double Dm3_J_Per_Kg = 6.5;
   const double v1_Per_Day = 0.6 / 86400.0;
-  const double vc_Per_Day = 0.6 / 86400.0; //this one isn't defined in the literature
+  const double vc_Per_Day = 1.6 / 86400.0; //this one isn't defined in the literature
   const double v2_Per_Day = 7.0 / 86400.0;
   const double xhat = 1.936e9;   //average number of lympohocytes
   const double nu_Per_Day = (v2_Per_Day * phi) / v1_Per_Day; //capital gamma in the model
@@ -558,9 +559,9 @@ void BloodChemistry::AcuteRadiationSyndrome()
   double rho3 = (Dm3_J_Per_Kg / (D3_J_Per_Kg - 1));
 
   // a single dose of 3-8 gy over one time step will break the model so we will administer the dose over a few hours to keep the dynamics
-  // we will assume the exposure is fairly high over a period of time, around 0.5 gy / min ( some of the highest exposures at chernobyl)
+  // we will assume the exposure is fairly high over a period of time, around 0.1 gy / min ( some of the highest exposures at chernobyl)
   /// \todo: make this configurable from the action
-  const double radiationRate_Per_s = (0.5) / 60;
+  const double radiationRate_Per_s = (0.1) / 60;
   double radiationRate_Per_dt = radiationRate_Per_s * m_dt_s;
 
   if (m_radAbsorbed_Gy >= radDose) {
@@ -608,8 +609,42 @@ void BloodChemistry::AcuteRadiationSyndrome()
   m_data.GetDataTrack().Probe("m_Lymphocytes_hd_ct ", m_Lymphocytes_hd_ct);
   m_data.GetDataTrack().Probe("m_radAbsorbed_Gy ", m_radAbsorbed_Gy);
 }
-
 //--------------------------------------------------------------------------------------------------
+/// \brief
+/// Checks the blood substance levels and set radiation specific events.
+///
+/// \details
+/// Checks the lymphocyte and neutrophil levels to determine patient events.
+/// These events are specific to radiation exposure but should expanded to be more general
+//--------------------------------------------------------------------------------------------------
+void BloodChemistry::CheckRadiationSymptoms()
+{
+    //get lymphocyte value: 
+    double lymph_ct_Per_L = GetLymphocyteCellCount().GetValue(AmountPerVolumeUnit::ct_Per_L);
+    const double xhat_ct_Per_L = 1.936e9; //average number of lympohocytes
+
+    //mild
+    if (lymph_ct_Per_L / xhat_ct_Per_L < 0.5) {
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, true, m_data.GetSimulationTime());
+    }
+
+    //severe
+    if (lymph_ct_Per_L / xhat_ct_Per_L < 0.2) {
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, false, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, false, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereHeadache, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, true, m_data.GetSimulationTime());
+
+    }
+
+ }
+
+
+  //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Checks the blood substance (oxygen, carbon dioxide, glucose, etc.) levels and sets events.
 ///
@@ -938,10 +973,12 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
   cbc.Reset();
   cbc.GetHematocrit().Set(GetHematocrit());
   cbc.GetHemoglobin().Set(m_data.GetSubstances().GetHb().GetBloodConcentration());
+  cbc.GetLymphocyteCellCount().SetValue(GetLymphocyteCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
   cbc.GetPlateletCount().SetValue(325000, AmountPerVolumeUnit::ct_Per_uL); // Hardcoded for now, don't support PlateletCount yet
   cbc.GetMeanCorpuscularHemoglobin().SetValue(m_data.GetConfiguration().GetMeanCorpuscularHemoglobin(MassPerAmountUnit::pg_Per_ct), MassPerAmountUnit::pg_Per_ct);
   cbc.GetMeanCorpuscularHemoglobinConcentration().SetValue(m_data.GetSubstances().GetHb().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL) / GetHematocrit().GetValue(), MassPerVolumeUnit::g_Per_dL); //Average range should be 32-36 g/dL. (https://en.wikipedia.org/wiki/Mean_corpuscular_hemoglobin_concentration)
   cbc.GetMeanCorpuscularVolume().SetValue(m_data.GetConfiguration().GetMeanCorpuscularVolume(VolumeUnit::uL), VolumeUnit::uL);
+  cbc.GetNeutrophilCount().SetValue(GetLymphocyteCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);   ///\TODO: update with correct data
   double rbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
   cbc.GetRedBloodCellCount().SetValue(rbcCount_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
   double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL); //m_data.GetSubstances().GetWBC().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
