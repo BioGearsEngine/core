@@ -52,10 +52,14 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="CriticalBrainOxygenDeficit"/>      <!--<< @brief A critical lack of oxygen in the brain. Death in under 10min-->
       <xs:enumeration value="Dehydration"/>      <!--<< @brief A loss of more fluid than is taken in (More than 3% loss of resting fluid mass). -->
       <xs:enumeration value="Diuresis"/>      <!--<< @brief High urine flow.-->
+      <xs:enumeration value="MildDiarrhea"/>      <!--<< @brief mild diarrhea.-->
+      <xs:enumeration value="SevereDiarrhea"/>      <!--<< @brief severe diarrhea.-->
       <xs:enumeration value="Fasciculation"/>      <!--<< @brief Brief spontaneous contractions of muscle fibers. -->
       <xs:enumeration value="Fatigue"/>      <!--<< @brief The body is using energy above the Basal Metabolic Rate. -->
       <xs:enumeration value="FlaccidParalysis"/>      <!--<< @brief RBCACE > 90% complete paralysis -->
       <xs:enumeration value="FunctionalIncontinence"/>      <!--<< @brief Uncontrolled bladder release due to a full bladder. -->
+      <xs:enumeration value="MildHeadache"/>      <!--<< @brief mild headache. -->
+      <xs:enumeration value="SevereHeadache"/>      <!--<< @brief mild headache. -->
       <xs:enumeration value="HemolyticTransfusionReaction"/>      <!--<< @brief Incompatible transfusion reaction. -->
       <xs:enumeration value="Hypercapnia"/>      <!--<< @brief State at which the arterial carbon dioxide partial pressure has exceeded 60 mmHg. -->
       <xs:enumeration value="Hyperglycemia"/>      <!--<< @brief An excess of glucose in the bloodstream (> 200 mg/dL). -->

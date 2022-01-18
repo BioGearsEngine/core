@@ -583,6 +583,12 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::Dehydration:
         m_ss << " Patient has entered state of Dehydration";
         break;
+      case CDM::enumPatientEvent::MildDiarrhea:
+        m_ss << " Patient has mild diarrhea";
+        break;
+      case CDM::enumPatientEvent::SevereDiarrhea:
+        m_ss << " Patient has severe diarrhea";
+        break;
       case CDM::enumPatientEvent::Diuresis:
         m_ss << " Patient has entered Diuresis";
         break;
@@ -594,6 +600,12 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
         break;
       case CDM::enumPatientEvent::FunctionalIncontinence:
         m_ss << " Patient has involuntarily emptied their bladder";
+        break;
+      case CDM::enumPatientEvent::MildHeadache:
+        m_ss << " Patient has a mild headache";
+        break;
+      case CDM::enumPatientEvent::SevereHeadache:
+        m_ss << " Patient has a severe headache";
         break;
       case CDM::enumPatientEvent::HemolyticTransfusionReaction:
         m_ss << " Patient is undergoing an incompatible blood transfusion";

@@ -40,6 +40,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
 #include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>
+#include <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>
 #include <biogears/cdm/patient/actions/SESleep.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
@@ -321,6 +322,10 @@ public:
   SEPulmonaryShunt* GetPulmonaryShunt() const;
   void RemovePulmonaryShunt();
 
+  bool HasRadiationAbsorbedDose() const;
+  SERadiationAbsorbedDose* GetRadiationAbsorbedDose() const;
+  void RemoveRadiationAbsorbedDose();
+
   bool HasSleepState() const;
   SESleep* GetSleepState() const;
   void RemoveSleepState();
@@ -402,6 +407,7 @@ protected:
   SENeedleDecompression* m_RightNeedleDecompression;
   SEPericardialEffusion* m_PericardialEffusion;
   SEPulmonaryShunt* m_PulmonaryShunt;
+  SERadiationAbsorbedDose* m_RadiationAbsorbedDose;
   SESleep* m_Sleep;
   SETensionPneumothorax* m_LeftClosedTensionPneumothorax;
   SETensionPneumothorax* m_LeftOpenTensionPneumothorax;

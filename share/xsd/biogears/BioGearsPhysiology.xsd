@@ -30,6 +30,18 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ThreeCellDonAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="FourCellAgglutinates_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
           <xs:element name="RemovedRBC_ct" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <!-- @brief radiation system values  -->
+          <xs:element name="progenitorLymphocytes" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="progenitorLymphocytes_wd" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="progenitorLymphocytes_d" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="progenitorLymphocytes_hd" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="maturingLymphocytes" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="maturingLymphocytes_d" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="maturingLymphocytes_hd" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Lymphocytes" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Lymphocytes_d" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Lymphocytes_hd" type="xs:double" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="RadiationAbsorbed" type="xs:double" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

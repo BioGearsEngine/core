@@ -44,6 +44,7 @@
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
 #include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
+#include <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
@@ -326,6 +327,13 @@ namespace io {
       if (pulmData != nullptr) {
         auto a = std::make_unique<SEPulmonaryShunt>();
         Scenario::Marshall(*pulmData, *a);
+        return a;
+      }
+
+      CDM::RadiationAbsorbedDoseData* radDose = dynamic_cast<CDM::RadiationAbsorbedDoseData*>(action);
+      if (radDose != nullptr) {
+        auto a = std::make_unique<SERadiationAbsorbedDose>();
+        Scenario::Marshall(*radDose, *a);
         return a;
       }
 
@@ -1195,6 +1203,22 @@ namespace io {
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, FlowRateScaling)
+  }
+  //----------------------------------------------------------------------------------
+  //class SERadiationAbsorbedDose
+  void PatientActions::Marshall(const CDM::RadiationAbsorbedDoseData& in, SERadiationAbsorbedDose& out)
+  {
+    out.Clear();
+
+    Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
+
+    io::Property::Marshall(in.RadiationDose(), out.GetDose());
+  }
+  //----------------------------------------------------------------------------------
+  void PatientActions::UnMarshall(const SERadiationAbsorbedDose& in, CDM::RadiationAbsorbedDoseData& out)
+  {
+    Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, RadiationDose)
   }
   //----------------------------------------------------------------------------------
   //class SETensionPneumothorax

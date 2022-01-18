@@ -56,6 +56,7 @@ class SENeedleDecompression;
 class SEPainStimulus;
 class SEPericardialEffusion;
 class SEPulmonaryShunt;
+class SERadiationAbsorbedDose;
 class SETensionPneumothorax;
 class SESubstanceAdministration;
 class SESubstanceBolus;
@@ -182,6 +183,9 @@ namespace io {
     //class SEPulmonaryShunt;
     static void Marshall(const CDM::PulmonaryShuntData& in, SEPulmonaryShunt& out);
     static void UnMarshall(const SEPulmonaryShunt& in, CDM::PulmonaryShuntData& out);
+    //class SERadiationAbsorbedDose;
+    static void Marshall(const CDM::RadiationAbsorbedDoseData& in, SERadiationAbsorbedDose& out);
+    static void UnMarshall(const SERadiationAbsorbedDose& in, CDM::RadiationAbsorbedDoseData& out);
     //class SETensionPneumothorax;
     static void Marshall(const CDM::TensionPneumothoraxData& in, SETensionPneumothorax& out);
     static void UnMarshall(const SETensionPneumothorax& in, CDM::TensionPneumothoraxData& out);

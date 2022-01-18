@@ -107,7 +107,7 @@
       <EC50 readOnly="false" unit="ug/mL" value="0.02"/>
     </PainModifier>
     <PupilReactivityModifier>
-      <EMax readOnly="false" value="0"/>
+      <EMax readOnly="false" value="-0.5"/>
       <EC50 readOnly="false" unit="ug/mL" value="0.075"/>
     </PupilReactivityModifier>
     <PupilSizeModifier>
@@ -116,7 +116,7 @@
     </PupilSizeModifier>
     <RespirationRateModifier>
       <EMax readOnly="false" value="-1"/>
-      <EC50 readOnly="false" unit="ug/mL" value="0.075"/>
+      <EC50 readOnly="false" unit="ug/mL" value="0.75"/>
     </RespirationRateModifier>
     <Sedation>
       <EMax readOnly="false" value="0.6"/>

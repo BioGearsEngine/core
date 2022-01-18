@@ -93,6 +93,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="Hematocrit" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume percentage of red blood cells in the blood.-->
                     <xs:element name="HemoglobinContent" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total amount of hemoglobin in the blood.-->
 					<xs:element name="HemoglobinLostToUrine" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total amount of hemoglobin lost from the blood to urine during HTR.-->
+                    <xs:element name="NeutrophilCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of neutrophil cells in the blood.-->
                     <xs:element name="OxygenSaturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin that is oxygen bound.-->
 					<xs:element name="OxygenVenousSaturation" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief Fraction of hemoglobin oxygen bound in vena cava, cited as indicator for shock risk-->
                     <xs:element name="Phosphate" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Sum of all inorganic phosphate in the blood.-->
@@ -106,6 +107,7 @@ specific language governing permissions and limitations under the License.
                     <xs:element name="VolumeFractionNeutralLipidInPlasma" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Fraction of the plasma that is made up of neutral lipids.-->
                     <xs:element name="VolumeFractionNeutralPhospholipidInPlasma" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Fraction of the plasma that is made up of neutral phospholipids.-->
                     <xs:element name="WhiteBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of white blood cells in the blood.-->
+                    <xs:element name="LymphocyteCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of lymphocyte cells in the blood.-->
                     <xs:element name="RedBloodCellAcetylcholinesterase" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Concentration of acetylcholinesterase associated with red blood cells-->
                     <xs:element name="TotalBilirubin" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--@brief Concentration of bilirubin in plasma in indicative of progression of sepsis-->
 					<xs:element name="InflammatoryResponse" type="InflammatoryResponseData" minOccurs="0" maxOccurs="1"/> <!--Inflammatory response to infections, burn wounds, hemorrhage, and other trauma-->

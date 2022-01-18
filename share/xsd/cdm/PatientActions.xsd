@@ -537,6 +537,17 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 
+		<!-- @brief An absorbed dose of radiation ionization, is the amount of energy per mass that has been absorbed into the body, can support rad (0.01 J/kg) or Gy (1 J/kg) through unit conversion, connects to the acute radiation injury model as an input. -->
+	<xs:complexType name="RadiationAbsorbedDoseData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:sequence>
+          			<xs:element name="RadiationDose" type="ScalarEnergyPerMassData" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
 	<!-- @brief put the patient into a sleep state. Can also be used to awaken the patient from a sleep state. -->
     <xs:complexType name="SleepData">
 		<xs:complexContent>
