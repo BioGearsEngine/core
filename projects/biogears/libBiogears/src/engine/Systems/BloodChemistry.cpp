@@ -163,17 +163,17 @@ void BloodChemistry::Initialize()
   //absorbed set to zero
   m_radAbsorbed_Gy = 0.0;
 
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_ct ", m_progenitorLymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_wd_ct ", m_progenitorLymphocytes_wd_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_d_ct ", m_progenitorLymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_hd_ct ", m_progenitorLymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_ct ", m_maturingLymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_d_ct ", m_maturingLymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_hd_ct ", m_maturingLymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_ct ", m_Lymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_d_ct ", m_Lymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_hd_ct ", m_Lymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_radAbsorbed_Gy ", m_radAbsorbed_Gy);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_ct ", m_progenitorLymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_wd_ct ", m_progenitorLymphocytes_wd_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_d_ct ", m_progenitorLymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_hd_ct ", m_progenitorLymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_ct ", m_maturingLymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_d_ct ", m_maturingLymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_hd_ct ", m_maturingLymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_ct ", m_Lymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_d_ct ", m_Lymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_hd_ct ", m_Lymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_radAbsorbed_Gy ", m_radAbsorbed_Gy);
 
   Process(); // Calculate the initial system values
 }
@@ -526,7 +526,7 @@ void BloodChemistry::AcuteRadiationSyndrome()
   //define parameters
   //control parameters  
   const double alpha_Per_Day = 0.8 / 86400.0;   //scale to our timescale
-  const double gamma_Per_Day = 0.2 / 86400.0;
+  const double gamma_Per_Day = 0.5 / 86400.0;
   const double delta_Per_Day = 0.2 / 86400.0;
   const double kappa_Per_Day = 0.1 / 86400.0;
   const double sigma1 = 1.0;
@@ -547,7 +547,7 @@ void BloodChemistry::AcuteRadiationSyndrome()
   const double D3_J_Per_Kg = 0.2;   //this value has been adjusted for physiological response
   const double Dm3_J_Per_Kg = 6.5;
   const double v1_Per_Day = 0.6 / 86400.0;
-  const double vc_Per_Day = 1.6 / 86400.0; //this one isn't defined in the literature
+  const double vc_Per_Day = 10.6 / 86400.0; //this one isn't defined in the literature
   const double v2_Per_Day = 7.0 / 86400.0;
   const double xhat = 1.936e9;   //average number of lympohocytes
   const double nu_Per_Day = (v2_Per_Day * phi) / v1_Per_Day; //capital gamma in the model
@@ -597,17 +597,17 @@ void BloodChemistry::AcuteRadiationSyndrome()
   m_radAbsorbed_Gy += radiationRate_Per_dt;
 
   //testing probes
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_ct ", m_progenitorLymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_wd_ct ", m_progenitorLymphocytes_wd_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_d_ct ", m_progenitorLymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_hd_ct ", m_progenitorLymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_ct ", m_maturingLymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_d_ct ", m_maturingLymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_hd_ct ", m_maturingLymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_ct ", m_Lymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_d_ct ", m_Lymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_hd_ct ", m_Lymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_radAbsorbed_Gy ", m_radAbsorbed_Gy);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_ct ", m_progenitorLymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_wd_ct ", m_progenitorLymphocytes_wd_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_d_ct ", m_progenitorLymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_hd_ct ", m_progenitorLymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_ct ", m_maturingLymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_d_ct ", m_maturingLymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_hd_ct ", m_maturingLymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_ct ", m_Lymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_d_ct ", m_Lymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_hd_ct ", m_Lymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_radAbsorbed_Gy ", m_radAbsorbed_Gy);
 }
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -624,10 +624,13 @@ void BloodChemistry::CheckRadiationSymptoms()
     const double xhat_ct_Per_L = 1.936e9; //average number of lympohocytes
 
     //mild
-    if (lymph_ct_Per_L / xhat_ct_Per_L < 0.5) {
+    if (0.3 < lymph_ct_Per_L / xhat_ct_Per_L && lymph_ct_Per_L / xhat_ct_Per_L < 0.5) {
       m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, true, m_data.GetSimulationTime());
       m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, false, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereHeadache, false, m_data.GetSimulationTime());
       m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, false, m_data.GetSimulationTime());
     }
 
     //severe
