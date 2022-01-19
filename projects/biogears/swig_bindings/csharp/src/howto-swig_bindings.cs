@@ -436,6 +436,7 @@ namespace bio
       var TotalLungVolumeRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); TotalLungVolumeRequest.Set("TotalLungVolume", VolumeUnit.mL);
       var OxygenSaturationRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); OxygenSaturationRequest.Set("OxygenSaturation");
 
+
       //TODO: Get Substance and GetSubstanceCompound need better exception handeling
       var oxygen = engine.GetSubstanceManager().GetSubstance("Oxygen");
       var carbonDioxide = engine.GetSubstanceManager().GetSubstance("CarbonDioxide");
@@ -445,6 +446,7 @@ namespace bio
       var MeanUrineRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); MeanUrineRequest.Set("MeanUrineOutput", VolumePerTimeUnit.mL_Per_hr);
       var BrainVasculatureRequest = engine.GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest(); BrainVasculatureRequest.Set("BrainVasculature", oxygen, "PartialPressure", PressureUnit.mmHg);
       var TracheaPartialPressure = engine.GetEngineTrack().GetDataRequestManager().CreateGasCompartmentDataRequest(); TracheaPartialPressure.Set("Trachea", carbonDioxide, "PartialPressure", PressureUnit.mmHg);
+  
 
       engine.GetEngineTrack().SetupRequests();
 
@@ -467,6 +469,8 @@ namespace bio
       logger.Info(Urine.ToString());
       logger.Info(String.Format("Urine Value {0} {1}", Urine.GetValue(MeanUrineRequest.GetUnit().ToString()), MeanUrineRequest.GetUnit().ToString()));
       logger.Info(String.Format("Urine Value {0} {1}", Urine.GetValue(), Urine.GetUnit().ToString()));
+      logger.Info(String.Format("BrainVasculature oxygen partial pressure Value {0} {1}", PartialPressure.GetValue(), PartialPressure.GetUnit().ToString()));
+      logger.Info(String.Format("BrainVasculature oxygen partial pressure Value {0} {1}", PartialPressure.GetValue("mmHg"), PartialPressure.GetUnit().ToString()));
 
 
       apply_acute_respiratory_distress(engine);

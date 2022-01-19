@@ -1023,11 +1023,18 @@ void Drugs::CalculateDrugEffects()
   GetTubularPermeabilityChange().SetValue(effects_unitless["TubularPermeability"]);
   GetAntibioticActivity().SetValue(antibioticEffect_Per_hr);
 
+  //!
+  //! TODO:  minor patch to fix sarin pupil effects, logic is a bit wrong 
+  //! 
+  //! The next section of code is being saved 2022-01-19 To review reintroduction of the Sarin Gas Curve.  
+  //! Cumulitive applications of PupilSizeResponseLevel tended to Zero in most senarios making the 
+  //! PupilaryResponse less then useful. 
+  
   //Assume drugs affecing pupil behavior do so equally on left/right sides (this might need to be deleted, logic is all wrong)
-  const SEPupillaryResponse& leftPupillaryResponse = m_data.GetNervous().GetLeftEyePupillaryResponse();
-  const SEPupillaryResponse& rightPupillaryResponse = m_data.GetNervous().GetRightEyePupillaryResponse();
-  double leftPupilReactivityResponseLevel = leftPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
-  double rightPupilReactivityResponseLevel = rightPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
+  //const SEPupillaryResponse& leftPupillaryResponse = m_data.GetNervous().GetLeftEyePupillaryResponse();
+  //const SEPupillaryResponse& rightPupillaryResponse = m_data.GetNervous().GetRightEyePupillaryResponse();
+  //double leftPupilReactivityResponseLevel = leftPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
+  //double rightPupilReactivityResponseLevel = rightPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
   //double leftPupilSizeResponseLevel = leftPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
   //double rightPupilSizeResponseLevel = rightPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
 
@@ -1035,7 +1042,7 @@ void Drugs::CalculateDrugEffects()
   //do not depend on the Sarin plasma concentration in the same way as other PD effects.  We still perform the calculation here because
   //we cannot "contact" the eye, but scale them differently.  Sarin pupil effects are large and fast, so it's reasonable to
   //overwrite other drug pupil effects (and we probably aren't modeling opioid addicts inhaling Sarin)
-  // ///TODO: minor patch to fix sarin pupil effects, logic is a bit wrong
+  // 
   //if (m_data.GetSubstances().IsActive(*m_data.GetSubstances().GetSubstance("Sarin"))) {
   //  leftPupilSizeResponseLevel = GeneralMath::LogisticFunction(-1, 0.0475, 250, m_data.GetSubstances().GetSubstance("Sarin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_L));
   //  rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
