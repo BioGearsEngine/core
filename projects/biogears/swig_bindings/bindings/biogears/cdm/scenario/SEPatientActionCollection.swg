@@ -40,6 +40,7 @@
 %import <biogears/cdm/patient/actions/SEPatientAssessmentRequest.swg>
 %import <biogears/cdm/patient/actions/SEPericardialEffusion.swg>
 %import <biogears/cdm/patient/actions/SEPulmonaryShunt.swg>
+%import <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>
 %import <biogears/cdm/patient/actions/SESleep.swg>
 %import <biogears/cdm/patient/actions/SESubstanceBolus.swg>
 %import <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.swg>
