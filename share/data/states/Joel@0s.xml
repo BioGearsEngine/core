@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.4.0+67" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+49" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>Joel</Name>
@@ -399,7 +399,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="94.5399573299666"/>
     <MassInBody readOnly="false" unit="ug" value="1412511.62948767"/>
     <MassInBlood readOnly="false" unit="ug" value="524525.232668164"/>
-    <MassInTissue readOnly="false" unit="ug" value="887986.396819508"/>
+    <MassInTissue readOnly="false" unit="ug" value="887986.396819507"/>
     <SystemicMassCleared readOnly="false" unit="ug" value="47.2105836550181"/>
     <Clearance>
       <Systemic>
@@ -582,7 +582,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="79.9445046008717"/>
     <MassInBody readOnly="false" unit="ug" value="3682194.79724752"/>
     <MassInBlood readOnly="false" unit="ug" value="453595.274374068"/>
-    <MassInTissue readOnly="false" unit="ug" value="3228599.52287346"/>
+    <MassInTissue readOnly="false" unit="ug" value="3228599.52287345"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -813,6 +813,7 @@
     <VolumeFractionNeutralLipidInPlasma readOnly="false" value="0.0023"/>
     <VolumeFractionNeutralPhospholipidInPlasma readOnly="false" value="0.0013"/>
     <WhiteBloodCellCount readOnly="false" unit="ct/uL" value="7000.55795777056"/>
+    <LymphocyteCellCount readOnly="false" unit="ct/L" value="1900000000"/>
     <RedBloodCellAcetylcholinesterase readOnly="false" unit="mol/L" value="8e-09"/>
     <TotalBilirubin readOnly="false" unit="mg/dL" value="0.7"/>
     <InflammatoryResponse>
@@ -860,6 +861,17 @@
     <ThreeCellDonAgglutinates_ct>0</ThreeCellDonAgglutinates_ct>
     <FourCellAgglutinates_ct>0</FourCellAgglutinates_ct>
     <RemovedRBC_ct>0</RemovedRBC_ct>
+    <progenitorLymphocytes>1</progenitorLymphocytes>
+    <progenitorLymphocytes_wd>0</progenitorLymphocytes_wd>
+    <progenitorLymphocytes_d>0</progenitorLymphocytes_d>
+    <progenitorLymphocytes_hd>0</progenitorLymphocytes_hd>
+    <maturingLymphocytes>1</maturingLymphocytes>
+    <maturingLymphocytes_d>0</maturingLymphocytes_d>
+    <maturingLymphocytes_hd>0</maturingLymphocytes_hd>
+    <Lymphocytes>1</Lymphocytes>
+    <Lymphocytes_d>0</Lymphocytes_d>
+    <Lymphocytes_hd>0</Lymphocytes_hd>
+    <RadiationAbsorbed>0</RadiationAbsorbed>
   </System>
   <System xsi:type="BioGearsCardiovascularSystemData">
     <ArterialPressure readOnly="false" unit="mmHg" value="83.9571547971637"/>
@@ -997,13 +1009,13 @@
     <ComplianceScale readOnly="false" value="0.99975647667756"/>
     <LeftEyePupillaryResponse>
       <ReactivityModifier readOnly="false" value="0"/>
-      <SizeModifier readOnly="false" value="0"/>
+      <SizeModifier readOnly="false" value="6.56287134264365e-15"/>
     </LeftEyePupillaryResponse>
     <PainVisualAnalogueScale readOnly="false" value="0"/>
     <RichmondAgitationSedationScale readOnly="false" value="0"/>
     <RightEyePupillaryResponse>
-      <ReactivityModifier readOnly="false" value="0"/>
-      <SizeModifier readOnly="false" value="0"/>
+      <ReactivityModifier readOnly="false" value="6.56287134264365e-15"/>
+      <SizeModifier readOnly="false" value="6.56287134264365e-15"/>
     </RightEyePupillaryResponse>
     <SleepTime readOnly="false" unit="min" value="480"/>
     <SleepState>Awake</SleepState>
@@ -1190,7 +1202,7 @@
   </System>
   <System xsi:type="BioGearsTissueSystemData">
     <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="3.73397097327368"/>
-    <DehydrationFraction readOnly="false" value="1.24962291100328e-05"/>
+    <DehydrationFraction readOnly="false" value="1.2496229110399e-05"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="9414.78222919189"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="35103.2040432881"/>
     <IntracellularFluidPH readOnly="false" value="7"/>

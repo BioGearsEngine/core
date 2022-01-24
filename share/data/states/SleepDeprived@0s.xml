@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.4.0+67" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+49" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>SleepDeprived</Name>
@@ -68,7 +68,7 @@
     <State>Gas</State>
     <MassInBody readOnly="false" unit="ug" value="79628.0745446942"/>
     <MassInBlood readOnly="false" unit="ug" value="13576.2422837335"/>
-    <MassInTissue readOnly="false" unit="ug" value="66051.8322609607"/>
+    <MassInTissue readOnly="false" unit="ug" value="66051.8322609606"/>
     <AlveolarTransfer readOnly="false" unit="mL/s" value="3.78692266907205"/>
     <DiffusingCapacity readOnly="false" unit="mL/s mmHg" value="0.486020997929047"/>
     <EndTidalFraction readOnly="false" value="0.16284886105271"/>
@@ -343,7 +343,7 @@
     <MolarMass readOnly="false" unit="g/mol" value="66500"/>
     <State>Liquid</State>
     <BloodConcentration readOnly="false" unit="ug/mL" value="44994.5063217776"/>
-    <MassInBody readOnly="false" unit="ug" value="430139044.381522"/>
+    <MassInBody readOnly="false" unit="ug" value="430139044.381523"/>
     <MassInBlood readOnly="false" unit="ug" value="248831766.201851"/>
     <MassInTissue readOnly="false" unit="ug" value="181307278.179672"/>
     <Clearance>
@@ -543,7 +543,7 @@
     <MaximumDiffusionFlux readOnly="false" unit="g/cm^2 s" value="0.5"/>
     <MichaelisCoefficient readOnly="false" value="0.8"/>
     <BloodConcentration readOnly="false" unit="ug/mL" value="10.2927681692096"/>
-    <MassInBody readOnly="false" unit="ug" value="383830.130162424"/>
+    <MassInBody readOnly="false" unit="ug" value="383830.130162423"/>
     <MassInBlood readOnly="false" unit="ug" value="57234.8497860236"/>
     <MassInTissue readOnly="false" unit="ug" value="326595.2803764"/>
     <SystemicMassCleared readOnly="false" unit="ug" value="7389.50194657504"/>
@@ -807,6 +807,7 @@
     <VolumeFractionNeutralLipidInPlasma readOnly="false" value="0.0023"/>
     <VolumeFractionNeutralPhospholipidInPlasma readOnly="false" value="0.0013"/>
     <WhiteBloodCellCount readOnly="false" unit="ct/uL" value="6997.45834059357"/>
+    <LymphocyteCellCount readOnly="false" unit="ct/L" value="1900000000"/>
     <RedBloodCellAcetylcholinesterase readOnly="false" unit="mol/L" value="8e-09"/>
     <TotalBilirubin readOnly="false" unit="mg/dL" value="0.7"/>
     <InflammatoryResponse>
@@ -854,6 +855,17 @@
     <ThreeCellDonAgglutinates_ct>0</ThreeCellDonAgglutinates_ct>
     <FourCellAgglutinates_ct>0</FourCellAgglutinates_ct>
     <RemovedRBC_ct>0</RemovedRBC_ct>
+    <progenitorLymphocytes>1</progenitorLymphocytes>
+    <progenitorLymphocytes_wd>0</progenitorLymphocytes_wd>
+    <progenitorLymphocytes_d>0</progenitorLymphocytes_d>
+    <progenitorLymphocytes_hd>0</progenitorLymphocytes_hd>
+    <maturingLymphocytes>1</maturingLymphocytes>
+    <maturingLymphocytes_d>0</maturingLymphocytes_d>
+    <maturingLymphocytes_hd>0</maturingLymphocytes_hd>
+    <Lymphocytes>1</Lymphocytes>
+    <Lymphocytes_d>0</Lymphocytes_d>
+    <Lymphocytes_hd>0</Lymphocytes_hd>
+    <RadiationAbsorbed>0</RadiationAbsorbed>
   </System>
   <System xsi:type="BioGearsCardiovascularSystemData">
     <ArterialPressure readOnly="false" unit="mmHg" value="92.9452147990625"/>
@@ -991,13 +1003,13 @@
     <ComplianceScale readOnly="false" value="0.999839869892873"/>
     <LeftEyePupillaryResponse>
       <ReactivityModifier readOnly="false" value="0"/>
-      <SizeModifier readOnly="false" value="0"/>
+      <SizeModifier readOnly="false" value="4.19893588704635e-15"/>
     </LeftEyePupillaryResponse>
     <PainVisualAnalogueScale readOnly="false" value="0"/>
     <RichmondAgitationSedationScale readOnly="false" value="0"/>
     <RightEyePupillaryResponse>
-      <ReactivityModifier readOnly="false" value="0"/>
-      <SizeModifier readOnly="false" value="0"/>
+      <ReactivityModifier readOnly="false" value="4.19893588704635e-15"/>
+      <SizeModifier readOnly="false" value="4.19893588704635e-15"/>
     </RightEyePupillaryResponse>
     <SleepTime readOnly="false" unit="min" value="120"/>
     <SleepState>Awake</SleepState>
@@ -1189,7 +1201,7 @@
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="34413.9014188488"/>
     <IntracellularFluidPH readOnly="false" value="7"/>
     <IntracellularFluidVolume readOnly="false" unit="mL" value="25042.3630968785"/>
-    <TotalBodyFluidVolume readOnly="false" unit="mL" value="39946.4003669087"/>
+    <TotalBodyFluidVolume readOnly="false" unit="mL" value="39946.4003669088"/>
     <OxygenConsumptionRate readOnly="false" unit="mL/s" value="4.02535429194807"/>
     <RespiratoryExchangeRatio readOnly="false" value="0.876466517288987"/>
     <LiverInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>

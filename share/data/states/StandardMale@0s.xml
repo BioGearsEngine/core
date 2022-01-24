@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.4.0+67" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+49" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>StandardMale</Name>
@@ -45,7 +45,7 @@
     <Density readOnly="false" unit="g/m^3" value="1251"/>
     <MolarMass readOnly="false" unit="g/mol" value="28.0134"/>
     <State>Gas</State>
-    <MassInBody readOnly="false" unit="ug" value="556824.226318674"/>
+    <MassInBody readOnly="false" unit="ug" value="556824.226318673"/>
     <MassInBlood readOnly="false" unit="ug" value="92183.7879731553"/>
     <MassInTissue readOnly="false" unit="ug" value="464640.438345518"/>
     <AlveolarTransfer readOnly="false" unit="mL/s" value="131.9098158776"/>
@@ -368,7 +368,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="497.286440543461"/>
     <MassInBody readOnly="false" unit="ug" value="19940852.1132112"/>
     <MassInBlood readOnly="false" unit="ug" value="2749812.53295108"/>
-    <MassInTissue readOnly="false" unit="ug" value="17191039.5802601"/>
+    <MassInTissue readOnly="false" unit="ug" value="17191039.5802602"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -807,6 +807,7 @@
     <VolumeFractionNeutralLipidInPlasma readOnly="false" value="0.0023"/>
     <VolumeFractionNeutralPhospholipidInPlasma readOnly="false" value="0.0013"/>
     <WhiteBloodCellCount readOnly="false" unit="ct/uL" value="6997.45834059324"/>
+    <LymphocyteCellCount readOnly="false" unit="ct/L" value="1900000000"/>
     <RedBloodCellAcetylcholinesterase readOnly="false" unit="mol/L" value="8e-09"/>
     <TotalBilirubin readOnly="false" unit="mg/dL" value="0.7"/>
     <InflammatoryResponse>
@@ -854,6 +855,17 @@
     <ThreeCellDonAgglutinates_ct>0</ThreeCellDonAgglutinates_ct>
     <FourCellAgglutinates_ct>0</FourCellAgglutinates_ct>
     <RemovedRBC_ct>0</RemovedRBC_ct>
+    <progenitorLymphocytes>1</progenitorLymphocytes>
+    <progenitorLymphocytes_wd>0</progenitorLymphocytes_wd>
+    <progenitorLymphocytes_d>0</progenitorLymphocytes_d>
+    <progenitorLymphocytes_hd>0</progenitorLymphocytes_hd>
+    <maturingLymphocytes>1</maturingLymphocytes>
+    <maturingLymphocytes_d>0</maturingLymphocytes_d>
+    <maturingLymphocytes_hd>0</maturingLymphocytes_hd>
+    <Lymphocytes>1</Lymphocytes>
+    <Lymphocytes_d>0</Lymphocytes_d>
+    <Lymphocytes_hd>0</Lymphocytes_hd>
+    <RadiationAbsorbed>0</RadiationAbsorbed>
   </System>
   <System xsi:type="BioGearsCardiovascularSystemData">
     <ArterialPressure readOnly="false" unit="mmHg" value="92.9452147991278"/>
@@ -991,13 +1003,13 @@
     <ComplianceScale readOnly="false" value="0.99983986989268"/>
     <LeftEyePupillaryResponse>
       <ReactivityModifier readOnly="false" value="0"/>
-      <SizeModifier readOnly="false" value="0"/>
+      <SizeModifier readOnly="false" value="4.19893588706875e-15"/>
     </LeftEyePupillaryResponse>
     <PainVisualAnalogueScale readOnly="false" value="0"/>
     <RichmondAgitationSedationScale readOnly="false" value="0"/>
     <RightEyePupillaryResponse>
-      <ReactivityModifier readOnly="false" value="0"/>
-      <SizeModifier readOnly="false" value="0"/>
+      <ReactivityModifier readOnly="false" value="4.19893588706875e-15"/>
+      <SizeModifier readOnly="false" value="4.19893588706875e-15"/>
     </RightEyePupillaryResponse>
     <SleepTime readOnly="false" unit="min" value="480"/>
     <SleepState>Awake</SleepState>
