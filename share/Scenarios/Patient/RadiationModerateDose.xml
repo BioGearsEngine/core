@@ -12,8 +12,6 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperature"                   Unit="degC"        Precision="1"/>
 
-    <!-- Specific to this scenario -->
-
   </DataRequests>
 
   <Action xsi:type="AdvanceTimeData">
