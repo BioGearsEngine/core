@@ -181,6 +181,15 @@ public:
   SEScalarAmountPerVolume& GetLymphocyteCellCount();
   double GetLymphocyteCellCount(const AmountPerVolumeUnit& unit) const;
   //@}
+  /** @name NeutrophilCellCount
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_NeutrophilCellCount
+  *  @{*/
+  /// %Test if member has been allocated
+  bool HasNeutrophilCellCount() const;
+  /// Get member class, allocate if nullptr
+  SEScalarAmountPerVolume& GetNeutrophilCellCount();
+  double GetNeutrophilCellCount(const AmountPerVolumeUnit& unit) const;
+  //@}
   /** @name OxygenSaturation
    *  @brief @copybrief Physiology_BloodChemistrySystemData_OxygenSaturation
    *  @{*/
@@ -421,6 +430,7 @@ protected:
   SEScalarMass* m_HemoglobinContent;
   SEScalarMass* m_HemoglobinLostToUrine;
   SEScalarAmountPerVolume* m_LymphocyteCellCount;
+  SEScalarAmountPerVolume* m_NeutrophilCellCount;
   SEScalarFraction* m_OxygenSaturation;
   SEScalarFraction* m_OxygenVenousSaturation;
   SEScalarAmountPerVolume* m_Phosphate;

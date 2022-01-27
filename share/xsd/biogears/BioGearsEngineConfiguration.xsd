@@ -10,24 +10,24 @@
   specific language governing permissions and limitations under the License.
 -->
 <!-- @brief BioGears specific data for our methodology  -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-  
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
   <xs:include schemaLocation="../cdm/Environment.xsd"/>
   <xs:include schemaLocation="../cdm/EngineConfiguration.xsd"/>
-    
+
   <xs:complexType name="BloodChemistryConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="MeanCorpuscularHemoglobin" type="ScalarMassPerAmountData" minOccurs="0" maxOccurs="1"/>              
-          <xs:element name="MeanCorpuscularVolume" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/>                        
+          <xs:element name="MeanCorpuscularHemoglobin" type="ScalarMassPerAmountData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="MeanCorpuscularVolume" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="StandardDiffusionDistance" type="ScalarLengthData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="StandardOxygenDiffusionCoefficient" type="ScalarAreaPerTimePressureData" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="CardiovascularConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
@@ -42,7 +42,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="CircuitConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
@@ -62,19 +62,19 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="ConstantsConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
-        <xs:sequence>                
-          <xs:element name="OxygenMetabolicConstant" type="ScalarData" minOccurs="0" maxOccurs="1"/>          
+        <xs:sequence>
+          <xs:element name="OxygenMetabolicConstant" type="ScalarData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="StefanBoltzmann" type="ScalarPowerPerAreaTemperatureToTheFourthData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="UniversalGasConstant" type="ScalarHeatCapacitancePerAmountData" minOccurs="0" maxOccurs="1"/>          
+          <xs:element name="UniversalGasConstant" type="ScalarHeatCapacitancePerAmountData" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="DrugsConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
@@ -84,7 +84,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="EnergyConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
@@ -95,99 +95,110 @@
           <xs:element name="DeltaCoreTemperatureLow" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="EnergyPerATP" type="ScalarEnergyPerAmountData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="SweatHeatTransfer" type="ScalarHeatConductanceData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="VaporizationEnergy" type="ScalarEnergyPerMassData" minOccurs="0" maxOccurs="1"/>          
+          <xs:element name="VaporizationEnergy" type="ScalarEnergyPerMassData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="VaporSpecificHeat" type="ScalarHeatCapacitancePerMassData" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="EnvironmentConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
           <xs:element name="AirDensity" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="AirSpecificHeat" type="ScalarHeatCapacitancePerMassData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="MolarMassOfDryAir" type="ScalarMassPerAmountData" minOccurs="0" maxOccurs="1"/>  
-          <xs:element name="MolarMassOfWaterVapor" type="ScalarMassPerAmountData" minOccurs="0" maxOccurs="1"/>    
+          <xs:element name="MolarMassOfDryAir" type="ScalarMassPerAmountData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="MolarMassOfWaterVapor" type="ScalarMassPerAmountData" minOccurs="0" maxOccurs="1"/>
           <xs:choice>
             <xs:element name="InitialEnvironmentalConditions" type="EnvironmentalConditionsData" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="InitialEnvironmentalConditionsFile" type="xs:string" minOccurs="0" maxOccurs="1"/>    
-          </xs:choice>   
+            <xs:element name="InitialEnvironmentalConditionsFile" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          </xs:choice>
           <xs:element name="WaterDensity" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="GastrointestinalConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="CalciumAbsorptionFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!-- @brief Fraction of the calcium eaten that get absorbed into the body --> 
-          <xs:element name="CalciumDigestionRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/><!-- @brief Speed at which calcium is digested by the body, mouth to being absorbed into the blood -->
-          <xs:element name="CarbohydrateAbsorptionFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!-- @brief Fraction of the Carbs eaten that get absorbed into the body -->
+          <xs:element name="CalciumAbsorptionFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!-- @brief Fraction of the calcium eaten that get absorbed into the body -->
+          <xs:element name="CalciumDigestionRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!-- @brief Speed at which calcium is digested by the body, mouth to being absorbed into the blood -->
+          <xs:element name="CarbohydrateAbsorptionFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!-- @brief Fraction of the Carbs eaten that get absorbed into the body -->
           <xs:choice>
-            <xs:element name="DefaultStomachContents" type="NutritionData" minOccurs="0" maxOccurs="1"/><!-- @brief The default stomach contents for the patient -->
-            <xs:element name="DefaultStomachContentsFile" type="xs:string" minOccurs="0" maxOccurs="1"/><!-- @brief The default stomach contents for the patient -->
-          </xs:choice>   
-          <xs:element name="FatAbsorptionFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!-- @brief Fraction of the fat eaten that get absorbed into the body --> 
-          <xs:element name="ProteinToUreaFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!-- @brief Fraction of the protein eaten that get turned into urea -->              
-          <xs:element name="WaterDigestionRate" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!-- @brief The rate at which water is absorbed from gut chyme into the vascular system (small intestine) -->
+            <xs:element name="DefaultStomachContents" type="NutritionData" minOccurs="0" maxOccurs="1"/>
+            <!-- @brief The default stomach contents for the patient -->
+            <xs:element name="DefaultStomachContentsFile" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <!-- @brief The default stomach contents for the patient -->
+          </xs:choice>
+          <xs:element name="FatAbsorptionFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!-- @brief Fraction of the fat eaten that get absorbed into the body -->
+          <xs:element name="ProteinToUreaFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!-- @brief Fraction of the protein eaten that get turned into urea -->
+          <xs:element name="WaterDigestionRate" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!-- @brief The rate at which water is absorbed from gut chyme into the vascular system (small intestine) -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="NervousConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="EnableCerebral" type="enumOnOff" minOccurs="0" maxOccurs="1"/><!--<<@brief Flagged on to use discretized cerebral circuit-->
-          <xs:element name="PupilDiameterBaseline" type="ScalarLengthData" minOccurs="0" maxOccurs="1"/><!--<< @brief Pupil Diameter Baseline. -->
+          <xs:element name="EnableCerebral" type="enumOnOff" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Flagged on to use discretized cerebral circuit-->
+          <xs:element name="PupilDiameterBaseline" type="ScalarLengthData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Pupil Diameter Baseline. -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="RenalConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
-        <xs:sequence>  		
+        <xs:sequence>
           <xs:element name="EnableRenal" type="enumOnOff" minOccurs="0" maxOccurs="1"/>
-          
+
           <xs:element name="PlasmaSodiumConcentrationSetPoint" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
-          
+
           <xs:element name="LeftGlomerularFilteringSurfaceAreaBaseline" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="LeftGlomerularFluidPermeabilityBaseline" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="LeftTubularReabsorptionFilteringSurfaceAreaBaseline " type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>    
+          <xs:element name="LeftTubularReabsorptionFilteringSurfaceAreaBaseline " type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="LeftTubularReabsorptionFluidPermeabilityBaseline" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-          
+
           <xs:element name="MaximumAfferentResistance" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="MinimumAfferentResistance" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
-          
+
           <xs:element name="RightGlomerularFilteringSurfaceAreaBaseline" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="RightGlomerularFluidPermeabilityBaseline" type="ScalarData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="RightTubularReabsorptionFilteringSurfaceAreaBaseline " type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="RightTubularReabsorptionFluidPermeabilityBaseline" type="ScalarData" minOccurs="0" maxOccurs="1"/> 
-          <xs:element name="TargetSodiumDelivery" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/> 
+          <xs:element name="RightTubularReabsorptionFluidPermeabilityBaseline" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="TargetSodiumDelivery" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="RespiratoryConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
           <xs:element name="PleuralComplianceSensitivity" type="ScalarInverseVolumeData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="PulmonaryVentilationRateMaximum" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The maximum rate before permanent damage to the lungs occurs. -->
+          <xs:element name="PulmonaryVentilationRateMaximum" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The maximum rate before permanent damage to the lungs occurs. -->
           <xs:element name="VentilatoryOcclusionPressure" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="TissueConfigurationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
@@ -197,27 +208,27 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsConfigurationData">
     <xs:complexContent>
       <xs:extension base="PhysiologyEngineConfigurationData">
-        <xs:sequence>              
-          <xs:element name="BloodChemistryConfiguration"   type="BloodChemistryConfigurationData" minOccurs="0" maxOccurs="1"/> 
+        <xs:sequence>
+          <xs:element name="BloodChemistryConfiguration"   type="BloodChemistryConfigurationData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="CardiovascularConfiguration"   type="CardiovascularConfigurationData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="CircuitConfiguration"          type="CircuitConfigurationData" minOccurs="0" maxOccurs="1"/> 
-          <xs:element name="ConstantsConfiguration"        type="ConstantsConfigurationData" minOccurs="0" maxOccurs="1"/> 
+          <xs:element name="CircuitConfiguration"          type="CircuitConfigurationData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ConstantsConfiguration"        type="ConstantsConfigurationData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="DrugsConfiguration"            type="DrugsConfigurationData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="EnergyConfiguration"           type="EnergyConfigurationData" minOccurs="0" maxOccurs="1"/> 
-          <xs:element name="EnvironmentConfiguration"      type="EnvironmentConfigurationData" minOccurs="0" maxOccurs="1"/>     
-          <xs:element name="GastrointestinalConfiguration" type="GastrointestinalConfigurationData" minOccurs="0" maxOccurs="1"/>   
+          <xs:element name="EnergyConfiguration"           type="EnergyConfigurationData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="EnvironmentConfiguration"      type="EnvironmentConfigurationData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="GastrointestinalConfiguration" type="GastrointestinalConfigurationData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="NervousConfiguration"          type="NervousConfigurationData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="RenalConfiguration"            type="RenalConfigurationData" minOccurs="0" maxOccurs="1"/>       
+          <xs:element name="RenalConfiguration"            type="RenalConfigurationData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="RespiratoryConfiguration"      type="RespiratoryConfigurationData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="TissueConfiguration"           type="TissueConfigurationData" minOccurs="0" maxOccurs="1"/>       
-        </xs:sequence>  
+          <xs:element name="TissueConfiguration"           type="TissueConfigurationData" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="BioGearsConfiguration" type="BioGearsConfigurationData"/>
-  
+
 </xs:schema>

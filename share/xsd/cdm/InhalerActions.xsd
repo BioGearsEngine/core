@@ -10,28 +10,30 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Actions able to be performed to change the patient environment  -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-    
-    <xs:include schemaLocation="Scenario.xsd"/>
-    <xs:include schemaLocation="Inhaler.xsd"/>
-    
-    <!-- @brief Base inhaler action type. -->
-    <xs:complexType name="InhalerActionData" abstract="true">
-        <xs:complexContent>
-            <xs:extension base="ActionData"/>
-        </xs:complexContent>
-    </xs:complexType>	
-    
-    <!-- @brief Action for configuring the inhaler. -->
-    <xs:complexType name="InhalerConfigurationData">
-        <xs:complexContent>
-            <xs:extension base="InhalerActionData">
-                <xs:choice minOccurs="1"  maxOccurs="1">
-                    <xs:element name="ConfigurationFile" type="xs:string"/><!--<< @brief A file to use for configuration. -->
-                    <xs:element name="Configuration" type="InhalerData"/><!--<< @brief Changes to make to the anesthesia machine. -->                                             
-                </xs:choice>                    
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="Scenario.xsd"/>
+  <xs:include schemaLocation="Inhaler.xsd"/>
+
+  <!-- @brief Base inhaler action type. -->
+  <xs:complexType name="InhalerActionData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ActionData"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Action for configuring the inhaler. -->
+  <xs:complexType name="InhalerConfigurationData">
+    <xs:complexContent>
+      <xs:extension base="InhalerActionData">
+        <xs:choice minOccurs="1"  maxOccurs="1">
+          <xs:element name="ConfigurationFile" type="xs:string"/>
+          <!--<< @brief A file to use for configuration. -->
+          <xs:element name="Configuration" type="InhalerData"/>
+          <!--<< @brief Changes to make to the anesthesia machine. -->
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
 </xs:schema>

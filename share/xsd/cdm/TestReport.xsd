@@ -10,53 +10,53 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Data structures associated with unit testing and reporting. -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-    
-    <xs:include schemaLocation="Properties.xsd"/>
-	
-    <xs:complexType name="TestErrorStatisticsData">
-        <xs:sequence>
-            <xs:element name="MinimumError" type="xs:double" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="MaximumError" type="xs:double" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="AverageError" type="xs:double" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="StandardDeviation" type="xs:double" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="PercentToleranceVsNumErrors" type="FunctionData" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="Differences" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="ComputedPropertyID" type="xs:string" use="required"/>
-        <xs:attribute name="ExpectedPropertyID" type="xs:string" use="required"/>
-        <xs:attribute name="NumberOfErrors" type="xs:int" use="optional"/>
-        <xs:attribute name="PercentTolerance" type="xs:double" use="required"/>
-        <xs:attribute name="PropertyName" type="xs:string" use="required"/>
-    </xs:complexType>
-    
-    <xs:complexType name="TestReportData">
-        <xs:sequence>
-            <xs:element name="TestSuite" minOccurs="1" maxOccurs="unbounded"> 
-                <xs:complexType>
-                    <xs:sequence>
-						<xs:element name="Requirement" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-                        <xs:element name="SuiteEqualError" type="TestErrorStatisticsData" minOccurs="0" maxOccurs="unbounded"/>
-						<xs:element name="Time" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-                        <xs:element name="TestCase" minOccurs="0" maxOccurs="unbounded">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="CaseEqualError" type="TestErrorStatisticsData" minOccurs="0" maxOccurs="unbounded"/>
-                                    <xs:element name="Failure" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>                              
-									<xs:element name="Time" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-                                </xs:sequence>
-                                <xs:attribute name="Name" type="xs:string" use="required"/>
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-					<xs:attribute name="Performed" type="xs:boolean" default="true"/>
-					<xs:attribute name="Errors" type="xs:int" use="required"/>
-					<xs:attribute name="Tests" type="xs:int" use="required"/>
-                    <xs:attribute name="Name" type="xs:string" use="required"/>                                       
-                </xs:complexType>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="Properties.xsd"/>
+
+  <xs:complexType name="TestErrorStatisticsData">
+    <xs:sequence>
+      <xs:element name="MinimumError" type="xs:double" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MaximumError" type="xs:double" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AverageError" type="xs:double" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="StandardDeviation" type="xs:double" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PercentToleranceVsNumErrors" type="FunctionData" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Differences" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="ComputedPropertyID" type="xs:string" use="required"/>
+    <xs:attribute name="ExpectedPropertyID" type="xs:string" use="required"/>
+    <xs:attribute name="NumberOfErrors" type="xs:int" use="optional"/>
+    <xs:attribute name="PercentTolerance" type="xs:double" use="required"/>
+    <xs:attribute name="PropertyName" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="TestReportData">
+    <xs:sequence>
+      <xs:element name="TestSuite" minOccurs="1" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Requirement" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="SuiteEqualError" type="TestErrorStatisticsData" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Time" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="TestCase" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="CaseEqualError" type="TestErrorStatisticsData" minOccurs="0" maxOccurs="unbounded"/>
+                  <xs:element name="Failure" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                  <xs:element name="Time" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+                <xs:attribute name="Name" type="xs:string" use="required"/>
+              </xs:complexType>
             </xs:element>
-        </xs:sequence>  
-    </xs:complexType>
-    <xs:element name="TestReport" type="TestReportData"/>
-    
+          </xs:sequence>
+          <xs:attribute name="Performed" type="xs:boolean" default="true"/>
+          <xs:attribute name="Errors" type="xs:int" use="required"/>
+          <xs:attribute name="Tests" type="xs:int" use="required"/>
+          <xs:attribute name="Name" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="TestReport" type="TestReportData"/>
+
 </xs:schema>

@@ -24,6 +24,7 @@ SECompleteBloodCount::SECompleteBloodCount()
   m_Hematocrit = nullptr;
   m_Hemoglobin = nullptr;
   m_NeutrophilCellCount = nullptr;
+  m_LymphocyteCellCount = nullptr;
   m_PlateletCount = nullptr;
   m_MeanCorpuscularHemoglobin = nullptr;
   m_MeanCorpuscularHemoglobinConcentration = nullptr;
@@ -64,6 +65,7 @@ void SECompleteBloodCount::Reset()
   INVALIDATE_PROPERTY(m_MeanCorpuscularHemoglobinConcentration);
   INVALIDATE_PROPERTY(m_MeanCorpuscularVolume);
   INVALIDATE_PROPERTY(m_NeutrophilCellCount);
+  INVALIDATE_PROPERTY(m_LymphocyteCellCount);
   INVALIDATE_PROPERTY(m_RedBloodCellCount);
   INVALIDATE_PROPERTY(m_WhiteBloodCellCount);
 }

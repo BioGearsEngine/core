@@ -10,104 +10,104 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Generic configuration data for physiology simulation -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-    
-    <xs:include schemaLocation="Properties.xsd"/>
-    <xs:include schemaLocation="ElectroCardioGram.xsd"/>
-    
-    <xs:complexType name="PhysiologyEngineConfigurationData">
-        <xs:complexContent>
-            <xs:extension base="ObjectData">
-                <xs:sequence>                    
-                    <xs:element name="TimeStep" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>                 
-                    <xs:element name="WritePatientBaselineFile" type="enumOnOff" minOccurs="0" maxOccurs="1"/>
-                    
-                    <xs:choice minOccurs="0" maxOccurs="1">
-                        <xs:element name="ElectroCardioGramInterpolator" type="ElectroCardioGramWaveformInterpolatorData"/>
-                        <xs:element name="ElectroCardioGramInterpolatorFile" type="xs:string"/>    
-                    </xs:choice> 
-                    <xs:choice minOccurs="0" maxOccurs="1">
-                        <xs:element name="StabilizationCriteria" type="PhysiologyEngineStabilizationData"/>
-                        <xs:element name="StabilizationCriteriaFile" type="xs:string"/>    
-                    </xs:choice>                                                  
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    
-    
-    <xs:complexType name="PhysiologyEngineStabilizationData" abstract="true">
-        <xs:complexContent>
-            <xs:extension base="ObjectData">
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <xs:complexType name="PhysiologyEngineConditionStabilizationData" abstract="true">
-        <xs:complexContent>
-            <xs:extension base="ObjectData">
-                <xs:attribute name="Name" type="xs:string" use="required"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief Version of PhysiologyEngineTimedStabilizationData. -->
-    <xs:complexType name="PhysiologyEngineTimedStabilizationData">
-        <xs:complexContent>
-            <xs:extension base="PhysiologyEngineStabilizationData">
-                <xs:sequence>
-                    <xs:element name="RestingStabilizationTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="FeedbackStabilizationTime" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="ConditionStabilization" type="PhysiologyEngineTimedConditionStabilizationData" minOccurs="0" maxOccurs="unbounded"/>                   
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="PhysiologyEngineTimedConditionStabilizationData">
-        <xs:complexContent>
-            <xs:extension base="PhysiologyEngineConditionStabilizationData">
-                <xs:sequence>
-                    <xs:element name="Time" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="PhysiologyEngineTimedStabilization" type="PhysiologyEngineTimedStabilizationData"/>
-    
-    <!-- @brief Version of PhysiologyEngineDynamicStabilizationData. -->
-    <xs:complexType name="PhysiologyEngineDynamicStabilizationData">
-        <xs:complexContent>
-            <xs:extension base="PhysiologyEngineStabilizationData">
-                <xs:sequence>
-                    <xs:element name="RestingStabilizationCriteria" type="PhysiologyEngineDynamicStabilizationCriteriaData" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="FeedbackStabilizationCriteria" type="PhysiologyEngineDynamicStabilizationCriteriaData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="ConditionStabilization" type="PhysiologyEngineDynamicConditionStabilizationData" minOccurs="0" maxOccurs="unbounded"/>       
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="PhysiologyEngineDynamicConditionStabilizationData">
-        <xs:complexContent>
-            <xs:extension base="PhysiologyEngineConditionStabilizationData">
-                <xs:sequence>
-                    <xs:element name="Criteria" type="PhysiologyEngineDynamicStabilizationCriteriaData" minOccurs="1" maxOccurs="1"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="PhysiologyEngineDynamicStabilizationCriteriaData">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="Properties.xsd"/>
+  <xs:include schemaLocation="ElectroCardioGram.xsd"/>
+
+  <xs:complexType name="PhysiologyEngineConfigurationData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
         <xs:sequence>
-            <xs:element name="ConvergenceTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="MinimumReactionTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="MaximumAllowedStabilizationTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="PropertyConvergence" type="PhysiologyEngineDynamicStabilizationCriteriaPropertyData" minOccurs="1" maxOccurs="unbounded"/>            
+          <xs:element name="TimeStep" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="WritePatientBaselineFile" type="enumOnOff" minOccurs="0" maxOccurs="1"/>
+
+          <xs:choice minOccurs="0" maxOccurs="1">
+            <xs:element name="ElectroCardioGramInterpolator" type="ElectroCardioGramWaveformInterpolatorData"/>
+            <xs:element name="ElectroCardioGramInterpolatorFile" type="xs:string"/>
+          </xs:choice>
+          <xs:choice minOccurs="0" maxOccurs="1">
+            <xs:element name="StabilizationCriteria" type="PhysiologyEngineStabilizationData"/>
+            <xs:element name="StabilizationCriteriaFile" type="xs:string"/>
+          </xs:choice>
         </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="PhysiologyEngineDynamicStabilizationCriteriaPropertyData">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+
+  <xs:complexType name="PhysiologyEngineStabilizationData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PhysiologyEngineConditionStabilizationData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
         <xs:attribute name="Name" type="xs:string" use="required"/>
-        <xs:attribute name="PercentDifference" type="xs:double" use="required"/>
-    </xs:complexType>
-    <xs:element name="PhysiologyEngineDynamicStabilization" type="PhysiologyEngineDynamicStabilizationData"/>
-    
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Version of PhysiologyEngineTimedStabilizationData. -->
+  <xs:complexType name="PhysiologyEngineTimedStabilizationData">
+    <xs:complexContent>
+      <xs:extension base="PhysiologyEngineStabilizationData">
+        <xs:sequence>
+          <xs:element name="RestingStabilizationTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="FeedbackStabilizationTime" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ConditionStabilization" type="PhysiologyEngineTimedConditionStabilizationData" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PhysiologyEngineTimedConditionStabilizationData">
+    <xs:complexContent>
+      <xs:extension base="PhysiologyEngineConditionStabilizationData">
+        <xs:sequence>
+          <xs:element name="Time" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PhysiologyEngineTimedStabilization" type="PhysiologyEngineTimedStabilizationData"/>
+
+  <!-- @brief Version of PhysiologyEngineDynamicStabilizationData. -->
+  <xs:complexType name="PhysiologyEngineDynamicStabilizationData">
+    <xs:complexContent>
+      <xs:extension base="PhysiologyEngineStabilizationData">
+        <xs:sequence>
+          <xs:element name="RestingStabilizationCriteria" type="PhysiologyEngineDynamicStabilizationCriteriaData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="FeedbackStabilizationCriteria" type="PhysiologyEngineDynamicStabilizationCriteriaData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ConditionStabilization" type="PhysiologyEngineDynamicConditionStabilizationData" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PhysiologyEngineDynamicConditionStabilizationData">
+    <xs:complexContent>
+      <xs:extension base="PhysiologyEngineConditionStabilizationData">
+        <xs:sequence>
+          <xs:element name="Criteria" type="PhysiologyEngineDynamicStabilizationCriteriaData" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PhysiologyEngineDynamicStabilizationCriteriaData">
+    <xs:sequence>
+      <xs:element name="ConvergenceTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="MinimumReactionTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="MaximumAllowedStabilizationTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="PropertyConvergence" type="PhysiologyEngineDynamicStabilizationCriteriaPropertyData" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PhysiologyEngineDynamicStabilizationCriteriaPropertyData">
+    <xs:attribute name="Name" type="xs:string" use="required"/>
+    <xs:attribute name="PercentDifference" type="xs:double" use="required"/>
+  </xs:complexType>
+  <xs:element name="PhysiologyEngineDynamicStabilization" type="PhysiologyEngineDynamicStabilizationData"/>
+
 </xs:schema>

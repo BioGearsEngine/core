@@ -10,106 +10,138 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief The patients external environment and it's conditions -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-	
-	<xs:include schemaLocation="System.xsd"/>
-	<xs:include schemaLocation="Substance.xsd"/>
-    
-	<!-- @brief The type of environment surroundings. -->
-	<xs:simpleType name="enumSurroundingType">
-		<xs:restriction base="xs:string">
-		  <xs:enumeration value="Air"/>
-		  <xs:enumeration value="Water"/>
-		</xs:restriction>
-	</xs:simpleType>
-	
-	<!-- @brief The ambient environmental conditions surrounding the patient. -->
-	<xs:complexType name="EnvironmentalConditionsData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="Name" type="xs:string" minOccurs="0" maxOccurs="1" /><!--<< @brief The unique name of the environment. -->
-					<xs:element name="SurroundingType" type="enumSurroundingType" minOccurs="0" maxOccurs="1"/><!--<< @brief @copybrief Environment_enumSurroundingType -->
-					
-					<xs:element name="AirDensity" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Local ambient density of the surrounding atmosphere. -->
-					<xs:element name="AirVelocity" type="ScalarLengthPerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Velocity of the surrounding air relative to the patient. -->
-					<xs:element name="AmbientTemperature" type="ScalarTemperatureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Local ambient temperature of the surrounding air/fluid (if submerged). -->
-					<xs:element name="AtmosphericPressure" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Local ambient pressure of the surrounding atmosphere. -->
-					<xs:element name="ClothingResistance" type="ScalarHeatResistanceAreaData" minOccurs="0" maxOccurs="1"/><!--<< @brief Average thermal resistance of all patient clothing. -->
-					<xs:element name="Emissivity" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief Efficiency of the patient's surface to emit thermal energy. -->
-					<xs:element name="MeanRadiantTemperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/><!--<< @brief The uniform temperature of an imaginary enclosure in which the radiant heat transfer from the patient's body is equal to the radiant heat transfer in the actual non-uniform enclosure. -->
-					<xs:element name="RelativeHumidity" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Local ambient ratio of the partial pressure of water vapor to the equilibrium vapor pressure of water at the same temperature. -->
-					<xs:element name="RespirationAmbientTemperature" type="ScalarTemperatureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Local ambient temperature of the surrounding air that is inhaled. -->
-					
-					<xs:element name="AmbientGas" type="SubstanceFractionData" minOccurs="0" maxOccurs="unbounded"/><!--<< @brief Break down of the gasses in the environment, fractions must add up to 1. -->                  
-					<xs:element name="AmbientAerosol" type="SubstanceConcentrationData" minOccurs="0" maxOccurs="unbounded"/><!--<< @brief Break down of the aerosolized solid/liquid substances in the environment. -->
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element name="EnvironmentalConditions" type="EnvironmentalConditionsData"/>
-	
-	<!-- @brief A heat source near the patient. -->
-	<xs:complexType name="ActiveHeatingData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">	
-				<xs:sequence>
-					<xs:element name="Power" type="ScalarPowerData" minOccurs="1" maxOccurs="1"/><!--<< @brief Heat source power. Set to zero to turn off. -->
-					<xs:element name="SurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/><!--<< @brief SurfaceArea of the body that is being heated. -->
-					<xs:element name="SurfaceAreaFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief SurfaceArea Fraction of the body that is being heated. -->
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<!-- @brief A cooling source near the patient. -->
-	<xs:complexType name="ActiveCoolingData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="Power" type="ScalarPowerData" minOccurs="1" maxOccurs="1"/><!--<< @brief Heat sink power. Set to zero to turn off cooling. -->
-					<xs:element name="SurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/><!--<< @brief SurfaceArea of the body that is being heated. -->
-					<xs:element name="SurfaceAreaFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief SurfaceArea Fraction of the body that is being cooled. -->                                                        
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<!-- @brief Something radiating a specified temperature to the patient. -->
-	<xs:complexType name="AppliedTemperatureData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="State" type="enumOnOff" minOccurs="0" maxOccurs="1"/><!--<< @brief Use Off to remove the applied object from the patient. -->
-					<xs:element name="Temperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Temperature of an object held on the patient. -->
-					<xs:element name="SurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/><!--<< @brief SurfaceArea of the patient that the temperature is being appllied to. -->
-					<xs:element name="SurfaceAreaFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief SurfaceArea Fraction of the body that the temperature is being appllied to -->                                                               
-				</xs:sequence>
-				
-				<!-- Note an error chould be thrown if On is used with out an applied temperature, or the temperature could be defaulted to the ambient temperature, it's up to the engine -->
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<!-- @brief Data describing the environemental surroundings and their affect on the patient. -->
-    <xs:complexType name="EnvironmentData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>			
-                	<xs:element name="Name" type="xs:string" minOccurs="0"  maxOccurs="1"/>
-                	<xs:element name="Conditions" type="EnvironmentalConditionsData" minOccurs="0" maxOccurs="1"/><!--<< @brief @copybrief Environment_EnvironmentalConditionsData -->
-                  <xs:element name="ConvectiveHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total patient heat loss due to convection. -->
-                	<xs:element name="ConvectiveHeatTranferCoefficient" type="ScalarHeatConductancePerAreaData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The proportionality coefficient between the heat flux and the thermodynamic driving force for the flow of heat due to convection. -->
-                	<xs:element name="EvaporativeHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total patient heat loss due to evaporation. -->
-                	<xs:element name="EvaporativeHeatTranferCoefficient" type="ScalarHeatConductancePerAreaData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The proportionality coefficient between the heat flux and the thermodynamic driving force for the flow of heat due to evaporation. -->
-                	<xs:element name="RadiativeHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total patient heat loss due to radiation.-->
-                	<xs:element name="RadiativeHeatTranferCoefficient" type="ScalarHeatConductancePerAreaData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The proportionality coefficient between the heat flux and the thermodynamic driving force for the flow of heat due to radiation. -->
-                	<xs:element name="RespirationHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total heat loss from the Respiratory System. -->
-                	<xs:element name="SkinHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total heat loss from the Respiratory skin. -->			
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="Environment" type="EnvironmentData"/>
-    	
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="System.xsd"/>
+  <xs:include schemaLocation="Substance.xsd"/>
+
+  <!-- @brief The type of environment surroundings. -->
+  <xs:simpleType name="enumSurroundingType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Air"/>
+      <xs:enumeration value="Water"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- @brief The ambient environmental conditions surrounding the patient. -->
+  <xs:complexType name="EnvironmentalConditionsData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string" minOccurs="0" maxOccurs="1" />
+          <!--<< @brief The unique name of the environment. -->
+          <xs:element name="SurroundingType" type="enumSurroundingType" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief @copybrief Environment_enumSurroundingType -->
+
+          <xs:element name="AirDensity" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Local ambient density of the surrounding atmosphere. -->
+          <xs:element name="AirVelocity" type="ScalarLengthPerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Velocity of the surrounding air relative to the patient. -->
+          <xs:element name="AmbientTemperature" type="ScalarTemperatureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Local ambient temperature of the surrounding air/fluid (if submerged). -->
+          <xs:element name="AtmosphericPressure" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Local ambient pressure of the surrounding atmosphere. -->
+          <xs:element name="ClothingResistance" type="ScalarHeatResistanceAreaData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Average thermal resistance of all patient clothing. -->
+          <xs:element name="Emissivity" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Efficiency of the patient's surface to emit thermal energy. -->
+          <xs:element name="MeanRadiantTemperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The uniform temperature of an imaginary enclosure in which the radiant heat transfer from the patient's body is equal to the radiant heat transfer in the actual non-uniform enclosure. -->
+          <xs:element name="RelativeHumidity" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Local ambient ratio of the partial pressure of water vapor to the equilibrium vapor pressure of water at the same temperature. -->
+          <xs:element name="RespirationAmbientTemperature" type="ScalarTemperatureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Local ambient temperature of the surrounding air that is inhaled. -->
+
+          <xs:element name="AmbientGas" type="SubstanceFractionData" minOccurs="0" maxOccurs="unbounded"/>
+          <!--<< @brief Break down of the gasses in the environment, fractions must add up to 1. -->
+          <xs:element name="AmbientAerosol" type="SubstanceConcentrationData" minOccurs="0" maxOccurs="unbounded"/>
+          <!--<< @brief Break down of the aerosolized solid/liquid substances in the environment. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="EnvironmentalConditions" type="EnvironmentalConditionsData"/>
+
+  <!-- @brief A heat source near the patient. -->
+  <xs:complexType name="ActiveHeatingData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Power" type="ScalarPowerData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Heat source power. Set to zero to turn off. -->
+          <xs:element name="SurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief SurfaceArea of the body that is being heated. -->
+          <xs:element name="SurfaceAreaFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief SurfaceArea Fraction of the body that is being heated. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief A cooling source near the patient. -->
+  <xs:complexType name="ActiveCoolingData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Power" type="ScalarPowerData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Heat sink power. Set to zero to turn off cooling. -->
+          <xs:element name="SurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief SurfaceArea of the body that is being heated. -->
+          <xs:element name="SurfaceAreaFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief SurfaceArea Fraction of the body that is being cooled. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Something radiating a specified temperature to the patient. -->
+  <xs:complexType name="AppliedTemperatureData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="State" type="enumOnOff" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Use Off to remove the applied object from the patient. -->
+          <xs:element name="Temperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Temperature of an object held on the patient. -->
+          <xs:element name="SurfaceArea" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief SurfaceArea of the patient that the temperature is being appllied to. -->
+          <xs:element name="SurfaceAreaFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief SurfaceArea Fraction of the body that the temperature is being appllied to -->
+        </xs:sequence>
+
+        <!-- Note an error chould be thrown if On is used with out an applied temperature, or the temperature could be defaulted to the ambient temperature, it's up to the engine -->
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Data describing the environemental surroundings and their affect on the patient. -->
+  <xs:complexType name="EnvironmentData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="Conditions" type="EnvironmentalConditionsData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief @copybrief Environment_EnvironmentalConditionsData -->
+          <xs:element name="ConvectiveHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total patient heat loss due to convection. -->
+          <xs:element name="ConvectiveHeatTranferCoefficient" type="ScalarHeatConductancePerAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The proportionality coefficient between the heat flux and the thermodynamic driving force for the flow of heat due to convection. -->
+          <xs:element name="EvaporativeHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total patient heat loss due to evaporation. -->
+          <xs:element name="EvaporativeHeatTranferCoefficient" type="ScalarHeatConductancePerAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The proportionality coefficient between the heat flux and the thermodynamic driving force for the flow of heat due to evaporation. -->
+          <xs:element name="RadiativeHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total patient heat loss due to radiation.-->
+          <xs:element name="RadiativeHeatTranferCoefficient" type="ScalarHeatConductancePerAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The proportionality coefficient between the heat flux and the thermodynamic driving force for the flow of heat due to radiation. -->
+          <xs:element name="RespirationHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total heat loss from the Respiratory System. -->
+          <xs:element name="SkinHeatLoss" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total heat loss from the Respiratory skin. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Environment" type="EnvironmentData"/>
+
 </xs:schema>

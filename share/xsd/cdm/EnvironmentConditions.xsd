@@ -10,28 +10,30 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Conditions able to be performed to change the patient environment before the start of simulation -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-	
-	<xs:include schemaLocation="Environment.xsd"/>
-    <xs:include schemaLocation="Scenario.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
 
-	<!-- @brief Base environmental condition type -->
-	<xs:complexType name="EnvironmentConditionData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="ConditionData"/>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<!-- @brief Change environmental conditions before the simulation begins. -->
-	<xs:complexType name="InitialEnvironmentData">
-		<xs:complexContent>
-			<xs:extension base="EnvironmentConditionData">
-				<xs:choice  minOccurs="1" maxOccurs="1">
-					<xs:element name="ConditionsFile" type="xs:string"/><!--<< @brief A file to use for configuration. -->
-					<xs:element name="Conditions" type="EnvironmentalConditionsData"/><!--<< @brief Changes to make to the environment. -->
-				</xs:choice>  
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
+  <xs:include schemaLocation="Environment.xsd"/>
+  <xs:include schemaLocation="Scenario.xsd"/>
+
+  <!-- @brief Base environmental condition type -->
+  <xs:complexType name="EnvironmentConditionData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ConditionData"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Change environmental conditions before the simulation begins. -->
+  <xs:complexType name="InitialEnvironmentData">
+    <xs:complexContent>
+      <xs:extension base="EnvironmentConditionData">
+        <xs:choice  minOccurs="1" maxOccurs="1">
+          <xs:element name="ConditionsFile" type="xs:string"/>
+          <!--<< @brief A file to use for configuration. -->
+          <xs:element name="Conditions" type="EnvironmentalConditionsData"/>
+          <!--<< @brief Changes to make to the environment. -->
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
 </xs:schema>

@@ -10,31 +10,31 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief BioGears specific data for our methodology  -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-  
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
   <xs:include schemaLocation="../cdm/EngineState.xsd"/>
-  
+
   <xs:include schemaLocation="../biogears/BioGearsEngineConfiguration.xsd"/>
   <xs:include schemaLocation="../biogears/BioGearsEnvironment.xsd"/>
   <xs:include schemaLocation="../biogears/BioGearsEquipment.xsd"/>
   <xs:include schemaLocation="../biogears/BioGearsPhysiology.xsd"/>
 
-  
+
   <!-- BioGears Enums -->
   <xs:simpleType name="enumBioGearsAirwayMode">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Free"/>
-      <xs:enumeration value="AnesthesiaMachine"/>   
+      <xs:enumeration value="AnesthesiaMachine"/>
       <xs:enumeration value="Inhaler"/>
       <xs:enumeration value="MechanicalVentilator"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <!-- @brief BioGears engine save state. -->
   <xs:complexType name="BioGearsStateData">
     <xs:complexContent>
       <xs:extension base="PhysiologyEngineStateData">
-        <xs:sequence> 
+        <xs:sequence>
           <xs:element name="AirwayMode" type="enumBioGearsAirwayMode" minOccurs="1" maxOccurs="1"/>
           <xs:element name="Intubation" type="enumOnOff" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
@@ -42,5 +42,5 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="BioGearsState" type="BioGearsStateData"/>
-  
+
 </xs:schema>

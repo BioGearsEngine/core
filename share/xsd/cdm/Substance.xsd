@@ -9,12 +9,12 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
-<!-- @brief Substances in the body --> 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-  
-  <xs:include schemaLocation="Properties.xsd"/>  
+<!-- @brief Substances in the body -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="Properties.xsd"/>
   <xs:include schemaLocation="Physiology.xsd"/>
-  
+
   <!-- @brief Enumeration for substance states. -->
   <xs:simpleType name="enumSubstanceState">
     <xs:restriction base="xs:string">
@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="Molecular"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <!-- @brief Enumeration for substance ionic state. -->
   <xs:simpleType name="enumSubstanceIonicState">
     <xs:restriction base="xs:string">
@@ -32,10 +32,10 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="Base"/>
       <xs:enumeration value="Acid"/>
       <xs:enumeration value="Neutral"/>
-	  <xs:enumeration value="Zwitterion"/>
+      <xs:enumeration value="Zwitterion"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <!-- @brief Enumeration for specifying a substance binding protein. -->
   <xs:simpleType name="enumSubstanceBindingProtein">
     <xs:restriction base="xs:string">
@@ -44,7 +44,7 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="AAG"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="enumCharge">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Positive"/>
@@ -52,20 +52,20 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="Neutral"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="enumSubstanceClass">
-  	<xs:restriction base="xs:string">
-  		<xs:enumeration value="Anesthetic"/>
-		<xs:enumeration value="Antibiotic"/>
-		<xs:enumeration value="WholeBlood"/>
-  		<xs:enumeration value="Ion"/>
-  		<xs:enumeration value="Opioid"/>
-  		<xs:enumeration value="ReversalAgent"/>
-  		<xs:enumeration value="Sedative"/>
-  	</xs:restriction>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Anesthetic"/>
+      <xs:enumeration value="Antibiotic"/>
+      <xs:enumeration value="WholeBlood"/>
+      <xs:enumeration value="Ion"/>
+      <xs:enumeration value="Opioid"/>
+      <xs:enumeration value="ReversalAgent"/>
+      <xs:enumeration value="Sedative"/>
+    </xs:restriction>
   </xs:simpleType>
-  
-  
+
+
   <!-- The following object types encapsulate data for a particular methodology.
        There may be data fields (ex. FractionUnboundInPlasma) duplicated between objects.
        It is up to the implementing code to resolve differences or not.
@@ -75,20 +75,23 @@ specific language governing permissions and limitations under the License.
        substance definition part of the methodology schema. For now, I am just 
        going to enforce these requirements in the data model as well with an isValid method (like actions)
   -->
-  
+
   <!-- @brief  Data for if a substance was to be aerosolized. -->
   <xs:complexType name="SubstanceAerosolizationData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="BronchioleModifier" type="ScalarNeg1To1Data" minOccurs="1"  maxOccurs="1"/><!--<< @brief Factor to characterize the localized bronchiole effects -1 is full constriction, 1 is full dilation. -->          
-          <xs:element name="InflammationCoefficient" type="Scalar0To1Data" minOccurs="1"  maxOccurs="1"/><!--<< @brief Factor to characterize the inflammation of respiratory tract tissue caused by this substance. -->
-          <xs:element name="ParticulateSizeDistribution" type="HistogramFractionVsLengthData" minOccurs="1" maxOccurs="1"/><!--<< @brief Histogram of Particle Fraction Vs. Size -->          
+          <xs:element name="BronchioleModifier" type="ScalarNeg1To1Data" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief Factor to characterize the localized bronchiole effects -1 is full constriction, 1 is full dilation. -->
+          <xs:element name="InflammationCoefficient" type="Scalar0To1Data" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief Factor to characterize the inflammation of respiratory tract tissue caused by this substance. -->
+          <xs:element name="ParticulateSizeDistribution" type="HistogramFractionVsLengthData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Histogram of Particle Fraction Vs. Size -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <!-- @brief Data associated with movement of drugs within the body.  -->
   <xs:complexType name="SubstancePharmacokineticsData">
     <xs:complexContent>
@@ -96,7 +99,7 @@ specific language governing permissions and limitations under the License.
         <xs:sequence>
           <xs:element name="Physicochemicals" type="SubstancePhysicochemicalData" minOccurs="0"  maxOccurs="1"/>
           <xs:element name="TissueKinetics" type="SubstanceTissuePharmacokineticsData" minOccurs="0"  maxOccurs="unbounded"/>
-        </xs:sequence>                
+        </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -104,14 +107,22 @@ specific language governing permissions and limitations under the License.
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="AcidDissociationConstant" type="ScalarData" minOccurs="1"  maxOccurs="2"/> <!--<< @brief A quantitative measure of the strength of an acid in solution. -->         
-          <xs:element name="BindingProtein" type="enumSubstanceBindingProtein" minOccurs="1"  maxOccurs="1"/><!--<< @brief @copybrief Substance_enumSubstanceBindingProtein -->
-          <xs:element name="BloodPlasmaRatio" type="ScalarData" minOccurs="1"  maxOccurs="1"/><!--<< @brief The ratio of the substance in the blood versus the plasma. -->
-          <xs:element name="FractionUnboundInPlasma" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Fraction of the substance in the plasma that is unbound. -->
-          <xs:element name="IonicState" type="enumSubstanceIonicState" minOccurs="1"  maxOccurs="1"/><!--<< @brief @copybrief Substance_enumSubstanceIonicState -->
-          <xs:element name="LogP" type="ScalarData" minOccurs="1"  maxOccurs="1"/><!--<< @brief The octanol-water partition coefficient. -->
-          <xs:element name="HydrogenBondCount" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Combined number of hydrogen bond donor and acceptors sites, used by GI CAT model. -->
-		  <xs:element name="PolarSurfaceArea" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--@brief Area (in A^2) encompassed by polar atoms of a molecule, which effects permeability, used by GI CAT model-->
+          <xs:element name="AcidDissociationConstant" type="ScalarData" minOccurs="1"  maxOccurs="2"/>
+          <!--<< @brief A quantitative measure of the strength of an acid in solution. -->
+          <xs:element name="BindingProtein" type="enumSubstanceBindingProtein" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief @copybrief Substance_enumSubstanceBindingProtein -->
+          <xs:element name="BloodPlasmaRatio" type="ScalarData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief The ratio of the substance in the blood versus the plasma. -->
+          <xs:element name="FractionUnboundInPlasma" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief Fraction of the substance in the plasma that is unbound. -->
+          <xs:element name="IonicState" type="enumSubstanceIonicState" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief @copybrief Substance_enumSubstanceIonicState -->
+          <xs:element name="LogP" type="ScalarData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief The octanol-water partition coefficient. -->
+          <xs:element name="HydrogenBondCount" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Combined number of hydrogen bond donor and acceptors sites, used by GI CAT model. -->
+          <xs:element name="PolarSurfaceArea" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <!--@brief Area (in A^2) encompassed by polar atoms of a molecule, which effects permeability, used by GI CAT model-->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -120,41 +131,62 @@ specific language governing permissions and limitations under the License.
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/><!--<< @brief The tissue compartment/area/organ name impacted. -->
-          <xs:element name="PartitionCoefficient" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of a substance to diffuse across a membrane. Calculated using the physiochemical properties of a substance.--><!--UNC-->
+          <xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief The tissue compartment/area/organ name impacted. -->
+          <xs:element name="PartitionCoefficient" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Represents the ability of a substance to diffuse across a membrane. Calculated using the physiochemical properties of a substance.-->
+          <!--UNC-->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <!-- @brief Data asscociated with the effects of drugs and the mechanism of their action. -->
   <xs:complexType name="SubstancePharmacodynamicsData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-		  <xs:element name="EffectSiteRateConstant" type="ScalarFrequencyData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Describes speed of equilibration between plasma concentration and site of action of a drug -->
-		  <xs:element name="EMaxShapeParameter" type="ScalarData" minOccurs="1"  maxOccurs="1"/><!--<< @brief This used to create a sigmoid shape response. i.e. the steepness parameter in the EMax equation. -->
-          <xs:element name="AntibacterialEffect" type="ScalarFrequencyData" minOccurs="1" maxOccurs="1"/><!--<< @brief The enhancement in bacterial death rate caused by an antibiotic-->
-		  <xs:element name="Bronchodilation" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="CentralNervousModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-		  <xs:element name="DiastolicPressureModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="FeverModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief This is used to modify core temperature as a result of drug dosage-->
-		  <xs:element name="HeartRateModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief A modifier representing the effect of the drug on the heart rate. -->
-          <xs:element name="HemorrhageModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief A modifier representing the effect of the drug on the hemorrhage blood flow effect. -->
-		  <xs:element name="NeuromuscularBlock" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="PainModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief This is used to modify core temperature as a result of drug dosage-->
-		  <xs:element name="PupilReactivityModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-		  <xs:element name="PupilSizeModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="RespirationRateModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="Sedation" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="SystolicPressureModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-          <xs:element name="TidalVolumeModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->          
-          <xs:element name="TubularPermeabilityModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/><!--<< @brief --> 
+          <xs:element name="EffectSiteRateConstant" type="ScalarFrequencyData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief Describes speed of equilibration between plasma concentration and site of action of a drug -->
+          <xs:element name="EMaxShapeParameter" type="ScalarData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief This used to create a sigmoid shape response. i.e. the steepness parameter in the EMax equation. -->
+          <xs:element name="AntibacterialEffect" type="ScalarFrequencyData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief The enhancement in bacterial death rate caused by an antibiotic-->
+          <xs:element name="Bronchodilation" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="CentralNervousModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="DiastolicPressureModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="FeverModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief This is used to modify core temperature as a result of drug dosage-->
+          <xs:element name="HeartRateModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief A modifier representing the effect of the drug on the heart rate. -->
+          <xs:element name="HemorrhageModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief A modifier representing the effect of the drug on the hemorrhage blood flow effect. -->
+          <xs:element name="NeuromuscularBlock" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="PainModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief This is used to modify core temperature as a result of drug dosage-->
+          <xs:element name="PupilReactivityModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="PupilSizeModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="RespirationRateModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="Sedation" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="SystolicPressureModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="TidalVolumeModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="TubularPermeabilityModifier" type="PharmacodynamicModifierData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <!-- @brief Data associated with reducing substance mass in the body by filtration (Kidney/Liver) or some other metabolic process (Systemic). -->
   <xs:complexType name="SubstanceClearanceData">
     <xs:complexContent>
@@ -163,141 +195,198 @@ specific language governing permissions and limitations under the License.
           <xs:element name="Systemic" minOccurs="0" maxOccurs="1">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="FractionExcretedInFeces" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Fraction of the administered dose excreted in the feces. -->
-                <xs:element name="FractionExcretedInUrine" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Fraction of the administered dose excreted in the urine. -->
-                <xs:element name="FractionMetabolizedInGut" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Fraction of the administered dose metabolized in the gut. -->
-                <xs:element name="FractionUnboundInPlasma" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Fraction of the substance in the plasma that is unbound. -->
-                <xs:element name="IntrinsicClearance" type="ScalarVolumePerTimeMassData" minOccurs="1"  maxOccurs="1"/><!--<< @brief The intrinsic ability of hepatic enzymes to metabolize the substance. -->          
-                <xs:element name="RenalClearance" type="ScalarVolumePerTimeMassData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Amount of substances to clear from the kidneys. -->
-                <xs:element name="SystemicClearance" type="ScalarVolumePerTimeMassData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Amount of substance cleared by all organs. -->
+                <xs:element name="FractionExcretedInFeces" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/>
+                <!--<< @brief Fraction of the administered dose excreted in the feces. -->
+                <xs:element name="FractionExcretedInUrine" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+                <!--<< @brief Fraction of the administered dose excreted in the urine. -->
+                <xs:element name="FractionMetabolizedInGut" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+                <!--<< @brief Fraction of the administered dose metabolized in the gut. -->
+                <xs:element name="FractionUnboundInPlasma" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/>
+                <!--<< @brief Fraction of the substance in the plasma that is unbound. -->
+                <xs:element name="IntrinsicClearance" type="ScalarVolumePerTimeMassData" minOccurs="1"  maxOccurs="1"/>
+                <!--<< @brief The intrinsic ability of hepatic enzymes to metabolize the substance. -->
+                <xs:element name="RenalClearance" type="ScalarVolumePerTimeMassData" minOccurs="1"  maxOccurs="1"/>
+                <!--<< @brief Amount of substances to clear from the kidneys. -->
+                <xs:element name="SystemicClearance" type="ScalarVolumePerTimeMassData" minOccurs="1"  maxOccurs="1"/>
+                <!--<< @brief Amount of substance cleared by all organs. -->
               </xs:sequence>
             </xs:complexType>
           </xs:element>
-          <xs:element name="RenalDynamics" minOccurs="0"  maxOccurs="1"> <!--<< @brief Renal Dynamics for clearance and/or regulation of substances. -->
+          <xs:element name="RenalDynamics" minOccurs="0"  maxOccurs="1">
+            <!--<< @brief Renal Dynamics for clearance and/or regulation of substances. -->
             <xs:complexType>
               <xs:sequence>
                 <xs:choice minOccurs="1"  maxOccurs="1">
-                  <xs:element name="Clearance" type="ScalarVolumePerTimeMassData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Amount of substances to clear from the kidneys. -->
+                  <xs:element name="Clearance" type="ScalarVolumePerTimeMassData" minOccurs="1"  maxOccurs="1"/>
+                  <!--<< @brief Amount of substances to clear from the kidneys. -->
                   <xs:element name="Regulation"  minOccurs="1"  maxOccurs="1">
                     <xs:complexType>
                       <xs:sequence>
-                        <xs:element name="ChargeInBlood" type="enumCharge" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-                        <xs:element name="FractionUnboundInPlasma" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief Fraction of the substance in the plasma that is unbound. -->                        
-                        <xs:element name="ReabsorptionRatio" type="ScalarData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
-                        <xs:element name="TransportMaximum" type="ScalarMassPerTimeData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+                        <xs:element name="ChargeInBlood" type="enumCharge" minOccurs="1"  maxOccurs="1"/>
+                        <!--<< @brief -->
+                        <xs:element name="FractionUnboundInPlasma" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/>
+                        <!--<< @brief Fraction of the substance in the plasma that is unbound. -->
+                        <xs:element name="ReabsorptionRatio" type="ScalarData" minOccurs="1"  maxOccurs="1"/>
+                        <!--<< @brief -->
+                        <xs:element name="TransportMaximum" type="ScalarMassPerTimeData" minOccurs="1"  maxOccurs="1"/>
+                        <!--<< @brief -->
                       </xs:sequence>
                     </xs:complexType>
                   </xs:element>
                 </xs:choice>
-                <xs:element name="FiltrationRate" type="ScalarMassPerTimeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief  -->
-                <xs:element name="ReabsorptionRate" type="ScalarMassPerTimeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief  -->
-                <xs:element name="ExcretionRate" type="ScalarMassPerTimeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief  -->
-                <xs:element name="GlomerularFilterability" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief  -->
+                <xs:element name="FiltrationRate" type="ScalarMassPerTimeData" minOccurs="0"  maxOccurs="1"/>
+                <!--<< @brief  -->
+                <xs:element name="ReabsorptionRate" type="ScalarMassPerTimeData" minOccurs="0"  maxOccurs="1"/>
+                <!--<< @brief  -->
+                <xs:element name="ExcretionRate" type="ScalarMassPerTimeData" minOccurs="0"  maxOccurs="1"/>
+                <!--<< @brief  -->
+                <xs:element name="GlomerularFilterability" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+                <!--<< @brief  -->
               </xs:sequence>
             </xs:complexType>
-          </xs:element>   
-		  <xs:element name="CellRegulation" minOccurs="0"  maxOccurs="1"> <!--<< @brief Renal Dynamics for clearance and/or regulation of substances. -->
+          </xs:element>
+          <xs:element name="CellRegulation" minOccurs="0"  maxOccurs="1">
+            <!--<< @brief Renal Dynamics for clearance and/or regulation of substances. -->
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="CellDeathRate" type="ScalarFrequencyData" minOccurs="1"  maxOccurs="1"/><!--<< @brief frequency of cells being added into circulation. -->
-                <xs:element name="CellBirthRate" type="ScalarFrequencyData" minOccurs="1"  maxOccurs="1"/><!--<< @brief frequency of cells being taken out of circulation. -->
+                <xs:element name="CellDeathRate" type="ScalarFrequencyData" minOccurs="1"  maxOccurs="1"/>
+                <!--<< @brief frequency of cells being added into circulation. -->
+                <xs:element name="CellBirthRate" type="ScalarFrequencyData" minOccurs="1"  maxOccurs="1"/>
+                <!--<< @brief frequency of cells being taken out of circulation. -->
               </xs:sequence>
             </xs:complexType>
-          </xs:element>     
+          </xs:element>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
-  
+
+
   <!-- @brief  A generic substance. -->
-  <xs:complexType name="SubstanceData"> 
+  <xs:complexType name="SubstanceData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/><!--<< @brief The unique name of the substance. -->
-          <xs:element name="Classification" type="enumSubstanceClass" minOccurs="0" maxOccurs="1"/><!--<<@brief Label for grouping drugs according to common physiological effects. -->
-          <xs:element name="Density" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Mass density of a substance -->                   
-          <xs:element name="MolarMass" type="ScalarMassPerAmountData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Molar mass of the substance. -->
-          <xs:element name="State" type="enumSubstanceState" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_enumSubstanceState. -->
+          <xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief The unique name of the substance. -->
+          <xs:element name="Classification" type="enumSubstanceClass" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Label for grouping drugs according to common physiological effects. -->
+          <xs:element name="Density" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Mass density of a substance -->
+          <xs:element name="MolarMass" type="ScalarMassPerAmountData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Molar mass of the substance. -->
+          <xs:element name="State" type="enumSubstanceState" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief @copybrief Substance_enumSubstanceState. -->
           <!-- Diffusion -->
-          <xs:element name="MaximumDiffusionFlux" type="ScalarMassPerAreaTimeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Maximum mass flux of a substance when diffusing across a membrane. -->
-          <xs:element name="MichaelisCoefficient" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The concentration gradient at which the flux is half of the MaxDiffusionFlux. -->
-		  <xs:element name="MembraneResistance" type="ScalarElectricResistanceData" minOccurs="0" maxOccurs="1"/><!--<<@brief The potential that causes the average steady state extracellular and intracellular concentrations of an ion to be in equilibrium.-->            
+          <xs:element name="MaximumDiffusionFlux" type="ScalarMassPerAreaTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Maximum mass flux of a substance when diffusing across a membrane. -->
+          <xs:element name="MichaelisCoefficient" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The concentration gradient at which the flux is half of the MaxDiffusionFlux. -->
+          <xs:element name="MembraneResistance" type="ScalarElectricResistanceData" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief The potential that causes the average steady state extracellular and intracellular concentrations of an ion to be in equilibrium.-->
           <!-- Aerosol -->
-          <xs:element name="Aerosolization" type="SubstanceAerosolizationData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Data for if this substance was to be aerosolized. -->
+          <xs:element name="Aerosolization" type="SubstanceAerosolizationData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Data for if this substance was to be aerosolized. -->
           <!-- Liquid -->
-		  <xs:element name="AreaUnderCurve" type="ScalarTimeMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--@ brief Parameter for drugs to track residence in body-->
-          <xs:element name="BloodConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Concentration of this substance that is in the blood. -->
-		  <xs:element name="EffectSiteConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Calculated concentration at drug site of action for PD Effects -->
-          <xs:element name="MassInBody" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total Amount of mass of this substance that is in the body. -->
-          <xs:element name="MassInBlood" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Amount of mass of this substance that is in the blood. -->
-          <xs:element name="MassInTissue" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Amount of mass of this substance that is in the tissue. -->
-          <xs:element name="PlasmaConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Calculated concentration of a substance in the plasma. -->
-          <xs:element name="SystemicMassCleared" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total amount of mass that has been systemically cleared-->          
-          <xs:element name="TissueConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Concentration of this substance that is in the tissue. -->
+          <xs:element name="AreaUnderCurve" type="ScalarTimeMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--@ brief Parameter for drugs to track residence in body-->
+          <xs:element name="BloodConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Concentration of this substance that is in the blood. -->
+          <xs:element name="EffectSiteConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Calculated concentration at drug site of action for PD Effects -->
+          <xs:element name="MassInBody" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total Amount of mass of this substance that is in the body. -->
+          <xs:element name="MassInBlood" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Amount of mass of this substance that is in the blood. -->
+          <xs:element name="MassInTissue" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Amount of mass of this substance that is in the tissue. -->
+          <xs:element name="PlasmaConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Calculated concentration of a substance in the plasma. -->
+          <xs:element name="SystemicMassCleared" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total amount of mass that has been systemically cleared-->
+          <xs:element name="TissueConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Concentration of this substance that is in the tissue. -->
           <!-- Gas -->
-          <xs:element name="AlveolarTransfer" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Calculated rate of transfer that occurs during gas exchange. -->
-          <xs:element name="DiffusingCapacity" type="ScalarVolumePerTimePressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief Calculated value representing the ability of a gas to cross the respiratory membrane. -->
-          <xs:element name="EndTidalFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of gas in the trachea that consists of the substance at the end of each respiratory cycle. -->
-          <xs:element name="EndTidalPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The pressure of gas in the trachea that consists of the substance at the end of each respiratory cycle. -->
-          <xs:element name="RelativeDiffusionCoefficient" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of the substance to diffuse across a membrane. A proportionality of the solubility and the square root of the molecular weight as defined relative to oxygen.-->
-          <xs:element name="SolubilityCoefficient" type="ScalarInversePressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Represents the ability of a substance to dissolve in a solution. -->    
+          <xs:element name="AlveolarTransfer" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Calculated rate of transfer that occurs during gas exchange. -->
+          <xs:element name="DiffusingCapacity" type="ScalarVolumePerTimePressureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Calculated value representing the ability of a gas to cross the respiratory membrane. -->
+          <xs:element name="EndTidalFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The fraction of gas in the trachea that consists of the substance at the end of each respiratory cycle. -->
+          <xs:element name="EndTidalPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The pressure of gas in the trachea that consists of the substance at the end of each respiratory cycle. -->
+          <xs:element name="RelativeDiffusionCoefficient" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Represents the ability of the substance to diffuse across a membrane. A proportionality of the solubility and the square root of the molecular weight as defined relative to oxygen.-->
+          <xs:element name="SolubilityCoefficient" type="ScalarInversePressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Represents the ability of a substance to dissolve in a solution. -->
           <!-- More complex Objects -->
-          <xs:element name="Clearance" type="SubstanceClearanceData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstanceClearanceData --> 
-          <xs:element name="Pharmacokinetics" type="SubstancePharmacokineticsData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstancePharmacokineticsData -->  
-          <xs:element name="Pharmacodynamics" type="SubstancePharmacodynamicsData" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Substance_SubstancePharmacodynamicsData --> 
-        </xs:sequence>        
+          <xs:element name="Clearance" type="SubstanceClearanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief @copybrief Substance_SubstanceClearanceData -->
+          <xs:element name="Pharmacokinetics" type="SubstancePharmacokineticsData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief @copybrief Substance_SubstancePharmacokineticsData -->
+          <xs:element name="Pharmacodynamics" type="SubstancePharmacodynamicsData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief @copybrief Substance_SubstancePharmacodynamicsData -->
+        </xs:sequence>
       </xs:extension>
     </xs:complexContent>
-  </xs:complexType>  
+  </xs:complexType>
   <xs:element name="Substance" type="SubstanceData"/>
-  
-  
-  
+
+
+
   <!-- @brief A compound made up of several substances. -->
   <xs:complexType name="SubstanceCompoundData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
-          <xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/><!--<< @brief The unique name of the compound. -->
-		  <xs:element name="Classification" type="enumSubstanceClass" minOccurs="0" maxOccurs="1"/><!--<<@brief Label for grouping drugs according to common physiological effects. -->
-		  <xs:element name="BloodRHFactor" type="xs:boolean" minOccurs="0" maxOccurs="1"/><!--<<@brief Label for grouping drugs according to common physiological effects. true is positive and false is negative. -->
-          <xs:element name="Component" type="SubstanceConcentrationData" minOccurs="0"  maxOccurs="unbounded"/> <!--<< @brief @copybrief Substance_SubstanceConcentrationData -->
+          <xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief The unique name of the compound. -->
+          <xs:element name="Classification" type="enumSubstanceClass" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Label for grouping drugs according to common physiological effects. -->
+          <xs:element name="BloodRHFactor" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Label for grouping drugs according to common physiological effects. true is positive and false is negative. -->
+          <xs:element name="Component" type="SubstanceConcentrationData" minOccurs="0"  maxOccurs="unbounded"/>
+          <!--<< @brief @copybrief Substance_SubstanceConcentrationData -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="SubstanceCompound" type="SubstanceCompoundData"/>
-  
+
   <!--<< @brief A fractional amount associated with a substance. -->
   <xs:complexType name="SubstanceFractionData">
     <xs:sequence>
-      <xs:element name="FractionAmount" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+      <xs:element name="FractionAmount" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/>
+      <!--<< @brief -->
     </xs:sequence>
-    <xs:attribute name="Name" type="xs:string" use="required"/><!--<< @brief -->
+    <xs:attribute name="Name" type="xs:string" use="required"/>
+    <!--<< @brief -->
   </xs:complexType>
-  
+
   <!--<< @brief A concentration amount associated with a substance. -->
   <xs:complexType name="SubstanceConcentrationData">
     <xs:sequence>
-      <xs:element name="Concentration" type="ScalarMassPerVolumeData" minOccurs="1"  maxOccurs="1"/><!--<< @brief -->
+      <xs:element name="Concentration" type="ScalarMassPerVolumeData" minOccurs="1"  maxOccurs="1"/>
+      <!--<< @brief -->
     </xs:sequence>
-    <xs:attribute name="Name" type="xs:string" use="required"/><!--<< @brief -->
+    <xs:attribute name="Name" type="xs:string" use="required"/>
+    <!--<< @brief -->
   </xs:complexType>
-  
+
   <!-- @brief Data associated with a drug pharmacodynamic modifier, e.g. heart rate-->
   <xs:complexType name="PharmacodynamicModifierData">
-	<xs:complexContent>
-		<xs:extension base="ObjectData">
-			<xs:sequence>
-				<xs:element name="EMax" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/><!--<< @brief The maximum effect as a fraction of the modifier basline value -->
-				<xs:element name="EC50" type="ScalarMassPerVolumeData" minOccurs="1"  maxOccurs="1"/><!--<< @brief The drug concentration at which half the maximum effect is achieved -->
-			</xs:sequence>
-		</xs:extension>
-	</xs:complexContent>
-</xs:complexType>
-  
-  
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="EMax" type="ScalarFractionData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief The maximum effect as a fraction of the modifier basline value -->
+          <xs:element name="EC50" type="ScalarMassPerVolumeData" minOccurs="1"  maxOccurs="1"/>
+          <!--<< @brief The drug concentration at which half the maximum effect is achieved -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
 </xs:schema>
 

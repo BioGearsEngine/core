@@ -158,7 +158,6 @@ protected:
   //track radiation
   double m_radAbsorbed_Gy;
 
-
   //Initialize HTR concentrations
   double m_donorRBC_ct;
   double m_patientRBC_ct;

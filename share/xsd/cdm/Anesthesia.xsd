@@ -13,99 +13,118 @@ specific language governing permissions and limitations under the License.
      @details The anesthesia machine simulates postive-pressure ventilation through use of a ventilator comprised of components, including a mask, endotracheal tube, carbon dioxide absorber,
      ventilator, vaporizer, and valves. Inhaled agents can be supplied by the vaporizer within the anesthesia machine, while a patient can be fully ventilated using the ventilator.
      A variety of equipment failures can be initiated causing various components to fail. 
---> 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-	
-	<xs:include schemaLocation="System.xsd"/>	
-	<xs:include schemaLocation="Compartment.xsd"/>
-	<xs:include schemaLocation="Substance.xsd"/>
-	
-	<!-- @brief A set of events/states that the can be triggered on the anesthesia machine. -->
-	<xs:simpleType name="enumAnesthesiaMachineEvent">
-		<xs:restriction base="xs:string">            
-			<xs:enumeration value="OxygenBottle1Exhausted"/>
-			<xs:enumeration value="OxygenBottle2Exhausted"/>
-			<xs:enumeration value="ReliefValveActive"/>
-		</xs:restriction>
-	</xs:simpleType>
-	
-	<!-- @brief An enumeration for the source of oxygen for the anesthesia machine. -->
-	<xs:simpleType name="enumAnesthesiaMachineOxygenSource">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Wall"/>
-			<xs:enumeration value="BottleOne"/>
-			<xs:enumeration value="BottleTwo"/>
-		</xs:restriction>
-	</xs:simpleType>
-	
-	<!-- @brief An enumeration for the primary gas used by the anesthesia machine. -->
-	<xs:simpleType name="enumAnesthesiaMachinePrimaryGas">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Air"/>
-			<xs:enumeration value="Nitrogen"/>
-		</xs:restriction>
-	</xs:simpleType>
-	
-	<!-- @brief An enumeration for the primary gas used by the anesthesia machine. -->
-	<xs:simpleType name="enumAnesthesiaMachineConnection">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Off"/>
-			<xs:enumeration value="Mask"/>
-			<xs:enumeration value="Tube"/>
-		</xs:restriction>
-	</xs:simpleType>
-	
-	<xs:complexType name="ActiveAnesthesiaMachineEventData">
-		<xs:sequence>
-			<xs:element name="Duration" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-		<xs:attribute name="Event" type="enumAnesthesiaMachineEvent" use="required"/>                            
-	</xs:complexType>
-		
-	<!-- @brief Generic anesthesia machine for positive pressure ventilation. -->
-	<xs:complexType name="AnesthesiaMachineData">		
-		<xs:complexContent>
-			<xs:extension base="SystemData">
-				<xs:sequence>
-					<xs:element name="Connection" type="enumAnesthesiaMachineConnection" minOccurs="0"  maxOccurs="1"/><!--<< @copybrief Anesthesia_enumAnesthesiaMachineConnection -->
-					<xs:element name="InletFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total fresh gas inlet flow. -->			
-					<xs:element name="InspiratoryExpiratoryRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The ratio of time spent in the inspiratory phase vs the expiratory phase of respiration. -->
-					<xs:element name="OxygenFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of the fresh gas inlet flow that is oxygen. -->
-					<xs:element name="OxygenSource" type="enumAnesthesiaMachineOxygenSource" minOccurs="0" maxOccurs="1"/><!--<< @brief @copybrief Anesthesia_enumAnesthesiaMachineOxygenSource -->
-					<xs:element name="PositiveEndExpiredPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The pressure above atmospheric pressure that exists in the lungs at the end of expiration.-->
-					<xs:element name="PrimaryGas" type="enumAnesthesiaMachinePrimaryGas" minOccurs="0"  maxOccurs="1"/><!--<< @brief @copybrief Anesthesia_enumAnesthesiaMachinePrimaryGas -->			
-					<xs:element name="ReliefValvePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Pressure at while the valve opens to prevent a build up of pressure in the system. -->
-					<xs:element name="RespiratoryRate" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The prescribed rate of positive-pressure ventilation. -->
-					<xs:element name="VentilatorPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The pressure of the ventilator. -->
-					
-					<xs:element name="LeftChamber" type="AnesthesiaMachineChamberData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The left chamber of the anesthesia machine. -->	
-					<xs:element name="RightChamber" type="AnesthesiaMachineChamberData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The right chamber of the anesthesia machine. -->		
-					
-					<xs:element name="OxygenBottleOne" type="AnesthesiaMachineOxygenBottleData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The first bottle attached to the anesthesia machine. -->	
-					<xs:element name="OxygenBottleTwo" type="AnesthesiaMachineOxygenBottleData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The second bottle attached to the anesthesia machine. -->
-										
-					<xs:element name="ActiveEvent" type="ActiveAnesthesiaMachineEventData" minOccurs="0"  maxOccurs="unbounded"/><!--<< @brief Active Events and their duration. -->
-					
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element name="AnesthesiaMachine" type="AnesthesiaMachineData"/>
-	
-	<!-- @brief A vaporization chamber that can be filled with a particular substance for inhalation. -->
-	<xs:complexType name="AnesthesiaMachineChamberData">
-		<xs:sequence>			
-      <xs:element name="State" type="enumOnOff" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of the substance supplied by the vaporizer chamber.-->
-			<xs:element name="SubstanceFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of the substance supplied by the vaporizer chamber.-->
-			<xs:element name="Substance" type="xs:string" minOccurs="0"  maxOccurs="1"/><!--<< @brief The substance in the vaporizer chamber. -->
-		</xs:sequence>
-	</xs:complexType>
-	
-	<!-- @brief A bottle of Oxygen -->
-	<xs:complexType name="AnesthesiaMachineOxygenBottleData">
-		<xs:sequence>			
-			<xs:element name="Volume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The amount of oxygen in the bottle. -->
-		</xs:sequence>
-	</xs:complexType>
-	
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="System.xsd"/>
+  <xs:include schemaLocation="Compartment.xsd"/>
+  <xs:include schemaLocation="Substance.xsd"/>
+
+  <!-- @brief A set of events/states that the can be triggered on the anesthesia machine. -->
+  <xs:simpleType name="enumAnesthesiaMachineEvent">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OxygenBottle1Exhausted"/>
+      <xs:enumeration value="OxygenBottle2Exhausted"/>
+      <xs:enumeration value="ReliefValveActive"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- @brief An enumeration for the source of oxygen for the anesthesia machine. -->
+  <xs:simpleType name="enumAnesthesiaMachineOxygenSource">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Wall"/>
+      <xs:enumeration value="BottleOne"/>
+      <xs:enumeration value="BottleTwo"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- @brief An enumeration for the primary gas used by the anesthesia machine. -->
+  <xs:simpleType name="enumAnesthesiaMachinePrimaryGas">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Air"/>
+      <xs:enumeration value="Nitrogen"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- @brief An enumeration for the primary gas used by the anesthesia machine. -->
+  <xs:simpleType name="enumAnesthesiaMachineConnection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Off"/>
+      <xs:enumeration value="Mask"/>
+      <xs:enumeration value="Tube"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="ActiveAnesthesiaMachineEventData">
+    <xs:sequence>
+      <xs:element name="Duration" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="Event" type="enumAnesthesiaMachineEvent" use="required"/>
+  </xs:complexType>
+
+  <!-- @brief Generic anesthesia machine for positive pressure ventilation. -->
+  <xs:complexType name="AnesthesiaMachineData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="Connection" type="enumAnesthesiaMachineConnection" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @copybrief Anesthesia_enumAnesthesiaMachineConnection -->
+          <xs:element name="InletFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total fresh gas inlet flow. -->
+          <xs:element name="InspiratoryExpiratoryRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The ratio of time spent in the inspiratory phase vs the expiratory phase of respiration. -->
+          <xs:element name="OxygenFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The fraction of the fresh gas inlet flow that is oxygen. -->
+          <xs:element name="OxygenSource" type="enumAnesthesiaMachineOxygenSource" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief @copybrief Anesthesia_enumAnesthesiaMachineOxygenSource -->
+          <xs:element name="PositiveEndExpiredPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The pressure above atmospheric pressure that exists in the lungs at the end of expiration.-->
+          <xs:element name="PrimaryGas" type="enumAnesthesiaMachinePrimaryGas" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief @copybrief Anesthesia_enumAnesthesiaMachinePrimaryGas -->
+          <xs:element name="ReliefValvePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure at while the valve opens to prevent a build up of pressure in the system. -->
+          <xs:element name="RespiratoryRate" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The prescribed rate of positive-pressure ventilation. -->
+          <xs:element name="VentilatorPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The pressure of the ventilator. -->
+
+          <xs:element name="LeftChamber" type="AnesthesiaMachineChamberData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The left chamber of the anesthesia machine. -->
+          <xs:element name="RightChamber" type="AnesthesiaMachineChamberData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The right chamber of the anesthesia machine. -->
+
+          <xs:element name="OxygenBottleOne" type="AnesthesiaMachineOxygenBottleData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The first bottle attached to the anesthesia machine. -->
+          <xs:element name="OxygenBottleTwo" type="AnesthesiaMachineOxygenBottleData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The second bottle attached to the anesthesia machine. -->
+
+          <xs:element name="ActiveEvent" type="ActiveAnesthesiaMachineEventData" minOccurs="0"  maxOccurs="unbounded"/>
+          <!--<< @brief Active Events and their duration. -->
+
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AnesthesiaMachine" type="AnesthesiaMachineData"/>
+
+  <!-- @brief A vaporization chamber that can be filled with a particular substance for inhalation. -->
+  <xs:complexType name="AnesthesiaMachineChamberData">
+    <xs:sequence>
+      <xs:element name="State" type="enumOnOff" minOccurs="0"  maxOccurs="1"/>
+      <!--<< @brief The fraction of the substance supplied by the vaporizer chamber.-->
+      <xs:element name="SubstanceFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+      <!--<< @brief The fraction of the substance supplied by the vaporizer chamber.-->
+      <xs:element name="Substance" type="xs:string" minOccurs="0"  maxOccurs="1"/>
+      <!--<< @brief The substance in the vaporizer chamber. -->
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- @brief A bottle of Oxygen -->
+  <xs:complexType name="AnesthesiaMachineOxygenBottleData">
+    <xs:sequence>
+      <xs:element name="Volume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+      <!--<< @brief The amount of oxygen in the bottle. -->
+    </xs:sequence>
+  </xs:complexType>
+
 </xs:schema>

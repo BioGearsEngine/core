@@ -1267,7 +1267,7 @@ void Nervous::SetPupilEffects()
   double leftPupilSizeResponseLevel = GetLeftEyePupillaryResponse().GetSizeModifier().GetValue();
   double leftPupilReactivityResponseLevel = GetLeftEyePupillaryResponse().GetReactivityModifier().GetValue();
   double rightPupilSizeResponseLevel = GetRightEyePupillaryResponse().GetSizeModifier().GetValue();
-  double rightPupilReactivityResponseLevel = GetRightEyePupillaryResponse().GetSizeModifier().GetValue();
+  double rightPupilReactivityResponseLevel = GetRightEyePupillaryResponse().GetReactivityModifier().GetValue();
 
   // Calculate the TBI response
   if (m_data.GetActions().GetPatientActions().HasBrainInjury()) {
@@ -1439,6 +1439,36 @@ SEScalar& Nervous::CalculateCentralNervousSOFA()
   //No Glasgow Coma Score in BioGears yet -- could try to use pupil effects
   sofa->SetValue(sofaScore);
   return *sofa;
+}
+
+int Nervous::GlasgowEstimator(double cbf)
+{
+  if (cbf < 116)
+    return 3;
+  else if (cbf < 151)
+    return 4;
+  else if (cbf < 186)
+    return 5;
+  else if (cbf < 220)
+    return 6;
+  else if (cbf < 255)
+    return 7;
+  else if (cbf < 290)
+    return 8;
+  else if (cbf < 363)
+    return 9;
+  else if (cbf < 435)
+    return 10;
+  else if (cbf < 508)
+    return 11;
+  else if (cbf < 580)
+    return 12;
+  else if (cbf < 628)
+    return 13;
+  else if (cbf < 725)
+    return 14;
+  else
+    return 15;
 }
 
 }

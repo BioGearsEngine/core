@@ -9,68 +9,73 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
-<!-- @brief Substance Tracking in the body --> 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-    
-    <xs:include schemaLocation="Properties.xsd"/>
-    
-    <xs:complexType name="SubstanceQuantityData" abstract="true">
-        <xs:complexContent>
-            <xs:extension base="ObjectData">
-                <xs:sequence>
-                    <xs:element name="Substance" type="xs:string" minOccurs="1"  maxOccurs="1"/>        
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
+<!-- @brief Substance Tracking in the body -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
 
-    <xs:complexType name="GasSubstanceQuantityData">
-        <xs:complexContent>
-            <xs:extension base="SubstanceQuantityData">
-                <xs:sequence>
-                    <xs:element name="PartialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>   
-                    <xs:element name="Volume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>            
-                    <xs:element name="VolumeFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>                  
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    
-   <xs:complexType name="LiquidSubstanceQuantityData">
-        <xs:complexContent>
-            <xs:extension base="SubstanceQuantityData">
-                <xs:sequence>
-                    <xs:element name="Concentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
-                    <xs:element name="Mass" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
-                    <xs:element name="MassCleared" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total mass of a substance cleared in the specified compartment.--><!--UNC-->  
-                    <xs:element name="MassDeposited" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total mass of a substance deposited on the wall of the compartment.-->                    
-                    <xs:element name="MassExcreted" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total mass of a substance excreted in the specified compartment.--><!--UNC-->
-                    <xs:element name="Molarity" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
-                    <xs:element name="PartialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>                                 
-                    <xs:element name="Saturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>                    
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    
-    <xs:complexType name="TissueSubstanceQuantityData">
-        <xs:complexContent>
-            <xs:extension base="SubstanceQuantityData">
-                <xs:sequence>
-                    <xs:element name="Mass" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
-                    
-                    <xs:element name="TissueConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>                    
-                    <xs:element name="TissueMolarity" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
-                    
-                    <xs:element name="ExtravascularConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
-                    <xs:element name="ExtravascularMolarity" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
-                    <xs:element name="ExtravascularPartialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>                                 
-                    <xs:element name="ExtravascularSaturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>           
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
+  <xs:include schemaLocation="Properties.xsd"/>
+
+  <xs:complexType name="SubstanceQuantityData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Substance" type="xs:string" minOccurs="1"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="GasSubstanceQuantityData">
+    <xs:complexContent>
+      <xs:extension base="SubstanceQuantityData">
+        <xs:sequence>
+          <xs:element name="PartialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="Volume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="VolumeFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="LiquidSubstanceQuantityData">
+    <xs:complexContent>
+      <xs:extension base="SubstanceQuantityData">
+        <xs:sequence>
+          <xs:element name="Concentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="Mass" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="MassCleared" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total mass of a substance cleared in the specified compartment.-->
+          <!--UNC-->
+          <xs:element name="MassDeposited" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total mass of a substance deposited on the wall of the compartment.-->
+          <xs:element name="MassExcreted" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total mass of a substance excreted in the specified compartment.-->
+          <!--UNC-->
+          <xs:element name="Molarity" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="PartialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="Saturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="TissueSubstanceQuantityData">
+    <xs:complexContent>
+      <xs:extension base="SubstanceQuantityData">
+        <xs:sequence>
+          <xs:element name="Mass" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+
+          <xs:element name="TissueConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="TissueMolarity" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+
+          <xs:element name="ExtravascularConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="ExtravascularMolarity" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="ExtravascularPartialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="ExtravascularSaturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
 </xs:schema>

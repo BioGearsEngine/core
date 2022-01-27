@@ -30,11 +30,13 @@ specific language governing permissions and limitations under the License.
   <xs:complexType name="ActionData">
     <xs:sequence>
       <xs:element name="Comment"  type="xs:string" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="Occurs"   type="xs:double" minOccurs="0" maxOccurs="1"/><!-- @brief When this event occurs in the scenario (currently not supported)-->
-      <xs:element name="Duration" type="xs:double" minOccurs="0" maxOccurs="1"/><!-- @brief Length of time before event ends (currently not supported)  -->
+      <xs:element name="Occurs"   type="xs:double" minOccurs="0" maxOccurs="1"/>
+      <!-- @brief When this event occurs in the scenario (currently not supported)-->
+      <xs:element name="Duration" type="xs:double" minOccurs="0" maxOccurs="1"/>
+      <!-- @brief Length of time before event ends (currently not supported)  -->
     </xs:sequence>
   </xs:complexType>
-  
+
   <xs:complexType name="ActionListData">
     <xs:sequence>
       <xs:element name="Action" type="ActionData" minOccurs="1" maxOccurs="unbounded"/>

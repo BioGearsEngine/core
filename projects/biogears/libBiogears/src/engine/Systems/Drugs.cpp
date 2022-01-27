@@ -1054,8 +1054,8 @@ void Drugs::CalculateDrugEffects()
   //BLIM(rightPupilSizeResponseLevel, -1, 1);
 
   m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
-  m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
   m_data.GetNervous().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
+  m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
   m_data.GetNervous().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
 
   //m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);

@@ -10,34 +10,43 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Generic configuration data for physiology simulation -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-    
-    <xs:include schemaLocation="Patient.xsd"/>
-    <xs:include schemaLocation="Scenario.xsd"/>
-    <xs:include schemaLocation="Circuit.xsd"/>
-    <xs:include schemaLocation="Substance.xsd"/>
-    <xs:include schemaLocation="Compartment.xsd"/>
-    <xs:include schemaLocation="EngineConfiguration.xsd"/>
-    
-    <xs:complexType name="PhysiologyEngineStateData">
-        <xs:complexContent>
-            <xs:extension base="ObjectData">
-                <xs:sequence>
-                    <xs:element name="SimulationTime" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Simulation time at which this state was saved. -->                    
-                    <xs:element name="Patient" type="PatientData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Full patient state. -->
-                    <xs:element name="Condition" type="ConditionData" minOccurs="0" maxOccurs="unbounded"/> <!--<< @brief All conditions used. -->
-                    <xs:element name="ActiveAction" type="ActionData" minOccurs="0" maxOccurs="unbounded"/> <!--<< @brief All active actions, if an action was previously processed, the engine could have removed it from the action managers and it will not be here, the system should maintain that state. -->                    
-                    <xs:element name="ActiveSubstance" type="SubstanceData" minOccurs="0" maxOccurs="unbounded"/> <!--<< @brief All substances modified by the engine -->
-                    <xs:element name="ActiveSubstanceCompound" type="SubstanceCompoundData" minOccurs="0" maxOccurs="unbounded"/> <!--<< @brief All substance compounds modified by the engine -->
-                    <xs:element name="System" type="SystemData" minOccurs="0" maxOccurs="unbounded"/> <!--<< @brief Systems such as Physiology, Equipment, and the Environment -->                    
-                    <xs:element name="CompartmentManager" type="CompartmentManagerData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Compartments used by the engine. -->                     
-                    <xs:element name="Configuration" type="PhysiologyEngineConfigurationData" minOccurs="0" maxOccurs="1"/>
-                    <!-- Stabilization criteria should not be it's own file.. right? just put it in configuration file -->                                                                                             
-                    <xs:element name="CircuitManager" type="CircuitManagerData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Circuits used by the engine. -->
-                    <xs:element name="DataRequests" type="DataRequestsData" minOccurs="0" maxOccurs="1"/> 
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="Patient.xsd"/>
+  <xs:include schemaLocation="Scenario.xsd"/>
+  <xs:include schemaLocation="Circuit.xsd"/>
+  <xs:include schemaLocation="Substance.xsd"/>
+  <xs:include schemaLocation="Compartment.xsd"/>
+  <xs:include schemaLocation="EngineConfiguration.xsd"/>
+
+  <xs:complexType name="PhysiologyEngineStateData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="SimulationTime" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Simulation time at which this state was saved. -->
+          <xs:element name="Patient" type="PatientData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Full patient state. -->
+          <xs:element name="Condition" type="ConditionData" minOccurs="0" maxOccurs="unbounded"/>
+          <!--<< @brief All conditions used. -->
+          <xs:element name="ActiveAction" type="ActionData" minOccurs="0" maxOccurs="unbounded"/>
+          <!--<< @brief All active actions, if an action was previously processed, the engine could have removed it from the action managers and it will not be here, the system should maintain that state. -->
+          <xs:element name="ActiveSubstance" type="SubstanceData" minOccurs="0" maxOccurs="unbounded"/>
+          <!--<< @brief All substances modified by the engine -->
+          <xs:element name="ActiveSubstanceCompound" type="SubstanceCompoundData" minOccurs="0" maxOccurs="unbounded"/>
+          <!--<< @brief All substance compounds modified by the engine -->
+          <xs:element name="System" type="SystemData" minOccurs="0" maxOccurs="unbounded"/>
+          <!--<< @brief Systems such as Physiology, Equipment, and the Environment -->
+          <xs:element name="CompartmentManager" type="CompartmentManagerData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Compartments used by the engine. -->
+          <xs:element name="Configuration" type="PhysiologyEngineConfigurationData" minOccurs="0" maxOccurs="1"/>
+          <!-- Stabilization criteria should not be it's own file.. right? just put it in configuration file -->
+          <xs:element name="CircuitManager" type="CircuitManagerData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Circuits used by the engine. -->
+          <xs:element name="DataRequests" type="DataRequestsData" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
 </xs:schema>

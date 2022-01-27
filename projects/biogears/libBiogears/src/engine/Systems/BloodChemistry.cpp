@@ -31,6 +31,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
+#include <biogears/cdm/system/physiology/SEEnergySystem.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
@@ -112,6 +114,7 @@ void BloodChemistry::Clear()
   m_Lymphocytes_ct = 0.0;
   m_Lymphocytes_d_ct = 0.0;
   m_Lymphocytes_hd_ct = 0.0;
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -129,6 +132,7 @@ void BloodChemistry::Initialize()
   GetStrongIonDifference().SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
   GetTotalBilirubin().SetValue(0.70, MassPerVolumeUnit::mg_Per_dL); //Reference range is 0.2-1.0
   GetLymphocyteCellCount().SetValue(1.9e9, AmountPerVolumeUnit::ct_Per_L); //Reference range is 1.3-3.5e9 per liter
+  GetNeutrophilCellCount().SetValue(3.0e9, AmountPerVolumeUnit::ct_Per_L);  //Reference range is 1.5-3.8e9 per liter
   //Note that RedBloodCellAcetylcholinesterase is initialized in Drugs file because Drugs is processed before Blood Chemistry
   GetInflammatoryResponse().Initialize();
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
@@ -522,21 +526,28 @@ void BloodChemistry::AcuteRadiationSyndrome()
 
   //N is the exposed dose, consistent with the paper we are basing this on
   auto radDose = m_PatientActions->GetRadiationAbsorbedDose()->GetDose().GetValue(EnergyPerMassUnit::J_Per_kg);
+  const double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
+  const double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
+  const double currentMetabolicRate_kcal_Per_day = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
+  double metabolicStress = 0.0;
+  const double kcal_Per_day_Per_Watt = 20.6362855;
+  double EnergyIncrement_kcal_Per_day = 0.0;
+
 
   //define parameters
   //control parameters  
   const double alpha_Per_Day = 0.8 / 86400.0;   //scale to our timescale
-  const double gamma_Per_Day = 0.5 / 86400.0;
-  const double delta_Per_Day = 0.2 / 86400.0;
-  const double kappa_Per_Day = 0.1 / 86400.0;
+  const double gamma_Per_Day = 0.8 / 86400.0;
+  const double delta_Per_Day = 0.1 / 86400.0;
+  const double kappa_Per_Day = 0.4 / 86400.0;
   const double sigma1 = 1.0;
   const double sigma2 = 0.06;
   const double sigma3 = 0.01;
   const double phi = 1.01;
-  //const double rho1 = 0.1;    //this number is not defined in the literature, transfer ratio from healthy to heavily damaged cells
-  //const double rho2 = 0.1;
-  //const double rho3 = 0.1;
   double speed = 5.0;
+
+  //neutrophil delay
+  const double delay = 3600.0; //one hour delay
 
   //radiobiological paramters
   const double D1_J_Per_Kg = 1.4;
@@ -544,14 +555,19 @@ void BloodChemistry::AcuteRadiationSyndrome()
   const double Dm1_J_Per_Kg = 13.0;
   const double D2_J_Per_Kg = 1.4;
   const double Dm2_J_Per_Kg = 13.0;
-  const double D3_J_Per_Kg = 0.2;   //this value has been adjusted for physiological response
+  const double D3_J_Per_Kg = 0.9;   //this value has been adjusted for physiological response
   const double Dm3_J_Per_Kg = 6.5;
   const double v1_Per_Day = 0.6 / 86400.0;
-  const double vc_Per_Day = 10.6 / 86400.0; //this one isn't defined in the literature
+  const double vc_Per_Day = 0.6 / 86400.0; //this one isn't defined in the literature
   const double v2_Per_Day = 7.0 / 86400.0;
   const double xhat = 1.936e9;   //average number of lympohocytes
+  const double neutrophilhat = 4.0e9; //average number of neutrophiles per liter
   const double nu_Per_Day = (v2_Per_Day * phi) / v1_Per_Day; //capital gamma in the model
 
+  //neutrophil/lymphocyte count (want this to be nondimensional for now): 
+  double neutrophilAmount = GetNeutrophilCellCount().GetValue(AmountPerVolumeUnit::ct_Per_L) / neutrophilhat;
+  double lymphoAmount = GetLymphocyteCellCount().GetValue(AmountPerVolumeUnit::ct_Per_L) / xhat;
+  double diff = 0.0;
 
   //rho is a ratio of d1 and dm1... 
   double rho1 = (Dm1_J_Per_Kg / (D1_J_Per_Kg - 1));
@@ -559,9 +575,9 @@ void BloodChemistry::AcuteRadiationSyndrome()
   double rho3 = (Dm3_J_Per_Kg / (D3_J_Per_Kg - 1));
 
   // a single dose of 3-8 gy over one time step will break the model so we will administer the dose over a few hours to keep the dynamics
-  // we will assume the exposure is fairly high over a period of time, around 0.1 gy / min ( some of the highest exposures at chernobyl)
+  // we will assume the exposure is fairly high over a period of time, around 0.05 gy / min ( some of the middle exposures at chernobyl)
   /// \todo: make this configurable from the action
-  const double radiationRate_Per_s = (0.1) / 60;
+  const double radiationRate_Per_s = (0.05) / 60;
   double radiationRate_Per_dt = radiationRate_Per_s * m_dt_s;
 
   if (m_radAbsorbed_Gy >= radDose) {
@@ -592,6 +608,22 @@ void BloodChemistry::AcuteRadiationSyndrome()
   m_Lymphocytes_hd_ct += m_dt_s * speed * ((radiationRate_Per_dt / Dm3_J_Per_Kg) * (rho1 / (1 + rho1)) * m_Lymphocytes_ct - v2_Per_Day * m_Lymphocytes_hd_ct);
 
   GetLymphocyteCellCount().SetValue(m_Lymphocytes_ct * xhat, AmountPerVolumeUnit::ct_Per_L); //Reference range is 1.3-3.5e9 per liter, scaling back to get a count
+
+  if (m_data.GetSimulationTime().GetValue(TimeUnit::s) > delay) {
+    //scale neutrophils super simple exponential, using hr timestep to slow things down
+    diff = m_dt_hr * (neutrophilAmount - lymphoAmount);
+    GetNeutrophilCellCount().IncrementValue(-diff * neutrophilhat, AmountPerVolumeUnit::ct_Per_L );
+  }
+
+
+  //thermal effects due to lymphocyt changes, scale based upon damaged lymphocyte
+  BLIM(m_Lymphocytes_ct, 0, 1);
+  metabolicStress = std::pow(m_Lymphocytes_ct, 2) - 2 * m_Lymphocytes_ct + 1;
+  EnergyIncrement_kcal_Per_day = m_dt_s * (basalMetabolicRate_kcal_Per_day + metabolicStress * maxWorkRate_W * kcal_Per_day_Per_Watt - currentMetabolicRate_kcal_Per_day) * 0.0002;
+
+  m_data.GetEnergy().GetTotalMetabolicRate().IncrementValue(EnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
+  m_data.GetEnergy().GetExerciseEnergyDemand().IncrementValue(EnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
+
 
   //increment the exposure variable: 
   m_radAbsorbed_Gy += radiationRate_Per_dt;
@@ -624,7 +656,7 @@ void BloodChemistry::CheckRadiationSymptoms()
     const double xhat_ct_Per_L = 1.936e9; //average number of lympohocytes
 
     //mild
-    if (0.3 < lymph_ct_Per_L / xhat_ct_Per_L && lymph_ct_Per_L / xhat_ct_Per_L < 0.5) {
+    if (0.5 < lymph_ct_Per_L / xhat_ct_Per_L && lymph_ct_Per_L / xhat_ct_Per_L < 0.6) {
       m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, true, m_data.GetSimulationTime());
       m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, true, m_data.GetSimulationTime());
       m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, false, m_data.GetSimulationTime());
@@ -634,7 +666,7 @@ void BloodChemistry::CheckRadiationSymptoms()
     }
 
     //severe
-    if (lymph_ct_Per_L / xhat_ct_Per_L < 0.2) {
+    if (lymph_ct_Per_L / xhat_ct_Per_L < 0.4) {
       m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, false, m_data.GetSimulationTime());
       m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, false, m_data.GetSimulationTime());
       m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, true, m_data.GetSimulationTime());
@@ -981,7 +1013,7 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
   cbc.GetMeanCorpuscularHemoglobin().SetValue(m_data.GetConfiguration().GetMeanCorpuscularHemoglobin(MassPerAmountUnit::pg_Per_ct), MassPerAmountUnit::pg_Per_ct);
   cbc.GetMeanCorpuscularHemoglobinConcentration().SetValue(m_data.GetSubstances().GetHb().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL) / GetHematocrit().GetValue(), MassPerVolumeUnit::g_Per_dL); //Average range should be 32-36 g/dL. (https://en.wikipedia.org/wiki/Mean_corpuscular_hemoglobin_concentration)
   cbc.GetMeanCorpuscularVolume().SetValue(m_data.GetConfiguration().GetMeanCorpuscularVolume(VolumeUnit::uL), VolumeUnit::uL);
-  cbc.GetNeutrophilCount().SetValue(GetLymphocyteCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);   ///\TODO: update with correct data
+  cbc.GetNeutrophilCount().SetValue(GetNeutrophilCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);   ///\TODO: update with correct data
   double rbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
   cbc.GetRedBloodCellCount().SetValue(rbcCount_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
   double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL); //m_data.GetSubstances().GetWBC().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);

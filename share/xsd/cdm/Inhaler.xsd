@@ -10,26 +10,31 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Basic Electro Cardiogram machine -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-    
-    <xs:include schemaLocation="Physiology.xsd"/>
-    <xs:include schemaLocation="Compartment.xsd"/>
-    
-    <!-- @brief Generic inhaler for substance administration. -->
-    <xs:complexType name="InhalerData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>
-                    <xs:element name="State" type="enumOnOff" minOccurs="0" maxOccurs="1"/><!--<< @brief Is the inhaler adminstering it's substance or not. -->
-                    <xs:element name="Substance" type="xs:string" minOccurs="0" maxOccurs="1"/>    <!--<< @brief Substance contained. -->
-                    <xs:element name="MeteredDose" type="ScalarMassData" minOccurs="0" maxOccurs="1"/><!--<< @brief Dosage of substance. -->
-                    <xs:element name="NozzleLoss" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief Fraction of substance lost from the inhaler. --> 
-                    <xs:element name="SpacerVolume" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Volume of a spacer, if used. -->
-                </xs:sequence>	
-                
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="Inhaler" type="InhalerData"/>
-	
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="Physiology.xsd"/>
+  <xs:include schemaLocation="Compartment.xsd"/>
+
+  <!-- @brief Generic inhaler for substance administration. -->
+  <xs:complexType name="InhalerData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="State" type="enumOnOff" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Is the inhaler adminstering it's substance or not. -->
+          <xs:element name="Substance" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Substance contained. -->
+          <xs:element name="MeteredDose" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Dosage of substance. -->
+          <xs:element name="NozzleLoss" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Fraction of substance lost from the inhaler. -->
+          <xs:element name="SpacerVolume" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Volume of a spacer, if used. -->
+        </xs:sequence>
+
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Inhaler" type="InhalerData"/>
+
 </xs:schema>

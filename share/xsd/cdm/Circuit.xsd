@@ -10,256 +10,259 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Circuit components for lumped parameter modeling -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-	
-	<xs:include schemaLocation="Properties.xsd"/>
-	
-	<xs:simpleType name="enumCircuitType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Electrical"/> 
-			<xs:enumeration value="Fluid"/>
-			<xs:enumeration value="Thermal"/>
-		</xs:restriction>
-	</xs:simpleType>  
-	
-	<xs:simpleType name="enumResistancePathType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="Cerebral"/>
-            <xs:enumeration value="Extrasplanchnic"/>
-            <xs:enumeration value="Muscle"/>
-            <xs:enumeration value="Splanchnic"/>
-            <xs:enumeration value="Myocardium"/>
-        </xs:restriction>
-    </xs:simpleType>
-	
-	<xs:complexType name="CircuitData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence> 
-					<xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="ReferenceNode"  type="xs:string" minOccurs="1" maxOccurs="unbounded"/>					
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>	
-	<xs:complexType name="CircuitNodeData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="CircuitPathData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="SourceNode" type="xs:string" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="TargetNode" type="xs:string" minOccurs="1" maxOccurs="1"/>
-					
-					<xs:element name="Switch" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="NextSwitch" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/> 
-					
-					<xs:element name="Valve" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="NextValve" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/>
-					
-					<xs:element name="PolarizedState" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="NextPolarizedState" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="ElectricalCircuitData">
-		<xs:complexContent>
-			<xs:extension base="CircuitData">
-				<xs:sequence> 
-					<xs:element name="Node"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="Path"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>	
-	<xs:complexType name="ElectricalCircuitNodeData">
-		<xs:complexContent>
-			<xs:extension base="CircuitNodeData">
-				<xs:sequence>
-					<xs:element name="Voltage" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextVoltage" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
-				    <xs:element name="Charge" type="ScalarElectricChargeData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextCharge" type="ScalarElectricChargeData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="ChargeBaseline" type="ScalarElectricChargeData" minOccurs="0" maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="ElectricalCircuitPathData">
-		<xs:complexContent>
-			<xs:extension base="CircuitPathData">
-				<xs:sequence>
-					
-					<!-- Resistance Types -->
-					<xs:element name="Resistance" type="ScalarElectricResistanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextResistance" type="ScalarElectricResistanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="ResistanceBaseline" type="ScalarElectricResistanceData" minOccurs="0" maxOccurs="1"/>					
-					<!-- Capacitance Types -->					
-					<xs:element name="Capacitance" type="ScalarElectricCapacitanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextCapacitance" type="ScalarElectricCapacitanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="CapacitanceBaseline" type="ScalarElectricCapacitanceData" minOccurs="0" maxOccurs="1"/>					
-					<!-- Inductance Types -->					
-					<xs:element name="Inductance" type="ScalarElectricInductanceData" minOccurs="0" maxOccurs="1"/>		
-					<xs:element name="NextInductance" type="ScalarElectricInductanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="InductanceBaseline" type="ScalarElectricInductanceData" minOccurs="0" maxOccurs="1"/>						
-					<!-- Flux Types -->
-					<xs:element name="Current" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextCurrent" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="CurrentSource" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextCurrentSource" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="CurrentSourceBaseline" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>					
-					<!-- Potential Types -->
-					<xs:element name="VoltageSource" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextVoltageSource" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="VoltageSourceBaseline" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="ValveBreakdownVoltage" type="ScalarElectricPotentialData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Maximum potential at which the ideal Zener Diode/Valve ceases backflow -->
-					
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="FluidCircuitData">
-		<xs:complexContent>
-			<xs:extension base="CircuitData">
-				<xs:sequence> 
-					<xs:element name="Node"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="Path"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>	
-	<xs:complexType name="FluidCircuitNodeData">
-		<xs:complexContent>
-			<xs:extension base="CircuitNodeData">
-				<xs:sequence>
-					<!-- Potential Types --> 
-					<xs:element name="Pressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="NextPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="Volume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="NextVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="VolumeBaseline" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
-			    </xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="FluidCircuitPathData">
-		<xs:complexContent>
-			<xs:extension base="CircuitPathData">
-				<xs:sequence>
-					<!-- Resistance Types -->
-					<xs:element name="Resistance" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextResistance" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="ResistanceBaseline" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="CardiovascularRegion" type="enumResistancePathType" minOccurs="0" maxOccurs="1"/>
-					<!-- Capacitance Types -->					
-					<xs:element name="Compliance" type="ScalarFlowComplianceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextCompliance" type="ScalarFlowComplianceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="ComplianceBaseline" type="ScalarFlowComplianceData" minOccurs="0" maxOccurs="1"/>
-					<!-- Inductance Types -->					
-					<xs:element name="Inertance" type="ScalarFlowInertanceData" minOccurs="0" maxOccurs="1"/>		
-					<xs:element name="NextInertance" type="ScalarFlowInertanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="InertanceBaseline" type="ScalarFlowInertanceData" minOccurs="0" maxOccurs="1"/>
-					<!-- Flux Types -->
-					<xs:element name="Flow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="NextFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="FlowSource" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="NextFlowSource" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="FlowSourceBaseline" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
-					<!-- Potential Types -->
-					<xs:element name="PressureSource" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="NextPressureSource" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="PressureSourceBaseline" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="ValveBreakdownPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Maximum potential at which the ideal Zener Diode/Valve ceases backflow -->
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="ThermalCircuitData">
-		<xs:complexContent>
-			<xs:extension base="CircuitData">
-				<xs:sequence> 
-					<xs:element name="Node"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="Path"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>	
-	<xs:complexType name="ThermalCircuitNodeData">
-		<xs:complexContent>
-			<xs:extension base="CircuitNodeData">
-				<xs:sequence>
-					<xs:element name="Temperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextTemperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>					
-					<xs:element name="Heat" type="ScalarEnergyData" minOccurs="0" maxOccurs="1"/>					
-					<xs:element name="NextHeat" type="ScalarEnergyData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="HeatBaseline" type="ScalarEnergyData" minOccurs="0" maxOccurs="1"/>					
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="ThermalCircuitPathData">
-		<xs:complexContent>
-			<xs:extension base="CircuitPathData">
-				<xs:sequence>
-					<!-- Resistance Types -->
-					<xs:element name="Resistance" type="ScalarHeatResistanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextResistance" type="ScalarHeatResistanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="ResistanceBaseline" type="ScalarHeatResistanceData" minOccurs="0" maxOccurs="1"/>
-					<!-- Capacitance Types -->					
-					<xs:element name="Capacitance" type="ScalarHeatCapacitanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextCapacitance" type="ScalarHeatCapacitanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="CapacitanceBaseline" type="ScalarHeatCapacitanceData" minOccurs="0" maxOccurs="1"/>
-					<!-- Inductance Types -->					
-					<xs:element name="Inductance" type="ScalarHeatInductanceData" minOccurs="0" maxOccurs="1"/>		
-					<xs:element name="NextInductance" type="ScalarHeatInductanceData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="InductanceBaseline" type="ScalarHeatInductanceData" minOccurs="0" maxOccurs="1"/>
-					<!-- Flux Types -->
-					<xs:element name="HeatTransferRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextHeatTransferRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="HeatSource" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextHeatSource" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="HeatSourceBaseline" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
-					<!-- Potential Types -->
-					<xs:element name="TemperatureSource" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NextTemperatureSource" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="TemperatureSourceBaseline" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="ValveBreakdownTemperature" type="ScalarTemperatureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Maximum potential at which the ideal Zener Diode/Valve ceases backflow -->
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-		
-	<xs:complexType name="CircuitManagerData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence> 
-					<xs:element name="ElectricalNode"  type="ElectricalCircuitNodeData" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="ElectricalPath"  type="ElectricalCircuitPathData" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="ElectricalCircuit"  type="ElectricalCircuitData"  minOccurs="0" maxOccurs="unbounded"/>
-					
-					<xs:element name="FluidNode"  type="FluidCircuitNodeData" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="FluidPath"  type="FluidCircuitPathData" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="FluidCircuit"  type="FluidCircuitData"  minOccurs="0" maxOccurs="unbounded"/>
-					
-					<xs:element name="ThermalNode"  type="ThermalCircuitNodeData" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="ThermalPath"  type="ThermalCircuitPathData" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="ThermalCircuit"  type="ThermalCircuitData"  minOccurs="0" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>   
-	<xs:element name="CircuitManager" type="CircuitManagerData"/>
-	
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="Properties.xsd"/>
+
+  <xs:simpleType name="enumCircuitType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Electrical"/>
+      <xs:enumeration value="Fluid"/>
+      <xs:enumeration value="Thermal"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="enumResistancePathType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Cerebral"/>
+      <xs:enumeration value="Extrasplanchnic"/>
+      <xs:enumeration value="Muscle"/>
+      <xs:enumeration value="Splanchnic"/>
+      <xs:enumeration value="Myocardium"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="CircuitData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ReferenceNode"  type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CircuitNodeData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CircuitPathData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="SourceNode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="TargetNode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+
+          <xs:element name="Switch" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="NextSwitch" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/>
+
+          <xs:element name="Valve" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="NextValve" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/>
+
+          <xs:element name="PolarizedState" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="NextPolarizedState" type="enumOpenClosed" minOccurs="0"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ElectricalCircuitData">
+    <xs:complexContent>
+      <xs:extension base="CircuitData">
+        <xs:sequence>
+          <xs:element name="Node"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="Path"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ElectricalCircuitNodeData">
+    <xs:complexContent>
+      <xs:extension base="CircuitNodeData">
+        <xs:sequence>
+          <xs:element name="Voltage" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextVoltage" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Charge" type="ScalarElectricChargeData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextCharge" type="ScalarElectricChargeData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ChargeBaseline" type="ScalarElectricChargeData" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ElectricalCircuitPathData">
+    <xs:complexContent>
+      <xs:extension base="CircuitPathData">
+        <xs:sequence>
+
+          <!-- Resistance Types -->
+          <xs:element name="Resistance" type="ScalarElectricResistanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextResistance" type="ScalarElectricResistanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ResistanceBaseline" type="ScalarElectricResistanceData" minOccurs="0" maxOccurs="1"/>
+          <!-- Capacitance Types -->
+          <xs:element name="Capacitance" type="ScalarElectricCapacitanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextCapacitance" type="ScalarElectricCapacitanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="CapacitanceBaseline" type="ScalarElectricCapacitanceData" minOccurs="0" maxOccurs="1"/>
+          <!-- Inductance Types -->
+          <xs:element name="Inductance" type="ScalarElectricInductanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextInductance" type="ScalarElectricInductanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="InductanceBaseline" type="ScalarElectricInductanceData" minOccurs="0" maxOccurs="1"/>
+          <!-- Flux Types -->
+          <xs:element name="Current" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextCurrent" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="CurrentSource" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextCurrentSource" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="CurrentSourceBaseline" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
+          <!-- Potential Types -->
+          <xs:element name="VoltageSource" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextVoltageSource" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="VoltageSourceBaseline" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ValveBreakdownVoltage" type="ScalarElectricPotentialData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Maximum potential at which the ideal Zener Diode/Valve ceases backflow -->
+
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="FluidCircuitData">
+    <xs:complexContent>
+      <xs:extension base="CircuitData">
+        <xs:sequence>
+          <xs:element name="Node"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="Path"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FluidCircuitNodeData">
+    <xs:complexContent>
+      <xs:extension base="CircuitNodeData">
+        <xs:sequence>
+          <!-- Potential Types -->
+          <xs:element name="Pressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="NextPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="Volume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="NextVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="VolumeBaseline" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FluidCircuitPathData">
+    <xs:complexContent>
+      <xs:extension base="CircuitPathData">
+        <xs:sequence>
+          <!-- Resistance Types -->
+          <xs:element name="Resistance" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextResistance" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ResistanceBaseline" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="CardiovascularRegion" type="enumResistancePathType" minOccurs="0" maxOccurs="1"/>
+          <!-- Capacitance Types -->
+          <xs:element name="Compliance" type="ScalarFlowComplianceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextCompliance" type="ScalarFlowComplianceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ComplianceBaseline" type="ScalarFlowComplianceData" minOccurs="0" maxOccurs="1"/>
+          <!-- Inductance Types -->
+          <xs:element name="Inertance" type="ScalarFlowInertanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextInertance" type="ScalarFlowInertanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="InertanceBaseline" type="ScalarFlowInertanceData" minOccurs="0" maxOccurs="1"/>
+          <!-- Flux Types -->
+          <xs:element name="Flow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="NextFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="FlowSource" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="NextFlowSource" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="FlowSourceBaseline" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!-- Potential Types -->
+          <xs:element name="PressureSource" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="NextPressureSource" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="PressureSourceBaseline" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="ValveBreakdownPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Maximum potential at which the ideal Zener Diode/Valve ceases backflow -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ThermalCircuitData">
+    <xs:complexContent>
+      <xs:extension base="CircuitData">
+        <xs:sequence>
+          <xs:element name="Node"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="Path"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ThermalCircuitNodeData">
+    <xs:complexContent>
+      <xs:extension base="CircuitNodeData">
+        <xs:sequence>
+          <xs:element name="Temperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextTemperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Heat" type="ScalarEnergyData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextHeat" type="ScalarEnergyData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="HeatBaseline" type="ScalarEnergyData" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ThermalCircuitPathData">
+    <xs:complexContent>
+      <xs:extension base="CircuitPathData">
+        <xs:sequence>
+          <!-- Resistance Types -->
+          <xs:element name="Resistance" type="ScalarHeatResistanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextResistance" type="ScalarHeatResistanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ResistanceBaseline" type="ScalarHeatResistanceData" minOccurs="0" maxOccurs="1"/>
+          <!-- Capacitance Types -->
+          <xs:element name="Capacitance" type="ScalarHeatCapacitanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextCapacitance" type="ScalarHeatCapacitanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="CapacitanceBaseline" type="ScalarHeatCapacitanceData" minOccurs="0" maxOccurs="1"/>
+          <!-- Inductance Types -->
+          <xs:element name="Inductance" type="ScalarHeatInductanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextInductance" type="ScalarHeatInductanceData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="InductanceBaseline" type="ScalarHeatInductanceData" minOccurs="0" maxOccurs="1"/>
+          <!-- Flux Types -->
+          <xs:element name="HeatTransferRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextHeatTransferRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="HeatSource" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextHeatSource" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="HeatSourceBaseline" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
+          <!-- Potential Types -->
+          <xs:element name="TemperatureSource" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NextTemperatureSource" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="TemperatureSourceBaseline" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ValveBreakdownTemperature" type="ScalarTemperatureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Maximum potential at which the ideal Zener Diode/Valve ceases backflow -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CircuitManagerData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="ElectricalNode"  type="ElectricalCircuitNodeData" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="ElectricalPath"  type="ElectricalCircuitPathData" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="ElectricalCircuit"  type="ElectricalCircuitData"  minOccurs="0" maxOccurs="unbounded"/>
+
+          <xs:element name="FluidNode"  type="FluidCircuitNodeData" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="FluidPath"  type="FluidCircuitPathData" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="FluidCircuit"  type="FluidCircuitData"  minOccurs="0" maxOccurs="unbounded"/>
+
+          <xs:element name="ThermalNode"  type="ThermalCircuitNodeData" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="ThermalPath"  type="ThermalCircuitPathData" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="ThermalCircuit"  type="ThermalCircuitData"  minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CircuitManager" type="CircuitManagerData"/>
+
 </xs:schema>

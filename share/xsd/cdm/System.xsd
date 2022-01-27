@@ -10,19 +10,19 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Basic system data type for Physiology, Equipment, and Environmental systems -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-	
-	<xs:include schemaLocation="Properties.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
 
-	<xs:complexType name="SystemData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					
-				</xs:sequence>	
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+  <xs:include schemaLocation="Properties.xsd"/>
 
- 
+  <xs:complexType name="SystemData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
 </xs:schema>

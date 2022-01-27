@@ -1,14 +1,14 @@
 <!-- @brief BioGears specific data for our methodology  -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-  
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
   <xs:include schemaLocation="cdm/Properties.xsd"/>
   <xs:include schemaLocation="cdm/EngineState.xsd"/>
   <xs:include schemaLocation="cdm/Scenario.xsd"/>
   <xs:include schemaLocation="cdm/Patient.xsd"/>
-  <xs:include schemaLocation="cdm/PatientActions.xsd"/>  
+  <xs:include schemaLocation="cdm/PatientActions.xsd"/>
   <xs:include schemaLocation="cdm/PatientAssessments.xsd"/>
   <xs:include schemaLocation="cdm/PatientConditions.xsd"/>
-  <xs:include schemaLocation="cdm/PatientNutrition.xsd"/>  
+  <xs:include schemaLocation="cdm/PatientNutrition.xsd"/>
   <xs:include schemaLocation="cdm/Compartment.xsd"/>
   <xs:include schemaLocation="cdm/Substance.xsd"/>
   <xs:include schemaLocation="cdm/System.xsd"/>
@@ -21,11 +21,11 @@
   <xs:include schemaLocation="cdm/ElectroCardioGram.xsd"/>
   <xs:include schemaLocation="cdm/Inhaler.xsd"/>
   <xs:include schemaLocation="cdm/InhalerActions.xsd"/>
-  <xs:include schemaLocation="cdm/Circuit.xsd"/>   
+  <xs:include schemaLocation="cdm/Circuit.xsd"/>
   <xs:include schemaLocation="cdm/TestReport.xsd"/>
-  
+
   <!-- Schema Versioning -->
   <!-- Everything deriving from the ObjectData type has a contentVersion attribute -->
   <!-- Use this attribute when you write out data files to be used by an engine    -->
-  
+
 </xs:schema>
