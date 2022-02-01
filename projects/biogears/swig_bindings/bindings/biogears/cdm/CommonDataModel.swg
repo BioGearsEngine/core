@@ -205,6 +205,8 @@ namespace tatrc {
         CriticalBrainOxygenDeficit,
         Dehydration,
         Diuresis,
+        MildDiarrhea,
+        SevereDiarrhea,
         Fasciculation,
         Fatigue,
         FlaccidParalysis,
