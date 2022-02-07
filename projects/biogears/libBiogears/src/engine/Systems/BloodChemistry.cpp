@@ -112,6 +112,7 @@ void BloodChemistry::Clear()
   m_Lymphocytes_ct = 0.0;
   m_Lymphocytes_d_ct = 0.0;
   m_Lymphocytes_hd_ct = 0.0;
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -129,6 +130,7 @@ void BloodChemistry::Initialize()
   GetStrongIonDifference().SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
   GetTotalBilirubin().SetValue(0.70, MassPerVolumeUnit::mg_Per_dL); //Reference range is 0.2-1.0
   GetLymphocyteCellCount().SetValue(1.9e9, AmountPerVolumeUnit::ct_Per_L); //Reference range is 1.3-3.5e9 per liter
+  GetNeutrophilCellCount().SetValue(4.0e9, AmountPerVolumeUnit::ct_Per_L); //Reference range is 1.5-3.8e9 per liter
   //Note that RedBloodCellAcetylcholinesterase is initialized in Drugs file because Drugs is processed before Blood Chemistry
   GetInflammatoryResponse().Initialize();
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
@@ -526,17 +528,17 @@ void BloodChemistry::AcuteRadiationSyndrome()
   //define parameters
   //control parameters  
   const double alpha_Per_Day = 0.8 / 86400.0;   //scale to our timescale
-  const double gamma_Per_Day = 0.5 / 86400.0;
+  const double gamma_Per_Day = 0.8 / 86400.0;
   const double delta_Per_Day = 0.1 / 86400.0;
   const double kappa_Per_Day = 0.4 / 86400.0;
   const double sigma1 = 1.0;
   const double sigma2 = 0.06;
   const double sigma3 = 0.01;
   const double phi = 1.01;
-  //const double rho1 = 0.1;    //this number is not defined in the literature, transfer ratio from healthy to heavily damaged cells
-  //const double rho2 = 0.1;
-  //const double rho3 = 0.1;
   double speed = 5.0;
+
+  //neutrophil delay
+  const double delay = 3600.0; //one hour delay
 
   //radiobiological paramters
   const double D1_J_Per_Kg = 1.4;
@@ -550,8 +552,13 @@ void BloodChemistry::AcuteRadiationSyndrome()
   const double vc_Per_Day = 0.6 / 86400.0; //this one isn't defined in the literature
   const double v2_Per_Day = 7.0 / 86400.0;
   const double xhat = 1.936e9;   //average number of lympohocytes
+  const double neutrophilhat = 4.0e9; //average number of neutrophiles per liter
   const double nu_Per_Day = (v2_Per_Day * phi) / v1_Per_Day; //capital gamma in the model
 
+  //neutrophil/lymphocyte count (want this to be nondimensional for now): 
+  double neutrophilAmount = GetNeutrophilCellCount().GetValue(AmountPerVolumeUnit::ct_Per_L) / neutrophilhat;
+  double lymphoAmount = GetLymphocyteCellCount().GetValue(AmountPerVolumeUnit::ct_Per_L) / xhat;
+  double diff = 0.0;
 
   //rho is a ratio of d1 and dm1... 
   double rho1 = (Dm1_J_Per_Kg / (D1_J_Per_Kg - 1));
@@ -592,6 +599,13 @@ void BloodChemistry::AcuteRadiationSyndrome()
   m_Lymphocytes_hd_ct += m_dt_s * speed * ((radiationRate_Per_dt / Dm3_J_Per_Kg) * (rho1 / (1 + rho1)) * m_Lymphocytes_ct - v2_Per_Day * m_Lymphocytes_hd_ct);
 
   GetLymphocyteCellCount().SetValue(m_Lymphocytes_ct * xhat, AmountPerVolumeUnit::ct_Per_L); //Reference range is 1.3-3.5e9 per liter, scaling back to get a count
+
+  if (m_data.GetSimulationTime().GetValue(TimeUnit::s) > delay) {
+    //scale neutrophils super simple exponential, using hr timestep to slow things down
+    diff = m_dt_hr * (neutrophilAmount - lymphoAmount);
+    GetNeutrophilCellCount().IncrementValue(-diff * neutrophilhat, AmountPerVolumeUnit::ct_Per_L );
+  }
+
 
   //increment the exposure variable: 
   m_radAbsorbed_Gy += radiationRate_Per_dt;

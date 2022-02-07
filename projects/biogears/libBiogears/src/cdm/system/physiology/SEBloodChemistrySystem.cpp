@@ -52,6 +52,7 @@ constexpr char idVolumeFractionNeutralPhospholipidInPlasma[] = "VolumeFractionNe
 constexpr char idVolumeFractionNeutralLipidInPlasma[] = "VolumeFractionNeutralLipidInPlasma";
 constexpr char idWhiteBloodCellCount[] = "WhiteBloodCellCount";
 constexpr char idLymphocyteCellCount[] = "LymphocyteCellCount";
+constexpr char idNeutrophilCellCount[] = "NeutrophilCellCount";
 constexpr char idArterialCarbonDioxidePressure[] = "ArterialCarbonDioxidePressure";
 constexpr char idArterialOxygenPressure[] = "ArterialOxygenPressure";
 constexpr char idPulmonaryArterialCarbonDioxidePressure[] = "PulmonaryArterialCarbonDioxidePressure";
@@ -196,6 +197,9 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
   if (name == idLymphocyteCellCount) {
     return &GetLymphocyteCellCount();
   }
+  if (name == idNeutrophilCellCount) {
+    return &GetNeutrophilCellCount();
+  }
   if (name == idOxygenSaturation) {
     return &GetOxygenSaturation();
   }
@@ -319,6 +323,9 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
   }
   if (in.LymphocyteCellCount().present()) {
     GetLymphocyteCellCount().Load(in.LymphocyteCellCount().get());
+  }
+  if (in.NeutrophilCellCount().present()) {
+    GetNeutrophilCellCount().Load(in.NeutrophilCellCount().get());
   }
   if (in.OxygenSaturation().present()) {
     GetOxygenSaturation().Load(in.OxygenSaturation().get());
@@ -784,6 +791,26 @@ double SEBloodChemistrySystem::GetLymphocyteCellCount(const AmountPerVolumeUnit&
   return m_LymphocyteCellCount->GetValue(unit);
 }
 
+//-------------------------------------------------------------------------------
+
+bool SEBloodChemistrySystem::HasNeutrophilCellCount() const
+{
+  return m_NeutrophilCellCount == nullptr ? false : m_NeutrophilCellCount->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarAmountPerVolume& SEBloodChemistrySystem::GetNeutrophilCellCount()
+{
+  if (m_NeutrophilCellCount == nullptr)
+    m_NeutrophilCellCount = new SEScalarAmountPerVolume();
+  return *m_NeutrophilCellCount;
+}
+//-------------------------------------------------------------------------------
+double SEBloodChemistrySystem::GetNeutrophilCellCount(const AmountPerVolumeUnit& unit) const
+{
+  if (m_NeutrophilCellCount == nullptr)
+    return SEScalar::dNaN();
+  return m_NeutrophilCellCount->GetValue(unit);
+}
 //-------------------------------------------------------------------------------
 
 bool SEBloodChemistrySystem::HasOxygenSaturation() const
@@ -1318,6 +1345,7 @@ Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idHematocrit)
     .emplace_back(idHemoglobinContent)
     .emplace_back(idLymphocyteCellCount)
+    .emplace_back(idNeutrophilCellCount)
     .emplace_back(idOxygenSaturation)
     .emplace_back(idPhosphate)
     .emplace_back(idPlasmaVolume)
