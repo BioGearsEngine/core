@@ -7,6 +7,7 @@
   
     <DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="BloodConcentration" Unit="mg/L" Precision="2"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="LymphocyteCellCount" Unit="ct/uL" Precision="5"/>
+    <DataRequest xsi:type="PhysiologyDataRequestData" Name="NeutrophilCellCount" Unit="ct/uL" Precision="5"/>
 
 
     <!-- Specific to this scenario -->
@@ -18,7 +19,7 @@
   </Action>
 
   <Action xsi:type="RadiationAbsorbedDoseData">
-    <RadiationDose value="3" unit="J/kg"/>
+    <RadiationDose value="9" unit="J/kg"/>
   </Action>
 
   <Action xsi:type="AdvanceTimeData">
