@@ -31,6 +31,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
+#include <biogears/cdm/system/physiology/SEEnergySystem.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
@@ -130,7 +132,7 @@ void BloodChemistry::Initialize()
   GetStrongIonDifference().SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
   GetTotalBilirubin().SetValue(0.70, MassPerVolumeUnit::mg_Per_dL); //Reference range is 0.2-1.0
   GetLymphocyteCellCount().SetValue(1.9e9, AmountPerVolumeUnit::ct_Per_L); //Reference range is 1.3-3.5e9 per liter
-  GetNeutrophilCellCount().SetValue(4.0e9, AmountPerVolumeUnit::ct_Per_L); //Reference range is 1.5-3.8e9 per liter
+  GetNeutrophilCellCount().SetValue(3.0e9, AmountPerVolumeUnit::ct_Per_L);  //Reference range is 1.5-3.8e9 per liter
   //Note that RedBloodCellAcetylcholinesterase is initialized in Drugs file because Drugs is processed before Blood Chemistry
   GetInflammatoryResponse().Initialize();
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
@@ -524,6 +526,13 @@ void BloodChemistry::AcuteRadiationSyndrome()
 
   //N is the exposed dose, consistent with the paper we are basing this on
   auto radDose = m_PatientActions->GetRadiationAbsorbedDose()->GetDose().GetValue(EnergyPerMassUnit::J_Per_kg);
+  const double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
+  const double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
+  const double currentMetabolicRate_kcal_Per_day = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
+  double metabolicStress = 0.0;
+  const double kcal_Per_day_Per_Watt = 20.6362855;
+  double EnergyIncrement_kcal_Per_day = 0.0;
+
 
   //define parameters
   //control parameters  
@@ -605,6 +614,15 @@ void BloodChemistry::AcuteRadiationSyndrome()
     diff = m_dt_hr * (neutrophilAmount - lymphoAmount);
     GetNeutrophilCellCount().IncrementValue(-diff * neutrophilhat, AmountPerVolumeUnit::ct_Per_L );
   }
+
+
+  //thermal effects due to lymphocyt changes, scale based upon damaged lymphocyte
+  BLIM(m_Lymphocytes_ct, 0, 1);
+  metabolicStress = std::pow(m_Lymphocytes_ct, 2) - 2 * m_Lymphocytes_ct + 1;
+  EnergyIncrement_kcal_Per_day = m_dt_s * (basalMetabolicRate_kcal_Per_day + metabolicStress * maxWorkRate_W * kcal_Per_day_Per_Watt - currentMetabolicRate_kcal_Per_day) * 0.0001;
+
+  m_data.GetEnergy().GetTotalMetabolicRate().IncrementValue(EnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
+  m_data.GetEnergy().GetExerciseEnergyDemand().IncrementValue(EnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
 
 
   //increment the exposure variable: 
