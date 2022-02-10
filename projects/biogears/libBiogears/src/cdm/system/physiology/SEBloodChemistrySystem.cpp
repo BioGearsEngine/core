@@ -79,6 +79,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_HemoglobinContent = nullptr;
   m_HemoglobinLostToUrine = nullptr;
   m_LymphocyteCellCount = nullptr;
+  m_NeutrophilCellCount = nullptr;
   m_OxygenSaturation = nullptr;
   m_OxygenVenousSaturation = nullptr;
   m_Phosphate = nullptr;
@@ -129,6 +130,7 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_HemoglobinContent);
   SAFE_DELETE(m_HemoglobinLostToUrine);
   SAFE_DELETE(m_LymphocyteCellCount);
+  SAFE_DELETE(m_NeutrophilCellCount);
   SAFE_DELETE(m_OxygenSaturation);
   SAFE_DELETE(m_OxygenVenousSaturation);
   SAFE_DELETE(m_Phosphate);
@@ -450,6 +452,9 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
   }
   if (m_LymphocyteCellCount != nullptr) {
     data.LymphocyteCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_LymphocyteCellCount->Unload()));
+  }
+  if (m_NeutrophilCellCount != nullptr) {
+    data.NeutrophilCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_NeutrophilCellCount->Unload()));
   }
   if (m_OxygenSaturation != nullptr) {
     data.OxygenSaturation(std::unique_ptr<CDM::ScalarFractionData>(m_OxygenSaturation->Unload()));

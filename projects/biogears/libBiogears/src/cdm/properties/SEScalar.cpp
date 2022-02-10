@@ -124,7 +124,7 @@ void SEScalar::Copy(const SEScalar& s)
 {
   if (m_readOnly) {
 #if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
-    throw CommonDataModelException("Scalar is marked read-only");
+    throw CommonDataModelException("Scalar: " + s.ToString() +  "is marked read-only");
 #else
     return;
 #endif
