@@ -1024,10 +1024,10 @@ void Drugs::CalculateDrugEffects()
   GetAntibioticActivity().SetValue(antibioticEffect_Per_hr);
 
   //Assume drugs affecing pupil behavior do so equally on left/right sides (this might need to be deleted, logic is all wrong)
-  const SEPupillaryResponse& leftPupillaryResponse = m_data.GetNervous().GetLeftEyePupillaryResponse();
-  const SEPupillaryResponse& rightPupillaryResponse = m_data.GetNervous().GetRightEyePupillaryResponse();
-  double leftPupilReactivityResponseLevel = leftPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
-  double rightPupilReactivityResponseLevel = rightPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
+  //const SEPupillaryResponse& leftPupillaryResponse = m_data.GetNervous().GetLeftEyePupillaryResponse();
+  //const SEPupillaryResponse& rightPupillaryResponse = m_data.GetNervous().GetRightEyePupillaryResponse();
+  //double leftPupilReactivityResponseLevel = leftPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
+  //double rightPupilReactivityResponseLevel = rightPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
   //double leftPupilSizeResponseLevel = leftPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
   //double rightPupilSizeResponseLevel = rightPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
 
@@ -1047,8 +1047,8 @@ void Drugs::CalculateDrugEffects()
   //BLIM(rightPupilSizeResponseLevel, -1, 1);
 
   m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
-  m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
   m_data.GetNervous().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
+  m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
   m_data.GetNervous().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
 
   //m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
