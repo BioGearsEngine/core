@@ -1267,7 +1267,7 @@ void Nervous::SetPupilEffects()
   double leftPupilSizeResponseLevel = GetLeftEyePupillaryResponse().GetSizeModifier().GetValue();
   double leftPupilReactivityResponseLevel = GetLeftEyePupillaryResponse().GetReactivityModifier().GetValue();
   double rightPupilSizeResponseLevel = GetRightEyePupillaryResponse().GetSizeModifier().GetValue();
-  double rightPupilReactivityResponseLevel = GetRightEyePupillaryResponse().GetSizeModifier().GetValue();
+  double rightPupilReactivityResponseLevel = GetRightEyePupillaryResponse().GetReactivityModifier().GetValue();
 
   // Calculate the TBI response
   if (m_data.GetActions().GetPatientActions().HasBrainInjury()) {
