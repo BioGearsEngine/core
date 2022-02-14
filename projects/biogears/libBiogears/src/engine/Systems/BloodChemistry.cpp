@@ -619,7 +619,7 @@ void BloodChemistry::AcuteRadiationSyndrome()
   //thermal effects due to lymphocyt changes, scale based upon damaged lymphocyte
   BLIM(m_Lymphocytes_ct, 0, 1);
   metabolicStress = std::pow(m_Lymphocytes_ct, 2) - 2 * m_Lymphocytes_ct + 1;
-  EnergyIncrement_kcal_Per_day = m_dt_s * (basalMetabolicRate_kcal_Per_day + metabolicStress * maxWorkRate_W * kcal_Per_day_Per_Watt - currentMetabolicRate_kcal_Per_day) * 0.0001;
+  EnergyIncrement_kcal_Per_day = m_dt_s * (basalMetabolicRate_kcal_Per_day + metabolicStress * maxWorkRate_W * kcal_Per_day_Per_Watt - currentMetabolicRate_kcal_Per_day) * 0.0002;
 
   m_data.GetEnergy().GetTotalMetabolicRate().IncrementValue(EnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
   m_data.GetEnergy().GetExerciseEnergyDemand().IncrementValue(EnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
