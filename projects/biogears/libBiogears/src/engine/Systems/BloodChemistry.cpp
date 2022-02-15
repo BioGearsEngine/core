@@ -167,17 +167,17 @@ void BloodChemistry::Initialize()
   //absorbed set to zero
   m_radAbsorbed_Gy = 0.0;
 
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_ct ", m_progenitorLymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_wd_ct ", m_progenitorLymphocytes_wd_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_d_ct ", m_progenitorLymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_hd_ct ", m_progenitorLymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_ct ", m_maturingLymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_d_ct ", m_maturingLymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_hd_ct ", m_maturingLymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_ct ", m_Lymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_d_ct ", m_Lymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_hd_ct ", m_Lymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_radAbsorbed_Gy ", m_radAbsorbed_Gy);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_ct ", m_progenitorLymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_wd_ct ", m_progenitorLymphocytes_wd_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_d_ct ", m_progenitorLymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_hd_ct ", m_progenitorLymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_ct ", m_maturingLymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_d_ct ", m_maturingLymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_hd_ct ", m_maturingLymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_ct ", m_Lymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_d_ct ", m_Lymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_hd_ct ", m_Lymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_radAbsorbed_Gy ", m_radAbsorbed_Gy);
 
   Process(); // Calculate the initial system values
 }
@@ -629,17 +629,17 @@ void BloodChemistry::AcuteRadiationSyndrome()
   m_radAbsorbed_Gy += radiationRate_Per_dt;
 
   //testing probes
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_ct ", m_progenitorLymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_wd_ct ", m_progenitorLymphocytes_wd_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_d_ct ", m_progenitorLymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_progenitorLymphocytes_hd_ct ", m_progenitorLymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_ct ", m_maturingLymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_d_ct ", m_maturingLymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_maturingLymphocytes_hd_ct ", m_maturingLymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_ct ", m_Lymphocytes_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_d_ct ", m_Lymphocytes_d_ct);
-  m_data.GetDataTrack().Probe("m_Lymphocytes_hd_ct ", m_Lymphocytes_hd_ct);
-  m_data.GetDataTrack().Probe("m_radAbsorbed_Gy ", m_radAbsorbed_Gy);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_ct ", m_progenitorLymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_wd_ct ", m_progenitorLymphocytes_wd_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_d_ct ", m_progenitorLymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_hd_ct ", m_progenitorLymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_ct ", m_maturingLymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_d_ct ", m_maturingLymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_hd_ct ", m_maturingLymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_ct ", m_Lymphocytes_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_d_ct ", m_Lymphocytes_d_ct);
+  //m_data.GetDataTrack().Probe("m_Lymphocytes_hd_ct ", m_Lymphocytes_hd_ct);
+  //m_data.GetDataTrack().Probe("m_radAbsorbed_Gy ", m_radAbsorbed_Gy);
 }
 //--------------------------------------------------------------------------------------------------
 /// \brief
