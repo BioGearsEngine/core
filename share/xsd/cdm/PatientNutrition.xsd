@@ -10,26 +10,26 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Nutrition data for feeding the patient -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-    
-    <xs:include schemaLocation="Properties.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
 
-    <!-- @brief Nutritional information for eating -->
-    <xs:complexType name="NutritionData">
-        <xs:complexContent>
-            <xs:extension base="ObjectData">
-                <xs:sequence>
-                    <xs:element name="Name" type="xs:string" minOccurs="0"  maxOccurs="1"/>
-                    <xs:element name="Carbohydrate" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="Fat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="Protein" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="Calcium" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="Sodium" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="Water" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="Nutrition" type="NutritionData"/>
-    
+  <xs:include schemaLocation="Properties.xsd"/>
+
+  <!-- @brief Nutritional information for eating -->
+  <xs:complexType name="NutritionData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="Carbohydrate" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Fat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Protein" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Calcium" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Sodium" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Water" type="ScalarVolumeData" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Nutrition" type="NutritionData"/>
+
 </xs:schema>

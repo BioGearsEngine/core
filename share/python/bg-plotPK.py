@@ -184,9 +184,11 @@ def plot_PK(bgFile, litFile, plotTime,scale):
         plt.close()
 
 def err(message, level):
-    print( "{}\n".format(message) if _log_verbose >= level else "" , end="", file=sys.stderr)
+   if _log_verbose >= level:
+    print( "{}\n".format(message))# end="", file=sys.stderr)
 def log(message, level):
-    print( "{}\n".format(message) if _log_verbose >= level else "" , end="")
+   if _log_verbose >= level:
+    print( "{}\n".format(message))#, end="")
     
 if __name__ == "__main__":
     # execute only if run as a script

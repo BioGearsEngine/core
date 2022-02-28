@@ -10,12 +10,12 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief BioGears specific data for our methodology  -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-  
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
   <xs:include schemaLocation="../cdm/Anesthesia.xsd"/>
   <xs:include schemaLocation="../cdm/ElectroCardioGram.xsd"/>
   <xs:include schemaLocation="../cdm/Inhaler.xsd"/>
-  
+
   <xs:complexType name="BioGearsAnesthesiaMachineData">
     <xs:complexContent>
       <xs:extension base="AnesthesiaMachineData">
@@ -23,17 +23,17 @@ specific language governing permissions and limitations under the License.
           <xs:element name="Inhaling" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
           <xs:element name="CurrentBreathingCycleTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="InspirationTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="OxygenInletVolumeFraction" type="ScalarData" minOccurs="1" maxOccurs="1"/>          
+          <xs:element name="OxygenInletVolumeFraction" type="ScalarData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="TotalBreathingCycleTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsElectroCardioGramData">
     <xs:complexContent>
       <xs:extension base="ElectroCardioGramData">
-        <xs:sequence> 
+        <xs:sequence>
           <xs:element name="HeartRythmTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="HeartRythmPeriod" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="Waveforms" type="ElectroCardioGramWaveformInterpolatorData" minOccurs="1" maxOccurs="1"/>
@@ -41,14 +41,14 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="BioGearsInhalerData">
     <xs:complexContent>
       <xs:extension base="InhalerData">
-        <xs:sequence> 
+        <xs:sequence>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
 </xs:schema>

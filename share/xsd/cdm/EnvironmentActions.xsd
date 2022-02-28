@@ -10,42 +10,48 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Generic configuration data for physiology simulation -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-	
-	<xs:include schemaLocation="Environment.xsd"/>
-    <xs:include schemaLocation="Scenario.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
 
-	<!-- @brief Base Environmental Action type -->
-	<xs:complexType name="EnvironmentActionData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="ActionData"/>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<!-- @brief Change environmental conditions -->
-	<xs:complexType name="EnvironmentChangeData">
-		<xs:complexContent>
-			<xs:extension base="EnvironmentActionData">
-				<xs:choice  minOccurs="1" maxOccurs="1">
-					<xs:element name="ConditionsFile" type="xs:string"/><!--<< @brief A file to use for configuration. -->
-					<xs:element name="Conditions" type="EnvironmentalConditionsData"/><!--<< @brief Changes to make to the environment. -->
-				</xs:choice>  
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-    
-	<!-- @brief Create an external heat source. -->
-	<xs:complexType name="ThermalApplicationData">
-		<xs:complexContent>
-			<xs:extension base="EnvironmentActionData">
-				<xs:sequence>
-					<xs:element name="ActiveHeating" type="ActiveHeatingData" minOccurs="0" maxOccurs="1"/><!--<< @brief @copybrief Environment_ActiveHeatingData -->
-					<xs:element name="ActiveCooling" type="ActiveCoolingData" minOccurs="0" maxOccurs="1"/><!--<< @brief @copybrief Environment_ActiveCoolingData -->
-					<xs:element name="AppliedTemperature" type="AppliedTemperatureData" minOccurs="0" maxOccurs="1"/><!--<< @brief @copybrief Environment_AppliedTemperatureData -->					
-				</xs:sequence>			
-				<xs:attribute name="AppendToPrevious" type="xs:boolean" use="required"/><!--<< @brief Appends data provided to the engine without removing currect applications. @details For example if a previous aciton turned on heating, and you wanted to add cooling, set append to true, if you want tto cool and also have the heating off, set to false --> 
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
+  <xs:include schemaLocation="Environment.xsd"/>
+  <xs:include schemaLocation="Scenario.xsd"/>
+
+  <!-- @brief Base Environmental Action type -->
+  <xs:complexType name="EnvironmentActionData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ActionData"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Change environmental conditions -->
+  <xs:complexType name="EnvironmentChangeData">
+    <xs:complexContent>
+      <xs:extension base="EnvironmentActionData">
+        <xs:choice  minOccurs="1" maxOccurs="1">
+          <xs:element name="ConditionsFile" type="xs:string"/>
+          <!--<< @brief A file to use for configuration. -->
+          <xs:element name="Conditions" type="EnvironmentalConditionsData"/>
+          <!--<< @brief Changes to make to the environment. -->
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Create an external heat source. -->
+  <xs:complexType name="ThermalApplicationData">
+    <xs:complexContent>
+      <xs:extension base="EnvironmentActionData">
+        <xs:sequence>
+          <xs:element name="ActiveHeating" type="ActiveHeatingData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief @copybrief Environment_ActiveHeatingData -->
+          <xs:element name="ActiveCooling" type="ActiveCoolingData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief @copybrief Environment_ActiveCoolingData -->
+          <xs:element name="AppliedTemperature" type="AppliedTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief @copybrief Environment_AppliedTemperatureData -->
+        </xs:sequence>
+        <xs:attribute name="AppendToPrevious" type="xs:boolean" use="required"/>
+        <!--<< @brief Appends data provided to the engine without removing currect applications. @details For example if a previous aciton turned on heating, and you wanted to add cooling, set append to true, if you want tto cool and also have the heating off, set to false -->
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
 </xs:schema>

@@ -10,156 +10,170 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Actions able to be performed to change the patient environment  -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-    
-    <xs:include schemaLocation="Scenario.xsd"/>
-    <xs:include schemaLocation="Anesthesia.xsd"/>
-    
-    <!-- @brief Base anesthesia machine action type. -->
-    <xs:complexType name="AnesthesiaMachineActionData" abstract="true">
-        <xs:complexContent>
-            <xs:extension base="ActionData"/>
-        </xs:complexContent>
-    </xs:complexType>	
-    
-    <!-- @brief Action for controlling the machine. -->
-    <xs:complexType name="AnesthesiaMachineConfigurationData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">
-                <xs:choice minOccurs="1"  maxOccurs="1">
-                    <xs:element name="ConfigurationFile" type="xs:string"/><!--<< @brief A file to use for configuration. -->
-                    <xs:element name="Configuration" type="AnesthesiaMachineData"/><!--<< @brief Changes to make to the anesthesia machine. -->                                             
-                </xs:choice>                    
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief A leak in the expiritory valve. -->
-    <xs:complexType name="ExpiratoryValveLeakData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">  
-                <xs:sequence>
-                    <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Severity of the leak from 0 to 1. -->
-                </xs:sequence> 
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief An obstruction in the expiritory valve. -->
-    <xs:complexType name="ExpiratoryValveObstructionData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">  
-                <xs:sequence>
-                    <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Severity of the leak from 0 to 1. -->
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief  A leak in the inspiratory valve. -->
-    <xs:complexType name="InspiratoryValveLeakData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">  
-                <xs:sequence>
-                    <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Severity of the leak from 0 to 1. -->
-                </xs:sequence>   
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief An obstruction in the inspiritory valve. -->
-    <xs:complexType name="InspiratoryValveObstructionData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">  
-                <xs:sequence>
-                    <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Severity of the leak from 0 to 1. -->
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief A leak in the mask. -->
-    <xs:complexType name="MaskLeakData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">  
-                <xs:sequence>
-                    <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Severity of the leak from 0 to 1. -->
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief A soda lime failure. -->
-    <xs:complexType name="SodaLimeFailureData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">  
-                <xs:sequence>
-                    <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Severity of the leak from 0 to 1. -->
-                </xs:sequence> 
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief A leak in the tube cuff. -->
-    <xs:complexType name="TubeCuffLeakData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">  
-                <xs:sequence>
-                    <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Severity of the leak from 0 to 1. -->
-                </xs:sequence> 
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief The vaporizer fails. -->
-    <xs:complexType name="VaporizerFailureData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">  
-                <xs:sequence>
-                    <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Severity of the leak from 0 to 1. -->
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief The ventilator losses pressure. -->
-    <xs:complexType name="VentilatorPressureLossData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">  
-                <xs:sequence>
-                    <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Severity of the leak from 0 to 1. -->
-                </xs:sequence>  
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief The Y Piece becomes disconnected. -->
-    <xs:complexType name="YPieceDisconnectData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">  
-                <xs:sequence>
-                    <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Severity of the leak from 0 to 1. -->
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief The wall port losses oxygen pressure. -->
-    <xs:complexType name="OxygenWallPortPressureLossData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">  
-                <xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief Turn the action on or off. -->
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
-    <!-- @brief The active oxygen tank losses pressure. -->
-    <xs:complexType name="OxygenTankPressureLossData">
-        <xs:complexContent>
-            <xs:extension base="AnesthesiaMachineActionData">   
-                <xs:attribute name="State" type="enumOnOff" use="required"/><!--<< @brief Turn the action on or off. -->
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="Scenario.xsd"/>
+  <xs:include schemaLocation="Anesthesia.xsd"/>
+
+  <!-- @brief Base anesthesia machine action type. -->
+  <xs:complexType name="AnesthesiaMachineActionData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ActionData"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Action for controlling the machine. -->
+  <xs:complexType name="AnesthesiaMachineConfigurationData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:choice minOccurs="1"  maxOccurs="1">
+          <xs:element name="ConfigurationFile" type="xs:string"/>
+          <!--<< @brief A file to use for configuration. -->
+          <xs:element name="Configuration" type="AnesthesiaMachineData"/>
+          <!--<< @brief Changes to make to the anesthesia machine. -->
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief A leak in the expiritory valve. -->
+  <xs:complexType name="ExpiratoryValveLeakData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Severity of the leak from 0 to 1. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief An obstruction in the expiritory valve. -->
+  <xs:complexType name="ExpiratoryValveObstructionData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Severity of the leak from 0 to 1. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief  A leak in the inspiratory valve. -->
+  <xs:complexType name="InspiratoryValveLeakData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Severity of the leak from 0 to 1. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief An obstruction in the inspiritory valve. -->
+  <xs:complexType name="InspiratoryValveObstructionData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Severity of the leak from 0 to 1. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief A leak in the mask. -->
+  <xs:complexType name="MaskLeakData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Severity of the leak from 0 to 1. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief A soda lime failure. -->
+  <xs:complexType name="SodaLimeFailureData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Severity of the leak from 0 to 1. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief A leak in the tube cuff. -->
+  <xs:complexType name="TubeCuffLeakData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Severity of the leak from 0 to 1. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief The vaporizer fails. -->
+  <xs:complexType name="VaporizerFailureData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Severity of the leak from 0 to 1. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief The ventilator losses pressure. -->
+  <xs:complexType name="VentilatorPressureLossData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Severity of the leak from 0 to 1. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief The Y Piece becomes disconnected. -->
+  <xs:complexType name="YPieceDisconnectData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Severity of the leak from 0 to 1. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief The wall port losses oxygen pressure. -->
+  <xs:complexType name="OxygenWallPortPressureLossData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:attribute name="State" type="enumOnOff" use="required"/>
+        <!--<< @brief Turn the action on or off. -->
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief The active oxygen tank losses pressure. -->
+  <xs:complexType name="OxygenTankPressureLossData">
+    <xs:complexContent>
+      <xs:extension base="AnesthesiaMachineActionData">
+        <xs:attribute name="State" type="enumOnOff" use="required"/>
+        <!--<< @brief Turn the action on or off. -->
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
 </xs:schema>

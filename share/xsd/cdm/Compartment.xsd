@@ -10,228 +10,228 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Data encapsulation for body and machine components for lumped parameter modeling -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-	
-	<xs:include schemaLocation="Properties.xsd"/>		
-	<xs:include schemaLocation="SubstanceQuantity.xsd"/>
-	
-	<xs:simpleType name="enumCompartmentType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Electrical"/>
-			<xs:enumeration value="Gas"/> 
-			<xs:enumeration value="Liquid"/>
-			<xs:enumeration value="Thermal"/>
-			<xs:enumeration value="Tissue"/>			
-		</xs:restriction>
-	</xs:simpleType>  
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
 
-	<xs:complexType name="CompartmentData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/>
-					<xs:element name="Node" type="xs:string" minOccurs="0"  maxOccurs="unbounded"/>
-					<xs:element name="Child" type="xs:string" minOccurs="0"  maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="CompartmentLinkData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/>
-					<xs:element name="Path" type="xs:string" minOccurs="0"  maxOccurs="1"/>
-					
-					<xs:element name="SourceCompartment" type="xs:string" minOccurs="1"  maxOccurs="1"/>
-					<xs:element name="TargetCompartment" type="xs:string" minOccurs="1"  maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="CompartmentGraphData" abstract="true">
-		<xs:sequence> 
-			<xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1"/> 
-			
-			<xs:element name="Compartment" type="xs:string"    minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Link"        type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>   	
-	
-	<xs:complexType name="FluidCompartmentData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="CompartmentData">
-				<xs:sequence>
-					<xs:element name="InFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="OutFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="Pressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> 
-					<xs:element name="Volume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="FluidCompartmentLinkData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="CompartmentLinkData">
-				<xs:sequence>
-					<xs:element name="Flow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="FluidCompartmentGraphData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="CompartmentGraphData">
-				<xs:sequence>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="GasCompartmentData">
-		<xs:complexContent>
-			<xs:extension base="FluidCompartmentData">
-				<xs:sequence>                   
-					<xs:element name="SubstanceQuantity" type="GasSubstanceQuantityData" minOccurs="0"  maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="GasCompartmentLinkData">
-		<xs:complexContent>
-			<xs:extension base="FluidCompartmentLinkData">
-				<xs:sequence>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="GasCompartmentGraphData">
-		<xs:complexContent>
-			<xs:extension base="FluidCompartmentGraphData">
-				<xs:sequence>					
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-		
-	<xs:complexType name="LiquidCompartmentData">
-		<xs:complexContent>
-			<xs:extension base="FluidCompartmentData">
-				<xs:sequence>                   
-					<xs:element name="pH" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="WaterVolumeFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> 
-					
-					<xs:element name="SubstanceQuantity" type="LiquidSubstanceQuantityData" minOccurs="0"  maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="LiquidCompartmentLinkData">
-		<xs:complexContent>
-			<xs:extension base="FluidCompartmentLinkData">
-				<xs:sequence>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="LiquidCompartmentGraphData">
-		<xs:complexContent>
-			<xs:extension base="FluidCompartmentGraphData">
-				<xs:sequence>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="TissueCompartmentData">
-		<xs:complexContent>
-			<xs:extension base="CompartmentData">
-				<xs:sequence>					
-					<xs:element name="AcidicPhospohlipidConcentration" type="ScalarMassPerMassData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="MatrixVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="MembranePotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="NeutralLipidsVolumeFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="NeutralPhospholipidsVolumeFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="ReflectionCoefficient" type="Scalar0To1Data" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="TissueToPlasmaAlbuminRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="TissueToPlasmaAlphaAcidGlycoproteinRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="TissueToPlasmaLipoproteinRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
-					<xs:element name="TotalMass" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
-				</xs:sequence>              
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="ThermalCompartmentData">
-		<xs:complexContent>
-			<xs:extension base="CompartmentData">
-				<xs:sequence>
-					<xs:element name="HeatTransferRateIn" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="HeatTransferRateOut" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="Temperature" type="ScalarTemperatureData" minOccurs="0"  maxOccurs="1"/> 
-					<xs:element name="Heat" type="ScalarEnergyData" minOccurs="0"  maxOccurs="1"/>                  
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="ThermalCompartmentLinkData">
-		<xs:complexContent>
-			<xs:extension base="CompartmentLinkData">
-				<xs:sequence>
-					<xs:element name="HeatTransferRate" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="ElectricalCompartmentData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="CurrentIn" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="CurrentOut" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="Voltage" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="Charge" type="ScalarElectricChargeData" minOccurs="0" maxOccurs="1"/>                 
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>  
-	<xs:complexType name="ElectricalCompartmentLinkData">
-		<xs:complexContent>
-			<xs:extension base="CompartmentLinkData">
-				<xs:sequence>
-					<xs:element name="Current" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="CompartmentManagerData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence> 
-					<xs:element name="ElectricalCompartment" type="ElectricalCompartmentData" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="ElectricalLink"        type="ElectricalCompartmentLinkData" minOccurs="0" maxOccurs="unbounded"/>
-					
-					<xs:element name="LiquidCompartment" type="LiquidCompartmentData"      minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="LiquidLink"        type="LiquidCompartmentLinkData"  minOccurs="0" maxOccurs="unbounded"/>             
-					<xs:element name="LiquidSubstance"   type="xs:string" minOccurs="0"  maxOccurs="unbounded"/>
-					<xs:element name="LiquidGraph"       type="LiquidCompartmentGraphData" minOccurs="0" maxOccurs="unbounded"/> 
-					
-					<xs:element name="GasCompartment"    type="GasCompartmentData"     minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="GasLink"           type="GasCompartmentLinkData"     minOccurs="0" maxOccurs="unbounded"/>             
-					<xs:element name="GasSubstance"      type="xs:string" minOccurs="0"  maxOccurs="unbounded"/>
-					<xs:element name="GasGraph"          type="GasCompartmentGraphData" minOccurs="0" maxOccurs="unbounded"/> 
-																				
-					<xs:element name="ThermalCompartment" type="ThermalCompartmentData" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element name="ThermalLink"        type="ThermalCompartmentLinkData" minOccurs="0" maxOccurs="unbounded"/> 
-					
-					<xs:element name="TissueCompartment" type="TissueCompartmentData"  minOccurs="0" maxOccurs="unbounded"/>             
-					<xs:element name="TissueSubstance"   type="xs:string" minOccurs="0"  maxOccurs="unbounded"/>					
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>   
-	<xs:element name="CompartmentManager" type="CompartmentManagerData"/>
-	
+  <xs:include schemaLocation="Properties.xsd"/>
+  <xs:include schemaLocation="SubstanceQuantity.xsd"/>
+
+  <xs:simpleType name="enumCompartmentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Electrical"/>
+      <xs:enumeration value="Gas"/>
+      <xs:enumeration value="Liquid"/>
+      <xs:enumeration value="Thermal"/>
+      <xs:enumeration value="Tissue"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="CompartmentData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/>
+          <xs:element name="Node" type="xs:string" minOccurs="0"  maxOccurs="unbounded"/>
+          <xs:element name="Child" type="xs:string" minOccurs="0"  maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CompartmentLinkData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string" minOccurs="1"  maxOccurs="1"/>
+          <xs:element name="Path" type="xs:string" minOccurs="0"  maxOccurs="1"/>
+
+          <xs:element name="SourceCompartment" type="xs:string" minOccurs="1"  maxOccurs="1"/>
+          <xs:element name="TargetCompartment" type="xs:string" minOccurs="1"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CompartmentGraphData" abstract="true">
+    <xs:sequence>
+      <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+
+      <xs:element name="Compartment" type="xs:string"    minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Link"        type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FluidCompartmentData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="CompartmentData">
+        <xs:sequence>
+          <xs:element name="InFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="OutFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="Pressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="Volume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FluidCompartmentLinkData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="CompartmentLinkData">
+        <xs:sequence>
+          <xs:element name="Flow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FluidCompartmentGraphData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="CompartmentGraphData">
+        <xs:sequence>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="GasCompartmentData">
+    <xs:complexContent>
+      <xs:extension base="FluidCompartmentData">
+        <xs:sequence>
+          <xs:element name="SubstanceQuantity" type="GasSubstanceQuantityData" minOccurs="0"  maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GasCompartmentLinkData">
+    <xs:complexContent>
+      <xs:extension base="FluidCompartmentLinkData">
+        <xs:sequence>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GasCompartmentGraphData">
+    <xs:complexContent>
+      <xs:extension base="FluidCompartmentGraphData">
+        <xs:sequence>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="LiquidCompartmentData">
+    <xs:complexContent>
+      <xs:extension base="FluidCompartmentData">
+        <xs:sequence>
+          <xs:element name="pH" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="WaterVolumeFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+
+          <xs:element name="SubstanceQuantity" type="LiquidSubstanceQuantityData" minOccurs="0"  maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LiquidCompartmentLinkData">
+    <xs:complexContent>
+      <xs:extension base="FluidCompartmentLinkData">
+        <xs:sequence>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LiquidCompartmentGraphData">
+    <xs:complexContent>
+      <xs:extension base="FluidCompartmentGraphData">
+        <xs:sequence>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="TissueCompartmentData">
+    <xs:complexContent>
+      <xs:extension base="CompartmentData">
+        <xs:sequence>
+          <xs:element name="AcidicPhospohlipidConcentration" type="ScalarMassPerMassData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="MatrixVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="MembranePotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="NeutralLipidsVolumeFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="NeutralPhospholipidsVolumeFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="ReflectionCoefficient" type="Scalar0To1Data" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="TissueToPlasmaAlbuminRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="TissueToPlasmaAlphaAcidGlycoproteinRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="TissueToPlasmaLipoproteinRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="TotalMass" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ThermalCompartmentData">
+    <xs:complexContent>
+      <xs:extension base="CompartmentData">
+        <xs:sequence>
+          <xs:element name="HeatTransferRateIn" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="HeatTransferRateOut" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Temperature" type="ScalarTemperatureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="Heat" type="ScalarEnergyData" minOccurs="0"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ThermalCompartmentLinkData">
+    <xs:complexContent>
+      <xs:extension base="CompartmentLinkData">
+        <xs:sequence>
+          <xs:element name="HeatTransferRate" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ElectricalCompartmentData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="CurrentIn" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="CurrentOut" type="ScalarElectricCurrentData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Voltage" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Charge" type="ScalarElectricChargeData" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ElectricalCompartmentLinkData">
+    <xs:complexContent>
+      <xs:extension base="CompartmentLinkData">
+        <xs:sequence>
+          <xs:element name="Current" type="ScalarPowerData" minOccurs="0"  maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CompartmentManagerData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="ElectricalCompartment" type="ElectricalCompartmentData" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="ElectricalLink"        type="ElectricalCompartmentLinkData" minOccurs="0" maxOccurs="unbounded"/>
+
+          <xs:element name="LiquidCompartment" type="LiquidCompartmentData"      minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="LiquidLink"        type="LiquidCompartmentLinkData"  minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="LiquidSubstance"   type="xs:string" minOccurs="0"  maxOccurs="unbounded"/>
+          <xs:element name="LiquidGraph"       type="LiquidCompartmentGraphData" minOccurs="0" maxOccurs="unbounded"/>
+
+          <xs:element name="GasCompartment"    type="GasCompartmentData"     minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="GasLink"           type="GasCompartmentLinkData"     minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="GasSubstance"      type="xs:string" minOccurs="0"  maxOccurs="unbounded"/>
+          <xs:element name="GasGraph"          type="GasCompartmentGraphData" minOccurs="0" maxOccurs="unbounded"/>
+
+          <xs:element name="ThermalCompartment" type="ThermalCompartmentData" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="ThermalLink"        type="ThermalCompartmentLinkData" minOccurs="0" maxOccurs="unbounded"/>
+
+          <xs:element name="TissueCompartment" type="TissueCompartmentData"  minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="TissueSubstance"   type="xs:string" minOccurs="0"  maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CompartmentManager" type="CompartmentManagerData"/>
+
 </xs:schema>

@@ -10,64 +10,81 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Basic Electro Cardiogram machine -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-    
-    <xs:include schemaLocation="Physiology.xsd"/>
-    
-    <!-- @brief Generic ECG machine to assess the heart rhythm. -->
-    <xs:complexType name="ElectroCardioGramData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>
-                    <xs:element name="Lead1ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 1 of the ECG. -->
-                    <xs:element name="Lead2ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 2 of the ECG. -->
-                    <xs:element name="Lead3ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 3 of the ECG. -->
-                    <xs:element name="Lead4ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 4 of the ECG. -->
-                    <xs:element name="Lead5ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 5 of the ECG. -->
-                    <xs:element name="Lead6ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 6 of the ECG. -->
-                    <xs:element name="Lead7ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 7 of the ECG. -->
-                    <xs:element name="Lead8ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 8 of the ECG. -->
-                    <xs:element name="Lead9ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 9 of the ECG. -->
-                    <xs:element name="Lead10ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 10 of the ECG. -->
-                    <xs:element name="Lead11ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 11 of the ECG. -->
-                    <xs:element name="Lead12ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/><!--<< @brief The amount of electric potential given off by lead 12 of the ECG. -->
-                </xs:sequence>	
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="ElectroCardioGram" type="ElectroCardioGramData"/>
-    
-    <xs:simpleType name="ElectroCardioGramWaveformLeadNumber">
-        <xs:restriction base="xs:int">
-            <xs:minInclusive value="1"/>
-            <xs:maxInclusive value="12"/>
-        </xs:restriction>
-    </xs:simpleType>
-    <!-- @brief Explicit waveform data for a particular heart rhythm. -->
-    <xs:complexType name="ElectroCardioGramInterpolationWaveformData">
-        <xs:complexContent>
-            <xs:extension base="ObjectData">
-                <xs:sequence>                                                               
-                    <xs:element name="Data" type="FunctionElectricPotentialVsTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief Dataset of a full heart cycle. -->
-                    <xs:element name="TimeStep" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Time step of the data provided. -->
-                    <xs:element name="ActiveIndicies" type="IntegerArray" minOccurs="0" maxOccurs="1"/><!--<< @brief Active indicies of the WaveForm Data used to interpolate the current electric potential. -->
-                </xs:sequence>
-                <xs:attribute name="Lead" type="ElectroCardioGramWaveformLeadNumber" use="required"/><!--<< @brief Rhythm type of the waveform provided. -->            
-                <xs:attribute name="Rhythm" type="enumHeartRhythm" use="required"/><!--<< @brief Rhythm type of the waveform provided. -->
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>    
-    
-    <!-- @brief Version of ElectroCardioGramWaveformInterpolatorData. -->   
-    <xs:complexType name="ElectroCardioGramWaveformInterpolatorData">
-        <xs:complexContent>
-            <xs:extension base="ObjectData">
-                <xs:sequence>
-                    <xs:element name="Waveform" type="ElectroCardioGramInterpolationWaveformData" minOccurs="1" maxOccurs="unbounded"/>
-                </xs:sequence>	
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="ElectroCardioGramWaveformInterpolator" type="ElectroCardioGramWaveformInterpolatorData"/>
-    
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="Physiology.xsd"/>
+
+  <!-- @brief Generic ECG machine to assess the heart rhythm. -->
+  <xs:complexType name="ElectroCardioGramData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="Lead1ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 1 of the ECG. -->
+          <xs:element name="Lead2ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 2 of the ECG. -->
+          <xs:element name="Lead3ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 3 of the ECG. -->
+          <xs:element name="Lead4ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 4 of the ECG. -->
+          <xs:element name="Lead5ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 5 of the ECG. -->
+          <xs:element name="Lead6ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 6 of the ECG. -->
+          <xs:element name="Lead7ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 7 of the ECG. -->
+          <xs:element name="Lead8ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 8 of the ECG. -->
+          <xs:element name="Lead9ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 9 of the ECG. -->
+          <xs:element name="Lead10ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 10 of the ECG. -->
+          <xs:element name="Lead11ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 11 of the ECG. -->
+          <xs:element name="Lead12ElectricPotential" type="ScalarElectricPotentialData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of electric potential given off by lead 12 of the ECG. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ElectroCardioGram" type="ElectroCardioGramData"/>
+
+  <xs:simpleType name="ElectroCardioGramWaveformLeadNumber">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="12"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- @brief Explicit waveform data for a particular heart rhythm. -->
+  <xs:complexType name="ElectroCardioGramInterpolationWaveformData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Data" type="FunctionElectricPotentialVsTimeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Dataset of a full heart cycle. -->
+          <xs:element name="TimeStep" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Time step of the data provided. -->
+          <xs:element name="ActiveIndicies" type="IntegerArray" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Active indicies of the WaveForm Data used to interpolate the current electric potential. -->
+        </xs:sequence>
+        <xs:attribute name="Lead" type="ElectroCardioGramWaveformLeadNumber" use="required"/>
+        <!--<< @brief Rhythm type of the waveform provided. -->
+        <xs:attribute name="Rhythm" type="enumHeartRhythm" use="required"/>
+        <!--<< @brief Rhythm type of the waveform provided. -->
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Version of ElectroCardioGramWaveformInterpolatorData. -->
+  <xs:complexType name="ElectroCardioGramWaveformInterpolatorData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Waveform" type="ElectroCardioGramInterpolationWaveformData" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ElectroCardioGramWaveformInterpolator" type="ElectroCardioGramWaveformInterpolatorData"/>
+
 </xs:schema>

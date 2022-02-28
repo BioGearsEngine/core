@@ -10,144 +10,160 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
 <!-- @brief Conditions able to be performed to change the patient before the start of simulation  -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-	
-	<xs:include schemaLocation="Scenario.xsd"/>
-	<xs:include schemaLocation="PatientNutrition.xsd"/>
-	
-	<!-- @brief Base Patient Condition type -->
-	<xs:complexType name="PatientConditionData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="ConditionData"/>
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- @brief Condition characterized by reduced red blood cells, which leads to reduced oxygen carrying capacity. Implemented by reducing the amount of hemoglobin in the blood. -->
-	<xs:complexType name="ChronicAnemiaData">
-		<xs:complexContent>
-			<xs:extension base="PatientConditionData">
-				<xs:sequence>	
-					<xs:element name="ReductionFactor" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief The fraction to reduce the amount of hemoglobin by. -->
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- @brief Any condition causing the heart muscle not to pump sufficient blood. -->
-	<xs:complexType name="ChronicHeartFailureData" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="PatientConditionData"/>
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- @brief Impairment of the ventricular contraction, reducing the ability of the heart to pump blood. -->
-	<xs:complexType name="ChronicVentricularSystolicDysfunctionData">
-		<xs:complexContent>
-			<xs:extension base="ChronicHeartFailureData"/>
-		</xs:complexContent>
-	</xs:complexType>	
-	
-	<!-- @brief Chronic Obstructive Pulmonary Disease (COPD) is an obstructive lung disease characterized by chronically reduced airflow into the lungs. Unlike asthma, the reduction in airflow does not generally improve with medication. When tissue damage occurs primarily in the airways, the condition is called chronic bronchitis. When tissue destruction is focused in the alveoli, the condition is called emphysema. COPD is a manifestation of both conditions, although one condition may dominate. -->
-	<xs:complexType name="ChronicObstructivePulmonaryDiseaseData">
-		<xs:complexContent>
-			<xs:extension base="PatientConditionData">
-				<xs:sequence>   
-					<xs:element name="BronchitisSeverity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
-					<xs:element name="EmphysemaSeverity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief -->
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<!-- @brief Pericardial effusion ("fluid around the heart") is an abnormal accumulation of fluid in the pericardial cavity. Because of the limited amount of space in the pericardial cavity, fluid accumulation leads to an increased intrapericardial pressure which can negatively affect heart function. A pericardial effusion with enough pressure to adversely affect heart function is called cardiac tamponade. Pericardial effusion usually results from a disturbed equilibrium between the production andre-absorption of pericardial fluid, or from a structural abnormality that allows fluid to enter the pericardial cavity. Normal levels of pericardial fluid are from 15 to 50 mL. -->
-	<xs:complexType name="ChronicPericardialEffusionData">
-		<xs:complexContent>
-			<xs:extension base="PatientConditionData">
-				<xs:sequence>
-					<xs:element name="AccumulatedVolume" type="ScalarVolumeData" minOccurs="1" maxOccurs="1"/><!--<< @brief The amount of fluid in the pericardial cavity. -->
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>   
-	
-	<!-- @brief Narrowing of the renal artery. -->
-	<xs:complexType name="ChronicRenalStenosisData">
-		<xs:complexContent>
-			<xs:extension base="PatientConditionData">
-				<xs:sequence>	
-					<xs:element name="LeftKidneySeverity" type="Scalar0To1Data" minOccurs="0" maxOccurs="1"/><!--<< @brief Fraction of the Left kidney artery stenosed.-->
-					<xs:element name="RightKidneySeverity" type="Scalar0To1Data" minOccurs="0" maxOccurs="1"/><!--<< @brief Fraction of the Right kidney artery stenosed.-->
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
 
-	<!-- @brief Dehydration is the state of being without water for a given time period. -->
+  <xs:include schemaLocation="Scenario.xsd"/>
+  <xs:include schemaLocation="PatientNutrition.xsd"/>
+
+  <!-- @brief Base Patient Condition type -->
+  <xs:complexType name="PatientConditionData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="ConditionData"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- @brief Condition characterized by reduced red blood cells, which leads to reduced oxygen carrying capacity. Implemented by reducing the amount of hemoglobin in the blood. -->
+  <xs:complexType name="ChronicAnemiaData">
+    <xs:complexContent>
+      <xs:extension base="PatientConditionData">
+        <xs:sequence>
+          <xs:element name="ReductionFactor" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief The fraction to reduce the amount of hemoglobin by. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- @brief Any condition causing the heart muscle not to pump sufficient blood. -->
+  <xs:complexType name="ChronicHeartFailureData" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="PatientConditionData"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- @brief Impairment of the ventricular contraction, reducing the ability of the heart to pump blood. -->
+  <xs:complexType name="ChronicVentricularSystolicDysfunctionData">
+    <xs:complexContent>
+      <xs:extension base="ChronicHeartFailureData"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Chronic Obstructive Pulmonary Disease (COPD) is an obstructive lung disease characterized by chronically reduced airflow into the lungs. Unlike asthma, the reduction in airflow does not generally improve with medication. When tissue damage occurs primarily in the airways, the condition is called chronic bronchitis. When tissue destruction is focused in the alveoli, the condition is called emphysema. COPD is a manifestation of both conditions, although one condition may dominate. -->
+  <xs:complexType name="ChronicObstructivePulmonaryDiseaseData">
+    <xs:complexContent>
+      <xs:extension base="PatientConditionData">
+        <xs:sequence>
+          <xs:element name="BronchitisSeverity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="EmphysemaSeverity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Pericardial effusion ("fluid around the heart") is an abnormal accumulation of fluid in the pericardial cavity. Because of the limited amount of space in the pericardial cavity, fluid accumulation leads to an increased intrapericardial pressure which can negatively affect heart function. A pericardial effusion with enough pressure to adversely affect heart function is called cardiac tamponade. Pericardial effusion usually results from a disturbed equilibrium between the production andre-absorption of pericardial fluid, or from a structural abnormality that allows fluid to enter the pericardial cavity. Normal levels of pericardial fluid are from 15 to 50 mL. -->
+  <xs:complexType name="ChronicPericardialEffusionData">
+    <xs:complexContent>
+      <xs:extension base="PatientConditionData">
+        <xs:sequence>
+          <xs:element name="AccumulatedVolume" type="ScalarVolumeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief The amount of fluid in the pericardial cavity. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Narrowing of the renal artery. -->
+  <xs:complexType name="ChronicRenalStenosisData">
+    <xs:complexContent>
+      <xs:extension base="PatientConditionData">
+        <xs:sequence>
+          <xs:element name="LeftKidneySeverity" type="Scalar0To1Data" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Fraction of the Left kidney artery stenosed.-->
+          <xs:element name="RightKidneySeverity" type="Scalar0To1Data" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Fraction of the Right kidney artery stenosed.-->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Dehydration is the state of being without water for a given time period. -->
   <xs:complexType name="DehydrationData">
     <xs:complexContent>
       <xs:extension base="PatientConditionData">
         <xs:sequence>
-          <xs:element name="DehydrationFraction" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Fraction representing the percentage body weight change due to hypo-osmotic fluid depletion. -->
+          <xs:element name="DehydrationFraction" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Fraction representing the percentage body weight change due to hypo-osmotic fluid depletion. -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
-  </xs:complexType>   
-  
+  </xs:complexType>
+
   <!-- @brief Type 1 Diabetes mellitus causes a reduction in insulin produced by the pancreatic beta cells. -->
   <xs:complexType name="DiabetesType1Data">
     <xs:complexContent>
       <xs:extension base="PatientConditionData">
         <xs:sequence>
-          <xs:element name="InsulinProductionSeverity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Fraction representing severity of reduction in insulin production. -->
+          <xs:element name="InsulinProductionSeverity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Fraction representing severity of reduction in insulin production. -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
-  </xs:complexType>   
-  
+  </xs:complexType>
+
   <!-- @brief Type 2 Diabetes mellitus causes insulin resistance. -->
   <xs:complexType name="DiabetesType2Data">
     <xs:complexContent>
       <xs:extension base="PatientConditionData">
         <xs:sequence>
-          <xs:element name="InsulinProductionSeverity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Fraction representing severity of insulin production reduction. -->
-          <xs:element name="InsulinResistanceSeverity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Fraction representing severity of insulin resistance. -->
+          <xs:element name="InsulinProductionSeverity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Fraction representing severity of insulin production reduction. -->
+          <xs:element name="InsulinResistanceSeverity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Fraction representing severity of insulin resistance. -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
-  </xs:complexType>   
-		
-	<!-- @brief Generic way to specify the effectiveness of alveolar exchange. -->
-	<xs:complexType name="ImpairedAlveolarExchangeData">
-		<xs:complexContent>
-			<xs:extension base="PatientConditionData">    
-				<xs:choice minOccurs="1" maxOccurs="1">
-					<xs:element name="ImpairedSurfaceArea" type="ScalarAreaData"/><!--<< @brief Surface Area of the impaired alveoli. -->
-					<xs:element name="ImpairedFraction" type="Scalar0To1Data"/><!--<< @brief Surface Area Fraction of the impaired alveoli. -->
-				</xs:choice>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<!-- @brief Lobar pneumonia is a form of pneumonia that affects one or more lobes of the lungs. As fluid fills portions of the lung it becomes more difficult to breath and the gas diffusion surface area in the alveoli is reduced. -->
-	<xs:complexType name="LobarPneumoniaData">
-		<xs:complexContent>
-			<xs:extension base="PatientConditionData">
-				<xs:sequence>
-					<xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief -->					
-					<xs:element name="LeftLungAffected" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Fraction of the Left Lung Affected-->
-					<xs:element name="RightLungAffected" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/><!--<< @brief Fraction of the Left Lung Affected -->
-				</xs:sequence>				
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<!-- @brief Starvation is the state of being without nutrients (anything but water) for a given time period. -->
+  </xs:complexType>
+
+  <!-- @brief Generic way to specify the effectiveness of alveolar exchange. -->
+  <xs:complexType name="ImpairedAlveolarExchangeData">
+    <xs:complexContent>
+      <xs:extension base="PatientConditionData">
+        <xs:choice minOccurs="1" maxOccurs="1">
+          <xs:element name="ImpairedSurfaceArea" type="ScalarAreaData"/>
+          <!--<< @brief Surface Area of the impaired alveoli. -->
+          <xs:element name="ImpairedFraction" type="Scalar0To1Data"/>
+          <!--<< @brief Surface Area Fraction of the impaired alveoli. -->
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Lobar pneumonia is a form of pneumonia that affects one or more lobes of the lungs. As fluid fills portions of the lung it becomes more difficult to breath and the gas diffusion surface area in the alveoli is reduced. -->
+  <xs:complexType name="LobarPneumoniaData">
+    <xs:complexContent>
+      <xs:extension base="PatientConditionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="LeftLungAffected" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Fraction of the Left Lung Affected-->
+          <xs:element name="RightLungAffected" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief Fraction of the Left Lung Affected -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Starvation is the state of being without nutrients (anything but water) for a given time period. -->
   <xs:complexType name="StarvationData">
     <xs:complexContent>
       <xs:extension base="PatientConditionData">
         <xs:sequence>
-          <xs:element name="TimeSinceMeal" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/><!--<< @brief The time since the last consumption of nutrients. -->
+          <xs:element name="TimeSinceMeal" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief The time since the last consumption of nutrients. -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
-  </xs:complexType>   
-	
+  </xs:complexType>
+
 
 </xs:schema>

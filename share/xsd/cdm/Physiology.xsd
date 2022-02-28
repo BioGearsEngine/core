@@ -12,477 +12,701 @@ specific language governing permissions and limitations under the License.
 <!-- @brief Physiological systems of the body and the data associated with them
      @details Each system and its data to be populated by physiology modeling and simulations 
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">  
-    
-    <xs:include schemaLocation="System.xsd"/>
-    <xs:include schemaLocation="PatientNutrition.xsd"/>
-    
-    <xs:complexType name="PupillaryResponseData">
-        <xs:complexContent>
-            <xs:extension base="ObjectData">
-                <xs:sequence>
-                    <xs:element name="ReactivityModifier" type="ScalarNeg1To1Data" minOccurs="0"  maxOccurs="1"/><!--<< @brief Change in pupil reaction time -1 complete reduction/no response, 0 is normal, and 1 is the fastest reaction time. -->
-                    <xs:element name="ShapeModifier" type="ScalarNeg1To1Data" minOccurs="0"  maxOccurs="1"/><!--<< @brief Percentage change in pupil shape from normal. Positive is vertical ovoid. Negative is horizontal ovoid. -->
-                    <xs:element name="SizeModifier" type="ScalarNeg1To1Data" minOccurs="0"  maxOccurs="1"/><!--<< @brief Pupil size change from normal. -1 is fully constricted, 0 is no change, +1 is fully dilated. -->
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-	
-	<!--@brief State of the acute inflammation model that tracks response to an insult (infection, trauma).
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="System.xsd"/>
+  <xs:include schemaLocation="PatientNutrition.xsd"/>
+
+  <xs:complexType name="PupillaryResponseData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="ReactivityModifier" type="ScalarNeg1To1Data" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Change in pupil reaction time -1 complete reduction/no response, 0 is normal, and 1 is the fastest reaction time. -->
+          <xs:element name="ShapeModifier" type="ScalarNeg1To1Data" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Percentage change in pupil shape from normal. Positive is vertical ovoid. Negative is horizontal ovoid. -->
+          <xs:element name="SizeModifier" type="ScalarNeg1To1Data" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pupil size change from normal. -1 is fully constricted, 0 is no change, +1 is fully dilated. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!--@brief State of the acute inflammation model that tracks response to an insult (infection, trauma).
 	-->
-	<xs:simpleType name="enumInflammationSource">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Burn"/>
-			<xs:enumeration value="Hemorrhage"/>
-			<xs:enumeration value="Infection"/>
-		</xs:restriction>
-	</xs:simpleType>
-		
-	<xs:complexType name="InflammatoryResponseData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="LocalPathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="LocalMacrophage" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="LocalNeutrophil" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="LocalBarrier" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="ActiveTLR" type="enumOnOff" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="AutonomicResponseLevel" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-                    <xs:element name="BloodPathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Trauma" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="MacrophageResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="MacrophageActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="NeutrophilResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="NeutrophilActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="TumorNecrosisFactor" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Interleukin6" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Interleukin10" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Interleukin12" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="InducibleNOSPre" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="InducibleNOS" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="ConstitutiveNOS" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Nitrate" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="NitricOxide" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Catecholamines" type="ScalarData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="InflammationTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-					<xs:element name="Source" type="enumInflammationSource" minOccurs="0" maxOccurs="3"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-    <!-- @brief Provides clinician level data reflecting the composition of the blood.
+  <xs:simpleType name="enumInflammationSource">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Burn"/>
+      <xs:enumeration value="Hemorrhage"/>
+      <xs:enumeration value="Infection"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="InflammatoryResponseData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="LocalPathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="LocalMacrophage" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="LocalNeutrophil" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="LocalBarrier" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ActiveTLR" type="enumOnOff" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="AutonomicResponseLevel" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="BloodPathogen" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Trauma" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="MacrophageResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="MacrophageActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="NeutrophilResting" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="NeutrophilActive" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="TumorNecrosisFactor" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Interleukin6" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Interleukin10" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Interleukin12" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="InducibleNOSPre" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="InducibleNOS" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="ConstitutiveNOS" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Nitrate" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="NitricOxide" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="TissueIntegrity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Catecholamines" type="ScalarData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="InflammationTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Source" type="enumInflammationSource" minOccurs="0" maxOccurs="3"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Provides clinician level data reflecting the composition of the blood.
          @details Blood Chemistry is complete analysis on the blood at any given point during the simulation.
          The blood chemistry system houses all of the blood concentrations and compositions needed to assess a patient's health. This system is under development
          and will be improved in future releases to include more substances that can provide clinician level details and assessments, such as a CBC and blood panel.
      -->
-    <xs:complexType name="BloodChemistrySystemData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>                     
-                    <xs:element name="BloodDensity" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief Mass per unit volume of the blood. -->
-                    <xs:element name="ArterialBloodPH" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Measure of acidity or basicity of the arterial blood. -->
-                    <xs:element name="ArterialBloodPHBaseline" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Measure of acidity or basicity of the arterial blood. Baseline value for model. -->
-                    <xs:element name="VenousBloodPH" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Measure of acidity or basicity of the venous blood. -->
-                    <xs:element name="BloodSpecificHeat" type="ScalarHeatCapacitancePerMassData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The amount of energy required to raise one kilogram of blood by one degree Celsius. -->
-                    <xs:element name="BloodUreaNitrogenConcentration" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The BUN concentration in the blood.-->                    
-                    <xs:element name="CarbonDioxideSaturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin that is carbon dioxide bound.-->					
-                    <xs:element name="CarbonMonoxideSaturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin that is carbon monoxide bound.-->                    
-                    <xs:element name="Hematocrit" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume percentage of red blood cells in the blood.-->
-                    <xs:element name="HemoglobinContent" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total amount of hemoglobin in the blood.-->
-					<xs:element name="HemoglobinLostToUrine" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The total amount of hemoglobin lost from the blood to urine during HTR.-->
-                    <xs:element name="NeutrophilCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of neutrophil cells in the blood.-->
-                    <xs:element name="OxygenSaturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin that is oxygen bound.-->
-					<xs:element name="OxygenVenousSaturation" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief Fraction of hemoglobin oxygen bound in vena cava, cited as indicator for shock risk-->
-                    <xs:element name="Phosphate" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Sum of all inorganic phosphate in the blood.-->
-                    <xs:element name="PlasmaVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume of the plasma.-->
-                    <xs:element name="PulseOximetry" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The fraction of hemoglobin with bound oxygen as measured optically, which can include Carbon Monoxide.-->
-                    <xs:element name="RedBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of red blood cells in the blood.-->
-					<xs:element name="RhTransfusionReactionVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume of transfusion reaction blood based on rh mismatch.-->
-                    <xs:element name="ShuntFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Fraction of the blood flow that bypasses the alveoli; therefore, does not engage is gas exchange.-->
-					<xs:element name="StrongIonDifference" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Difference between the positive and negative strong ion concentrations in the blood.-->
-                    <xs:element name="TotalProteinConcentration" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--<< @brief The concentration of urea in the blood.-->
-                    <xs:element name="VolumeFractionNeutralLipidInPlasma" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Fraction of the plasma that is made up of neutral lipids.-->
-                    <xs:element name="VolumeFractionNeutralPhospholipidInPlasma" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Fraction of the plasma that is made up of neutral phospholipids.-->
-                    <xs:element name="WhiteBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of white blood cells in the blood.-->
-                    <xs:element name="LymphocyteCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total number of lymphocyte cells in the blood.-->
-                    <xs:element name="RedBloodCellAcetylcholinesterase" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Concentration of acetylcholinesterase associated with red blood cells-->
-                    <xs:element name="TotalBilirubin" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/><!--@brief Concentration of bilirubin in plasma in indicative of progression of sepsis-->
-					<xs:element name="InflammatoryResponse" type="InflammatoryResponseData" minOccurs="0" maxOccurs="1"/> <!--Inflammatory response to infections, burn wounds, hemorrhage, and other trauma-->
-					<!-- Substance Pressures -->
-                    <xs:element name="ArterialCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of carbon dioxide in the aorta.-->
-                    <xs:element name="ArterialOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of oxygen in the aorta.-->
-                    <xs:element name="PulmonaryArterialCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of carbon dioxide in the pulmonary arteries.-->
-                    <xs:element name="PulmonaryArterialOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of oxygen in the pulmonary arteries.-->
-                    <xs:element name="PulmonaryVenousCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of carbon dioxide in the pulmonary veins.-->
-                    <xs:element name="PulmonaryVenousOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of oxygen in the pulmonary veins.-->
-                    <xs:element name="VenousCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of carbon dioxide in the vena cava.-->				
-                    <xs:element name="VenousOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Partial pressure of oxygen in the vena cava.-->                    
-                </xs:sequence>            
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="BloodChemistrySystem" type="BloodChemistrySystemData"/>
-    
-    <!-- @brief Available heart rhythms for use in systems. -->
-	<xs:simpleType name="enumHeartRhythm">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Asystole"/>
-			<xs:enumeration value="NormalSinus"/>
-		</xs:restriction>
-	</xs:simpleType>
- 
-    <!-- @brief Provides a representation of the human vasculature.
+  <xs:complexType name="BloodChemistrySystemData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="BloodDensity" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Mass per unit volume of the blood. -->
+          <xs:element name="ArterialBloodPH" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Measure of acidity or basicity of the arterial blood. -->
+          <xs:element name="ArterialBloodPHBaseline" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Measure of acidity or basicity of the arterial blood. Baseline value for model. -->
+          <xs:element name="VenousBloodPH" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Measure of acidity or basicity of the venous blood. -->
+          <xs:element name="BloodSpecificHeat" type="ScalarHeatCapacitancePerMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amount of energy required to raise one kilogram of blood by one degree Celsius. -->
+          <xs:element name="BloodUreaNitrogenConcentration" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The BUN concentration in the blood.-->
+          <xs:element name="CarbonDioxideSaturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The fraction of hemoglobin that is carbon dioxide bound.-->
+          <xs:element name="CarbonMonoxideSaturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The fraction of hemoglobin that is carbon monoxide bound.-->
+          <xs:element name="Hematocrit" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Volume percentage of red blood cells in the blood.-->
+          <xs:element name="HemoglobinContent" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total amount of hemoglobin in the blood.-->
+          <xs:element name="HemoglobinLostToUrine" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total amount of hemoglobin lost from the blood to urine during HTR.-->
+          <xs:element name="NeutrophilCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total number of neutrophil cells in the blood.-->
+          <xs:element name="OxygenSaturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The fraction of hemoglobin that is oxygen bound.-->
+          <xs:element name="OxygenVenousSaturation" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Fraction of hemoglobin oxygen bound in vena cava, cited as indicator for shock risk-->
+          <xs:element name="Phosphate" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Sum of all inorganic phosphate in the blood.-->
+          <xs:element name="PlasmaVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Volume of the plasma.-->
+          <xs:element name="PulseOximetry" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The fraction of hemoglobin with bound oxygen as measured optically, which can include Carbon Monoxide.-->
+          <xs:element name="RedBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total number of red blood cells in the blood.-->
+          <xs:element name="RhTransfusionReactionVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Volume of transfusion reaction blood based on rh mismatch.-->
+          <xs:element name="ShuntFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Fraction of the blood flow that bypasses the alveoli; therefore, does not engage is gas exchange.-->
+          <xs:element name="StrongIonDifference" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Difference between the positive and negative strong ion concentrations in the blood.-->
+          <xs:element name="TotalProteinConcentration" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The concentration of urea in the blood.-->
+          <xs:element name="VolumeFractionNeutralLipidInPlasma" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Fraction of the plasma that is made up of neutral lipids.-->
+          <xs:element name="VolumeFractionNeutralPhospholipidInPlasma" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Fraction of the plasma that is made up of neutral phospholipids.-->
+          <xs:element name="WhiteBloodCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total number of white blood cells in the blood.-->
+          <xs:element name="LymphocyteCellCount" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total number of lymphocyte cells in the blood.-->
+          <xs:element name="RedBloodCellAcetylcholinesterase" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Concentration of acetylcholinesterase associated with red blood cells-->
+          <xs:element name="TotalBilirubin" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--@brief Concentration of bilirubin in plasma in indicative of progression of sepsis-->
+          <xs:element name="InflammatoryResponse" type="InflammatoryResponseData" minOccurs="0" maxOccurs="1"/>
+          <!--Inflammatory response to infections, burn wounds, hemorrhage, and other trauma-->
+          <!-- Substance Pressures -->
+          <xs:element name="ArterialCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Partial pressure of carbon dioxide in the aorta.-->
+          <xs:element name="ArterialOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Partial pressure of oxygen in the aorta.-->
+          <xs:element name="PulmonaryArterialCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Partial pressure of carbon dioxide in the pulmonary arteries.-->
+          <xs:element name="PulmonaryArterialOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Partial pressure of oxygen in the pulmonary arteries.-->
+          <xs:element name="PulmonaryVenousCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Partial pressure of carbon dioxide in the pulmonary veins.-->
+          <xs:element name="PulmonaryVenousOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Partial pressure of oxygen in the pulmonary veins.-->
+          <xs:element name="VenousCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Partial pressure of carbon dioxide in the vena cava.-->
+          <xs:element name="VenousOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Partial pressure of oxygen in the vena cava.-->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="BloodChemistrySystem" type="BloodChemistrySystemData"/>
+
+  <!-- @brief Available heart rhythms for use in systems. -->
+  <xs:simpleType name="enumHeartRhythm">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Asystole"/>
+      <xs:enumeration value="NormalSinus"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- @brief Provides a representation of the human vasculature.
          @details The heart is the driving force that creates blood flow through the cardiovascular system. 
          The resulting blood flow is utilized by other physiologic systems as a means of transporting the oxygen, carbon dioxide
          and other substances throughout the human body.
      -->
-    <xs:complexType name="CardiovascularSystemData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>
-                    <xs:element name="ArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The current arteial pressure.-->
-                    <xs:element name="BloodVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total volume of fluid within the cardiovascular system.-->
-                    <xs:element name="CardiacIndex" type="ScalarVolumePerTimeAreaData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Relates heart performance to the size of the individual.-->
-                    <xs:element name="CardiacOutput" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of blood being pumped from the heart in a given time interval.<br> It is defined as the heart rate multiplied by the stroke volume.-->
-                    <xs:element name="CentralVenousPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The instantaneous pressure of the venous return.-->
-                    <xs:element name="CerebralBloodFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The rate of blood flow into the skull, thus supplying the brain.-->
-                    <xs:element name="CerebralPerfusionPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The difference between the mean arterial pressure and the cerebral blood pressure. Defines the hydrostatic diffusion gradient.-->
-                    <xs:element name="DiastolicArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The minimum pressure in the aorta over the course of a cardiac cycle.-->
-                    <xs:element name="ExtremityPressure-LeftArm" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pulse pressure observable in specified extremity.-->
-                    <xs:element name="ExtremityPressure-LeftLeg" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pulse pressure observable in specified extremity.-->
-                    <xs:element name="ExtremityPressure-RightArm" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pulse pressure observable in specified extremity.-->
-                    <xs:element name="ExtremityPressure-RightLeg" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pulse pressure observable in specified extremity.-->                   
-					<xs:element name="HeartEjectionFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The current pressure in the aorta.-->
-                    <xs:element name="HeartRate" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The fraction of the blood that is pumped out of the ventricle during a cardiac cycle.-->
-                    <xs:element name="HeartRhythm" type="enumHeartRhythm" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Current heart rhythm -->			
-                    <xs:element name="HeartStrokeVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of blood pumped from the left ventricle in one contraction.-->
-                    <xs:element name="IntracranialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The pressure inside the skull. Equal to the cerebral blood pressure with the cerebrospinal fluid pressure being assumed equal.-->
-                    <xs:element name="MeanArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The average arterial pressure throughout each cardiac cycle.-->
-                    <xs:element name="MeanArterialCarbonDioxidePartialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The mean of the partial pressure of carbon dioxide in the aorta over a cardiac cycle.-->
-                    <xs:element name="MeanArterialCarbonDioxidePartialPressureDelta" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The change of the the mean of the partial pressure of carbon dioxide in the aorta from the previous cardiac cycle.-->
-                    <xs:element name="MeanCentralVenousPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The average pressure in the vena cava over the course of a cardiac cycle.-->
-                    <xs:element name="MeanSkinFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The blood flow to the skin  averaged over the current cardiac cycle time-->
-                    <xs:element name="PulmonaryArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The current pressure in the pulmonary arteries.-->
-                    <xs:element name="PulmonaryCapillariesWedgePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The pressure within the pulmonary capillaries.-->
-                    <xs:element name="PulmonaryDiastolicArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The minimum pressure that occurs in the pulmonary arteries over the course of a cardiac cycle.-->
-                    <xs:element name="PulmonaryMeanArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The average pressure that occurs in the pulmonary arteries over the course of a cardiac cycle.-->
-                    <xs:element name="PulmonaryMeanCapillaryFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The average blood flow in the pulmonary capillaries over the course of a cardiac cycle.-->
-                    <xs:element name="PulmonaryMeanShuntFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The average blood flow diverted from the pulmonary capillaries (not oxygenated) over the course of a cardiac cycle.-->
-                    <xs:element name="PulmonarySystolicArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The maximum pressure in the pulmonary arteries over the course of a cardiac cycle.-->
-                    <xs:element name="PulmonaryVascularResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The resistance offered by the pulmonary circulation.-->
-                    <xs:element name="PulmonaryVascularResistanceIndex" type="ScalarPressureTimePerVolumeAreaData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Relates pulmonary circulation performance to the size of the individual. -->
-                    <xs:element name="PulsePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The difference between the systolic and diastolic pressures.-->
-                    <xs:element name="SystemicVascularResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The resistance to blood flow through the entire systemic vasculature, not including the pulmonary circulation.-->						
-                    <xs:element name="SystolicArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The maximum pressure in the aorta over the course of a cardiac cycle.-->				                    
-                </xs:sequence>            
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="CardiovascularSystem" type="CardiovascularSystemData"/>
-    
-    <!-- @brief Provides transport of drugs through the blood and air in the cardiovascular and respiratory systems, respectively.
+  <xs:complexType name="CardiovascularSystemData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="ArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The current arteial pressure.-->
+          <xs:element name="BloodVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total volume of fluid within the cardiovascular system.-->
+          <xs:element name="CardiacIndex" type="ScalarVolumePerTimeAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Relates heart performance to the size of the individual.-->
+          <xs:element name="CardiacOutput" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The volume of blood being pumped from the heart in a given time interval.<br> It is defined as the heart rate multiplied by the stroke volume.-->
+          <xs:element name="CentralVenousPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The instantaneous pressure of the venous return.-->
+          <xs:element name="CerebralBloodFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The rate of blood flow into the skull, thus supplying the brain.-->
+          <xs:element name="CerebralPerfusionPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The difference between the mean arterial pressure and the cerebral blood pressure. Defines the hydrostatic diffusion gradient.-->
+          <xs:element name="DiastolicArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The minimum pressure in the aorta over the course of a cardiac cycle.-->
+          <xs:element name="ExtremityPressure-LeftArm" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pulse pressure observable in specified extremity.-->
+          <xs:element name="ExtremityPressure-LeftLeg" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pulse pressure observable in specified extremity.-->
+          <xs:element name="ExtremityPressure-RightArm" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pulse pressure observable in specified extremity.-->
+          <xs:element name="ExtremityPressure-RightLeg" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pulse pressure observable in specified extremity.-->
+          <xs:element name="HeartEjectionFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The current pressure in the aorta.-->
+          <xs:element name="HeartRate" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The fraction of the blood that is pumped out of the ventricle during a cardiac cycle.-->
+          <xs:element name="HeartRhythm" type="enumHeartRhythm" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Current heart rhythm -->
+          <xs:element name="HeartStrokeVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The volume of blood pumped from the left ventricle in one contraction.-->
+          <xs:element name="IntracranialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The pressure inside the skull. Equal to the cerebral blood pressure with the cerebrospinal fluid pressure being assumed equal.-->
+          <xs:element name="MeanArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The average arterial pressure throughout each cardiac cycle.-->
+          <xs:element name="MeanArterialCarbonDioxidePartialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The mean of the partial pressure of carbon dioxide in the aorta over a cardiac cycle.-->
+          <xs:element name="MeanArterialCarbonDioxidePartialPressureDelta" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The change of the the mean of the partial pressure of carbon dioxide in the aorta from the previous cardiac cycle.-->
+          <xs:element name="MeanCentralVenousPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The average pressure in the vena cava over the course of a cardiac cycle.-->
+          <xs:element name="MeanSkinFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The blood flow to the skin  averaged over the current cardiac cycle time-->
+          <xs:element name="PulmonaryArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The current pressure in the pulmonary arteries.-->
+          <xs:element name="PulmonaryCapillariesWedgePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The pressure within the pulmonary capillaries.-->
+          <xs:element name="PulmonaryDiastolicArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The minimum pressure that occurs in the pulmonary arteries over the course of a cardiac cycle.-->
+          <xs:element name="PulmonaryMeanArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The average pressure that occurs in the pulmonary arteries over the course of a cardiac cycle.-->
+          <xs:element name="PulmonaryMeanCapillaryFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The average blood flow in the pulmonary capillaries over the course of a cardiac cycle.-->
+          <xs:element name="PulmonaryMeanShuntFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The average blood flow diverted from the pulmonary capillaries (not oxygenated) over the course of a cardiac cycle.-->
+          <xs:element name="PulmonarySystolicArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The maximum pressure in the pulmonary arteries over the course of a cardiac cycle.-->
+          <xs:element name="PulmonaryVascularResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The resistance offered by the pulmonary circulation.-->
+          <xs:element name="PulmonaryVascularResistanceIndex" type="ScalarPressureTimePerVolumeAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Relates pulmonary circulation performance to the size of the individual. -->
+          <xs:element name="PulsePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The difference between the systolic and diastolic pressures.-->
+          <xs:element name="SystemicVascularResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The resistance to blood flow through the entire systemic vasculature, not including the pulmonary circulation.-->
+          <xs:element name="SystolicArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The maximum pressure in the aorta over the course of a cardiac cycle.-->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CardiovascularSystem" type="CardiovascularSystemData"/>
+
+  <!-- @brief Provides transport of drugs through the blood and air in the cardiovascular and respiratory systems, respectively.
          @details The exchange of gases across the alveoli/pulmonary capillary barrier, and the diffusion of substances into and out of tissues. 
          Important substances required for cell function are transported to the organs, while waste material is transported away for expulsion from the body.
          Drugs impact physiologic behavior, such as heart rate, respiration rate, and blood pressure through modifiers.
          Totals are from all active drugs in the body.
      -->
-    <xs:complexType name="DrugSystemData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>
-					<xs:element name="AntibioticActivity" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="BronchodilationLevel" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-					<xs:element name="FeverChange" type="ScalarTemperatureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                    <xs:element name="HeartRateChange" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-					<xs:element name="HemorrhageChange" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                    <xs:element name="MeanBloodPressureChange" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                    <xs:element name="NeuromuscularBlockLevel" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-					<xs:element name="PainToleranceChange" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                    <xs:element name="PulsePressureChange" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                    <xs:element name="RespirationRateChange" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                    <xs:element name="SedationLevel" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                    <xs:element name="TidalVolumeChange" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                    <xs:element name="TubularPermeabilityChange" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                    <xs:element name="CentralNervousResponse" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                </xs:sequence> 
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="DrugSystem" type="DrugSystemData"/>
-    
-    <!-- @brief Releases hormones to maintain homeostasis and regulate body functions, including metabolism and behavior.
+  <xs:complexType name="DrugSystemData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="AntibioticActivity" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="BronchodilationLevel" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="FeverChange" type="ScalarTemperatureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="HeartRateChange" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="HemorrhageChange" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="MeanBloodPressureChange" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="NeuromuscularBlockLevel" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="PainToleranceChange" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="PulsePressureChange" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="RespirationRateChange" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="SedationLevel" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="TidalVolumeChange" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="TubularPermeabilityChange" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="CentralNervousResponse" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DrugSystem" type="DrugSystemData"/>
+
+  <!-- @brief Releases hormones to maintain homeostasis and regulate body functions, including metabolism and behavior.
          @details The release of the hormones in response to the stimuli to represent the response of the sympathetic nervous system.
      -->
-    <xs:complexType name="EndocrineSystemData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>
-                    <xs:element name="InsulinSynthesisRate" type="ScalarAmountPerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Insulin production rate. -->
-                    <xs:element name="GlucagonSynthesisRate" type="ScalarAmountPerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Glucagon production rate. -->
-                </xs:sequence>	
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="EndocrineSystem" type="EndocrineSystemData"/>
-    
-    <!-- @brief Provides heat transfer, nutrition, and exercise physiology in the human body.
+  <xs:complexType name="EndocrineSystemData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="InsulinSynthesisRate" type="ScalarAmountPerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Insulin production rate. -->
+          <xs:element name="GlucagonSynthesisRate" type="ScalarAmountPerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Glucagon production rate. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="EndocrineSystem" type="EndocrineSystemData"/>
+
+  <!-- @brief Provides heat transfer, nutrition, and exercise physiology in the human body.
      @details 
      -->
-    <xs:complexType name="EnergySystemData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>
-                    <xs:element name="AchievedExerciseLevel" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/><!--<< @brief The fraction of how much of the requested exercise the patient is able to achieve. 1.0 means the the patient is performing at the requested level. Nan is the patient is not exercising (no Action)-->
-                    <xs:element name="CoreTemperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The internal body temperature.-->
-                    <xs:element name="CreatinineProductionRate" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The generation of creatinine in the muscle tissue per -->                    
-                    <xs:element name="ExerciseEnergyDemand" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/><!--<@bried The current level of energy demanded for exercise as a function of user input.  Not equal to user input because sometimes we can't meet full demand-->
-					<xs:element name="ExerciseMeanArterialPressureDelta" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/><!--<< @brief The pressure delta that occurs during exercise. Used to modify the baroreceptor set-point -->
-                    <xs:element name="FatigueLevel" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The exhaustion level of the body, or inability to perform physical exercise @details The amount of energy available for activity divided by the normal rested energy -->                            
-                    <xs:element name="LactateProductionRate" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The molar amount of lactate generated on the tissue level from anaerobic metabolism -->
-                    <xs:element name="SkinTemperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The skin surface temperature.-->
-                    <xs:element name="SweatRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Mass of sweat generated per unit time due to elevated core temperature -->
-                    <xs:element name="TotalMetabolicRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The basal metabolic rate plus additional energy expenditure rates due to activity.-->
-                    <xs:element name="TotalWorkRateLevel" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The current patient work rate above basal over the maximum work rate capable by the patient -->
-                    <xs:element name="SodiumLostToSweat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of sodium lost while sweating during exercise -->
-                    <xs:element name="PotassiumLostToSweat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of potassium lost while sweating during exercise --> 
-                    <xs:element name="ChlorideLostToSweat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<<@brief Tracks the total amount of chloride lost while sweating during exercise -->      
-					<xs:element name="EnergyDeficit" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/><!--<<@brief Tracks a gap in energy supply/demand caused by pathophysiological states, like hypoperfusion-->
-                </xs:sequence>    
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="EnergySystemData" type="EnergySystemData"/>   
-    
-	
-	<xs:complexType name="DrugTransitStateData">
-		<xs:complexContent>
-			<xs:extension base="ObjectData">
-				<xs:sequence>
-					<xs:element name="LumenSolidMasses" type="ScalarMassData" minOccurs="0" maxOccurs="9"/>  <!--@brief CAT drug model, solid drug content of 8 small intestince compartments and stomach-->
-					<xs:element name="LumenDissolvedMasses" type="ScalarMassData" minOccurs="0" maxOccurs="9"/> <!--@brief CAT drug model, dissolved drug content of 8 small intestince compartments and stomach-->
-					<xs:element name="EnterocyteMasses" type="ScalarMassData" minOccurs="0" maxOccurs="8"/> <!--@brief CAT drug model, drug content of intestinal enteroycte layer, no stomach portion-->
-					<xs:element name="MassMetabolized" type="ScalarMassData" minOccurs="1" maxOccurs="1"/><!--@brief CAT drug model, tracks the amount of drug metabolized in the GI-->
-					<xs:element name="MassExcreted" type="ScalarMassData" minOccurs="1" maxOccurs="1"/><!--@brief CAT drug model, tracks the amount of drug excreted unabsorbed from GI-->
-				</xs:sequence>
-				<xs:attribute name="Substance" type="xs:string" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-    <!-- @brief Provides nutrients to the body and monitors oral drug absorption
+  <xs:complexType name="EnergySystemData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="AchievedExerciseLevel" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The fraction of how much of the requested exercise the patient is able to achieve. 1.0 means the the patient is performing at the requested level. Nan is the patient is not exercising (no Action)-->
+          <xs:element name="CoreTemperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The internal body temperature.-->
+          <xs:element name="CreatinineProductionRate" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The generation of creatinine in the muscle tissue per -->
+          <xs:element name="ExerciseEnergyDemand" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
+          <!--<@bried The current level of energy demanded for exercise as a function of user input.  Not equal to user input because sometimes we can't meet full demand-->
+          <xs:element name="ExerciseMeanArterialPressureDelta" type="ScalarPressureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The pressure delta that occurs during exercise. Used to modify the baroreceptor set-point -->
+          <xs:element name="FatigueLevel" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The exhaustion level of the body, or inability to perform physical exercise @details The amount of energy available for activity divided by the normal rested energy -->
+          <xs:element name="LactateProductionRate" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The molar amount of lactate generated on the tissue level from anaerobic metabolism -->
+          <xs:element name="SkinTemperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The skin surface temperature.-->
+          <xs:element name="SweatRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Mass of sweat generated per unit time due to elevated core temperature -->
+          <xs:element name="TotalMetabolicRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The basal metabolic rate plus additional energy expenditure rates due to activity.-->
+          <xs:element name="TotalWorkRateLevel" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The current patient work rate above basal over the maximum work rate capable by the patient -->
+          <xs:element name="SodiumLostToSweat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Tracks the total amount of sodium lost while sweating during exercise -->
+          <xs:element name="PotassiumLostToSweat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Tracks the total amount of potassium lost while sweating during exercise -->
+          <xs:element name="ChlorideLostToSweat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Tracks the total amount of chloride lost while sweating during exercise -->
+          <xs:element name="EnergyDeficit" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief Tracks a gap in energy supply/demand caused by pathophysiological states, like hypoperfusion-->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="EnergySystemData" type="EnergySystemData"/>
+
+
+  <xs:complexType name="DrugTransitStateData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="LumenSolidMasses" type="ScalarMassData" minOccurs="0" maxOccurs="9"/>
+          <!--@brief CAT drug model, solid drug content of 8 small intestince compartments and stomach-->
+          <xs:element name="LumenDissolvedMasses" type="ScalarMassData" minOccurs="0" maxOccurs="9"/>
+          <!--@brief CAT drug model, dissolved drug content of 8 small intestince compartments and stomach-->
+          <xs:element name="EnterocyteMasses" type="ScalarMassData" minOccurs="0" maxOccurs="8"/>
+          <!--@brief CAT drug model, drug content of intestinal enteroycte layer, no stomach portion-->
+          <xs:element name="MassMetabolized" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+          <!--@brief CAT drug model, tracks the amount of drug metabolized in the GI-->
+          <xs:element name="MassExcreted" type="ScalarMassData" minOccurs="1" maxOccurs="1"/>
+          <!--@brief CAT drug model, tracks the amount of drug excreted unabsorbed from GI-->
+        </xs:sequence>
+        <xs:attribute name="Substance" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- @brief Provides nutrients to the body and monitors oral drug absorption
          @details Balances out the fluid and substances lost through other functionalities such as urination, sweating, and water loss from breathing.  Hosts Compartment Absorption Transit (CAT) model for oral drug administration
      -->
-    <xs:complexType name="GastrointestinalSystemData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>
-                    <xs:element name="ChymeAbsorptionRate" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief Rate of the absorption of nutrients from chyme into the blood stream-->
-                    <xs:element name="StomachContents" type="NutritionData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The contents in the stomach-->
-					<xs:element name="DrugTransitStates" type="DrugTransitStateData" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence>	
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="GastrointestinalSystem" type="GastrointestinalSystemData"/>
-    
-    <!-- @brief Provides liver function by clearing and maintaining substances in the blood
+  <xs:complexType name="GastrointestinalSystemData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="ChymeAbsorptionRate" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Rate of the absorption of nutrients from chyme into the blood stream-->
+          <xs:element name="StomachContents" type="NutritionData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The contents in the stomach-->
+          <xs:element name="DrugTransitStates" type="DrugTransitStateData" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GastrointestinalSystem" type="GastrointestinalSystemData"/>
+
+  <!-- @brief Provides liver function by clearing and maintaining substances in the blood
          @details Carries blood from parts of the gastrointestinal (GI) tract to the liver. The products of digestion are processed in the liver.
      -->
-    <xs:complexType name="HepaticSystemData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>
-                    <xs:element name="KetoneProductionRate" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The rate of ketone production in the liver -->
-                    <xs:element name="HepaticGluconeogenesisRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The rate of glucose production in the liver -->
-                </xs:sequence>  
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="HepaticSystem" type="HepaticSystemData"/>
-    
-    <!-- @brief 
+  <xs:complexType name="HepaticSystemData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="KetoneProductionRate" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The rate of ketone production in the liver -->
+          <xs:element name="HepaticGluconeogenesisRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The rate of glucose production in the liver -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HepaticSystem" type="HepaticSystemData"/>
+
+  <!-- @brief 
          @details
      -->
 
 
-    <xs:simpleType name="enumSleepState">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="Awake"/>
-            <xs:enumeration value="Asleep"/>
-        </xs:restriction>
-    </xs:simpleType>
- 
-    <xs:complexType name="NervousSystemData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>    
-                    <xs:element name="HeartRateScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart rate multiplier used to scale the heart rate due to baroreceptor feedback-->
-                    <xs:element name="HeartElastanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Heart elastance multiplier used to scale the heart rate due to baroreceptor feedback-->
-                    <xs:element name="MentalStatus" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief mental status of the patient from 0 to 1, 1 indicating fully comatose, used in CBRNE exposure models-->
-                    <xs:element name="ResistanceScaleExtrasplanchnic" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="ResistanceScaleMuscle" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Cardiovascular resistance multiplier used to scale the heart rate due to baroreceptor feedback-->
-                    <xs:element name="ResistanceScaleMyocardium" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="ResistanceScaleSplanchnic" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="ComplianceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Cardiovascular compliance multiplier used to scale the heart rate due to baroreceptor feedback-->
-                    <xs:element name="LeftEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->   		
-                    <xs:element name="PainVisualAnalogueScale" type="ScalarData" minOccurs="0" maxOccurs="1"/><!--<< @brief Computed visual analogue scale due to stimulus and patient susceptibility-->
-					<xs:element name="RichmondAgitationSedationScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>
-					<xs:element name="RightEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->  
-                    <xs:element name="SleepTime" type="ScalarTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->
-                    <xs:element name="SleepState" type="enumSleepState" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Current sleep state --> 
-                    <xs:element name="WakeTime" type="ScalarTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief -->    
-                    <xs:element name="BiologicalDebt" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief --> 
-                    <xs:element name="ReactionTime" type="ScalarTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief ms time taken to quickly react to stimulus -->    
-                    <xs:element name="AttentionLapses" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief number of times attention lapses for a given focused task -->   
+  <xs:simpleType name="enumSleepState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Awake"/>
+      <xs:enumeration value="Asleep"/>
+    </xs:restriction>
+  </xs:simpleType>
 
-                </xs:sequence>  
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="NervousSystem" type="NervousSystemData"/>
+  <xs:complexType name="NervousSystemData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="HeartRateScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Heart rate multiplier used to scale the heart rate due to baroreceptor feedback-->
+          <xs:element name="HeartElastanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Heart elastance multiplier used to scale the heart rate due to baroreceptor feedback-->
+          <xs:element name="MentalStatus" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief mental status of the patient from 0 to 1, 1 indicating fully comatose, used in CBRNE exposure models-->
+          <xs:element name="ResistanceScaleExtrasplanchnic" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ResistanceScaleMuscle" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Cardiovascular resistance multiplier used to scale the heart rate due to baroreceptor feedback-->
+          <xs:element name="ResistanceScaleMyocardium" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ResistanceScaleSplanchnic" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ComplianceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Cardiovascular compliance multiplier used to scale the heart rate due to baroreceptor feedback-->
+          <xs:element name="LeftEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="PainVisualAnalogueScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Computed visual analogue scale due to stimulus and patient susceptibility-->
+          <xs:element name="RichmondAgitationSedationScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="RightEyePupillaryResponse" type="PupillaryResponseData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="SleepTime" type="ScalarTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="SleepState" type="enumSleepState" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Current sleep state -->
+          <xs:element name="WakeTime" type="ScalarTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="BiologicalDebt" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief -->
+          <xs:element name="ReactionTime" type="ScalarTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief ms time taken to quickly react to stimulus -->
+          <xs:element name="AttentionLapses" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief number of times attention lapses for a given focused task -->
 
-    <!-- @brief Provides kidney function by clearing and maintaining substances in the blood
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="NervousSystem" type="NervousSystemData"/>
+
+  <!-- @brief Provides kidney function by clearing and maintaining substances in the blood
          @details Maintain substance balance in the blood by removing and maintaining fluid and
          substances in the blood with behavior dependent upon factors such as dehydration and the presence of diuretics.
      -->
-    <xs:complexType name="RenalSystemData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>    
-				    <xs:element name="BladderPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure of bladder iwth changes marked due to compartment syndrome. -->
-                    <xs:element name="FiltrationFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Scalar used to compute reabsorption for substances-->
-                    <xs:element name="GlomerularFiltrationRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Flow rate of filtrate into the tubules -->
-                    
-                    <xs:element name="LeftAfferentArterioleResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief resistance to flow going into the glomerular capillaries in the left Kidney-->
-                    <xs:element name="LeftBowmansCapsulesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated from fluid in the bowmans capsules in the left Kidney -->
-                    <xs:element name="LeftBowmansCapsulesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief  Pressure generated from substances in the bowmans capsules in the left Kidney-->
-                    <xs:element name="LeftEfferentArterioleResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Resistance to flow into the peritubular capillaries in the left Kidney -->
-                    <xs:element name="LeftGlomerularCapillariesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated from fluid in the glomerular capillaries in the left Kidney -->
-                    <xs:element name="LeftGlomerularCapillariesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated from substances in the capillaries in the left Kidney -->
-                    <xs:element name="LeftGlomerularFiltrationCoefficient" type="ScalarVolumePerTimePressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Calculated for each substance to determine ease of transport into the tubules in the left Kidney -->
-                    <xs:element name="LeftGlomerularFiltrationRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
-                    <xs:element name="LeftGlomerularFiltrationSurfaceArea" type="ScalarAreaData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Surface area of glomerular capillaries that experiance filtration in the left Kidney -->
-                    <xs:element name="LeftGlomerularFluidPermeability" type="ScalarVolumePerTimePressureAreaData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Permeability coeffitient of the capillary tissue in the left Kidney -->
-                    <xs:element name="LeftFiltrationFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Scalar used to compute reabsorption for substances in left Kidney -->
-                    <xs:element name="LeftNetFiltrationPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Total pressure directed into the tubules in the left Kidney -->
-                    <xs:element name="LeftNetReabsorptionPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Total pressure directed into the peritubular capillaries in the left Kidney -->
-                    <xs:element name="LeftPeritubularCapillariesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated by the fluid in the peritubular capillaries in the left Kidney -->
-                    <xs:element name="LeftPeritubularCapillariesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated by the substance concentration in the peritubular capillaries in the left Kidney-->
-                    <xs:element name="LeftReabsorptionFiltrationCoefficient" type="ScalarVolumePerTimePressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Value which determines how much of a substance is reabsorbed into the blood stream in the left Kidney-->
-                    <xs:element name="LeftReabsorptionRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Rate at which fluid or a substance is transported into the peritubular capillaries in the left Kidney -->                    
-					<xs:element name="LeftTubularOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated by substances in the tubules in the left Kidney -->                    
-                    <xs:element name="LeftTubularHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated by the fluid in the tubules in the left Kidney -->
-                    <xs:element name="LeftTubularReabsorptionFiltrationSurfaceArea" type="ScalarAreaData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Surface ares of the tubules which is subject to fluid transport (reabsorption) in the left Kidney -->
-                    <xs:element name="LeftTubularReabsorptionFluidPermeability" type="ScalarVolumePerTimePressureAreaData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Permeability of the tissue in the tubules, influencing resistance to flow into peritubular capillaries in the left Kidney  -->
-                   
-					<xs:element name="RenalBloodFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Blood flow into the kidney that is not filtered into the tubules -->
-                    <xs:element name="RenalPlasmaFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Plasma flow into the kidney that is not filtered into the tubules -->                    
-					<xs:element name="RenalVascularResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Total resistance o f the kidney vasculature  -->
-                    
-                    <xs:element name="RightAfferentArterioleResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief resistance to flow going into the glomerular capillaries in the right Kidney -->
-                    <xs:element name="RightBowmansCapsulesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated from fluid in the bowmans capsules in the right Kidney  -->
-                    <xs:element name="RightBowmansCapsulesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated from substances in the bowmans capsules in the right Kidney  -->
-                    <xs:element name="RightEfferentArterioleResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Resistance to flow into the peritubular capillaries in the left Kidney -->
-                    <xs:element name="RightGlomerularCapillariesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated from fluid in the glomerular capillaries in the left Kidney -->
-                    <xs:element name="RightGlomerularCapillariesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated from substances in the capillaries in the left Kidney -->
-                    <xs:element name="RightGlomerularFiltrationCoefficient" type="ScalarVolumePerTimePressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Calculated for each substance to determine ease of transport into the tubules in the left Kidney -->
-                    <xs:element name="RightGlomerularFiltrationRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
-                    <xs:element name="RightGlomerularFiltrationSurfaceArea" type="ScalarAreaData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Surface area of glomerular capillaries that experiance filtration in the left Kidney -->
-                    <xs:element name="RightGlomerularFluidPermeability" type="ScalarVolumePerTimePressureAreaData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Permeability coeffitient of the capillary tissue in the left Kidney-->
-                    <xs:element name="RightFiltrationFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Scalar used to compute reabsorption for substances in left Kidney -->
-                    <xs:element name="RightNetFiltrationPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief  Total pressure directed into the tubules in the left Kidney -->
-                    <xs:element name="RightNetReabsorptionPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Total pressure directed into the peritubular capillaries in the left Kidney -->
-                    <xs:element name="RightPeritubularCapillariesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated by the fluid in the peritubular capillaries in the left Kidney -->
-                    <xs:element name="RightPeritubularCapillariesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated by the substance concentration in the peritubular capillaries in the left Kidney -->
-                    <xs:element name="RightReabsorptionFiltrationCoefficient" type="ScalarVolumePerTimePressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Value which determines how much of a substance is reabsorbed into the blood stream in the left Kidney -->
-                    <xs:element name="RightReabsorptionRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Rate at which fluid or a substance is transported into the peritubular capillaries in the left Kidney -->
-                    <xs:element name="RightTubularOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated by substances in the tubules in the left Kidney  -->                    
-                    <xs:element name="RightTubularHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Pressure generated by the fluid in the tubules in the left Kidney -->                    					
-					<xs:element name="RightTubularReabsorptionFiltrationSurfaceArea" type="ScalarAreaData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Surface ares of the tubules which is subject to fluid transport (reabsorption) in the left Kidney -->
-                    <xs:element name="RightTubularReabsorptionFluidPermeability" type="ScalarVolumePerTimePressureAreaData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Permeability of the tissue in the tubules, influencing resistance to flow into peritubular capillaries in the left Kidney -->
-                    
-					<xs:element name="UrinationRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Rate that fluid exits the bladder  --> 
-                    <xs:element name="UrineOsmolality" type="ScalarOsmolalityData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the mass of the fluid -->
-                    <xs:element name="UrineOsmolarity" type="ScalarOsmolarityData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the volume of the fluid -->
-                    <xs:element name="UrineProductionRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The rate of fluid flow to the bladder -->
-                    <xs:element name="MeanUrineOutput" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/><!--@brief Less noisy average of fluid flow to bladder-->
-                    <xs:element name="UrineSpecificGravity" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The density of the fluid relative to water -->
-                    <xs:element name="UrineVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of the urine in the bladder --> 
-                    <xs:element name="UrineUreaNitrogenConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Scaled concentration of Urea in the bladder  --> 
-                </xs:sequence>  
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>    
-    <xs:element name="RenalSystem" type="RenalSystemData"/>
-    
-    <!-- @brief Provides ventilation and gas exchange of the human respiratory system.
+  <xs:complexType name="RenalSystemData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="BladderPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure of bladder iwth changes marked due to compartment syndrome. -->
+          <xs:element name="FiltrationFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Scalar used to compute reabsorption for substances-->
+          <xs:element name="GlomerularFiltrationRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Flow rate of filtrate into the tubules -->
+
+          <xs:element name="LeftAfferentArterioleResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief resistance to flow going into the glomerular capillaries in the left Kidney-->
+          <xs:element name="LeftBowmansCapsulesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated from fluid in the bowmans capsules in the left Kidney -->
+          <xs:element name="LeftBowmansCapsulesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief  Pressure generated from substances in the bowmans capsules in the left Kidney-->
+          <xs:element name="LeftEfferentArterioleResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Resistance to flow into the peritubular capillaries in the left Kidney -->
+          <xs:element name="LeftGlomerularCapillariesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated from fluid in the glomerular capillaries in the left Kidney -->
+          <xs:element name="LeftGlomerularCapillariesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated from substances in the capillaries in the left Kidney -->
+          <xs:element name="LeftGlomerularFiltrationCoefficient" type="ScalarVolumePerTimePressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Calculated for each substance to determine ease of transport into the tubules in the left Kidney -->
+          <xs:element name="LeftGlomerularFiltrationRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
+          <xs:element name="LeftGlomerularFiltrationSurfaceArea" type="ScalarAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Surface area of glomerular capillaries that experiance filtration in the left Kidney -->
+          <xs:element name="LeftGlomerularFluidPermeability" type="ScalarVolumePerTimePressureAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Permeability coeffitient of the capillary tissue in the left Kidney -->
+          <xs:element name="LeftFiltrationFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Scalar used to compute reabsorption for substances in left Kidney -->
+          <xs:element name="LeftNetFiltrationPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total pressure directed into the tubules in the left Kidney -->
+          <xs:element name="LeftNetReabsorptionPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total pressure directed into the peritubular capillaries in the left Kidney -->
+          <xs:element name="LeftPeritubularCapillariesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated by the fluid in the peritubular capillaries in the left Kidney -->
+          <xs:element name="LeftPeritubularCapillariesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated by the substance concentration in the peritubular capillaries in the left Kidney-->
+          <xs:element name="LeftReabsorptionFiltrationCoefficient" type="ScalarVolumePerTimePressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Value which determines how much of a substance is reabsorbed into the blood stream in the left Kidney-->
+          <xs:element name="LeftReabsorptionRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Rate at which fluid or a substance is transported into the peritubular capillaries in the left Kidney -->
+          <xs:element name="LeftTubularOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated by substances in the tubules in the left Kidney -->
+          <xs:element name="LeftTubularHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated by the fluid in the tubules in the left Kidney -->
+          <xs:element name="LeftTubularReabsorptionFiltrationSurfaceArea" type="ScalarAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Surface ares of the tubules which is subject to fluid transport (reabsorption) in the left Kidney -->
+          <xs:element name="LeftTubularReabsorptionFluidPermeability" type="ScalarVolumePerTimePressureAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Permeability of the tissue in the tubules, influencing resistance to flow into peritubular capillaries in the left Kidney  -->
+
+          <xs:element name="RenalBloodFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Blood flow into the kidney that is not filtered into the tubules -->
+          <xs:element name="RenalPlasmaFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Plasma flow into the kidney that is not filtered into the tubules -->
+          <xs:element name="RenalVascularResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total resistance o f the kidney vasculature  -->
+
+          <xs:element name="RightAfferentArterioleResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief resistance to flow going into the glomerular capillaries in the right Kidney -->
+          <xs:element name="RightBowmansCapsulesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated from fluid in the bowmans capsules in the right Kidney  -->
+          <xs:element name="RightBowmansCapsulesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated from substances in the bowmans capsules in the right Kidney  -->
+          <xs:element name="RightEfferentArterioleResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Resistance to flow into the peritubular capillaries in the left Kidney -->
+          <xs:element name="RightGlomerularCapillariesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated from fluid in the glomerular capillaries in the left Kidney -->
+          <xs:element name="RightGlomerularCapillariesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated from substances in the capillaries in the left Kidney -->
+          <xs:element name="RightGlomerularFiltrationCoefficient" type="ScalarVolumePerTimePressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Calculated for each substance to determine ease of transport into the tubules in the left Kidney -->
+          <xs:element name="RightGlomerularFiltrationRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Flow rate of filtrate into the tubules in left Kidney -->
+          <xs:element name="RightGlomerularFiltrationSurfaceArea" type="ScalarAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Surface area of glomerular capillaries that experiance filtration in the left Kidney -->
+          <xs:element name="RightGlomerularFluidPermeability" type="ScalarVolumePerTimePressureAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Permeability coeffitient of the capillary tissue in the left Kidney-->
+          <xs:element name="RightFiltrationFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Scalar used to compute reabsorption for substances in left Kidney -->
+          <xs:element name="RightNetFiltrationPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief  Total pressure directed into the tubules in the left Kidney -->
+          <xs:element name="RightNetReabsorptionPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total pressure directed into the peritubular capillaries in the left Kidney -->
+          <xs:element name="RightPeritubularCapillariesHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated by the fluid in the peritubular capillaries in the left Kidney -->
+          <xs:element name="RightPeritubularCapillariesOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated by the substance concentration in the peritubular capillaries in the left Kidney -->
+          <xs:element name="RightReabsorptionFiltrationCoefficient" type="ScalarVolumePerTimePressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Value which determines how much of a substance is reabsorbed into the blood stream in the left Kidney -->
+          <xs:element name="RightReabsorptionRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Rate at which fluid or a substance is transported into the peritubular capillaries in the left Kidney -->
+          <xs:element name="RightTubularOsmoticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated by substances in the tubules in the left Kidney  -->
+          <xs:element name="RightTubularHydrostaticPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Pressure generated by the fluid in the tubules in the left Kidney -->
+          <xs:element name="RightTubularReabsorptionFiltrationSurfaceArea" type="ScalarAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Surface ares of the tubules which is subject to fluid transport (reabsorption) in the left Kidney -->
+          <xs:element name="RightTubularReabsorptionFluidPermeability" type="ScalarVolumePerTimePressureAreaData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Permeability of the tissue in the tubules, influencing resistance to flow into peritubular capillaries in the left Kidney -->
+
+          <xs:element name="UrinationRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Rate that fluid exits the bladder  -->
+          <xs:element name="UrineOsmolality" type="ScalarOsmolalityData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the mass of the fluid -->
+          <xs:element name="UrineOsmolarity" type="ScalarOsmolarityData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The osmolar pressure contributions of the sodium, urea and glucose divided by the volume of the fluid -->
+          <xs:element name="UrineProductionRate" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The rate of fluid flow to the bladder -->
+          <xs:element name="MeanUrineOutput" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--@brief Less noisy average of fluid flow to bladder-->
+          <xs:element name="UrineSpecificGravity" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The density of the fluid relative to water -->
+          <xs:element name="UrineVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The volume of the urine in the bladder -->
+          <xs:element name="UrineUreaNitrogenConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Scaled concentration of Urea in the bladder  -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RenalSystem" type="RenalSystemData"/>
+
+  <!-- @brief Provides ventilation and gas exchange of the human respiratory system.
          @details Supports changes in the lungs volume and pressure data during the flow
          and transfer of gases between the lungs, the blood and the outside environment.          
      -->
-    <xs:complexType name="RespiratorySystemData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>
-                    <xs:element name="AlveolarArterialGradient" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Measure of the difference between the alveolar concentration of oxygen and the arterial concentration of oxygen to assess the integrity of the alveolar capillary unit..-->
-                    <xs:element name="CarricoIndex" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The ratio of arterial partial pressure O2 and the inspired O2. O2 level in blood vs. Concentration of O2 in a breath.-->
-                    <xs:element name="EndTidalCarbonDioxideFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The fraction of CarbonDioxide in the trachea that is carbon dioxide at the end of each respiratory cycle.-->
-                    <xs:element name="EndTidalCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The pressure of CarbonDioxide in the trachea that is carbon dioxide at the end of each respiratory cycle.-->
-                    <xs:element name="ExpiratoryFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Instantaneous airflow out of the lungs (negative value when inhaling)-->
-                    <xs:element name="InspiratoryExpiratoryRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The ratio of the length of time of inspiration to the length of time of expiration.-->
-                    <xs:element name="InspiratoryFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief TInstantaneous airflow into the lungs (negative value when exhaling).-->
-                    <xs:element name="MeanPleuralPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Running average pleural pressure-->
-					<xs:element name="PulmonaryCompliance" type="ScalarFlowComplianceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total compliance of the lungs.-->
-                    <xs:element name="PulmonaryResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total resistance to airflow through the lungs.-->
-                    <xs:element name="RespirationDriverFrequency" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/><!--<< @brief Target frequency of respiratory driver communicated by chemoreceptors-->
-                    <xs:element name="RespirationDriverPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Target amplitude of respiratory driver communicated by chemoreceptors-->                    
-                    <xs:element name="RespirationMusclePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief Combined driver pressure of the muscles that contribute to inhalation and exhalation, by aiding in the expansion and contraction of the thoracic cavity.-->                    
-                    <xs:element name="RespirationRate" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The frequency of the respiratory cycle.-->	
-                    <xs:element name="SpecificVentilation" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The ratio of the volume of gas entering a region of the lung following an inspiration and the end-expiratory volume of that same lung region.-->
-                    <xs:element name="TidalVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The volume of air moved into or out of the lungs during normal respiration.-->
-					<xs:element name="TargetPulmonaryVentilation" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/> <!--<<@brief The target ventilation determined by the chemoreceptor method in the Nervous system, used by Respiratory to drive Respiration-->
-                    <xs:element name="TotalAlveolarVentilation" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The air flow to the alveoli.-->
-                    <xs:element name="TotalDeadSpaceVentilation" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The air flow to the dead space.-->
-                    <xs:element name="TotalLungVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The total volume of air within the lungs at any given time.-->
-                    <xs:element name="TotalPulmonaryVentilation" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The flow rate representing the exchange of air between the lungs and ambient air.-->
-                    <xs:element name="TranspulmonaryPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The pressure difference between the alveoli and the intrapleural space.-->	
-                </xs:sequence>	
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="RespiratorySystem" type="RespiratorySystemData"/>
-    
-    <!-- @brief Provides data pertaining to the extracellular and intracelluar space          
+  <xs:complexType name="RespiratorySystemData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="AlveolarArterialGradient" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Measure of the difference between the alveolar concentration of oxygen and the arterial concentration of oxygen to assess the integrity of the alveolar capillary unit..-->
+          <xs:element name="CarricoIndex" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The ratio of arterial partial pressure O2 and the inspired O2. O2 level in blood vs. Concentration of O2 in a breath.-->
+          <xs:element name="EndTidalCarbonDioxideFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The fraction of CarbonDioxide in the trachea that is carbon dioxide at the end of each respiratory cycle.-->
+          <xs:element name="EndTidalCarbonDioxidePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The pressure of CarbonDioxide in the trachea that is carbon dioxide at the end of each respiratory cycle.-->
+          <xs:element name="ExpiratoryFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Instantaneous airflow out of the lungs (negative value when inhaling)-->
+          <xs:element name="InspiratoryExpiratoryRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The ratio of the length of time of inspiration to the length of time of expiration.-->
+          <xs:element name="InspiratoryFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief TInstantaneous airflow into the lungs (negative value when exhaling).-->
+          <xs:element name="MeanPleuralPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Running average pleural pressure-->
+          <xs:element name="PulmonaryCompliance" type="ScalarFlowComplianceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total compliance of the lungs.-->
+          <xs:element name="PulmonaryResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total resistance to airflow through the lungs.-->
+          <xs:element name="RespirationDriverFrequency" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief Target frequency of respiratory driver communicated by chemoreceptors-->
+          <xs:element name="RespirationDriverPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Target amplitude of respiratory driver communicated by chemoreceptors-->
+          <xs:element name="RespirationMusclePressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Combined driver pressure of the muscles that contribute to inhalation and exhalation, by aiding in the expansion and contraction of the thoracic cavity.-->
+          <xs:element name="RespirationRate" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The frequency of the respiratory cycle.-->
+          <xs:element name="SpecificVentilation" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The ratio of the volume of gas entering a region of the lung following an inspiration and the end-expiratory volume of that same lung region.-->
+          <xs:element name="TidalVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The volume of air moved into or out of the lungs during normal respiration.-->
+          <xs:element name="TargetPulmonaryVentilation" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<<@brief The target ventilation determined by the chemoreceptor method in the Nervous system, used by Respiratory to drive Respiration-->
+          <xs:element name="TotalAlveolarVentilation" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The air flow to the alveoli.-->
+          <xs:element name="TotalDeadSpaceVentilation" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The air flow to the dead space.-->
+          <xs:element name="TotalLungVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total volume of air within the lungs at any given time.-->
+          <xs:element name="TotalPulmonaryVentilation" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The flow rate representing the exchange of air between the lungs and ambient air.-->
+          <xs:element name="TranspulmonaryPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The pressure difference between the alveoli and the intrapleural space.-->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RespiratorySystem" type="RespiratorySystemData"/>
+
+  <!-- @brief Provides data pertaining to the extracellular and intracelluar space          
      -->
-    <xs:complexType name="TissueSystemData">
-        <xs:complexContent>
-            <xs:extension base="SystemData">
-                <xs:sequence>
-                    <xs:element name="CarbonDioxideProductionRate" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The carbon dioxide generated on the tissue level from aerobic metabolism-->
-                    <xs:element name="DehydrationFraction" type="Scalar0To1Data" minOccurs="0" maxOccurs="1"/> <!--<< @brief The fraction of body weight lost as fluid since initialization -->
-                    <xs:element name="ExtracellularFluidVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume of fluid outside of cells AND outside of the blood vessels-->
-                    <xs:element name="ExtravascularFluidVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total fluid volume outside of the blood vessels. -->
-                    <xs:element name="IntracellularFluidPH" type="ScalarData" minOccurs="0"  maxOccurs="1"/><!--<< @brief The acidity or alkalinity of the extravascular intercellular fluid.-->
-                    <xs:element name="IntracellularFluidVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Volume of fluid in the cells outside of the blood vessels. --> 
-                    <xs:element name="TotalBodyFluidVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/><!--<< @brief Total fluid volume inside the body. -->                   
-                    <xs:element name="OxygenConsumptionRate" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The oxygen consumed on the tissue level from aerobic metabolism-->
-                    <xs:element name="RespiratoryExchangeRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief The true ratio of carbon dioxide produced to oxygen consumed -->    
-                    <xs:element name="LiverInsulinSetPoint" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The insulin molarity in the liver vasculature after stabilization -->
-                    <xs:element name="LiverGlucagonSetPoint" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The glucagon concentration in the liver vasculature after stabilization -->
-                    <xs:element name="MuscleInsulinSetPoint" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The insulin molarity in the muscle vasculature after stabilization -->
-                    <xs:element name="MuscleGlucagonSetPoint" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The glucagon concentration in the muscle vasculature after stabilization -->
-                    <xs:element name="FatInsulinSetPoint" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The insulin molarity in the fat vasculature after stabilization -->
-                    <xs:element name="FatGlucagonSetPoint" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The glucagon concentration in the fat vasculature after stabilization -->
-                    <xs:element name="LiverGlycogen" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The glucose stored as glycogen in the liver tissue. -->
-                    <xs:element name="MuscleGlycogen" type="ScalarMassData" minOccurs="0" maxOccurs="1"/> <!--<< @brief The glucose stored as glycogen in the muscle tissue. -->
-                    <xs:element name="StoredProtein" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The amino acids stored as protein in the muscle tissue. -->
-                    <xs:element name="StoredFat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>  <!--<< @brief The triacylglycerol stored in the fat tissue. -->
-                </xs:sequence>	
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:element name="TissueSystem" type="TissueSystemData"/>
+  <xs:complexType name="TissueSystemData">
+    <xs:complexContent>
+      <xs:extension base="SystemData">
+        <xs:sequence>
+          <xs:element name="CarbonDioxideProductionRate" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The carbon dioxide generated on the tissue level from aerobic metabolism-->
+          <xs:element name="DehydrationFraction" type="Scalar0To1Data" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The fraction of body weight lost as fluid since initialization -->
+          <xs:element name="ExtracellularFluidVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Volume of fluid outside of cells AND outside of the blood vessels-->
+          <xs:element name="ExtravascularFluidVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total fluid volume outside of the blood vessels. -->
+          <xs:element name="IntracellularFluidPH" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The acidity or alkalinity of the extravascular intercellular fluid.-->
+          <xs:element name="IntracellularFluidVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Volume of fluid in the cells outside of the blood vessels. -->
+          <xs:element name="TotalBodyFluidVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Total fluid volume inside the body. -->
+          <xs:element name="OxygenConsumptionRate" type="ScalarVolumePerTimeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The oxygen consumed on the tissue level from aerobic metabolism-->
+          <xs:element name="RespiratoryExchangeRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The true ratio of carbon dioxide produced to oxygen consumed -->
+          <xs:element name="LiverInsulinSetPoint" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The insulin molarity in the liver vasculature after stabilization -->
+          <xs:element name="LiverGlucagonSetPoint" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The glucagon concentration in the liver vasculature after stabilization -->
+          <xs:element name="MuscleInsulinSetPoint" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The insulin molarity in the muscle vasculature after stabilization -->
+          <xs:element name="MuscleGlucagonSetPoint" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The glucagon concentration in the muscle vasculature after stabilization -->
+          <xs:element name="FatInsulinSetPoint" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The insulin molarity in the fat vasculature after stabilization -->
+          <xs:element name="FatGlucagonSetPoint" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The glucagon concentration in the fat vasculature after stabilization -->
+          <xs:element name="LiverGlycogen" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The glucose stored as glycogen in the liver tissue. -->
+          <xs:element name="MuscleGlycogen" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The glucose stored as glycogen in the muscle tissue. -->
+          <xs:element name="StoredProtein" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The amino acids stored as protein in the muscle tissue. -->
+          <xs:element name="StoredFat" type="ScalarMassData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The triacylglycerol stored in the fat tissue. -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TissueSystem" type="TissueSystemData"/>
 
 </xs:schema>
 
