@@ -20,7 +20,7 @@
     <Physicochemicals>
       <AcidDissociationConstant readOnly="false" value="4.24"/>
       <BindingProtein>Albumin</BindingProtein>
-      <BloodPlasmaRatio readOnly="false" value="1.15"/>
+      <BloodPlasmaRatio readOnly="false" value="1.0"/>
       <FractionUnboundInPlasma readOnly="false" value="0.25"/>
       <IonicState>WeakBase</IonicState>
       <LogP readOnly="false" value="3.05"/>

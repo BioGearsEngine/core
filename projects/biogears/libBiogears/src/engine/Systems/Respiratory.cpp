@@ -1832,7 +1832,7 @@ void Respiratory::CalculateVitalSigns()
       subQ->GetSubstance().GetEndTidalPressure().Set(subQ->GetPartialPressure());
     }
     GetEndTidalCarbonDioxideFraction().Set(m_data.GetSubstances().GetCO2().GetEndTidalFraction());
-    GetEndTidalCarbonDioxidePressure().Set(m_LeftAlveoliCO2->GetPartialPressure());
+    GetEndTidalCarbonDioxidePressure().Set(m_Lungs->GetSubstanceQuantity(m_data.GetSubstances().GetCO2())->GetPartialPressure());
 
     // Calculate Ventilationss
     GetTotalAlveolarVentilation().SetValue(AlveoliDeltaVolume_L * RespirationRate_Per_min, VolumePerTimeUnit::L_Per_min);
