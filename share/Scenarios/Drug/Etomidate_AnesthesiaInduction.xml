@@ -155,7 +155,7 @@
 		<AdminTime value="30" unit="s"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
-        <Time value="2" unit="hr"/>       
+        <Time value="6" unit="hr"/>       
     </Action>
 
 	
