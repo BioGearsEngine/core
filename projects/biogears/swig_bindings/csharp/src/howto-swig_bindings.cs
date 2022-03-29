@@ -13,244 +13,251 @@ namespace bio
   {
     static int g_event_count = 0;
 
-    public static string ToString( CDM.enumPatientEvent.value ev ) {
+    public static string ToString(CDM.enumPatientEvent.value ev)
+    {
 
-      switch (ev) {
-      case CDM.enumPatientEvent.value.AcuteLungInjury:
-        return "AcuteLungInjury";
+      switch (ev)
+      {
+        case CDM.enumPatientEvent.value.AcuteLungInjury:
+          return "AcuteLungInjury";
 
-      case CDM.enumPatientEvent.value.AcuteRespiratoryDistress:
-        return "AcuteRespiratoryDistress";
+        case CDM.enumPatientEvent.value.AcuteRespiratoryDistress:
+          return "AcuteRespiratoryDistress";
 
-      case CDM.enumPatientEvent.value.Antidiuresis:
-        return "Antidiuresis";
+        case CDM.enumPatientEvent.value.Antidiuresis:
+          return "Antidiuresis";
 
-      case CDM.enumPatientEvent.value.Asystole:
-        return "Asystoley";
+        case CDM.enumPatientEvent.value.Asystole:
+          return "Asystoley";
 
-      case CDM.enumPatientEvent.value.Bradycardia:
-        return "Bradycardia";
+        case CDM.enumPatientEvent.value.Bradycardia:
+          return "Bradycardia";
 
-      case CDM.enumPatientEvent.value.Bradypnea:
-        return "Bradypnea";
+        case CDM.enumPatientEvent.value.Bradypnea:
+          return "Bradypnea";
 
-      case CDM.enumPatientEvent.value.BrainOxygenDeficit:
-        return "BrainOxygenDeficit";
+        case CDM.enumPatientEvent.value.BrainOxygenDeficit:
+          return "BrainOxygenDeficit";
 
-      case CDM.enumPatientEvent.value.CardiacArrest:
-        return "CardiacArrest";
+        case CDM.enumPatientEvent.value.CardiacArrest:
+          return "CardiacArrest";
 
-      case CDM.enumPatientEvent.value.CardiogenicShock:
-        return "CardiogenicShock";
+        case CDM.enumPatientEvent.value.CardiogenicShock:
+          return "CardiogenicShock";
 
-      case CDM.enumPatientEvent.value.CriticalBrainOxygenDeficit:
-        return "CriticalBrainOxygenDeficit";
+        case CDM.enumPatientEvent.value.CriticalBrainOxygenDeficit:
+          return "CriticalBrainOxygenDeficit";
 
-      case CDM.enumPatientEvent.value.Dehydration:
-        return "Dehydration";
+        case CDM.enumPatientEvent.value.Dehydration:
+          return "Dehydration";
 
-      case CDM.enumPatientEvent.value.MildDiaphoresis:
-        return "MildDiaphoresis";
+        case CDM.enumPatientEvent.value.MildDiaphoresis:
+          return "MildDiaphoresis";
 
-      case CDM.enumPatientEvent.value.ModerateDiaphoresis:
-        return "ModerateDiaphoresis";
+        case CDM.enumPatientEvent.value.ModerateDiaphoresis:
+          return "ModerateDiaphoresis";
 
-      case CDM.enumPatientEvent.value.SevereDiaphoresis:
-        return "SevereDiaphoresis";
+        case CDM.enumPatientEvent.value.SevereDiaphoresis:
+          return "SevereDiaphoresis";
 
         case CDM.enumPatientEvent.value.Diuresis:
-        return "AcuteLungInjury";
+          return "AcuteLungInjury";
 
-      case CDM.enumPatientEvent.value.Fasciculation:
-        return "Fasciculation";
+        case CDM.enumPatientEvent.value.Fasciculation:
+          return "Fasciculation";
 
-      case CDM.enumPatientEvent.value.Fatigue:
-        return "Fatigue";
+        case CDM.enumPatientEvent.value.Fatigue:
+          return "Fatigue";
 
-      case CDM.enumPatientEvent.value.FlaccidParalysis:
-        return "FlaccidParalysis";
+        case CDM.enumPatientEvent.value.FlaccidParalysis:
+          return "FlaccidParalysis";
 
         case CDM.enumPatientEvent.value.FunctionalIncontinence:
-        return "FunctionalIncontinence";
+          return "FunctionalIncontinence";
 
-      case CDM.enumPatientEvent.value.HemolyticTransfusionReaction:
-        return "HemolyticTransfusionReaction";
+        case CDM.enumPatientEvent.value.HemolyticTransfusionReaction:
+          return "HemolyticTransfusionReaction";
 
-      case CDM.enumPatientEvent.value.Hypercapnia:
-        return "Hypercapnia";
+        case CDM.enumPatientEvent.value.Hypercapnia:
+          return "Hypercapnia";
 
-      case CDM.enumPatientEvent.value.Hyperglycemia:
-        return "Hyperglycemia";
+        case CDM.enumPatientEvent.value.Hyperglycemia:
+          return "Hyperglycemia";
 
-      case CDM.enumPatientEvent.value.MildHyperkalemia:
-        return "MildHyperkalemia";
+        case CDM.enumPatientEvent.value.MildHyperkalemia:
+          return "MildHyperkalemia";
 
-      case CDM.enumPatientEvent.value.SevereHyperkalemia:
-        return "SevereHyperkalemia";
+        case CDM.enumPatientEvent.value.SevereHyperkalemia:
+          return "SevereHyperkalemia";
 
-      case CDM.enumPatientEvent.value.MildHypernatremia:
-        return "MildHypernatremia";
+        case CDM.enumPatientEvent.value.MildHypernatremia:
+          return "MildHypernatremia";
 
-      case CDM.enumPatientEvent.value.SevereHypernatremia:
-        return "SevereHypernatremia";
+        case CDM.enumPatientEvent.value.SevereHypernatremia:
+          return "SevereHypernatremia";
 
-      case CDM.enumPatientEvent.value.Hyperthermia:
-        return "Hyperthermia";
+        case CDM.enumPatientEvent.value.Hyperthermia:
+          return "Hyperthermia";
 
-      case CDM.enumPatientEvent.value.Hypoglycemia:
-        return "Hypoglycemia";
+        case CDM.enumPatientEvent.value.Hypoglycemia:
+          return "Hypoglycemia";
 
-      case CDM.enumPatientEvent.value.HypoglycemicShock:
-        return "HypoglycemicShock";
+        case CDM.enumPatientEvent.value.HypoglycemicShock:
+          return "HypoglycemicShock";
 
-      case CDM.enumPatientEvent.value.HypoglycemicComa:
-        return "HypoglycemicComa";
+        case CDM.enumPatientEvent.value.HypoglycemicComa:
+          return "HypoglycemicComa";
 
-      case CDM.enumPatientEvent.value.Hypothermia:
-        return "Hypothermia";
+        case CDM.enumPatientEvent.value.Hypothermia:
+          return "Hypothermia";
 
-      case CDM.enumPatientEvent.value.MildHypokalemia:
-        return "MildHypokalemia";
+        case CDM.enumPatientEvent.value.MildHypokalemia:
+          return "MildHypokalemia";
 
-      case CDM.enumPatientEvent.value.SevereHypokalemia:
-        return "SevereHypokalemia";
+        case CDM.enumPatientEvent.value.SevereHypokalemia:
+          return "SevereHypokalemia";
 
-      case CDM.enumPatientEvent.value.MildHyponatremia:
-        return "MildHyponatremia";
+        case CDM.enumPatientEvent.value.MildHyponatremia:
+          return "MildHyponatremia";
 
-      case CDM.enumPatientEvent.value.SevereHyponatremia:
-        return "SevereHyponatremia";
+        case CDM.enumPatientEvent.value.SevereHyponatremia:
+          return "SevereHyponatremia";
 
-      case CDM.enumPatientEvent.value.Hypoxia:
-        return "Hypoxia";
+        case CDM.enumPatientEvent.value.Hypoxia:
+          return "Hypoxia";
 
-      case CDM.enumPatientEvent.value.HypovolemicShock:
-        return "HypovolemicShock";
+        case CDM.enumPatientEvent.value.HypovolemicShock:
+          return "HypovolemicShock";
 
-      case CDM.enumPatientEvent.value.IntracranialHypertension:
-        return "IntracranialHypertension";
+        case CDM.enumPatientEvent.value.IntracranialHypertension:
+          return "IntracranialHypertension";
 
-      case CDM.enumPatientEvent.value.IntracranialHypotension:
-        return "IntracranialHypotension";
+        case CDM.enumPatientEvent.value.IntracranialHypotension:
+          return "IntracranialHypotension";
 
-      case CDM.enumPatientEvent.value.IrreversibleState:
-        return "IrreversibleState";
+        case CDM.enumPatientEvent.value.IrreversibleState:
+          return "IrreversibleState";
 
-      case CDM.enumPatientEvent.value.Ketoacidosis:
-        return "Ketoacidosis";
+        case CDM.enumPatientEvent.value.Ketoacidosis:
+          return "Ketoacidosis";
 
-      case CDM.enumPatientEvent.value.LacticAcidosis:
-        return "LacticAcidosis";
+        case CDM.enumPatientEvent.value.LacticAcidosis:
+          return "LacticAcidosis";
 
-      case CDM.enumPatientEvent.value.LiverGlycogenDepleted:
-        return "LiverGlycogenDepleted";
+        case CDM.enumPatientEvent.value.LiverGlycogenDepleted:
+          return "LiverGlycogenDepleted";
 
-      case CDM.enumPatientEvent.value.MaximumPulmonaryVentilationRate:
-        return "MaximumPulmonaryVentilationRate";
+        case CDM.enumPatientEvent.value.MaximumPulmonaryVentilationRate:
+          return "MaximumPulmonaryVentilationRate";
 
-      case CDM.enumPatientEvent.value.MetabolicAcidosis:
-        return "MetabolicAcidosis";
+        case CDM.enumPatientEvent.value.MetabolicAcidosis:
+          return "MetabolicAcidosis";
 
-      case CDM.enumPatientEvent.value.MetabolicAlkalosis:
-        return "MetabolicAlkalosis";
+        case CDM.enumPatientEvent.value.MetabolicAlkalosis:
+          return "MetabolicAlkalosis";
 
-      case CDM.enumPatientEvent.value.MuscleCatabolism:
-        return "MuscleCatabolism";
+        case CDM.enumPatientEvent.value.MuscleCatabolism:
+          return "MuscleCatabolism";
 
-      case CDM.enumPatientEvent.value.MuscleGlycogenDepleted:
-        return "MuscleGlycogenDepleted";
+        case CDM.enumPatientEvent.value.MuscleGlycogenDepleted:
+          return "MuscleGlycogenDepleted";
 
-      case CDM.enumPatientEvent.value.MyocardiumOxygenDeficit:
-        return "MyocardiumOxygenDeficit";
+        case CDM.enumPatientEvent.value.MyocardiumOxygenDeficit:
+          return "MyocardiumOxygenDeficit";
 
-      case CDM.enumPatientEvent.value.Natriuresis:
-        return "Natriuresis";
+        case CDM.enumPatientEvent.value.Natriuresis:
+          return "Natriuresis";
 
-      case CDM.enumPatientEvent.value.Nausea:
-        return "Nausea";
+        case CDM.enumPatientEvent.value.Nausea:
+          return "Nausea";
 
         case CDM.enumPatientEvent.value.NutritionDepleted:
-        return "NutritionDepleted";
+          return "NutritionDepleted";
 
-      case CDM.enumPatientEvent.value.PulselessRhythm:
-        return "PulselessRhythm";
+        case CDM.enumPatientEvent.value.PulselessRhythm:
+          return "PulselessRhythm";
 
-      case CDM.enumPatientEvent.value.RenalHypoperfusion:
-        return "RenalHypoperfusion";
+        case CDM.enumPatientEvent.value.RenalHypoperfusion:
+          return "RenalHypoperfusion";
 
-      case CDM.enumPatientEvent.value.RespiratoryAcidosis:
-        return "RespiratoryAcidosis";
+        case CDM.enumPatientEvent.value.RespiratoryAcidosis:
+          return "RespiratoryAcidosis";
 
-      case CDM.enumPatientEvent.value.RespiratoryAlkalosis:
-        return "RespiratoryAlkalosis";
+        case CDM.enumPatientEvent.value.RespiratoryAlkalosis:
+          return "RespiratoryAlkalosis";
 
-      case CDM.enumPatientEvent.value.SevereAcuteRespiratoryDistress:
-        return "SevereAcuteRespiratoryDistress";
+        case CDM.enumPatientEvent.value.SevereAcuteRespiratoryDistress:
+          return "SevereAcuteRespiratoryDistress";
 
-      case CDM.enumPatientEvent.value.StartOfCardiacCycle:
-        return "AcuteLungInjury";
+        case CDM.enumPatientEvent.value.StartOfCardiacCycle:
+          return "AcuteLungInjury";
 
-      case CDM.enumPatientEvent.value.StartOfExhale:
-        return "StartOfExhale";
+        case CDM.enumPatientEvent.value.StartOfExhale:
+          return "StartOfExhale";
 
-      case CDM.enumPatientEvent.value.StartOfInhale:
-        return "StartOfInhale";
+        case CDM.enumPatientEvent.value.StartOfInhale:
+          return "StartOfInhale";
 
-      case CDM.enumPatientEvent.value.MildSecretions:
-        return "MildSecretions";
+        case CDM.enumPatientEvent.value.MildSecretions:
+          return "MildSecretions";
 
-      case CDM.enumPatientEvent.value.ModerateSecretions:
-        return "ModerateSecretions";
+        case CDM.enumPatientEvent.value.ModerateSecretions:
+          return "ModerateSecretions";
 
-      case CDM.enumPatientEvent.value.SevereSecretions:
-        return "SevereSecretions";
+        case CDM.enumPatientEvent.value.SevereSecretions:
+          return "SevereSecretions";
 
         case CDM.enumPatientEvent.value.Seizures:
-        return "Seizures";
+          return "Seizures";
 
-      case CDM.enumPatientEvent.value.SevereSepsis:
-        return "SevereSepsis";
+        case CDM.enumPatientEvent.value.SevereSepsis:
+          return "SevereSepsis";
 
-      case CDM.enumPatientEvent.value.Tachycardia:
-        return "Tachycardia";
+        case CDM.enumPatientEvent.value.Tachycardia:
+          return "Tachycardia";
 
-      case CDM.enumPatientEvent.value.Tachypnea:
-        return "Tachypnea";
+        case CDM.enumPatientEvent.value.Tachypnea:
+          return "Tachypnea";
 
-      case CDM.enumPatientEvent.value.MildWeakness:
-        return "MildWeakness";
+        case CDM.enumPatientEvent.value.MildWeakness:
+          return "MildWeakness";
 
-      case CDM.enumPatientEvent.value.ModerateWeakness:
-        return "ModerateWeakness";
+        case CDM.enumPatientEvent.value.ModerateWeakness:
+          return "ModerateWeakness";
 
-      case CDM.enumPatientEvent.value.Vomiting:
-        return "Vomiting";
+        case CDM.enumPatientEvent.value.Vomiting:
+          return "Vomiting";
 
         default:
-        return "";
+          return "";
 
       }
 
     }
 
-    public static string ToString( CDM.enumAnesthesiaMachineEvent.value ev ) {
-      switch (ev) {
-      case CDM.enumAnesthesiaMachineEvent.value.OxygenBottle1Exhausted:
-        return "OxygenBottle1Exhausted";
-      case CDM.enumAnesthesiaMachineEvent.value.OxygenBottle2Exhausted:
-        return "OxygenBottle2Exhausted";
-      case CDM.enumAnesthesiaMachineEvent.value.ReliefValveActive:
-        return "ReliefValveActive";
-      default:
-        return "";
+    public static string ToString(CDM.enumAnesthesiaMachineEvent.value ev)
+    {
+      switch (ev)
+      {
+        case CDM.enumAnesthesiaMachineEvent.value.OxygenBottle1Exhausted:
+          return "OxygenBottle1Exhausted";
+        case CDM.enumAnesthesiaMachineEvent.value.OxygenBottle2Exhausted:
+          return "OxygenBottle2Exhausted";
+        case CDM.enumAnesthesiaMachineEvent.value.ReliefValveActive:
+          return "ReliefValveActive";
+        default:
+          return "";
       }
     }
 
-    public BioGearsEventHandler() : base() {
+    public BioGearsEventHandler() : base()
+    {
     }
 
-    public override void HandlePatientEvent( CDM.enumPatientEvent.value type, bool active, biogears.SEScalarTime time ) {
-      if (g_event_count++ % 31 != 0) {
+    public override void HandlePatientEvent(CDM.enumPatientEvent.value type, bool active, biogears.SEScalarTime time)
+    {
+      if (g_event_count++ % 31 != 0)
+      {
         return;
       }
 
@@ -266,16 +273,22 @@ namespace bio
 
 
       string state = (active) ? "(On)" : "(Off)";
-      if (ev.Length < marquee_1.Length) {
+      if (ev.Length < marquee_1.Length)
+      {
         marquee_1.Remove((marquee_1.Length / 2) - (ev.Length / 2), ev.Length);
         marquee_1.Insert((marquee_1.Length / 2), ev);
-      } else {
+      }
+      else
+      {
         marquee_1 = new StringBuilder(ev);
       }
-      if (state.Length < marquee_2.Length) {
+      if (state.Length < marquee_2.Length)
+      {
         marquee_2.Remove((marquee_2.Length / 2) - (state.Length / 2), state.Length);
         marquee_2.Insert((marquee_2.Length / 2), state);
-      } else {
+      }
+      else
+      {
         marquee_1 = new StringBuilder(state);
       }
       Console.WriteLine(prefix + marquee_1 + end);
@@ -285,14 +298,17 @@ namespace bio
       Console.WriteLine("\n");
     }
 
-    public override void HandlePatientEvent( CDM.enumPatientEvent.value type, bool active ) {
+    public override void HandlePatientEvent(CDM.enumPatientEvent.value type, bool active)
+    {
       var eventTime = new SEScalarTime();
       eventTime.SetValue(0, TimeUnit.s);
       HandlePatientEvent(type, active, eventTime);
     }
 
-    public override void HandleAnesthesiaMachineEvent( CDM.enumAnesthesiaMachineEvent.value type, bool active, biogears.SEScalarTime time ) {
-      if (g_event_count++ % 31 != 0) {
+    public override void HandleAnesthesiaMachineEvent(CDM.enumAnesthesiaMachineEvent.value type, bool active, biogears.SEScalarTime time)
+    {
+      if (g_event_count++ % 31 != 0)
+      {
         return;
       }
 
@@ -304,24 +320,30 @@ namespace bio
       string ev = ToString(type);
       var marquee_1 = new StringBuilder(@"                        |");
       var marquee_2 = new StringBuilder(@"                        /");
-      string prefix_1 =  @"|";
-      string prefix_2 =  @"\";
+      string prefix_1 = @"|";
+      string prefix_2 = @"\";
       string end_1 = "|";
       string end_2 = "/";
 
 
       string state = (active) ? "(On)" : "(Off)";
-      if (ev.Length < marquee_1.Length) {
+      if (ev.Length < marquee_1.Length)
+      {
         marquee_1.Remove((marquee_1.Length / 2) - (ev.Length / 2), ev.Length);
         marquee_1.Insert((marquee_1.Length / 2) - (ev.Length / 2), ev);
-      } else {
+      }
+      else
+      {
         marquee_1 = new StringBuilder(ev);
       }
-      if (state.Length < marquee_2.Length) {
+      if (state.Length < marquee_2.Length)
+      {
         marquee_2.Remove((marquee_2.Length / 2) - (state.Length / 2), state.Length);
         marquee_2.Insert((marquee_2.Length / 2) - (state.Length / 2), state);
-      } else {
-        marquee_1= new StringBuilder(state) ;
+      }
+      else
+      {
+        marquee_1 = new StringBuilder(state);
       }
       Console.WriteLine(prefix_1 + marquee_1 + end_1);
       Console.WriteLine(prefix_2 + marquee_2 + end_2);
@@ -331,7 +353,8 @@ namespace bio
     }
 
 
-    public override void HandleAnesthesiaMachineEvent( CDM.enumAnesthesiaMachineEvent.value type, bool active ) {
+    public override void HandleAnesthesiaMachineEvent(CDM.enumAnesthesiaMachineEvent.value type, bool active)
+    {
       var eventTime = new SEScalarTime();
       eventTime.SetValue(0, TimeUnit.s);
       HandleAnesthesiaMachineEvent(type, active, eventTime);
@@ -341,6 +364,26 @@ namespace bio
 
   static class csharp_test
   {
+
+    // These really should be member variables.
+    // Idealy they should have a lifetime no longer then the DataTrack
+    public static biogears.SEDataRequestScalar HeartRate;
+    public static biogears.SEDataRequestScalar SystolicArterialPressure;
+    public static biogears.SEDataRequestScalar DiastolicArterialPressure;
+    public static biogears.SEDataRequestScalar RespirationRate;
+    public static biogears.SEDataRequestScalar TidalVolume;
+    public static biogears.SEDataRequestScalar TotalLungVolume;
+    public static biogears.SEDataRequestScalar OxygenSaturation;
+    public static biogears.SEDataRequestScalar Urine;
+    public static biogears.SEDataRequestScalar PartialPressure;
+    public static biogears.SEDataRequestScalar ecgData;
+    public static biogears.SEDataRequestScalar CO2PartialPressure;
+
+    //Physiology API based queries
+    public static biogears.SEScalarVolumePerTime Urine2;
+    public static biogears.SEScalar PainLevel;
+
+    public static biogears.Logger logger;
     //!
     //! Very Terse testing of the SWIG_Bindings
     //!
@@ -351,10 +394,14 @@ namespace bio
     //!   4. Apply Actions to an exsiting BioGearsEngine
     //!   5. Create and Apply all BioGears Actions
 
-    static void Main( string[] args ) {
 
 
-      var logger = new Logger("");
+    static void Main(string[] args)
+    {
+
+
+      //Create a Log File 
+      logger = new Logger("unittest_csharp.log");
       logger.Warning("Perfect Now lets Try to compliate things with two modules!");
 
       var percent = new SEScalar0To1();
@@ -367,62 +414,71 @@ namespace bio
       logger.Info(String.Format("{0}", time.GetValue()));
 
 
+      //Initialize an Engine by Patient Requiring Stabilization
       var engine = new BioGearsEngine(logger);
       engine.InitializeEngine("StandardMale.xml");
+      engine.GetEngineTrack().GetDataRequestManager().SetResultsFilename("howto_csharp_swig.csv");
       engine.AdvanceModelTime();
       engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
 
       var eh = new BioGearsEventHandler();
       engine.SetEventHandler(eh);
 
-      var acuteStress = new SEAcuteStress();
-      acuteStress.GetSeverity().SetValue(.75);
+      //!
+      //! Legacy Demo of Manually Invoking Burn Scenario.  
+      //! Valid code but unneeded by Action Validation Code Below 
+      //! And it clutters the log a bit
 
-      logger.Warning(String.Format("AcuteStress @ Severity {0}", acuteStress.GetSeverity().GetValue()));
-      engine.ProcessAction(acuteStress);
 
-      engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
+      //!
+      //! Create Acute Stress @ .75
+      //! Apply a Burn of 50% TBSA
+      //! Treat Burn with Fluid Infusion of Albumin and Saline
+      
 
-      var severity = acuteStress.GetSeverity();
-      severity.SetValue(0.5);
+      //var acuteStress = new SEAcuteStress();
+      //acuteStress.GetSeverity().SetValue(.75);
 
-      engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
+      //logger.Warning(String.Format("AcuteStress @ Severity {0}", acuteStress.GetSeverity().GetValue()));
+      //engine.ProcessAction(acuteStress);
 
-      SEBurnWound m_burnWound = new SEBurnWound();
-      m_burnWound.GetTotalBodySurfaceArea().SetValue(50.0 / 100.0);
-      engine.ProcessAction(m_burnWound);
-      engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
+      //engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
 
-      var m_substances = engine.GetSubstanceManager();
-      var m_albumine = m_substances.GetSubstance("Albumin");
-      var m_saline = m_substances.GetCompound("Saline");
+      //var severity = acuteStress.GetSeverity();
+      //severity.SetValue(0.5);
 
-      try {
-        var m_SubstanceBolus = new SESubstanceBolus(m_albumine);
-        var m_SubstanceInfusion = new SESubstanceInfusion(m_albumine);
-        var m_SubstanceNasalDose = new SESubstanceNasalDose(m_albumine);
-        var m_SubstanceOralDose = new SESubstanceOralDose(m_albumine);
-      } catch (global::System.Exception /*ex*/) {
-        logger.Error("Definition of Albumin is missing.  Unable to test Substance Actions");
-      }
+      //engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
 
-      try {
-        var m_SubstanceCompoundInfusion = new SESubstanceCompoundInfusion(m_saline);
-      } catch (global::System.Exception /*ex*/) {
-        logger.Error("Definition of Saline is missing.  Unable to test SubstanceCompound  Actions");
-      }
+      ////Applying Burn Wound will increase Patient Pain Until 
+      //SEBurnWound m_burnWound = new SEBurnWound();
+      //m_burnWound.GetTotalBodySurfaceArea().SetValue(50.0 / 100.0);
+      //engine.ProcessAction(m_burnWound);
+      //engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
 
-      var m_TensionPneumothorax = new SETensionPneumothorax();
-      var m_Tourniquet = new SETourniquet();
-      var m_Urinate = new SEUrinate();
-      var m_UseInhaler = new SEUseInhaler();
+      //var m_substances = engine.GetSubstanceManager();
+      //var m_albumine = m_substances.GetSubstance("Albumin");
+      //var m_saline = m_substances.GetCompound("Saline");
 
-      var patient = engine.GetPatient();
-      bool isTacycardia = patient.IsEventActive(CDM.enumPatientEvent.value.Tachycardia);
-      bool isAlive = patient.IsEventActive(CDM.enumPatientEvent.value.IrreversibleState);
-      bool isKetoacidosis = patient.IsEventActive(CDM.enumPatientEvent.value.Ketoacidosis);
+      //try
+      //{
+      //  var m_SubstanceBolus = new SESubstanceBolus(m_albumine);
+      //  var m_SubstanceInfusion = new SESubstanceInfusion(m_albumine);
+      //  var m_SubstanceNasalDose = new SESubstanceNasalDose(m_albumine);
+      //  var m_SubstanceOralDose = new SESubstanceOralDose(m_albumine);
+      //}
+      //catch (global::System.Exception /*ex*/)
+      //{
+      //  logger.Error("Definition of Albumin is missing.  Unable to test Substance Actions");
+      //}
 
-      logger.Warning(String.Format("AcuteStress @ Severity {0}", acuteStress.GetSeverity().GetValue()));
+      //try
+      //{
+      //  var m_SubstanceCompoundInfusion = new SESubstanceCompoundInfusion(m_saline);
+      //}
+      //catch (global::System.Exception /*ex*/)
+      //{
+      //  logger.Error("Definition of Saline is missing.  Unable to test SubstanceCompound  Actions");
+      //}
 
       //!
       //! Very Quick Example of how to use Data Tracks to Poll data
@@ -446,28 +502,29 @@ namespace bio
       var MeanUrineRequest = engine.GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest(); MeanUrineRequest.Set("MeanUrineOutput", VolumePerTimeUnit.mL_Per_hr);
       var BrainVasculatureRequest = engine.GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest(); BrainVasculatureRequest.Set("BrainVasculature", oxygen, "PartialPressure", PressureUnit.mmHg);
       var TracheaPartialPressure = engine.GetEngineTrack().GetDataRequestManager().CreateGasCompartmentDataRequest(); TracheaPartialPressure.Set("Trachea", carbonDioxide, "PartialPressure", PressureUnit.mmHg);
-  
+
 
       engine.GetEngineTrack().SetupRequests();
 
-      var HeartRate = engine.GetEngineTrack().GetScalar(HeartRateRequest);
-      var SystolicArterialPressure = engine.GetEngineTrack().GetScalar(HeartRateRequest);
-      var DiastolicArterialPressure = engine.GetEngineTrack().GetScalar(DiastolicArterialPressureRequest);
-      var RespirationRate = engine.GetEngineTrack().GetScalar(RespirationRateRequest);
-      var TidalVolume = engine.GetEngineTrack().GetScalar(TidalVolumeRequest);
-      var TotalLungVolume = engine.GetEngineTrack().GetScalar(TotalLungVolumeRequest);
-      var OxygenSaturation = engine.GetEngineTrack().GetScalar(OxygenSaturationRequest);
-      var PartialPressure = engine.GetEngineTrack().GetScalar(BrainVasculatureRequest);
-      var CO2PartialPressure = engine.GetEngineTrack().GetScalar(TracheaPartialPressure);
-      var Urine = engine.GetEngineTrack().GetScalar(MeanUrineRequest);
-      var ecgData = engine.GetEngineTrack().GetScalar(ecg);
+      HeartRate = engine.GetEngineTrack().GetScalar(HeartRateRequest);
+      SystolicArterialPressure = engine.GetEngineTrack().GetScalar(HeartRateRequest);
+      DiastolicArterialPressure = engine.GetEngineTrack().GetScalar(DiastolicArterialPressureRequest);
+      RespirationRate = engine.GetEngineTrack().GetScalar(RespirationRateRequest);
+      TidalVolume = engine.GetEngineTrack().GetScalar(TidalVolumeRequest);
+      TotalLungVolume = engine.GetEngineTrack().GetScalar(TotalLungVolumeRequest);
+      OxygenSaturation = engine.GetEngineTrack().GetScalar(OxygenSaturationRequest);
+      PartialPressure = engine.GetEngineTrack().GetScalar(BrainVasculatureRequest);
+      CO2PartialPressure = engine.GetEngineTrack().GetScalar(TracheaPartialPressure);
+      Urine = engine.GetEngineTrack().GetScalar(MeanUrineRequest);
+      ecgData = engine.GetEngineTrack().GetScalar(ecg);
 
-      
+      PainLevel = engine.GetNervousSystem().GetPainVisualAnalogueScale();
+      Urine2 = engine.GetRenalSystem().GetMeanUrineOutput();
       //!
       //!  Testing format outputs of using DataRequest
       //!  UrineOutput is stored in ml/Day in biogears but we want it in ml/hr
       logger.Info(Urine.ToString());
-      logger.Info(String.Format("Urine Value {0} {1}", Urine.GetValue(MeanUrineRequest.GetUnit().ToString()), MeanUrineRequest.GetUnit().ToString()));
+      logger.Info(String.Format("Urine Value {0} {1}", Urine2.GetValue(VolumePerTimeUnit.mL_Per_hr), Urine2.ToString()));
       logger.Info(String.Format("Urine Value {0} {1}", Urine.GetValue(), Urine.GetUnit().ToString()));
       logger.Info(String.Format("BrainVasculature oxygen partial pressure Value {0} {1}", PartialPressure.GetValue(), PartialPressure.GetUnit().ToString()));
       logger.Info(String.Format("BrainVasculature oxygen partial pressure Value {0} {1}", PartialPressure.GetValue("mmHg"), PartialPressure.GetUnit().ToString()));
@@ -476,20 +533,6 @@ namespace bio
       apply_acute_respiratory_distress(engine);
 
       engine.GetEngineTrack().PullData();
-      logger.Info(HeartRate.ToString());
-      logger.Info(SystolicArterialPressure.ToString());
-      logger.Info(DiastolicArterialPressure.ToString());
-      logger.Info(RespirationRate.ToString());
-      logger.Info(TidalVolume.ToString());
-      logger.Info(TotalLungVolume.ToString());
-      logger.Info(OxygenSaturation.ToString());
-      logger.Info(PartialPressure.ToString());
-      logger.Info(CO2PartialPressure.ToString());
-      logger.Info(Urine.ToString());
-      logger.Info("ecg: \n");
-      logger.Info(ecgData.ToString());
-
-
 
       //!
       //!  Just to test most actions we will apply and unapply every action in 2 second sperts
@@ -513,14 +556,8 @@ namespace bio
       apply_cardiac_arrest(engine);
       engine.GetEngineTrack().PullData();
 
-      logger.Info(HeartRate.ToString());
-      logger.Info(SystolicArterialPressure.ToString());
-      logger.Info(DiastolicArterialPressure.ToString());
-      logger.Info(RespirationRate.ToString());
-      logger.Info(TidalVolume.ToString());
-      logger.Info(TotalLungVolume.ToString());
-      logger.Info(OxygenSaturation.ToString());
-
+      apply_radiation_absorbed_dose(engine);
+      engine.GetEngineTrack().PullData();
       apply_chest_compression(engine);
       engine.GetEngineTrack().PullData();
       apply_chest_compression_force(engine);
@@ -562,26 +599,10 @@ namespace bio
       apply_pericadial_effusion(engine);
       engine.GetEngineTrack().PullData();
 
-      logger.Info(HeartRate.ToString());
-      logger.Info(SystolicArterialPressure.ToString());
-      logger.Info(DiastolicArterialPressure.ToString());
-      logger.Info(RespirationRate.ToString());
-      logger.Info(TidalVolume.ToString());
-      logger.Info(TotalLungVolume.ToString());
-      logger.Info(OxygenSaturation.ToString());
-
       apply_pulmonary_shunt(engine);
       engine.GetEngineTrack().PullData();
       apply_sleep(engine);
 
-      engine.GetEngineTrack().PullData();
-      logger.Info(HeartRate.ToString());
-      logger.Info(SystolicArterialPressure.ToString());
-      logger.Info(DiastolicArterialPressure.ToString());
-      logger.Info(RespirationRate.ToString());
-      logger.Info(TidalVolume.ToString());
-      logger.Info(TotalLungVolume.ToString());
-      logger.Info(OxygenSaturation.ToString());
 
       var AMConfig = new SEAnesthesiaMachineConfiguration(engine.GetSubstanceManager());
       var config = AMConfig.GetConfiguration();
@@ -654,16 +675,47 @@ namespace bio
     //! If you try to process some actions with out setting the values to zero BioGears will segfault
     //! Our 8.0 Roadmap as we refactor our SE layer to hide implementation and expose Clone and Assignment operators
 
-    public static void apply_and_cancel_patient_action( PhysiologyEngine engine, SEPatientAction on, SEPatientAction off ) {
+    public static void apply_and_cancel_patient_action(PhysiologyEngine engine, SEPatientAction on, SEPatientAction off)
+    {
       engine.ProcessAction(on);
       engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
-      if (off.IsValid()) {
+      engine.GetEngineTrack().PullData();
+      logger.Info("\n\t\tHeartRate: " + HeartRate.ToString()
+                  + "\n\t\tSystolicArterialPressure: " + SystolicArterialPressure.ToString()
+                  + "\n\t\tDiastolicArterialPressure: " + DiastolicArterialPressure.ToString()
+                  + "\n\t\tRespirationRate: " + RespirationRate.ToString()
+                  + "\n\t\tTidalVolume: " + TidalVolume.ToString()
+                  + "\n\t\tTotalLungVolume: " + TotalLungVolume.ToString()
+                  + "\n\t\tOxygenSaturation: " + OxygenSaturation.ToString()
+                  + "\n\t\tPartialPressure: " + PartialPressure.ToString()
+                  + "\n\t\tCO2PartialPressure: " + CO2PartialPressure.ToString()
+                  + "\n\t\tAPI MeanUrineOutput: " + Urine2.GetValue().ToString()
+                  + "\n\t\tDataTrack MeanUrineOuput: " + Urine.ToString()
+                  + "\n\t\tPainLevel: " + PainLevel.ToString());
+      if (off.IsValid())
+      {
         engine.ProcessAction(off);
         engine.AdvanceModelTimeBy(2.0, TimeUnit.s);
+        engine.GetEngineTrack().PullData();
+        logger.Info("\n\t\tHeartRate: " + HeartRate.ToString()
+                    + "\n\t\tSystolicArterialPressure: " + SystolicArterialPressure.ToString()
+                    + "\n\t\tDiastolicArterialPressure: " + DiastolicArterialPressure.ToString()
+                    + "\n\t\tRespirationRate: " + RespirationRate.ToString()
+                    + "\n\t\tTidalVolume: " + TidalVolume.ToString()
+                    + "\n\t\tTotalLungVolume: " + TotalLungVolume.ToString()
+                    + "\n\t\tOxygenSaturation: " + OxygenSaturation.ToString()
+                    + "\n\t\tPartialPressure: " + PartialPressure.ToString()
+                    + "\n\t\tCO2PartialPressure: " + CO2PartialPressure.ToString()
+                    + "\n\t\tAPI MeanUrineOutput: " + Urine2.GetValue().ToString()
+                    + "\n\t\tDataTrack MeanUrineOuput: " + Urine.ToString()
+                    + "\n\t\tPainLevel: " + PainLevel.ToString());
       }
 
+
+
     }
-    public static void apply_acute_respiratory_distress( BioGearsEngine engine ) {
+    public static void apply_acute_respiratory_distress(BioGearsEngine engine)
+    {
       var on = new SEAcuteRespiratoryDistress();
       var off = new SEAcuteRespiratoryDistress();
       on.GetSeverity().SetValue(0.5);
@@ -671,7 +723,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_acute_stress( BioGearsEngine engine ) {
+    public static void apply_acute_stress(BioGearsEngine engine)
+    {
       var on = new SEAcuteStress();
       var off = new SEAcuteStress();
       on.GetSeverity().SetValue(0.5);
@@ -679,7 +732,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_airway_obstruction( BioGearsEngine engine ) {
+    public static void apply_airway_obstruction(BioGearsEngine engine)
+    {
       var on = new SEAirwayObstruction();
       var off = new SEAirwayObstruction();
       on.GetSeverity().SetValue(0.5);
@@ -687,7 +741,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_apnea( BioGearsEngine engine ) {
+    public static void apply_apnea(BioGearsEngine engine)
+    {
       var on = new SEApnea();
       var off = new SEApnea();
       on.GetSeverity().SetValue(0.5);
@@ -695,7 +750,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_asthma_attack( BioGearsEngine engine ) {
+    public static void apply_asthma_attack(BioGearsEngine engine)
+    {
       var on = new SEAsthmaAttack();
       var off = new SEAsthmaAttack();
       on.GetSeverity().SetValue(0.5);
@@ -703,7 +759,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_brain_injury( BioGearsEngine engine ) {
+    public static void apply_brain_injury(BioGearsEngine engine)
+    {
       var on = new SEBrainInjury();
       var off = new SEBrainInjury();
       on.GetSeverity().SetValue(0.5);
@@ -713,7 +770,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_breath_hold( BioGearsEngine engine ) {
+    public static void apply_breath_hold(BioGearsEngine engine)
+    {
       var on = new SEConsciousRespiration();
       var off = new SEConsciousRespiration();
       on.AddBreathHold().GetPeriod().SetValue(2, TimeUnit.s);
@@ -722,7 +780,8 @@ namespace bio
       apply_and_cancel_patient_action(engine, on, off);
     }
 
-    public static void apply_bronchoconstriction( BioGearsEngine engine ) {
+    public static void apply_bronchoconstriction(BioGearsEngine engine)
+    {
       var on = new SEBronchoconstriction();
       var off = new SEBronchoconstriction();
       on.GetSeverity().SetValue(0.5);
@@ -730,11 +789,12 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_burn_wound( BioGearsEngine engine ) {
+    public static void apply_burn_wound(BioGearsEngine engine)
+    {
       var on = new SEBurnWound();
       var off = new SEBurnWound();
       on.SetCompartment("Chest");
-      on.SetInflammation(false);
+      on.SetInflammation(true);
       on.GetTotalBodySurfaceArea().SetValue(0.5);
 
       //Removing a BurnWound is a really bad idea
@@ -745,7 +805,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_cardiac_arrest( BioGearsEngine engine ) {
+    public static void apply_cardiac_arrest(BioGearsEngine engine)
+    {
       var on = new SECardiacArrest();
       var off = new SECardiacArrest();
       on.SetActive(true);
@@ -753,13 +814,15 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_chest_compression( BioGearsEngine engine ) {
+    public static void apply_chest_compression(BioGearsEngine engine)
+    {
       var on = new SEChestCompression();
       var off = new SEChestCompression();
       //Nothing to do
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_chest_compression_force( BioGearsEngine engine ) {
+    public static void apply_chest_compression_force(BioGearsEngine engine)
+    {
       var on = new SEChestCompressionForce();
       var off = new SEChestCompressionForce();
       on.GetForce().SetValue(0.5, ForceUnit.N);
@@ -767,7 +830,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_chest_compression_force_scale( BioGearsEngine engine ) {
+    public static void apply_chest_compression_force_scale(BioGearsEngine engine)
+    {
       var on = new SEChestCompressionForceScale();
       var off = new SEChestCompressionForceScale();
       on.GetForcePeriod().SetValue(0.5, TimeUnit.s);
@@ -777,7 +841,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_chest_occlusive_dressing( BioGearsEngine engine ) {
+    public static void apply_chest_occlusive_dressing(BioGearsEngine engine)
+    {
       var on = new SEChestOcclusiveDressing();
       var off = new SEChestOcclusiveDressing();
       on.SetSide(CDM.enumSide.value.Left);
@@ -788,7 +853,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_conscious_respiration( BioGearsEngine engine ) {
+    public static void apply_conscious_respiration(BioGearsEngine engine)
+    {
       var on = new SEConsciousRespiration();
       var off = new SEConsciousRespiration();
       var inhale_1 = on.AddForcedInhale();
@@ -806,7 +872,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_consume_nutrients( BioGearsEngine engine ) {
+    public static void apply_consume_nutrients(BioGearsEngine engine)
+    {
       var on = new SEConsumeNutrients();
       var off = new SEConsumeNutrients();
       on.GetNutrition().GetCalcium().SetValue(5, MassUnit.g);
@@ -818,14 +885,16 @@ namespace bio
       apply_and_cancel_patient_action(engine, on, off);
     }
 
-    public static void apply_exercise( BioGearsEngine engine ) {
+    public static void apply_exercise(BioGearsEngine engine)
+    {
       apply_cycling_exercise(engine);
       apply_generic_exercise(engine);
       apply_cycling_exercise(engine);
       apply_strength_exercise(engine);
     }
 
-    public static void apply_cycling_exercise( BioGearsEngine engine ) {
+    public static void apply_cycling_exercise(BioGearsEngine engine)
+    {
       var on = new SEExercise();
       var off = new SEExercise();
 
@@ -837,15 +906,19 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_generic_exercise( BioGearsEngine engine ) {
+    public static void apply_generic_exercise(BioGearsEngine engine)
+    {
       var on = new SEExercise();
       var off = new SEExercise();
 
       var generic = new SEExercise.SEGeneric();
       generic.DesiredWorkRate.SetValue(5, PowerUnit.W);
-      try {
+      try
+      {
         generic.Intensity.SetValue(0.8);
-      } catch (global::System.Exception /*ex*/) {
+      }
+      catch (global::System.Exception /*ex*/)
+      {
         engine.GetLogger().Error("Intensity is an SEScalar0To1 which throws a CDMException if the set value is greater then 1.0");
       }
 
@@ -853,7 +926,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_running_exercise( BioGearsEngine engine ) {
+    public static void apply_running_exercise(BioGearsEngine engine)
+    {
       var on = new SEExercise();
       var off = new SEExercise();
 
@@ -867,7 +941,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_strength_exercise( BioGearsEngine engine ) {
+    public static void apply_strength_exercise(BioGearsEngine engine)
+    {
       var on = new SEExercise();
       var off = new SEExercise();
 
@@ -880,7 +955,8 @@ namespace bio
       apply_and_cancel_patient_action(engine, on, off);
     }
 
-    public static void apply_hemorrhage( BioGearsEngine engine ) {
+    public static void apply_hemorrhage(BioGearsEngine engine)
+    {
       var on = new SEHemorrhage();
       var off = new SEHemorrhage();
       on.GetInitialRate().SetValue(0.5);
@@ -890,7 +966,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_infection( BioGearsEngine engine ) {
+    public static void apply_infection(BioGearsEngine engine)
+    {
       var on = new SEInfection();
       var off = new SEInfection();
       on.SetLocation("Liver");
@@ -902,7 +979,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_intubation( BioGearsEngine engine ) {
+    public static void apply_intubation(BioGearsEngine engine)
+    {
       var on = new SEIntubation();
       var off = new SEIntubation();
       on.SetIntubationType(CDM.enumIntubationType.value.Tracheal);
@@ -910,7 +988,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_mechanical_ventilation( BioGearsEngine engine ) {
+    public static void apply_mechanical_ventilation(BioGearsEngine engine)
+    {
       var oxygen = engine.GetSubstanceManager().GetSubstance("Oxygen");
 
       var on = new SEMechanicalVentilation();
@@ -929,7 +1008,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_needle_decompression( BioGearsEngine engine ) {
+    public static void apply_needle_decompression(BioGearsEngine engine)
+    {
       var on = new SENeedleDecompression();
       var off = new SENeedleDecompression();
       on.SetSide(CDM.enumSide.value.Left);
@@ -939,7 +1019,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_override( BioGearsEngine engine ) {
+    public static void apply_override(BioGearsEngine engine)
+    {
       var on = new SEOverride();
       var off = new SEOverride();
       on.SetOverrideState(CDM.enumOnOff.value.On);
@@ -949,7 +1030,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_pain_stimulus( BioGearsEngine engine ) {
+    public static void apply_pain_stimulus(BioGearsEngine engine)
+    {
       var on = new SEPainStimulus();
       var off = new SEPainStimulus();
       on.SetLocation("Neck");
@@ -959,7 +1041,8 @@ namespace bio
 
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_patient_assessment_request( BioGearsEngine engine ) {
+    public static void apply_patient_assessment_request(BioGearsEngine engine)
+    {
       var CompleteBloodCount = new SEPatientAssessmentRequest();
       var ComprehensiveMetabolicPanel = new SEPatientAssessmentRequest();
       var PulmonaryFunctionTest = new SEPatientAssessmentRequest();
@@ -993,7 +1076,8 @@ namespace bio
       engine.ProcessAction(Urinalysis);
       engine.AdvanceModelTimeBy(1, TimeUnit.s);
     }
-    public static void apply_pericadial_effusion( BioGearsEngine engine ) {
+    public static void apply_pericadial_effusion(BioGearsEngine engine)
+    {
       var on = new SEPericardialEffusion();
       var off = new SEPericardialEffusion();
       on.GetEffusionRate().SetValue(0.5, VolumePerTimeUnit.mL_Per_s);
@@ -1001,7 +1085,8 @@ namespace bio
       //1.0 milliliters per second
       apply_and_cancel_patient_action(engine, on, off);
     }
-    public static void apply_pulmonary_shunt( BioGearsEngine engine ) {
+    public static void apply_pulmonary_shunt(BioGearsEngine engine)
+    {
       var on = new SEPulmonaryShunt();
       var off = new SEPulmonaryShunt();
       on.GetFlowRateScale().SetValue(0.5);
@@ -1010,11 +1095,25 @@ namespace bio
       apply_and_cancel_patient_action(engine, on, off);
     }
 
-    public static void apply_sleep( BioGearsEngine engine ) {
+    public static void apply_sleep(BioGearsEngine engine)
+    {
       var on = new SESleep();
       var off = new SESleep();
       on.SetSleepState(CDM.enumOnOff.value.On);
       off.SetSleepState(CDM.enumOnOff.value.Off);
+
+      apply_and_cancel_patient_action(engine, on, off);
+    }
+
+    public static void apply_radiation_absorbed_dose(BioGearsEngine engine)
+    {
+      var on = new SERadiationAbsorbedDose();
+      var off = new SERadiationAbsorbedDose();
+      on.GetDose().SetValue(5.0, EnergyPerMassUnit.J_Per_kg);
+
+
+      //TODO: This might be usless. I need t evaulate the action to decide
+      off.GetDose().SetValue(0.0, EnergyPerMassUnit.J_Per_kg);
 
       apply_and_cancel_patient_action(engine, on, off);
     }
