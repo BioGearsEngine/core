@@ -450,19 +450,19 @@ void Drugs::AdministerSubstanceNasal()
     double absconst = 13.2;
     double degredation = 20.0;
     //Rate constants in 1/s
-    const double nasalk1 = transconst*(0.00000001736111); //translocation rate constant of unreleased substance from the anterior to the posterior section
-    const double nasalk2 = carrier*(1000000); // rate constant of release from drug carrier in anterior section
-    const double nasalk3 = transconst*(0.00000001736111); // translocation rate constant of released substance from the anterior to the posterior section
-    const double nasalk4 = absconst*(0.000173); // absorption rate constant in anterior section
-    const double nasalk5 = 0.000000011575; // translocation rate constant of unreleased substance from the posterior to the gastrointestinal section
-    const double nasalk6 = carrier*(1000000); // rate constant of release from drug carrier in posterior section
-    const double nasalk7 = transconst*(0.00000011575); // translocation rate constant of released substance from the posterior to the gastrointestinal section
-    const double nasalk8 = absconst*(0.0000260); // absorption rate constant in posterior section
-    const double nasalk9 = carrier*(1000000); // rate constant of release from drug carrier in gastrointestinal section
-    const double nasalk10 = absconst*(0.0000000027); // absorption rate constant in gastrointestinal section
-    const double nasalk11 = degredation*(0.0001); // rate constant of released drug degradation in anterior section
-    const double nasalk12 = degredation*(0.0001); // rate constant of released drug degradation in posterior section
-    const double nasalk13 = degredation*(0.00001); // rate constant of released drug degradation in gastrointestinal section
+    const double nasalk1 = 0.00001736111; //translocation rate constant of unreleased substance from the anterior to the posterior section
+    const double nasalk2 = 1000000; // rate constant of release from drug carrier in anterior section
+    const double nasalk3 = 0.000001736111; // translocation rate constant of released substance from the anterior to the posterior section
+    const double nasalk4 = 0.5*(0.000173); // absorption rate constant in anterior section
+    const double nasalk5 = 0.00011575; // translocation rate constant of unreleased substance from the posterior to the gastrointestinal section
+    const double nasalk6 = 1000000; // rate constant of release from drug carrier in posterior section
+    const double nasalk7 = 0.0011575; // translocation rate constant of released substance from the posterior to the gastrointestinal section
+    const double nasalk8 = 0.5*(0.0000260); // absorption rate constant in posterior section
+    const double nasalk9 = 1000000; // rate constant of release from drug carrier in gastrointestinal section
+    const double nasalk10 = 0.0000000027; // absorption rate constant in gastrointestinal section
+    const double nasalk11 = 0.0001; // rate constant of released drug degradation in anterior section
+    const double nasalk12 = 0.0001; // rate constant of released drug degradation in posterior section
+    const double nasalk13 = 0.00001; // rate constant of released drug degradation in gastrointestinal section
     const double nasalk14 = 0.000027777; // transit rate constant of unreleased drug through gastrointestinal section
     const double nasalk15 = 0.000027777; // transit rate constant of released drug through gastrointestinal section
 
