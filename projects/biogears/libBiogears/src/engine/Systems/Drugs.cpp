@@ -445,31 +445,54 @@ void Drugs::AdministerSubstanceNasal()
     }
 
     double newNasalDose_mg = nDose->GetDose().GetValue(MassUnit::mg);
-
+    double transconst = 1.0;
+    double carrier = 0.0000000001; //1.0;
+    double absconst = 12.2;
+    double degredation = 10.0;
     //Rate constants in 1/s
-    const double nasalk1 = 0.00001736111; //translocation rate constant of unreleased substance from the anterior to the posterior section
-    const double nasalk2 = 1000000; // rate constant of release from drug carrier in anterior section
-    const double nasalk3 = 0.000001736111; // translocation rate constant of released substance from the anterior to the posterior section
-    const double nasalk4 = 0.5*(0.000173); // absorption rate constant in anterior section
-    const double nasalk5 = 0.00011575; // translocation rate constant of unreleased substance from the posterior to the gastrointestinal section
-    const double nasalk6 = 1000000; // rate constant of release from drug carrier in posterior section
-    const double nasalk7 = 0.0011575; // translocation rate constant of released substance from the posterior to the gastrointestinal section
-    const double nasalk8 = 0.5*(0.0000260); // absorption rate constant in posterior section
-    const double nasalk9 = 1000000; // rate constant of release from drug carrier in gastrointestinal section
-    const double nasalk10 = 0.0000000027; // absorption rate constant in gastrointestinal section
-    const double nasalk11 = 0.0001; // rate constant of released drug degradation in anterior section
-    const double nasalk12 = 0.0001; // rate constant of released drug degradation in posterior section
-    const double nasalk13 = 0.00001; // rate constant of released drug degradation in gastrointestinal section
+    const double nasalk1 = transconst*(0.00000001736111); //translocation rate constant of unreleased substance from the anterior to the posterior section
+    const double nasalk2 = carrier*(1000000); // rate constant of release from drug carrier in anterior section
+    const double nasalk3 = transconst*(0.00000001736111); // translocation rate constant of released substance from the anterior to the posterior section
+    const double nasalk4 = absconst*(0.000173); // absorption rate constant in anterior section
+    const double nasalk5 = 0.000000011575; // translocation rate constant of unreleased substance from the posterior to the gastrointestinal section
+    const double nasalk6 = carrier*(1000000); // rate constant of release from drug carrier in posterior section
+    const double nasalk7 = transconst*(0.00000011575); // translocation rate constant of released substance from the posterior to the gastrointestinal section
+    const double nasalk8 = absconst*(0.0000260); // absorption rate constant in posterior section
+    const double nasalk9 = carrier*(1000000); // rate constant of release from drug carrier in gastrointestinal section
+    const double nasalk10 = absconst*(0.0000000027); // absorption rate constant in gastrointestinal section
+    const double nasalk11 = degredation*(0.0001); // rate constant of released drug degradation in anterior section
+    const double nasalk12 = degredation*(0.0001); // rate constant of released drug degradation in posterior section
+    const double nasalk13 = degredation*(0.00001); // rate constant of released drug degradation in gastrointestinal section
     const double nasalk14 = 0.000027777; // transit rate constant of unreleased drug through gastrointestinal section
     const double nasalk15 = 0.000027777; // transit rate constant of released drug through gastrointestinal section
+
+
+    ////Rate constants in 1/s
+    //const double nasalk1 = 1; //translocation rate constant of unreleased substance from the anterior to the posterior section
+    //const double nasalk2 = 1; // rate constant of release from drug carrier in anterior section
+    //const double nasalk3 = 1; // translocation rate constant of released substance from the anterior to the posterior section
+    //const double nasalk4 = 1; // absorption rate constant in anterior section
+    //const double nasalk5 = 1; // translocation rate constant of unreleased substance from the posterior to the gastrointestinal section
+    //const double nasalk6 = 1; // rate constant of release from drug carrier in posterior section
+    //const double nasalk7 = 1; // translocation rate constant of released substance from the posterior to the gastrointestinal section
+    //const double nasalk8 = 1; // absorption rate constant in posterior section
+    //const double nasalk9 = 1; // rate constant of release from drug carrier in gastrointestinal section
+    //const double nasalk10 = 1; // absorption rate constant in gastrointestinal section
+    //const double nasalk11 = 1; // rate constant of released drug degradation in anterior section
+    //const double nasalk12 = 1; // rate constant of released drug degradation in posterior section
+    //const double nasalk13 = 1; // rate constant of released drug degradation in gastrointestinal section
+    //const double nasalk14 =1; // transit rate constant of unreleased drug through gastrointestinal section
+    //const double nasalk15 = 1; // transit rate constant of released drug through gastrointestinal section
 
     //Initial Drug Distribution
     std::vector<double> unrelMass = nState->GetUnreleasedNasalMasses(MassUnit::mg);
     std::vector<double> relMass = nState->GetReleasedNasalMasses(MassUnit::mg);
 
     if (0.0 != nDose->GetDose().GetValue(MassUnit::mg)) {
-      relMass[0] += (0.6 * newNasalDose_mg); // initial amount of released drug in anterior section
-      relMass[1] += (0.4 * newNasalDose_mg); // initial amount of released drug in posterior section
+      relMass[0] += (0.0 * newNasalDose_mg); // initial amount of released drug in anterior section
+      relMass[1] += (0.0 * newNasalDose_mg); // initial amount of released drug in posterior section
+      unrelMass[0] += (0.6 * newNasalDose_mg); // initial amount of released drug in anterior section
+      unrelMass[1] += (0.4 * newNasalDose_mg); // initial amount of released drug in posterior section
     }
     double nasalAnteriorUnreleasedInitial_mg = unrelMass[0]; // initial amount of unreleased drug in anterior section
     double nasalAnteriorReleasedInitial_mg = relMass[0];
@@ -515,7 +538,7 @@ void Drugs::AdministerSubstanceNasal()
     unrelMass[2] += (dNasal_Gastro_Unreleased_Per_dt * m_dt_s);
     //Amounts of Released Drug - ODE style
     double dNasal_Anterior_Released_Per_dt = (nasalk2 * unrelMass[0]) - (nasalDelta * relMass[0]);
-    relMass[0] += (dNasal_Anterior_Released_Per_dt * m_dt_s);
+    relMass[0] += 1.0*(dNasal_Anterior_Released_Per_dt * m_dt_s);
     double dNasal_Posterior_Released_Per_dt = (nasalk6 * unrelMass[1]) + (nasalk3 * relMass[0]) - (nasalEpsilon * relMass[1]);
     relMass[1] += (dNasal_Posterior_Released_Per_dt * m_dt_s);
     double dNasal_Gastro_Released_Per_dt = (nasalk9 * unrelMass[2]) + (nasalk7 * relMass[1]) - (nasalOmega * relMass[2]);
