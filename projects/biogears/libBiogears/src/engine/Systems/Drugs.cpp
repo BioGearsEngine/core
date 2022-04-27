@@ -446,7 +446,7 @@ void Drugs::AdministerSubstanceNasal()
 
     double newNasalDose_mg = nDose->GetDose().GetValue(MassUnit::mg);
     double transconst = 1.0;
-    double carrier = 0.0000000001; //1.0;
+    double carrier = 2.0*(0.0000000001); //1.0;
     double absconst = 12.2;
     double degredation = 10.0;
     //Rate constants in 1/s
