@@ -446,9 +446,9 @@ void Drugs::AdministerSubstanceNasal()
 
     double newNasalDose_mg = nDose->GetDose().GetValue(MassUnit::mg);
     double transconst = 1.0;
-    double carrier = 2.0*(0.0000000001); //1.0;
-    double absconst = 12.2;
-    double degredation = 10.0;
+    double carrier = 1.8*(0.0000000001); //1.0;
+    double absconst = 13.2;
+    double degredation = 20.0;
     //Rate constants in 1/s
     const double nasalk1 = transconst*(0.00000001736111); //translocation rate constant of unreleased substance from the anterior to the posterior section
     const double nasalk2 = carrier*(1000000); // rate constant of release from drug carrier in anterior section
