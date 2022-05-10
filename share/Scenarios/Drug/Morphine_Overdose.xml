@@ -70,8 +70,8 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialBloodPH" Precision="2"/>
   
   
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"                  Substance="Morphine" Name="Concentration" Unit="ug/L" Precision="4"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"               Substance="Morphine" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"                  Substance="Morphine" Name="Concentration" Unit="ug/mL" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"               Substance="Morphine" Name="Concentration" Unit="ug/mL" Precision="4"/> 
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Morphine"                          Name="PlasmaConcentration"           Unit="ug/mL" Precision="9"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Morphine"                          Name="SystemicMassCleared"  Unit="ug"    Precision="2"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Morphine"                          Name="MassInBody"                    Unit="ug"    Precision="2"/>
@@ -90,7 +90,7 @@
 	</Action>
 	<Action xsi:type="SubstanceInfusionData">
 		<Substance>Morphine</Substance>
-		<Concentration value="1000" unit="ug/mL"/>
+		<Concentration value="1" unit="mg/mL"/>
 		<Rate value="8.2" unit="mL/min"/>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">

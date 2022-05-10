@@ -80,7 +80,7 @@
     </Bronchodilation>
     <CentralNervousModifier>
       <EMax readOnly="false" value="1"/>
-      <EC50 readOnly="false" unit="ug/L" value="3"/>
+      <EC50 readOnly="false" unit="ug/L" value="10"/>
     </CentralNervousModifier>
     <DiastolicPressureModifier>
       <EMax readOnly="false" value="-0.15"/>
@@ -115,7 +115,7 @@
       <EC50 readOnly="false" unit="ug/mL" value="0.075"/>
     </PupilSizeModifier>
     <RespirationRateModifier>
-      <EMax readOnly="false" value="-1"/>
+      <EMax readOnly="false" value="-0.9"/>
       <EC50 readOnly="false" unit="ug/mL" value="0.0075"/>
     </RespirationRateModifier>
     <Sedation>
