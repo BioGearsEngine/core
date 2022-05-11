@@ -61,6 +61,7 @@ constexpr char idPulmonaryVenousCarbonDioxidePressure[] = "PulmonaryVenousCarbon
 constexpr char idPulmonaryVenousOxygenPressure[] = "PulmonaryVenousOxygenPressure";
 constexpr char idVenousCarbonDioxidePressure[] = "VenousCarbonDioxidePressure";
 constexpr char idVenousOxygenPressure[] = "VenousOxygenPressure";
+constexpr char idViralLoad[] = "ViralLoad";
 constexpr char idInflammtoryRespone[] = "InflammatoryResponse";
 
 SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
@@ -105,6 +106,7 @@ SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   m_PulmonaryVenousOxygenPressure = nullptr;
   m_VenousCarbonDioxidePressure = nullptr;
   m_VenousOxygenPressure = nullptr;
+  m_ViralLoad = nullptr;
   m_InflammatoryResponse = nullptr;
 }
 //-------------------------------------------------------------------------------
@@ -156,6 +158,7 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_VenousOxygenPressure);
   SAFE_DELETE(m_ArterialCarbonDioxidePressure);
   SAFE_DELETE(m_VenousCarbonDioxidePressure);
+  SAFE_DELETE(m_ViralLoad);
   SAFE_DELETE(m_InflammatoryResponse);
 }
 //-------------------------------------------------------------------------------
@@ -273,6 +276,9 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
   }
   if (name == idVenousOxygenPressure) {
     return &GetVenousOxygenPressure();
+  }
+  if (name == idViralLoad) {
+    return &GetViralLoad();
   }
 
   //This applies to InflammationState values, as they are defined AcuteInflammatoryResponse-Pathogen, e.g.
@@ -401,6 +407,9 @@ bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
   if (in.VenousOxygenPressure().present()) {
     GetVenousOxygenPressure().Load(in.VenousOxygenPressure().get());
   }
+  if (in.ViralLoad().present()) {
+    GetViralLoad().Load(in.ViralLoad().get());
+  }
   if (in.InflammatoryResponse().present()) {
     GetInflammatoryResponse().Load(in.InflammatoryResponse().get());
   }
@@ -527,6 +536,9 @@ void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
   }
   if (m_VenousOxygenPressure != nullptr) {
     data.VenousOxygenPressure(std::unique_ptr<CDM::ScalarPressureData>(m_VenousOxygenPressure->Unload()));
+  }
+  if (m_ViralLoad != nullptr) {
+    data.ViralLoad(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_ViralLoad->Unload()));
   }
   if (m_InflammatoryResponse != nullptr) {
     data.InflammatoryResponse(std::unique_ptr<CDM::InflammatoryResponseData>(m_InflammatoryResponse->Unload()));
@@ -1101,6 +1113,28 @@ double SEBloodChemistrySystem::GetVolumeFractionNeutralPhospholipidInPlasma() co
 }
 //-------------------------------------------------------------------------------
 
+bool SEBloodChemistrySystem::HasViralLoad() const
+{
+  return m_ViralLoad == nullptr ? false : m_ViralLoad->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarAmountPerVolume& SEBloodChemistrySystem::GetViralLoad()
+{
+  if (m_ViralLoad == nullptr) {
+    m_ViralLoad = new SEScalarAmountPerVolume();
+  }
+  return *m_ViralLoad;
+}
+//-------------------------------------------------------------------------------
+double SEBloodChemistrySystem::GetViralLoad() const
+{
+  if (m_ViralLoad == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_ViralLoad->GetValue();
+}
+//-------------------------------------------------------------------------------
+
 bool SEBloodChemistrySystem::HasVolumeFractionNeutralLipidInPlasma() const
 {
   return m_VolumeFractionNeutralLipidInPlasma == nullptr ? false : m_VolumeFractionNeutralLipidInPlasma->IsValid();
@@ -1371,6 +1405,7 @@ Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idPulmonaryArterialOxygenPressure)
     .emplace_back(idPulmonaryVenousCarbonDioxidePressure)
     .emplace_back(idPulmonaryVenousOxygenPressure)
+    .emplace_back(idViralLoad)
     .emplace_back(idVenousCarbonDioxidePressure)
     .emplace_back(idVenousOxygenPressure)
     .emplace_back(GetInflammatoryResponse().GetPhysiologyRequestGraph());

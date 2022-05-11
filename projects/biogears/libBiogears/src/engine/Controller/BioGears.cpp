@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/patient/assessments/SEPsychomotorVigilanceTask.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
+#include <biogears/cdm/patient/assessments/SEProthrombinTime.h>
 #include <biogears/cdm/patient/assessments/SESequentialOrganFailureAssessment.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
@@ -1008,6 +1009,11 @@ bool BioGears::GetPatientAssessment(SEPatientAssessment& assessment)
   SEArterialBloodGasAnalysis* abga = dynamic_cast<SEArterialBloodGasAnalysis*>(&assessment);
   if (abga != nullptr) {
     return m_BloodChemistrySystem->CalculateArterialBloodGasAnalysis(*abga);
+  }
+
+  SEProthrombinTime* ptt = dynamic_cast<SEProthrombinTime*>(&assessment);
+  if (ptt != nullptr) {
+    return m_BloodChemistrySystem->CalculateProthrombinTime(*ptt);
   }
 
   SEPulmonaryFunctionTest* pft = dynamic_cast<SEPulmonaryFunctionTest*>(&assessment);

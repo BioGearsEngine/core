@@ -30,6 +30,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
 #include <biogears/cdm/patient/actions/SEEscharotomy.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
+#include <biogears/cdm/patient/actions/SEEbola.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SEIntubation.h>
@@ -272,6 +273,10 @@ public:
   void RemoveEscharotomy(const char* cmpt);
   void RemoveEscharotomy(const std::string& cmpt);
 
+  bool HasEbola() const;
+  SEEbola* GetEbola() const;
+  void RemoveEbola();
+
   bool HasExercise() const;
   SEExercise* GetExercise() const;
   void RemoveExercise();
@@ -399,6 +404,7 @@ protected:
   SEChestOcclusiveDressing* m_RightChestOcclusiveDressing;
   SEConsciousRespiration* m_ConsciousRespiration;
   SEConsumeNutrients* m_ConsumeNutrients;
+  SEEbola* m_Ebola;
   SEExercise* m_Exercise;
   SEInfection* m_Infection;
   SEIntubation* m_Intubation;

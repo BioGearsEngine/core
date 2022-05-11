@@ -24,6 +24,8 @@ namespace biogears {
 class SEArterialBloodGasAnalysis;
 class SECompleteBloodCount;
 class SEComprehensiveMetabolicPanel;
+class SEProthrombinTime;
+class SESubstance;
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
 class SEPatientActionCollection;
@@ -77,12 +79,14 @@ public:
   bool CalculateArterialBloodGasAnalysis(SEArterialBloodGasAnalysis& abga);
   bool CalculateCompleteBloodCount(SECompleteBloodCount& cbc);
   bool CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabolicPanel& cmp);
+  bool CalculateProthrombinTime(SEProthrombinTime& ptt);
   SEScalar& CalculateCoagulationSOFA();
   void CalculateHemolyticTransfusionReaction(bool rhMismatch = false);
 
 protected:
   void AcuteRadiationSyndrome();
   void CheckRadiationSymptoms();
+  void CheckViralSymptoms();
   void CheckBloodSubstanceLevels();
   void InflammatoryResponse();
   void ManageSIRS();		//SIRS = Systemic Inflammatory Response Syndrome
@@ -99,6 +103,9 @@ protected:
   // Patient
   SEPatient* m_Patient;
   SEPatientActionCollection* m_PatientActions;
+
+  //substances
+  SESubstance* m_Ondansetron;
 
   // Stateless member variable (Set in SetUp())
   double m_dt_s;
