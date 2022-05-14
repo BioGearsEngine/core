@@ -305,8 +305,8 @@ specific language governing permissions and limitations under the License.
         <xs:attribute name="Severity" type="enumInfectionSeverity" use="required"/>
       </xs:extension>
     </xs:complexContent>
-
   </xs:complexType>
+  
   <xs:complexType name="GenericExerciseData">
     <xs:complexContent>
       <xs:extension base="PatientActionData">
