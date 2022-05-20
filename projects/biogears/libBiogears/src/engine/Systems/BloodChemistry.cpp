@@ -575,7 +575,7 @@ void BloodChemistry::AcuteRadiationSyndrome()
   double rho3 = (Dm3_J_Per_Kg / (D3_J_Per_Kg - 1));
 
   // a single dose of 3-8 gy over one time step will break the model so we will administer the dose over a few hours to keep the dynamics
-  // we will assume the exposure is fairly high over a period of time, around 0.05 gy / min ( some of the highest exposures at chernobyl)
+  // we will assume the exposure is fairly high over a period of time, around 0.05 gy / min ( some of the middle exposures at chernobyl)
   /// \todo: make this configurable from the action
   const double radiationRate_Per_s = (0.05) / 60;
   double radiationRate_Per_dt = radiationRate_Per_s * m_dt_s;
