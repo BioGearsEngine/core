@@ -12,9 +12,9 @@
 	</InitialParameters>
     
   <DataRequests SamplesPerSecond="1">
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Fentanyl" Unit="ug/mL" Precision="9"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Name="Concentration" Substance="Fentanyl" Unit="ug/L" Precision="9"/>
     <DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="AreaUnderCurve" Unit="s g/L" Precision="6"/>
-  
+  	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalAlveolarVentilation"          Unit="L/min"       Precision="2"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="SystemicMassCleared" Unit="ug" Precision="2"/>	
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Fentanyl" Name="MassInBody" Unit="ug" Precision="2"/>
@@ -42,21 +42,18 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Fentanyl" Name="MassExcreted" Unit="ug" Precision="2"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Fentanyl" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
-
-	
-    <Action xsi:type="SubstanceInfusionData">
-		<Substance>Fentanyl</Substance>
-		<Concentration value="300" unit="ug/mL"/>
-		<Rate value="1.0" unit="mL/min"/>
+<!--
+[1]H. Stoeckel, J. Schüttler, H. Magnussen, and J. H. Hengstmann, “PLASMA FENTANYL CONCENTRATIONS AND THE OCCURRENCE OF RESPIRATORY DEPRESSION IN VOLUNTEERS,” British Journal of Anaesthesia, vol. 54, no. 10, pp. 1087–1095, Oct. 1982, doi: 10.1093/bja/54.10.1087.  
+-->
+    <Action xsi:type="SubstanceBolusData" AdminRoute="Intraarterial">
+        <Substance>Fentanyl</Substance>
+        <Concentration value="50" unit="ug/mL"/>
+        <Dose value="10" unit="mL"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="1.0" unit="min"/>       
     </Action>
-	<Action xsi:type="SubstanceInfusionData">
-		<Substance>Fentanyl</Substance>
-		<Concentration value="0" unit="ug/mL"/>
-		<Rate value="0" unit="mL/s"/>
-    </Action>
+
     <Action xsi:type="AdvanceTimeData">
         <Time value="4" unit="hr"/>       
     </Action>

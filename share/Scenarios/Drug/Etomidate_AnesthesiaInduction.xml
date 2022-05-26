@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Etomidate_AnesthesiaInduction</Name>
+    <Description>Administer loading dose of Etomidate for anesthesia induction </Description>
+    <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
+    
+	<!-- Base system data required for all scenario verification -->
+  <DataRequests SamplesPerSecond="50">
+	<DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                         Unit="1/min"       Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"                 Unit="mL"          Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="L"          Precision="2"/>	
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="L"          Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure"                  Unit="mmHg"        Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"          Unit="mmHg"        Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure"         Unit="mmHg"        Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"                     Unit="L/min"      Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HemoglobinContent"                 Unit="g"           Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralVenousPressure"             Unit="mmHg"        Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryCapillariesWedgePressure" Unit="mmHg"        Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"                   Unit="1/min"       Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"                  Unit="unitless"    Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CarbonDioxideSaturation"           Unit="unitless"    Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                       Unit="mL"          Precision="0"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"                   Unit="L"          Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxideFraction"     Unit="unitless"    Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalAlveolarVentilation"          Unit="L/min"       Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="TranspulmonaryPressure"            Unit="cmH2O"       Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespiratoryExchangeRatio"          Unit="unitless"    Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperature"                   Unit="degC"        Precision="1"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="GlomerularFiltrationRate"          Unit="mL/min"      Precision="0"/> 
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RenalBloodFlow"                    Unit="L/min"      Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/min"      Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftAfferentArterioleResistance"   Unit="mmHg min/mL" Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightAfferentArterioleResistance"  Unit="mmHg min/mL" Precision="4"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenConsumptionRate"             Unit="mL/min"      Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CarbonDioxideProductionRate"       Unit="mL/min"      Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystemicVascularResistance" Unit="mmHg s/mL" Precision="3"/>
+    
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"                            Name="Pressure"        Unit="cmH2O" Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"  Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg"  Precision="1"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli"                           Name="Pressure"        Unit="cmH2O" Precision="0"/>
+ 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli" Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg"  Precision="1"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="Oxygen"        Name="PartialPressure" Unit="cmH2O" Precision="0"/>
+	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="CarbonDioxide" Name="PartialPressure" Unit="cmH2O" Precision="1"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightTubules" Substance="Sodium"        Name="Concentration" Unit="g/L" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftTubules"  Substance="Sodium"        Name="Concentration" Unit="g/L" Precision="2"/>
+	
+	<DataRequest xsi:type="SubstanceDataRequestData"  Substance="Oxygen"         Name="AlveolarTransfer" Unit="mL/s" Precision="2"/>
+	<DataRequest xsi:type="SubstanceDataRequestData"  Substance="CarbonDioxide"  Name="AlveolarTransfer" Unit="mL/s" Precision="2"/>
+	
+	<DataRequest Substance="Epinephrine" Name="BloodConcentration" xsi:type="SubstanceDataRequestData" Unit="ug/L" Precision="6"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LiverGlycogen" Unit="g" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MuscleGlycogen" Unit="g" Precision="2"/>
+
+	<!-- Anything action specific data needed for verification of this scenario -->
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralNervousResponse" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SedationLevel" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRateChange" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanBloodPressureChange" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RichmondAgitationSedationScale" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-ReactivityModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-SizeModifier" Precision="3"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-ReactivityModifier" Precision="3"/>
+  
+  
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"                  Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"               Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneVasculature"        Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainVasculature"       Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatVasculature"         Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutVasculature"         Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyVasculature"  Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungVasculature"    Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverVasculature"       Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleVasculature"      Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumVasculature"  Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyVasculature" Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungVasculature"   Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinVasculature"        Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenVasculature"      Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/>
+    	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueExtracellular"        Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueExtracellular"       Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueExtracellular"         Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueExtracellular"         Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueExtracellular"  Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueExtracellular"    Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueExtracellular"       Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueExtracellular"      Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueExtracellular"  Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueExtracellular" Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueExtracellular"   Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueExtracellular"        Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueExtracellular"      Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 
+                                                                                                                                           
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BoneTissueIntracellular"        Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="BrainTissueIntracellular"       Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="FatTissueIntracellular"         Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="GutTissueIntracellular"         Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular"    Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MuscleTissueIntracellular"      Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="MyocardiumTissueIntracellular"  Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular"   Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 		
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SkinTissueIntracellular"        Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/> 	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular"      Substance="Etomidate" Name="Concentration" Unit="ug/L" Precision="4"/>   
+	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate"	Name="EffectSiteConcentration" Unit="ug/mL" Precision="6"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Name="SystemicMassCleared" Unit="ug"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Name="MassInBody" Unit="ug"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="LeftKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="RightKidneyTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="BrainTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="RightLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="LeftLungTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="LiverTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="BoneTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="FatTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="SkinTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="MuscleTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="SpleenTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="GutTissue" Name="PartitionCoefficient" Precision="4"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Etomidate" Compartment="MyocardiumTissue" Name="PartitionCoefficient" Precision="4"/>	
+	
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Etomidate" Name="MassCleared" Unit="ug" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Etomidate" Name="MassCleared" Unit="ug" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Etomidate" Name="MassCleared" Unit="ug" Precision="2"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Etomidate" Name="MassExcreted" Unit="ug" Precision="2"/>
+  </DataRequests>
+	
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+	<!--Rapid induction dose = 0.3 m / kg (21 mg total for 77 kg BG standard male) -->
+	<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Etomidate</Substance>
+        <Concentration value="1.5" unit="mg/mL"/>
+        <Dose value="15" unit="mL"/>
+		<AdminTime value="30" unit="s"/>
+    </Action>
+	<Action xsi:type="AdvanceTimeData">
+        <Time value="6" unit="hr"/>       
+    </Action>
+
+	
+	
+</Scenario>

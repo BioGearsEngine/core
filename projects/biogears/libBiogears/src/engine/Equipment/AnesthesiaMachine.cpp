@@ -322,9 +322,7 @@ void AnesthesiaMachine::SetConnection()
 void AnesthesiaMachine::PreProcess()
 {
   if (m_data.GetActions().GetAnesthesiaMachineActions().HasConfiguration()) {
-    if (m_data.GetRespiratory().GetExpiratoryFlow(VolumePerTimeUnit::L_Per_s) > ZERO_APPROX) {
-      return;
-    }
+
     ProcessConfiguration(*m_data.GetActions().GetAnesthesiaMachineActions().GetConfiguration());
     m_data.GetActions().GetAnesthesiaMachineActions().RemoveConfiguration();
   }

@@ -8,7 +8,9 @@
     <DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="BloodConcentration" Unit="mg/L" Precision="2"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="LymphocyteCellCount" Unit="ct/uL" Precision="5"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="NeutrophilCellCount" Unit="ct/uL" Precision="5"/>
-
+  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperature"                   Unit="degC"        Precision="1"/>
 
     <!-- Specific to this scenario -->
 
@@ -18,11 +20,30 @@
     <Time value="1" unit="min"/>
   </Action>
 
+    <Action xsi:type="PatientAssessmentRequestData" Type="CompleteBloodCount"/>
+  <Action xsi:type="PatientAssessmentRequestData" Type="ComprehensiveMetabolicPanel"/>
+
   <Action xsi:type="RadiationAbsorbedDoseData">
-    <RadiationDose value="9" unit="J/kg"/>
+    <RadiationDose value="6" unit="J/kg"/>
   </Action>
 
   <Action xsi:type="AdvanceTimeData">
-    <Time value="15" unit="min"/>
+    <Time value="18660" unit="s"/>
   </Action>
+
+  <Action xsi:type="SerializeStateData" Type="Save">
+    <Filename>./states/Radiation6Gy@5hr11m30s.xml</Filename>
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="5" unit="hr"/>
+  </Action>
+
+  <Action xsi:type="PatientAssessmentRequestData" Type="CompleteBloodCount"/>
+  <Action xsi:type="PatientAssessmentRequestData" Type="ComprehensiveMetabolicPanel"/>
+  
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="min"/>
+  </Action>
+
 </Scenario>
