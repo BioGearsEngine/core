@@ -749,7 +749,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
     }
     m_Ebola->Load(*ebola);
     if (!m_Ebola->IsActive()) {
-      RemoveExercise();
+      RemoveEbola();
       return true;
     }
     return IsValid(*m_Ebola);
