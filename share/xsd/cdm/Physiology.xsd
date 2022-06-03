@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="Burn"/>
       <xs:enumeration value="Hemorrhage"/>
       <xs:enumeration value="Infection"/>
+      <xs:enumeration value="Ebola"/>
     </xs:restriction>
   </xs:simpleType>
 

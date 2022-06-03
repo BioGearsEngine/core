@@ -1329,6 +1329,30 @@ void BloodChemistry::InflammatoryResponse()
       m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Infection);
     }
   }
+
+  if (m_data.GetActions().GetPatientActions().HasEbola()) {
+    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Ebola) == sources.end()) {
+      double initialPathogen = 0.0;
+      switch (m_data.GetActions().GetPatientActions().GetEbola()->GetSeverity()) {
+      case CDM::enumInfectionSeverity::Mild:
+        initialPathogen = 1.0e6;
+        break;
+      case CDM::enumInfectionSeverity::Moderate:
+        initialPathogen = 5.0e6;
+        break;
+      case CDM::enumInfectionSeverity::Severe:
+        initialPathogen = 2.5e7;
+        break;
+      default:
+        initialPathogen = 1.0e6; //Default to very mild infection
+      }
+
+      m_InflammatoryResponse->GetLocalPathogen().SetValue(initialPathogen);
+      m_InflammatoryResponse->SetActiveTLR(CDM::enumOnOff::On);
+      m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Ebola);
+    }
+  }
+
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
     burnTotalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
@@ -1442,6 +1466,14 @@ void BloodChemistry::InflammatoryResponse()
   double antibacterialEffect = m_data.GetDrugs().GetAntibioticActivity().GetValue();
 
   //------------------Inflammation source specific modifications and/or actions --------------------------------
+  if (burnTotalBodySurfaceArea != 0) {
+    //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
+    kDTR = 11.0 * burnTotalBodySurfaceArea; //We assume that larger burns inflict damage more rapidly
+    kTr = 0.45 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
+    tiMin = 0.008; //Promotes faster damage accumulation
+    kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
+    scale = 1.0;
+  }
   if (burnTotalBodySurfaceArea != 0) {
     //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
     kDTR = 11.0 * burnTotalBodySurfaceArea; //We assume that larger burns inflict damage more rapidly

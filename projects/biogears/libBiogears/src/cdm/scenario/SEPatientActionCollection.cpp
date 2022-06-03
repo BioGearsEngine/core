@@ -278,6 +278,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_LeftChestOcclusiveDressing = nullptr;
   m_RightChestOcclusiveDressing = nullptr;
   m_Exercise = nullptr;
+  m_Ebola = nullptr;
   m_Infection = nullptr;
   m_Intubation = nullptr;
   m_MechanicalVentilation = nullptr;
@@ -317,6 +318,7 @@ void SEPatientActionCollection::Clear()
   RemoveLeftChestOcclusiveDressing();
   RemoveRightChestOcclusiveDressing();
   RemoveExercise();
+  RemoveEbola();
   RemoveInfection();
   RemoveIntubation();
   RemoveMechanicalVentilation();
@@ -394,6 +396,9 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
     for (auto itr : GetEscharotomies()) {
       to.push_back(itr.second->Unload());
     }
+  }
+  if (HasEbola()) {
+    to.push_back(GetEbola()->Unload());
   }
   if (HasExercise()) {
     to.push_back(GetExercise()->Unload());
@@ -735,6 +740,19 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return true;
     }
     return IsValid(*escharotomy2);
+  }
+
+  const CDM::EbolaData* ebola = dynamic_cast<const CDM::EbolaData*>(&action);
+  if (ebola != nullptr) {
+    if (m_Ebola == nullptr) {
+      m_Ebola = new SEEbola();
+    }
+    m_Ebola->Load(*ebola);
+    if (!m_Ebola->IsActive()) {
+      RemoveExercise();
+      return true;
+    }
+    return IsValid(*m_Ebola);
   }
 
   const CDM::ExerciseData* exercise = dynamic_cast<const CDM::ExerciseData*>(&action);
@@ -1288,6 +1306,21 @@ void SEPatientActionCollection::RemoveEscharotomy(const std::string& cmpt)
   SEEscharotomy* h = m_Escharotomies[cmpt];
   m_Escharotomies.erase(cmpt);
   SAFE_DELETE(h);
+}
+//-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasEbola() const
+{
+  return m_Ebola == nullptr ? false : true;
+}
+//-------------------------------------------------------------------------------
+SEEbola* SEPatientActionCollection::GetEbola() const
+{
+  return m_Ebola;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveEbola()
+{
+  SAFE_DELETE(m_Ebola);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasExercise() const
