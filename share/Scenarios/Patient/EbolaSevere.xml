@@ -2,9 +2,8 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>EbolaSevere</Name>
     <Description>A ebola viral exposure.</Description>
-    <InitialParameters>
-		<PatientFile>StandardMale.xml</PatientFile>
-	</InitialParameters>
+  <EngineStateFile>./states/StandardMale@0s.xml</EngineStateFile>
+
     
 	<!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">
@@ -92,11 +91,11 @@
   </DataRequests>
     	
     <Action xsi:type="AdvanceTimeData">
-        <Time value="2" unit="min"/>
+        <Time value="1" unit="s"/>
     </Action>
 <Action xsi:type="EbolaData" Severity="Severe"/>
 
     <Action xsi:type="AdvanceTimeData">
-        <Time value="6" unit="hr"/>
+        <Time value="24" unit="hr"/>
     </Action>
 </Scenario>

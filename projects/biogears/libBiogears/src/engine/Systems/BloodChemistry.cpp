@@ -1306,6 +1306,7 @@ void BloodChemistry::InflammatoryResponse()
 {
   std::vector<CDM::enumInflammationSource> sources = m_InflammatoryResponse->GetInflammationSources();
   double burnTotalBodySurfaceArea = 0.0;
+  double ebolaTemp = 0.0;
 
   if (m_data.GetActions().GetPatientActions().HasInfection()) {
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Infection) == sources.end()) {
@@ -1329,18 +1330,20 @@ void BloodChemistry::InflammatoryResponse()
       m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Infection);
     }
   }
-
   if (m_data.GetActions().GetPatientActions().HasEbola()) {
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Ebola) == sources.end()) {
       double initialPathogen = 0.0;
       switch (m_data.GetActions().GetPatientActions().GetEbola()->GetSeverity()) {
       case CDM::enumInfectionSeverity::Mild:
+        ebolaTemp = 0.1;
         initialPathogen = 1.0e6;
         break;
       case CDM::enumInfectionSeverity::Moderate:
+        ebolaTemp = 0.25;
         initialPathogen = 5.0e6;
         break;
       case CDM::enumInfectionSeverity::Severe:
+        ebolaTemp = 0.5;
         initialPathogen = 2.5e7;
         break;
       default:
@@ -1348,11 +1351,25 @@ void BloodChemistry::InflammatoryResponse()
       }
 
       m_InflammatoryResponse->GetLocalPathogen().SetValue(initialPathogen);
+      m_InflammatoryResponse->GetTrauma().SetValue(ebolaTemp); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
       m_InflammatoryResponse->SetActiveTLR(CDM::enumOnOff::On);
       m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Ebola);
     }
   }
-
+  // mapping severity of the ebola infection to a tuning parameter to change inflammation dynamics
+  if (m_data.GetActions().GetPatientActions().HasEbola()) {
+    switch (m_data.GetActions().GetPatientActions().GetEbola()->GetSeverity()) {
+    case CDM::enumInfectionSeverity::Mild:
+      ebolaTemp = 0.1;
+      break;
+    case CDM::enumInfectionSeverity::Moderate:
+      ebolaTemp = 0.25;
+      break;
+    case CDM::enumInfectionSeverity::Severe:
+      ebolaTemp = 0.5;
+      break;
+    }
+  }
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
     burnTotalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
@@ -1474,10 +1491,10 @@ void BloodChemistry::InflammatoryResponse()
     kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
   }
-  if (burnTotalBodySurfaceArea != 0) {
-    //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
-    kDTR = 11.0 * burnTotalBodySurfaceArea; //We assume that larger burns inflict damage more rapidly
-    kTr = 0.45 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
+  if (m_InflammatoryResponse->HasInflammationSource(CDM::enumInflammationSource::Ebola)) {
+    //for ebola we assume the patient has been incubating for 8 days, after this time inflammation will occur on a rapid time scale.  These parameters were tuned for infecton--return to nominal values
+    kDTR = 11.0 * ebolaTemp; //We assume that larger burns inflict damage more rapidly
+    kTr = 0.45 / ebolaTemp; //We assume that larger burns take longer for trauma to resolve
     tiMin = 0.008; //Promotes faster damage accumulation
     kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
