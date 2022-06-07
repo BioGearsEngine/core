@@ -45,6 +45,8 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="RightAfferentArterioleResistance"  Unit="mmHg min/mL" Precision="4"/>
    <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalBilirubin" Unit="mg/dL" Precision="3"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="EnergyDeficit" Unit="W" Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="ViralLoad"               Unit="ct/uL"      Precision="3"/>
+
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-TissueIntegrity" Precision = "3"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-BloodPathogen" Precision = "3"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="InflammatoryResponse-LocalPathogen" Precision = "3"/>

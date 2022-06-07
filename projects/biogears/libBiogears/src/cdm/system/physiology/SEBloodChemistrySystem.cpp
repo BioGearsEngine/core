@@ -1101,6 +1101,28 @@ double SEBloodChemistrySystem::GetVolumeFractionNeutralPhospholipidInPlasma() co
 }
 //-------------------------------------------------------------------------------
 
+bool SEBloodChemistrySystem::HasViralLoad() const
+{
+  return m_ViralLoad == nullptr ? false : m_ViralLoad->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarAmountPerVolume& SEBloodChemistrySystem::GetViralLoad()
+{
+  if (m_ViralLoad == nullptr) {
+    m_ViralLoad = new SEScalarAmountPerVolume();
+  }
+  return *m_ViralLoad;
+}
+//-------------------------------------------------------------------------------
+double SEBloodChemistrySystem::GetViralLoad() const
+{
+  if (m_ViralLoad == nullptr) {
+    return SEScalar::dNaN();
+  }
+  return m_ViralLoad->GetValue();
+}
+//-------------------------------------------------------------------------------
+
 bool SEBloodChemistrySystem::HasVolumeFractionNeutralLipidInPlasma() const
 {
   return m_VolumeFractionNeutralLipidInPlasma == nullptr ? false : m_VolumeFractionNeutralLipidInPlasma->IsValid();

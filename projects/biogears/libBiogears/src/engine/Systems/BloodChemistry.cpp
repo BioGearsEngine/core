@@ -138,6 +138,7 @@ void BloodChemistry::Initialize()
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
   m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
   GetCarbonMonoxideSaturation().SetValue(0);
+  GetViralLoad().SetValue(0.0, AmountPerVolumeUnit::ct_Per_uL);
 
   m_RhFactorMismatch_ct = 0.0; // Only matters when patient is negative type
   m_RhTransfusionReactionVolume_mL = 0.0;
@@ -1351,7 +1352,6 @@ void BloodChemistry::InflammatoryResponse()
       }
 
       m_InflammatoryResponse->GetLocalPathogen().SetValue(initialPathogen);
-      m_InflammatoryResponse->GetTrauma().SetValue(ebolaTemp); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
       m_InflammatoryResponse->SetActiveTLR(CDM::enumOnOff::On);
       m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Ebola);
     }
@@ -1369,6 +1369,7 @@ void BloodChemistry::InflammatoryResponse()
       ebolaTemp = 0.5;
       break;
     }
+    m_InflammatoryResponse->GetTrauma().SetValue(ebolaTemp); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
   }
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
     burnTotalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
@@ -1587,6 +1588,8 @@ void BloodChemistry::InflammatoryResponse()
   m_InflammatoryResponse->GetNitricOxide().SetValue(NO);
   m_InflammatoryResponse->SetActiveTLR(TLR);
   m_InflammatoryResponse->GetInflammationTime().IncrementValue(m_dt_hr, TimeUnit::hr);
+  //for now viral and bacterial infections will be handeled the same way
+  GetViralLoad().SetValue(m_InflammatoryResponse->GetBloodPathogen().GetValue(), AmountPerVolumeUnit::ct_Per_uL);
 
   //------------------------Check to see if infection-induced inflammation has resolved sufficient to eliminate action-----------------------
   //Note that even though we remove the infection, we leave the inflammation source active.  This is because we want the inflammation markers

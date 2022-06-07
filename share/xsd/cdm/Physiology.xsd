@@ -161,6 +161,8 @@ specific language governing permissions and limitations under the License.
           <!--<< @brief Partial pressure of carbon dioxide in the vena cava.-->
           <xs:element name="VenousOxygenPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief Partial pressure of oxygen in the vena cava.-->
+          <xs:element name="ViralLoad" type="ScalarAmountPerVolumeData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief amount of virus per volume of the blood. -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
