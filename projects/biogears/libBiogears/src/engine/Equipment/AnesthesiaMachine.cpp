@@ -119,7 +119,7 @@ void AnesthesiaMachine::Initialize()
   //element, which negatively affects the lung volume.  Run through five cycles to be safe.
   SEFluidCircuitCalculator AmCalculator(FlowComplianceUnit::L_Per_cmH2O, VolumePerTimeUnit::L_Per_s, FlowInertanceUnit::cmH2O_s2_Per_L, PressureUnit::cmH2O, VolumeUnit::L, FlowResistanceUnit::cmH2O_s_Per_L, GetLogger());
   SEFluidCircuit& RespiratoryAnesthesiaCombined = m_data.GetCircuits().GetRespiratoryAndAnesthesiaMachineCircuit();
-  for (unsigned int loops = 0; loops < static_cast<unsigned int>(60.0 / m_dt_s); loops++) {
+  for (unsigned int loops = 0; loops < static_cast<unsigned int>(5); loops++) {
     CalculateCyclePhase();
     CalculateValveResistances();
     CalculateVentilator();
@@ -127,10 +127,10 @@ void AnesthesiaMachine::Initialize()
     AmCalculator.PostProcess(RespiratoryAnesthesiaCombined);
   }
   //Restore cycle tracking parameters to their initial values
-  m_inhaling = true;
-  m_inspirationTime.SetValue(0.0, TimeUnit::s);
-  m_totalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
-  m_currentbreathingCycleTime.SetValue(0.0, TimeUnit::s);
+  //m_inhaling = true;
+  //m_inspirationTime.SetValue(0.0, TimeUnit::s);
+  //m_totalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
+  //m_currentbreathingCycleTime.SetValue(0.0, TimeUnit::s);
 }
 
 bool AnesthesiaMachine::Load(const CDM::BioGearsAnesthesiaMachineData& in)
