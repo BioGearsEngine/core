@@ -148,6 +148,8 @@ namespace io {
     io::Property::Marshall(in.PulmonaryVenousCarbonDioxidePressure(), out.GetPulmonaryVenousCarbonDioxidePressure());
     io::Property::Marshall(in.VenousCarbonDioxidePressure(), out.GetVenousCarbonDioxidePressure());
     io::Property::Marshall(in.VenousOxygenPressure(), out.GetVenousOxygenPressure());
+    io::Property::Marshall(in.VenousBloodPH(), out.GetVenousBloodPH());
+    io::Property::Marshall(in.ViralLoad(), out.GetViralLoad());
     Marshall(in.InflammatoryResponse(), out.GetInflammatoryResponse());
   }
   //----------------------------------------------------------------------------------
@@ -249,6 +251,9 @@ namespace io {
     }
     if (in.m_VenousOxygenPressure != nullptr) {
       io::Property::UnMarshall(*in.m_VenousOxygenPressure, out.VenousOxygenPressure());
+    }
+    if (in.m_ViralLoad != nullptr) {
+      io::Property::UnMarshall(*in.m_ViralLoad, out.ViralLoad());
     }
     if (in.m_InflammatoryResponse != nullptr) {
       UnMarshall(*in.m_InflammatoryResponse, out.InflammatoryResponse());
