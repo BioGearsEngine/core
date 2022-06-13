@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+49" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>Bob</Name>
@@ -45,9 +45,9 @@
     <Density readOnly="false" unit="g/m^3" value="1251"/>
     <MolarMass readOnly="false" unit="g/mol" value="28.0134"/>
     <State>Gas</State>
-    <MassInBody readOnly="false" unit="ug" value="519952.163956622"/>
+    <MassInBody readOnly="false" unit="ug" value="519952.163956621"/>
     <MassInBlood readOnly="false" unit="ug" value="85571.71032473"/>
-    <MassInTissue readOnly="false" unit="ug" value="434380.453631892"/>
+    <MassInTissue readOnly="false" unit="ug" value="434380.453631891"/>
     <AlveolarTransfer readOnly="false" unit="mL/s" value="115.591389842481"/>
     <DiffusingCapacity readOnly="false" unit="mL/s mmHg" value="0.227624167116874"/>
     <EndTidalFraction readOnly="false" value="0.793299556114397"/>
@@ -424,7 +424,7 @@
     <State>Liquid</State>
     <MembraneResistance readOnly="false" unit="ohm" value="10.5"/>
     <BloodConcentration readOnly="false" unit="ug/mL" value="3838.09132495522"/>
-    <MassInBody readOnly="false" unit="ug" value="53787835.4259189"/>
+    <MassInBody readOnly="false" unit="ug" value="53787835.425919"/>
     <MassInBlood readOnly="false" unit="ug" value="18790625.1195657"/>
     <MassInTissue readOnly="false" unit="ug" value="34997210.3063532"/>
     <Clearance>
@@ -667,7 +667,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="262.214914615441"/>
     <MassInBody readOnly="false" unit="ug" value="10298427.4499895"/>
     <MassInBlood readOnly="false" unit="ug" value="1445399.46031073"/>
-    <MassInTissue readOnly="false" unit="ug" value="8853027.98967881"/>
+    <MassInTissue readOnly="false" unit="ug" value="8853027.9896788"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -794,6 +794,7 @@
     <Hematocrit readOnly="false" value="0.459768102223169"/>
     <HemoglobinContent readOnly="false" unit="g" value="747.016666995537"/>
     <HemoglobinLostToUrine readOnly="false" unit="g" value="0"/>
+    <NeutrophilCellCount readOnly="false" unit="ct/L" value="3000000000"/>
     <OxygenSaturation readOnly="false" value="0.979153037697956"/>
     <OxygenVenousSaturation readOnly="false" value="0.803707903077788"/>
     <Phosphate readOnly="false" unit="mmol/L" value="1.1"/>
@@ -1008,7 +1009,7 @@
     <PainVisualAnalogueScale readOnly="false" value="0"/>
     <RichmondAgitationSedationScale readOnly="false" value="0"/>
     <RightEyePupillaryResponse>
-      <ReactivityModifier readOnly="false" value="5.8936439516243e-15"/>
+      <ReactivityModifier readOnly="false" value="0"/>
       <SizeModifier readOnly="false" value="5.8936439516243e-15"/>
     </RightEyePupillaryResponse>
     <SleepTime readOnly="false" unit="min" value="480"/>
@@ -1138,7 +1139,7 @@
     <AlveolarArterialGradient readOnly="false" unit="mmHg" value="19.8064042488519"/>
     <CarricoIndex readOnly="false" unit="mmHg" value="463.678705071789"/>
     <EndTidalCarbonDioxideFraction readOnly="false" value="0.0436385209999227"/>
-    <EndTidalCarbonDioxidePressure readOnly="false" unit="cmH2O" value="55.5983309219979"/>
+    <EndTidalCarbonDioxidePressure readOnly="false" unit="cmH2O" value="54.7618354984145"/>
     <ExpiratoryFlow readOnly="false" unit="L/s" value="0.0134594336389325"/>
     <InspiratoryExpiratoryRatio readOnly="false" value="0.500000000000001"/>
     <InspiratoryFlow readOnly="false" unit="L/s" value="-0.0134594336389325"/>
@@ -28604,7 +28605,7 @@
       <Name>Ambient</Name>
       <Node>Ambient</Node>
       <InFlow readOnly="true" unit="mL/s" value="13.4594336390292"/>
-      <OutFlow readOnly="true" unit="mL/s" value="1.98113533609822e-91"/>
+      <OutFlow readOnly="true" unit="mL/s" value="1.98427191632577e-91"/>
       <Pressure readOnly="false" unit="mmHg" value="760"/>
       <Volume readOnly="true" unit="L" value="INF"/>
       <SubstanceQuantity>
@@ -28920,8 +28921,8 @@
     <GasCompartment>
       <Name>Mouth</Name>
       <Node>Mouth</Node>
-      <InFlow readOnly="true" unit="mL/s" value="13.4594336389325"/>
-      <OutFlow readOnly="true" unit="mL/s" value="13.4594336390292"/>
+      <InFlow readOnly="true" unit="mL/s" value="13.459433617617"/>
+      <OutFlow readOnly="true" unit="mL/s" value="13.4594336603447"/>
       <Pressure readOnly="true" unit="cmH2O" value="1033.22744953679"/>
       <Volume readOnly="false" unit="mL" value="20.6"/>
       <SubstanceQuantity>

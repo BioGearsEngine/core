@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+49" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>Hassan</Name>
@@ -399,7 +399,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="95.1651173829603"/>
     <MassInBody readOnly="false" unit="ug" value="1531433.50040018"/>
     <MassInBlood readOnly="false" unit="ug" value="575789.454683445"/>
-    <MassInTissue readOnly="false" unit="ug" value="955644.045716733"/>
+    <MassInTissue readOnly="false" unit="ug" value="955644.045716734"/>
     <SystemicMassCleared readOnly="false" unit="ug" value="484.442938750333"/>
     <Clearance>
       <Systemic>
@@ -800,6 +800,7 @@
     <Hematocrit readOnly="false" value="0.459461169683893"/>
     <HemoglobinContent readOnly="false" unit="g" value="921.679282252704"/>
     <HemoglobinLostToUrine readOnly="false" unit="g" value="0"/>
+    <NeutrophilCellCount readOnly="false" unit="ct/L" value="3000000000"/>
     <OxygenSaturation readOnly="false" value="0.980151465118127"/>
     <OxygenVenousSaturation readOnly="false" value="0.826375563878179"/>
     <Phosphate readOnly="false" unit="mmol/L" value="1.1"/>
@@ -1014,7 +1015,7 @@
     <PainVisualAnalogueScale readOnly="false" value="0"/>
     <RichmondAgitationSedationScale readOnly="false" value="0"/>
     <RightEyePupillaryResponse>
-      <ReactivityModifier readOnly="false" value="5.30107756807561e-15"/>
+      <ReactivityModifier readOnly="false" value="0"/>
       <SizeModifier readOnly="false" value="5.30107756807561e-15"/>
     </RightEyePupillaryResponse>
     <SleepTime readOnly="false" unit="min" value="480"/>
@@ -1144,7 +1145,7 @@
     <AlveolarArterialGradient readOnly="false" unit="mmHg" value="19.5365387357237"/>
     <CarricoIndex readOnly="false" unit="mmHg" value="470.633174508369"/>
     <EndTidalCarbonDioxideFraction readOnly="false" value="0.0435142828010096"/>
-    <EndTidalCarbonDioxidePressure readOnly="false" unit="cmH2O" value="55.0086143000859"/>
+    <EndTidalCarbonDioxidePressure readOnly="false" unit="cmH2O" value="54.2965818553072"/>
     <ExpiratoryFlow readOnly="false" unit="L/s" value="-0.410908813520066"/>
     <InspiratoryExpiratoryRatio readOnly="false" value="0.508928571428573"/>
     <InspiratoryFlow readOnly="false" unit="L/s" value="0.410908813520066"/>

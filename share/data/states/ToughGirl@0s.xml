@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+49" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>ToughGirl</Name>
@@ -797,6 +797,7 @@
     <Hematocrit readOnly="false" value="0.459782153358374"/>
     <HemoglobinContent readOnly="false" unit="g" value="752.087739014406"/>
     <HemoglobinLostToUrine readOnly="false" unit="g" value="0"/>
+    <NeutrophilCellCount readOnly="false" unit="ct/L" value="3000000000"/>
     <OxygenSaturation readOnly="false" value="0.980826088151411"/>
     <OxygenVenousSaturation readOnly="false" value="0.802249039294235"/>
     <Phosphate readOnly="false" unit="mmol/L" value="1.1"/>
@@ -1011,7 +1012,7 @@
     <PainVisualAnalogueScale readOnly="false" value="0"/>
     <RichmondAgitationSedationScale readOnly="false" value="0"/>
     <RightEyePupillaryResponse>
-      <ReactivityModifier readOnly="false" value="5.16773072785207e-15"/>
+      <ReactivityModifier readOnly="false" value="0"/>
       <SizeModifier readOnly="false" value="5.16773072785207e-15"/>
     </RightEyePupillaryResponse>
     <SleepTime readOnly="false" unit="min" value="480"/>
@@ -1141,7 +1142,7 @@
     <AlveolarArterialGradient readOnly="false" unit="mmHg" value="19.2477490118063"/>
     <CarricoIndex readOnly="false" unit="mmHg" value="473.567215567969"/>
     <EndTidalCarbonDioxideFraction readOnly="false" value="0.0420106149868348"/>
-    <EndTidalCarbonDioxidePressure readOnly="false" unit="cmH2O" value="54.0133793713795"/>
+    <EndTidalCarbonDioxidePressure readOnly="false" unit="cmH2O" value="53.2405149641651"/>
     <ExpiratoryFlow readOnly="false" unit="L/s" value="0.134152736576263"/>
     <InspiratoryExpiratoryRatio readOnly="false" value="0.484848484848486"/>
     <InspiratoryFlow readOnly="false" unit="L/s" value="-0.134152736576263"/>
