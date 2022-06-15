@@ -129,7 +129,7 @@ specific language governing permissions and limitations under the License.
 		<xs:complexContent>
 			<xs:extension base="PatientAssessmentData">
 				<xs:sequence>
-                    <xs:element name="InternationalNormalizedRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief ms time taken to quickly react to stimulus -->    
+                    <xs:element name="InternationalNormalizedRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief ms time taken to quickly react to stimulus --> 
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
