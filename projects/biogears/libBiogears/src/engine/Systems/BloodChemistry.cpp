@@ -679,6 +679,39 @@ void BloodChemistry::CheckRadiationSymptoms()
 
  }
 
+//--------------------------------------------------------------------------------------------------
+ /// \brief
+ /// Checks the blood substance levels and set ebola specific events.
+ ///
+ /// \details
+ /// Checks the Viral load levels to determine patient events.
+ /// These events are specific to radiation exposure but should expanded to be more general
+ //--------------------------------------------------------------------------------------------------
+ void BloodChemistry::CheckViralSymptoms()
+ {
+   //get lymphocyte value:
+   double viralLoad = GetViralLoad().GetValue(AmountPerVolumeUnit::ct_Per_L);
+
+   //mild
+   if (2 < viralLoad < 9) {
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, true, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, true, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereHeadache, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, true, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, false, m_data.GetSimulationTime());
+   }
+
+   //severe
+   if (viralLoad > 10.0) {
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, true, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereHeadache, true, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, true, m_data.GetSimulationTime());
+   }
+ }
 
   //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -1336,15 +1369,12 @@ void BloodChemistry::InflammatoryResponse()
       double initialPathogen = 0.0;
       switch (m_data.GetActions().GetPatientActions().GetEbola()->GetSeverity()) {
       case CDM::enumInfectionSeverity::Mild:
-        ebolaTemp = 0.1;
         initialPathogen = 1.0e6;
         break;
       case CDM::enumInfectionSeverity::Moderate:
-        ebolaTemp = 0.25;
         initialPathogen = 5.0e6;
         break;
       case CDM::enumInfectionSeverity::Severe:
-        ebolaTemp = 0.5;
         initialPathogen = 2.5e7;
         break;
       default:
@@ -1363,10 +1393,10 @@ void BloodChemistry::InflammatoryResponse()
       ebolaTemp = 0.1;
       break;
     case CDM::enumInfectionSeverity::Moderate:
-      ebolaTemp = 0.25;
+      ebolaTemp = 0.15;
       break;
     case CDM::enumInfectionSeverity::Severe:
-      ebolaTemp = 0.5;
+      ebolaTemp = 0.2;
       break;
     }
     m_InflammatoryResponse->GetTrauma().SetValue(ebolaTemp); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
@@ -1487,17 +1517,18 @@ void BloodChemistry::InflammatoryResponse()
   if (burnTotalBodySurfaceArea != 0) {
     //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
     kDTR = 11.0 * burnTotalBodySurfaceArea; //We assume that larger burns inflict damage more rapidly
-    kTr = 0.45 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
+    kTr = 0.25 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
     tiMin = 0.008; //Promotes faster damage accumulation
     kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
   }
   if (m_InflammatoryResponse->HasInflammationSource(CDM::enumInflammationSource::Ebola)) {
     //for ebola we assume the patient has been incubating for 8 days, after this time inflammation will occur on a rapid time scale.  These parameters were tuned for infecton--return to nominal values
-    kDTR = 11.0 * ebolaTemp; //We assume that larger burns inflict damage more rapidly
-    kTr = 0.45 / ebolaTemp; //We assume that larger burns take longer for trauma to resolve
-    tiMin = 0.008; //Promotes faster damage accumulation
-    kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
+    kDTR = 0.02 * ebolaTemp; //We assume that larger burns inflict damage more rapidly
+    kTr = 0.05 / ebolaTemp; //We assume that larger burns take longer for trauma to resolve
+    tiMin = 0.00008; //Promotes faster damage accumulation
+    kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049, kPS = 9.9e4;
+    kapP = 0.1;
     scale = 1.0;
   }
   if (PB > ZERO_APPROX) {

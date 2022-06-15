@@ -95,7 +95,7 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="1" unit="s"/>
     </Action>
-<Action xsi:type="EbolaData" Severity="Severe"/>
+<Action xsi:type="EbolaData" Severity="Moderate"/>
 
     <Action xsi:type="AdvanceTimeData">
         <Time value="24" unit="hr"/>
