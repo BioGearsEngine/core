@@ -238,7 +238,7 @@ bool SEDataRequestManager::DuplicateRequest(SEDataRequest* request)
   }
   return duplicate;
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void SEDataRequestManager::CreateFromBind(const CDM::DataRequestData& input, SESubstanceManager& subMgr)
 {
   SEDataRequest* dr = newFromBind(input, subMgr, m_DefaultDecimalFormatting);
@@ -313,4 +313,33 @@ SEDataRequest* SEDataRequestManager::newFromBind(const CDM::DataRequestData& dat
   return nullptr;
 }
 //-----------------------------------------------------------------------------
+bool SEDataRequestManager::HasResultsFilename() const
+{
+  return !m_ResultsFile.empty();
+}
+//-----------------------------------------------------------------------------
+bool SEDataRequestManager::HasWorkingDir() const
+{
+  return !m_ResultsFile.empty();
+}
+//-----------------------------------------------------------------------------
+double SEDataRequestManager::GetSamplesPerSecond() const
+{
+  return m_SamplesPerSecond;
+}
+//-----------------------------------------------------------------------------
+void SEDataRequestManager::SetSamplesPerSecond(double num)
+{
+  m_SamplesPerSecond = num;
+}
+//-----------------------------------------------------------------------------
+bool SEDataRequestManager::HasDataRequests()
+{
+  return !m_Requests.empty();
+}
+//-----------------------------------------------------------------------------
+const std::vector<SEDataRequest*>& SEDataRequestManager::GetDataRequests()
+{
+  return m_Requests;
+}
 }
