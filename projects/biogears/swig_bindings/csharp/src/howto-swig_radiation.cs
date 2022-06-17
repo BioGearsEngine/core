@@ -365,24 +365,6 @@ namespace bio
   static class csharp_test
   {
 
-    // These really should be member variables.
-    // Idealy they should have a lifetime no longer then the DataTrack
-    public static biogears.SEDataRequestScalar HeartRate;
-    public static biogears.SEDataRequestScalar SystolicArterialPressure;
-    public static biogears.SEDataRequestScalar DiastolicArterialPressure;
-    public static biogears.SEDataRequestScalar RespirationRate;
-    public static biogears.SEDataRequestScalar TidalVolume;
-    public static biogears.SEDataRequestScalar TotalLungVolume;
-    public static biogears.SEDataRequestScalar OxygenSaturation;
-    public static biogears.SEDataRequestScalar Urine;
-    public static biogears.SEDataRequestScalar PartialPressure;
-    public static biogears.SEDataRequestScalar ecgData;
-    public static biogears.SEDataRequestScalar CO2PartialPressure;
-
-    //Physiology API based queries
-    public static biogears.SEScalarVolumePerTime Urine2;
-    public static biogears.SEScalar PainLevel;
-
     public static biogears.Logger logger;
     //!
     //! Very Terse testing of the SWIG_Bindings
@@ -417,6 +399,8 @@ namespace bio
       SERadiationAbsorbedDose action = new SERadiationAbsorbedDose();
       action.GetDose().SetValue(radiation, biogears.EnergyPerMassUnit.J_Per_kg);
       engine.ProcessAction(action);
+
+      engine.GetEngineTrack().GetDataRequestManager().HasResultsFilename();
 
       engine.AdvanceModelTimeBy(30, TimeUnit.s);
 
