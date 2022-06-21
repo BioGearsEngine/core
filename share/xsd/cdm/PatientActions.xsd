@@ -31,6 +31,8 @@ specific language governing permissions and limitations under the License.
     <xs:restriction base="xs:string">
       <xs:enumeration value="ArterialBloodGasAnalysis"/>
       <xs:enumeration value="PulmonaryFunctionTest"/>
+      <xs:enumeration value="ProthrombinTime"/>
+      <xs:enumeration value="PsychomotorVigilanceTask"/>
       <xs:enumeration value="CompleteBloodCount"/>
       <xs:enumeration value="ComprehensiveMetabolicPanel"/>
       <xs:enumeration value="SequentialOrganFailureAssessment"/>

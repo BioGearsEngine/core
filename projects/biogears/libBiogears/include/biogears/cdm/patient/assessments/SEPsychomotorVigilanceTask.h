@@ -19,10 +19,18 @@ class SENervousSystem;
 class SEScalar;
 class SEScalarTime;
 
+namespace io {
+  class PatientAssessments;
+}
+
 class BIOGEARS_API SEPsychomotorVigilanceTask : public SEPatientAssessment {
+friend io::PatientAssessments;
 public:
   SEPsychomotorVigilanceTask();
   virtual ~SEPsychomotorVigilanceTask();
+
+  static constexpr const char* TypeTag() { return "SEArterialBloodGasAnalysis"; };
+  const char* classname() const override { return TypeTag(); }
 
   virtual void Reset(); //reset values
   virtual void Clear(); //clear memory
