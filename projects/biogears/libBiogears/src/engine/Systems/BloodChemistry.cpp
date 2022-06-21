@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SEArterialBloodGasAnalysis.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
+#include <biogears/cdm/patient/assessments/SEProthrombinTime.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
@@ -29,6 +30,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
@@ -67,6 +69,7 @@ void BloodChemistry::Clear()
   m_aortaBicarbonate = nullptr;
   m_brainO2 = nullptr;
   m_myocardiumO2 = nullptr;
+  m_Ondansetron = nullptr;
   m_pulmonaryArteriesO2 = nullptr;
   m_pulmonaryArteriesCO2 = nullptr;
   m_pulmonaryVeinsO2 = nullptr;
@@ -286,6 +289,7 @@ void BloodChemistry::SetUp()
   SESubstance* insulin = &m_data.GetSubstances().GetInsulin();
   SESubstance* ketones = &m_data.GetSubstances().GetKetones();
   SESubstance* lactate = &m_data.GetSubstances().GetLactate();
+  m_Ondansetron = m_data.GetSubstances().GetSubstance("Ondansetron");
   SESubstance* potassium = &m_data.GetSubstances().GetPotassium();
   SESubstance* rbc = &m_data.GetSubstances().GetRBC();
   SESubstance* sodium = &m_data.GetSubstances().GetSodium();
@@ -352,6 +356,7 @@ void BloodChemistry::PreProcess()
   InflammatoryResponse();
   AcuteRadiationSyndrome();
   CheckRadiationSymptoms();
+  CheckViralSymptoms();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -690,10 +695,13 @@ void BloodChemistry::CheckRadiationSymptoms()
  void BloodChemistry::CheckViralSymptoms()
  {
    //get lymphocyte value:
-   double viralLoad = GetViralLoad().GetValue(AmountPerVolumeUnit::ct_Per_L);
-
+   double viralLoad = GetViralLoad().GetValue(AmountPerVolumeUnit::ct_Per_uL);
+   double ondansetron_mg_Per_L = 0.0;
+   if (m_data.GetSubstances().IsActive(*m_Ondansetron)) {
+     ondansetron_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_Ondansetron)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
+   }
    //mild
-   if (2 < viralLoad < 9) {
+   if (2 < viralLoad && viralLoad < 9 && ondansetron_mg_Per_L < 0.1) {
      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, true, m_data.GetSimulationTime());
      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, true, m_data.GetSimulationTime());
      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, false, m_data.GetSimulationTime());
@@ -703,13 +711,17 @@ void BloodChemistry::CheckRadiationSymptoms()
    }
 
    //severe
-   if (viralLoad > 10.0) {
+   if (viralLoad > 10.0 && ondansetron_mg_Per_L < 0.1) {
      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, false, m_data.GetSimulationTime());
      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, false, m_data.GetSimulationTime());
      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, true, m_data.GetSimulationTime());
      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereHeadache, true, m_data.GetSimulationTime());
      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, true, m_data.GetSimulationTime());
+   }
+   if (ondansetron_mg_Per_L > 0.1) {
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
    }
  }
 
@@ -1062,7 +1074,32 @@ SEScalar& BloodChemistry::CalculateCoagulationSOFA()
   sofa->SetValue(0.0);
   return *sofa;
 }
-
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Sets data on the prothrombin time assesment object.
+///
+/// \details
+/// Sets data on the prothrombintime object to create the [ptt](@ref bloodchemistry-assessments).
+//--------------------------------------------------------------------------------------------------
+bool BloodChemistry::CalculateProthrombinTime(SEProthrombinTime& ptt)
+{
+    //super basic scaling as a function of viral load
+    ///\todo: make this a function of actual coagulation substances
+  double viralLoad = GetViralLoad().GetValue(AmountPerVolumeUnit::ct_Per_uL);
+  ptt.GetInternationalNormalizedRatio().Set(0.9);   //average value
+  if (viralLoad > ZERO_APPROX) {
+    if (viralLoad > 1 && viralLoad < 3) {
+      ptt.GetInternationalNormalizedRatio().Set(1.3);
+    } 
+    else if (3 < viralLoad && viralLoad < 7) {
+      ptt.GetInternationalNormalizedRatio().Set(1.9);
+    } 
+    else if (7 < viralLoad) {
+      ptt.GetInternationalNormalizedRatio().Set(2.5);
+    }
+  }
+  return true;
+}
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Reaction when incompatible blood is transfused
@@ -1375,7 +1412,7 @@ void BloodChemistry::InflammatoryResponse()
         initialPathogen = 5.0e6;
         break;
       case CDM::enumInfectionSeverity::Severe:
-        initialPathogen = 2.5e7;
+        initialPathogen = 8.0e6;
         break;
       default:
         initialPathogen = 1.0e6; //Default to very mild infection
@@ -1524,11 +1561,9 @@ void BloodChemistry::InflammatoryResponse()
   }
   if (m_InflammatoryResponse->HasInflammationSource(CDM::enumInflammationSource::Ebola)) {
     //for ebola we assume the patient has been incubating for 8 days, after this time inflammation will occur on a rapid time scale.  These parameters were tuned for infecton--return to nominal values
-    kDTR = 0.02 * ebolaTemp; //We assume that larger burns inflict damage more rapidly
-    kTr = 0.05 / ebolaTemp; //We assume that larger burns take longer for trauma to resolve
-    tiMin = 0.00008; //Promotes faster damage accumulation
-    kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049, kPS = 9.9e4;
-    kapP = 0.1;
+    //kapP *= ebolaTemp;
+    //thetaP *= 0.1;
+    double kPS = 6.9e1; //reduce Background immune response to pathogen in blood for ebola 
     scale = 1.0;
   }
   if (PB > ZERO_APPROX) {

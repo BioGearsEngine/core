@@ -18,10 +18,18 @@ namespace biogears {
 class SEBloodChemistry;
 class SEScalar;
 
+namespace io {
+  class PatientAssessments;
+}
+
 class BIOGEARS_API SEProthrombinTime : public SEPatientAssessment {
+friend io::PatientAssessments;
 public:
   SEProthrombinTime();
   virtual ~SEProthrombinTime();
+
+  static constexpr const char* TypeTag() { return "SEProthrombinTime"; };
+  const char* classname() const override { return TypeTag(); }
 
   virtual void Reset(); //reset values
   virtual void Clear(); //clear memory
@@ -33,8 +41,8 @@ protected:
   virtual void Unload(CDM::ProthrombinTimeData& data);
 
 public:
-  bool HasInternationalNormalizedRatio();
-  SEScalar& GetInternationalNormalizedRatio();
+  virtual bool HasInternationalNormalizedRatio();
+  virtual SEScalar& GetInternationalNormalizedRatio();
 
 protected:
   SEScalar* m_InternationalNormalizedRatio;
