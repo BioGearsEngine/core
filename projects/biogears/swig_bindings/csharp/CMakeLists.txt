@@ -72,16 +72,26 @@ if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
     LIST(APPEND libiogears_csharp_biogears ${file})
   endforeach()
 
-  add_executable(unittest_csharp ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std} ${libiogears_csharp_unittest})
-  set_target_properties(unittest_csharp PROPERTIES
+  add_executable(csharp_example ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std} src/howto-swig_bindings.cs)
+  add_executable(csharp_radiation_debugging ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std} src/howto-swig_radiation.cs)
+  set_target_properties(csharp_example PROPERTIES
       POSITION_INDEPENDENT_CODE ON
-      FOLDER UnitTest
-      PROJECT_LABEL "UnitTest_CSharp"
+      FOLDER "Swig\\CSharp"
+      PROJECT_LABEL "Example"
+      FOLDERS ON
+    )
+  set_target_properties(csharp_radiation_debugging PROPERTIES
+      POSITION_INDEPENDENT_CODE ON
+      FOLDER "Swig\\CSharp"
+      PROJECT_LABEL "Debugging"
       FOLDERS ON
     )
     
-  target_link_libraries(unittest_csharp PUBLIC  lib${PROJECT_NAME} lib${PROJECT_NAME}_csharp)
-  target_include_directories(unittest_csharp PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
+  target_link_libraries(csharp_example PUBLIC  lib${PROJECT_NAME} lib${PROJECT_NAME}_csharp)
+  target_include_directories(csharp_example PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
+
+  target_link_libraries(csharp_radiation_debugging PUBLIC  lib${PROJECT_NAME} lib${PROJECT_NAME}_csharp)
+  target_include_directories(csharp_radiation_debugging PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
 endif()
 
 

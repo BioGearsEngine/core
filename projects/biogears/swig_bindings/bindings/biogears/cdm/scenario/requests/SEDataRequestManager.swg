@@ -41,5 +41,20 @@ namespace biogears {
     SELiquidCompartmentDataRequest& CreateLiquidCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
     SEThermalCompartmentDataRequest& CreateThermalCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
     SETissueCompartmentDataRequest& CreateTissueCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
+
+    bool HasResultsFilename() const { return !m_ResultsFile.empty(); }
+    std::string GetResultsFilename() const;
+    void SetResultsFilename(const std::string& name);
+
+    bool HasWorkingDir() const { return !m_ResultsFile.empty(); }
+    std::string GetWorkingDir() const;
+    void SetWorkingDir(const char* name);
+
+    std::string GetResovedFilePath() const;
+ 
+    double GetSamplesPerSecond() const { return m_SamplesPerSecond; }
+    void SetSamplesPerSecond(double num) { m_SamplesPerSecond = num; }
+
+    bool HasDataRequests() { return !m_Requests.empty(); }
   };
 }

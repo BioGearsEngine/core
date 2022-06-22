@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+49" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>Rick</Name>
@@ -794,6 +794,7 @@
     <Hematocrit readOnly="false" value="0.459979334086133"/>
     <HemoglobinContent readOnly="false" unit="g" value="800.68478635655"/>
     <HemoglobinLostToUrine readOnly="false" unit="g" value="0"/>
+    <NeutrophilCellCount readOnly="false" unit="ct/L" value="3000000000"/>
     <OxygenSaturation readOnly="false" value="0.979027427187215"/>
     <OxygenVenousSaturation readOnly="false" value="0.841926775340441"/>
     <Phosphate readOnly="false" unit="mmol/L" value="1.1"/>
@@ -1008,7 +1009,7 @@
     <PainVisualAnalogueScale readOnly="false" value="0"/>
     <RichmondAgitationSedationScale readOnly="false" value="0"/>
     <RightEyePupillaryResponse>
-      <ReactivityModifier readOnly="false" value="6.20323720249828e-15"/>
+      <ReactivityModifier readOnly="false" value="0"/>
       <SizeModifier readOnly="false" value="6.20323720249828e-15"/>
     </RightEyePupillaryResponse>
     <SleepTime readOnly="false" unit="min" value="480"/>
@@ -1138,7 +1139,7 @@
     <AlveolarArterialGradient readOnly="false" unit="mmHg" value="16.6949055734088"/>
     <CarricoIndex readOnly="false" unit="mmHg" value="465.092494890074"/>
     <EndTidalCarbonDioxideFraction readOnly="false" value="0.0441906672019139"/>
-    <EndTidalCarbonDioxidePressure readOnly="false" unit="cmH2O" value="56.4194433116131"/>
+    <EndTidalCarbonDioxidePressure readOnly="false" unit="cmH2O" value="55.6349336183994"/>
     <ExpiratoryFlow readOnly="false" unit="L/s" value="4.61283770207609e-05"/>
     <InspiratoryExpiratoryRatio readOnly="false" value="0.488000000000002"/>
     <InspiratoryFlow readOnly="false" unit="L/s" value="-4.61283770207609e-05"/>
@@ -1196,7 +1197,7 @@
   </System>
   <System xsi:type="BioGearsTissueSystemData">
     <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="3.80380572606014"/>
-    <DehydrationFraction readOnly="false" value="0.000138533384872953"/>
+    <DehydrationFraction readOnly="false" value="0.000138533384872856"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="8917.27557576186"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="33305.0194613304"/>
     <IntracellularFluidPH readOnly="false" value="7"/>

@@ -44,6 +44,7 @@ namespace biogears {
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
+%ignore  SetValue(double);
 
 %ignore  biogears::SEScalarQuantity< MassUnit >::operator==;
 %rename(NotEquals)  biogears::SEScalarQuantity< MassUnit >::operator!=;

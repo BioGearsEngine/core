@@ -2,12 +2,12 @@
 #include "Tokenizer.h"
 
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <list>
 #include <map>
 #include <regex>
 #include <sstream>
-#include <functional>
 
 #include <biogears/string/manipulation.h>
 
@@ -28,7 +28,8 @@ bool handle_driver_string(const std::string&, EDriver&);
 bool handle_tick_string(Tokenizer::token_list::iterator& tokenItr, Tokenizer::token_list::iterator end, std::string& rhs);
 bool handle_quote_string(Tokenizer::token_list::iterator& tokenItr, Tokenizer::token_list::iterator end, std::string& rhs);
 bool handle_email_list(const std::string& input, std::vector<std::string>& result);
-bool handle_delimited_list(const std::string& input, const char delimiter, std::vector<std::string>& result, std::function<bool(std::string)> validator = [](std::string input) { return true; });
+bool handle_delimited_list(
+  const std::string& input, const char delimiter, std::vector<std::string>& result, std::function<bool(std::string)> validator = [](std::string input) { return true; });
 bool validate_email_string(const std::string&);
 bool validate_server_address(const std::string&);
 bool grab_next_word_or_fail(Tokenizer::token_list::iterator& tokenItr, Tokenizer::token_list::iterator end);
@@ -319,9 +320,12 @@ bool Config::load(std::string filepath, bool silent)
   Tokenizer tokens;
   std::ifstream ifs(filepath);
   if (ifs.is_open() && tokens.tokenize(ifs)) {
-    int count = 1;
     return process(std::move(tokens));
   } else {
+    ifs.open("config/" + filepath);
+    if (ifs.is_open() && tokens.tokenize(ifs)) {
+      return process(std::move(tokens));
+    }
     if (!silent) {
       std::cerr << "Unable to Load " << filepath << "!!!\n";
     }
@@ -337,7 +341,7 @@ bool Config::process(Tokenizer&& tokens)
     std::string& token = tokenItr->value;
     std::string original_token = token;
 
-    //This should be safe
+    // This should be safe
     std::transform(token.begin(), token.end(), token.begin(), ::tolower);
 
     bool valid_state = true;
@@ -348,7 +352,7 @@ bool Config::process(Tokenizer&& tokens)
       error_context = original_token;
       if (grab_next_symbol_or_fail(tokenItr, tokens.end()) && tokenItr->value == "(") {
         Tokenizer::token_list paramaters;
-        Token close_scope_token{ ETokenClass::Symbol, ")" };
+        Token close_scope_token { ETokenClass::Symbol, ")" };
         if (gobble_until_next_given(tokenItr, tokens.end(), close_scope_token, paramaters)) {
           Executor run = symbol_table[original_token];
           run.Group(_current_group);
@@ -415,7 +419,7 @@ bool Config::process(Tokenizer&& tokens)
         if (grab_next_word_or_fail(tokenItr, tokens.end())) {
           _current_group = tokenItr->value;
           Tokenizer::token_list group_name;
-          auto delimiter = Token{ ETokenClass::Newline, "\n"};
+          auto delimiter = Token { ETokenClass::Newline, "\n" };
           if (gobble_until_next_given(tokenItr, tokens.end(), delimiter, group_name)) {
             for (auto& component : group_name) {
               _current_group += component.value;
@@ -433,7 +437,7 @@ bool Config::process(Tokenizer&& tokens)
         valid_state &= false;
       }
     } else if (token == "driver") {
-      Executor ex{ "Undefined", EDriver::Undefined };
+      Executor ex { "Undefined", EDriver::Undefined };
       valid_state &= handle_driver_definition(tokenItr, tokens.end(), ex);
       if (valid_state) {
         symbol_table[ex.Name()] = ex;
@@ -618,7 +622,7 @@ bool handle_driver_definition(Tokenizer::token_list::iterator& tokenItr, Tokeniz
         return false;
       }
     } else if (current_mode == ParseMode::OPTIONS) {
-      auto token = Token{ ETokenClass::Symbol, '}' };
+      auto token = Token { ETokenClass::Symbol, '}' };
       if (gobble_until_next_given(next, end, token, paramaters)) {
         rhs.Name(driver_name);
         rhs.Driver(parent_driver);
@@ -653,7 +657,7 @@ bool handle_driver_paramaters(Tokenizer::token_list::iterator& tokenItr, Tokeniz
     } else if (token == "nocompare") {
       rhs.NoCompare(true);
     } else if (token == "track_stabilization") {
-      rhs.TrackStabilization(true);  
+      rhs.TrackStabilization(true);
     } else if (token == "fastplot") {
       rhs.PlotStyle(EPlotStyle::FastPlot);
     } else if (token == "fullplot") {
@@ -796,14 +800,14 @@ bool handle_email_list(const std::string& input, std::vector<std::string>& resul
 //-----------------------------------------------------------------------------
 bool validate_email_string(const std::string& token)
 {
-  std::regex rx{ R"REGEX(^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$)REGEX" };
+  std::regex rx { R"REGEX(^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$)REGEX" };
   return std::regex_match(token, rx);
 }
 //-----------------------------------------------------------------------------
 bool validate_server_address(const std::string& token)
 {
-  auto ip_rx = std::regex{ R"REGEX(^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$)REGEX" };
-  auto hostname_rx = std::regex{ R"REGEX(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$)REGEX" };
+  auto ip_rx = std::regex { R"REGEX(^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$)REGEX" };
+  auto hostname_rx = std::regex { R"REGEX(^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$)REGEX" };
 
   return std::regex_match(token, ip_rx) || std::regex_match(token, hostname_rx);
 }

@@ -241,9 +241,9 @@ def plot(root_dir, source, skip_count, plotTime):
                     err("Non-numeric data or range, not plotting {}".format(col),LOG_LEVEL_0)
 
 def err(message, level):
-    print( "{}\n".format(message) if _log_verbose >= level else "" , end="", file=sys.stderr)
+    print( "{}\n".format(message) )#if _log_verbose >= level else "" , end="", file=sys.stderr)
 def log(message, level):
-    print( "{}\n".format(message) if _log_verbose >= level else "" , end="")
+    print( "{}\n".format(message) )#if _log_verbose >= level else "" , end="")
     
 if __name__ == "__main__":
     # execute only if run as a script
