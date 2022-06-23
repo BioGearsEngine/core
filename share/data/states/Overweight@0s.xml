@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+67" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>Overweight</Name>
@@ -345,7 +345,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="44990.7775978344"/>
     <MassInBody readOnly="false" unit="ug" value="544178232.562496"/>
     <MassInBlood readOnly="false" unit="ug" value="315315813.266622"/>
-    <MassInTissue readOnly="false" unit="ug" value="228862419.295875"/>
+    <MassInTissue readOnly="false" unit="ug" value="228862419.295874"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>

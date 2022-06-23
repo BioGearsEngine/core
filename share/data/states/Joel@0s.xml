@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+67" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>Joel</Name>
@@ -1203,7 +1203,7 @@
   </System>
   <System xsi:type="BioGearsTissueSystemData">
     <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="3.73397097327368"/>
-    <DehydrationFraction readOnly="false" value="1.24962291101243e-05"/>
+    <DehydrationFraction readOnly="false" value="1.24962291102159e-05"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="9414.78222919189"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="35103.2040432881"/>
     <IntracellularFluidPH readOnly="false" value="7"/>
@@ -28611,7 +28611,7 @@
       <Name>Ambient</Name>
       <Node>Ambient</Node>
       <InFlow readOnly="true" unit="mL/s" value="0.178682942377087"/>
-      <OutFlow readOnly="true" unit="mL/s" value="1.98255090926072e-91"/>
+      <OutFlow readOnly="true" unit="mL/s" value="1.98568748948827e-91"/>
       <Pressure readOnly="false" unit="mmHg" value="760"/>
       <Volume readOnly="true" unit="L" value="INF"/>
       <SubstanceQuantity>
@@ -28927,8 +28927,8 @@
     <GasCompartment>
       <Name>Mouth</Name>
       <Node>Mouth</Node>
-      <InFlow readOnly="true" unit="mL/s" value="0.178682942402832"/>
-      <OutFlow readOnly="true" unit="mL/s" value="0.178682942377087"/>
+      <InFlow readOnly="true" unit="mL/s" value="0.178682921087296"/>
+      <OutFlow readOnly="true" unit="mL/s" value="0.178682963692623"/>
       <Pressure readOnly="true" unit="cmH2O" value="1033.22744953679"/>
       <Volume readOnly="false" unit="mL" value="20.6"/>
       <SubstanceQuantity>
