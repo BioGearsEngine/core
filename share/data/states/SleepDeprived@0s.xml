@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+67" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>SleepDeprived</Name>
@@ -543,7 +543,7 @@
     <MaximumDiffusionFlux readOnly="false" unit="g/cm^2 s" value="0.5"/>
     <MichaelisCoefficient readOnly="false" value="0.8"/>
     <BloodConcentration readOnly="false" unit="ug/mL" value="10.2927681692096"/>
-    <MassInBody readOnly="false" unit="ug" value="383830.130162424"/>
+    <MassInBody readOnly="false" unit="ug" value="383830.130162423"/>
     <MassInBlood readOnly="false" unit="ug" value="57234.8497860236"/>
     <MassInTissue readOnly="false" unit="ug" value="326595.2803764"/>
     <SystemicMassCleared readOnly="false" unit="ug" value="7389.50194657504"/>
@@ -667,7 +667,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="263.767518438824"/>
     <MassInBody readOnly="false" unit="ug" value="11641796.8134134"/>
     <MassInBlood readOnly="false" unit="ug" value="1655204.22473685"/>
-    <MassInTissue readOnly="false" unit="ug" value="9986592.58867654"/>
+    <MassInTissue readOnly="false" unit="ug" value="9986592.58867653"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>

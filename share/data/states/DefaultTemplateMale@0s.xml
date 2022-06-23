@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+67" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>DefaultTemplateMale</Name>
@@ -624,7 +624,7 @@
     <State>Liquid</State>
     <MembraneResistance readOnly="false" unit="ohm" value="18.7"/>
     <BloodConcentration readOnly="false" unit="ug/mL" value="3264.27362982625"/>
-    <MassInBody readOnly="false" unit="ug" value="51209739.7972146"/>
+    <MassInBody readOnly="false" unit="ug" value="51209739.7972147"/>
     <MassInBlood readOnly="false" unit="ug" value="15964913.1385421"/>
     <MassInTissue readOnly="false" unit="ug" value="35244826.6586726"/>
     <Clearance>
@@ -1198,7 +1198,7 @@
   <System xsi:type="BioGearsTissueSystemData">
     <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="3.50642944317507"/>
     <DehydrationFraction readOnly="false" value="0"/>
-    <ExtracellularFluidVolume readOnly="false" unit="mL" value="8461.97621268301"/>
+    <ExtracellularFluidVolume readOnly="false" unit="mL" value="8461.97621268302"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="30654.2499796296"/>
     <IntracellularFluidPH readOnly="false" value="7"/>
     <IntracellularFluidVolume readOnly="false" unit="mL" value="22192.2737669465"/>

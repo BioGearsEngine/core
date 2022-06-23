@@ -388,8 +388,10 @@ namespace bio
 
       //Initialize an Engine by Patient Requiring Stabilization
       var engine = new BioGearsEngine(logger);
-      engine.LoadState("states/StandardMale@0s.xml");
+      engine.LoadState("StandardMale@0s.xml");
       engine.GetEngineTrack().GetDataRequestManager().SetResultsFilename("csharp_debugging.csv");
+      engine.GetEngineTrack().GetDataRequestManager().GetSamplesPerSecond();
+      engine.GetEngineTrack().GetDataRequestManager().SetSamplesPerSecond(60);
       var eh = new BioGearsEventHandler();
       engine.SetEventHandler(eh);
 
