@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #include <cctype>
 #include <cmath>
 #include <iostream>
+#include <stdexcept>
+#include <limits>
 //Project Includes
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/cdm/utils/Logger.h>

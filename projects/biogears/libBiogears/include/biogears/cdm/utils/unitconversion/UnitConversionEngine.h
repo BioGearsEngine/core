@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <cassert>
 #include <cmath>
 #include <unordered_map>
+#include <cstddef>
 //Project Includes
 #include <biogears/cdm/utils/unitconversion/PrefixDescriptor.h>
 #include <biogears/cdm/utils/unitconversion/QuantityConversionDescriptor.h>
