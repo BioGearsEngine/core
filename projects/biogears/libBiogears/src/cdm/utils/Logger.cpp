@@ -171,7 +171,7 @@ void simtime_handler(std::ostream& os, std::string const& /*message*/, std::stri
     }
 #else
     if (hours) {
-      os << std::to_string(hours % 24) << "h" << std::to_string(minutes % 60) << "m" << std::to_string(t_seconds % 60) << "s";
+      os << std::to_string(hours) << "h" << std::to_string(minutes % 60) << "m" << std::to_string(t_seconds % 60) << "s";
     } else if (minutes) {
       os << std::to_string(minutes % 60) << "m" << std::to_string(t_seconds % 60) << "s";
     } else {
