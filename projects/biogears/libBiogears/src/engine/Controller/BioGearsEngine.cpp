@@ -123,11 +123,20 @@ PhysiologyEngineTrack* BioGearsEngine::GetEngineTrack()
   return &m_EngineTrack;
 }
 //-------------------------------------------------------------------------------
+//!
+//!  \param char* - Coniocal Path to be loaded
+//!  \param SEScalarTime*  -  Overrides the internal states Simulation time with the given. Defaults to nullptr which assumes the state files time.
+//! 
+//!  Load sate is biogears_io aware.  If the file path given is embedded it will fall back
+//!  to the embeded version if non of the default search locations are found.
 bool BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 {
   return LoadState(std::string { file }, simTime);
 }
 //-------------------------------------------------------------------------------
+//!
+//!  Override of LoadState 
+//! \\see   BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime)
 {
 
@@ -153,6 +162,12 @@ bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simT
   return false;
 }
 //-------------------------------------------------------------------------------
+//!
+//!  \param char const* buffer -- String literal ASCII encoding of a biogears EngineState file
+//!  \param size_t - Ammount of data in the buffer
+//! 
+//!  \note This function allows integrators to perform IO for Biogears and avoid 
+//!        assumptons of the underlying filesystem.
 bool BioGearsEngine::LoadState(char const* buffer, size_t size)
 {
 
@@ -165,6 +180,9 @@ bool BioGearsEngine::LoadState(char const* buffer, size_t size)
   return false;
 }
 //-------------------------------------------------------------------------------
+//!
+//!  Override of LoadState
+//! \\see   BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime)
 {
   auto requests = GetEngineTrack()->GetDataRequestManager().GetDataRequests();
