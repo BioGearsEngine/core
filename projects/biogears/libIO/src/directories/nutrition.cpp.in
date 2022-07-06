@@ -10,7 +10,7 @@
 
 namespace biogears {
 namespace io {
-  static char default_directory[] = "nutrition/";
+  constexpr char default_nutrition_directory[] = "nutrition/";
   char const * nutrition_file_list[] = {
 @RESOURCE_FILE_LIST@
   };
@@ -35,7 +35,7 @@ namespace io {
       output.close();
       return true;
    };
-biogears::filesystem::path dir {default_directory};
+biogears::filesystem::path dir {default_nutrition_directory};
 @GENERATE_DIRECTORY_BODY@
 
    return true;
@@ -73,7 +73,7 @@ biogears::filesystem::path dir {default_directory};
     return size_of_embedded_content ;
   }
   //-----------------------------------------------------------------------------
-  char const * get_default_nutrition_directory() { return default_directory; }
+  char const * get_default_nutrition_directory() { return default_nutrition_directory; }
   //-----------------------------------------------------------------------------
   
   bool generate_nutrition_directory(const char* root)
@@ -85,8 +85,8 @@ biogears::filesystem::path dir {default_directory};
   bool does_embedded_nutrition_file_exist(const char* path)
   {
    std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_nutrition_directory == resource_id.substr(0,sizeof(default_nutrition_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_nutrition_directory)-1);
     }
    return does_embedded_nutrition_file_exist(resource_id);
   }
@@ -95,8 +95,8 @@ biogears::filesystem::path dir {default_directory};
   char const* get_nutrition_file_sha1(const char* path)
   {
    std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_nutrition_directory == resource_id.substr(0,sizeof(default_nutrition_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_nutrition_directory)-1);
     }
    return get_nutrition_file_sha1(resource_id);
   }
@@ -114,8 +114,8 @@ biogears::filesystem::path dir {default_directory};
   char const* get_embedded_nutrition_file(const char* path, size_t& content_size)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_nutrition_directory == resource_id.substr(0,sizeof(default_nutrition_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_nutrition_directory)-1);
     }
     return get_embedded_nutrition_file(resource_id, content_size);
   }

@@ -11,7 +11,7 @@
 namespace biogears {
 namespace io {
 
-  static char default_directory[] = "config/";
+  constexpr  char default_config_directory[] = "config/";
   char const * config_file_list[] = {
 @RESOURCE_FILE_LIST@
   };
@@ -38,7 +38,7 @@ namespace io {
       output.close();
       return true;
    };
-   biogears::filesystem::path dir {default_directory};
+   biogears::filesystem::path dir {default_config_directory};
 @GENERATE_DIRECTORY_BODY@
 
    return true;
@@ -67,7 +67,7 @@ namespace io {
     return embedded_content;
   }
   //-----------------------------------------------------------------------------
-  char const * get_default_config_directory() { return default_directory; }
+  char const * get_default_config_directory() { return default_config_directory; }
   //-----------------------------------------------------------------------------
   size_t  get_embedded_config_file_size( const char* path) 
   {
@@ -88,8 +88,8 @@ namespace io {
   bool does_embedded_config_file_exist(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_config_directory == resource_id.substr(0,sizeof(default_config_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_config_directory)-1);
     }
     return does_embedded_config_file_exist(resource_id);
   }
@@ -98,8 +98,8 @@ namespace io {
   char const* get_config_file_sha1(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_config_directory == resource_id.substr(0,sizeof(default_config_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_config_directory)-1);
     }
     return get_config_file_sha1(resource_id);
   }
@@ -117,8 +117,8 @@ namespace io {
   char const* get_embedded_config_file(const char* path, size_t& content_size)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_config_directory == resource_id.substr(0,sizeof(default_config_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_config_directory)-1);
     }
     return get_embedded_config_file(resource_id, content_size);
   }
