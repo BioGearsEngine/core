@@ -9,7 +9,11 @@
 #include <regex>
 #include <sstream>
 
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/io/directories/config.h>
+#include <biogears/io/io-manager.h>
 #include <biogears/string/manipulation.h>
+
 
 namespace biogears {
 
@@ -317,19 +321,36 @@ auto Config::back() const -> const_reference
 //-----------------------------------------------------------------------------
 bool Config::load(std::string filepath, bool silent)
 {
+  using namespace biogears;
+
   Tokenizer tokens;
-  std::ifstream ifs(filepath);
-  if (ifs.is_open() && tokens.tokenize(ifs)) {
-    return process(std::move(tokens));
-  } else {
-    ifs.open("config/" + filepath);
-    if (ifs.is_open() && tokens.tokenize(ifs)) {
+
+  std::unique_ptr<Logger> logger = std::make_unique<Logger>("");
+
+  auto possible_path = logger->GetIoManager().lock()->FindConfigFile(filepath.c_str());
+  if (possible_path.empty()) {
+    size_t content_size;
+    #ifdef BIOGEARS_IO_PRESENT
+      auto content = biogears::io::get_embedded_config_file(filepath.c_str(), content_size);
+    std::istringstream iss { content };
+    if ( tokens.tokenize(iss)) {
       return process(std::move(tokens));
     }
-    if (!silent) {
-      std::cerr << "Unable to Load " << filepath << "!!!\n";
+    #endif
+  } else {
+    std::ifstream ifs { possible_path };
+    if (ifs.is_open() && tokens.tokenize(ifs)) {
+      return process(std::move(tokens));
+    } else {
+      ifs.open("config/" + filepath);
+      if (ifs.is_open() && tokens.tokenize(ifs)) {
+        return process(std::move(tokens));
+      }
+      if (!silent) {
+        std::cerr << "Unable to Load " << filepath << "!!!\n";
+      }
+      return false;
     }
-    return false;
   }
   return true;
 }
