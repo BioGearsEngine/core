@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19.0)
+cmake_minimum_required(VERSION 3.21.0)
 message(STATUS "  Configuring lib${PROJECT_NAME}_io")
 
 option(UNITTEST_biogears-core_io "Enable libBiogears_io UnitTest "  ON)
@@ -176,18 +176,18 @@ message(STATUS "            : data/substances")
 FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/substances" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/substances/*.xml")
 configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/substances.cpp.in" TYPE "substances/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
 
-option(Biogears_IO_INCLUDE_DATA_TEMPLATES "Add default states which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" OFF)
+option(Biogears_IO_INCLUDE_DATA_TEMPLATES "Add default data templates which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" OFF)
 if (Biogears_IO_INCLUDE_DATA_TEMPLATES)
 message(STATUS "            : data/templates")
 FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/templates" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/templates/*.csv")
 configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/templates.cpp.in" TYPE "templates/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
 endif()
 
-option(Biogears_IO_INCLUDE_SCENARIOS "Add default states which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" OFF)
+option(Biogears_IO_INCLUDE_SCENARIOS "Add default scenarios which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" OFF)
 if (Biogears_IO_INCLUDE_SCENARIOS)
 message(STATUS "            : Scenarios")
 FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/Scenarios" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/Scenarios/*.xml")
-configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/Scenarios.cpp.in" TYPE "Scenarios/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
+configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/Scenarios.cpp.in" TYPE "Scenarios/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/ HEADERS GEN_HDRS SOURCES GEN_SRCS )
 endif()
 
 configure_file( src/constants.h.in  ${BIOGEARS_BINARY_DIR}/generated/biogears/io/constants.h NEWLINE_STYLE LF)

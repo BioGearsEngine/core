@@ -10,7 +10,7 @@
 
 namespace biogears {
 namespace io {
-  static char default_directory[] = "templates/";
+  constexpr char default_template_directory[] = "templates/";
   char const * template_file_list[] = {
 @RESOURCE_FILE_LIST@
   };
@@ -35,7 +35,7 @@ namespace io {
       output.close();
       return true;
    };
-   biogears::filesystem::path dir {default_directory};
+   biogears::filesystem::path dir {default_template_directory};
 
 @GENERATE_DIRECTORY_BODY@
 
@@ -74,7 +74,7 @@ namespace io {
     return size_of_embedded_content ;
   }
   //-----------------------------------------------------------------------------
-  char const * get_default_template_directory() { return default_directory; }
+  char const * get_default_template_directory() { return default_template_directory; }
   //-----------------------------------------------------------------------------
   
   bool generate_templates_directory(const char* root)
@@ -86,8 +86,8 @@ namespace io {
   bool does_embedded_templates_file_exist(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_template_directory == resource_id.substr(0,sizeof(default_template_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_template_directory)-1);
     }
     return does_embedded_templates_file_exist(resource_id);
   }
@@ -96,8 +96,8 @@ namespace io {
   char const* get_templates_file_sha1(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_template_directory == resource_id.substr(0,sizeof(default_template_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_template_directory)-1);
     }
     return get_templates_file_sha1(resource_id);
   }
@@ -115,8 +115,8 @@ namespace io {
   char const* get_embedded_templates_file(const char* path, size_t& content_size)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_template_directory == resource_id.substr(0,sizeof(default_template_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_template_directory)-1);
     }
     return get_embedded_templates_file(resource_id, content_size);
   }

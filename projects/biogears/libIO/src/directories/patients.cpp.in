@@ -10,7 +10,7 @@
 
 namespace biogears {
 namespace io {
-  static char default_directory[] = "patients/";
+  constexpr char default_patient_directory[] = "patients/";
   char const * patient_file_list[] = {
 @RESOURCE_FILE_LIST@
   };
@@ -36,7 +36,7 @@ namespace io {
       output.close();
       return true;
    };
-   biogears::filesystem::path dir {default_directory};
+   biogears::filesystem::path dir {default_patient_directory};
 @GENERATE_DIRECTORY_BODY@
 
    return true;
@@ -74,7 +74,7 @@ namespace io {
     return size_of_embedded_content ;
   }
   //-----------------------------------------------------------------------------
-  char const * get_default_patients_directory() { return default_directory; }
+  char const * get_default_patients_directory() { return default_patient_directory; }
   //-----------------------------------------------------------------------------
   bool generate_patients_directory(const char* root)
   {
@@ -85,8 +85,8 @@ namespace io {
   bool does_embedded_patients_file_exist(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_patient_directory == resource_id.substr(0,sizeof(default_patient_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_patient_directory)-1);
     }
     return does_embedded_patients_file_exist(resource_id);
   }
@@ -95,8 +95,8 @@ namespace io {
   char const* get_patients_file_sha1(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_patient_directory == resource_id.substr(0,sizeof(default_patient_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_patient_directory)-1);
     }
     return get_patients_file_sha1(resource_id);
   }
@@ -114,8 +114,8 @@ namespace io {
   char const* get_embedded_patients_file(const char* path, size_t& content_size)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_patient_directory == resource_id.substr(0,sizeof(default_patient_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_patient_directory)-1);
     }
     return get_embedded_patients_file(resource_id, content_size);
   }
