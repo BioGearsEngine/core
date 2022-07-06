@@ -1,13 +1,13 @@
 //**********************************************************************************
-//Copyright 2015 Applied Research Associates, Inc.
-//Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-//this file except in compliance with the License.You may obtain a copy of the License
-//at :
-//http://www.apache.org/licenses/LICENSE-2.0
-//Unless required by applicable law or agreed to in writing, software distributed under
-//the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-//CONDITIONS OF ANY KIND, either express or implied.See the License for the
-//specific language governing permissions and limitations under the License.
+// Copyright 2015 Applied Research Associates, Inc.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License.You may obtain a copy of the License
+// at :
+// http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software distributed under
+// the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied.See the License for the
+// specific language governing permissions and limitations under the License.
 //**************************************************************************************
 
 #include "Driver.h"
@@ -43,6 +43,13 @@
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
 #include <biogears/cdm/test/CommonDataModelTest.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
+#endif
+
+#ifdef BIOGEARS_IO_PRESENT
+#include <biogears/io/directories/patients.h>
+#ifdef BIOGEARS_IO_EMBED_STATES
+#include <biogears/io/directories/states.h>
+#endif
 #endif
 
 #include "../utils/Config.h"
@@ -217,7 +224,7 @@ void Driver::join()
 //-----------------------------------------------------------------------------
 void Driver::queue_BGEUnitTest(Executor exec, bool as_subprocess)
 {
-  //TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
+  // TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
   _pool.queue_work(
     [=]() {
@@ -238,7 +245,7 @@ void Driver::queue_BGEUnitTest(Executor exec, bool as_subprocess)
 //-----------------------------------------------------------------------------
 void Driver::queue_CDMUnitTest(Executor exec, bool as_subprocess)
 {
-  //TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
+  // TODO: Add Subprocess suport for BGEUnitTest by porting test_driver to bg-unittest
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
   _pool.queue_work(
     [&]() {
@@ -282,17 +289,26 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
   biogears::Logger logger { "", io };
 
   filesystem::path resolved_filepath = io.FindScenarioFile(exec.Scenario().c_str());
-  if (resolved_filepath.empty()) {
-    std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
-    return;
-  }
   using biogears::filesystem::path;
   using mil::tatrc::physiology::datamodel::ScenarioData;
   std::unique_ptr<ScenarioData> scenario;
+  std::unique_ptr<CDM::ObjectData> obj;
   try {
-    std::cout << "Reading " << exec.Scenario() << std::endl;
-    auto obj = Serializer::ReadFile(resolved_filepath,
-                                    &logger);
+    if (resolved_filepath.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+      size_t content_size;
+      auto content = io.get_embedded_resource_file(exec.Scenario().c_str(), content_size);
+      if (content_size == 0) {
+        std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
+        return;
+      }
+      obj = Serializer::ReadBuffer((XMLByte*)content, content_size, &logger);
+#endif
+    } else {
+      std::cout << "Reading " << exec.Scenario() << std::endl;
+      obj = Serializer::ReadFile(resolved_filepath,
+                                 &logger);
+    }
     scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
     if (scenario == nullptr) {
       throw std::runtime_error(exec.Scenario() + " is not a valid Scenario file.");
@@ -320,6 +336,12 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     std::transform(nc_state_file.begin(), nc_state_file.end(), nc_state_file.begin(), ::tolower);
     if ("all" == nc_state_file) {
       auto state_files = biogears::ListFiles("states", R"(.*\.xml)", false);
+#if BIOGEARS_IO_PRESENT && BIOGEARS_IO_EMBED_STATES
+      if (state_files.size() == 0) {
+        auto states = biogears::io::list_patients_files();
+        state_files = std::vector<biogears::filesystem::path> { states, states + biogears::io::patients_file_count() };
+      }
+#endif
       auto infection_state_files = biogears::ListFiles("states/InfectionStates", R"(.*\.xml)", false);
       state_files.insert(state_files.end(), infection_state_files.begin(), infection_state_files.end());
       queue_from_sate_files(exec, state_files, scenario_launch);
@@ -360,6 +382,12 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     std::transform(nc_patient_file.begin(), nc_patient_file.end(), nc_patient_file.begin(), ::tolower);
     if ("all" == nc_patient_file) {
       auto patient_files = biogears::ListFiles("patients", R"(.*\.xml)", false);
+#if BIOGEARS_IO_PRESENT
+      if (patient_files.size() == 0) {
+        auto patients = biogears::io::list_patients_files();
+        patient_files = std::vector<biogears::filesystem::path> { patients, patients + biogears::io::patients_file_count() };
+      }
+#endif
       queue_from_patient_files(exec, patient_files, scenario_launch);
     } else if (filesystem::exists(scenario->InitialParameters()->PatientFile().get())) {
       if (filesystem::is_directory(scenario->InitialParameters()->PatientFile().get())) {
@@ -708,7 +736,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   auto split_patient_path = filesystem::path(trimed_patient_path);
   auto patient_no_extension = split(split_patient_path.back(), '.').front();
 
-  //NOTE: This loses non relative prefixes as the split will eat the leading path_separator
+  // NOTE: This loses non relative prefixes as the split will eat the leading path_separator
   filesystem::path parent_dir = split_scenario_path.parent_path();
 
   if (multi_patient_run) {
@@ -797,8 +825,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
     sce.GetInitialParameters().SetPatient(patient);
   }
 
-
-  console_logger.Info("Starting " + ex.Name() );
+  console_logger.Info("Starting " + ex.Name());
   try {
     BioGearsScenarioExec bse { *eng };
     filesystem::path resultsFilePath = ex.Computed();
