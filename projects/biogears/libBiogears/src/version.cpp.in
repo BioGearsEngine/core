@@ -14,16 +14,16 @@ namespace biogears {
 
 //-----------------------------------------------------------------------------
 
-constexpr char const * _PROJECT_NAME_ = "${ROOT_PROJECT_NAME}";
-constexpr char const * _REV_HASH_ = "${${ROOT_PROJECT_NAME}_VERSION_HASH}";
-constexpr char const * _REV_TAG_ = "${${ROOT_PROJECT_NAME}_VERSION_TAG}";
-constexpr char const * _REV_COMMIT_DATE_= "${${ROOT_PROJECT_NAME}_COMMIT_DATE}";
-constexpr bool _OFFICAL_RELEASE_ = ${${ROOT_PROJECT_NAME}_CLEAN_BUILD};
+constexpr char const * _PROJECT_NAME_ = "Biogears";
+constexpr char const * _REV_HASH_ = "${Biogears_VERSION_HASH}";
+constexpr char const * _REV_TAG_ = "${Biogears_VERSION_TAG}";
+constexpr char const * _REV_COMMIT_DATE_= "${Biogears_COMMIT_DATE}";
+constexpr bool _OFFICAL_RELEASE_ = ${Biogears_CLEAN_BUILD};
 
-constexpr int _MAJOR_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_MAJOR};
-constexpr int _MINOR_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_MINOR};
-constexpr int _PATCH_VERSION_NUMBER_  = ${${ROOT_PROJECT_NAME}_VERSION_PATCH};
-constexpr char const * _TWEAK_VERSION_NUMBER_  = "${${ROOT_PROJECT_NAME}_VERSION_TWEAK}";
+constexpr int _MAJOR_VERSION_NUMBER_  = ${Biogears_VERSION_MAJOR};
+constexpr int _MINOR_VERSION_NUMBER_  = ${Biogears_VERSION_MINOR};
+constexpr int _PATCH_VERSION_NUMBER_  = ${Biogears_VERSION_PATCH};
+constexpr char const * _TWEAK_VERSION_NUMBER_  = "${Biogears_VERSION_TWEAK}";
 
 constexpr char const* _CMAKE_INSTALL_PREFIX_ = "${CMAKE_PREFIX_PATH}";
 

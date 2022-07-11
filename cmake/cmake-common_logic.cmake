@@ -168,7 +168,7 @@ function(create_cache_file)
   set(CacheForScript ${CMAKE_BINARY_DIR}/cmake-common_cache.cmake)
   set(OUTPUT_PREFIX ${CMAKE_BINARY_DIR}/outputs)
   file(WRITE ${CacheForScript} "")
-  file(APPEND ${CacheForScript} "set(ROOT_PROJECT_NAME ${ROOT_PROJECT_NAME})\n")
+  file(APPEND ${CacheForScript} "set(ROOT_PROJECT_NAME Biogears)\n")
   file(APPEND ${CacheForScript} "set(PROJECT_SOURCE_DIR \"${PROJECT_SOURCE_DIR}\")\n")
   file(APPEND ${CacheForScript} "set(CMAKE_BINARY_DIR \"${CMAKE_BINARY_DIR}\")\n")
   file(APPEND ${CacheForScript} "set(CMAKE_PREFIX_PATH \"${CMAKE_PREFIX_PATH}\")\n")
@@ -202,15 +202,15 @@ endfunction()
 # List Tags in the order they appear assumes the version of the project is the latest version split by '.'
 # Creates the following variabels
 #
-# ${ROOT_PROJECT_NAME}_VERSION_MAJOR  #First group of characters in the split
-# ${ROOT_PROJECT_NAME}_VERSION_MINOR  #Second group of characters in the split
-# ${ROOT_PROJECT_NAME}_VERSION_PATCH  #Third set of characters in the split
-# ${ROOT_PROJECT_NAME}_VERSION_TWEAK  #Forth set of characters in the split
-# ${ROOT_PROJECT_NAME}_VERSION_TAG    #A string tag based on how dirty the tag is usually -dirty 
-# ${ROOT_PROJECT_NAME}_VERSION_HASH   #Abriviated Git Hash for the specific commit
-# ${ROOT_PROJECT_NAME}_LIB_VERSION    #MAJOR.MINOR.PATCH - This really only works if your tags use this format
-# ${ROOT_PROJECT_NAME}_CLEAN_BUILD    #True if the number of commits since the last tag is greater then 0
-# ${ROOT_PROJECT_NAME}_COMMIT_DATE    #Date of the latest commit in the repo git  log -1 --format=%ai 
+# Biogears_VERSION_MAJOR  #First group of characters in the split
+# Biogears_VERSION_MINOR  #Second group of characters in the split
+# Biogears_VERSION_PATCH  #Third set of characters in the split
+# Biogears_VERSION_TWEAK  #Forth set of characters in the split
+# Biogears_VERSION_TAG    #A string tag based on how dirty the tag is usually -dirty 
+# Biogears_VERSION_HASH   #Abriviated Git Hash for the specific commit
+# Biogears_LIB_VERSION    #MAJOR.MINOR.PATCH - This really only works if your tags use this format
+# Biogears_CLEAN_BUILD    #True if the number of commits since the last tag is greater then 0
+# Biogears_COMMIT_DATE    #Date of the latest commit in the repo git  log -1 --format=%ai 
 #
 ########################################################################################################
 
@@ -232,15 +232,15 @@ function(configure_version_information _SUCESS_CHECK)
   endif()
 
   #Set values based on passed inputs as defaults incase GIT fails
-  set(${ROOT_PROJECT_NAME}_VERSION_MAJOR ${_MAJOR} PARENT_SCOPE)
-  set(${ROOT_PROJECT_NAME}_VERSION_MINOR ${_MINOR} PARENT_SCOPE)
-  set(${ROOT_PROJECT_NAME}_VERSION_PATCH ${_PATCH} PARENT_SCOPE)
-  set(${ROOT_PROJECT_NAME}_VERSION_TWEAK ${_TWEAK} PARENT_SCOPE)
-  set(${ROOT_PROJECT_NAME}_LIB_VERSION "${_MAJOR}.${_MINOR}.${_PATCH}" PARENT_SCOPE)
-  set(${ROOT_PROJECT_NAME}_VERSION_TAG "Custom" PARENT_SCOPE)
-  set(${ROOT_PROJECT_NAME}_CLEAN_BUILD false PARENT_SCOPE)
-  set(${ROOT_PROJECT_NAME}_VERSION_HASH "Unknown" PARENT_SCOPE)
-  set(${ROOT_PROJECT_NAME}_COMMIT_DATE "Unknown" PARENT_SCOPE)
+  set(Biogears_VERSION_MAJOR ${_MAJOR} PARENT_SCOPE)
+  set(Biogears_VERSION_MINOR ${_MINOR} PARENT_SCOPE)
+  set(Biogears_VERSION_PATCH ${_PATCH} PARENT_SCOPE)
+  set(Biogears_VERSION_TWEAK ${_TWEAK} PARENT_SCOPE)
+  set(Biogears_LIB_VERSION "${_MAJOR}.${_MINOR}.${_PATCH}" PARENT_SCOPE)
+  set(Biogears_VERSION_TAG "Custom" PARENT_SCOPE)
+  set(Biogears_CLEAN_BUILD false PARENT_SCOPE)
+  set(Biogears_VERSION_HASH "Unknown" PARENT_SCOPE)
+  set(Biogears_COMMIT_DATE "Unknown" PARENT_SCOPE)
  
   if(GIT_FOUND) 
     #Pull the latest GIT TAG
@@ -299,33 +299,33 @@ function(configure_version_information _SUCESS_CHECK)
                                     ERROR_QUIET)
     if(_RESULT_VARIABLE EQUAL 0_)    
       string(STRIP "${_GIT_COMMIT_DATE}" _GIT_COMMIT_DATE)
-      set (${ROOT_PROJECT_NAME}_COMMIT_DATE "${_GIT_COMMIT_DATE}" PARENT_SCOPE)
+      set (Biogears_COMMIT_DATE "${_GIT_COMMIT_DATE}" PARENT_SCOPE)
     endif()
 
     # 
     if( _VERSION_MAJOR MATCHES "[0-9]+")
-      set( ${ROOT_PROJECT_NAME}_VERSION_MAJOR ${_VERSION_MAJOR} PARENT_SCOPE)
+      set( Biogears_VERSION_MAJOR ${_VERSION_MAJOR} PARENT_SCOPE)
     endif()
     if( _VERSION_MINOR MATCHES "[0-9]+")
-      set( ${ROOT_PROJECT_NAME}_VERSION_MINOR ${_VERSION_MINOR} PARENT_SCOPE)
+      set( Biogears_VERSION_MINOR ${_VERSION_MINOR} PARENT_SCOPE)
     endif()
     if( _VERSION_PATCH MATCHES "[0-9]+")
-      set( ${ROOT_PROJECT_NAME}_VERSION_PATCH ${_VERSION_PATCH} PARENT_SCOPE)
+      set( Biogears_VERSION_PATCH ${_VERSION_PATCH} PARENT_SCOPE)
     endif()
     if( _VERSION_TWEAK MATCHES "[0-9]+")
-      set( ${ROOT_PROJECT_NAME}_VERSION_TWEAK ${_VERSION_TWEAK} PARENT_SCOPE)
+      set( Biogears_VERSION_TWEAK ${_VERSION_TWEAK} PARENT_SCOPE)
     endif()
     if( _VERSION_MAJOR AND _VERSION_MINOR )
-      set( ${ROOT_PROJECT_NAME}_LIB_VERSION   "${_VERSION_MAJOR}.${_VERSION_MINOR}" PARENT_SCOPE)
+      set( Biogears_LIB_VERSION   "${_VERSION_MAJOR}.${_VERSION_MINOR}" PARENT_SCOPE)
     endif()
     if (_VERSION_TAG)
-      set( ${ROOT_PROJECT_NAME}_VERSION_TAG   "${_VERSION_TAG}" PARENT_SCOPE)
+      set( Biogears_VERSION_TAG   "${_VERSION_TAG}" PARENT_SCOPE)
     endif()
     if (_CLEAN_BUILD)
-      set( ${ROOT_PROJECT_NAME}_CLEAN_BUILD   "${_CLEAN_BUILD}" PARENT_SCOPE)
+      set( Biogears_CLEAN_BUILD   "${_CLEAN_BUILD}" PARENT_SCOPE)
     endif()
     if(_VERSION_HASH)
-      set( ${ROOT_PROJECT_NAME}_VERSION_HASH  "${_VERSION_HASH}"  PARENT_SCOPE)
+      set( Biogears_VERSION_HASH  "${_VERSION_HASH}"  PARENT_SCOPE)
     endif()
  endif() 
   

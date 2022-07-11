@@ -25,8 +25,11 @@ specific language governing permissions and limitations under the License.
     #endif 
   #define BG_EXT extern
 #elif defined(_WIN32)
-  //#include <biogears/string-exports.h>
-  #ifdef biogears_EXPORTS
+  #if defined (biogears_BUILT_STATIC)
+    #define BIOGEARS_API 
+    #define BIOGEARS_PRIVATE_API
+    #define BG_EXT
+  #elif defined(biogears_EXPORTS)
     #define BIOGEARS_API __declspec(dllexport)
     #ifdef ENABLE_UNIT_TEST_API
       #define BIOGEARS_PRIVATE_API  __declspec(dllexport)

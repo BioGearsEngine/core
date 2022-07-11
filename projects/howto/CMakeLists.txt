@@ -1,4 +1,4 @@
-option(${ROOT_PROJECT_NAME}_BUILD_HOWTOS     "Select to build sdk how to examples." ON)
+option(Biogears_BUILD_HOWTOS     "Select to build sdk how to examples." ON)
 cmake_policy(SET CMP0087 NEW)
 message(STATUS "Configuring Examples")
 function(add_howto name)
@@ -8,7 +8,7 @@ function(add_howto name)
   set(EXAMPLE_NAME howto-${name})
 
   string(TOLOWER ${EXAMPLE_NAME} TARGET_NAME)
-  option(BUILD_EX_${EXAMPLE_NAME}     "Select to build Example ${ROOT_PROJECT_NAME}" ON)
+  option(BUILD_EX_${EXAMPLE_NAME}     "Select to build Example Biogears" ON)
 
   if(BUILD_EX_${EXAMPLE_NAME})
     # BASE VARIABLES
@@ -82,23 +82,23 @@ function(add_howto name)
     )
       
     target_link_libraries(${TARGET_NAME} ${${EXAMPLE_NAME}_LIBS} )
-    if(TARGET prepare_runtime_dir AND ${ROOT_PROJECT_NAME}_PREPARE_RUNTIME_DIR) 
+    if(TARGET prepare_runtime_dir AND Biogears_PREPARE_RUNTIME_DIR) 
       add_dependencies(${TARGET_NAME} prepare_runtime_dir)
     endif()
    
     add_dependencies(all_howtos ${TARGET_NAME})
     
-if (NOT (${ROOT_PROJECT_NAME}_BUILD_INSTALLER AND APPLE)) 
+if (NOT (Biogears_BUILD_INSTALLER AND APPLE)) 
   install(TARGETS ${TARGET_NAME} EXPORT all_howtos
-     RUNTIME DESTINATION bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>/howtos
-     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
-     ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+     RUNTIME DESTINATION bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>/howtos
+     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
+     ARCHIVE DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
   )
 else()
   install(TARGETS ${TARGET_NAME} EXPORT all_howtos
      RUNTIME DESTINATION "./"
-     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
-     ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
+     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
+     ARCHIVE DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
   )
 endif()
 
@@ -110,7 +110,7 @@ endfunction(add_howto)
 #         Examples are almost never order dependent just add them as we  find
 #         them
 ############################################################################
-if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
+if(Biogears_BUILD_HOWTOS)
   include ( ${PROJECT_SOURCE_DIR}/cmake/cmake-common_logic.cmake )
   
   find_package(Threads REQUIRED)
@@ -138,7 +138,7 @@ if(${ROOT_PROJECT_NAME}_BUILD_HOWTOS)
   )
 
   target_compile_definitions(howto-common  PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
-  target_compile_options(howto-common  PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
+  target_compile_options(howto-common  PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
   
   add_custom_target(all_howtos COMMENT "Meta Target for compiling all howtos")
   set_target_properties(all_howtos PROPERTIES FOLDER "Examples" )
@@ -178,11 +178,11 @@ if(NOT (CMAKE_CROSSCOMPILING OR APPLE))
 		
 	FILE(TO_CMAKE_PATH   \"\${CMAKE_INSTALL_PREFIX}\"  INSTALL_PATH)
 
-	set( Biogears_RUNTIME_DESTINATION \"\${INSTALL_PATH}/bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
-    set( Biogears_LIBRARY_DESTINATION \"\${INSTALL_PATH}/${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
-    set( Biogears_ARCHIVE_DESTINATION \"\${INSTALL_PATH}/lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+	set( Biogears_RUNTIME_DESTINATION \"\${INSTALL_PATH}/bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+    set( Biogears_LIBRARY_DESTINATION \"\${INSTALL_PATH}/${LIBRARY_INSTALL_DIR}/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+    set( Biogears_ARCHIVE_DESTINATION \"\${INSTALL_PATH}/lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
 
-    EXELIST(TARGET \"\${INSTALL_PATH}/bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>/howtos/\" )
+    EXELIST(TARGET \"\${INSTALL_PATH}/bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>/howtos/\" )
     if(NOT APPLE)
       fixup_bundle(\"\${TARGET}\"
         \"\"

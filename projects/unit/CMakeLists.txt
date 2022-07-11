@@ -3,9 +3,9 @@ CMAKE_POLICY(VERSION 3.8.0)
 
 enable_language(CXX)
 find_package(GTest)
-option(${PROJECT_NAME}_BUILD_TEST        "Select to Build Tests." ${GTest_FOUND})
+option(Biogears_BUILD_TEST        "Select to Build Tests." ${GTest_FOUND})
 
-if(${PROJECT_NAME}_BUILD_TEST)
+if(Biogears_BUILD_TEST)
   
   ###############################################################################
   # Unit Test
@@ -191,12 +191,12 @@ if(${PROJECT_NAME}_BUILD_TEST)
   )
   endif()
 
-     target_compile_definitions(unittest PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
-     target_compile_options(unittest PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
+  target_compile_definitions(unittest PRIVATE ${UNIT_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )
+     target_compile_options(unittest PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
 
   target_link_libraries(unittest
     GTest::GTest 
     GTest::Main
     Biogears::libbiogears
   )
-endif(${PROJECT_NAME}_BUILD_TEST)
+endif(Biogears_BUILD_TEST)

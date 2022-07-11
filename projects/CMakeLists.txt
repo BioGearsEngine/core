@@ -1,11 +1,11 @@
 enable_language(CXX)
 
-option(${ROOT_PROJECT_NAME}_BUILD_STATIC  "Build ${ROOT_PROJECT_NAME} as a static libraries" OFF)
-option(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
-option(${ROOT_PROJECT_NAME}_PREPARE_RUNTIME_DIR "Automatically move files from share/ toto runtime/ to create a staging ground for BioGears to run. Takes a resonable amount of disk space not needed for some CI task" ON)
+option(Biogears_BUILD_STATIC  "Build Biogears as a static libraries" OFF)
+option(Biogears_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
+option(Biogears_PREPARE_RUNTIME_DIR "Automatically move files from share/ toto runtime/ to create a staging ground for BioGears to run. Takes a resonable amount of disk space not needed for some CI task" ON)
 
 find_path (
-  ${ROOT_PROJECT_NAME}_Baseline_DIR
+  Biogears_Baseline_DIR
   NAME Scenarios
   PATHS ${PROJECT_SOURCE_DIR}/../verification/core  
         ${PROJECT_SOURCE_DIR}/../validation/core 
@@ -22,7 +22,7 @@ find_path (
   DOC "Optional directory path to hiarchial filetree of baseline archives. This will be used by Python Plotters to find Baselines"
 )
 find_path (
-  ${ROOT_PROJECT_NAME}_Reference_DIR
+  Biogears_Reference_DIR
   NAME BioGears.bib
   PATHS ${PROJECT_SOURCE_DIR}/../references
   DOC "Optional directory path to a hiarchial references filetree of publication articles for documentation building"
@@ -47,24 +47,24 @@ setup_unified_output_directory(PREFIX "outputs")
 ##################################################################################
 #STAGE RUNTIME LOGIC
 ##################################################################################
-if(NOT ${ROOT_PROJECT_NAME}_RUNTIME_DIR)
-  set(${ROOT_PROJECT_NAME}_RUNTIME_DIR ${PROJECT_BINARY_DIR}/runtime)
+if(NOT Biogears_RUNTIME_DIR)
+  set(Biogears_RUNTIME_DIR ${PROJECT_BINARY_DIR}/runtime)
 endif()
 
 add_custom_command(
-    OUTPUT  ${${ROOT_PROJECT_NAME}_RUNTIME_DIR} 
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${${ROOT_PROJECT_NAME}_RUNTIME_DIR}
+    OUTPUT  ${Biogears_RUNTIME_DIR} 
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${Biogears_RUNTIME_DIR}
 )
 
 add_custom_command(
-  OUTPUT ${${ROOT_PROJECT_NAME}_RUNTIME_DIR}/UCEDefs.conf
+  OUTPUT ${Biogears_RUNTIME_DIR}/UCEDefs.conf
   DEPENDS ${PROJECT_SOURCE_DIR}/share/etc/UCEDefs.conf
-  COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/etc/UCEDefs.conf  ${${ROOT_PROJECT_NAME}_RUNTIME_DIR}/
+  COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/share/etc/UCEDefs.conf  ${Biogears_RUNTIME_DIR}/
 )
 
 file(GLOB_RECURSE source_xsd_list LIST_DIRECTORIES false CONFIGURE_DEPENDS  "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd")
 foreach(_file IN LISTS  source_xsd_list)
-  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${${ROOT_PROJECT_NAME}_RUNTIME_DIR}" runtime_file "${_file}" )
+  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${Biogears_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_xsd_list ${runtime_file})
   add_custom_command(
     OUTPUT  ${runtime_file}
@@ -76,7 +76,7 @@ endforeach()
 
 file(GLOB_RECURSE source_data_list LIST_DIRECTORIES false CONFIGURE_DEPENDS  "${PROJECT_SOURCE_DIR}/share/data/*")
 foreach(_file IN LISTS  source_data_list)
-  string(REPLACE "${PROJECT_SOURCE_DIR}/share/data" "${${ROOT_PROJECT_NAME}_RUNTIME_DIR}" runtime_file "${_file}" )
+  string(REPLACE "${PROJECT_SOURCE_DIR}/share/data" "${Biogears_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_data_list ${runtime_file})
   add_custom_command(
     OUTPUT  ${runtime_file}
@@ -88,7 +88,7 @@ endforeach()
 if(Biogears_BUILD_WEBSITE)
 file(GLOB_RECURSE source_doc_list LIST_DIRECTORIES false CONFIGURE_DEPENDS  "${PROJECT_SOURCE_DIR}/share/doc/*")
 foreach(_file IN LISTS  source_doc_list)
-  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${${ROOT_PROJECT_NAME}_RUNTIME_DIR}" runtime_file "${_file}" )
+  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${Biogears_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_doc_list ${runtime_file})
   add_custom_command(
     OUTPUT  ${runtime_file}
@@ -100,7 +100,7 @@ endif()
 
 file(GLOB_RECURSE source_scenario_list   LIST_DIRECTORIES false  CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/Scenarios/*" )
 foreach(_file IN LISTS  source_scenario_list)
-  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${${ROOT_PROJECT_NAME}_RUNTIME_DIR}" runtime_file "${_file}" )
+  string(REPLACE "${PROJECT_SOURCE_DIR}/share" "${Biogears_RUNTIME_DIR}" runtime_file "${_file}" )
   list(APPEND runtime_scenario_list ${runtime_file})
   add_custom_command(
     OUTPUT  ${runtime_file}
@@ -109,10 +109,10 @@ foreach(_file IN LISTS  source_scenario_list)
   )
 endforeach()
 ########################################################################################################################################################
-if(${ROOT_PROJECT_NAME}_BUILD_DOCUMENTATION)
+if(Biogears_BUILD_DOCUMENTATION)
   file(GLOB_RECURSE source_website_list   LIST_DIRECTORIES false CONFIGURE_DEPENDS  "${PROJECT_SOURCE_DIR}/share/website/*" )
   foreach(_file IN LISTS  source_website_list)
-    string(REPLACE "${PROJECT_SOURCE_DIR}/share/website" "${${ROOT_PROJECT_NAME}_RUNTIME_DIR}" runtime_file "${_file}" )
+    string(REPLACE "${PROJECT_SOURCE_DIR}/share/website" "${Biogears_RUNTIME_DIR}" runtime_file "${_file}" )
     list(APPEND runtime_scenario_list ${runtime_file})
     add_custom_command(
       OUTPUT  ${runtime_file}
@@ -126,7 +126,7 @@ list(APPEND runtime_glob_list   "${runtime_xsd_list}"  "${runtime_data_list}"  "
 
 add_custom_target( prepare_runtime_dir
   DEPENDS 
-  ${${ROOT_PROJECT_NAME}_RUNTIME_DIR}/UCEDefs.conf
+  ${Biogears_RUNTIME_DIR}/UCEDefs.conf
   ${runtime_glob_list}
   COMMENT "Scanning for need to stage runtime dir"
 )
