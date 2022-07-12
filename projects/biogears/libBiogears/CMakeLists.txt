@@ -52,6 +52,7 @@ if(Biogears_BUILD_STATIC)
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
     CXX_STANDARD 14
     )
+    add_dependencies(libbiogears hex_bindings)
   set_target_properties(libbiogears PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
    if(biogears_USE_OVERRIDE_CONTROL)
       target_compile_definitions( libbiogears PRIVATE BIOGEARS_USE_OVERRIDE_CONTROL)

@@ -4,7 +4,7 @@
 ###############################################################################
 if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
    message(STATUS "            : biogears_csharp")
-   enable_language( CSharp )
+   
    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
@@ -22,9 +22,15 @@ if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
      set_property(SOURCE ${_file} PROPERTY COMPILE_OPTIONS )
    endforeach()
    
+   if(Biogears_BUILD_STATIC)
+       set(LIBRARY_TYPE STATIC)
+   else()
+       set(LIBRARY_TYPE SHARED)
+   endif()
+
    option(UNITTEST_biogears-swig_csharp "Enable biogears_csharp UnitTest " ${Biogears_SWIG_CSHARP_BINDINGS})
    swig_add_library(biogears_csharp 
-         TYPE SHARED 
+	   TYPE ${LIBRARY_TYPE}
          LANGUAGE csharp 
          OUTPUT_DIR "${PROJECT_BINARY_DIR}/outputs/csharp"
          OUTFILE_DIR "${PROJECT_BINARY_DIR}/outputs/csharp"
@@ -36,6 +42,7 @@ if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
    set_target_properties(biogears_csharp PROPERTIES
       POSITION_INDEPENDENT_CODE ON
       FOLDER Libraries
+      CXX_STANDARD 14
    )  
    get_property(support_files TARGET biogears_csharp PROPERTY SWIG_SUPPORT_FILES)
 
@@ -72,26 +79,29 @@ if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
     LIST(APPEND libiogears_csharp_biogears ${file})
   endforeach()
 
-  add_executable(csharp_example ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std} src/howto-swig_bindings.cs)
-  add_executable(csharp_radiation_debugging ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std} src/howto-swig_radiation.cs)
-  set_target_properties(csharp_example PROPERTIES
-      POSITION_INDEPENDENT_CODE ON
-      FOLDER "Swig\\CSharp"
-      PROJECT_LABEL "Example"
-      FOLDERS ON
-    )
-  set_target_properties(csharp_radiation_debugging PROPERTIES
-      POSITION_INDEPENDENT_CODE ON
-      FOLDER "Swig\\CSharp"
-      PROJECT_LABEL "Debugging"
-      FOLDERS ON
-    )
-    
-  target_link_libraries(csharp_example PUBLIC  libbiogears biogears_csharp)
-  target_include_directories(csharp_example PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
+  if (WIN32)
+    enable_language( CSharp )
+    add_executable(csharp_example ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std} src/howto-swig_bindings.cs)
+    add_executable(csharp_radiation_debugging ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std} src/howto-swig_radiation.cs)
+    set_target_properties(csharp_example PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+        FOLDER "Swig\\CSharp"
+        PROJECT_LABEL "Example"
+        FOLDERS ON
+      )
+    set_target_properties(csharp_radiation_debugging PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+        FOLDER "Swig\\CSharp"
+        PROJECT_LABEL "Debugging"
+        FOLDERS ON
+      )
+      
+    target_link_libraries(csharp_example PUBLIC  libbiogears biogears_csharp)
+    target_include_directories(csharp_example PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
 
-  target_link_libraries(csharp_radiation_debugging PUBLIC  libbiogears biogears_csharp)
-  target_include_directories(csharp_radiation_debugging PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
+    target_link_libraries(csharp_radiation_debugging PUBLIC  libbiogears biogears_csharp)
+    target_include_directories(csharp_radiation_debugging PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
+  endif()
 endif()
 
 
