@@ -18,10 +18,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
-class SEScalarMassPerVolume;
-namespace io {
-  class PatientActions;
-}
+  class SEScalarMassPerVolume;
+  namespace io {
+    class PatientActions;
+  }
+
 class BIOGEARS_API SEEbola : public SEPatientAction {
   friend io::PatientActions;
 
