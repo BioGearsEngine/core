@@ -15,4 +15,9 @@
 
 %nspace biogears::SETissueCompartmentDataRequest;
 
+
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SETissueCompartmentDataRequest::HashCode() const "public override";
+#endif 
+
 %include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
