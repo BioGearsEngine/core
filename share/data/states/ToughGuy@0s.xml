@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+67" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+84" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>ToughGuy</Name>
@@ -45,7 +45,7 @@
     <Density readOnly="false" unit="g/m^3" value="1251"/>
     <MolarMass readOnly="false" unit="g/mol" value="28.0134"/>
     <State>Gas</State>
-    <MassInBody readOnly="false" unit="ug" value="556824.226318674"/>
+    <MassInBody readOnly="false" unit="ug" value="556824.226318673"/>
     <MassInBlood readOnly="false" unit="ug" value="92183.7879731553"/>
     <MassInTissue readOnly="false" unit="ug" value="464640.438345518"/>
     <AlveolarTransfer readOnly="false" unit="mL/s" value="131.9098158776"/>
@@ -497,7 +497,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="875.864808533753"/>
     <MassInBody readOnly="false" unit="ug" value="35603035.5230097"/>
     <MassInBlood readOnly="false" unit="ug" value="4871840.23882007"/>
-    <MassInTissue readOnly="false" unit="ug" value="30731195.2841897"/>
+    <MassInTissue readOnly="false" unit="ug" value="30731195.2841896"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -845,6 +845,7 @@
     <PulmonaryVenousOxygenPressure readOnly="false" unit="mmHg" value="97.021828076551"/>
     <VenousCarbonDioxidePressure readOnly="false" unit="mmHg" value="44.5417534388919"/>
     <VenousOxygenPressure readOnly="false" unit="mmHg" value="39.5555383668586"/>
+    <ViralLoad readOnly="false" unit="ct/uL" value="0"/>
     <ArterialOxygenAverage_mmHg numSamples="30" sum="2908.68958266054"/>
     <ArterialCarbonDioxideAverage_mmHg numSamples="30" sum="1204.81947367936"/>
     <RhFactorMismatch_ct>0</RhFactorMismatch_ct>
