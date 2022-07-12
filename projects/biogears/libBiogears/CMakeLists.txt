@@ -1,4 +1,4 @@
-###############################################################################
+#############################################################################
 #Sorce and Header Defines
 ###############################################################################
 message(STATUS "  Configuring libbiogears")
@@ -6,9 +6,16 @@ message(STATUS "  Configuring libbiogears")
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/config.h.in  ${CMAKE_CURRENT_BINARY_DIR}/../generated/biogears/config.h NEWLINE_STYLE LF)
 
 #Biogears CDM
-add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
-add_source_files(CDM_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/biogears REGEX "*.hxx" SOURCE_GROUP "Headers\\Public\\")
-add_source_files(CDM_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/biogears REGEX "*.cxx" SOURCE_GROUP "Sources\\")
+add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\schema\\")
+add_source_files(CDM_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.hxx" SOURCE_GROUP "Headers\\Public\\schema\\")
+add_source_files(CDM_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.cxx" SOURCE_GROUP "Sources\\schema\\")
+
+#Biogears IO
+add_source_files(IO_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libIO/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
+add_source_files(IO_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/io REGEX "*.h" SOURCE_GROUP "Headers\\Public\\generated\\")
+add_source_files(IO_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogears/io REGEX "*.cpp" SOURCE_GROUP "Sources\\generated\\")
+add_source_files(IO_EMBEDED_HDRS LOCATION "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}" REGEX "*.h" SOURCE_GROUP "Headers\\Public\\generated\\")
+add_source_files(IO_EMBEDED_SRCS LOCATION  "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}/" REGEX "*.cpp" SOURCE_GROUP "Sources\\generated\\")
 
 #Biogears Core
 add_source_files(CORE_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/src REGEX "*.h" SOURCE_GROUP "Headers\\Private\\")
@@ -17,18 +24,23 @@ add_source_files(CORE_GEN_SRCS LOCATION ${BIOGEARS_BINARY_DIR}/libBiogears/src R
 add_source_files(CORE_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
 add_source_files(CORE_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/include REGEX "*.inl" SOURCE_GROUP "Headers\\Public\\")
 
-set(LIBBIO_CDM_HEADERS ${CDM_HDRS} ${CDM_PUBLIC_HDRS} ${CDM_GEN_HDRS})
-set(LIBBIO_CDM_SOURCES ${CDM_SRCS} ${CDM_GEN_SRCS})
+set(BIO_CDM_HEADERS ${CDM_HDRS} ${CDM_PUBLIC_HDRS} ${CDM_GEN_HDRS})
+set(BIO_CDM_SOURCES ${CDM_SRCS} ${CDM_GEN_SRCS})
 
-set(LIBBIO_CORE_HEADERS ${CORE_HDRS} ${CORE_PUBLIC_HDRS} ${CORE_GEN_HDRS})
-set(LIBBIO_CORE_SOURCES ${CORE_SRCS} ${CORE_GEN_SRCS})
+set(BIO_IO_HEADERS ${IO_HDRS} ${IO_EMBEDED_HDRS} ${IO_GEN_HDRS})
+set(BIO_IO_SOURCES ${IO_EMBEDED_SRCS} ${IO_GEN_SRCS})
+
+set(BIO_CORE_HEADERS ${CORE_HDRS} ${CORE_PUBLIC_HDRS} ${CORE_GEN_HDRS})
+set(BIO_CORE_SOURCES ${CORE_SRCS} ${CORE_GEN_SRCS})
 
 ###############################################################################
 #Define Logic
 ###############################################################################
 if(Biogears_BUILD_STATIC)
-  add_library(libbiogears STATIC ${LIBBIO_CORE_SOURCES} ${LIBBIO_CORE_HEADERS} 
-                                 ${LIBBIO_CDM_HEADERS}  ${LIBBIO_CDM_SOURCES})
+  add_library(libbiogears STATIC ${BIO_CORE_SOURCES} ${BIO_CORE_HEADERS} 
+                                 ${BIO_CDM_HEADERS}  ${BIO_CDM_SOURCES}
+                                 ${BIO_IO_HEADERS}   ${BIO_IO_SOURCES}
+  )
   add_library(Biogears::libbiogears ALIAS libbiogears)
   set_target_properties(libbiogears
     PROPERTIES
@@ -68,10 +80,23 @@ if(Biogears_BUILD_STATIC)
    if(Biogears_THROW_NAN_EXCEPTIONS )
         target_compile_definitions(libbiogears PUBLIC BIOGEARS_THROW_NAN_EXCEPTIONS )
   endif()
+   if(Biogears_BUILD_STATIC)
+        target_compile_definitions(libbiogears PUBLIC BIOGEARS_STATIC_BUILD)
+  endif()
   target_include_directories(libbiogears
       PRIVATE  ${BIO_INCLUDE_DIR} ${BIO_PRIVATE_INCLUDE_DIR} ${BIO_GENERATED_INCLUDE_DIR}
+                ${BIO_CDM_INCLUDE_DIR} # CDM
+                ${BIO_CIRCUIT_INCLUDE_DIR} # Circuit
+                ${BIO_IO_INCLUDE_DIR} # IO
+                ${BIO_IO_GENERATED_INCLUDE_DIR} # IO
+                ${BIO_IO_EMBEDED_INCLUDE_DIR} # IO
       INTERFACE $<BUILD_INTERFACE:${BIO_GENERATED_INCLUDE_DIR}> 
                 $<BUILD_INTERFACE:${BIO_INCLUDE_DIR}>
+                $<BUILD_INTERFACE:${BIO_CDM_INCLUDE_DIR}> # CDM
+                $<BUILD_INTERFACE:${BIO_CIRCUIT_INCLUDE_DIR}> # Circuit
+                $<BUILD_INTERFACE:${BIO_IO_INCLUDE_DIR}> # IO
+                $<BUILD_INTERFACE:${BIO_IO_GENERATED_INCLUDE_DIR}> # IO
+                $<BUILD_INTERFACE:${BIO_IO_EMBEDED_INCLUDE_DIR}> # IO
                 $<INSTALL_INTERFACE:include>
   )
   
@@ -95,7 +120,7 @@ else()
   ###############################################################################
   # libBiogears
   ###############################################################################
-  add_library(libbiogears SHARED ${LIBBIO_CORE_SOURCES} ${LIBBIO_CORE_HEADERS})
+  add_library(libbiogears SHARED ${BIO_CORE_SOURCES} ${BIO_CORE_HEADERS})
   add_library(Biogears::libbiogears ALIAS libbiogears)
   	set_target_properties(libbiogears
     PROPERTIES
@@ -149,12 +174,9 @@ else()
     target_link_libraries(libbiogears  PUBLIC Biogears::libbiogears_io )
   endif()
   if(WIN32)
-    install(FILES $<TARGET_PDB_FILE:libbiogears> DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
-    # lib//biogears.lib               #When Biogears_BREAKOUT_INSTALL == FAlSE AND Biogears_PLATFORM_PREFIX = ""
-    # lib//biogears_d.lib
-    # lib//Release/libbiogears.lib    #When Biogears_BREAKOUT_INSTALL == TRUE AND Biogears_PLATFORM_PREFIX = ""
-    # lib//Debug/libbiogears_d.lib
-    # lib/Win64/Debug/libbiogears_d.lib  #When Biogears_BREAKOUT_INSTALL == FAlSE AND Biogears_PLATFORM_PREFIX = "Win64"
+    if ( NOT Biogears_BUILD_STATIC )
+      install(FILES $<TARGET_PDB_FILE:libbiogears> DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
+    endif()
   endif()
 endif() #NOT BIO_BUILD_STATIC
 
@@ -167,7 +189,7 @@ install(TARGETS libbiogears EXPORT libBiogears
      ARCHIVE DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
 )
 
-if(WIN32)
+if(WIN32 AND NOT Biogears_BUILD_STATIC)
   install(FILES $<TARGET_PDB_FILE:libbiogears> DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
 endif()
 

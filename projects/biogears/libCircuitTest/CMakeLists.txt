@@ -67,7 +67,7 @@ if( Biogears_BUILD_CIRCUIT_TESTS)
       FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
   )
 
-  if(WIN32)
+  if(WIN32 AND NOT Biogears_BUILD_STATIC)
     install(FILES $<TARGET_PDB_FILE:libbiogears_circuit_test> DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
   endif()
 endif()

@@ -47,7 +47,7 @@ if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
              LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
              ARCHIVE DESTINATION lib
     )
-    if(WIN32)
+    if(WIN32 AND NOT Biogears_BUILD_STATIC)
       install(FILES $<TARGET_PDB_FILE:libbiogears_csharp> DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
     endif()
 

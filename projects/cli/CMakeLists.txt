@@ -112,7 +112,8 @@ if(Boost_FOUND)
       Boost::date_time
       Boost::program_options
    )
-
+   add_dependencies(bg-cli bg-scenario )
+   
    target_compile_definitions(bg-scenario PRIVATE BIOGEARS_SUBPROCESS_SUPPORT)
    target_link_libraries(bg-scenario 
       Boost::disable_autolinking

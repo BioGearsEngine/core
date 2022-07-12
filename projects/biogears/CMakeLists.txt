@@ -19,6 +19,11 @@ option (Biogears_BUILD_SWIG_BINDINGS       "Toggle the Genearting of languge bin
 # Base Variables
 ###############################################################################
 set(BIO_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/include" )
+set(BIO_CDM_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libCDM/include/")
+set(BIO_IO_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libIO/include" )
+set(BIO_IO_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/" )
+set(BIO_IO_EMBEDED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}" )
+set(BIO_CIRCUIT_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libCircuitTest/include" )
 set(BIO_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src" )
 set(BIO_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/" )
 set(BIO_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)

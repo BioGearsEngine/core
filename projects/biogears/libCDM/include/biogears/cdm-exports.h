@@ -18,12 +18,15 @@ specific language governing permissions and limitations under the License.
 #elif defined(__gnu_linux__) 
   #define BIOGEARS_CDM_API __attribute__ ((visibility ("default")))
 #elif defined(_WIN32)
-  //#include <biogears/string-exports.h>
-  //#ifdef biogears_cdm_EXPORTS
-    #define BIOGEARS_CDM_API __declspec(dllexport)
-  //#else
-    //#define BIOGEARS_CDM_API __declspec(dllimport)
-  //#endif
+  #if defined(BIOGEARS_STATIC_BUILD)
+    #define BIOGEARS_CDM_API
+  #else
+    //#ifdef biogears_cdm_EXPORTS
+      #define BIOGEARS_CDM_API __declspec(dllexport)
+    //#else
+      //#define BIOGEARS_CDM_API __declspec(dllimport)
+    //#endif
+  #endif
 #else 
   #define BIOGEARS_CDM_API
 #endif
