@@ -28,6 +28,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
+#include <biogears/cdm/patient/assessments/SEProthrombinTime.h>
+#include <biogears/cdm/patient/assessments/SEPsychomotorVigilanceTask.h>
 #include <biogears/cdm/patient/assessments/SESequentialOrganFailureAssessment.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/scenario/SECondition.h>
@@ -121,11 +123,20 @@ PhysiologyEngineTrack* BioGearsEngine::GetEngineTrack()
   return &m_EngineTrack;
 }
 //-------------------------------------------------------------------------------
+//!
+//!  \param char* - Coniocal Path to be loaded
+//!  \param SEScalarTime*  -  Overrides the internal states Simulation time with the given. Defaults to nullptr which assumes the state files time.
+//! 
+//!  Load sate is biogears_io aware.  If the file path given is embedded it will fall back
+//!  to the embeded version if non of the default search locations are found.
 bool BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 {
   return LoadState(std::string { file }, simTime);
 }
 //-------------------------------------------------------------------------------
+//!
+//!  Override of LoadState 
+//! \\see   BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime)
 {
 
@@ -151,6 +162,12 @@ bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simT
   return false;
 }
 //-------------------------------------------------------------------------------
+//!
+//!  \param char const* buffer -- String literal ASCII encoding of a biogears EngineState file
+//!  \param size_t - Ammount of data in the buffer
+//! 
+//!  \note This function allows integrators to perform IO for Biogears and avoid 
+//!        assumptons of the underlying filesystem.
 bool BioGearsEngine::LoadState(char const* buffer, size_t size)
 {
 
@@ -163,6 +180,9 @@ bool BioGearsEngine::LoadState(char const* buffer, size_t size)
   return false;
 }
 //-------------------------------------------------------------------------------
+//!
+//!  Override of LoadState
+//! \\see   BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime)
 {
   auto requests = GetEngineTrack()->GetDataRequestManager().GetDataRequests();
@@ -794,6 +814,42 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       std::unique_ptr<CDM::PulmonaryFunctionTestData> unloaded(pft.Unload());
       unloaded->contentVersion(branded_version_string());
       PulmonaryFunctionTest(stream, *unloaded, map);
+      stream.close();
+      break;
+    }
+
+    case CDM::enumPatientAssessment::ProthrombinTime: {
+      SEProthrombinTime ptt;
+      GetPatientAssessment(ptt);
+      if (results_filepath.empty()) {
+        results_filepath = "ProthrombinTime";
+      }
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sPTT@%.0fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
+      // Write out the xml file
+      xml_schema::namespace_infomap map;
+      map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
+      map[""].schema = "BioGears.xsd";
+      std::unique_ptr<CDM::ProthrombinTimeData> unloaded(ptt.Unload());
+      unloaded->contentVersion(branded_version_string());
+      ProthrombinTime(stream, *unloaded, map);
+      stream.close();
+      break;
+    }
+
+    case CDM::enumPatientAssessment::PsychomotorVigilanceTask: {
+      SEPsychomotorVigilanceTask pvt;
+      GetPatientAssessment(pvt);
+      if (results_filepath.empty()) {
+        results_filepath = "PsychomotorVigilanceTask";
+      }
+      std::ofstream stream(io->ResolveResultsFileLocation(asprintf("%sPVT@%.0fs.xml", results_filepath.c_str(), GetSimulationTime(TimeUnit::s))));
+      // Write out the xml file
+      xml_schema::namespace_infomap map;
+      map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
+      map[""].schema = "BioGears.xsd";
+      std::unique_ptr<CDM::PsychomotorVigilanceTaskData> unloaded(pvt.Unload());
+      unloaded->contentVersion(branded_version_string());
+      PsychomotorVigilanceTask(stream, *unloaded, map);
       stream.close();
       break;
     }

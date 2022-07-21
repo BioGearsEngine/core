@@ -15,8 +15,6 @@ if(Biogears_BUILD_WEBSITE)
     # Base Variables
     ###############################################################################
 
-    set(PROJECT_NAME Python_BioGears)
-
     ###############################################################################
     # Requirements
     ###############################################################################
@@ -66,7 +64,7 @@ if(Biogears_BUILD_WEBSITE)
     #Sorce and Header Defines
     ###############################################################################
 
-    message(STATUS "Configuring ${PROJECT_NAME}")
+    message(STATUS "Configuring www")
     configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/doxyfile.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/Doxyfile @ONLY)
 
     ###############################################################################
@@ -89,8 +87,8 @@ if(Biogears_BUILD_WEBSITE)
         COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE} -p doc/markdown -f doc/doxygen/processed_md #cdm
         COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${DoxygenPreprocessor_SOURCE}  -p doc/methodology -f doc/doxygen/processed_md #cdm
         COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${XSDToDOXYGEN_SOURCE} -p xsd/BioGearsDataModel.xsd -f doc/doxygen/processed_md #cdm 
-        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRun-1_of_2.config -j 5 -v
-        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${${ROOT_PROJECT_NAME}_Baseline_DIR} -p PlotRun-2_of_2.config -j 5 -v
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${Biogears_Baseline_DIR} -p PlotRun-1_of_2.config -j 5 -v
+        COMMAND venv/${PYTHON_SCRIPT_DIR}/python${CMAKE_EXECUTABLE_SUFFIX}  ${Plot_SOURCE}  -b ${Biogears_Baseline_DIR} -p PlotRun-2_of_2.config -j 5 -v
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
         VERBATIM
         USES_TERMINAL
@@ -175,7 +173,7 @@ if(Biogears_BUILD_WEBSITE)
     add_dependencies(docs-prepare-py prepare_runtime_dir bg-cli venvcreate )
     add_dependencies(docs-doxygen-py docs-prepare-py )
     add_dependencies(docs-stage-py   docs-doxygen-py )
-    if(TARGET prepare_runtime_dir AND ${ROOT_PROJECT_NAME}_PREPARE_RUNTIME_DIR)
+    if(TARGET prepare_runtime_dir AND Biogears_PREPARE_RUNTIME_DIR)
         add_dependencies(docs-prepare-py prepare_runtime_dir )
         if (Biogears_BUILD_WEBSITE_DEBUG)
             add_dependencies(docs-prepare-cdm2md prepare_runtime_dir )

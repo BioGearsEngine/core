@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+84" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>Bradycardic</Name>
@@ -452,7 +452,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="10.6896586300755"/>
     <MassInBody readOnly="false" unit="ug" value="497324.088005291"/>
     <MassInBlood readOnly="false" unit="ug" value="68921.4989779099"/>
-    <MassInTissue readOnly="false" unit="ug" value="428402.589027382"/>
+    <MassInTissue readOnly="false" unit="ug" value="428402.589027381"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -500,7 +500,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="818.560487808809"/>
     <MassInBody readOnly="false" unit="ug" value="35429800.374057"/>
     <MassInBlood readOnly="false" unit="ug" value="4605954.54851333"/>
-    <MassInTissue readOnly="false" unit="ug" value="30823845.8255437"/>
+    <MassInTissue readOnly="false" unit="ug" value="30823845.8255436"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -848,6 +848,7 @@
     <PulmonaryVenousOxygenPressure readOnly="false" unit="mmHg" value="94.2577940380706"/>
     <VenousCarbonDioxidePressure readOnly="false" unit="mmHg" value="45.7849720221524"/>
     <VenousOxygenPressure readOnly="false" unit="mmHg" value="34.0176975124799"/>
+    <ViralLoad readOnly="false" unit="ct/uL" value="0"/>
     <ArterialOxygenAverage_mmHg numSamples="17" sum="1599.44390042748"/>
     <ArterialCarbonDioxideAverage_mmHg numSamples="17" sum="689.990856134358"/>
     <RhFactorMismatch_ct>0</RhFactorMismatch_ct>
@@ -1200,7 +1201,7 @@
   </System>
   <System xsi:type="BioGearsTissueSystemData">
     <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="4.10461578733016"/>
-    <DehydrationFraction readOnly="false" value="0.00021035970014882"/>
+    <DehydrationFraction readOnly="false" value="0.000210359700148729"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="9421.89108910742"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="35096.6597274786"/>
     <IntracellularFluidPH readOnly="false" value="7"/>

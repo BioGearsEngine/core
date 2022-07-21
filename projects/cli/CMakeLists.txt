@@ -7,14 +7,14 @@ cmake_policy(SET CMP0087 NEW)
 ###############################################################################
 # Options
 ###############################################################################
-option(${ROOT_PROJECT_NAME}_BUILD_TOOLS "Toggle building of biogears command line tools" ON)
-if(${ROOT_PROJECT_NAME}_BUILD_TOOLS)
+option(Biogears_BUILD_TOOLS "Toggle building of biogears command line tools" ON)
+if(Biogears_BUILD_TOOLS)
 
 ###############################################################################
 # Requirments
 ###############################################################################
 if (${PREFIX}_BUILD_STATIC)
-  add_definitions("-D${PREFIX}_BUILT_AS_STATIC")
+	add_definitions("-DBIOGEARS_BUILT_AS_STATIC")
   add_definitions("-DARACORE_BUILT_AS_STATIC")
 endif()
 
@@ -22,7 +22,7 @@ endif()
 #Sorce and Header Defines
 ###############################################################################
 message(STATUS "")
-message(STATUS "Configuring ${PROJECT_NAME}")
+message(STATUS "Configuring bg-cli")
 
 #Scenario Driver
 add_source_files(HEADERS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/include REGEX "*.h"  SOURCE_GROUP "Headers\\Public\\")
@@ -51,7 +51,7 @@ if(WIN32)
   target_sources(bg-cli  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bg-cli.rc)
 endif()
 target_compile_definitions(bg-cli PRIVATE DEBUG_POSTFIX=$<$<CONFIG:Debug>:"${CMAKE_DEBUG_POSTFIX}">)
-target_compile_options(bg-cli PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
+target_compile_options(bg-cli PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
 target_include_directories(bg-cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 
@@ -89,7 +89,7 @@ set_target_properties(bg-scenario
 )
 
 target_compile_definitions(bg-scenario PRIVATE DEBUG_POSTFIX=$<$<CONFIG:Debug>:"${CMAKE_DEBUG_POSTFIX}">)
-target_compile_options(bg-scenario PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
+target_compile_options(bg-scenario PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
 target_include_directories(bg-scenario PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 target_link_libraries(bg-scenario 
       Biogears::libbiogears
@@ -112,7 +112,8 @@ if(Boost_FOUND)
       Boost::date_time
       Boost::program_options
    )
-
+   add_dependencies(bg-cli bg-scenario )
+   
    target_compile_definitions(bg-scenario PRIVATE BIOGEARS_SUBPROCESS_SUPPORT)
    target_link_libraries(bg-scenario 
       Boost::disable_autolinking
@@ -168,11 +169,11 @@ if(NOT (CMAKE_CROSSCOMPILING OR APPLE))
 		
    	FILE(TO_CMAKE_PATH   \"\${CMAKE_INSTALL_PREFIX}\"  INSTALL_PATH)
 
-	  set( Biogears_RUNTIME_DESTINATION \"\${INSTALL_PATH}/bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
-    set( Biogears_LIBRARY_DESTINATION \"\${INSTALL_PATH}/${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
-    set( Biogears_ARCHIVE_DESTINATION \"\${INSTALL_PATH}/lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+	  set( Biogears_RUNTIME_DESTINATION \"\${INSTALL_PATH}/bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+    set( Biogears_LIBRARY_DESTINATION \"\${INSTALL_PATH}/${LIBRARY_INSTALL_DIR}/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+    set( Biogears_ARCHIVE_DESTINATION \"\${INSTALL_PATH}/lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
 
-    EXELIST(TARGET \"\${INSTALL_PATH}/bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>/\" )
+    EXELIST(TARGET \"\${INSTALL_PATH}/bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>/\" )
     if(NOT APPLE)
       fixup_bundle(\"\${TARGET}\"
         \"\"

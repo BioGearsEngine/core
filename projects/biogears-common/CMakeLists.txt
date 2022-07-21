@@ -6,21 +6,19 @@
 # Options
 ###############################################################################
 
- option(${ROOT_PROJECT_NAME}_COMMON_BUILD_STATIC       "If enabled Biogears biogears_common will be built as a static library"  ON)
+ option(Biogears_COMMON_BUILD_STATIC       "If enabled Biogears biogears_common will be built as a static library"  ON)
  
 ###############################################################################
 # Base Variables
 ###############################################################################
-set(PROJECT_NAME biogears_common)
-set(PREFIX common)
 
-set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
-set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" )
-set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" PARENT_SCOPE)
-set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" )
-set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" PARENT_SCOPE)
-set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" )
-set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
+set(Common_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
+set(Common_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" )
+set(Common_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" PARENT_SCOPE)
+set(Common_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" )
+set(Common_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" PARENT_SCOPE)
+set(Common_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" )
+set(Common_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 
 ###############################################################################
 # Requirments
@@ -34,7 +32,7 @@ find_package(Threads REQUIRED)
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################
-message(STATUS "Configuring ${PROJECT_NAME}")
+message(STATUS "Configuring biogears_common")
 
 #Scenario Driver
 
@@ -43,96 +41,96 @@ add_source_files(PUBLIC_HDRS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/include REGEX 
 add_source_files(SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.cpp" SOURCE_GROUP "Sources\\")
 add_source_files(SRCS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src REGEX "*.c" SOURCE_GROUP "Sources\\")
 
-set(${PREFIX}_HEADERS ${HDRS} ${PUBLIC_HDRS} ${GEN_HDRS})
-set(${PREFIX}_SOURCES ${SRCS} ${GEN_SRCS})
+set(Common_HEADERS ${HDRS} ${PUBLIC_HDRS} ${GEN_HDRS})
+set(Common_SOURCES ${SRCS} ${GEN_SRCS})
 ###############################################################################
 #Define Logic
 ###############################################################################
 if(WIN32)
-  list(APPEND ${PREFIX}_CPPFLAGS_EXPORT )
-  list(APPEND ${PREFIX}_CPPFLAGS "-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS"  $ENV{PARALLEL_COMPILE} )
+  list(APPEND Common_CPPFLAGS_EXPORT )
+  list(APPEND Common_CPPFLAGS "-D_SCL_SECURE_NO_WARNINGS" "-D_CRT_SECURE_NO_WARNINGS"  $ENV{PARALLEL_COMPILE} )
 elseif(CMAKE_COMPILER_IS_GNUCXX)
-list(APPEND ${PREFIX}_CPPFLAGS_EXPORT )
-  list(APPEND ${PREFIX}_CPPFLAGS  ${CodeSynthesis_CPPFLAGS})
-  list(APPEND ${PREFIX}_LDFLAGS "-Wl,--no-as-needed" )
+list(APPEND Common_CPPFLAGS_EXPORT )
+  list(APPEND Common_CPPFLAGS  ${CodeSynthesis_CPPFLAGS})
+  list(APPEND Common_LDFLAGS "-Wl,--no-as-needed" )
 endif()
 
 
-if(${ROOT_PROJECT_NAME}_COMMON_BUILD_STATIC)
-  add_library(lib${PROJECT_NAME} STATIC  ${${PREFIX}_SOURCES} ${${PREFIX}_HEADERS})
+if(Biogears_COMMON_BUILD_STATIC)
+  add_library(libbiogears_common STATIC  ${Common_SOURCES} ${Common_HEADERS})
 else()
-  add_library(lib${PROJECT_NAME} SHARED  ${${PREFIX}_SOURCES} ${${PREFIX}_HEADERS})
+  add_library(libbiogears_common SHARED  ${Common_SOURCES} ${Common_HEADERS})
 endif()
 
-add_library(Biogears::libbiogears_common ALIAS lib${PROJECT_NAME})
-set_target_properties(lib${PROJECT_NAME}
+add_library(Biogears::libbiogears_common ALIAS libbiogears_common)
+set_target_properties(libbiogears_common
   PROPERTIES
-  DEFINE_SYMBOL ${PROJECT_NAME}_EXPORTS
+  DEFINE_SYMBOL biogears_common_EXPORTS
   FOLDER "Libraries"
-  COMPILE_PDB_NAME "${PROJECT_NAME}"
-  OUTPUT_NAME "${PROJECT_NAME}"
-  PROJECT_LABEL "lib${PROJECT_NAME}"
+  COMPILE_PDB_NAME "biogears_common"
+  OUTPUT_NAME "biogears_common"
+  PROJECT_LABEL "libbiogears_common"
   DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
   CXX_STANDARD 14
   POSITION_INDEPENDENT_CODE TRUE
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
-  target_compile_definitions(lib${PROJECT_NAME} PUBLIC  ${${PREFIX}_INTERFACE_CPPFLAGS} PRIVATE ${${PREFIX}_CPPFLAGS} )
-  if (${ROOT_PROJECT_NAME}_COMMON_BUILD_STATIC)
-    target_compile_definitions(lib${PROJECT_NAME} PUBLIC  "BIOGEARS_COMMON_BUILD_STATIC")
+target_compile_definitions(libbiogears_common PUBLIC  ${Common_INTERFACE_CPPFLAGS} PRIVATE ${Common_CPPFLAGS} )
+if (Biogears_COMMON_BUILD_STATIC)
+    target_compile_definitions(libbiogears_common PUBLIC  "BIOGEARS_COMMON_BUILD_STATIC")
     set(LIB_TYPE STATIC)
-  endif()
+endif()
 
-  target_compile_options(lib${PROJECT_NAME} PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
-target_include_directories(lib${PROJECT_NAME}
-  PRIVATE  ${${PREFIX}_INCLUDE_DIR} ${${PREFIX}_PRIVATE_INCLUDE_DIR} ${${PREFIX}_GENERATED_INCLUDE_DIR}
-  INTERFACE $<BUILD_INTERFACE:${${PREFIX}_GENERATED_INCLUDE_DIR}> 
-      $<BUILD_INTERFACE:${${PREFIX}_INCLUDE_DIR}>
+target_compile_options(libbiogears_common PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>    PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
+target_include_directories(libbiogears_common
+  PRIVATE  ${Common_INCLUDE_DIR} ${Common_PRIVATE_INCLUDE_DIR} ${Common_GENERATED_INCLUDE_DIR}
+  INTERFACE $<BUILD_INTERFACE:${Common_GENERATED_INCLUDE_DIR}> 
+      $<BUILD_INTERFACE:${Common_INCLUDE_DIR}>
       $<INSTALL_INTERFACE:include>
 )
 ###############################################################################
 # COMPILATION & LINKAGE MODIFICATIONS
 ###############################################################################
 
-list(APPEND ${PREFIX}_INCLUDES
-      ${PREFIX}_INCLUDE_DIR
-      ${PREFIX}_PRIVATE_INCLUDE_DIR
-      ${PREFIX}_GENERATED_INCLUDE_DIR
+list(APPEND Common_INCLUDES
+      Common_INCLUDE_DIR
+      Common_PRIVATE_INCLUDE_DIR
+      Common_GENERATED_INCLUDE_DIR
       bio_INCLUDE_DIR
 )
-list(REMOVE_DUPLICATES ${PREFIX}_INCLUDES)
+list(REMOVE_DUPLICATES Common_INCLUDES)
 
-set(${PREFIX}_LIBS
+set(Common_LIBS
       ${CMAKE_THREAD_LIBS_INIT}
       ${CMAKE_DL_LIBS}
 )
 
-set(${PREFIX}_LIBS ${${PREFIX}_LIBS} PARENT_SCOPE)
-target_link_libraries(lib${PROJECT_NAME} PUBLIC ${${PREFIX}_LIBS} )
+set(Common_LIBS ${Common_LIBS} PARENT_SCOPE)
+target_link_libraries(libbiogears_common PUBLIC ${Common_LIBS} )
 if(ANDROID)
-  target_link_libraries(lib${PROJECT_NAME} PUBLIC android log)
+  target_link_libraries(libbiogears_common PUBLIC android log)
 endif() 
-if(TARGET prepare_runtime_dir AND ${ROOT_PROJECT_NAME}_PREPARE_RUNTIME_DIR) 
-	add_dependencies(lib${PROJECT_NAME} prepare_runtime_dir)
+if(TARGET prepare_runtime_dir AND Biogears_PREPARE_RUNTIME_DIR) 
+	add_dependencies(libbiogears_common prepare_runtime_dir)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set_target_properties(lib${PROJECT_NAME} PROPERTIES LINK_FLAGS ${${PREFIX}_LDFLAGS})
+    set_target_properties(libbiogears_common PROPERTIES LINK_FLAGS ${Common_LDFLAGS})
 endif()
 
- install(TARGETS lib${PROJECT_NAME} EXPORT libBiogears
-     RUNTIME DESTINATION bin/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
-     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
-     ARCHIVE DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>>
-  )
-  
-  install(DIRECTORY 
-    include/biogears
-    DESTINATION include/
-    FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-    )
+install(TARGETS libbiogears_common EXPORT libBiogears
+    RUNTIME DESTINATION bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
+    LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
+    ARCHIVE DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
+)
+ 
+install(DIRECTORY 
+   include/biogears
+   DESTINATION include/
+   FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+)
 
-	install(FILES 
-    "include/units.h"
-    DESTINATION include/
-    )
+install(FILES 
+   "include/units.h"
+   DESTINATION include/
+)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+84" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>DefaultTemplateMale</Name>
@@ -845,6 +845,7 @@
     <PulmonaryVenousOxygenPressure readOnly="false" unit="mmHg" value="96.9103119615313"/>
     <VenousCarbonDioxidePressure readOnly="false" unit="mmHg" value="44.4437533217987"/>
     <VenousOxygenPressure readOnly="false" unit="mmHg" value="40.8961467300825"/>
+    <ViralLoad readOnly="false" unit="ct/uL" value="0"/>
     <ArterialOxygenAverage_mmHg numSamples="20" sum="1940.41541681014"/>
     <ArterialCarbonDioxideAverage_mmHg numSamples="20" sum="811.776292229858"/>
     <RhFactorMismatch_ct>0</RhFactorMismatch_ct>

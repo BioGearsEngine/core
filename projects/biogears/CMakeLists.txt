@@ -6,25 +6,27 @@
 # Options
 ###############################################################################
 
-option (${ROOT_PROJECT_NAME}_BUILD_IO_LIBRARY "When enabled an extra IO Library will be built allowing BioGears to fall back to embeded versions of resource files " ON)
+option (Biogears_BUILD_IO_LIBRARY "When enabled an extra IO Library will be built allowing BioGears to fall back to embeded versions of resource files " ON)
 
-option (${ROOT_PROJECT_NAME}_THROW_READONLY_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when a ReadOnly SEScalar is Modified." ON)
-option (${ROOT_PROJECT_NAME}_THROW_NAN_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when an  SEScalar is NaNExceptions." ON)
-option (${ROOT_PROJECT_NAME}_USE_OVERRIDE_CONTROL       "When enabled Biogears will control the ranges of override"  OFF)
-option (${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS       "Toggle on the Circuit Test Library which is a dependeny of libbiogears_jni"  OFF)
+option (Biogears_THROW_READONLY_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when a ReadOnly SEScalar is Modified." ON)
+option (Biogears_THROW_NAN_EXCEPTIONS "Toggle the throwing CommonDataModelExceptions when an  SEScalar is NaNExceptions." ON)
+option (Biogears_USE_OVERRIDE_CONTROL       "When enabled Biogears will control the ranges of override"  OFF)
+option (Biogears_BUILD_CIRCUIT_TESTS       "Toggle on the Circuit Test Library which is a dependeny of libbiogears_jni"  OFF)
 
-option (${ROOT_PROJECT_NAME}_BUILD_SWIG_BINDINGS       "Toggle the Genearting of languge bindings using SWIG (Experimental)"  OFF)
+option (Biogears_BUILD_SWIG_BINDINGS       "Toggle the Genearting of languge bindings using SWIG (Experimental)"  OFF)
 
 ###############################################################################
 # Base Variables
 ###############################################################################
-set(PROJECT_NAME biogears)
-set(PREFIX bio)
-
-set(${PREFIX}_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/include" )
-set(${PREFIX}_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src" )
-set(${PREFIX}_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/" )
-set(${PREFIX}_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
+set(BIO_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/include" )
+set(BIO_CDM_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libCDM/include/")
+set(BIO_IO_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libIO/include" )
+set(BIO_IO_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/" )
+set(BIO_IO_EMBEDED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}" )
+set(BIO_CIRCUIT_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libCircuitTest/include" )
+set(BIO_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src" )
+set(BIO_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/" )
+set(BIO_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 
 ###############################################################################
 # Requirments
@@ -36,7 +38,7 @@ endif()
 verify_package(Threads REQUIRED)
 verify_package(Eigen3 REQUIRED)
 verify_package(CodeSynthesis REQUIRED)
-if(${ROOT_PROJECT_NAME}_BUILD_PYTHON_BINDINGS)
+if(Biogears_BUILD_PYTHON_BINDINGS)
   verify_package(pybind11 REQUIRED)
 endif()
 ###############################################################################
@@ -64,15 +66,15 @@ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src/version.cpp.in  ${CM
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################
-message(STATUS "Configuring ${PROJECT_NAME}")
+message(STATUS "Configuring biogears")
 
-set(LIB${PREFIX}_PY_HEADERS ${PY_HDRS} ${PUBLIC_PY_HDRS} ${GEN_PY_HDRS})
-set(LIB${PREFIX}_PY_SOURCES ${PY_SRCS} ${GEN_PY_SRCS})
+set(LIBBIO_PY_HEADERS ${PY_HDRS} ${PUBLIC_PY_HDRS} ${GEN_PY_HDRS})
+set(LIBBIO_PY_SOURCES ${PY_SRCS} ${GEN_PY_SRCS})
 
 ###############################################################################
 #Define Logic
 ###############################################################################
-if(${PREFIX}_BUILD_STATIC)
+if(Biogears_BUILD_STATIC)
   ###############################################################################
   # libBiogears_st
   ###############################################################################
@@ -81,7 +83,7 @@ else()
   ###############################################################################
   # libBiogears_io
   ###############################################################################
-  if(${ROOT_PROJECT_NAME}_BUILD_IO_LIBRARY)
+  if(Biogears_BUILD_IO_LIBRARY)
     add_subdirectory(libIO)
   endif()
   ###############################################################################
@@ -97,27 +99,27 @@ else()
   ###############################################################################
   # libBiogears_circuit_test
   ###############################################################################
-  if( ${ROOT_PROJECT_NAME}_BUILD_CIRCUIT_TESTS)
+  if( Biogears_BUILD_CIRCUIT_TESTS)
     add_subdirectory(libCircuitTest)
   endif()
   ###############################################################################
   # libBiogears_circuit_test
   ###############################################################################
   add_subdirectory(swig_bindings)
-endif() #${PREFIX}_BUILD_STATIC
+endif() #Biogears_BUILD_STATIC
 ######################################################################################################
 # INSTALL LOGIC
 ######################################################################################################
-if(NOT  ${ROOT_PROJECT_NAME}_BUILD_IO_LIBRARY)
+if(NOT  Biogears_BUILD_IO_LIBRARY)
   install(DIRECTORY 
       ${PROJECT_SOURCE_DIR}/share/xsd 
-      DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}
+      DESTINATION share/biogears/${Biogears_VERSION_TAG}
       FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
   )
   
   install(DIRECTORY 
       ${PROJECT_SOURCE_DIR}/share/data
-      DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}
+      DESTINATION share/biogears/${Biogears_VERSION_TAG}
       FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
       FILES_MATCHING 
       PATTERN "*.xml"
@@ -127,7 +129,7 @@ if(NOT  ${ROOT_PROJECT_NAME}_BUILD_IO_LIBRARY)
   
   install(DIRECTORY 
       ${PROJECT_SOURCE_DIR}/share/Scenarios
-      DESTINATION share/biogears/${${ROOT_PROJECT_NAME}_VERSION_TAG}/data/
+      DESTINATION share/biogears/${Biogears_VERSION_TAG}/data/
       FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
       FILES_MATCHING 
       PATTERN "*.xml"

@@ -15,43 +15,36 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
 namespace biogears {
-class SENervousSystem;
+class SEBloodChemistry;
 class SEScalar;
-class SEScalarTime;
 
 namespace io {
   class PatientAssessments;
 }
 
-class BIOGEARS_API SEPsychomotorVigilanceTask : public SEPatientAssessment {
+class BIOGEARS_API SEProthrombinTime : public SEPatientAssessment {
 friend io::PatientAssessments;
 public:
-  SEPsychomotorVigilanceTask();
-  virtual ~SEPsychomotorVigilanceTask();
+  SEProthrombinTime();
+  virtual ~SEProthrombinTime();
 
-  static constexpr const char* TypeTag() { return "SEArterialBloodGasAnalysis"; };
+  static constexpr const char* TypeTag() { return "SEProthrombinTime"; };
   const char* classname() const override { return TypeTag(); }
 
   virtual void Reset(); //reset values
   virtual void Clear(); //clear memory
 
-  virtual bool Load(const CDM::PsychomotorVigilanceTaskData& in);
-  virtual CDM::PsychomotorVigilanceTaskData* Unload();
+  virtual bool Load(const CDM::ProthrombinTimeData& in);
+  virtual CDM::ProthrombinTimeData* Unload();
 
 protected:
-  virtual void Unload(CDM::PsychomotorVigilanceTaskData& data);
+  virtual void Unload(CDM::ProthrombinTimeData& data);
 
 public:
-  bool HasAttentionLapses();
-  SEScalar& GetAttentionLapses();
-
-  bool HasReactionTime();
-  SEScalarTime& GetReactionTime();
-
-
+  virtual bool HasInternationalNormalizedRatio();
+  virtual SEScalar& GetInternationalNormalizedRatio();
 
 protected:
-  SEScalar* m_AttentionLapses;
-  SEScalarTime* m_ReactionTime;
+  SEScalar* m_InternationalNormalizedRatio;
 };
 }

@@ -2,12 +2,12 @@
   ###############################################################################
   # Python SWIG Bindings libBiogears_py
   ###############################################################################
-  if(SWIG_python_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_PYTHON_BINDINGS)
-   message(STATUS "            : lib${PROJECT_NAME}_py")
+  if(SWIG_python_FOUND AND Biogears_SWIG_PYTHON_BINDINGS)
+   message(STATUS "            : libbiogears_py")
 
    find_package(Python3  COMPONENTS Interpreter Development REQUIRED)
 
-   if(${ROOT_PROJECT_NAME}_BUILD_PYBIND11_BINDINGS)
+   if(Biogears_BUILD_PYBIND11_BINDINGS)
      message(FATAL_ERROR "Unable to build PyBind11 and SWIG Python3 Hooks at the same time. Please disable at least one project")
    endif()
 
@@ -28,23 +28,23 @@
        set_property(SOURCE ${_file} PROPERTY SWIG_MODULE_NAME ${_file_name} )
      endforeach()
      
-     option(UNITTEST_biogears-swig_py     "Enable libBiogears_py UnitTest " ${${ROOT_PROJECT_NAME}_SWIG_PYTHON_BINDINGS})
-     swig_add_library(lib${PROJECT_NAME}_py
+     option(UNITTEST_biogears-swig_py     "Enable libBiogears_py UnitTest " ${Biogears_SWIG_PYTHON_BINDINGS})
+     swig_add_library(libbiogears_py
            TYPE SHARED 
            LANGUAGE python 
            OUTPUT_DIR "${PROJECT_BINARY_DIR}/outputs/python"
            OUTFILE_DIR "${PROJECT_BINARY_DIR}/outputs/python"
            SOURCES  ${Python_SWIGS}
      )
-     add_library(Biogears::lib${PROJECT_NAME}_py ALIAS lib${PROJECT_NAME}_py)
-     target_include_directories(lib${PROJECT_NAME}_py PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../bindings"
+     add_library(Biogears::libbiogears_py ALIAS libbiogears_py)
+     target_include_directories(libbiogears_py PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../bindings"
                                                       PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../libbiogears/include"
      )
-     target_link_libraries(lib${PROJECT_NAME}_py PUBLIC lib${PROJECT_NAME} Python3::Python)
-     set_target_properties(lib${PROJECT_NAME}_py PROPERTIES
+     target_link_libraries(libbiogears_py PUBLIC libbiogears Python3::Python)
+     set_target_properties(libbiogears_py PROPERTIES
        POSITION_INDEPENDENT_CODE ON
-       PROJECT_LABEL lib${PROJECT_NAME}_py
-       OUTPUT_NAME ${PROJECT_NAME}
+       PROJECT_LABEL libbiogears_py
+       OUTPUT_NAME biogears
        FOLDER Libraries
        ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/python"
        ARCHIVE_OUTPUT_NAME      "_biogears"
@@ -53,17 +53,17 @@
        PDB_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/python"
      )
 
-     get_property(support_files TARGET lib${PROJECT_NAME}_py PROPERTY SWIG_SUPPORT_FILES)
+     get_property(support_files TARGET libbiogears_py PROPERTY SWIG_SUPPORT_FILES)
     ######################################################################################################
     # INSTALL LOGIC
     ######################################################################################################
-    install(TARGETS lib${PROJECT_NAME}_py EXPORT libBiogears
+    install(TARGETS libbiogears_py EXPORT libBiogears
              RUNTIME DESTINATION bin
              LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
             ARCHIVE DESTINATION lib
     )
-    if(WIN32)
-      install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}_py> DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
+    if(WIN32 AND NOT Biogears_BUILD_STATIC)
+      install(FILES $<TARGET_PDB_FILE:libbiogears_py> DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
     endif()
    endif()
   endif()

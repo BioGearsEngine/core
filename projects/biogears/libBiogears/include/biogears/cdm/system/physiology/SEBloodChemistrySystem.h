@@ -304,6 +304,16 @@ public:
   double GetRhTransfusionReactionVolume(const VolumeUnit& unit) const;
   //@}
 
+  /** @name ViralLoad
+  *  @brief @copybrief Physiology_BloodChemistrySystemData_ViralLoad
+  *  @{*/
+  /// %Test if member has been allocated
+  bool HasViralLoad() const;
+  /// Get member class, allocate if nullptr
+  SEScalarAmountPerVolume& GetViralLoad();
+  double GetViralLoad() const;
+  //@}
+
   /** @name VolumeFractionNeutralPhospholipidInPlasma
   *  @brief @copybrief Physiology_BloodChemistrySystemData_VolumeFractionNeutralPhospholipidInPlasma
   *  @{*/
@@ -443,6 +453,7 @@ protected:
   SEScalarMassPerVolume* m_TotalBilirubin;
   SEScalarMassPerVolume* m_TotalProteinConcentration;
   SEScalarVolume* m_RhTransfusionReactionVolume;
+  SEScalarAmountPerVolume* m_ViralLoad;
   SEScalarFraction* m_VolumeFractionNeutralPhospholipidInPlasma;
   SEScalarFraction* m_VolumeFractionNeutralLipidInPlasma;
   SEScalarAmountPerVolume* m_WhiteBloodCellCount;

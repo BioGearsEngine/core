@@ -28,6 +28,7 @@
 %import <biogears/cdm/patient/actions/SEChestOcclusiveDressing.swg>
 %import <biogears/cdm/patient/actions/SEConsciousRespiration.swg>
 %import <biogears/cdm/patient/actions/SEConsumeNutrients.swg>
+%import <biogears/cdm/patient/actions/SEEbola.swg>
 %import <biogears/cdm/patient/actions/SEEscharotomy.swg>
 %import <biogears/cdm/patient/actions/SEExercise.swg>
 %import <biogears/cdm/patient/actions/SEHemorrhage.swg>

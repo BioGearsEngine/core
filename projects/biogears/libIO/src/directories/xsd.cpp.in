@@ -10,7 +10,7 @@
 
 namespace biogears {
 namespace io {
-  char default_directory[] = "xsd/";
+  constexpr char default_xsd_directory[] = "xsd/";
   char const * schema_file_list[] = {
 @RESOURCE_FILE_LIST@
   };
@@ -35,7 +35,7 @@ namespace io {
       output.close();
       return true;
    };
-  biogears::filesystem::path dir {default_directory};
+  biogears::filesystem::path dir {default_xsd_directory};
 @GENERATE_DIRECTORY_BODY@
 
    return true;
@@ -73,7 +73,7 @@ namespace io {
     return size_of_embedded_content ;
   }
   //-----------------------------------------------------------------------------
-  char const * get_default_xsd_directory() { return default_directory; }
+  char const * get_default_xsd_directory() { return default_xsd_directory; }
   //-----------------------------------------------------------------------------
   bool generate_xsd_directory(const char* root)
   {
@@ -85,8 +85,8 @@ namespace io {
   bool does_embedded_xsd_file_exist(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_xsd_directory == resource_id.substr(0,sizeof(default_xsd_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_xsd_directory)-1);
     }
     return does_embedded_xsd_file_exist(resource_id);
   }
@@ -95,8 +95,8 @@ namespace io {
   char const* get_xsd_file_sha1(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_xsd_directory == resource_id.substr(0,sizeof(default_xsd_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_xsd_directory)-1);
     }
     return get_xsd_file_sha1(resource_id);
   }
@@ -114,8 +114,8 @@ namespace io {
   char const* get_embedded_xsd_file(const char* path, size_t& content_size)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_xsd_directory == resource_id.substr(0,sizeof(default_xsd_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_xsd_directory)-1);
     }
     return get_embedded_xsd_file(resource_id, content_size);
   }

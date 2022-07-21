@@ -13,14 +13,14 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-#if defined(BIOGEARS_BUILD_STATIC)
+#if defined(BIOGEARS_BUILD_STATIC)                                                        
   #define BIOGEARS_IO_API
 #else
   #if defined(__clang__)
     #define BIOGEARS_IO_API
   #elif defined(__gnu_linux__) 
     #define BIOGEARS_IO_API __attribute__ ((visibility ("default")))
-  #elif defined(_WIN32)
+  #elif defined(_WIN32) && !defined(BIOGEARS_STATIC_BUILD)
     #ifdef biogears_io_EXPORTS
       #define BIOGEARS_IO_API __declspec(dllexport)
     #else

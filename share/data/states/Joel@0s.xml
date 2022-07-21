@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+84" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>Joel</Name>
@@ -851,6 +851,7 @@
     <PulmonaryVenousOxygenPressure readOnly="false" unit="mmHg" value="98.8289631192327"/>
     <VenousCarbonDioxidePressure readOnly="false" unit="mmHg" value="43.8625188719934"/>
     <VenousOxygenPressure readOnly="false" unit="mmHg" value="46.765284900856"/>
+    <ViralLoad readOnly="false" unit="ct/uL" value="0"/>
     <ArterialOxygenAverage_mmHg numSamples="0" sum="0"/>
     <ArterialCarbonDioxideAverage_mmHg numSamples="0" sum="0"/>
     <RhFactorMismatch_ct>0</RhFactorMismatch_ct>
@@ -28611,7 +28612,7 @@
       <Name>Ambient</Name>
       <Node>Ambient</Node>
       <InFlow readOnly="true" unit="mL/s" value="0.178682942377087"/>
-      <OutFlow readOnly="true" unit="mL/s" value="1.98255090926072e-91"/>
+      <OutFlow readOnly="true" unit="mL/s" value="1.98568748948827e-91"/>
       <Pressure readOnly="false" unit="mmHg" value="760"/>
       <Volume readOnly="true" unit="L" value="INF"/>
       <SubstanceQuantity>
@@ -28927,8 +28928,8 @@
     <GasCompartment>
       <Name>Mouth</Name>
       <Node>Mouth</Node>
-      <InFlow readOnly="true" unit="mL/s" value="0.178682942402832"/>
-      <OutFlow readOnly="true" unit="mL/s" value="0.178682942377087"/>
+      <InFlow readOnly="true" unit="mL/s" value="0.178682921087296"/>
+      <OutFlow readOnly="true" unit="mL/s" value="0.178682963692623"/>
       <Pressure readOnly="true" unit="cmH2O" value="1033.22744953679"/>
       <Volume readOnly="false" unit="mL" value="20.6"/>
       <SubstanceQuantity>

@@ -120,6 +120,21 @@ specific language governing permissions and limitations under the License.
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:element name="PsychomotorVigilanceTask" type="PsychomotorVigilanceTaskData"/>
+
+		<!-- @brief A test used to evaluate coagulation in the blood, reported as INR
+	     @details References<br>
+	              http://www.nlm.nih.gov/medlineplus/ency/article/003642.htm <br>
+	              http://www.mayoclinic.org/tests-procedures/complete-blood-count/basics/results/prc-20014088-->
+	<xs:complexType name="ProthrombinTimeData">
+		<xs:complexContent>
+			<xs:extension base="PatientAssessmentData">
+				<xs:sequence>
+                    <xs:element name="InternationalNormalizedRatio" type="ScalarData" minOccurs="0"  maxOccurs="1"/> <!--<< @brief ms time taken to quickly react to stimulus --> 
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="ProthrombinTime" type="ProthrombinTimeData"/>
 	
 	<!-- @brief A comprehensive metabolic panel is a group of 14 blood tests which provide a clinician with an overall picture of the body's chemical balance and metabolism.
 	     @details Reference https://www.nlm.nih.gov/medlineplus/ency/article/003468.htm -->

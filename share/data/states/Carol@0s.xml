@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+84" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>Carol</Name>
@@ -68,7 +68,7 @@
     <State>Gas</State>
     <MassInBody readOnly="false" unit="ug" value="71504.4578974014"/>
     <MassInBlood readOnly="false" unit="ug" value="13147.7371188715"/>
-    <MassInTissue readOnly="false" unit="ug" value="58356.7207785299"/>
+    <MassInTissue readOnly="false" unit="ug" value="58356.72077853"/>
     <AlveolarTransfer readOnly="false" unit="mL/s" value="2.6213162421399"/>
     <DiffusingCapacity readOnly="false" unit="mL/s mmHg" value="0.457431527462633"/>
     <EndTidalFraction readOnly="false" value="0.166156830579755"/>
@@ -845,6 +845,7 @@
     <PulmonaryVenousOxygenPressure readOnly="false" unit="mmHg" value="99.3388579025917"/>
     <VenousCarbonDioxidePressure readOnly="false" unit="mmHg" value="44.2513425317539"/>
     <VenousOxygenPressure readOnly="false" unit="mmHg" value="40.8159953547394"/>
+    <ViralLoad readOnly="false" unit="ct/uL" value="0"/>
     <ArterialOxygenAverage_mmHg numSamples="1" sum="99.2659324285132"/>
     <ArterialCarbonDioxideAverage_mmHg numSamples="1" sum="39.3731621162046"/>
     <RhFactorMismatch_ct>0</RhFactorMismatch_ct>

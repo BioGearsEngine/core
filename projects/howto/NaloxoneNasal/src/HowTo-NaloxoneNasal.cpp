@@ -76,7 +76,7 @@ NaloxoneThread::NaloxoneThread(const std::string logFile, double opioidDose, con
 {
   //Create the engine and load patient state
   m_bg = CreateBioGearsEngine(logFile);
-  m_bg->GetLogger()->Info(asprintf("Initiating %f %s", opioidDose, "mg/mL or whatever of ", opioidName, " for overdose"));
+  m_bg->GetLogger()->Info(asprintf("Initiating %f %s", opioidDose, "mg/mL or whatever of ", opioidName.c_str(), " for overdose"));
   if (!m_bg->LoadState("./states/StandardMale@0s.xml")) {
     m_bg->GetLogger()->Error("Could not load state, check the error");
     throw std::runtime_error("Could not load state, check the error");

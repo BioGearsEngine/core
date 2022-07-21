@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+84" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>StandardFemale</Name>
@@ -845,6 +845,7 @@
     <PulmonaryVenousOxygenPressure readOnly="false" unit="mmHg" value="99.208103221001"/>
     <VenousCarbonDioxidePressure readOnly="false" unit="mmHg" value="44.4755951149829"/>
     <VenousOxygenPressure readOnly="false" unit="mmHg" value="42.7432868949098"/>
+    <ViralLoad readOnly="false" unit="ct/uL" value="0"/>
     <ArterialOxygenAverage_mmHg numSamples="38" sum="3771.38975953236"/>
     <ArterialCarbonDioxideAverage_mmHg numSamples="38" sum="1566.20342826535"/>
     <RhFactorMismatch_ct>0</RhFactorMismatch_ct>
@@ -1197,7 +1198,7 @@
   </System>
   <System xsi:type="BioGearsTissueSystemData">
     <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="3.12566117142121"/>
-    <DehydrationFraction readOnly="false" value="1.15920887756148e-05"/>
+    <DehydrationFraction readOnly="false" value="1.15920887755551e-05"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="7332.56138433987"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="23632.2496328606"/>
     <IntracellularFluidPH readOnly="false" value="7"/>

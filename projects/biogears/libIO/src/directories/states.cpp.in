@@ -10,8 +10,8 @@
 
 namespace biogears {
 namespace io {
-  static char default_directory[] = "states/";
-  char const * scenario_file_list[] = {
+  constexpr char default_state_directory[] = "states/";
+  char const * state_file_list[] = {
 @RESOURCE_FILE_LIST@
   };
 
@@ -35,7 +35,7 @@ namespace io {
       output.close();
       return true;
    };
-   biogears::filesystem::path dir {default_directory};
+   biogears::filesystem::path dir {default_state_directory};
 
 @GENERATE_DIRECTORY_BODY@
 
@@ -74,7 +74,7 @@ namespace io {
     return size_of_embedded_content ;
   }
   //-----------------------------------------------------------------------------
-  char const * get_default_scenario_directory() { return default_directory; }
+  char const * get_default_states_directory() { return default_state_directory; }
   //-----------------------------------------------------------------------------
   
   bool generate_states_directory(const char* root)
@@ -86,8 +86,8 @@ namespace io {
   bool does_embedded_states_file_exist(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_state_directory == resource_id.substr(0,sizeof(default_state_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_state_directory)-1);
     }
     return does_embedded_states_file_exist(resource_id);
   }
@@ -96,15 +96,15 @@ namespace io {
   char const* get_states_file_sha1(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_state_directory == resource_id.substr(0,sizeof(default_state_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_state_directory)-1);
     }
     return get_states_file_sha1(resource_id);
   }
   //-----------------------------------------------------------------------------
   char const** list_states_files()
   {
-    return scenario_file_list;
+    return state_file_list;
   }
   //-----------------------------------------------------------------------------
   size_t states_file_count()
@@ -115,8 +115,8 @@ namespace io {
   char const* get_embedded_states_file(const char* path, size_t& content_size)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_state_directory == resource_id.substr(0,sizeof(default_state_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_state_directory)-1);
     }
     return get_embedded_states_file(resource_id, content_size);
   }

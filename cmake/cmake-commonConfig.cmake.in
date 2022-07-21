@@ -1,3 +1,3 @@
 @PACKAGE_INIT@
 
-include ( "${CMAKE_CURRENT_LIST_DIR}/@ROOT_PROJECT_NAME@.cmake" )
+include ( "${CMAKE_CURRENT_LIST_DIR}/Biogears.cmake" )

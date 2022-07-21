@@ -16,6 +16,4 @@
 %ignore biogears::SERadiationAbsorbedDose::Unload;
 %ignore biogears::SERadiationAbsorbedDose::Load;
 
-%ignore biogears::SERadiationAbsorbedDose::SetCompartment(std::string const &);
-
 %include <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>

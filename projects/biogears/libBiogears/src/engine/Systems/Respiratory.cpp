@@ -1892,6 +1892,11 @@ void Respiratory::CalculateVitalSigns()
     GetRespirationRate().SetValue(0.0, FrequencyUnit::Per_min);
   }
 
+    //there is an issue with the driver logic where the elapsed breathing time doesn't update when you set anesthesia to zero
+  if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::AnesthesiaMachine && m_data.GetAnesthesiaMachine().GetRespiratoryRate().GetValue() == 0) {
+    GetRespirationRate().SetValue(0.0, FrequencyUnit::Per_min);
+  }
+
   /// \todo Move to blood chemistry
   // Although it is called respiratory acidosis/alkalosis, the detection and event setting is actually a part of the @ref BloodChemistrySystem
   // The terms "metabolic" and "respiratory" refer to the origin of the acid-base disturbance

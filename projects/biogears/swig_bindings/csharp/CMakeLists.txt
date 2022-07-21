@@ -1,9 +1,9 @@
 
 ###############################################################################
-# CSharp SWIG Bindings libBiogears_csharp
+# CSharp SWIG Bindings biogears_csharp
 ###############################################################################
-if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
-   message(STATUS "            : lib${PROJECT_NAME}_csharp")
+if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
+   message(STATUS "            : biogears_csharp")
    enable_language( CSharp )
    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
@@ -22,33 +22,33 @@ if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
      set_property(SOURCE ${_file} PROPERTY COMPILE_OPTIONS )
    endforeach()
    
-   option(UNITTEST_biogears-swig_csharp "Enable libBiogears_csharp UnitTest " ${${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS})
-   swig_add_library(lib${PROJECT_NAME}_csharp 
+   option(UNITTEST_biogears-swig_csharp "Enable biogears_csharp UnitTest " ${Biogears_SWIG_CSHARP_BINDINGS})
+   swig_add_library(biogears_csharp 
          TYPE SHARED 
          LANGUAGE csharp 
          OUTPUT_DIR "${PROJECT_BINARY_DIR}/outputs/csharp"
          OUTFILE_DIR "${PROJECT_BINARY_DIR}/outputs/csharp"
          SOURCES ${CSharp_SWIGS}
    )
-   target_link_libraries(lib${PROJECT_NAME}_csharp PUBLIC lib${PROJECT_NAME} )
-   target_include_directories(lib${PROJECT_NAME}_csharp PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../bindings")
-   target_compile_options(lib${PROJECT_NAME}_csharp PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${${ROOT_PROJECT_NAME}_BUILD_PARALLEL_LEVEL}>)
-   set_target_properties(lib${PROJECT_NAME}_csharp PROPERTIES
+   target_link_libraries(biogears_csharp PUBLIC libbiogears )
+   target_include_directories(biogears_csharp PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../bindings")
+   target_compile_options(biogears_csharp PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
+   set_target_properties(biogears_csharp PROPERTIES
       POSITION_INDEPENDENT_CODE ON
       FOLDER Libraries
    )  
-   get_property(support_files TARGET lib${PROJECT_NAME}_csharp PROPERTY SWIG_SUPPORT_FILES)
+   get_property(support_files TARGET biogears_csharp PROPERTY SWIG_SUPPORT_FILES)
 
     ######################################################################################################
     # INSTALL LOGIC
     ######################################################################################################
-    install(TARGETS lib${PROJECT_NAME}_csharp EXPORT libBiogears
+    install(TARGETS biogears_csharp EXPORT libBiogears
              RUNTIME DESTINATION bin
              LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
              ARCHIVE DESTINATION lib
     )
-    if(WIN32)
-      install(FILES $<TARGET_PDB_FILE:lib${PROJECT_NAME}_csharp> DESTINATION lib/${${ROOT_PROJECT_NAME}_PLATFORM_PREFIX}$<$<BOOL:${${ROOT_PROJECT_NAME}_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
+    if(WIN32 AND NOT Biogears_BUILD_STATIC)
+      install(FILES $<TARGET_PDB_FILE:biogears_csharp> DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
     endif()
 
 
@@ -65,7 +65,7 @@ if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
   source_group(TREE ${CMAKE_BINARY_DIR}/outputs/csharp/ PREFIX "Source Files"  FILES ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std})
   source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files"  FILES ${libiogears_csharp_unittest} )
-  get_property(support_files TARGET lib${PROJECT_NAME}_csharp PROPERTY SWIG_SUPPORT_FILES)
+  get_property(support_files TARGET biogears_csharp PROPERTY SWIG_SUPPORT_FILES)
 
   include(CSharpUtilities)
   foreach(file IN LISTS support_files)
@@ -87,10 +87,10 @@ if(SWIG_csharp_FOUND AND ${ROOT_PROJECT_NAME}_SWIG_CSHARP_BINDINGS)
       FOLDERS ON
     )
     
-  target_link_libraries(csharp_example PUBLIC  lib${PROJECT_NAME} lib${PROJECT_NAME}_csharp)
+  target_link_libraries(csharp_example PUBLIC  libbiogears biogears_csharp)
   target_include_directories(csharp_example PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
 
-  target_link_libraries(csharp_radiation_debugging PUBLIC  lib${PROJECT_NAME} lib${PROJECT_NAME}_csharp)
+  target_link_libraries(csharp_radiation_debugging PUBLIC  libbiogears biogears_csharp)
   target_include_directories(csharp_radiation_debugging PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
 endif()
 

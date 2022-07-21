@@ -10,7 +10,7 @@
 
 namespace biogears {
 namespace io {
-  static char default_directory[] = "ecg/";
+  constexpr  char default_ecg_directory[] = "ecg/";
   char const * ecg_file_list[] = {
 @RESOURCE_FILE_LIST@
   };
@@ -34,7 +34,7 @@ namespace io {
       output.close();
       return true;
    };
-   biogears::filesystem::path dir {default_directory};
+   biogears::filesystem::path dir {default_ecg_directory};
 @GENERATE_DIRECTORY_BODY@
 
    return true;
@@ -63,7 +63,7 @@ namespace io {
     return embedded_content;
   }
   //-----------------------------------------------------------------------------
-  char const * get_default_ecg_directory() { return default_directory; }
+  char const * get_default_ecg_directory() { return default_ecg_directory; }
   //-----------------------------------------------------------------------------
   size_t  get_embedded_ecg_file_size( const char* path) 
   {
@@ -83,8 +83,8 @@ namespace io {
   bool does_embedded_ecg_file_exist(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_ecg_directory == resource_id.substr(0,sizeof(default_ecg_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_ecg_directory)-1);
     }
     return does_embedded_ecg_file_exist(resource_id);
   }
@@ -93,8 +93,8 @@ namespace io {
   char const* get_ecg_file_sha1(const char* path)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_ecg_directory == resource_id.substr(0,sizeof(default_ecg_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_ecg_directory)-1);
     }
     return get_ecg_file_sha1(resource_id);
   }
@@ -112,8 +112,8 @@ namespace io {
   char const* get_embedded_ecg_file(const char* path, size_t& content_size)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_ecg_directory == resource_id.substr(0,sizeof(default_ecg_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_ecg_directory)-1);
     }
     return get_embedded_ecg_file(resource_id, content_size);
   }

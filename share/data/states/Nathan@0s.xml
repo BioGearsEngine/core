@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+84" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>Nathan</Name>
@@ -366,7 +366,7 @@
     <MolarMass readOnly="false" unit="g/mol" value="89.09"/>
     <State>Liquid</State>
     <BloodConcentration readOnly="false" unit="ug/mL" value="497.331754379298"/>
-    <MassInBody readOnly="false" unit="ug" value="20291267.576978"/>
+    <MassInBody readOnly="false" unit="ug" value="20291267.5769781"/>
     <MassInBlood readOnly="false" unit="ug" value="2751456.86430317"/>
     <MassInTissue readOnly="false" unit="ug" value="17539810.7126749"/>
     <Clearance>
@@ -845,6 +845,7 @@
     <PulmonaryVenousOxygenPressure readOnly="false" unit="mmHg" value="96.9478324814636"/>
     <VenousCarbonDioxidePressure readOnly="false" unit="mmHg" value="44.5433061959414"/>
     <VenousOxygenPressure readOnly="false" unit="mmHg" value="39.5492023978753"/>
+    <ViralLoad readOnly="false" unit="ct/uL" value="0"/>
     <ArterialOxygenAverage_mmHg numSamples="30" sum="2905.78758282105"/>
     <ArterialCarbonDioxideAverage_mmHg numSamples="30" sum="1206.6358457003"/>
     <RhFactorMismatch_ct>0</RhFactorMismatch_ct>
@@ -1198,7 +1199,7 @@
   <System xsi:type="BioGearsTissueSystemData">
     <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="3.76406335442639"/>
     <DehydrationFraction readOnly="false" value="0"/>
-    <ExtracellularFluidVolume readOnly="false" unit="mL" value="9234.91463800626"/>
+    <ExtracellularFluidVolume readOnly="false" unit="mL" value="9234.91463800625"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="35109.5835707731"/>
     <IntracellularFluidPH readOnly="false" value="7"/>
     <IntracellularFluidVolume readOnly="false" unit="mL" value="25874.6689327668"/>

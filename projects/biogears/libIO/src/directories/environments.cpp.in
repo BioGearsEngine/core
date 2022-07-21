@@ -10,7 +10,7 @@
 
 namespace biogears {
 namespace io {
-  static char default_directory[] = "environments/";
+  constexpr  char default_environment_directory[] = "environments/";
   char const * environment_file_list[] = {
 @RESOURCE_FILE_LIST@
   };
@@ -63,7 +63,7 @@ namespace io {
     return embedded_content;
   }
 //-----------------------------------------------------------------------------
-  char const * get_default_environments_directory() { return default_directory; }
+  char const * get_default_environments_directory() { return default_environment_directory; }
   //-----------------------------------------------------------------------------
   size_t  get_embedded_environments_file_size( const char* path) 
   {
@@ -83,8 +83,8 @@ namespace io {
   bool does_embedded_environments_file_exist(const char* path)
   {
    std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_environment_directory == resource_id.substr(0,sizeof(default_environment_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_environment_directory)-1);
     }
    return does_embedded_environments_file_exist(resource_id);
   }
@@ -93,8 +93,8 @@ namespace io {
   char const* get_environments_file_sha1(const char* path)
   {
    std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_environment_directory == resource_id.substr(0,sizeof(default_environment_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_environment_directory)-1);
     }
    return get_environments_file_sha1(resource_id);
   }
@@ -112,8 +112,8 @@ namespace io {
   char const* get_embedded_environments_file(const char* path, size_t& content_size)
   {
     std::string resource_id { path };
-    if ( default_directory == resource_id.substr(0,sizeof(default_directory))){
-      resource_id = resource_id.substr(sizeof(default_directory));
+    if ( default_environment_directory == resource_id.substr(0,sizeof(default_environment_directory)-1)){
+      resource_id = resource_id.substr(sizeof(default_environment_directory)-1);
     }
     return get_embedded_environments_file(resource_id, content_size);
   }

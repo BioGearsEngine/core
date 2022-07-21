@@ -35,6 +35,10 @@
 %rename (GetTissueToPlasmaLipoproteinRatio_const) biogears::SETissueCompartment::GetTissueToPlasmaLipoproteinRatio() const;
 %rename (GetTotalMass_const) biogears::SETissueCompartment::GetTotalMass(const MassUnit& unit) const;
 
+#if defined(SWIGCSHARP)
+%csmethodmodifiers biogears::SETissueCompartment::HashCode() const "public override";
+#endif 
+
 %include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
 
 %nspace std::vector<biogears::SETissueCompartment*>;

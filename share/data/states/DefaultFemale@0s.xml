@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+64" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+84" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>DefaultFemale</Name>
@@ -543,7 +543,7 @@
     <MaximumDiffusionFlux readOnly="false" unit="g/cm^2 s" value="0.5"/>
     <MichaelisCoefficient readOnly="false" value="0.8"/>
     <BloodConcentration readOnly="false" unit="ug/mL" value="11.5904049075158"/>
-    <MassInBody readOnly="false" unit="ug" value="278721.786190762"/>
+    <MassInBody readOnly="false" unit="ug" value="278721.786190761"/>
     <MassInBlood readOnly="false" unit="ug" value="47234.6420400872"/>
     <MassInTissue readOnly="false" unit="ug" value="231487.144150674"/>
     <SystemicMassCleared readOnly="false" unit="ug" value="9659.88940884121"/>
@@ -845,6 +845,7 @@
     <PulmonaryVenousOxygenPressure readOnly="false" unit="mmHg" value="99.1354009668774"/>
     <VenousCarbonDioxidePressure readOnly="false" unit="mmHg" value="44.287334105098"/>
     <VenousOxygenPressure readOnly="false" unit="mmHg" value="42.6557980417791"/>
+    <ViralLoad readOnly="false" unit="ct/uL" value="0"/>
     <ArterialOxygenAverage_mmHg numSamples="16" sum="1581.7196369897"/>
     <ArterialCarbonDioxideAverage_mmHg numSamples="16" sum="650.027838482581"/>
     <RhFactorMismatch_ct>0</RhFactorMismatch_ct>
@@ -28605,7 +28606,7 @@
       <Name>Ambient</Name>
       <Node>Ambient</Node>
       <InFlow readOnly="true" unit="mL/s" value="65.8337858827353"/>
-      <OutFlow readOnly="true" unit="mL/s" value="1.97932165964858e-91"/>
+      <OutFlow readOnly="true" unit="mL/s" value="1.97618507942103e-91"/>
       <Pressure readOnly="false" unit="mmHg" value="760"/>
       <Volume readOnly="true" unit="L" value="INF"/>
       <SubstanceQuantity>
@@ -28921,8 +28922,8 @@
     <GasCompartment>
       <Name>Mouth</Name>
       <Node>Mouth</Node>
-      <InFlow readOnly="true" unit="mL/s" value="65.8337858614093"/>
-      <OutFlow readOnly="true" unit="mL/s" value="65.8337859040509"/>
+      <InFlow readOnly="true" unit="mL/s" value="65.8337858827248"/>
+      <OutFlow readOnly="true" unit="mL/s" value="65.8337858827353"/>
       <Pressure readOnly="true" unit="cmH2O" value="1033.22744953679"/>
       <Volume readOnly="false" unit="mL" value="20.6"/>
       <SubstanceQuantity>
