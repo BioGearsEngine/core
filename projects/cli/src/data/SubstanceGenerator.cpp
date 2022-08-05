@@ -46,6 +46,9 @@ bool SubstanceGenerator::parse()
   for (auto lineItr = begin(); lineItr != end(); ++lineItr) {
     if ("Name" == lineItr->first) {
       for (auto name : lineItr->second) {
+        if (name.empty()) {
+          std::cout << "Warning: Substance found wiht out a name. CSV maybe corrupt.";
+        }
         CDM::SubstanceData data;
         data.Name(name);
         data.contentVersion(branded_version_string());
@@ -340,6 +343,7 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
 
     auto& value = (itr)->second[index];
     if (!value.empty()) {
+      default_clearance = false;
       CDM::SubstanceClearanceData::Systemic_type systemic_data;
 
       CDM::SubstanceClearanceData::Systemic_type::FractionExcretedInFeces_type feif_data;
@@ -381,9 +385,14 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
     if (!value.empty()) {
       default_clearance = false;
       try {
-        renal_data.Clearance(std::stod(value, &pos));
-        renal_data.Clearance()->unit(trim(value.substr(pos)));
-        data.RenalDynamics(renal_data);
+        if (data.Systemic().present()) {
+          renal_data.Clearance(data.Systemic()->RenalClearance().value());
+          renal_data.Clearance()->unit(data.Systemic()->RenalClearance().unit());
+        } else {
+          renal_data.Clearance(std::stod(value, &pos));
+          renal_data.Clearance()->unit(trim(value.substr(pos)));
+          data.RenalDynamics(renal_data);        
+        }
       } catch (std::exception e) {
         rValue = false;
       }
@@ -395,7 +404,11 @@ bool SubstanceGenerator::process_clearance(CSV_RowItr itr)
         regulation_data.ChargeInBlood(value);
         try {
           value = (itr + 9)->second[index];
-          regulation_data.FractionUnboundInPlasma(std::stod(value));
+          if (data.Systemic().present()) {
+            regulation_data.FractionUnboundInPlasma(data.Systemic()->FractionUnboundInPlasma().value());
+          } else {
+            regulation_data.FractionUnboundInPlasma(std::stod(value));
+          }
           value = (itr + 10)->second[index];
           regulation_data.ReabsorptionRatio(std::stod(value));
           value = (itr + 11)->second[index];
@@ -482,7 +495,16 @@ bool SubstanceGenerator::process_pharmacokinetics(CSV_RowItr itr)
         value = (itr + 2)->second[index];
         phys_type.BloodPlasmaRatio(std::stod(value));
         value = (itr + 3)->second[index];
-        phys_type.FractionUnboundInPlasma(std::stod(value));
+
+        //FractionUnbound Blood can appear earlier in the file. For simplicty we have decided to take the first occurance of the value as the intended value.
+        //Users are encouraged through notes to delete redundant values to avoid revision errors. 
+        if (substance.Clearance().present() && substance.Clearance()->Systemic().present()) {
+          phys_type.FractionUnboundInPlasma(substance.Clearance()->Systemic()->FractionUnboundInPlasma().value());
+        } else if (substance.Clearance().present() && substance.Clearance()->RenalDynamics().present() && substance.Clearance()->RenalDynamics()->Regulation().present()) {
+          phys_type.FractionUnboundInPlasma(substance.Clearance()->RenalDynamics()->Regulation()->FractionUnboundInPlasma().value());
+        } else {
+          phys_type.FractionUnboundInPlasma(std::stod(value));
+        }
         value = (itr + 4)->second[index];
         phys_type.IonicState(value);
         value = (itr + 5)->second[index];

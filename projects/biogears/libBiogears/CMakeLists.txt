@@ -14,8 +14,8 @@ add_source_files(CDM_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogear
 add_source_files(IO_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libIO/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
 add_source_files(IO_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/io REGEX "*.h" SOURCE_GROUP "Headers\\Public\\generated\\")
 add_source_files(IO_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogears/io REGEX "*.cpp" SOURCE_GROUP "Sources\\generated\\")
-add_source_files(IO_EMBEDED_HDRS LOCATION "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}" REGEX "*.h" SOURCE_GROUP "Headers\\Public\\generated\\")
-add_source_files(IO_EMBEDED_SRCS LOCATION  "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}/" REGEX "*.cpp" SOURCE_GROUP "Sources\\generated\\")
+add_source_files(IO_EMBEDED_HDRS LOCATION "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}" REGEX "*.hxx" SOURCE_GROUP "Headers\\Public\\generated\\")
+add_source_files(IO_EMBEDED_SRCS LOCATION  "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}/" REGEX "*.cxx" SOURCE_GROUP "Sources\\generated\\")
 
 #Biogears Core
 add_source_files(CORE_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/src REGEX "*.h" SOURCE_GROUP "Headers\\Private\\")

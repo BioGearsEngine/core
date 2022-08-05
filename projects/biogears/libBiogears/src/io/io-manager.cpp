@@ -992,7 +992,7 @@ size_t IOManager::read_resource_file(char const*
   size_t content_size = 0;
   biogears::filesystem::path test_location { find_resource_file(file) };
   if (test_location.exists() && test_location.is_file()) {
-    std::ifstream resource_file { test_location, std::ios::in };
+    std::ifstream resource_file { test_location, std::ios::in  | std::ios::binary};
     if (resource_file.is_open()) {
       resource_file.seekg(0, resource_file.end);
       content_size = resource_file.tellg();

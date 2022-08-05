@@ -157,33 +157,39 @@ bool SESubstanceClearance::Load(const CDM::SubstanceClearanceData& in)
 {
   Clear();
   // Make sure dups match
-  if (in.Systemic().present() && in.RenalDynamics()->Clearance().present() && in.Systemic().get().RenalClearance().value() != in.RenalDynamics()->Clearance().get().value()) {
-    Fatal("Multiple Renal Clearances specified, but not the same. These must match at this time.");
-    return false;
+  if (in.Systemic().present() && in.RenalDynamics().present()) {
+    if (in.RenalDynamics()->Clearance().present() && in.Systemic().get().RenalClearance().value() != in.RenalDynamics()->Clearance().get().value()) {
+      Warning("Multiple Renal Clearances specified, but not the same. RenalDynamics will override Systemic.");
+    }
   }
-  if (in.Systemic().present() && in.RenalDynamics()->Regulation().present() && in.Systemic().get().FractionUnboundInPlasma().value() != in.RenalDynamics()->Regulation().get().FractionUnboundInPlasma().value()) {
-    Fatal("Multiple FractionUnboundInPlasma values specified, but not the same. These must match at this time.");
-    return false;
+  if (in.Systemic().present() && in.RenalDynamics().present()) {
+    if (in.RenalDynamics()->Regulation().present() && in.Systemic().get().FractionUnboundInPlasma().value() != in.RenalDynamics()->Regulation().get().FractionUnboundInPlasma().value()) {
+      Warning("Multiple FractionUnboundInPlasma values specified, but not the same. RenalDynamics will override Systemic.");
+    }
   }
 
   if (in.Systemic().present()) {
     SetSystemic(true);
-    GetFractionExcretedInFeces().Load(in.Systemic().get().FractionExcretedInFeces());
-    //GetFractionExcretedInUrine().Load(in.Systemic().get().FractionExcretedInUrine());
-    //GetFractionMetabolizedInGut().Load(in.Systemic().get().FractionMetabolizedInGut());
-    GetFractionUnboundInPlasma().Load(in.Systemic().get().FractionUnboundInPlasma());
-    GetIntrinsicClearance().Load(in.Systemic().get().IntrinsicClearance());
-    GetRenalClearance().Load(in.Systemic().get().RenalClearance());
-    GetSystemicClearance().Load(in.Systemic().get().SystemicClearance());
+    GetFractionExcretedInFeces().Load(in.Systemic()->FractionExcretedInFeces());
+    if (in.Systemic()->FractionExcretedInUrine().present()) {
+      GetFractionExcretedInUrine().Load(in.Systemic()->FractionExcretedInUrine()->value());
+    }
+    if (in.Systemic()->FractionMetabolizedInGut().present()) {
+      GetFractionMetabolizedInGut().Load(in.Systemic()->FractionMetabolizedInGut()->value());
+    }
+    GetFractionUnboundInPlasma().Load(in.Systemic()->FractionUnboundInPlasma());
+    GetIntrinsicClearance().Load(in.Systemic()->IntrinsicClearance());
+    GetRenalClearance().Load(in.Systemic()->RenalClearance());
+    GetSystemicClearance().Load(in.Systemic()->SystemicClearance());
   }
 
   if (in.RenalDynamics().present()) {
     if (in.RenalDynamics()->Regulation().present()) {
       m_RenalDynamic = RenalDynamic::Regulation;
-      SetChargeInBlood(in.RenalDynamics()->Regulation().get().ChargeInBlood());
-      GetFractionUnboundInPlasma().Load(in.RenalDynamics()->Regulation().get().FractionUnboundInPlasma());
-      GetRenalReabsorptionRatio().Load(in.RenalDynamics()->Regulation().get().ReabsorptionRatio());
-      GetRenalTransportMaximum().Load(in.RenalDynamics()->Regulation().get().TransportMaximum());
+      SetChargeInBlood(in.RenalDynamics()->Regulation()->ChargeInBlood());
+      GetFractionUnboundInPlasma().Load(in.RenalDynamics()->Regulation()->FractionUnboundInPlasma());
+      GetRenalReabsorptionRatio().Load(in.RenalDynamics()->Regulation()->ReabsorptionRatio());
+      GetRenalTransportMaximum().Load(in.RenalDynamics()->Regulation()->TransportMaximum());
     } else if (in.RenalDynamics()->Clearance().present()) {
       m_RenalDynamic = RenalDynamic::Clearance;
       GetRenalClearance().Load(in.RenalDynamics()->Clearance().get());
@@ -201,8 +207,8 @@ bool SESubstanceClearance::Load(const CDM::SubstanceClearanceData& in)
 
   if (in.CellRegulation().present()) {
     SetCellular(true);
-    GetCellBirthRate().Load(in.CellRegulation().get().CellBirthRate());
-    GetCellDeathRate().Load(in.CellRegulation().get().CellDeathRate());
+    GetCellBirthRate().Load(in.CellRegulation()->CellBirthRate());
+    GetCellDeathRate().Load(in.CellRegulation()->CellDeathRate());
   }
 
   return true;

@@ -108,9 +108,7 @@ bool ErrorHandler::handleError(const xercesc::DOMError& err)
          << loc->getLineNumber() << ":" << loc->getColumnNumber() << " "
          << (warn ? "warning: " : "error: ") << msg << std::ends;
   /// \error Invalid schema file
-  std::cerr << error_.str() << std::endl;
-  std::cerr << err.getRelatedData() << std::endl;
-  std::cerr << err.getRelatedException() << std::endl;
+  std::cerr << std::flush << error_.str() << "\n" << err.getRelatedData() << "\n" << err.getRelatedException() << std::endl;
 
   xercesc::XMLString::release(&uri);
   xercesc::XMLString::release(&msg);
@@ -324,7 +322,7 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, s
     // TODO Append parse error
     /// \error Error reading xml file
     err << "Error reading data from buffer\n"
-        << eh.getError() << std::ends;
+        << eh.getError() << std::endl;
     logger->Error(err.str());
     return std::unique_ptr<CDM::ObjectData>();
   }
