@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel xsd/BioGears.xsd">
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGearsDataModel.xsd">
   <Name>Acetaminophen</Name>
   <Density readOnly="false" unit="g/cm^3" value="1.293"/>
   <MolarMass readOnly="false" unit="g/mol" value="151.163"/>
@@ -12,9 +12,6 @@
       <RenalClearance readOnly="false" unit="mL/min kg" value="4.5"/>
       <SystemicClearance readOnly="false" unit="mL/min kg" value="0.5"/>
     </Systemic>
-    <RenalDynamics>
-      <Clearance readOnly="false" unit="mL/min kg" value="4.5"/>
-    </RenalDynamics>
   </Clearance>
   <Pharmacokinetics>
     <Physicochemicals>

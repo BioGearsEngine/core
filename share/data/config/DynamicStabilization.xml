@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<PhysiologyEngineDynamicStabilization xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
-	<RestingStabilizationCriteria>
+<PhysiologyEngineDynamicStabilization xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGearsDataModel.xsd">
+  <RestingStabilizationCriteria>
     <ConvergenceTime readOnly="false" unit="s" value="15"/>
     <MinimumReactionTime readOnly="false" unit="s" value="25"/>
     <MaximumAllowedStabilizationTime readOnly="false" unit="s" value="1000"/>
@@ -30,7 +30,7 @@
     <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
     <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
   </FeedbackStabilizationCriteria>
-  <ConditionStabilization Name="ChronicAnemia">
+  <ConditionStabilization Name="ChronicAnemia" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>
@@ -48,7 +48,7 @@
       <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
-  <ConditionStabilization Name="ChronicVentricularSystolicDysfunction">
+  <ConditionStabilization Name="ChronicVentricularSystolicDysfunction" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>
@@ -66,7 +66,7 @@
       <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
-  <ConditionStabilization Name="ChronicPericardialEffusion">
+  <ConditionStabilization Name="ChronicPericardialEffusion" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>
@@ -84,7 +84,7 @@
       <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
-  <ConditionStabilization Name="ChronicObstructivePulmonaryDisease">
+  <ConditionStabilization Name="ChronicObstructivePulmonaryDisease" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>
@@ -102,7 +102,7 @@
       <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
-  <ConditionStabilization Name="LobarPneumonia">
+  <ConditionStabilization Name="LobarPneumonia" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>
@@ -120,7 +120,7 @@
       <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
-  <ConditionStabilization Name="InitialEnvironment">
+  <ConditionStabilization Name="InitialEnvironment" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>
@@ -138,7 +138,7 @@
       <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
-  <ConditionStabilization Name="ChronicRenalStenosis">
+  <ConditionStabilization Name="ChronicRenalStenosis" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>
@@ -156,7 +156,7 @@
       <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
-  <ConditionStabilization Name="ImpairedAlveolarExchange">
+  <ConditionStabilization Name="ImpairedAlveolarExchange" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>
@@ -174,7 +174,7 @@
       <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
-  <ConditionStabilization Name="Dehydration">
+  <ConditionStabilization Name="Dehydration" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>
@@ -192,7 +192,7 @@
       <PropertyConvergence Name="SkinTemperature" PercentDifference="1.25"/>
     </Criteria>
   </ConditionStabilization>
-  <ConditionStabilization Name="Starvation">
+  <ConditionStabilization Name="Starvation" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>
@@ -210,7 +210,7 @@
       <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
-  <ConditionStabilization Name="DiabetesType1">
+  <ConditionStabilization Name="DiabetesType1" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>
@@ -228,7 +228,7 @@
       <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
-  <ConditionStabilization Name="DiabetesType2">
+  <ConditionStabilization Name="DiabetesType2" contentVersion="Biogears_7.5.0+85">
     <Criteria>
       <ConvergenceTime readOnly="false" unit="s" value="15"/>
       <MinimumReactionTime readOnly="false" unit="s" value="25"/>

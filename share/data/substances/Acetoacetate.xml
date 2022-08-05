@@ -1,23 +1,23 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_7.5" xsi:schemaLocation="">
-    <Name>Acetoacetate</Name>
-    <MolarMass value="102.09" unit="g/mol"/>
-    <State>Liquid</State>
-    <Clearance>
-        <Systemic>
-            <FractionExcretedInFeces value="0.0"/>
-            <FractionUnboundInPlasma value="1.0"/>
-            <IntrinsicClearance value="0.0" unit="mL/min kg"/>
-            <RenalClearance value="0.0" unit="mL/min kg"/>
-            <SystemicClearance value="17.8" unit="mL/min kg"/>
-        </Systemic>
-        <RenalDynamics>
-            <Regulation>
-                <ChargeInBlood>Neutral</ChargeInBlood>
-                <FractionUnboundInPlasma value="1.0"/>
-                <ReabsorptionRatio value="INF"/>
-                <TransportMaximum value="INF" unit="mg/min"/>
-            </Regulation>
-        </RenalDynamics>
-    </Clearance>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGearsDataModel.xsd">
+  <Name>Acetoacetate</Name>
+  <MolarMass readOnly="false" unit="g/mol" value="102.09"/>
+  <State>Liquid</State>
+  <Clearance>
+    <Systemic>
+      <FractionExcretedInFeces readOnly="false" value="0"/>
+      <FractionUnboundInPlasma readOnly="false" value="1"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="0"/>
+      <RenalClearance readOnly="false" unit="mL/min kg" value="0"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="17.8"/>
+    </Systemic>
+    <RenalDynamics>
+      <Regulation>
+        <ChargeInBlood>Neutral</ChargeInBlood>
+        <FractionUnboundInPlasma readOnly="false" value="1"/>
+        <ReabsorptionRatio readOnly="false" value="INF"/>
+        <TransportMaximum readOnly="false" unit="mg/min" value="INF"/>
+      </Regulation>
+    </RenalDynamics>
+  </Clearance>
 </Substance>

@@ -1,58 +1,59 @@
-Data Type,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound
-Compound Name,PlamsaLyteA,Saline,SalineSlowDrip,RingersLactate,PiperacillinTazobactam,Blood_ABNegative,Blood_ABPositive,Blood_ANegative,Blood_APositive,Blood_BNegative,Blood_BPositive,Blood_ONegative,Blood_OPositive,Plasma
-Classification,,,,,,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood
-BloodRHFactor,,,,,,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE,
-,Substance,Substance,Substance,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,Sodium,Sodium,Sodium,Sodium,Piperacillin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Sodium
-Concentration,3220 mg/L,0.354 g/dL,0.354 g/dL,0.299 g/dL,0.2 g/mL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,0.3335 g/dL
-,Substance,Substance,Substance,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,Potassium,Chloride,Chloride,Chloride,Tazobactam,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Albumin
-Concentration,195 mg/L,0.546 g/dL,0.546 g/dL,0.386 g/dL,0.025 g/mL,11.1 g/dL,11.1 g/dL,11.1 g/dL,11.1 g/dL,11.1 g/dL,11.1 g/dL,11.1 g/dL,11.1 g/dL,4.5 g/dL
-,Substance,Substance,Substance,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,Magnesium,Oxygen,Oxygen,Lactate,Sodium,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Urea
-Concentration,36 mg/L,0.0314 g/L,0.0314 g/L,0.249 g/dL,0.0268 g/mL,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0257 g/dL
-,Substance,Substance,Substance,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,Chloride,CarbonDioxide,CarbonDioxide,Potassium,,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,Glucose
-Concentration,3430 mg/L,0.715 g/L,0.715 g/L,0.0156 g/dL,,0.715 g/L,0.715 g/L,0.715 g/L,0.715 g/L,0.715 g/L,0.715 g/L,0.715 g/L,0.715 g/L,0.08 g/dL
-,Substance,Substance,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,Acetoacetate,,,Calcium,,Sodium,Sodium,Sodium,Sodium,Sodium,Sodium,Sodium,Sodium,Triacylglycerol
-Concentration,1594 mg/L,,,0.006 g/dL,,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.107 g/dL
-,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,Glucose,,,Oxygen,,Albumin,Albumin,Albumin,Albumin,Albumin,Albumin,Albumin,Albumin,Calcium
-Concentration,4488.5 mg/L,,,0.0314 g/L,,4.5 g/dL,4.5 g/dL,4.5 g/dL,4.5 g/dL,4.5 g/dL,4.5 g/dL,4.5 g/dL,4.5 g/dL,.010 g/dL
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,CarbonDioxide,,Urea,Urea,Urea,Urea,Urea,Urea,Urea,Urea,Creatinine
-Concentration,,,,0.715 g/L,,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,.001 g/dL
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,,,Glucose,Glucose,Glucose,Glucose,Glucose,Glucose,Glucose,Glucose,Chloride
-Concentration,,,,,,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.362 g/dL
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,,,Triacylglycerol,Triacylglycerol,Triacylglycerol,Triacylglycerol,Triacylglycerol,Triacylglycerol,Triacylglycerol,Triacylglycerol,Potassium
-Concentration,,,,,,0.107 g/dL,0.107 g/dL,0.107 g/dL,0.107 g/dL,0.107 g/dL,0.107 g/dL,0.107 g/dL,0.107 g/dL,176.4 mg/L
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,,,Calcium,Calcium,Calcium,Calcium,Calcium,Calcium,Calcium,Calcium,Chloride
-Concentration,,,,,,.010 g/dL,.010 g/dL,.010 g/dL,.010 g/dL,.010 g/dL,.010 g/dL,.010 g/dL,.010 g/dL,0.362 g/dL
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,,,Creatinine,Creatinine,Creatinine,Creatinine,Creatinine,Creatinine,Creatinine,Creatinine,Potassium
-Concentration,,,,,,.001 g/dL,.001 g/dL,.001 g/dL,.001 g/dL,.001 g/dL,.001 g/dL,.001 g/dL,.001 g/dL,176.4 mg/L
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,,,Chloride,Chloride,Chloride,Chloride,Chloride,Chloride,Chloride,Chloride,
-Concentration,,,,,,0.362 g/dL,0.362 g/dL,0.362 g/dL,0.362 g/dL,0.362 g/dL,0.362 g/dL,0.362 g/dL,0.362 g/dL,
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,,,Potassium,Potassium,Potassium,Potassium,Potassium,Potassium,Potassium,Potassium,
-Concentration,,,,,,176.4 mg/L,176.4 mg/L,176.4 mg/L,176.4 mg/L,176.4 mg/L,176.4 mg/L,176.4 mg/L,176.4 mg/L,
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,,,RedBloodCell,RedBloodCell,RedBloodCell,RedBloodCell,RedBloodCell,RedBloodCell,RedBloodCell,RedBloodCell,
-Concentration,,,,,,14.256 g/dL,14.256 g/dL,14.256 g/dL,14.256 g/dL,14.256 g/dL,14.256 g/dL,14.256 g/dL,14.256 g/dL,
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,,,Antigen_A,Antigen_A,Antigen_A,Antigen_A,Antigen_A,Antigen_A,Antigen_A,Antigen_A,
-Concentration,,,,,,0.0115 g/L,0.0115 g/L,0.023 g/L,0.023 g/L,0.0 g/dL,0.0 g/dL,0.0 g/dL,0.0 g/dL,
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,,,Antigen_B,Antigen_B,Antigen_B,Antigen_B,Antigen_B,Antigen_B,Antigen_B,Antigen_B,
-Concentration,,,,,,0.0095 g/L,0.0095 g/L,0.0 g/dL,0.0 g/dL,0.019 g/L,0.019 g/L,0.0 g/dL,0.0 g/dL,
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,,,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,
-Concentration,,,,,,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,
-,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
-Component Name,,,,,,Platelet,Platelet,Platelet,Platelet,Platelet,Platelet,Platelet,Platelet,
-Concentration,,,,,,0.81 g/dL,0.81 g/dL,0.81 g/dL,0.81 g/dL,0.81 g/dL,0.81 g/dL,0.81 g/dL,0.81 g/dL,
+,,,,,,,,,,,,,,,,,
+Data Type,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound,SubstanceCompound
+Compound Name,Albuminar_25,Albuminex_4PCT,Albuminex_5PCT,PlasmaLyteA,Saline,SalineSlowDrip,RingersLactate,PiperacillinTazobactam,Blood_ABNegative,Blood_ABPositive,Blood_ANegative,Blood_APositive,Blood_BNegative,Blood_BPositive,Blood_ONegative,Blood_OPositive,Plasma
+Classification,,,,,,,,,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,WholeBlood,
+BloodRHFactor,,,,,,,,,false,true,false,true,false,true,false,true,
+,Substance,Substance,Substance,Substance,Substance,Substance,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,Albumin,Albumin,Albumin,Sodium,Sodium,Sodium,Sodium,Piperacillin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Hemoglobin,Sodium
+Concentration,25.0 g/dL,4.0 g/dL,5.0 g/dL,3220 mg/L,0.354 g/dL,0.354 g/dL,0.299 g/dL,0.2 g/mL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,3.7 g/dL,0.3335 g/dL
+,Substance,Substance,Substance,Substance,Substance,Substance,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,Sodium,Sodium,Sodium,Potassium,Chloride,Chloride,Chloride,Tazobactam,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Oxyhemoglobin,Albumin
+Concentration,0.32 g/dL,0.322 g/dL,0.322 g/dL,195 mg/L,0.546 g/dL,0.546 g/dL,0.386 g/dL,0.025 g/mL,11.1 g/dL,11.1 g/dL,11.1 g/dL,11.1 g/dL,11.1 g/dL,11.1 g/dL,11.1 g/dL,11.1 g/dL,4.5 g/dL
+,,Substance,Substance,Substance,Substance,Substance,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,Chloride,Chloride,Magnesium,Oxygen,Oxygen,Lactate,Sodium,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Oxygen,Urea
+Concentration,,0.454 g/dL,0.454 g/dL,36 mg/L,0.0314 g/L,0.0314 g/L,0.249 g/dL,0.0268 g/mL,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0314 g/L,0.0257 g/dL
+,,,,Substance,Substance,Substance,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,Chloride,CarbonDioxide,CarbonDioxide,Potassium,,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,CarbonDioxide,Glucose
+Concentration,,,,3430 mg/L,0.715 g/L,0.715 g/L,0.0156 g/dL,,0.715 g/L,0.715 g/L,0.715 g/L,0.715 g/L,0.715 g/L,0.715 g/L,0.715 g/L,0.715 g/L,0.08 g/dL
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,Acetoacetate,,,Calcium,,Sodium,Sodium,Sodium,Sodium,Sodium,Sodium,Sodium,Sodium,Triacylglycerol
+Concentration,,,,1594 mg/L,,,0.006 g/dL,,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.3335 g/dL,0.107 g/dL
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,Glucose,,,Oxygen,,Albumin,Albumin,Albumin,Albumin,Albumin,Albumin,Albumin,Albumin,Calcium
+Concentration,,,,4488.5 mg/L,,,0.0314 g/L,,4.5 g/dL,4.5 g/dL,4.5 g/dL,4.5 g/dL,4.5 g/dL,4.5 g/dL,4.5 g/dL,4.5 g/dL,.010 g/dL
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,CarbonDioxide,,Urea,Urea,Urea,Urea,Urea,Urea,Urea,Urea,Creatinine
+Concentration,,,,,,,0.715 g/L,,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,0.0257 g/dL,.001 g/dL
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,,,Glucose,Glucose,Glucose,Glucose,Glucose,Glucose,Glucose,Glucose,Chloride
+Concentration,,,,,,,,,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.08 g/dL,0.362 g/dL
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,,,Triacylglycerol,Triacylglycerol,Triacylglycerol,Triacylglycerol,Triacylglycerol,Triacylglycerol,Triacylglycerol,Triacylglycerol,Potassium
+Concentration,,,,,,,,,0.107 g/dL,0.107 g/dL,0.107 g/dL,0.107 g/dL,0.107 g/dL,0.107 g/dL,0.107 g/dL,0.107 g/dL,176.4 mg/L
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,,,Calcium,Calcium,Calcium,Calcium,Calcium,Calcium,Calcium,Calcium,Chloride
+Concentration,,,,,,,,,.010 g/dL,.010 g/dL,.010 g/dL,.010 g/dL,.010 g/dL,.010 g/dL,.010 g/dL,.010 g/dL,0.362 g/dL
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,,,Creatinine,Creatinine,Creatinine,Creatinine,Creatinine,Creatinine,Creatinine,Creatinine,Potassium
+Concentration,,,,,,,,,.001 g/dL,.001 g/dL,.001 g/dL,.001 g/dL,.001 g/dL,.001 g/dL,.001 g/dL,.001 g/dL,176.4 mg/L
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,,,Chloride,Chloride,Chloride,Chloride,Chloride,Chloride,Chloride,Chloride,
+Concentration,,,,,,,,,0.362 g/dL,0.362 g/dL,0.362 g/dL,0.362 g/dL,0.362 g/dL,0.362 g/dL,0.362 g/dL,0.362 g/dL,
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,,,Potassium,Potassium,Potassium,Potassium,Potassium,Potassium,Potassium,Potassium,
+Concentration,,,,,,,,,176.4 mg/L,176.4 mg/L,176.4 mg/L,176.4 mg/L,176.4 mg/L,176.4 mg/L,176.4 mg/L,176.4 mg/L,
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,,,RedBloodCell,RedBloodCell,RedBloodCell,RedBloodCell,RedBloodCell,RedBloodCell,RedBloodCell,RedBloodCell,
+Concentration,,,,,,,,,14.256 g/dL,14.256 g/dL,14.256 g/dL,14.256 g/dL,14.256 g/dL,14.256 g/dL,14.256 g/dL,14.256 g/dL,
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,,,Antigen_A,Antigen_A,Antigen_A,Antigen_A,Antigen_A,Antigen_A,Antigen_A,Antigen_A,
+Concentration,,,,,,,,,0.0115 g/L,0.0115 g/L,0.023 g/L,0.023 g/L,0.0 g/dL,0.0 g/dL,0.0 g/dL,0.0 g/dL,
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,,,Antigen_B,Antigen_B,Antigen_B,Antigen_B,Antigen_B,Antigen_B,Antigen_B,Antigen_B,
+Concentration,,,,,,,,,0.0095 g/L,0.0095 g/L,0.0 g/dL,0.0 g/dL,0.019 g/L,0.019 g/L,0.0 g/dL,0.0 g/dL,
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,,,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,WhiteBloodCell,
+Concentration,,,,,,,,,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,0.0189 g/dL,
+,,,,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance,Substance
+Component Name,,,,,,,,,Platelet,Platelet,Platelet,Platelet,Platelet,Platelet,Platelet,Platelet,
+Concentration,,,,,,,,,0.81 g/dL,0.81 g/dL,0.81 g/dL,0.81 g/dL,0.81 g/dL,0.81 g/dL,0.81 g/dL,0.81 g/dL,
