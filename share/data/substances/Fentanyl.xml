@@ -6,19 +6,22 @@
   <State>Liquid</State>
   <Clearance>
     <Systemic>
-      <FractionExcretedInFeces readOnly="false" value="0"/>
-      <FractionUnboundInPlasma readOnly="false" value="0.15"/>
-      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="781"/>
-      <RenalClearance readOnly="false" unit="mL/min kg" value="0.7"/>
-      <SystemicClearance readOnly="false" unit="mL/min kg" value="15.5"/>
+      <FractionExcretedInFeces readOnly="false" value="0.1"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.3"/>
+      <IntrinsicClearance readOnly="false" unit="mL/min kg" value="25.5"/>
+      <RenalClearance readOnly="false" unit="mL/min kg" value="0.5"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="68"/>
     </Systemic>
+    <RenalDynamics>
+      <Clearance readOnly="false" unit="mL/min kg" value="0.5"/>
+    </RenalDynamics>
   </Clearance>
   <Pharmacokinetics>
     <Physicochemicals>
       <AcidDissociationConstant readOnly="false" value="9"/>
       <BindingProtein>Albumin</BindingProtein>
       <BloodPlasmaRatio readOnly="false" value="1"/>
-      <FractionUnboundInPlasma readOnly="false" value="0.15"/>
+      <FractionUnboundInPlasma readOnly="false" value="0.3"/>
       <IonicState>Base</IonicState>
       <LogP readOnly="false" value="4.05"/>
       <HydrogenBondCount readOnly="false" value="2"/>
@@ -35,7 +38,7 @@
     </Bronchodilation>
     <CentralNervousModifier>
       <EMax readOnly="false" value="1"/>
-      <EC50 readOnly="false" unit="ug/L" value="4"/>
+      <EC50 readOnly="false" unit="ug/L" value="2"/>
     </CentralNervousModifier>
     <DiastolicPressureModifier>
       <EMax readOnly="false" value="-0.05"/>
