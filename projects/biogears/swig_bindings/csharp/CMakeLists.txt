@@ -5,10 +5,6 @@
 if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
    message(STATUS "            : biogears_csharp")
    
-   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
-   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
-   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/chsarp" PARENT_SCOPE)
-
    file(GLOB_RECURSE CSharp_SWIGS LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../bindings/*.swg" )
    source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/bindings/*.swg" PREFIX "Source Files"  FILES ${csharp_test_files} )
 
@@ -29,11 +25,13 @@ if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
    endif()
 
    option(UNITTEST_biogears-swig_csharp "Enable biogears_csharp UnitTest " ${Biogears_SWIG_CSHARP_BINDINGS})
+   set(SWIG_GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/")
+   set(SWIG_STAGE_DIR "${CMAKE_BINARY_DIR}/outputs/bindings/csharp/")
    swig_add_library(biogears_csharp 
 	   TYPE ${LIBRARY_TYPE}
          LANGUAGE csharp 
-         OUTPUT_DIR "${PROJECT_BINARY_DIR}/outputs/csharp"
-         OUTFILE_DIR "${PROJECT_BINARY_DIR}/outputs/csharp"
+         OUTPUT_DIR  "${SWIG_STAGE_DIR}"
+         OUTFILE_DIR "${SWIG_GEN_DIR}"
          SOURCES ${CSharp_SWIGS}
    )
    target_link_libraries(biogears_csharp PUBLIC libbiogears )
@@ -62,16 +60,9 @@ if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
   ######################################################################################################
   # CSharp Unit Test
   ######################################################################################################
-
-  #add_source_files(libiogears_csharp_files LOCATION ${CMAKE_BINARY_DIR}/outputs/csharp/ REGEX "*.cs" SOURCE_GROUP "Source Files\\")
-  file(GLOB_RECURSE  libiogears_csharp_biogears  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_BINARY_DIR}/outputs/csharp/biogears/*.cs")
-  file(GLOB_RECURSE  libiogears_csharp_cdm  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_BINARY_DIR}/outputs/csharp/mil/*.cs")
-  file(GLOB_RECURSE  libiogears_csharp_std  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_BINARY_DIR}/outputs/csharp/std/*.cs")
-  file(GLOB_RECURSE  libiogears_csharp_unittest  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cs")
-  
+ file(GLOB_RECURSE  swig_generated_csharp  LIST_DIRECTORIES False CONFIGURE_DEPENDS "${SWIG_STAGE_DIR}/*.cs")
+ 
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-  source_group(TREE ${CMAKE_BINARY_DIR}/outputs/csharp/ PREFIX "Source Files"  FILES ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std})
-  source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files"  FILES ${libiogears_csharp_unittest} )
   get_property(support_files TARGET biogears_csharp PROPERTY SWIG_SUPPORT_FILES)
 
   include(CSharpUtilities)
@@ -81,8 +72,9 @@ if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
 
   if (WIN32)
     enable_language( CSharp )
-    add_executable(csharp_example ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std} src/howto-swig_bindings.cs)
-    add_executable(csharp_radiation_debugging ${libiogears_csharp_biogears} ${libiogears_csharp_cdm} ${libiogears_csharp_std} src/howto-swig_radiation.cs)
+    add_executable(csharp_example ${swig_generated_csharp}  src/howto-swig_bindings.cs)
+    add_executable(csharp_radiation_debugging ${swig_generated_csharp}  src/howto-swig_radiation.cs)
+
     set_target_properties(csharp_example PROPERTIES
         POSITION_INDEPENDENT_CODE ON
         FOLDER "Swig\\CSharp"
@@ -97,10 +89,10 @@ if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
       )
       
     target_link_libraries(csharp_example PUBLIC  libbiogears biogears_csharp)
-    target_include_directories(csharp_example PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
+    target_include_directories(csharp_example PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/bindings )
 
     target_link_libraries(csharp_radiation_debugging PUBLIC  libbiogears biogears_csharp)
-    target_include_directories(csharp_radiation_debugging PUBLIC ${CMAKE_BINARY_DIR}/outputs/csharp ${CMAKE_BINARY_DIR}/outputs/csharp/biogears)
+    target_include_directories(csharp_radiation_debugging PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/bindings ${CMAKE_CURRENT_BINARY_DIR}/bindings/biogears)
   endif()
 endif()
 
