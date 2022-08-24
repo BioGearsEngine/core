@@ -1,7 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_7.5" xsi:schemaLocation="">
-    <Name>Tristearin</Name>
-    <Density value="862.0" unit="kg/m^3"/>
-    <MolarMass value="891.48" unit="g/mol"/>
-    <State>Liquid</State>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGearsDataModel.xsd">
+  <Name>Tristearin</Name>
+  <Density readOnly="false" unit="kg/m^3" value="862"/>
+  <MolarMass readOnly="false" unit="g/mol" value="891.48"/>
+  <State>Liquid</State>
+  <Clearance>
+    <RenalDynamics>
+      <Clearance readOnly="false" unit="mL/min kg" value="0"/>
+    </RenalDynamics>
+  </Clearance>
 </Substance>

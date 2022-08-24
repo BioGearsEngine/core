@@ -234,7 +234,10 @@ bool SESubstance::Load(const CDM::SubstanceData& in)
   if (in.Pharmacodynamics().present())
     GetPD().Load(in.Pharmacodynamics().get());
 
-  if (HasClearance() && HasPK() && GetPK().HasPhysicochemicals() && GetClearance().HasFractionUnboundInPlasma() && !GetClearance().GetFractionUnboundInPlasma().Equals(GetPK().GetPhysicochemicals().GetFractionUnboundInPlasma())) {
+  if (HasClearance() && HasPK() &&
+    GetPK().HasPhysicochemicals() && 
+    GetClearance().HasFractionUnboundInPlasma() &&
+    !GetClearance().GetFractionUnboundInPlasma().Equals(GetPK().GetPhysicochemicals().GetFractionUnboundInPlasma())) {
     Fatal("Multiple FractionUnboundInPlasma values specified, but not the same. These must match at this time.");
   }
 

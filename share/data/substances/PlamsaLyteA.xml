@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<SubstanceCompound xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGearsDataModel.xsd">
+  <Name>PlamsaLyteA</Name>
+  <Component Name="Sodium">
+    <Concentration readOnly="false" unit="mg/L" value="3220"/>
+  </Component>
+  <Component Name="Potassium">
+    <Concentration readOnly="false" unit="mg/L" value="195"/>
+  </Component>
+  <Component Name="Magnesium">
+    <Concentration readOnly="false" unit="mg/L" value="36"/>
+  </Component>
+  <Component Name="Chloride">
+    <Concentration readOnly="false" unit="mg/L" value="3430"/>
+  </Component>
+  <Component Name="Acetoacetate">
+    <Concentration readOnly="false" unit="mg/L" value="1594"/>
+  </Component>
+  <Component Name="Glucose">
+    <Concentration readOnly="false" unit="mg/L" value="4488.5"/>
+  </Component>
+</SubstanceCompound>

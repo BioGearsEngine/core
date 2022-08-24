@@ -1,5 +1,5 @@
 Environment Data,,,,,,,,,,,,,
-Name,Standard,Submerged,Hypobaric3000m,Hypobaric4000m,ExerciseEnvironment,SubmergedFreezing,CheyenneMountainAprilCool,CheyenneMountainAprilWarm,CheyenneMountainAmbulance,AnchorageDecember,AnchorageInside,CheyenneMountainFireFighter,CarbonMonoxideAtmospheric
+Name,StandardEnvironment,Submerged,Hypobaric3000m,Hypobaric4000m,ExerciseEnvironment,SubmergedFreezing,CheyenneMountainAprilCool,CheyenneMountainAprilWarm,CheyenneMountainAmbulance,AnchorageDecember,AnchorageInside,CheyenneMountainFireFighter,CarbonMonoxideAtmospheric
 ,,,,,,,,,,,,,
 SurroundingType,Air,Water,Air,Air,Air,Water,Air,Air,Air,Air,Air,Air,Air
 ,,,,,,,,,,,,,

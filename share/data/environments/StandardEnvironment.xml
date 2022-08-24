@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EnvironmentalConditions xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
-  <Name>Standard</Name>
+<EnvironmentalConditions xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGearsDataModel.xsd">
+  <Name>StandardEnvironment</Name>
   <SurroundingType>Air</SurroundingType>
   <AirVelocity readOnly="false" unit="m/s" value="0.1"/>
   <AmbientTemperature readOnly="false" unit="degC" value="22"/>

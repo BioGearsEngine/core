@@ -547,7 +547,7 @@ endif()
 
 # Link with external libraries
 if(MZ_ZLIB AND NOT MZ_LIBCOMP)
-    target_link_libraries(libminizip zlib::static)
+    target_link_libraries(libminizip zlib::zlib)
 endif()
 if(MZ_BZIP2 AND BZIP2_FOUND)
     target_link_libraries(libminizip ${BZIP2_LIBRARIES})

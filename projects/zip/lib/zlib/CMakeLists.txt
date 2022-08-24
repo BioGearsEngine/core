@@ -183,30 +183,28 @@ if(MINGW)
     set(ZLIB_DLL_SRCS ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj)
 endif(MINGW)
 
+if(Biogears_BUILD_STATIC)
 add_library(zlib SHARED ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
-add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
 add_library(zlib::zlib ALIAS zlib)
-add_library(zlib::static ALIAS zlibstatic)
-
 set_target_properties(zlib PROPERTIES 
   FOLDER "Libraries/extern"
   DEFINE_SYMBOL ZLIB_DLL
  SOVERSION 1
  )
- set_target_properties(zlibstatic PROPERTIES 
+else()
+add_library(zlib STATIC ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
+add_library(zlib::zlib ALIAS zlib)
+ set_target_properties(zlib PROPERTIES 
   FOLDER "Libraries/extern"
  )
 
+endif()
 
 target_include_directories(zlib PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
 
-target_include_directories(zlibstatic PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-)
 
 if(NOT CYGWIN)
     # This property causes shared libraries on Linux to have the full version
@@ -221,7 +219,7 @@ endif()
 
 if(UNIX)
     # On unix-like platforms the library is almost always called libz
-   set_target_properties(zlib zlibstatic PROPERTIES OUTPUT_NAME z)
+   set_target_properties(zlib PROPERTIES OUTPUT_NAME z)
    if(NOT APPLE)
      set_target_properties(zlib PROPERTIES LINK_FLAGS "-Wl,--version-script,\"${CMAKE_CURRENT_SOURCE_DIR}/zlib.map\"")
    endif()

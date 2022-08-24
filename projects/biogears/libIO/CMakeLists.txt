@@ -130,6 +130,7 @@ endfunction(configure_io_directory_file)
 if(Biogears_IO_USE_SHORT_TARGET_NAMES)
   set(NAME_ARG SHORT_NAMES)
 endif()
+
 set ( IO_VERSION "${Biogears_LIB_VERSION}")
 set ( IO_INCLUDE "c_encoded/${IO_VERSION}")
 
@@ -209,58 +210,60 @@ set_target_properties( hex_bindings PROPERTIES
 ###############################################################################
 # libBiogears_io
 ###############################################################################
-add_library(libbiogears_io  SHARED ${GEN_HDRS} ${GEN_SRCS} ${INTERFACE_HEADERS} ${INTERFACE_SOURCES})
-add_library(Biogears::libbiogears_io ALIAS libbiogears_io)
-set_target_properties(libbiogears_io
-  PROPERTIES
-  DEFINE_SYMBOL biogears_io_EXPORTS
-  FOLDER "Libraries"
-  OUTPUT_NAME "biogears_io"
-  COMPILE_PDB_NAME "biogears_io"
-  PROJECT_LABEL "libbiogears_io"
-  DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
-  CXX_STANDARD 14
+if(NOT Biogears_BUILD_STATIC)
+  add_library(libbiogears_io  SHARED ${GEN_HDRS} ${GEN_SRCS} ${INTERFACE_HEADERS} ${INTERFACE_SOURCES})
+  add_library(Biogears::libbiogears_io ALIAS libbiogears_io)
+  set_target_properties(libbiogears_io
+    PROPERTIES
+    DEFINE_SYMBOL biogears_io_EXPORTS
+    FOLDER "Libraries"
+    OUTPUT_NAME "biogears_io"
+    COMPILE_PDB_NAME "biogears_io"
+    PROJECT_LABEL "libbiogears_io"
+    DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
+    CXX_STANDARD 14
+    )
+  set_target_properties(libbiogears_io PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
+  add_dependencies(libbiogears_io hex_bindings xsd_bindings)
+  target_compile_definitions(libbiogears_io  PUBLIC BIOGEARS_IO_PRESENT
+                                                           $<$<BOOL:${Biogears_IO_INCLUDE_STATES}>:BIOGEARS_IO_EMBED_STATES> 
+                                                           $<$<BOOL:${Biogears_IO_INCLUDE_DATA_TEMPLATES}>:BIOGEARS_IO_EMBED_TEMPLATES> 
+                                                           $<$<BOOL:${Biogears_IO_INCLUDE_SCENARIOS}>:BIOGEARS_IO_EMBED_SCENARIOS>)
+  ###############################################################################
+  # libBiogears_io COMPILATION & LINKAGE MODIFICATIONS
+  ###############################################################################
+  set( BIO_CPPFLAGS $<$<PLATFORM_ID:Windows>:_SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX > )
+  target_compile_definitions(libbiogears_io  PUBLIC ${BIO_CPPFLAGS_INTERFACE} $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},armv7-a>:XSD_NO_EXPORT>)
+  target_compile_definitions(libbiogears_io  PRIVATE ${BIO_CPPFLAGS} PRIVATE)
+  target_compile_options(libbiogears_io PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
+  
+  target_include_directories(libbiogears_io 
+      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+              ${BIOGEARS_BINARY_DIR}/generated
+              ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}
+      
+      INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+      INTERFACE $<BUILD_INTERFACE:${BIOGEARS_BINARY_DIR}/generated>
+      INTERFACE $<INSTALL_INTERFACE:include>
   )
-set_target_properties(libbiogears_io PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
-add_dependencies(libbiogears_io hex_bindings xsd_bindings)
-target_compile_definitions(libbiogears_io  PUBLIC BIOGEARS_IO_PRESENT
-                                                         $<$<BOOL:${Biogears_IO_INCLUDE_STATES}>:BIOGEARS_IO_EMBED_STATES> 
-                                                         $<$<BOOL:${Biogears_IO_INCLUDE_DATA_TEMPLATES}>:BIOGEARS_IO_EMBED_TEMPLATES> 
-                                                         $<$<BOOL:${Biogears_IO_INCLUDE_SCENARIOS}>:BIOGEARS_IO_EMBED_SCENARIOS>)
-###############################################################################
-# libBiogears_io COMPILATION & LINKAGE MODIFICATIONS
-###############################################################################
-set( BIO_CPPFLAGS $<$<PLATFORM_ID:Windows>:_SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX > )
-target_compile_definitions(libbiogears_io  PUBLIC ${BIO_CPPFLAGS_INTERFACE} $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},armv7-a>:XSD_NO_EXPORT>)
-target_compile_definitions(libbiogears_io  PRIVATE ${BIO_CPPFLAGS} PRIVATE)
-target_compile_options(libbiogears_io PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
-
-target_include_directories(libbiogears_io 
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
-            ${BIOGEARS_BINARY_DIR}/generated
-            ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}
-    
-    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    INTERFACE $<BUILD_INTERFACE:${BIOGEARS_BINARY_DIR}/generated>
-    INTERFACE $<INSTALL_INTERFACE:include>
-)
-
-set(BIO_io_LIBS
-          Biogears::libbiogears_common
-)
-target_link_libraries(libbiogears_io  PUBLIC ${BIO_io_LIBS} )
-
-install(DIRECTORY 
-      ${CMAKE_CURRENT_SOURCE_DIR}/include/
-      DESTINATION include
-      FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
- )
-
-install(TARGETS libbiogears_io  EXPORT libBiogears
-    RUNTIME DESTINATION bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
-    LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
-    ARCHIVE DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
-)
-if(WIN32 AND NOT Biogears_BUILD_STATIC)
-install(FILES $<TARGET_PDB_FILE:libbiogears_io> DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
+  
+  set(BIO_io_LIBS
+            Biogears::libbiogears_common
+  )
+  target_link_libraries(libbiogears_io  PUBLIC ${BIO_io_LIBS} )
+  
+  install(DIRECTORY 
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        DESTINATION include
+        FILE_PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+   )
+  
+  install(TARGETS libbiogears_io  EXPORT libBiogears
+      RUNTIME DESTINATION bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
+      ARCHIVE DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>
+  )
+  if(WIN32 AND NOT Biogears_BUILD_STATIC)
+  install(FILES $<TARGET_PDB_FILE:libbiogears_io> DESTINATION lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>> OPTIONAL)
+endif()
 endif()

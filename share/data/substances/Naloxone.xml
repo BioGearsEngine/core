@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGearsDataModel.xsd">
   <Name>Naloxone</Name>
   <Classification>ReversalAgent</Classification>
   <MolarMass readOnly="false" unit="g/mol" value="327.37"/>
@@ -12,9 +12,6 @@
       <RenalClearance readOnly="false" unit="mL/min kg" value="0.5"/>
       <SystemicClearance readOnly="false" unit="mL/min kg" value="27.5"/>
     </Systemic>
-    <RenalDynamics>
-      <Clearance readOnly="false" unit="mL/min kg" value="0.5"/>
-    </RenalDynamics>
   </Clearance>
   <Pharmacokinetics>
     <Physicochemicals>
@@ -38,7 +35,7 @@
     </Bronchodilation>
     <CentralNervousModifier>
       <EMax readOnly="false" value="0"/>
-      <EC50 readOnly="false" unit="ug/L" value="1.55"/>
+      <EC50 readOnly="false" unit="ug/L" value="1.5"/>
     </CentralNervousModifier>
     <DiastolicPressureModifier>
       <EMax readOnly="false" value="0"/>

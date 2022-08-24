@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGears.xsd">
+<Substance xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGearsDataModel.xsd">
   <Name>Atropine</Name>
   <MolarMass readOnly="false" unit="g/mol" value="289.4"/>
   <State>Liquid</State>
@@ -8,18 +8,15 @@
       <FractionExcretedInFeces readOnly="false" value="0"/>
       <FractionUnboundInPlasma readOnly="false" value="0.65"/>
       <IntrinsicClearance readOnly="false" unit="mL/min kg" value="0"/>
-      <RenalClearance readOnly="false" unit="mL/min kg" value="9.0"/>
-      <SystemicClearance readOnly="false" unit="mL/min kg" value="4.0"/>
+      <RenalClearance readOnly="false" unit="mL/min kg" value="9"/>
+      <SystemicClearance readOnly="false" unit="mL/min kg" value="4"/>
     </Systemic>
-    <RenalDynamics>
-      <Clearance readOnly="false" unit="mL/min kg" value="9.0"/>
-    </RenalDynamics>
   </Clearance>
   <Pharmacokinetics>
     <Physicochemicals>
       <AcidDissociationConstant readOnly="false" value="5.78"/>
       <BindingProtein>AAG</BindingProtein>
-      <BloodPlasmaRatio readOnly="false" value="1.0"/>
+      <BloodPlasmaRatio readOnly="false" value="1"/>
       <FractionUnboundInPlasma readOnly="false" value="0.65"/>
       <IonicState>WeakBase</IonicState>
       <LogP readOnly="false" value="1.85"/>
