@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/string/manipulation.h>
 
 using namespace biogears;
@@ -32,7 +33,7 @@ using namespace biogears;
 int HowToLobarPneumonia()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToLobarPneumonia.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToLobarPneumonia.log");
   bg->GetLogger()->Info("HowToLobarPneumonia");
 
   // Lobar pneumonia is a form of pneumonia that affects one or more lobes of the lungs.
@@ -79,11 +80,12 @@ int HowToLobarPneumonia()
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("InspiratoryExpiratoryRatio : %f", bg->GetRespiratorySystem()->GetInspiratoryExpiratoryRatio()));
   bg->GetLogger()->Info(asprintf("Carina InFlow : %f %s", bg->GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Trachea)->GetInFlow(VolumePerTimeUnit::L_Per_s), "L_Per_s"));
-  
+
   bg->GetLogger()->Info("Finished");
   return 0;
 }
 
-int main ( int argc, char* argv[] ) {
+int main(int argc, char* argv[])
+{
   return HowToLobarPneumonia();
 }

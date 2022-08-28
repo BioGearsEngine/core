@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -33,7 +34,7 @@ using namespace biogears;
 int HowToPulmonaryFunction()
 {
   // Create the engine and load the patient
-	std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToPulmonaryFunctionTest.log");
+	auto bg = std::make_unique<BioGearsEngine>("HowToPulmonaryFunctionTest.log");
   bg->GetLogger()->Info("HowToPulmonaryFunctionTest");
 	if (!bg->LoadState("./states/StandardMale@0s.xml"))
   {

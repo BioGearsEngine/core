@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEPatientActionCollection.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -38,7 +39,7 @@ int HowToParameterOverride()
 {
   std::stringstream ss;
   // Create a BioGears Engine and load the standard patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToParameterOverride.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToParameterOverride.log");
 
   bg->GetLogger()->Info("HowToParameterOverride");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {

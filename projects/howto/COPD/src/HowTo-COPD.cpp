@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/string/manipulation.h>
 
 using namespace biogears;
@@ -32,7 +33,7 @@ using namespace biogears;
 int HowToCOPD()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToCOPD.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToCOPD.log");
   bg->GetLogger()->Info("HowToCOPD");
 
   // Since this is a condition, we do not provide a starting state
@@ -47,7 +48,7 @@ int HowToCOPD()
 
   if (!bg->InitializeEngine("StandardMale.xml", &conditions)) {
     bg->GetLogger()->Error("Could not load initialize engine, check the error");
-    return 1 ;
+    return 1;
   }
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
@@ -78,12 +79,12 @@ int HowToCOPD()
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("InspiratoryExpiratoryRatio : %f", bg->GetRespiratorySystem()->GetInspiratoryExpiratoryRatio()));
   bg->GetLogger()->Info(asprintf("Carina InFlow : %f %s", bg->GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Trachea)->GetInFlow(VolumePerTimeUnit::L_Per_s), "L_Per_s"));
-  
+
   bg->GetLogger()->Info("Finished");
   return 0;
 }
 
-int main ( int argc, char* argv[] ) {
+int main(int argc, char* argv[])
+{
   return HowToCOPD();
 }
-

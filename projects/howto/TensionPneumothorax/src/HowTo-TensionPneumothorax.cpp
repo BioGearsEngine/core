@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -36,7 +38,7 @@ using namespace biogears;
 int HowToTensionPneumothorax()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToTensionPneumothorax.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToTensionPneumothorax.log");
   bg->GetLogger()->Info("HowToTensionPneumothorax");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");

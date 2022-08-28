@@ -10,8 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
-
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
@@ -23,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -55,7 +53,7 @@ int HowToRunScenario()
   // BioGearsEngines will always output log messages to stdout and a log file
   // If you want this engine to write a log file, include the name
   // of the log file. If nullptr is given, the engine will only output to the console
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToRunScenario.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToRunScenario.log");
   bg->GetLogger()->Info("HowToRunScenario");
 
   // This BioGearsEngine logger
@@ -100,6 +98,7 @@ int HowToRunScenario()
   return 0;
 }
 
-int main ( int argc, char* argv[] ) {
+int main(int argc, char* argv[])
+{
   return HowToRunScenario();
 }

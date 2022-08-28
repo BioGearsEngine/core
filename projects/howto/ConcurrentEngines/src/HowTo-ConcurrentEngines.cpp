@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -65,7 +66,7 @@ void RunScenarioTask::Run()
   // initialization constructs not being thread safe, we must not construct BioGearsEngines simultaneously
   // from multiple threads.
   ms_constructionMutex.lock();
-  std::unique_ptr<PhysiologyEngine> bioGears = CreateBioGearsEngine(logFile.c_str());
+  std::unique_ptr<PhysiologyEngine> bioGears = std::make_unique<BioGearsEngine>(logFile.c_str());
   ms_constructionMutex.unlock();
 
   if (!bioGears) {
@@ -98,13 +99,14 @@ int HowToConcurrentEngines()
   // until there are none left.  Run() blocks until all task threads are finished executing.
   try {
     runner.Run();
-  } catch ( std::runtime_error e){
+  } catch (std::runtime_error e) {
     std::cerr << e.what() << std::endl;
     return 1;
   }
   return 0;
 }
 
-int main ( int argc, char* argv[] ) {
+int main(int argc, char* argv[])
+{
   return HowToConcurrentEngines();
 }

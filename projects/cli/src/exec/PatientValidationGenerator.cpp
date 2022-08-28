@@ -72,7 +72,7 @@ int runPatientScenario(const std::string patient, std::string&& XMLString)
 
   std::unique_ptr<PhysiologyEngine> eng;
   try {
-    eng = CreateBioGearsEngine(logFile);
+    eng = std::make_unique<BioGearsEngine>(logFile);
   } catch (std::exception e) {
     std::cout << e.what();
     return 1;

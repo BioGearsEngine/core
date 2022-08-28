@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -38,12 +39,12 @@ using namespace biogears;
 /// Refer to the SEEnvironmentChange class
 /// Refer to the SEDrug Class
 //--------------------------------------------------------------------------------------------------
-void OutputState(std::unique_ptr<PhysiologyEngine>& bgOut);
+void OutputState(std::unique_ptr<BioGearsEngine>& bgOut);
 
 int HowToSarinExposure()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToSarinExposure.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToSarinExposure.log");
   bg->GetLogger()->Info("HowToSarinExposure");
 
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
@@ -156,7 +157,7 @@ int HowToSarinExposure()
   return 0;
 }
 
-void OutputState(std::unique_ptr<PhysiologyEngine>& bgOut)
+void OutputState(std::unique_ptr<BioGearsEngine>& bgOut)
 {
   //Since we'll want this data repeatedly, make a function call so that we don't copy and paste like crazy
   bgOut->GetLogger()->Info(asprintf( "Respiration Rate : %f %s", bgOut->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "breaths/min"));

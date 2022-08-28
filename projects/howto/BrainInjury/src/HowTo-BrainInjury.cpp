@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/string/manipulation.h>
 
 #include <sstream>
@@ -41,7 +42,7 @@ int HowToBrainInjury()
 {
   std::stringstream ss;
   // Create a BioGears Engine and load the standard patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToBrainInjury.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToBrainInjury.log");
 
   bg->GetLogger()->Info("HowToBrainInjury");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {

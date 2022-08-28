@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 
@@ -74,7 +75,7 @@ BioGearsThread::BioGearsThread(const std::string& logfile)
   : m_thread()
 {
   // Create our engine with the standard patient
-  m_bg = CreateBioGearsEngine(logfile);
+  m_bg = std::make_unique<BioGearsEngine>(logfile);
   SESubstanceCompound* saline = m_bg->GetSubstanceManager().GetCompound("Saline");
 
   if (!m_bg->LoadState("./states/StandardMale@0s.xml")) {

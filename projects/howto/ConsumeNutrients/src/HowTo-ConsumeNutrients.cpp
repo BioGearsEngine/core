@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/string/manipulation.h>
 
 #include <sstream>
@@ -35,7 +36,7 @@ using namespace biogears;
 int HowToConsumeNutrients()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToConsumeNutrients.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToConsumeNutrients.log");
   bg->GetLogger()->Info("HowToConsumeNutrients");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
@@ -90,7 +91,7 @@ int HowToConsumeNutrients()
   return 0;
 }
 
-int main ( int argc, char* argv[] ) {
+int main(int argc, char* argv[])
+{
   return HowToConsumeNutrients();
 }
-

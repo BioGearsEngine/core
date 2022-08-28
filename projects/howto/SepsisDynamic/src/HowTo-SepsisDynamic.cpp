@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERenalSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 //This method uses the Threaded BioGears functionality
@@ -111,7 +112,7 @@ DynamicSepsis::DynamicSepsis(const std::string& logfile, int infectionInput)
   : m_sepsisThread()
 {
   //Create the engine
-  m_bg = CreateBioGearsEngine(logfile);
+  m_bg = std::make_unique<BioGearsEngine>(logfile);
   //Load appropriate patient state
   std::string patientState = "./states/InfectionStates/SevereInfection";
   if (infectionInput == 1) {

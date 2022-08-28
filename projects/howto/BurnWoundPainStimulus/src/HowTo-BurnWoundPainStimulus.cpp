@@ -31,8 +31,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/string/manipulation.h>
-
 
 int main(int argc, char* argv[])
 {
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
   double highestTBSA = 40.0;
   double tbsaIncrement = 5.0;
   for (double tbsa = lowestTBSA; tbsa <= highestTBSA; tbsa += tbsaIncrement) {
-    //HowToBurnWoundPainStimulus();
+    // HowToBurnWoundPainStimulus();
     int docTBSA = (int)(tbsa);
     std::string strTBSA = std::to_string(docTBSA);
     std::string logName = "./states/BurnWoundStates/HowToBurnWound";
@@ -51,7 +51,6 @@ int main(int argc, char* argv[])
     burn.FluidLoading(tbsa);
   }
 }
-
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -127,8 +126,8 @@ int HowToBurnWoundPainStimulus()
 BurnThread::BurnThread(const std::string logFile, double tbsa)
   : m_burnThread()
 {
-  //Create the engine and load patient state
-  m_bg = CreateBioGearsEngine(logFile);
+  // Create the engine and load patient state
+  m_bg = std::make_unique<BioGearsEngine>(logFile);
   m_bg->GetLogger()->Info(asprintf("Initiating %f %s", tbsa, "% TBSA burn wound"));
   if (!m_bg->LoadState("./states/Bob@0s.xml")) {
     m_bg->GetLogger()->Error("Could not load state, check the error");
@@ -136,13 +135,13 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
   }
   SESubstance* epi = m_bg->GetSubstanceManager().GetSubstance("Epinephrine");
 
-  //Create CSV results file and set up data that we want to be tracked (tracking done in AdvanceModelTime)
+  // Create CSV results file and set up data that we want to be tracked (tracking done in AdvanceModelTime)
   int docTBSA = (int)(tbsa);
   std::string resultsFileTBSA = std::to_string(docTBSA);
   std::string resultsFile = "HowToBurnWound";
   resultsFile.append(resultsFileTBSA);
   resultsFile.append(".csv");
-  m_bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile); //deposits in build/runtime
+  m_bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile); // deposits in build/runtime
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", "1/min");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*epi, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("ArterialBloodPH", "unitless");
@@ -162,18 +161,18 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
   m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluidAlbumin_mL", m_TotalVolumeAlbumin_mL);
   m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolumeAlbumin_mL", m_ivBagVolumeAlbumin_mL);
 
-  //Load substances and compounds
+  // Load substances and compounds
   SESubstanceCompound* ringers = m_bg->GetSubstanceManager().GetCompound("RingersLactate");
   SESubstanceCompound* albumex = m_bg->GetSubstanceManager().GetCompound("Albuminex_4PCT");
   SESubstance* ketamine = m_bg->GetSubstanceManager().GetSubstance("Ketamine");
-  //Create infusion and bolus actions
+  // Create infusion and bolus actions
   m_ringers = new SESubstanceCompoundInfusion(*ringers);
   m_albumex = new SESubstanceCompoundInfusion(*albumex);
   m_escharotomy = new SEEscharotomy();
   m_ivBagVolume_mL = 0.0;
   m_ivBagVolumeAlbumin_mL = 0.0;
   m_ketamineBolus = new SESubstanceBolus(*ketamine);
-  //m_genState = new SESerializeState();
+  // m_genState = new SESerializeState();
   m_burnWound = new SEBurnWound();
   m_burnWound->GetTotalBodySurfaceArea().SetValue(tbsa / 100.0);
   m_bg->ProcessAction(*m_burnWound);
@@ -188,7 +187,7 @@ BurnThread::~BurnThread()
   std::this_thread::sleep_for(std::chrono::seconds(2));
   SAFE_DELETE(m_ketamineBolus);
   SAFE_DELETE(m_ringers);
-  //SAFE_DELETE(m_genState);
+  // SAFE_DELETE(m_genState);
 }
 
 void BurnThread::AdministerKetamine(double& bolus)
@@ -314,51 +313,51 @@ void BurnThread::Status()
   m_mutex.unlock();
 }
 
-//routine to administer fluids with a goal directed therapy for urine ourput
+// routine to administer fluids with a goal directed therapy for urine ourput
 void BurnThread::FluidLoading(double tbsa)
 {
-  //fluidType fluid = ringers;
-  // auto fluid = albumin;   //set the type of fluid here
-  //double tbsa = tbsa;
+  // fluidType fluid = ringers;
+  //  auto fluid = albumin;   //set the type of fluid here
+  // double tbsa = tbsa;
   double urineProduction = 0.0;
   int checkTime_s = 3600;
   int stateTime_s = 3600; // 60 mins
   double ringersVolume_mL = 500.0;
   double volume = 0.0;
-  double titrate = 0.25; //how much to adjust each hour
+  double titrate = 0.25; // how much to adjust each hour
   double maxSimTime = 24.0;
   m_runThread = true;
-  //Create variables for scenario
-  SEPainStimulus PainStimulus; //pain object
-  std::string location; //location of pain stimulus, examples "Arm", "Leg"
-  double severity; //severity (scale 0-1)
+  // Create variables for scenario
+  SEPainStimulus PainStimulus; // pain object
+  std::string location; // location of pain stimulus, examples "Arm", "Leg"
+  double severity; // severity (scale 0-1)
 
-  //set up the configuration of the pain stimulus
+  // set up the configuration of the pain stimulus
   location = "Arm";
   severity = 0.1;
   PainStimulus.SetLocation(location);
   PainStimulus.GetSeverity().SetValue(severity);
   // m_bg->ProcessAction(PainStimulus);
 
-  //compute urine production and max fluid requirements, per parkland formula
+  // compute urine production and max fluid requirements, per parkland formula
   const SEPatient& patient = m_bg->GetPatient();
   double weight_kg = patient.GetWeight(MassUnit::kg);
   double targetLowUrineProduction_mL_Per_Hr = 30.0;
-  double targetHighUrineProduction_mL_Per_Hr = 1.0 * weight_kg; //average of around 50ml/hr
+  double targetHighUrineProduction_mL_Per_Hr = 1.0 * weight_kg; // average of around 50ml/hr
   double DayLimit_mL = 4.0 * weight_kg * tbsa;
-  double initialInfustion_mL_Per_hr = 0.0; //tbsa * 10.0; // Should start at 10*tbsa // (DayLimit_mL / 0.5) / 8.0; //half of the fluid should be loaded in the first 8 hours;
-  double initialInfustionAlbumin_mL_Per_hr = 40.0; //tbsa * 10.0; // Should start at 10*tbsa // (DayLimit_mL / 0.5) / 8.0; //half of the fluid should be loaded in the first 8 hours;
+  double initialInfustion_mL_Per_hr = 0.0; // tbsa * 10.0; // Should start at 10*tbsa // (DayLimit_mL / 0.5) / 8.0; //half of the fluid should be loaded in the first 8 hours;
+  double initialInfustionAlbumin_mL_Per_hr = 40.0; // tbsa * 10.0; // Should start at 10*tbsa // (DayLimit_mL / 0.5) / 8.0; //half of the fluid should be loaded in the first 8 hours;
   double hrsBeforeIntervention = 1.0;
   double DayLimit_Hr = DayLimit_mL / 25.0;
   double temp = 0.0;
   bool saveState = true;
   bool fluidOn = true;
 
-  //set fluid infusion rate, using ringers lactate:
+  // set fluid infusion rate, using ringers lactate:
   if (fluid == ringers) {
     SetRingersInfusionRate(ringersVolume_mL, initialInfustion_mL_Per_hr);
   }
-  //same volume and rate
+  // same volume and rate
   if (fluid == albumin) {
     m_bg->GetLogger()->Info(asprintf("Beginning Intervention with infusion at %f %s", initialInfustionAlbumin_mL_Per_hr, "mL_Per_hr"));
     SetAlbuminInfusionRate(ringersVolume_mL, initialInfustionAlbumin_mL_Per_hr);
@@ -380,13 +379,13 @@ void BurnThread::FluidLoading(double tbsa)
       if (m_ringers->HasRate()) {
         ringersRate_mL_Per_hr = (int)(m_ringers->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr));
       }
-      //ringersRate_mL_Per_hr = (int)(floor(ringersRate_mL_Per_hr * 100.0) / 100.0);
+      // ringersRate_mL_Per_hr = (int)(floor(ringersRate_mL_Per_hr * 100.0) / 100.0);
       fname.append(std::to_string(ringersRate_mL_Per_hr));
       fname.append("Ringers_");
       int albuminRate_mL_Per_hr = 0;
       if (m_albumex->HasRate())
         albuminRate_mL_Per_hr = (int)(m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr));
-      //albuminRate_mL_Per_hr = (int)(floor(albuminRate_mL_Per_hr * 100.0) / 100.0);
+      // albuminRate_mL_Per_hr = (int)(floor(albuminRate_mL_Per_hr * 100.0) / 100.0);
       fname.append(std::to_string(albuminRate_mL_Per_hr));
       fname.append("Albumin.xml");
 
@@ -394,7 +393,7 @@ void BurnThread::FluidLoading(double tbsa)
       m_bg->SaveStateToFile(fname);
     }
 
-    //set fluid to albumin at the 8 hour mark
+    // set fluid to albumin at the 8 hour mark
     if ((int)m_bg->GetSimulationTime(TimeUnit::s) == (int)28800) {
       fluid = albumin;
       m_bg->GetLogger()->Info(asprintf("adding albumin"));
@@ -402,10 +401,10 @@ void BurnThread::FluidLoading(double tbsa)
       SetAlbuminInfusionRate(ringersVolume_mL, initialInfustionAlbumin_mL_Per_hr);
     }
 
-    //check urine every hour, reset the volume while we are at it
+    // check urine every hour, reset the volume while we are at it
     if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) % checkTime_s == 0) {
       Status();
-      //m_bg->GetLogger()->Info(asprintf("Checking urine production %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
+      // m_bg->GetLogger()->Info(asprintf("Checking urine production %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
       urineProduction = m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr);
 
       //  to add "too high" and "too low" options for titrating
@@ -414,7 +413,7 @@ void BurnThread::FluidLoading(double tbsa)
       int errSelection = rand() % (3 - 1 + 1) + 1;
       scaleTitration = errTitrate[errSelection - 1];
       scaleTitration = 1.0;
-      //m_bg->GetLogger()->Info(asprintf("Were they right? titrate percent is: %f %s", scaleTitration, "percent"));
+      // m_bg->GetLogger()->Info(asprintf("Were they right? titrate percent is: %f %s", scaleTitration, "percent"));
 
       if (fluidOn == true) {
         if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) == ((int)hrsBeforeIntervention * 3600)) {
@@ -475,7 +474,7 @@ void BurnThread::FluidLoading(double tbsa)
       m_ringers->GetBagVolume().SetValue(ringersVolume_mL, VolumeUnit::mL);
       m_bg->GetLogger()->Info("ringers IV bag is low, refilling bag \n");
       m_bg->ProcessAction(*m_ringers);
-      m_ivBagVolume_mL = ringersVolume_mL; //tracking purposes
+      m_ivBagVolume_mL = ringersVolume_mL; // tracking purposes
     }
 
     if (fluid == albumin) {
@@ -483,13 +482,13 @@ void BurnThread::FluidLoading(double tbsa)
         m_albumex->GetBagVolume().SetValue(ringersVolume_mL, VolumeUnit::mL);
         m_bg->GetLogger()->Info("albumin IV bag is low, refilling bag \n");
         m_bg->ProcessAction(*m_albumex);
-        m_ivBagVolumeAlbumin_mL = ringersVolume_mL; //tracking purposes
+        m_ivBagVolumeAlbumin_mL = ringersVolume_mL; // tracking purposes
       }
     }
 
-    //exit checks:
+    // exit checks:
     if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::IrreversibleState)) {
-      //m_bg->GetLogger()->Info(std::stringstream() << "oh no!");
+      // m_bg->GetLogger()->Info(std::stringstream() << "oh no!");
       m_bg->GetLogger()->Info("///////////////////////////////////////////////////////////////");
       m_runThread = false;
     }
@@ -497,7 +496,7 @@ void BurnThread::FluidLoading(double tbsa)
     if (m_TotalVolume_mL > DayLimit_mL) {
       m_bg->GetLogger()->Info(asprintf("We have given too many fluids, per guidelines: %f %s", m_TotalVolume_mL, "mL"));
       DayLimit_mL *= 2.0;
-      //m_runThread = false;
+      // m_runThread = false;
     }
 
     if (m_bg->GetSimulationTime(TimeUnit::hr) > maxSimTime) {
@@ -505,9 +504,8 @@ void BurnThread::FluidLoading(double tbsa)
       m_runThread = false;
     }
 
-    //advance time
+    // advance time
 
     AdvanceTimeFluids();
   }
 }
-

@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/string/manipulation.h>
 
 using namespace biogears;
@@ -50,7 +51,7 @@ int using_direct_control()
 
   //NOTE: Absolute Path to logger independent of any working path later passed to BioGearsEngine
   Logger absolute_logger { logfile_path };
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine(working_dir_path, &absolute_logger);
+  auto bg = std::make_unique<BioGearsEngine> (&absolute_logger, working_dir_path);
   bg->GetLogger()->Info("HowToAsthmaAttack");
   if (!bg->LoadState("states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
@@ -141,7 +142,7 @@ int using_scenario_exec()
 
   //NOTE: If your passing a log_file with a working_dir the logfile should be relative to the working dir
 
-  std::unique_ptr<PhysiologyEngine> bioGears = CreateBioGearsEngine(working_dir_path, log_file);
+  std::unique_ptr<PhysiologyEngine> bioGears = std::make_unique<BioGearsEngine>(working_dir_path, log_file);
   if (!bioGears) {
     std::cerr << "Unable to create BioGearsEngine" << std::endl;
     return 1;

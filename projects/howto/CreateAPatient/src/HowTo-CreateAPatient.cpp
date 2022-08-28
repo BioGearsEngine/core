@@ -10,8 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
-
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
@@ -21,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -33,14 +31,14 @@ using namespace biogears;
 //--------------------------------------------------------------------------------------------------
 int HowToCreateAPatient()
 {
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToEngineUse.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToEngineUse.log");
   bg->GetLogger()->Info("HowToCreateAPatient");
 
   SEPatient patient(bg->GetLogger());
   patient.SetName("HowToCreateAPatient");
-  //Patient Gender is the only thing that is absolutely required to be set.
-  //All value not explicitly set based or standard values or calculations.
-  //If you do something out of bounds or set something you're not allowed to, it will alert you with a warning/error.
+  // Patient Gender is the only thing that is absolutely required to be set.
+  // All value not explicitly set based or standard values or calculations.
+  // If you do something out of bounds or set something you're not allowed to, it will alert you with a warning/error.
   patient.SetGender(CDM::enumSex::Male);
   patient.GetAge().SetValue(44, TimeUnit::yr);
   patient.GetWeight().SetValue(170, MassUnit::lb);
@@ -58,8 +56,8 @@ int HowToCreateAPatient()
   // Write out the xml file
   xml_schema::namespace_infomap map;
   map[""].name = "uri:/mil/tatrc/physiology/datamodel";
-  //TODO: What constructor are these from
-  // Patient(stream, *pData, map);
+  // TODO: What constructor are these from
+  //  Patient(stream, *pData, map);
   stream.close();
   SAFE_DELETE(pData);
 
@@ -73,6 +71,7 @@ int HowToCreateAPatient()
   return 0;
 }
 
-int main ( int argc, char* argv[] ) {
+int main(int argc, char* argv[])
+{
   return HowToCreateAPatient();
 }

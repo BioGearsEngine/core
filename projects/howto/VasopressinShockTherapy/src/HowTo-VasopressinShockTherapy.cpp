@@ -19,12 +19,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 int HowToVasopressinShockTherapy()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HemorrhageScenario_Control.log");
+  auto bg = std::make_unique<BioGearsEngine>("HemorrhageScenario_Control.log");
   bg->GetLogger()->Info("HemorrhageScenario_Control");
 
   if (!bg->InitializeEngine("StandardMale.xml")) {

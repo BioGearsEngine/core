@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/string/manipulation.h>
 
 #include <sstream>
@@ -40,10 +41,10 @@ using namespace biogears;
 int HowToEnvironmentChange()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToEnvironmentChange.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToEnvironmentChange.log");
   bg->GetLogger()->Info("HowToEnvironmentChange");
   /*
-  // You have the option to change the enviornmental conditions of the patient 
+  // You have the option to change the enviornmental conditions of the patient
   // with a condition or an action. By default the standard environment file is used
   // when stabilizing the patient, all initial states provided are with that environment.
   // You will need to initialize the engine to this condition
@@ -164,8 +165,8 @@ int HowToEnvironmentChange()
   bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
   bg->GetLogger()->Info("");
 
-  //The patient’s skin temperature continues to rise as they are actively heated at 340 btu/hr. Both core temperature and skin
-  // temperature increase as a result of this.  The patient’s metabolic rate has returned to normal since shivering has ceased.
+  // The patient’s skin temperature continues to rise as they are actively heated at 340 btu/hr. Both core temperature and skin
+  //  temperature increase as a result of this.  The patient’s metabolic rate has returned to normal since shivering has ceased.
   SEThermalApplication heat;
   heat.GetActiveHeating().GetPower().SetValue(340, PowerUnit::BTU_Per_hr);
   bg->ProcessAction(heat);
@@ -185,7 +186,7 @@ int HowToEnvironmentChange()
   return 0;
 }
 
-
-int main ( int argc, char* argv[] ) {
+int main(int argc, char* argv[])
+{
   return HowToEnvironmentChange();
 }

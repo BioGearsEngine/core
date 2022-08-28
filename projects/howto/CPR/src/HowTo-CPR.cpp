@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/string/manipulation.h>
 
 #include <sstream>
@@ -52,7 +53,7 @@ public:
   virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time) override
   {
     std::stringstream ss;
-    ss <<  "Recieved Anesthesia Machine Event : " << type;
+    ss << "Recieved Anesthesia Machine Event : " << type;
     log->Info(ss);
   }
 
@@ -73,7 +74,7 @@ private:
 int HowToCPR()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToCPR.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToCPR.log");
   bg->GetLogger()->Info("HowToCPR");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
@@ -106,7 +107,7 @@ int HowToCPR()
   // This is where you specify how much force to apply to the chest. We have capped the applicable force at 600 N.
   double compressionForce_Newtons = 400;
 
-  //set a compression scale
+  // set a compression scale
   double compressionScale = 0.6;
 
   // This is the percent of time per period that the chest will be compressed e.g. if I have a 1 second period
@@ -175,12 +176,12 @@ int HowToCPR()
     if (pulseState) // check if the chest is supposed to be compressed. If yes...
     {
 
-      //set the cpr using a force scale function
+      // set the cpr using a force scale function
       chestCompressionScale.GetForceScale().SetValue(compressionScale);
       bg->ProcessAction(chestCompressionScale);
       // This calls the CPR function in the Cardiovascular system.  It sets the chest compression at the specified force.
-      //chestCompression.GetForce().SetValue(compressionForce_Newtons, ForceUnit::N);
-      //bg->ProcessAction(chestCompression);
+      // chestCompression.GetForce().SetValue(compressionForce_Newtons, ForceUnit::N);
+      // bg->ProcessAction(chestCompression);
 
       // Time is advanced until it is time to remove the compression
       bg->AdvanceModelTime(timeOn, TimeUnit::s);
@@ -192,8 +193,8 @@ int HowToCPR()
       pulseState = false;
     } else {
       // This removes the chest compression by specifying the applied force as 0 N
-      //chestCompression.GetForce().SetValue(0, ForceUnit::N);
-      //bg->ProcessAction(chestCompression);
+      // chestCompression.GetForce().SetValue(0, ForceUnit::N);
+      // bg->ProcessAction(chestCompression);
 
       // Time is advanced until it is time to compress the chest again
       bg->AdvanceModelTime(timeOff, TimeUnit::s);
@@ -207,7 +208,7 @@ int HowToCPR()
   }
 
   // Make sure that the chest is no longer being compressed
-  //if (chestCompression.GetForce().GetValue(ForceUnit::N) != 0)
+  // if (chestCompression.GetForce().GetValue(ForceUnit::N) != 0)
   //{
   //       // If it is compressed, set force to 0 to turn off
   //	chestCompression.GetForce().SetValue(0, ForceUnit::N);
@@ -234,7 +235,7 @@ int HowToCPR()
   return 0;
 }
 
-int main ( int argc, char* argv[] ) {
+int main(int argc, char* argv[])
+{
   return HowToCPR();
 }
-

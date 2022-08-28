@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/string/manipulation.h>
 
 #include <sstream>
@@ -35,7 +36,7 @@ int HowToAsthma()
 {
   // Create the engine and load the patient
   Logger logger("HowToAsthma.log");
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine(&logger);
+  auto bg = std::make_unique<BioGearsEngine>(&logger);
 
   // The tracker is responsible for advancing the engine time and outputting the da ta requests below at each time step
 

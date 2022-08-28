@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -39,7 +40,7 @@ using namespace biogears;
 int HowToSmoke()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToSmoke.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToSmoke.log");
   bg->GetLogger()->Info("HowToSmoke");
   /*
   // Smoke is made up of many things.

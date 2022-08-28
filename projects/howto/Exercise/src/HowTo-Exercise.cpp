@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/string/manipulation.h>
 
 #include <sstream>
@@ -33,7 +34,7 @@ using namespace biogears;
 int HowToExercise()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToExercise.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToExercise.log");
   bg->GetLogger()->Info("HowToExercise");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
@@ -63,9 +64,6 @@ int HowToExercise()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SweatRate", MassPerTimeUnit::mg_Per_min);
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SkinTemperature", TemperatureUnit::C);
 
-
-
-
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToExercise.csv");
 
   // Advance some time to get some resting data
@@ -80,9 +78,9 @@ int HowToExercise()
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  //bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
-  //bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // No fatigue either
-  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); //This will be at Basal Level
+  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
+  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // No fatigue either
+  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // This will be at Basal Level
 
   // Exercise Starts - instantiate an Exercise action and have the engine process it.
   // After initiating exercise the patient’s metabolic rate begins to increased.
@@ -127,8 +125,8 @@ int HowToExercise()
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  //bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
-  //bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
+  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
+  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
   bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
   //////////////////////////////// Next Exercise
   // Cycling Inputs
@@ -171,8 +169,8 @@ int HowToExercise()
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  //bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
-  //bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
+  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
+  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
   bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
   //////////////////////////////// Next Exercise
   // Running Inputs
@@ -215,8 +213,8 @@ int HowToExercise()
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  //bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
-  //bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
+  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
+  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
   bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
 
   //////////////////////////////// Next Exercise
@@ -260,14 +258,15 @@ int HowToExercise()
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  //bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
-  //bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
+  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
+  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
   bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
 
   bg->GetLogger()->Info("Finished");
   return 0;
 }
 
-int main ( int argc, char* argv[] ) {
+int main(int argc, char* argv[])
+{
   return HowToExercise();
 }

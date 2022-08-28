@@ -10,8 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
-
 #include <biogears/schema/cdm/Properties.hxx>
 
 // Include the various types you will be using in your code
@@ -21,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -37,7 +35,7 @@ using namespace biogears;
 int HowToFaciculation()
 {
   // Create the engine and load the patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToFasciculation.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToFasciculation.log");
   bg->GetLogger()->Info("HowToFasciculation");
 
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
@@ -51,12 +49,11 @@ int HowToFaciculation()
   SESubstance* Cl = bg->GetSubstanceManager().GetSubstance("Chloride");
   SESubstance* Ca = bg->GetSubstanceManager().GetSubstance("Calcium");
 
-  double monitorTime = 200.0; //how long we're going to be on the look out for ion imbalances in the blood
+  double monitorTime = 200.0; // how long we're going to be on the look out for ion imbalances in the blood
   CDM::enumOnOff::value lowKActive;
   lowKActive = CDM::enumOnOff::Off;
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
-  
 
   bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Na, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
   bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *K, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
@@ -90,7 +87,7 @@ int HowToFaciculation()
   return 0;
 }
 
-int main ( int argc, char* argv[] ) {
+int main(int argc, char* argv[])
+{
   return HowToFaciculation();
 }
-

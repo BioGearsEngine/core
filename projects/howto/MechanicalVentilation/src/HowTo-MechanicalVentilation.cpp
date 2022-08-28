@@ -40,6 +40,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 using namespace biogears;
 // Make a custom event handler that you can connect to your code (See EngineUse for more info)
@@ -107,7 +108,7 @@ int HowToMechanicalVentialtion()
 
   std::stringstream ss;
   // Create a BioGears Engine and load the standard patient
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToMechanicalVentilation.log");
+  auto bg = std::make_unique<BioGearsEngine>("HowToMechanicalVentilation.log");
 
   bg->GetLogger()->Info("HowToMechanicalVentilation");
 

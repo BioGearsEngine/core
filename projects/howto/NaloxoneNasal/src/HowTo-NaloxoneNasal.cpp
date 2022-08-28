@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/string/manipulation.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 int main(int argc, char* argv[])
 {
@@ -75,7 +76,7 @@ NaloxoneThread::NaloxoneThread(const std::string logFile, double opioidDose, con
   : m_naloxoneThread()
 {
   //Create the engine and load patient state
-  m_bg = CreateBioGearsEngine(logFile);
+  m_bg = std::make_unique<BioGearsEngine>(logFile);
   m_bg->GetLogger()->Info(asprintf("Initiating %f %s", opioidDose, "mg/mL or whatever of ", opioidName.c_str(), " for overdose"));
   if (!m_bg->LoadState("./states/StandardMale@0s.xml")) {
     m_bg->GetLogger()->Error("Could not load state, check the error");

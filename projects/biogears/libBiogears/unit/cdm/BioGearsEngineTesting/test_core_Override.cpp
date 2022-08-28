@@ -74,8 +74,7 @@ TEST_F(TEST_FIXTURE_NAME, Override_On_Off)
   std::string patientLog{ "OverrideTestResults.log" };
   std::string patientResults{ "OverrideTestResults.csv" };
 
-  std::unique_ptr<PhysiologyEngine> eng;
-  eng = CreateBioGearsEngine(patientLog);
+ auto eng = std::make_unique<BioGearsEngine>(patientLog);
   DataTrack* trk = &eng->GetEngineTrack()->GetDataTrack();
   BioGearsScenario sce(eng->GetSubstanceManager());
   sce.Load("OverrideTest.xml");
