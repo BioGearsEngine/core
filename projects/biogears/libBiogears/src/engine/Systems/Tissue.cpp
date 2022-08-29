@@ -52,7 +52,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Systems/Cardiovascular.h>
 #include <biogears/engine/Systems/Drugs.h>
 #include <biogears/engine/Systems/Energy.h>
@@ -76,12 +76,12 @@ namespace biogears {
 double Tissue::m_hepaticCO2Produced_mol;
 double Tissue::m_hepaticO2Consumed_mol;
 
-auto Tissue::make_unique(BioGears& bg) -> std::unique_ptr<Tissue>
+auto Tissue::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Tissue>
 {
   return std::unique_ptr<Tissue>(new Tissue(bg));
 }
 
-Tissue::Tissue(BioGears& bg)
+Tissue::Tissue(BioGearsEngine& bg)
   : SETissueSystem(bg.GetLogger())
   , m_data(bg)
 {
@@ -148,14 +148,14 @@ void Tissue::Initialize()
   SETissueCompartment* tissue;
   SELiquidCompartment* vascular;
   SEScalarMassPerVolume density;
-  GeneralMath::CalculateWaterDensity(m_data.GetEnergy().GetCoreTemperature(), density);
+  GeneralMath::CalculateWaterDensity(m_data.GetEnergySystem().GetCoreTemperature(), density);
   m_RestingFluidMass_kg = 0.0;
   for (auto tissueVascular : m_TissueToVascular) {
     tissue = tissueVascular.first;
     vascular = tissueVascular.second;
     SELiquidCompartment& extracellular = m_data.GetCompartments().GetExtracellularFluid(*tissue);
     SELiquidCompartment& intracellular = m_data.GetCompartments().GetIntracellularFluid(*tissue);
-    m_RestingFluidMass_kg += vascular->GetVolume(VolumeUnit::mL) * m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
+    m_RestingFluidMass_kg += vascular->GetVolume(VolumeUnit::mL) * m_data.GetBloodChemistrySystem().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
     m_RestingFluidMass_kg += intracellular.GetVolume(VolumeUnit::mL) * density.GetValue(MassPerVolumeUnit::kg_Per_mL);
     m_RestingFluidMass_kg += extracellular.GetVolume(VolumeUnit::mL) * density.GetValue(MassPerVolumeUnit::kg_Per_mL);
   }
@@ -175,7 +175,7 @@ void Tissue::Initialize()
   GetFatInsulinSetPoint().Set(m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Fat)->GetSubstanceQuantity(*m_Insulin)->GetMolarity());
   GetFatGlucagonSetPoint().Set(m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Fat)->GetSubstanceQuantity(*m_Glucagon)->GetConcentration());
 
-  //Set nutrient stores (also reset in AtSteadyState)
+  //Set nutrient stores (also reset in SimulationPhaseChange)
   GetLiverGlycogen().SetValue(.065 * m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Liver)->GetTotalMass(MassUnit::g), MassUnit::g);
   GetMuscleGlycogen().SetValue(.02 * m_data.GetPatient().GetMuscleMass(MassUnit::g), MassUnit::g); //2% of muscle mass
   GetStoredProtein().SetValue(110, MassUnit::g); //"Reusable" protein stores are usually about 1% of total body protein, ~110 g (https://www.nap.edu/read/10490/chapter/12#595)
@@ -241,7 +241,7 @@ void Tissue::SetUp()
 
   m_PatientActions = &m_data.GetActions().GetPatientActions();
   m_Patient = &m_data.GetPatient();
-  m_energy = &m_data.GetEnergy();
+  m_energy = &m_data.GetEnergySystem();
 
   m_Albumin = &m_data.GetSubstances().GetAlbumin();
   m_AminoAcids = &m_data.GetSubstances().GetAminoAcids();
@@ -428,10 +428,10 @@ void Tissue::SetUp()
 }
 
 //#define logMeal
-void Tissue::AtSteadyState()
+void Tissue::SimulationPhaseChange()
 {
 
-  if (m_data.GetState() == EngineState::AtInitialStableState) {
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtInitialStableState) {
     // Apply our conditions
     if (m_data.GetConditions().HasStarvation())
       SetStarvationState();
@@ -439,7 +439,7 @@ void Tissue::AtSteadyState()
       Dehydrate();
   }
 
-  if (m_data.GetState() == EngineState::AtSecondaryStableState && !m_data.GetConditions().HasStarvation()) {
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtSecondaryStableState && !m_data.GetConditions().HasStarvation()) {
     //refill nutrient stores that were depleted during stabilization (should match SetUp)
     GetLiverGlycogen().SetValue(.065 * m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Liver)->GetTotalMass(MassUnit::g), MassUnit::g);
     GetMuscleGlycogen().SetValue(.02 * m_data.GetPatient().GetMuscleMass(MassUnit::g), MassUnit::g); //2% of muscle mass
@@ -570,7 +570,7 @@ void Tissue::PostProcess()
 {
 
   if (m_data.GetActions().GetPatientActions().HasOverride()
-      && m_data.GetState() == EngineState::Active) {
+      && m_data.GetSimulationPhase() == SimulationPhase::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasTissueOverride()) {
       ProcessOverride();
     }
@@ -622,12 +622,12 @@ void Tissue::CalculateCompartmentalBurn()
   double burnTBSA = BurnAction->GetTotalBodySurfaceArea().GetValue();
   std::vector<std::string> burnComptVector = BurnAction->GetCompartments();
   double numBurnLocations = static_cast<double>(burnComptVector.size()); //Currently assume tbsa is evenly spread across multiple locations; future update can correct this
-  double tissueIntegrityPercent = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
+  double tissueIntegrityPercent = m_data.GetBloodChemistrySystem().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
 
   // As extracellular volume increases (particularly with fluid resuscitation), we would expect the resistance in the burned extremity to increase (less flow to extremity)
   // 200 mL/kg is orange zone, correlates to approx. 150% ecf volume baseline, risk of compartment syndrome
   // 250 mL/kg is red zone, correlates to approx. 175% ecf volume baseline, extremely high risk of compartment syndrome
-  double ecVolume_mL = m_data.GetTissue().GetExtracellularFluidVolume().GetValue(VolumeUnit::mL);
+  double ecVolume_mL = m_data.GetTissueSystem().GetExtracellularFluidVolume().GetValue(VolumeUnit::mL);
   double fluidCreepOrange_pct = 1.5;
   double fluidCreepRed_pct = 1.75;
   if (ecVolume_mL > (m_baselineECFluidVolume_mL * fluidCreepRed_pct)) { // This if statement determines when fluid resuscitations enters "red zone" and compartment syndrome is highly likely
@@ -670,7 +670,7 @@ void Tissue::CalculateCompartmentalBurn()
       ///todo: test bladder pressure changes against renal functionality during burn
       // Change in bladder pressure for VIR testing. Needs to be tested to see how much it impacts burns in BG (ONLY ABDOMINAL CS)
       //double bladderPressure = m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetPressure().GetValue(PressureUnit::mmHg);
-      //double bladderPressureMultiplier = ((-1.0 * m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue() + 1.0) * 6.25); //Asymptotic relation to tissue integirty, max increase of 6.25
+      //double bladderPressureMultiplier = ((-1.0 * m_data.GetBloodChemistrySystem().GetInflammatoryResponse().GetTissueIntegrity().GetValue() + 1.0) * 6.25); //Asymptotic relation to tissue integirty, max increase of 6.25
       //m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetNextPressure().SetValue(bladderPressure * bladderPressureMultiplier, PressureUnit::mmHg);
 
     } else if (burnCompt == "LeftArm" && m_leftArmEscharotomy == false) {
@@ -919,13 +919,13 @@ void Tissue::CalculatePulmonaryCapillarySubstanceTransfer()
 void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
 {
   //Inputs and outputs
-  const double TMR_kcal_Per_s = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::kcal_Per_s);
+  const double TMR_kcal_Per_s = m_data.GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_s);
   const double BMR_kcal_Per_s = m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::kcal_Per_s);
   const double baseEnergyRequested_kcal = BMR_kcal_Per_s * time_s;
-  const double biologicalDebt = m_data.GetNervous().GetBiologicalDebt().GetValue();
-  const double exerciseEnergyRequested_kcal = m_data.GetEnergy().GetExerciseEnergyDemand(PowerUnit::kcal_Per_s) * time_s; //Will get added to muscle in tissue loop below
+  const double biologicalDebt = m_data.GetNervousSystem().GetBiologicalDebt().GetValue();
+  const double exerciseEnergyRequested_kcal = m_data.GetEnergySystem().GetExerciseEnergyDemand(PowerUnit::kcal_Per_s) * time_s; //Will get added to muscle in tissue loop below
   const double otherEnergyDemandAboveBasal_kcal = std::max((TMR_kcal_Per_s - BMR_kcal_Per_s) * time_s * (1.0 - biologicalDebt) - exerciseEnergyRequested_kcal, 0.0); //Due to other factors like shivering -- will get split between muscles and fat stores in tissue loop below
-  const double hypoperfusionDeficit_kcal = m_data.GetEnergy().GetEnergyDeficit(PowerUnit::kcal_Per_s) * time_s; //Hypoperfusion deficit is "faux" energy value -- it makes system perceive an energy deficit and enter anaerobic production earlier during hemorrhage and sepsis
+  const double hypoperfusionDeficit_kcal = m_data.GetEnergySystem().GetEnergyDeficit(PowerUnit::kcal_Per_s) * time_s; //Hypoperfusion deficit is "faux" energy value -- it makes system perceive an energy deficit and enter anaerobic production earlier during hemorrhage and sepsis
   double brainNeededEnergy_kcal = .2 * baseEnergyRequested_kcal; //brain requires a roughly constant 20% of basal energy regardless of exercise \cite raichle2002appraising
   double nonbrainNeededEnergy_kcal = 0.8 * baseEnergyRequested_kcal + hypoperfusionDeficit_kcal;
   double totalEnergyRequested_kcal = brainNeededEnergy_kcal + nonbrainNeededEnergy_kcal + exerciseEnergyRequested_kcal + otherEnergyDemandAboveBasal_kcal; //Use to check math below
@@ -973,8 +973,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double kcal_Per_day_Per_Watt = 20.6362855;
   double maxWorkRate_W = 1200; //see Energy::Exercise
 
-  double sleepTime_min = m_data.GetNervous().GetSleepTime().GetValue(TimeUnit::min); //update value from last computation
-  double wakeTime_min = m_data.GetNervous().GetWakeTime().GetValue(TimeUnit::min); //update value from last computation
+  double sleepTime_min = m_data.GetNervousSystem().GetSleepTime().GetValue(TimeUnit::min); //update value from last computation
+  double wakeTime_min = m_data.GetNervousSystem().GetWakeTime().GetValue(TimeUnit::min); //update value from last computation
   double sleepRatio = wakeTime_min / sleepTime_min;
 
   //Patients with COPD show higher levels of anaerobic metabolism \cite mathur1999cerebral \cite engelen2000factors
@@ -1498,7 +1498,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   } //end of the tissue loop
 
   ////Debug Info: Make sure that the energy we used lines up with our demand -- allowing 1% tolerance on either side
-  if ((m_data.GetState() >= EngineState::AtSecondaryStableState) && (totalEnergyRequested_kcal_Check < 0.99 * totalEnergyRequested_kcal || totalEnergyRequested_kcal_Check > 1.01 * totalEnergyRequested_kcal)) {
+  if ((m_data.GetSimulationPhase() >= SimulationPhase::AtSecondaryStableState) && (totalEnergyRequested_kcal_Check < 0.99 * totalEnergyRequested_kcal || totalEnergyRequested_kcal_Check > 1.01 * totalEnergyRequested_kcal)) {
     std::stringstream ss;
     ss << "Tissue Energy Demand / Accounting Mismatch : " << std::endl;
     ss << "\t Total Energy Requested (kcal) : " << totalEnergyRequested_kcal << std::endl;
@@ -1713,7 +1713,7 @@ void Tissue::Dehydrate()
 {
   SEDehydration* dehydration = m_data.GetConditions().GetDehydration();
   SEScalarMassPerVolume density;
-  GeneralMath::CalculateWaterDensity(m_data.GetEnergy().GetCoreTemperature(), density);
+  GeneralMath::CalculateWaterDensity(m_data.GetEnergySystem().GetCoreTemperature(), density);
 
   //dehydration determine patient weight loss due to water deficiency
   double fractionalWeightLoss = dehydration->GetDehydrationFraction().GetValue();
@@ -1726,7 +1726,7 @@ void Tissue::Dehydrate()
   double waterReduction_L = patientMass_kg * fractionalWeightLoss / density.GetValue(MassPerVolumeUnit::kg_Per_L);
 
   //from fraction that is water
-  double waterReductionFraction = waterReduction_L / m_data.GetTissue().GetTotalBodyFluidVolume(VolumeUnit::L);
+  double waterReductionFraction = waterReduction_L / m_data.GetTissueSystem().GetTotalBodyFluidVolume(VolumeUnit::L);
 
   //tracking fluid losses
   double temp_mL = 0.0;
@@ -1758,14 +1758,14 @@ void Tissue::Dehydrate()
   }
 
   //set patient weight
-  double bloodDensity_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
+  double bloodDensity_kg_Per_mL = m_data.GetBloodChemistrySystem().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
   double bodyWeightLost_kg = bloodDensity_kg_Per_mL * totalFluidLoss_mL;
 
   patientMass_kg -= bodyWeightLost_kg;
   m_Patient->GetWeight().SetValue(patientMass_kg, MassUnit::kg);
 
   //need to set blood volume here
-  m_data.GetCardiovascular().GetBloodVolume().SetValue(blood_mL, VolumeUnit::mL);
+  m_data.GetCardiovascularSystem().GetBloodVolume().SetValue(blood_mL, VolumeUnit::mL);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1853,11 +1853,11 @@ void Tissue::CalculateVitals()
   SETissueCompartment* tissue;
   SELiquidCompartment* vascular;
   SEScalarMassPerVolume density;
-  GeneralMath::CalculateWaterDensity(m_data.GetEnergy().GetCoreTemperature(), density);
+  GeneralMath::CalculateWaterDensity(m_data.GetEnergySystem().GetCoreTemperature(), density);
   for (auto tissueVascular : m_TissueToVascular) {
     tissue = tissueVascular.first;
     vascular = tissueVascular.second;
-    currentFluidMass_kg += vascular->GetVolume(VolumeUnit::mL) * m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
+    currentFluidMass_kg += vascular->GetVolume(VolumeUnit::mL) * m_data.GetBloodChemistrySystem().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
     currentFluidMass_kg += m_data.GetCompartments().GetIntracellularFluid(*tissue).GetVolume(VolumeUnit::mL) * density.GetValue(MassPerVolumeUnit::kg_Per_mL);
     currentFluidMass_kg += m_data.GetCompartments().GetExtracellularFluid(*tissue).GetVolume(VolumeUnit::mL) * density.GetValue(MassPerVolumeUnit::kg_Per_mL);
   }
@@ -1887,7 +1887,7 @@ void Tissue::CalculateVitals()
   GetExtracellularFluidVolume().SetValue(ecVol_mL, VolumeUnit::mL);
   GetIntracellularFluidVolume().SetValue(icvol_mL, VolumeUnit::mL);
   GetExtravascularFluidVolume().SetValue(ecVol_mL + icvol_mL, VolumeUnit::mL);
-  bloodvol_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
+  bloodvol_mL = m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL);
   GetTotalBodyFluidVolume().SetValue(ecVol_mL + icvol_mL + bloodvol_mL, VolumeUnit::mL);
 }
 
@@ -1930,10 +1930,10 @@ void Tissue::ManageSubstancesAndSaturation()
   // Currently, substances are not where they need to be, we will hard code this for now until we fix them
   /// \todo Remove SetBodyState hardcode and replace with computed values after substance redux is complete
   m_data.GetSaturationCalculator().SetBodyState(albuminConcentration,
-                                                m_data.GetBloodChemistry().GetHematocrit(),
-                                                m_data.GetEnergy().GetCoreTemperature(),
-                                                m_data.GetBloodChemistry().GetStrongIonDifference(),
-                                                m_data.GetBloodChemistry().GetPhosphate());
+                                                m_data.GetBloodChemistrySystem().GetHematocrit(),
+                                                m_data.GetEnergySystem().GetCoreTemperature(),
+                                                m_data.GetBloodChemistrySystem().GetStrongIonDifference(),
+                                                m_data.GetBloodChemistrySystem().GetPhosphate());
   for (SELiquidCompartment* cmpt : m_data.GetCompartments().GetVascularLeafCompartments()) {
     if (cmpt->HasVolume()) {
       m_data.GetSaturationCalculator().CalculateBloodGasDistribution(*cmpt);
@@ -2063,8 +2063,8 @@ void Tissue::CalculateTissueFluidFluxes()
     osmoticFlow->GetNextFlowSource().SetValue(hydraulicConductivity_mL_Per_min_mM * (mOsmIntra - mOsmExtra), VolumePerTimeUnit::mL_Per_min);
   }
 
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSources()) {
-    double resistanceModifier = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
+  if (m_data.GetBloodChemistrySystem().GetInflammatoryResponse().HasInflammationSources()) {
+    double resistanceModifier = m_data.GetBloodChemistrySystem().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
     for (auto t : m_data.GetCompartments().GetTissueCompartments()) {
       SEFluidCircuitPath* res = m_EndothelialResistancePaths[t];
       if (t->GetName() != BGE::TissueCompartment::Brain) {

@@ -23,7 +23,7 @@ namespace io {
 class BIOGEARS_API SEScenarioAutoSerialization : public Loggable {
   friend io::Scenario;
 public:
-  SEScenarioAutoSerialization(Logger* logger);
+  SEScenarioAutoSerialization(Logger const* logger);
   virtual ~SEScenarioAutoSerialization();
 
   virtual void Clear();

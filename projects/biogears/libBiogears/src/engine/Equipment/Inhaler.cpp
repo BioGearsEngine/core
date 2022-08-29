@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
@@ -33,12 +33,12 @@ Constructors
 ========================
 */
 
-auto Inhaler::make_unique(BioGears& bg) -> std::unique_ptr<Inhaler>
+auto Inhaler::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Inhaler>
 {
   return std::unique_ptr<Inhaler>(new Inhaler(bg));
 }
 
-Inhaler::Inhaler(BioGears& bg)
+Inhaler::Inhaler(BioGearsEngine& bg)
   : SEInhaler(bg.GetSubstances())
   , m_data(bg)
 {

@@ -36,7 +36,7 @@ class SEElectroCardioGramInterpolator : public Loggable {
   friend io::ElectroCardioGram;
 
 public:
-  BIOGEARS_API SEElectroCardioGramInterpolator(Logger* logger);
+  BIOGEARS_API SEElectroCardioGramInterpolator(Logger const* logger);
   BIOGEARS_API virtual ~SEElectroCardioGramInterpolator();
 
   BIOGEARS_API virtual void Clear(); // Deletes all members

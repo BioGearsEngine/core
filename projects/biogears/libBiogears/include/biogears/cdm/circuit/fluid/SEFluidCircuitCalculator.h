@@ -26,8 +26,8 @@ BG_EXT template class BIOGEARS_API SECircuitCalculator<SEFluidCircuit, SEFluidCi
 
 class BIOGEARS_API SEFluidCircuitCalculator : public SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit> {
 public:
-  SEFluidCircuitCalculator(Logger* logger);
-  SEFluidCircuitCalculator(const FlowComplianceUnit&, const VolumePerTimeUnit&, const FlowInertanceUnit&, const PressureUnit&, const VolumeUnit&, const FlowResistanceUnit&, Logger* logger);
+  SEFluidCircuitCalculator(Logger const* logger);
+  SEFluidCircuitCalculator(const FlowComplianceUnit&, const VolumePerTimeUnit&, const FlowInertanceUnit&, const PressureUnit&, const VolumeUnit&, const FlowResistanceUnit&, Logger const* logger);
   virtual ~SEFluidCircuitCalculator();
 };
 }

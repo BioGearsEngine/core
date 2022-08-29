@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Substance.hxx>
 
 namespace biogears {
-SESubstanceClearance::SESubstanceClearance(Logger* logger)
+SESubstanceClearance::SESubstanceClearance(Logger const* logger)
   : Loggable(logger)
 {
   m_hasSystemic = false;
@@ -112,43 +112,43 @@ bool SESubstanceClearance::IsValid() const
   return true;
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstanceClearance::GetScalar(const char* name)
+const SEScalar* SESubstanceClearance::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstanceClearance::GetScalar(const std::string& name)
+const SEScalar* SESubstanceClearance::GetScalar(const std::string& name) const
 {
   if (name.compare("CellDeathRate") == 0)
-    return &GetCellDeathRate();
+    return &const_cast<SESubstanceClearance*>(this)->GetCellDeathRate();
   if (name.compare("CellBirthRate") == 0)
-    return &GetCellBirthRate();
+    return &const_cast<SESubstanceClearance*>(this)->GetCellBirthRate();
   if (name.compare("FractionExcretedInFeces") == 0)
-    return &GetFractionExcretedInFeces();
+    return &const_cast<SESubstanceClearance*>(this)->GetFractionExcretedInFeces();
   if (name.compare("FractionExcretedInUrine") == 0)
-    return &GetFractionExcretedInUrine();
+    return &const_cast<SESubstanceClearance*>(this)->GetFractionExcretedInUrine();
   if (name.compare("FractionMetabolizedInGut") == 0)
-    return &GetFractionMetabolizedInGut();
+    return &const_cast<SESubstanceClearance*>(this)->GetFractionMetabolizedInGut();
   if (name.compare("FractionUnboundInPlasma") == 0)
-    return &GetFractionUnboundInPlasma();
+    return &const_cast<SESubstanceClearance*>(this)->GetFractionUnboundInPlasma();
   if (name.compare("IntrinsicClearance") == 0)
-    return &GetIntrinsicClearance();
+    return &const_cast<SESubstanceClearance*>(this)->GetIntrinsicClearance();
   if (name.compare("GlomerularFilterability") == 0)
-    return &GetGlomerularFilterability();
+    return &const_cast<SESubstanceClearance*>(this)->GetGlomerularFilterability();
   if (name.compare("RenalClearance") == 0)
-    return &GetRenalClearance();
+    return &const_cast<SESubstanceClearance*>(this)->GetRenalClearance();
   if (name.compare("RenalReabsorptionRatio") == 0)
-    return &GetRenalReabsorptionRatio();
+    return &const_cast<SESubstanceClearance*>(this)->GetRenalReabsorptionRatio();
   if (name.compare("RenalTransportMaximum") == 0)
-    return &GetRenalTransportMaximum();
+    return &const_cast<SESubstanceClearance*>(this)->GetRenalTransportMaximum();
   if (name.compare("RenalFiltrationRate") == 0)
-    return &GetRenalFiltrationRate();
+    return &const_cast<SESubstanceClearance*>(this)->GetRenalFiltrationRate();
   if (name.compare("RenalReabsorptionRate") == 0)
-    return &GetRenalReabsorptionRate();
+    return &const_cast<SESubstanceClearance*>(this)->GetRenalReabsorptionRate();
   if (name.compare("RenalExcretionRate") == 0)
-    return &GetRenalExcretionRate();
+    return &const_cast<SESubstanceClearance*>(this)->GetRenalExcretionRate();
   if (name.compare("SystemicClearance") == 0)
-    return &GetSystemicClearance();
+    return &const_cast<SESubstanceClearance*>(this)->GetSystemicClearance();
 
   return nullptr;
 }

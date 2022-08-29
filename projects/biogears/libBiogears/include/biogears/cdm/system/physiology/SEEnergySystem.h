@@ -36,7 +36,7 @@ class BIOGEARS_API SEEnergySystem : public SESystem {
   friend io::Physiology;
 
 public:
-  SEEnergySystem(Logger* logger);
+  SEEnergySystem(Logger const* logger);
   ~SEEnergySystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
@@ -46,8 +46,8 @@ public:
 
   void Clear() override; // Deletes all members
 
-  const SEScalar* GetScalar(const char* name) override;
-  const SEScalar* GetScalar(const std::string& name) override;
+  const SEScalar* GetScalar(const char* name) const override;
+  const SEScalar* GetScalar(const std::string& name) const override;
 
   bool Load(const CDM::EnergySystemData& in);
   CDM::EnergySystemData* Unload() const override;

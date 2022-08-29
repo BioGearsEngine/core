@@ -27,7 +27,7 @@ namespace io {
 class BIOGEARS_API SEAppliedTemperature : public Loggable {
 public:
   friend io::Environment;
-  SEAppliedTemperature(Logger* logger);
+  SEAppliedTemperature(Logger const* logger);
   SEAppliedTemperature(const SEAppliedTemperature& other)  = delete;
   virtual ~SEAppliedTemperature();
 
@@ -40,8 +40,8 @@ protected:
   virtual void Unload(CDM::AppliedTemperatureData& data) const;
 
 public:
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) const;
+  virtual const SEScalar* GetScalar(const std::string& name) const ;
 
   virtual bool HasTemperature() const;
   virtual SEScalarTemperature& GetTemperature();

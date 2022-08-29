@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 template <COMPARTMENT_NODE_TEMPLATE>
-SECompartmentNodes<COMPARTMENT_NODE_TYPES>::SECompartmentNodes(Logger* logger)
+SECompartmentNodes<COMPARTMENT_NODE_TYPES>::SECompartmentNodes(Logger const* logger)
   : Loggable(logger)
 {
   m_Quantity = nullptr;

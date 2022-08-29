@@ -29,7 +29,7 @@ template class map<CDM::enumPatientEvent::value, void (*)(bool)>;
 template class map<CDM::enumPatientEvent::value, double>;
 }
 namespace biogears {
-SEPatient::SEPatient(Logger* logger)
+SEPatient::SEPatient(Logger const* logger)
   : Loggable(logger)
 {
   m_EventHandler = nullptr;
@@ -174,79 +174,79 @@ void SEPatient::Clear()
   SAFE_DELETE(m_VitalCapacity);
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEPatient::GetScalar(const char* name)
+const SEScalar* SEPatient::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEPatient::GetScalar(const std::string& name)
+const SEScalar* SEPatient::GetScalar(const std::string& name) const
 {
   if (name.compare("Age") == 0)
-    return &GetAge();
+    return &const_cast<SEPatient*>(this)->GetAge();
   if (name.compare("Weight") == 0)
-    return &GetWeight();
+    return &const_cast<SEPatient*>(this)->GetWeight();
   if (name.compare("Height") == 0)
-    return &GetHeight();
+    return &const_cast<SEPatient*>(this)->GetHeight();
   if (name.compare("AlveoliSurfaceArea") == 0)
-    return &GetAlveoliSurfaceArea();
+    return &const_cast<SEPatient*>(this)->GetAlveoliSurfaceArea();
   if (name.compare("BasalMetabolicRate") == 0)
-    return &GetBasalMetabolicRate();
+    return &const_cast<SEPatient*>(this)->GetBasalMetabolicRate();
   if (name.compare("BloodVolumeBaseline") == 0)
-    return &GetBloodVolumeBaseline();
+    return &const_cast<SEPatient*>(this)->GetBloodVolumeBaseline();
   if (name.compare("BodyDensity") == 0)
-    return &GetBodyDensity();
+    return &const_cast<SEPatient*>(this)->GetBodyDensity();
   if (name.compare("BodyFatFraction") == 0)
-    return &GetBodyFatFraction();
+    return &const_cast<SEPatient*>(this)->GetBodyFatFraction();
   if (name.compare("DiastolicArterialPressureBaseline") == 0)
-    return &GetDiastolicArterialPressureBaseline();
+    return &const_cast<SEPatient*>(this)->GetDiastolicArterialPressureBaseline();
   if (name.compare("ExpiratoryReserveVolume") == 0)
-    return &GetExpiratoryReserveVolume();
+    return &const_cast<SEPatient*>(this)->GetExpiratoryReserveVolume();
   if (name.compare("FunctionalResidualCapacity") == 0)
-    return &GetFunctionalResidualCapacity();
+    return &const_cast<SEPatient*>(this)->GetFunctionalResidualCapacity();
   if (name.compare("HeartRateBaseline") == 0)
-    return &GetHeartRateBaseline();
+    return &const_cast<SEPatient*>(this)->GetHeartRateBaseline();
   if (name.compare("HeartRateMaximum") == 0)
-    return &GetHeartRateMaximum();
+    return &const_cast<SEPatient*>(this)->GetHeartRateMaximum();
   if (name.compare("HeartRateMinimum") == 0)
-    return &GetHeartRateMinimum();
+    return &const_cast<SEPatient*>(this)->GetHeartRateMinimum();
   if (name.compare("Hyperhidrosis") == 0)
-    return &GetHyperhidrosis();
+    return &const_cast<SEPatient*>(this)->GetHyperhidrosis();
   if (name.compare("InspiratoryCapacity") == 0)
-    return &GetInspiratoryCapacity();
+    return &const_cast<SEPatient*>(this)->GetInspiratoryCapacity();
   if (name.compare("InspiratoryReserveVolume") == 0)
-    return &GetInspiratoryReserveVolume();
+    return &const_cast<SEPatient*>(this)->GetInspiratoryReserveVolume();
   if (name.compare("LeanBodyMass") == 0)
-    return &GetLeanBodyMass();
+    return &const_cast<SEPatient*>(this)->GetLeanBodyMass();
   if (name.compare("MaxWorkRate") == 0)
-    return &GetMaxWorkRate();
+    return &const_cast<SEPatient*>(this)->GetMaxWorkRate();
   if (name.compare("MuscleMass") == 0)
-    return &GetMuscleMass();
+    return &const_cast<SEPatient*>(this)->GetMuscleMass();
   if (name.compare("MeanArterialPressureBaseline") == 0)
-    return &GetMeanArterialPressureBaseline();
+    return &const_cast<SEPatient*>(this)->GetMeanArterialPressureBaseline();
   if (name.compare("PainSusceptibility") == 0)
-    return &GetPainSusceptibility();
+    return &const_cast<SEPatient*>(this)->GetPainSusceptibility();
   if (name.compare("ResidualVolume") == 0)
-    return &GetResidualVolume();
+    return &const_cast<SEPatient*>(this)->GetResidualVolume();
   if (name.compare("RespirationRateBaseline") == 0)
-    return &GetRespirationRateBaseline();
+    return &const_cast<SEPatient*>(this)->GetRespirationRateBaseline();
   if (name.compare("RespiratoryDriverAmplitudeBaseline") == 0)
-    return &GetRespiratoryDriverAmplitudeBaseline();
+    return &const_cast<SEPatient*>(this)->GetRespiratoryDriverAmplitudeBaseline();
   if (name.compare("RightLungRatio") == 0)
-    return &GetRightLungRatio();
+    return &const_cast<SEPatient*>(this)->GetRightLungRatio();
   if (name.compare("SkinSurfaceArea") == 0)
-    return &GetSkinSurfaceArea();
+    return &const_cast<SEPatient*>(this)->GetSkinSurfaceArea();
   if (name.compare("SleepAmount") == 0)
-    return &GetSleepAmount();
+    return &const_cast<SEPatient*>(this)->GetSleepAmount();
   if (name.compare("SystolicArterialPressureBaseline") == 0)
-    return &GetSystolicArterialPressureBaseline();
+    return &const_cast<SEPatient*>(this)->GetSystolicArterialPressureBaseline();
   if (name.compare("TotalVentilationBaseline") == 0)
-    return &GetTotalVentilationBaseline();
+    return &const_cast<SEPatient*>(this)->GetTotalVentilationBaseline();
   if (name.compare("TidalVolumeBaseline") == 0)
-    return &GetTidalVolumeBaseline();
+    return &const_cast<SEPatient*>(this)->GetTidalVolumeBaseline();
   if (name.compare("TotalLungCapacity") == 0)
-    return &GetTotalLungCapacity();
+    return &const_cast<SEPatient*>(this)->GetTotalLungCapacity();
   if (name.compare("VitalCapacity") == 0)
-    return &GetVitalCapacity();
+    return &const_cast<SEPatient*>(this)->GetVitalCapacity();
 
   return nullptr;
 }

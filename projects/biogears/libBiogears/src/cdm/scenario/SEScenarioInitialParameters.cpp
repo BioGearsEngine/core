@@ -119,7 +119,7 @@ const PhysiologyEngineConfiguration* SEScenarioInitialParameters::GetConfigurati
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::SetConfiguration(const PhysiologyEngineConfiguration& config)
 {
-  CDM_COPY((&config), (&GetConfiguration()));
+  CDM_COPY((config), (GetConfiguration()));
 }
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::InvalidateConfiguration()
@@ -169,7 +169,7 @@ const SEPatient* SEScenarioInitialParameters::GetPatient() const
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::SetPatient(const SEPatient& patient)
 {
-  CDM_COPY((&patient), (&GetPatient()));
+  CDM_COPY((patient), (GetPatient()));
 }
 //-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::HasPatient() const

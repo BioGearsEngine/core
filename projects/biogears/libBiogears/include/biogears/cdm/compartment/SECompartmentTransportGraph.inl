@@ -14,13 +14,13 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
-SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::SECompartmentTransportGraph(const char* name, Logger* logger)
+SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::SECompartmentTransportGraph(const char* name, Logger const* logger)
   : SECompartmentTransportGraph(std::string{ name }, logger)
 {
 }
 //-------------------------------------------------------------------------------
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
-SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::SECompartmentTransportGraph(const std::string& name, Logger* logger)
+SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::SECompartmentTransportGraph(const std::string& name, Logger const* logger)
   : SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>(name, logger)
 {
 }

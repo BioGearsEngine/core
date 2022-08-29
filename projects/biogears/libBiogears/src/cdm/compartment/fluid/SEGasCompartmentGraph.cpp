@@ -29,12 +29,12 @@ template class map<const biogears::SEGasTransportVertex*, vector<biogears::SEGas
 }
 namespace biogears {
 
-SEGasCompartmentGraph::SEGasCompartmentGraph(const char* name, Logger* logger)
+SEGasCompartmentGraph::SEGasCompartmentGraph(const char* name, Logger const* logger)
   : SEGasCompartmentGraph(std::string { name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
-SEGasCompartmentGraph::SEGasCompartmentGraph(const std::string& name, Logger* logger)
+SEGasCompartmentGraph::SEGasCompartmentGraph(const std::string& name, Logger const* logger)
   : SECompartmentTransportGraph(name, logger)
 {
 }

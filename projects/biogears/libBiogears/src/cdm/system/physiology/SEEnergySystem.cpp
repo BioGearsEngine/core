@@ -40,7 +40,7 @@ constexpr char idSweatRate[] = "SweatRate";
 constexpr char idTotalMetabolicRate[] = "TotalMetabolicRate";
 constexpr char idTotalWorkRateLevel[] = "TotalWorkRateLevel";
 
-SEEnergySystem::SEEnergySystem(Logger* logger)
+SEEnergySystem::SEEnergySystem(Logger const* logger)
   : SESystem(logger)
 {
   m_AchievedExerciseLevel = nullptr;
@@ -87,43 +87,43 @@ void SEEnergySystem::Clear()
   SAFE_DELETE(m_TotalMetabolicRate);
   SAFE_DELETE(m_TotalWorkRateLevel);
 } //-------------------------------------------------------------------------------
-const SEScalar* SEEnergySystem::GetScalar(const char* name)
+const SEScalar* SEEnergySystem::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEEnergySystem::GetScalar(const std::string& name)
+const SEScalar* SEEnergySystem::GetScalar(const std::string& name) const
 {
   if (name == idAchievedExerciseLevel)
-    return &GetAchievedExerciseLevel();
+    return &const_cast<SEEnergySystem*>(this)->GetAchievedExerciseLevel();
   if (name == idChlorideLostToSweat)
-    return &GetChlorideLostToSweat();
+    return &const_cast<SEEnergySystem*>(this)->GetChlorideLostToSweat();
   if (name == idCoreTemperature)
-    return &GetCoreTemperature();
+    return &const_cast<SEEnergySystem*>(this)->GetCoreTemperature();
   if (name == idCreatinineProductionRate)
-    return &GetCreatinineProductionRate();
+    return &const_cast<SEEnergySystem*>(this)->GetCreatinineProductionRate();
   if (name == idEnergyDeficit)
-    return &GetEnergyDeficit();
+    return &const_cast<SEEnergySystem*>(this)->GetEnergyDeficit();
   if (name == idExerciseEnergyDemand)
-    return &GetExerciseEnergyDemand();
+    return &const_cast<SEEnergySystem*>(this)->GetExerciseEnergyDemand();
   if (name == idExerciseMeanArterialPressureDelta)
-    return &GetExerciseMeanArterialPressureDelta();
+    return &const_cast<SEEnergySystem*>(this)->GetExerciseMeanArterialPressureDelta();
   if (name == idFatigueLevel)
-    return &GetFatigueLevel();
+    return &const_cast<SEEnergySystem*>(this)->GetFatigueLevel();
   if (name == idLactateProductionRate)
-    return &GetLactateProductionRate();
+    return &const_cast<SEEnergySystem*>(this)->GetLactateProductionRate();
   if (name == idPotassiumLostToSweat)
-    return &GetPotassiumLostToSweat();
+    return &const_cast<SEEnergySystem*>(this)->GetPotassiumLostToSweat();
   if (name == idSkinTemperature)
-    return &GetSkinTemperature();
+    return &const_cast<SEEnergySystem*>(this)->GetSkinTemperature();
   if (name == idSodiumLostToSweat)
-    return &GetSodiumLostToSweat();
+    return &const_cast<SEEnergySystem*>(this)->GetSodiumLostToSweat();
   if (name == idSweatRate)
-    return &GetSweatRate();
+    return &const_cast<SEEnergySystem*>(this)->GetSweatRate();
   if (name == idTotalMetabolicRate)
-    return &GetTotalMetabolicRate();
+    return &const_cast<SEEnergySystem*>(this)->GetTotalMetabolicRate();
   if (name == idTotalWorkRateLevel)
-    return &GetTotalWorkRateLevel();
+    return &const_cast<SEEnergySystem*>(this)->GetTotalWorkRateLevel();
   return nullptr;
 }
 //-------------------------------------------------------------------------------

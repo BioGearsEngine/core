@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/system/environment/SEEnvironment.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
@@ -63,7 +63,7 @@ double SizeIndependentDepositionEfficencyCoefficient::GetAlveoli() const
   return m_alveoli;
 }
 //-------------------------------------------------------------------------------
-BioGearsSubstances::BioGearsSubstances(BioGears& data)
+BioGearsSubstances::BioGearsSubstances(BioGearsEngine& data)
   : SESubstanceManager(data.GetLogger())
   , m_data(data)
 {

@@ -32,7 +32,7 @@ public:
     SetUp();
   }
   /// Notify systems that steady state has been achieved
-  virtual void AtSteadyState(){};
+  virtual void SimulationPhaseChange(){};
   virtual void PreProcess() = 0;
   virtual void Process() = 0;
   virtual void PostProcess() = 0;

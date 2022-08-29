@@ -44,7 +44,7 @@ namespace biogears {
   constexpr char idStoredFat[] = "StoredFat";
 
 
-SETissueSystem::SETissueSystem(Logger* logger)
+SETissueSystem::SETissueSystem(Logger const* logger)
   : SESystem(logger)
 {
   m_CarbonDioxideProductionRate = nullptr;
@@ -96,51 +96,51 @@ void SETissueSystem::Clear()
   SAFE_DELETE(m_StoredFat);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SETissueSystem::GetScalar(const char* name)
+const SEScalar* SETissueSystem::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SETissueSystem::GetScalar(const std::string& name)
+const SEScalar* SETissueSystem::GetScalar(const std::string& name) const
 {
   if (name == idCarbonDioxideProductionRate)
-    return &GetCarbonDioxideProductionRate();
+    return &const_cast<SETissueSystem*>(this)->GetCarbonDioxideProductionRate();
   if (name == idDehydrationFraction)
-    return &GetDehydrationFraction();
+    return &const_cast<SETissueSystem*>(this)->GetDehydrationFraction();
   if (name == idExtracellularFluidVolume)
-    return &GetExtracellularFluidVolume();
+    return &const_cast<SETissueSystem*>(this)->GetExtracellularFluidVolume();
   if (name == idExtravascularFluidVolume)
-    return &GetExtravascularFluidVolume();
+    return &const_cast<SETissueSystem*>(this)->GetExtravascularFluidVolume();
   if (name == idIntracellularFluidPH)
-    return &GetIntracellularFluidPH();
+    return &const_cast<SETissueSystem*>(this)->GetIntracellularFluidPH();
   if (name == idIntracellularFluidVolume)
-    return &GetIntracellularFluidVolume();
+    return &const_cast<SETissueSystem*>(this)->GetIntracellularFluidVolume();
   if (name == idTotalBodyFluidVolume)
-    return &GetTotalBodyFluidVolume();
+    return &const_cast<SETissueSystem*>(this)->GetTotalBodyFluidVolume();
   if (name == idOxygenConsumptionRate)
-    return &GetOxygenConsumptionRate();
+    return &const_cast<SETissueSystem*>(this)->GetOxygenConsumptionRate();
   if (name == idRespiratoryExchangeRatio)
-    return &GetRespiratoryExchangeRatio();
+    return &const_cast<SETissueSystem*>(this)->GetRespiratoryExchangeRatio();
   if (name == idLiverInsulinSetPoint)
-    return &GetLiverInsulinSetPoint();
+    return &const_cast<SETissueSystem*>(this)->GetLiverInsulinSetPoint();
   if (name == idLiverGlucagonSetPoint)
-    return &GetLiverGlucagonSetPoint();
+    return &const_cast<SETissueSystem*>(this)->GetLiverGlucagonSetPoint();
   if (name == idMuscleInsulinSetPoint)
-    return &GetMuscleInsulinSetPoint();
+    return &const_cast<SETissueSystem*>(this)->GetMuscleInsulinSetPoint();
   if (name == idMuscleGlucagonSetPoint)
-    return &GetMuscleGlucagonSetPoint();
+    return &const_cast<SETissueSystem*>(this)->GetMuscleGlucagonSetPoint();
   if (name == idFatInsulinSetPoint)
-    return &GetFatInsulinSetPoint();
+    return &const_cast<SETissueSystem*>(this)->GetFatInsulinSetPoint();
   if (name == idFatGlucagonSetPoint)
-    return &GetFatGlucagonSetPoint();
+    return &const_cast<SETissueSystem*>(this)->GetFatGlucagonSetPoint();
   if (name == idLiverGlycogen)
-    return &GetLiverGlycogen();
+    return &const_cast<SETissueSystem*>(this)->GetLiverGlycogen();
   if (name == idMuscleGlycogen)
-    return &GetMuscleGlycogen();
+    return &const_cast<SETissueSystem*>(this)->GetMuscleGlycogen();
   if (name == idStoredProtein)
-    return &GetStoredProtein();
+    return &const_cast<SETissueSystem*>(this)->GetStoredProtein();
   if (name == idStoredFat)
-    return &GetStoredFat();
+    return &const_cast<SETissueSystem*>(this)->GetStoredFat();
 
   return nullptr;
 }

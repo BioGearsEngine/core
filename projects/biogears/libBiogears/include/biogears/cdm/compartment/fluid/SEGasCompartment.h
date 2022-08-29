@@ -33,8 +33,8 @@ class BIOGEARS_API SEGasCompartment : public SEFluidCompartment<SEGasCompartment
   friend io::Compartment;
 
 protected:
-  SEGasCompartment(const char* name, Logger* logger);
-  SEGasCompartment(const std::string& name, Logger* logger);
+  SEGasCompartment(const char* name, Logger const* logger);
+  SEGasCompartment(const std::string& name, Logger const* logger);
 
 public:
   virtual ~SEGasCompartment();

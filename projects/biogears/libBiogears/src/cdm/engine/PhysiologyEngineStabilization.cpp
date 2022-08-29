@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/EngineConfiguration.hxx>
 
 namespace biogears {
-PhysiologyEngineStabilization::PhysiologyEngineStabilization(Logger* logger)
+PhysiologyEngineStabilization::PhysiologyEngineStabilization(Logger const* logger)
   : Loggable(logger)
 {
   m_StabilizationDuration = nullptr;

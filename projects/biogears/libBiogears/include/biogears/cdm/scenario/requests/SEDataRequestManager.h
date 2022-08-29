@@ -34,12 +34,12 @@ class BIOGEARS_API SEDataRequestManager : public Loggable {
   friend io::Scenario;
 
 public:
-  SEDataRequestManager(Logger* logger);
+  SEDataRequestManager(Logger const* logger);
   ~SEDataRequestManager();
 
   void Clear();
 
-  bool Load(const CDM::DataRequestsData& in, SESubstanceManager& subMgr);
+  bool Load(const CDM::DataRequestsData& in, SESubstanceManager const& subMgr);
   CDM::DataRequestsData* Unload() const;
 
 protected:
@@ -65,7 +65,7 @@ public:
   double GetSamplesPerSecond() const;
   void SetSamplesPerSecond(double num);
 
-  bool HasDataRequests();
+  bool HasDataRequests() const;
   const std::vector<SEDataRequest*>& GetDataRequests();
 
   virtual bool HasDefaultDecimalFormatting() const;
@@ -87,7 +87,7 @@ public:
   SEThermalCompartmentDataRequest& CreateThermalCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   SETissueCompartmentDataRequest& CreateTissueCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
 
-  void CreateFromBind(const CDM::DataRequestData& input, SESubstanceManager& subMgr);
+  void CreateFromBind(const CDM::DataRequestData& input, SESubstanceManager const& subMgr);
 
 protected:
   double m_SamplesPerSecond;
@@ -99,6 +99,6 @@ protected:
   SEDecimalFormat* m_OverrideDecimalFormatting;
 
   bool DuplicateRequest(SEDataRequest* request);
-  static SEDataRequest* newFromBind(const CDM::DataRequestData& dataRequest, SESubstanceManager& substances, const SEDecimalFormat* dfault = nullptr);
+  static SEDataRequest* newFromBind(const CDM::DataRequestData& dataRequest, SESubstanceManager const & substances, const SEDecimalFormat* dfault = nullptr);
 };
 }

@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <thread>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 namespace biogears {
 class SEInfection;
@@ -38,7 +38,7 @@ public:
   void UpdateMIC(double mic);
   void Status();
 
-  biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
+  biogears::Logger const* GetLogger() { return m_bg->GetLogger(); }
 
 protected:
   void AdvanceTime();
@@ -49,7 +49,7 @@ protected:
 
   double m_StartTime_min;
 
-  std::unique_ptr<biogears::PhysiologyEngine> m_bg;
+  std::unique_ptr<biogears::BioGearsEngine> m_bg;
 
   biogears::SEInfection* m_septicInfection;
   biogears::SESubstanceInfusion* m_pressor;

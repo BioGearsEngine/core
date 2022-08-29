@@ -14,16 +14,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEScalarMassPerAreaTime.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 namespace biogears {
 
-auto DiffusionCalculator::make_unique(BioGears& bg) -> std::unique_ptr<DiffusionCalculator>
+auto DiffusionCalculator::make_unique(BioGearsEngine& bg) -> std::unique_ptr<DiffusionCalculator>
 {
   return std::unique_ptr<DiffusionCalculator>(new DiffusionCalculator(bg));
 }
 //-------------------------------------------------------------------------------
-DiffusionCalculator::DiffusionCalculator(BioGears& bg)
+DiffusionCalculator::DiffusionCalculator(BioGearsEngine& bg)
   : Loggable(bg.GetLogger())
   , m_data(bg)
 {
@@ -485,7 +485,7 @@ void DiffusionCalculator::CalculateActiveIonDiffusion(DiffusionCompartmentSet& c
   //double calciumConductance_S_Per_mL = 1.0 / (calcium->GetMembraneResistance(ElectricResistanceUnit::Ohm));
 
   //Calculate current Nernst potentials for each ion (Faradays constant is multiplied by the charge of the ion--1 for Na and K, -1 for Cl)
-  double coreTemp_K = m_data.GetEnergy().GetCoreTemperature(TemperatureUnit::K);
+  double coreTemp_K = m_data.GetEnergySystem().GetCoreTemperature(TemperatureUnit::K);
   double naNernst_V = GeneralMath::CalculateNernstPotential(extra, intra, sodium, coreTemp_K);
   double kNernst_V = GeneralMath::CalculateNernstPotential(extra, intra, potassium, coreTemp_K);
   double clNernst_V = GeneralMath::CalculateNernstPotential(extra, intra, chloride, coreTemp_K);
@@ -598,8 +598,8 @@ void DiffusionCalculator::CalculateMacromoleculeDiffusion(DiffusionCompartmentSe
   double fluidFlux_mL_Per_min = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(fluidFluxPathName)->GetFlow(VolumePerTimeUnit::mL_Per_min);
 
   //We need to increase albumin permeability when there is inflammation
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSources()) {
-    double tissueIntegrity = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
+  if (m_data.GetBloodChemistrySystem().GetInflammatoryResponse().HasInflammationSources()) {
+    double tissueIntegrity = m_data.GetBloodChemistrySystem().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
     reflectionCoefficientSmall = reflectionCoefficientSmallBase * tissueIntegrity;
   }
 

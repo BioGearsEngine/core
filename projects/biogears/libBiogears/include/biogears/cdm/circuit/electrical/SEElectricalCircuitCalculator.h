@@ -27,8 +27,8 @@ BG_EXT template class BIOGEARS_API SECircuitCalculator<SEElectricalCircuit, SEEl
 
 class BIOGEARS_API SEElectricalCircuitCalculator : public SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit> {
 public:
-  SEElectricalCircuitCalculator(Logger* logger);
-  SEElectricalCircuitCalculator(const ElectricCapacitanceUnit&, const ElectricCurrentUnit&, const ElectricInductanceUnit&, const ElectricPotentialUnit&, const ElectricChargeUnit&, const ElectricResistanceUnit&, Logger* logger);
+  SEElectricalCircuitCalculator(Logger const* logger);
+  SEElectricalCircuitCalculator(const ElectricCapacitanceUnit&, const ElectricCurrentUnit&, const ElectricInductanceUnit&, const ElectricPotentialUnit&, const ElectricChargeUnit&, const ElectricResistanceUnit&, Logger const* logger);
   virtual ~SEElectricalCircuitCalculator();
 };
 }

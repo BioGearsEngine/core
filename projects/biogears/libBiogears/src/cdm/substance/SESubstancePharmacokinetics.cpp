@@ -19,7 +19,7 @@ template class map<string, biogears::SESubstanceTissuePharmacokinetics*>;
 
 namespace biogears {
 
-SESubstancePharmacokinetics::SESubstancePharmacokinetics(Logger* logger)
+SESubstancePharmacokinetics::SESubstancePharmacokinetics(Logger const* logger)
   : Loggable(logger)
 {
   m_Physicochemicals = nullptr;
@@ -46,15 +46,15 @@ bool SESubstancePharmacokinetics::IsValid() const
   return false;
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstancePharmacokinetics::GetScalar(const char* name)
+const SEScalar* SESubstancePharmacokinetics::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstancePharmacokinetics::GetScalar(const std::string& name)
+const SEScalar* SESubstancePharmacokinetics::GetScalar(const std::string& name) const
 {
   if (HasPhysicochemicals())
-    return GetPhysicochemicals().GetScalar(name);
+    return const_cast<SESubstancePharmacokinetics*>(this)->GetPhysicochemicals().GetScalar(name);
   // I did not support for getting a specific tissue kinetic scalar due to lack of coffee
   return nullptr;
 }

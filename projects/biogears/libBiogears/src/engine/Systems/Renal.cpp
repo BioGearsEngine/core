@@ -41,16 +41,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Drugs.h>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
-auto Renal::make_unique(BioGears& bg) -> std::unique_ptr<Renal>
+auto Renal::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Renal>
 {
   return std::unique_ptr<Renal>(new Renal(bg));
 }
 
-Renal::Renal(BioGears& bg)
+Renal::Renal(BioGearsEngine& bg)
   : SERenalSystem(bg.GetLogger())
   , m_data(bg)
 {
@@ -443,9 +443,9 @@ void Renal::SetUp()
 /// values that may occur during stabilization. When the consume meal condition is available, the renal system
 /// will adjust blood contents as necessary via calculate substance state.
 //--------------------------------------------------------------------------------------------------
-void Renal::AtSteadyState()
+void Renal::SimulationPhaseChange()
 {
-  if (m_data.GetState() == EngineState::AtInitialStableState) {
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtInitialStableState) {
     /*
     if (m_data.GetConditions().HasConsumeMeal())
     {
@@ -455,7 +455,7 @@ void Renal::AtSteadyState()
     */
   }
 
-  if (m_data.GetState() == EngineState::AtSecondaryStableState) {
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtSecondaryStableState) {
     //We were letting the substances flow out to get the initial concentrations correct
     //We want to do this out of the pressure source, not the urethra to ensure the flow bringing substances into the compartment is the same as the flow taking it out
     //But now we're stable and want to start filling the bladder, so make substances stay in bladder as they come in with the fluid
@@ -516,7 +516,7 @@ void Renal::PostProcess()
 {
   //Circuit PostProcessing is done on the entire circulatory circuit elsewhere
   if (m_data.GetActions().GetPatientActions().HasOverride()
-      && m_data.GetState() == EngineState::Active) {
+      && m_data.GetSimulationPhase() == SimulationPhase::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasRenalOverride()) {
       ProcessOverride();
     }
@@ -1287,7 +1287,7 @@ void Renal::CalculateVitalSigns()
   //A lot of the system data has already been set elsewhere
   //Set the stuff that was not
 
-  double hematocrit = m_data.GetBloodChemistry().GetHematocrit().GetValue();
+  double hematocrit = m_data.GetBloodChemistrySystem().GetHematocrit().GetValue();
 
   //Do it separate for both kidneys
   for (unsigned int kidney = 0; kidney < 2; kidney++) {
@@ -1426,7 +1426,7 @@ void Renal::CalculateVitalSigns()
   }
 
   if (m_data.GetActions().GetPatientActions().HasBurnWound() && (m_data.GetActions().GetPatientActions().GetBurnWound()->HasCompartment("Trunk"))) {
-    double tissueIntegrity = m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
+    double tissueIntegrity = m_data.GetBloodChemistrySystem().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
     double bladderPressure = m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetPressure().GetValue(PressureUnit::mmHg);
     double bladderPressureMultiplier = (((-1.0 * tissueIntegrity) + 1.0) * 5.25) + 1.0; //Asymptotic relation to tissue integirty, max increase of 6.25 (5.25+1.0)
     GetBladderPressure().SetValue(bladderPressure * bladderPressureMultiplier, PressureUnit::mmHg);
@@ -1490,7 +1490,7 @@ void Renal::CalculateVitalSigns()
   //Only check these once each cardiac cycle (using running average for entire cycle)
   //Otherwise, they could turn on and off like crazy as the flows fluctuate throughout the cycle
   if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle) && m_Urinating == false) {
-    if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
+    if (m_data.GetSimulationPhase() > SimulationPhase::InitialStabilization) { // Don't throw events if we are initializing
       //Handle Events
       /// \cite lahav1992intermittent
       /// 2.5 mL/min
@@ -1535,8 +1535,8 @@ void Renal::CalculateVitalSigns()
         m_patient->SetEvent(CDM::enumPatientEvent::Natriuresis, false, m_data.GetSimulationTime());
       }
 
-      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
-        double systolicBP = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
+      if (m_data.GetBloodChemistrySystem().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+        double systolicBP = m_data.GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg);
         if (systolicBP <= 100.0 && GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) <= 0.5) {
           m_patient->SetEvent(CDM::enumPatientEvent::SevereSepsis, true, m_data.GetSimulationTime());
         }
@@ -1675,7 +1675,7 @@ bool Renal::CalculateUrinalysis(SEUrinalysis& u)
   u.Reset();
 
   double urineOsm_Per_kg = GetUrineOsmolality(OsmolalityUnit::mOsm_Per_kg);
-  if (m_data.GetBloodChemistry().GetHemoglobinLostToUrine(MassUnit::g) >= 5.0) {
+  if (m_data.GetBloodChemistrySystem().GetHemoglobinLostToUrine(MassUnit::g) >= 5.0) {
     u.SetColorResult(CDM::enumUrineColor::Pink);
   } else if (urineOsm_Per_kg <= 400) { // Need cite for this
     u.SetColorResult(CDM::enumUrineColor::PaleYellow);
@@ -1701,7 +1701,7 @@ bool Renal::CalculateUrinalysis(SEUrinalysis& u)
   //u.SetBilirubinResult();
 
   u.GetSpecificGravityResult().Set(GetUrineSpecificGravity());
-  if (bladder_glucose_mg_Per_dL > 0.15 || m_data.GetBloodChemistry().GetHemoglobinLostToUrine(MassUnit::g) >= 5.0) /// \cite roxe1990urinalysis
+  if (bladder_glucose_mg_Per_dL > 0.15 || m_data.GetBloodChemistrySystem().GetHemoglobinLostToUrine(MassUnit::g) >= 5.0) /// \cite roxe1990urinalysis
     u.SetBloodResult(CDM::enumPresenceIndicator::Positive);
   else
     u.SetBloodResult(CDM::enumPresenceIndicator::Negative);
@@ -1842,14 +1842,14 @@ void Renal::CalculateTubuloglomerularFeedback()
       sodiumFlow_mg_Per_s = tubulesFlow_mL_Per_s * sodiumConcentration_mg_Per_mL;
 
       //On the off chance it's negative (like the first time-step) don't do anything
-      if (sodiumFlow_mg_Per_s < 0.0 && m_data.GetState() <= EngineState::InitialStabilization)
+      if (sodiumFlow_mg_Per_s < 0.0 && m_data.GetSimulationPhase() <= SimulationPhase::InitialStabilization)
         continue;
 
       //Keep a running average, so the resistance doesn't go crazy
       sodiumFlow_mg_Per_s = m_leftSodiumFlow_mg_Per_s_runningAvg.Sample(sodiumFlow_mg_Per_s);
 
       // Save off the last set point from initial stabilization for use after stabilization
-      if (m_data.GetState() == EngineState::InitialStabilization && m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+      if (m_data.GetSimulationPhase() == SimulationPhase::InitialStabilization && m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
         //Don't change the resistance - just figure out what it is
         m_leftSodiumFlowSetPoint_mg_Per_s = sodiumFlow_mg_Per_s;
       }
@@ -1871,14 +1871,14 @@ void Renal::CalculateTubuloglomerularFeedback()
       sodiumFlow_mg_Per_s = tubulesFlow_mL_Per_s * sodiumConcentration_mg_Per_mL;
 
       //On the off chance it's negative (like the first time-step) don't do anything
-      if (sodiumFlow_mg_Per_s < 0.0 && m_data.GetState() < EngineState::InitialStabilization)
+      if (sodiumFlow_mg_Per_s < 0.0 && m_data.GetSimulationPhase() < SimulationPhase::InitialStabilization)
         continue;
 
       //Keep a running average, so the resistance doesn't go crazy
       sodiumFlow_mg_Per_s = m_rightSodiumFlow_mg_Per_s_runningAvg.Sample(sodiumFlow_mg_Per_s);
 
       // Save off the last set point from initial stabilization for use after stabilization
-      if (m_data.GetState() == EngineState::InitialStabilization && m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+      if (m_data.GetSimulationPhase() == SimulationPhase::InitialStabilization && m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
         //Don't change the resistance - just figure out what it is
         m_rightSodiumFlowSetPoint_mg_Per_s = sodiumFlow_mg_Per_s;
       }
@@ -1901,7 +1901,7 @@ void Renal::CalculateTubuloglomerularFeedback()
 
       //create control statement to drive resistance to get desired sodium flow rate, damping needed to get steady flow rate
       double dampingFactor = 0.001;
-      if (m_data.GetState() < EngineState::Active) {
+      if (m_data.GetSimulationPhase() < SimulationPhase::Active) {
         //Make the damping factor higher to get to homeostasis faster
         dampingFactor = 0.005;
       }
@@ -1954,8 +1954,8 @@ void Renal::CalculateFluidPermeability()
   double rightArterialPressure_mmHg = 0.0;
   double tubularPermeabilityModifier = 1.0;
 
-  if (m_data.GetDrugs().HasTubularPermeabilityChange())
-    tubularPermeabilityModifier -= m_data.GetDrugs().GetTubularPermeabilityChange().GetValue();
+  if (m_data.GetDrugsSystem().HasTubularPermeabilityChange())
+    tubularPermeabilityModifier -= m_data.GetDrugsSystem().GetTubularPermeabilityChange().GetValue();
 
   for (unsigned int kidney = 0; kidney < 2; kidney++) {
     if (kidney == 0) {

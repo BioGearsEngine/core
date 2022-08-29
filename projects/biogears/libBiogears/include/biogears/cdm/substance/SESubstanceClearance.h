@@ -37,14 +37,14 @@ enum class RenalDynamic { Clearance,
 class BIOGEARS_API SESubstanceClearance : public Loggable {
   friend io::Substance;
 public:
-  SESubstanceClearance(Logger* logger);
+  SESubstanceClearance(Logger const* logger);
   virtual ~SESubstanceClearance();
 
   virtual void Clear();
   virtual bool IsValid() const;
 
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) const;
+  virtual const SEScalar* GetScalar(const std::string& name) const ;
 
   virtual bool Load(const CDM::SubstanceClearanceData& in);
   virtual CDM::SubstanceClearanceData* Unload() const;

@@ -35,7 +35,7 @@ class BIOGEARS_API SENutrition : public Loggable {
   friend io::PatientNutrition;
 
 public:
-  SENutrition(Logger* logger);
+  SENutrition(Logger const* logger);
   virtual ~SENutrition();
 
   virtual void Clear();
@@ -44,8 +44,8 @@ public:
   virtual CDM::NutritionData* Unload() const;
 
 public:
-  const SEScalar* GetScalar(const char* name);
-  const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const char* name) const ;
+  const SEScalar* GetScalar(const std::string& name) const ;
 
   bool Load(const char* nutritionFile);
   bool Load(const std::string& nutritionFile);

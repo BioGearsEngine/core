@@ -26,14 +26,14 @@ namespace io {
 class BIOGEARS_API SESubstanceAerosolization : public Loggable {
   friend io::Substance;
 public:
-  SESubstanceAerosolization(Logger* logger);
+  SESubstanceAerosolization(Logger const* logger);
   virtual ~SESubstanceAerosolization();
 
   virtual void Clear();
   virtual bool IsValid() const;
 
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) const;
+  virtual const SEScalar* GetScalar(const std::string& name) const ;
 
   virtual bool Load(const CDM::SubstanceAerosolizationData& in);
   virtual CDM::SubstanceAerosolizationData* Unload() const;

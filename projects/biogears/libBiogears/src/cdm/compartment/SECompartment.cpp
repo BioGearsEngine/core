@@ -15,12 +15,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 
 namespace biogears {
-SECompartment::SECompartment(const char* name, Logger* logger)
+SECompartment::SECompartment(const char* name, Logger const* logger)
   : SECompartment(std::string{ name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
-SECompartment::SECompartment(const std::string& name, Logger* logger)
+SECompartment::SECompartment(const std::string& name, Logger const* logger)
   : Loggable(logger)
   , m_Name(name)
 {

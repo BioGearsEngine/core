@@ -141,25 +141,25 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
   std::string resultsFile = "HowToBurnWound";
   resultsFile.append(resultsFileTBSA);
   resultsFile.append(".csv");
-  m_bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile); // deposits in build/runtime
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", "1/min");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*epi, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("ArterialBloodPH", "unitless");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", "mL/min");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("InflammatoryResponse-TissueIntegrity");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", "mmHg");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", "mmHg");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", "mmHg");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", "1/min");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", "mL");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystemicVascularResistance", "mmHg s/mL");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("BloodVolume", "mL");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanUrineOutput", "mL/hr");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("PainVisualAnalogueScale");
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluid_mL", m_TotalVolume_mL);
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolume_mL", m_ivBagVolume_mL);
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluidAlbumin_mL", m_TotalVolumeAlbumin_mL);
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolumeAlbumin_mL", m_ivBagVolumeAlbumin_mL);
+  m_bg->GetEngineTrack().GetDataRequestManager().SetResultsFilename(resultsFile); // deposits in build/runtime
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", "1/min");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreateSubstanceDataRequest().Set(*epi, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("ArterialBloodPH", "unitless");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", "mL/min");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("InflammatoryResponse-TissueIntegrity");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", "mmHg");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", "mmHg");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", "mmHg");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", "1/min");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", "mL");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystemicVascularResistance", "mmHg s/mL");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("BloodVolume", "mL");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanUrineOutput", "mL/hr");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("PainVisualAnalogueScale");
+  m_bg->GetEngineTrack().GetDataTrack().Probe("totalFluid_mL", m_TotalVolume_mL);
+  m_bg->GetEngineTrack().GetDataTrack().Probe("bagVolume_mL", m_ivBagVolume_mL);
+  m_bg->GetEngineTrack().GetDataTrack().Probe("totalFluidAlbumin_mL", m_TotalVolumeAlbumin_mL);
+  m_bg->GetEngineTrack().GetDataTrack().Probe("bagVolumeAlbumin_mL", m_ivBagVolumeAlbumin_mL);
 
   // Load substances and compounds
   SESubstanceCompound* ringers = m_bg->GetSubstanceManager().GetCompound("RingersLactate");
@@ -233,7 +233,7 @@ void BurnThread::AdvanceTime()
         m_ringers->Clear();
       }
     }
-    m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
+    m_bg->GetEngineTrack().TrackData(m_bg->GetSimulationTime(TimeUnit::s));
     m_mutex.unlock();
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
   }
@@ -250,11 +250,11 @@ void BurnThread::AdvanceTimeFluids()
       m_bg->GetLogger()->Info("Ringers Lactate IV bag is empty \n");
     }
   }
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluid_mL", m_TotalVolume_mL);
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolume_mL", m_ivBagVolume_mL);
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluidAlbumin_mL", m_TotalVolumeAlbumin_mL);
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolumeAlbumin_mL", m_ivBagVolumeAlbumin_mL);
-  m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
+  m_bg->GetEngineTrack().GetDataTrack().Probe("totalFluid_mL", m_TotalVolume_mL);
+  m_bg->GetEngineTrack().GetDataTrack().Probe("bagVolume_mL", m_ivBagVolume_mL);
+  m_bg->GetEngineTrack().GetDataTrack().Probe("totalFluidAlbumin_mL", m_TotalVolumeAlbumin_mL);
+  m_bg->GetEngineTrack().GetDataTrack().Probe("bagVolumeAlbumin_mL", m_ivBagVolumeAlbumin_mL);
+  m_bg->GetEngineTrack().TrackData(m_bg->GetSimulationTime(TimeUnit::s));
   m_mutex.unlock();
   std::this_thread::sleep_for(std::chrono::milliseconds(25));
 
@@ -268,7 +268,7 @@ void BurnThread::AdvanceTimeFluids()
         m_bg->GetLogger()->Info("Albumex_4PCT IV bag is empty \n");
       }
     }
-    m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
+    m_bg->GetEngineTrack().TrackData(m_bg->GetSimulationTime(TimeUnit::s));
     m_mutex.unlock();
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
   }
@@ -285,9 +285,9 @@ void BurnThread::AdvanceTimeFluidsAlbumin()
       m_bg->GetLogger()->Info("Albumex_4PCT IV bag is empty \n");
     }
   }
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluidAlbumin_mL", m_TotalVolumeAlbumin_mL);
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolumeAlbumin_mL", m_ivBagVolumeAlbumin_mL);
-  m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
+  m_bg->GetEngineTrack().GetDataTrack().Probe("totalFluidAlbumin_mL", m_TotalVolumeAlbumin_mL);
+  m_bg->GetEngineTrack().GetDataTrack().Probe("bagVolumeAlbumin_mL", m_ivBagVolumeAlbumin_mL);
+  m_bg->GetEngineTrack().TrackData(m_bg->GetSimulationTime(TimeUnit::s));
   m_mutex.unlock();
   std::this_thread::sleep_for(std::chrono::milliseconds(25));
 }
@@ -296,15 +296,15 @@ void BurnThread::Status()
 {
   m_mutex.lock();
   /*m_bg->GetLogger()->Info(asprintf("The patient suffered a burn wound %f %s", m_bg->GetSimulationTime(TimeUnit::min), " min ago"));
-  m_bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", m_bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
-  m_bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  m_bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  m_bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", m_bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  m_bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", m_bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  m_bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", m_bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
-  m_bg->GetLogger()->Info(asprintf("Blood Volume: %f %s", m_bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL), "mL"));
-  m_bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", m_bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
-  m_bg->GetLogger()->Info(asprintf("Mean Urine Output : %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
+  m_bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", m_bg->GetRespiratorySystem().GetTidalVolume(VolumeUnit::mL), "mL"));
+  m_bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", m_bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", m_bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", m_bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  m_bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", m_bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  m_bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", m_bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  m_bg->GetLogger()->Info(asprintf("Blood Volume: %f %s", m_bg->GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL), "mL"));
+  m_bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", m_bg->GetCardiovascularSystem().GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
+  m_bg->GetLogger()->Info(asprintf("Mean Urine Output : %f %s", m_bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
   if (m_ringers->HasBagVolume()) {
     m_bg->GetLogger()->Info(asprintf("Remaining LR Volume : %f %s", m_ivBagVolume_mL, "mL"));
   }*/
@@ -365,7 +365,7 @@ void BurnThread::FluidLoading(double tbsa)
 
   while (m_runThread) {
     // Generate State Every X amount of time
-    m_bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+    m_bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", m_bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
     if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) % stateTime_s == 0 && saveState == true) {
       int intTBSA = (int)tbsa;
       std::string stringTBSA = std::to_string(intTBSA);
@@ -404,8 +404,8 @@ void BurnThread::FluidLoading(double tbsa)
     // check urine every hour, reset the volume while we are at it
     if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) % checkTime_s == 0) {
       Status();
-      // m_bg->GetLogger()->Info(asprintf("Checking urine production %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
-      urineProduction = m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr);
+      // m_bg->GetLogger()->Info(asprintf("Checking urine production %f %s", m_bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
+      urineProduction = m_bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr);
 
       //  to add "too high" and "too low" options for titrating
       double scaleTitration = 1.0;
@@ -427,7 +427,7 @@ void BurnThread::FluidLoading(double tbsa)
             m_ringers->GetRate().SetValue((m_ringers->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 + titrate) * scaleTitration, VolumePerTimeUnit::mL_Per_hr);
             m_bg->ProcessAction(*m_ringers);
           }
-          if ((m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) > targetHighUrineProduction_mL_Per_Hr)) {
+          if ((m_bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) > targetHighUrineProduction_mL_Per_Hr)) {
             m_bg->GetLogger()->Info(asprintf("Urine production is too high at %f %s", urineProduction, "mL_Per_hr"));
             m_ringers->GetRate().SetValue((m_ringers->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)) * (1 - titrate) * scaleTitration, VolumePerTimeUnit::mL_Per_hr);
             m_bg->ProcessAction(*m_ringers);
@@ -440,7 +440,7 @@ void BurnThread::FluidLoading(double tbsa)
           m_albumex->GetRate().SetValue((m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)), VolumePerTimeUnit::mL_Per_hr);
           m_bg->ProcessAction(*m_albumex);
         }
-        if ((m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) > targetHighUrineProduction_mL_Per_Hr)) {
+        if ((m_bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) > targetHighUrineProduction_mL_Per_Hr)) {
           m_bg->GetLogger()->Info(asprintf("Albumin staying at the same rate"));
           m_albumex->GetRate().SetValue((m_albumex->GetRate().GetValue(VolumePerTimeUnit::mL_Per_hr)), VolumePerTimeUnit::mL_Per_hr);
           m_bg->ProcessAction(*m_albumex);

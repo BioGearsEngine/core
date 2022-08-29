@@ -33,8 +33,8 @@ public:
 
   virtual void Clear(); // Deletes all members
 
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) const;
+  virtual const SEScalar* GetScalar(const std::string& name) const;
 
   virtual bool Load(const CDM::PupillaryResponseData& in);
   virtual CDM::PupillaryResponseData* Unload() const;

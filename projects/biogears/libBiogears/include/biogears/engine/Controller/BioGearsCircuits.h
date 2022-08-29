@@ -17,15 +17,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
-class BioGears;
+class BioGearsEngine;
 /**
 * @brief Manages all circuits associated with all %BioGears systems/equipement
 */
 
 class BIOGEARS_API BioGearsCircuits : public SECircuitManager {
 public:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<BioGearsCircuits>;
-  BioGearsCircuits(BioGears& data);
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<BioGearsCircuits>;
+  BioGearsCircuits(BioGearsEngine& data);
   virtual ~BioGearsCircuits();
   void Clear();
 
@@ -52,7 +52,7 @@ public:
   SEFluidCircuit& GetAnesthesiaMachineCircuit();
 
 protected:
-  BioGears& m_data;
+  BioGearsEngine& m_data;
 
   // Note, I am not making a tissue or inhaler standalone circuit
   // this are super simple circuits and can't be tested by themselves

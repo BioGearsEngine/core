@@ -26,7 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -36,12 +36,12 @@ namespace biogears {
 ========================
 */
 
-auto AnesthesiaMachine::make_unique(BioGears& bg) -> std::unique_ptr<AnesthesiaMachine>
+auto AnesthesiaMachine::make_unique(BioGearsEngine& bg) -> std::unique_ptr<AnesthesiaMachine>
 {
   return std::unique_ptr<AnesthesiaMachine>(new AnesthesiaMachine(bg));
 }
 
-AnesthesiaMachine::AnesthesiaMachine(BioGears& bg)
+AnesthesiaMachine::AnesthesiaMachine(BioGearsEngine& bg)
   : SEAnesthesiaMachine(bg.GetSubstances())
   , m_data(bg)
 {

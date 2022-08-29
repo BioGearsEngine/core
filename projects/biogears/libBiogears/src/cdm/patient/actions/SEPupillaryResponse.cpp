@@ -33,19 +33,19 @@ void SEPupillaryResponse::Clear()
   SAFE_DELETE(m_SizeModifier);
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEPupillaryResponse::GetScalar(const char* name)
+const SEScalar* SEPupillaryResponse::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEPupillaryResponse::GetScalar(const std::string& name)
+const SEScalar* SEPupillaryResponse::GetScalar(const std::string& name) const
 {
   if (name.compare("ReactivityModifier") == 0)
-    return &GetReactivityModifier();
+    return &const_cast<SEPupillaryResponse*>(this)->GetReactivityModifier();
   if (name.compare("ShapeModifier") == 0)
-    return &GetShapeModifier();
+    return &const_cast<SEPupillaryResponse*>(this)->GetShapeModifier();
   if (name.compare("SizeModifier") == 0)
-    return &GetSizeModifier();
+    return &const_cast<SEPupillaryResponse*>(this)->GetSizeModifier();
   return nullptr;
 }
 //-----------------------------------------------------------------------------

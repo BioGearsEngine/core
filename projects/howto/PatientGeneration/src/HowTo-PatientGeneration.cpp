@@ -76,7 +76,7 @@ void PatientRun::antibiotics_regimen()
 //--------------------------------------------------------------------------------
 void PatientRun::refresh_treatment()
 {
-  if (!_patient_is_septic && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 100) {
+  if (!_patient_is_septic && _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) < 100) {
 
     _patient_is_septic = true;
 
@@ -113,24 +113,24 @@ void PatientRun::refresh_treatment()
         _bg->ProcessAction(*_Norepinphrine);
         _norepinphrine_titrate_active = true;
       } else {
-        if (65. <= _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) <= 70.) {
+        if (65. <= _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) && _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) <= 70.) {
           // Condition 1: Finding correct titrate rate.
           double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
           _Norepinphrine->GetConcentration().SetValue(rate * 0.9, MassPerVolumeUnit::ug_Per_mL);
           _bg->ProcessAction(*_Norepinphrine);
-        } else if (_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) <= 65.) {
+        } else if (_bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) <= 65.) {
           double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
           _Norepinphrine->GetConcentration().SetValue(rate * 1.1, MassPerVolumeUnit::ug_Per_mL);
           _bg->ProcessAction(*_Norepinphrine);
-        } else /* 70. <= _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) .*/ {
+        } else /* 70. <= _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) .*/ {
           // MAYBE THIS IS AN EXIT CONDITION ON TITRATE?
           double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
           _Norepinphrine->GetConcentration().SetValue(rate * 0.75, MassPerVolumeUnit::ug_Per_mL); // FASTER PULL BACK
           _bg->ProcessAction(*_Norepinphrine);
         }
       }
-      if (65 < _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg)
-          && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 70) {
+      if (65 < _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg)
+          && _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) < 70) {
         // Check for 10 minutes of 65 < MAP < 70
         _persistant_stable_map_min += 1;
       } else {
@@ -173,14 +173,14 @@ void PatientRun::refresh_treatment()
     _bg->GetPatientAssessment(ua);
 
     // When MAP < 65mmHg or Systolic < 90mmHg move to TITRATE.  Additionally if Urine Output is to low apply a bolus
-    if (_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.
-        || _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) <= 90.) {
+    if (_bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) < 65.
+        || _bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg) <= 90.) {
       // Apply a 250ml Bolus and Move to Titrate
       _refresh_state = RefreshState::NOREPINEPHRINE_TITRATE;
       _Saline_bag->GetBagVolume().SetValue(250, VolumeUnit::mL);
       _Saline_bag->GetRate().SetValue(250, VolumePerTimeUnit::mL_Per_hr);
       if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
-          || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20) {
+          || _bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20) {
         // Because body fluids are so low apply an additional 1000nl bolus over the hour
         _Saline_bag->GetBagVolume().SetValue(1250, VolumeUnit::mL);
         _Saline_bag->GetRate().SetValue(1250, VolumePerTimeUnit::mL_Per_hr);
@@ -198,18 +198,18 @@ void PatientRun::refresh_treatment()
     ss << "Patient Physiology"
        << "\n\tSimulation Time  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
        << "\n\tTime Since Infection Start  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
-       << "\n\tBlood Volume : " << _bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL
-       << "\n\tBlood Oxygen Saturation : " << _bg->GetBloodChemistrySystem()->GetOxygenSaturation() << "%"
-       << "\n\tMean Arterial Pressure : " << _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-       << "\n\tSystolic Pressure : " << _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-       << "\n\tDiastolic Pressure : " << _bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-       << "\n\tHeart Rate : " << _bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm"
-       << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
-       << "\n\tMean Urine Output : " << _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
-       << "\n\tTemperature : " << _bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << "deg C"
+       << "\n\tBlood Volume : " << _bg->GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL
+       << "\n\tBlood Oxygen Saturation : " << _bg->GetBloodChemistrySystem().GetOxygenSaturation() << "%"
+       << "\n\tMean Arterial Pressure : " << _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tSystolic Pressure : " << _bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tDiastolic Pressure : " << _bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tHeart Rate : " << _bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min) << "bpm"
+       << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
+       << "\n\tMean Urine Output : " << _bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
+       << "\n\tTemperature : " << _bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C) << "deg C"
        << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
-       << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()
-       << "\n\tAntibiotic Activity : " << _bg->GetDrugSystem()->GetAntibioticActivity();
+       << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem().GetInflammatoryResponse().GetBloodPathogen().GetValue()
+       << "\n\tAntibiotic Activity : " << _bg->GetDrugsSystem().GetAntibioticActivity();
     _bg->GetLogger()->Info(ss);
   }
   _time_to_reassessment_min -= 1.;
@@ -223,7 +223,7 @@ void PatientRun::refresh_treatment()
 //-------------------------------------------------------------------------------RAPID_FLUID_BOLUS
 void PatientRun::egdt_treatment()
 {
-  if (!_patient_is_septic && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 100) {
+  if (!_patient_is_septic && _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) < 100) {
 
     _patient_is_septic = true;
 
@@ -255,10 +255,10 @@ void PatientRun::egdt_treatment()
         biogears::SEUrinalysis ua;
         _bg->GetPatientAssessment(ua);
 
-        auto is_septic = _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.
-          || _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) <= 90;
+        auto is_septic = _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) < 65.
+          || _bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg) <= 90;
         auto is_not_euvolaemic = ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
-          || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20;
+          || _bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20;
 
         if (is_septic && is_not_euvolaemic) {
           _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL);
@@ -268,8 +268,8 @@ void PatientRun::egdt_treatment()
           _egdt_state = EGDTState::MONITORING;
         }
       }
-      if ((_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) < 91.
-           || _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 66.)) {
+      if ((_bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg) < 91.
+           || _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) < 66.)) {
         // Check for consistant low MAP. If it is consistant for 30 minutes move to Norepinephrine infusion
         // I check for this by asking if MAP < 66 for 30 iterations with out seeing MAP > 66 for 5 consecutive iterations
         _persistent_low_map_min += 1;
@@ -297,24 +297,24 @@ void PatientRun::egdt_treatment()
         _bg->ProcessAction(*_Norepinphrine);
         _norepinphrine_titrate_active = true;
       } else {
-        if (65. <= _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) <= 70.) {
+        if (65. <= _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) && _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) <= 70.) {
           // Condition 1: Finding correct titrate rate.
           double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
           _Norepinphrine->GetConcentration().SetValue(rate * 0.9, MassPerVolumeUnit::ug_Per_mL);
           _bg->ProcessAction(*_Norepinphrine);
-        } else if (_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) <= 65.) {
+        } else if (_bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) <= 65.) {
           double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
           _Norepinphrine->GetConcentration().SetValue(rate * 1.1, MassPerVolumeUnit::ug_Per_mL);
           _bg->ProcessAction(*_Norepinphrine);
-        } else /* 70. <= _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) .*/ {
+        } else /* 70. <= _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) .*/ {
           // MAYBE THIS IS AN EXIT CONDITION ON TITRATE?
           double rate = _Norepinphrine->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
           _Norepinphrine->GetConcentration().SetValue(rate * 0.75, MassPerVolumeUnit::ug_Per_mL); // FASTER PULL BACK
           _bg->ProcessAction(*_Norepinphrine);
         }
       }
-      if (65 < _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg)
-          && _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 70) {
+      if (65 < _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg)
+          && _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) < 70) {
         // Check for 10 minutes of 65 < MAP < 70
         _persistant_stable_map_min += 1;
       } else {
@@ -326,7 +326,7 @@ void PatientRun::egdt_treatment()
       }
     } break;
     case EGDTState::MONITORING: {
-      if (65 < _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) && 90 < _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg)) {
+      if (65 < _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) && 90 < _bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg)) {
         _persistant_normal_map_min += 1;
       } else {
         _persistant_normal_map_min -= 1;
@@ -361,8 +361,8 @@ void PatientRun::egdt_treatment()
     _time_to_reassessment_min = hours(1);
 
     // When MAP < 65mmHg or Systolic < 90mmHg move to TITRATE.  Additionally if Urine Output is to low apply a bolus
-    if (_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.
-        || _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) <= 90.) {
+    if (_bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) < 65.
+        || _bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg) <= 90.) {
       _egdt_state = (_egdt_state == EGDTState::NOREPINEPHRINE_TITRATE) ? EGDTState::NOREPINEPHRINE_TITRATE : EGDTState::RAPID_FLUID_BOLUS;
 
       auto ua = SEUrinalysis();
@@ -371,7 +371,7 @@ void PatientRun::egdt_treatment()
       _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL);
       _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
       if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
-          || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20) {
+          || _bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20) {
         // Because body fluids are so low apply an additional 500ml bolus over the hour
         _Saline_bag->GetBagVolume().SetValue(1000, VolumeUnit::mL);
       }
@@ -395,18 +395,18 @@ void PatientRun::egdt_treatment()
     ss << "Patient Physiology"
        << "\n\tSimulation Time  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
        << "\n\tTime Since Infection Start  : " << _bg->GetSimulationTime(TimeUnit::min) << "min"
-       << "\n\tBlood Volume : " << _bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL
-       << "\n\tBlood Oxygen Saturation : " << _bg->GetBloodChemistrySystem()->GetOxygenSaturation() << "%"
-       << "\n\tMean Arterial Pressure : " << _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-       << "\n\tSystolic Pressure : " << _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-       << "\n\tDiastolic Pressure : " << _bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
-       << "\n\tHeart Rate : " << _bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min) << "bpm"
-       << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
-       << "\n\tMean Urine Output : " << _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
-       << "\n\tTemperature : " << _bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << "deg C"
+       << "\n\tBlood Volume : " << _bg->GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL) << VolumeUnit::mL
+       << "\n\tBlood Oxygen Saturation : " << _bg->GetBloodChemistrySystem().GetOxygenSaturation() << "%"
+       << "\n\tMean Arterial Pressure : " << _bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tSystolic Pressure : " << _bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tDiastolic Pressure : " << _bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg) << PressureUnit::mmHg
+       << "\n\tHeart Rate : " << _bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min) << "bpm"
+       << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
+       << "\n\tMean Urine Output : " << _bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
+       << "\n\tTemperature : " << _bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C) << "deg C"
        << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
-       << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()
-       << "\n\tAntibiotic Activity : " << _bg->GetDrugSystem()->GetAntibioticActivity();
+       << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem().GetInflammatoryResponse().GetBloodPathogen().GetValue()
+       << "\n\tAntibiotic Activity : " << _bg->GetDrugsSystem().GetAntibioticActivity();
     _bg->GetLogger()->Info(ss);
   }
   _time_to_reassessment_min -= 1.;
@@ -469,33 +469,33 @@ void PatientRun::run()
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
   // defined in the Physiology.xsd file
-  // Example _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", VolumePerTimeUnit::L_Per_min);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HemoglobinContent", MassUnit::g);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CentralVenousPressure", PressureUnit::mmHg);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("Hematocrit");
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("ArterialBloodPH");
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("UrinationRate", VolumePerTimeUnit::mL_Per_hr);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("WhiteBloodCellCount", AmountPerVolumeUnit::ct_Per_uL);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("UrineProductionRate", VolumePerTimeUnit::mL_Per_min);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", FrequencyUnit::Per_min);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CarbonDioxideSaturation");
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CoreTemperature", TemperatureUnit::C);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SkinTemperature", TemperatureUnit::C);
+  // Example _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", VolumePerTimeUnit::L_Per_min);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("HemoglobinContent", MassUnit::g);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("CentralVenousPressure", PressureUnit::mmHg);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("Hematocrit");
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("ArterialBloodPH");
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("UrinationRate", VolumePerTimeUnit::mL_Per_hr);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("WhiteBloodCellCount", AmountPerVolumeUnit::ct_Per_uL);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("UrineProductionRate", VolumePerTimeUnit::mL_Per_min);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", FrequencyUnit::Per_min);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("CarbonDioxideSaturation");
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("CoreTemperature", TemperatureUnit::C);
+  _bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SkinTemperature", TemperatureUnit::C);
 
-  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Bicarbonate"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Creatinine"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Lactate"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Piperacillin"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Tazobactam"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
+  _bg->GetEngineTrack().GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Bicarbonate"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
+  _bg->GetEngineTrack().GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Creatinine"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
+  _bg->GetEngineTrack().GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Lactate"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
+  _bg->GetEngineTrack().GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Piperacillin"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
+  _bg->GetEngineTrack().GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Tazobactam"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
 
-  _bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename(long_name + ".csv");
-  _bg->GetEngineTrack()->GetDataRequestManager().SetSamplesPerSecond(1. / (5. * 60.));
+  _bg->GetEngineTrack().GetDataRequestManager().SetResultsFilename(long_name + ".csv");
+  _bg->GetEngineTrack().GetDataRequestManager().SetSamplesPerSecond(1. / (5. * 60.));
 
   SEInfection infection {};
   infection.SetSeverity(_infection_severity);

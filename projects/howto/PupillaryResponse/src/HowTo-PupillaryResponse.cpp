@@ -62,16 +62,16 @@ int HowToPupillaryResponse()
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
   // defined in the Physiology.xsd file
-  bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*morphine, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", VolumePerTimeUnit::L_Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("UrineProductionRate", VolumePerTimeUnit::mL_Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("UrineOsmolarity", OsmolarityUnit::mOsm_Per_L);
+  bg->GetEngineTrack().GetDataRequestManager().CreateSubstanceDataRequest().Set(*morphine, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", VolumePerTimeUnit::L_Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("UrineProductionRate", VolumePerTimeUnit::mL_Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("UrineOsmolarity", OsmolarityUnit::mOsm_Per_L);
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("PupillaryResponseExample.csv");
+  bg->GetEngineTrack().GetDataRequestManager().SetResultsFilename("PupillaryResponseExample.csv");
 
   bg->GetLogger()->Info("Beginning Pupillary response Scenario");
 
@@ -86,8 +86,8 @@ int HowToPupillaryResponse()
   bg->ProcessAction(infuse);
   bg->AdvanceModelTime(60, TimeUnit::s);
 
-  bg->GetLogger()->Info(asprintf("Has Left Pupillary Response %s", (bg->GetNervousSystem()->HasLeftEyePupillaryResponse()) ? "true" : "false"));
-  bg->GetLogger()->Info(asprintf("Has Right Pupillary Response %s", (bg->GetNervousSystem()->HasRightEyePupillaryResponse()) ? "true" : "false"));
+  bg->GetLogger()->Info(asprintf("Has Left Pupillary Response %s", (bg->GetNervousSystem().HasLeftEyePupillaryResponse()) ? "true" : "false"));
+  bg->GetLogger()->Info(asprintf("Has Right Pupillary Response %s", (bg->GetNervousSystem().HasRightEyePupillaryResponse()) ? "true" : "false"));
 
   bg->GetLogger()->Info("Finished");
   return 0;

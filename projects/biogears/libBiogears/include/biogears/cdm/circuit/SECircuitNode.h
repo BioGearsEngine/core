@@ -42,8 +42,8 @@ class SECircuitNode : public Loggable {
   friend class io::Circuit;
 
 protected:
-  SECircuitNode(const char* name, Logger* logger);
-  SECircuitNode(const std::string& name, Logger* logger);
+  SECircuitNode(const char* name, Logger const* logger);
+  SECircuitNode(const std::string& name, Logger const* logger);
 
 public:
   virtual ~SECircuitNode();

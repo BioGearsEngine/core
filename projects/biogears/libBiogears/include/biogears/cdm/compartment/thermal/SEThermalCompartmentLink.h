@@ -47,8 +47,8 @@ protected:
   virtual void Unload(CDM::ThermalCompartmentLinkData& data);
 
 public:
-  virtual const SEScalar* GetScalar(const char* name) override;
-  virtual const SEScalar* GetScalar(const std::string& name) override;
+  virtual const SEScalar* GetScalar(const char* name) const override;
+  virtual const SEScalar* GetScalar(const std::string& name) const override;
 
   virtual bool HasHeatTransferRate() const;
   virtual SEScalarPower& GetHeatTransferRate();
@@ -83,8 +83,8 @@ BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartmentLin
 namespace biogears {
 class SEThermalCompartmentGraph : public SECompartmentGraph<SEThermalCompartment, SEThermalCompartmentLink> {
 public:
-  SEThermalCompartmentGraph(const char* name, Logger* logger);
-  SEThermalCompartmentGraph(const std::string& name, Logger* logger);
+  SEThermalCompartmentGraph(const char* name, Logger const* logger);
+  SEThermalCompartmentGraph(const std::string& name, Logger const* logger);
   virtual ~SEThermalCompartmentGraph() override;
 };
 } //namespace biogears

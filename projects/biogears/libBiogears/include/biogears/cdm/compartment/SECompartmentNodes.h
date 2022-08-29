@@ -30,7 +30,7 @@ class SECompartmentNodes : public Loggable {
   friend io::Compartment;
 
 public:
-  SECompartmentNodes(Logger* logger);
+  SECompartmentNodes(Logger const* logger);
   virtual ~SECompartmentNodes();
 
   virtual void Clear();

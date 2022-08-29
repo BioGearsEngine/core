@@ -27,8 +27,8 @@ BG_EXT template class BIOGEARS_API SECircuitCalculator<SEThermalCircuit, SETherm
 
 class BIOGEARS_API SEThermalCircuitCalculator : public SECircuitCalculator<SEThermalCircuit, SEThermalCircuitNode, SEThermalCircuitPath, HeatCapacitanceUnit, PowerUnit, HeatInductanceUnit, TemperatureUnit, EnergyUnit, HeatResistanceUnit> {
 public:
-  SEThermalCircuitCalculator(Logger* logger);
-  SEThermalCircuitCalculator(const HeatCapacitanceUnit&, const PowerUnit&, const HeatInductanceUnit&, const TemperatureUnit&, const EnergyUnit&, const HeatResistanceUnit&, Logger* logger);
+  SEThermalCircuitCalculator(Logger const* logger);
+  SEThermalCircuitCalculator(const HeatCapacitanceUnit&, const PowerUnit&, const HeatInductanceUnit&, const TemperatureUnit&, const EnergyUnit&, const HeatResistanceUnit&, Logger const* logger);
   virtual ~SEThermalCircuitCalculator();
 };
 }

@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
-SEElectroCardioGram::SEElectroCardioGram(Logger* logger)
+SEElectroCardioGram::SEElectroCardioGram(Logger const* logger)
   : SESystem(logger)
 {
   m_Lead1ElectricPotential = nullptr;
@@ -123,37 +123,37 @@ void SEElectroCardioGram::Unload(CDM::ElectroCardioGramData& data) const
     data.Lead12ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead12ElectricPotential->Unload()));
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEElectroCardioGram::GetScalar(const char* name)
+const SEScalar* SEElectroCardioGram::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEElectroCardioGram::GetScalar(const std::string& name)
+const SEScalar* SEElectroCardioGram::GetScalar(const std::string& name) const
 {
   if (name.compare("Lead1ElectricPotential") == 0)
-    return &GetLead1ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead1ElectricPotential();
   if (name.compare("Lead2ElectricPotential") == 0)
-    return &GetLead2ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead2ElectricPotential();
   if (name.compare("Lead3ElectricPotential") == 0)
-    return &GetLead3ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead3ElectricPotential();
   if (name.compare("Lead4ElectricPotential") == 0)
-    return &GetLead4ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead4ElectricPotential();
   if (name.compare("Lead5ElectricPotential") == 0)
-    return &GetLead5ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead5ElectricPotential();
   if (name.compare("Lead6ElectricPotential") == 0)
-    return &GetLead6ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead6ElectricPotential();
   if (name.compare("Lead7ElectricPotential") == 0)
-    return &GetLead7ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead7ElectricPotential();
   if (name.compare("Lead8ElectricPotential") == 0)
-    return &GetLead8ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead8ElectricPotential();
   if (name.compare("Lead9ElectricPotential") == 0)
-    return &GetLead9ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead9ElectricPotential();
   if (name.compare("Lead10ElectricPotential") == 0)
-    return &GetLead10ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead10ElectricPotential();
   if (name.compare("Lead11ElectricPotential") == 0)
-    return &GetLead11ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead11ElectricPotential();
   if (name.compare("Lead12ElectricPotential") == 0)
-    return &GetLead12ElectricPotential();
+    return &const_cast<SEElectroCardioGram*>(this)->GetLead12ElectricPotential();
   return nullptr;
 }
 //-------------------------------------------------------------------------------

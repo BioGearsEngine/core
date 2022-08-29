@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
 namespace biogears {
-SESubstance::SESubstance(Logger* logger)
+SESubstance::SESubstance(Logger const * logger)
   : Loggable(logger)
 {
   m_Name = "";
@@ -106,68 +106,68 @@ void SESubstance::Clear()
   SAFE_DELETE(m_PD);
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstance::GetScalar(const char* name)
+const SEScalar* SESubstance::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstance::GetScalar(const std::string& name)
+const SEScalar* SESubstance::GetScalar(const std::string& name) const
 {
   if (name.compare("Density") == 0)
-    return &GetDensity();
+    return &const_cast<SESubstance*>(this)->GetDensity();
   if (name.compare("MolarMass") == 0)
-    return &GetMolarMass();
+    return &const_cast<SESubstance*>(this)->GetMolarMass();
 
   if (name.compare("MaximumDiffusionFlux") == 0)
-    return &GetMaximumDiffusionFlux();
+    return &const_cast<SESubstance*>(this)->GetMaximumDiffusionFlux();
   if (name.compare("MichaelisCoefficient") == 0)
-    return &GetMichaelisCoefficient();
+    return &const_cast<SESubstance*>(this)->GetMichaelisCoefficient();
   if (name.compare("MembraneConductivity") == 0)
-    return &GetMembraneResistance();
+    return &const_cast<SESubstance*>(this)->GetMembraneResistance();
   if (name.compare("AreaUnderCurve") == 0)
-    return &GetAreaUnderCurve();
+    return &const_cast<SESubstance*>(this)->GetAreaUnderCurve();
   if (name.compare("BloodConcentration") == 0)
-    return &GetBloodConcentration();
+    return &const_cast<SESubstance*>(this)->GetBloodConcentration();
   if (name.compare("EffectSiteConcentration") == 0)
-    return &GetEffectSiteConcentration();
+    return &const_cast<SESubstance*>(this)->GetEffectSiteConcentration();
   if (name.compare("MassInBody") == 0)
-    return &GetMassInBody();
+    return &const_cast<SESubstance*>(this)->GetMassInBody();
   if (name.compare("MassInBlood") == 0)
-    return &GetMassInBlood();
+    return &const_cast<SESubstance*>(this)->GetMassInBlood();
   if (name.compare("MassInTissue") == 0)
-    return &GetMassInTissue();
+    return &const_cast<SESubstance*>(this)->GetMassInTissue();
   if (name.compare("PlasmaConcentration") == 0)
-    return &GetPlasmaConcentration();
+    return &const_cast<SESubstance*>(this)->GetPlasmaConcentration();
   if (name.compare("SystemicMassCleared") == 0)
-    return &GetSystemicMassCleared();
+    return &const_cast<SESubstance*>(this)->GetSystemicMassCleared();
   if (name.compare("TissueConcentration") == 0)
-    return &GetTissueConcentration();
+    return &const_cast<SESubstance*>(this)->GetTissueConcentration();
 
   if (name.compare("AlveolarTransfer") == 0)
-    return &GetAlveolarTransfer();
+    return &const_cast<SESubstance*>(this)->GetAlveolarTransfer();
   if (name.compare("DiffusingCapacity") == 0)
-    return &GetDiffusingCapacity();
+    return &const_cast<SESubstance*>(this)->GetDiffusingCapacity();
   if (name.compare("EndTidalFraction") == 0)
-    return &GetEndTidalFraction();
+    return &const_cast<SESubstance*>(this)->GetEndTidalFraction();
   if (name.compare("EndTidalPressure") == 0)
-    return &GetEndTidalPressure();
+    return &const_cast<SESubstance*>(this)->GetEndTidalPressure();
   if (name.compare("RelativeDiffusionCoefficient") == 0)
-    return &GetRelativeDiffusionCoefficient();
+    return &const_cast<SESubstance*>(this)->GetRelativeDiffusionCoefficient();
   if (name.compare("SolubilityCoefficient") == 0)
-    return &GetSolubilityCoefficient();
+    return &const_cast<SESubstance*>(this)->GetSolubilityCoefficient();
 
   size_t split = name.find('-');
   if (split != name.npos) {
     std::string child = name.substr(0, split);
     std::string prop = name.substr(split + 1, name.npos);
     if (child == "Aerosolization")
-      return GetAerosolization().GetScalar(prop);
+      return const_cast<SESubstance*>(this)->GetAerosolization().GetScalar(prop);
     if (child == "Clearance")
-      return GetClearance().GetScalar(prop);
+      return const_cast<SESubstance*>(this)->GetClearance().GetScalar(prop);
     if (child == "PK")
-      return GetPK().GetScalar(prop);
+      return const_cast<SESubstance*>(this)->GetPK().GetScalar(prop);
     if (child == "PD")
-      return GetPD().GetScalar(prop);
+      return const_cast<SESubstance*>(this)->GetPD().GetScalar(prop);
   }
 
   return nullptr;

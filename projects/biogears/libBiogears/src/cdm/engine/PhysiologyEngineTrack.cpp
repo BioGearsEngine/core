@@ -64,7 +64,7 @@ std::string Space2Underscore(const std::string& str)
   });
   return s;
 }
-
+//-------------------------------------------------------------------------------
 PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngine& engine)
   : Loggable(engine.GetLogger())
   , m_DataRequestMgr(engine.GetLogger())
@@ -76,54 +76,54 @@ PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngine& engine)
 
   // TODO We are not handling nullptr well here...
 
-  SEBloodChemistrySystem* bchem = (SEBloodChemistrySystem*)engine.GetBloodChemistrySystem();
+  auto bchem = &engine.GetBloodChemistrySystem();
   if (bchem != nullptr)
     m_PhysiologySystems.push_back(bchem);
-  SECardiovascularSystem* cv = (SECardiovascularSystem*)engine.GetCardiovascularSystem();
+  auto cv = &engine.GetCardiovascularSystem();
   if (cv != nullptr)
     m_PhysiologySystems.push_back(cv);
-  SEEndocrineSystem* endo = (SEEndocrineSystem*)engine.GetEndocrineSystem();
+  auto endo = &engine.GetEndocrineSystem();
   if (endo != nullptr)
     m_PhysiologySystems.push_back(endo);
-  SEEnergySystem* energy = (SEEnergySystem*)engine.GetEnergySystem();
+  auto energy = &engine.GetEnergySystem();
   if (energy != nullptr)
     m_PhysiologySystems.push_back(energy);
-  SERenalSystem* renal = (SERenalSystem*)engine.GetRenalSystem();
+  auto renal = &engine.GetRenalSystem();
   if (renal != nullptr)
     m_PhysiologySystems.push_back(renal);
-  SEGastrointestinalSystem* gi = (SEGastrointestinalSystem*)engine.GetGastrointestinalSystem();
+  auto gi = &engine.GetGastrointestinalSystem();
   if (gi != nullptr)
     m_PhysiologySystems.push_back(gi);
-  SERespiratorySystem* resp = (SERespiratorySystem*)engine.GetRespiratorySystem();
+  auto resp = &engine.GetRespiratorySystem();
   if (resp != nullptr)
     m_PhysiologySystems.push_back(resp);
-  SEDrugSystem* drug = (SEDrugSystem*)engine.GetDrugSystem();
+  auto drug = &engine.GetDrugsSystem();
   if (drug != nullptr)
     m_PhysiologySystems.push_back(drug);
-  SETissueSystem* tissue = (SETissueSystem*)engine.GetTissueSystem();
+  auto tissue = &engine.GetTissueSystem();
   if (tissue != nullptr)
     m_PhysiologySystems.push_back(tissue);
-  SENervousSystem* nervous = (SENervousSystem*)engine.GetNervousSystem();
+  auto nervous = &engine.GetNervousSystem();
   if (nervous != nullptr)
     m_PhysiologySystems.push_back(nervous);
-  SEHepaticSystem* hepatic = (SEHepaticSystem*)engine.GetHepaticSystem();
+  auto hepatic = &engine.GetHepaticSystem();
   if (hepatic != nullptr)
     m_PhysiologySystems.push_back(hepatic);
 
-  m_Environment = (SEEnvironment*)engine.GetEnvironment();
+  m_Environment = &engine.GetEnvironment();
 
-  SEAnesthesiaMachine* am = (SEAnesthesiaMachine*)engine.GetAnesthesiaMachine();
+  auto am = &engine.GetAnesthesiaMachine();
   if (am != nullptr)
     m_EquipmentSystems.push_back(am);
-  SEElectroCardioGram* ecg = (SEElectroCardioGram*)engine.GetElectroCardioGram();
+  auto ecg = &engine.GetElectroCardioGram();
   if (ecg != nullptr)
     m_EquipmentSystems.push_back(ecg);
-  SEInhaler* inh = (SEInhaler*)engine.GetInhaler();
+  auto inh = &engine.GetInhaler();
   if (inh != nullptr)
     m_EquipmentSystems.push_back(inh);
   m_ForceConnection = false;
 }
-
+//-------------------------------------------------------------------------------
 PhysiologyEngineTrack::PhysiologyEngineTrack(SEPatient& patient, SESubstanceManager& subMgr, SECompartmentManager& cmptMgr,
                                              const std::vector<SESystem*>& physiology, const std::vector<SESystem*>& equipment)
   : Loggable(patient.GetLogger())
@@ -141,6 +141,7 @@ PhysiologyEngineTrack::PhysiologyEngineTrack(SEPatient& patient, SESubstanceMana
   }
   m_ForceConnection = false;
 }
+//-------------------------------------------------------------------------------
 PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngineTrack&& obj)
   : m_ForceConnection(std::move(obj.m_ForceConnection))
   , m_DataTrack(std::move(obj.m_DataTrack))
@@ -158,6 +159,7 @@ PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngineTrack&& obj)
   , m_Request2Scalar(std::move(obj.m_Request2Scalar))
 {
 }
+//-------------------------------------------------------------------------------
 PhysiologyEngineTrack& PhysiologyEngineTrack::operator=(PhysiologyEngineTrack&& rhs)
 {
   m_ForceConnection = std::move(rhs.m_ForceConnection);
@@ -179,30 +181,31 @@ PhysiologyEngineTrack& PhysiologyEngineTrack::operator=(PhysiologyEngineTrack&& 
   m_Request2Scalar = std::move(rhs.m_Request2Scalar);
   return *this;
 }
+//-------------------------------------------------------------------------------
 PhysiologyEngineTrack::~PhysiologyEngineTrack()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTrack::Clear()
 {
   ResetFile();
   m_ForceConnection = false;
   DELETE_MAP_SECOND(m_Request2Scalar);
 }
-
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTrack::ResetFile()
 {
   if (m_ResultsStream.is_open()) {
     m_ResultsStream.close();
   }
 }
-
+//-------------------------------------------------------------------------------
 DataTrack& PhysiologyEngineTrack::GetDataTrack()
 {
   return m_DataTrack;
 }
-
+//-------------------------------------------------------------------------------
 SEDataRequestScalar* PhysiologyEngineTrack::GetScalar(SEDataRequest* dr)
 {
   if (dr) {
@@ -210,7 +213,7 @@ SEDataRequestScalar* PhysiologyEngineTrack::GetScalar(SEDataRequest* dr)
   }
   return nullptr;
 }
-
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTrack::SetupRequests(bool append)
 {
   bool isOpen = m_ResultsStream.is_open();
@@ -229,7 +232,7 @@ void PhysiologyEngineTrack::SetupRequests(bool append)
     m_DataTrack.CreateFile(m_DataRequestMgr.GetResultsFilename(), m_ResultsStream, (append) ? std::ios_base::app : std::ios_base::trunc);
   }
 }
-
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTrack::TrackData(double time_s, bool append)
 {
   if (!m_DataRequestMgr.HasDataRequests()) {
@@ -240,6 +243,7 @@ void PhysiologyEngineTrack::TrackData(double time_s, bool append)
   PullData();
   m_DataTrack.StreamProbesToFile(time_s, m_ResultsStream);
 }
+//-------------------------------------------------------------------------------
 void PhysiologyEngineTrack::PullData()
 {
   SEDataRequestScalar* ds;
@@ -268,7 +272,7 @@ void PhysiologyEngineTrack::PullData()
       m_DataTrack.Probe(ds->Heading, SEScalar::dNaN());
   }
 }
-
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTrack::TrackRequest(SEDataRequest& dr)
 {
   std::string name = dr.GetName();
@@ -386,7 +390,7 @@ bool PhysiologyEngineTrack::TrackRequest(SEDataRequest& dr)
   Fatal(m_ss);
   return false;
 }
-
+//-------------------------------------------------------------------------------
 bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScalar& ds)
 {
   std::string name = dr.GetName();
@@ -552,8 +556,14 @@ bool PhysiologyEngineTrack::ConnectRequest(SEDataRequest& dr, SEDataRequestScala
   Fatal(m_ss);
   return false;
 }
+//-------------------------------------------------------------------------------
+SEDataRequestManager const& PhysiologyEngineTrack::GetDataRequestManager() const { return m_DataRequestMgr; }
+//-------------------------------------------------------------------------------
+SEDataRequestManager& PhysiologyEngineTrack::GetDataRequestManager() { return m_DataRequestMgr; }
+//-------------------------------------------------------------------------------
 
 
+//-------------------------------------------------------------------------------
 //  Set the DataRequestScalar based on the Connected SEScalar and Configured DataRequest
 //
 //  When the DataRequest Unit differs from the SEScalar Unit we want to output
@@ -579,7 +589,7 @@ void SEDataRequestScalar::SetScalar(const SEScalar* s, SEDataRequest& dr)
     }
   }
 }
-
+//-------------------------------------------------------------------------------
 std::string SEDataRequestScalar::ToString() const
 {
   if (HasScalar()) {
@@ -589,7 +599,7 @@ std::string SEDataRequestScalar::ToString() const
   }
   return "";
 };
-
+//-------------------------------------------------------------------------------
 void SEDataRequestScalar::UpdateScalar()
 {
   if (UpdateProperty == CompartmentUpdate::None)
@@ -686,4 +696,5 @@ void SEDataRequestScalar::UpdateScalar()
   }
   Error("Could not update " + Heading);
 }
+//-------------------------------------------------------------------------------
 }

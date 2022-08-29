@@ -54,13 +54,13 @@ class BIOGEARS_API SESubstance : public Loggable {
   friend io::Substance;
 
 public:
-  SESubstance(Logger* logger);
+  SESubstance(Logger const* logger);
   virtual ~SESubstance();
 
   virtual void Clear();
 
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) const;
+  virtual const SEScalar* GetScalar(const std::string& name) const ;
 
   virtual bool Load(const CDM::SubstanceData& in);
   virtual CDM::SubstanceData* Unload() const;

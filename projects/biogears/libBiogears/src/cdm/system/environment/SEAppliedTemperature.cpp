@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
-SEAppliedTemperature::SEAppliedTemperature(Logger* logger)
+SEAppliedTemperature::SEAppliedTemperature(Logger const* logger)
   : Loggable(logger)
 {
   m_Temperature = nullptr;
@@ -40,19 +40,19 @@ void SEAppliedTemperature::Clear()
   m_State = CDM::enumOnOff::On;
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEAppliedTemperature::GetScalar(const char* name)
+const SEScalar* SEAppliedTemperature::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEAppliedTemperature::GetScalar(const std::string& name)
+const SEScalar* SEAppliedTemperature::GetScalar(const std::string& name) const
 {
   if (name.compare("Temperature") == 0)
-    return &GetTemperature();
+    return &const_cast<SEAppliedTemperature*>(this)->GetTemperature();
   if (name.compare("SurfaceArea") == 0)
-    return &GetSurfaceArea();
+    return &const_cast<SEAppliedTemperature*>(this)->GetSurfaceArea();
   if (name.compare("SurfaceAreaFraction") == 0)
-    return &GetSurfaceAreaFraction();
+    return &const_cast<SEAppliedTemperature*>(this)->GetSurfaceAreaFraction();
   return nullptr;
 }
 //-----------------------------------------------------------------------------

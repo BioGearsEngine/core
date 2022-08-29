@@ -34,14 +34,14 @@ class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {
   friend io::Substance;
 
 public:
-  SESubstancePharmacokinetics(Logger* logger);
+  SESubstancePharmacokinetics(Logger const* logger);
   virtual ~SESubstancePharmacokinetics();
 
   virtual void Clear();
   virtual bool IsValid() const;
 
-  virtual const SEScalar* GetScalar(const std::string& name);
-  virtual const SEScalar* GetScalar(const char* name);
+  virtual const SEScalar* GetScalar(const std::string& name) const ;
+  virtual const SEScalar* GetScalar(const char* name) const;
 
   virtual bool Load(const CDM::SubstancePharmacokineticsData& in);
   virtual CDM::SubstancePharmacokineticsData* Unload() const;

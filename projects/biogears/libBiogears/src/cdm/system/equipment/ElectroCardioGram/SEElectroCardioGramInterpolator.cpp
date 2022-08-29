@@ -28,7 +28,7 @@ template class map<CDM::ElectroCardioGramWaveformLeadNumber, map<CDM::enumHeartR
 }
 
 namespace biogears {
-SEElectroCardioGramInterpolator::SEElectroCardioGramInterpolator(Logger* logger)
+SEElectroCardioGramInterpolator::SEElectroCardioGramInterpolator(Logger const* logger)
   : Loggable(logger)
 {
 }
@@ -156,7 +156,7 @@ void SEElectroCardioGramInterpolator::Interpolate(SEElectroCardioGramInterpolato
       currentTime_s += timeStep_s;
     }
     SEFunctionElectricPotentialVsTime* iWaveForm = data.InterpolateToTime(iTime, TimeUnit::s); // creates the new waveform data
-    CDM_COPY(iWaveForm, (&data));
+    CDM_COPY((*iWaveForm), (data));
     delete iWaveForm;
   }
 }

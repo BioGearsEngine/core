@@ -58,4 +58,9 @@ bool SEScalarFraction::operator!=(const SEScalarFraction& obj) const
 {
   return !(*this == obj);
 }
+//-------------------------------------------------------------------------------
+SEScalarFraction::operator double() const
+{
+  return this->GetValue();
+}
 }

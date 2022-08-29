@@ -26,19 +26,19 @@ class SESubstance;
 class SETissueSystem;
 class SEEnergySystem;
 class SEPatient;
-class BioGears;
+class BioGearsEngine;
 
 /**
  * @copydoc Physiology_HepaticystemData
  */
 class BIOGEARS_API Hepatic : public SEHepaticSystem, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<Hepatic>;
-  Hepatic(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<Hepatic>;
+  Hepatic(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~Hepatic() override;
@@ -67,11 +67,11 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState() override;
+  void SimulationPhaseChange() override;
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;
-  static double CalculateRelativeHormoneChange(double insulinSetPoint_pmol_Per_L, double glucagonSetPoint_pg_Per_mL, SELiquidSubstanceQuantity* currentInsulin, SELiquidSubstanceQuantity* currentGlucagon, BioGears& m_data);
+  static double CalculateRelativeHormoneChange(double insulinSetPoint_pmol_Per_L, double glucagonSetPoint_pg_Per_mL, SELiquidSubstanceQuantity* currentInsulin, SELiquidSubstanceQuantity* currentGlucagon, BioGearsEngine& m_data);
 
 protected:
   //Pre-Process methods

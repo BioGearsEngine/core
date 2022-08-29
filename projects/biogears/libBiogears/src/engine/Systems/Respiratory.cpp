@@ -45,7 +45,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
@@ -58,12 +58,12 @@ namespace biogears {
 //Should be commented out, unless debugging/tuning
 // #define TUNING
 
-auto Respiratory::make_unique(BioGears& bg) -> std::unique_ptr<Respiratory>
+auto Respiratory::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Respiratory>
 {
   return std::unique_ptr<Respiratory>(new Respiratory(bg));
 }
 
-Respiratory::Respiratory(BioGears& bg)
+Respiratory::Respiratory(BioGearsEngine& bg)
   : SERespiratorySystem(bg.GetLogger())
   , m_data(bg)
   , m_Calculator(FlowComplianceUnit::L_Per_cmH2O, VolumePerTimeUnit::L_Per_s, FlowInertanceUnit::cmH2O_s2_Per_L, PressureUnit::cmH2O, VolumeUnit::L, FlowResistanceUnit::cmH2O_s_Per_L, GetLogger())
@@ -218,7 +218,7 @@ void Respiratory::Initialize()
   GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverFrequency().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverPressure().SetValue(m_PeakRespiratoryDrivePressure_cmH2O, PressureUnit::cmH2O);
-  GetCarricoIndex().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
+  GetCarricoIndex().SetValue(m_data.GetBloodChemistrySystem().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
   GetMeanPleuralPressure().SetValue(AbsolutePleuralPressure_mmHg - EnvironmentPressure_mmHg, PressureUnit::mmHg);
   GetTotalAlveolarVentilation().SetValue(RespirationRate_Per_min * (TidalVolume_L - DeadSpace_L), VolumePerTimeUnit::L_Per_min);
@@ -358,7 +358,7 @@ void Respiratory::SetUp()
   //Configuration parameters
   m_dDefaultOpenResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   m_dDefaultClosedResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetDefaultClosedFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
-  m_meanShuntFlow_L_Per_s = m_data.GetCardiovascular().GetPulmonaryMeanShuntFlow(VolumePerTimeUnit::L_Per_s);
+  m_meanShuntFlow_L_Per_s = m_data.GetCardiovascularSystem().GetPulmonaryMeanShuntFlow(VolumePerTimeUnit::L_Per_s);
   m_dRespOpenResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetRespiratoryOpenResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   m_dRespClosedResistance_cmH2O_s_Per_L = m_data.GetConfiguration().GetRespiratoryClosedResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   m_VentilatoryOcclusionPressure_cmH2O = m_data.GetConfiguration().GetVentilatoryOcclusionPressure(PressureUnit::cmH2O); //This increases the absolute max driver pressure
@@ -452,7 +452,7 @@ void Respiratory::SetUp()
 ///  </UL>
 ///
 //--------------------------------------------------------------------------------------------------
-void Respiratory::AtSteadyState()
+void Respiratory::SimulationPhaseChange()
 {
   double respirationRate_Per_min = GetRespirationRate(FrequencyUnit::Per_min);
   double tidalVolume_L = GetTidalVolume(VolumeUnit::L);
@@ -472,7 +472,7 @@ void Respiratory::AtSteadyState()
   m_Patient->GetRespiratoryDriverAmplitudeBaseline().Set(GetRespirationDriverPressure());
 
   std::string typeString = "Initial Stabilization Homeostasis: ";
-  if (m_data.GetState() == EngineState::AtSecondaryStableState)
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtSecondaryStableState)
     typeString = "Secondary Stabilization Homeostasis: ";
 
   std::stringstream ss;
@@ -491,7 +491,7 @@ void Respiratory::AtSteadyState()
   ss << typeString << "Patient inspiratory capacity = " << inspiratoryCapacity_L << " L.";
   Info(ss);
 
-  if (m_data.GetState() == EngineState::AtInitialStableState) { // At Resting State, apply conditions if we have them
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtInitialStableState) { // At Resting State, apply conditions if we have them
     COPD();
     LobarPneumonia();
     //These conditions stack effects
@@ -570,7 +570,7 @@ void Respiratory::Process()
 void Respiratory::PostProcess()
 {
   if (m_data.GetActions().GetPatientActions().HasOverride()
-      && m_data.GetState() == EngineState::Active) {
+      && m_data.GetSimulationPhase() == SimulationPhase::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasRespiratoryOverride()) {
       ProcessOverride();
     }
@@ -981,7 +981,7 @@ void Respiratory::ProcessDriverActions()
     cardiacArrestEffect = 0.0;
   }
   //Process drug effects--adjust them based on neuromuscular block level
-  SEDrugSystem& Drugs = m_data.GetDrugs();
+  SEDrugSystem& Drugs = m_data.GetDrugsSystem();
   double DrugRRChange_Per_min = Drugs.GetRespirationRateChange(FrequencyUnit::Per_min);
   double DrugsTVChange_L = Drugs.GetTidalVolumeChange(VolumeUnit::L);
   double NMBModifier = 1.0;
@@ -1000,21 +1000,21 @@ void Respiratory::ProcessDriverActions()
   }
 
   //Process Pain effects
-  double painVAS = 0.1 * m_data.GetNervous().GetPainVisualAnalogueScale().GetValue(); //already processed pain score from nervous [0,10]
+  double painVAS = 0.1 * m_data.GetNervousSystem().GetPainVisualAnalogueScale().GetValue(); //already processed pain score from nervous [0,10]
   double painModifier = 1.0 + 0.75 * (painVAS / (painVAS + 0.2));
 
   //Process inflammation effects--separate modifiers since different time scales are involved
   double infectionModifier = 0.0;
   double hemorrhageModifier = 0.0;
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSources()) {
-    auto& inflammation = m_data.GetBloodChemistry().GetInflammatoryResponse();
+  if (m_data.GetBloodChemistrySystem().GetInflammatoryResponse().HasInflammationSources()) {
+    auto& inflammation = m_data.GetBloodChemistrySystem().GetInflammatoryResponse();
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
-    double sigmoidInput = 1.0 - m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
+    double sigmoidInput = 1.0 - m_data.GetBloodChemistrySystem().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
     if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Infection)) {
       infectionModifier = baselineRR_Per_min * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2.0) + std::pow(0.4, 2));
     }
     if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Hemorrhage)) {
-      double volumeEffect = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL) / m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::mL);
+      double volumeEffect = m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL) / m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::mL);
       volumeEffect = std::min(volumeEffect, 1.0);
       sigmoidInput = 1.0 - volumeEffect;
       hemorrhageModifier = 1.2 * baselineRR_Per_min * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2) + 0.25);
@@ -1027,9 +1027,9 @@ void Respiratory::ProcessDriverActions()
   m_PeakRespiratoryDrivePressure_cmH2O *= (1.0 - (DrugsTVChange_L / m_Patient->GetTidalVolumeBaseline(VolumeUnit::L)));
 
   //update PH during stabilization
-  if (m_data.GetState() < EngineState::Active) {
-    m_arterialPHBaseline = m_data.GetBloodChemistry().GetArterialBloodPH().GetValue();
-    m_data.GetBloodChemistry().GetArterialBloodPHBaseline().SetValue(m_arterialPHBaseline);
+  if (m_data.GetSimulationPhase() < SimulationPhase::Active) {
+    m_arterialPHBaseline = m_data.GetBloodChemistrySystem().GetArterialBloodPH().GetValue();
+    m_data.GetBloodChemistrySystem().GetArterialBloodPHBaseline().SetValue(m_arterialPHBaseline);
   }
 
   //That tidal volume cannot exceed 1/2 * Vital Capacity after modifications. m_MaxDriverPressure is set up to correspond to this maximum tidal volume
@@ -1181,7 +1181,7 @@ void Respiratory::BronchoDilation()
   //Experimentally, 1mg of Albuterol given via a spacer device on an endotracheal tube caused a pulmonary resistance change of ~20% @cite mancebo1991effects.
   //The bronchi are ~30% of the total pulmonary resistance, so we'll make a dilation effect of 1.0 be at the respiratory open resistance.
   //Dilation effect values have max effect at 1 and below -1, so anything outside of that will maintain that effect.
-  double bronchoDilationEffect = m_data.GetDrugs().GetBronchodilationLevel().GetValue();
+  double bronchoDilationEffect = m_data.GetDrugsSystem().GetBronchodilationLevel().GetValue();
   double resTrack = 0.0;
 
   if (bronchoDilationEffect != 0.0) {
@@ -1757,7 +1757,7 @@ void Respiratory::CalculateVitalSigns()
   GetMeanPleuralPressure().SetValue(meanPleuralPressure_cmH2O, PressureUnit::cmH2O);
 
   //Track ratio of partial pressure of oxygen in arterial blood to fraction of inspired oxygen (Carrico Index)--clinically relevant output for acute lung injury (ALI) and acute respiratory distress syndrome (ARDS)
-  double arterialPartialPressureO2_mmHg = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
+  double arterialPartialPressureO2_mmHg = m_data.GetBloodChemistrySystem().GetArterialOxygenPressure(PressureUnit::mmHg);
   double fractionInspiredO2 = 0.0;
   switch (m_data.GetAirwayMode()) {
   case CDM::enumBioGearsAirwayMode::Free:
@@ -1853,7 +1853,7 @@ void Respiratory::CalculateVitalSigns()
     m_TopBreathDeadSpaceVolume_L = m_RightBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_LeftBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_Trachea->GetVolume(VolumeUnit::L);
     m_TopBreathPleuralPressure_cmH2O = dPleuralPressure_cmH2O;
 
-    if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
+    if (m_data.GetSimulationPhase() > SimulationPhase::InitialStabilization) { // Don't throw events if we are initializing
       //Check for acute lung injury and acute respiratory distress
       if (GetCarricoIndex().GetValue(PressureUnit::mmHg) < 100.0) {
         /// \event Patient: Severe ARDS: Carrico Index is below 100 mmHg
@@ -1903,14 +1903,14 @@ void Respiratory::CalculateVitalSigns()
   // The hydrogen ion concentration is a property of the blood
   // The events related to blood concentrations should be detected and set in blood chemistry.
   //Keep a running average of the pH
-  m_BloodPHRunningAverage.Sample(m_data.GetBloodChemistry().GetArterialBloodPH().GetValue());
+  m_BloodPHRunningAverage.Sample(m_data.GetBloodChemistrySystem().GetArterialBloodPH().GetValue());
   //Reset at start of cardiac cycle
   if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
     m_LastCardiacCycleBloodPH = m_BloodPHRunningAverage.Value();
     m_BloodPHRunningAverage.Reset();
   }
 
-  if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
+  if (m_data.GetSimulationPhase() > SimulationPhase::InitialStabilization) { // Don't throw events if we are initializing
 
     //Bradypnea
     if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) < 8) {
@@ -2425,7 +2425,7 @@ void Respiratory::OverrideControlLoop()
   double currentPulmonaryComplianceOverride = 0.0; // value gets changed in next check
   double currentPulmonaryResistanceOverride = 0.0; // value gets changed in next check
   double currentRROverride = 12.0; //Average RR, value gets changed in next check
-  double currentTVOverride = m_data.GetRespiratory().GetTidalVolume().GetValue(VolumeUnit::mL); //Current Tidal Volume, value gets changed in next check
+  double currentTVOverride = m_data.GetRespiratorySystem().GetTidalVolume().GetValue(VolumeUnit::mL); //Current Tidal Volume, value gets changed in next check
   double currentTargetPulmonaryVentilationOverride = 0.0; // value gets changed in next check
   double currentTotalAlveolarVentilationOverride = 0.0; // value gets changed in next check
   double currentTotalLungVolumeOverride = 0.0; // value gets changed in next check

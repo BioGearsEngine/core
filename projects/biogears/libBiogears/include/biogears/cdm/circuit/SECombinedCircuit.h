@@ -20,8 +20,8 @@ namespace biogears {
 template <COMBINED_CIRCUIT_TEMPLATE>
 class SECombinedCircuit : public CircuitType {
 public:
-  SECombinedCircuit(const char* name, Logger* logger);
-  SECombinedCircuit(const std::string& name, Logger* logger);
+  SECombinedCircuit(const char* name, Logger const* logger);
+  SECombinedCircuit(const std::string& name, Logger const* logger);
   virtual ~SECombinedCircuit() override;
 
   virtual void Clear() override; //clear memory

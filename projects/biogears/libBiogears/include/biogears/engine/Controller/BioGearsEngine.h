@@ -21,11 +21,51 @@ specific language governing permissions and limitations under the License.
 // If anyone else has opinions on this, let me know
 // abray@ara.com
 #pragma warning(disable : 4251)
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/exports.h>
+
+#include <biogears/cdm/engine/PhysiologyEngineTrack.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/scenario/SEActionManager.h>
+#include <biogears/cdm/scenario/SEConditionManager.h>
+#include <biogears/cdm/utils/DataTrack.h>
+#include <biogears/engine/Controller/BioGearsCircuits.h>
+#include <biogears/engine/Controller/BioGearsCompartments.h>
+#include <biogears/engine/Controller/BioGearsConfiguration.h>
+#include <biogears/engine/Controller/BioGearsSubstances.h>
+#include <biogears/engine/Equipment/AnesthesiaMachine.h>
+#include <biogears/engine/Equipment/ECG.h>
+#include <biogears/engine/Equipment/Inhaler.h>
+#include <biogears/engine/Systems/BloodChemistry.h>
+#include <biogears/engine/Systems/Cardiovascular.h>
+#include <biogears/engine/Systems/Diffusion.h>
+#include <biogears/engine/Systems/Drugs.h>
+#include <biogears/engine/Systems/Endocrine.h>
+#include <biogears/engine/Systems/Energy.h>
+#include <biogears/engine/Systems/Environment.h>
+#include <biogears/engine/Systems/Gastrointestinal.h>
+#include <biogears/engine/Systems/Hepatic.h>
+#include <biogears/engine/Systems/Nervous.h>
+#include <biogears/engine/Systems/Renal.h>
+#include <biogears/engine/Systems/Respiratory.h>
+#include <biogears/engine/Systems/Saturation.h>
+#include <biogears/engine/Systems/Tissue.h>
+#include <biogears/schema/biogears/BioGears.hxx>
+
+#include <memory>
 #pragma warning(pop)
 
 namespace biogears {
+
+enum class SimulationPhase { NotReady = 0,
+                             Initialization,
+                             InitialStabilization,
+                             AtInitialStableState,
+                             SecondaryStabilization,
+                             AtSecondaryStableState,
+                             Active };
+
 //--------------------------------------------------------------------------------------------------
 /// @brief
 /// This is the implementation of the PhysiologyEngine interface for the biogears engines.
@@ -34,42 +74,43 @@ namespace biogears {
 /// calls as well as assessment calls for obtaining the results. During engine execution a log files
 /// is generated containing information, warning and error data.
 //--------------------------------------------------------------------------------------------------
-class BIOGEARS_API BioGearsEngine : public PhysiologyEngine, public BioGears {
+class BioGearsEngine : public PhysiologyEngine {
+  friend class BioGearsEngineTest;
+  friend class BioGearsScenarioExec;
+  friend class SEScenarioExec;
+  friend class AnesthesiaMachine;
+
 public:
   //-------------------------------------------------------------------------------
-  BioGearsEngine(Logger* logger);
+  BIOGEARS_API BioGearsEngine(Logger const* logger);
+  BIOGEARS_API BioGearsEngine(Logger const* logger, char const* working_dir);
+  BIOGEARS_API BioGearsEngine(Logger const* logger, std::string const& working_dir);
 
-  BioGearsEngine(const std::string& logFileName);
-  BioGearsEngine(const char* logFileName);
-  BioGearsEngine(Logger* logger, const std::string& working_dir);
-  BioGearsEngine(Logger* logger, const char* working_dir);
-  BioGearsEngine(const std::string&, const std::string& working_dir);
-  BioGearsEngine(const char*, const char*);
+  BIOGEARS_API BioGearsEngine(char const* logFileName);
+  BIOGEARS_API BioGearsEngine(std::string const& logFileName);
+  BIOGEARS_API BioGearsEngine(char const*, char const*);
+  BIOGEARS_API BioGearsEngine(std::string const&, std::string const& working_dir);
 
-  virtual ~BioGearsEngine() override;
+  BIOGEARS_API ~BioGearsEngine() override;
 
-  virtual bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) override;
-  virtual bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr) override;
-  virtual bool LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr) override;
-  virtual bool LoadState(char const* buffer, size_t size) override;
+  BIOGEARS_API bool LoadState(char const* file, SEScalarTime const* simTime = nullptr) override;
+  BIOGEARS_API bool LoadState(std::string const& file, SEScalarTime const* simTime = nullptr) override;
+  BIOGEARS_API bool LoadState(const CDM::PhysiologyEngineStateData& state, SEScalarTime const* simTime = nullptr) override;
+  BIOGEARS_API bool LoadState(char const* buffer, size_t size) override;
 
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> GetStateData() override;
-  virtual void SaveStateToFile(const char* file) override;
-  virtual void SaveStateToFile(const std::string& file = "") override;
+  BIOGEARS_API auto SaveStateToFile(char const* file) const -> void override;
+  BIOGEARS_API auto SaveStateToFile(std::string const& file = "") const -> void override;
 
-  virtual Logger* GetLogger() override;
-  virtual PhysiologyEngineTrack* GetEngineTrack() override;
+  BIOGEARS_API auto GetLogger() -> Logger*;
+  BIOGEARS_API auto GetLogger() const -> Logger const* override;
+  BIOGEARS_API auto GetEngineTrack() const -> PhysiologyEngineTrack const& override;
+  BIOGEARS_API auto GetEngineTrack() -> PhysiologyEngineTrack&;
 
-  virtual bool InitializeEngine(const char* patientFile) override;
-  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions) override;
-  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config) override;
-  virtual bool InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
-  virtual bool InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) override;
-
-  virtual const PhysiologyEngineConfiguration* GetConfiguration() override;
-
-  virtual double GetTimeStep(const TimeUnit& unit) override;
-  virtual double GetSimulationTime(const TimeUnit& unit) override;
+  BIOGEARS_API auto InitializeEngine(char const* patientFile) -> bool override;
+  BIOGEARS_API auto InitializeEngine(char const* patientFile, std::vector<const SECondition*> const* conditions) -> bool override;
+  BIOGEARS_API auto InitializeEngine(char const* patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config) -> bool override;
+  BIOGEARS_API auto InitializeEngine(std::string const& patientFile, const std::vector<const SECondition*>* conditions = nullptr, PhysiologyEngineConfiguration const* config = nullptr) -> bool override;
+  BIOGEARS_API auto InitializeEngine(SEPatient const& patient, const std::vector<const SECondition*>* conditions = nullptr, PhysiologyEngineConfiguration const* config = nullptr) -> bool override;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -80,7 +121,7 @@ public:
   //!	physiology metrics at simulation times that would fall between a deltaT. Additionally advancing time by
   //! non multiples of deltaT can result in the true simtime being out of sync with the expected time sync
   //!-------------------------------------------------------------------------------------------------
-  virtual bool AdvanceModelTime(bool appendDataTrack = false) override;
+  BIOGEARS_API auto AdvanceModelTime(bool appendDataTrack = false) -> bool override;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -89,36 +130,20 @@ public:
   //! See AdvanceModelTime(bool) for additional details.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual bool AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s, bool appendDataTrack = false) override; //NOTE: Maynot compile on clang will evaluate
-  virtual bool ProcessAction(const SEAction& action) override;
+  BIOGEARS_API auto AdvanceModelTime(double time, TimeUnit const& unit = TimeUnit::s, bool appendDataTrack = false) -> bool override; // NOTE: Maynot compile on clang will evaluate
+  BIOGEARS_API auto ProcessAction(SEAction const& action) -> bool override;
 
-  virtual SESubstanceManager& GetSubstanceManager() override;
-  virtual void SetEventHandler(SEEventHandler* handler) override;
-  virtual const SEPatient& GetPatient() override;
-  virtual bool GetPatientAssessment(SEPatientAssessment& assessment) override;
+  BIOGEARS_API auto GetSubstanceManager() -> SESubstanceManager&;
+  BIOGEARS_API auto GetSubstanceManager() const -> SESubstanceManager const& override;
 
-  virtual const SEEnvironment* GetEnvironment() override;
-  virtual const SEBloodChemistrySystem* GetBloodChemistrySystem() override;
-  virtual const SECardiovascularSystem* GetCardiovascularSystem() override;
-  virtual const SEDrugSystem* GetDrugSystem() override;
-  virtual const SEEndocrineSystem* GetEndocrineSystem() override;
-  virtual const SEEnergySystem* GetEnergySystem() override;
-  virtual const SEGastrointestinalSystem* GetGastrointestinalSystem() override;
-  virtual const SEHepaticSystem* GetHepaticSystem() override;
-  virtual const SENervousSystem* GetNervousSystem() override;
-  virtual const SERenalSystem* GetRenalSystem() override;
-  virtual const SERespiratorySystem* GetRespiratorySystem() override;
-  virtual const SETissueSystem* GetTissueSystem() override;
-  virtual const SEAnesthesiaMachine* GetAnesthesiaMachine() override;
-  virtual const SEElectroCardioGram* GetElectroCardioGram() override;
-  virtual const SEInhaler* GetInhaler() override;
+  BIOGEARS_API auto SetEventHandler(SEEventHandler* handler) -> void override;
+  BIOGEARS_API auto GetPatientAssessment(SEPatientAssessment& assessment) const -> bool override;
 
-  virtual const SECompartmentManager& GetCompartments() override;
-  virtual Tree<const char*> GetDataRequestGraph() const override;
+  BIOGEARS_API Tree<char const*> GetDataRequestGraph() const override;
 
-  virtual bool IsAutoTracking() const override;
-  virtual void SetAutoTrackFlag(bool flag) override;
-  virtual bool IsTrackingStabilization() const override;
+  BIOGEARS_API bool IsAutoTracking() const override;
+  BIOGEARS_API void SetAutoTrackFlag(bool flag) override;
+  BIOGEARS_API bool IsTrackingStabilization() const override;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -126,11 +151,177 @@ public:
   //! After it is set. But can be used as a shortcut to modify m_Config->GetStabilizationCriteria()->TrackStabilization()
   //! After stabiliztion criteira has been loaded.
   //!-------------------------------------------------------------------------------------------------
-  virtual void SetTrackStabilizationFlag(bool flag) override;
+  BIOGEARS_API auto SetTrackStabilizationFlag(bool flag) -> void override;
 
+  BIOGEARS_API SimulationPhase GetSimulationPhase() const;
+
+  BIOGEARS_API auto GetDataTrack() -> DataTrack&;
+  BIOGEARS_API auto GetDataTrack() const -> DataTrack const&;
+
+  BIOGEARS_API auto GetSaturationCalculator() -> SaturationCalculator&;
+  BIOGEARS_API auto GetSaturationCalculator() const -> SaturationCalculator const&;
+
+  BIOGEARS_API DiffusionCalculator& GetDiffusionCalculator();
+  BIOGEARS_API DiffusionCalculator const& GetDiffusionCalculator() const;
+
+  BIOGEARS_API BioGearsSubstances& GetSubstances();
+  BIOGEARS_API BioGearsSubstances const& GetSubstances() const;
+
+  BIOGEARS_API SEPatient& GetPatient();
+  BIOGEARS_API SEPatient const& GetPatient() const;
+
+  BIOGEARS_API auto GetActions() -> SEActionManager&;
+  BIOGEARS_API auto GetActions() const -> SEActionManager const& override;
+
+  BIOGEARS_API auto GetAnesthesiaMachine() -> SEAnesthesiaMachine&;
+  BIOGEARS_API auto GetAnesthesiaMachine() const -> SEAnesthesiaMachine const& override;
+
+  BIOGEARS_API auto GetBloodChemistrySystem() -> SEBloodChemistrySystem&;
+  BIOGEARS_API auto GetBloodChemistrySystem() const -> SEBloodChemistrySystem const& override;
+
+  BIOGEARS_API auto GetCardiovascularSystem() -> SECardiovascularSystem&;
+  BIOGEARS_API auto GetCardiovascularSystem() const -> SECardiovascularSystem const& override;
+
+  BIOGEARS_API auto GetCircuits() -> BioGearsCircuits&;
+  BIOGEARS_API auto GetCircuits() const -> BioGearsCircuits const&;
+
+  BIOGEARS_API auto GetCompartments() -> BioGearsCompartments&;
+  BIOGEARS_API auto GetCompartments() const -> BioGearsCompartments  const& override;
+
+  BIOGEARS_API auto GetConditions() -> SEConditionManager&;
+  BIOGEARS_API auto GetConditions() const -> SEConditionManager const& override;
+
+  BIOGEARS_API auto GetConfiguration() -> BioGearsConfiguration&;
+  BIOGEARS_API auto GetConfiguration() const -> BioGearsConfiguration const& override;
+
+  BIOGEARS_API auto GetDrugsSystem() -> SEDrugSystem&;
+  BIOGEARS_API auto GetDrugsSystem() const -> SEDrugSystem const& override;
+
+  BIOGEARS_API auto GetElectroCardioGram() -> SEElectroCardioGram&;
+  BIOGEARS_API auto GetElectroCardioGram() const -> SEElectroCardioGram const& override;
+
+  BIOGEARS_API auto GetEndocrineSystem() -> SEEndocrineSystem&;
+  BIOGEARS_API auto GetEndocrineSystem() const -> SEEndocrineSystem const& override;
+
+  BIOGEARS_API auto GetEnergySystem() -> SEEnergySystem&;
+  BIOGEARS_API auto GetEnergySystem() const -> SEEnergySystem const& override;
+
+  BIOGEARS_API auto GetEngineTime() const -> SEScalarTime const&;
+  BIOGEARS_API auto GetEngineTime() -> SEScalarTime const&;
+
+  BIOGEARS_API auto GetEnvironment() -> SEEnvironment&;
+  BIOGEARS_API auto GetEnvironment() const -> SEEnvironment const& override;
+
+  BIOGEARS_API auto GetGastrointestinalSystem() -> SEGastrointestinalSystem&;
+  BIOGEARS_API auto GetGastrointestinalSystem() const -> SEGastrointestinalSystem const& override;
+
+  BIOGEARS_API auto GetHepaticSystem() -> SEHepaticSystem&;
+  BIOGEARS_API auto GetHepaticSystem() const -> SEHepaticSystem const& override;
+
+  BIOGEARS_API auto GetInhaler() -> SEInhaler&;
+  BIOGEARS_API auto GetInhaler() const -> SEInhaler const& override;
+
+  BIOGEARS_API auto GetNervousSystem() -> SENervousSystem&;
+  BIOGEARS_API auto GetNervousSystem() const -> SENervousSystem const& override;
+
+  BIOGEARS_API auto GetRenalSystem() -> SERenalSystem&;
+  BIOGEARS_API auto GetRenalSystem() const -> SERenalSystem const& override;
+
+  BIOGEARS_API auto GetRespiratorySystem() -> SERespiratorySystem&;
+  BIOGEARS_API auto GetRespiratorySystem() const -> SERespiratorySystem const& override;
+
+  BIOGEARS_API auto GetSimulationTime(TimeUnit const& unit) const -> double override;
+  BIOGEARS_API auto GetSimulationTime() -> SEScalarTime&;
+  BIOGEARS_API auto GetSimulationTime() const -> SEScalarTime const& override;
+
+  BIOGEARS_API auto GetTimeStep(const TimeUnit& unit) const -> double override;
+  BIOGEARS_API auto GetTimeStep() -> SEScalarTime&;
+  BIOGEARS_API auto GetTimeStep() const -> SEScalarTime const& override;
+
+  BIOGEARS_API auto GetTissueSystem() -> SETissueSystem&;
+  BIOGEARS_API auto GetTissueSystem() const -> SETissueSystem const& override;
+ 
+  BIOGEARS_API auto GetAirwayMode() const -> CDM::enumBioGearsAirwayMode::value const;
+  BIOGEARS_API auto GetIntubation() const -> CDM::enumOnOff::value const;
+
+  BIOGEARS_API void SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode);
+  BIOGEARS_API void SetIntubation(CDM::enumOnOff::value s);
 protected:
-  virtual bool IsReady();
-  virtual bool InitializeEngine(const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
+  BIOGEARS_API bool IsReady() const;
+  BIOGEARS_API bool InitializeEngine(const std::vector<const SECondition*>* conditions = nullptr, PhysiologyEngineConfiguration const* config = nullptr);
+
+  BIOGEARS_API void SetupCardiovascular();
+  BIOGEARS_API void SetupCerebral();
+  BIOGEARS_API void SetupRenal();
+  BIOGEARS_API void SetupTissue();
+  BIOGEARS_API void SetupGastrointestinal();
+  BIOGEARS_API void SetupRespiratory();
+  BIOGEARS_API void SetupAnesthesiaMachine();
+  BIOGEARS_API void SetupInhaler();
+  BIOGEARS_API void SetupMechanicalVentilator();
+  BIOGEARS_API void SetupExternalTemperature();
+  BIOGEARS_API void SetupInternalTemperature();
+
+  BIOGEARS_API bool Initialize(PhysiologyEngineConfiguration const* config);
+  BIOGEARS_API bool SetupPatient();
+
+  BIOGEARS_API void SetUp();
+
+  // Notify systems that steady state has been achieved
+  BIOGEARS_API void SimulationPhaseChange(SimulationPhase state);
+  BIOGEARS_API void PreProcess();
+  BIOGEARS_API void Process();
+  BIOGEARS_API void PostProcess();
+
+  BIOGEARS_API bool CreateCircuitsAndCompartments();
+
+  BIOGEARS_API void ForwardFatal(std::string const& msg, std::string const& origin);
+
+private:
+  auto GetStateData() const -> std::unique_ptr<CDM::PhysiologyEngineStateData>;
+
+  DataTrack* m_DataTrack;
+
+  std::unique_ptr<SEScalarTime> m_CurrentTime;
+  std::unique_ptr<SEScalarTime> m_SimulationTime;
+  CDM::enumBioGearsAirwayMode::value m_AirwayMode;
+  CDM::enumOnOff::value m_Intubation;
+
+  std::unique_ptr<BioGearsConfiguration> m_Config;
+  std::unique_ptr<SaturationCalculator> m_SaturationCalculator;
+  std::unique_ptr<DiffusionCalculator> m_DiffusionCalculator;
+
+  std::unique_ptr<BioGearsSubstances> m_Substances;
+
+  std::unique_ptr<SEActionManager> m_Actions;
+  std::unique_ptr<SEConditionManager> m_Conditions;
+  std::unique_ptr<BioGearsCircuits> m_Circuits;
+  std::unique_ptr<BioGearsCompartments> m_Compartments;
+
+  std::unique_ptr<Environment> m_Environment;
+
+  std::unique_ptr<BloodChemistry> m_BloodChemistrySystem;
+  std::unique_ptr<Cardiovascular> m_CardiovascularSystem;
+  std::unique_ptr<Endocrine> m_EndocrineSystem;
+  std::unique_ptr<Energy> m_EnergySystem;
+  std::unique_ptr<Gastrointestinal> m_GastrointestinalSystem;
+  std::unique_ptr<Hepatic> m_HepaticSystem;
+  std::unique_ptr<Nervous> m_NervousSystem;
+  std::unique_ptr<Renal> m_RenalSystem;
+  std::unique_ptr<Respiratory> m_RespiratorySystem;
+  std::unique_ptr<Drugs> m_DrugSystem;
+  std::unique_ptr<Tissue> m_TissueSystem;
+
+  std::unique_ptr<ECG> m_ECG;
+
+  std::unique_ptr<AnesthesiaMachine> m_AnesthesiaMachine;
+
+  std::unique_ptr<Inhaler> m_Inhaler;
+
+  std::unique_ptr<SEPatient> m_Patient;
+
+  Logger* m_Logger;
+  std::unique_ptr<Logger> m_managedLogger;
 
   double m_timeStep_remainder = 0.0;
   double m_timeSinceLastDataTrack = 0.0;
@@ -142,11 +333,15 @@ protected:
 
   bool m_isAutoTracking = true;
   bool m_areTrackingStabilization = false;
+
+  SimulationPhase m_SimulationPhase;
+
+  /// END BIOGEARS
 };
 
-BIOGEARS_API Logger* create_logger(const char* logfile);
+BIOGEARS_API Logger* create_logger(char const* logfile);
 BIOGEARS_API void destroy_logger(Logger** engine);
-BIOGEARS_API BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir);
-BIOGEARS_API BioGearsEngine* create_biogears_engine(const char* logger, const char* working_dir);
+BIOGEARS_API BioGearsEngine* create_biogears_engine(biogears::Logger* logger, char const* working_dir);
+BIOGEARS_API BioGearsEngine* create_biogears_engine(char const* logger, char const* working_dir);
 BIOGEARS_API void destroy_biogears_engine(BioGearsEngine** engine);
-} //namespace biogears
+} // namespace biogears

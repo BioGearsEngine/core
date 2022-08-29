@@ -21,16 +21,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
-auto Hepatic::make_unique(BioGears& bg) -> std::unique_ptr<Hepatic>
+auto Hepatic::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Hepatic>
 {
   return std::unique_ptr<Hepatic>(new Hepatic(bg));
 }
 
-Hepatic::Hepatic(BioGears& bg)
+Hepatic::Hepatic(BioGearsEngine& bg)
   : SEHepaticSystem(bg.GetLogger())
   , m_data(bg)
 {
@@ -118,8 +118,8 @@ void Hepatic::Unload(CDM::BioGearsHepaticSystemData& data) const
 void Hepatic::SetUp()
 {
   m_dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
-  m_tsu = &m_data.GetTissue();
-  m_energy = &m_data.GetEnergy();
+  m_tsu = &m_data.GetTissueSystem();
+  m_energy = &m_data.GetEnergySystem();
   m_Patient = &m_data.GetPatient();
 
   m_Insulin = &m_data.GetSubstances().GetInsulin();
@@ -166,7 +166,7 @@ void Hepatic::SetUp()
 /// \details
 /// When the engine is stable, the CDM makes this call to update the member variable.
 //--------------------------------------------------------------------------------------------------
-void Hepatic::AtSteadyState()
+void Hepatic::SimulationPhaseChange()
 {
 }
 
@@ -518,7 +518,7 @@ void Hepatic::Gluconeogenesis()
 /// did, and vice versa. A zero value means insulin and glucagon didn't change or stayed the same
 /// relative to each other.
 //--------------------------------------------------------------------------------------------------
-double Hepatic::CalculateRelativeHormoneChange(double insulinSetPoint_pmol_Per_L, double glucagonSetPoint_pg_Per_mL, SELiquidSubstanceQuantity* currentInsulin, SELiquidSubstanceQuantity* currentGlucagon, BioGears& m_data)
+double Hepatic::CalculateRelativeHormoneChange(double insulinSetPoint_pmol_Per_L, double glucagonSetPoint_pg_Per_mL, SELiquidSubstanceQuantity* currentInsulin, SELiquidSubstanceQuantity* currentGlucagon, BioGearsEngine& m_data)
 {
   double currentInsulin_pmol_Per_L = currentInsulin->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) * 1e9;
   double currentGlucagon_pg_Per_mL = currentGlucagon->GetConcentration(MassPerVolumeUnit::mg_Per_mL) * 1e9;
@@ -663,7 +663,7 @@ SEScalar& Hepatic::CalculateLiverSOFA()
 {
   SEScalar* sofa = new SEScalar();
   double sofaScore = 0.0;
-  const double bilirubinCount = m_data.GetBloodChemistry().GetTotalBilirubin(MassPerVolumeUnit::mg_Per_dL);
+  const double bilirubinCount = m_data.GetBloodChemistrySystem().GetTotalBilirubin(MassPerVolumeUnit::mg_Per_dL);
   if (bilirubinCount <= 1.2) {
     //Normal, leave sofaScore = 0
   } else if (bilirubinCount <= 2.0) {

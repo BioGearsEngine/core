@@ -33,7 +33,7 @@ class SELiquidSubstanceQuantity;
 class SEPatientActionCollection;
 class SEPatient;
 class SEEnergySystem;
-class BioGears;
+class BioGearsEngine;
 }
 
 namespace std {
@@ -52,13 +52,13 @@ namespace biogears {
  * The primary function of this system is to capture the substance transport that occurs between systems.
  */
 class BIOGEARS_API Tissue : public SETissueSystem, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<Tissue>;
-  Tissue(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<Tissue>;
+  Tissue(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~Tissue() override;
@@ -83,7 +83,7 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState() override;
+  void SimulationPhaseChange() override;
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;

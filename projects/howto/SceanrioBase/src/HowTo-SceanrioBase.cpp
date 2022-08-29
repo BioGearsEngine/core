@@ -83,17 +83,17 @@ int HowToScenarioBase()
   // set of data requests for all your scenarios
   std::unique_ptr<CDM::ObjectData> obj = biogears::Serializer::ReadFile("YourDataRequestsFile.xml", bg->GetLogger());
   drData = dynamic_cast<CDM::DataRequestsData*>(obj.get());
-  bg->GetEngineTrack()->GetDataRequestManager().Load(*drData, bg->GetSubstanceManager());
+  bg->GetEngineTrack().GetDataRequestManager().Load(*drData, bg->GetSubstanceManager());
   // Don't need to delete drData as obj is wrapped in a unique_ptr
  
   // Make a copy of the data requests, not this clears out data requests from the engine
   // This will clear out the data requests if any exist in the DataRequestManager
   drData = sce.GetDataRequestManager().Unload();
-  bg->GetEngineTrack()->GetDataRequestManager().Load(*drData, bg->GetSubstanceManager());
+  bg->GetEngineTrack().GetDataRequestManager().Load(*drData, bg->GetSubstanceManager());
   delete drData;
 
-  if (!bg->GetEngineTrack()->GetDataRequestManager().HasResultsFilename()) {
-    bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("./ResultsFileName.csv");
+  if (!bg->GetEngineTrack().GetDataRequestManager().HasResultsFilename()) {
+    bg->GetEngineTrack().GetDataRequestManager().SetResultsFilename("./ResultsFileName.csv");
   }
   // Let's request data do be tracked that is in the scenario	
   

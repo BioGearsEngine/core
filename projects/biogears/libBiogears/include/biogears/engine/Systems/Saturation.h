@@ -24,7 +24,7 @@ struct error_functor;
 class SESubstance;
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
-class BioGears;
+class BioGearsEngine;
 class SEScalarFraction;
 class SEScalarTemperature;
 
@@ -35,14 +35,14 @@ class SEScalarTemperature;
 class BIOGEARS_API SaturationCalculator : public Loggable {
 protected:
   friend struct error_functor;
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<SaturationCalculator>;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<SaturationCalculator>;
 
-  SaturationCalculator(BioGears& bg);
-  BioGears& m_data;
+  SaturationCalculator(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~SaturationCalculator();

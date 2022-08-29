@@ -26,7 +26,7 @@ namespace io {
 class BIOGEARS_API PhysiologyEngineTimedStabilizationCriteria : public Loggable {
 public:
   friend io::EngineConfiguration;
-  PhysiologyEngineTimedStabilizationCriteria(Logger* logger);
+  PhysiologyEngineTimedStabilizationCriteria(Logger const* logger);
   virtual ~PhysiologyEngineTimedStabilizationCriteria();
 
   virtual void Clear();
@@ -58,7 +58,7 @@ CDM_BIND_DECL(PhysiologyEngineTimedStabilizationData)
 class  PhysiologyEngineTimedStabilization : public PhysiologyEngineStabilization {
 public:
   friend io::EngineConfiguration;
-  BIOGEARS_API PhysiologyEngineTimedStabilization(Logger* logger);
+  BIOGEARS_API PhysiologyEngineTimedStabilization(Logger const* logger);
   BIOGEARS_API virtual ~PhysiologyEngineTimedStabilization();
 
   BIOGEARS_API virtual void Clear() override;

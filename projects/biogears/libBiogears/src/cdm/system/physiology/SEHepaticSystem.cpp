@@ -20,7 +20,7 @@ namespace biogears {
 constexpr char idKetoneProductionRate[] = "KetoneProductionRate";
 constexpr char idHepaticGluconeogenesisRate[] = "HepaticGluconeogenesisRate";
 
-SEHepaticSystem::SEHepaticSystem(Logger* logger)
+SEHepaticSystem::SEHepaticSystem(Logger const* logger)
   : SESystem(logger)
 {
   m_KetoneProductionRate = nullptr;
@@ -42,17 +42,17 @@ void SEHepaticSystem::Clear()
   SAFE_DELETE(m_HepaticGluconeogenesisRate);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEHepaticSystem::GetScalar(const char* name)
+const SEScalar* SEHepaticSystem::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEHepaticSystem::GetScalar(const std::string& name)
+const SEScalar* SEHepaticSystem::GetScalar(const std::string& name) const
 {
   if (name == idKetoneProductionRate)
-    return &GetKetoneProductionRate();
+    return &const_cast<SEHepaticSystem*>(this)->GetKetoneProductionRate();
   if (name == idHepaticGluconeogenesisRate)
-    return &GetHepaticGluconeogenesisRate();
+    return &const_cast<SEHepaticSystem*>(this)->GetHepaticGluconeogenesisRate();
   return nullptr;
 }
 //-------------------------------------------------------------------------------

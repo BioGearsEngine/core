@@ -46,7 +46,7 @@ class BIOGEARS_API SEBloodChemistrySystem : public SESystem {
   friend io::Physiology;
 
 public:
-  SEBloodChemistrySystem(Logger* logger);
+  SEBloodChemistrySystem(Logger const* logger);
   ~SEBloodChemistrySystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
@@ -56,8 +56,8 @@ public:
 
   void Clear() override; /**< @copydoc DOXY_CDM_CLEAR */
 
-  const SEScalar* GetScalar(const char* name) override;
-  const SEScalar* GetScalar(const std::string& name) override; /**< @copydoc DOXY_CDM_GET_SCALAR */
+  const SEScalar* GetScalar(const char* name) const override;
+  const SEScalar* GetScalar(const std::string& name) const override; /**< @copydoc DOXY_CDM_GET_SCALAR */
 
   /**  @name Serialization */ //@{
   bool Load(const CDM::BloodChemistrySystemData& in); /**< @copydoc DOXY_CDM_LOAD */
@@ -488,8 +488,8 @@ public:
   bool IsValid();
 
   void Initialize();
-  const SEScalar* GetScalar(const char* name);
-  const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const char* name) const;
+  const SEScalar* GetScalar(const std::string& name) const ;
 
 protected:
   void Unload(CDM::InflammatoryResponseData& data) const;

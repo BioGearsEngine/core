@@ -70,14 +70,14 @@ int runPatientScenario(const std::string patient, std::string&& XMLString)
   logFile = findAndReplace(logFile, ".xml", "Results.log");
   outputFile = findAndReplace(outputFile, ".xml", "Results.csv");
 
-  std::unique_ptr<PhysiologyEngine> eng;
+  std::unique_ptr<BioGearsEngine> eng;
   try {
     eng = std::make_unique<BioGearsEngine>(logFile);
   } catch (std::exception e) {
     std::cout << e.what();
     return 1;
   }
-  DataTrack* trk = &eng->GetEngineTrack()->GetDataTrack();
+
   BioGearsScenario sce(eng->GetSubstanceManager());
   sce.Load(XMLString);
   sce.GetInitialParameters().SetPatientFile(patientXML);

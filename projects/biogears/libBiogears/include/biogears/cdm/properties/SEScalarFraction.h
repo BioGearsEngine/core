@@ -31,5 +31,7 @@ public:
   double GetValue(const NoUnit& unitless) const;
   using SEScalar::SetValue;
   void SetValue(double d, const NoUnit& unitless);
+
+   operator double() const;
 };
 }

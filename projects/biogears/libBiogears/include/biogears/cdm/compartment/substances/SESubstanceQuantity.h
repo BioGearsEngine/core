@@ -38,8 +38,8 @@ protected:
 public:
   virtual SESubstance& GetSubstance() const { return m_Substance; }
 
-  virtual const SEScalar* GetScalar(const char* name) = 0;
-  virtual const SEScalar* GetScalar(const std::string& name) = 0;
+  virtual const SEScalar* GetScalar(const char* name) const = 0;
+  virtual const SEScalar* GetScalar(const std::string& name) const = 0;
 
 protected:
   SESubstance& m_Substance;

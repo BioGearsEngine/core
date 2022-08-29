@@ -37,7 +37,7 @@ public:
   void SetIVFluidsFlow_mL_Per_min(double rate);
   virtual void Status();
 
-  biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
+  biogears::Logger const* GetLogger() { return m_bg->GetLogger(); }
 
 protected:
   void AdvanceTime();

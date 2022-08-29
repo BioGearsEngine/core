@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsEquipment.hxx>
 
 namespace biogears {
-class BioGears;
+class BioGearsEngine;
 class SEAnesthesiaMachineActionCollection;
 class SEGasCompartment;
 class SEGasSubstanceQuantity;
@@ -33,13 +33,13 @@ class SEFluidCircuitPath;
  * Generic anesthesia machine for positive pressure ventilation.
  */
 class BIOGEARS_API AnesthesiaMachine : public SEAnesthesiaMachine, public BioGearsSystem {
-  friend BioGears;
+  friend BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<AnesthesiaMachine>;
-  AnesthesiaMachine(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<AnesthesiaMachine>;
+  AnesthesiaMachine(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~AnesthesiaMachine();

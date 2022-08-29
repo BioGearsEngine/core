@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioInitialParameters.h>
 
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
@@ -40,6 +40,6 @@ const BioGearsConfiguration* BioGearsScenarioInitialParameters::GetConfiguration
 }
 void BioGearsScenarioInitialParameters::SetConfiguration(const BioGearsConfiguration& config)
 {
-  CDM_COPY((&config), (&GetConfiguration()));
+  CDM_COPY((config), (GetConfiguration()));
 }
 }

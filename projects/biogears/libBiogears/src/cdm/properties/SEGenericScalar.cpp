@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 //-------------------------------------------------------------------------------
-SEGenericScalar::SEGenericScalar(Logger* logger)
+SEGenericScalar::SEGenericScalar(Logger const* logger)
   : Loggable(logger)
 {
   m_Scalar = nullptr;

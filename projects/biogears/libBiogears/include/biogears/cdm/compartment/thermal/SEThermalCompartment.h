@@ -38,8 +38,8 @@ class BIOGEARS_API SEThermalCompartment : public SECompartment {
   friend io::Compartment;
 
 protected:
-  SEThermalCompartment(const char* name, Logger* logger);
-  SEThermalCompartment(const std::string& name, Logger* logger);
+  SEThermalCompartment(const char* name, Logger const* logger);
+  SEThermalCompartment(const std::string& name, Logger const* logger);
 
 public:
   virtual ~SEThermalCompartment() override;
@@ -53,8 +53,8 @@ protected:
   virtual void Unload(CDM::ThermalCompartmentData& data);
 
 public:
-  virtual const SEScalar* GetScalar(const std::string& name) override;
-  virtual const SEScalar* GetScalar(const char* name) override;
+  virtual const SEScalar* GetScalar(const std::string& name) const override;
+  virtual const SEScalar* GetScalar(const char* name) const override;
 
   virtual bool HasChildren() const override { return !m_Children.empty(); }
   virtual const std::vector<SEThermalCompartment*>& GetChildren() { return m_Children; }

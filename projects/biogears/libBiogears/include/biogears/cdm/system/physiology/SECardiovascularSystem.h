@@ -37,7 +37,7 @@ namespace io {
 class BIOGEARS_API SECardiovascularSystem : public SESystem {
   friend io::Physiology;
 public:
-  SECardiovascularSystem(Logger* logger);
+  SECardiovascularSystem(Logger const* logger);
   ~SECardiovascularSystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
@@ -47,8 +47,8 @@ public:
 
   void Clear() override; //! Deletes all members
 
-  const SEScalar* GetScalar(const char* name) override;
-  const SEScalar* GetScalar(const std::string& name) override;
+  const SEScalar* GetScalar(const char* name) const override;
+  const SEScalar* GetScalar(const std::string& name) const override;
 
   bool Load(const CDM::CardiovascularSystemData& in);
   CDM::CardiovascularSystemData* Unload() const override;

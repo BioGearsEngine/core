@@ -70,31 +70,31 @@ void SEEnvironmentalConditions::Clear()
   m_cAmbientAerosols.clear();
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEEnvironmentalConditions::GetScalar(const char* name)
+const SEScalar* SEEnvironmentalConditions::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEEnvironmentalConditions::GetScalar(const std::string& name)
+const SEScalar* SEEnvironmentalConditions::GetScalar(const std::string& name) const
 {
   if (name.compare("AirDensity") == 0)
-    return &GetAirDensity();
+    return &const_cast<SEEnvironmentalConditions*>(this)->GetAirDensity();
   if (name.compare("AirVelocity") == 0)
-    return &GetAirVelocity();
+    return &const_cast<SEEnvironmentalConditions*>(this)->GetAirVelocity();
   if (name.compare("AmbientTemperature") == 0)
-    return &GetAmbientTemperature();
+    return &const_cast<SEEnvironmentalConditions*>(this)->GetAmbientTemperature();
   if (name.compare("AtmosphericPressure") == 0)
-    return &GetAtmosphericPressure();
+    return &const_cast<SEEnvironmentalConditions*>(this)->GetAtmosphericPressure();
   if (name.compare("ClothingResistance") == 0)
-    return &GetClothingResistance();
+    return &const_cast<SEEnvironmentalConditions*>(this)->GetClothingResistance();
   if (name.compare("Emissivity") == 0)
-    return &GetEmissivity();
+    return &const_cast<SEEnvironmentalConditions*>(this)->GetEmissivity();
   if (name.compare("MeanRadiantTemperature") == 0)
-    return &GetMeanRadiantTemperature();
+    return &const_cast<SEEnvironmentalConditions*>(this)->GetMeanRadiantTemperature();
   if (name.compare("RelativeHumidity") == 0)
-    return &GetRelativeHumidity();
+    return &const_cast<SEEnvironmentalConditions*>(this)->GetRelativeHumidity();
   if (name.compare("RespirationAmbientTemperature") == 0)
-    return &GetRespirationAmbientTemperature();
+    return &const_cast<SEEnvironmentalConditions*>(this)->GetRespirationAmbientTemperature();
   // I did not support for getting a specific gas/aerosol scalars due to lack of coffee
   return nullptr;
 }

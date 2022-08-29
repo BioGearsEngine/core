@@ -46,8 +46,8 @@ protected:
   virtual void Merge(const SEAnesthesiaMachineChamber& from);
 
 public:
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) const;
+  virtual const SEScalar* GetScalar(const std::string& name) const ;
 
   virtual CDM::enumOnOff::value GetState() const;
   virtual void SetState(CDM::enumOnOff::value name);

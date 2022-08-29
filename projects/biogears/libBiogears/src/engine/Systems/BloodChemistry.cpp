@@ -36,18 +36,18 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4275)
 namespace biogears {
-auto BloodChemistry::make_unique(BioGears& bg) -> std::unique_ptr<BloodChemistry>
+auto BloodChemistry::make_unique(BioGearsEngine& bg) -> std::unique_ptr<BloodChemistry>
 {
   return std::unique_ptr<BloodChemistry>(new BloodChemistry(bg));
 }
 
-BloodChemistry::BloodChemistry(BioGears& bg)
+BloodChemistry::BloodChemistry(BioGearsEngine& bg)
   : SEBloodChemistrySystem(bg.GetLogger())
   , m_data(bg)
 {
@@ -146,7 +146,7 @@ void BloodChemistry::Initialize()
   m_RhFactorMismatch_ct = 0.0; // Only matters when patient is negative type
   m_RhTransfusionReactionVolume_mL = 0.0;
   m_donorRBC_ct = 0.0;
-  m_patientRBC_ct = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) * m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::uL);
+  m_patientRBC_ct = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) * m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::uL);
   m_2Agglutinate_ct = 0.0;
   m_p3Agglutinate_ct = 0.0;
   m_d3Agglutinate_ct = 0.0;
@@ -340,7 +340,7 @@ void BloodChemistry::SetUp()
   m_InflammatoryResponse = &GetInflammatoryResponse();
 }
 
-void BloodChemistry::AtSteadyState()
+void BloodChemistry::SimulationPhaseChange()
 {
 }
 
@@ -408,7 +408,7 @@ void BloodChemistry::Process()
 
   // Calculate Blood Cell Counts
   SESubstance& rbc = m_data.GetSubstances().GetRBC();
-  double TotalBloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
+  double TotalBloodVolume_mL = m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL);
 
   if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction)) {
     if (GetRhTransfusionReactionVolume().GetValue(VolumeUnit::uL) > 0) {
@@ -427,7 +427,7 @@ void BloodChemistry::Process()
   double RedBloodCellVolume_mL = RedBloodCellCount_ct * m_redBloodCellVolume_mL;
   GetHematocrit().SetValue((RedBloodCellVolume_mL / TotalBloodVolume_mL));
   // Yes, we are giving GetRedBloodCellCount a concentration, because that is what it is, but clinically, it is known as RedBloodCellCount
-  GetRedBloodCellCount().SetValue(RedBloodCellCount_ct / m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::uL), AmountPerVolumeUnit::ct_Per_uL);
+  GetRedBloodCellCount().SetValue(RedBloodCellCount_ct / m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::uL), AmountPerVolumeUnit::ct_Per_uL);
   GetPlasmaVolume().SetValue(TotalBloodVolume_mL - RedBloodCellVolume_mL, VolumeUnit::mL); //Look into changing to account for platelets and wbc too
 
   // Concentrations
@@ -477,8 +477,8 @@ void BloodChemistry::Process()
   GetVenousOxygenPressure().Set(m_venaCavaO2->GetPartialPressure());
   GetVenousCarbonDioxidePressure().Set(m_venaCavaCO2->GetPartialPressure());
 
-  double totalFlow_mL_Per_min = m_data.GetCardiovascular().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min);
-  double shuntFlow_mL_Per_min = m_data.GetCardiovascular().GetPulmonaryMeanShuntFlow(VolumePerTimeUnit::mL_Per_min);
+  double totalFlow_mL_Per_min = m_data.GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min);
+  double shuntFlow_mL_Per_min = m_data.GetCardiovascularSystem().GetPulmonaryMeanShuntFlow(VolumePerTimeUnit::mL_Per_min);
   double shunt = shuntFlow_mL_Per_min / totalFlow_mL_Per_min;
   GetShuntFraction().SetValue(shunt);
 
@@ -507,7 +507,7 @@ void BloodChemistry::Process()
 void BloodChemistry::PostProcess()
 {
   if (m_data.GetActions().GetPatientActions().HasOverride()
-      && m_data.GetState() == EngineState::Active) {
+      && m_data.GetSimulationPhase() == SimulationPhase::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasBloodChemistryOverride()) {
       ProcessOverride();
     }
@@ -534,7 +534,7 @@ void BloodChemistry::AcuteRadiationSyndrome()
   auto radDose = m_PatientActions->GetRadiationAbsorbedDose()->GetDose().GetValue(EnergyPerMassUnit::J_Per_kg);
   const double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
   const double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
-  const double currentMetabolicRate_kcal_Per_day = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
+  const double currentMetabolicRate_kcal_Per_day = m_data.GetEnergySystem().GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double metabolicStress = 0.0;
   const double kcal_Per_day_Per_Watt = 20.6362855;
   double EnergyIncrement_kcal_Per_day = 0.0;
@@ -627,8 +627,8 @@ void BloodChemistry::AcuteRadiationSyndrome()
   metabolicStress = std::pow(m_Lymphocytes_ct, 2) - 2 * m_Lymphocytes_ct + 1;
   EnergyIncrement_kcal_Per_day = m_dt_s * (basalMetabolicRate_kcal_Per_day + metabolicStress * maxWorkRate_W * kcal_Per_day_Per_Watt - currentMetabolicRate_kcal_Per_day) * 0.0002;
 
-  m_data.GetEnergy().GetTotalMetabolicRate().IncrementValue(EnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
-  m_data.GetEnergy().GetExerciseEnergyDemand().IncrementValue(EnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
+  m_data.GetEnergySystem().GetTotalMetabolicRate().IncrementValue(EnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
+  m_data.GetEnergySystem().GetExerciseEnergyDemand().IncrementValue(EnergyIncrement_kcal_Per_day, PowerUnit::kcal_Per_day);
 
 
   //increment the exposure variable: 
@@ -753,7 +753,7 @@ void BloodChemistry::CheckBloodSubstanceLevels()
     double arterialOxygen_mmHg = m_ArterialOxygen_mmHg.Value();
     double arterialCarbonDioxide_mmHg = m_ArterialCarbonDioxide_mmHg.Value();
 
-    if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
+    if (m_data.GetSimulationPhase() > SimulationPhase::InitialStabilization) { // Don't throw events if we are initializing
       // hypercapnia check
       double hypercapniaFlag = 60.0; // \cite Guyton11thEd p.531
       double carbonDioxideToxicity = 80.0; // \cite labertsen1971CarbonDioxideToxicity
@@ -900,7 +900,7 @@ void BloodChemistry::CheckBloodSubstanceLevels()
     m_ArterialCarbonDioxide_mmHg.Reset();
   }
 
-  if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
+  if (m_data.GetSimulationPhase() > SimulationPhase::InitialStabilization) { // Don't throw events if we are initializing
 
     // When the brain oxygen partial pressure is too low, events are triggered and event duration is tracked.
     // If the oxygen tension in the brain remains below the thresholds for the specified amount of time, the body
@@ -1289,9 +1289,9 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
       compt->GetSubstanceQuantity(AntigenB_substance)->Balance(BalanceLiquidBy::Mass);
     }
   }
-  double MetabolismAfterHTR = m_data.GetEnergy().GetTotalMetabolicRate().GetValue(PowerUnit::W); //used (primarily) for core temp increase
+  double MetabolismAfterHTR = m_data.GetEnergySystem().GetTotalMetabolicRate().GetValue(PowerUnit::W); //used (primarily) for core temp increase
   MetabolismAfterHTR += metabolicIncrease;
-  m_data.GetEnergy().GetTotalMetabolicRate().SetValue(MetabolismAfterHTR, PowerUnit::W);
+  m_data.GetEnergySystem().GetTotalMetabolicRate().SetValue(MetabolismAfterHTR, PowerUnit::W);
 
   if (rhMismatch) {
     m_RhTransfusionReactionVolume_mL = GetRhTransfusionReactionVolume().GetValue(VolumeUnit::mL);
@@ -1356,7 +1356,7 @@ void BloodChemistry::ManageSIRS()
   double basalTissueEnergyDemand_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W) * 0.8; //Discounting the 20% used by brain
   const double maxDeficitMultiplier = 0.35;
   double energyDeficit_W = basalTissueEnergyDemand_W * maxDeficitMultiplier * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2.0) + 0.5 * 0.5);
-  m_data.GetEnergy().GetEnergyDeficit().SetValue(energyDeficit_W, PowerUnit::W);
+  m_data.GetEnergySystem().GetEnergyDeficit().SetValue(energyDeficit_W, PowerUnit::W);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1548,7 +1548,7 @@ void BloodChemistry::InflammatoryResponse()
   double tiMin = 0.2; //Minimum tissue integrity allowed
 
   //Antibiotic effects
-  double antibacterialEffect = m_data.GetDrugs().GetAntibioticActivity().GetValue();
+  double antibacterialEffect = m_data.GetDrugsSystem().GetAntibioticActivity().GetValue();
 
   //------------------Inflammation source specific modifications and/or actions --------------------------------
   if (burnTotalBodySurfaceArea != 0) {
@@ -1570,7 +1570,7 @@ void BloodChemistry::InflammatoryResponse()
     ManageSIRS();
   }
   if (m_InflammatoryResponse->HasInflammationSource(CDM::enumInflammationSource::Hemorrhage)) {
-    double volumeEffect = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL) / m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::mL);
+    double volumeEffect = m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL) / m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::mL);
     volumeEffect = std::min(volumeEffect, 1.0);
     if (volumeEffect < 1.0) {
       fB = std::pow(1.0 - volumeEffect, 4.0);

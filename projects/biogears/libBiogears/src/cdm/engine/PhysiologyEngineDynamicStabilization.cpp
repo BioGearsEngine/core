@@ -86,7 +86,7 @@ bool PhysiologyEngineDynamicStabilization::Stabilize(PhysiologyEngine& engine, c
     profiler.Start("Status");
   }
   // Execute System initialization time
-  PhysiologyEngineTrack* tracker = engine.GetEngineTrack();
+  PhysiologyEngineTrack const& tracker = engine.GetEngineTrack();
   bool hasOptionalProperties = false;
 
   // Grab all the convergence properties
@@ -94,9 +94,15 @@ bool PhysiologyEngineDynamicStabilization::Stabilize(PhysiologyEngine& engine, c
     if (pc->IsOptional()) {
       hasOptionalProperties = true;
     }
-    if (tracker) {
-      tracker->ConnectRequest(pc->GetDataRequest(), pc->GetDataRequestScalar());
-    }
+
+    //TODO: Move Styabilization to the Engine Layer
+    //
+    //      Personally, the entire concept of EngineTracks is fundamentally broken
+    //      It brakes the divide between abstract interfaces in the SE Layer 
+    //      and concrete implementation along with the idea that PhysiologyEngines are 
+    //      const objects. 
+    const_cast<PhysiologyEngineTrack&>(tracker).ConnectRequest(pc->GetDataRequest(), pc->GetDataRequestScalar());
+ 
     if (!pc->GetDataRequestScalar().HasScalar()) {
       ss << "Cannot find convergence property " << pc->GetDataRequest().GetName();
       throw CommonDataModelException(ss.str());
@@ -340,7 +346,7 @@ bool PropertyConvergence::Test(double time_s)
   return false;
 }
 //-----------------------------------------------------------------------------
-PhysiologyEngineDynamicStabilization::PhysiologyEngineDynamicStabilization(Logger* logger)
+PhysiologyEngineDynamicStabilization::PhysiologyEngineDynamicStabilization(Logger const* logger)
   : PhysiologyEngineStabilization(logger)
   , m_RestingCriteria(logger)
   , m_MergedConditions(logger)
@@ -509,7 +515,7 @@ const std::vector<PhysiologyEngineDynamicStabilizationCriteria*>& PhysiologyEngi
 // PhysiologyEngineDynamicStabilizationCriteria //
 //////////////////////////////////////////////////
 
-PhysiologyEngineDynamicStabilizationCriteria::PhysiologyEngineDynamicStabilizationCriteria(Logger* logger)
+PhysiologyEngineDynamicStabilizationCriteria::PhysiologyEngineDynamicStabilizationCriteria(Logger const* logger)
   : Loggable(logger)
   , m_DataRequestMgr(logger)
 {
@@ -823,7 +829,7 @@ const std::vector<PropertyConvergence*>& PhysiologyEngineDynamicStabilizationCri
 // PropertyConvergence //
 /////////////////////////
 
-PropertyConvergence::PropertyConvergence(SEDataRequest& dr, Logger* logger)
+PropertyConvergence::PropertyConvergence(SEDataRequest& dr, Logger const* logger)
   : Loggable(logger)
   , m_DataRequest(dr)
   , m_DataRequestScalar(logger)

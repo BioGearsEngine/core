@@ -40,16 +40,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/GeneralMath.h>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
-auto Environment::make_unique(BioGears& bg) -> std::unique_ptr<Environment>
+auto Environment::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Environment>
 {
   return std::unique_ptr<Environment>(new Environment(bg));
 }
 
-Environment::Environment(BioGears& bg)
+Environment::Environment(BioGearsEngine& bg)
   : SEEnvironment(bg.GetSubstances())
   , m_data(bg)
 {
@@ -218,9 +218,9 @@ void Environment::StateChange()
   }
 }
 
-void Environment::AtSteadyState()
+void Environment::SimulationPhaseChange()
 {
-  if (m_data.GetState() == EngineState::AtInitialStableState) {
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtInitialStableState) {
     if (m_data.GetConditions().HasInitialEnvironment())
       ProcessChange(*m_data.GetConditions().GetInitialEnvironment());
   }
@@ -319,7 +319,7 @@ void Environment::ProcessActions()
   m_ActiveSwitchPath->SetNextSwitch(CDM::enumOpenClosed::Open);
 
   //Check for actions that modify environment resistances
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+  if (m_data.GetBloodChemistrySystem().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
     //In the event of a burn, modify the skin to clothing, clothing to enclosure (radiation), and clothing to environment (convection)
     //paths based on the burn surface area fraction.  Reducing skin to clothing resistance assumes that burn patient will have large
     //surface area uncovered. We calculate change in evaporative resistance in CalcEvaporation since that involves adjustment of funtion level parameters
@@ -679,7 +679,7 @@ void Environment::CalculateEvaporation()
     double fCl = 1.0 + 0.3 * dClothingResistance_clo;
     double skinWettednessDiffusion = 0.06;
 
-    auto& inflamationSources = m_data.GetBloodChemistry().GetInflammatoryResponse().GetInflammationSources();
+    auto& inflamationSources = m_data.GetBloodChemistrySystem().GetInflammatoryResponse().GetInflammationSources();
     auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), CDM::enumInflammationSource::Burn);
     if ( burn_inflamation != inflamationSources.end() ) {
       if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
@@ -701,8 +701,8 @@ void Environment::CalculateEvaporation()
     double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
 
     double dSweatRate_kgPers = 0.0;
-    if (m_data.GetEnergy().HasSweatRate()) {
-      dSweatRate_kgPers = m_data.GetEnergy().GetSweatRate(MassPerTimeUnit::kg_Per_s) / dSurfaceArea_m2;
+    if (m_data.GetEnergySystem().HasSweatRate()) {
+      dSweatRate_kgPers = m_data.GetEnergySystem().GetSweatRate(MassPerTimeUnit::kg_Per_s) / dSurfaceArea_m2;
     }
     double dSweatingControlMechanisms = dSweatRate_kgPers * m_dHeatOfVaporizationOfWater_J_Per_kg;
     double dWettedPortion = 0.0;
@@ -733,10 +733,10 @@ void Environment::CalculateRespiration()
   //Convection
   double dTempOfRespAir_K = GetConditions().GetRespirationAmbientTemperature(TemperatureUnit::K);
   double dTempOfRespTract_K = 310.15; // = 37C = 98.6F
-  if (m_data.GetEnergy().HasCoreTemperature()) {
-    dTempOfRespTract_K = m_data.GetEnergy().GetCoreTemperature(TemperatureUnit::K);
+  if (m_data.GetEnergySystem().HasCoreTemperature()) {
+    dTempOfRespTract_K = m_data.GetEnergySystem().GetCoreTemperature(TemperatureUnit::K);
   }
-  double dPulmonaryVentilationRate_M3PerS = m_data.GetRespiratory().GetTotalPulmonaryVentilation(VolumePerTimeUnit::m3_Per_s);
+  double dPulmonaryVentilationRate_M3PerS = m_data.GetRespiratorySystem().GetTotalPulmonaryVentilation(VolumePerTimeUnit::m3_Per_s);
   double dAirDensity_kgPerM3 = GetConditions().GetAirDensity(MassPerVolumeUnit::kg_Per_m3);
   double dAirSpecificHeat_JPerK_kg = m_data.GetConfiguration().GetAirSpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg);
   double dSensibleHeatLoss_W = dPulmonaryVentilationRate_M3PerS * dAirDensity_kgPerM3 * dAirSpecificHeat_JPerK_kg * (dTempOfRespTract_K - dTempOfRespAir_K);

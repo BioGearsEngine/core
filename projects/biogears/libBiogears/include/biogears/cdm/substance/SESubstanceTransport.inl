@@ -23,7 +23,7 @@ SESubstanceTransporter<GraphType, FluxUnit, QuantityUnit, ExtensiveUnit, Intensi
   const QuantityUnit& qUnit,
   const ExtensiveUnit& eUnit,
   const IntensiveUnit& iUnit,
-  Logger* logger)
+  Logger const* logger)
   : Loggable(logger)
   , m_FluxUnit(fUnit)
   , m_QuantityUnit(qUnit)

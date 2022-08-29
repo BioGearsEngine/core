@@ -69,8 +69,8 @@ public:
   virtual void StateChange() = 0;
 
 public:
-  const SEScalar* GetScalar(const char* name) override;
-  const SEScalar* GetScalar(const std::string& name) override;
+  const SEScalar* GetScalar(const char* name) const override;
+  const SEScalar* GetScalar(const std::string& name) const override;
 
   std::string GetName() const;
   const char* GetName_cStr() const;

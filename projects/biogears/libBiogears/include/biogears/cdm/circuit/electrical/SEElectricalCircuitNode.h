@@ -26,8 +26,8 @@ class BIOGEARS_API SEElectricalCircuitNode : public SECircuitNode<SEScalarElectr
   friend io::Circuit;
 
 protected:
-  SEElectricalCircuitNode(const char* name, Logger* logger);
-  SEElectricalCircuitNode(const std::string& name, Logger* logger);
+  SEElectricalCircuitNode(const char* name, Logger const* logger);
+  SEElectricalCircuitNode(const std::string& name, Logger const* logger);
 
 public:
   virtual ~SEElectricalCircuitNode();

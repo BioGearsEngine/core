@@ -250,40 +250,40 @@ void SEAnesthesiaMachine::Unload(CDM::AnesthesiaMachineData& data) const
   }
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEAnesthesiaMachine::GetScalar(const char* name)
+const SEScalar* SEAnesthesiaMachine::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEAnesthesiaMachine::GetScalar(const std::string& name)
+const SEScalar* SEAnesthesiaMachine::GetScalar(const std::string& name) const
 {
   if (name == "InletFlow")
-    return &GetInletFlow();
+    return &const_cast<SEAnesthesiaMachine*>(this)->GetInletFlow();
   if (name == "InspiratoryExpiratoryRatio")
-    return &GetInspiratoryExpiratoryRatio();
+    return &const_cast<SEAnesthesiaMachine*>(this)->GetInspiratoryExpiratoryRatio();
   if (name == "OxygenFraction")
-    return &GetOxygenFraction();
+    return &const_cast<SEAnesthesiaMachine*>(this)->GetOxygenFraction();
   if (name == "PositiveEndExpiredPressure")
-    return &GetPositiveEndExpiredPressure();
+    return &const_cast<SEAnesthesiaMachine*>(this)->GetPositiveEndExpiredPressure();
   if (name == "ReliefValvePressure")
-    return &GetReliefValvePressure();
+    return &const_cast<SEAnesthesiaMachine*>(this)->GetReliefValvePressure();
   if (name == "RespiratoryRate")
-    return &GetRespiratoryRate();
+    return &const_cast<SEAnesthesiaMachine*>(this)->GetRespiratoryRate();
   if (name == "VentilatorPressure")
-    return &GetVentilatorPressure();
+    return &const_cast<SEAnesthesiaMachine*>(this)->GetVentilatorPressure();
 
   size_t split = name.find('-');
   if (split != name.npos) {
     std::string child = name.substr(0, split);
     std::string prop = name.substr(split + 1, name.npos);
     if (child == "LeftChamber")
-      return GetLeftChamber().GetScalar(prop);
+      return const_cast<SEAnesthesiaMachine*>(this)->GetLeftChamber().GetScalar(prop);
     if (child == "RightChamber")
-      return GetRightChamber().GetScalar(prop);
+      return const_cast<SEAnesthesiaMachine*>(this)->GetRightChamber().GetScalar(prop);
     if (child == "OxygenBottleOne")
-      return GetOxygenBottleOne().GetScalar(prop);
+      return const_cast<SEAnesthesiaMachine*>(this)->GetOxygenBottleOne().GetScalar(prop);
     if (child == "OxygenBottleTwo")
-      return GetOxygenBottleTwo().GetScalar(prop);
+      return const_cast<SEAnesthesiaMachine*>(this)->GetOxygenBottleTwo().GetScalar(prop);
   }
 
   return nullptr;

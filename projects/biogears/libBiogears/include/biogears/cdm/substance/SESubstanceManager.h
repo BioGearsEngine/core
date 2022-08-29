@@ -38,7 +38,7 @@ class BIOGEARS_API SESubstanceManager : public Loggable {
   friend io::Scenario;
 
 public:
-  SESubstanceManager(Logger* logger);
+  SESubstanceManager(Logger const* logger);
   virtual ~SESubstanceManager();
 
   virtual void Clear();

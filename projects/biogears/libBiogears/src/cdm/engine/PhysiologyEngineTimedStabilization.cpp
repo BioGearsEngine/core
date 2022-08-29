@@ -118,7 +118,7 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
   return true;
 }
 //-------------------------------------------------------------------------------
-PhysiologyEngineTimedStabilization::PhysiologyEngineTimedStabilization(Logger* logger)
+PhysiologyEngineTimedStabilization::PhysiologyEngineTimedStabilization(Logger const* logger)
   : PhysiologyEngineStabilization(logger)
 {
   m_FeedbackStabilizationTime = nullptr;
@@ -302,7 +302,7 @@ const std::vector<PhysiologyEngineTimedStabilizationCriteria*>& PhysiologyEngine
 // PhysiologyEngineTimedStabilizationCriteria //
 //////////////////////////////////////////////////
 
-PhysiologyEngineTimedStabilizationCriteria::PhysiologyEngineTimedStabilizationCriteria(Logger* logger)
+PhysiologyEngineTimedStabilizationCriteria::PhysiologyEngineTimedStabilizationCriteria(Logger const* logger)
   : Loggable(logger)
 {
   Clear();

@@ -22,12 +22,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
-SETissueCompartment::SETissueCompartment(const char* name, Logger* logger)
+SETissueCompartment::SETissueCompartment(const char* name, Logger const* logger)
   : SETissueCompartment(std::string{ name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
-SETissueCompartment::SETissueCompartment(const std::string& name, Logger* logger)
+SETissueCompartment::SETissueCompartment(const std::string& name, Logger const* logger)
   : SECompartment(name, logger)
 {
   m_AcidicPhospohlipidConcentration = nullptr;
@@ -124,33 +124,33 @@ void SETissueCompartment::Unload(CDM::TissueCompartmentData& data)
     data.TotalMass(std::unique_ptr<CDM::ScalarMassData>(m_TotalMass->Unload()));
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SETissueCompartment::GetScalar(const char* name)
+const SEScalar* SETissueCompartment::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SETissueCompartment::GetScalar(const std::string& name)
+const SEScalar* SETissueCompartment::GetScalar(const std::string& name) const
 {
   if (name.compare("AcidicPhospohlipidConcentration") == 0)
-    return &GetAcidicPhospohlipidConcentration();
+    return &const_cast<SETissueCompartment*>(this)->GetAcidicPhospohlipidConcentration();
   if (name.compare("MatrixVolume") == 0)
-    return &GetMatrixVolume();
+    return &const_cast<SETissueCompartment*>(this)->GetMatrixVolume();
   if (name.compare("MembranePotential") == 0)
-    return &GetMembranePotential();
+    return &const_cast<SETissueCompartment*>(this)->GetMembranePotential();
   if (name.compare("NeutralLipidsVolumeFraction") == 0)
-    return &GetNeutralLipidsVolumeFraction();
+    return &const_cast<SETissueCompartment*>(this)->GetNeutralLipidsVolumeFraction();
   if (name.compare("NeutralPhospholipidsVolumeFraction") == 0)
-    return &GetNeutralPhospholipidsVolumeFraction();
+    return &const_cast<SETissueCompartment*>(this)->GetNeutralPhospholipidsVolumeFraction();
   if (name.compare("ReflectionCoefficient") == 0)
-    return &GetReflectionCoefficient();
+    return &const_cast<SETissueCompartment*>(this)->GetReflectionCoefficient();
   if (name.compare("TissueToPlasmaAlbuminRatio") == 0)
-    return &GetTissueToPlasmaAlbuminRatio();
+    return &const_cast<SETissueCompartment*>(this)->GetTissueToPlasmaAlbuminRatio();
   if (name.compare("TissueToPlasmaAlphaAcidGlycoproteinRatio") == 0)
-    return &GetTissueToPlasmaAlphaAcidGlycoproteinRatio();
+    return &const_cast<SETissueCompartment*>(this)->GetTissueToPlasmaAlphaAcidGlycoproteinRatio();
   if (name.compare("TissueToPlasmaLipoproteinRatio") == 0)
-    return &GetTissueToPlasmaLipoproteinRatio();
+    return &const_cast<SETissueCompartment*>(this)->GetTissueToPlasmaLipoproteinRatio();
   if (name.compare("TotalMass") == 0)
-    return &GetTotalMass();
+    return &const_cast<SETissueCompartment*>(this)->GetTotalMass();
   return nullptr;
 }
 //-----------------------------------------------------------------------------

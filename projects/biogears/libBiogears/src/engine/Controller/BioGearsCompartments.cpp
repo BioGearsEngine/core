@@ -20,16 +20,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
-auto BioGearsCompartments::make_unique(BioGears& bg) -> std::unique_ptr<BioGearsCompartments>
+auto BioGearsCompartments::make_unique(BioGearsEngine& bg) -> std::unique_ptr<BioGearsCompartments>
 {
   return std::unique_ptr<BioGearsCompartments>(new BioGearsCompartments(bg));
 }
 
-BioGearsCompartments::BioGearsCompartments(BioGears& bg)
+BioGearsCompartments::BioGearsCompartments(BioGearsEngine& bg)
   : SECompartmentManager(bg.GetSubstances())
   , m_data(bg)
 {

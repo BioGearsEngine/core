@@ -441,7 +441,7 @@ void Logger::SetConsoleConversionPattern(std::string const& pattern)
 //!  \return LogLevel [IN] -- Lowest level message to be printed to the volatile log stream
 //!
 //!
-auto Logger::GetLogLevel() -> LogLevel
+auto Logger::GetLogLevel() const -> LogLevel
 {
   return m_impl->persistant_filter_level;
 }
@@ -456,7 +456,8 @@ void Logger::SetForward(LoggerForward* forward) { m_impl->userDefinedLogger = fo
 
 //-------------------------------------------------------------------------
 //!  \return bool - Has a User defined LogFoward Impl been defined to this logger
-bool Logger::HasForward() { return m_impl->userDefinedLogger == nullptr ? false : true; }
+bool Logger::HasForward() const 
+{ return m_impl->userDefinedLogger == nullptr ? false : true; }
 
 //-------------------------------------------------------------------------------
 //! \brief
@@ -827,7 +828,7 @@ Loggable::Loggable()
   : Loggable(nullptr, "")
 {
 }
-Loggable::Loggable(Logger* logger, std::string const& origin)
+Loggable::Loggable(Logger const * logger, std::string const& origin)
   : m_Logger(logger)
   , m_origin(origin)
 {
@@ -972,5 +973,5 @@ void Loggable::Fatal(std::istream&& msg) const
   }
 }
 
-Logger* Loggable::GetLogger() const { return m_Logger; }
+Logger const * Loggable::GetLogger() const { return m_Logger; }
 }

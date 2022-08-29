@@ -13,12 +13,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 
 namespace biogears {
-SEThermalCircuitNode::SEThermalCircuitNode(const char* name, Logger* logger)
+SEThermalCircuitNode::SEThermalCircuitNode(const char* name, Logger const* logger)
   : SEThermalCircuitNode(std::string{ name }, logger)
 {
 }
 //-------------------------------------------------------------------------------
-SEThermalCircuitNode::SEThermalCircuitNode(const std::string& name, Logger* logger)
+SEThermalCircuitNode::SEThermalCircuitNode(const std::string& name, Logger const* logger)
   : SECircuitNode<THERMAL_CIRCUIT_NODE>(name, logger)
 {
 }

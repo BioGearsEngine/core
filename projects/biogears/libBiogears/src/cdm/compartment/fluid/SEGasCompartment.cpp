@@ -19,12 +19,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
-SEGasCompartment::SEGasCompartment(const char* name, Logger* logger)
+SEGasCompartment::SEGasCompartment(const char* name, Logger const* logger)
   : SEGasCompartment(std::string{ name }, logger)
 {
 }
 //-------------------------------------------------------------------------------
-SEGasCompartment::SEGasCompartment(const std::string& name, Logger* logger)
+SEGasCompartment::SEGasCompartment(const std::string& name, Logger const* logger)
   : SEFluidCompartment(name, logger)
 {
 }

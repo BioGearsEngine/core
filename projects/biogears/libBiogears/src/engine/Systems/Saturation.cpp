@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarInversePressure.h>
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 //#define VERBOSE
 namespace biogears {
@@ -131,12 +131,12 @@ public:
   }
 };
 
-auto SaturationCalculator::make_unique(BioGears& bg) -> std::unique_ptr<SaturationCalculator>
+auto SaturationCalculator::make_unique(BioGearsEngine& bg) -> std::unique_ptr<SaturationCalculator>
 {
   return std::unique_ptr<SaturationCalculator>(new SaturationCalculator(bg));
 }
 
-SaturationCalculator::SaturationCalculator(BioGears& bg)
+SaturationCalculator::SaturationCalculator(BioGearsEngine& bg)
   : Loggable(bg.GetLogger())
   , m_data(bg)
 {

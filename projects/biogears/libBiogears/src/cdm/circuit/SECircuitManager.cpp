@@ -22,7 +22,7 @@ template class SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath,
 template class SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit>;
 template class SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit>;
 
-SECircuitManager::SECircuitManager(Logger* logger)
+SECircuitManager::SECircuitManager(Logger const* logger)
   : Loggable(logger)
 {
 }

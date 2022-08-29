@@ -24,7 +24,7 @@ class SEElectroCardioGram : public SESystem {
   friend io::ElectroCardioGram;
 protected:
 public:
-  BIOGEARS_API SEElectroCardioGram(Logger* logger);
+  BIOGEARS_API SEElectroCardioGram(Logger const* logger);
   BIOGEARS_API ~SEElectroCardioGram() override;
 
   BIOGEARS_API static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
@@ -34,8 +34,8 @@ public:
 
   BIOGEARS_API void Clear() override;
 
-  BIOGEARS_API const SEScalar* GetScalar(const char* name) override;
-  BIOGEARS_API const SEScalar* GetScalar(const std::string& name) override;
+  BIOGEARS_API const SEScalar* GetScalar(const char* name) const override;
+  BIOGEARS_API const SEScalar* GetScalar(const std::string& name) const override;
 
   BIOGEARS_API bool Load(const CDM::ElectroCardioGramData& in);
   BIOGEARS_API CDM::ElectroCardioGramData* Unload() const override;

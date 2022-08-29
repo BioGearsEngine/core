@@ -28,16 +28,16 @@ class SEGasCompartment;
 class SELiquidCompartment;
 class SEGasCompartment;
 class SELiquidSubstanceQuantity;
-class BioGears;
+class BioGearsEngine;
 
 class BIOGEARS_API Inhaler : public SEInhaler, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<Inhaler>;
-  Inhaler(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<Inhaler>;
+  Inhaler(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~Inhaler() override;

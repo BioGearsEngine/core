@@ -27,10 +27,10 @@ template class map<const biogears::SELiquidTransportVertex*, vector<biogears::SE
 }
 
 namespace biogears {
-SELiquidCompartmentGraph::SELiquidCompartmentGraph(const char* name, Logger* logger)
+SELiquidCompartmentGraph::SELiquidCompartmentGraph(const char* name, Logger const* logger)
   : SELiquidCompartmentGraph(std::string { name }, logger) {};
 
-SELiquidCompartmentGraph::SELiquidCompartmentGraph(const std::string& name, Logger* logger)
+SELiquidCompartmentGraph::SELiquidCompartmentGraph(const std::string& name, Logger const* logger)
   : SECompartmentTransportGraph(name, logger) {};
 
 SELiquidCompartmentGraph::~SELiquidCompartmentGraph() { }

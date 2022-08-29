@@ -92,19 +92,19 @@ void SEInhaler::Unload(CDM::InhalerData& data) const
     data.Substance(m_Substance->GetName());
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEInhaler::GetScalar(const char* name)
+const SEScalar* SEInhaler::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEInhaler::GetScalar(const std::string& name)
+const SEScalar* SEInhaler::GetScalar(const std::string& name) const
 {
   if (name.compare("MeteredDose") == 0)
-    return &GetMeteredDose();
+    return &const_cast<SEInhaler*>(this)->GetMeteredDose();
   if (name.compare("NozzleLoss") == 0)
-    return &GetNozzleLoss();
+    return &const_cast<SEInhaler*>(this)->GetNozzleLoss();
   if (name.compare("SpacerVolume") == 0)
-    return &GetSpacerVolume();
+    return &const_cast<SEInhaler*>(this)->GetSpacerVolume();
   return nullptr;
 }
 //-------------------------------------------------------------------------------

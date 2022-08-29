@@ -41,7 +41,7 @@ namespace biogears {
 class BIOGEARS_API TimingProfile : public Loggable {
 public:
   TimingProfile();
-  TimingProfile(Logger* logger);
+  TimingProfile(Logger const* logger);
   virtual ~TimingProfile();
 
   void Clear();

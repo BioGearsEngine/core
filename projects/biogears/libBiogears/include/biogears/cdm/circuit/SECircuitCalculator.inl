@@ -36,7 +36,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 template <CIRCUIT_CALCULATOR_TEMPLATE>
-SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::SECircuitCalculator(const CapacitanceUnit& c, const FluxUnit& f, const InductanceUnit& i, const PotentialUnit& p, const QuantityUnit& q, const ResistanceUnit& r, Logger* logger)
+SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::SECircuitCalculator(const CapacitanceUnit& c, const FluxUnit& f, const InductanceUnit& i, const PotentialUnit& p, const QuantityUnit& q, const ResistanceUnit& r, Logger const* logger)
   : Loggable(logger)
   , m_CapacitanceUnit(c)
   , m_FluxUnit(f)

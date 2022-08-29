@@ -29,16 +29,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
-auto Endocrine::make_unique(BioGears& bg) -> std::unique_ptr<Endocrine>
+auto Endocrine::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Endocrine>
 {
   return std::unique_ptr<Endocrine>(new Endocrine(bg));
 }
 
-Endocrine::Endocrine(BioGears& bg)
+Endocrine::Endocrine(BioGearsEngine& bg)
   : SEEndocrineSystem(bg.GetLogger())
   , m_data(bg)
 {
@@ -103,9 +103,9 @@ void Endocrine::SetUp()
   m_SplanchnicGlucagon = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Splanchnic)->GetSubstanceQuantity(*glucagon);
 }
 
-void Endocrine::AtSteadyState()
+void Endocrine::SimulationPhaseChange()
 {
-  if (m_data.GetState() == EngineState::AtInitialStableState) {
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtInitialStableState) {
     double diabetesScale = 1;
     if (m_data.GetConditions().HasDiabetesType1()) {
       if (m_data.GetConditions().GetDiabetesType1()->HasInsulinProductionSeverity())
@@ -124,7 +124,7 @@ void Endocrine::AtSteadyState()
     }
   }
 
-  m_AverageBiologicalDebt = m_data.GetNervous().GetBiologicalDebt().GetValue();  //save off the average after stabilization
+  m_AverageBiologicalDebt = m_data.GetNervousSystem().GetBiologicalDebt().GetValue();  //save off the average after stabilization
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ void Endocrine::Process()
 void Endocrine::PostProcess()
 {
   if (m_data.GetActions().GetPatientActions().HasOverride()
-      && m_data.GetState() == EngineState::Active) {
+      && m_data.GetSimulationPhase() == SimulationPhase::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasEndocrineOverride()) {
       ProcessOverride();
     }
@@ -183,7 +183,7 @@ void Endocrine::PostProcess()
 void Endocrine::SynthesizeInsulin()
 {
   double bloodGlucoseConcentration_g_Per_L = m_AortaGlucose->GetConcentration(MassPerVolumeUnit::g_Per_L);
-  const double biologicalDebt = m_data.GetNervous().GetBiologicalDebt().GetValue();
+  const double biologicalDebt = m_data.GetNervousSystem().GetBiologicalDebt().GetValue();
   double diabetesScale = 1;
   double metabolicScaling = 0.0;
   double insulinSynthesisRate_pmol_Per_min = 0.0;
@@ -305,7 +305,7 @@ void Endocrine::ReleaseEpinephrine()
   double epinephrineBasalReleaseRate_ug_Per_min = .00229393 * patientWeight_kg; //We want it to be ~.18 ug/min for our StandardMale
   double epinephrineRelease_ug = (epinephrineBasalReleaseRate_ug_Per_min / 60) * m_dt_s; //amount released per timestep
 
-  double currentMetabolicRate_W = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W);
+  double currentMetabolicRate_W = m_data.GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W);
   double basalMetabolicRate_W = Patient.GetBasalMetabolicRate(PowerUnit::W);
   double releaseMultiplier = 1.0;
 
@@ -331,7 +331,7 @@ void Endocrine::ReleaseEpinephrine()
 
   // If we have a pain response, release more epi
   if (m_data.GetActions().GetPatientActions().HasPainStimulus()) {
-    double patientPainVAS = m_data.GetNervous().GetPainVisualAnalogueScale().GetValue();
+    double patientPainVAS = m_data.GetNervousSystem().GetPainVisualAnalogueScale().GetValue();
 
     //The highest stress multiplier we currently support is 30
     releaseMultiplier += GeneralMath::LinearInterpolator(0, 1, 0, 5, patientPainVAS);

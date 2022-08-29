@@ -93,24 +93,24 @@ NaloxoneThread::NaloxoneThread(const std::string logFile, double opioidDose, con
   resultsFile.append(opioidName);
   resultsFile.append(resultsFileNasalNaloxone);
   resultsFile.append(".csv");
-  m_bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile); //deposits in build/runtime
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", "1/min");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*opioidSub, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*nal, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("ArterialBloodPH", "unitless");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", "mL/min");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("InflammatoryResponse-TissueIntegrity");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", "mmHg");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", "mmHg");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", "mmHg");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", "1/min");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", "mL");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystemicVascularResistance", "mmHg s/mL");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("BloodVolume", "mL");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanUrineOutput", "mL/hr");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("PainVisualAnalogueScale");
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalNaloxone_mg", m_totalNaloxone_mg);
+  m_bg->GetEngineTrack().GetDataRequestManager().SetResultsFilename(resultsFile); //deposits in build/runtime
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", "1/min");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreateSubstanceDataRequest().Set(*opioidSub, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+  m_bg->GetEngineTrack().GetDataRequestManager().CreateSubstanceDataRequest().Set(*nal, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("ArterialBloodPH", "unitless");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", "mL/min");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("InflammatoryResponse-TissueIntegrity");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", "mmHg");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", "mmHg");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", "mmHg");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", "1/min");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", "mL");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystemicVascularResistance", "mmHg s/mL");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("BloodVolume", "mL");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanUrineOutput", "mL/hr");
+  m_bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("PainVisualAnalogueScale");
+  m_bg->GetEngineTrack().GetDataTrack().Probe("totalNaloxone_mg", m_totalNaloxone_mg);
 
   //Create infusion actions
   m_opioid = new SESubstanceInfusion(*opioidSub);
@@ -162,8 +162,8 @@ void NaloxoneThread::AdvanceTime()
     // Increment m_totalNaloxone here?
     // Need to check for O2 below 0.9 and readmin naloxone
 
-    m_bg->GetEngineTrack()->GetDataTrack().Probe("totalNaloxone1_mg", m_totalNaloxone_mg);
-    m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
+    m_bg->GetEngineTrack().GetDataTrack().Probe("totalNaloxone1_mg", m_totalNaloxone_mg);
+    m_bg->GetEngineTrack().TrackData(m_bg->GetSimulationTime(TimeUnit::s));
     m_mutex.unlock();
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
   }
@@ -176,8 +176,8 @@ void NaloxoneThread::AdvanceTimeFluids()
   // Increment m_totalNaloxone here?
   // Need to check for O2 below 0.9 and readmin naloxone
 
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalNaloxone2_mg", m_totalNaloxone_mg);
-  m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
+  m_bg->GetEngineTrack().GetDataTrack().Probe("totalNaloxone2_mg", m_totalNaloxone_mg);
+  m_bg->GetEngineTrack().TrackData(m_bg->GetSimulationTime(TimeUnit::s));
   m_mutex.unlock();
   std::this_thread::sleep_for(std::chrono::milliseconds(25));
 }
@@ -186,15 +186,15 @@ void NaloxoneThread::Status()
 {
   m_mutex.lock();
   /*m_bg->GetLogger()->Info(asprintf("The patient suffered a burn wound %f %s", m_bg->GetSimulationTime(TimeUnit::min), " min ago"));
-  m_bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", m_bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
-  m_bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  m_bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  m_bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", m_bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  m_bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", m_bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  m_bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", m_bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
-  m_bg->GetLogger()->Info(asprintf("Blood Volume: %f %s", m_bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL), "mL"));
-  m_bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", m_bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
-  m_bg->GetLogger()->Info(asprintf("Mean Urine Output : %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
+  m_bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", m_bg->GetRespiratorySystem().GetTidalVolume(VolumeUnit::mL), "mL"));
+  m_bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", m_bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", m_bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", m_bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  m_bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", m_bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  m_bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", m_bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  m_bg->GetLogger()->Info(asprintf("Blood Volume: %f %s", m_bg->GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL), "mL"));
+  m_bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", m_bg->GetCardiovascularSystem().GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
+  m_bg->GetLogger()->Info(asprintf("Mean Urine Output : %f %s", m_bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
   if (m_ringers->HasBagVolume()) {
     m_bg->GetLogger()->Info(asprintf("Remaining LR Volume : %f %s", m_ivBagVolume_mL, "mL"));
   }*/
@@ -269,7 +269,7 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
     if ((int)m_bg->GetSimulationTime(TimeUnit::s) == ((int)secsBeforeIntervention)) {
       m_bg->GetLogger()->Info(asprintf("administering nasal naloxone"));
       m_bg->GetLogger()->Info(asprintf("Beginning Intervention with infusion at %f %s", standardNaloxoneDose_mg, "mg"));
-      m_bg->GetLogger()->Info(asprintf("Current O2 Saturation is %f %s", m_bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
+      m_bg->GetLogger()->Info(asprintf("Current O2 Saturation is %f %s", m_bg->GetBloodChemistrySystem().GetOxygenSaturation()));
       SetNaloxoneInfusionRate(standardNaloxoneDose_mg);
     }
 
@@ -277,7 +277,7 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
     //check o2 
     if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) > ((int)secsBeforeIntervention)) {
         Status();
-        double o2Sat = m_bg->GetBloodChemistrySystem()->GetOxygenSaturation();
+        double o2Sat = m_bg->GetBloodChemistrySystem().GetOxygenSaturation();
 
         if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) > ((int)(minTimeBetweenDoses_s + timeOfLastDose))) {
             if (o2Sat < targetLowO2Saturation) {

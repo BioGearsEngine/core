@@ -97,15 +97,15 @@ void SEAnesthesiaMachineChamber::Merge(const SEAnesthesiaMachineChamber& from)
   }
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEAnesthesiaMachineChamber::GetScalar(const char* name)
+const SEScalar* SEAnesthesiaMachineChamber::GetScalar(const char* name) const
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEAnesthesiaMachineChamber::GetScalar(const std::string& name)
+const SEScalar* SEAnesthesiaMachineChamber::GetScalar(const std::string& name) const
 {
   if (name == "SubstanceFraction")
-    return &GetSubstanceFraction();
+    return &const_cast<SEAnesthesiaMachineChamber*>(this)->GetSubstanceFraction();
   return nullptr;
 }
 //-------------------------------------------------------------------------------

@@ -40,7 +40,7 @@ struct BIOGEARS_API EigenCircuitSolver {
 template <CIRCUIT_CALCULATOR_TEMPLATE>
 class SECircuitCalculator : public Loggable {
 public:
-  SECircuitCalculator(const CapacitanceUnit& c, const FluxUnit& f, const InductanceUnit& i, const PotentialUnit& p, const QuantityUnit& q, const ResistanceUnit& r, Logger* logger);
+  SECircuitCalculator(const CapacitanceUnit& c, const FluxUnit& f, const InductanceUnit& i, const PotentialUnit& p, const QuantityUnit& q, const ResistanceUnit& r, Logger const* logger);
   virtual ~SECircuitCalculator();
 
   virtual void SetEigenSolver(EigenCircuitSolver s) { m_solver = s; };

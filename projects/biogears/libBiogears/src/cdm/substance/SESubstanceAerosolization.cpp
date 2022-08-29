@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
-SESubstanceAerosolization::SESubstanceAerosolization(Logger* logger)
+SESubstanceAerosolization::SESubstanceAerosolization(Logger const* logger)
   : Loggable(logger)
 {
   m_BronchioleModifier = nullptr;
@@ -49,17 +49,17 @@ bool SESubstanceAerosolization::IsValid() const
   return true;
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstanceAerosolization::GetScalar(const char* name)
+const SEScalar* SESubstanceAerosolization::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstanceAerosolization::GetScalar(const std::string& name)
+const SEScalar* SESubstanceAerosolization::GetScalar(const std::string& name) const
 {
   if (name.compare("BronchioleModifier") == 0)
-    return &GetBronchioleModifier();
+    return &const_cast<SESubstanceAerosolization*>(this)->GetBronchioleModifier();
   if (name.compare("InflammationCoefficient") == 0)
-    return &GetInflammationCoefficient();
+    return &const_cast<SESubstanceAerosolization*>(this)->GetInflammationCoefficient();
   return nullptr;
 }
 //-----------------------------------------------------------------------------

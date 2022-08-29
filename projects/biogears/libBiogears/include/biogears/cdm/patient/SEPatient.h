@@ -60,7 +60,7 @@ class BIOGEARS_API SEPatient : public Loggable {
   friend io::Patient;
 
 public:
-  SEPatient(Logger* logger);
+  SEPatient(Logger const* logger);
   virtual ~SEPatient();
 
   virtual void Clear();
@@ -80,8 +80,8 @@ public:
   *              This is best used, and intended for, you to dynamically prepopulate
   *              a mapping data structure that will help access what you need
   */
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) const;
+  virtual const SEScalar* GetScalar(const std::string& name) const ;
 
   virtual const std::map<CDM::enumPatientEvent::value, bool>& GetEventStates() const { return m_EventState; }
   virtual void SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time);

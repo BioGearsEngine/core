@@ -13,12 +13,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 
 namespace biogears {
-SEFluidCircuitNode::SEFluidCircuitNode(const char* name, Logger* logger)
+SEFluidCircuitNode::SEFluidCircuitNode(const char* name, Logger const* logger)
   : SECircuitNode<SEScalarPressure, SEScalarVolume>(std::string{ name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
-SEFluidCircuitNode::SEFluidCircuitNode(const std::string& name, Logger* logger)
+SEFluidCircuitNode::SEFluidCircuitNode(const std::string& name, Logger const* logger)
   : SECircuitNode<SEScalarPressure, SEScalarVolume>(name, logger)
 {
 }

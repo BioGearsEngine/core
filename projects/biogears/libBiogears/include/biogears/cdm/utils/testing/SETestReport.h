@@ -22,7 +22,7 @@ class BIOGEARS_API SETestReport : public Loggable {
   friend io::TestReport;
 
 public:
-  SETestReport(Logger* logger);
+  SETestReport(Logger const* logger);
   virtual ~SETestReport();
 
   virtual void Reset(); //reset values

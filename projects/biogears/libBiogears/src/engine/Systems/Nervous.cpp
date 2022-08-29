@@ -33,7 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 #include "biogears/math/angles.h"
 namespace BGE = mil::tatrc::physiology::biogears;
@@ -43,12 +43,12 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 // #define VERBOSE
 namespace biogears {
-auto Nervous::make_unique(BioGears& bg) -> std::unique_ptr<Nervous>
+auto Nervous::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Nervous>
 {
   return std::unique_ptr<Nervous>(new Nervous(bg));
 }
 
-Nervous::Nervous(BioGears& bg)
+Nervous::Nervous(BioGearsEngine& bg)
   : SENervousSystem(bg.GetLogger())
   , m_data(bg)
 {
@@ -85,9 +85,9 @@ void Nervous::Initialize()
   m_AfferentPulmonaryStretchReceptor_Hz = 12.0;
   m_AorticBaroreceptorStrain = 0.04226;
   m_AttentionLapses = 3.0;   //well rested number of lapses for a given task
-  m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
+  m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg);
   m_BiologicalDebt = 0.0;
-  m_CardiopulmonaryInputBaseline_mmHg = m_data.GetCardiovascular().GetCentralVenousPressure(PressureUnit::mmHg) - (m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg) - m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient)->GetPressure(PressureUnit::mmHg));
+  m_CardiopulmonaryInputBaseline_mmHg = m_data.GetCardiovascularSystem().GetCentralVenousPressure(PressureUnit::mmHg) - (m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg) - m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient)->GetPressure(PressureUnit::mmHg));
   m_CardiopulmonaryInput_mmHg = m_CardiopulmonaryInputBaseline_mmHg;
   m_CarotidBaroreceptorStrain = 0.04226;
   m_CentralFrequencyDelta_Per_min = 0.0;
@@ -95,7 +95,7 @@ void Nervous::Initialize()
   m_CerebralArteriesEffectors_Large = std::vector<double>(3);
   m_CerebralArteriesEffectors_Small = std::vector<double>(3);
   m_CerebralOxygenSaturationBaseline = 0.0;
-  m_CerebralPerfusionPressureBaseline_mmHg = m_data.GetCardiovascular().GetCerebralPerfusionPressure(PressureUnit::mmHg);
+  m_CerebralPerfusionPressureBaseline_mmHg = m_data.GetCardiovascularSystem().GetCerebralPerfusionPressure(PressureUnit::mmHg);
   m_CerebralBloodFlowBaseline_mL_Per_s = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralCapillariesToCerebralVeins1)->GetFlow(VolumePerTimeUnit::mL_Per_s);
   m_CerebralBloodFlowInput_mL_Per_s = m_CerebralBloodFlowBaseline_mL_Per_s;
   m_ChemoreceptorFiringRateSetPoint_Hz = m_AfferentChemoreceptor_Hz;
@@ -108,7 +108,7 @@ void Nervous::Initialize()
   m_HypoxiaThresholdHeart = 0.0;
   m_HypoxiaThresholdPeripheral = 0.0;
   m_HeartOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
-  m_MeanLungVolume_L = m_data.GetRespiratory().GetTotalLungVolume(VolumeUnit::L);
+  m_MeanLungVolume_L = m_data.GetRespiratorySystem().GetTotalLungVolume(VolumeUnit::L);
   m_MuscleOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
   m_OxygenAutoregulatorHeart = 0.0;
   m_OxygenAutoregulatorMuscle = 0.0;
@@ -299,9 +299,9 @@ void Nervous::SetUp()
 
 }
 
-void Nervous::AtSteadyState()
+void Nervous::SimulationPhaseChange()
 {
-  if (m_data.GetState() == EngineState::AtInitialStableState) {
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtInitialStableState) {
     m_FeedbackActive = true;
     //Only reset oxygen baselines after initial stabilization because we want conditions (e.g. pneumonia) to put body in state of actively trying to get back to "normal"
     m_HeartOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
@@ -315,8 +315,8 @@ void Nervous::AtSteadyState()
   }
 
   // The set-points (Baselines) get reset at the end of each stabilization period.
-  m_ArterialOxygenBaseline_mmHg = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
-  m_ArterialCarbonDioxideBaseline_mmHg = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
+  m_ArterialOxygenBaseline_mmHg = m_data.GetBloodChemistrySystem().GetArterialOxygenPressure(PressureUnit::mmHg);
+  m_ArterialCarbonDioxideBaseline_mmHg = m_data.GetBloodChemistrySystem().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
 
   //Central and peripheral ventilation changes are set to 0 because patient baseline ventilation is updated to include
   //their contributions at steady state.
@@ -327,9 +327,9 @@ void Nervous::AtSteadyState()
 
   //The chemoreceptor firing rate and its setpoint are reset so that central and peripheral derivatives will evaluate to 0
   //the first time step after stabilization (and will stay that way, assuming no other perturbations to blood gas levels)
-  m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
+  m_BaroreceptorOperatingPoint_mmHg = m_data.GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg);
   m_ChemoreceptorFiringRateSetPoint_Hz = m_AfferentChemoreceptor_Hz;
-  m_CerebralPerfusionPressureBaseline_mmHg = m_data.GetCardiovascular().GetCerebralPerfusionPressure(PressureUnit::mmHg);
+  m_CerebralPerfusionPressureBaseline_mmHg = m_data.GetCardiovascularSystem().GetCerebralPerfusionPressure(PressureUnit::mmHg);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -389,7 +389,7 @@ void Nervous::AfferentResponse()
   //instabilities.  The total lung volume is therefore a better reflection of the state of the lungs.
   const double tauAP_s = 2.0;
   const double gainAP_Hz_Per_L = 4.4;
-  const double totalLungVolume = m_data.GetRespiratory().GetTotalLungVolume(VolumeUnit::L);
+  const double totalLungVolume = m_data.GetRespiratorySystem().GetTotalLungVolume(VolumeUnit::L);
   const double dVolume = 0.5 * (-m_MeanLungVolume_L + totalLungVolume);
   m_MeanLungVolume_L += (dVolume * m_dt_s);
   const double dFrequencyAP_Hz = (1.0 / tauAP_s) * (-m_AfferentPulmonaryStretchReceptor_Hz + gainAP_Hz_Per_L * m_MeanLungVolume_L);
@@ -426,7 +426,7 @@ void Nervous::CentralSignalProcess()
   //See Magosso2001Mathematical for more detail
 
   //Hypoxia thresholds
-  const double arterialO2 = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
+  const double arterialO2 = m_data.GetBloodChemistrySystem().GetArterialOxygenPressure(PressureUnit::mmHg);
   const double expHypoxiaSH = std::exp((arterialO2 - oxygenHalfMaxSH) / kOxygenSH);
   const double expHypoxiaSP = std::exp((arterialO2 - oxygenHalfMaxSP) / kOxygenSP);
   const double hypoxiaSH = xSatSH / (1.0 + expHypoxiaSH);
@@ -434,7 +434,7 @@ void Nervous::CentralSignalProcess()
   const double dHypoxiaThresholdSH = (1.0 / tauIschemia) * (-m_HypoxiaThresholdHeart + hypoxiaSH);
   const double dHypoxiaThresholdSP = (1.0 / tauIschemia) * (-m_HypoxiaThresholdPeripheral + hypoxiaSP);
   //Hypercapnia thresholds
-  const double arterialCO2 = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
+  const double arterialCO2 = m_data.GetBloodChemistrySystem().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
   const double dHypercapaniaThresholdSH = (1.0 / tauCO2) * (-m_HypercapniaThresholdHeart + xCO2SH * (arterialCO2 - m_ArterialCarbonDioxideBaseline_mmHg));
   const double dHypercapniaThresholdSP = (1.0 / tauCO2) * (-m_HypercapniaThresholdPeripheral + xCO2SP * (arterialCO2 - m_ArterialCarbonDioxideBaseline_mmHg));
 
@@ -490,7 +490,7 @@ void Nervous::CentralSignalProcess()
   //Model fatigue of sympathetic peripheral response during sepsis -- Future work should investigate relevance of fatigue in other scenarios
   //Currently applying only to the peripheral signal because the literature notes that vascular smooth muscle shows depressed responsiveness to sympathetic activiy,
   //(Sayk et al., 2008 and Brassard et al., 2016) which would inhibit ability to increase peripheral resistance
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+  if (m_data.GetBloodChemistrySystem().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
     double fatigueThreshold = 6.0;
     double fatigueTimeConstant_hr = 2.0;
     double dFatigueScale_hr = 0.0;
@@ -515,7 +515,7 @@ void Nervous::CentralSignalProcess()
   const double wV_AC = 0.15;
   const double wV_AP = 0.0745;
   const double hypoxiaThresholdV = -0.648;
-  const double baroreceptorBaseline_Hz = 25.15; //This value is the average of the fBaroMin and fBaroMax parameters in BaroreceptorFeedback (NOT reset AtSteadyState because we want continuous signals)
+  const double baroreceptorBaseline_Hz = 25.15; //This value is the average of the fBaroMin and fBaroMax parameters in BaroreceptorFeedback (NOT reset SimulationPhaseChange because we want continuous signals)
 
   const double exponentCarotid = (m_AfferentBaroreceptorCarotid_Hz - baroreceptorBaseline_Hz) / kV;
   const double exponentAortic = (m_AfferentBaroreceptorAortic_Hz - baroreceptorBaseline_Hz) / kV;
@@ -647,7 +647,7 @@ void Nervous::BaroreceptorFeedback()
   //Pain exercise, and some drugs alter the apparent operating point of the baroreceptors
   double painEffect = 0.0;
   double drugEffect = 0.0;
-  const double exerciseEffect = m_data.GetEnergy().GetExerciseMeanArterialPressureDelta(PressureUnit::mmHg);
+  const double exerciseEffect = m_data.GetEnergySystem().GetExerciseMeanArterialPressureDelta(PressureUnit::mmHg);
 
   if (m_data.GetActions().GetPatientActions().HasPainStimulus()) {
     const double painVAS = 0.1 * GetPainVisualAnalogueScale().GetValue();
@@ -655,7 +655,7 @@ void Nervous::BaroreceptorFeedback()
   }
   for (SESubstance* drug : m_data.GetSubstances().GetActiveDrugs()) {
     if ((drug->GetClassification() == CDM::enumSubstanceClass::Anesthetic) || (drug->GetClassification() == CDM::enumSubstanceClass::Sedative) || (drug->GetClassification() == CDM::enumSubstanceClass::Opioid)) {
-      drugEffect = m_data.GetDrugs().GetMeanBloodPressureChange(PressureUnit::mmHg); // / m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
+      drugEffect = m_data.GetDrugsSystem().GetMeanBloodPressureChange(PressureUnit::mmHg); // / m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
       break;
       //Only want to apply the blood pressure change ONCE (In case there are multiple sedative/opioids/etc)
     }
@@ -666,7 +666,7 @@ void Nervous::BaroreceptorFeedback()
   //force, as the pressure at these receptors is technically a function of height above the heart.  Thus, in a lying down
   //position, carotid receptors would "sense" a different pressure than when standing.  See Lim2013Cardiovascular for such
   //an application
-  const double systolicPressure_mmHg = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
+  const double systolicPressure_mmHg = m_data.GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg);
   const double carotidStrainExp = std::exp(-slopeStrain * (systolicPressure_mmHg - baroreceptorOperatingPoint_mmHg));
   const double carotidWallStrain = 1.0 - std::sqrt((1.0 + carotidStrainExp) / (A + carotidStrainExp));
   const double dCarotidStrain = (1.0 / tauVoigt) * (-m_CarotidBaroreceptorStrain + kVoigt * carotidWallStrain);
@@ -677,7 +677,7 @@ void Nervous::BaroreceptorFeedback()
   //Thus, the pressure input is the difference between the sytolic pressure and mean pleural pressure.
   //This means that the aortic baroreceptors will have different sensitivities to events that effect the pleural
   //space (like tension pneumothorax).
-  const double meanPleuralPressure_mmHg = m_data.GetRespiratory().GetMeanPleuralPressure(PressureUnit::mmHg);
+  const double meanPleuralPressure_mmHg = m_data.GetRespiratorySystem().GetMeanPleuralPressure(PressureUnit::mmHg);
   const double aorticPressureInput = systolicPressure_mmHg - meanPleuralPressure_mmHg;
   const double aorticStrainExp = std::exp(-slopeStrain * (aorticPressureInput - baroreceptorOperatingPoint_mmHg));
   const double aorticWallStrain = 1.0 - std::sqrt((1.0 + aorticStrainExp) / (A + aorticStrainExp));
@@ -699,7 +699,7 @@ void Nervous::BaroreceptorFeedback()
   //Since they are located by the heart, they are also effected by changes in transmural pressure.
   //This model for cardiopulmonary receptors is based on Lim2013Cardiovascular
   const double tZ = 6.0;
-  const double cvp = m_data.GetCardiovascular().GetCentralVenousPressure(PressureUnit::mmHg);
+  const double cvp = m_data.GetCardiovascularSystem().GetCentralVenousPressure(PressureUnit::mmHg);
   const double kAff = 3.429;
   const double fmax2 = 20.0;
 
@@ -715,7 +715,7 @@ void Nervous::BaroreceptorFeedback()
   //Update baroreceptor setpoint -- the study from which this time constant was obtained focused on hemorrhagic shock.  The time scale is much different
   //than septic shock and so it is not clear how (or if) this value would change for sepsis.  For now, we will track baroreceptor adaptation and sympathetic fatigue
   //separately.  Future work should try to consolidate these two phenomena into a single model
-  if (m_data.GetState() > EngineState::SecondaryStabilization && !m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+  if (m_data.GetSimulationPhase() > SimulationPhase::SecondaryStabilization && !m_data.GetBloodChemistrySystem().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
     //Pruett2013Population assumes ~16 hr half-time for baroreceptor adaptation to new setpoint (They varied this parameter up to 1-2 days half-time)
     const double kAdapt_Per_hr = 0.042;
     const double dSetpointAdjust_mmHg_Per_hr = kAdapt_Per_hr * (systolicPressure_mmHg - m_BaroreceptorOperatingPoint_mmHg);
@@ -763,9 +763,9 @@ void Nervous::LocalAutoregulation()
   m_CerebralBloodFlowInput_mL_Per_s += (dCerebralBloodFlow * m_dt_s);
 
   //Current physiological values
-  const double cerebralPerfusionPressure = m_data.GetCardiovascular().GetCerebralPerfusionPressure(PressureUnit::mmHg);
-  const double arterialCO2Pressure = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
-  const double arterialO2Pressure = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
+  const double cerebralPerfusionPressure = m_data.GetCardiovascularSystem().GetCerebralPerfusionPressure(PressureUnit::mmHg);
+  const double arterialCO2Pressure = m_data.GetBloodChemistrySystem().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
+  const double arterialO2Pressure = m_data.GetBloodChemistrySystem().GetArterialOxygenPressure(PressureUnit::mmHg);
   const double largePialArteriesResistanceBaseline = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::NeckArteriesToCerebralArteries1)->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
   const double smallPialArteriesResistanceBaseline = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::CerebralPath::CerebralArteries2ToCapillaries)->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
 
@@ -864,7 +864,7 @@ void Nervous::LocalAutoregulation()
   double nextMuscleResistance = GetResistanceScaleMuscle().GetValue();
   nextMuscleResistance *= (1.0 / (1.0 + m_OxygenAutoregulatorMuscle));
 
-  const double metabolicFraction = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W) / m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::W);
+  const double metabolicFraction = m_data.GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W) / m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::W);
 
   //Avoid applying modifiers when drugs affecting respiration are present. If respiration rate --> 0 (like with succinylcholine),
   //  then we get outputs from this function that overwhelm all other modifiers.  This technically isn't unreasonable if you
@@ -915,7 +915,7 @@ void Nervous::ChemoreceptorFeedback()
   const double tuningFactor = 1.4;
 
   //Determine a combined drug effect on the respiratory arm of the nervous system
-  SEDrugSystem& Drugs = m_data.GetDrugs();
+  SEDrugSystem& Drugs = m_data.GetDrugsSystem();
   const double cnsModifier = Drugs.GetCentralNervousResponse().GetValue(); //Apply effects of opioids that depress central nervous activity
   const double sedationModifier = Drugs.GetSedationLevel().GetValue(); //Apply effects of sedatives
   const double nbModifier = Drugs.GetNeuromuscularBlockLevel().GetValue(); //Apply effects of neuromuscular blockers
@@ -927,8 +927,8 @@ void Nervous::ChemoreceptorFeedback()
   BLIM(m_DrugRespirationEffects, 0.0, 1.0);
 
   //Note that this method uses instantaneous values of blood gas levels, not running averages
-  const double arterialO2Pressure_mmHg = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
-  const double arterialCO2Pressure_mmHg = m_data.GetBloodChemistry().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
+  const double arterialO2Pressure_mmHg = m_data.GetBloodChemistrySystem().GetArterialOxygenPressure(PressureUnit::mmHg);
+  const double arterialCO2Pressure_mmHg = m_data.GetBloodChemistrySystem().GetArterialCarbonDioxidePressure(PressureUnit::mmHg);
 
   //Magosso and Ursino cite findings that central chemoreceptors are less sensitive at sub-normal levels of CO2 than to super-normal levels
   if (arterialCO2Pressure_mmHg < m_ArterialCarbonDioxideBaseline_mmHg) {
@@ -981,9 +981,9 @@ void Nervous::ChemoreceptorFeedback()
   //Old driver multiplied a target ventilation by the metabolic modifier.  Since Vent (L/min) = RR(/min) * TV(L) and
   //relationship between driver pressure and TV is approx linear (e.g. 10% change in pressure -> 10% change in TV),
   //, we should be able to maintain this assumption to achieve desired effect
-  const double TMR_W = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W);
+  const double TMR_W = m_data.GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W);
   const double BMR_W = m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::W);
-  const double energyDeficit_W = m_data.GetEnergy().GetEnergyDeficit(PowerUnit::W);
+  const double energyDeficit_W = m_data.GetEnergySystem().GetEnergyDeficit(PowerUnit::W);
   const double metabolicFraction = (TMR_W + energyDeficit_W) / BMR_W;
   const double tunedVolumeMetabolicSlope = 0.2;
   const double metabolicModifier = 1.0 + tunedVolumeMetabolicSlope * (metabolicFraction - 1.0);
@@ -991,17 +991,17 @@ void Nervous::ChemoreceptorFeedback()
   nextDrivePressure_cmH2O *= metabolicModifier;
 
   //We want to make sure the patient respiration rate baseline is met.  Therefore, we only allow RR to change +/- 5% during initial stabilization
-  if (m_data.GetState() < EngineState::AtInitialStableState) {
+  if (m_data.GetSimulationPhase() < SimulationPhase::AtInitialStableState) {
     const double upperTolerance = baselineRespirationRate_Per_min * 1.05;
     const double lowerTolerance = baselineRespirationRate_Per_min * 0.95;
     if (nextRespirationRate_Per_min < upperTolerance && nextRespirationRate_Per_min > lowerTolerance) {
-      m_data.GetRespiratory().GetRespirationDriverFrequency().SetValue(nextRespirationRate_Per_min, FrequencyUnit::Per_min);
+      m_data.GetRespiratorySystem().GetRespirationDriverFrequency().SetValue(nextRespirationRate_Per_min, FrequencyUnit::Per_min);
     }
   } else {
-    m_data.GetRespiratory().GetRespirationDriverFrequency().SetValue(nextRespirationRate_Per_min, FrequencyUnit::Per_min);
+    m_data.GetRespiratorySystem().GetRespirationDriverFrequency().SetValue(nextRespirationRate_Per_min, FrequencyUnit::Per_min);
   }
   //Driver pressure is always updated
-  m_data.GetRespiratory().GetRespirationDriverPressure().SetValue(nextDrivePressure_cmH2O, PressureUnit::cmH2O);
+  m_data.GetRespiratorySystem().GetRespirationDriverPressure().SetValue(nextDrivePressure_cmH2O, PressureUnit::cmH2O);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1017,7 +1017,7 @@ void Nervous::ChemoreceptorFeedback()
 void Nervous::CheckPainStimulus()
 {
   //Screen for both external pain stimulus and presence of inflammation
-  if (!m_data.GetActions().GetPatientActions().HasPainStimulus() && !m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSources()) {
+  if (!m_data.GetActions().GetPatientActions().HasPainStimulus() && !m_data.GetBloodChemistrySystem().GetInflammatoryResponse().HasInflammationSources()) {
     GetPainVisualAnalogueScale().SetValue(0.0);
     return;
   }
@@ -1060,8 +1060,8 @@ void Nervous::CheckPainStimulus()
   }
 
   //apply effects of pain medication
-  if (m_data.GetDrugs().HasPainToleranceChange()) {
-    double PainModifier = 10.0 * m_data.GetDrugs().GetPainToleranceChange().GetValue();
+  if (m_data.GetDrugsSystem().HasPainToleranceChange()) {
+    double PainModifier = 10.0 * m_data.GetDrugsSystem().GetPainToleranceChange().GetValue();
     tempPainVAS += -PainModifier;
     tempPainVAS = std::max(tempPainVAS, 0.0);
   }
@@ -1096,7 +1096,7 @@ void Nervous::CheckPainStimulus()
 void Nervous::CheckNervousStatus()
 {
   //-----Check Brain Status-----------------
-  double icp_mmHg = m_data.GetCardiovascular().GetIntracranialPressure().GetValue(PressureUnit::mmHg);
+  double icp_mmHg = m_data.GetCardiovascularSystem().GetIntracranialPressure().GetValue(PressureUnit::mmHg);
   //Intracranial Hypertension
   if (icp_mmHg > 25.0) // \cite steiner2006monitoring
   {
@@ -1120,7 +1120,7 @@ void Nervous::CheckNervousStatus()
   //---Check Sedatation / Agitation State and output a Richmond Agitation Sedation Scale (RASS) score
   const double painVAS = GetPainVisualAnalogueScale().GetValue();
   const double maxSedationLevel = 0.75;
-  const double sedationLevel = std::min(m_data.GetDrugs().GetSedationLevel().GetValue(), maxSedationLevel);
+  const double sedationLevel = std::min(m_data.GetDrugsSystem().GetSedationLevel().GetValue(), maxSedationLevel);
   const double sedationTerm = -std::floor(sedationLevel / 0.15);
   const double agitationTerm = std::ceil((std::pow(5.0, painVAS / 10.0) - 1.0) * (1.0 - sedationLevel / maxSedationLevel));
   const double rassScore = sedationTerm + agitationTerm;
@@ -1141,7 +1141,7 @@ void Nervous::CheckNervousStatus()
 
   //-----patient events due to Sarin--------------------------------------------------
   //Occurs due to inhibition of acetylcholinesterase, the enzyme which breaks down the neurotransmitter acetylcholine
-  double RbcAche_mol_Per_L = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
+  double RbcAche_mol_Per_L = m_data.GetBloodChemistrySystem().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L);
   double brainAtropine_mg_Per_L = 0.0;
   double midazolam_mg_Per_L = 0.0;
   double RbcFractionInhibited = 1.0 - RbcAche_mol_Per_L / (8e-9); //8 nM is the baseline activity of Rbc-Ache
@@ -1239,7 +1239,7 @@ void Nervous::CheckNervousStatus()
   //90% of maximum.  To prevent fasciculation from being re-flagged as succinylcholine leaves the body and the block dissipates, we use a sentinel (m_blockActive,
   //initialized to FALSE) so that the event cannot be triggered more than once.
   /// \cite @appiah2004pharmacology, @cite mcloughlin1994influence
-  double neuromuscularBlockLevel = m_data.GetDrugs().GetNeuromuscularBlockLevel().GetValue();
+  double neuromuscularBlockLevel = m_data.GetDrugsSystem().GetNeuromuscularBlockLevel().GetValue();
   if (m_data.GetSubstances().IsActive(*m_Succinylcholine) && (neuromuscularBlockLevel > 0.0)) {
     if ((neuromuscularBlockLevel < 0.9) && (!m_blockActive))
       m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
@@ -1274,7 +1274,7 @@ void Nervous::SetPupilEffects()
     SEBrainInjury* b = m_data.GetActions().GetPatientActions().GetBrainInjury();
 
     if (b->GetSeverity().GetValue() > 0) {
-      double icp_mmHg = m_data.GetCardiovascular().GetIntracranialPressure().GetValue(PressureUnit::mmHg);
+      double icp_mmHg = m_data.GetCardiovascularSystem().GetIntracranialPressure().GetValue(PressureUnit::mmHg);
 
       if (b->GetType() == CDM::enumBrainInjuryType::Diffuse) {
         //https://www.wolframalpha.com/input/?i=y%3D(1+%2F+(1+%2B+exp(-2.0*(x+-+24))))+from+18%3Cx%3C28

@@ -24,43 +24,43 @@ namespace biogears {
 namespace io {
   class ElectroCardioGram;
 }
-class BIOGEARS_API SEElectroCardioGramInterpolatorWaveform : public Loggable {
+class SEElectroCardioGramInterpolatorWaveform : public Loggable {
   friend io::ElectroCardioGram;
 
 public:
-  SEElectroCardioGramInterpolatorWaveform(Logger* logger);
-  virtual ~SEElectroCardioGramInterpolatorWaveform();
+  BIOGEARS_API SEElectroCardioGramInterpolatorWaveform(Logger const* logger);
+  BIOGEARS_API virtual ~SEElectroCardioGramInterpolatorWaveform();
 
-  virtual void Clear(); // Deletes all members
+  BIOGEARS_API virtual void Clear(); // Deletes all members
 
-  virtual bool Load(const CDM::ElectroCardioGramInterpolationWaveformData& in);
-  virtual CDM::ElectroCardioGramInterpolationWaveformData* Unload() const;
+  BIOGEARS_API virtual bool Load(const CDM::ElectroCardioGramInterpolationWaveformData& in);
+  BIOGEARS_API virtual CDM::ElectroCardioGramInterpolationWaveformData* Unload() const;
 
 protected:
-  virtual void Unload(CDM::ElectroCardioGramInterpolationWaveformData& data) const;
+  BIOGEARS_API virtual void Unload(CDM::ElectroCardioGramInterpolationWaveformData& data) const;
 
 public:
-  virtual bool HasLeadNumber() const;
-  virtual CDM::ElectroCardioGramWaveformLeadNumber GetLeadNumber() const;
-  virtual void SetLeadNumber(CDM::ElectroCardioGramWaveformLeadNumber n);
-  virtual void InvalidateLeadNumber();
+  BIOGEARS_API virtual bool HasLeadNumber() const;
+  BIOGEARS_API virtual CDM::ElectroCardioGramWaveformLeadNumber GetLeadNumber() const;
+  BIOGEARS_API virtual void SetLeadNumber(CDM::ElectroCardioGramWaveformLeadNumber n);
+  BIOGEARS_API virtual void InvalidateLeadNumber();
 
-  virtual CDM::enumHeartRhythm::value GetRhythm() const;
-  virtual void SetRhythm(CDM::enumHeartRhythm::value name);
-  virtual bool HasRhythm() const;
-  virtual void InvalidateRhythm();
+  BIOGEARS_API virtual CDM::enumHeartRhythm::value GetRhythm() const;
+  BIOGEARS_API virtual void SetRhythm(CDM::enumHeartRhythm::value name);
+  BIOGEARS_API virtual bool HasRhythm() const;
+  BIOGEARS_API virtual void InvalidateRhythm();
+   
+  BIOGEARS_API virtual bool HasData() const;
+  BIOGEARS_API virtual SEFunctionElectricPotentialVsTime& GetData();
+  BIOGEARS_API virtual const SEFunctionElectricPotentialVsTime* GetData() const;
+   
+  BIOGEARS_API virtual bool HasTimeStep() const;
+  BIOGEARS_API virtual SEScalarTime& GetTimeStep();
+  BIOGEARS_API virtual double GetTimeStep(const TimeUnit& unit) const;
+   
+  BIOGEARS_API virtual std::vector<unsigned int>& GetActiveIndicies() { return m_ActiveIndicies; }
 
-  virtual bool HasData() const;
-  virtual SEFunctionElectricPotentialVsTime& GetData();
-  virtual const SEFunctionElectricPotentialVsTime* GetData() const;
-
-  virtual bool HasTimeStep() const;
-  virtual SEScalarTime& GetTimeStep();
-  virtual double GetTimeStep(const TimeUnit& unit) const;
-
-  virtual std::vector<unsigned int>& GetActiveIndicies() { return m_ActiveIndicies; }
-
-protected:
+private:
   CDM::ElectroCardioGramWaveformLeadNumber m_LeadNumber;
   CDM::enumHeartRhythm::value m_Rhythm;
   SEScalarTime* m_TimeStep;

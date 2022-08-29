@@ -17,9 +17,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 #include <biogears/schema/biogears/BioGearsEnvironment.hxx>
-#include <biogears/engine/Controller/BioGears.h>  
+#include <biogears/engine/Controller/BioGearsEngine.h>  
 #include <biogears/engine/Controller/BioGearsSystem.h>
 
+#pragma warning(push)
+#pragma warning(disable: 4275)
 namespace biogears {
 /**
 * @brief 
@@ -27,13 +29,13 @@ namespace biogears {
 */
 
 class BIOGEARS_API ECG : public SEElectroCardioGram, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<ECG>;
-  ECG(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<ECG>;
+  ECG(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~ECG() override;
@@ -73,4 +75,5 @@ protected:
   // Stateless member variable (Set in SetUp())
   double m_dt_s;
 };
+#pragma warning(pop)
 }

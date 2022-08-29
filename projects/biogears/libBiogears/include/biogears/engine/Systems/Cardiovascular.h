@@ -30,7 +30,7 @@ class SEFluidCircuit;
 class SELiquidCompartmentGraph;
 class SEFluidCircuitNode;
 class SEFluidCircuitPath;
-class BioGears;
+class BioGearsEngine;
 /**
 * @brief 
 * The %Cardiovascular system utilizes circuit methodology to characterize the intravascular fluid dynamics throughout the body.
@@ -44,13 +44,13 @@ class BioGears;
 *
 */
 class BIOGEARS_API Cardiovascular : public SECardiovascularSystem, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<Cardiovascular>;
-  Cardiovascular(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<Cardiovascular>;
+  Cardiovascular(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~Cardiovascular() override;
@@ -79,7 +79,7 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState() override;
+  void SimulationPhaseChange() override;
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;

@@ -55,12 +55,12 @@ int HowToFaciculation()
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
 
-  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Na, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
-  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *K, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
-  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Cl, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
-  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Ca, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
+  bg->GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Na, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
+  bg->GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *K, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
+  bg->GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Cl, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
+  bg->GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *Ca, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToFasciculation.csv");
+  bg->GetEngineTrack().GetDataRequestManager().SetResultsFilename("HowToFasciculation.csv");
 
   // Advance some time to get some resting data
   bg->AdvanceModelTime(60, TimeUnit::s);

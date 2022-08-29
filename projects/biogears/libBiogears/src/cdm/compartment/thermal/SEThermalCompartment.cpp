@@ -19,12 +19,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 
 namespace biogears {
-SEThermalCompartment::SEThermalCompartment(const char* name, Logger* logger)
+SEThermalCompartment::SEThermalCompartment(const char* name, Logger const* logger)
   : SEThermalCompartment(std::string{ name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
-SEThermalCompartment::SEThermalCompartment(const std::string& name, Logger* logger)
+SEThermalCompartment::SEThermalCompartment(const std::string& name, Logger const* logger)
   : SECompartment(name, logger)
   , m_Nodes(logger)
 {
@@ -105,21 +105,21 @@ void SEThermalCompartment::Unload(CDM::ThermalCompartmentData& data)
     data.Temperature(std::unique_ptr<CDM::ScalarTemperatureData>(GetTemperature().Unload()));
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEThermalCompartment::GetScalar(const char* name)
+const SEScalar* SEThermalCompartment::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEThermalCompartment::GetScalar(const std::string& name)
+const SEScalar* SEThermalCompartment::GetScalar(const std::string& name) const
 {
   if (name.compare("HeatTransferRateIn") == 0)
-    return &GetHeatTransferRateIn();
+    return &const_cast<SEThermalCompartment*>(this)->GetHeatTransferRateIn();
   if (name.compare("HeatTransferRateOut") == 0)
-    return &GetHeatTransferRateOut();
+    return &const_cast<SEThermalCompartment*>(this)->GetHeatTransferRateOut();
   if (name.compare("Heat") == 0)
-    return &GetHeat();
+    return &const_cast<SEThermalCompartment*>(this)->GetHeat();
   if (name.compare("Temperature") == 0)
-    return &GetTemperature();
+    return &const_cast<SEThermalCompartment*>(this)->GetTemperature();
   return nullptr;
 }
 //-----------------------------------------------------------------------------

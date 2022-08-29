@@ -27,7 +27,7 @@ namespace biogears {
 constexpr char idChymeAbsorptionRate[] = "ChymeAbsorptionRate";
 constexpr char idStomachContents[] = "StomachContents";
 
-SEGastrointestinalSystem::SEGastrointestinalSystem(Logger* logger)
+SEGastrointestinalSystem::SEGastrointestinalSystem(Logger const* logger)
   : SESystem(logger)
 {
   m_ChymeAbsorptionRate = nullptr;
@@ -48,22 +48,22 @@ void SEGastrointestinalSystem::Clear()
   SAFE_DELETE(m_StomachContents);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEGastrointestinalSystem::GetScalar(const char* name)
+const SEScalar* SEGastrointestinalSystem::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEGastrointestinalSystem::GetScalar(const std::string& name)
+const SEScalar* SEGastrointestinalSystem::GetScalar(const std::string& name) const
 {
   if (name == idChymeAbsorptionRate)
-    return &GetChymeAbsorptionRate();
+    return &const_cast<SEGastrointestinalSystem*>(this)->GetChymeAbsorptionRate();
 
   size_t split = name.find('-');
   if (split != name.npos) {
     std::string child = name.substr(0, split);
     std::string prop = name.substr(split + 1, name.npos);
     if (child == idStomachContents)
-      return GetStomachContents().GetScalar(prop);
+      return const_cast<SEGastrointestinalSystem*>(this)->GetStomachContents().GetScalar(prop);
   }
   return nullptr;
 }

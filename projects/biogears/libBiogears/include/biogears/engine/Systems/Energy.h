@@ -29,19 +29,19 @@ class SEThermalCircuitPath;
 class SEFluidCircuitPath;
 class SEThermalCircuit;
 class SEThermalCircuitCalculator;
-class BioGears;
+class BioGearsEngine;
 
 /**
  * @brief @copydoc Physiology_EnergySystemData
  */
 class BIOGEARS_API Energy : public SEEnergySystem, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<Energy>;
-  Energy(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<Energy>;
+  Energy(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   ~Energy(void) override;
@@ -67,7 +67,7 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState() override;
+  void SimulationPhaseChange() override;
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;

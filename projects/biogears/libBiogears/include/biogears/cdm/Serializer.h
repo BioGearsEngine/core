@@ -36,15 +36,16 @@ namespace biogears {
 class  Serializer {
 public:
   BIOGEARS_API static void Destroy() { SAFE_DELETE(m_me); }
-  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadFile(const char* xmlFile, Logger* logger);
-  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadFile(const std::string& xmlFile, Logger* logger);
-  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadBuffer(XMLByte const * buffer, size_t size, Logger* logger);
+  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadFile(const char* xmlFile, Logger const* logger);
+  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadFile(const std::string& xmlFile, Logger const* logger);
+  BIOGEARS_API static std::unique_ptr<CDM::ObjectData> ReadBuffer(XMLByte const* buffer, size_t size, Logger const* logger);
+
 private:
   Serializer();
   virtual ~Serializer();
 
-  bool Initialize(Logger* logger);
-  xercesc::DOMLSParser* CreateParser(Logger* logger, bool embeddedResolver = false) const;
+  bool Initialize(Logger const* logger);
+  xercesc::DOMLSParser* CreateParser(Logger const* logger, bool embeddedResolver = false) const;
 
   static Serializer* m_me;
 

@@ -16,17 +16,17 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
-SESubstanceCompound::SESubstanceCompound(const std::string& name, Logger* logger)
+SESubstanceCompound::SESubstanceCompound(const std::string& name, Logger const* logger)
   : Loggable(logger)
   , m_Name(name)
   , m_Classification((CDM::enumSubstanceClass::value)-1)
 {
 }
-SESubstanceCompound::SESubstanceCompound(const char* name, Logger* logger)
+SESubstanceCompound::SESubstanceCompound(const char* name, Logger const* logger)
   : SESubstanceCompound(std::string { name }, logger)
 {
 }
-SESubstanceCompound::SESubstanceCompound(Logger* logger)
+SESubstanceCompound::SESubstanceCompound(Logger const* logger)
   : SESubstanceCompound("", logger)
 {
 }
@@ -36,7 +36,7 @@ SESubstanceCompound::~SESubstanceCompound()
   Clear();
 }
 //-----------------------------------------------------------------------------
-std::unique_ptr<SESubstanceCompound> SESubstanceCompound::make_unique(const std::string& name, Logger* logger)
+std::unique_ptr<SESubstanceCompound> SESubstanceCompound::make_unique(const std::string& name, Logger const* logger)
 {
   return std::make_unique<SESubstanceCompound>(name, logger);
 }

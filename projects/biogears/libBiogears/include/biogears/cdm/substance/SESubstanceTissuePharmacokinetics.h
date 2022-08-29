@@ -25,7 +25,7 @@ class BIOGEARS_API SESubstanceTissuePharmacokinetics : public Loggable {
   friend io::Substance;
 
 public:
-  SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger);
+  SESubstanceTissuePharmacokinetics(const std::string& name, Logger const* logger);
   virtual ~SESubstanceTissuePharmacokinetics();
 
   virtual void Clear();
@@ -33,8 +33,8 @@ public:
   virtual bool Load(const CDM::SubstanceTissuePharmacokineticsData& in);
   virtual CDM::SubstanceTissuePharmacokineticsData* Unload() const;
 public:
-  const SEScalar* GetScalar(const char* name);
-  const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const char* name) const;
+  const SEScalar* GetScalar(const std::string& name) const ;
 
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;

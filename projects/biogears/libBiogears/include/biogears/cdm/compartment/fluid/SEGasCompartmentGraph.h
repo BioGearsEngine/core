@@ -41,8 +41,8 @@ class BIOGEARS_API SEGasCompartmentGraph : public SECompartmentTransportGraph<SE
   friend io::Compartment;
 
 protected:
-  SEGasCompartmentGraph(const char* name, Logger* logger);
-  SEGasCompartmentGraph(const std::string& name, Logger* logger);
+  SEGasCompartmentGraph(const char* name, Logger const* logger);
+  SEGasCompartmentGraph(const std::string& name, Logger const* logger);
 
 public:
   virtual ~SEGasCompartmentGraph();

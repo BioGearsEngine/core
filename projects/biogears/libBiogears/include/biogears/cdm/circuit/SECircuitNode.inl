@@ -16,13 +16,13 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 template <CIRCUIT_NODE_TEMPLATE>
-SECircuitNode<CIRCUIT_NODE_TYPES>::SECircuitNode(const char* name, Logger* logger)
+SECircuitNode<CIRCUIT_NODE_TYPES>::SECircuitNode(const char* name, Logger const* logger)
   : SECircuitNode(std::string { name }, logger)
 {
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_NODE_TEMPLATE>
-SECircuitNode<CIRCUIT_NODE_TYPES>::SECircuitNode(const std::string& name, Logger* logger)
+SECircuitNode<CIRCUIT_NODE_TYPES>::SECircuitNode(const std::string& name, Logger const* logger)
   : Loggable(logger)
   , m_Name(name)
 {

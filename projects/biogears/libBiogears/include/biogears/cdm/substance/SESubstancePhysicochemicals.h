@@ -28,14 +28,14 @@ class BIOGEARS_API SESubstancePhysicochemicals : public Loggable {
   friend io::Substance;
 
 public:
-  SESubstancePhysicochemicals(Logger* logger);
+  SESubstancePhysicochemicals(Logger const* logger);
   virtual ~SESubstancePhysicochemicals();
 
   virtual void Clear();
   virtual bool IsValid() const;
 
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) const;
+  virtual const SEScalar* GetScalar(const std::string& name) const ;
 
   virtual bool Load(const CDM::SubstancePhysicochemicalData& in);
   virtual CDM::SubstancePhysicochemicalData* Unload() const;

@@ -45,7 +45,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/BloodChemistry.h>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace std {
@@ -55,12 +55,12 @@ template class std::map<const biogears::SESubstance*, biogears::SETransmucosalSt
 }
 
 namespace biogears {
-auto Drugs::make_unique(BioGears& bg) -> std::unique_ptr<Drugs>
+auto Drugs::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Drugs>
 {
   return std::unique_ptr<Drugs>(new Drugs(bg));
 }
 
-Drugs::Drugs(BioGears& bg)
+Drugs::Drugs(BioGearsEngine& bg)
   : SEDrugSystem(bg.GetLogger())
   , m_data(bg)
 {
@@ -106,9 +106,9 @@ void Drugs::Initialize()
   GetTidalVolumeChange().SetValue(0.0, VolumeUnit::mL);
   GetTubularPermeabilityChange().SetValue(0);
   GetCentralNervousResponse().SetValue(0.0);
-  m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase().SetValue(8.0 * 1e-9, AmountPerVolumeUnit::mol_Per_L); //Need to initialize here since Drugs processed before BloodChemistry
-  m_data.GetBloodChemistry().GetHemoglobinLostToUrine().SetValue(0.0, MassUnit::g); //Need to initialize here since Drugs processed before BloodChemistry
-  m_data.GetBloodChemistry().GetRhTransfusionReactionVolume().SetValue(0.0, VolumeUnit::uL);
+  m_data.GetBloodChemistrySystem().GetRedBloodCellAcetylcholinesterase().SetValue(8.0 * 1e-9, AmountPerVolumeUnit::mol_Per_L); //Need to initialize here since Drugs processed before BloodChemistry
+  m_data.GetBloodChemistrySystem().GetHemoglobinLostToUrine().SetValue(0.0, MassUnit::g); //Need to initialize here since Drugs processed before BloodChemistry
+  m_data.GetBloodChemistrySystem().GetRhTransfusionReactionVolume().SetValue(0.0, VolumeUnit::uL);
 
   m_SarinRbcAcetylcholinesteraseComplex_nM = 0.0;
   m_AgedRbcAcetylcholinesterase_nM = 0.0;
@@ -223,7 +223,7 @@ void Drugs::SetUp()
 /// \details
 /// When the engine is stable, the CDM makes this call to update the member variable.
 //--------------------------------------------------------------------------------------------------
-void Drugs::AtSteadyState()
+void Drugs::SimulationPhaseChange()
 {
 }
 
@@ -585,8 +585,8 @@ void Drugs::AdministerSubstanceOral()
         m_TransmucosalStates[sub] = otState;
         //Every OT state needs to initialize a GI absorption model state to account for drug that is swallowed.
         //Clearly we are assuming that there is not already an active pill of the same substance already present in the GI (seems like a safe assumption).
-        m_data.GetGastrointestinal().NewDrugTransitState(sub);
-        if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oDose->GetAdminRoute())) {
+        m_data.GetGastrointestinalSystem().NewDrugTransitState(sub);
+        if (!m_data.GetGastrointestinalSystem().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oDose->GetAdminRoute())) {
           Error("SEGastrointestinalSystem::SEDrugAbsorptionTransitModelState: Probably vector length mismatch");
         }
       }
@@ -599,14 +599,14 @@ void Drugs::AdministerSubstanceOral()
       }
     } else {
       //Oral dose is being given as a pill--initiate a GI absorption model state for it if it doesn't already exist.
-      if (m_data.GetGastrointestinal().GetDrugTransitState(sub) == nullptr) {
-        m_data.GetGastrointestinal().NewDrugTransitState(sub);
-        if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oDose->GetAdminRoute())) {
+      if (m_data.GetGastrointestinalSystem().GetDrugTransitState(sub) == nullptr) {
+        m_data.GetGastrointestinalSystem().NewDrugTransitState(sub);
+        if (!m_data.GetGastrointestinalSystem().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oDose->GetAdminRoute())) {
           Error("SEGastrointestinalSystem::SEDrugAbsorptionTransitModelState: Probably vector length mismatch");
         }
       } else {
         //If the drug already has as an existing GI state, that means we are repeat dosing.  Get the drug state and add the new dose to the stomach
-        m_data.GetGastrointestinal().GetDrugTransitState(sub)->IncrementStomachSolidMass(oDose->GetDose().GetValue(MassUnit::mg), MassUnit::mg);
+        m_data.GetGastrointestinalSystem().GetDrugTransitState(sub)->IncrementStomachSolidMass(oDose->GetDose().GetValue(MassUnit::mg), MassUnit::mg);
       }
       //We can remove the action right away because the GI will keep processing the drug once the transit model state is initiated
       //By deactivating the Oral Dose action right away, we will be able to detect repeat dose actions
@@ -712,7 +712,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
     }
 
     if (!patient.IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction) && !patient.GetBloodRh() && compound->GetRhFactor()) {
-      m_data.GetBloodChemistry().GetRhTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL);
+      m_data.GetBloodChemistrySystem().GetRhTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL);
       patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
     }
 
@@ -723,7 +723,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       GeneralMath::CalculateWaterDensity(ambientTemp, densityFluid);
       densityFluid_kg_Per_mL = densityFluid.GetValue(MassPerVolumeUnit::kg_Per_mL);
     } else if (compound->GetName() == "Blood")
-      densityFluid_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
+      densityFluid_kg_Per_mL = m_data.GetBloodChemistrySystem().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
     patientMass_kg += volumeToAdminister_mL * densityFluid_kg_Per_mL;
   }
 
@@ -749,8 +749,8 @@ void Drugs::AdministerSubstanceCompoundInfusion()
 //--------------------------------------------------------------------------------------------------
 void Drugs::CalculatePartitionCoefficients()
 {
-  SEBloodChemistrySystem& BloodChemistry = m_data.GetBloodChemistry();
-  double IntracellularPH = m_data.GetTissue().GetIntracellularFluidPH().GetValue();
+  SEBloodChemistrySystem& BloodChemistry = m_data.GetBloodChemistrySystem();
+  double IntracellularPH = m_data.GetTissueSystem().GetIntracellularFluidPH().GetValue();
   double PlasmaPH = BloodChemistry.GetArterialBloodPH().GetValue();
   double NeutralLipidInPlasmaVolumeFraction = BloodChemistry.GetVolumeFractionNeutralLipidInPlasma().GetValue();
   double NeutralPhosphoLipidInPlasmaVolumeFraction = BloodChemistry.GetVolumeFractionNeutralPhospholipidInPlasma().GetValue();
@@ -771,7 +771,7 @@ void Drugs::CalculatePartitionCoefficients()
   double rbcIntracellularPH = 7.2; //See Poulin2011Predictive:Part5
   double rbcPHEffects = 0.0;
   //Constansts for zwitterions
-  double hematocrit = m_data.GetBloodChemistry().GetHematocrit().GetValue();
+  double hematocrit = m_data.GetBloodChemistrySystem().GetHematocrit().GetValue();
   double bloodPlasmaUnboundRatio = 0.0;
   double AcidicPhospholipidAssociation = 0.0;
 
@@ -978,7 +978,7 @@ void Drugs::CalculateDrugEffects()
     }
 
     //Antibiotic Effects -- Do not evaluate unless the patient has inflammation casued by infection
-    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+    if (m_data.GetBloodChemistrySystem().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
       double minimumInhibitoryConcentration_ug_Per_mL = m_data.GetActions().GetPatientActions().GetInfection()->GetMinimumInhibitoryConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
       if (sub->GetClassification() == CDM::enumSubstanceClass::Antibiotic) {
         ///\ @cite Regoes2004Pharmacodynamics
@@ -1036,8 +1036,8 @@ void Drugs::CalculateDrugEffects()
   //! PupilaryResponse less then useful. 
   
   //Assume drugs affecing pupil behavior do so equally on left/right sides (this might need to be deleted, logic is all wrong)
-  //const SEPupillaryResponse& leftPupillaryResponse = m_data.GetNervous().GetLeftEyePupillaryResponse();
-  //const SEPupillaryResponse& rightPupillaryResponse = m_data.GetNervous().GetRightEyePupillaryResponse();
+  //const SEPupillaryResponse& leftPupillaryResponse = m_data.GetNervousSystem().GetLeftEyePupillaryResponse();
+  //const SEPupillaryResponse& rightPupillaryResponse = m_data.GetNervousSystem().GetRightEyePupillaryResponse();
   //double leftPupilReactivityResponseLevel = leftPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
   //double rightPupilReactivityResponseLevel = rightPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
   //double leftPupilSizeResponseLevel = leftPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
@@ -1058,15 +1058,15 @@ void Drugs::CalculateDrugEffects()
   //BLIM(leftPupilSizeResponseLevel, -1, 1);
   //BLIM(rightPupilSizeResponseLevel, -1, 1);
 
-  m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
-  m_data.GetNervous().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
-  m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
-  m_data.GetNervous().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
+  m_data.GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
+  m_data.GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
+  m_data.GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
+  m_data.GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
 
-  //m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
-  //m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(leftPupilSizeResponseLevel);
-  //m_data.GetNervous().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
-  //m_data.GetNervous().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
+  //m_data.GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
+  //m_data.GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(leftPupilSizeResponseLevel);
+  //m_data.GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
+  //m_data.GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
 
   //Account for cardiovascular override actions
   if (m_data.GetActions().GetPatientActions().HasOverride()
@@ -1093,9 +1093,9 @@ void Drugs::CalculateDrugEffects()
 void Drugs::CalculatePlasmaSubstanceConcentration()
 {
   double plasmaMass_ug = 0;
-  double bloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
+  double bloodVolume_mL = m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL);
   double effectConcentration;
-  double plasmaVolume_mL = m_data.GetBloodChemistry().GetPlasmaVolume(VolumeUnit::mL);
+  double plasmaVolume_mL = m_data.GetBloodChemistrySystem().GetPlasmaVolume(VolumeUnit::mL);
   double rate_Per_s = 0.0;
 
   for (SESubstance* sub : m_data.GetSubstances().GetActiveDrugs()) {
@@ -1226,7 +1226,7 @@ void Drugs::SarinKinetics()
   }
 
   //Get RBC-AChE concentration and create copies of all concentrations so that they are not overwritten in the rate equations
-  double RbcAcetylcholinesterase_nM = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L) * 1e9;
+  double RbcAcetylcholinesterase_nM = m_data.GetBloodChemistrySystem().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L) * 1e9;
   double RbcAche_nM = RbcAcetylcholinesterase_nM;
   double SarinRbcAche_nM = m_SarinRbcAcetylcholinesteraseComplex_nM;
   double AgedSarin_nM = m_AgedRbcAcetylcholinesterase_nM;
@@ -1254,7 +1254,7 @@ void Drugs::SarinKinetics()
 
   //Update values for next time step
   m_Sarin->GetPlasmaConcentration().SetValue(SarinConcentration_nM / 1000.0 * SarinMolarMass_g_Per_umol, MassPerVolumeUnit::g_Per_L);
-  m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase().SetValue(RbcAche_nM * 1e-9, AmountPerVolumeUnit::mol_Per_L);
+  m_data.GetBloodChemistrySystem().GetRedBloodCellAcetylcholinesterase().SetValue(RbcAche_nM * 1e-9, AmountPerVolumeUnit::mol_Per_L);
   m_SarinRbcAcetylcholinesteraseComplex_nM = SarinRbcAche_nM;
   m_AgedRbcAcetylcholinesterase_nM = AgedSarin_nM;
 
@@ -1400,7 +1400,7 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   ot->SetSublingualConcentrations(sublingualCon, MassPerVolumeUnit::ug_Per_mL);
 
   //Put swallowed drug in GI transit model as dissolved drug in stomach
-  m_data.GetGastrointestinal().GetDrugTransitState(sub)->IncrementStomachDissolvedMass(rateSwallowedDrugToStomach_ug_Per_s * dT_s, MassUnit::ug);
+  m_data.GetGastrointestinalSystem().GetDrugTransitState(sub)->IncrementStomachDissolvedMass(rateSwallowedDrugToStomach_ug_Per_s * dT_s, MassUnit::ug);
 
   //Return the amount of mass remaining in the transmucosal layers and mouth
   return totalTransmucosalMass_ug;

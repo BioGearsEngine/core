@@ -25,8 +25,8 @@ class BIOGEARS_API SEThermalCircuitNode : public SECircuitNode<THERMAL_CIRCUIT_N
   friend io::Circuit;
 
 protected:
-  SEThermalCircuitNode(const char* name, Logger* logger);
-  SEThermalCircuitNode(const std::string& name, Logger* logger);
+  SEThermalCircuitNode(const char* name, Logger const* logger);
+  SEThermalCircuitNode(const std::string& name, Logger const* logger);
 
 public:
   virtual ~SEThermalCircuitNode();

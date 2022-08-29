@@ -54,7 +54,7 @@ enum class CompartmentUpdate { None,
 
 class BIOGEARS_API SEDataRequestScalar : public SEGenericScalar {
 public:
-  SEDataRequestScalar(Logger* logger)
+  SEDataRequestScalar(Logger const* logger)
     : SEGenericScalar(logger)
   {
     Heading.clear();
@@ -107,7 +107,8 @@ public:
   void Clear(); // Remove all requests and close the results file
 
   DataTrack& GetDataTrack();
-  SEDataRequestManager& GetDataRequestManager() { return m_DataRequestMgr; }
+  SEDataRequestManager const& GetDataRequestManager() const;
+  SEDataRequestManager& GetDataRequestManager();
 
   void ResetFile(); // Close file, so next Track Data will re hook up everything and make a new file
 
@@ -132,9 +133,9 @@ protected:
   SESubstanceManager* m_SubMgr;
   SECompartmentManager* m_CmptMgr;
 
-  SEEnvironment* m_Environment;
-  std::vector<SESystem*> m_PhysiologySystems;
-  std::vector<SESystem*> m_EquipmentSystems;
+  SEEnvironment const * m_Environment;
+  std::vector<SESystem const *> m_PhysiologySystems;
+  std::vector<SESystem const *> m_EquipmentSystems;
   std::map<const SEDataRequest*, SEDataRequestScalar*> m_Request2Scalar;
 };
 }

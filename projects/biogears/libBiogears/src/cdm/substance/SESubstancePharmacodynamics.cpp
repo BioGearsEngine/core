@@ -22,7 +22,7 @@ template class map<string, biogears::SEPharmacodynamicModifier*>;
 }
 namespace biogears {
 
-SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
+SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger const* logger)
   : Loggable(logger)
 {
   m_AntibacterialEffect = nullptr;
@@ -114,52 +114,52 @@ bool SESubstancePharmacodynamics::IsValid() const
   return true;
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstancePharmacodynamics::GetScalar(const char* name)
+const SEScalar* SESubstancePharmacodynamics::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name)
+const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name) const
 {
   //For modifiers that use SEPharmacodynamicModifier type, assuming request will be passed as "HeartRateModifer-EMax"
   //Search to see if modifier name is a substring of request, then pass name to SEPharmacodynamicModifier::GetScalar,
   //which will search for the subrequest (EMax, EC50)
   if (name.compare("EMaxShapeParameter") == 0)
-    return &GetEMaxShapeParameter();
+    return &const_cast<SESubstancePharmacodynamics*>(this)->GetEMaxShapeParameter();
   if (name.compare("AntibacterialEffect") == 0)
-    return &GetAntibacterialEffect();
+    return &const_cast<SESubstancePharmacodynamics*>(this)->GetAntibacterialEffect();
   if (name.find("Bronchodilation") != std::string::npos)
-    return GetBronchodilation().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetBronchodilation().GetScalar(name);
   if (name.find("DiastolicPressureModifier") != std::string::npos)
-    return GetDiastolicPressureModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetDiastolicPressureModifier().GetScalar(name);
   if (name.find("FeverModifier") != std::string::npos)
-    return GetFeverModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetFeverModifier().GetScalar(name);
   if (name.find("HeartRateModifier") != std::string::npos)
-    return GetHeartRateModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetHeartRateModifier().GetScalar(name);
   if (name.find("HemorrhageModifier") != std::string::npos)
-    return GetHemorrhageModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetHemorrhageModifier().GetScalar(name);
   if (name.find("NeuromuscularBlock") != std::string::npos)
-    return GetNeuromuscularBlock().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetNeuromuscularBlock().GetScalar(name);
   if (name.find("PainModifier") != std::string::npos)
-    return GetPainModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetPainModifier().GetScalar(name);
   if (name.find("RespirationRateModifier") != std::string::npos)
-    return GetRespirationRateModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetRespirationRateModifier().GetScalar(name);
   if (name.find("Sedation") != std::string::npos)
-    return GetSedation().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetSedation().GetScalar(name);
   if (name.find("SystolicPressureModifier") != std::string::npos)
-    return GetSystolicPressureModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetSystolicPressureModifier().GetScalar(name);
   if (name.find("TidalVolumeModifier") != std::string::npos)
-    return GetTidalVolumeModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetTidalVolumeModifier().GetScalar(name);
   if (name.find("TubularPermeabilityModifier") != std::string::npos)
-    return GetTubularPermeabilityModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetTubularPermeabilityModifier().GetScalar(name);
   if (name.find("CentralNervousModifier") != std::string::npos)
-    return GetCentralNervousModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetCentralNervousModifier().GetScalar(name);
   if (name.compare("EffectSiteRateConstant") == 0)
-    return &GetEffectSiteRateConstant();
+    return &const_cast<SESubstancePharmacodynamics*>(this)->GetEffectSiteRateConstant();
   if (name.find("PupilReactivityModifier") != std::string::npos)
-    return GetPupilReactivityModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetPupilReactivityModifier().GetScalar(name);
   if (name.find("PupilSizeModifier") != std::string::npos)
-    return GetPupilSizeModifier().GetScalar(name);
+    return const_cast<SESubstancePharmacodynamics*>(this)->GetPupilSizeModifier().GetScalar(name);
   return nullptr;
 }
 //-----------------------------------------------------------------------------
@@ -631,18 +631,18 @@ bool SEPharmacodynamicModifier::IsValid() const
   return (HasEMax() && HasEC50());
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEPharmacodynamicModifier::GetScalar(const char* name)
+const SEScalar* SEPharmacodynamicModifier::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEPharmacodynamicModifier::GetScalar(const std::string& name)
+const SEScalar* SEPharmacodynamicModifier::GetScalar(const std::string& name) const
 {
   if (name.find("EMax") != std::string::npos) {
-    return &GetEMax();
+    return &const_cast<SEPharmacodynamicModifier*>(this)->GetEMax();
   }
   if (name.find("EC50") != std::string::npos) {
-    return &GetEC50();
+    return &const_cast<SEPharmacodynamicModifier*>(this)->GetEC50();
   }
   return nullptr;
 }

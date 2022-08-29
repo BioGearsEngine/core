@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #endif
 
 namespace biogears {
-SENutrition::SENutrition(Logger* logger)
+SENutrition::SENutrition(Logger const* logger)
   : Loggable(logger)
 {
   m_Name = "Standard Meal";
@@ -125,25 +125,25 @@ void SENutrition::Unload(CDM::NutritionData& data) const
     data.Water(std::unique_ptr<CDM::ScalarVolumeData>(m_Water->Unload()));
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SENutrition::GetScalar(const char* name)
+const SEScalar* SENutrition::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SENutrition::GetScalar(const std::string& name)
+const SEScalar* SENutrition::GetScalar(const std::string& name) const
 {
   if (name.compare("Carbohydrate") == 0)
-    return &GetCarbohydrate();
+    return &const_cast<SENutrition*>(this)-> GetCarbohydrate();
   if (name.compare("Fat") == 0)
-    return &GetFat();
+    return &const_cast<SENutrition*>(this)->GetFat();
   if (name.compare("Protein") == 0)
-    return &GetProtein();
+    return &const_cast<SENutrition*>(this)->GetProtein();
   if (name.compare("Calcium") == 0)
-    return &GetCalcium();
+    return &const_cast<SENutrition*>(this)->GetCalcium();
   if (name.compare("Sodium") == 0)
-    return &GetSodium();
+    return &const_cast<SENutrition*>(this)->GetSodium();
   if (name.compare("Water") == 0)
-    return &GetWater();
+    return &const_cast<SENutrition*>(this)->GetWater();
   return nullptr;
 }
 //-----------------------------------------------------------------------------

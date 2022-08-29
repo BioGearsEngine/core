@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
 namespace biogears {
-class BioGears;
+class BioGearsEngine;
 class SEGasCompartmentGraph;
 /**
 * @brief Manages all compartments and graphs associated with all %BioGears systems/equipement
@@ -25,8 +25,8 @@ class BIOGEARS_API BioGearsCompartments : public SECompartmentManager {
   friend class BioGearsSubstances;
 
 public:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<BioGearsCompartments>;
-  BioGearsCompartments(BioGears& data);
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<BioGearsCompartments>;
+  BioGearsCompartments(BioGearsEngine& data);
   virtual ~BioGearsCompartments();
 
   void Clear();
@@ -104,7 +104,7 @@ protected:
   virtual bool AllowGasSubstance(SESubstance& s, SEGasCompartment& cmpt) const;
   virtual bool AllowLiquidSubstance(SESubstance& s, SELiquidCompartment& cmpt) const;
 
-  BioGears& m_data;
+  BioGearsEngine& m_data;
 
   bool m_UpdateActiveAirwayGraph;
   bool m_UpdateActiveAerosolGraph;

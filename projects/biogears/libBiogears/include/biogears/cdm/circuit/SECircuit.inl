@@ -18,14 +18,14 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 template <CIRCUIT_TEMPLATE>
-SECircuit<CIRCUIT_TYPES>::SECircuit(const char* name, Logger* logger)
+SECircuit<CIRCUIT_TYPES>::SECircuit(const char* name, Logger const* logger)
   : Loggable(logger)
   , m_Name(name)
 {
 }
 //-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
-SECircuit<CIRCUIT_TYPES>::SECircuit(const std::string& name, Logger* logger)
+SECircuit<CIRCUIT_TYPES>::SECircuit(const std::string& name, Logger const* logger)
   : Loggable(logger)
   , m_Name(name)
 {

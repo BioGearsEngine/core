@@ -41,7 +41,7 @@ constexpr char idTubularPermeabilityChange[] = "TubularPermeabilityChange";
 constexpr char idCentralNervousResponse[] = "CentralNervousResponse";
 constexpr char idPupillaryResponse[] = "PupillaryResponse";
 
-SEDrugSystem::SEDrugSystem(Logger* logger)
+SEDrugSystem::SEDrugSystem(Logger const* logger)
   : SESystem(logger)
 {
   m_AntibioticActivity = nullptr;
@@ -124,41 +124,41 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
   return true;
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEDrugSystem::GetScalar(const char* name)
+const SEScalar* SEDrugSystem::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
+const SEScalar* SEDrugSystem::GetScalar(const std::string& name) const
 {
   if (name == idAntibioticActivity)
-    return &GetAntibioticActivity();
+    return &const_cast<SEDrugSystem*>(this)->GetAntibioticActivity();
   if (name == idBronchodilationLevel)
-    return &GetBronchodilationLevel();
+    return &const_cast<SEDrugSystem*>(this)->GetBronchodilationLevel();
   if (name == idFeverChange)
-    return &GetFeverChange();
+    return &const_cast<SEDrugSystem*>(this)->GetFeverChange();
   if (name == idHeartRateChange)
-    return &GetHeartRateChange();
+    return &const_cast<SEDrugSystem*>(this)->GetHeartRateChange();
   if (name == idHemorrhageChange)
-    return &GetHemorrhageChange();
+    return &const_cast<SEDrugSystem*>(this)->GetHemorrhageChange();
   if (name == idMeanBloodPressureChange)
-    return &GetMeanBloodPressureChange();
+    return &const_cast<SEDrugSystem*>(this)->GetMeanBloodPressureChange();
   if (name == idNeuromuscularBlockLevel)
-    return &GetNeuromuscularBlockLevel();
+    return &const_cast<SEDrugSystem*>(this)->GetNeuromuscularBlockLevel();
   if (name == idPainToleranceChange)
-    return &GetPainToleranceChange();
+    return &const_cast<SEDrugSystem*>(this)->GetPainToleranceChange();
   if (name == idPulsePressureChange)
-    return &GetPulsePressureChange();
+    return &const_cast<SEDrugSystem*>(this)->GetPulsePressureChange();
   if (name == idRespirationRateChange)
-    return &GetRespirationRateChange();
+    return &const_cast<SEDrugSystem*>(this)->GetRespirationRateChange();
   if (name == idSedationLevel)
-    return &GetSedationLevel();
+    return &const_cast<SEDrugSystem*>(this)->GetSedationLevel();
   if (name == idTidalVolumeChange)
-    return &GetTidalVolumeChange();
+    return &const_cast<SEDrugSystem*>(this)->GetTidalVolumeChange();
   if (name == idTubularPermeabilityChange)
-    return &GetTubularPermeabilityChange();
+    return &const_cast<SEDrugSystem*>(this)->GetTubularPermeabilityChange();
   if (name == idCentralNervousResponse)
-    return &GetCentralNervousResponse();
+    return &const_cast<SEDrugSystem*>(this)->GetCentralNervousResponse();
 
   return nullptr;
 }

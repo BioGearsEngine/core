@@ -160,29 +160,29 @@ void SELiquidSubstanceQuantity::SetToZero()
   GetMassExcreted().SetValue(0, MassUnit::mg);
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SELiquidSubstanceQuantity::GetScalar(const char* name)
+const SEScalar* SELiquidSubstanceQuantity::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SELiquidSubstanceQuantity::GetScalar(const std::string& name)
+const SEScalar* SELiquidSubstanceQuantity::GetScalar(const std::string& name) const
 {
   if (name.compare("Concentration") == 0)
-    return &GetConcentration();
+    return &const_cast<SELiquidSubstanceQuantity*>(this)->GetConcentration();
   if (name.compare("Mass") == 0)
-    return &GetMass();
+    return &const_cast<SELiquidSubstanceQuantity*>(this)->GetMass();
   if (name.compare("MassCleared") == 0)
-    return &GetMassCleared();
+    return &const_cast<SELiquidSubstanceQuantity*>(this)->GetMassCleared();
   if (name.compare("MassDeposited") == 0)
-    return &GetMassDeposited();
+    return &const_cast<SELiquidSubstanceQuantity*>(this)->GetMassDeposited();
   if (name.compare("MassExcreted") == 0)
-    return &GetMassExcreted();
+    return &const_cast<SELiquidSubstanceQuantity*>(this)->GetMassExcreted();
   if (name.compare("Molarity") == 0)
-    return &GetMolarity();
+    return &const_cast<SELiquidSubstanceQuantity*>(this)->GetMolarity();
   if (name.compare("PartialPressure") == 0)
-    return &GetPartialPressure();
+    return &const_cast<SELiquidSubstanceQuantity*>(this)->GetPartialPressure();
   if (name.compare("Saturation") == 0)
-    return &GetSaturation();
+    return &const_cast<SELiquidSubstanceQuantity*>(this)->GetSaturation();
   return nullptr;
 }
 //-----------------------------------------------------------------------------

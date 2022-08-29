@@ -31,10 +31,10 @@ public:
   static const char* empty_cStr;
 
   Loggable();
-  Loggable(Logger* log, std::string const& origin = Loggable::empty);
+  Loggable(Logger const * log, std::string const& origin = Loggable::empty);
   virtual ~Loggable();
 
-  virtual Logger* GetLogger() const;
+  virtual Logger const * GetLogger() const;
 
 protected:
   virtual void Debug(std::string const& msg) const;
@@ -62,7 +62,7 @@ protected:
   virtual void Fatal(std::istream&& msg) const;
 
   std::string m_origin;
-  Logger* m_Logger;
+  Logger const * m_Logger;
 };
 }
 
@@ -113,7 +113,7 @@ public:
   void SetLogLevel(LogLevel logLevel) const;
   void SetConsoleLogLevel(LogLevel priority) const;
 
-  LogLevel GetLogLevel();
+  LogLevel GetLogLevel() const ;
 
   virtual void SetLogTime(const SEScalarTime* time);
 
@@ -121,7 +121,7 @@ public:
   void SetConsoleConversionPattern(std::string const&);
 
   virtual void SetForward(LoggerForward* forward);
-  virtual bool HasForward();
+  virtual bool HasForward() const ;
 
   virtual void Debug(std::string const& msg, std::string const& origin = Loggable::empty) const;
   virtual void Info(std::string const& msg, std::string const& origin = Loggable::empty) const;

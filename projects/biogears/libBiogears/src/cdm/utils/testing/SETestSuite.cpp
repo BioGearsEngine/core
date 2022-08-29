@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/TestReport.hxx>
 
 namespace biogears {
-SETestSuite::SETestSuite(Logger* logger)
+SETestSuite::SETestSuite(Logger const* logger)
   : Loggable(logger)
 {
   m_Performed = true;

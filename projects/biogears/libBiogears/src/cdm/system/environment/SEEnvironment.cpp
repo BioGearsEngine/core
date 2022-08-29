@@ -72,36 +72,36 @@ void SEEnvironment::Clear()
   SAFE_DELETE(m_SkinHeatLoss);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEEnvironment::GetScalar(const char* name)
+const SEScalar* SEEnvironment::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEEnvironment::GetScalar(const std::string& name)
+const SEScalar* SEEnvironment::GetScalar(const std::string& name) const
 {
   if (name.compare("ConvectiveHeatLoss") == 0) {
-    return &GetConvectiveHeatLoss();
+    return &const_cast<SEEnvironment*>(this)->GetConvectiveHeatLoss();
   }
   if (name.compare("ConvectiveHeatTranferCoefficient") == 0) {
-    return &GetConvectiveHeatTranferCoefficient();
+    return &const_cast<SEEnvironment*>(this)->GetConvectiveHeatTranferCoefficient();
   }
   if (name.compare("EvaporativeHeatLoss") == 0) {
-    return &GetEvaporativeHeatLoss();
+    return &const_cast<SEEnvironment*>(this)->GetEvaporativeHeatLoss();
   }
   if (name.compare("EvaporativeHeatTranferCoefficient") == 0) {
-    return &GetEvaporativeHeatTranferCoefficient();
+    return &const_cast<SEEnvironment*>(this)->GetEvaporativeHeatTranferCoefficient();
   }
   if (name.compare("RadiativeHeatLoss") == 0) {
-    return &GetRadiativeHeatLoss();
+    return &const_cast<SEEnvironment*>(this)->GetRadiativeHeatLoss();
   }
   if (name.compare("RadiativeHeatTranferCoefficient") == 0) {
-    return &GetRadiativeHeatTranferCoefficient();
+    return &const_cast<SEEnvironment*>(this)->GetRadiativeHeatTranferCoefficient();
   }
   if (name.compare("RespirationHeatLoss") == 0) {
-    return &GetRespirationHeatLoss();
+    return &const_cast<SEEnvironment*>(this)->GetRespirationHeatLoss();
   }
   if (name.compare("SkinHeatLoss") == 0) {
-    return &GetSkinHeatLoss();
+    return &const_cast<SEEnvironment*>(this)->GetSkinHeatLoss();
   }
 
   size_t split = name.find('-');
@@ -109,7 +109,7 @@ const SEScalar* SEEnvironment::GetScalar(const std::string& name)
     std::string child = name.substr(0, split);
     std::string prop = name.substr(split + 1, name.npos);
     if (child == "Conditions") {
-      return GetConditions().GetScalar(prop);
+      return GetConditions()->GetScalar(prop);
     }
   }
   return nullptr;

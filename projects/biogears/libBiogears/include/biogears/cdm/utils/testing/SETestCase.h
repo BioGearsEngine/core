@@ -25,8 +25,8 @@ class BIOGEARS_API SETestCase : public Loggable {
   friend io::TestReport;
 
 protected:
-  SETestCase(Logger* logger);
-  SETestCase(const std::string& name, Logger* logger);
+  SETestCase(Logger const* logger);
+  SETestCase(const std::string& name, Logger const* logger);
 
 public:
   virtual ~SETestCase();

@@ -31,7 +31,7 @@ template class map<biogears::SESubstanceCompound*, const CDM::SubstanceCompoundD
 }
 
 namespace biogears {
-SESubstanceManager::SESubstanceManager(Logger* logger)
+SESubstanceManager::SESubstanceManager(Logger const* logger)
   : Loggable(logger)
 {
   Clear();

@@ -95,19 +95,19 @@ void SEGasSubstanceQuantity::SetToZero()
   GetVolumeFraction().SetValue(0);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEGasSubstanceQuantity::GetScalar(const char* name)
+const SEScalar* SEGasSubstanceQuantity::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEGasSubstanceQuantity::GetScalar(const std::string& name)
+const SEScalar* SEGasSubstanceQuantity::GetScalar(const std::string& name) const
 {
   if (name.compare("PartialPressure") == 0)
-    return &GetPartialPressure();
+    return &const_cast<SEGasSubstanceQuantity*>(this)->GetPartialPressure();
   if (name.compare("Volume") == 0)
-    return &GetVolume();
+    return &const_cast<SEGasSubstanceQuantity*>(this)->GetVolume();
   if (name.compare("VolumeFraction") == 0)
-    return &GetVolumeFraction();
+    return &const_cast<SEGasSubstanceQuantity*>(this)->GetVolumeFraction();
   return nullptr;
 }
 //-------------------------------------------------------------------------------

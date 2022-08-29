@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
-SEActiveHeating::SEActiveHeating(Logger* logger)
+SEActiveHeating::SEActiveHeating(Logger const* logger)
   : Loggable(logger)
 {
   m_Power = nullptr;
@@ -43,19 +43,19 @@ void SEActiveHeating::Reset()
   Clear();
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEActiveHeating::GetScalar(const char* name)
+const SEScalar* SEActiveHeating::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SEActiveHeating::GetScalar(const std::string& name)
+const SEScalar* SEActiveHeating::GetScalar(const std::string& name) const
 {
   if (name.compare("Power") == 0)
-    return &GetPower();
+    return &const_cast<SEActiveHeating*>(this)->GetPower();
   if (name.compare("SurfaceArea") == 0)
-    return &GetSurfaceArea();
+    return &const_cast<SEActiveHeating*>(this)->GetSurfaceArea();
   if (name.compare("SurfaceAreaFraction") == 0)
-    return &GetSurfaceAreaFraction();
+    return &const_cast<SEActiveHeating*>(this)->GetSurfaceAreaFraction();
   return nullptr;
 }
 //-----------------------------------------------------------------------------

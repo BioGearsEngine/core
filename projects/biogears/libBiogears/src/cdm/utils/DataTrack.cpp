@@ -35,7 +35,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
-DataTrack::DataTrack(Logger* logger)
+DataTrack::DataTrack(Logger const* logger)
   : Loggable(logger)
 {
   m_Delimiter = ',';

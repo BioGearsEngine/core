@@ -28,7 +28,7 @@ class BIOGEARS_API PropertyConvergence : public Loggable {
   friend io::EngineConfiguration;
 
 protected:
-  PropertyConvergence(SEDataRequest& dr, Logger* logger);
+  PropertyConvergence(SEDataRequest& dr, Logger const* logger);
 
 public:
   virtual ~PropertyConvergence();
@@ -65,7 +65,7 @@ class BIOGEARS_API PhysiologyEngineDynamicStabilizationCriteria : public Loggabl
   friend io::EngineConfiguration;
 
 public:
-  PhysiologyEngineDynamicStabilizationCriteria(Logger* logger);
+  PhysiologyEngineDynamicStabilizationCriteria(Logger const* logger);
 
   virtual ~PhysiologyEngineDynamicStabilizationCriteria();
 
@@ -154,7 +154,7 @@ CDM_BIND_DECL(PhysiologyEngineDynamicStabilizationData)
 class PhysiologyEngineDynamicStabilization : public PhysiologyEngineStabilization {
 public:
   friend io::EngineConfiguration;
-  BIOGEARS_API PhysiologyEngineDynamicStabilization(Logger* logger);
+  BIOGEARS_API PhysiologyEngineDynamicStabilization(Logger const* logger);
   BIOGEARS_API virtual ~PhysiologyEngineDynamicStabilization();
 
   BIOGEARS_API virtual void Clear() override;

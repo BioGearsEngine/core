@@ -37,7 +37,7 @@ BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::S
 }
 
 namespace biogears {
-class BioGears;
+class BioGearsEngine;
 /**
  * @brief
  * The drug system contains the physiologically based pharmacokinetic (PBPK) model and the pharmacodynamic (PD) model.
@@ -46,13 +46,13 @@ class BioGears;
  * and the physiologic effects on the body are modeled with a low-fidelity pharmacodynamic (PD) model.
  */
 class BIOGEARS_API Drugs : public SEDrugSystem, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<Drugs>;
-  Drugs(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<Drugs>;
+  Drugs(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~Drugs() override;
@@ -78,7 +78,7 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState() override;
+  void SimulationPhaseChange() override;
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;

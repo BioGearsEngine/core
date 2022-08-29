@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SELiquidSubstanceQuantity;
-class BioGears;
+class BioGearsEngine;
 /**
  * @brief @copydoc Physiology_EndocrineSystemData
  * @details
@@ -30,13 +30,13 @@ class BioGears;
  * In the future, additional stimuli and additional hormones will be added.
  */
 class BIOGEARS_API Endocrine : public SEEndocrineSystem, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<Endocrine>;
-  Endocrine(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<Endocrine>;
+  Endocrine(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~Endocrine() override;
@@ -62,7 +62,7 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState() override;
+  void SimulationPhaseChange() override;
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;

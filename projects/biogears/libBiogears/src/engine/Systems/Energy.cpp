@@ -48,16 +48,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
-auto Energy::make_unique(BioGears& bg) -> std::unique_ptr<Energy>
+auto Energy::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Energy>
 {
   return std::unique_ptr<Energy>(new Energy(bg));
 }
 
-Energy::Energy(BioGears& bg)
+Energy::Energy(BioGearsEngine& bg)
   : SEEnergySystem(bg.GetLogger())
   , m_data(bg)
   , m_circuitCalculator(GetLogger())
@@ -190,9 +190,9 @@ void Energy::SetUp()
   m_skinExtravascularToSweatingGroundPath = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinSweating);
 }
 
-void Energy::AtSteadyState()
+void Energy::SimulationPhaseChange()
 {
-  if (m_data.GetState() == EngineState::AtInitialStableState) {
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtInitialStableState) {
   }
 }
 
@@ -380,7 +380,7 @@ void Energy::Process()
 void Energy::PostProcess()
 {
   if (m_data.GetActions().GetPatientActions().HasOverride()
-      && m_data.GetState() == EngineState::Active) {
+      && m_data.GetSimulationPhase() == SimulationPhase::Active) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasEnergyOverride()) {
       ProcessOverride();
     }
@@ -401,8 +401,8 @@ void Energy::CalculateVitalSigns()
 {
   double coreTemperature_degC = m_coreNode->GetTemperature(TemperatureUnit::C);
   double skinTemperature_degC = m_skinNode->GetTemperature(TemperatureUnit::C);
-  if (m_data.GetDrugs().HasFeverChange() && GetCoreTemperature().GetValue(TemperatureUnit::C) > 37.0) { // Modifier for current drugs should not be able to increase core temperature
-    coreTemperature_degC += m_data.GetDrugs().GetFeverChange().GetValue(TemperatureUnit::C);
+  if (m_data.GetDrugsSystem().HasFeverChange() && GetCoreTemperature().GetValue(TemperatureUnit::C) > 37.0) { // Modifier for current drugs should not be able to increase core temperature
+    coreTemperature_degC += m_data.GetDrugsSystem().GetFeverChange().GetValue(TemperatureUnit::C);
     LLIM(coreTemperature_degC, 36.5); // Tylenol will not lower your basal core temperature
   }
   GetCoreTemperature().SetValue(coreTemperature_degC, TemperatureUnit::C);
@@ -448,14 +448,14 @@ void Energy::CalculateVitalSigns()
   // The events related to blood concentrations should be detected and set in blood chemistry.
   double highPh = 8.5;
   double lowPh = 6.5; // \cite Edge2006AcidosisConscious
-  m_BloodpH.Sample(m_data.GetBloodChemistry().GetArterialBloodPH().GetValue());
+  m_BloodpH.Sample(m_data.GetBloodChemistrySystem().GetArterialBloodPH().GetValue());
   m_BicarbonateMolarity_mmol_Per_L.Sample(m_AortaHCO3->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
   //Only check these at the end of a cardiac cycle and reset at start of cardiac cycle
   if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
     double bloodPH = m_BloodpH.Value();
     double bloodBicarbonate_mmol_Per_L = m_BicarbonateMolarity_mmol_Per_L.Value();
 
-    if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
+    if (m_data.GetSimulationPhase() > SimulationPhase::InitialStabilization) { // Don't throw events if we are initializing
       if (bloodPH < 7.35 && bloodBicarbonate_mmol_Per_L < 22.0) {
         /// \event The patient is in a state of metabolic acidosis
       }
@@ -597,7 +597,7 @@ void Energy::CalculateSweatRate()
   /// \todo Convert to sweat density once specific gravity calculation is in
   SEScalarMassPerVolume sweatDensity;
   GeneralMath::CalculateWaterDensity(m_skinNode->GetTemperature(), sweatDensity);
-  double dehydrationFraction = m_data.GetTissue().GetDehydrationFraction().GetValue();
+  double dehydrationFraction = m_data.GetTissueSystem().GetDehydrationFraction().GetValue();
 
   //Calculate sweat rate (in kg/s) from core temperature feedback.
   //The sweat rate heat transfer is determined from a control equation that attempts to keep the core temperature in line
@@ -654,12 +654,12 @@ void Energy::CalculateSweatRate()
 //--------------------------------------------------------------------------------------------------
 void Energy::UpdateHeatResistance()
 {
-  double skinBloodFlow_m3_Per_s = m_data.GetCardiovascular().GetMeanSkinFlow().GetValue(VolumePerTimeUnit::m3_Per_s);
-  double bloodDensity_kg_Per_m3 = m_data.GetBloodChemistry().GetBloodDensity().GetValue(MassPerVolumeUnit::kg_Per_m3);
-  double bloodSpecificHeat_J_Per_K_kg = m_data.GetBloodChemistry().GetBloodSpecificHeat().GetValue(HeatCapacitancePerMassUnit::J_Per_K_kg);
+  double skinBloodFlow_m3_Per_s = m_data.GetCardiovascularSystem().GetMeanSkinFlow().GetValue(VolumePerTimeUnit::m3_Per_s);
+  double bloodDensity_kg_Per_m3 = m_data.GetBloodChemistrySystem().GetBloodDensity().GetValue(MassPerVolumeUnit::kg_Per_m3);
+  double bloodSpecificHeat_J_Per_K_kg = m_data.GetBloodChemistrySystem().GetBloodSpecificHeat().GetValue(HeatCapacitancePerMassUnit::J_Per_K_kg);
 
   double alphaScale = 0.5; //Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+  if (m_data.GetBloodChemistrySystem().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
     const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
     const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0); //Make >50% burn the worse case scenario
     const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 20.0, resInput);
@@ -728,7 +728,7 @@ void Energy::ManageEnergyDeficit()
 {
   if (m_PatientActions->HasHemorrhage()) {
     double basalTissueEnergyDemand_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W) * 0.8; //We say in tissue that say brain takes up 20%, and we just care about the other tissues for this process
-    double volFraction = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL) / m_Patient->GetBloodVolumeBaseline(VolumeUnit::mL);
+    double volFraction = m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL) / m_Patient->GetBloodVolumeBaseline(VolumeUnit::mL);
     ULIM(volFraction, 1.0);
     double minVolFraction = 0.5; //i.e. half of blood volume lost
     double maxDeficitMultiplier = 0.5;

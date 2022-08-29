@@ -30,7 +30,7 @@ namespace io {
 class BIOGEARS_API SEActiveHeating : public Loggable {
 public:
   friend io::Environment;
-  SEActiveHeating(Logger* logger);
+  SEActiveHeating(Logger const* logger);
   virtual ~SEActiveHeating();
 
   virtual void Clear();
@@ -43,8 +43,8 @@ protected:
   virtual void Unload(CDM::ActiveHeatingData& data) const;
 
 public:
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) const;
+  virtual const SEScalar* GetScalar(const std::string& name) const ;
 
   virtual bool HasPower() const;
   virtual SEScalarPower& GetPower();

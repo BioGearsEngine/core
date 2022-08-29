@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 #include <biogears/engine/Equipment/ECG.h>
 #include <biogears/engine/Systems/Cardiovascular.h>
@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
@@ -29,12 +29,12 @@ Constructors
 ========================
 */
 
-auto ECG::make_unique(BioGears& bg) -> std::unique_ptr<ECG>
+auto ECG::make_unique(BioGearsEngine& bg) -> std::unique_ptr<ECG>
 {
   return std::unique_ptr<ECG>(new ECG(bg));
 }
 
-ECG::ECG(BioGears& bg)
+ECG::ECG(BioGearsEngine& bg)
   : SEElectroCardioGram(bg.GetLogger())
   , m_data(bg)
   , m_interpolator(bg.GetLogger())
@@ -72,7 +72,7 @@ void ECG::Initialize()
 
   m_heartRhythmTime.SetValue(0, TimeUnit::s);
   m_heartRhythmPeriod.SetValue(0, TimeUnit::s);
-  CDM_COPY(m_data.GetConfiguration().GetECGInterpolator(), (&m_interpolator));
+  CDM_COPY(m_data.GetConfiguration().GetECGInterpolator(), (m_interpolator));
   // You can uncomment this code to compare the original waveform to the interpolated waveform and make sure you are capturing the data properly
   /* Code to write out the ECG data in a format easy to view in plotting tools 
   std::vector<double> original_s = m_interpolator.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetTime();
@@ -155,13 +155,13 @@ void ECG::Process()
   m_heartRhythmTime.IncrementValue(m_dt_s, TimeUnit::s);
   if (m_heartRhythmTime.GetValue(TimeUnit::s) >= m_heartRhythmPeriod.GetValue(TimeUnit::s)) {
     m_heartRhythmTime.SetValue(0, TimeUnit::s);
-    m_heartRhythmPeriod.SetValue(1 / m_data.GetCardiovascular().GetHeartRate(FrequencyUnit::Per_s), TimeUnit::s);
+    m_heartRhythmPeriod.SetValue(1 / m_data.GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_s), TimeUnit::s);
     // Currently we  have one data set for all currently supported Heart Rhythms
     // Eventually we will support multiple rhythmic data
-    if (m_data.GetCardiovascular().GetHeartRhythm() == CDM::enumHeartRhythm::NormalSinus)
+    if (m_data.GetCardiovascularSystem().GetHeartRhythm() == CDM::enumHeartRhythm::NormalSinus)
       m_interpolator.StartNewCycle(CDM::enumHeartRhythm::NormalSinus);
     else {
-      m_ss << m_data.GetCardiovascular().GetHeartRhythm() << " is not a supported Heart Rhythm for ECG";
+      m_ss << m_data.GetCardiovascularSystem().GetHeartRhythm() << " is not a supported Heart Rhythm for ECG";
       Error(m_ss);
     }
   }

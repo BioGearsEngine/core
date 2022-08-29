@@ -25,7 +25,7 @@ class MassUnit;
 class SEScalarMassPerVolume;
 class MassPerVolumeUnit;
 
-class BioGears;
+class BioGearsEngine;
 
 class BIOGEARS_API SizeIndependentDepositionEfficencyCoefficient {
   friend class BioGearsSubstances;
@@ -61,7 +61,7 @@ class BIOGEARS_API BioGearsSubstances : public SESubstanceManager {
   friend class BioGearsEngineTest;
 
 public:
-  BioGearsSubstances(BioGears& data);
+  BioGearsSubstances(BioGearsEngine& data);
   virtual ~BioGearsSubstances();
 
   virtual void Clear();
@@ -177,6 +177,6 @@ protected:
 
   std::map<SESubstance*, SizeIndependentDepositionEfficencyCoefficient*> m_SIDECoefficients;
 
-  BioGears& m_data;
+  BioGearsEngine& m_data;
 };
 }

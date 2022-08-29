@@ -38,7 +38,7 @@ constexpr char idWakeTime[] = "WakeTime";
 constexpr char idRichmondAgitationSedationScale[] = "RichmondAgitationSedationScale";
 
 
-SENervousSystem::SENervousSystem(Logger* logger)
+SENervousSystem::SENervousSystem(Logger const* logger)
   : SESystem(logger)
 {
   m_AttentionLapses = nullptr;
@@ -91,52 +91,52 @@ void SENervousSystem::Clear()
   SAFE_DELETE(m_RichmondAgitationSedationScale);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SENervousSystem::GetScalar(const char* name)
+const SEScalar* SENervousSystem::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SENervousSystem::GetScalar(const std::string& name)
+const SEScalar* SENervousSystem::GetScalar(const std::string& name) const
 {
   if (name == idAttentionLapses)
-    return &GetAttentionLapses();
+    return &const_cast<SENervousSystem*>(this)->GetAttentionLapses();
   if (name == idBiologicalDebt)
-    return &GetBiologicalDebt();
+    return &const_cast<SENervousSystem*>(this)->GetBiologicalDebt();
   if (name == idHeartRateScale)
-    return &GetHeartRateScale();
+    return &const_cast<SENervousSystem*>(this)->GetHeartRateScale();
   if (name == idHeartElastanceScale)
-    return &GetHeartElastanceScale();
+    return &const_cast<SENervousSystem*>(this)->GetHeartElastanceScale();
   if (name == idMentalStatus)
-    return &GetMentalStatus();
+    return &const_cast<SENervousSystem*>(this)->GetMentalStatus();
   if (name == idReactionTime)
-    return &GetReactionTime();
+    return &const_cast<SENervousSystem*>(this)->GetReactionTime();
   if (name == idResistanceScaleExtrasplanchnic)
-    return &GetResistanceScaleExtrasplanchnic();
+    return &const_cast<SENervousSystem*>(this)->GetResistanceScaleExtrasplanchnic();
   if (name == idResistanceScaleMuscle)
-    return &GetResistanceScaleMuscle();
+    return &const_cast<SENervousSystem*>(this)->GetResistanceScaleMuscle();
   if (name == idResistanceScaleMyocardium)
-    return &GetResistanceScaleMyocardium();
+    return &const_cast<SENervousSystem*>(this)->GetResistanceScaleMyocardium();
   if (name == idResistanceScaleSplanchnic)
-    return &GetResistanceScaleSplanchnic();
+    return &const_cast<SENervousSystem*>(this)->GetResistanceScaleSplanchnic();
   if (name == idComplianceScale)
-    return &GetComplianceScale();
+    return &const_cast<SENervousSystem*>(this)->GetComplianceScale();
   if (name == idPainVisualAnalogueScale)
-    return &GetPainVisualAnalogueScale();
+    return &const_cast<SENervousSystem*>(this)->GetPainVisualAnalogueScale();
   if (name == idSleepTime)
-    return &GetSleepTime();
+    return &const_cast<SENervousSystem*>(this)->GetSleepTime();
   if (name == idWakeTime)
-    return &GetWakeTime();
+    return &const_cast<SENervousSystem*>(this)->GetWakeTime();
   if (name == idRichmondAgitationSedationScale)
-    return &GetRichmondAgitationSedationScale();
+    return &const_cast<SENervousSystem*>(this)->GetRichmondAgitationSedationScale();
 
   size_t split = name.find('-');
   if (split != name.npos) {
     std::string child = name.substr(0, split);
     std::string prop = name.substr(split + 1, name.npos);
     if (child == idLeftEyePupillaryResponse)
-      return GetLeftEyePupillaryResponse().GetScalar(prop);
+      return const_cast<SENervousSystem*>(this)->GetLeftEyePupillaryResponse().GetScalar(prop);
     if (child == idRightEyePupillaryResponse)
-      return GetRightEyePupillaryResponse().GetScalar(prop);
+      return const_cast<SENervousSystem*>(this)->GetRightEyePupillaryResponse().GetScalar(prop);
   }
   return nullptr;
 }

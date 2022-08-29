@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/TestReport.hxx>
 
 namespace biogears {
-SETestErrorStatistics::SETestErrorStatistics(Logger* logger)
+SETestErrorStatistics::SETestErrorStatistics(Logger const* logger)
   : Loggable(logger)
 {
   m_PercentToleranceVsNumErrorsHistogram = nullptr;

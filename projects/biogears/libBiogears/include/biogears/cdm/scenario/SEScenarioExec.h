@@ -35,17 +35,17 @@ public:
 
   virtual void Cancel();
 
-  virtual bool Execute(const char* scenarioFile, const char* resultsFile, SEScenarioCustomExec* cExec = nullptr);
-  virtual bool Execute(SEScenario const& scenario, const char* resultsFile, SEScenarioCustomExec* cExec = nullptr);
-  virtual bool Execute(const std::string& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr);
-  virtual bool Execute(SEScenario const& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr);
+  virtual bool Execute(const char* scenarioFile, const char* resultsFile, SEScenarioCustomExec* cExec = nullptr) = 0;
+  virtual bool Execute(SEScenario const& scenario, const char* resultsFile, SEScenarioCustomExec* cExec = nullptr) = 0;
+  virtual bool Execute(const std::string& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr) = 0;
+  virtual bool Execute(SEScenario const& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec = nullptr) = 0;
 
 protected:
-  virtual bool ProcessActions(SEScenario& scenario);
+  virtual bool ProcessActions(SEScenario& scenario) = 0;
   /// This does not include advance time actions
   /// To override default functionality with those
   /// actions override the ProcessActions method
-  virtual bool ProcessAction(const SEAction& action);
+  virtual bool ProcessAction(const SEAction& action) = 0;
 
   bool m_Cancel;
   SEScenarioCustomExec* m_CustomExec;

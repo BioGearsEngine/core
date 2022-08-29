@@ -128,7 +128,7 @@ Serializer::~Serializer()
   xercesc::XMLPlatformUtils::Terminate();
 }
 //-----------------------------------------------------------------------------
-bool Serializer::Initialize(Logger* logger)
+bool Serializer::Initialize(Logger const* logger)
 {
   if (m_Initialized)
     return true;
@@ -209,7 +209,7 @@ bool Serializer::Initialize(Logger* logger)
   }
 }
 //-----------------------------------------------------------------------------
-xercesc::DOMLSParser* Serializer::CreateParser(Logger* logger, bool embeddedXSD) const
+xercesc::DOMLSParser* Serializer::CreateParser(Logger const* logger, bool embeddedXSD) const
 {
   using namespace xercesc;
   const XMLCh ls_id[] = { chLatin_L, chLatin_S, chNull };
@@ -267,12 +267,12 @@ xercesc::DOMLSParser* Serializer::CreateParser(Logger* logger, bool embeddedXSD)
   return parser;
 }
 //-----------------------------------------------------------------------------
-std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const char* xmlFile, Logger* logger)
+std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const char* xmlFile, Logger const * logger)
 {
   return ReadFile(std::string { xmlFile }, logger);
 }
 //-----------------------------------------------------------------------------
-std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile, Logger* logger)
+std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile, Logger const* logger)
 {
   std::lock_guard<std::mutex> thread_lock { g_serializer_mutex };
   if (m_me == nullptr) {
@@ -295,7 +295,7 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadFile(const std::string& xmlFile
   return ReadBuffer(&m_me->m_buffer[0], content_size, logger);
 }
 //-----------------------------------------------------------------------------
-std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, size_t size, Logger* logger)
+std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, size_t size, Logger const* logger)
 {
 
   if (m_me == nullptr) {

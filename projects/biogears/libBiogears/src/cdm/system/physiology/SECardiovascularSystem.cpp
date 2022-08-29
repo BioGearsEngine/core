@@ -60,7 +60,7 @@ namespace biogears {
   constexpr char idSystemicVascularResistance[] = "SystemicVascularResistance";
   constexpr char idSystolicArterialPressure[] = "SystolicArterialPressure";
 
-SECardiovascularSystem::SECardiovascularSystem(Logger* logger)
+SECardiovascularSystem::SECardiovascularSystem(Logger const* logger)
   : SESystem(logger)
 {
   m_ArterialPressure = nullptr;
@@ -146,79 +146,79 @@ void SECardiovascularSystem::Clear()
   SAFE_DELETE(m_SystolicArterialPressure);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SECardiovascularSystem::GetScalar(const char* name)
+const SEScalar* SECardiovascularSystem::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name } );
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SECardiovascularSystem::GetScalar(const std::string& name)
+const SEScalar* SECardiovascularSystem::GetScalar(const std::string& name) const
 {
   if (name.compare(idArterialPressure) == 0)
-    return &GetArterialPressure();
+    return &const_cast<SECardiovascularSystem*>(this)->GetArterialPressure();
   if (name.compare(idBloodVolume) == 0)
-    return &GetBloodVolume();
+    return &const_cast<SECardiovascularSystem*>(this)->GetBloodVolume();
   if (name.compare(idCardiacIndex) == 0)
-    return &GetCardiacIndex();
+    return &const_cast<SECardiovascularSystem*>(this)->GetCardiacIndex();
   if (name.compare(idCardiacOutput) == 0)
-    return &GetCardiacOutput();
+    return &const_cast<SECardiovascularSystem*>(this)->GetCardiacOutput();
   if (name.compare(idCentralVenousPressure) == 0)
-    return &GetCentralVenousPressure();
+    return &const_cast<SECardiovascularSystem*>(this)->GetCentralVenousPressure();
   if (name.compare(idCerebralBloodFlow) == 0)
-    return &GetCerebralBloodFlow();
+    return &const_cast<SECardiovascularSystem*>(this)->GetCerebralBloodFlow();
   if (name.compare(idCerebralPerfusionPressure) == 0)
-    return &GetCerebralPerfusionPressure();
+    return &const_cast<SECardiovascularSystem*>(this)->GetCerebralPerfusionPressure();
   if (name.compare(idDiastolicArterialPressure) == 0)
-    return &GetDiastolicArterialPressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetDiastolicArterialPressure();
   if (name.compare(idExtremityPressureLeftArm) == 0)
-    return &GetExtremityPressureLeftArm();
+    return&const_cast<SECardiovascularSystem*>(this)->GetExtremityPressureLeftArm();
   if (name.compare(idExtremityPressureLeftLeg) == 0)
-    return &GetExtremityPressureLeftLeg();
+    return&const_cast<SECardiovascularSystem*>(this)->GetExtremityPressureLeftLeg();
   if (name.compare(idExtremityPressureRightArm) == 0)
-    return &GetExtremityPressureRightArm();
+    return&const_cast<SECardiovascularSystem*>(this)->GetExtremityPressureRightArm();
   if (name.compare(idExtremityPressureRightLeg) == 0)
-    return &GetExtremityPressureRightLeg();
+    return&const_cast<SECardiovascularSystem*>(this)->GetExtremityPressureRightLeg();
   if (name.compare(idHeartEjectionFraction) == 0)
-    return &GetHeartEjectionFraction();
+    return&const_cast<SECardiovascularSystem*>(this)->GetHeartEjectionFraction();
   if (name.compare(idHeartRate) == 0)
-    return &GetHeartRate();
+    return&const_cast<SECardiovascularSystem*>(this)->GetHeartRate();
   if (name.compare(idHeartStrokeVolume) == 0)
-    return &GetHeartStrokeVolume();
+    return&const_cast<SECardiovascularSystem*>(this)->GetHeartStrokeVolume();
   if (name.compare(idIntracranialPressure) == 0)
-    return &GetIntracranialPressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetIntracranialPressure();
   if (name.compare(idMeanArterialPressure) == 0)
-    return &GetMeanArterialPressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetMeanArterialPressure();
   if (name.compare(idMeanArterialCarbonDioxidePartialPressure) == 0)
-    return &GetMeanArterialCarbonDioxidePartialPressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetMeanArterialCarbonDioxidePartialPressure();
   if (name.compare(idMeanArterialCarbonDioxidePartialPressureDelta) == 0)
-    return &GetMeanArterialCarbonDioxidePartialPressureDelta();
+    return&const_cast<SECardiovascularSystem*>(this)->GetMeanArterialCarbonDioxidePartialPressureDelta();
   if (name.compare(idMeanCentralVenousPressure) == 0)
-    return &GetMeanCentralVenousPressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetMeanCentralVenousPressure();
   if (name.compare(idMeanSkinFlow) == 0)
-    return &GetMeanSkinFlow();
+    return&const_cast<SECardiovascularSystem*>(this)->GetMeanSkinFlow();
   if (name.compare(idPulmonaryArterialPressure) == 0)
-    return &GetPulmonaryArterialPressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetPulmonaryArterialPressure();
   if (name.compare(idPulmonaryCapillariesWedgePressure) == 0)
-    return &GetPulmonaryCapillariesWedgePressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetPulmonaryCapillariesWedgePressure();
   if (name.compare(idPulmonaryDiastolicArterialPressure) == 0)
-    return &GetPulmonaryDiastolicArterialPressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetPulmonaryDiastolicArterialPressure();
   if (name.compare(idPulmonaryMeanArterialPressure) == 0)
-    return &GetPulmonaryMeanArterialPressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetPulmonaryMeanArterialPressure();
   if (name.compare(idPulmonaryMeanCapillaryFlow) == 0)
-    return &GetPulmonaryMeanCapillaryFlow();
+    return&const_cast<SECardiovascularSystem*>(this)->GetPulmonaryMeanCapillaryFlow();
   if (name.compare(idPulmonaryMeanShuntFlow) == 0)
-    return &GetPulmonaryMeanShuntFlow();
+    return&const_cast<SECardiovascularSystem*>(this)->GetPulmonaryMeanShuntFlow();
   if (name.compare(idPulmonarySystolicArterialPressure) == 0)
-    return &GetPulmonarySystolicArterialPressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetPulmonarySystolicArterialPressure();
   if (name.compare(idPulmonaryVascularResistance) == 0)
-    return &GetPulmonaryVascularResistance();
+    return&const_cast<SECardiovascularSystem*>(this)->GetPulmonaryVascularResistance();
   if (name.compare(idPulmonaryVascularResistanceIndex) == 0)
-    return &GetPulmonaryVascularResistanceIndex();
+    return&const_cast<SECardiovascularSystem*>(this)->GetPulmonaryVascularResistanceIndex();
   if (name.compare(idPulsePressure) == 0)
-    return &GetPulsePressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetPulsePressure();
   if (name.compare(idSystemicVascularResistance) == 0)
-    return &GetSystemicVascularResistance();
+    return&const_cast<SECardiovascularSystem*>(this)->GetSystemicVascularResistance();
   if (name.compare(idSystolicArterialPressure) == 0)
-    return &GetSystolicArterialPressure();
+    return&const_cast<SECardiovascularSystem*>(this)->GetSystolicArterialPressure();
   return nullptr;
 }
 //-------------------------------------------------------------------------------

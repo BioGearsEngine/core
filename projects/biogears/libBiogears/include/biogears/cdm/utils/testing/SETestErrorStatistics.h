@@ -34,7 +34,7 @@ class BIOGEARS_API SETestErrorStatistics : public Loggable {
   friend io::TestReport;
 
 protected:
-  SETestErrorStatistics(Logger* logger);
+  SETestErrorStatistics(Logger const* logger);
 
 public:
   virtual ~SETestErrorStatistics();

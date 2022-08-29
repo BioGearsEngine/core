@@ -14,12 +14,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
   template class SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>;
-SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(Logger* logger)
+SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(Logger const* logger)
   : SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>(
       ElectricCapacitanceUnit::F, ElectricCurrentUnit::A, ElectricInductanceUnit::H, ElectricPotentialUnit::V, ElectricChargeUnit::C, ElectricResistanceUnit::Ohm, logger)
 {
 }
-SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(const ElectricCapacitanceUnit& c, const ElectricCurrentUnit& f, const ElectricInductanceUnit& i, const ElectricPotentialUnit& p, const ElectricChargeUnit& q, const ElectricResistanceUnit& r, Logger* logger)
+SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(const ElectricCapacitanceUnit& c, const ElectricCurrentUnit& f, const ElectricInductanceUnit& i, const ElectricPotentialUnit& p, const ElectricChargeUnit& q, const ElectricResistanceUnit& r, Logger const* logger)
   : SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>(c, f, i, p, q, r, logger)
 {
 }

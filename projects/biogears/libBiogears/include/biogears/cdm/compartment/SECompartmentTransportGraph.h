@@ -25,8 +25,8 @@ namespace biogears {
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 class SECompartmentTransportGraph : public GraphType, public SECompartmentGraph<COMPARTMENT_GRAPH_TYPES> {
 public:
-  SECompartmentTransportGraph(const char* name, Logger* logger);
-  SECompartmentTransportGraph(const std::string& name, Logger* logger);
+  SECompartmentTransportGraph(const char* name, Logger const* logger);
+  SECompartmentTransportGraph(const std::string& name, Logger const* logger);
   virtual ~SECompartmentTransportGraph();
 
   virtual void Clear() override;

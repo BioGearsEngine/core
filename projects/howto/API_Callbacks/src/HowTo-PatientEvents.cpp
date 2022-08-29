@@ -26,7 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
@@ -439,7 +439,7 @@ void hypercapnia_callback(bool active)
                  ,8"                                  "Yb,
                ,8"       Hypecapnia                     `8,
               dP'           Event                        8I
-            ,8"                           bg,_          ,P'
+            ,8"                           biogears,_          ,P'
            ,8'                              "Y8"Ya,,,,ad"
           ,d"                            a,_ I8   `"""'
          ,8'                              ""888
@@ -528,15 +528,15 @@ __________________        ____________________________________________
 int HowToPatientEvents()
 {
   // Create the engine and load the patient
-  std::unique_ptr<BioGearsEngine> bg = std::make_unique<BioGearsEngine>("HowToPain.log"
+  std::unique_ptr<BioGearsEngine> biogears = std::make_unique<BioGearsEngine>("HowToPain.log"
     );
-  bg->GetLogger()->Info("HowToPain");
-  if (!bg->LoadState("./states/StandardMale@0s.xml")) {
-    bg->GetLogger()->Error("Could not load state, check the error");
+  biogears->GetLogger()->Info("HowToPain");
+  if (!biogears->LoadState("./states/StandardMale@0s.xml")) {
+    biogears->GetLogger()->Error("Could not load state, check the error");
     return 1;
   }
 
-  auto biogears = dynamic_cast<BioGears*>(bg.get());
+  
   biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::Hypoxia, hypoxia_callback);
   biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::RespiratoryAcidosis, respiratory_acidosis_callback);
   biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::Tachycardia, tachycardia_callback);
@@ -545,11 +545,11 @@ int HowToPatientEvents()
   biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::IrreversibleState, irreversible_state_callback);
 
   CustomEventHandler eventHandler;
-  bg->SetEventHandler(&eventHandler);
+  biogears->SetEventHandler(&eventHandler);
 
-  SEAnesthesiaMachineConfiguration machine { bg->GetSubstanceManager() };
+  SEAnesthesiaMachineConfiguration machine { biogears->GetSubstanceManager() };
   auto& machine_config = machine.GetConfiguration();
-  bg->AdvanceModelTime(50.0, TimeUnit::s);
+  biogears->AdvanceModelTime(50.0, TimeUnit::s);
 
   machine_config.SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
   machine_config.GetInletFlow().SetValue(5.0, biogears::VolumePerTimeUnit::L_Per_min);
@@ -563,23 +563,23 @@ int HowToPatientEvents()
   machine_config.GetOxygenBottleOne().GetVolume().SetValue(660, biogears::VolumeUnit::L);
   machine_config.GetOxygenBottleTwo().GetVolume().SetValue(660, biogears::VolumeUnit::L);
 
-  bg->ProcessAction(machine);
+  biogears->ProcessAction(machine);
 
-  bg->AdvanceModelTime(50.0, TimeUnit::s);
+  biogears->AdvanceModelTime(50.0, TimeUnit::s);
 
   machine_config.GetLeftChamber().SetState(CDM::enumOnOff::On);
   machine_config.GetLeftChamber().GetSubstanceFraction().SetValue(0.05);
-  machine_config.GetLeftChamber().SetSubstance(*bg->GetSubstanceManager().GetSubstance("Desflurane"));
-  bg->ProcessAction(machine);
+  machine_config.GetLeftChamber().SetSubstance(*biogears->GetSubstanceManager().GetSubstance("Desflurane"));
+  biogears->ProcessAction(machine);
 
-  bg->AdvanceModelTime(0.5, TimeUnit::hr);
+  biogears->AdvanceModelTime(0.5, TimeUnit::hr);
 
   machine_config.GetLeftChamber().SetState(CDM::enumOnOff::Off);
-  bg->ProcessAction(machine);
+  biogears->ProcessAction(machine);
 
-  bg->AdvanceModelTime(2, TimeUnit::hr);
+  biogears->AdvanceModelTime(2, TimeUnit::hr);
 
-  bg->GetLogger()->Info("Finished");
+  biogears->GetLogger()->Info("Finished");
   return 0;
 }
 int main ( int argc, char* argv[] ) {

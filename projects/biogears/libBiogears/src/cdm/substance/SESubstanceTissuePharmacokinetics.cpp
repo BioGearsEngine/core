@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
-SESubstanceTissuePharmacokinetics::SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger)
+SESubstanceTissuePharmacokinetics::SESubstanceTissuePharmacokinetics(const std::string& name, Logger const* logger)
   : Loggable(logger)
   , m_Name(name)
 {
@@ -57,15 +57,15 @@ void SESubstanceTissuePharmacokinetics::Unload(CDM::SubstanceTissuePharmacokinet
     data.PartitionCoefficient(std::unique_ptr<CDM::ScalarData>(m_PartitionCoefficient->Unload()));
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstanceTissuePharmacokinetics::GetScalar(const char* name)
+const SEScalar* SESubstanceTissuePharmacokinetics::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstanceTissuePharmacokinetics::GetScalar(const std::string& name)
+const SEScalar* SESubstanceTissuePharmacokinetics::GetScalar(const std::string& name) const
 {
   if (name.compare("PartitionCoefficient") == 0)
-    return &GetPartitionCoefficient();
+    return &const_cast<SESubstanceTissuePharmacokinetics*>(this)->GetPartitionCoefficient();
 
   return nullptr;
 }

@@ -45,7 +45,7 @@ constexpr char idTotalDeadSpaceVentilation[] = "TotalDeadSpaceVentilation";
 constexpr char idTotalLungVolume[] = "TotalLungVolume";
 constexpr char idTotalPulmonaryVentilation[] = "TotalPulmonaryVentilation";
 constexpr char idTranspulmonaryPressure[] = "TranspulmonaryPressure";
-SERespiratorySystem::SERespiratorySystem(Logger* logger)
+SERespiratorySystem::SERespiratorySystem(Logger const* logger)
   : SESystem(logger)
 {
   m_AlveolarArterialGradient = nullptr;
@@ -106,57 +106,57 @@ void SERespiratorySystem::Clear()
   SAFE_DELETE(m_TranspulmonaryPressure);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SERespiratorySystem::GetScalar(const char* name)
+const SEScalar* SERespiratorySystem::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SERespiratorySystem::GetScalar(const std::string& name)
+const SEScalar* SERespiratorySystem::GetScalar(const std::string& name) const
 {
   if (name == idAlveolarArterialGradient)
-    return &GetAlveolarArterialGradient();
+    return &const_cast<SERespiratorySystem*>(this)->GetAlveolarArterialGradient();
   if (name == idCarricoIndex)
-    return &GetCarricoIndex();
+    return &const_cast<SERespiratorySystem*>(this)->GetCarricoIndex();
   if (name == idEndTidalCarbonDioxideFraction)
-    return &GetEndTidalCarbonDioxideFraction();
+    return &const_cast<SERespiratorySystem*>(this)->GetEndTidalCarbonDioxideFraction();
   if (name == idEndTidalCarbonDioxidePressure)
-    return &GetEndTidalCarbonDioxidePressure();
+    return &const_cast<SERespiratorySystem*>(this)->GetEndTidalCarbonDioxidePressure();
   if (name == idExpiratoryFlow)
-    return &GetExpiratoryFlow();
+    return &const_cast<SERespiratorySystem*>(this)->GetExpiratoryFlow();
   if (name == idInspiratoryExpiratoryRatio)
-    return &GetInspiratoryExpiratoryRatio();
+    return &const_cast<SERespiratorySystem*>(this)->GetInspiratoryExpiratoryRatio();
   if (name == idInspiratoryFlow)
-    return &GetInspiratoryFlow();
+    return &const_cast<SERespiratorySystem*>(this)->GetInspiratoryFlow();
   if (name == idMeanPleuralPressure)
-    return &GetMeanPleuralPressure();
+    return &const_cast<SERespiratorySystem*>(this)->GetMeanPleuralPressure();
   if (name == idPulmonaryCompliance)
-    return &GetPulmonaryCompliance();
+    return &const_cast<SERespiratorySystem*>(this)->GetPulmonaryCompliance();
   if (name == idPulmonaryResistance)
-    return &GetPulmonaryResistance();
+    return &const_cast<SERespiratorySystem*>(this)->GetPulmonaryResistance();
   if (name == idRespirationDriverFrequency)
-    return &GetRespirationDriverFrequency();
+    return &const_cast<SERespiratorySystem*>(this)->GetRespirationDriverFrequency();
   if (name == idRespirationDriverPressure)
-    return &GetRespirationDriverPressure();
+    return &const_cast<SERespiratorySystem*>(this)->GetRespirationDriverPressure();
   if (name == idRespirationMusclePressure)
-    return &GetRespirationMusclePressure();
+    return &const_cast<SERespiratorySystem*>(this)->GetRespirationMusclePressure();
   if (name == idRespirationRate)
-    return &GetRespirationRate();
+    return &const_cast<SERespiratorySystem*>(this)->GetRespirationRate();
   if (name == idSpecificVentilation)
-    return &GetSpecificVentilation();
+    return &const_cast<SERespiratorySystem*>(this)->GetSpecificVentilation();
   if (name == idTargetPulmonaryVentilation)
-    return &GetTargetPulmonaryVentilation();
+    return &const_cast<SERespiratorySystem*>(this)->GetTargetPulmonaryVentilation();
   if (name == idTidalVolume)
-    return &GetTidalVolume();
+    return &const_cast<SERespiratorySystem*>(this)->GetTidalVolume();
   if (name == idTotalAlveolarVentilation)
-    return &GetTotalAlveolarVentilation();
+    return &const_cast<SERespiratorySystem*>(this)->GetTotalAlveolarVentilation();
   if (name == idTotalDeadSpaceVentilation)
-    return &GetTotalDeadSpaceVentilation();
+    return &const_cast<SERespiratorySystem*>(this)->GetTotalDeadSpaceVentilation();
   if (name == idTotalLungVolume)
-    return &GetTotalLungVolume();
+    return &const_cast<SERespiratorySystem*>(this)->GetTotalLungVolume();
   if (name == idTotalPulmonaryVentilation)
-    return &GetTotalPulmonaryVentilation();
+    return &const_cast<SERespiratorySystem*>(this)->GetTotalPulmonaryVentilation();
   if (name == idTranspulmonaryPressure)
-    return &GetTranspulmonaryPressure();
+    return &const_cast<SERespiratorySystem*>(this)->GetTranspulmonaryPressure();
   return nullptr;
 }
 //-------------------------------------------------------------------------------

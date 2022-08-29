@@ -134,7 +134,7 @@ namespace biogears {
 template <SUBSTANCE_TRANSPORTER_TEMPLATE>
 class SESubstanceTransporter : public Loggable {
 public:
-  SESubstanceTransporter(const FluxUnit& fUnit, const QuantityUnit& qUnit, const ExtensiveUnit& eUnit, const IntensiveUnit& iUnit, Logger* logger);
+  SESubstanceTransporter(const FluxUnit& fUnit, const QuantityUnit& qUnit, const ExtensiveUnit& eUnit, const IntensiveUnit& iUnit, Logger const* logger);
   virtual ~SESubstanceTransporter() { }
 
   void Transport(GraphType& graph, double timeStep_s);

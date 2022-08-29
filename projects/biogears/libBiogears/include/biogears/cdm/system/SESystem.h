@@ -28,7 +28,7 @@ class SEScalar;
 class BIOGEARS_API SESystem : public Loggable {
 public:
   friend io::Environment;
-  SESystem(Logger* logger);
+  SESystem(Logger const* logger);
   virtual ~SESystem();
 
   virtual const char* classname() const = 0;
@@ -44,14 +44,14 @@ public:
   *              This is best used, and intended for, you to dynamically prepopulate
   *              a mapping data structure that will help access what you need
   */
-  virtual const SEScalar* GetScalar(const char* name) = 0;
-  virtual const SEScalar* GetScalar(const std::string& name) = 0;
+  virtual const SEScalar* GetScalar(const char* name) const = 0;
+  virtual const SEScalar* GetScalar(const std::string& name) const = 0;
 
   /** @name GetScalar
   *   @brief - Look for the Scalar property in the systems contained in the provided vector
   */
-  static const SEScalar* GetScalar(const char* name, std::vector<SESystem*>* systems);
-  static const SEScalar* GetScalar(const std::string& name, std::vector<SESystem*>* systems);
+  static const SEScalar* GetScalar(const char* name, std::vector<SESystem const *>* systems);
+  static const SEScalar* GetScalar(const std::string& name, std::vector<SESystem const *>* systems);
 
   bool Load(const CDM::SystemData& in);
   virtual CDM::SystemData* Unload() const = 0;

@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEAppliedTemperature.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
@@ -354,10 +354,10 @@ bool action_urinate(std::unique_ptr<biogears::BioGearsEngine>& engine)
 bool action_get_urine_color(std::unique_ptr<biogears::BioGearsEngine>& engine)
 {
   auto urineAnalysis = biogears::SEUrinalysis();
-  const biogears::Renal* constRenalSystem = dynamic_cast<const biogears::Renal*>(engine->GetRenalSystem());
-  biogears::Renal* renalSystem = const_cast<biogears::Renal*>(constRenalSystem);
+  auto& renalSystem = engine->GetRenalSystem();
+  auto& renal = dynamic_cast<biogears::Renal&>(renalSystem);
 
-  renalSystem->CalculateUrinalysis(urineAnalysis);
+  renal.CalculateUrinalysis(urineAnalysis);
   if (urineAnalysis.HasColorResult()) {
     mil::tatrc::physiology::datamodel::enumUrineColor eColor = urineAnalysis.GetColorResult();
 
@@ -576,7 +576,7 @@ void BioGearsPlugin::run()
               //Example of creating data request for tracking the components of the new substance.
               //Note: String based DataRequest will cause runtime instability if no Scalar matches the input string.
               if (component.GetSubstance().HasPK()) {
-                _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance(component.GetSubstance().GetName()), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+                _pimpl->engine->GetEngineTrack().GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance(component.GetSubstance().GetName()), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
               }
             }
             auto compound_name = substance_register_compound(_pimpl->engine, std::move(customCompound)); //<  _pimpl->engine takes ownership of customCompound here and will delete it once it is removed (DLL Boundry issue need to create a make_compound function to avoid that in biogears)

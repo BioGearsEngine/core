@@ -30,8 +30,8 @@ class SECircuit : public Loggable {
   friend io::Circuit;
 
 public:
-  SECircuit(const char* name, Logger* logger);
-  SECircuit(const std::string& name, Logger* logger);
+  SECircuit(const char* name, Logger const* logger);
+  SECircuit(const std::string& name, Logger const* logger);
   virtual ~SECircuit();
 
   virtual void Clear(); //clear memory

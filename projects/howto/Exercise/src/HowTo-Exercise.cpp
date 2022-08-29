@@ -46,41 +46,41 @@ int HowToExercise()
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
   // defined in the Physiology.xsd file
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", VolumePerTimeUnit::mL_Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalMetabolicRate", PowerUnit::kcal_Per_day);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CoreTemperature", TemperatureUnit::C);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", FrequencyUnit::Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("AchievedExerciseLevel");
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("FatigueLevel");
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalMetabolicRate", PowerUnit::W);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalWorkRateLevel");
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SodiumLostToSweat", MassUnit::mg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("PotassiumLostToSweat", MassUnit::mg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("ChlorideLostToSweat", MassUnit::mg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SweatRate", MassPerTimeUnit::mg_Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SkinTemperature", TemperatureUnit::C);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", VolumePerTimeUnit::mL_Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalMetabolicRate", PowerUnit::kcal_Per_day);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("CoreTemperature", TemperatureUnit::C);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", FrequencyUnit::Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("AchievedExerciseLevel");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("FatigueLevel");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalMetabolicRate", PowerUnit::W);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalWorkRateLevel");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SodiumLostToSweat", MassUnit::mg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("PotassiumLostToSweat", MassUnit::mg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("ChlorideLostToSweat", MassUnit::mg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SweatRate", MassPerTimeUnit::mg_Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SkinTemperature", TemperatureUnit::C);
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToExercise.csv");
+  bg->GetEngineTrack().GetDataRequestManager().SetResultsFilename("HowToExercise.csv");
 
   // Advance some time to get some resting data
   bg->AdvanceModelTime(20, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient is nice and healthy");
-  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
-  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
-  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
-  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // No fatigue either
-  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // This will be at Basal Level
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
+  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // No fatigue either
+  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // This will be at Basal Level
 
   // Exercise Starts - instantiate an Exercise action and have the engine process it.
   // After initiating exercise the patient’s metabolic rate begins to increased.
@@ -94,18 +94,18 @@ int HowToExercise()
   bg->ProcessAction(exG);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
-  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
-  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
-  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
-  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // Patient is very tired
-  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
-  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem()->GetTotalWorkRateLevel()));
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
+  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // Patient is very tired
+  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
+  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem().GetTotalWorkRateLevel()));
   ; // How much work we are getting / the max work rate possible
 
   // Once exercise has ended, the patient is in a recovery period where the metabolic rate begins to return to its basal value.
@@ -117,17 +117,17 @@ int HowToExercise()
   // Advance some time while the medic gets the drugs ready
   bg->AdvanceModelTime(30, TimeUnit::s);
 
-  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
-  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
-  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
-  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
-  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
+  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // We are not working out but we are still fatigued
+  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
   //////////////////////////////// Next Exercise
   // Cycling Inputs
   SEExercise::SECycling cyc;
@@ -137,18 +137,18 @@ int HowToExercise()
   bg->ProcessAction(exC);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
-  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
-  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
-  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
-  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // Patient is very tired
-  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
-  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem()->GetTotalWorkRateLevel()));
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
+  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // Patient is very tired
+  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
+  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem().GetTotalWorkRateLevel()));
   ; // How much work we are getting / the max work rate possible
 
   // Once exercise has ended, the patient is in a recovery period where the metabolic rate begins to return to its basal value.
@@ -161,17 +161,17 @@ int HowToExercise()
   // Advance some time while the medic gets the drugs ready
   bg->AdvanceModelTime(30, TimeUnit::s);
 
-  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
-  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
-  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
-  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
-  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
+  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // We are not working out but we are still fatigued
+  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
   //////////////////////////////// Next Exercise
   // Running Inputs
   SEExercise::SERunning run;
@@ -181,18 +181,18 @@ int HowToExercise()
   bg->ProcessAction(exR);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
-  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
-  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
-  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
-  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // Patient is very tired
-  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
-  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem()->GetTotalWorkRateLevel()));
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
+  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // Patient is very tired
+  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
+  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem().GetTotalWorkRateLevel()));
   ; // How much work we are getting / the max work rate possible
 
   // Once exercise has ended, the patient is in a recovery period where the metabolic rate begins to return to its basal value.
@@ -205,17 +205,17 @@ int HowToExercise()
   // Advance some time while the medic gets the drugs ready
   bg->AdvanceModelTime(30, TimeUnit::s);
 
-  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
-  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
-  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
-  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
-  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
+  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // We are not working out but we are still fatigued
+  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
 
   //////////////////////////////// Next Exercise
   // Strength Training
@@ -226,18 +226,18 @@ int HowToExercise()
   bg->ProcessAction(exS);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
-  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
-  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
-  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
-  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // Patient is very tired
-  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
-  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem()->GetTotalWorkRateLevel()));
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
+  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // Patient is very tired
+  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
+  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem().GetTotalWorkRateLevel()));
   ; // How much work we are getting / the max work rate possible
 
   // Once exercise has ended, the patient is in a recovery period where the metabolic rate begins to return to its basal value.
@@ -250,17 +250,17 @@ int HowToExercise()
   // Advance some time while the medic gets the drugs ready
   bg->AdvanceModelTime(30, TimeUnit::s);
 
-  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
-  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
-  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem()->GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
-  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem()->GetFatigueLevel())); // We are not working out but we are still fatigued
-  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
+  bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
+  bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  // bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // This will be NaN as the patient is not doing any exercise
+  // bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // We are not working out but we are still fatigued
+  bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are still burning
 
   bg->GetLogger()->Info("Finished");
   return 0;

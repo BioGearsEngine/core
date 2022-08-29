@@ -40,8 +40,8 @@ protected:
 
 public:
   virtual void SetToZero();
-  virtual const SEScalar* GetScalar(const char* name) override;
-  virtual const SEScalar* GetScalar(const std::string& name) override;
+  virtual const SEScalar* GetScalar(const char* name) const override;
+  virtual const SEScalar* GetScalar(const std::string& name) const override;
 
   virtual bool HasPartialPressure() const;
   virtual SEScalarPressure& GetPartialPressure();

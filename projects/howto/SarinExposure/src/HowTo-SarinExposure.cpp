@@ -82,18 +82,18 @@ int HowToSarinExposure()
   // Physiology System Names are defined on the System Objects
   // defined in the Physiology.xsd file
 
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", FrequencyUnit::Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", VolumeUnit::mL);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalAlveolarVentilation", VolumePerTimeUnit::L_Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("Aorta", *CO2, "PartialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("Aorta", *O2, "PartialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RedBloodCellAcetylcholinesterase", AmountPerVolumeUnit::mol_Per_L);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("LeftEyePupillaryResponse-ReactivityModifier");
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-SizeModifier");
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-ReactivityModifier");
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToSarinExposure.csv");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", FrequencyUnit::Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", VolumeUnit::mL);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalAlveolarVentilation", VolumePerTimeUnit::L_Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("Aorta", *CO2, "PartialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("Aorta", *O2, "PartialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RedBloodCellAcetylcholinesterase", AmountPerVolumeUnit::mol_Per_L);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("LeftEyePupillaryResponse-ReactivityModifier");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-SizeModifier");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-ReactivityModifier");
+  bg->GetEngineTrack().GetDataRequestManager().SetResultsFilename("HowToSarinExposure.csv");
 
   // Advance some time to get some resting data
   bg->AdvanceModelTime(60, TimeUnit::s);
@@ -124,7 +124,7 @@ int HowToSarinExposure()
     }
 
     //Get the fraction of inactive red blood cell acetylcholinesterase by converting active M concentration to nM, dividing by baseline, and subtracting from 1
-    FractionRbcAcheInhibited = 1.0 - (bg->GetBloodChemistrySystem()->GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L) * RbcAcheConversionFactor_M_to_nM / BaselineRbcAche_nM);
+    FractionRbcAcheInhibited = 1.0 - (bg->GetBloodChemistrySystem().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L) * RbcAcheConversionFactor_M_to_nM / BaselineRbcAche_nM);
 
     //Cout statement outputs Fraction of RBC Inhibited in case you want to track that during simulation
     std::cout << "Fraction of Red Blood Cell AChE Inhibited: " << FractionRbcAcheInhibited << std::endl;
@@ -160,13 +160,13 @@ int HowToSarinExposure()
 void OutputState(std::unique_ptr<BioGearsEngine>& bgOut)
 {
   //Since we'll want this data repeatedly, make a function call so that we don't copy and paste like crazy
-  bgOut->GetLogger()->Info(asprintf( "Respiration Rate : %f %s", bgOut->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "breaths/min"));
-  bgOut->GetLogger()->Info(asprintf( "Tidal Volume : %f %s", bgOut->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
-  bgOut->GetLogger()->Info(asprintf( "C02 Partial Pressure in Aorta : %f %s", bgOut->GetBloodChemistrySystem()->GetArterialCarbonDioxidePressure(PressureUnit::mmHg), "mmHg"));
-  bgOut->GetLogger()->Info(asprintf( "O2 Partial Pressure in Aorta : %f %s", bgOut->GetBloodChemistrySystem()->GetArterialOxygenPressure(PressureUnit::mmHg), "mmHg"));
-  bgOut->GetLogger()->Info(asprintf( "Oxygen Saturation : %f%%" , bgOut->GetBloodChemistrySystem()->GetOxygenSaturation()));
-  bgOut->GetLogger()->Info(asprintf( "Heart Rate : %f %s", bgOut->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bgOut->GetLogger()->Info(asprintf( "Red Blood Cell Acetylcholinesterase Level : %f %s", bgOut->GetBloodChemistrySystem()->GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L), "mol_Per_L"));
+  bgOut->GetLogger()->Info(asprintf( "Respiration Rate : %f %s", bgOut->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "breaths/min"));
+  bgOut->GetLogger()->Info(asprintf( "Tidal Volume : %f %s", bgOut->GetRespiratorySystem().GetTidalVolume(VolumeUnit::mL), "mL"));
+  bgOut->GetLogger()->Info(asprintf( "C02 Partial Pressure in Aorta : %f %s", bgOut->GetBloodChemistrySystem().GetArterialCarbonDioxidePressure(PressureUnit::mmHg), "mmHg"));
+  bgOut->GetLogger()->Info(asprintf( "O2 Partial Pressure in Aorta : %f %s", bgOut->GetBloodChemistrySystem().GetArterialOxygenPressure(PressureUnit::mmHg), "mmHg"));
+  bgOut->GetLogger()->Info(asprintf( "Oxygen Saturation : %f%%" , bgOut->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bgOut->GetLogger()->Info(asprintf( "Heart Rate : %f %s", bgOut->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bgOut->GetLogger()->Info(asprintf( "Red Blood Cell Acetylcholinesterase Level : %f %s", bgOut->GetBloodChemistrySystem().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L), "mol_Per_L"));
 }
 
 

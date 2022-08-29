@@ -21,20 +21,20 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SESubstance;
 class SEPsychomotorVigilanceTask;
-class BioGears;
+class BioGearsEngine;
 class SEPatient;
 /**
  * @brief 
  * The nervous class holds models of the peripheral and central nervous system. Currently, on the baroreceptor reflex is modeled.
  */
 class BIOGEARS_API Nervous : public SENervousSystem, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<Nervous>;
-  Nervous(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<Nervous>;
+  Nervous(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~Nervous() override;
@@ -65,7 +65,7 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState() override;
+  void SimulationPhaseChange() override;
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;

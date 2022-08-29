@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 #pragma warning(disable : 4786)
@@ -41,12 +41,12 @@ template class map<biogears::SELiquidSubstanceQuantity*, double>;
 }
 
 namespace biogears {
-auto Gastrointestinal::make_unique(BioGears& bg) -> std::unique_ptr<Gastrointestinal>
+auto Gastrointestinal::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Gastrointestinal>
 {
   return std::unique_ptr<Gastrointestinal>(new Gastrointestinal(bg));
 }
 
-Gastrointestinal::Gastrointestinal(BioGears& bg)
+Gastrointestinal::Gastrointestinal(BioGearsEngine& bg)
   : SEGastrointestinalSystem(bg.GetLogger())
   , m_data(bg)
 {
@@ -85,7 +85,7 @@ void Gastrointestinal::Initialize()
   if (m_data.GetConfiguration().HasDefaultStomachContents()) {
     // We are going to initialize the body with 2 meals so we process the default meal twice
     // 1 meal about 5hrs ago, and one meal at the start of the scenario
-    CDM_COPY((m_data.GetConfiguration().GetDefaultStomachContents()), (&GetStomachContents()));
+    CDM_COPY((m_data.GetConfiguration().GetDefaultStomachContents()), (GetStomachContents()));
     m_data.GetPatient().GetWeight().IncrementValue(m_StomachContents->GetWeight(MassUnit::g), MassUnit::g);
   }
   // Cache off the initial Gut masses so we can reset back to them after stabilization
@@ -184,9 +184,9 @@ void Gastrointestinal::SetUp()
 /// if no condition is present we reset the body state substance levels to their original level
 //--------------------------------------------------------------------------------------------------
 
-void Gastrointestinal::AtSteadyState()
+void Gastrointestinal::SimulationPhaseChange()
 {
-  if (m_data.GetState() == EngineState::AtInitialStableState) {
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtInitialStableState) {
     /*
     // Apply our conditions   
     if (m_data.GetConditions().HasConsumeMeal())
@@ -204,7 +204,7 @@ void Gastrointestinal::AtSteadyState()
       // Remove the default meal weight from the patient
       m_data.GetPatient().GetWeight().IncrementValue(-m_StomachContents->GetWeight(MassUnit::g), MassUnit::g);
       // Overwrite meal contents into our stomach
-      CDM_COPY((&meal), (m_StomachContents));
+      CDM_COPY((meal), (m_StomachContents));
       if (!m_StomachContents->HasWater() || m_StomachContents->GetWater().IsZero())
         m_StomachContents->GetWater().SetValue(m_secretionRate_mL_Per_s*m_dT_s, VolumeUnit::mL);//Add a time steps' worth of water if empty
       // Increase our weight by the meal
@@ -276,7 +276,7 @@ void Gastrointestinal::AtSteadyState()
     }
     */
   }
-  if (m_data.GetState() == EngineState::AtSecondaryStableState) {
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtSecondaryStableState) {
     m_DecrementNutrients = true;
     // Reset the Gut Chyme substance to their original values
     for (auto i : m_InitialSubstanceMasses_ug) {
@@ -300,7 +300,7 @@ void Gastrointestinal::AtSteadyState()
 
 void Gastrointestinal::PreProcess()
 {
-  if (m_data.GetState() == EngineState::Active) {
+  if (m_data.GetSimulationPhase() == SimulationPhase::Active) {
     if (m_data.GetActions().GetPatientActions().HasConsumeNutrients()) {
       // Use Default Rates if none provided
       SEConsumeNutrients* c = m_data.GetActions().GetPatientActions().GetConsumeNutrients();
@@ -573,7 +573,7 @@ void Gastrointestinal::AbsorbNutrients()
   double absorbedVolume_mL = absorptionRate_mL_Per_min / 60.0 * m_dT_s;
 
   //move fluid
-  if (m_data.GetState() == EngineState::Active) { // Don't Remove volume while stabilizing
+  if (m_data.GetSimulationPhase() == SimulationPhase::Active) { // Don't Remove volume while stabilizing
     if (smallIntestineVolume_mL > absorbedVolume_mL) {
       m_GItoCVPath->GetNextFlowSource().SetValue(absorptionRate_mL_Per_min, VolumePerTimeUnit::mL_Per_min);
       m_GItoCVPath->GetSourceNode().GetNextVolume().IncrementValue(-absorbedVolume_mL, VolumeUnit::mL);
@@ -637,7 +637,7 @@ void Gastrointestinal::AbsorbNutrients(double duration_s)
     absorptionRate_mL_Per_min = 60 * (absorbedVolume_mL / duration_s);
   }
 
-  if (m_data.GetState() == EngineState::AtSecondaryStableState) { // Don't Remove volume while stabilizing
+  if (m_data.GetSimulationPhase() == SimulationPhase::AtSecondaryStableState) { // Don't Remove volume while stabilizing
     m_SmallIntestineChyme->GetVolume().IncrementValue(-absorbedVolume_mL, VolumeUnit::mL);
     // Calculate new concentrations for everything based on new volume
     for (SELiquidSubstanceQuantity* subQ : m_SmallIntestineChyme->GetSubstanceQuantities()) {
@@ -718,7 +718,7 @@ void Gastrointestinal::AbsorbMeal(double duration_min)
   if (absorbedVolume_mL > siVolume_mL)
     absorbedVolume_mL = siVolume_mL; // Don't take off what we don't have
 #ifdef logMeal
-  double totVol_mL = m_data.GetBloodChemistry()->GetExtravascularFluidVolume()->GetValue(VolumeUnit::mL);
+  double totVol_mL = m_data.GetBloodChemistrySystem()->GetExtravascularFluidVolume()->GetValue(VolumeUnit::mL);
   totVol_mL += m_data.GetCardiovascular()->GetBloodVolume()->GetValue(VolumeUnit::mL);
   m_ss << "Blood Volume before absorption " << totVol_mL << "(mL)";
   Info(m_ss);
@@ -733,7 +733,7 @@ void Gastrointestinal::AbsorbMeal(double duration_min)
   absorbedVolume.SetValue(absorbedVolume_mL, VolumeUnit::mL);
 //m_data.GetCircuits().DistributeVolume(absorbedVolume);
 #ifdef logMeal
-  double newtotVol_mL = m_data.GetBloodChemistry()->GetExtravascularFluidVolume()->GetValue(VolumeUnit::mL);
+  double newtotVol_mL = m_data.GetBloodChemistrySystem()->GetExtravascularFluidVolume()->GetValue(VolumeUnit::mL);
   newtotVol_mL += m_data.GetCardiovascular()->GetBloodVolume()->GetValue(VolumeUnit::mL);
   m_ss << "Blood Volume after absorption " << newtotVol_mL << "(mL), body absorbed : " << newtotVol_mL - totVol_mL;
   Info(m_ss);
@@ -749,8 +749,8 @@ void Gastrointestinal::AbsorbMeal(double duration_min)
   // the amount of mass that goes on a compartment is the ratio of it volume over the total
   // and incrementing total volume via compartment should keep that same ratio
 
-  double bloodVol_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
-  double tissueVol_mL = m_data.GetTissue().GetExtravascularFluidVolume(VolumeUnit::mL);
+  double bloodVol_mL = m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL);
+  double tissueVol_mL = m_data.GetTissueSystem().GetExtravascularFluidVolume(VolumeUnit::mL);
 
   SEScalarMass mass;
   double gutMass_g;

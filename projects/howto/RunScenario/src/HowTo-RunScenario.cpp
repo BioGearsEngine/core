@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
+#include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 
 using namespace biogears;
 //--------------------------------------------------------------------------------------------------
@@ -68,7 +69,7 @@ int HowToRunScenario()
   // You can forward logs as demonstrated in HowTo-EngineUse
 
   // Create a Scenario Executor
-  SEScenarioExec executor(*bg);
+  BioGearsScenarioExec executor(*bg);
   // Let's make a scenario (you could just point the executor to a scenario xml file on disk as well)
   SEScenario sce(bg->GetSubstanceManager());
   sce.SetName("HowToRunScenario");

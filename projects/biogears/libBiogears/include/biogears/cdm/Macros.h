@@ -60,8 +60,8 @@ inline size_t _Hash_value(_InIt _Begin, _InIt _End)
 
 #define CDM_COPY(from, to)       \
   {                              \
-    auto* bind = from->Unload(); \
-    to->Load(*bind);             \
+    auto* bind = from.Unload(); \
+    to.Load(*bind);             \
     delete bind;                 \
   }
 

@@ -33,7 +33,7 @@ protected:
   friend io::Anesthesia;
 
 public:
-  SEAnesthesiaMachineOxygenBottle(Logger* logger);
+  SEAnesthesiaMachineOxygenBottle(Logger const* logger);
   virtual ~SEAnesthesiaMachineOxygenBottle();
 
   virtual void Clear();
@@ -47,8 +47,8 @@ protected:
   virtual void Merge(const SEAnesthesiaMachineOxygenBottle& from);
 
 public:
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  virtual const SEScalar* GetScalar(const char* name) const;
+  virtual const SEScalar* GetScalar(const std::string& name) const ;
 
   virtual bool HasVolume() const;
   virtual SEScalarVolume& GetVolume();

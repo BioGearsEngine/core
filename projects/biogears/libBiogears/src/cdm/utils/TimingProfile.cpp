@@ -26,7 +26,7 @@ TimingProfile::TimingProfile()
 {
 }
 
-TimingProfile::TimingProfile(Logger* logger)
+TimingProfile::TimingProfile(Logger const* logger)
   : Loggable(logger)
 {
 }

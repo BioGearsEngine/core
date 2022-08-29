@@ -12,17 +12,17 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsCircuits.h>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
 
-auto BioGearsCircuits::make_unique(BioGears& bg) -> std::unique_ptr<BioGearsCircuits>
+auto BioGearsCircuits::make_unique(BioGearsEngine& bg) -> std::unique_ptr<BioGearsCircuits>
 {
   return std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(bg));
 }
 
-BioGearsCircuits::BioGearsCircuits(BioGears& bg)
+BioGearsCircuits::BioGearsCircuits(BioGearsEngine& bg)
   : SECircuitManager(bg.GetLogger())
   , m_data(bg)
 {

@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
-SESystem::SESystem(Logger* logger)
+SESystem::SESystem(Logger const* logger)
   : Loggable(logger)
 {
 }
@@ -37,7 +37,7 @@ void SESystem::Unload(CDM::SystemData& data) const
 {
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SESystem::GetScalar(const std::string& name, std::vector<SESystem*>* systems)
+const SEScalar* SESystem::GetScalar(const std::string& name, std::vector<SESystem const*>* systems)
 {
   const SEScalar* s;
   for (auto itr = systems->begin(); itr != systems->end(); itr++) {
@@ -50,7 +50,7 @@ const SEScalar* SESystem::GetScalar(const std::string& name, std::vector<SESyste
   return nullptr;
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SESystem::GetScalar(const char* name, std::vector<SESystem*>* systems)
+const SEScalar* SESystem::GetScalar(const char* name, std::vector<SESystem const*>* systems)
 {
   return GetScalar( std::string{ name }, systems);
 }

@@ -44,8 +44,8 @@ protected:
   virtual void Unload(CDM::FluidCompartmentLinkData& data);
 
 public:
-  virtual const SEScalar* GetScalar(const char* name) override;
-  virtual const SEScalar* GetScalar(const std::string& name) override;
+  virtual const SEScalar* GetScalar(const char* name) const override;
+  virtual const SEScalar* GetScalar(const std::string& name) const override;
 
   virtual std::string GetName() const override;
   virtual const char* GetName_cStr() const override;

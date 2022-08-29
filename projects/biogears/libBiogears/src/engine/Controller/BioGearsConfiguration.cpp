@@ -355,7 +355,7 @@ void BioGearsConfiguration::Merge(const PhysiologyEngineConfiguration& from)
 void BioGearsConfiguration::Merge(const BioGearsConfiguration& from)
 {
   m_Merge = true;
-  CDM_COPY((&from), this);
+  CDM_COPY((from), (*this));
   m_Merge = false;
 }
 

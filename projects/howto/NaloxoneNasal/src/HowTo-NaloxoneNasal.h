@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <thread>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 int HowToNasalNaloxone();
 
@@ -36,7 +36,7 @@ public:
   void FluidLoading(std::string overdoseSubstance, double opioidDose);
 
 
-  biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
+  biogears::Logger const* GetLogger() { return m_bg->GetLogger(); }
 
   protected:
   void AdvanceTime();
@@ -46,7 +46,7 @@ public:
   std::mutex m_mutex;
   bool m_runThread;
 
-  std::unique_ptr<biogears::PhysiologyEngine> m_bg;
+  std::unique_ptr<biogears::BioGearsEngine> m_bg;
 
   biogears::SESubstanceInfusion* m_opioid;
   biogears::SESubstanceNasalDose* m_naloxone;

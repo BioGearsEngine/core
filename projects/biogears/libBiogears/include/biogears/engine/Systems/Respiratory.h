@@ -37,7 +37,7 @@ class SEGasCompartment;
 class SEFluidCircuit;
 class SEFluidCircuitNode;
 class SEConsciousRespirationCommand;
-class BioGears;
+class BioGearsEngine;
 
 /**
 * @brief The %Respiratory System class handles the analysis and storage of
@@ -51,13 +51,13 @@ class BioGears;
 * respiratory system and the anesthesia machine during mechanical ventilation.
 */
 class BIOGEARS_API Respiratory : public SERespiratorySystem, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<Respiratory>;
-  Respiratory(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<Respiratory>;
+  Respiratory(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~Respiratory() override;
@@ -83,7 +83,7 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState() override;
+  void SimulationPhaseChange() override;
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;

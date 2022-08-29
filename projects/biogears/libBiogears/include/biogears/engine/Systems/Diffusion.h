@@ -24,22 +24,22 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class MassUnit;
-class BioGears;
+class BioGearsEngine;
 class SESubstanceManager;
 class SESubstance;
 class SETissueCompartment;
 class SELiquidCompartment;
 
 class BIOGEARS_API DiffusionCalculator : public Loggable {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<DiffusionCalculator>;
-  DiffusionCalculator(BioGears& bg);
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<DiffusionCalculator>;
+  DiffusionCalculator(BioGearsEngine& bg);
 
   void ClearConcentrations();
-  BioGears& m_data;
+  BioGearsEngine& m_data;
 
   struct DiffusionCompartmentSet {
     SETissueCompartment* tissue;

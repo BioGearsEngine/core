@@ -29,12 +29,12 @@ class BIOGEARS_API SESubstanceCompound : public Loggable {
   friend io::Substance;
 
 public:
-  explicit SESubstanceCompound(const std::string& name, Logger* logger);
-  explicit SESubstanceCompound(const char* name, Logger* logger);
-  SESubstanceCompound(Logger* logger);
+  explicit SESubstanceCompound(const std::string& name, Logger const* logger);
+  explicit SESubstanceCompound(const char* name, Logger const* logger);
+  SESubstanceCompound(Logger const* logger);
   virtual ~SESubstanceCompound();
 
-  static std::unique_ptr<SESubstanceCompound> make_unique(const std::string& name, Logger* logger);
+  static std::unique_ptr<SESubstanceCompound> make_unique(const std::string& name, Logger const* logger);
   virtual void Clear();
 
   virtual bool Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr);

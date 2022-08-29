@@ -83,16 +83,16 @@ void SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::Clear()
 }
 //-------------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
-const SEScalar* SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetScalar(const char* name)
+const SEScalar* SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
-const SEScalar* SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetScalar(const std::string& name)
+const SEScalar* SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetScalar(const std::string& name) const
 {
   if (name.compare("Flow") == 0)
-    return &GetFlow();
+    return &const_cast<SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>*>(this)->GetFlow();
   return nullptr;
 }
 //-------------------------------------------------------------------------------

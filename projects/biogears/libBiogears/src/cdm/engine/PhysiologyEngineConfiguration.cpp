@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #endif
 
 namespace biogears {
-PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
+PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger const* logger)
   : Loggable(logger)
 {
   m_Merge = false;
@@ -54,7 +54,7 @@ void PhysiologyEngineConfiguration::Clear()
 void PhysiologyEngineConfiguration::Merge(const PhysiologyEngineConfiguration& from)
 {
   m_Merge = true;
-  CDM_COPY((&from), this);
+  CDM_COPY(from, (*this));
   m_Merge = false;
 }
 //-----------------------------------------------------------------------------

@@ -19,7 +19,7 @@ namespace biogears {
 namespace io {
   class Anesthesia;
 }
-SEAnesthesiaMachineOxygenBottle::SEAnesthesiaMachineOxygenBottle(Logger* logger)
+SEAnesthesiaMachineOxygenBottle::SEAnesthesiaMachineOxygenBottle(Logger const* logger)
   : Loggable(logger)
 {
   m_Volume = nullptr;
@@ -66,15 +66,15 @@ void SEAnesthesiaMachineOxygenBottle::Merge(const SEAnesthesiaMachineOxygenBottl
   COPY_PROPERTY(Volume);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEAnesthesiaMachineOxygenBottle::GetScalar(const char* name)
+const SEScalar* SEAnesthesiaMachineOxygenBottle::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEAnesthesiaMachineOxygenBottle::GetScalar(const std::string& name)
+const SEScalar* SEAnesthesiaMachineOxygenBottle::GetScalar(const std::string& name) const
 {
   if (name == "Volume")
-    return &GetVolume();
+    return &const_cast<SEAnesthesiaMachineOxygenBottle*>(this)->GetVolume();
   return nullptr;
 }
 //-------------------------------------------------------------------------------

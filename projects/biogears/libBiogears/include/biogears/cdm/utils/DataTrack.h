@@ -37,7 +37,7 @@ typedef std::map<std::string, SEDecimalFormat> FormattingMap;
 class BIOGEARS_API DataTrack : public Loggable {
 public:
 
-  DataTrack(Logger* m_Log);
+  DataTrack(Logger const* m_Log);
   DataTrack(DataTrack&&);
   DataTrack& operator=(DataTrack&&);
   ~DataTrack();

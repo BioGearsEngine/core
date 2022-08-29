@@ -81,15 +81,15 @@ void SEThermalCompartmentLink::Clear()
   SAFE_DELETE(m_HeatTransferRate);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEThermalCompartmentLink::GetScalar(const char* name)
+const SEScalar* SEThermalCompartmentLink::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEThermalCompartmentLink::GetScalar(const std::string& name)
+const SEScalar* SEThermalCompartmentLink::GetScalar(const std::string& name) const
 {
   if (name.compare("HeatTransferRate") == 0)
-    return &GetHeatTransferRate();
+    return &const_cast<SEThermalCompartmentLink*>(this)->GetHeatTransferRate();
   return nullptr;
 }
 //-------------------------------------------------------------------------------
@@ -121,12 +121,12 @@ double SEThermalCompartmentLink::GetHeatTransferRate(const PowerUnit& unit) cons
 }//namespace biogears
 
 namespace biogears {
-SEThermalCompartmentGraph::SEThermalCompartmentGraph(const char* name, Logger* logger)
+SEThermalCompartmentGraph::SEThermalCompartmentGraph(const char* name, Logger const* logger)
   : SECompartmentGraph(std::string{ name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
-SEThermalCompartmentGraph::SEThermalCompartmentGraph(const std::string& name, Logger* logger)
+SEThermalCompartmentGraph::SEThermalCompartmentGraph(const std::string& name, Logger const* logger)
   : SECompartmentGraph(name, logger){};
 //-----------------------------------------------------------------------------
 SEThermalCompartmentGraph::~SEThermalCompartmentGraph()

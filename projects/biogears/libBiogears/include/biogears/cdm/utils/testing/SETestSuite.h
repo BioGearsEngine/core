@@ -25,7 +25,7 @@ class BIOGEARS_API SETestSuite : public Loggable {
   friend io::TestReport;
 
 protected:
-  SETestSuite(Logger* logger);
+  SETestSuite(Logger const* logger);
 
 public:
   virtual ~SETestSuite();

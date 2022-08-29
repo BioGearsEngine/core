@@ -62,7 +62,7 @@ class BIOGEARS_API SECircuitManager : public Loggable {
   friend io::Circuit;
 
 public:
-  SECircuitManager(Logger* logger);
+  SECircuitManager(Logger const* logger);
   virtual ~SECircuitManager();
 
   virtual void Clear(); //clear memory

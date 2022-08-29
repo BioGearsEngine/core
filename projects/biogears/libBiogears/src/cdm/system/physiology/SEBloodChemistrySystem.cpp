@@ -64,7 +64,7 @@ constexpr char idVenousOxygenPressure[] = "VenousOxygenPressure";
 constexpr char idViralLoad[] = "ViralLoad";
 constexpr char idInflammtoryRespone[] = "InflammatoryResponse";
 
-SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
+SEBloodChemistrySystem::SEBloodChemistrySystem(Logger const* logger)
   : SESystem(logger)
 {
   m_ArterialBloodPH = nullptr;
@@ -162,123 +162,123 @@ void SEBloodChemistrySystem::Clear()
   SAFE_DELETE(m_InflammatoryResponse);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEBloodChemistrySystem::GetScalar(const char* name)
+const SEScalar* SEBloodChemistrySystem::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
+const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name) const
 {
   if (name == idArterialBloodPH) {
-    return &GetArterialBloodPH();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetArterialBloodPH();
   }
   if (name == idArterialBloodPHBaseline) {
-    return &GetArterialBloodPHBaseline();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetArterialBloodPHBaseline();
   }
   if (name == idBloodDensity) {
-    return &GetBloodDensity();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetBloodDensity();
   }
   if (name == idBloodSpecificHeat) {
-    return &GetBloodSpecificHeat();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetBloodSpecificHeat();
   }
   if (name == idBloodUreaNitrogenConcentration) {
-    return &GetBloodUreaNitrogenConcentration();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetBloodUreaNitrogenConcentration();
   }
   if (name == idCarbonDioxideSaturation) {
-    return &GetCarbonDioxideSaturation();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetCarbonDioxideSaturation();
   }
   if (name == idCarbonMonoxideSaturation) {
-    return &GetCarbonMonoxideSaturation();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetCarbonMonoxideSaturation();
   }
   if (name == idHematocrit) {
-    return &GetHematocrit();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetHematocrit();
   }
   if (name == idHemoglobinContent) {
-    return &GetHemoglobinContent();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetHemoglobinContent();
   }
   if (name == idHemoglobinLostToUrine) {
-    return &GetHemoglobinLostToUrine();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetHemoglobinLostToUrine();
   }
   if (name == idLymphocyteCellCount) {
-    return &GetLymphocyteCellCount();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetLymphocyteCellCount();
   }
   if (name == idNeutrophilCellCount) {
-    return &GetNeutrophilCellCount();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetNeutrophilCellCount();
   }
   if (name == idOxygenSaturation) {
-    return &GetOxygenSaturation();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetOxygenSaturation();
   }
   if (name == idOxygenVenousSaturation) {
-    return &GetOxygenVenousSaturation();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetOxygenVenousSaturation();
   }
   if (name == idPhosphate) {
-    return &GetPhosphate();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetPhosphate();
   }
   if (name == idPlasmaVolume) {
-    return &GetPlasmaVolume();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetPlasmaVolume();
   }
   if (name == idPulseOximetry) {
-    return &GetPulseOximetry();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetPulseOximetry();
   }
   if (name == idRedBloodCellAcetylcholinesterase) {
-    return &GetRedBloodCellAcetylcholinesterase();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetRedBloodCellAcetylcholinesterase();
   }
   if (name == idRedBloodCellCount) {
-    return &GetRedBloodCellCount();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetRedBloodCellCount();
   }
   if (name == idRhTransfusionReactionVolume) {
-    return &GetRhTransfusionReactionVolume();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetRhTransfusionReactionVolume();
   }
   if (name == idShuntFraction) {
-    return &GetShuntFraction();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetShuntFraction();
   }
   if (name == idStrongIonDifference) {
-    return &GetStrongIonDifference();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetStrongIonDifference();
   }
   if (name == idTotalBilirubin) {
-    return &GetTotalBilirubin();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetTotalBilirubin();
   }
   if (name == idTotalProteinConcentration) {
-    return &GetTotalProteinConcentration();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetTotalProteinConcentration();
   }
   if (name == idVenousBloodPH) {
-    return &GetVenousBloodPH();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetVenousBloodPH();
   }
   if (name == idVolumeFractionNeutralPhospholipidInPlasma) {
-    return &GetVolumeFractionNeutralPhospholipidInPlasma();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetVolumeFractionNeutralPhospholipidInPlasma();
   }
   if (name == idVolumeFractionNeutralLipidInPlasma) {
-    return &GetVolumeFractionNeutralLipidInPlasma();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetVolumeFractionNeutralLipidInPlasma();
   }
   if (name == idWhiteBloodCellCount) {
-    return &GetWhiteBloodCellCount();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetWhiteBloodCellCount();
   }
   if (name == idArterialCarbonDioxidePressure) {
-    return &GetArterialCarbonDioxidePressure();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetArterialCarbonDioxidePressure();
   }
   if (name == idArterialOxygenPressure) {
-    return &GetArterialOxygenPressure();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetArterialOxygenPressure();
   }
   if (name == idPulmonaryArterialCarbonDioxidePressure) {
-    return &GetPulmonaryArterialCarbonDioxidePressure();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetPulmonaryArterialCarbonDioxidePressure();
   }
   if (name == idPulmonaryArterialOxygenPressure) {
-    return &GetPulmonaryArterialOxygenPressure();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetPulmonaryArterialOxygenPressure();
   }
   if (name == idPulmonaryVenousCarbonDioxidePressure) {
-    return &GetPulmonaryVenousCarbonDioxidePressure();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetPulmonaryVenousCarbonDioxidePressure();
   }
   if (name == idPulmonaryVenousOxygenPressure) {
-    return &GetPulmonaryVenousOxygenPressure();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetPulmonaryVenousOxygenPressure();
   }
   if (name == idVenousCarbonDioxidePressure) {
-    return &GetVenousCarbonDioxidePressure();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetVenousCarbonDioxidePressure();
   }
   if (name == idVenousOxygenPressure) {
-    return &GetVenousOxygenPressure();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetVenousOxygenPressure();
   }
   if (name == idViralLoad) {
-    return &GetViralLoad();
+    return &const_cast<SEBloodChemistrySystem*>(this)->GetViralLoad();
   }
 
   //This applies to InflammationState values, as they are defined AcuteInflammatoryResponse-Pathogen, e.g.
@@ -287,7 +287,7 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
     std::string prop = name.substr(split + 1, name.npos); //Get property that follows dash
     std::string parent = name.substr(0, split);
     if (parent == idInflammtoryRespone) {
-      return GetInflammatoryResponse().GetScalar(prop);
+      return const_cast<SEBloodChemistrySystem*>(this)->GetInflammatoryResponse().GetScalar(prop);
     }
   }
 
@@ -1584,7 +1584,7 @@ bool SEInflammatoryResponse::IsValid()
   }
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEInflammatoryResponse::GetScalar(const char* name)
+const SEScalar* SEInflammatoryResponse::GetScalar(const char* name) const
 {
   return GetScalar(std::string { name });
 }
@@ -1613,77 +1613,77 @@ constexpr char idCatecholamines[] = "Catecholamines";
 constexpr char idTissueIntegrity[] = "TissueIntegrity";
 constexpr char idInflammationTime[] = "InflammationTime";
 
-const SEScalar* SEInflammatoryResponse::GetScalar(const std::string& name)
+const SEScalar* SEInflammatoryResponse::GetScalar(const std::string& name) const
 {
   using namespace std::string_literals;
   if (idLocalPathogen == name) {
-    return &GetLocalPathogen();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetLocalPathogen();
   }
   if (idLocalMacrophage == name) {
-    return &GetLocalMacrophage();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetLocalMacrophage();
   }
   if (idLocalNeutrophil == name) {
-    return &GetLocalNeutrophil();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetLocalNeutrophil();
   }
   if (idLocalBarrier == name) {
-    return &GetLocalBarrier();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetLocalBarrier();
   }
   if (idBloodPathogen == name) {
-    return &GetBloodPathogen();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetBloodPathogen();
   }
   if (idTrauma == name) {
-    return &GetTrauma();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetTrauma();
   }
   if (idAutonomicResponseLevel == name) {
-    return &GetAutonomicResponseLevel();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetAutonomicResponseLevel();
   }
   if (idMacrophageResting == name) {
-    return &GetMacrophageResting();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetMacrophageResting();
   }
   if (idMacrophageActive == name) {
-    return &GetMacrophageActive();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetMacrophageActive();
   }
   if (idNeutrophilResting == name) {
-    return &GetNeutrophilResting();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetNeutrophilResting();
   }
   if (idNeutrophilActive == name) {
-    return &GetNeutrophilActive();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetNeutrophilActive();
   }
   if (idInducibleNOSPre == name) {
-    return &GetInducibleNOSPre();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetInducibleNOSPre();
   }
   if (idInducibleNOS == name) {
-    return &GetInducibleNOS();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetInducibleNOS();
   }
   if (idConstitutiveNOS == name) {
-    return &GetConstitutiveNOS();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetConstitutiveNOS();
   }
   if (idNitrate == name) {
-    return &GetNitrate();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetNitrate();
   }
   if (idNitricOxide == name) {
-    return &GetNitricOxide();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetNitricOxide();
   }
   if (idTumorNecrosisFactor == name) {
-    return &GetTumorNecrosisFactor();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetTumorNecrosisFactor();
   }
   if (idInterleukin6 == name) {
-    return &GetInterleukin6();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetInterleukin6();
   }
   if (idInterleukin10 == name) {
-    return &GetInterleukin10();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetInterleukin10();
   }
   if (idInterleukin12 == name) {
-    return &GetInterleukin12();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetInterleukin12();
   }
   if (idCatecholamines == name) {
-    return &GetCatecholamines();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetCatecholamines();
   }
   if (idTissueIntegrity == name) {
-    return &GetTissueIntegrity();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetTissueIntegrity();
   }
   if (idInflammationTime == name) {
-    return &GetInflammationTime();
+    return &const_cast<SEInflammatoryResponse*>(this)->GetInflammationTime();
   }
 
   return nullptr;

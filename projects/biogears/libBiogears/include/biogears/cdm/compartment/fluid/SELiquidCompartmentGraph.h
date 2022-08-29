@@ -44,8 +44,8 @@ class BIOGEARS_API SELiquidCompartmentGraph : public SECompartmentTransportGraph
   friend io::Compartment;
 
 protected:
-  SELiquidCompartmentGraph(const char* name, Logger* logger);
-  SELiquidCompartmentGraph(const std::string& name, Logger* logger);
+  SELiquidCompartmentGraph(const char* name, Logger const* logger);
+  SELiquidCompartmentGraph(const std::string& name, Logger const* logger);
 
 public:
   virtual ~SELiquidCompartmentGraph() override;

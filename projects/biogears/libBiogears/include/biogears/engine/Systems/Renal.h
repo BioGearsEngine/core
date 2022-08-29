@@ -29,19 +29,19 @@ class SEFluidCircuitPath;
 class SESubstance;
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
-class BioGears;
+class BioGearsEngine;
 class SETissueCompartment;
 /**
  * @brief @copydoc Physiology_RenalSystemData
  */
 class BIOGEARS_API Renal : public SERenalSystem, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<Renal>;
-  Renal(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<Renal>;
+  Renal(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
   double m_dt;
 
@@ -69,7 +69,7 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState() override;
+  void SimulationPhaseChange() override;
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;

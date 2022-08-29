@@ -34,6 +34,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/string/manipulation.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 using namespace biogears;
 //This method uses the Threaded BioGears functionality
@@ -128,7 +129,7 @@ DynamicSepsis::DynamicSepsis(const std::string& logfile, int infectionInput)
   }
 
   //Create CSV results file and set up data that we want to be tracked (tracking done in AdvanceModelTime)
-  m_bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToSepsisDynamic.csv");
+  m_bg->GetEngineTrack().GetDataRequestManager().SetResultsFilename("HowToSepsisDynamic.csv");
   //We do not need to add any data requests to the manager because they have already been initialized in the simulations that generated the septic patient states.
 
 
@@ -210,17 +211,17 @@ void DynamicSepsis::Status()
   m_bg->GetLogger()->Info("");
   m_bg->GetLogger()->Info(asprintf("Simulation Time  : %f %s", m_bg->GetSimulationTime(TimeUnit::min) - m_StartTime_min, "min"));
   m_bg->GetLogger()->Info(asprintf("Time Since Infection Start  : %f %s", m_bg->GetSimulationTime(TimeUnit::min), "min"));
-  m_bg->GetLogger()->Info(asprintf("Blood Volume : %f %s", m_bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL), "mL"));
-  m_bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  m_bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  m_bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  m_bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", m_bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  m_bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", m_bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  m_bg->GetLogger()->Info(asprintf("Mean Urine Output : %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  m_bg->GetLogger()->Info(asprintf("Temperature : %f %s", m_bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "deg C"));
+  m_bg->GetLogger()->Info(asprintf("Blood Volume : %f %s", m_bg->GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL), "mL"));
+  m_bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", m_bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", m_bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", m_bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  m_bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", m_bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  m_bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", m_bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  m_bg->GetLogger()->Info(asprintf("Mean Urine Output : %f %s", m_bg->GetRenalSystem().GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  m_bg->GetLogger()->Info(asprintf("Temperature : %f %s", m_bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "deg C"));
   m_bg->GetLogger()->Info(asprintf("Blood Lactate : %f %s", m_bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L), "mmol_Per_L"));
-  m_bg->GetLogger()->Info(asprintf("Bacteria Count (Blood) : %f", m_bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()));
-  m_bg->GetLogger()->Info(asprintf("Antibiotic Activity : %f", m_bg->GetDrugSystem()->GetAntibioticActivity()));
+  m_bg->GetLogger()->Info(asprintf("Bacteria Count (Blood) : %f", m_bg->GetBloodChemistrySystem().GetInflammatoryResponse().GetBloodPathogen().GetValue()));
+  m_bg->GetLogger()->Info(asprintf("Antibiotic Activity : %f", m_bg->GetDrugsSystem().GetAntibioticActivity()));
 
   std::cout << std::endl;
   m_mutex.unlock();
@@ -231,7 +232,7 @@ void DynamicSepsis::AdvanceTime()
   while (m_runThread) {
     m_mutex.lock();
     m_bg->AdvanceModelTime(1.0, TimeUnit::s);
-    m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
+    m_bg->GetEngineTrack().TrackData(m_bg->GetSimulationTime(TimeUnit::s));
     m_mutex.unlock();
     std::this_thread::sleep_for(std::chrono::milliseconds(25));
   }

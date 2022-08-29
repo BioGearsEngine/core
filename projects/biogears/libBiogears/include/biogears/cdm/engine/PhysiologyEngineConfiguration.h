@@ -30,7 +30,7 @@ namespace io {
 class BIOGEARS_API PhysiologyEngineConfiguration : public Loggable {
 public:
   friend io::EngineConfiguration;
-  PhysiologyEngineConfiguration(Logger* logger);
+  PhysiologyEngineConfiguration(Logger const* logger);
 
   virtual ~PhysiologyEngineConfiguration();
 

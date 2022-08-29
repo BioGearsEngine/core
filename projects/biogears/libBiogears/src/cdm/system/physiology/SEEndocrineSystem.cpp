@@ -19,7 +19,7 @@ namespace biogears {
   constexpr char idInsulinSynthesisRate[] = "InsulinSynthesisRate";
   constexpr char idGlucagonSynthesisRate[] = "GlucagonSynthesisRate";
 
-SEEndocrineSystem::SEEndocrineSystem(Logger* logger)
+SEEndocrineSystem::SEEndocrineSystem(Logger const* logger)
   : SESystem(logger)
 {
   m_InsulinSynthesisRate = nullptr;
@@ -40,17 +40,17 @@ void SEEndocrineSystem::Clear()
   SAFE_DELETE(m_GlucagonSynthesisRate);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEEndocrineSystem::GetScalar(const char* name)
+const SEScalar* SEEndocrineSystem::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SEEndocrineSystem::GetScalar(const std::string& name)
+const SEScalar* SEEndocrineSystem::GetScalar(const std::string& name) const
 {
   if (name == idInsulinSynthesisRate)
-    return &GetInsulinSynthesisRate();
+    return &const_cast<SEEndocrineSystem*>(this)->GetInsulinSynthesisRate();
   if (name == idGlucagonSynthesisRate)
-    return &GetGlucagonSynthesisRate();
+    return &const_cast<SEEndocrineSystem*>(this)->GetGlucagonSynthesisRate();
   return nullptr;
 }
 //-------------------------------------------------------------------------------

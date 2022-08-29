@@ -54,40 +54,40 @@ int HowToBrainInjury()
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", FrequencyUnit::Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", VolumeUnit::mL);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalLungVolume", VolumeUnit::mL);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("LeftEyePupillaryResponse-SizeModifier");
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("LeftEyePupillaryResponse-ReactivityModifier");
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-SizeModifier");
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-ReactivityModifier");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", FrequencyUnit::Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", VolumeUnit::mL);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalLungVolume", VolumeUnit::mL);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("LeftEyePupillaryResponse-SizeModifier");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("LeftEyePupillaryResponse-ReactivityModifier");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-SizeModifier");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RightEyePupillaryResponse-ReactivityModifier");
 
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToBrainInjury.csv");
+  bg->GetEngineTrack().GetDataRequestManager().SetResultsFilename("HowToBrainInjury.csv");
 
   bg->GetLogger()->Info("The patient is nice and healthy");
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem()->GetCarbonDioxideSaturation()));
-  bg->GetLogger()->Info(asprintf("Intracranial Pressure : %f %s", bg->GetCardiovascularSystem()->GetIntracranialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem()->GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Cerebral Blood Flow : %f %s", bg->GetCardiovascularSystem()->GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Instantaneous GCS value : %f", GlasgowEstimator(bg->GetCardiovascularSystem()->GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min))));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation()));
+  bg->GetLogger()->Info(asprintf("Intracranial Pressure : %f %s", bg->GetCardiovascularSystem().GetIntracranialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem().GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Cerebral Blood Flow : %f %s", bg->GetCardiovascularSystem().GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Instantaneous GCS value : %f", GlasgowEstimator(bg->GetCardiovascularSystem().GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min))));
   // You can get the following pupillary effects
   // Reactivity Change in pupil recation time to light. -1 complete reduction/no response, 0 is normal, and 1 is the fastest reaction time.
   // Pupil size change from normal. -1 is fully constricted, 0 is no change, +1 is fully dilated.
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem()->GetLeftEyePupillaryResponse()->GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem()->GetLeftEyePupillaryResponse()->GetReactivityModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem()->GetRightEyePupillaryResponse()->GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem()->GetRightEyePupillaryResponse()->GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier()));
 
   bg->AdvanceModelTime(30, TimeUnit::s);
 
@@ -103,24 +103,24 @@ int HowToBrainInjury()
   bg->AdvanceModelTime(90, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient has had a brain injury for 90s, not doing well...");
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem()->GetCarbonDioxideSaturation()));
-  bg->GetLogger()->Info(asprintf("Intracranial Pressure : %f %s", bg->GetCardiovascularSystem()->GetIntracranialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem()->GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Cerebral Blood Flow : %f %s", bg->GetCardiovascularSystem()->GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Instantaneous GCS value : %f", GlasgowEstimator(bg->GetCardiovascularSystem()->GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min))));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation()));
+  bg->GetLogger()->Info(asprintf("Intracranial Pressure : %f %s", bg->GetCardiovascularSystem().GetIntracranialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem().GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Cerebral Blood Flow : %f %s", bg->GetCardiovascularSystem().GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Instantaneous GCS value : %f", GlasgowEstimator(bg->GetCardiovascularSystem().GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min))));
   // You can get the following pupillary effects
   // Reactivity Change in pupil recation time to light. -1 complete reduction/no response, 0 is normal, and 1 is the fastest reaction time.
   // Pupil size change from normal. -1 is fully constricted, 0 is no change, +1 is fully dilated.
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem()->GetLeftEyePupillaryResponse()->GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem()->GetLeftEyePupillaryResponse()->GetReactivityModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem()->GetRightEyePupillaryResponse()->GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem()->GetRightEyePupillaryResponse()->GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier()));
 
   // You can remove a brain injury by setting the severity to 0, this will instantly remove the flow resistance in the brain, and the patient will recover.
   tbi.GetSeverity().SetValue(0.0);
@@ -131,24 +131,24 @@ int HowToBrainInjury()
   bg->AdvanceModelTime(90, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient's brain injury has been removed for 90s; patient is much better");
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem()->GetCarbonDioxideSaturation()));
-  bg->GetLogger()->Info(asprintf("Intracranial Pressure : %f %s", bg->GetCardiovascularSystem()->GetIntracranialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem()->GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Cerebral Blood Flow : %f %s", bg->GetCardiovascularSystem()->GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Instantaneous GCS value : %f", GlasgowEstimator(bg->GetCardiovascularSystem()->GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min))));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation()));
+  bg->GetLogger()->Info(asprintf("Intracranial Pressure : %f %s", bg->GetCardiovascularSystem().GetIntracranialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem().GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Cerebral Blood Flow : %f %s", bg->GetCardiovascularSystem().GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
+  bg->GetLogger()->Info(asprintf("Instantaneous GCS value : %f", GlasgowEstimator(bg->GetCardiovascularSystem().GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min))));
   // You can get the following pupillary effects
   // Reactivity Change in pupil recation time to light. -1 complete reduction/no response, 0 is normal, and 1 is the fastest reaction time.
   // Pupil size change from normal. -1 is fully constricted, 0 is no change, +1 is fully dilated.
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem()->GetLeftEyePupillaryResponse()->GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem()->GetLeftEyePupillaryResponse()->GetReactivityModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem()->GetRightEyePupillaryResponse()->GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem()->GetRightEyePupillaryResponse()->GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier()));
 
   // A more severe injury has more pronounced effects
   tbi.GetSeverity().SetValue(1);
@@ -161,24 +161,24 @@ int HowToBrainInjury()
   const SELiquidCompartment* brain = bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Brain);
 
   bg->GetLogger()->Info("The patient has had a severe brain injury for 5 minutes");
-  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem()->GetCarbonDioxideSaturation()));
+  bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation()));
   bg->GetLogger()->Info(asprintf("Intracranial Pressure : %f %s", brain->GetPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem()->GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem().GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Cerebral Blood Flow : %f %s", brain->GetInFlow(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
-  bg->GetLogger()->Info(asprintf("Instantaneous GCS value : %f", GlasgowEstimator(bg->GetCardiovascularSystem()->GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min))));
+  bg->GetLogger()->Info(asprintf("Instantaneous GCS value : %f", GlasgowEstimator(bg->GetCardiovascularSystem().GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min))));
   // You can get the following pupillary effects
   // Reactivity Change in pupil recation time to light. -1 complete reduction/no response, 0 is normal, and 1 is the fastest reaction time.
   // Pupil size change from normal. -1 is fully constricted, 0 is no change, +1 is fully dilated.
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem()->GetLeftEyePupillaryResponse()->GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem()->GetLeftEyePupillaryResponse()->GetReactivityModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem()->GetRightEyePupillaryResponse()->GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem()->GetRightEyePupillaryResponse()->GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier()));
 
   bg->GetLogger()->Info("Finished");
   return 0;

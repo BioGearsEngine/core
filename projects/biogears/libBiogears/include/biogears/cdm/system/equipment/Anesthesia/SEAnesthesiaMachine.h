@@ -80,8 +80,8 @@ protected:
 public:
   bool Load(const std::string& file);
 
-  const SEScalar* GetScalar(const char* name) override;
-  const SEScalar* GetScalar(const std::string& name) override;
+  const SEScalar* GetScalar(const char* name) const override;
+  const SEScalar* GetScalar(const std::string& name) const override;
 
   const std::map<CDM::enumAnesthesiaMachineEvent::value, bool>& GetEventStates() const { return m_EventState; }
   void SetEvent(CDM::enumAnesthesiaMachineEvent::value state, bool active, const SEScalarTime& time);

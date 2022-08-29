@@ -48,8 +48,8 @@ class SEFluidCompartment : public SECompartment, public VertexType {
   friend class SECompartmentGraph;
 
 protected:
-  SEFluidCompartment(const char* name, Logger* logger);
-  SEFluidCompartment(const std::string& name, Logger* logger);
+  SEFluidCompartment(const char* name, Logger const* logger);
+  SEFluidCompartment(const std::string& name, Logger const* logger);
 
 public:
   virtual ~SEFluidCompartment();
@@ -66,8 +66,8 @@ public:
   std::string GetName() const override;
   const char* GetName_cStr() const override;
 
-  const SEScalar* GetScalar(const char* name) override;
-  const SEScalar* GetScalar(const std::string& name) override;
+  virtual const SEScalar* GetScalar(const char* name) const override;
+  virtual const SEScalar* GetScalar(const std::string& name) const override;
 
   bool HasChildren() const override { return !m_FluidChildren.empty(); }
 

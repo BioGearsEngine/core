@@ -21,13 +21,13 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 template <FLUID_COMPARTMENT_TEMPLATE>
-SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::SEFluidCompartment(const char* name, Logger* logger)
-  : SEFluidCompartment(std::string{ name }, logger)
+SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::SEFluidCompartment(const char* name, Logger const* logger)
+  : SEFluidCompartment(std::string { name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
-SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::SEFluidCompartment(const std::string& name, Logger* logger)
+SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::SEFluidCompartment(const std::string& name, Logger const* logger)
   : SECompartment(name, logger)
   , m_Nodes(logger)
 {
@@ -73,7 +73,7 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Load(const CDM::FluidCompartme
     for (auto name : in.Node()) {
       SEFluidCircuitNode* node = circuits->GetFluidNode(name);
       if (node == nullptr) {
-        Error("Compartment is mapped to circuit node, " + std::string{ name } +", but provided circuit manager did not have that node");
+        Error("Compartment is mapped to circuit node, " + std::string { name } + ", but provided circuit manager did not have that node");
         return false;
       }
       MapNode(*node);
@@ -119,22 +119,22 @@ const char* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetName_cStr() const
 }
 //-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
-const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const char* name)
+const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const char* name) const
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
-const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const std::string& name)
+const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const std::string& name) const
 {
   if (name.compare("InFlow") == 0)
-    return &GetInFlow();
+    return &const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>*>(this)->GetInFlow();
   if (name.compare("OutFlow") == 0)
-    return &GetOutFlow();
+    return &const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>*>(this)->GetOutFlow();
   if (name.compare("Pressure") == 0)
-    return &GetPressure();
+    return &const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>*>(this)->GetPressure();
   if (name.compare("Volume") == 0)
-    return &GetVolume();
+    return &const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>*>(this)->GetVolume();
   return nullptr;
 }
 //-----------------------------------------------------------------------------
@@ -465,7 +465,7 @@ const std::vector<LinkType*>& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetLi
 template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasChild(const char* name)
 {
-  return HasChild( std::string{ name } );
+  return HasChild(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>

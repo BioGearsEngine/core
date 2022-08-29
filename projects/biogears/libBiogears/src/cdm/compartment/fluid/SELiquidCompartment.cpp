@@ -19,12 +19,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
-SELiquidCompartment::SELiquidCompartment(const char* name, Logger* logger)
+SELiquidCompartment::SELiquidCompartment(const char* name, Logger const* logger)
   : SELiquidCompartment(std::string{ name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
-SELiquidCompartment::SELiquidCompartment(const std::string& name, Logger* logger)
+SELiquidCompartment::SELiquidCompartment(const std::string& name, Logger const* logger)
   : SEFluidCompartment(name, logger)
 {
   m_pH = nullptr;
@@ -84,20 +84,20 @@ void SELiquidCompartment::Unload(CDM::LiquidCompartmentData& data)
     data.WaterVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(GetWaterVolumeFraction().Unload()));
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SELiquidCompartment::GetScalar(const char* name)
+const SEScalar* SELiquidCompartment::GetScalar(const char* name)  const 
 {
   return GetScalar(std::string{ name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SELiquidCompartment::GetScalar(const std::string& name)
+const SEScalar* SELiquidCompartment::GetScalar(const std::string& name) const 
 {
   const SEScalar* s = SEFluidCompartment::GetScalar(name);
   if (s != nullptr)
     return s;
   if (name.compare("PH") == 0)
-    return &GetPH();
+    return &const_cast<SELiquidCompartment*>(this)->GetPH();
   if (name.compare("WaterVolumeFraction") == 0)
-    return &GetWaterVolumeFraction();
+    return &const_cast<SELiquidCompartment*>(this)->GetWaterVolumeFraction();
   return nullptr;
 }
 //-----------------------------------------------------------------------------

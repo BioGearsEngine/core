@@ -86,7 +86,7 @@ constexpr char idBladderPressure[] = "BladderPressure";
   constexpr char idUrineVolume[] = "UrineVolume";
   constexpr char idUrineUreaNitrogenConcentration[] = "UrineUreaNitrogenConcentration";
 
-SERenalSystem::SERenalSystem(Logger* logger)
+SERenalSystem::SERenalSystem(Logger const* logger)
   : SESystem(logger)
 {
   m_BladderPressure = nullptr;
@@ -224,129 +224,129 @@ void SERenalSystem::Clear()
   SAFE_DELETE(m_UrineUreaNitrogenConcentration);
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SERenalSystem::GetScalar(const char* name)
+const SEScalar* SERenalSystem::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-------------------------------------------------------------------------------
-const SEScalar* SERenalSystem::GetScalar(const std::string& name)
+const SEScalar* SERenalSystem::GetScalar(const std::string& name) const
 {
   if (name == idBladderPressure)
-    return &GetBladderPressure();
+    return &const_cast<SERenalSystem*>(this)->GetBladderPressure();
   if (name == idGlomerularFiltrationRate)
-    return &GetGlomerularFiltrationRate();
+    return &const_cast<SERenalSystem*>(this)->GetGlomerularFiltrationRate();
   if (name == idFiltrationFraction)
-    return &GetFiltrationFraction();
+    return &const_cast<SERenalSystem*>(this)->GetFiltrationFraction();
 
   if (name == idLeftAfferentArterioleResistance)
-    return &GetLeftAfferentArterioleResistance();
+    return &const_cast<SERenalSystem*>(this)->GetLeftAfferentArterioleResistance();
   if (name == idLeftBowmansCapsulesHydrostaticPressure)
-    return &GetLeftBowmansCapsulesHydrostaticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetLeftBowmansCapsulesHydrostaticPressure();
   if (name == idLeftBowmansCapsulesOsmoticPressure)
-    return &GetLeftBowmansCapsulesOsmoticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetLeftBowmansCapsulesOsmoticPressure();
   if (name == idLeftEfferentArterioleResistance)
-    return &GetLeftEfferentArterioleResistance();
+    return &const_cast<SERenalSystem*>(this)->GetLeftEfferentArterioleResistance();
   if (name == idLeftGlomerularCapillariesHydrostaticPressure)
-    return &GetLeftGlomerularCapillariesHydrostaticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetLeftGlomerularCapillariesHydrostaticPressure();
   if (name == idLeftGlomerularCapillariesOsmoticPressure)
-    return &GetLeftGlomerularCapillariesOsmoticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetLeftGlomerularCapillariesOsmoticPressure();
   if (name == idLeftGlomerularFiltrationCoefficient)
-    return &GetLeftGlomerularFiltrationCoefficient();
+    return &const_cast<SERenalSystem*>(this)->GetLeftGlomerularFiltrationCoefficient();
   if (name == idLeftGlomerularFiltrationRate)
-    return &GetLeftGlomerularFiltrationRate();
+    return &const_cast<SERenalSystem*>(this)->GetLeftGlomerularFiltrationRate();
   if (name == idLeftGlomerularFiltrationSurfaceArea)
-    return &GetLeftGlomerularFiltrationSurfaceArea();
+    return &const_cast<SERenalSystem*>(this)->GetLeftGlomerularFiltrationSurfaceArea();
   if (name == idLeftGlomerularFluidPermeability)
-    return &GetLeftGlomerularFluidPermeability();
+    return &const_cast<SERenalSystem*>(this)->GetLeftGlomerularFluidPermeability();
   if (name == idLeftFiltrationFraction)
-    return &GetLeftFiltrationFraction();
+    return &const_cast<SERenalSystem*>(this)->GetLeftFiltrationFraction();
   if (name == idLeftNetFiltrationPressure)
-    return &GetLeftNetFiltrationPressure();
+    return &const_cast<SERenalSystem*>(this)->GetLeftNetFiltrationPressure();
   if (name == idLeftNetReabsorptionPressure)
-    return &GetLeftNetReabsorptionPressure();
+    return &const_cast<SERenalSystem*>(this)->GetLeftNetReabsorptionPressure();
   if (name == idLeftPeritubularCapillariesHydrostaticPressure)
-    return &GetLeftPeritubularCapillariesHydrostaticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetLeftPeritubularCapillariesHydrostaticPressure();
   if (name == idLeftPeritubularCapillariesOsmoticPressure)
-    return &GetLeftPeritubularCapillariesOsmoticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetLeftPeritubularCapillariesOsmoticPressure();
   if (name == idLeftReabsorptionFiltrationCoefficient)
-    return &GetLeftReabsorptionFiltrationCoefficient();
+    return &const_cast<SERenalSystem*>(this)->GetLeftReabsorptionFiltrationCoefficient();
   if (name == idLeftReabsorptionRate)
-    return &GetLeftReabsorptionRate();
+    return &const_cast<SERenalSystem*>(this)->GetLeftReabsorptionRate();
   if (name == idLeftTubularReabsorptionFiltrationSurfaceArea)
-    return &GetLeftTubularReabsorptionFiltrationSurfaceArea();
+    return &const_cast<SERenalSystem*>(this)->GetLeftTubularReabsorptionFiltrationSurfaceArea();
   if (name == idLeftTubularReabsorptionFluidPermeability)
-    return &GetLeftTubularReabsorptionFluidPermeability();
+    return &const_cast<SERenalSystem*>(this)->GetLeftTubularReabsorptionFluidPermeability();
   if (name == idLeftTubularHydrostaticPressure)
-    return &GetLeftTubularHydrostaticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetLeftTubularHydrostaticPressure();
   if (name == idLeftTubularOsmoticPressure)
-    return &GetLeftTubularOsmoticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetLeftTubularOsmoticPressure();
 
   if (name == idRenalBloodFlow)
-    return &GetRenalBloodFlow();
+    return &const_cast<SERenalSystem*>(this)->GetRenalBloodFlow();
   if (name == idRenalPlasmaFlow)
-    return &GetRenalPlasmaFlow();
+    return &const_cast<SERenalSystem*>(this)->GetRenalPlasmaFlow();
   if (name == idRenalVascularResistance)
-    return &GetRenalVascularResistance();
+    return &const_cast<SERenalSystem*>(this)->GetRenalVascularResistance();
 
   if (name == idRightAfferentArterioleResistance)
-    return &GetRightAfferentArterioleResistance();
+    return &const_cast<SERenalSystem*>(this)->GetRightAfferentArterioleResistance();
   if (name == idRightBowmansCapsulesHydrostaticPressure)
-    return &GetRightBowmansCapsulesHydrostaticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetRightBowmansCapsulesHydrostaticPressure();
   if (name == idRightBowmansCapsulesOsmoticPressure)
-    return &GetRightBowmansCapsulesOsmoticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetRightBowmansCapsulesOsmoticPressure();
   if (name == idRightEfferentArterioleResistance)
-    return &GetRightEfferentArterioleResistance();
+    return &const_cast<SERenalSystem*>(this)->GetRightEfferentArterioleResistance();
   if (name == idRightGlomerularCapillariesHydrostaticPressure)
-    return &GetRightGlomerularCapillariesHydrostaticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetRightGlomerularCapillariesHydrostaticPressure();
   if (name == idRightGlomerularCapillariesOsmoticPressure)
-    return &GetRightGlomerularCapillariesOsmoticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetRightGlomerularCapillariesOsmoticPressure();
   if (name == idRightGlomerularFiltrationCoefficient)
-    return &GetRightGlomerularFiltrationCoefficient();
+    return &const_cast<SERenalSystem*>(this)->GetRightGlomerularFiltrationCoefficient();
   if (name == idRightGlomerularFiltrationRate)
-    return &GetRightGlomerularFiltrationRate();
+    return &const_cast<SERenalSystem*>(this)->GetRightGlomerularFiltrationRate();
   if (name == idRightGlomerularFiltrationSurfaceArea)
-    return &GetRightGlomerularFiltrationSurfaceArea();
+    return &const_cast<SERenalSystem*>(this)->GetRightGlomerularFiltrationSurfaceArea();
   if (name == idRightGlomerularFluidPermeability)
-    return &GetRightGlomerularFluidPermeability();
+    return &const_cast<SERenalSystem*>(this)->GetRightGlomerularFluidPermeability();
   if (name == idRightFiltrationFraction)
-    return &GetRightFiltrationFraction();
+    return &const_cast<SERenalSystem*>(this)->GetRightFiltrationFraction();
   if (name == idRightNetFiltrationPressure)
-    return &GetRightNetFiltrationPressure();
+    return &const_cast<SERenalSystem*>(this)->GetRightNetFiltrationPressure();
   if (name == idRightNetReabsorptionPressure)
-    return &GetRightNetReabsorptionPressure();
+    return &const_cast<SERenalSystem*>(this)->GetRightNetReabsorptionPressure();
   if (name == idRightPeritubularCapillariesHydrostaticPressure)
-    return &GetRightPeritubularCapillariesHydrostaticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetRightPeritubularCapillariesHydrostaticPressure();
   if (name == idRightPeritubularCapillariesOsmoticPressure)
-    return &GetRightPeritubularCapillariesOsmoticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetRightPeritubularCapillariesOsmoticPressure();
   if (name == idRightReabsorptionFiltrationCoefficient)
-    return &GetRightReabsorptionFiltrationCoefficient();
+    return &const_cast<SERenalSystem*>(this)->GetRightReabsorptionFiltrationCoefficient();
   if (name == idRightReabsorptionRate)
-    return &GetRightReabsorptionRate();
+    return &const_cast<SERenalSystem*>(this)->GetRightReabsorptionRate();
   if (name == idRightTubularReabsorptionFiltrationSurfaceArea)
-    return &GetRightTubularReabsorptionFiltrationSurfaceArea();
+    return &const_cast<SERenalSystem*>(this)->GetRightTubularReabsorptionFiltrationSurfaceArea();
   if (name == idRightTubularReabsorptionFluidPermeability)
-    return &GetRightTubularReabsorptionFluidPermeability();
+    return &const_cast<SERenalSystem*>(this)->GetRightTubularReabsorptionFluidPermeability();
   if (name == idRightTubularHydrostaticPressure)
-    return &GetRightTubularHydrostaticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetRightTubularHydrostaticPressure();
   if (name == idRightTubularOsmoticPressure)
-    return &GetRightTubularOsmoticPressure();
+    return &const_cast<SERenalSystem*>(this)->GetRightTubularOsmoticPressure();
 
   if (name == idUrinationRate)
-    return &GetUrinationRate();
+    return &const_cast<SERenalSystem*>(this)->GetUrinationRate();
   if (name == idUrineOsmolality)
-    return &GetUrineOsmolality();
+    return &const_cast<SERenalSystem*>(this)->GetUrineOsmolality();
   if (name == idUrineOsmolarity)
-    return &GetUrineOsmolarity();
+    return &const_cast<SERenalSystem*>(this)->GetUrineOsmolarity();
   if (name == idUrineProductionRate)
-    return &GetUrineProductionRate();
+    return &const_cast<SERenalSystem*>(this)->GetUrineProductionRate();
   if (name == idMeanUrineOutput)
-    return &GetMeanUrineOutput();
+    return &const_cast<SERenalSystem*>(this)->GetMeanUrineOutput();
   if (name == idUrineSpecificGravity)
-    return &GetUrineSpecificGravity();
+    return &const_cast<SERenalSystem*>(this)->GetUrineSpecificGravity();
   if (name == idUrineVolume)
-    return &GetUrineVolume();
+    return &const_cast<SERenalSystem*>(this)->GetUrineVolume();
   if (name == idUrineUreaNitrogenConcentration)
-    return &GetUrineUreaNitrogenConcentration();
+    return &const_cast<SERenalSystem*>(this)->GetUrineUreaNitrogenConcentration();
 
   return nullptr;
 }

@@ -24,8 +24,8 @@ class Logger;
 template <COMPARTMENT_GRAPH_TEMPLATE>
 class SECompartmentGraph : public Loggable {
 protected:
-  SECompartmentGraph(const std::string& name, Logger* logger);
-  SECompartmentGraph(const char* name, Logger* logger);
+  SECompartmentGraph(const std::string& name, Logger const* logger);
+  SECompartmentGraph(const char* name, Logger const* logger);
 
 public:
   virtual ~SECompartmentGraph();

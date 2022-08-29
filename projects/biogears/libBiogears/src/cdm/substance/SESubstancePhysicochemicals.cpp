@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
-SESubstancePhysicochemicals::SESubstancePhysicochemicals(Logger* logger)
+SESubstancePhysicochemicals::SESubstancePhysicochemicals(Logger const* logger)
   : Loggable(logger)
 {
   m_AcidDissociationConstants.clear();
@@ -62,27 +62,27 @@ bool SESubstancePhysicochemicals::IsValid() const
   return true;
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstancePhysicochemicals::GetScalar(const char* name)
+const SEScalar* SESubstancePhysicochemicals::GetScalar(const char* name) const
 {
   return GetScalar(std::string{ name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstancePhysicochemicals::GetScalar(const std::string& name)
+const SEScalar* SESubstancePhysicochemicals::GetScalar(const std::string& name) const
 {
   if (name.compare("PrimaryPKA") == 0)
-    return &GetPrimaryPKA();
+    return &const_cast<SESubstancePhysicochemicals*>(this)->GetPrimaryPKA();
   if (name.compare("SecondaryPKA") == 0)
-    return &GetSecondaryPKA();
+    return &const_cast<SESubstancePhysicochemicals*>(this)->GetSecondaryPKA();
   if (name.compare("BloodPlasmaRatio") == 0)
-    return &GetBloodPlasmaRatio();
+    return &const_cast<SESubstancePhysicochemicals*>(this)->GetBloodPlasmaRatio();
   if (name.compare("FractionUnboundInPlasma") == 0)
-    return &GetFractionUnboundInPlasma();
+    return &const_cast<SESubstancePhysicochemicals*>(this)->GetFractionUnboundInPlasma();
   if (name.compare("LogP") == 0)
-    return &GetLogP();
+    return &const_cast<SESubstancePhysicochemicals*>(this)->GetLogP();
   if (name.compare("HydrogenBondCount") == 0)
-    return &GetHydrogenBondCount();
+    return &const_cast<SESubstancePhysicochemicals*>(this)->GetHydrogenBondCount();
   if (name.compare("PolarSurfaceArea") == 0)
-    return &GetPolarSurfaceArea();
+    return &const_cast<SESubstancePhysicochemicals*>(this)->GetPolarSurfaceArea();
 
   return nullptr;
 }

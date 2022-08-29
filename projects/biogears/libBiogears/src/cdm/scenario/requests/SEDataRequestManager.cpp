@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 namespace biogears {
-SEDataRequestManager::SEDataRequestManager(Logger* logger)
+SEDataRequestManager::SEDataRequestManager(Logger const* logger)
   : Loggable(logger)
   , m_SamplesPerSecond(1.0)
   , m_ResultsFile("")
@@ -81,7 +81,7 @@ void SEDataRequestManager::Clear()
   SAFE_DELETE(m_OverrideDecimalFormatting);
 }
 //-----------------------------------------------------------------------------
-bool SEDataRequestManager::Load(const CDM::DataRequestsData& in, SESubstanceManager& subMgr)
+bool SEDataRequestManager::Load(const CDM::DataRequestsData& in, SESubstanceManager const& subMgr)
 {
   Clear();
   if (in.Filename().present())
@@ -239,7 +239,7 @@ bool SEDataRequestManager::DuplicateRequest(SEDataRequest* request)
   return duplicate;
 }
 //-----------------------------------------------------------------------------
-void SEDataRequestManager::CreateFromBind(const CDM::DataRequestData& input, SESubstanceManager& subMgr)
+void SEDataRequestManager::CreateFromBind(const CDM::DataRequestData& input, SESubstanceManager const& subMgr)
 {
   SEDataRequest* dr = newFromBind(input, subMgr, m_DefaultDecimalFormatting);
   if (dr != nullptr && !DuplicateRequest(dr)) {
@@ -250,7 +250,7 @@ void SEDataRequestManager::CreateFromBind(const CDM::DataRequestData& input, SES
   }
 }
 //-----------------------------------------------------------------------------
-SEDataRequest* SEDataRequestManager::newFromBind(const CDM::DataRequestData& data, SESubstanceManager& substances, const SEDecimalFormat* dfault)
+SEDataRequest* SEDataRequestManager::newFromBind(const CDM::DataRequestData& data, SESubstanceManager const & substances, const SEDecimalFormat* dfault)
 {
   const CDM::DataRequestData* drData = &data;
   const CDM::PhysiologyDataRequestData* physSysData = dynamic_cast<const CDM::PhysiologyDataRequestData*>(drData);
@@ -333,7 +333,7 @@ void SEDataRequestManager::SetSamplesPerSecond(double num)
   m_SamplesPerSecond = num;
 }
 //-----------------------------------------------------------------------------
-bool SEDataRequestManager::HasDataRequests()
+bool SEDataRequestManager::HasDataRequests()  const
 {
   return !m_Requests.empty();
 }

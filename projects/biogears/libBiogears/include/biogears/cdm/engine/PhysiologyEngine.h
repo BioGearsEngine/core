@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/utils/Logger.h>
 #include <biogears/container/Tree.h>
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/EngineState.hxx>
@@ -23,7 +24,9 @@ class SEEventHandler;
 class SEPatient;
 class SEPatientAssessment;
 class SECondition;
+class SEConditionManager;
 class SEAction;
+class SEActionManager;
 class TimeUnit;
 class SESubstanceManager;
 class SEBloodChemistrySystem;
@@ -45,7 +48,7 @@ class SECompartmentManager;
 class PhysiologyEngineTrack;
 class PhysiologyEngineConfiguration;
 
-/** 
+/**
  * @brief
  * Base exception class that all CDM classes throw when an error occurs
  */
@@ -54,19 +57,22 @@ struct PhysiologyEngineException : public CommonDataModelException {
     : CommonDataModelException("Physiology Engine Error")
   {
   }
-  PhysiologyEngineException(const char* _Message)
+  PhysiologyEngineException(char const* _Message)
     : CommonDataModelException(_Message)
   {
   }
-  PhysiologyEngineException(const std::string& _Message)
+  PhysiologyEngineException(std::string const& _Message)
     : CommonDataModelException(_Message)
   {
   }
 };
 
-class BIOGEARS_API PhysiologyEngine {
+class BIOGEARS_API PhysiologyEngine : public Loggable {
 public:
-  virtual ~PhysiologyEngine() { }
+  PhysiologyEngine(Logger const* log);
+  PhysiologyEngine();
+
+  virtual ~PhysiologyEngine();
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -76,9 +82,9 @@ public:
   //! Return value indicates engine was able to load provided state file.
   //! Engine will be in a cleared state if this method fails.
   //!-------------------------------------------------------------------------------------------------
-  virtual bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) = 0;
-  virtual bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr) = 0;
-  virtual bool LoadState(char const* buffer, size_t size) = 0;
+  virtual auto LoadState(char const* file, SEScalarTime const* simTime = nullptr) -> bool = 0;
+  virtual auto LoadState(std::string const& file, SEScalarTime const* simTime = nullptr) -> bool = 0;
+  virtual auto LoadState(char const* buffer, size_t size) -> bool = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -88,22 +94,22 @@ public:
   //! Return value indicates engine was able to load provided state file.
   //! Engine will be in a cleared state if this method fails.
   //!-------------------------------------------------------------------------------------------------
-  virtual bool LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr) = 0;
+  virtual auto LoadState(CDM::PhysiologyEngineStateData const& state, SEScalarTime const* simTime = nullptr) -> bool = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! State object will be returned.
   //! Engine will be in a cleared state if this method fails.
   //!-------------------------------------------------------------------------------------------------
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> GetStateData() = 0;
+  virtual auto GetStateData() const -> std::unique_ptr<CDM::PhysiologyEngineStateData> = 0;
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Save the current state of the engine.
   //! State will be written to a file.
   //! Engine will be in a cleared state if this method fails.
   //!-------------------------------------------------------------------------------------------------
-  virtual void SaveStateToFile(const char* file) = 0;
-  virtual void SaveStateToFile(const std::string& file) = 0;
+  virtual auto SaveStateToFile(char const* file) const -> void = 0;
+  virtual auto SaveStateToFile(const std::string& file) const -> void = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -114,10 +120,15 @@ public:
   //! Some combinations of patients and conditions may prevent the engine from stabilizing
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual bool InitializeEngine(const char* patientFile) = 0;
-  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions) = 0;
-  virtual bool InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config) = 0;
-  virtual bool InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) = 0;
+  virtual auto InitializeEngine(char const* patientFile) -> bool = 0;
+  virtual auto InitializeEngine(char const* patientFile, const std::vector<SECondition const*>* conditions) -> bool = 0;
+  virtual auto InitializeEngine(char const* patientFile, const std::vector<SECondition const*>* conditions, PhysiologyEngineConfiguration const* config) -> bool = 0;
+  virtual auto InitializeEngine(const std::string& patientFile, const std::vector<SECondition const*>* conditions = nullptr, PhysiologyEngineConfiguration const* config = nullptr) -> bool = 0;
+
+  // NEW REFACTOR //
+  virtual auto GetActions() const -> SEActionManager const& = 0;
+  virtual auto GetConditions() const -> SEConditionManager const& = 0;
+
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -127,38 +138,40 @@ public:
   //! Some combinations of patients and conditions may prevent the engine from stabilizing
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual bool InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr) = 0;
+  virtual auto InitializeEngine(const SEPatient& patient, const std::vector<SECondition const*>* conditions = nullptr, PhysiologyEngineConfiguration const* config = nullptr) -> bool = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Retrieve the Logger associated with this engine
   //!-------------------------------------------------------------------------------------------------
-  virtual Logger* GetLogger() = 0;
+  virtual auto GetLogger() const -> Logger const * = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Retrieve the PhysiologyEngineTrack associated with tracking data from this engine to a file
   //!-------------------------------------------------------------------------------------------------
-  virtual PhysiologyEngineTrack* GetEngineTrack() = 0;
+  virtual auto GetEngineTrack() const -> PhysiologyEngineTrack const & = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! returns the engine configuration.
   //!-------------------------------------------------------------------------------------------------
-  virtual const PhysiologyEngineConfiguration* GetConfiguration() = 0;
+  virtual auto GetConfiguration() const -> PhysiologyEngineConfiguration const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! returns the engine time step that is used when advancing time.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual double GetTimeStep(const TimeUnit& unit) = 0;
+  virtual auto GetTimeStep(const TimeUnit& unit) const -> double = 0;
+  virtual auto GetTimeStep() const -> SEScalarTime const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! returns the current time of the simulation.
   //!-------------------------------------------------------------------------------------------------
-  virtual double GetSimulationTime(const TimeUnit& unit) = 0;
+  virtual auto GetSimulationTime(TimeUnit const& unit) const -> double = 0;
+  virtual auto GetSimulationTime() const -> SEScalarTime const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -168,7 +181,7 @@ public:
   //! through the API at this time.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual bool AdvanceModelTime(bool appendDataTrack = false) = 0;
+  virtual auto AdvanceModelTime(bool appendDataTrack = false) -> bool = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -179,7 +192,7 @@ public:
   //! through the API at this time.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual bool AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s, bool appendDataTrack = false) = 0;
+  virtual auto AdvanceModelTime(double time, TimeUnit const& unit = TimeUnit::s, bool appendDataTrack = false) -> bool = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -188,27 +201,27 @@ public:
   //! false will be returned if the engine does not support the action
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual bool ProcessAction(const SEAction& action) = 0;
+  virtual auto ProcessAction(SEAction const& action) -> bool = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Retrieves the associated substance manager.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual SESubstanceManager& GetSubstanceManager() = 0;
+  virtual auto GetSubstanceManager() const -> SESubstanceManager const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Add a callback object that will be called whenever a pateint or anesthesia machine event changes state
   //!-------------------------------------------------------------------------------------------------
-  virtual void SetEventHandler(SEEventHandler* handler) = 0;
+  virtual auto SetEventHandler(SEEventHandler* handler) -> void = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the patient object used by the engine
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SEPatient& GetPatient() = 0;
+  virtual auto GetPatient() const -> SEPatient const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -217,112 +230,112 @@ public:
   //! Assessments can be queried at any point in the calculation and as many times are desired.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual bool GetPatientAssessment(SEPatientAssessment& assessment) = 0;
+  virtual auto GetPatientAssessment(SEPatientAssessment& assessment) const -> bool = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the environment object used by the engine
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SEEnvironment* GetEnvironment() = 0;
+  virtual auto GetEnvironment() const -> SEEnvironment const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Blood Chemistry System
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SEBloodChemistrySystem* GetBloodChemistrySystem() = 0;
+  virtual auto GetBloodChemistrySystem() const -> SEBloodChemistrySystem const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Cardiovascular System
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SECardiovascularSystem* GetCardiovascularSystem() = 0;
+  virtual auto GetCardiovascularSystem() const -> SECardiovascularSystem const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the drug system
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SEDrugSystem* GetDrugSystem() = 0;
+  virtual auto GetDrugsSystem() const -> SEDrugSystem const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Endocrine System
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SEEndocrineSystem* GetEndocrineSystem() = 0;
+  virtual auto GetEndocrineSystem() const -> SEEndocrineSystem const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Energy System
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SEEnergySystem* GetEnergySystem() = 0;
+  virtual auto GetEnergySystem() const -> SEEnergySystem const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Gastrointestinal System
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SEGastrointestinalSystem* GetGastrointestinalSystem() = 0;
+  virtual auto GetGastrointestinalSystem() const -> SEGastrointestinalSystem const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Hepatic System
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SEHepaticSystem* GetHepaticSystem() = 0;
+  virtual auto GetHepaticSystem() const -> SEHepaticSystem const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Nervous System
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SENervousSystem* GetNervousSystem() = 0;
+  virtual auto GetNervousSystem() const -> SENervousSystem const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Renal System
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SERenalSystem* GetRenalSystem() = 0;
+  virtual auto GetRenalSystem() const -> SERenalSystem const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Respiratory System
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SERespiratorySystem* GetRespiratorySystem() = 0;
+  virtual auto GetRespiratorySystem() const -> SERespiratorySystem const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the tissue system
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SETissueSystem* GetTissueSystem() = 0;
+  virtual auto GetTissueSystem() const -> SETissueSystem const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Anesthesia machine
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SEAnesthesiaMachine* GetAnesthesiaMachine() = 0;
+  virtual auto GetAnesthesiaMachine() const -> SEAnesthesiaMachine const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Electrocardiogram machine
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SEElectroCardioGram* GetElectroCardioGram() = 0;
+  virtual auto GetElectroCardioGram() const -> SEElectroCardioGram const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Inhaler
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SEInhaler* GetInhaler() = 0;
+  virtual auto GetInhaler() const -> SEInhaler const& = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -330,12 +343,12 @@ public:
   //! flows, pressure, volume as well as substance volumes and volume fractions.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual const SECompartmentManager& GetCompartments() = 0;
+  virtual auto GetCompartments() const -> SECompartmentManager const& = 0;
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Return a Graph of DataRequest that the current PhysiologyEngine Supports.
   //!-------------------------------------------------------------------------------------------------
-  virtual Tree<const char*> GetDataRequestGraph() const = 0;
+  virtual auto GetDataRequestGraph() const -> Tree<char const*> = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
@@ -343,23 +356,23 @@ public:
   //! All DataRequest will be tracked if the current simulation time is a multiple of
   //! GetDataRequestManager().GetSamplesPerSecond();
   //!-------------------------------------------------------------------------------------------------
-  virtual bool IsAutoTracking() const = 0;
+  virtual auto IsAutoTracking() const -> bool = 0;
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Return Allows the toggling of the SetAutoTrackFlag to On/Off
   //!-------------------------------------------------------------------------------------------------
-  virtual void SetAutoTrackFlag(bool flag) = 0;
+  virtual auto SetAutoTrackFlag(bool flag) -> void = 0;
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Returns the current state of the Track Stabilization Property.
   //! When true the user expects the Results file to include engine values during stabilization routines
   //! When false the user expects the 0 time index to be the first engine readout post stabilization.
   //!-------------------------------------------------------------------------------------------------
-  virtual bool IsTrackingStabilization() const = 0;
+  virtual auto IsTrackingStabilization() const -> bool = 0;
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Return Allows the toggling of the SetAutoTrackFlag to On/Off
   //!-------------------------------------------------------------------------------------------------
-  virtual void SetTrackStabilizationFlag(bool flag) = 0;
+  virtual auto SetTrackStabilizationFlag(bool flag) -> void = 0;
 };
 }

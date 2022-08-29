@@ -36,8 +36,8 @@ namespace io {
 class BIOGEARS_API SECompartment : public Loggable {
   friend io::Compartment;
 protected:
-  SECompartment(const char* name, Logger* logger);
-  SECompartment(const std::string& name, Logger* logger);
+  SECompartment(const char* name, Logger const* logger);
+  SECompartment(const std::string& name, Logger const* logger);
 
 public:
   virtual ~SECompartment() override;
@@ -54,8 +54,8 @@ public:
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;
 
-  virtual const SEScalar* GetScalar(const char* name) = 0;
-  virtual const SEScalar* GetScalar(const std::string& name) = 0;
+  virtual const SEScalar* GetScalar(const char* name) const = 0;
+  virtual const SEScalar* GetScalar(const std::string& name) const = 0;
 
   virtual bool HasChildren() const = 0; // Compartments with children contain 'read only' scalars
 

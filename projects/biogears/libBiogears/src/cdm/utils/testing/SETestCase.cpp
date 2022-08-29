@@ -16,13 +16,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/TestReport.hxx>
 
 namespace biogears {
-SETestCase::SETestCase(Logger* logger)
+SETestCase::SETestCase(Logger const* logger)
   : Loggable(logger)
 {
   SETestCase("default", logger);
 }
 //-----------------------------------------------------------------------------
-SETestCase::SETestCase(const std::string& name, Logger* logger)
+SETestCase::SETestCase(const std::string& name, Logger const* logger)
   : Loggable(logger)
 {
   m_Name = name;

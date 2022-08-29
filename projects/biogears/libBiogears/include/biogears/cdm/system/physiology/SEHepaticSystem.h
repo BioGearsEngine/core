@@ -26,7 +26,7 @@ class BIOGEARS_API SEHepaticSystem : public SESystem {
   friend io::Physiology;
 
 public:
-  SEHepaticSystem(Logger* logger);
+  SEHepaticSystem(Logger const* logger);
   ~SEHepaticSystem() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
@@ -36,8 +36,8 @@ public:
 
   void Clear() override; // Deletes all members
 
-  const SEScalar* GetScalar(const char* name) override;
-  const SEScalar* GetScalar(const std::string& name) override;
+  const SEScalar* GetScalar(const char* name) const override;
+  const SEScalar* GetScalar(const std::string& name) const override;
 
   bool Load(const CDM::HepaticSystemData& in);
   CDM::HepaticSystemData* Unload() const override;

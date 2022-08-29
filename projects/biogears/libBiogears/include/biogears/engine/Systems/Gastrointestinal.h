@@ -24,7 +24,7 @@ namespace biogears {
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
 class SEFluidCircuitPath;
-class BioGears;
+class BioGearsEngine;
 }
 
 namespace std {
@@ -36,13 +36,13 @@ namespace biogears {
 * @brief @copydoc Physiology_GastrointestinalSystemData
 */
 class BIOGEARS_API Gastrointestinal : public SEGastrointestinalSystem, public BioGearsSystem {
-  friend class BioGears;
+  friend class BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<Gastrointestinal>;
-  Gastrointestinal(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<Gastrointestinal>;
+  Gastrointestinal(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~Gastrointestinal() override;
@@ -68,7 +68,7 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState() override;
+  void SimulationPhaseChange() override;
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;
@@ -117,7 +117,7 @@ protected:
   std::vector<double> m_TransitBileSalts_mM;
 
   // We want to start simulation time 0 (after stabilization) with the initial gut mass from the meal specified in the config file
-  std::map<SELiquidSubstanceQuantity*, double> m_InitialSubstanceMasses_ug; // Used only during the final AtSteadyState
+  std::map<SELiquidSubstanceQuantity*, double> m_InitialSubstanceMasses_ug; // Used only during the final SimulationPhaseChange
 
   bool m_ConsumeRate; // Some substance digestion rates are specified by the user, some by configuration,
   //if the stomach runs out of a substance with a user provided rate, we invalidate the rate (true)

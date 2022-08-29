@@ -29,7 +29,7 @@ class SESubstance;
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
 class SEPatientActionCollection;
-class BioGears;
+class BioGearsEngine;
 /**
  * @brief @copydoc Physiology_BloodChemistrySystemData
  * The Blood Chemistry System holds the system-level blood substance data that is computed on the compartment level by other systems.
@@ -39,13 +39,13 @@ class BioGears;
  * and will be improved in future releases to include more substances that can provide clinician level details and assessments, such as a CBC and blood panel.
  */
 class BIOGEARS_API BloodChemistry : public SEBloodChemistrySystem, public BioGearsSystem {
-  friend BioGears;
+  friend BioGearsEngine;
   friend class BioGearsEngineTest;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<BloodChemistry>;
-  BloodChemistry(BioGears& bg);
-  BioGears& m_data;
+  static auto make_unique(BioGearsEngine& bg) -> std::unique_ptr<BloodChemistry>;
+  BloodChemistry(BioGearsEngine& bg);
+  BioGearsEngine& m_data;
 
 public:
   virtual ~BloodChemistry() override;
@@ -71,7 +71,7 @@ protected:
   void SetUp() override;
 
 public:
-  void AtSteadyState() override;
+  void SimulationPhaseChange() override;
   void PreProcess() override;
   void Process() override;
   void PostProcess() override;

@@ -27,7 +27,7 @@ class SECondition;
 
 class  PhysiologyEngineStabilization : public Loggable {
 public:
-  BIOGEARS_API PhysiologyEngineStabilization(Logger* logger);
+  BIOGEARS_API PhysiologyEngineStabilization(Logger const* logger);
   BIOGEARS_API virtual ~PhysiologyEngineStabilization();
 
   BIOGEARS_API virtual void Clear();

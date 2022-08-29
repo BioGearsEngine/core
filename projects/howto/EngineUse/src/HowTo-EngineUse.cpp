@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
@@ -78,7 +79,7 @@ public:
 //--------------------------------------------------------------------------------------------------
 class MyEventHandler : public SEEventHandler {
 public:
-  MyEventHandler(Logger* logger)
+  MyEventHandler(Logger const* logger)
     : SEEventHandler()
   {
   }
@@ -164,20 +165,20 @@ int HowToEngineUse()
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects
   // defined in the Physiology.xsd file
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", FrequencyUnit::Per_min);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", VolumeUnit::mL);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalLungVolume", VolumeUnit::mL);
-  bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
-  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set(BGE::VascularCompartment::Aorta, *O2, "PartialPressure");
-  bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set(BGE::VascularCompartment::Aorta, *CO2, "PartialPressure");
-  bg->GetEngineTrack()->GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Lungs, "Volume");
-  bg->GetEngineTrack()->GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Trachea, "InFlow");
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", FrequencyUnit::Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", PressureUnit::mmHg);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", FrequencyUnit::Per_min);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", VolumeUnit::mL);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalLungVolume", VolumeUnit::mL);
+  bg->GetEngineTrack().GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
+  bg->GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set(BGE::VascularCompartment::Aorta, *O2, "PartialPressure");
+  bg->GetEngineTrack().GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set(BGE::VascularCompartment::Aorta, *CO2, "PartialPressure");
+  bg->GetEngineTrack().GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Lungs, "Volume");
+  bg->GetEngineTrack().GetDataRequestManager().CreateGasCompartmentDataRequest().Set(BGE::PulmonaryCompartment::Trachea, "InFlow");
 
-  bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToEngineUse.csv");
+  bg->GetEngineTrack().GetDataRequestManager().SetResultsFilename("HowToEngineUse.csv");
 
   // We are ready to execute the engine
   // simply tell the engine how long you would like it to execute
@@ -215,9 +216,9 @@ int HowToEngineUse()
   // The general naming convention used in creating these structures and their properties is a 'Get', 'Has' style
   // For Scalar objects, these structures only instantiate scalar objects for data they have, in order to maintain a small memory footprint.
   // Calling the Get method will create A new scalar (managed by the structure) and the value will be set to NaN.
-  // ex. bg->GetCardiovascularSystem()->GetBloodVolume()->GetValue(VolumeUnit::L);
+  // ex. bg->GetCardiovascularSystem().GetBloodVolume()->GetValue(VolumeUnit::L);
   // You can check to see if an engine has output a particular property by calling a complimentary 'Has' method
-  // ex. bg->GetCardiovascularSystem()->HasBloodVolume(), if the value is not NaN, true will be returned
+  // ex. bg->GetCardiovascularSystem().HasBloodVolume(), if the value is not NaN, true will be returned
   //
   // When you set a value to a scalar, you MUST provide a unit!
   // When you which to get the value of a scalar, you MUST provide a unit!
@@ -230,11 +231,11 @@ int HowToEngineUse()
 
   // Here we demostrate pulling data from various physiology systems
 
-  bg->GetLogger()->Info(asprintf("HeartRate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("BloodVolume : %f %s", bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL), "mL"));
-  bg->GetLogger()->Info(asprintf("ArterialSystolicPressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("ArterialDiastolicPressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("MeanArterialPressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("HeartRate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("BloodVolume : %f %s", bg->GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL), "mL"));
+  bg->GetLogger()->Info(asprintf("ArterialSystolicPressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("ArterialDiastolicPressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
+  bg->GetLogger()->Info(asprintf("MeanArterialPressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
 
   // Here we demonstrate pulling data from a compartment
   // NOTE THAT WHEN YOU PULL A COMPARTMENT FROM THE COMPARTMENT MANAGER, THAT IS A STRING LOOK UP, TRY TO CACHE COMPARTMENTS OF INTEREST INTO YOUR OWN LIST/MAP
@@ -243,10 +244,10 @@ int HowToEngineUse()
   // Since this is an arterial compartment, blood is flowing through this compartment, where as the carina compartment is air flow
   bg->GetLogger()->Info(asprintf("Invasive Blood Pressure : %f %s", bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetPressure(PressureUnit::mmHg), "mmHg"));
 
-  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Total Lung Volume : %f %s", bg->GetRespiratorySystem()->GetTotalLungVolume(VolumeUnit::mL), "mL"));
-  bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
-  bg->GetLogger()->Info(asprintf("End Tidal CarbonDioxide Fraction : %f", bg->GetRespiratorySystem()->GetEndTidalCarbonDioxideFraction()));
+  bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
+  bg->GetLogger()->Info(asprintf("Total Lung Volume : %f %s", bg->GetRespiratorySystem().GetTotalLungVolume(VolumeUnit::mL), "mL"));
+  bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", bg->GetRespiratorySystem().GetTidalVolume(VolumeUnit::mL), "mL"));
+  bg->GetLogger()->Info(asprintf("End Tidal CarbonDioxide Fraction : %f", bg->GetRespiratorySystem().GetEndTidalCarbonDioxideFraction()));
 
   // Using the compartment we can get more detailed respiratory information
   // Here we will test the flow of air in the carina compartment. A positive flow is an inhale and a negative flow is an exhale.
@@ -259,11 +260,11 @@ int HowToEngineUse()
     bg->GetLogger()->Info(asprintf("CO2 Exhaled %f %s", carina->GetSubstanceQuantity(*CO2)->GetVolume(VolumeUnit::mL), "mL"));
   }
 
-  bg->GetLogger()->Info(asprintf("OxygenSaturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("ArterialBlood pH : %f", bg->GetBloodChemistrySystem()->GetArterialBloodPH()));
+  bg->GetLogger()->Info(asprintf("OxygenSaturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bg->GetLogger()->Info(asprintf("ArterialBlood pH : %f", bg->GetBloodChemistrySystem().GetArterialBloodPH()));
   //  You should save off the SESubstanceQuantity* if you will need it more than once
   bg->GetLogger()->Info(asprintf("Lactate Concentration : %f %s", bg->GetSubstanceManager().GetSubstance("Lactate")->GetBloodConcentration(MassPerVolumeUnit::mg_Per_dL), "mg_Per_dL"));
-  bg->GetLogger()->Info(asprintf("Core Body Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Core Body Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
 
   // Save the state of the engine
   bg->SaveStateToFile("./states/FinalEngineUseState.xml");
