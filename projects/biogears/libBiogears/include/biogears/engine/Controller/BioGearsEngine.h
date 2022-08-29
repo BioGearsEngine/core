@@ -315,7 +315,6 @@ private:
 
   std::unique_ptr<SEPatient> m_Patient;
 
-  Logger* m_Logger;
   std::unique_ptr<Logger> m_managedLogger;
 
   double m_timeStep_remainder = 0.0;
