@@ -133,8 +133,8 @@ public:
   BIOGEARS_API auto AdvanceModelTime(double time, TimeUnit const& unit = TimeUnit::s, bool appendDataTrack = false) -> bool override; // NOTE: Maynot compile on clang will evaluate
   BIOGEARS_API auto ProcessAction(SEAction const& action) -> bool override;
 
-  BIOGEARS_API auto GetSubstanceManager() -> SESubstanceManager&;
-  BIOGEARS_API auto GetSubstanceManager() const -> SESubstanceManager const& override;
+  BIOGEARS_API auto GetSubstanceManager() -> BioGearsSubstances&;
+  BIOGEARS_API auto GetSubstanceManager() const -> BioGearsSubstances const& override;
 
   BIOGEARS_API auto SetEventHandler(SEEventHandler* handler) -> void override;
   BIOGEARS_API auto GetPatientAssessment(SEPatientAssessment& assessment) const -> bool override;
@@ -164,23 +164,20 @@ public:
   BIOGEARS_API DiffusionCalculator& GetDiffusionCalculator();
   BIOGEARS_API DiffusionCalculator const& GetDiffusionCalculator() const;
 
-  BIOGEARS_API BioGearsSubstances& GetSubstances();
-  BIOGEARS_API BioGearsSubstances const& GetSubstances() const;
-
   BIOGEARS_API SEPatient& GetPatient();
   BIOGEARS_API SEPatient const& GetPatient() const;
 
   BIOGEARS_API auto GetActions() -> SEActionManager&;
   BIOGEARS_API auto GetActions() const -> SEActionManager const& override;
 
-  BIOGEARS_API auto GetAnesthesiaMachine() -> SEAnesthesiaMachine&;
-  BIOGEARS_API auto GetAnesthesiaMachine() const -> SEAnesthesiaMachine const& override;
+  BIOGEARS_API auto GetAnesthesiaMachine() -> AnesthesiaMachine&;
+  BIOGEARS_API auto GetAnesthesiaMachine() const -> AnesthesiaMachine const& override;
 
-  BIOGEARS_API auto GetBloodChemistrySystem() -> SEBloodChemistrySystem&;
-  BIOGEARS_API auto GetBloodChemistrySystem() const -> SEBloodChemistrySystem const& override;
+  BIOGEARS_API auto GetBloodChemistrySystem() -> BloodChemistry&;
+  BIOGEARS_API auto GetBloodChemistrySystem() const -> BloodChemistry const& override;
 
-  BIOGEARS_API auto GetCardiovascularSystem() -> SECardiovascularSystem&;
-  BIOGEARS_API auto GetCardiovascularSystem() const -> SECardiovascularSystem const& override;
+  BIOGEARS_API auto GetCardiovascularSystem() -> Cardiovascular&;
+  BIOGEARS_API auto GetCardiovascularSystem() const -> Cardiovascular const& override;
 
   BIOGEARS_API auto GetCircuits() -> BioGearsCircuits&;
   BIOGEARS_API auto GetCircuits() const -> BioGearsCircuits const&;
@@ -194,41 +191,41 @@ public:
   BIOGEARS_API auto GetConfiguration() -> BioGearsConfiguration&;
   BIOGEARS_API auto GetConfiguration() const -> BioGearsConfiguration const& override;
 
-  BIOGEARS_API auto GetDrugsSystem() -> SEDrugSystem&;
-  BIOGEARS_API auto GetDrugsSystem() const -> SEDrugSystem const& override;
+  BIOGEARS_API auto GetDrugsSystem() -> Drugs&;
+  BIOGEARS_API auto GetDrugsSystem() const -> Drugs const & override;
 
-  BIOGEARS_API auto GetElectroCardioGram() -> SEElectroCardioGram&;
-  BIOGEARS_API auto GetElectroCardioGram() const -> SEElectroCardioGram const& override;
+  BIOGEARS_API auto GetElectroCardioGram() -> ECG&;
+  BIOGEARS_API auto GetElectroCardioGram() const -> ECG const& override;
 
-  BIOGEARS_API auto GetEndocrineSystem() -> SEEndocrineSystem&;
-  BIOGEARS_API auto GetEndocrineSystem() const -> SEEndocrineSystem const& override;
+  BIOGEARS_API auto GetEndocrineSystem() -> Endocrine&;
+  BIOGEARS_API auto GetEndocrineSystem() const -> Endocrine const& override;
 
-  BIOGEARS_API auto GetEnergySystem() -> SEEnergySystem&;
-  BIOGEARS_API auto GetEnergySystem() const -> SEEnergySystem const& override;
+  BIOGEARS_API auto GetEnergySystem() -> Energy&;
+  BIOGEARS_API auto GetEnergySystem() const -> Energy const& override;
 
   BIOGEARS_API auto GetEngineTime() const -> SEScalarTime const&;
   BIOGEARS_API auto GetEngineTime() -> SEScalarTime const&;
 
-  BIOGEARS_API auto GetEnvironment() -> SEEnvironment&;
-  BIOGEARS_API auto GetEnvironment() const -> SEEnvironment const& override;
+  BIOGEARS_API auto GetEnvironment() -> Environment&;
+  BIOGEARS_API auto GetEnvironment() const -> Environment const& override;
 
-  BIOGEARS_API auto GetGastrointestinalSystem() -> SEGastrointestinalSystem&;
-  BIOGEARS_API auto GetGastrointestinalSystem() const -> SEGastrointestinalSystem const& override;
+  BIOGEARS_API auto GetGastrointestinalSystem() -> Gastrointestinal&;
+  BIOGEARS_API auto GetGastrointestinalSystem() const -> Gastrointestinal const& override;
 
-  BIOGEARS_API auto GetHepaticSystem() -> SEHepaticSystem&;
-  BIOGEARS_API auto GetHepaticSystem() const -> SEHepaticSystem const& override;
+  BIOGEARS_API auto GetHepaticSystem() -> Hepatic&;
+  BIOGEARS_API auto GetHepaticSystem() const -> Hepatic const& override;
 
-  BIOGEARS_API auto GetInhaler() -> SEInhaler&;
-  BIOGEARS_API auto GetInhaler() const -> SEInhaler const& override;
+  BIOGEARS_API auto GetInhaler() -> Inhaler&;
+  BIOGEARS_API auto GetInhaler() const -> Inhaler const& override;
 
-  BIOGEARS_API auto GetNervousSystem() -> SENervousSystem&;
-  BIOGEARS_API auto GetNervousSystem() const -> SENervousSystem const& override;
+  BIOGEARS_API auto GetNervousSystem() -> Nervous&;
+  BIOGEARS_API auto GetNervousSystem() const -> Nervous const& override;
 
-  BIOGEARS_API auto GetRenalSystem() -> SERenalSystem&;
-  BIOGEARS_API auto GetRenalSystem() const -> SERenalSystem const& override;
+  BIOGEARS_API auto GetRenalSystem() -> Renal&;
+  BIOGEARS_API auto GetRenalSystem() const -> Renal const& override;
 
-  BIOGEARS_API auto GetRespiratorySystem() -> SERespiratorySystem&;
-  BIOGEARS_API auto GetRespiratorySystem() const -> SERespiratorySystem const& override;
+  BIOGEARS_API auto GetRespiratorySystem() -> Respiratory&;
+  BIOGEARS_API auto GetRespiratorySystem() const -> Respiratory const& override;
 
   BIOGEARS_API auto GetSimulationTime(TimeUnit const& unit) const -> double override;
   BIOGEARS_API auto GetSimulationTime() -> SEScalarTime&;
@@ -238,8 +235,8 @@ public:
   BIOGEARS_API auto GetTimeStep() -> SEScalarTime&;
   BIOGEARS_API auto GetTimeStep() const -> SEScalarTime const& override;
 
-  BIOGEARS_API auto GetTissueSystem() -> SETissueSystem&;
-  BIOGEARS_API auto GetTissueSystem() const -> SETissueSystem const& override;
+  BIOGEARS_API auto GetTissueSystem() -> Tissue&;
+  BIOGEARS_API auto GetTissueSystem() const -> Tissue const& override;
  
   BIOGEARS_API auto GetAirwayMode() const -> CDM::enumBioGearsAirwayMode::value const;
   BIOGEARS_API auto GetIntubation() const -> CDM::enumOnOff::value const;
@@ -274,8 +271,6 @@ protected:
   BIOGEARS_API void PostProcess();
 
   BIOGEARS_API bool CreateCircuitsAndCompartments();
-
-  BIOGEARS_API void ForwardFatal(std::string const& msg, std::string const& origin);
 
 private:
   auto GetStateData() const -> std::unique_ptr<CDM::PhysiologyEngineStateData>;

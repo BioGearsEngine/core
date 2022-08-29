@@ -226,9 +226,9 @@ void BioGearsSubstances::InitializeGasCompartments()
 
   for (SEGasCompartment* cmpt : m_data.GetCompartments().GetInhalerLeafCompartments()) {
     if (cmpt->HasVolume()) {
-      cmpt->GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetVolumeFraction().SetValue(AmbientO2VF);
-      cmpt->GetSubstanceQuantity(m_data.GetSubstances().GetCO2())->GetVolumeFraction().SetValue(AmbientCO2VF);
-      cmpt->GetSubstanceQuantity(m_data.GetSubstances().GetN2())->GetVolumeFraction().SetValue(AmbientN2VF);
+      cmpt->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2())->GetVolumeFraction().SetValue(AmbientO2VF);
+      cmpt->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2())->GetVolumeFraction().SetValue(AmbientCO2VF);
+      cmpt->GetSubstanceQuantity(m_data.GetSubstanceManager().GetN2())->GetVolumeFraction().SetValue(AmbientN2VF);
       cmpt->Balance(BalanceGasBy::VolumeFraction);
     }
   }

@@ -140,7 +140,7 @@ SaturationCalculator::SaturationCalculator(BioGearsEngine& bg)
   : Loggable(bg.GetLogger())
   , m_data(bg)
 {
-  Initialize(bg.GetSubstances());
+  Initialize(bg.GetSubstanceManager());
 }
 
 void SaturationCalculator::Initialize(SESubstanceManager& substances)
@@ -370,7 +370,7 @@ void SaturationCalculator::CalculateBloodGasDistribution(SELiquidCompartment& cm
   m_subHbO2CO2Q = cmpt.GetSubstanceQuantity(*m_HbO2CO2);
   m_subHCO3Q = cmpt.GetSubstanceQuantity(*m_HCO3);
 
-  if (m_data.GetSubstances().IsActive(*m_CO)) {
+  if (m_data.GetSubstanceManager().IsActive(*m_CO)) {
     m_subCOQ = cmpt.GetSubstanceQuantity(*m_CO);
     m_subHbCOQ = cmpt.GetSubstanceQuantity(*m_HbCO);
   }

@@ -358,7 +358,7 @@ void Cardiovascular::SetUp()
   m_CirculatoryGraph = &m_data.GetCompartments().GetActiveCardiovascularGraph();
   //Compartments
   m_Aorta = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta);
-  m_AortaCO2 = m_Aorta->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
+  m_AortaCO2 = m_Aorta->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
   m_Brain = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Brain);
   m_LeftPulmonaryArteries = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftPulmonaryArteries);
   m_RightPulmonaryArteries = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightPulmonaryArteries);
@@ -603,10 +603,10 @@ void Cardiovascular::ChronicAnemia()
   double viscousModifier = 1.0 - (0.15 * rf);
 
   std::vector<SESubstance*> hemoglobinSubs;
-  hemoglobinSubs.push_back(&m_data.GetSubstances().GetHb());
-  hemoglobinSubs.push_back(&m_data.GetSubstances().GetHbO2());
-  hemoglobinSubs.push_back(&m_data.GetSubstances().GetHbCO2());
-  hemoglobinSubs.push_back(&m_data.GetSubstances().GetHbO2CO2());
+  hemoglobinSubs.push_back(&m_data.GetSubstanceManager().GetHb());
+  hemoglobinSubs.push_back(&m_data.GetSubstanceManager().GetHbO2());
+  hemoglobinSubs.push_back(&m_data.GetSubstanceManager().GetHbCO2());
+  hemoglobinSubs.push_back(&m_data.GetSubstanceManager().GetHbO2CO2());
 
   double newMass_g;
   SELiquidSubstanceQuantity* subQ;
@@ -1994,7 +1994,7 @@ void Cardiovascular::TuneCircuit()
       //skip the pericardium since it's not connected to the circulation
       if (m_CirculatoryGraph->GetCompartment(c->GetName()) == nullptr && c->GetName()!="Pericardium")
         Info(std::string{ "Cardiovascular Graph does not have cmpt " } + c->GetName());
-      if (c->HasSubstanceQuantity(m_data.GetSubstances().GetHb())) // Unit testing does not have any Hb
+      if (c->HasSubstanceQuantity(m_data.GetSubstanceManager().GetHb())) // Unit testing does not have any Hb
         m_data.GetSaturationCalculator().CalculateBloodGasDistribution(*c); //so don't do this if we don't have Hb
     }
     //We need to reset the blood volume baseline because it might have changed during circuit stabilization
@@ -2156,7 +2156,7 @@ void Cardiovascular::AdjustVascularTone()
     double CardiacOutput_mL_Per_s = GetCardiacOutput(VolumePerTimeUnit::mL_Per_s);
     if (CardiacOutput_mL_Per_s != 0.0) {
       ResistanceChange = m_data.GetDrugsSystem().GetMeanBloodPressureChange(PressureUnit::mmHg) / GetCardiacOutput(VolumePerTimeUnit::mL_Per_s);
-      if (m_data.GetSubstances().IsActive(*m_data.GetSubstances().GetSubstance("Sarin"))) {
+      if (m_data.GetSubstanceManager().IsActive(*m_data.GetSubstanceManager().GetSubstance("Sarin"))) {
         ResistanceChange *= -1.0;   //oppose the effect for sarin
       }
     }
@@ -2211,11 +2211,11 @@ SEScalar& Cardiovascular::CalculateCardiovascularSOFA()
   SEScalar* sofa = new SEScalar();
   double sofaScore = 0.0;
   const double meanPressure = GetMeanArterialPressure(PressureUnit::mmHg);
-  SESubstance* norEpi = m_data.GetSubstances().GetSubstance("Norepinephrine");
+  SESubstance* norEpi = m_data.GetSubstanceManager().GetSubstance("Norepinephrine");
   std::map<const SESubstance*, SESubstanceInfusion*> infusionMap = m_data.GetActions().GetPatientActions().GetSubstanceInfusions();
   if (meanPressure >= 70.0) {
     //Normal, leave sofaScore = 0
-  } else if (m_data.GetSubstances().IsActive(*norEpi) && infusionMap.find(norEpi) != infusionMap.end()) {
+  } else if (m_data.GetSubstanceManager().IsActive(*norEpi) && infusionMap.find(norEpi) != infusionMap.end()) {
     SESubstanceInfusion* norEpiInfusion = infusionMap.at(norEpi);
     const double infusionRate_ug_Per_kg_min = norEpiInfusion->GetRate().GetValue(VolumePerTimeUnit::mL_Per_min) * norEpiInfusion->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL) / m_data.GetPatient().GetWeight(MassUnit::kg);
     if (infusionRate_ug_Per_kg_min < 0.1) {

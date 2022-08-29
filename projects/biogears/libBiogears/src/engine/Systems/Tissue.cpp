@@ -231,7 +231,7 @@ void Tissue::SetUp()
 
   //Initialize the Diffusion calculator here because it depends on all tissues being fully defined.  Placement here ensures that Diffusion gets set up
   //correctly whether you are initializing a new engine or loading a state.
-  m_data.GetDiffusionCalculator().Initialize(m_data.GetSubstances());
+  m_data.GetDiffusionCalculator().Initialize(m_data.GetSubstanceManager());
 
   //"Reusable" protein stores are usually about 1% of total body protein, ~110 g (https://www.nap.edu/read/10490/chapter/12#595)
   m_maxProteinStorage_g = 110;
@@ -243,23 +243,23 @@ void Tissue::SetUp()
   m_Patient = &m_data.GetPatient();
   m_energy = &m_data.GetEnergySystem();
 
-  m_Albumin = &m_data.GetSubstances().GetAlbumin();
-  m_AminoAcids = &m_data.GetSubstances().GetAminoAcids();
-  m_Glucose = &m_data.GetSubstances().GetGlucose();
-  m_Glucagon = &m_data.GetSubstances().GetGlucagon();
-  m_Triacylglycerol = &m_data.GetSubstances().GetTriacylglycerol();
-  m_O2 = &m_data.GetSubstances().GetO2();
-  m_CO2 = &m_data.GetSubstances().GetCO2();
-  m_CO = &m_data.GetSubstances().GetCO();
-  m_Lactate = &m_data.GetSubstances().GetLactate();
-  m_Ketones = &m_data.GetSubstances().GetKetones();
-  m_Creatinine = &m_data.GetSubstances().GetCreatinine();
-  m_Sodium = &m_data.GetSubstances().GetSodium();
-  m_Potassium = &m_data.GetSubstances().GetPotassium();
-  m_Calcium = &m_data.GetSubstances().GetCalcium();
-  m_Chloride = &m_data.GetSubstances().GetChloride();
-  m_Insulin = &m_data.GetSubstances().GetInsulin();
-  m_Urea = &m_data.GetSubstances().GetUrea();
+  m_Albumin = &m_data.GetSubstanceManager().GetAlbumin();
+  m_AminoAcids = &m_data.GetSubstanceManager().GetAminoAcids();
+  m_Glucose = &m_data.GetSubstanceManager().GetGlucose();
+  m_Glucagon = &m_data.GetSubstanceManager().GetGlucagon();
+  m_Triacylglycerol = &m_data.GetSubstanceManager().GetTriacylglycerol();
+  m_O2 = &m_data.GetSubstanceManager().GetO2();
+  m_CO2 = &m_data.GetSubstanceManager().GetCO2();
+  m_CO = &m_data.GetSubstanceManager().GetCO();
+  m_Lactate = &m_data.GetSubstanceManager().GetLactate();
+  m_Ketones = &m_data.GetSubstanceManager().GetKetones();
+  m_Creatinine = &m_data.GetSubstanceManager().GetCreatinine();
+  m_Sodium = &m_data.GetSubstanceManager().GetSodium();
+  m_Potassium = &m_data.GetSubstanceManager().GetPotassium();
+  m_Calcium = &m_data.GetSubstanceManager().GetCalcium();
+  m_Chloride = &m_data.GetSubstanceManager().GetChloride();
+  m_Insulin = &m_data.GetSubstanceManager().GetInsulin();
+  m_Urea = &m_data.GetSubstanceManager().GetUrea();
 
   m_MuscleInsulin = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Muscle)->GetSubstanceQuantity(*m_Insulin);
   m_MuscleGlucagon = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Muscle)->GetSubstanceQuantity(*m_Glucagon);
@@ -524,7 +524,7 @@ void Tissue::SetStarvationState()
   m_Patient->GetBodyDensity().SetValue(bodyDensity_g_Per_cm3, MassPerVolumeUnit::g_Per_cm3); //See BioGears::SetUpPatient()
 
   //Set new blood concentrations
-  m_data.GetSubstances().SetLiquidCompartmentNonGasesForStarvation(starvedTime_hr);
+  m_data.GetSubstanceManager().SetLiquidCompartmentNonGasesForStarvation(starvedTime_hr);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -884,7 +884,7 @@ void Tissue::CalculatePulmonaryCapillarySubstanceTransfer()
     StandardDiffusingCapacityOfOxygen_mLPersPermmHg *= (1.0 / diffusionCapacityReductionFactor);
   }
 
-  for (SESubstance* sub : m_data.GetSubstances().GetActiveGases()) {
+  for (SESubstance* sub : m_data.GetSubstanceManager().GetActiveGases()) {
     sub->GetAlveolarTransfer().SetValue(0, VolumePerTimeUnit::mL_Per_s);
     sub->GetDiffusingCapacity().SetValue(0, VolumePerTimePressureUnit::mL_Per_s_mmHg);
 
@@ -1926,7 +1926,7 @@ void Tissue::CheckGlycogenLevels()
 void Tissue::ManageSubstancesAndSaturation()
 {
   SEScalarMassPerVolume albuminConcentration;
-  albuminConcentration = m_data.GetSubstances().GetAlbumin().GetBloodConcentration();
+  albuminConcentration = m_data.GetSubstanceManager().GetAlbumin().GetBloodConcentration();
   // Currently, substances are not where they need to be, we will hard code this for now until we fix them
   /// \todo Remove SetBodyState hardcode and replace with computed values after substance redux is complete
   m_data.GetSaturationCalculator().SetBodyState(albuminConcentration,

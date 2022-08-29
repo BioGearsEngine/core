@@ -271,7 +271,7 @@ void DiffusionCalculator::CalculateLinearDiffusionMethods()
 //-------------------------------------------------------------------------------
 void DiffusionCalculator::CalculateNonLinearDiffusionMethods()
 {
-  SESubstance* albumin = &m_data.GetSubstances().GetAlbumin(); //Many albumin-specific calls, so make a variable for it
+  SESubstance* albumin = &m_data.GetSubstanceManager().GetAlbumin(); //Many albumin-specific calls, so make a variable for it
   for (auto diffSet : m_DiffusionSets) {
     CalculateActiveIonDiffusion(diffSet);
     for (auto facilitatedSub : m_FacilitatedDiffusionSubstances) {
@@ -285,7 +285,7 @@ void DiffusionCalculator::CalculateNonLinearDiffusionMethods()
     }
 
     const SESubstanceTissuePharmacokinetics* tissueKinetics;
-    for (auto pkSub : m_data.GetSubstances().GetActiveDrugs()) {
+    for (auto pkSub : m_data.GetSubstanceManager().GetActiveDrugs()) {
       tissueKinetics = &pkSub->GetPK().GetTissueKinetics(diffSet.tissue->GetName());
       //Check to see if substance is a drug with the appropriate parameters to calculate PK diffusion
       // If the substance is a PBPK drug, then diffusion is computed by perfusion limited diffusion, as described in \cite huisinga2012modeling
@@ -463,10 +463,10 @@ void DiffusionCalculator::CalculateActiveIonDiffusion(DiffusionCompartmentSet& c
   double scaleFactor = tissue.GetTotalMass(MassUnit::kg) * 1e6 / cellSurfaceArea_cm2; //Carlson reports 1*10^6 cm^2 / kg tissue relationship
 
   //Define ions
-  SESubstance* sodium = &m_data.GetSubstances().GetSodium();
-  SESubstance* potassium = &m_data.GetSubstances().GetPotassium();
-  SESubstance* chloride = &m_data.GetSubstances().GetChloride();
-  SESubstance* calcium = &m_data.GetSubstances().GetCalcium();
+  SESubstance* sodium = &m_data.GetSubstanceManager().GetSodium();
+  SESubstance* potassium = &m_data.GetSubstanceManager().GetPotassium();
+  SESubstance* chloride = &m_data.GetSubstanceManager().GetChloride();
+  SESubstance* calcium = &m_data.GetSubstanceManager().GetCalcium();
 
   //Get all ion concentrations
   double naExtracellular_mM = extra.GetSubstanceQuantity(*sodium)->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);

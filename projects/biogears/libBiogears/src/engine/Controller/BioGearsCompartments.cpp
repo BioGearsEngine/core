@@ -30,7 +30,7 @@ auto BioGearsCompartments::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Bi
 }
 
 BioGearsCompartments::BioGearsCompartments(BioGearsEngine& bg)
-  : SECompartmentManager(bg.GetSubstances())
+  : SECompartmentManager(bg.GetSubstanceManager())
   , m_data(bg)
 {
   Clear();

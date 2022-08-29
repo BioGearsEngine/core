@@ -218,7 +218,7 @@ void Respiratory::Initialize()
   GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverFrequency().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverPressure().SetValue(m_PeakRespiratoryDrivePressure_cmH2O, PressureUnit::cmH2O);
-  GetCarricoIndex().SetValue(m_data.GetBloodChemistrySystem().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
+  GetCarricoIndex().SetValue(m_data.GetBloodChemistrySystem().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstanceManager().GetO2()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
   GetMeanPleuralPressure().SetValue(AbsolutePleuralPressure_mmHg - EnvironmentPressure_mmHg, PressureUnit::mmHg);
   GetTotalAlveolarVentilation().SetValue(RespirationRate_Per_min * (TidalVolume_L - DeadSpace_L), VolumePerTimeUnit::L_Per_min);
@@ -375,15 +375,15 @@ void Respiratory::SetUp()
   m_LeftLungExtravascular = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::LeftLungIntracellular);
   m_RightLungExtravascular = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::RightLungIntracellular);
   m_Trachea = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Trachea);
-  m_TracheaO2 = m_Trachea->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
-  m_TracheaCO2 = m_Trachea->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
+  m_TracheaO2 = m_Trachea->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
+  m_TracheaCO2 = m_Trachea->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
   SELiquidCompartment* Aorta = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta);
-  m_AortaO2 = Aorta->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
-  m_AortaCO2 = Aorta->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
-  m_LeftAlveoliO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftAlveoli)->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
-  m_RightAlveoliO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightAlveoli)->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
-  m_LeftAlveoliCO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftAlveoli)->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
-  m_RightAlveoliCO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightAlveoli)->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
+  m_AortaO2 = Aorta->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
+  m_AortaCO2 = Aorta->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
+  m_LeftAlveoliO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftAlveoli)->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
+  m_RightAlveoliO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightAlveoli)->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
+  m_LeftAlveoliCO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftAlveoli)->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
+  m_RightAlveoliCO2 = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightAlveoli)->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
   m_MechanicalVentilatorConnection = m_data.GetCompartments().GetGasCompartment(BGE::MechanicalVentilatorCompartment::Connection);
   // Compartments we will process aerosol effects on
   m_AerosolEffects.push_back(m_data.GetCompartments().GetLiquidCompartment(BGE::PulmonaryCompartment::Trachea));
@@ -667,7 +667,7 @@ void Respiratory::ProcessAerosolSubstances()
     inflammationCoefficient = subQ->GetSubstance().GetAerosolization().GetInflammationCoefficient().GetValue(); // Once for each subQ
     inflammationCoefficient *= 0.01;
     //Mouth
-    SIDECoeff = &m_data.GetSubstances().GetSizeIndependentDepositionEfficencyCoefficient(subQ->GetSubstance()); // Once for each subQ
+    SIDECoeff = &m_data.GetSubstanceManager().GetSizeIndependentDepositionEfficencyCoefficient(subQ->GetSubstance()); // Once for each subQ
     mouthDepositied_ug = subQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL) * m_AerosolMouth->GetInFlow(VolumePerTimeUnit::mL_Per_s) * m_dt_s * SIDECoeff->GetMouth();
     if (mouthDepositied_ug > subQ->GetMass(MassUnit::ug)) {
       mouthDepositied_ug = subQ->GetMass(MassUnit::ug);
@@ -817,7 +817,7 @@ void Respiratory::MechanicalVentilation()
         double fraction = f->GetFractionAmount().GetValue();
 
         //Do this, just in case it's something new
-        m_data.GetSubstances().AddActiveSubstance(sub);
+        m_data.GetSubstanceManager().AddActiveSubstance(sub);
 
         //Now set it on the connection compartment
         //It has a NaN volume, so this will keep the same volume fraction no matter what's going on around it
@@ -1761,19 +1761,19 @@ void Respiratory::CalculateVitalSigns()
   double fractionInspiredO2 = 0.0;
   switch (m_data.GetAirwayMode()) {
   case CDM::enumBioGearsAirwayMode::Free:
-    fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+    fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstanceManager().GetO2()).GetFractionAmount().GetValue();
     break;
   case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
     fractionInspiredO2 = m_data.GetAnesthesiaMachine().GetOxygenFraction().GetValue();
     break;
   case CDM::enumBioGearsAirwayMode::MechanicalVentilator:
-    fractionInspiredO2 = m_data.GetActions().GetPatientActions().GetMechanicalVentilation()->GetGasFraction(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+    fractionInspiredO2 = m_data.GetActions().GetPatientActions().GetMechanicalVentilation()->GetGasFraction(m_data.GetSubstanceManager().GetO2()).GetFractionAmount().GetValue();
     break;
   case CDM::enumBioGearsAirwayMode::Inhaler:
     //Unclear what O2 fraction in an inhaler is, let this case flow into default for now.
   default:
     //Use environment as default
-    fractionInspiredO2 = fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+    fractionInspiredO2 = fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstanceManager().GetO2()).GetFractionAmount().GetValue();
   }
   GetCarricoIndex().SetValue(arterialPartialPressureO2_mmHg / fractionInspiredO2, PressureUnit::mmHg);
 
@@ -1831,8 +1831,8 @@ void Respiratory::CalculateVitalSigns()
       subQ->GetSubstance().GetEndTidalFraction().Set(subQ->GetVolumeFraction());
       subQ->GetSubstance().GetEndTidalPressure().Set(subQ->GetPartialPressure());
     }
-    GetEndTidalCarbonDioxideFraction().Set(m_data.GetSubstances().GetCO2().GetEndTidalFraction());
-    GetEndTidalCarbonDioxidePressure().Set(m_Lungs->GetSubstanceQuantity(m_data.GetSubstances().GetCO2())->GetPartialPressure());
+    GetEndTidalCarbonDioxideFraction().Set(m_data.GetSubstanceManager().GetCO2().GetEndTidalFraction());
+    GetEndTidalCarbonDioxidePressure().Set(m_Lungs->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2())->GetPartialPressure());
 
     // Calculate Ventilationss
     GetTotalAlveolarVentilation().SetValue(AlveoliDeltaVolume_L * RespirationRate_Per_min, VolumePerTimeUnit::L_Per_min);

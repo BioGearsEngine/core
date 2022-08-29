@@ -107,9 +107,9 @@ void Nervous::Initialize()
   m_HypercapniaThresholdPeripheral = 0.0;
   m_HypoxiaThresholdHeart = 0.0;
   m_HypoxiaThresholdPeripheral = 0.0;
-  m_HeartOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
+  m_HeartOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
   m_MeanLungVolume_L = m_data.GetRespiratorySystem().GetTotalLungVolume(VolumeUnit::L);
-  m_MuscleOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
+  m_MuscleOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
   m_OxygenAutoregulatorHeart = 0.0;
   m_OxygenAutoregulatorMuscle = 0.0;
   m_ReactionTime_s = 0.3;
@@ -272,10 +272,10 @@ void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
 void Nervous::SetUp()
 {
   m_dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
-  m_Succinylcholine = m_data.GetSubstances().GetSubstance("Succinylcholine");
-  m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
-  m_Atropine = m_data.GetSubstances().GetSubstance("Atropine");
-  m_Midazolam = m_data.GetSubstances().GetSubstance("Midazolam");
+  m_Succinylcholine = m_data.GetSubstanceManager().GetSubstance("Succinylcholine");
+  m_Sarin = m_data.GetSubstanceManager().GetSubstance("Sarin");
+  m_Atropine = m_data.GetSubstanceManager().GetSubstance("Atropine");
+  m_Midazolam = m_data.GetSubstanceManager().GetSubstance("Midazolam");
   m_Patient = &m_data.GetPatient();
 
   m_DrugRespirationEffects = 0.0;
@@ -304,8 +304,8 @@ void Nervous::SimulationPhaseChange()
   if (m_data.GetSimulationPhase() == SimulationPhase::AtInitialStableState) {
     m_FeedbackActive = true;
     //Only reset oxygen baselines after initial stabilization because we want conditions (e.g. pneumonia) to put body in state of actively trying to get back to "normal"
-    m_HeartOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
-    m_MuscleOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
+    m_HeartOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
+    m_MuscleOxygenBaseline = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
     m_OxygenAutoregulatorHeart = 0.0;
     m_OxygenAutoregulatorMuscle = 0.0;
     m_SympatheticPeripheralSignalBaseline_Hz = m_SympatheticPeripheralSignal_Hz;
@@ -653,7 +653,7 @@ void Nervous::BaroreceptorFeedback()
     const double painVAS = 0.1 * GetPainVisualAnalogueScale().GetValue();
     painEffect = 0.5 * painVAS * m_BaroreceptorOperatingPoint_mmHg;
   }
-  for (SESubstance* drug : m_data.GetSubstances().GetActiveDrugs()) {
+  for (SESubstance* drug : m_data.GetSubstanceManager().GetActiveDrugs()) {
     if ((drug->GetClassification() == CDM::enumSubstanceClass::Anesthetic) || (drug->GetClassification() == CDM::enumSubstanceClass::Sedative) || (drug->GetClassification() == CDM::enumSubstanceClass::Opioid)) {
       drugEffect = m_data.GetDrugsSystem().GetMeanBloodPressureChange(PressureUnit::mmHg); // / m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
       break;
@@ -851,8 +851,8 @@ void Nervous::LocalAutoregulation()
   const double gainMuscle_L_Blood_Per_L_O2 = 750.0;
   const double tauAutoregulator = 10.0;
   const double conversion_L_O2_Per_mmol_O2 = 0.227;
-  const double heartOxygenMolarity = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
-  const double muscleOxygenMolarity = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
+  const double heartOxygenMolarity = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Myocardium)).GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
+  const double muscleOxygenMolarity = m_data.GetCompartments().GetIntracellularFluid(*m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle)).GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
 
   const double dHeartAutoEffect = (1.0 / tauAutoregulator) * (-m_OxygenAutoregulatorHeart - gainHeart_L_Blood_Per_L_O2 * conversion_L_O2_Per_mmol_O2 * (heartOxygenMolarity - m_HeartOxygenBaseline));
   const double dMuscleAutoEffect = (1.0 / tauAutoregulator) * (-m_OxygenAutoregulatorMuscle - gainMuscle_L_Blood_Per_L_O2 * conversion_L_O2_Per_mmol_O2 * (muscleOxygenMolarity - m_MuscleOxygenBaseline));
@@ -1146,13 +1146,13 @@ void Nervous::CheckNervousStatus()
   double midazolam_mg_Per_L = 0.0;
   double RbcFractionInhibited = 1.0 - RbcAche_mol_Per_L / (8e-9); //8 nM is the baseline activity of Rbc-Ache
   //only update values if the substances are active
-  if (m_data.GetSubstances().IsActive(*m_Atropine)) {
+  if (m_data.GetSubstanceManager().IsActive(*m_Atropine)) {
     brainAtropine_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::BrainIntracellular)->GetSubstanceQuantity(*m_Atropine)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
   }
-  if (m_data.GetSubstances().IsActive(*m_Midazolam)) {
+  if (m_data.GetSubstanceManager().IsActive(*m_Midazolam)) {
     midazolam_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_Midazolam)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
   }
-  if (m_data.GetSubstances().IsActive(*m_Sarin)) {
+  if (m_data.GetSubstanceManager().IsActive(*m_Sarin)) {
       ///\cite nambda1971cholinesterase
       //The above study found that individuals exposed to the organophosphate parathion did not exhibit fasciculation until at least
       //80% of Rbc-Ache was inhibited.  This was relaxed to 70% because BioGears is calibrated to throw an irreversible state at
@@ -1166,7 +1166,7 @@ void Nervous::CheckNervousStatus()
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildWeakness, false, m_data.GetSimulationTime());
       }
-      if (RbcFractionInhibited > 0.8 && !m_data.GetSubstances().IsActive(*m_Atropine))  {
+      if (RbcFractionInhibited > 0.8 && !m_data.GetSubstanceManager().IsActive(*m_Atropine))  {
         m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
       }
       if (0.4 < RbcFractionInhibited && RbcFractionInhibited < 0.65) {
@@ -1240,7 +1240,7 @@ void Nervous::CheckNervousStatus()
   //initialized to FALSE) so that the event cannot be triggered more than once.
   /// \cite @appiah2004pharmacology, @cite mcloughlin1994influence
   double neuromuscularBlockLevel = m_data.GetDrugsSystem().GetNeuromuscularBlockLevel().GetValue();
-  if (m_data.GetSubstances().IsActive(*m_Succinylcholine) && (neuromuscularBlockLevel > 0.0)) {
+  if (m_data.GetSubstanceManager().IsActive(*m_Succinylcholine) && (neuromuscularBlockLevel > 0.0)) {
     if ((neuromuscularBlockLevel < 0.9) && (!m_blockActive))
       m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
     else {

@@ -105,7 +105,7 @@ bool Gastrointestinal::Load(const CDM::BioGearsGastrointestinalSystemData& in)
 
   //Loading drug absorption/transit model states here (rather than SE side) because we want to map them to an SESubstance already defined in Sub Manager
   for (auto transitData : in.DrugTransitStates()) {
-    SESubstance* sub = m_data.GetSubstances().GetSubstance(transitData.Substance());
+    SESubstance* sub = m_data.GetSubstanceManager().GetSubstance(transitData.Substance());
     if (sub == nullptr) {
       m_ss << "Unable to find substance" << transitData.Substance();
       Error(m_ss.str(), "Gastrointestinal: Load Transit Model");
@@ -148,18 +148,18 @@ void Gastrointestinal::SetUp()
   m_SmallIntestineChyme = m_data.GetCompartments().GetLiquidCompartment(BGE::ChymeCompartment::SmallIntestine);
   m_Lymph = m_data.GetCompartments().GetLiquidCompartment(BGE::LymphCompartment::Lymph);
 
-  m_SmallIntestineChymeAminoAcids = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstances().GetAminoAcids());
-  m_SmallIntestineChymeGlucose = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstances().GetGlucose());
-  m_SmallIntestineChymeTriacylglycerol = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstances().GetTriacylglycerol());
-  m_SmallIntestineChymeCalcium = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstances().GetCalcium());
-  m_SmallIntestineChymeSodium = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstances().GetSodium());
-  m_SmallIntestineChymeUrea = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstances().GetUrea());
-  m_SmallIntestineVascularSodium = m_vSmallIntestine->GetSubstanceQuantity(m_data.GetSubstances().GetSodium());
-  m_smallIntestineVascularGlucose = m_vSmallIntestine->GetSubstanceQuantity(m_data.GetSubstances().GetGlucose());
-  m_smallIntestineVascularAminoAcids = m_vSmallIntestine->GetSubstanceQuantity(m_data.GetSubstances().GetAminoAcids());
-  m_SmallIntestineVascularCalcium = m_vSmallIntestine->GetSubstanceQuantity(m_data.GetSubstances().GetCalcium());
-  m_LymphTriacylglycerol = m_Lymph->GetSubstanceQuantity(m_data.GetSubstances().GetTriacylglycerol());
-  m_smallintestineVAscularTriacylglycerol = m_vSmallIntestine->GetSubstanceQuantity(m_data.GetSubstances().GetTriacylglycerol());
+  m_SmallIntestineChymeAminoAcids = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstanceManager().GetAminoAcids());
+  m_SmallIntestineChymeGlucose = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstanceManager().GetGlucose());
+  m_SmallIntestineChymeTriacylglycerol = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstanceManager().GetTriacylglycerol());
+  m_SmallIntestineChymeCalcium = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCalcium());
+  m_SmallIntestineChymeSodium = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstanceManager().GetSodium());
+  m_SmallIntestineChymeUrea = m_SmallIntestineChyme->GetSubstanceQuantity(m_data.GetSubstanceManager().GetUrea());
+  m_SmallIntestineVascularSodium = m_vSmallIntestine->GetSubstanceQuantity(m_data.GetSubstanceManager().GetSodium());
+  m_smallIntestineVascularGlucose = m_vSmallIntestine->GetSubstanceQuantity(m_data.GetSubstanceManager().GetGlucose());
+  m_smallIntestineVascularAminoAcids = m_vSmallIntestine->GetSubstanceQuantity(m_data.GetSubstanceManager().GetAminoAcids());
+  m_SmallIntestineVascularCalcium = m_vSmallIntestine->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCalcium());
+  m_LymphTriacylglycerol = m_Lymph->GetSubstanceQuantity(m_data.GetSubstanceManager().GetTriacylglycerol());
+  m_smallintestineVAscularTriacylglycerol = m_vSmallIntestine->GetSubstanceQuantity(m_data.GetSubstanceManager().GetTriacylglycerol());
 
   // Drug Compartment Absorption Transit Model Parameters: Parameters are organized into vectors to reduce space and hopefully avoid redundant code.
   // Each vector entry represents a compartment in the GI transit model, according to the following convention:

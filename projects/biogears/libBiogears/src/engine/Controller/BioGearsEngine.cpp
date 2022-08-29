@@ -1054,16 +1054,6 @@ auto BioGearsEngine::GetDiffusionCalculator() const -> DiffusionCalculator const
   return *m_DiffusionCalculator;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetSubstances() -> BioGearsSubstances&
-{
-  return *m_Substances;
-}
-//-------------------------------------------------------------------------------
-auto BioGearsEngine::GetSubstances() const -> BioGearsSubstances const&
-{
-  return *m_Substances;
-}
-//-------------------------------------------------------------------------------
 auto BioGearsEngine::GetActions() -> SEActionManager&
 {
   return *m_Actions;
@@ -1150,132 +1140,132 @@ auto BioGearsEngine::GetEngineTime() -> SEScalarTime const&
   return *m_CurrentTime;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetEnvironment() const -> SEEnvironment const&
+auto BioGearsEngine::GetEnvironment() const -> Environment const&
 {
   return *m_Environment;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetEnvironment() -> SEEnvironment&
+auto BioGearsEngine::GetEnvironment() -> Environment&
 {
   return *m_Environment;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetSubstanceManager() const -> SESubstanceManager const&
+auto BioGearsEngine::GetSubstanceManager() const -> BioGearsSubstances const&
 {
   return *m_Substances;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetSubstanceManager() -> SESubstanceManager&
+auto BioGearsEngine::GetSubstanceManager() -> BioGearsSubstances&
 {
   return *m_Substances;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetBloodChemistrySystem() const -> SEBloodChemistrySystem const&
+auto BioGearsEngine::GetBloodChemistrySystem() const -> BloodChemistry const&
 {
   return *m_BloodChemistrySystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetBloodChemistrySystem() -> SEBloodChemistrySystem&
+auto BioGearsEngine::GetBloodChemistrySystem() -> BloodChemistry&
 {
   return *m_BloodChemistrySystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetCardiovascularSystem() const -> SECardiovascularSystem const&
+auto BioGearsEngine::GetCardiovascularSystem() const -> Cardiovascular const&
 {
   return *m_CardiovascularSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetCardiovascularSystem() -> SECardiovascularSystem&
+auto BioGearsEngine::GetCardiovascularSystem() -> Cardiovascular&
 {
   return *m_CardiovascularSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetDrugsSystem() const -> SEDrugSystem const&
+auto BioGearsEngine::GetDrugsSystem() const -> Drugs const&
 {
   return *m_DrugSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetDrugsSystem() -> SEDrugSystem&
+auto BioGearsEngine::GetDrugsSystem() -> Drugs&
 {
   return *m_DrugSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetEndocrineSystem() const -> SEEndocrineSystem const&
+auto BioGearsEngine::GetEndocrineSystem() const -> Endocrine const&
 {
   return *m_EndocrineSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetEndocrineSystem() -> SEEndocrineSystem&
+auto BioGearsEngine::GetEndocrineSystem() -> Endocrine&
 {
   return *m_EndocrineSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetEnergySystem() const -> SEEnergySystem const&
+auto BioGearsEngine::GetEnergySystem() const -> Energy const&
 {
   return *m_EnergySystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetEnergySystem() -> SEEnergySystem&
+auto BioGearsEngine::GetEnergySystem() -> Energy&
 {
   return *m_EnergySystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetGastrointestinalSystem() const -> SEGastrointestinalSystem const&
+auto BioGearsEngine::GetGastrointestinalSystem() const -> Gastrointestinal const&
 {
   return *m_GastrointestinalSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetGastrointestinalSystem() -> SEGastrointestinalSystem&
+auto BioGearsEngine::GetGastrointestinalSystem() -> Gastrointestinal&
 {
   return *m_GastrointestinalSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetHepaticSystem() const -> SEHepaticSystem const&
+auto BioGearsEngine::GetHepaticSystem() const -> Hepatic const&
 {
   return *m_HepaticSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetHepaticSystem() -> SEHepaticSystem&
+auto BioGearsEngine::GetHepaticSystem() -> Hepatic&
 {
   return *m_HepaticSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetNervousSystem() const -> SENervousSystem const&
+auto BioGearsEngine::GetNervousSystem() const -> Nervous const&
 {
   return *m_NervousSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetNervousSystem() -> SENervousSystem&
+auto BioGearsEngine::GetNervousSystem() -> Nervous&
 {
   return *m_NervousSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetRenalSystem() const -> SERenalSystem const&
+auto BioGearsEngine::GetRenalSystem() const -> Renal const&
 {
   return *m_RenalSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetRenalSystem() -> SERenalSystem&
+auto BioGearsEngine::GetRenalSystem() -> Renal&
 {
   return *m_RenalSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetRespiratorySystem() const -> SERespiratorySystem const&
+auto BioGearsEngine::GetRespiratorySystem() const -> Respiratory const&
 {
   return *m_RespiratorySystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetRespiratorySystem() -> SERespiratorySystem&
+auto BioGearsEngine::GetRespiratorySystem() -> Respiratory&
 {
   return *m_RespiratorySystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetTissueSystem() const -> SETissueSystem const&
+auto BioGearsEngine::GetTissueSystem() const -> Tissue const&
 {
   return *m_TissueSystem;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetTissueSystem() -> SETissueSystem&
+auto BioGearsEngine::GetTissueSystem() -> Tissue&
 {
   return *m_TissueSystem;
 }
@@ -1290,32 +1280,32 @@ auto BioGearsEngine::GetIntubation() const -> CDM::enumOnOff::value const
   return m_Intubation;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetAnesthesiaMachine() const -> SEAnesthesiaMachine const&
+auto BioGearsEngine::GetAnesthesiaMachine() const -> AnesthesiaMachine const&
 {
   return *m_AnesthesiaMachine;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetAnesthesiaMachine() -> SEAnesthesiaMachine&
+auto BioGearsEngine::GetAnesthesiaMachine() -> AnesthesiaMachine&
 {
   return *m_AnesthesiaMachine;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetElectroCardioGram() const -> SEElectroCardioGram const&
+auto BioGearsEngine::GetElectroCardioGram() const -> ECG const&
 {
   return *m_ECG;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetElectroCardioGram() -> SEElectroCardioGram&
+auto BioGearsEngine::GetElectroCardioGram() -> ECG&
 {
   return *m_ECG;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetInhaler() const -> SEInhaler const&
+auto BioGearsEngine::GetInhaler() const -> Inhaler const&
 {
   return *m_Inhaler;
 }
 //-------------------------------------------------------------------------------
-auto BioGearsEngine::GetInhaler() -> SEInhaler&
+auto BioGearsEngine::GetInhaler() -> Inhaler&
 {
   return *m_Inhaler;
 }

@@ -247,7 +247,7 @@ void Renal::Initialize()
   // Set a Clearance of zero for ALL substances
   // Determine substance filterability based on other parameters (if provided)
   // This won't change, unless the substance parameters change
-  for (SESubstance* sub : m_data.GetSubstances().GetSubstances()) {
+  for (SESubstance* sub : m_data.GetSubstanceManager().GetSubstanceManager()) {
     CalculateFilterability(*sub);
     if (!sub->GetClearance().HasRenalDynamic())
       sub->GetClearance().SetRenalDynamic(RenalDynamic::Clearance);
@@ -317,12 +317,12 @@ void Renal::SetUp()
   m_patient = &m_data.GetPatient();
 
   //Substances
-  m_albumin = &m_data.GetSubstances().GetAlbumin();
-  m_sodium = &m_data.GetSubstances().GetSodium();
-  m_urea = &m_data.GetSubstances().GetUrea();
-  m_glucose = &m_data.GetSubstances().GetGlucose();
-  m_lactate = &m_data.GetSubstances().GetLactate();
-  m_potassium = &m_data.GetSubstances().GetPotassium();
+  m_albumin = &m_data.GetSubstanceManager().GetAlbumin();
+  m_sodium = &m_data.GetSubstanceManager().GetSodium();
+  m_urea = &m_data.GetSubstanceManager().GetUrea();
+  m_glucose = &m_data.GetSubstanceManager().GetGlucose();
+  m_lactate = &m_data.GetSubstanceManager().GetLactate();
+  m_potassium = &m_data.GetSubstanceManager().GetPotassium();
 
   //Substance quantities
 
@@ -580,12 +580,12 @@ void Renal::CalculateUltrafiltrationFeedback()
     filterResistance_mmHg_s_Per_mL = std::min(filterResistance_mmHg_s_Per_mL, m_CVOpenResistance_mmHg_s_Per_mL);
 
     filterResistancePath->GetNextResistance().SetValue(filterResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    glomerularCapillaries->GetSubstanceQuantity(m_data.GetSubstances().GetAlbumin())->GetConcentration();
+    glomerularCapillaries->GetSubstanceQuantity(m_data.GetSubstanceManager().GetAlbumin())->GetConcentration();
     //Modify the pressure on both sides of the filter based on the protein (Albumin) concentration
     //This is the osmotic pressure effect
     ///\todo turn on colloid osmotic pressure once substances have been handled properly (and GI)
     // CACHE THIS SUBSTANCE QUANTITY IN SETUP
-    CalculateColloidOsmoticPressure(glomerularCapillaries->GetSubstanceQuantity(m_data.GetSubstances().GetAlbumin())->GetConcentration(), glomerularOsmoticSourcePath->GetNextPressureSource());
+    CalculateColloidOsmoticPressure(glomerularCapillaries->GetSubstanceQuantity(m_data.GetSubstanceManager().GetAlbumin())->GetConcentration(), glomerularOsmoticSourcePath->GetNextPressureSource());
     //CalculateColloidOsmoticPressure(bowmansNode->GetSubstanceQuantity(m_albumin)->GetNextConcentration(), bowmansOsmoticSourcePath->GetNextPressureSource());
   }
 }
@@ -660,10 +660,10 @@ void Renal::CalculateReabsorptionFeedback()
     //This is the osmotic pressure effect
     ///\todo turn on colloid osmotic pressure once substances have been handled properly (and GI)
     // CACHE THIS SUBSTANCE QUANTITY IN SETUP
-    //CalculateColloidOsmoticPressure(peritubularCapillaries->GetSubstanceQuantity(m_data.GetSubstances().GetAlbumin())->GetConcentration(), peritubularOsmoticSourcePath->GetNextPressureSource());
+    //CalculateColloidOsmoticPressure(peritubularCapillaries->GetSubstanceQuantity(m_data.GetSubstanceManager().GetAlbumin())->GetConcentration(), peritubularOsmoticSourcePath->GetNextPressureSource());
     //Since we're not modeling the interstitial space, we'll just always keep this side constant
     //We just won't touch it and let it use the baseline value
-    //CalculateColloidOsmoticPressure(renalInterstitial->GetSubstanceQuantity(m_data.GetSubstances().GetAlbumin())->GetConcentration(), tubulesOsmoticSourcePath->GetNextPressureSource());
+    //CalculateColloidOsmoticPressure(renalInterstitial->GetSubstanceQuantity(m_data.GetSubstanceManager().GetAlbumin())->GetConcentration(), tubulesOsmoticSourcePath->GetNextPressureSource());
     tubulesOsmoticSourcePath->GetNextPressureSource().SetValue(-15.0, PressureUnit::mmHg);
   }
 }
@@ -1259,11 +1259,11 @@ void Renal::CalculateAutomaticClearance(SESubstance& sub)
   double massCleared_ug = 0.0;
 
   //Right Kidney Clearance
-  m_data.GetSubstances().CalculateGenericClearance(renalVolumeCleared_mL, *m_rightKidneyTissue, sub, &m_spCleared);
+  m_data.GetSubstanceManager().CalculateGenericClearance(renalVolumeCleared_mL, *m_rightKidneyTissue, sub, &m_spCleared);
   massCleared_ug += m_spCleared.GetValue(MassUnit::ug);
 
   //Left Kidney Clearance
-  m_data.GetSubstances().CalculateGenericClearance(renalVolumeCleared_mL, *m_leftKidneyTissue, sub, &m_spCleared);
+  m_data.GetSubstanceManager().CalculateGenericClearance(renalVolumeCleared_mL, *m_leftKidneyTissue, sub, &m_spCleared);
   massCleared_ug += m_spCleared.GetValue(MassUnit::ug);
 
   //Put it in the bladder
@@ -1601,7 +1601,7 @@ void Renal::Urinate()
     //  m_urethraPath->GetNextResistance().SetValue(0.01, FlowResistanceUnit::mmHg_s_Per_mL); //0.182
     //}
     m_bladderNode->GetNextVolume().SetValue(1.0, VolumeUnit::mL);
-    for (auto sub : m_data.GetSubstances().GetActiveSubstances()) {
+    for (auto sub : m_data.GetSubstanceManager().GetActiveSubstances()) {
       if (m_bladder->GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug) > ZERO_APPROX) {
         m_bladder->GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Concentration);
       }
@@ -1761,7 +1761,7 @@ void Renal::CalculateOsmoreceptorFeedback()
   double permeability_mL_Per_s_Per_mmHg_Per_m2 = 0.0;
 
   ///\todo get the aorta osmolarity instead of sodium concentration
-  double sodiumConcentration_mg_Per_mL = m_data.GetSubstances().GetSodium().GetBloodConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
+  double sodiumConcentration_mg_Per_mL = m_data.GetSubstanceManager().GetSodium().GetBloodConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
   sodiumConcentration_mg_Per_mL = m_sodiumConcentration_mg_Per_mL_runningAvg.Sample(sodiumConcentration_mg_Per_mL);
 
   //Do it separate for both kidneys

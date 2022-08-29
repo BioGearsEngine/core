@@ -50,7 +50,7 @@ auto Environment::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Environment
 }
 
 Environment::Environment(BioGearsEngine& bg)
-  : SEEnvironment(bg.GetSubstances())
+  : SEEnvironment(bg.GetSubstanceManager())
   , m_data(bg)
 {
   Clear();
@@ -182,7 +182,7 @@ void Environment::StateChange()
   for (auto s : GetConditions().GetAmbientGases()) {
     SESubstance& sub = s->GetSubstance();
     totalFraction += s->GetFractionAmount().GetValue();
-    m_data.GetSubstances().AddActiveSubstance(sub);
+    m_data.GetSubstanceManager().AddActiveSubstance(sub);
   }
   if (std::abs(1.0 - totalFraction) > 1e-6) //Allow for a little bit of numerical error
   {
@@ -212,7 +212,7 @@ void Environment::StateChange()
       Error("Ignoring environment aerosol as it does not have any aerosol data : "s + sub.GetName());
       continue;
     }
-    m_data.GetSubstances().AddActiveSubstance(sub);
+    m_data.GetSubstanceManager().AddActiveSubstance(sub);
     SELiquidSubstanceQuantity* subQ = m_AmbientAerosols->GetSubstanceQuantity(sub);
     subQ->GetConcentration().Set(s->GetConcentration());
   }

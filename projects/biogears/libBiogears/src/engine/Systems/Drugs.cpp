@@ -125,7 +125,7 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
   BioGearsSystem::LoadState();
 
   for (const CDM::SubstanceBolusStateData& bData : in.BolusAdministration()) {
-    SESubstance* sub = m_data.GetSubstances().GetSubstance(bData.Substance());
+    SESubstance* sub = m_data.GetSubstanceManager().GetSubstance(bData.Substance());
     if (sub == nullptr) {
       /// \error Error: Unable to find substance for IV bolus administration
       m_ss << "Unable to find substance " << bData.Substance();
@@ -138,7 +138,7 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
   }
 
   for (const CDM::TransmucosalStateData& otData : in.TransmucosalStates()) {
-    SESubstance* sub = m_data.GetSubstances().GetSubstance(otData.Substance());
+    SESubstance* sub = m_data.GetSubstanceManager().GetSubstance(otData.Substance());
     if (sub == nullptr) {
       m_ss << "Unable to find subtance " << otData.Substance();
       Error(m_ss.str(), "Drugs::Load::OralAdministration");
@@ -150,7 +150,7 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
   }
 
   for (const CDM::NasalStateData& nData : in.NasalStates()) {
-    SESubstance* sub = m_data.GetSubstances().GetSubstance(nData.Substance());
+    SESubstance* sub = m_data.GetSubstanceManager().GetSubstance(nData.Substance());
     if (sub == nullptr) {
       m_ss << "Unable to find subtance " << nData.Substance();
       Error(m_ss.str(), "Drugs::Load::NasalAdministration");
@@ -210,9 +210,9 @@ void Drugs::SetUp()
   m_liverTissue = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Liver);
   m_IVToVenaCava = m_data.GetCircuits().GetCardiovascularCircuit().GetPath(BGE::CardiovascularPath::IVToVenaCava);
   //Need to set up pointers for Sarin and Pralidoxime to handle nerve agent events since they use a different method to calculate effects
-  m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
-  m_Pralidoxime = m_data.GetSubstances().GetSubstance("Pralidoxime");
-  m_Atropine = m_data.GetSubstances().GetSubstance("Atropine");
+  m_Sarin = m_data.GetSubstanceManager().GetSubstance("Sarin");
+  m_Pralidoxime = m_data.GetSubstanceManager().GetSubstance("Pralidoxime");
+  m_Atropine = m_data.GetSubstanceManager().GetSubstance("Atropine");
   DELETE_MAP_SECOND(m_BolusAdministrations);
 }
 
@@ -685,8 +685,8 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         */
 
         //Check for HTR
-        SESubstance* m_AntigenA = m_data.GetSubstances().GetSubstance("Antigen_A");
-        SESubstance* m_AntigenB = m_data.GetSubstances().GetSubstance("Antigen_B");
+        SESubstance* m_AntigenA = m_data.GetSubstanceManager().GetSubstance("Antigen_A");
+        SESubstance* m_AntigenB = m_data.GetSubstanceManager().GetSubstance("Antigen_B");
         const double AntigenA_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
         const double AntigenB_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenB)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
 
@@ -942,16 +942,16 @@ void Drugs::CalculateDrugEffects()
   double antibioticEffect_Per_hr = 0.0;
 
   //Naloxone reversal--we will need to get more generic with this code if we add other reversal agents
-  SESubstance* m_Naloxone = m_data.GetSubstances().GetSubstance("Naloxone");
+  SESubstance* m_Naloxone = m_data.GetSubstanceManager().GetSubstance("Naloxone");
   double inhibitorConcentration_ug_Per_mL = 0.0;
   double inhibitorConstant_ug_Per_mL = 1.0; //Can't initialize to 0 lest we divide by 0.  Won't matter what it is when there is no inhibitor because this will get mulitplied by 0 anyway
-  if (m_data.GetSubstances().IsActive(*m_Naloxone)) {
+  if (m_data.GetSubstanceManager().IsActive(*m_Naloxone)) {
     inhibitorConstant_ug_Per_mL = m_Naloxone->GetPD().GetCentralNervousModifier().GetEC50().GetValue(MassPerVolumeUnit::ug_Per_mL);
     inhibitorConcentration_ug_Per_mL = m_Naloxone->GetEffectSiteConcentration(MassPerVolumeUnit::ug_Per_mL);
   }
 
   //Loop over substances
-  for (SESubstance* sub : m_data.GetSubstances().GetActiveDrugs()) {
+  for (SESubstance* sub : m_data.GetSubstanceManager().GetActiveDrugs()) {
     if (!sub->HasPD())
       continue;
 
@@ -1048,8 +1048,8 @@ void Drugs::CalculateDrugEffects()
   //we cannot "contact" the eye, but scale them differently.  Sarin pupil effects are large and fast, so it's reasonable to
   //overwrite other drug pupil effects (and we probably aren't modeling opioid addicts inhaling Sarin)
   // 
-  //if (m_data.GetSubstances().IsActive(*m_data.GetSubstances().GetSubstance("Sarin"))) {
-  //  leftPupilSizeResponseLevel = GeneralMath::LogisticFunction(-1, 0.0475, 250, m_data.GetSubstances().GetSubstance("Sarin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_L));
+  //if (m_data.GetSubstanceManager().IsActive(*m_data.GetSubstanceManager().GetSubstance("Sarin"))) {
+  //  leftPupilSizeResponseLevel = GeneralMath::LogisticFunction(-1, 0.0475, 250, m_data.GetSubstanceManager().GetSubstance("Sarin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_L));
   //  rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
   //}
   ////Bound pupil modifiers
@@ -1098,7 +1098,7 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
   double plasmaVolume_mL = m_data.GetBloodChemistrySystem().GetPlasmaVolume(VolumeUnit::mL);
   double rate_Per_s = 0.0;
 
-  for (SESubstance* sub : m_data.GetSubstances().GetActiveDrugs()) {
+  for (SESubstance* sub : m_data.GetSubstanceManager().GetActiveDrugs()) {
 
     //--Assume that vena cava concentration is representative blood average (this is what we do in BloodChemistry) -
     double bloodPlasmaRatio = 1.0; //Assume equal distribution for subs without a defined BP ratio
@@ -1141,7 +1141,7 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
       sub->GetEffectSiteConcentration().SetValue(effectConcentration, MassPerVolumeUnit::ug_Per_mL);
     }
 
-    if (sub->GetName() == "Sarin" && (m_data.GetSubstances().IsActive(*m_Sarin)))
+    if (sub->GetName() == "Sarin" && (m_data.GetSubstanceManager().IsActive(*m_Sarin)))
       SarinKinetics();
   }
 }
@@ -1190,13 +1190,13 @@ void Drugs::CalculateSubstanceClearance()
     LLIM(OtherSystemicVolumeCleared_mL, 0.);
 
     //Hepatic Clearance
-    m_data.GetSubstances().CalculateGenericClearance(HepaticVolumeCleared_mL, *m_liverTissue, *sub);
+    m_data.GetSubstanceManager().CalculateGenericClearance(HepaticVolumeCleared_mL, *m_liverTissue, *sub);
 
     //Systemic Clearance
-    m_data.GetSubstances().CalculateGenericClearance(OtherSystemicVolumeCleared_mL, *m_venaCavaVascular, *sub);
+    m_data.GetSubstanceManager().CalculateGenericClearance(OtherSystemicVolumeCleared_mL, *m_venaCavaVascular, *sub);
 
     //Hepatic Excretion
-    m_data.GetSubstances().CalculateGenericExcretion(LiverVascularFlow_mL_Per_s, *m_liverTissue, *sub, clearance.GetFractionExcretedInFeces().GetValue(), m_dt_s);
+    m_data.GetSubstanceManager().CalculateGenericExcretion(LiverVascularFlow_mL_Per_s, *m_liverTissue, *sub, clearance.GetFractionExcretedInFeces().GetValue(), m_dt_s);
   }
 }
 
@@ -1219,7 +1219,7 @@ void Drugs::SarinKinetics()
   double PralidoximeConcentration_nM = 0.0;
   double PralidoximeMolarMass_g_Per_umol = m_Pralidoxime->GetMolarMass(MassPerAmountUnit::g_Per_umol);
   double PralidoximeConcentration_g_Per_L = 0.0;
-  if ((m_data.GetSubstances().IsActive(*m_Pralidoxime)) && (m_Pralidoxime->HasPlasmaConcentration())) //Substance can get flagged active w/ null plasma concentration so need to check both for stabilization step
+  if ((m_data.GetSubstanceManager().IsActive(*m_Pralidoxime)) && (m_Pralidoxime->HasPlasmaConcentration())) //Substance can get flagged active w/ null plasma concentration so need to check both for stabilization step
   {
     PralidoximeConcentration_g_Per_L = m_Pralidoxime->GetPlasmaConcentration(MassPerVolumeUnit::g_Per_L);
     PralidoximeConcentration_nM = PralidoximeConcentration_g_Per_L / PralidoximeMolarMass_g_Per_umol * 1000;
@@ -1258,7 +1258,7 @@ void Drugs::SarinKinetics()
   m_SarinRbcAcetylcholinesteraseComplex_nM = SarinRbcAche_nM;
   m_AgedRbcAcetylcholinesterase_nM = AgedSarin_nM;
 
-  if (m_data.GetSubstances().IsActive(*m_Pralidoxime))
+  if (m_data.GetSubstanceManager().IsActive(*m_Pralidoxime))
     m_Pralidoxime->GetPlasmaConcentration().SetValue(PralidoximeConcentration_nM / 1000 * PralidoximeMolarMass_g_Per_umol, MassPerVolumeUnit::g_Per_L);
 }
 

@@ -42,7 +42,7 @@ auto AnesthesiaMachine::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Anest
 }
 
 AnesthesiaMachine::AnesthesiaMachine(BioGearsEngine& bg)
-  : SEAnesthesiaMachine(bg.GetSubstances())
+  : SEAnesthesiaMachine(bg.GetSubstanceManager())
   , m_data(bg)
 {
   Clear();
@@ -179,18 +179,18 @@ void AnesthesiaMachine::SetUp()
 
   // Compartments
   m_ambient = m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient);
-  m_ambientCO2 = m_ambient->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
-  m_ambientN2 = m_ambient->GetSubstanceQuantity(m_data.GetSubstances().GetN2());
-  m_ambientO2 = m_ambient->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
+  m_ambientCO2 = m_ambient->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
+  m_ambientN2 = m_ambient->GetSubstanceQuantity(m_data.GetSubstanceManager().GetN2());
+  m_ambientO2 = m_ambient->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
 
   m_gasSource = m_data.GetCompartments().GetGasCompartment(BGE::AnesthesiaMachineCompartment::GasSource);
-  m_gasSourceCO2 = m_gasSource->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
-  m_gasSourceN2 = m_gasSource->GetSubstanceQuantity(m_data.GetSubstances().GetN2());
-  m_gasSourceO2 = m_gasSource->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
+  m_gasSourceCO2 = m_gasSource->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
+  m_gasSourceN2 = m_gasSource->GetSubstanceQuantity(m_data.GetSubstanceManager().GetN2());
+  m_gasSourceO2 = m_gasSource->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
 
   m_scrubber = m_data.GetCompartments().GetGasCompartment(BGE::AnesthesiaMachineCompartment::Scrubber);
-  m_scubberCO2 = m_scrubber->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
-  m_scrubberN2 = m_scrubber->GetSubstanceQuantity(m_data.GetSubstances().GetN2());
+  m_scubberCO2 = m_scrubber->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
+  m_scrubberN2 = m_scrubber->GetSubstanceQuantity(m_data.GetSubstanceManager().GetN2());
 
   // Circuit Nodes
   m_nVentilator = m_data.GetCircuits().GetAnesthesiaMachineCircuit().GetNode(BGE::AnesthesiaMachineNode::Ventilator);

@@ -173,10 +173,10 @@ void Energy::SetUp()
   m_PatientActions = &m_data.GetActions().GetPatientActions();
   m_Patient = &m_data.GetPatient();
 
-  m_AortaHCO3 = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(m_data.GetSubstances().GetHCO3());
-  m_SkinSodium = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular)->GetSubstanceQuantity(m_data.GetSubstances().GetSodium());
-  m_SkinChloride = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular)->GetSubstanceQuantity(m_data.GetSubstances().GetChloride());
-  m_SkinPotassium = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular)->GetSubstanceQuantity(m_data.GetSubstances().GetPotassium());
+  m_AortaHCO3 = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(m_data.GetSubstanceManager().GetHCO3());
+  m_SkinSodium = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular)->GetSubstanceQuantity(m_data.GetSubstanceManager().GetSodium());
+  m_SkinChloride = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular)->GetSubstanceQuantity(m_data.GetSubstanceManager().GetChloride());
+  m_SkinPotassium = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular)->GetSubstanceQuantity(m_data.GetSubstanceManager().GetPotassium());
   //Circuit elements
   //Circuits
   m_TemperatureCircuit = &m_data.GetCircuits().GetTemperatureCircuit();
@@ -624,9 +624,9 @@ void Energy::CalculateSweatRate()
   GetSweatRate().SetValue(sweatRate_kg_Per_s, MassPerTimeUnit::kg_Per_s);
 
   //Calculate mass of ions lost in sweat (sodium, potassium, and chloride):  Converts kg sweat lost -> L sweat lost -> mmol ion lost -> mg ion lost
-  double sodiumLost_mg = massLost_kg / sweatDensity.GetValue(MassPerVolumeUnit::kg_Per_L) * sweatSodiumConcentration_mM * m_data.GetSubstances().GetSodium().GetMolarMass(MassPerAmountUnit::mg_Per_mmol);
-  double potassiumLost_mg = massLost_kg / sweatDensity.GetValue(MassPerVolumeUnit::kg_Per_L) * sweatPotassiumConcentration_mM * m_data.GetSubstances().GetPotassium().GetMolarMass(MassPerAmountUnit::mg_Per_mmol);
-  double chlorideLost_mg = massLost_kg / sweatDensity.GetValue(MassPerVolumeUnit::kg_Per_L) * sweatChlorideConcentration_mM * m_data.GetSubstances().GetChloride().GetMolarMass(MassPerAmountUnit::mg_Per_mmol);
+  double sodiumLost_mg = massLost_kg / sweatDensity.GetValue(MassPerVolumeUnit::kg_Per_L) * sweatSodiumConcentration_mM * m_data.GetSubstanceManager().GetSodium().GetMolarMass(MassPerAmountUnit::mg_Per_mmol);
+  double potassiumLost_mg = massLost_kg / sweatDensity.GetValue(MassPerVolumeUnit::kg_Per_L) * sweatPotassiumConcentration_mM * m_data.GetSubstanceManager().GetPotassium().GetMolarMass(MassPerAmountUnit::mg_Per_mmol);
+  double chlorideLost_mg = massLost_kg / sweatDensity.GetValue(MassPerVolumeUnit::kg_Per_L) * sweatChlorideConcentration_mM * m_data.GetSubstanceManager().GetChloride().GetMolarMass(MassPerAmountUnit::mg_Per_mmol);
 
   //Decrement amount of each ion in the skin extracellular compartment, track the cumulative amount removed for output, and balance (i.e. update concentration) remaining levels
   m_SkinSodium->GetMass().IncrementValue(-sodiumLost_mg, MassUnit::mg);

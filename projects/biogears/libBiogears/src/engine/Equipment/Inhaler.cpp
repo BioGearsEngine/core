@@ -39,7 +39,7 @@ auto Inhaler::make_unique(BioGearsEngine& bg) -> std::unique_ptr<Inhaler>
 }
 
 Inhaler::Inhaler(BioGearsEngine& bg)
-  : SEInhaler(bg.GetSubstances())
+  : SEInhaler(bg.GetSubstanceManager())
   , m_data(bg)
 {
   Clear();
@@ -202,7 +202,7 @@ void Inhaler::Administer()
   m_Mouthpiece->Balance(BalanceGasBy::VolumeFraction);
 
   // Add the dose substance to the list of active substances to be tracked in BioGears
-  m_data.GetSubstances().AddActiveSubstance((SESubstance&)*m_Substance);
+  m_data.GetSubstanceManager().AddActiveSubstance((SESubstance&)*m_Substance);
 
   // Get the inhaler node volume
   double dVolume_L = m_Mouthpiece->GetVolume(VolumeUnit::L);

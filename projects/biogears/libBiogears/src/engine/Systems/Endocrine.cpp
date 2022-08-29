@@ -91,13 +91,13 @@ void Endocrine::SetUp()
   SELiquidCompartment* aorta = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta);
   SELiquidCompartment* rkidney = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightEfferentArteriole);
   SELiquidCompartment* lkidney = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftEfferentArteriole);
-  m_AortaEpinephrine = aorta->GetSubstanceQuantity(m_data.GetSubstances().GetEpi());
-  m_rKidneyEpinephrine = rkidney->GetSubstanceQuantity(m_data.GetSubstances().GetEpi());
-  m_lKidneyEpinephrine = lkidney->GetSubstanceQuantity(m_data.GetSubstances().GetEpi());
-  m_AortaGlucose = aorta->GetSubstanceQuantity(m_data.GetSubstances().GetGlucose());
-  SESubstance* insulin = &m_data.GetSubstances().GetInsulin();
+  m_AortaEpinephrine = aorta->GetSubstanceQuantity(m_data.GetSubstanceManager().GetEpi());
+  m_rKidneyEpinephrine = rkidney->GetSubstanceQuantity(m_data.GetSubstanceManager().GetEpi());
+  m_lKidneyEpinephrine = lkidney->GetSubstanceQuantity(m_data.GetSubstanceManager().GetEpi());
+  m_AortaGlucose = aorta->GetSubstanceQuantity(m_data.GetSubstanceManager().GetGlucose());
+  SESubstance* insulin = &m_data.GetSubstanceManager().GetInsulin();
   m_InsulinMolarMass_g_Per_mol = insulin->GetMolarMass(MassPerAmountUnit::g_Per_mol);
-  SESubstance* glucagon = &m_data.GetSubstances().GetGlucagon();
+  SESubstance* glucagon = &m_data.GetSubstanceManager().GetGlucagon();
   m_GlucagonMolarMass_g_Per_mol = glucagon->GetMolarMass(MassPerAmountUnit::g_Per_mol);
   m_SplanchnicInsulin = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Splanchnic)->GetSubstanceQuantity(*insulin);
   m_SplanchnicGlucagon = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Splanchnic)->GetSubstanceQuantity(*glucagon);
@@ -112,7 +112,7 @@ void Endocrine::SimulationPhaseChange()
         diabetesScale = 1 - m_data.GetConditions().GetDiabetesType1()->GetInsulinProductionSeverity().GetValue();
 
       const std::vector<SELiquidCompartment*>& vascular = m_data.GetCompartments().GetVascularLeafCompartments();
-      SESubstance& insulin = m_data.GetSubstances().GetInsulin();
+      SESubstance& insulin = m_data.GetSubstanceManager().GetInsulin();
 
       SELiquidSubstanceQuantity* subQ;
 

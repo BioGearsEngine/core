@@ -146,7 +146,7 @@ void BloodChemistry::Initialize()
   m_RhFactorMismatch_ct = 0.0; // Only matters when patient is negative type
   m_RhTransfusionReactionVolume_mL = 0.0;
   m_donorRBC_ct = 0.0;
-  m_patientRBC_ct = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) * m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::uL);
+  m_patientRBC_ct = m_venaCava->GetSubstanceQuantity(m_data.GetSubstanceManager().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL) * m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::uL);
   m_2Agglutinate_ct = 0.0;
   m_p3Agglutinate_ct = 0.0;
   m_d3Agglutinate_ct = 0.0;
@@ -277,36 +277,36 @@ void BloodChemistry::SetUp()
   m_dt_hr = m_data.GetTimeStep().GetValue(TimeUnit::hr);
 
   //Substance
-  SESubstance* albumin = &m_data.GetSubstances().GetAlbumin();
-  SESubstance* aminoAcids = &m_data.GetSubstances().GetAminoAcids();
-  SESubstance* bicarbonate = &m_data.GetSubstances().GetHCO3();
-  SESubstance* calcium = &m_data.GetSubstances().GetCalcium();
-  SESubstance* chloride = &m_data.GetSubstances().GetChloride();
-  SESubstance* creatinine = &m_data.GetSubstances().GetCreatinine();
-  SESubstance* epinephrine = &m_data.GetSubstances().GetEpi();
-  SESubstance* glucagon = &m_data.GetSubstances().GetGlucagon();
-  SESubstance* glucose = &m_data.GetSubstances().GetGlucose();
-  SESubstance* insulin = &m_data.GetSubstances().GetInsulin();
-  SESubstance* ketones = &m_data.GetSubstances().GetKetones();
-  SESubstance* lactate = &m_data.GetSubstances().GetLactate();
-  m_Ondansetron = m_data.GetSubstances().GetSubstance("Ondansetron");
-  SESubstance* potassium = &m_data.GetSubstances().GetPotassium();
-  SESubstance* rbc = &m_data.GetSubstances().GetRBC();
-  SESubstance* sodium = &m_data.GetSubstances().GetSodium();
-  SESubstance* triaclyglycerol = &m_data.GetSubstances().GetTriacylglycerol();
-  SESubstance* urea = &m_data.GetSubstances().GetUrea();
+  SESubstance* albumin = &m_data.GetSubstanceManager().GetAlbumin();
+  SESubstance* aminoAcids = &m_data.GetSubstanceManager().GetAminoAcids();
+  SESubstance* bicarbonate = &m_data.GetSubstanceManager().GetHCO3();
+  SESubstance* calcium = &m_data.GetSubstanceManager().GetCalcium();
+  SESubstance* chloride = &m_data.GetSubstanceManager().GetChloride();
+  SESubstance* creatinine = &m_data.GetSubstanceManager().GetCreatinine();
+  SESubstance* epinephrine = &m_data.GetSubstanceManager().GetEpi();
+  SESubstance* glucagon = &m_data.GetSubstanceManager().GetGlucagon();
+  SESubstance* glucose = &m_data.GetSubstanceManager().GetGlucose();
+  SESubstance* insulin = &m_data.GetSubstanceManager().GetInsulin();
+  SESubstance* ketones = &m_data.GetSubstanceManager().GetKetones();
+  SESubstance* lactate = &m_data.GetSubstanceManager().GetLactate();
+  m_Ondansetron = m_data.GetSubstanceManager().GetSubstance("Ondansetron");
+  SESubstance* potassium = &m_data.GetSubstanceManager().GetPotassium();
+  SESubstance* rbc = &m_data.GetSubstanceManager().GetRBC();
+  SESubstance* sodium = &m_data.GetSubstanceManager().GetSodium();
+  SESubstance* triaclyglycerol = &m_data.GetSubstanceManager().GetTriacylglycerol();
+  SESubstance* urea = &m_data.GetSubstanceManager().GetUrea();
 
   m_aorta = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta);
-  m_aortaO2 = m_aorta->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
-  m_aortaCO2 = m_aorta->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
-  m_aortaBicarbonate = m_aorta->GetSubstanceQuantity(m_data.GetSubstances().GetHCO3());
+  m_aortaO2 = m_aorta->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
+  m_aortaCO2 = m_aorta->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
+  m_aortaBicarbonate = m_aorta->GetSubstanceQuantity(m_data.GetSubstanceManager().GetHCO3());
 
-  m_brainO2 = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Brain)->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
-  m_myocardiumO2 = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Myocardium)->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
+  m_brainO2 = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Brain)->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
+  m_myocardiumO2 = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Myocardium)->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
 
   m_venaCava = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava);
-  m_venaCavaO2 = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
-  m_venaCavaCO2 = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
+  m_venaCavaO2 = m_venaCava->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
+  m_venaCavaCO2 = m_venaCava->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
   m_venaCavaAlbumin = m_venaCava->GetSubstanceQuantity(*albumin);
   m_venaCavaAminoAcids = m_venaCava->GetSubstanceQuantity(*aminoAcids);
   m_venaCavaBicarbonate = m_venaCava->GetSubstanceQuantity(*bicarbonate);
@@ -328,12 +328,12 @@ void BloodChemistry::SetUp()
   GetRedBloodCellCount().SetValue(m_venaCavaRBC->GetMolarity(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
 
   SELiquidCompartment* pulmonaryArteries = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::PulmonaryArteries);
-  m_pulmonaryArteriesO2 = pulmonaryArteries->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
-  m_pulmonaryArteriesCO2 = pulmonaryArteries->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
+  m_pulmonaryArteriesO2 = pulmonaryArteries->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
+  m_pulmonaryArteriesCO2 = pulmonaryArteries->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
 
   SELiquidCompartment* pulmonaryVeins = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::PulmonaryVeins);
-  m_pulmonaryVeinsO2 = pulmonaryVeins->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
-  m_pulmonaryVeinsCO2 = pulmonaryVeins->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
+  m_pulmonaryVeinsO2 = pulmonaryVeins->GetSubstanceQuantity(m_data.GetSubstanceManager().GetO2());
+  m_pulmonaryVeinsCO2 = pulmonaryVeins->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO2());
 
   m_PatientActions = &m_data.GetActions().GetPatientActions();
 
@@ -374,8 +374,8 @@ void BloodChemistry::Process()
   GetOxygenSaturation().Set(m_aortaO2->GetSaturation());
   GetOxygenVenousSaturation().Set(m_venaCavaO2->GetSaturation());
   GetCarbonDioxideSaturation().Set(m_aortaCO2->GetSaturation());
-  if (m_aortaCO == nullptr && m_data.GetSubstances().IsActive(m_data.GetSubstances().GetCO()))
-    m_aortaCO = m_aorta->GetSubstanceQuantity(m_data.GetSubstances().GetCO());
+  if (m_aortaCO == nullptr && m_data.GetSubstanceManager().IsActive(m_data.GetSubstanceManager().GetCO()))
+    m_aortaCO = m_aorta->GetSubstanceQuantity(m_data.GetSubstanceManager().GetCO());
   if (m_aortaCO != nullptr) {
     GetCarbonMonoxideSaturation().Set(m_aortaCO->GetSaturation());
     GetPulseOximetry().SetValue(GetOxygenSaturation().GetValue() + GetCarbonMonoxideSaturation().GetValue());
@@ -389,25 +389,25 @@ void BloodChemistry::Process()
   // Step 2) Convert to moles using the molar weight of the bound species (molar mass of bound species includes the mass of the bound gas and the mass of the unbound species).
   // Step 3) Covert moles of the bound species to moles of the unbound species. i.e.multiply by 1 (this step is implied)
   // Step 4) Convert moles of the unbound species to mass in order to get a total mass of hemoglobin (as opposed to a total mass of hemoglobin plus the bound gases).
-  double totalHb_g = m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHb(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g);
-  double totalHbO2_g = (m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHbO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstances().GetHbO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstances().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
-  double totalHbCO2_g = (m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHbCO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstances().GetHbCO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstances().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
-  double totalHBO2CO2_g = (m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHbO2CO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstances().GetHbO2CO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstances().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
+  double totalHb_g = m_data.GetSubstanceManager().GetSubstanceMass(m_data.GetSubstanceManager().GetHb(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g);
+  double totalHbO2_g = (m_data.GetSubstanceManager().GetSubstanceMass(m_data.GetSubstanceManager().GetHbO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstanceManager().GetHbO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstanceManager().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
+  double totalHbCO2_g = (m_data.GetSubstanceManager().GetSubstanceMass(m_data.GetSubstanceManager().GetHbCO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstanceManager().GetHbCO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstanceManager().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
+  double totalHBO2CO2_g = (m_data.GetSubstanceManager().GetSubstanceMass(m_data.GetSubstanceManager().GetHbO2CO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstanceManager().GetHbO2CO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstanceManager().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
   double totalHBCO_g = 0.0;
   if (m_aortaCO != nullptr)
-    totalHBCO_g = (m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHbCO(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstances().GetHbCO().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstances().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
+    totalHBCO_g = (m_data.GetSubstanceManager().GetSubstanceMass(m_data.GetSubstanceManager().GetHbCO(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstanceManager().GetHbCO().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstanceManager().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
 
   double totalHemoglobinO2Hemoglobin_g = totalHb_g + totalHbO2_g + totalHbCO2_g + totalHBO2CO2_g + totalHBCO_g;
   GetHemoglobinContent().SetValue(totalHemoglobinO2Hemoglobin_g, MassUnit::g);
   if (totalHemoglobinO2Hemoglobin_g < (13.0 * m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::dL))) {
     // 13.5 g/dL is considered low Hb content
     double hemoglobinIncrease_g = (0.63 / 86400.0) * m_data.GetTimeStep().GetValue(TimeUnit::s); //0.63 g Hb per day (in seconds is 86400)
-    m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetHb())->GetMass().IncrementValue(hemoglobinIncrease_g, MassUnit::g);
+    m_venaCava->GetSubstanceQuantity(m_data.GetSubstanceManager().GetHb())->GetMass().IncrementValue(hemoglobinIncrease_g, MassUnit::g);
   }
   m_HbLostToUrine_g = GetHemoglobinContent().GetValue(MassUnit::g);
 
   // Calculate Blood Cell Counts
-  SESubstance& rbc = m_data.GetSubstances().GetRBC();
+  SESubstance& rbc = m_data.GetSubstanceManager().GetRBC();
   double TotalBloodVolume_mL = m_data.GetCardiovascularSystem().GetBloodVolume(VolumeUnit::mL);
 
   if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction)) {
@@ -419,7 +419,7 @@ void BloodChemistry::Process()
   }
 
   //set white blood cell count
-  const double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+  const double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstanceManager().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
   GetWhiteBloodCellCount().SetValue(wbcCount_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   const double RedBloodCellCount_ct_Per_uL = m_venaCavaRBC->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
@@ -432,28 +432,28 @@ void BloodChemistry::Process()
 
   // Concentrations
   double albuminConcentration_ug_Per_mL = m_venaCavaAlbumin->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
-  m_data.GetSubstances().GetAlbumin().GetBloodConcentration().Set(m_venaCavaAlbumin->GetConcentration());
-  m_data.GetSubstances().GetAminoAcids().GetBloodConcentration().Set(m_venaCavaAminoAcids->GetConcentration());
-  m_data.GetSubstances().GetHCO3().GetBloodConcentration().Set(m_venaCavaBicarbonate->GetConcentration());
+  m_data.GetSubstanceManager().GetAlbumin().GetBloodConcentration().Set(m_venaCavaAlbumin->GetConcentration());
+  m_data.GetSubstanceManager().GetAminoAcids().GetBloodConcentration().Set(m_venaCavaAminoAcids->GetConcentration());
+  m_data.GetSubstanceManager().GetHCO3().GetBloodConcentration().Set(m_venaCavaBicarbonate->GetConcentration());
   GetBloodUreaNitrogenConcentration().SetValue(m_venaCavaUrea->GetConcentration(MassPerVolumeUnit::ug_Per_mL) / 2.14, MassPerVolumeUnit::ug_Per_mL);
-  m_data.GetSubstances().GetCalcium().GetBloodConcentration().Set(m_venaCavaCalcium->GetConcentration());
-  m_data.GetSubstances().GetChloride().GetBloodConcentration().Set(m_venaCavaChloride->GetConcentration());
-  m_data.GetSubstances().GetCreatinine().GetBloodConcentration().Set(m_venaCavaCreatinine->GetConcentration());
-  m_data.GetSubstances().GetEpi().GetBloodConcentration().Set(m_venaCavaEpinephrine->GetConcentration());
-  m_data.GetSubstances().GetGlobulin().GetBloodConcentration().SetValue(albuminConcentration_ug_Per_mL * 1.6 - albuminConcentration_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL); // 1.6 comes from reading http://www.drkaslow.com/html/proteins_-_albumin-_globulins-_etc.html
-  m_data.GetSubstances().GetGlucagon().GetBloodConcentration().Set(m_venaCavaGlucagon->GetConcentration());
-  m_data.GetSubstances().GetGlucose().GetBloodConcentration().Set(m_venaCavaGlucose->GetConcentration());
+  m_data.GetSubstanceManager().GetCalcium().GetBloodConcentration().Set(m_venaCavaCalcium->GetConcentration());
+  m_data.GetSubstanceManager().GetChloride().GetBloodConcentration().Set(m_venaCavaChloride->GetConcentration());
+  m_data.GetSubstanceManager().GetCreatinine().GetBloodConcentration().Set(m_venaCavaCreatinine->GetConcentration());
+  m_data.GetSubstanceManager().GetEpi().GetBloodConcentration().Set(m_venaCavaEpinephrine->GetConcentration());
+  m_data.GetSubstanceManager().GetGlobulin().GetBloodConcentration().SetValue(albuminConcentration_ug_Per_mL * 1.6 - albuminConcentration_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL); // 1.6 comes from reading http://www.drkaslow.com/html/proteins_-_albumin-_globulins-_etc.html
+  m_data.GetSubstanceManager().GetGlucagon().GetBloodConcentration().Set(m_venaCavaGlucagon->GetConcentration());
+  m_data.GetSubstanceManager().GetGlucose().GetBloodConcentration().Set(m_venaCavaGlucose->GetConcentration());
   double HemoglobinConcentration = totalHemoglobinO2Hemoglobin_g / TotalBloodVolume_mL;
-  m_data.GetSubstances().GetHb().GetBloodConcentration().SetValue(HemoglobinConcentration, MassPerVolumeUnit::g_Per_mL);
-  m_data.GetSubstances().GetInsulin().GetBloodConcentration().Set(m_venaCavaInsulin->GetConcentration());
-  m_data.GetSubstances().GetKetones().GetBloodConcentration().Set(m_venaCavaKetones->GetConcentration());
-  m_data.GetSubstances().GetLactate().GetBloodConcentration().Set(m_venaCavaLactate->GetConcentration());
-  m_data.GetSubstances().GetPotassium().GetBloodConcentration().Set(m_venaCavaPotassium->GetConcentration());
-  m_data.GetSubstances().GetRBC().GetBloodConcentration().Set(m_venaCavaRBC->GetConcentration());
-  m_data.GetSubstances().GetSodium().GetBloodConcentration().Set(m_venaCavaSodium->GetConcentration());
+  m_data.GetSubstanceManager().GetHb().GetBloodConcentration().SetValue(HemoglobinConcentration, MassPerVolumeUnit::g_Per_mL);
+  m_data.GetSubstanceManager().GetInsulin().GetBloodConcentration().Set(m_venaCavaInsulin->GetConcentration());
+  m_data.GetSubstanceManager().GetKetones().GetBloodConcentration().Set(m_venaCavaKetones->GetConcentration());
+  m_data.GetSubstanceManager().GetLactate().GetBloodConcentration().Set(m_venaCavaLactate->GetConcentration());
+  m_data.GetSubstanceManager().GetPotassium().GetBloodConcentration().Set(m_venaCavaPotassium->GetConcentration());
+  m_data.GetSubstanceManager().GetRBC().GetBloodConcentration().Set(m_venaCavaRBC->GetConcentration());
+  m_data.GetSubstanceManager().GetSodium().GetBloodConcentration().Set(m_venaCavaSodium->GetConcentration());
   GetTotalProteinConcentration().SetValue(albuminConcentration_ug_Per_mL * 1.6, MassPerVolumeUnit::ug_Per_mL);
-  m_data.GetSubstances().GetTriacylglycerol().GetBloodConcentration().Set(m_venaCavaTriacylglycerol->GetConcentration());
-  m_data.GetSubstances().GetUrea().GetBloodConcentration().Set(m_venaCavaUrea->GetConcentration());
+  m_data.GetSubstanceManager().GetTriacylglycerol().GetBloodConcentration().Set(m_venaCavaTriacylglycerol->GetConcentration());
+  m_data.GetSubstanceManager().GetUrea().GetBloodConcentration().Set(m_venaCavaUrea->GetConcentration());
 
   double otherIons_mmol_Per_L = -5.4; //Na, K, and Cl baseline concentrations give SID = 45.83, we assume baseline SID = 40.5, thus "other ions" (i.e. Mg, Ca, Ketones) make up -5.3 mmol_Per_L equivalent of charge
   double strongIonDifference_mmol_Per_L = m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) - (m_venaCavaChloride->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + (m_venaCavaLactate->GetMolarity(AmountPerVolumeUnit::mmol_Per_L))) + otherIons_mmol_Per_L;
@@ -488,9 +488,9 @@ void BloodChemistry::Process()
   // Total up all active substances
   double bloodMass_ug;
   double tissueMass_ug;
-  for (SESubstance* sub : m_data.GetSubstances().GetActiveSubstances()) {
-    bloodMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::ug);
-    tissueMass_ug = m_data.GetSubstances().GetSubstanceMass(*sub, m_data.GetCompartments().GetTissueLeafCompartments(), MassUnit::ug);
+  for (SESubstance* sub : m_data.GetSubstanceManager().GetActiveSubstances()) {
+    bloodMass_ug = m_data.GetSubstanceManager().GetSubstanceMass(*sub, m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::ug);
+    tissueMass_ug = m_data.GetSubstanceManager().GetSubstanceMass(*sub, m_data.GetCompartments().GetTissueLeafCompartments(), MassUnit::ug);
     sub->GetMassInBody().SetValue(bloodMass_ug + tissueMass_ug, MassUnit::ug);
     sub->GetMassInBlood().SetValue(bloodMass_ug, MassUnit::ug);
     sub->GetMassInTissue().SetValue(tissueMass_ug, MassUnit::ug);
@@ -697,7 +697,7 @@ void BloodChemistry::CheckRadiationSymptoms()
    //get lymphocyte value:
    double viralLoad = GetViralLoad().GetValue(AmountPerVolumeUnit::ct_Per_uL);
    double ondansetron_mg_Per_L = 0.0;
-   if (m_data.GetSubstances().IsActive(*m_Ondansetron)) {
+   if (m_data.GetSubstanceManager().IsActive(*m_Ondansetron)) {
      ondansetron_mg_Per_L = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_Ondansetron)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_L);
    }
    //mild
@@ -994,25 +994,25 @@ bool BloodChemistry::CalculateComprehensiveMetabolicPanel(SEComprehensiveMetabol
   //for now the units on this are going to be hardcoded to be consistent with our validation data 
   /// \todo: update this to take in generic units, then allow the user to configure units on data call in the API or scenario files
   cmp.Reset();
-  double Albumin_g_Per_dL = m_data.GetSubstances().GetAlbumin().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL);
+  double Albumin_g_Per_dL = m_data.GetSubstanceManager().GetAlbumin().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL);
   cmp.GetAlbumin().SetValue(Albumin_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
   //cmp.GetALP().SetValue();
   //cmp.GetALT().SetValue();
   //cmp.GetAST().SetValue();
   double BUN_mg_Per_dL = GetBloodUreaNitrogenConcentration(MassPerVolumeUnit::mg_Per_dL);
   cmp.GetBUN().SetValue(BUN_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
-  cmp.GetCalcium().Set(m_data.GetSubstances().GetCalcium().GetBloodConcentration());
-  double CL_mmol_Per_L = m_data.GetSubstances().GetChloride().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetChloride().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
+  cmp.GetCalcium().Set(m_data.GetSubstanceManager().GetCalcium().GetBloodConcentration());
+  double CL_mmol_Per_L = m_data.GetSubstanceManager().GetChloride().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstanceManager().GetChloride().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetChloride().SetValue(CL_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   // CO2 is predominantly Bicarbonate, so going to put that in this slot
-  double HCO3_mmol_Per_L = m_data.GetSubstances().GetHCO3().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetHCO3().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
+  double HCO3_mmol_Per_L = m_data.GetSubstanceManager().GetHCO3().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstanceManager().GetHCO3().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetCO2().SetValue(HCO3_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
-  cmp.GetCreatinine().Set(m_data.GetSubstances().GetCreatinine().GetBloodConcentration());
-  double Glucose_mg_Per_dL = m_data.GetSubstances().GetGlucose().GetBloodConcentration(MassPerVolumeUnit::mg_Per_dL);
+  cmp.GetCreatinine().Set(m_data.GetSubstanceManager().GetCreatinine().GetBloodConcentration());
+  double Glucose_mg_Per_dL = m_data.GetSubstanceManager().GetGlucose().GetBloodConcentration(MassPerVolumeUnit::mg_Per_dL);
   cmp.GetGlucose().SetValue(Glucose_mg_Per_dL, MassPerVolumeUnit::mg_Per_dL);
-  double K_mmol_Per_L = m_data.GetSubstances().GetPotassium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetPotassium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
+  double K_mmol_Per_L = m_data.GetSubstanceManager().GetPotassium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstanceManager().GetPotassium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetPotassium().SetValue(K_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
-  double Sodium_mmol_Per_L = m_data.GetSubstances().GetSodium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstances().GetSodium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
+  double Sodium_mmol_Per_L = m_data.GetSubstanceManager().GetSodium().GetBloodConcentration(MassPerVolumeUnit::g_Per_L) / m_data.GetSubstanceManager().GetSodium().GetMolarMass(MassPerAmountUnit::g_Per_mmol);
   cmp.GetSodium().SetValue(Sodium_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   //cmp.GetTotalBelirubin().SetValue();
   double TotalProtein_g_Per_dL = GetTotalProteinConcentration(MassPerVolumeUnit::g_Per_dL);
@@ -1030,7 +1030,7 @@ bool BloodChemistry::CalculateArterialBloodGasAnalysis(SEArterialBloodGasAnalysi
 {
   abga.Reset();
   double arterialpH = GetArterialBloodPH().GetValue();
-  double standardBicarbonate_mmol_Per_L = m_aorta->GetSubstanceQuantity(m_data.GetSubstances().GetHCO3())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
+  double standardBicarbonate_mmol_Per_L = m_aorta->GetSubstanceQuantity(m_data.GetSubstanceManager().GetHCO3())->GetMolarity(AmountPerVolumeUnit::mmol_Per_L);
   double baseExcess_mmol_Per_L = 0.9287 * (standardBicarbonate_mmol_Per_L - 24.4 + (14.83 * (arterialpH - 7.4)));
 
   abga.GetpH().Set(arterialpH);
@@ -1053,16 +1053,16 @@ bool BloodChemistry::CalculateCompleteBloodCount(SECompleteBloodCount& cbc)
 {
   cbc.Reset();
   cbc.GetHematocrit().Set(GetHematocrit());
-  cbc.GetHemoglobin().Set(m_data.GetSubstances().GetHb().GetBloodConcentration());
+  cbc.GetHemoglobin().Set(m_data.GetSubstanceManager().GetHb().GetBloodConcentration());
   cbc.GetLymphocyteCellCount().SetValue(GetLymphocyteCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);
   cbc.GetPlateletCount().SetValue(325000, AmountPerVolumeUnit::ct_Per_uL); // Hardcoded for now, don't support PlateletCount yet
   cbc.GetMeanCorpuscularHemoglobin().SetValue(m_data.GetConfiguration().GetMeanCorpuscularHemoglobin(MassPerAmountUnit::pg_Per_ct), MassPerAmountUnit::pg_Per_ct);
-  cbc.GetMeanCorpuscularHemoglobinConcentration().SetValue(m_data.GetSubstances().GetHb().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL) / GetHematocrit().GetValue(), MassPerVolumeUnit::g_Per_dL); //Average range should be 32-36 g/dL. (https://en.wikipedia.org/wiki/Mean_corpuscular_hemoglobin_concentration)
+  cbc.GetMeanCorpuscularHemoglobinConcentration().SetValue(m_data.GetSubstanceManager().GetHb().GetBloodConcentration(MassPerVolumeUnit::g_Per_dL) / GetHematocrit().GetValue(), MassPerVolumeUnit::g_Per_dL); //Average range should be 32-36 g/dL. (https://en.wikipedia.org/wiki/Mean_corpuscular_hemoglobin_concentration)
   cbc.GetMeanCorpuscularVolume().SetValue(m_data.GetConfiguration().GetMeanCorpuscularVolume(VolumeUnit::uL), VolumeUnit::uL);
   cbc.GetNeutrophilCount().SetValue(GetNeutrophilCellCount().GetValue(AmountPerVolumeUnit::ct_Per_uL), AmountPerVolumeUnit::ct_Per_uL);   ///\TODO: update with correct data
-  double rbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+  double rbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstanceManager().GetRBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
   cbc.GetRedBloodCellCount().SetValue(rbcCount_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
-  double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL); //m_data.GetSubstances().GetWBC().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
+  double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstanceManager().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL); //m_data.GetSubstanceManager().GetWBC().GetCellCount(AmountPerVolumeUnit::ct_Per_uL);
   cbc.GetWhiteBloodCellCount().SetValue(wbcCount_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
   return true;
 }
@@ -1124,9 +1124,9 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   double RBC_initial_ct = 0.0;
   double AntA_initial_ct = 0.0;
   double AntB_initial_ct = 0.0;
-  SESubstance& RBC_substance = m_data.GetSubstances().GetRBC();
-  SESubstance& AntigenA_substance = m_data.GetSubstances().GetAntigen_A();
-  SESubstance& AntigenB_substance = m_data.GetSubstances().GetAntigen_B();
+  SESubstance& RBC_substance = m_data.GetSubstanceManager().GetRBC();
+  SESubstance& AntigenA_substance = m_data.GetSubstanceManager().GetAntigen_A();
+  SESubstance& AntigenB_substance = m_data.GetSubstanceManager().GetAntigen_B();
 
   std::vector<SELiquidCompartment*> vascularcompts = m_data.GetCompartments().GetVascularLeafCompartments();
   for (auto v : vascularcompts) {
@@ -1163,8 +1163,8 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   double HealExp = 1.0 - (patientRBC / (5280000.0 * 4800000.0)); // uL of blood at steady state times ct/uL of rbc
   BLIM(HealExp, 0.0, 1.0);
   double HealFactor = std::pow(5.0, HealExp);
-  double RBC_birth = HealFactor * m_data.GetSubstances().GetRBC().GetClearance().GetCellBirthRate().GetValue(FrequencyUnit::Per_s); //per s(increased by factor of 10)
-  double RBC_death = m_data.GetSubstances().GetRBC().GetClearance().GetCellDeathRate(FrequencyUnit::Per_s); //per s
+  double RBC_birth = HealFactor * m_data.GetSubstanceManager().GetRBC().GetClearance().GetCellBirthRate().GetValue(FrequencyUnit::Per_s); //per s(increased by factor of 10)
+  double RBC_death = m_data.GetSubstanceManager().GetRBC().GetClearance().GetCellDeathRate(FrequencyUnit::Per_s); //per s
 
   //Surface Area of rbc stacked, based on surface area of cylinders
   double sa1 = 1.3e-6; // SA of 1 cell | |
@@ -1247,12 +1247,12 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   /*std::stringstream ss;
   ss << m_RhFactorMismatch_ct << ",   " << m_RhTransfusionReactionVolume_mL;
   Info(ss);*/
-  SESubstance& Hemoglobin = m_data.GetSubstances().GetHb();
-  SESubstance& HemoglobinO2 = m_data.GetSubstances().GetHbO2();
-  SESubstance& HemoglobinCO2 = m_data.GetSubstances().GetHbCO2();
-  SESubstance& HemoglobinCO = m_data.GetSubstances().GetHbCO();
-  SESubstance& HemoglobinO2CO2 = m_data.GetSubstances().GetHbO2CO2();
-  SESubstance& Oxygen = m_data.GetSubstances().GetO2();
+  SESubstance& Hemoglobin = m_data.GetSubstanceManager().GetHb();
+  SESubstance& HemoglobinO2 = m_data.GetSubstanceManager().GetHbO2();
+  SESubstance& HemoglobinCO2 = m_data.GetSubstanceManager().GetHbCO2();
+  SESubstance& HemoglobinCO = m_data.GetSubstanceManager().GetHbCO();
+  SESubstance& HemoglobinO2CO2 = m_data.GetSubstanceManager().GetHbO2CO2();
+  SESubstance& Oxygen = m_data.GetSubstanceManager().GetO2();
 
   m_RemovedRBC_ct = m_4Agglutinate_ct + (m_p3Agglutinate_ct / 12.0);
 
@@ -1299,13 +1299,13 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
     LLIM(m_RhFactorMismatch_ct, 0.0);
   }
 
-  double totalHb_g = m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHb(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g);
-  double totalHbO2_g = (m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHbO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstances().GetHbO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstances().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
-  double totalHbCO2_g = (m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHbCO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstances().GetHbCO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstances().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
-  double totalHBO2CO2_g = (m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHbO2CO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstances().GetHbO2CO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstances().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
+  double totalHb_g = m_data.GetSubstanceManager().GetSubstanceMass(m_data.GetSubstanceManager().GetHb(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g);
+  double totalHbO2_g = (m_data.GetSubstanceManager().GetSubstanceMass(m_data.GetSubstanceManager().GetHbO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstanceManager().GetHbO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstanceManager().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
+  double totalHbCO2_g = (m_data.GetSubstanceManager().GetSubstanceMass(m_data.GetSubstanceManager().GetHbCO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstanceManager().GetHbCO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstanceManager().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
+  double totalHBO2CO2_g = (m_data.GetSubstanceManager().GetSubstanceMass(m_data.GetSubstanceManager().GetHbO2CO2(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstanceManager().GetHbO2CO2().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstanceManager().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
   double totalHBCO_g = 0.0;
   if (m_aortaCO != nullptr)
-    totalHBCO_g = (m_data.GetSubstances().GetSubstanceMass(m_data.GetSubstances().GetHbCO(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstances().GetHbCO().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstances().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
+    totalHBCO_g = (m_data.GetSubstanceManager().GetSubstanceMass(m_data.GetSubstanceManager().GetHbCO(), m_data.GetCompartments().GetVascularLeafCompartments(), MassUnit::g) / m_data.GetSubstanceManager().GetHbCO().GetMolarMass(MassPerAmountUnit::g_Per_mol)) * m_data.GetSubstanceManager().GetHb().GetMolarMass(MassPerAmountUnit::g_Per_mol);
 
   double totalHemoglobinO2Hemoglobin_g = totalHb_g + totalHbO2_g + totalHbCO2_g + totalHBO2CO2_g + totalHBCO_g;
 
@@ -1327,14 +1327,14 @@ void BloodChemistry::ManageSIRS()
   SEThermalCircuitPath* coreCompliance = m_data.GetCircuits().GetInternalTemperatureCircuit().GetPath(BGE::InternalTemperaturePath::InternalCoreToGround);
 
   //Physiological response
-  SESubstance& wbcBaseline = m_data.GetSubstances().GetWBC();
+  SESubstance& wbcBaseline = m_data.GetSubstanceManager().GetWBC();
   double tissueIntegrity = m_InflammatoryResponse->GetTissueIntegrity().GetValue();
   double neutrophilActive = m_InflammatoryResponse->GetNeutrophilActive().GetValue();
 
   //Set pathological effects, starting with updating white blood cell count.  Scaled down to get max levels around 25-30k ct_Per_uL
-  double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
+  double wbcCount_ct_Per_uL = m_venaCava->GetSubstanceQuantity(m_data.GetSubstanceManager().GetWBC())->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
   double wbcAbsolute_ct_Per_uL = wbcCount_ct_Per_uL * (1.0 + neutrophilActive / 0.25);
-  m_venaCava->GetSubstanceQuantity(m_data.GetSubstances().GetWBC())->GetMolarity().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
+  m_venaCava->GetSubstanceQuantity(m_data.GetSubstanceManager().GetWBC())->GetMolarity().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
   GetWhiteBloodCellCount().SetValue(wbcAbsolute_ct_Per_uL, AmountPerVolumeUnit::ct_Per_uL);
 
   //Use the tissue integrity output from the inflammation model to track other Systemic Inflammatory metrics.  These relationships were all
@@ -1709,19 +1709,19 @@ void BloodChemistry::ProcessOverride()
     GetTotalBilirubin().SetValue(override->GetTotalBilirubinOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
   }
   if (override->HasCalciumConcentrationOverride()) {
-    m_data.GetSubstances().GetCalcium().GetBloodConcentration().SetValue(override->GetCalciumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+    m_data.GetSubstanceManager().GetCalcium().GetBloodConcentration().SetValue(override->GetCalciumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
   }
   if (override->HasGlucoseConcentrationOverride()) {
-    m_data.GetSubstances().GetGlucose().GetBloodConcentration().SetValue(override->GetGlucoseConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+    m_data.GetSubstanceManager().GetGlucose().GetBloodConcentration().SetValue(override->GetGlucoseConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
   }
   if (override->HasLactateConcentrationOverride()) {
-    m_data.GetSubstances().GetLactate().GetBloodConcentration().SetValue(override->GetLactateConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+    m_data.GetSubstanceManager().GetLactate().GetBloodConcentration().SetValue(override->GetLactateConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
   }
   if (override->HasPotassiumConcentrationOverride()) {
-    m_data.GetSubstances().GetPotassium().GetBloodConcentration().SetValue(override->GetPotassiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+    m_data.GetSubstanceManager().GetPotassium().GetBloodConcentration().SetValue(override->GetPotassiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
   }
   if (override->HasSodiumConcentrationOverride()) {
-    m_data.GetSubstances().GetSodium().GetBloodConcentration().SetValue(override->GetSodiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
+    m_data.GetSubstanceManager().GetSodium().GetBloodConcentration().SetValue(override->GetSodiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL), MassPerVolumeUnit::mg_Per_mL);
   }
 }
 

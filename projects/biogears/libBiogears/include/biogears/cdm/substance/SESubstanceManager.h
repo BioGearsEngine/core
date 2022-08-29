@@ -45,7 +45,7 @@ public:
   virtual void Reset();
   virtual bool LoadSubstanceDirectory();
 
-  virtual const std::vector<SESubstance*>& GetSubstances() const;
+  virtual const std::vector<SESubstance*>& GetSubstanceManager() const;
   virtual SESubstance* GetSubstance(const char* name) const;
   virtual SESubstance* GetSubstance(const std::string& name) const;
   virtual void AddSubstance(SESubstance& substance);

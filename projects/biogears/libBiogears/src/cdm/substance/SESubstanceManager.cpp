@@ -97,7 +97,7 @@ SESubstance* SESubstanceManager::GetSubstance(const std::string& name) const
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-const std::vector<SESubstance*>& SESubstanceManager::GetSubstances() const
+const std::vector<SESubstance*>& SESubstanceManager::GetSubstanceManager() const
 {
   return m_Substances;
 }

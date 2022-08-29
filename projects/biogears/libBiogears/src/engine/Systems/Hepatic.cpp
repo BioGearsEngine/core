@@ -122,17 +122,17 @@ void Hepatic::SetUp()
   m_energy = &m_data.GetEnergySystem();
   m_Patient = &m_data.GetPatient();
 
-  m_Insulin = &m_data.GetSubstances().GetInsulin();
-  m_Glucagon = &m_data.GetSubstances().GetGlucagon();
-  m_Glucose = &m_data.GetSubstances().GetGlucose();
-  m_AminoAcids = &m_data.GetSubstances().GetAminoAcids();
-  m_Triacylglycerol = &m_data.GetSubstances().GetTriacylglycerol();
-  m_Urea = &m_data.GetSubstances().GetUrea();
-  m_Lactate = &m_data.GetSubstances().GetLactate();
-  m_O2 = &m_data.GetSubstances().GetO2();
-  m_CO2 = &m_data.GetSubstances().GetCO2();
-  m_Ketones = &m_data.GetSubstances().GetKetones();
-  m_Albumin = &m_data.GetSubstances().GetAlbumin();
+  m_Insulin = &m_data.GetSubstanceManager().GetInsulin();
+  m_Glucagon = &m_data.GetSubstanceManager().GetGlucagon();
+  m_Glucose = &m_data.GetSubstanceManager().GetGlucose();
+  m_AminoAcids = &m_data.GetSubstanceManager().GetAminoAcids();
+  m_Triacylglycerol = &m_data.GetSubstanceManager().GetTriacylglycerol();
+  m_Urea = &m_data.GetSubstanceManager().GetUrea();
+  m_Lactate = &m_data.GetSubstanceManager().GetLactate();
+  m_O2 = &m_data.GetSubstanceManager().GetO2();
+  m_CO2 = &m_data.GetSubstanceManager().GetCO2();
+  m_Ketones = &m_data.GetSubstanceManager().GetKetones();
+  m_Albumin = &m_data.GetSubstanceManager().GetAlbumin();
 
   m_liverInsulin = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Liver)->GetSubstanceQuantity(*m_Insulin);
   m_liverGlucagon = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Liver)->GetSubstanceQuantity(*m_Glucagon);
