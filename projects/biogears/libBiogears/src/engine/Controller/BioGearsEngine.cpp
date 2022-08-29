@@ -69,14 +69,50 @@ BioGearsEngine::BioGearsEngine(const char* logFileName)
 BioGearsEngine::BioGearsEngine(const std::string& logFileName, const std::string& working_dir)
   : PhysiologyEngine()
   , m_managedLogger(std::make_unique<Logger>(logFileName))
+  , m_CurrentTime(std::make_unique<SEScalarTime>())
+  , m_SimulationTime(std::make_unique<SEScalarTime>())
+
+  , m_Substances(std::make_unique<BioGearsSubstances>(*this, true))
+  , m_Config(std::make_unique<BioGearsConfiguration>(*m_Substances))
+  , m_Actions(std::make_unique<SEActionManager>(*m_Substances))
+  , m_Conditions(std::make_unique<SEConditionManager>(*m_Substances))
+
+  , m_Circuits(BioGearsCircuits::make_unique(*this))
+  , m_Compartments(BioGearsCompartments::make_unique(*this))
+
+  , m_Patient(std::make_unique<SEPatient>(GetLogger()))
+  , m_Environment(Environment::make_unique(*this))
+  , m_BloodChemistrySystem(BloodChemistry::make_unique(*this))
+  , m_CardiovascularSystem(Cardiovascular::make_unique(*this))
+  , m_EndocrineSystem(Endocrine::make_unique(*this))
+  , m_EnergySystem(Energy::make_unique(*this))
+  , m_GastrointestinalSystem(Gastrointestinal::make_unique(*this))
+  , m_HepaticSystem(Hepatic::make_unique(*this))
+  , m_NervousSystem(Nervous::make_unique(*this))
+  , m_RenalSystem(Renal::make_unique(*this))
+  , m_RespiratorySystem(Respiratory::make_unique(*this))
+  , m_DrugSystem(Drugs::make_unique(*this))
+  , m_TissueSystem(Tissue::make_unique(*this))
+  , m_ElectroCardioGram(ECG::make_unique(*this))
+  , m_AnesthesiaMachine(AnesthesiaMachine::make_unique(*this))
+  , m_Inhaler(Inhaler::make_unique(*this))
+
+  , m_SaturationCalculator(SaturationCalculator::make_unique(*this))
+  , m_DiffusionCalculator(DiffusionCalculator::make_unique(*this))
+
+  , m_EventHandler(nullptr)
+  , m_DataTrack(nullptr)
   , m_EngineTrack(*this)
 {
-
+  m_SimulationTime->SetValue(0, TimeUnit::s);
+  m_CurrentTime->SetValue(0, TimeUnit::s);
+  m_Config->Initialize();
   m_Logger->GetIoManager().lock()->SetBioGearsWorkingDirectory(working_dir);
   m_SimulationPhase = SimulationPhase::NotReady;
   m_EventHandler = nullptr;
   m_DataTrack = &m_EngineTrack.GetDataTrack();
-  SetUp();
+
+  // SetUp();
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const char* logFileName, const char* working_dir)
@@ -85,19 +121,62 @@ BioGearsEngine::BioGearsEngine(const char* logFileName, const char* working_dir)
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(Logger const* logger)
-  : BioGearsEngine(logger, "")
+  : BioGearsEngine(logger, std::string { "" })
 {
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(Logger const* logger, const std::string& working_dir)
   : PhysiologyEngine(logger)
+  , m_managedLogger(nullptr)
+  , m_CurrentTime(std::make_unique<SEScalarTime>())
+  , m_SimulationTime(std::make_unique<SEScalarTime>())
+
+  , m_Substances(std::make_unique<BioGearsSubstances>(*this, true))
+  , m_Circuits(BioGearsCircuits::make_unique(*this))
+  , m_Compartments(BioGearsCompartments::make_unique(*this))
+
+  , m_Config(std::make_unique<BioGearsConfiguration>(*m_Substances))
+  , m_Actions(std::make_unique<SEActionManager>(*m_Substances))
+  , m_Conditions(std::make_unique<SEConditionManager>(*m_Substances))
+
+  , m_Patient(std::make_unique<SEPatient>(GetLogger()))
+  , m_Environment(Environment::make_unique(*this))
+  , m_BloodChemistrySystem(BloodChemistry::make_unique(*this))
+  , m_CardiovascularSystem(Cardiovascular::make_unique(*this))
+  , m_EndocrineSystem(Endocrine::make_unique(*this))
+  , m_EnergySystem(Energy::make_unique(*this))
+  , m_GastrointestinalSystem(Gastrointestinal::make_unique(*this))
+  , m_HepaticSystem(Hepatic::make_unique(*this))
+  , m_NervousSystem(Nervous::make_unique(*this))
+  , m_RenalSystem(Renal::make_unique(*this))
+  , m_RespiratorySystem(Respiratory::make_unique(*this))
+  , m_DrugSystem(Drugs::make_unique(*this))
+  , m_TissueSystem(Tissue::make_unique(*this))
+  , m_ElectroCardioGram(ECG::make_unique(*this))
+  , m_AnesthesiaMachine(AnesthesiaMachine::make_unique(*this))
+  , m_Inhaler(Inhaler::make_unique(*this))
+
+  , m_SaturationCalculator(SaturationCalculator::make_unique(*this))
+  , m_DiffusionCalculator(DiffusionCalculator::make_unique(*this))
+
+  , m_EventHandler(nullptr)
+  , m_DataTrack(nullptr)
   , m_EngineTrack(*this)
 {
+  m_SimulationTime->SetValue(0, TimeUnit::s);
+  m_CurrentTime->SetValue(0, TimeUnit::s);
+
+  if (!m_Substances->LoadSubstanceDirectory()) {
+    Error("Unable to Load Substnace Directory! Engine is invalid and can not continue");
+    return;
+  }
+  const_cast<Logger*>(m_Logger)->SetLogTime(m_SimulationTime.get());
   m_Logger->GetIoManager().lock()->SetBioGearsWorkingDirectory(working_dir);
+
+  // SetUp();
+
   m_SimulationPhase = SimulationPhase::NotReady;
-  m_EventHandler = nullptr;
   m_DataTrack = &m_EngineTrack.GetDataTrack();
-  SetUp();
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(Logger const* logger, const char* working_dir)
@@ -132,7 +211,7 @@ BioGearsEngine::~BioGearsEngine()
   m_DrugSystem = nullptr;
   m_TissueSystem = nullptr;
 
-  m_ECG = nullptr;
+  m_ElectroCardioGram = nullptr;
 
   m_AnesthesiaMachine = nullptr;
 
@@ -464,7 +543,7 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
     }
     if (ecgData == nullptr) {
       ecgData = dynamic_cast<const CDM::BioGearsElectroCardioGramData*>(&sysData);
-      if (ecgData != nullptr && !m_ECG->Load(*ecgData)) {
+      if (ecgData != nullptr && !m_ElectroCardioGram->Load(*ecgData)) {
         m_ss << "Error loading ECG data" << std::endl;
       }
     }
@@ -596,7 +675,7 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData() c
   state->System().push_back(std::unique_ptr<CDM::BioGearsTissueSystemData>(m_TissueSystem->Unload()));
   state->System().push_back(std::unique_ptr<CDM::BioGearsEnvironmentData>(m_Environment->Unload()));
   state->System().push_back(std::unique_ptr<CDM::BioGearsAnesthesiaMachineData>(m_AnesthesiaMachine->Unload()));
-  state->System().push_back(std::unique_ptr<CDM::BioGearsElectroCardioGramData>(m_ECG->Unload()));
+  state->System().push_back(std::unique_ptr<CDM::BioGearsElectroCardioGramData>(m_ElectroCardioGram->Unload()));
   state->System().push_back(std::unique_ptr<CDM::BioGearsInhalerData>(m_Inhaler->Unload()));
   // Compartments
   state->CompartmentManager(std::unique_ptr<CDM::CompartmentManagerData>(m_Compartments->Unload()));
@@ -1292,12 +1371,12 @@ auto BioGearsEngine::GetAnesthesiaMachine() -> AnesthesiaMachine&
 //-------------------------------------------------------------------------------
 auto BioGearsEngine::GetElectroCardioGram() const -> ECG const&
 {
-  return *m_ECG;
+  return *m_ElectroCardioGram;
 }
 //-------------------------------------------------------------------------------
 auto BioGearsEngine::GetElectroCardioGram() -> ECG&
 {
-  return *m_ECG;
+  return *m_ElectroCardioGram;
 }
 //-------------------------------------------------------------------------------
 auto BioGearsEngine::GetInhaler() const -> Inhaler const&
@@ -1431,31 +1510,22 @@ void BioGearsEngine::SetUp()
   m_DataTrack = nullptr;
   m_CurrentTime = std::make_unique<SEScalarTime>();
   m_SimulationTime = std::make_unique<SEScalarTime>();
+
+  const_cast<Logger*>(m_Logger)->SetLogTime(m_SimulationTime.get());
   m_CurrentTime->SetValue(0, TimeUnit::s);
   m_SimulationTime->SetValue(0, TimeUnit::s);
 
-  // ToDo Refactor BioGearsEngine to retain mutable pointer
-  const_cast<Logger*>(m_Logger)->SetLogTime(m_SimulationTime.get());
-
-  m_Substances = std::make_unique<BioGearsSubstances>(*this);
-
-  if (!m_Substances->LoadSubstanceDirectory()) {
-    Error("Unable to Load Substnace Directory! Engine is invalid and can not continue");
-    return;
-  }
-
-  m_Patient = std::make_unique<SEPatient>(GetLogger());
-
+  m_Substances = std::make_unique<BioGearsSubstances>(*this, true);
   m_Config = std::make_unique<BioGearsConfiguration>(*m_Substances);
   m_Config->Initialize();
-
-  m_SaturationCalculator = SaturationCalculator::make_unique(*this);
-
   m_Actions = std::make_unique<SEActionManager>(*m_Substances);
   m_Conditions = std::make_unique<SEConditionManager>(*m_Substances);
 
-  m_Environment = Environment::make_unique(*this);
+  m_Compartments = BioGearsCompartments::make_unique(*this);
+  m_Circuits = BioGearsCircuits::make_unique(*this);
 
+  m_Patient = std::make_unique<SEPatient>(GetLogger());
+  m_Environment = Environment::make_unique(*this);
   m_BloodChemistrySystem = BloodChemistry::make_unique(*this);
   m_CardiovascularSystem = Cardiovascular::make_unique(*this);
   m_EndocrineSystem = Endocrine::make_unique(*this);
@@ -1467,18 +1537,15 @@ void BioGearsEngine::SetUp()
   m_RespiratorySystem = Respiratory::make_unique(*this);
   m_DrugSystem = Drugs::make_unique(*this);
   m_TissueSystem = Tissue::make_unique(*this);
-
-  m_ECG = ECG::make_unique(*this);
-
+  m_ElectroCardioGram = ECG::make_unique(*this);
   m_AnesthesiaMachine = AnesthesiaMachine::make_unique(*this);
-
   m_Inhaler = Inhaler::make_unique(*this);
-
-  m_Compartments = BioGearsCompartments::make_unique(*this);
-
-  m_Circuits = BioGearsCircuits::make_unique(*this);
-
+  
+  m_SaturationCalculator = SaturationCalculator::make_unique(*this);
   m_DiffusionCalculator = DiffusionCalculator::make_unique(*this);
+
+  
+
 }
 //---------------------------------------------------------------------
 bool BioGearsEngine::Initialize(const PhysiologyEngineConfiguration* config)
@@ -1563,7 +1630,7 @@ bool BioGearsEngine::Initialize(const PhysiologyEngineConfiguration* config)
   m_EnergySystem->Initialize();
   m_BloodChemistrySystem->Initialize();
   m_TissueSystem->Initialize(); // Depends on some parameters that Blood Chemistry initializes,needs to be after
-  m_ECG->Initialize();
+  m_ElectroCardioGram->Initialize();
   m_Inhaler->Initialize();
 
   return true;
@@ -2185,7 +2252,7 @@ void BioGearsEngine::SimulationPhaseChange(SimulationPhase state)
   m_TissueSystem->SimulationPhaseChange();
   m_BloodChemistrySystem->SimulationPhaseChange();
   m_NervousSystem->SimulationPhaseChange();
-  m_ECG->SimulationPhaseChange();
+  m_ElectroCardioGram->SimulationPhaseChange();
 }
 //---------------------------------------------------------------------
 void BioGearsEngine::PreProcess()
@@ -2204,7 +2271,7 @@ void BioGearsEngine::PreProcess()
   m_TissueSystem->PreProcess();
   m_BloodChemistrySystem->PreProcess();
   m_NervousSystem->PreProcess();
-  m_ECG->PreProcess();
+  m_ElectroCardioGram->PreProcess();
 }
 //---------------------------------------------------------------------
 void BioGearsEngine::Process()
@@ -2223,7 +2290,7 @@ void BioGearsEngine::Process()
   m_TissueSystem->Process();
   m_BloodChemistrySystem->Process();
   m_NervousSystem->Process();
-  m_ECG->Process();
+  m_ElectroCardioGram->Process();
 }
 //---------------------------------------------------------------------
 void BioGearsEngine::PostProcess()
@@ -2242,7 +2309,7 @@ void BioGearsEngine::PostProcess()
   m_TissueSystem->PostProcess();
   m_BloodChemistrySystem->PostProcess();
   m_NervousSystem->PostProcess();
-  m_ECG->PostProcess();
+  m_ElectroCardioGram->PostProcess();
 }
 //---------------------------------------------------------------------
 bool BioGearsEngine::CreateCircuitsAndCompartments()

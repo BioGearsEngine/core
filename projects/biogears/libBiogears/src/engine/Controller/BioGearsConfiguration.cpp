@@ -55,86 +55,160 @@ namespace biogears {
 BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   : PhysiologyEngineConfiguration(substances.GetLogger())
   , m_Substances(substances)
-  // Blood Chemistry
-  , m_MeanCorpuscularHemoglobin(nullptr)
-  , m_MeanCorpuscularVolume(nullptr)
-  , m_StandardDiffusionDistance(nullptr)
-  , m_StandardOxygenDiffusionCoefficient(nullptr)
-  // Cardiovascular
-  , m_LeftHeartElastanceMaximum(nullptr)
-  , m_LeftHeartElastanceMinimum(nullptr)
-  , m_MinimumBloodVolumeFraction(nullptr)
-  , m_RightHeartElastanceMaximum(nullptr)
-  , m_RightHeartElastanceMinimum(nullptr)
-  , m_StandardPulmonaryCapillaryCoverage(nullptr)
-  // Circuit
-  , m_CardiovascularOpenResistance(nullptr)
-  , m_DefaultClosedElectricResistance(nullptr)
-  , m_DefaultClosedFlowResistance(nullptr)
-  , m_DefaultClosedHeatResistance(nullptr)
-  , m_DefaultOpenElectricResistance(nullptr)
-  , m_DefaultOpenFlowResistance(nullptr)
-  , m_DefaultOpenHeatResistance(nullptr)
-  , m_MachineClosedResistance(nullptr)
-  , m_MachineOpenResistance(nullptr)
-  , m_RespiratoryClosedResistance(nullptr)
-  , m_RespiratoryOpenResistance(nullptr)
-  // Constants
-  , m_OxygenMetabolicConstant(nullptr)
-  , m_StefanBoltzmann(nullptr)
-  , m_UniversalGasConstant(nullptr)
-  // Drugs
-  , m_PDEnabled(CDM::enumOnOff::value(-1))
-  // Energy
-  , m_BodySpecificHeat(nullptr)
-  , m_CarbondDioxideProductionFromOxygenConsumptionConstant(nullptr)
-  , m_CoreTemperatureLow(nullptr)
-  , m_CoreTemperatureHigh(nullptr)
-  , m_DeltaCoreTemperatureLow(nullptr)
-  , m_EnergyPerATP(nullptr)
-  , m_SweatHeatTransfer(nullptr)
-  , m_VaporizationEnergy(nullptr)
-  , m_VaporSpecificHeat(nullptr)
-  // Environment
-  , m_AirDensity(nullptr)
-  , m_AirSpecificHeat(nullptr)
-  , m_MolarMassOfDryAir(nullptr)
-  , m_MolarMassOfWaterVapor(nullptr)
-  , m_InitialEnvironmentalConditions(nullptr)
-  , m_WaterDensity(nullptr)
-  // Gastrointestinal
-  , m_CalciumDigestionRate(nullptr)
-  , m_CalciumAbsorptionFraction(nullptr)
-  , m_CarbohydrateAbsorptionFraction(nullptr)
-  , m_DefaultStomachContents(nullptr)
-  , m_FatAbsorptionFraction(nullptr)
-  , m_ProteinToUreaFraction(nullptr)
-  , m_WaterDigestionRate(nullptr)
-  // Nervous
-  , m_CerebralEnabled(CDM::enumOnOff::value(-1))
-  , m_PupilDiameterBaseline(nullptr)
-  // Renal
-  , m_RenalEnabled(CDM::enumOnOff::value(-1))
-  , m_PlasmaSodiumConcentrationSetPoint(nullptr)
-  , m_PeritubularPotassiumConcentrationSetPoint(nullptr)
-  , m_LeftGlomerularFluidPermeabilityBaseline(nullptr)
-  , m_LeftGlomerularFilteringSurfaceAreaBaseline(nullptr)
-  , m_LeftTubularReabsorptionFluidPermeabilityBaseline(nullptr)
-  , m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline(nullptr)
-  , m_MaximumAfferentResistance(nullptr)
-  , m_MinimumAfferentResistance(nullptr)
-  , m_RightGlomerularFluidPermeabilityBaseline(nullptr)
-  , m_RightGlomerularFilteringSurfaceAreaBaseline(nullptr)
-  , m_RightTubularReabsorptionFluidPermeabilityBaseline(nullptr)
-  , m_RightTubularReabsorptionFilteringSurfaceAreaBaseline(nullptr)
-  , m_TargetSodiumDelivery(nullptr)
-  // Respiratory
-  , m_PleuralComplianceSensitivity(nullptr)
-  , m_PulmonaryVentilationRateMaximum(nullptr)
-  , m_VentilatoryOcclusionPressure(nullptr)
-  // Tissue
-  , m_TissueEnabled(CDM::enumOnOff::value(-1))
+  , m_MeanCorpuscularHemoglobin(new SEScalarMassPerAmount())
+  , m_MeanCorpuscularVolume(new SEScalarVolume())
+  , m_StandardDiffusionDistance(new SEScalarLength())
+  , m_StandardOxygenDiffusionCoefficient(new SEScalarAreaPerTimePressure())
+  , m_LeftHeartElastanceMaximum(new SEScalarFlowElastance())
+  , m_LeftHeartElastanceMinimum(new SEScalarFlowElastance())
+  , m_MinimumBloodVolumeFraction(new SEScalarFraction())
+  , m_RightHeartElastanceMaximum(new SEScalarFlowElastance())
+  , m_RightHeartElastanceMinimum(new SEScalarFlowElastance())
+  , m_StandardPulmonaryCapillaryCoverage(new SEScalar())
+  , m_CardiovascularOpenResistance(new SEScalarFlowResistance())
+  , m_DefaultClosedElectricResistance(new SEScalarElectricResistance())
+  , m_DefaultClosedFlowResistance(new SEScalarFlowResistance())
+  , m_DefaultClosedHeatResistance(new SEScalarHeatResistance())
+  , m_DefaultOpenElectricResistance(new SEScalarElectricResistance())
+  , m_DefaultOpenFlowResistance(new SEScalarFlowResistance())
+  , m_DefaultOpenHeatResistance(new SEScalarHeatResistance())
+  , m_MachineClosedResistance(new SEScalarFlowResistance())
+  , m_MachineOpenResistance(new SEScalarFlowResistance())
+  , m_RespiratoryClosedResistance(new SEScalarFlowResistance())
+  , m_RespiratoryOpenResistance(new SEScalarFlowResistance())
+  , m_OxygenMetabolicConstant(new SEScalar())
+  , m_StefanBoltzmann(new SEScalarPowerPerAreaTemperatureToTheFourth())
+  , m_UniversalGasConstant(new SEScalarHeatCapacitancePerAmount())
+  , m_PDEnabled(CDM::enumOnOff::On)
+  , m_BodySpecificHeat(new SEScalarHeatCapacitancePerMass())
+  , m_CarbondDioxideProductionFromOxygenConsumptionConstant(new SEScalar())
+  , m_CoreTemperatureLow(new SEScalarTemperature())
+  , m_CoreTemperatureHigh(new SEScalarTemperature())
+  , m_DeltaCoreTemperatureLow(new SEScalarTemperature())
+  , m_EnergyPerATP(new SEScalarEnergyPerAmount())
+  , m_SweatHeatTransfer(new SEScalarHeatConductance())
+  , m_VaporizationEnergy(new SEScalarEnergyPerMass())
+  , m_VaporSpecificHeat(new SEScalarHeatCapacitancePerMass())
+  , m_AirDensity(new SEScalarMassPerVolume())
+  , m_AirSpecificHeat(new SEScalarHeatCapacitancePerMass())
+  , m_MolarMassOfDryAir(new SEScalarMassPerAmount())
+  , m_MolarMassOfWaterVapor(new SEScalarMassPerAmount())
+  , m_InitialEnvironmentalConditions(new SEEnvironmentalConditions(substances))
+  , m_WaterDensity(new SEScalarMassPerVolume())
+  , m_CalciumDigestionRate(new SEScalarMassPerTime())
+  , m_CalciumAbsorptionFraction(new SEScalarFraction())
+  , m_CarbohydrateAbsorptionFraction(new SEScalarFraction())
+  , m_DefaultStomachContents(new SENutrition(substances.GetLogger()))
+  , m_FatAbsorptionFraction(new SEScalarFraction())
+  , m_ProteinToUreaFraction(new SEScalarFraction())
+  , m_WaterDigestionRate(new SEScalarVolumePerTime())
+  , m_CerebralEnabled(CDM::enumOnOff::On)
+  , m_PupilDiameterBaseline(new SEScalarLength())
+  , m_RenalEnabled(CDM::enumOnOff::On)
+  , m_PlasmaSodiumConcentrationSetPoint(new SEScalarMassPerVolume())
+  , m_PeritubularPotassiumConcentrationSetPoint(new SEScalarMassPerVolume())
+  , m_LeftGlomerularFilteringSurfaceAreaBaseline(new SEScalarArea())
+  , m_LeftGlomerularFluidPermeabilityBaseline(new SEScalarVolumePerTimePressureArea())
+  , m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline(new SEScalarArea())
+  , m_LeftTubularReabsorptionFluidPermeabilityBaseline(new SEScalarVolumePerTimePressureArea())
+  , m_RightGlomerularFilteringSurfaceAreaBaseline(new SEScalarArea())
+  , m_RightGlomerularFluidPermeabilityBaseline(new SEScalarVolumePerTimePressureArea())
+  , m_RightTubularReabsorptionFilteringSurfaceAreaBaseline(new SEScalarArea())
+  , m_RightTubularReabsorptionFluidPermeabilityBaseline(new SEScalarVolumePerTimePressureArea())
+  , m_MaximumAfferentResistance(new SEScalarFlowResistance())
+  , m_MinimumAfferentResistance(new SEScalarFlowResistance())
+  , m_TargetSodiumDelivery(new SEScalarMassPerTime())
+  , m_PleuralComplianceSensitivity(new SEScalarInverseVolume())
+  , m_PulmonaryVentilationRateMaximum(new SEScalarVolumePerTime())
+  , m_VentilatoryOcclusionPressure(new SEScalarPressure())
+  , m_TissueEnabled(CDM::enumOnOff::On)
 {
+  // Blood Chemistry
+  m_MeanCorpuscularVolume->SetValue(9.e-8, VolumeUnit::uL); // Guyton p419
+  m_MeanCorpuscularHemoglobin->SetValue(29, MassPerAmountUnit::pg_Per_ct);
+  m_StandardDiffusionDistance->SetValue(0.0006, LengthUnit::mm);
+  m_StandardOxygenDiffusionCoefficient->SetValue(0.0000000025, AreaPerTimePressureUnit::cm2_Per_min_mmHg);
+
+  // Cardiovascular
+  m_LeftHeartElastanceMaximum->SetValue(2.49, FlowElastanceUnit::mmHg_Per_mL);
+  m_LeftHeartElastanceMinimum->SetValue(0.049, FlowElastanceUnit::mmHg_Per_mL);
+  m_MinimumBloodVolumeFraction->SetValue(0.70); // \Boron2017Medical p583  This is fraction which triggers hypovolemic shock
+  m_RightHeartElastanceMaximum->SetValue(1.08, FlowElastanceUnit::mmHg_Per_mL);
+  m_RightHeartElastanceMinimum->SetValue(0.0243, FlowElastanceUnit::mmHg_Per_mL);
+  m_StandardPulmonaryCapillaryCoverage->SetValue(1.0);
+
+  // Circuits
+  m_CardiovascularOpenResistance->SetValue(100.0, FlowResistanceUnit::mmHg_s_Per_mL);
+  m_DefaultOpenElectricResistance->SetValue(1E100, ElectricResistanceUnit::Ohm);
+  m_DefaultOpenFlowResistance->SetValue(1E100, FlowResistanceUnit::Pa_s_Per_m3);
+  m_DefaultOpenHeatResistance->SetValue(1E100, HeatResistanceUnit::K_Per_W);
+  m_DefaultClosedElectricResistance->SetValue(1E-100, ElectricResistanceUnit::Ohm);
+  m_DefaultClosedFlowResistance->SetValue(1E-100, FlowResistanceUnit::Pa_s_Per_m3);
+  m_DefaultClosedHeatResistance->SetValue(1E-100, HeatResistanceUnit::K_Per_W);
+  m_MachineClosedResistance->SetValue(1E-3, FlowResistanceUnit::cmH2O_s_Per_L);
+  m_MachineOpenResistance->SetValue(1E3, FlowResistanceUnit::cmH2O_s_Per_L);
+  m_RespiratoryClosedResistance->SetValue(1E-3, FlowResistanceUnit::cmH2O_s_Per_L);
+  m_RespiratoryOpenResistance->SetValue(1E3, FlowResistanceUnit::cmH2O_s_Per_L);
+
+  // Constants
+  m_OxygenMetabolicConstant->SetValue(9.0);
+  m_StefanBoltzmann->SetValue(5.670367E-8, PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4); // http://physics.nist.gov/cuu/Constants/
+  m_UniversalGasConstant->SetValue(8.3144621, HeatCapacitancePerAmountUnit::J_Per_K_mol); // http://physics.nist.gov/cuu/Constants/
+
+  // Drugs
+
+  // Energy
+  m_BodySpecificHeat->SetValue(0.83, HeatCapacitancePerMassUnit::kcal_Per_K_kg);
+  m_CarbondDioxideProductionFromOxygenConsumptionConstant->SetValue(0.8);
+  m_CoreTemperatureLow->SetValue(36.8, TemperatureUnit::C);
+  m_CoreTemperatureHigh->SetValue(37.1, TemperatureUnit::C);
+  m_DeltaCoreTemperatureLow->SetValue(1.8, TemperatureUnit::C);
+  m_EnergyPerATP->SetValue(52, EnergyPerAmountUnit::kJ_Per_mol); // Under standard conditions, 30.5 kJ/mol, but cellular conditions shift this to 52 kJ/mol (Lehninger-Principles of BioChem)
+  m_SweatHeatTransfer->SetValue(0.20833, HeatConductanceUnit::kcal_Per_K_s);
+  m_VaporizationEnergy->SetValue(2260.0, EnergyPerMassUnit::kJ_Per_kg);
+  m_VaporSpecificHeat->SetValue(1.890, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
+
+  // Environment
+  m_AirDensity->SetValue(1.225, MassPerVolumeUnit::kg_Per_m3);
+  m_AirSpecificHeat->SetValue(1.0035, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
+  m_MolarMassOfDryAir->SetValue(0.028964, MassPerAmountUnit::kg_Per_mol);
+  m_MolarMassOfWaterVapor->SetValue(0.018016, MassPerAmountUnit::kg_Per_mol);
+  m_InitialEnvironmentalConditions->Load("StandardEnvironment.xml");
+  m_WaterDensity->SetValue(1000, MassPerVolumeUnit::kg_Per_m3); // Because water density changes with temperature, and this refers to room temperature water, you should use GeneralMath::CalculateWaterDensity() instead
+
+  // Gastrointestinal
+  m_CalciumAbsorptionFraction->SetValue(0.25); // Net fractional calcium absorption is 24.9 ± 12.4% (Hunt and Johnson 2007)
+  m_CalciumDigestionRate->SetValue(2.7, MassPerTimeUnit::mg_Per_min); // Wasserman1992Intestinal
+  m_CarbohydrateAbsorptionFraction->SetValue(0.80); // Guyton p790
+  m_DefaultStomachContents->Load("NoMacros.xml"); // Refs are in the data spreadsheet
+  m_FatAbsorptionFraction->SetValue(0.248); // Guyton p797 and the recommended daily value for saturated fat intake according to the AHA //TODO: Add this reference
+  // We should be making 30 grams of urea per 100 grams of protein haussinger1990nitrogen
+  m_ProteinToUreaFraction->SetValue(0.405); // BUT, We should excrete 24.3 g/day on average. Guyton p 328. With an average intake of 60 g/day, that works out to approximately 40%.
+  m_WaterDigestionRate->SetValue(0.417, VolumePerTimeUnit::mL_Per_s); // Peronnet2012Pharmacokinetic, Estimated from 300mL H20 being absorbed in 9.5-12m
+
+  // Nervous
+  m_PupilDiameterBaseline->SetValue(4, LengthUnit::mm);
+
+  // Renal
+  m_PlasmaSodiumConcentrationSetPoint->SetValue(3.23, MassPerVolumeUnit::mg_Per_mL);
+  m_PeritubularPotassiumConcentrationSetPoint->SetValue(0.0185, MassPerVolumeUnit::g_Per_dL);
+  m_LeftGlomerularFluidPermeabilityBaseline->SetValue(3.67647, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
+  m_LeftGlomerularFilteringSurfaceAreaBaseline->SetValue(2.0, AreaUnit::m2);
+  m_LeftTubularReabsorptionFluidPermeabilityBaseline->SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
+  m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline->SetValue(2.5, AreaUnit::m2);
+  m_MaximumAfferentResistance->SetValue(11.2, FlowResistanceUnit::mmHg_s_Per_mL); // 11.2
+  m_MinimumAfferentResistance->SetValue(2.2, FlowResistanceUnit::mmHg_s_Per_mL); // 2.1
+  m_RightGlomerularFluidPermeabilityBaseline->SetValue(3.67647, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
+  m_RightGlomerularFilteringSurfaceAreaBaseline->SetValue(2.0, AreaUnit::m2);
+  m_RightTubularReabsorptionFluidPermeabilityBaseline->SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
+  // m_RightTubularReabsorptionFluidPermeabilityBaseline->SetValue(1.0, VolumePerTimePressureAreaUnit::mL_Per_min_Per_mmHg_Per_m2);
+  m_RightTubularReabsorptionFilteringSurfaceAreaBaseline->SetValue(2.5, AreaUnit::m2);
+  m_TargetSodiumDelivery->SetValue(0.201, MassPerTimeUnit::g_Per_min);
+
+  // Respiratory
+  m_PleuralComplianceSensitivity->SetValue(5.0, InverseVolumeUnit::Inverse_L);
+  m_PulmonaryVentilationRateMaximum->SetValue(150.0, VolumePerTimeUnit::L_Per_min);
+  m_VentilatoryOcclusionPressure->SetValue(0.75, PressureUnit::cmH2O); // This increases the absolute max driver pressure
 }
 
 BioGearsConfiguration::~BioGearsConfiguration()
@@ -234,7 +308,7 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_PulmonaryVentilationRateMaximum);
   SAFE_DELETE(m_VentilatoryOcclusionPressure);
 
-  //Tissue
+  // Tissue
   m_TissueEnabled = CDM::enumOnOff::value(-1);
 }
 
@@ -247,9 +321,9 @@ void BioGearsConfiguration::Initialize()
   GetECGInterpolator().LoadWaveforms("StandardECG.xml");
   GetTimeStep().SetValue(1.0 / 50.0, TimeUnit::s);
   GetDynamicStabilizationCriteria().Load("DynamicStabilization.xml");
-  //GetTimedStabilizationCriteria().Load("TimedStabilization.xml");
+  // GetTimedStabilizationCriteria().Load("TimedStabilization.xml");
 
-  //Blood Chemistry
+  // Blood Chemistry
   GetMeanCorpuscularVolume().SetValue(9.e-8, VolumeUnit::uL); // Guyton p419
   GetMeanCorpuscularHemoglobin().SetValue(29, MassPerAmountUnit::pg_Per_ct);
   GetStandardDiffusionDistance().SetValue(0.0006, LengthUnit::mm);
@@ -278,8 +352,8 @@ void BioGearsConfiguration::Initialize()
 
   // Constants
   GetOxygenMetabolicConstant().SetValue(9.0);
-  GetStefanBoltzmann().SetValue(5.670367E-8, PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4); //http://physics.nist.gov/cuu/Constants/
-  GetUniversalGasConstant().SetValue(8.3144621, HeatCapacitancePerAmountUnit::J_Per_K_mol); //http://physics.nist.gov/cuu/Constants/
+  GetStefanBoltzmann().SetValue(5.670367E-8, PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4); // http://physics.nist.gov/cuu/Constants/
+  GetUniversalGasConstant().SetValue(8.3144621, HeatCapacitancePerAmountUnit::J_Per_K_mol); // http://physics.nist.gov/cuu/Constants/
 
   // Drugs
   m_PDEnabled = CDM::enumOnOff::On;
@@ -290,7 +364,7 @@ void BioGearsConfiguration::Initialize()
   GetCoreTemperatureLow().SetValue(36.8, TemperatureUnit::C);
   GetCoreTemperatureHigh().SetValue(37.1, TemperatureUnit::C);
   GetDeltaCoreTemperatureLow().SetValue(1.8, TemperatureUnit::C);
-  GetEnergyPerATP().SetValue(52, EnergyPerAmountUnit::kJ_Per_mol); //Under standard conditions, 30.5 kJ/mol, but cellular conditions shift this to 52 kJ/mol (Lehninger-Principles of BioChem)
+  GetEnergyPerATP().SetValue(52, EnergyPerAmountUnit::kJ_Per_mol); // Under standard conditions, 30.5 kJ/mol, but cellular conditions shift this to 52 kJ/mol (Lehninger-Principles of BioChem)
   GetSweatHeatTransfer().SetValue(0.20833, HeatConductanceUnit::kcal_Per_K_s);
   GetVaporizationEnergy().SetValue(2260.0, EnergyPerMassUnit::kJ_Per_kg);
   GetVaporSpecificHeat().SetValue(1.890, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
@@ -301,7 +375,7 @@ void BioGearsConfiguration::Initialize()
   GetMolarMassOfDryAir().SetValue(0.028964, MassPerAmountUnit::kg_Per_mol);
   GetMolarMassOfWaterVapor().SetValue(0.018016, MassPerAmountUnit::kg_Per_mol);
   GetInitialEnvironmentalConditions().Load("StandardEnvironment.xml");
-  GetWaterDensity().SetValue(1000, MassPerVolumeUnit::kg_Per_m3); //Because water density changes with temperature, and this refers to room temperature water, you should use GeneralMath::CalculateWaterDensity() instead
+  GetWaterDensity().SetValue(1000, MassPerVolumeUnit::kg_Per_m3); // Because water density changes with temperature, and this refers to room temperature water, you should use GeneralMath::CalculateWaterDensity() instead
 
   // Gastrointestinal
   GetCalciumAbsorptionFraction().SetValue(0.25); // Net fractional calcium absorption is 24.9 ± 12.4% (Hunt and Johnson 2007)
@@ -325,21 +399,21 @@ void BioGearsConfiguration::Initialize()
   GetLeftGlomerularFilteringSurfaceAreaBaseline().SetValue(2.0, AreaUnit::m2);
   GetLeftTubularReabsorptionFluidPermeabilityBaseline().SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
   GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline().SetValue(2.5, AreaUnit::m2);
-  GetMaximumAfferentResistance().SetValue(11.2, FlowResistanceUnit::mmHg_s_Per_mL); //11.2
-  GetMinimumAfferentResistance().SetValue(2.2, FlowResistanceUnit::mmHg_s_Per_mL); //2.1
+  GetMaximumAfferentResistance().SetValue(11.2, FlowResistanceUnit::mmHg_s_Per_mL); // 11.2
+  GetMinimumAfferentResistance().SetValue(2.2, FlowResistanceUnit::mmHg_s_Per_mL); // 2.1
   GetRightGlomerularFluidPermeabilityBaseline().SetValue(3.67647, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
   GetRightGlomerularFilteringSurfaceAreaBaseline().SetValue(2.0, AreaUnit::m2);
   GetRightTubularReabsorptionFluidPermeabilityBaseline().SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
-  //GetRightTubularReabsorptionFluidPermeabilityBaseline().SetValue(1.0, VolumePerTimePressureAreaUnit::mL_Per_min_Per_mmHg_Per_m2);
+  // GetRightTubularReabsorptionFluidPermeabilityBaseline().SetValue(1.0, VolumePerTimePressureAreaUnit::mL_Per_min_Per_mmHg_Per_m2);
   GetRightTubularReabsorptionFilteringSurfaceAreaBaseline().SetValue(2.5, AreaUnit::m2);
   GetTargetSodiumDelivery().SetValue(0.201, MassPerTimeUnit::g_Per_min);
 
   // Respiratory
   GetPleuralComplianceSensitivity().SetValue(5.0, InverseVolumeUnit::Inverse_L);
   GetPulmonaryVentilationRateMaximum().SetValue(150.0, VolumePerTimeUnit::L_Per_min);
-  GetVentilatoryOcclusionPressure().SetValue(0.75, PressureUnit::cmH2O); //This increases the absolute max driver pressure
+  GetVentilatoryOcclusionPressure().SetValue(0.75, PressureUnit::cmH2O); // This increases the absolute max driver pressure
 
-  // Tissue
+    // Tissue
   m_TissueEnabled = CDM::enumOnOff::On;
 }
 
@@ -1904,4 +1978,19 @@ double BioGearsConfiguration::GetVentilatoryOcclusionPressure(const PressureUnit
   return m_VentilatoryOcclusionPressure->GetValue(unit);
 }
 
+/////////////////////////
+/**      TISSUE       **/
+/////////////////////////
+bool BioGearsConfiguration::HasEnableTissue() const
+{
+  return m_TissueEnabled != (CDM::enumOnOff::value)-1;
+}
+bool BioGearsConfiguration::IsTissueEnabled() const
+{
+  return m_TissueEnabled == CDM::enumOnOff::On;
+}
+void BioGearsConfiguration::EnableTissue(CDM::enumOnOff::value s)
+{
+  m_TissueEnabled = s;
+}
 }

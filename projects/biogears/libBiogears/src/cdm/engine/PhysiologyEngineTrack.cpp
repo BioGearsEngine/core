@@ -67,11 +67,11 @@ std::string Space2Underscore(const std::string& str)
 //-------------------------------------------------------------------------------
 PhysiologyEngineTrack::PhysiologyEngineTrack(PhysiologyEngine& engine)
   : Loggable(engine.GetLogger())
+  , m_DataTrack(engine.GetLogger())
   , m_DataRequestMgr(engine.GetLogger())
   , m_Patient(&(SEPatient&)engine.GetPatient())
   , m_SubMgr(&(SESubstanceManager&)engine.GetSubstanceManager())
   , m_CmptMgr(&(SECompartmentManager&)engine.GetCompartments())
-  , m_DataTrack(engine.GetLogger())
 {
 
   // TODO We are not handling nullptr well here...

@@ -79,12 +79,9 @@ protected:
   bool m_Merge;
   SEElectroCardioGramInterpolator* m_ECGInterpolator;
 
-  PhysiologyEngineStabilization* m_StabilizationCriteria;
   PhysiologyEngineTimedStabilization* m_TimedStabilizationCriteria;
   PhysiologyEngineDynamicStabilization* m_DynamicStabilizationCriteria;
   SEScalarTime* m_TimeStep;
-  std::unique_ptr<SEPatient> m_Patient;
-  std::unique_ptr<bool> m_overrideMode;
 
   CDM::enumOnOff::value m_WritePatientBaselineFile;
 };

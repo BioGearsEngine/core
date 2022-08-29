@@ -58,43 +58,43 @@ public:
   SELiquidCompartmentGraph& GetAerosolAndInhalerGraph();
 
   // Compartment Helpers
-  const std::vector<SELiquidCompartment*>& GetAerosolCompartments() { return m_AerosolCompartments; }
-  const std::vector<SELiquidCompartment*>& GetAerosolLeafCompartments() { return m_AerosolLeafCompartments; }
+  const std::vector<SELiquidCompartment*>& GetAerosolCompartments() ;
+  const std::vector<SELiquidCompartment*>& GetAerosolLeafCompartments() ;
 
-  const std::vector<SELiquidCompartment*>& GetChymeCompartments() { return m_ChymeCompartments; }
-  const std::vector<SELiquidCompartment*>& GetChymeLeafCompartments() { return m_ChymeLeafCompartments; }
+  const std::vector<SELiquidCompartment*>& GetChymeCompartments() ;
+  const std::vector<SELiquidCompartment*>& GetChymeLeafCompartments() ;
 
-  const std::vector<SEGasCompartment*>& GetPulmonaryCompartments() { return m_PulmonaryCompartments; }
-  const std::vector<SEGasCompartment*>& GetPulmonaryLeafCompartments() { return m_PulmonaryLeafCompartments; }
+  const std::vector<SEGasCompartment*>& GetPulmonaryCompartments() ;
+  const std::vector<SEGasCompartment*>& GetPulmonaryLeafCompartments() ;
 
-  const std::vector<SEThermalCompartment*>& GetTemperatureCompartments() { return m_TemperatureCompartments; }
-  const std::vector<SEThermalCompartment*>& GetTemperatureLeafCompartments() { return m_TemperatureLeafCompartments; }
+  const std::vector<SEThermalCompartment*>& GetTemperatureCompartments() ;
+  const std::vector<SEThermalCompartment*>& GetTemperatureLeafCompartments() ;
 
-  const std::vector<SETissueCompartment*>& GetTissueCompartments() { return m_TissueCompartments; }
-  const std::vector<SETissueCompartment*>& GetTissueLeafCompartments() { return m_TissueLeafCompartments; }
+  const std::vector<SETissueCompartment*>& GetTissueCompartments() ;
+  const std::vector<SETissueCompartment*>& GetTissueLeafCompartments() ;
 
-  const std::vector<SELiquidCompartment*>& GetUrineCompartments() { return m_UrineCompartments; }
-  const std::vector<SELiquidCompartment*>& GetUrineLeafCompartments() { return m_UrineLeafCompartments; }
+  const std::vector<SELiquidCompartment*>& GetUrineCompartments() ;
+  const std::vector<SELiquidCompartment*>& GetUrineLeafCompartments() ;
 
-  const std::vector<SELiquidCompartment*>& GetVascularCompartments() { return m_VascularCompartments; }
-  const std::vector<SELiquidCompartment*>& GetVascularLeafCompartments() { return m_VascularLeafCompartments; }
+  const std::vector<SELiquidCompartment*>& GetVascularCompartments() ;
+  const std::vector<SELiquidCompartment*>& GetVascularLeafCompartments() ;
 
-  const std::vector<SEGasCompartment*>& GetAnesthesiaMachineCompartments() { return m_AnesthesiaMachineCompartments; }
-  const std::vector<SEGasCompartment*>& GetAnesthesiaMachineLeafCompartments() { return m_AnesthesiaMachineLeafCompartments; }
+  const std::vector<SEGasCompartment*>& GetAnesthesiaMachineCompartments() ;
+  const std::vector<SEGasCompartment*>& GetAnesthesiaMachineLeafCompartments() ;
 
-  const std::vector<SEGasCompartment*>& GetInhalerCompartments() { return m_InhalerCompartments; }
-  const std::vector<SEGasCompartment*>& GetInhalerLeafCompartments() { return m_InhalerLeafCompartments; }
+  const std::vector<SEGasCompartment*>& GetInhalerCompartments() ;
+  const std::vector<SEGasCompartment*>& GetInhalerLeafCompartments() ;
 
-  const std::vector<SELiquidCompartment*>& GetInhalerAerosolCompartments() { return m_InhalerAerosolCompartments; }
-  const std::vector<SELiquidCompartment*>& GetInhalerAerosolLeafCompartments() { return m_InhalerAerosolLeafCompartments; }
+  const std::vector<SELiquidCompartment*>& GetInhalerAerosolCompartments() ;
+  const std::vector<SELiquidCompartment*>& GetInhalerAerosolLeafCompartments() ;
 
-  const std::vector<SEGasCompartment*>& GetMechanicalVentilatorCompartments() { return m_MechanicalVentilatorCompartments; }
-  const std::vector<SEGasCompartment*>& GetMechanicalVentilatorLeafCompartments() { return m_MechanicalVentilatorCompartments; }
+  const std::vector<SEGasCompartment*>& GetMechanicalVentilatorCompartments() ;
+  const std::vector<SEGasCompartment*>& GetMechanicalVentilatorLeafCompartments() ;
 
-  SELiquidCompartment& GetExtracellularFluid(SETissueCompartment& t) { return *m_ExtracellularFluid[&t]; }
-  SELiquidCompartment& GetIntracellularFluid(SETissueCompartment& t) { return *m_IntracellularFluid[&t]; }
-  const std::map<SETissueCompartment*, SELiquidCompartment*>& GetExtracellularFluid() { return m_ExtracellularFluid; }
-  const std::map<SETissueCompartment*, SELiquidCompartment*>& GetIntracellularFluid() { return m_IntracellularFluid; }
+  SELiquidCompartment& GetExtracellularFluid(SETissueCompartment& t) ;
+  SELiquidCompartment& GetIntracellularFluid(SETissueCompartment& t) ;
+  const std::map<SETissueCompartment*, SELiquidCompartment*>& GetExtracellularFluid() ;
+  const std::map<SETissueCompartment*, SELiquidCompartment*>& GetIntracellularFluid() ;
 
 protected:
   // I don't want these exposed in BioGears, you should be calling the Substance manager

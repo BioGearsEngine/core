@@ -26,14 +26,16 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger const* logger)
   : Loggable(logger)
+  , m_Merge(false)
+  , m_ECGInterpolator(new SEElectroCardioGramInterpolator(logger))
+  , m_TimedStabilizationCriteria(nullptr)
+  , m_DynamicStabilizationCriteria(new PhysiologyEngineDynamicStabilization(logger))
+  , m_TimeStep(new SEScalarTime())
+  , m_WritePatientBaselineFile(CDM::enumOnOff::Off)
 {
-  m_Merge = false;
-  m_ECGInterpolator = nullptr;
-  m_StabilizationCriteria = nullptr;
-  m_TimedStabilizationCriteria = nullptr;
-  m_DynamicStabilizationCriteria = nullptr;
-  m_TimeStep = nullptr;
-  m_WritePatientBaselineFile = CDM::enumOnOff::value(-1);
+  m_ECGInterpolator->LoadWaveforms("StandardECG.xml");
+  m_TimeStep->SetValue(1.0 / 50.0, TimeUnit::s);
+  m_DynamicStabilizationCriteria->Load("DynamicStabilization.xml");
 }
 
 //-----------------------------------------------------------------------------
@@ -166,8 +168,10 @@ void PhysiologyEngineConfiguration::Unload(CDM::PhysiologyEngineConfigurationDat
 {
   if (HasECGInterpolator())
     data.ElectroCardioGramInterpolator(std::unique_ptr<CDM::ElectroCardioGramWaveformInterpolatorData>(m_ECGInterpolator->Unload()));
-  if (HasStabilizationCriteria())
-    data.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(m_StabilizationCriteria->Unload()));
+  if (HasTimedStabilizationCriteria())
+    data.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(m_TimedStabilizationCriteria->Unload()));
+  if (HasDynamicStabilizationCriteria())
+    data.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(m_DynamicStabilizationCriteria->Unload()));
   if (HasTimeStep())
     data.TimeStep(std::unique_ptr<CDM::ScalarTimeData>(m_TimeStep->Unload()));
   if (HasWritePatientBaselineFile())
@@ -198,19 +202,19 @@ void PhysiologyEngineConfiguration::RemoveECGInterpolator()
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::HasStabilizationCriteria() const
 {
-  return m_StabilizationCriteria != nullptr;
+  return (m_TimedStabilizationCriteria || m_DynamicStabilizationCriteria);
 }
 //-----------------------------------------------------------------------------
 PhysiologyEngineStabilization* PhysiologyEngineConfiguration::GetStabilizationCriteria()
 {
-  return m_StabilizationCriteria;
+  return (m_DynamicStabilizationCriteria) ? static_cast<PhysiologyEngineStabilization*>(m_DynamicStabilizationCriteria) 
+    : static_cast<PhysiologyEngineStabilization*>(m_TimedStabilizationCriteria);
 }
 //-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::RemoveStabilizationCriteria()
 {
   SAFE_DELETE(m_TimedStabilizationCriteria);
   SAFE_DELETE(m_DynamicStabilizationCriteria);
-  m_StabilizationCriteria = nullptr; // Generic pointer used to point to one of the above pointers
 }
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::HasTimedStabilizationCriteria() const
@@ -223,7 +227,6 @@ PhysiologyEngineTimedStabilization& PhysiologyEngineConfiguration::GetTimedStabi
   RemoveDynamicStabilizationCriteria();
   if (m_TimedStabilizationCriteria == nullptr) {
     m_TimedStabilizationCriteria = new PhysiologyEngineTimedStabilization(GetLogger());
-    m_StabilizationCriteria = m_TimedStabilizationCriteria;
   }
   return *m_TimedStabilizationCriteria;
 }
@@ -235,8 +238,6 @@ const PhysiologyEngineTimedStabilization* PhysiologyEngineConfiguration::GetTime
 //-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::RemoveTimedStabilizationCriteria()
 {
-  if (m_StabilizationCriteria == m_TimedStabilizationCriteria)
-    m_StabilizationCriteria = nullptr;
   SAFE_DELETE(m_TimedStabilizationCriteria);
 }
 //-----------------------------------------------------------------------------
@@ -250,7 +251,6 @@ PhysiologyEngineDynamicStabilization& PhysiologyEngineConfiguration::GetDynamicS
   RemoveTimedStabilizationCriteria();
   if (m_DynamicStabilizationCriteria == nullptr) {
     m_DynamicStabilizationCriteria = new PhysiologyEngineDynamicStabilization(GetLogger());
-    m_StabilizationCriteria = m_DynamicStabilizationCriteria;
   }
   return *m_DynamicStabilizationCriteria;
 }
@@ -262,8 +262,6 @@ const PhysiologyEngineDynamicStabilization* PhysiologyEngineConfiguration::GetDy
 //-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::RemoveDynamicStabilizationCriteria()
 {
-  if (m_StabilizationCriteria == m_DynamicStabilizationCriteria)
-    m_StabilizationCriteria = nullptr;
   SAFE_DELETE(m_DynamicStabilizationCriteria);
 }
 //-----------------------------------------------------------------------------

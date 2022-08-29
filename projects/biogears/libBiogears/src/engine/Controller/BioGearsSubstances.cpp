@@ -63,11 +63,23 @@ double SizeIndependentDepositionEfficencyCoefficient::GetAlveoli() const
   return m_alveoli;
 }
 //-------------------------------------------------------------------------------
-BioGearsSubstances::BioGearsSubstances(BioGearsEngine& data)
+BioGearsSubstances::BioGearsSubstances(BioGearsEngine& data) noexcept
   : SESubstanceManager(data.GetLogger())
   , m_data(data)
 {
   m_isCOActive = false;
+}
+//-------------------------------------------------------------------------------
+BioGearsSubstances::BioGearsSubstances(BioGearsEngine& data, bool loadSubstanceDirectory)
+  : SESubstanceManager(data.GetLogger())
+  , m_data(data)
+{
+  m_isCOActive = false;
+  if (loadSubstanceDirectory) {
+    if (!LoadSubstanceDirectory()) {
+      throw CommonDataModelException(m_errorMsg);
+    } 
+  }
 }
 //-------------------------------------------------------------------------------
 BioGearsSubstances::~BioGearsSubstances()
@@ -1067,52 +1079,53 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
 
   bool substancesAreMissing = false;
   if (m_O2 == nullptr) {
-    Error("Oxygen Definition not found");
+
+    m_errorMsg =("Oxygen Definition not found");
   }
   if (m_CO == nullptr) {
-    Error("CarbonMonoxide Definition not found");
+    m_errorMsg = ("CarbonMonoxide Definition not found");
   }
   if (m_CO2 == nullptr) {
-    Error("CarbonDioxide Definition not found");
+    m_errorMsg =("CarbonDioxide Definition not found");
   }
   if (m_N2 == nullptr) {
-    Error("Nitrogen Definition not found");
+    m_errorMsg =("Nitrogen Definition not found");
   }
   if (m_Hb == nullptr) {
-    Error("Hemoglobin Definition not found");
+    m_errorMsg =("Hemoglobin Definition not found");
   }
   if (m_HbO2 == nullptr) {
-    Error("Oxyhemoglobin Definition not found");
+    m_errorMsg =("Oxyhemoglobin Definition not found");
   }
   if (m_HbCO2 == nullptr) {
-    Error("Carbaminohemoglobin Definition not found");
+    m_errorMsg =("Carbaminohemoglobin Definition not found");
   }
   if (m_HbCO == nullptr) {
-    Error("Carboxyhemoglobin Definition not found");
+    m_errorMsg =("Carboxyhemoglobin Definition not found");
   }
   if (m_HbO2CO2 == nullptr) {
-    Error("OxyCarbaminohemoglobin Definition not found");
+    m_errorMsg =("OxyCarbaminohemoglobin Definition not found");
   }
   if (m_HCO3 == nullptr) {
-    Error("Bicarbonate Definition not found");
+    m_errorMsg =("Bicarbonate Definition not found");
   }
   if (m_epi == nullptr) {
-    Error("Epinephrine Definition not found");
+    m_errorMsg =("Epinephrine Definition not found");
   }
   if (m_platelets == nullptr) {
-    Error("Platelets Definition not found");
+    m_errorMsg =("Platelets Definition not found");
   }
   if (m_AntigenA == nullptr) {
-    Error("Antigen A Definition not found");
+    m_errorMsg =("Antigen A Definition not found");
   }
   if (m_AntigenB == nullptr) {
-    Error("Antigen B Definition not found");
+    m_errorMsg =("Antigen B Definition not found");
   }
   if (m_RBC == nullptr) {
-    Error("Red Blood Cell Definition not found");
+    m_errorMsg =("Red Blood Cell Definition not found");
   }
   if (m_WBC == nullptr) {
-    Error("White Blood Cell Definition not found");
+    m_errorMsg =("White Blood Cell Definition not found");
   }
 
   if (m_O2 == nullptr || m_CO == nullptr || m_CO2 == nullptr || m_N2 == nullptr || m_Hb == nullptr || m_HbO2 == nullptr
@@ -1136,49 +1149,64 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
   m_urea = GetSubstance("Urea");
 
   if (m_albumin == nullptr) {
-    Error("Albumin Definition not found");
+    m_errorMsg =("Albumin Definition not found");
+    Error(m_errorMsg);
   }
   if (m_aminoAcids == nullptr) {
-    Error("AminoAcids Definition not found");
+    m_errorMsg =("AminoAcids Definition not found");
+    Error(m_errorMsg);
   }
   if (m_calcium == nullptr) {
-    Error("Calcium Definition not found");
+    m_errorMsg =("Calcium Definition not found");
+    Error(m_errorMsg);
   }
   if (m_chloride == nullptr) {
-    Error("Chloride Definition not found");
+    m_errorMsg =("Chloride Definition not found");
+    Error(m_errorMsg);
   }
   if (m_creatinine == nullptr) {
-    Error("Creatinine Definition not found");
+    m_errorMsg = ("Creatinine Definition not found");
+    Error(m_errorMsg);
   }
   if (m_globulin == nullptr) {
-    Error("Globulin Definition not found");
+    m_errorMsg = ("Globulin Definition not found");
+    Error(m_errorMsg);
   }
   if (m_glucagon == nullptr) {
-    Error("Glucagon Definition not found");
+    m_errorMsg = ("Glucagon Definition not found");
+    Error(m_errorMsg);
   }
   if (m_glucose == nullptr) {
-    Error("Glucose Definition not found");
+    m_errorMsg = ("Glucose Definition not found");
+    Error(m_errorMsg);
   }
   if (m_insulin == nullptr) {
-    Error("Insulin Definition not found");
+    m_errorMsg = ("Insulin Definition not found");
+    Error(m_errorMsg);
   }
   if (m_ketones == nullptr) {
-    Error("Ketones Definition not found");
+    m_errorMsg = ("Ketones Definition not found");
+    Error(m_errorMsg);
   }
   if (m_lactate == nullptr) {
-    Error("Lactate Definition not found");
+    m_errorMsg = ("Lactate Definition not found");
+    Error(m_errorMsg);
   }
   if (m_potassium == nullptr) {
-    Error("Potassium Definition not found");
+    m_errorMsg = ("Potassium Definition not found");
+    Error(m_errorMsg);
   }
   if (m_sodium == nullptr) {
-    Error("Sodium Definition not found");
+    m_errorMsg = ("Sodium Definition not found");
+    Error(m_errorMsg);
   }
   if (m_triacylglycerol == nullptr) {
-    Error("Triacylglycerol Definition not found");
+    m_errorMsg = ("Triacylglycerol Definition not found");
+    Error(m_errorMsg);
   }
   if (m_urea == nullptr) {
-    Error("Urea Definition not found");
+    m_errorMsg = ("Urea Definition not found");
+    Error(m_errorMsg);
   }
   // These metabolites will be activated in initialization
   if (m_albumin == nullptr || m_aminoAcids == nullptr || m_calcium == nullptr || m_chloride == nullptr || m_creatinine == nullptr
@@ -1193,7 +1221,8 @@ bool BioGearsSubstances::LoadSubstanceDirectory()
         if (pdMod.second->GetEC50().IsNegative()) {
           std::stringstream ss;
           ss << sub->GetName() << ": " << pdMod.first << " cannot have EC50 < 0";
-          Fatal(ss);
+          m_errorMsg = ss.str();
+          Fatal(m_errorMsg);
           return false;
         }
       }

@@ -489,9 +489,9 @@ protected:
   /** Tissue */
   /////////////
 public:
-  virtual bool HasEnableTissue() const { return m_TissueEnabled != (CDM::enumOnOff::value)-1; }
-  virtual bool IsTissueEnabled() const { return m_TissueEnabled == CDM::enumOnOff::On; }
-  virtual void EnableTissue(CDM::enumOnOff::value s) { m_TissueEnabled = s; }
+  virtual bool HasEnableTissue() const;
+  virtual bool IsTissueEnabled() const;
+  virtual void EnableTissue(CDM::enumOnOff::value s);
 
 protected:
   CDM::enumOnOff::value m_TissueEnabled;

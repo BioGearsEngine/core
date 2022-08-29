@@ -61,7 +61,8 @@ class BIOGEARS_API BioGearsSubstances : public SESubstanceManager {
   friend class BioGearsEngineTest;
 
 public:
-  BioGearsSubstances(BioGearsEngine& data);
+  BioGearsSubstances(BioGearsEngine& data) noexcept;
+  BioGearsSubstances(BioGearsEngine& data, bool LoadSubstances);
   virtual ~BioGearsSubstances();
 
   virtual void Clear();
@@ -178,5 +179,7 @@ protected:
   std::map<SESubstance*, SizeIndependentDepositionEfficencyCoefficient*> m_SIDECoefficients;
 
   BioGearsEngine& m_data;
+
+  std::string m_errorMsg;
 };
 }

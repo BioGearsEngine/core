@@ -81,8 +81,10 @@ namespace io {
   {
     if (in.HasECGInterpolator())
       out.ElectroCardioGramInterpolator(std::unique_ptr<CDM::ElectroCardioGramWaveformInterpolatorData>(in.m_ECGInterpolator->Unload()));
-    if (in.HasStabilizationCriteria())
-      out.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(in.m_StabilizationCriteria->Unload()));
+    if (in.HasDynamicStabilizationCriteria())
+      out.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(in.m_DynamicStabilizationCriteria->Unload()));
+    if (in.HasTimedStabilizationCriteria())
+      out.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(in.m_TimedStabilizationCriteria->Unload()));
     if (in.HasTimeStep())
       io::Property::UnMarshall(*in.m_TimeStep, out.TimeStep());
     if (in.HasWritePatientBaselineFile())

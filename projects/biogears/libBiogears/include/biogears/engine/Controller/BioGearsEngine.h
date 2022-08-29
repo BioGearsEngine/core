@@ -93,10 +93,12 @@ public:
 
   BIOGEARS_API ~BioGearsEngine() override;
 
-  BIOGEARS_API bool LoadState(char const* file, SEScalarTime const* simTime = nullptr) override;
-  BIOGEARS_API bool LoadState(std::string const& file, SEScalarTime const* simTime = nullptr) override;
-  BIOGEARS_API bool LoadState(const CDM::PhysiologyEngineStateData& state, SEScalarTime const* simTime = nullptr) override;
-  BIOGEARS_API bool LoadState(char const* buffer, size_t size) override;
+  BIOGEARS_API auto IsValid() -> bool;
+
+  BIOGEARS_API auto LoadState(char const* file, SEScalarTime const* simTime = nullptr) -> bool override;
+  BIOGEARS_API auto LoadState(std::string const& file, SEScalarTime const* simTime = nullptr) -> bool override;
+  BIOGEARS_API auto LoadState(const CDM::PhysiologyEngineStateData& state, SEScalarTime const* simTime = nullptr) -> bool override;
+  BIOGEARS_API auto LoadState(char const* buffer, size_t size) -> bool override;
 
   BIOGEARS_API auto SaveStateToFile(char const* file) const -> void override;
   BIOGEARS_API auto SaveStateToFile(std::string const& file = "") const -> void override;
@@ -183,7 +185,7 @@ public:
   BIOGEARS_API auto GetCircuits() const -> BioGearsCircuits const&;
 
   BIOGEARS_API auto GetCompartments() -> BioGearsCompartments&;
-  BIOGEARS_API auto GetCompartments() const -> BioGearsCompartments  const& override;
+  BIOGEARS_API auto GetCompartments() const -> BioGearsCompartments const& override;
 
   BIOGEARS_API auto GetConditions() -> SEConditionManager&;
   BIOGEARS_API auto GetConditions() const -> SEConditionManager const& override;
@@ -192,7 +194,7 @@ public:
   BIOGEARS_API auto GetConfiguration() const -> BioGearsConfiguration const& override;
 
   BIOGEARS_API auto GetDrugsSystem() -> Drugs&;
-  BIOGEARS_API auto GetDrugsSystem() const -> Drugs const & override;
+  BIOGEARS_API auto GetDrugsSystem() const -> Drugs const& override;
 
   BIOGEARS_API auto GetElectroCardioGram() -> ECG&;
   BIOGEARS_API auto GetElectroCardioGram() const -> ECG const& override;
@@ -237,12 +239,13 @@ public:
 
   BIOGEARS_API auto GetTissueSystem() -> Tissue&;
   BIOGEARS_API auto GetTissueSystem() const -> Tissue const& override;
- 
+
   BIOGEARS_API auto GetAirwayMode() const -> CDM::enumBioGearsAirwayMode::value const;
   BIOGEARS_API auto GetIntubation() const -> CDM::enumOnOff::value const;
 
   BIOGEARS_API void SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode);
   BIOGEARS_API void SetIntubation(CDM::enumOnOff::value s);
+
 protected:
   BIOGEARS_API bool IsReady() const;
   BIOGEARS_API bool InitializeEngine(const std::vector<const SECondition*>* conditions = nullptr, PhysiologyEngineConfiguration const* config = nullptr);
@@ -275,26 +278,25 @@ protected:
 private:
   auto GetStateData() const -> std::unique_ptr<CDM::PhysiologyEngineStateData>;
 
-  DataTrack* m_DataTrack;
+  double m_timeStep_remainder = 0.0;
+  double m_timeSinceLastDataTrack = 0.0;
+  CDM::enumBioGearsAirwayMode::value m_AirwayMode = CDM::enumBioGearsAirwayMode::value::Free;
+  CDM::enumOnOff::value m_Intubation = CDM::enumOnOff::value::Off;
 
+  std::unique_ptr<Logger> m_managedLogger;
   std::unique_ptr<SEScalarTime> m_CurrentTime;
   std::unique_ptr<SEScalarTime> m_SimulationTime;
-  CDM::enumBioGearsAirwayMode::value m_AirwayMode;
-  CDM::enumOnOff::value m_Intubation;
-
-  std::unique_ptr<BioGearsConfiguration> m_Config;
-  std::unique_ptr<SaturationCalculator> m_SaturationCalculator;
-  std::unique_ptr<DiffusionCalculator> m_DiffusionCalculator;
 
   std::unique_ptr<BioGearsSubstances> m_Substances;
-
-  std::unique_ptr<SEActionManager> m_Actions;
-  std::unique_ptr<SEConditionManager> m_Conditions;
   std::unique_ptr<BioGearsCircuits> m_Circuits;
   std::unique_ptr<BioGearsCompartments> m_Compartments;
 
-  std::unique_ptr<Environment> m_Environment;
+  std::unique_ptr<BioGearsConfiguration> m_Config;
+  std::unique_ptr<SEActionManager> m_Actions;
+  std::unique_ptr<SEConditionManager> m_Conditions;
 
+  std::unique_ptr<SEPatient> m_Patient;
+  std::unique_ptr<Environment> m_Environment;
   std::unique_ptr<BloodChemistry> m_BloodChemistrySystem;
   std::unique_ptr<Cardiovascular> m_CardiovascularSystem;
   std::unique_ptr<Endocrine> m_EndocrineSystem;
@@ -306,21 +308,17 @@ private:
   std::unique_ptr<Respiratory> m_RespiratorySystem;
   std::unique_ptr<Drugs> m_DrugSystem;
   std::unique_ptr<Tissue> m_TissueSystem;
-
-  std::unique_ptr<ECG> m_ECG;
-
+  std::unique_ptr<ECG> m_ElectroCardioGram;
   std::unique_ptr<AnesthesiaMachine> m_AnesthesiaMachine;
-
   std::unique_ptr<Inhaler> m_Inhaler;
 
-  std::unique_ptr<SEPatient> m_Patient;
+  std::unique_ptr<SaturationCalculator> m_SaturationCalculator;
+  std::unique_ptr<DiffusionCalculator> m_DiffusionCalculator;
 
-  std::unique_ptr<Logger> m_managedLogger;
-
-  double m_timeStep_remainder = 0.0;
-  double m_timeSinceLastDataTrack = 0.0;
   SEEventHandler* m_EventHandler;
+  DataTrack* m_DataTrack;
   PhysiologyEngineTrack m_EngineTrack;
+
 #pragma warning(push, 0)
   std::stringstream m_ss;
 #pragma warning(pop)

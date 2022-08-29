@@ -11,10 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Controller/BioGearsCompartments.h>
 
-//Standard Includes
+// Standard Includes
 #include <string>
 #include <vector>
-//Project Includes
+// Project Includes
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
@@ -179,19 +179,19 @@ void BioGearsCompartments::StateChange()
     m_ExtracellularFluid.clear();
     m_IntracellularFluid.clear();
     for (SETissueCompartment* t : m_TissueLeafCompartments) {
-      cmpt = GetLiquidCompartment(std::string{ t->GetName() } + "Extracellular");
+      cmpt = GetLiquidCompartment(std::string { t->GetName() } + "Extracellular");
       if (cmpt == nullptr)
-        Fatal(std::string{ "Could not find the tissue " } + t->GetName() + " Extracellular compartment");
+        Fatal(std::string { "Could not find the tissue " } + t->GetName() + " Extracellular compartment");
       m_ExtracellularFluid[t] = cmpt;
-      cmpt = GetLiquidCompartment(std::string{ t->GetName() } + "Intracellular");
+      cmpt = GetLiquidCompartment(std::string { t->GetName() } + "Intracellular");
       if (cmpt == nullptr)
-        Fatal(std::string{ "Could not find the tissue " } + t->GetName() + " Intracellular compartment");
+        Fatal(std::string { "Could not find the tissue " } + t->GetName() + " Intracellular compartment");
       m_IntracellularFluid[t] = cmpt;
     }
   }
   if (m_data.GetConfiguration().IsRenalEnabled()) {
     SORT_CMPTS(Urine, Liquid);
-  } 
+  }
   SORT_CMPTS(Vascular, Liquid);
   // Equipment
   SORT_CMPTS(AnesthesiaMachine, Gas);
@@ -381,5 +381,122 @@ SEGasCompartmentGraph& BioGearsCompartments::GetRespiratoryAndMechanicalVentilat
   if (m_CombinedRespiratoryMechanicalVentilatorGraph == nullptr)
     m_CombinedRespiratoryMechanicalVentilatorGraph = &CreateGasGraph(BGE::Graph::RespiratoryAndMechanicalVentilator);
   return *m_CombinedRespiratoryMechanicalVentilatorGraph;
+}
+
+// Compartment Helpers
+const std::vector<SELiquidCompartment*>& BioGearsCompartments::GetAerosolCompartments()
+{
+  return m_AerosolCompartments;
+}
+const std::vector<SELiquidCompartment*>& BioGearsCompartments::GetAerosolLeafCompartments()
+{
+  return m_AerosolLeafCompartments;
+}
+
+const std::vector<SELiquidCompartment*>& BioGearsCompartments::GetChymeCompartments()
+{
+  return m_ChymeCompartments;
+}
+const std::vector<SELiquidCompartment*>& BioGearsCompartments::GetChymeLeafCompartments()
+{
+  return m_ChymeLeafCompartments;
+}
+
+const std::vector<SEGasCompartment*>& BioGearsCompartments::GetPulmonaryCompartments()
+{
+  return m_PulmonaryCompartments;
+}
+const std::vector<SEGasCompartment*>& BioGearsCompartments::GetPulmonaryLeafCompartments()
+{
+  return m_PulmonaryLeafCompartments;
+}
+
+const std::vector<SEThermalCompartment*>& BioGearsCompartments::GetTemperatureCompartments()
+{
+  return m_TemperatureCompartments;
+}
+const std::vector<SEThermalCompartment*>& BioGearsCompartments::GetTemperatureLeafCompartments()
+{
+  return m_TemperatureLeafCompartments;
+}
+
+const std::vector<SETissueCompartment*>& BioGearsCompartments::GetTissueCompartments()
+{
+  return m_TissueCompartments;
+}
+const std::vector<SETissueCompartment*>& BioGearsCompartments::GetTissueLeafCompartments()
+{
+  return m_TissueLeafCompartments;
+}
+
+const std::vector<SELiquidCompartment*>& BioGearsCompartments::GetUrineCompartments()
+{
+  return m_UrineCompartments;
+}
+const std::vector<SELiquidCompartment*>& BioGearsCompartments::GetUrineLeafCompartments()
+{
+  return m_UrineLeafCompartments;
+}
+
+const std::vector<SELiquidCompartment*>& BioGearsCompartments::GetVascularCompartments()
+{
+  return m_VascularCompartments;
+}
+const std::vector<SELiquidCompartment*>& BioGearsCompartments::GetVascularLeafCompartments()
+{
+  return m_VascularLeafCompartments;
+}
+
+const std::vector<SEGasCompartment*>& BioGearsCompartments::GetAnesthesiaMachineCompartments()
+{
+  return m_AnesthesiaMachineCompartments;
+}
+const std::vector<SEGasCompartment*>& BioGearsCompartments::GetAnesthesiaMachineLeafCompartments()
+{
+  return m_AnesthesiaMachineLeafCompartments;
+}
+
+const std::vector<SEGasCompartment*>& BioGearsCompartments::GetInhalerCompartments()
+{
+  return m_InhalerCompartments;
+}
+const std::vector<SEGasCompartment*>& BioGearsCompartments::GetInhalerLeafCompartments()
+{
+  return m_InhalerLeafCompartments;
+}
+
+const std::vector<SELiquidCompartment*>& BioGearsCompartments::GetInhalerAerosolCompartments()
+{
+  return m_InhalerAerosolCompartments;
+}
+const std::vector<SELiquidCompartment*>& BioGearsCompartments::GetInhalerAerosolLeafCompartments()
+{
+  return m_InhalerAerosolLeafCompartments;
+}
+
+const std::vector<SEGasCompartment*>& BioGearsCompartments::GetMechanicalVentilatorCompartments()
+{
+  return m_MechanicalVentilatorCompartments;
+}
+const std::vector<SEGasCompartment*>& BioGearsCompartments::GetMechanicalVentilatorLeafCompartments()
+{
+  return m_MechanicalVentilatorCompartments;
+}
+
+SELiquidCompartment& BioGearsCompartments::GetExtracellularFluid(SETissueCompartment& t)
+{
+  return *m_ExtracellularFluid[&t];
+}
+SELiquidCompartment& BioGearsCompartments::GetIntracellularFluid(SETissueCompartment& t)
+{
+  return *m_IntracellularFluid[&t];
+}
+const std::map<SETissueCompartment*, SELiquidCompartment*>& BioGearsCompartments::GetExtracellularFluid()
+{
+  return m_ExtracellularFluid;
+}
+const std::map<SETissueCompartment*, SELiquidCompartment*>& BioGearsCompartments::GetIntracellularFluid()
+{
+  return m_IntracellularFluid;
 }
 }
