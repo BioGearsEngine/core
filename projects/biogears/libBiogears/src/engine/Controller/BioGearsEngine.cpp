@@ -171,10 +171,6 @@ BioGearsEngine::BioGearsEngine(Logger const* logger, const std::string& working_
   m_SimulationTime->SetValue(0, TimeUnit::s);
   m_CurrentTime->SetValue(0, TimeUnit::s);
 
-  if (!m_Substances->LoadSubstanceDirectory()) {
-    Error("Unable to Load Substnace Directory! Engine is invalid and can not continue");
-    return;
-  }
   const_cast<Logger*>(m_Logger)->SetLogTime(m_SimulationTime.get());
   m_Logger->GetIoManager().lock()->SetBioGearsWorkingDirectory(working_dir);
 
@@ -1548,8 +1544,6 @@ void BioGearsEngine::SetUp()
   
   m_SaturationCalculator = SaturationCalculator::make_unique(*this);
   m_DiffusionCalculator = DiffusionCalculator::make_unique(*this);
-
-  
 
 }
 //---------------------------------------------------------------------
