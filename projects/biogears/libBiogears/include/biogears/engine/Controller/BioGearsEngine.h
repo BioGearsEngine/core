@@ -288,14 +288,13 @@ private:
   std::unique_ptr<SEScalarTime> m_SimulationTime;
 
   std::unique_ptr<BioGearsSubstances> m_Substances;
-  std::unique_ptr<BioGearsCircuits> m_Circuits;
-  std::unique_ptr<BioGearsCompartments> m_Compartments;
+  std::unique_ptr<SEPatient> m_Patient;
 
   std::unique_ptr<BioGearsConfiguration> m_Config;
+  std::unique_ptr<SaturationCalculator> m_SaturationCalculator;
   std::unique_ptr<SEActionManager> m_Actions;
   std::unique_ptr<SEConditionManager> m_Conditions;
 
-  std::unique_ptr<SEPatient> m_Patient;
   std::unique_ptr<Environment> m_Environment;
   std::unique_ptr<BloodChemistry> m_BloodChemistrySystem;
   std::unique_ptr<Cardiovascular> m_CardiovascularSystem;
@@ -311,8 +310,10 @@ private:
   std::unique_ptr<ECG> m_ElectroCardioGram;
   std::unique_ptr<AnesthesiaMachine> m_AnesthesiaMachine;
   std::unique_ptr<Inhaler> m_Inhaler;
+  
+  std::unique_ptr<BioGearsCompartments> m_Compartments;
+  std::unique_ptr<BioGearsCircuits> m_Circuits;
 
-  std::unique_ptr<SaturationCalculator> m_SaturationCalculator;
   std::unique_ptr<DiffusionCalculator> m_DiffusionCalculator;
 
   SEEventHandler* m_EventHandler;

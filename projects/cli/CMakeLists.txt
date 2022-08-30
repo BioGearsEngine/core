@@ -13,7 +13,7 @@ if(Biogears_BUILD_TOOLS)
 ###############################################################################
 # Requirments
 ###############################################################################
-if (${PREFIX}_BUILD_STATIC)
+if (Biogears_BUILD_STATIC)
 	add_definitions("-DBIOGEARS_BUILT_AS_STATIC")
   add_definitions("-DARACORE_BUILT_AS_STATIC")
 endif()

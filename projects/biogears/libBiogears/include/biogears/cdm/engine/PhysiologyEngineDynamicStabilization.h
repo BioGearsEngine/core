@@ -28,6 +28,7 @@ class BIOGEARS_API PropertyConvergence : public Loggable {
   friend io::EngineConfiguration;
 
 protected:
+  PropertyConvergence() = delete;
   PropertyConvergence(SEDataRequest& dr, Logger const* logger);
 
 public:

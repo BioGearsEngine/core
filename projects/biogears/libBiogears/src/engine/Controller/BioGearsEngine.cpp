@@ -67,21 +67,21 @@ BioGearsEngine::BioGearsEngine(const char* logFileName)
 }
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(const std::string& logFileName, const std::string& working_dir)
-  : PhysiologyEngine()
-  , m_managedLogger(std::make_unique<Logger>(logFileName))
+  : PhysiologyEngine(new Logger(logFileName))
+  , m_managedLogger(const_cast<Logger*>(m_Logger))
   , m_CurrentTime(std::make_unique<SEScalarTime>())
   , m_SimulationTime(std::make_unique<SEScalarTime>())
 
   , m_Substances(std::make_unique<BioGearsSubstances>(*this, true))
+  , m_Patient(std::make_unique<SEPatient>(GetLogger()))
   , m_Config(std::make_unique<BioGearsConfiguration>(*m_Substances))
+
+  , m_SaturationCalculator(SaturationCalculator::make_unique(*this))
   , m_Actions(std::make_unique<SEActionManager>(*m_Substances))
   , m_Conditions(std::make_unique<SEConditionManager>(*m_Substances))
 
-  , m_Circuits(BioGearsCircuits::make_unique(*this))
-  , m_Compartments(BioGearsCompartments::make_unique(*this))
-
-  , m_Patient(std::make_unique<SEPatient>(GetLogger()))
   , m_Environment(Environment::make_unique(*this))
+
   , m_BloodChemistrySystem(BloodChemistry::make_unique(*this))
   , m_CardiovascularSystem(Cardiovascular::make_unique(*this))
   , m_EndocrineSystem(Endocrine::make_unique(*this))
@@ -93,11 +93,14 @@ BioGearsEngine::BioGearsEngine(const std::string& logFileName, const std::string
   , m_RespiratorySystem(Respiratory::make_unique(*this))
   , m_DrugSystem(Drugs::make_unique(*this))
   , m_TissueSystem(Tissue::make_unique(*this))
+
   , m_ElectroCardioGram(ECG::make_unique(*this))
   , m_AnesthesiaMachine(AnesthesiaMachine::make_unique(*this))
   , m_Inhaler(Inhaler::make_unique(*this))
+  
+  , m_Compartments(BioGearsCompartments::make_unique(*this))
+  , m_Circuits(BioGearsCircuits::make_unique(*this))
 
-  , m_SaturationCalculator(SaturationCalculator::make_unique(*this))
   , m_DiffusionCalculator(DiffusionCalculator::make_unique(*this))
 
   , m_EventHandler(nullptr)
@@ -106,6 +109,8 @@ BioGearsEngine::BioGearsEngine(const std::string& logFileName, const std::string
 {
   m_SimulationTime->SetValue(0, TimeUnit::s);
   m_CurrentTime->SetValue(0, TimeUnit::s);
+  const_cast<Logger*>(m_Logger)->SetLogTime(m_SimulationTime.get());
+
   m_Config->Initialize();
   m_Logger->GetIoManager().lock()->SetBioGearsWorkingDirectory(working_dir);
   m_SimulationPhase = SimulationPhase::NotReady;

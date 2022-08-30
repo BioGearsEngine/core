@@ -517,11 +517,12 @@ const std::vector<PhysiologyEngineDynamicStabilizationCriteria*>& PhysiologyEngi
 
 PhysiologyEngineDynamicStabilizationCriteria::PhysiologyEngineDynamicStabilizationCriteria(Logger const* logger)
   : Loggable(logger)
+  , m_ConvergenceTime(new SEScalarTime())
+  , m_MinimumReactionTime(new SEScalarTime())
+  , m_MaximumAllowedStabilizationTime(new SEScalarTime())
   , m_DataRequestMgr(logger)
 {
-  m_ConvergenceTime = nullptr;
-  m_MinimumReactionTime = nullptr;
-  m_MaximumAllowedStabilizationTime = nullptr;
+
 }
 //-----------------------------------------------------------------------------
 PhysiologyEngineDynamicStabilizationCriteria::~PhysiologyEngineDynamicStabilizationCriteria()
@@ -560,7 +561,7 @@ void PhysiologyEngineDynamicStabilizationCriteria::Unload(CDM::PhysiologyEngineD
   data.ConvergenceTime(std::unique_ptr<CDM::ScalarTimeData>(m_ConvergenceTime->Unload()));
   data.MinimumReactionTime(std::unique_ptr<CDM::ScalarTimeData>(m_MinimumReactionTime->Unload()));
   data.MaximumAllowedStabilizationTime(std::unique_ptr<CDM::ScalarTimeData>(m_MaximumAllowedStabilizationTime->Unload()));
-  for (auto pc : m_PropertyConvergence) {
+  for (auto& pc : m_PropertyConvergence) {
     std::unique_ptr<CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData> pcData(new CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData());
     pcData->Name(pc->GetDataRequest().GetName());
     pcData->PercentDifference(pc->m_Target);
@@ -835,10 +836,10 @@ PropertyConvergence::PropertyConvergence(SEDataRequest& dr, Logger const* logger
   , m_DataRequestScalar(logger)
 {
   m_Error = 0;
-  m_Target = 0;
-  m_LastError = 0;
   m_LastErrorTime_s = 0;
+  
   m_Optional = false;
+  
   m_LastError = SEScalar::dNaN();
   m_Target = SEScalar::dNaN();
 }

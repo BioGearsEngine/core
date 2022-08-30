@@ -29,13 +29,12 @@ PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger const* logge
   , m_Merge(false)
   , m_ECGInterpolator(new SEElectroCardioGramInterpolator(logger))
   , m_TimedStabilizationCriteria(nullptr)
-  , m_DynamicStabilizationCriteria(new PhysiologyEngineDynamicStabilization(logger))
+  , m_DynamicStabilizationCriteria(nullptr)
   , m_TimeStep(new SEScalarTime())
   , m_WritePatientBaselineFile(CDM::enumOnOff::Off)
 {
   m_ECGInterpolator->LoadWaveforms("StandardECG.xml");
   m_TimeStep->SetValue(1.0 / 50.0, TimeUnit::s);
-  m_DynamicStabilizationCriteria->Load("DynamicStabilization.xml");
 }
 
 //-----------------------------------------------------------------------------
