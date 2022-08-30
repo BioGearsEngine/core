@@ -65,7 +65,7 @@ int HowToBolusDrug()
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
 
   bg->AdvanceModelTime(50, TimeUnit::s);
 
@@ -89,7 +89,7 @@ int HowToBolusDrug()
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
   bg->GetLogger()->Info("Finished");
   return 0;
 }

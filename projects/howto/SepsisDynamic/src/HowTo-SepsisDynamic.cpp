@@ -221,7 +221,7 @@ void DynamicSepsis::Status()
   m_bg->GetLogger()->Info(asprintf("Temperature : %f %s", m_bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "deg C"));
   m_bg->GetLogger()->Info(asprintf("Blood Lactate : %f %s", m_bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L), "mmol_Per_L"));
   m_bg->GetLogger()->Info(asprintf("Bacteria Count (Blood) : %f", m_bg->GetBloodChemistrySystem().GetInflammatoryResponse().GetBloodPathogen().GetValue()));
-  m_bg->GetLogger()->Info(asprintf("Antibiotic Activity : %f", m_bg->GetDrugsSystem().GetAntibioticActivity()));
+  m_bg->GetLogger()->Info(asprintf("Antibiotic Activity : %f", m_bg->GetDrugsSystem().GetAntibioticActivity().GetValue()));
 
   std::cout << std::endl;
   m_mutex.unlock();

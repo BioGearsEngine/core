@@ -260,8 +260,8 @@ int HowToEngineUse()
     bg->GetLogger()->Info(asprintf("CO2 Exhaled %f %s", carina->GetSubstanceQuantity(*CO2)->GetVolume(VolumeUnit::mL), "mL"));
   }
 
-  bg->GetLogger()->Info(asprintf("OxygenSaturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("ArterialBlood pH : %f", bg->GetBloodChemistrySystem().GetArterialBloodPH()));
+  bg->GetLogger()->Info(asprintf("OxygenSaturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
+  bg->GetLogger()->Info(asprintf("ArterialBlood pH : %f", bg->GetBloodChemistrySystem().GetArterialBloodPH().GetValue()));
   //  You should save off the SESubstanceQuantity* if you will need it more than once
   bg->GetLogger()->Info(asprintf("Lactate Concentration : %f %s", bg->GetSubstanceManager().GetSubstance("Lactate")->GetBloodConcentration(MassPerVolumeUnit::mg_Per_dL), "mg_Per_dL"));
   bg->GetLogger()->Info(asprintf("Core Body Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));

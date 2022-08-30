@@ -121,7 +121,7 @@ int HowToCPR()
   bg->GetLogger()->Info(asprintf("Stroke Volume : %f %s", bg->GetCardiovascularSystem().GetHeartStrokeVolume(VolumeUnit::mL), "mL"));
   bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
   bg->GetLogger()->Info(asprintf("Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Ejection Fraction : %f", bg->GetCardiovascularSystem().GetHeartEjectionFraction()));
+  bg->GetLogger()->Info(asprintf("Heart Ejection Fraction : %f", bg->GetCardiovascularSystem().GetHeartEjectionFraction().GetValue()));
   ;
 
   bg->AdvanceModelTime(50, TimeUnit::s);
@@ -146,7 +146,7 @@ int HowToCPR()
   bg->GetLogger()->Info(asprintf("Stroke Volume : %f %s", bg->GetCardiovascularSystem().GetHeartStrokeVolume(VolumeUnit::mL), "mL"));
   bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
   bg->GetLogger()->Info(asprintf("Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Ejection Fraction : %f", bg->GetCardiovascularSystem().GetHeartEjectionFraction()));
+  bg->GetLogger()->Info(asprintf("Heart Ejection Fraction : %f", bg->GetCardiovascularSystem().GetHeartEjectionFraction().GetValue()));
   ;
 
   // After patient's heart is not beating, start doing CPR
@@ -230,7 +230,7 @@ int HowToCPR()
   bg->GetLogger()->Info(asprintf("Stroke Volume : %f %s", bg->GetCardiovascularSystem().GetHeartStrokeVolume(VolumeUnit::mL), "mL"));
   bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
   bg->GetLogger()->Info(asprintf("Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetArterialPressure(PressureUnit::mmHg), "mmHg"));
-  bg->GetLogger()->Info(asprintf("Heart Ejection Fraction : %f", bg->GetCardiovascularSystem().GetHeartEjectionFraction()));
+  bg->GetLogger()->Info(asprintf("Heart Ejection Fraction : %f", bg->GetCardiovascularSystem().GetHeartEjectionFraction().GetValue()));
   bg->GetLogger()->Info("Finished");
   return 0;
 }

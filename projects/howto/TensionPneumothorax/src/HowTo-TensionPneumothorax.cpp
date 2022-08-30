@@ -66,7 +66,7 @@ int HowToTensionPneumothorax()
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f" , bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
   bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
   ;
 
@@ -99,7 +99,7 @@ int HowToTensionPneumothorax()
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
   bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
   ;
 
@@ -124,7 +124,7 @@ int HowToTensionPneumothorax()
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
   bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem().GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
   bg->GetLogger()->Info("Finished");
   return 0;

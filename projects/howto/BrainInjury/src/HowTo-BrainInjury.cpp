@@ -84,10 +84,10 @@ int HowToBrainInjury()
   // You can get the following pupillary effects
   // Reactivity Change in pupil recation time to light. -1 complete reduction/no response, 0 is normal, and 1 is the fastest reaction time.
   // Pupil size change from normal. -1 is fully constricted, 0 is no change, +1 is fully dilated.
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier().GetValue()));
 
   bg->AdvanceModelTime(30, TimeUnit::s);
 
@@ -117,10 +117,10 @@ int HowToBrainInjury()
   // You can get the following pupillary effects
   // Reactivity Change in pupil recation time to light. -1 complete reduction/no response, 0 is normal, and 1 is the fastest reaction time.
   // Pupil size change from normal. -1 is fully constricted, 0 is no change, +1 is fully dilated.
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier().GetValue()));
 
   // You can remove a brain injury by setting the severity to 0, this will instantly remove the flow resistance in the brain, and the patient will recover.
   tbi.GetSeverity().SetValue(0.0);
@@ -145,10 +145,10 @@ int HowToBrainInjury()
   // You can get the following pupillary effects
   // Reactivity Change in pupil recation time to light. -1 complete reduction/no response, 0 is normal, and 1 is the fastest reaction time.
   // Pupil size change from normal. -1 is fully constricted, 0 is no change, +1 is fully dilated.
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier().GetValue()));
 
   // A more severe injury has more pronounced effects
   tbi.GetSeverity().SetValue(1);
@@ -175,10 +175,10 @@ int HowToBrainInjury()
   // You can get the following pupillary effects
   // Reactivity Change in pupil recation time to light. -1 complete reduction/no response, 0 is normal, and 1 is the fastest reaction time.
   // Pupil size change from normal. -1 is fully constricted, 0 is no change, +1 is fully dilated.
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier()));
-  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetSizeModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Left Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetLeftEyePupillaryResponse().GetReactivityModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Size Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetSizeModifier().GetValue()));
+  bg->GetLogger()->Info(asprintf("Right Eye Pupil Reactivity Modifier : %f", bg->GetNervousSystem().GetRightEyePupillaryResponse().GetReactivityModifier().GetValue()));
 
   bg->GetLogger()->Info("Finished");
   return 0;

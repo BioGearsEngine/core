@@ -164,7 +164,7 @@ void OutputState(std::unique_ptr<BioGearsEngine>& bgOut)
   bgOut->GetLogger()->Info(asprintf( "Tidal Volume : %f %s", bgOut->GetRespiratorySystem().GetTidalVolume(VolumeUnit::mL), "mL"));
   bgOut->GetLogger()->Info(asprintf( "C02 Partial Pressure in Aorta : %f %s", bgOut->GetBloodChemistrySystem().GetArterialCarbonDioxidePressure(PressureUnit::mmHg), "mmHg"));
   bgOut->GetLogger()->Info(asprintf( "O2 Partial Pressure in Aorta : %f %s", bgOut->GetBloodChemistrySystem().GetArterialOxygenPressure(PressureUnit::mmHg), "mmHg"));
-  bgOut->GetLogger()->Info(asprintf( "Oxygen Saturation : %f%%" , bgOut->GetBloodChemistrySystem().GetOxygenSaturation()));
+  bgOut->GetLogger()->Info(asprintf("Oxygen Saturation : %f%%", bgOut->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
   bgOut->GetLogger()->Info(asprintf( "Heart Rate : %f %s", bgOut->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bgOut->GetLogger()->Info(asprintf( "Red Blood Cell Acetylcholinesterase Level : %f %s", bgOut->GetBloodChemistrySystem().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L), "mol_Per_L"));
 }

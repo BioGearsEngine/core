@@ -269,7 +269,7 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
     if ((int)m_bg->GetSimulationTime(TimeUnit::s) == ((int)secsBeforeIntervention)) {
       m_bg->GetLogger()->Info(asprintf("administering nasal naloxone"));
       m_bg->GetLogger()->Info(asprintf("Beginning Intervention with infusion at %f %s", standardNaloxoneDose_mg, "mg"));
-      m_bg->GetLogger()->Info(asprintf("Current O2 Saturation is %f %s", m_bg->GetBloodChemistrySystem().GetOxygenSaturation()));
+      m_bg->GetLogger()->Info(asprintf("Current O2 Saturation is %f %s", m_bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
       SetNaloxoneInfusionRate(standardNaloxoneDose_mg);
     }
 

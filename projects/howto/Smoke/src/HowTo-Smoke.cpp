@@ -95,10 +95,10 @@ int HowToSmoke()
   bg->AdvanceModelTime(5, TimeUnit::s);
 
   bg->GetLogger()->Info("The patient is nice and healthy");
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("CarbonDioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation()));
-  bg->GetLogger()->Info(asprintf("Carbon Monoxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonMonoxideSaturation()));
-  bg->GetLogger()->Info(asprintf("Pulse Oximetry : %f", bg->GetBloodChemistrySystem().GetPulseOximetry()));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
+  bg->GetLogger()->Info(asprintf("CarbonDioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation().GetValue()));
+  bg->GetLogger()->Info(asprintf("Carbon Monoxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonMonoxideSaturation().GetValue()));
+  bg->GetLogger()->Info(asprintf("Pulse Oximetry : %f", bg->GetBloodChemistrySystem().GetPulseOximetry().GetValue()));
   // There are liquid compartments for each of the gas pulmonary compartments, these track the trasportation of liquid and solid substances through the pulmonary tract, and their deposition
   // Currently, since we have not changed the environment there is no Particulate or CO in the system, so the GetSubstanceQuantity call will return nullptr, so keep this commented
   //bg->GetLogger()->Info(asprintf("Particulate Deposition : %f %s", bg->GetCompartments().GetLiquidCompartment(BGE::PulmonaryCompartment::RightAlveoli)->GetSubstanceQuantity(*Particulate)->GetMassDeposited(MassUnit::ug), "ug"));
@@ -126,10 +126,10 @@ int HowToSmoke()
   bg->ProcessAction(envChange);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("CarbonDioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation()));
-  bg->GetLogger()->Info(asprintf("Carbon Monoxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonMonoxideSaturation()));
-  bg->GetLogger()->Info(asprintf("Pulse Oximetry : %f", bg->GetBloodChemistrySystem().GetPulseOximetry()));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
+  bg->GetLogger()->Info(asprintf("CarbonDioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation().GetValue()));
+  bg->GetLogger()->Info(asprintf("Carbon Monoxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonMonoxideSaturation().GetValue()));
+  bg->GetLogger()->Info(asprintf("Pulse Oximetry : %f", bg->GetBloodChemistrySystem().GetPulseOximetry().GetValue()));
   // There are liquid compartments for each of the gas pulmonary compartments, these track the trasportation of liquid and solid substances through the pulmonary tract, and their deposition
   bg->GetLogger()->Info(asprintf("Particulate Deposition : %f %s", bg->GetCompartments().GetLiquidCompartment(BGE::PulmonaryCompartment::RightAlveoli)->GetSubstanceQuantity(*Particulate)->GetMassDeposited(MassUnit::ug), "ug"));
 

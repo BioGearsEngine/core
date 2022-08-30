@@ -102,10 +102,10 @@ int HowToExercise()
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
-  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // Patient is very tired
+  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel().GetValue())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
+  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel().GetValue())); // Patient is very tired
   bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
-  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem().GetTotalWorkRateLevel()));
+  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem().GetTotalWorkRateLevel().GetValue()));
   ; // How much work we are getting / the max work rate possible
 
   // Once exercise has ended, the patient is in a recovery period where the metabolic rate begins to return to its basal value.
@@ -145,8 +145,8 @@ int HowToExercise()
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
-  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // Patient is very tired
+  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel().GetValue())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
+  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel().GetValue())); // Patient is very tired
   bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
   bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem().GetTotalWorkRateLevel()));
   ; // How much work we are getting / the max work rate possible
@@ -189,10 +189,10 @@ int HowToExercise()
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
-  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // Patient is very tired
+  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel().GetValue())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
+  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel().GetValue())); // Patient is very tired
   bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
-  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem().GetTotalWorkRateLevel()));
+  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem().GetTotalWorkRateLevel().GetValue()));
   ; // How much work we are getting / the max work rate possible
 
   // Once exercise has ended, the patient is in a recovery period where the metabolic rate begins to return to its basal value.
@@ -234,10 +234,10 @@ int HowToExercise()
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::kcal_Per_day), "kcal_Per_day"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem().GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("RespirationRate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
-  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel())); // Patient is very tired
+  bg->GetLogger()->Info(asprintf("AchievedExerciseLevel : %f", bg->GetEnergySystem().GetAchievedExerciseLevel().GetValue())); // this is the fraction of what we asked for, 1.0 means we are doing what you asked for.
+  bg->GetLogger()->Info(asprintf("FatigueLevel : %f", bg->GetEnergySystem().GetFatigueLevel().GetValue())); // Patient is very tired
   bg->GetLogger()->Info(asprintf("TotalMetabolicRate : %f %s", bg->GetEnergySystem().GetTotalMetabolicRate(PowerUnit::W), "W")); // We are burning
-  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem().GetTotalWorkRateLevel()));
+  bg->GetLogger()->Info(asprintf("TotalWorkRateLevel : %f", bg->GetEnergySystem().GetTotalWorkRateLevel().GetValue()));
   ; // How much work we are getting / the max work rate possible
 
   // Once exercise has ended, the patient is in a recovery period where the metabolic rate begins to return to its basal value.

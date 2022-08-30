@@ -77,7 +77,7 @@ int HowToAsthma()
   bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min) , "bpm"));
-  bg->GetLogger()->Info(asprintf("InspiratoryExpiratoryRatio : %f", bg->GetRespiratorySystem().GetInspiratoryExpiratoryRatio()));
+  bg->GetLogger()->Info(asprintf("InspiratoryExpiratoryRatio : %f", bg->GetRespiratorySystem().GetInspiratoryExpiratoryRatio().GetValue()));
   bg->GetLogger()->Info(asprintf("Carina InFlow : %f %s", carina->GetInFlow(VolumePerTimeUnit::L_Per_s), "L_Per_s"));
   ;
 
@@ -99,7 +99,7 @@ int HowToAsthma()
   bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min) , "bpm"));
-  bg->GetLogger()->Info(asprintf("InspiratoryExpiratoryRatio : %f", bg->GetRespiratorySystem().GetInspiratoryExpiratoryRatio()));
+  bg->GetLogger()->Info(asprintf("InspiratoryExpiratoryRatio : %f", bg->GetRespiratorySystem().GetInspiratoryExpiratoryRatio().GetValue()));
   bg->GetLogger()->Info(asprintf("Carina InFlow : %f %s", carina->GetInFlow(VolumePerTimeUnit::L_Per_s), "L_Per_s"));
   ;
 
@@ -117,7 +117,7 @@ int HowToAsthma()
   bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem().GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem().GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("InspiratoryExpiratoryRatio : %f", bg->GetRespiratorySystem().GetInspiratoryExpiratoryRatio()));
+  bg->GetLogger()->Info(asprintf("InspiratoryExpiratoryRatio : %f", bg->GetRespiratorySystem().GetInspiratoryExpiratoryRatio().GetValue()));
   bg->GetLogger()->Info(asprintf("Carina InFlow : %f %s", carina->GetInFlow(VolumePerTimeUnit::L_Per_s), "L_Per_s"));
 
   bg->GetLogger()->Info("Finished");
