@@ -75,8 +75,8 @@ int HowToBrainInjury()
   bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation()));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
+  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation().GetValue()));
   bg->GetLogger()->Info(asprintf("Intracranial Pressure : %f %s", bg->GetCardiovascularSystem().GetIntracranialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem().GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Cerebral Blood Flow : %f %s", bg->GetCardiovascularSystem().GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
@@ -108,8 +108,8 @@ int HowToBrainInjury()
   bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation()));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
+  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation().GetValue()));
   bg->GetLogger()->Info(asprintf("Intracranial Pressure : %f %s", bg->GetCardiovascularSystem().GetIntracranialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem().GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Cerebral Blood Flow : %f %s", bg->GetCardiovascularSystem().GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
@@ -136,8 +136,8 @@ int HowToBrainInjury()
   bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation()));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
+  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation().GetValue()));
   bg->GetLogger()->Info(asprintf("Intracranial Pressure : %f %s", bg->GetCardiovascularSystem().GetIntracranialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem().GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Cerebral Blood Flow : %f %s", bg->GetCardiovascularSystem().GetCerebralBloodFlow(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
@@ -166,8 +166,8 @@ int HowToBrainInjury()
   bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem().GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem().GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", bg->GetRespiratorySystem().GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation()));
-  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation()));
+  bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", bg->GetBloodChemistrySystem().GetOxygenSaturation().GetValue()));
+  bg->GetLogger()->Info(asprintf("Carbon Dioxide Saturation : %f", bg->GetBloodChemistrySystem().GetCarbonDioxideSaturation().GetValue()));
   bg->GetLogger()->Info(asprintf("Intracranial Pressure : %f %s", brain->GetPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Cerebral Perfusion Pressure : %f %s", bg->GetCardiovascularSystem().GetCerebralPerfusionPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Cerebral Blood Flow : %f %s", brain->GetInFlow(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
