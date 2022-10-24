@@ -38,9 +38,9 @@ int main(int argc, char* argv[])
 {
   // To run multiple Morphine/Fentanyl overdose values
   std::string overdoseSubstance = "Fentanyl"; // Morphine or fentanyl
-  double lowestOverDose = 0.15; // mg/mL
-  double highestOverDose = 1.0; // mg/mL
-  double doseInc = 0.05;
+  double lowestOverDose = 0.2; // mg/mL
+  double highestOverDose = 2.0; // mg/mL
+  double doseInc = 0.1;
   for (double opioidDose = lowestOverDose; opioidDose <= highestOverDose; opioidDose += doseInc) {
     //HowToNaloxoneNasal();
     double opDoseug = opioidDose * 1000;
@@ -76,7 +76,7 @@ NaloxoneThread::NaloxoneThread(const std::string logFile, double opioidDose, con
 {
   //Create the engine and load patient state
   m_bg = CreateBioGearsEngine(logFile);
-  m_bg->GetLogger()->Info(asprintf("Initiating %f %s", opioidDose, "mg/mL or whatever of ", opioidName.c_str(), " for overdose"));
+  m_bg->GetLogger()->Info(asprintf("Initiating %f %s", opioidDose, "mg/mL  of ", opioidName, " for overdose"));
   if (!m_bg->LoadState("./states/StandardMale@0s.xml")) {
     m_bg->GetLogger()->Error("Could not load state, check the error");
     throw std::runtime_error("Could not load state, check the error");
@@ -92,29 +92,34 @@ NaloxoneThread::NaloxoneThread(const std::string logFile, double opioidDose, con
   resultsFile.append(opioidName);
   resultsFile.append(resultsFileNasalNaloxone);
   resultsFile.append(".csv");
+  m_totalNaloxone_mg = 0.0;
+
   m_bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile); //deposits in build/runtime
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("OxygenSaturation");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartRate", "1/min");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*opioidSub, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
   m_bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*nal, "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*opioidSub, "EffectSiteConcentration", MassPerVolumeUnit::ug_Per_L);
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*nal, "EffectSiteConcentration", MassPerVolumeUnit::ug_Per_L);
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("ArterialBloodPH", "unitless");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CardiacOutput", "mL/min");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("InflammatoryResponse-TissueIntegrity");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", "mmHg");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", "mmHg");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", "mmHg");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", "1/min");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", "mL");
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("HeartStrokeVolume", "mL");
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("EndTidalCarbonDioxideFraction");
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TotalAlveolarVentilation", "L/min");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystemicVascularResistance", "mmHg s/mL");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("BloodVolume", "mL");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanUrineOutput", "mL/hr");
-  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("PainVisualAnalogueScale");
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("NeuromuscularBlockLevel");
   m_bg->GetEngineTrack()->GetDataTrack().Probe("totalNaloxone_mg", m_totalNaloxone_mg);
 
   //Create infusion actions
   m_opioid = new SESubstanceInfusion(*opioidSub);
   m_naloxone = new SESubstanceNasalDose(*nal);
-  m_totalNaloxone_mg = 0.0;
   
   //m_genState = new SESerializeState();
 
@@ -146,7 +151,6 @@ void NaloxoneThread::AdministerOpioid(double& conc, double& rate)
 void NaloxoneThread::SetNaloxoneInfusionRate(double& dose)
 {
   m_naloxone->GetDose().SetValue(dose, MassUnit::mg);
-  m_totalNaloxone_mg += dose;
 
   m_mutex.lock();
   m_bg->ProcessAction(*m_naloxone);
@@ -175,7 +179,7 @@ void NaloxoneThread::AdvanceTimeFluids()
   // Increment m_totalNaloxone here?
   // Need to check for O2 below 0.9 and readmin naloxone
 
-  m_bg->GetEngineTrack()->GetDataTrack().Probe("totalNaloxone2_mg", m_totalNaloxone_mg);
+ // m_bg->GetEngineTrack()->GetDataTrack().Probe("totalNaloxone2_mg", m_totalNaloxone_mg);
   m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
   m_mutex.unlock();
   std::this_thread::sleep_for(std::chrono::milliseconds(25));
@@ -227,11 +231,11 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
   double initialInfustion_mL_Per_hr = 0.0;
   double hrsBeforeIntervention = 0.02 + (timeOfOpioidDose_min/60); // 2-3 mins, just make sure patient does not die before or right after treatment aka savable
   double secsBeforeIntervention = hrsBeforeIntervention * 3600;
-  double standardNaloxoneDose_mg = 4.0;
-  double minTimeBetweenDoses_s = 30.0;
+  double standardNaloxoneDose_mg = 2.0;  //begin with a 2mg dose
+  double minTimeBetweenDoses_s = 40.0;
   double timeOfLastDose = 0.0;
   //double DayLimit_Hr = DayLimit_mL / 25.0;
-  double maxSimTime = 4.0 + hrsBeforeIntervention + (timeOfOpioidDose_min / 60.0);
+  double maxSimTime = 1.0 + hrsBeforeIntervention + (timeOfOpioidDose_min / 60.0);
   double temp = 0.0;
   bool saveState = true;
   bool fluidOn = true;
@@ -267,7 +271,7 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
     //administer initial nasal naloxone dose at specified time
     if ((int)m_bg->GetSimulationTime(TimeUnit::s) == ((int)secsBeforeIntervention)) {
       m_bg->GetLogger()->Info(asprintf("administering nasal naloxone"));
-      m_bg->GetLogger()->Info(asprintf("Beginning Intervention with infusion at %f %s", standardNaloxoneDose_mg, "mg"));
+      m_bg->GetLogger()->Info(asprintf("Beginning Intervention with nasal dose at %f %s", standardNaloxoneDose_mg, "mg"));
       m_bg->GetLogger()->Info(asprintf("Current O2 Saturation is %f %s", m_bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
       SetNaloxoneInfusionRate(standardNaloxoneDose_mg);
     }
@@ -283,9 +287,11 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
                 m_bg->GetLogger()->Info(asprintf("O2 Saturation is too low at %f %s", o2Sat));
                 SetNaloxoneInfusionRate(standardNaloxoneDose_mg);
                 timeOfLastDose = m_bg->GetSimulationTime(TimeUnit::s) + 1;
+                m_totalNaloxone_mg += standardNaloxoneDose_mg;
             }
         }
     }
+    m_bg->GetEngineTrack()->GetDataTrack().Probe("totalNaloxone_mg", m_totalNaloxone_mg);
 
     //exit checks:
     if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::IrreversibleState)) {

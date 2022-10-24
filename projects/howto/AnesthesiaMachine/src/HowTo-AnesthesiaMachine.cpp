@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/string/manipulation.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
+#include <biogears/cdm/patient/actions/SEIntubation.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEMaskLeak.h>
@@ -89,6 +90,8 @@ int HowToAnesthesiaMachine()
 	// Or you can point to an XML with configuration data.
 	// Modifying the class will keep any old settings that are not provided in the config
 	// Using a xml will set the anesthesia machine to only the property states specified in the file
+	SEIntubation intubate; 
+	intubate.SetType(CDM::enumIntubationType::Tracheal);
 	SEAnesthesiaMachine& config = AMConfig.GetConfiguration();
 	config.SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
 	config.GetInletFlow().SetValue(2.0, VolumePerTimeUnit::L_Per_min);

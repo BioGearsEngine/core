@@ -15,10 +15,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
+#include <biogears/cdm/scenario/SEPatientActionCollection.h>
+#include <biogears/cdm/scenario/SEActionManager.h>
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/controller/BioGears.h>
+#include <biogears/engine/controller/BioGearsEngine.h>
+
 
 
 using namespace biogears;
@@ -32,39 +36,50 @@ using namespace biogears;
 int HowToScenarioBase()
 {
   // Create our engine
-  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToScenarioBase.log");
+
+  auto bg = std::make_unique<BioGearsEngine>("statloading.log");
+  auto biogears = dynamic_cast<BioGears*>(bg.get());
+
   bg->GetLogger()->Info("HowToScenarioBase");
 
   //Let's read the scenario we want to base this engine on, we are going to use the test state
-  SEScenario sce(bg->GetSubstanceManager());
-  sce.Load("./states/Roy@0s.xml");
-
-  if (sce.HasEngineStateFile()) {
-    if (!bg->LoadState(sce.GetEngineStateFile())) {
-      bg->GetLogger()->Error("Could not load state, check the error");
-      return 1;
-    }
-  } else if (sce.HasInitialParameters()) {
-    SEScenarioInitialParameters& sip = sce.GetInitialParameters();
-    if (sip.HasPatientFile()) {
-      std::vector<const SECondition*> conditions;
-      for (SECondition* c : sip.GetConditions())
-        conditions.push_back(c); // Copy to const
-      if (!bg->InitializeEngine(sip.GetPatientFile(), &conditions, &sip.GetConfiguration())) {
-        bg->GetLogger()->Error("Could not load state, check the error");
-        return 2;
-      }
-    } else if (sip.HasPatient()) {
-      std::vector<const SECondition*> conditions;
-      for (SECondition* c : sip.GetConditions())
-        conditions.push_back(c); // Copy to const
-      if (!bg->InitializeEngine(sip.GetPatient(), &conditions, &sip.GetConfiguration())) {
-        bg->GetLogger()->Error("Could not load state, check the error");
-        return 3;
-      }
-    }
+  if (!bg->LoadState("./states/Jeff@0s.xml")) {
+    bg->GetLogger()->Error("Could not load state, check the error");
+    return 1;
   }
-  CDM::DataRequestsData* drData;
+
+  //advance one time step to test
+  bg->AdvanceModelTime(0.5, TimeUnit::s);
+
+
+  //SEScenario sce(bg->GetSubstanceManager());
+  //sce.Load("./states/StandardMale@0s.xml");
+
+  //if (sce.HasEngineStateFile()) {
+  //  if (!bg->LoadState(sce.GetEngineStateFile())) {
+  //    bg->GetLogger()->Error("Could not load state, check the error");
+  //    return 1;
+  //  }
+  //} else if (sce.HasInitialParameters()) {
+  //  SEScenarioInitialParameters& sip = sce.GetInitialParameters();
+  //  if (sip.HasPatientFile()) {
+  //    std::vector<const SECondition*> conditions;
+  //    for (SECondition* c : sip.GetConditions())
+  //      conditions.push_back(c); // Copy to const
+  //    if (!bg->InitializeEngine(sip.GetPatientFile(), &conditions, &sip.GetConfiguration())) {
+  //      bg->GetLogger()->Error("Could not load state, check the error");
+  //      return 2;
+  //    }
+  //  } else if (sip.HasPatient()) {
+  //    std::vector<const SECondition*> conditions;
+  //    for (SECondition* c : sip.GetConditions())
+  //      conditions.push_back(c); // Copy to const
+  //    if (!bg->InitializeEngine(sip.GetPatient(), &conditions, &sip.GetConfiguration())) {
+  //      bg->GetLogger()->Error("Could not load state, check the error");
+  //      return 3;
+  //    }
+  //  }
+  //}
 
   //test that all the active states are registering 
   
@@ -72,42 +87,38 @@ int HowToScenarioBase()
   // NOTE : You can just make a DataRequests xml file that holds only data requests
   // And serialize that in instead of a sceanrio file, if all you want is a consistent
   // set of data requests for all your scenarios
-  std::unique_ptr<CDM::ObjectData> obj = biogears::Serializer::ReadFile("YourDataRequestsFile.xml", bg->GetLogger());
-  drData = dynamic_cast<CDM::DataRequestsData*>(obj.get());
-  bg->GetEngineTrack()->GetDataRequestManager().Load(*drData, bg->GetSubstanceManager());
+
   // Don't need to delete drData as obj is wrapped in a unique_ptr
 
   // Make a copy of the data requests, not this clears out data requests from the engine
   // This will clear out the data requests if any exist in the DataRequestManager
-  drData = sce.GetDataRequestManager().Unload();
-  bg->GetEngineTrack()->GetDataRequestManager().Load(*drData, bg->GetSubstanceManager());
-  delete drData;
+  //drData = sce.GetDataRequestManager().Unload();
+  //bg->GetEngineTrack()->GetDataRequestManager().Load(*drData, bg->GetSubstanceManager());
+  //delete drData;
 
-  if (!bg->GetEngineTrack()->GetDataRequestManager().HasResultsFilename()) {
-    bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("./ResultsFileName.csv");
-  }
   // Let's request data do be tracked that is in the scenario
-  biogears::SEPatientActionCollection action(bg->GetSubstanceManager());
+  biogears::SEPatientActionCollection* action;
+  auto& patientactions = biogears->GetActions().GetPatientActions();
 
   //pneumothorax: 
-  if (action.HasLeftClosedTensionPneumothorax()) {
+  if (patientactions.HasLeftClosedTensionPneumothorax()) {
     bg->GetLogger()->Info("tensionPneumo");
   }
 
   //hemorrhage
-  if (action.HasHemorrhage()) {
+  if (patientactions.HasHemorrhage()) {
     bg->GetLogger()->Info("tensionHem");
   }
 
-  if (action.HasAcuteStress()) {
+  if (patientactions.HasAcuteStress()) {
     bg->GetLogger()->Info("tensionStress");
   }
 
-  if (action.HasBrainInjury()) {
+  if (patientactions.HasBrainInjury()) {
     bg->GetLogger()->Info("tensionBrain");
   }
 
-  if (action.HasAsthmaAttack()) {
+  if (patientactions.HasAsthmaAttack()) {
     bg->GetLogger()->Info("tensionAsthma");
   }
 
