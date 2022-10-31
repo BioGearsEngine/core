@@ -232,7 +232,7 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
   double hrsBeforeIntervention = 0.02 + (timeOfOpioidDose_min/60); // 2-3 mins, just make sure patient does not die before or right after treatment aka savable
   double secsBeforeIntervention = hrsBeforeIntervention * 3600;
   double standardNaloxoneDose_mg = 2.0;  //begin with a 2mg dose
-  double minTimeBetweenDoses_s = 40.0;
+  double minTimeBetweenDoses_s = 50.0;
   double timeOfLastDose = 0.0;
   //double DayLimit_Hr = DayLimit_mL / 25.0;
   double maxSimTime = 1.0 + hrsBeforeIntervention + (timeOfOpioidDose_min / 60.0);

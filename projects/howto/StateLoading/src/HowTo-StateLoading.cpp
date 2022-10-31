@@ -52,50 +52,6 @@ int HowToScenarioBase()
   bg->AdvanceModelTime(0.5, TimeUnit::s);
 
 
-  //SEScenario sce(bg->GetSubstanceManager());
-  //sce.Load("./states/StandardMale@0s.xml");
-
-  //if (sce.HasEngineStateFile()) {
-  //  if (!bg->LoadState(sce.GetEngineStateFile())) {
-  //    bg->GetLogger()->Error("Could not load state, check the error");
-  //    return 1;
-  //  }
-  //} else if (sce.HasInitialParameters()) {
-  //  SEScenarioInitialParameters& sip = sce.GetInitialParameters();
-  //  if (sip.HasPatientFile()) {
-  //    std::vector<const SECondition*> conditions;
-  //    for (SECondition* c : sip.GetConditions())
-  //      conditions.push_back(c); // Copy to const
-  //    if (!bg->InitializeEngine(sip.GetPatientFile(), &conditions, &sip.GetConfiguration())) {
-  //      bg->GetLogger()->Error("Could not load state, check the error");
-  //      return 2;
-  //    }
-  //  } else if (sip.HasPatient()) {
-  //    std::vector<const SECondition*> conditions;
-  //    for (SECondition* c : sip.GetConditions())
-  //      conditions.push_back(c); // Copy to const
-  //    if (!bg->InitializeEngine(sip.GetPatient(), &conditions, &sip.GetConfiguration())) {
-  //      bg->GetLogger()->Error("Could not load state, check the error");
-  //      return 3;
-  //    }
-  //  }
-  //}
-
-  //test that all the active states are registering 
-  
-  
-  // NOTE : You can just make a DataRequests xml file that holds only data requests
-  // And serialize that in instead of a sceanrio file, if all you want is a consistent
-  // set of data requests for all your scenarios
-
-  // Don't need to delete drData as obj is wrapped in a unique_ptr
-
-  // Make a copy of the data requests, not this clears out data requests from the engine
-  // This will clear out the data requests if any exist in the DataRequestManager
-  //drData = sce.GetDataRequestManager().Unload();
-  //bg->GetEngineTrack()->GetDataRequestManager().Load(*drData, bg->GetSubstanceManager());
-  //delete drData;
-
   // Let's request data do be tracked that is in the scenario
   biogears::SEPatientActionCollection* action;
   auto& patientactions = biogears->GetActions().GetPatientActions();
@@ -122,20 +78,6 @@ int HowToScenarioBase()
     bg->GetLogger()->Info("tensionAsthma");
   }
 
-  //SEAdvanceTime* adv;
-  //// Now run the scenario actions
-  //for (SEAction* a : sce.GetActions()) {
-  //  // We want the tracker to process an advance time action so it will write each time step of data to our track file
-  //  adv = dynamic_cast<SEAdvanceTime*>(a);
-  //  if (adv != nullptr)
-  //    bg->AdvanceModelTime(adv->GetTime(TimeUnit::s), TimeUnit::s); // you could just do bg->AdvanceModelTime without tracking timesteps
-  //  else
-  //    bg->ProcessAction(*a);
-  //}
-
-  // At this point your engine is where you want it to be
-  // You could read in a new scenario and run it's actions
-  // or programatically add actions as your applications sees fit
 
   return 0;
 }
