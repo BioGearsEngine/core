@@ -142,13 +142,13 @@ void Nervous::Initialize()
   GetPainVisualAnalogueScale().SetValue(0.0);
   GetWakeTime().SetValue(0.0, TimeUnit::min);
   GetSleepTime().SetValue(m_data.GetPatient().GetSleepAmount(TimeUnit::min), TimeUnit::min);
-  m_data.GetDataTrack().Probe("m_AfferentChemoreceptor_Hz ", m_AfferentChemoreceptor_Hz);
-  m_data.GetDataTrack().Probe("m_CentralFrequencyDelta_Per_min ", m_CentralFrequencyDelta_Per_min);
-  m_data.GetDataTrack().Probe("m_CentralPressureDelta_cmH2O ", m_CentralPressureDelta_cmH2O);
-  m_data.GetDataTrack().Probe("m_PeripheralFrequencyDelta_Per_min ", m_PeripheralFrequencyDelta_Per_min);
-  m_data.GetDataTrack().Probe("m_PeripheralPressureDelta_cmH2O ", m_PeripheralPressureDelta_cmH2O);
-  m_data.GetDataTrack().Probe("m_OxygenAutoregulatorHeart ", m_OxygenAutoregulatorHeart);
-  m_data.GetDataTrack().Probe("m_OxygenAutoregulatorMuscle ", m_OxygenAutoregulatorMuscle);
+  //m_data.GetDataTrack().Probe("m_AfferentChemoreceptor_Hz ", m_AfferentChemoreceptor_Hz);
+  //m_data.GetDataTrack().Probe("m_CentralFrequencyDelta_Per_min ", m_CentralFrequencyDelta_Per_min);
+  //m_data.GetDataTrack().Probe("m_CentralPressureDelta_cmH2O ", m_CentralPressureDelta_cmH2O);
+  //m_data.GetDataTrack().Probe("m_PeripheralFrequencyDelta_Per_min ", m_PeripheralFrequencyDelta_Per_min);
+  //m_data.GetDataTrack().Probe("m_PeripheralPressureDelta_cmH2O ", m_PeripheralPressureDelta_cmH2O);
+  //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorHeart ", m_OxygenAutoregulatorHeart);
+  //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorMuscle ", m_OxygenAutoregulatorMuscle);
 
 }
 
@@ -879,8 +879,8 @@ void Nervous::LocalAutoregulation()
   m_OxygenAutoregulatorMuscle = std::max(0.0, m_OxygenAutoregulatorMuscle);
   double nextMuscleResistance = GetResistanceScaleMuscle().GetValue();
   nextMuscleResistance *= (1.0 / (1.0 + m_OxygenAutoregulatorMuscle));
-  m_data.GetDataTrack().Probe("m_OxygenAutoregulatorHeart ", m_OxygenAutoregulatorHeart);
-  m_data.GetDataTrack().Probe("m_OxygenAutoregulatorMuscle ", m_OxygenAutoregulatorMuscle);
+  //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorHeart ", m_OxygenAutoregulatorHeart);
+  //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorMuscle ", m_OxygenAutoregulatorMuscle);
 
 
   const double metabolicFraction = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W) / m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::W);
@@ -989,11 +989,11 @@ void Nervous::ChemoreceptorFeedback()
   m_PeripheralPressureDelta_cmH2O += dPressurePeripheral_cmH2O;
 
   //testing ode data
-  m_data.GetDataTrack().Probe("m_AfferentChemoreceptor_Hz ", m_AfferentChemoreceptor_Hz);
-  m_data.GetDataTrack().Probe("m_CentralFrequencyDelta_Per_min ", m_CentralFrequencyDelta_Per_min);
-  m_data.GetDataTrack().Probe("m_CentralPressureDelta_cmH2O ", m_CentralPressureDelta_cmH2O);
-  m_data.GetDataTrack().Probe("m_PeripheralFrequencyDelta_Per_min ", m_PeripheralFrequencyDelta_Per_min);
-  m_data.GetDataTrack().Probe("m_PeripheralPressureDelta_cmH2O ", m_PeripheralPressureDelta_cmH2O);
+  //m_data.GetDataTrack().Probe("m_AfferentChemoreceptor_Hz ", m_AfferentChemoreceptor_Hz);
+  //m_data.GetDataTrack().Probe("m_CentralFrequencyDelta_Per_min ", m_CentralFrequencyDelta_Per_min);
+  //m_data.GetDataTrack().Probe("m_CentralPressureDelta_cmH2O ", m_CentralPressureDelta_cmH2O);
+  //m_data.GetDataTrack().Probe("m_PeripheralFrequencyDelta_Per_min ", m_PeripheralFrequencyDelta_Per_min);
+  //m_data.GetDataTrack().Probe("m_PeripheralPressureDelta_cmH2O ", m_PeripheralPressureDelta_cmH2O);
 
 
   //Update Respiratory metrics
