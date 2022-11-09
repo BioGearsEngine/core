@@ -410,11 +410,11 @@ bool BioGears::SetupPatient()
   }
   fatFraction = m_Patient->GetBodyFatFraction().GetValue();
   if (fatFraction > fatFractionMax) {
-    Error(asprintf("Patient body fat fraction of %f is too high. Obese patients must be modeled by adding/using a condition. Maximum body fat fraction allowed is %f.", fatFraction, fatFractionMax));
-    err = true;
+    Warning(asprintf("Patient body fat fraction of %f is too high. Obese patients must be modeled by adding/using a condition. Maximum body fat fraction allowed is %f.", fatFraction, fatFractionMax));
+    //err = true;
   } else if (fatFraction < fatFractionMin) {
-    Error(asprintf("Patient body fat fraction  %f is too low. Patients must have essential fat. Minimum body fat fraction allowed is %f.", fatFraction, fatFractionMin));
-    err = true;
+    Warning(asprintf("Patient body fat fraction  %f is too low. Patients must have essential fat. Minimum body fat fraction allowed is %f.", fatFraction, fatFractionMin));
+    //err = true;
   }
 
   //Lean Body Mass ---------------------------------------------------------------
@@ -522,11 +522,11 @@ bool BioGears::SetupPatient()
   }
   systolic_mmHg = m_Patient->GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
   if (systolic_mmHg < systolicMin_mmHg) {
-    Error(asprintf("Patient systolic pressure baseline of %f mmHg is too low. Hypotension must be modeled by adding/using a condition. Minimum systolic pressure baseline allowed is %f mmHg.", systolic_mmHg, systolicMin_mmHg));
-    err = true;
+    Warning(asprintf("Patient systolic pressure baseline of %f mmHg is too low. Hypotension must be modeled by adding/using a condition. Minimum systolic pressure baseline allowed is %f mmHg.", systolic_mmHg, systolicMin_mmHg));
+    //err = true;
   } else if (systolic_mmHg > systolicMax_mmHg) {
-    Error(asprintf("Patient systolic pressure baseline of %f mmHg is too high. Hypertension must be modeled by adding/using a condition. Maximum systolic pressure baseline allowed is %f mmHg.", systolic_mmHg, systolicMax_mmHg));
-    err = true;
+    Warning(asprintf("Patient systolic pressure baseline of %f mmHg is too high. Hypertension must be modeled by adding/using a condition. Maximum systolic pressure baseline allowed is %f mmHg.", systolic_mmHg, systolicMax_mmHg));
+    //err = true;
   }
 
   if (!m_Patient->HasDiastolicArterialPressureBaseline()) {
@@ -536,16 +536,16 @@ bool BioGears::SetupPatient()
   }
   diastolic_mmHg = m_Patient->GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
   if (diastolic_mmHg < diastolicMin_mmHg) {
-    Error(asprintf("Patient diastolic pressure baseline of %f mmHg is too low. Hypotension must be modeled by adding/using a condition. Minimum diastolic pressure baseline allowed is %f mmHg.", diastolic_mmHg, diastolicMin_mmHg));
-    err = true;
+    Warning(asprintf("Patient diastolic pressure baseline of %f mmHg is too low. Hypotension must be modeled by adding/using a condition. Minimum diastolic pressure baseline allowed is %f mmHg.", diastolic_mmHg, diastolicMin_mmHg));
+    //err = true;
   } else if (diastolic_mmHg > diastolicMax_mmHg) {
-    Error(asprintf("Patient diastolic pressure baseline of %f mmHg is too high. Hypertension must be modeled by adding/using a condition. Maximum diastolic pressure baseline allowed is %f mmHg.", diastolic_mmHg, diastolicMax_mmHg));
-    err = true;
+    Warning(asprintf("Patient diastolic pressure baseline of %f mmHg is too high. Hypertension must be modeled by adding/using a condition. Maximum diastolic pressure baseline allowed is %f mmHg.", diastolic_mmHg, diastolicMax_mmHg));
+    //err = true;
   }
 
   if (diastolic_mmHg > 0.75 * systolic_mmHg) {
-    Error(asprintf("Patient baseline pulse pressure (systolic vs. diastolic pressure fraction) of %f is abnormally narrow. Minimum fraction allowed is %f .", diastolic_mmHg / systolic_mmHg, narrowestPulseFactor));
-    err = true;
+    Warning(asprintf("Patient baseline pulse pressure (systolic vs. diastolic pressure fraction) of %f is abnormally narrow. Minimum fraction allowed is %f .", diastolic_mmHg / systolic_mmHg, narrowestPulseFactor));
+    //err = true;
   }
 
   if (m_Patient->HasMeanArterialPressureBaseline()) {
