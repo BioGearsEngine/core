@@ -76,7 +76,7 @@ NaloxoneThread::NaloxoneThread(const std::string logFile, double opioidDose, con
 {
   //Create the engine and load patient state
   m_bg = CreateBioGearsEngine(logFile);
-  m_bg->GetLogger()->Info(asprintf("Initiating %f %s", opioidDose, "mg/mL  of ", opioidName, " for overdose"));
+  m_bg->GetLogger()->Info(asprintf("Initiating %f %s", opioidDose, "mg/mL  of ", opioidName.c_str(), " for overdose"));
   if (!m_bg->LoadState("./states/StandardMale@0s.xml")) {
     m_bg->GetLogger()->Error("Could not load state, check the error");
     throw std::runtime_error("Could not load state, check the error");
@@ -272,7 +272,7 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
     if ((int)m_bg->GetSimulationTime(TimeUnit::s) == ((int)secsBeforeIntervention)) {
       m_bg->GetLogger()->Info(asprintf("administering nasal naloxone"));
       m_bg->GetLogger()->Info(asprintf("Beginning Intervention with nasal dose at %f %s", standardNaloxoneDose_mg, "mg"));
-      m_bg->GetLogger()->Info(asprintf("Current O2 Saturation is %f %s", m_bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
+      m_bg->GetLogger()->Info(asprintf("Current O2 Saturation is %f %s", m_bg->GetBloodChemistrySystem()->GetOxygenSaturation(), "mg"));
       SetNaloxoneInfusionRate(standardNaloxoneDose_mg);
     }
 
@@ -284,7 +284,7 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
 
         if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) > ((int)(minTimeBetweenDoses_s + timeOfLastDose))) {
             if (o2Sat < targetLowO2Saturation) {
-                m_bg->GetLogger()->Info(asprintf("O2 Saturation is too low at %f %s", o2Sat));
+                m_bg->GetLogger()->Info(asprintf("O2 Saturation is too low at %f %s", o2Sat, "mg"));
                 SetNaloxoneInfusionRate(standardNaloxoneDose_mg);
                 timeOfLastDose = m_bg->GetSimulationTime(TimeUnit::s) + 1;
                 m_totalNaloxone_mg += standardNaloxoneDose_mg;
