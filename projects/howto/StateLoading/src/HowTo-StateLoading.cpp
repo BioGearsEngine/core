@@ -20,8 +20,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/controller/BioGears.h>
-#include <biogears/engine/controller/BioGearsEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 
 
