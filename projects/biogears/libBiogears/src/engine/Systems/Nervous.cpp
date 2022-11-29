@@ -30,7 +30,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
-#include <biogears/cdm/system/physiology/SEDrugSystem.h>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
@@ -143,6 +142,14 @@ void Nervous::Initialize()
   GetPainVisualAnalogueScale().SetValue(0.0);
   GetWakeTime().SetValue(0.0, TimeUnit::min);
   GetSleepTime().SetValue(m_data.GetPatient().GetSleepAmount(TimeUnit::min), TimeUnit::min);
+  //m_data.GetDataTrack().Probe("m_AfferentChemoreceptor_Hz ", m_AfferentChemoreceptor_Hz);
+  //m_data.GetDataTrack().Probe("m_CentralFrequencyDelta_Per_min ", m_CentralFrequencyDelta_Per_min);
+  //m_data.GetDataTrack().Probe("m_CentralPressureDelta_cmH2O ", m_CentralPressureDelta_cmH2O);
+  //m_data.GetDataTrack().Probe("m_PeripheralFrequencyDelta_Per_min ", m_PeripheralFrequencyDelta_Per_min);
+  //m_data.GetDataTrack().Probe("m_PeripheralPressureDelta_cmH2O ", m_PeripheralPressureDelta_cmH2O);
+  //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorHeart ", m_OxygenAutoregulatorHeart);
+  //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorMuscle ", m_OxygenAutoregulatorMuscle);
+
 }
 
 bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
@@ -277,6 +284,8 @@ void Nervous::SetUp()
   m_Atropine = m_data.GetSubstances().GetSubstance("Atropine");
   m_Midazolam = m_data.GetSubstances().GetSubstance("Midazolam");
   m_Patient = &m_data.GetPatient();
+  m_Drug = &m_data.GetDrugs();
+
 
   m_DrugRespirationEffects = 0.0;
 
@@ -417,9 +426,16 @@ void Nervous::CentralSignalProcess()
   const double tauIschemia = 30.0;
   const double tauCO2 = 20.0;
 
+
   // Exercise Signal Modifiers
   double fExerciseSympathetic = 0.0;
   double fExerciseVagal = 0.0;
+
+  //cns drug scaling
+  double cnsScale = 1.0;
+  if (m_DrugRespirationEffects > ZERO_APPROX) {
+    cnsScale = (1.0 - m_Drug->GetCentralNervousResponse().GetValue()); //Apply effects of opioids that depress central nervous activity
+  }
 
   //As hypoxia or hypercapnia deepens, the ischemic CNS response leads to increased sympathetic outflow.
   //This is modeled as a reduction on the threshold required to cause sympathetic firing.
@@ -438,12 +454,12 @@ void Nervous::CentralSignalProcess()
   const double dHypercapaniaThresholdSH = (1.0 / tauCO2) * (-m_HypercapniaThresholdHeart + xCO2SH * (arterialCO2 - m_ArterialCarbonDioxideBaseline_mmHg));
   const double dHypercapniaThresholdSP = (1.0 / tauCO2) * (-m_HypercapniaThresholdPeripheral + xCO2SP * (arterialCO2 - m_ArterialCarbonDioxideBaseline_mmHg));
 
-  //Inactive during initial stabilization and when there is a drug disrupting CNS(opioids)
-  if (m_FeedbackActive && m_DrugRespirationEffects < ZERO_APPROX) {
-    m_HypoxiaThresholdHeart += (dHypoxiaThresholdSH * m_dt_s);
-    m_HypoxiaThresholdPeripheral += (dHypoxiaThresholdSP * m_dt_s);
-    m_HypercapniaThresholdHeart += (dHypercapaniaThresholdSH * m_dt_s);
-    m_HypercapniaThresholdPeripheral += (dHypercapniaThresholdSP * m_dt_s);
+    //Inactive during initial stabilization scale the response when there is a drug disrupting CNS(opioids)
+  if (m_FeedbackActive) {
+    m_HypoxiaThresholdHeart += (dHypoxiaThresholdSH * cnsScale * m_dt_s);
+    m_HypoxiaThresholdPeripheral += (dHypoxiaThresholdSP * cnsScale * m_dt_s);
+    m_HypercapniaThresholdHeart += (dHypercapaniaThresholdSH * cnsScale * m_dt_s);
+    m_HypercapniaThresholdPeripheral += (dHypercapniaThresholdSP * cnsScale * m_dt_s);
   }
 
   //Determine final values of sympathetic firing thresholds
@@ -863,6 +879,9 @@ void Nervous::LocalAutoregulation()
   m_OxygenAutoregulatorMuscle = std::max(0.0, m_OxygenAutoregulatorMuscle);
   double nextMuscleResistance = GetResistanceScaleMuscle().GetValue();
   nextMuscleResistance *= (1.0 / (1.0 + m_OxygenAutoregulatorMuscle));
+  //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorHeart ", m_OxygenAutoregulatorHeart);
+  //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorMuscle ", m_OxygenAutoregulatorMuscle);
+
 
   const double metabolicFraction = m_data.GetEnergy().GetTotalMetabolicRate(PowerUnit::W) / m_data.GetPatient().GetBasalMetabolicRate(PowerUnit::W);
 
@@ -915,10 +934,9 @@ void Nervous::ChemoreceptorFeedback()
   const double tuningFactor = 1.4;
 
   //Determine a combined drug effect on the respiratory arm of the nervous system
-  SEDrugSystem& Drugs = m_data.GetDrugs();
-  const double cnsModifier = Drugs.GetCentralNervousResponse().GetValue(); //Apply effects of opioids that depress central nervous activity
-  const double sedationModifier = Drugs.GetSedationLevel().GetValue(); //Apply effects of sedatives
-  const double nbModifier = Drugs.GetNeuromuscularBlockLevel().GetValue(); //Apply effects of neuromuscular blockers
+  const double cnsModifier = m_Drug->GetCentralNervousResponse().GetValue(); //Apply effects of opioids that depress central nervous activity
+  const double sedationModifier = m_Drug->GetSedationLevel().GetValue(); //Apply effects of sedatives
+  const double nbModifier = m_Drug->GetNeuromuscularBlockLevel().GetValue(); //Apply effects of neuromuscular blockers
   m_DrugRespirationEffects = cnsModifier + sedationModifier; //Assume cns and sedation modifiers gradually accumulate affect on respiratory drive
   if (nbModifier > 0.1) {
     //Assume that neuromuscular block shuts down respiratory drive completely
@@ -969,6 +987,14 @@ void Nervous::ChemoreceptorFeedback()
   m_CentralPressureDelta_cmH2O += dPressureCentral_cmH2O;
   m_PeripheralFrequencyDelta_Per_min += dFrequencyPeripheral_Per_min;
   m_PeripheralPressureDelta_cmH2O += dPressurePeripheral_cmH2O;
+
+  //testing ode data
+  //m_data.GetDataTrack().Probe("m_AfferentChemoreceptor_Hz ", m_AfferentChemoreceptor_Hz);
+  //m_data.GetDataTrack().Probe("m_CentralFrequencyDelta_Per_min ", m_CentralFrequencyDelta_Per_min);
+  //m_data.GetDataTrack().Probe("m_CentralPressureDelta_cmH2O ", m_CentralPressureDelta_cmH2O);
+  //m_data.GetDataTrack().Probe("m_PeripheralFrequencyDelta_Per_min ", m_PeripheralFrequencyDelta_Per_min);
+  //m_data.GetDataTrack().Probe("m_PeripheralPressureDelta_cmH2O ", m_PeripheralPressureDelta_cmH2O);
+
 
   //Update Respiratory metrics
   const double baselineRespirationRate_Per_min = m_data.GetPatient().GetRespirationRateBaseline(FrequencyUnit::Per_min);

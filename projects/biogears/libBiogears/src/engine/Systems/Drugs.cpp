@@ -475,6 +475,8 @@ void Drugs::AdministerSubstanceNasal()
       relMass[1] += (0.0 * newNasalDose_mg); // initial amount of released drug in posterior section
       unrelMass[0] += (0.6 * newNasalDose_mg); // initial amount of unreleased drug in anterior section
       unrelMass[1] += (0.4 * newNasalDose_mg); // initial amount of unreleased drug in posterior section
+      unrelMass[0] += (0.6 * newNasalDose_mg); // initial amount of released drug in anterior section
+      unrelMass[1] += (0.4 * newNasalDose_mg); // initial amount of released drug in posterior section
     }
     double nasalAnteriorUnreleasedInitial_mg = unrelMass[0]; // initial amount of unreleased drug in anterior section
     double nasalAnteriorReleasedInitial_mg = relMass[0];
@@ -968,7 +970,7 @@ void Drugs::CalculateDrugEffects()
         continue; //If no effect (i.e. eMax = 0), move on to next effect.  Save some time and also don't run risk of dividing by 0 somewhere since non-defined EC50s are set to 0
       }
       if (sub->GetClassification() == CDM::enumSubstanceClass::Opioid) {
-        effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * std::pow(1.0 + inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL, shapeParameter) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
+        effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * (std::pow(1.0 + (inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL), shapeParameter)) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
       } else if (sub->GetName() == "Sarin") {
         effect = 0.8 * (m_RbcAcetylcholinesteraseFractionInhibited); //0.8 is a tuning factor, validated by patient expected physiological response
       } else {

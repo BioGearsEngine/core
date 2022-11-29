@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>MedicOneScenarioOne</Name>
+    <Description> Identification of Pneumothorax using Rapid Trauma Assessment; Differentiate between Pneumothorax and Tension Pneumothorax, Appropriate Aseptic Technique for Needle Thoracostomy
+</Description>
+    <InitialParameters><PatientFile>Nathan.xml</PatientFile></InitialParameters>
+   
+  <!-- Base system data required for all scenario verification -->
+  <DataRequests SamplesPerSecond="50">  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"              Unit=""        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"          Unit="mmHg"        Precision="0"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure"         Unit="mmHg"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"                     Unit="L/min"      Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralVenousPressure"             Unit="mmHg"        Precision="2"/>
+  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                       Unit="mL"          Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"                   Unit="L"          Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"                   Unit="1/min"       Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"                  Unit="unitless"    Precision="3"/>
+  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
+
+  
+  </DataRequests>
+  <!-- Anything action specific data needed for verification of this scenario -->
+  
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+    <Action xsi:type="TensionPneumothoraxData" Type="Closed" Side="Left">
+        <Severity value="1.0"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+
+    <Action xsi:type="AsthmaAttackData">
+        <Severity value="1.0"/>       
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+
+    <Action xsi:type="AcuteStressData">
+        <Severity value="0.8"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+
+    <Action xsi:type="HemorrhageData" Compartment="Aorta">
+        <InitialRate value="150" unit="mL/min"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+    
+    <Action xsi:type="BrainInjuryData" Type="LeftFocal">
+        <Severity value="0.75"/>
+    </Action>
+
+     <Action xsi:type="AdvanceTimeData">
+        <Time value="10" unit="s"/>       
+    </Action>
+
+    <Action xsi:type="SerializeStateData" Type="Save">
+    <Filename>./states/test/StateTesting.xml</Filename>
+  </Action>
+
+    <Action xsi:type="AdvanceTimeData">
+    <Time value="300" unit="s"/>    
+    </Action>
+</Scenario>

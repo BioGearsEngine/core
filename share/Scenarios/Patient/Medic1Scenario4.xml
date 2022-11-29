@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>Medic1Scenario4</Name>
+    <Description> The patient is unconscious, unresponsive, GCS 3, just stopped breathing and has no gag reflex, yet still has a pulse, tains scenario 4 for AJAMS</Description>
+    <InitialParameters><PatientFile>Cynthia.xml</PatientFile></InitialParameters>
+   
+  <!-- Base system data required for all scenario verification -->
+  <DataRequests SamplesPerSecond="50">  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"          Unit="mmHg"        Precision="0"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="DiastolicArterialPressure"         Unit="mmHg"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"                     Unit="L/min"      Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CentralVenousPressure"             Unit="mmHg"        Precision="2"/>
+  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                       Unit="mL"          Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"                   Unit="1/min"       Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"                  Unit="unitless"    Precision="3"/>
+  
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
+
+  
+  </DataRequests>
+  <!-- Anything action specific data needed for verification of this scenario -->
+  
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="30" unit="s"/>       
+    </Action>
+    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Succinylcholine</Substance>
+        <Concentration value="1000" unit="ug/mL"/>
+        <Dose value="70" unit="mL"/>
+    </Action>
+
+     <Action xsi:type="AdvanceTimeData">
+        <Time value="60" unit="s"/>       
+    </Action>
+  <Action xsi:type="SerializeStateData" Type="Save">
+    <Filename>./states/Medic1/Scenario4FemaleSuccs@60s.xml</Filename>
+  </Action>
+
+    <Action xsi:type="AdvanceTimeData">
+    <Time value="300" unit="s"/>    
+    </Action>
+</Scenario>

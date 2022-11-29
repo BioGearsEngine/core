@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+#include <biogears/cdm/system/physiology/SEDrugSystem.h>
+
 
 namespace biogears {
 class SESubstance;
@@ -146,6 +148,7 @@ protected:
   SESubstance* m_Atropine;
   SESubstance* m_Midazolam;
   SEPatient* m_Patient;
+  SEDrugSystem* m_Drug;
   bool m_blockActive;
   double m_painStimulusDuration_s;
   double m_painVASDuration_s;
