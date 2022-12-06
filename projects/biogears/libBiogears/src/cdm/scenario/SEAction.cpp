@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
+#include <biogears/cdm/patient/actions/SEActionExample.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
@@ -160,6 +161,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
     if (aStressData != nullptr) {
       SEAcuteStress* a = new SEAcuteStress();
       a->Load(*aStressData);
+      return a;
+    }
+
+    CDM::ActionExample* expAction = dynamic_cast<CDM::ActionExample*>(action);
+    if (expAction != nullptr) {
+      SEActionExample* a = new SEActionExample();
+      a->Load(*expAction);
       return a;
     }
 

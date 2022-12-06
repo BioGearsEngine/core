@@ -73,6 +73,18 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
 
+  <!-- @brief Fight or flight.  The body prepares to defend itself. -->
+  <xs:complexType name="ActionExample">
+    <xs:complexContent>
+      <xs:extension base="PatientActionData">
+        <xs:sequence>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <!--<< @brief -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <!-- @brief A blockage of the Airway leading to no respiration/air flow in or out of the body. -->
   <xs:complexType name="AirwayObstructionData">
     <xs:complexContent>

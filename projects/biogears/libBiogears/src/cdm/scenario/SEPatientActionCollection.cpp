@@ -265,6 +265,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
 {
   m_AcuteRespiratoryDistress = nullptr;
   m_AcuteStress = nullptr;
+  m_ActionExample = nullptr;
   m_AirwayObstruction = nullptr;
   m_Apnea = nullptr;
   m_AsthmaAttack = nullptr;
@@ -305,6 +306,7 @@ void SEPatientActionCollection::Clear()
 {
   RemoveAcuteRespiratoryDistress();
   RemoveAcuteStress();
+  RemoveActionExample();
   RemoveAirwayObstruction();
   RemoveApnea();
   RemoveAsthmaAttack();
@@ -352,6 +354,9 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   }
   if (HasAcuteStress()) {
     to.push_back(GetAcuteStress()->Unload());
+  }
+  if (HasActionExample()) {
+    to.push_back(GetActionExample()->Unload());
   }
   if (HasAirwayObstruction()) {
     to.push_back(GetAirwayObstruction()->Unload());
@@ -535,6 +540,19 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return true;
     }
     return IsValid(*m_AcuteStress);
+  }
+
+  const CDM::ActionExample* expAction = dynamic_cast<const CDM::ActionExample*>(&action);
+  if (expAction != nullptr) {
+    if (m_ActionExample == nullptr) {
+      m_ActionExample = new SEActionExample();
+    }
+    m_ActionExample->Load(*expAction);
+    if (!m_ActionExample->IsActive()) {
+      RemoveActionExample();
+      return true;
+    }
+    return IsValid(*m_ActionExample);
   }
 
   const CDM::AirwayObstructionData* airwayObst = dynamic_cast<const CDM::AirwayObstructionData*>(&action);
@@ -1079,6 +1097,21 @@ SEAcuteStress* SEPatientActionCollection::GetAcuteStress() const
 void SEPatientActionCollection::RemoveAcuteStress()
 {
   SAFE_DELETE(m_AcuteStress);
+}
+//-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasActionExample() const
+{
+  return m_ActionExample == nullptr ? false : true;
+}
+//-------------------------------------------------------------------------------
+SEActionExample* SEPatientActionCollection::GetActionExample() const
+{
+  return m_ActionExample;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveActionExample()
+{
+  SAFE_DELETE(m_ActionExample);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasAirwayObstruction() const
