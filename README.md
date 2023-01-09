@@ -48,10 +48,10 @@ The BioGears source is structured as follows:
   - `xsd/` - XSD definition files for the Common Data Model
 - `projects/`
   - `biogears` - Main Engine Source for building libbiogears libbiogears-cdm
+    - `swig_bindings` - Templates for generating language bindings using swig 
   - `biogears-common` - Helper framework for c++ with no third party dependencies
   - `bg-cli` - Primary Command Line Utility for using BioGears 
   - `howto/` - libbiogears SDK examples
-  - `java/`  - JNI utilities for running biogears
   - `unit/`  - Unit test harness used for testing libbiogears components
   - `zip/`   - Self hosted copy of https://github.com/nmoinvaz/minizip. A bg-cli third part dep
   
