@@ -4,18 +4,6 @@ Overview
 BioGears® source code is hosted here and will be developed through this public repository to encourage community facing development. In addition, we also support official stable releases. Our latest deployment (found under releases) is still in a beta phase, and is intended to be an intermediate release to showcase the capabilities of the BioGears® Physiology Engine. The current version of the software includes examples of all types of engine interfaces, but does not include all of the functionality or physiologic systems that will be present in the final product. This version of the software is meant to elicit feedback and enhance community involvement in establishing end product expectations.
 
 
-Build Status
------------------
-| Platform | Compiler | Architecture | Status |
-|----------|----------|--------------|--------|
-| Windows  |  msvc15  | amd64        | ![Windows msvc15 Build  Status](https://biogearsengine.com/content/badges/nightly_libBioGears_windows_msvc15.png) |
-| Windows  |  msvc16  | amd64        | ![Windows msvc16 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_windows_msvc16.png) |
-| Linux  |  gcc9  | amd64 | ![Linux-gcc9-amd64 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc9-amd64.png) |
-| Linux  |  gcc9  | armhf | ![Linux-gcc9-armhf Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc9-armhf.png) |
-| Linux  |  gcc9  | aarch64 | ![Linux-gcc9-aarch64 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_linux_gcc9-aarch64.png) |
-| MacOS  Yosemite |  clang10  | amd64 | ![MacOS Yosemite clang11 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_macos-yosemite.png) |
-| MacOS  Catalina|  clang11  | amd64 | ![MacOS Catalina clang11 Build Status](https://biogearsengine.com/content/badges/nightly_libBioGears_macos-catalina.png) |
-
 What is BioGears®
 ------------------
 BioGears® is a C++ based, open source, multi-platform (Windows, Mac, and Linux), comprehensive human physiology engine that will drive medical education, research, and training technologies. BioGears enables accurate and consistent physiology simulation across the medical community. The engine can be used as a standalone application or integrated with simulators, sensor interfaces, and models of all fidelities.
@@ -48,10 +36,10 @@ The BioGears source is structured as follows:
   - `xsd/` - XSD definition files for the Common Data Model
 - `projects/`
   - `biogears` - Main Engine Source for building libbiogears libbiogears-cdm
+    - `swig_bindings` - Templates for generating language bindings using swig 
   - `biogears-common` - Helper framework for c++ with no third party dependencies
   - `bg-cli` - Primary Command Line Utility for using BioGears 
   - `howto/` - libbiogears SDK examples
-  - `java/`  - JNI utilities for running biogears
   - `unit/`  - Unit test harness used for testing libbiogears components
   - `zip/`   - Self hosted copy of https://github.com/nmoinvaz/minizip. A bg-cli third part dep
   
