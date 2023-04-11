@@ -38,9 +38,9 @@ int main(int argc, char* argv[])
 {
   // To run multiple Morphine/Fentanyl overdose values
   std::string overdoseSubstance = "Fentanyl"; // Morphine or fentanyl
-  double lowestOverDose = 0.2; // mg/mL
-  double highestOverDose = 2.0; // mg/mL
-  double doseInc = 0.1;
+  double lowestOverDose = 0.02; // mg/mL for a 10 ml bolus push
+  double highestOverDose = 0.20; // mg/mL
+  double doseInc = 0.01;
   for (double opioidDose = lowestOverDose; opioidDose <= highestOverDose; opioidDose += doseInc) {
     //HowToNaloxoneNasal();
     double opDoseug = opioidDose * 1000;
@@ -119,8 +119,12 @@ NaloxoneThread::NaloxoneThread(const std::string logFile, double opioidDose, con
 
   //Create infusion actions
   m_opioid = new SESubstanceInfusion(*opioidSub);
+  m_opiodBolus = new SESubstanceBolus(*opioidSub);
+
+  m_opiodBolus->SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+
   m_naloxone = new SESubstanceNasalDose(*nal);
-  
+
   //m_genState = new SESerializeState();
 
   //m_bg->ProcessAction(*m_opioid);
@@ -145,6 +149,16 @@ void NaloxoneThread::AdministerOpioid(double& conc, double& rate)
 
   m_mutex.lock();
   m_bg->ProcessAction(*m_opioid);
+  m_mutex.unlock();
+}
+
+void NaloxoneThread::AdministerOpioidBolus(double& conc)
+{
+  m_opiodBolus->GetConcentration().SetValue(conc, MassPerVolumeUnit::mg_Per_mL);
+  m_opiodBolus->GetDose().SetValue(10, VolumeUnit::mL);
+
+  m_mutex.lock();
+  m_bg->ProcessAction(*m_opiodBolus);
   m_mutex.unlock();
 }
 
@@ -179,7 +193,7 @@ void NaloxoneThread::AdvanceTimeFluids()
   // Increment m_totalNaloxone here?
   // Need to check for O2 below 0.9 and readmin naloxone
 
- // m_bg->GetEngineTrack()->GetDataTrack().Probe("totalNaloxone2_mg", m_totalNaloxone_mg);
+  // m_bg->GetEngineTrack()->GetDataTrack().Probe("totalNaloxone2_mg", m_totalNaloxone_mg);
   m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
   m_mutex.unlock();
   std::this_thread::sleep_for(std::chrono::milliseconds(25));
@@ -187,23 +201,6 @@ void NaloxoneThread::AdvanceTimeFluids()
 
 void NaloxoneThread::Status()
 {
-  m_mutex.lock();
-  /*m_bg->GetLogger()->Info(asprintf("The patient suffered a burn wound %f %s", m_bg->GetSimulationTime(TimeUnit::min), " min ago"));
-  m_bg->GetLogger()->Info(asprintf("Tidal Volume : %f %s", m_bg->GetRespiratorySystem()->GetTidalVolume(VolumeUnit::mL), "mL"));
-  m_bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  m_bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", m_bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
-  m_bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", m_bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  m_bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", m_bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
-  m_bg->GetLogger()->Info(asprintf("Oxygen Saturation : %f", m_bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
-  m_bg->GetLogger()->Info(asprintf("Blood Volume: %f %s", m_bg->GetCardiovascularSystem()->GetBloodVolume(VolumeUnit::mL), "mL"));
-  m_bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", m_bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
-  m_bg->GetLogger()->Info(asprintf("Mean Urine Output : %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr), "mL_Per_hr"));
-  if (m_ringers->HasBagVolume()) {
-    m_bg->GetLogger()->Info(asprintf("Remaining LR Volume : %f %s", m_ivBagVolume_mL, "mL"));
-  }*/
-
-  std::cout << std::endl;
-  m_mutex.unlock();
 }
 
 //routine to administer drugs with a goal directed therapy for o2 sat
@@ -219,7 +216,7 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
   //compute urine production and max fluid requirements, per parkland formula
   const SEPatient& patient = m_bg->GetPatient();
   double weight_kg = patient.GetWeight(MassUnit::kg);
-  double targetLowO2Saturation = 0.9;
+  double targetLowO2Saturation = 0.85;
   //set drug infusion rate:
   //Infuse 3 ug / kg of fentanyl over 90 s.Effects should be large
   //Fentanyl overdose at 150 ug/mL at rate of 1 mL/min for 1.5 mins
@@ -229,24 +226,24 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
   double timeOfOpioidDose_min = 2; //24 for morphine; //min 2 for fentanyl
   //double DayLimit_mL = X; // Ask Austin if there is a max dosage of naloxone
   double initialInfustion_mL_Per_hr = 0.0;
-  double hrsBeforeIntervention = 0.02 + (timeOfOpioidDose_min/60); // 2-3 mins, just make sure patient does not die before or right after treatment aka savable
+  double hrsBeforeIntervention = 0.02 + (timeOfOpioidDose_min / 60); // 2-3 mins, just make sure patient does not die before or right after treatment aka savable
   double secsBeforeIntervention = hrsBeforeIntervention * 3600;
-  double standardNaloxoneDose_mg = 2.0;  //begin with a 2mg dose
+  double standardNaloxoneDose_mg = 2.0; //begin with a 2mg dose
   double minTimeBetweenDoses_s = 50.0;
   double timeOfLastDose = 0.0;
   //double DayLimit_Hr = DayLimit_mL / 25.0;
-  double maxSimTime = 1.0 + hrsBeforeIntervention + (timeOfOpioidDose_min / 60.0);
+  double maxSimTime_hr = 0.18 + hrsBeforeIntervention + (timeOfOpioidDose_min / 60.0);
   double temp = 0.0;
   bool saveState = true;
   bool fluidOn = true;
 
-  
-  AdministerOpioid(opioidConc_mg_Per_mL, opioidRate_mL_Per_min);
+  AdministerOpioidBolus(opioidConc_mg_Per_mL);
 
+  //AdministerOpioid(opioidConc_mg_Per_mL, opioidRate_mL_Per_min);
 
   while (m_runThread) {
     // Generate State Every X amount of time
-   /* if ((((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) % stateTime_s == 0 && saveState == true) || ((int)m_bg->GetSimulationTime(TimeUnit::s) == 0)) {
+    /* if ((((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) % stateTime_s == 0 && saveState == true) || ((int)m_bg->GetSimulationTime(TimeUnit::s) == 0)) {
       //Create CSV results file and set up data that we want to be tracked (tracking done in AdvanceModelTime)
       double opDose_ug = opioidDose * 1000;
       int docOpioidDose = (int)(opDose_ug);
@@ -276,20 +273,19 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
       SetNaloxoneInfusionRate(standardNaloxoneDose_mg);
     }
 
-
-    //check o2 
+    //check o2
     if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) > ((int)secsBeforeIntervention)) {
-        Status();
-        double o2Sat = m_bg->GetBloodChemistrySystem()->GetOxygenSaturation();
+      Status();
+      double o2Sat = m_bg->GetBloodChemistrySystem()->GetOxygenSaturation();
 
-        if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) > ((int)(minTimeBetweenDoses_s + timeOfLastDose))) {
-            if (o2Sat < targetLowO2Saturation) {
-                m_bg->GetLogger()->Info(asprintf("O2 Saturation is too low at %f %s", o2Sat, "mg"));
-                SetNaloxoneInfusionRate(standardNaloxoneDose_mg);
-                timeOfLastDose = m_bg->GetSimulationTime(TimeUnit::s) + 1;
-                m_totalNaloxone_mg += standardNaloxoneDose_mg;
-            }
+      if (((int)m_bg->GetSimulationTime(TimeUnit::s) + 1) > ((int)(minTimeBetweenDoses_s + timeOfLastDose))) {
+        if (o2Sat < targetLowO2Saturation) {
+          m_bg->GetLogger()->Info(asprintf("O2 Saturation is too low at %f %s", o2Sat, "mg"));
+          SetNaloxoneInfusionRate(standardNaloxoneDose_mg);
+          timeOfLastDose = m_bg->GetSimulationTime(TimeUnit::s) + 1;
+          m_totalNaloxone_mg += standardNaloxoneDose_mg;
         }
+      }
     }
     m_bg->GetEngineTrack()->GetDataTrack().Probe("totalNaloxone_mg", m_totalNaloxone_mg);
 
@@ -306,7 +302,7 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
       //m_runThread = false;
     }*/
 
-    if (m_bg->GetSimulationTime(TimeUnit::hr) > maxSimTime) {
+    if (m_bg->GetSimulationTime(TimeUnit::hr) > maxSimTime_hr) {
       m_bg->GetLogger()->Info("This simulation has gone on too long");
       m_runThread = false;
     }

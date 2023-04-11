@@ -22,6 +22,7 @@ int HowToNasalNaloxone();
 namespace biogears {
 class SESubstanceNasalDose;
 class SESubstanceInfusion;
+class SESubstanceBolus;
 class SESubstance;
 }
 
@@ -31,14 +32,14 @@ public:
   virtual ~NaloxoneThread();
 
   void AdministerOpioid(double& conc, double& rate);
+  void AdministerOpioidBolus(double& conc);
   void SetNaloxoneInfusionRate(double& dose);
   void Status();
   void FluidLoading(std::string overdoseSubstance, double opioidDose);
 
-
   biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
 
-  protected:
+protected:
   void AdvanceTime();
   void AdvanceTimeFluids();
 
@@ -49,9 +50,8 @@ public:
   std::unique_ptr<biogears::PhysiologyEngine> m_bg;
 
   biogears::SESubstanceInfusion* m_opioid;
+  biogears::SESubstanceBolus* m_opiodBolus;
   biogears::SESubstanceNasalDose* m_naloxone;
   double m_totalNaloxone_mg;
   //fluidType fluid = ringers; //set the type of fluid here
-
-
 };
