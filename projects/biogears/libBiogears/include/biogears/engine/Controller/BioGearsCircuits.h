@@ -43,6 +43,7 @@ public:
   SEFluidCircuit& GetRespiratoryCircuit();
   SEFluidCircuit& GetRespiratoryAndAnesthesiaMachineCircuit();
   SEFluidCircuit& GetRespiratoryAndInhalerCircuit();
+  SEFluidCircuit& GetRespiratoryAndNasalCanulaCircuit();
   SEFluidCircuit& GetRespiratoryAndMechanicalVentilatorCircuit();
 
   SEThermalCircuit& GetTemperatureCircuit();
@@ -77,6 +78,7 @@ protected:
   // It's quicker and easier to test these combiniation circuits
   SEFluidCircuit* m_CombinedRespiratoryAnesthesiaCircuit;
   SEFluidCircuit* m_CombinedRespiratoryInhalerCircuit;
+  SEFluidCircuit* m_CombinedRespiratoryNasalCannulaCircuit;
   SEFluidCircuit* m_CombinedRespiratoryMechanicalVentilatorCircuit;
 
   SEThermalCircuit* m_TemperatureCircuit;

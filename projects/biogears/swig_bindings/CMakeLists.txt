@@ -28,8 +28,8 @@ if( Biogears_BUILD_SWIG_BINDINGS )
   
     option (Biogears_SWIG_CSHARP_BINDINGS "Toggle the Genearting of languge bindings using SHARP (Experimental)"  ${SWIG_FOUND})
     add_subdirectory(csharp)
-    #option (Biogears_SWIG_PYTHON_BINDINGS "Toggle the building of Python Hooks. pybind11 is a dependency of this process (Experimental)"  ${SWIG_FOUND})
-    #add_subdirectory(python)
+    option (Biogears_SWIG_PYTHON_BINDINGS "Toggle the building of Python Hooks. pybind11 is a dependency of this process (Experimental)"  ${SWIG_FOUND})
+    add_subdirectory(python)
   endif()
 endif() #pybind11_FOUND
 

@@ -187,6 +187,7 @@ protected:
   void SetupRespiratory();
   void SetupAnesthesiaMachine();
   void SetupInhaler();
+  void SetupNasalCannula();
   void SetupMechanicalVentilator();
   void SetupExternalTemperature();
   void SetupInternalTemperature();

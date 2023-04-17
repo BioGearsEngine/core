@@ -45,6 +45,7 @@ void BioGearsCircuits::Clear()
   m_AnesthesiaMachineCircuit = nullptr;
   m_CombinedRespiratoryAnesthesiaCircuit = nullptr;
   m_CombinedRespiratoryInhalerCircuit = nullptr;
+  m_CombinedRespiratoryNasalCannulaCircuit = nullptr;
   m_CombinedRespiratoryMechanicalVentilatorCircuit = nullptr;
   m_TemperatureCircuit = nullptr;
   m_InternalTemperatureCircuit = nullptr;

@@ -499,6 +499,17 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
 
+  <!-- @brief Set the Nasal Cannula and flow rate. -->
+  <xs:complexType name="NasalCannulaData">
+    <xs:complexContent>
+      <xs:extension base="PatientActionData">
+        <xs:sequence>
+          <xs:element name="FlowRate" type="ScalarVolumePerTimeData" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <!-- @brief Pain response. -->
   <xs:complexType name="PainStimulusData">
     <xs:complexContent>

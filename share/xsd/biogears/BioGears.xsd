@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="Free"/>
       <xs:enumeration value="AnesthesiaMachine"/>
       <xs:enumeration value="Inhaler"/>
+      <xs:enumeration value="NasalCanula"/>
       <xs:enumeration value="MechanicalVentilator"/>
     </xs:restriction>
   </xs:simpleType>
