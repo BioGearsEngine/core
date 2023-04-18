@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
 #include <biogears/cdm/patient/actions/SEBreathHold.h>
+#include <biogears/cdm/patient/actions/SENasalCannula.h>
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
@@ -524,7 +525,7 @@ void Respiratory::PreProcess()
   Pneumothorax();
   PulmonaryShunt();
   ConsciousRespiration();
-
+  NasalCannula();
   MechanicalVentilation();
 
   RespiratoryDriver();
@@ -854,6 +855,45 @@ void Respiratory::MechanicalVentilation()
   }
 }
 
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Modifies the pressure and/or flow at the mouth
+///
+/// \details
+/// Handles the mechanical ventilation action that adds a flow and pressure source to instantaneously
+/// set the respiratory connection (mouth) to user specified values.
+//--------------------------------------------------------------------------------------------------
+void Respiratory::NasalCannula()
+{
+  if (m_data.GetActions().GetPatientActions().HasNasalCannula()) {
+    SENasalCannula* nc = m_data.GetActions().GetPatientActions().GetNasalCannula();
+    // You only get here if action is On
+    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::NasalCannula);
+
+    //Reset the substance quantities at the connection
+    for (SEGasSubstanceQuantity* subQ : m_MechanicalVentilatorConnection->GetSubstanceQuantities())
+      subQ->SetToZero();
+
+    //Apply the instantaneous flow set by the action ********************************************
+    if (nc->HasFlowRate()) {
+      m_ConnectionToMouth->GetNextFlowSource().Set(nc->GetFlowRate());
+      //It may or may not be there
+      if (!m_ConnectionToMouth->HasFlowSource()) {
+        m_data.GetCircuits().GetRespiratoryAndMechanicalVentilatorCircuit().StateChange();
+      }
+    } else {
+      //If there's no flow specified, we need to remove the flow source
+      if (m_ConnectionToMouth->HasNextFlowSource()) {
+        m_ConnectionToMouth->GetNextFlowSource().Invalidate();
+        m_data.GetCircuits().GetRespiratoryAndMechanicalVentilatorCircuit().StateChange();
+      }
+    }
+
+  } else if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::NasalCannula) {
+    // Was just turned off
+    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+  }
+}
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Respiratory driver pressure source

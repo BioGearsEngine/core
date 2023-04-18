@@ -113,6 +113,7 @@ private:
   void ConsciousRespiration();
   /**/ void ProcessConsciousRespiration(SEConsciousRespirationCommand& cmd);
   void MechanicalVentilation();
+  void NasalCannula();
   void Apnea();
   // Driver
   void RespiratoryDriver();

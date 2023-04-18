@@ -226,10 +226,13 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
 void BioGears::SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode)
 {
   if (mode == m_AirwayMode) {
-    return; // do nazing!
+    return; 
   }
   if (mode == CDM::enumBioGearsAirwayMode::Inhaler && m_AirwayMode != CDM::enumBioGearsAirwayMode::Free) {
     throw CommonDataModelException("Can only change airway mode to Inhaler from the Free mode, Disable other equipment first.");
+  }
+  if (mode == CDM::enumBioGearsAirwayMode::NasalCannula && m_AirwayMode != CDM::enumBioGearsAirwayMode::Free) {
+    throw CommonDataModelException("Can only change airway mode to NasalCannula from the Free mode, Disable other equipment first.");
   }
   if (mode == CDM::enumBioGearsAirwayMode::AnesthesiaMachine && m_AirwayMode != CDM::enumBioGearsAirwayMode::Free) {
     throw CommonDataModelException("Can only change airway mode to Anesthesia Machine from the Free mode, Disable other equipment first.");
@@ -245,6 +248,7 @@ void BioGears::SetAirwayMode(CDM::enumBioGearsAirwayMode::value mode)
             ( CDM::enumBioGearsAirwayMode::Free == m_AirwayMode) ? "Free":
             ( CDM::enumBioGearsAirwayMode::AnesthesiaMachine ==  m_AirwayMode) ? "AnesthesiaMachine":
             ( CDM::enumBioGearsAirwayMode::Inhaler == m_AirwayMode) ? "Inhaler":
+            ( CDM::enumBioGearsAirwayMode::NasalCannula == m_AirwayMode) ? "NasalCannula":
             ( CDM::enumBioGearsAirwayMode::MechanicalVentilator == m_AirwayMode) ? "MechanicalVentilator": "Unknown"));
 }
 
