@@ -35,6 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SEIntubation.h>
+#include <biogears/cdm/patient/actions/SENasalCannula.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 #include <biogears/cdm/patient/actions/SEOverride.h>
@@ -308,6 +309,10 @@ public:
   SEMechanicalVentilation* GetMechanicalVentilation() const;
   void RemoveMechanicalVentilation();
 
+  bool HasNasalCannula() const;
+  SENasalCannula* GetNasalCannula() const;
+  void RemoveNasalCannula();
+
   bool HasNeedleDecompression() const;
 
   bool HasLeftNeedleDecompression() const;
@@ -415,6 +420,7 @@ protected:
   SEInfection* m_Infection;
   SEIntubation* m_Intubation;
   SEMechanicalVentilation* m_MechanicalVentilation;
+  SENasalCannula* m_NasalCannula;
   SENeedleDecompression* m_LeftNeedleDecompression;
   SENeedleDecompression* m_RightNeedleDecompression;
   SEPericardialEffusion* m_PericardialEffusion;

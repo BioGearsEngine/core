@@ -283,6 +283,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_Infection = nullptr;
   m_Intubation = nullptr;
   m_MechanicalVentilation = nullptr;
+  m_NasalCannula = nullptr;
   m_LeftNeedleDecompression = nullptr;
   m_RightNeedleDecompression = nullptr;
   m_PericardialEffusion = nullptr;
@@ -324,6 +325,7 @@ void SEPatientActionCollection::Clear()
   RemoveInfection();
   RemoveIntubation();
   RemoveMechanicalVentilation();
+  RemoveNasalCannula();
   RemoveLeftNeedleDecompression();
   RemoveRightNeedleDecompression();
   RemovePericardialEffusion();
@@ -421,6 +423,9 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   }
   if (HasMechanicalVentilation()) {
     to.push_back(GetMechanicalVentilation()->Unload());
+  }
+  if (HasNasalCannula()) {
+    to.push_back(GetNasalCannula()->Unload());
   }
   if (HasLeftNeedleDecompression()) {
     to.push_back(GetLeftNeedleDecompression()->Unload());
@@ -840,6 +845,19 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       return true;
     }
     return IsValid(*m_MechanicalVentilation);
+  }
+
+  const CDM::NasalCannulaData* nCannula = dynamic_cast<const CDM::NasalCannulaData*>(&action);
+  if (nCannula != nullptr) {
+    if (m_NasalCannula == nullptr) {
+      m_NasalCannula = new SENasalCannula();
+    }
+    m_NasalCannula->Load(*nCannula);
+    if (!m_NasalCannula->IsActive()) {
+      RemoveNasalCannula();
+      return true;
+    }
+    return IsValid(*m_NasalCannula);
   }
 
   const CDM::NeedleDecompressionData* needleDecomp = dynamic_cast<const CDM::NeedleDecompressionData*>(&action);
@@ -1475,6 +1493,21 @@ SEMechanicalVentilation* SEPatientActionCollection::GetMechanicalVentilation() c
 void SEPatientActionCollection::RemoveMechanicalVentilation()
 {
   SAFE_DELETE(m_MechanicalVentilation);
+}
+//-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasNasalCannula() const
+{
+  return m_NasalCannula == nullptr ? false : true;
+}
+//-------------------------------------------------------------------------------
+SENasalCannula* SEPatientActionCollection::GetNasalCannula() const
+{
+  return m_NasalCannula;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveNasalCannula()
+{
+  SAFE_DELETE(m_NasalCannula);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasNeedleDecompression() const
