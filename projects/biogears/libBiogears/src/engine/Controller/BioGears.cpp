@@ -5259,32 +5259,36 @@ void BioGears::SetupNasalCannula()
 {
   Info("Setting Up Nasal Cannula");
   /////////////////////// Circuit Interdependencies
-  double dLowResistance = 0.01; // Also defined in SetupRespiratoryCircuit
+  double OpenResistance_cmH2O_s_Per_L = m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   SEFluidCircuit& cRespiratory = m_Circuits->GetRespiratoryCircuit();
   SEGasCompartmentGraph& gRespiratory = m_Compartments->GetRespiratoryGraph();
   SELiquidCompartmentGraph& lAerosol = m_Compartments->GetAerosolGraph();
   ///////////////////////
 
   //Combined Respiratory and Inhaler Circuit
-  SEFluidCircuit& m_CombinedInhaler = m_Circuits->GetRespiratoryAndInhalerCircuit();
-  m_CombinedInhaler.AddCircuit(cRespiratory);
+  SEFluidCircuit& m_CombinedNasalCannula = m_Circuits->GetRespiratoryAndNasalCannulaCircuit();
+  m_CombinedNasalCannula.AddCircuit(cRespiratory);
   // Grab connection points/nodes
   SEFluidCircuitNode& Mouth = *cRespiratory.GetNode(BGE::RespiratoryNode::Mouth);
   SEFluidCircuitNode& Ambient = *cRespiratory.GetNode(BGE::EnvironmentNode::Ambient);
   // Define node on the combined graph, this is a simple circuit, no reason to make a independent circuit at this point
-  SEFluidCircuitNode& Mouthpiece = m_CombinedInhaler.CreateNode(BGE::InhalerNode::Mouthpiece);
-  Mouthpiece.GetPressure().SetValue(0.0, PressureUnit::cmH2O);
-  Mouthpiece.GetNextPressure().SetValue(0.0, PressureUnit::cmH2O);
-  double dInhalerBaseVolume_L = 0.030; // 30 milliliters
-  Mouthpiece.GetVolumeBaseline().SetValue(dInhalerBaseVolume_L, VolumeUnit::L);
+  SEFluidCircuitNode& Nosepiece = m_CombinedNasalCannula.CreateNode(BGE::NasalCannulaNode::Nosepiece);
+  Nosepiece.GetVolumeBaseline().SetValue(30, VolumeUnit::mL); // 30 milliliters
+  SEFluidCircuitNode& OxygenTank = m_CombinedNasalCannula.CreateNode(BGE::NasalCannulaNode::OxygenTank);
+  OxygenTank.GetVolumeBaseline().SetValue(std::numeric_limits<double>::infinity(), VolumeUnit::L); // inf volume for the oxygen tank (assuming its a wall connection)
+
   // Define path on the combined graph, this is a simple circuit, no reason to make a independent circuit at this point
-  SEFluidCircuitPath& EnvironmentToMouthpiece = m_CombinedInhaler.CreatePath(Ambient, Mouthpiece, BGE::InhalerPath::EnvironmentToMouthpiece);
+  SEFluidCircuitPath& EnvironmentToOxygentank = m_CombinedNasalCannula.CreatePath(Ambient, OxygenTank, BGE::NasalCannulaPath::EnvironmentToOxygentank);
+  EnvironmentToOxygentank.GetPressureSourceBaseline().SetValue(2000.0, PressureUnit::psi);   //oxygen connection is pressurized
+  SEFluidCircuitPath& OxygenTankToNosepiece = m_CombinedNasalCannula.CreatePath(OxygenTank, Nosepiece, BGE::NasalCannulaPath::OxygenTankToNosepiece);
+  OxygenTankToNosepiece.GetResistanceBaseline().SetValue(OpenResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
+  SEFluidCircuitPath& ReturnFlow = m_CombinedNasalCannula.CreatePath(Nosepiece, Ambient, BGE::NasalCannulaPath::ReturnFlow);
+
   // Connect Path
-  SEFluidCircuitPath& MouthpieceToMouth = m_CombinedInhaler.CreatePath(Mouthpiece, Mouth, BGE::InhalerPath::MouthpieceToMouth);
-  MouthpieceToMouth.GetResistanceBaseline().SetValue(dLowResistance, FlowResistanceUnit::cmH2O_s_Per_L);
-  m_CombinedInhaler.RemovePath(BGE::RespiratoryPath::EnvironmentToMouth);
-  m_CombinedInhaler.SetNextAndCurrentFromBaselines();
-  m_CombinedInhaler.StateChange();
+  SEFluidCircuitPath& NosepieceToMouth = m_CombinedNasalCannula.CreatePath(Nosepiece, Mouth, BGE::NasalCannulaPath::NosepieceToMouth);
+  m_CombinedNasalCannula.RemovePath(BGE::RespiratoryPath::EnvironmentToMouth);
+  m_CombinedNasalCannula.SetNextAndCurrentFromBaselines();
+  m_CombinedNasalCannula.StateChange();
 
   //////////////////////
   // GAS COMPARTMENTS //
@@ -5292,50 +5296,32 @@ void BioGears::SetupNasalCannula()
   SEGasCompartment* gAmbient = m_Compartments->GetGasCompartment(BGE::EnvironmentCompartment::Ambient);
   //////////////////
   // Compartments //
-  SEGasCompartment& gMouthpiece = m_Compartments->CreateGasCompartment(BGE::InhalerCompartment::Mouthpiece);
-  gMouthpiece.MapNode(Mouthpiece);
+  SEGasCompartment& gNosepiece = m_Compartments->CreateGasCompartment(BGE::NasalCannulaCompartment::Nosepiece);
+  gNosepiece.MapNode(Nosepiece);
+  SEGasCompartment& gOxygenTank = m_Compartments->CreateGasCompartment(BGE::NasalCannulaCompartment::OxygenTank);
+  gNosepiece.MapNode(OxygenTank);
   ///////////
   // Links //
-  SEGasCompartmentLink& gEnvironmentToMouthpiece = m_Compartments->CreateGasLink(*gAmbient, gMouthpiece, BGE::InhalerLink::EnvironmentToMouthpiece);
-  gEnvironmentToMouthpiece.MapPath(EnvironmentToMouthpiece);
-  SEGasCompartmentLink& gMouthpieceToMouth = m_Compartments->CreateGasLink(gMouthpiece, *gMouth, BGE::InhalerLink::MouthpieceToMouth);
-  gMouthpieceToMouth.MapPath(MouthpieceToMouth);
+  SEGasCompartmentLink& gEnvironmentToOxygentank = m_Compartments->CreateGasLink(*gAmbient, gOxygenTank, BGE::NasalCannulaLink::EnvironmentToOxygentank);
+  gEnvironmentToOxygentank.MapPath(EnvironmentToOxygentank);
+  SEGasCompartmentLink& gOxygenTankToNosepiece = m_Compartments->CreateGasLink(gOxygenTank, gNosepiece, BGE::NasalCannulaLink::OxygenTankToNosepiece);
+  gOxygenTankToNosepiece.MapPath(OxygenTankToNosepiece);
+  SEGasCompartmentLink& gReturnFlow = m_Compartments->CreateGasLink(gNosepiece, *gAmbient, BGE::NasalCannulaLink::ReturnFlow);
+  gReturnFlow.MapPath(ReturnFlow);
+  SEGasCompartmentLink& gNosepieceToMouth = m_Compartments->CreateGasLink(gNosepiece, *gMouth, BGE::NasalCannulaLink::NosepieceToMouth);
+  gNosepieceToMouth.MapPath(NosepieceToMouth);
   ///////////
   // Graph //
-  SEGasCompartmentGraph& gCombinedInhaler = m_Compartments->GetRespiratoryAndInhalerGraph();
-  gCombinedInhaler.AddGraph(gRespiratory);
-  gCombinedInhaler.RemoveLink(BGE::PulmonaryLink::EnvironmentToMouth);
-  gCombinedInhaler.AddCompartment(gMouthpiece);
-  gCombinedInhaler.AddLink(gEnvironmentToMouthpiece);
-  gCombinedInhaler.AddLink(gMouthpieceToMouth);
-  gCombinedInhaler.StateChange();
-
-  // I could probably take the generic code I wrote in SetupRespiratory to clone the gas setup into a liquid setup
-  // and then call that method here, but this is such a simple circuit... I will leave that as an exercise for somebody else...
-
-  ///////////////////////////////////
-  // LIQUID (AEROSOL) COMPARTMENTS //
-  SELiquidCompartment* lMouth = m_Compartments->GetLiquidCompartment(BGE::PulmonaryCompartment::Mouth);
-  SELiquidCompartment* lAmbient = m_Compartments->GetLiquidCompartment(BGE::EnvironmentCompartment::Ambient);
-  //////////////////
-  // Compartments //
-  SELiquidCompartment& lMouthpiece = m_Compartments->CreateLiquidCompartment(BGE::InhalerCompartment::Mouthpiece);
-  lMouthpiece.MapNode(Mouthpiece);
-  ///////////
-  // Links //
-  SELiquidCompartmentLink& lEnvironmentToMouthpiece = m_Compartments->CreateLiquidLink(*lAmbient, lMouthpiece, BGE::InhalerLink::EnvironmentToMouthpiece);
-  lEnvironmentToMouthpiece.MapPath(EnvironmentToMouthpiece);
-  SELiquidCompartmentLink& lMouthpieceToMouth = m_Compartments->CreateLiquidLink(lMouthpiece, *lMouth, BGE::InhalerLink::MouthpieceToMouth);
-  lMouthpieceToMouth.MapPath(MouthpieceToMouth);
-  ///////////
-  // Graph //
-  SELiquidCompartmentGraph& lCombinedInhaler = m_Compartments->GetAerosolAndInhalerGraph();
-  lCombinedInhaler.AddGraph(lAerosol);
-  lCombinedInhaler.RemoveLink(BGE::PulmonaryLink::EnvironmentToMouth);
-  lCombinedInhaler.AddCompartment(lMouthpiece);
-  lCombinedInhaler.AddLink(lEnvironmentToMouthpiece);
-  lCombinedInhaler.AddLink(lMouthpieceToMouth);
-  lCombinedInhaler.StateChange();
+  SEGasCompartmentGraph& gCombinedNasalCannula = m_Compartments->GetRespiratoryAndNasalCannulaGraph();
+  gCombinedNasalCannula.AddGraph(gRespiratory);
+  gCombinedNasalCannula.RemoveLink(BGE::PulmonaryLink::EnvironmentToMouth);
+  gCombinedNasalCannula.AddCompartment(gNosepiece);
+  gCombinedNasalCannula.AddCompartment(gOxygenTank);
+  gCombinedNasalCannula.AddLink(gEnvironmentToOxygentank);
+  gCombinedNasalCannula.AddLink(gOxygenTankToNosepiece);
+  gCombinedNasalCannula.AddLink(gReturnFlow);
+  gCombinedNasalCannula.AddLink(gNosepieceToMouth);
+  gCombinedNasalCannula.StateChange();
 }
 
 void BioGears::SetupMechanicalVentilator()

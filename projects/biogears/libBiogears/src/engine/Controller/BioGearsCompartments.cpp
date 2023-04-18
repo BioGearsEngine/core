@@ -310,6 +310,11 @@ SEGasCompartmentGraph& BioGearsCompartments::GetActiveRespiratoryGraph()
       m_data.GetCompartments().UpdateLinks(*m_CombinedRespiratoryInhalerGraph);
     m_UpdateActiveAirwayGraph = false;
     return *m_CombinedRespiratoryInhalerGraph;
+  case CDM::enumBioGearsAirwayMode::NasalCannula:
+    if (m_UpdateActiveAirwayGraph)
+      m_data.GetCompartments().UpdateLinks(*m_CombinedRespiratoryNasalCannulaGraph);
+    m_UpdateActiveAirwayGraph = false;
+    return *m_CombinedRespiratoryNasalCannulaGraph;
   case CDM::enumBioGearsAirwayMode::MechanicalVentilator:
     if (m_UpdateActiveAirwayGraph)
       m_data.GetCompartments().UpdateLinks(*m_CombinedRespiratoryMechanicalVentilatorGraph);
@@ -343,6 +348,13 @@ SEGasCompartmentGraph& BioGearsCompartments::GetRespiratoryAndInhalerGraph()
   if (m_CombinedRespiratoryInhalerGraph == nullptr)
     m_CombinedRespiratoryInhalerGraph = &CreateGasGraph(BGE::Graph::RespiratoryAndInhaler);
   return *m_CombinedRespiratoryInhalerGraph;
+}
+
+SEGasCompartmentGraph& BioGearsCompartments::GetRespiratoryAndNasalCannulaGraph()
+{
+  if (m_CombinedRespiratoryNasalCannulaGraph == nullptr)
+    m_CombinedRespiratoryNasalCannulaGraph = &CreateGasGraph(BGE::Graph::RespiratoryAndNasalCannula);
+  return *m_CombinedRespiratoryNasalCannulaGraph;
 }
 SELiquidCompartmentGraph& BioGearsCompartments::GetActiveAerosolGraph()
 {

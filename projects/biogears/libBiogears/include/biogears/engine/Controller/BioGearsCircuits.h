@@ -43,7 +43,7 @@ public:
   SEFluidCircuit& GetRespiratoryCircuit();
   SEFluidCircuit& GetRespiratoryAndAnesthesiaMachineCircuit();
   SEFluidCircuit& GetRespiratoryAndInhalerCircuit();
-  SEFluidCircuit& GetRespiratoryAndNasalCanulaCircuit();
+  SEFluidCircuit& GetRespiratoryAndNasalCannulaCircuit();
   SEFluidCircuit& GetRespiratoryAndMechanicalVentilatorCircuit();
 
   SEThermalCircuit& GetTemperatureCircuit();
@@ -105,6 +105,7 @@ namespace tatrc {
         DEFINE_STATIC_STRING(AnesthesiaMachine);
         DEFINE_STATIC_STRING(RespiratoryAnesthesia);
         DEFINE_STATIC_STRING(RespiratoryInhaler);
+        DEFINE_STATIC_STRING(RespiratoryNasalCannula);
         DEFINE_STATIC_STRING(RespiratoryMechanicalVentilator);
         DEFINE_STATIC_STRING(Temperature);
         DEFINE_STATIC_STRING(InternalTemperature);
@@ -246,6 +247,26 @@ namespace tatrc {
 
         DEFINE_STATIC_STRING(EnvironmentToMouthpiece);
         DEFINE_STATIC_STRING(MouthpieceToMouth);
+      };
+
+
+      ///////////////////////////
+      // Nasal Cannula Circuit Enums //
+      ///////////////////////////
+
+      namespace NasalCannulaNode {
+
+        DEFINE_STATIC_STRING(Nosepiece);
+        DEFINE_STATIC_STRING(OxygenTank);
+      };
+
+      namespace NasalCannulaPath {
+
+        DEFINE_STATIC_STRING(OxygenTankToNosepiece);
+        DEFINE_STATIC_STRING(EnvironmentToOxygentank);
+        DEFINE_STATIC_STRING(ReturnFlow);
+        DEFINE_STATIC_STRING(NosepieceToMouth);
+
       };
 
       //////////////////////////////////////////

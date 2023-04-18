@@ -96,6 +96,11 @@ bool BioGearsCircuits::Load(const CDM::CircuitManagerData& in)
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::RespiratoryInhaler));
     return false;
   }
+  m_CombinedRespiratoryNasalCannulaCircuit = GetFluidCircuit(BGE::Circuits::RespiratoryNasalCannula);
+  if (m_CombinedRespiratoryNasalCannulaCircuit == nullptr) {
+    Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::RespiratoryNasalCannula));
+    return false;
+  }
   m_CombinedRespiratoryMechanicalVentilatorCircuit = GetFluidCircuit(BGE::Circuits::RespiratoryMechanicalVentilator);
   if (m_CombinedRespiratoryMechanicalVentilatorCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::RespiratoryMechanicalVentilator));
@@ -166,6 +171,8 @@ SEFluidCircuit& BioGearsCircuits::GetActiveRespiratoryCircuit()
     return *m_CombinedRespiratoryAnesthesiaCircuit;
   case CDM::enumBioGearsAirwayMode::Inhaler:
     return *m_CombinedRespiratoryInhalerCircuit;
+  case CDM::enumBioGearsAirwayMode::NasalCannula:
+    return *m_CombinedRespiratoryNasalCannulaCircuit;
   case CDM::enumBioGearsAirwayMode::MechanicalVentilator:
     return *m_CombinedRespiratoryMechanicalVentilatorCircuit;
   default:
@@ -195,6 +202,12 @@ SEFluidCircuit& BioGearsCircuits::GetRespiratoryAndInhalerCircuit()
   if (m_CombinedRespiratoryInhalerCircuit == nullptr)
     m_CombinedRespiratoryInhalerCircuit = &CreateFluidCircuit(BGE::Circuits::RespiratoryInhaler);
   return *m_CombinedRespiratoryInhalerCircuit;
+}
+SEFluidCircuit& BioGearsCircuits::GetRespiratoryAndNasalCannulaCircuit()
+{
+  if (m_CombinedRespiratoryNasalCannulaCircuit == nullptr)
+    m_CombinedRespiratoryNasalCannulaCircuit = &CreateFluidCircuit(BGE::Circuits::RespiratoryNasalCannula);
+  return *m_CombinedRespiratoryNasalCannulaCircuit;
 }
 SEFluidCircuit& BioGearsCircuits::GetRespiratoryAndMechanicalVentilatorCircuit()
 {
