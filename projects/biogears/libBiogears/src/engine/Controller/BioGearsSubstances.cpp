@@ -224,6 +224,20 @@ void BioGearsSubstances::InitializeGasCompartments()
     }
   }
 
+  //Initialize the compartments to Ambient values
+  for (SEGasCompartment* cmpt : m_data.GetCompartments().GetNasalCannulaLeafCompartments()) {
+    if (cmpt->HasVolume()) {
+      if (cmpt->GetName() == BGE::NasalCannulaCompartment::Nosepiece) {
+        cmpt->GetSubstanceQuantity(*m_O2)->GetVolumeFraction().SetValue(AmbientO2VF);
+        cmpt->GetSubstanceQuantity(*m_CO2)->GetVolumeFraction().SetValue(AmbientCO2VF);
+        cmpt->GetSubstanceQuantity(*m_N2)->GetVolumeFraction().SetValue(AmbientN2VF);
+      } else {
+        cmpt->GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetVolumeFraction().SetValue(1.0);
+      }
+      cmpt->Balance(BalanceGasBy::VolumeFraction);
+    }
+  }
+
   for (SEGasCompartment* cmpt : m_data.GetCompartments().GetInhalerLeafCompartments()) {
     if (cmpt->HasVolume()) {
       cmpt->GetSubstanceQuantity(m_data.GetSubstances().GetO2())->GetVolumeFraction().SetValue(AmbientO2VF);

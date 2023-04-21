@@ -870,24 +870,25 @@ void Respiratory::NasalCannula()
     // You only get here if action is On
     m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::NasalCannula);
 
-    //Reset the substance quantities at the connection
-    for (SEGasSubstanceQuantity* subQ : m_MechanicalVentilatorConnection->GetSubstanceQuantities())
-      subQ->SetToZero();
+    double flow_L_Per_min = 0.0;
+    SEFluidCircuit* RespirationCircuit = &m_data.GetCircuits().GetActiveRespiratoryCircuit();
+    SEFluidCircuitPath* OxygenTankToNosepiece = RespirationCircuit->GetPath(BGE::NasalCannulaPath::OxygenTankToNosepiece);
+    SEFluidCircuitPath* Tank = RespirationCircuit->GetPath(BGE::NasalCannulaPath::EnvironmentToOxygentank);
 
-    //Apply the instantaneous flow set by the action ********************************************
-    if (nc->HasFlowRate()) {
-      m_ConnectionToMouth->GetNextFlowSource().Set(nc->GetFlowRate());
-      //It may or may not be there
-      if (!m_ConnectionToMouth->HasFlowSource()) {
-        m_data.GetCircuits().GetRespiratoryAndMechanicalVentilatorCircuit().StateChange();
-      }
-    } else {
-      //If there's no flow specified, we need to remove the flow source
-      if (m_ConnectionToMouth->HasNextFlowSource()) {
-        m_ConnectionToMouth->GetNextFlowSource().Invalidate();
-        m_data.GetCircuits().GetRespiratoryAndMechanicalVentilatorCircuit().StateChange();
-      }
+    //check for no flow set:
+    if (!nc->HasFlowRate()) {
+      flow_L_Per_min = 3.0;
+      nc->GetFlowRate().SetValue(flow_L_Per_min, VolumePerTimeUnit::L_Per_min);
+      Info("Nasal cannula flow rate not set, setting to a default of: " + std::to_string(flow_L_Per_min) + " L per min");
     }
+
+    //get the flow
+    flow_L_Per_min = nc->GetFlowRate().GetValue(VolumePerTimeUnit::L_Per_min);
+
+    //compute the resistance: 
+    double tankPressure_cmH2O = Tank->GetNextPressureSource(PressureUnit::cmH2O);
+    double tankResistance_cmH2O_s_Per_L = tankPressure_cmH2O / (flow_L_Per_min / 60.0);
+    OxygenTankToNosepiece->GetNextResistance().SetValue(tankResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
 
   } else if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::NasalCannula) {
     // Was just turned off

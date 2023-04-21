@@ -86,6 +86,9 @@ public:
   const std::vector<SEGasCompartment*>& GetInhalerCompartments() { return m_InhalerCompartments; }
   const std::vector<SEGasCompartment*>& GetInhalerLeafCompartments() { return m_InhalerLeafCompartments; }
 
+  const std::vector<SEGasCompartment*>& GetNasalCannulaCompartments() { return m_NasalCannulaCompartments; }
+  const std::vector<SEGasCompartment*>& GetNasalCannulaLeafCompartments() { return m_NasalCannulaLeafCompartments; }
+
   const std::vector<SELiquidCompartment*>& GetInhalerAerosolCompartments() { return m_InhalerAerosolCompartments; }
   const std::vector<SELiquidCompartment*>& GetInhalerAerosolLeafCompartments() { return m_InhalerAerosolLeafCompartments; }
 
@@ -143,6 +146,8 @@ protected:
   std::vector<SEGasCompartment*> m_AnesthesiaMachineLeafCompartments;
   std::vector<SEGasCompartment*> m_InhalerCompartments;
   std::vector<SEGasCompartment*> m_InhalerLeafCompartments;
+  std::vector<SEGasCompartment*> m_NasalCannulaCompartments;
+  std::vector<SEGasCompartment*> m_NasalCannulaLeafCompartments;
   std::vector<SELiquidCompartment*> m_InhalerAerosolCompartments;
   std::vector<SELiquidCompartment*> m_InhalerAerosolLeafCompartments;
   std::vector<SEGasCompartment*> m_MechanicalVentilatorCompartments;
