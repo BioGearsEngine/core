@@ -382,6 +382,7 @@ SELiquidCompartmentGraph& BioGearsCompartments::GetActiveAerosolGraph()
   switch (m_data.GetAirwayMode()) {
   case CDM::enumBioGearsAirwayMode::Free:
   case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
+  case CDM::enumBioGearsAirwayMode::NasalCannula:
   case CDM::enumBioGearsAirwayMode::MechanicalVentilator: // Just use the regular graph
     if (m_UpdateActiveAerosolGraph)
       m_data.GetCompartments().UpdateLinks(*m_AerosolGraph);

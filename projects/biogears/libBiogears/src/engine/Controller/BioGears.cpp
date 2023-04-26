@@ -1124,6 +1124,7 @@ bool BioGears::CreateCircuitsAndCompartments()
   SetupRespiratory();
   SetupAnesthesiaMachine();
   SetupInhaler();
+  SetupNasalCannula();
   SetupMechanicalVentilator();
 
   m_Compartments->StateChange();
@@ -5266,7 +5267,6 @@ void BioGears::SetupNasalCannula()
   double OpenResistance_cmH2O_s_Per_L = m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   SEFluidCircuit& cRespiratory = m_Circuits->GetRespiratoryCircuit();
   SEGasCompartmentGraph& gRespiratory = m_Compartments->GetRespiratoryGraph();
-  SELiquidCompartmentGraph& lAerosol = m_Compartments->GetAerosolGraph();
   ///////////////////////
 
   //Combined Respiratory and Inhaler Circuit
@@ -5278,6 +5278,8 @@ void BioGears::SetupNasalCannula()
   // Define node on the combined graph, this is a simple circuit, no reason to make a independent circuit at this point
   SEFluidCircuitNode& Nosepiece = m_CombinedNasalCannula.CreateNode(BGE::NasalCannulaNode::Nosepiece);
   Nosepiece.GetVolumeBaseline().SetValue(30, VolumeUnit::mL); // 30 milliliters
+  //Nosepiece.GetPressure().SetValue(0.0, PressureUnit::cmH2O);
+  //Nosepiece.GetNextPressure().SetValue(0.0, PressureUnit::cmH2O);
   SEFluidCircuitNode& OxygenTank = m_CombinedNasalCannula.CreateNode(BGE::NasalCannulaNode::OxygenTank);
   OxygenTank.GetVolumeBaseline().SetValue(std::numeric_limits<double>::infinity(), VolumeUnit::L); // inf volume for the oxygen tank (assuming its a wall connection)
 
@@ -5303,7 +5305,7 @@ void BioGears::SetupNasalCannula()
   SEGasCompartment& gNosepiece = m_Compartments->CreateGasCompartment(BGE::NasalCannulaCompartment::Nosepiece);
   gNosepiece.MapNode(Nosepiece);
   SEGasCompartment& gOxygenTank = m_Compartments->CreateGasCompartment(BGE::NasalCannulaCompartment::OxygenTank);
-  gNosepiece.MapNode(OxygenTank);
+  gOxygenTank.MapNode(OxygenTank);
   ///////////
   // Links //
   SEGasCompartmentLink& gEnvironmentToOxygentank = m_Compartments->CreateGasLink(*gAmbient, gOxygenTank, BGE::NasalCannulaLink::EnvironmentToOxygentank);

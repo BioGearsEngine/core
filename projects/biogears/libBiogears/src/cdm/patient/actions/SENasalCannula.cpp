@@ -80,10 +80,10 @@ SEScalarVolumePerTime& SENasalCannula::GetFlowRate()
 //-------------------------------------------------------------------------------
 void SENasalCannula::ToString(std::ostream& str) const
 {
-  str << "Patient Action : Apnea";
+  str << "Patient Action : Nasal Cannula";
   if (HasComment())
     str << "\n\tComment: " << m_Comment;
-  str << "\n\tSeverity: ";
+  str << "\n\tFlow Rate: ";
   HasFlowRate() ? str << *m_FlowRate : str << "Not Set";
   str << std::flush;
 }
