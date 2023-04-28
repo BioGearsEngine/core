@@ -42,6 +42,10 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/min"      Precision="3"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialBloodPH" Precision="2"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="RightAfferentArterioleResistance"  Unit="mmHg min/mL" Precision="4"/>
+
+<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"        Name="VolumeFraction" Substance="Oxygen" Precision="3"/>
+<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Mouth"        Name="VolumeFraction" Substance="Oxygen" Precision="3"/>
+
   
   <DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"                            Name="Pressure"        Unit="cmH2O" Precision="0"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
@@ -74,36 +78,6 @@
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"                             Name="OutFlow"        Unit="L/s" Precision="2"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightAlveoli"                       Name="Volume"         Unit="mL" Precision="0"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"                        Name="Volume"         Unit="mL" Precision="0"/>
-	<!-- How does clearanc look? -->
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albuterol" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>	
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albuterol" Name="SystemicMassCleared" Unit="ug" Precision="4"/>	
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Albuterol" Name="MassInBody" Unit="ug" Precision="3"/>	  
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Albuterol" Name="MassCleared" Unit="ug" Precision="6"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftKidneyTissueIntracellular"  Substance="Albuterol" Name="MassCleared" Unit="ug" Precision="6"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightKidneyTissueIntracellular" Substance="Albuterol" Name="MassCleared" Unit="ug" Precision="6"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Albuterol" Name="MassExcreted" Unit="ug" Precision="6"/>    
-  <!-- Aerosol Compartments -->
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Mouth"          Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	  
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Trachea"         Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftAlveoli"    Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftBronchi"  Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightAlveoli"   Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBronchi" Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>	
-    
-  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Mouth"          Substance="Albuterol" Name="MassDeposited" Unit="ug"  Precision="4"/>
-  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Trachea"         Substance="Albuterol" Name="MassDeposited" Unit="ug"  Precision="4"/>
-  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftAlveoli"    Substance="Albuterol" Name="MassDeposited" Unit="ug"  Precision="4"/>
-  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftBronchi"  Substance="Albuterol" Name="MassDeposited" Unit="ug"  Precision="4"/>
-  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightAlveoli"   Substance="Albuterol" Name="MassDeposited" Unit="ug"  Precision="4"/>
-  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightBronchi" Substance="Albuterol" Name="MassDeposited" Unit="ug"  Precision="4"/>
-  
-  <!-- It will diffuse into the tissues, then into the blood -->  
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueIntracellular"   Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueIntracellular"  Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>
-  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungTissueExtracellular"   Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungTissueExtracellular"  Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>
-  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftLungVasculature"           Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>
-	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightLungVasculature"          Substance="Albuterol" Name="Concentration" Unit="ug/L" Precision="4"/>
 
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="ExpiratoryFlow"                 Unit="L/s"       Precision="4"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="InspiratoryFlow"                Unit="L/s"       Precision="4"/>
@@ -114,16 +88,21 @@
 	
 	
     <Action xsi:type="AdvanceTimeData">
-        <Time value="30" unit="s"/>       
+        <Time value="3" unit="s"/>       
     </Action>
-    <Action xsi:type="AcuteRespiratoryDistressData">
-        <Severity value="0.5"/>
-    </Action> 
+    <Action xsi:type="AirwayObstructionData">
+        <Severity value="0.6"/>       
+    </Action>
+
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="400" unit="s"/>       
+    </Action>
+
 	<Action xsi:type="NasalCannulaData">
-		<FlowRate Value="4" unit="L/min"/>
+		<FlowRate value="4" unit="L/min"/>
     </Action>
 
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="150" unit="s"/>
+		<Time value="350" unit="s"/>
 	</Action>
 </Scenario>

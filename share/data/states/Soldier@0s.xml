@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<BioGearsState xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+137" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SimulationTime readOnly="false" unit="s" value="0"/>
   <Patient>
     <Name>Soldier</Name>
@@ -374,7 +374,7 @@
     <MolarMass readOnly="false" unit="g/mol" value="89.09"/>
     <State>Liquid</State>
     <BloodConcentration readOnly="false" unit="ug/mL" value="495.40233071124"/>
-    <MassInBody readOnly="false" unit="ug" value="20270043.2856595"/>
+    <MassInBody readOnly="false" unit="ug" value="20270043.2856596"/>
     <MassInBlood readOnly="false" unit="ug" value="2743120.53301112"/>
     <MassInTissue readOnly="false" unit="ug" value="17526922.7526484"/>
     <Clearance>
@@ -401,7 +401,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="95.1536093935643"/>
     <MassInBody readOnly="false" unit="ug" value="1412773.52714357"/>
     <MassInBlood readOnly="false" unit="ug" value="527970.156915288"/>
-    <MassInTissue readOnly="false" unit="ug" value="884803.370228278"/>
+    <MassInTissue readOnly="false" unit="ug" value="884803.370228279"/>
     <SystemicMassCleared readOnly="false" unit="ug" value="112.286290858086"/>
     <Clearance>
       <Systemic>
@@ -434,7 +434,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="3818.49843576073"/>
     <MassInBody readOnly="false" unit="ug" value="60530644.0671883"/>
     <MassInBlood readOnly="false" unit="ug" value="21178169.2731757"/>
-    <MassInTissue readOnly="false" unit="ug" value="39352474.7940127"/>
+    <MassInTissue readOnly="false" unit="ug" value="39352474.7940126"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -551,7 +551,7 @@
     <MaximumDiffusionFlux readOnly="false" unit="g/cm^2 s" value="0.5"/>
     <MichaelisCoefficient readOnly="false" value="0.8"/>
     <BloodConcentration readOnly="false" unit="ug/mL" value="10.9404267721316"/>
-    <MassInBody readOnly="false" unit="ug" value="401856.608471585"/>
+    <MassInBody readOnly="false" unit="ug" value="401856.608471586"/>
     <MassInBlood readOnly="false" unit="ug" value="60222.6662512738"/>
     <MassInTissue readOnly="false" unit="ug" value="341633.942220312"/>
     <SystemicMassCleared readOnly="false" unit="ug" value="13630.7846367029"/>
@@ -634,7 +634,7 @@
     <BloodConcentration readOnly="false" unit="ug/mL" value="3256.38005690617"/>
     <MassInBody readOnly="false" unit="ug" value="57366068.0145939"/>
     <MassInBlood readOnly="false" unit="ug" value="18037142.010417"/>
-    <MassInTissue readOnly="false" unit="ug" value="39328926.0041769"/>
+    <MassInTissue readOnly="false" unit="ug" value="39328926.0041768"/>
     <Clearance>
       <RenalDynamics>
         <Regulation>
@@ -1205,15 +1205,15 @@
     <HadBronchoconstriction>false</HadBronchoconstriction>
   </System>
   <System xsi:type="BioGearsTissueSystemData">
-    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="4.0443848923425"/>
+    <CarbonDioxideProductionRate readOnly="false" unit="mL/s" value="4.01747225713227"/>
     <DehydrationFraction readOnly="false" value="0"/>
     <ExtracellularFluidVolume readOnly="false" unit="mL" value="9358.09540238534"/>
     <ExtravascularFluidVolume readOnly="false" unit="mL" value="35103.8455399145"/>
     <IntracellularFluidPH readOnly="false" value="7"/>
     <IntracellularFluidVolume readOnly="false" unit="mL" value="25745.7501375291"/>
     <TotalBodyFluidVolume readOnly="false" unit="mL" value="40635.9791814908"/>
-    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="4.32259602017511"/>
-    <RespiratoryExchangeRatio readOnly="false" value="0.876940254267235"/>
+    <OxygenConsumptionRate readOnly="false" unit="mL/s" value="4.31962517429139"/>
+    <RespiratoryExchangeRatio readOnly="false" value="0.871753644901876"/>
     <LiverInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
     <LiverGlucagonSetPoint readOnly="false" unit="ug/L" value="0.079"/>
     <MuscleInsulinSetPoint readOnly="false" unit="mmol/mL" value="1.46349862258953e-10"/>
@@ -1226,9 +1226,9 @@
     <StoredFat readOnly="false" unit="g" value="13970.1753194045"/>
     <RestingPatientMass_kg>77.6122029</RestingPatientMass_kg>
     <RestingFluidMass_kg>38.5493429349847</RestingFluidMass_kg>
-    <O2ConsumedRunningAverage_mL_Per_s numSamples="9" sum="38.8650745828486"/>
-    <CO2ProducedRunningAverage_mL_Per_s numSamples="9" sum="35.9913909494454"/>
-    <RespiratoryQuotientRunningAverage numSamples="9" sum="7.81199424496834"/>
+    <O2ConsumedRunningAverage_mL_Per_s numSamples="9" sum="38.8944222928524"/>
+    <CO2ProducedRunningAverage_mL_Per_s numSamples="9" sum="36.0976029388934"/>
+    <RespiratoryQuotientRunningAverage numSamples="9" sum="7.8292131254282"/>
     <FatigueRunningAverage numSamples="24" sum="0"/>
   </System>
   <System xsi:type="BioGearsEnvironmentData">
@@ -28930,8 +28930,8 @@
     <GasCompartment>
       <Name>Mouth</Name>
       <Node>Mouth</Node>
-      <InFlow readOnly="true" unit="mL/s" value="549.944379004297"/>
-      <OutFlow readOnly="true" unit="mL/s" value="549.944379004262"/>
+      <InFlow readOnly="true" unit="mL/s" value="549.944378982982"/>
+      <OutFlow readOnly="true" unit="mL/s" value="549.944379025578"/>
       <Pressure readOnly="true" unit="cmH2O" value="1033.22744953679"/>
       <Volume readOnly="false" unit="mL" value="20.6"/>
       <SubstanceQuantity>
@@ -28975,6 +28975,52 @@
         <PartialPressure readOnly="false" unit="cmH2O" value="0"/>
         <Volume readOnly="false" unit="mL" value="0.012"/>
         <VolumeFraction readOnly="false" value="0.0004"/>
+      </SubstanceQuantity>
+    </GasCompartment>
+    <GasCompartment>
+      <Name>Nosepiece</Name>
+      <Node>Nosepiece</Node>
+      <Volume readOnly="false" unit="mL" value="30"/>
+      <SubstanceQuantity>
+        <Substance>Nitrogen</Substance>
+        <PartialPressure readOnly="false" unit="mmHg" value="0"/>
+        <Volume readOnly="false" unit="mL" value="23.688"/>
+        <VolumeFraction readOnly="false" value="0.7896"/>
+      </SubstanceQuantity>
+      <SubstanceQuantity>
+        <Substance>Oxygen</Substance>
+        <PartialPressure readOnly="false" unit="mmHg" value="0"/>
+        <Volume readOnly="false" unit="mL" value="6.3"/>
+        <VolumeFraction readOnly="false" value="0.21"/>
+      </SubstanceQuantity>
+      <SubstanceQuantity>
+        <Substance>CarbonDioxide</Substance>
+        <PartialPressure readOnly="false" unit="mmHg" value="0"/>
+        <Volume readOnly="false" unit="mL" value="0.012"/>
+        <VolumeFraction readOnly="false" value="0.0004"/>
+      </SubstanceQuantity>
+    </GasCompartment>
+    <GasCompartment>
+      <Name>OxygenTank</Name>
+      <Node>OxygenTank</Node>
+      <Volume readOnly="false" unit="L" value="INF"/>
+      <SubstanceQuantity>
+        <Substance>Nitrogen</Substance>
+        <PartialPressure readOnly="false" unit="mmHg" value="0"/>
+        <Volume readOnly="false" unit="mL" value="INF"/>
+        <VolumeFraction readOnly="false" value="0"/>
+      </SubstanceQuantity>
+      <SubstanceQuantity>
+        <Substance>Oxygen</Substance>
+        <PartialPressure readOnly="false" unit="mmHg" value="0"/>
+        <Volume readOnly="false" unit="mL" value="INF"/>
+        <VolumeFraction readOnly="false" value="1"/>
+      </SubstanceQuantity>
+      <SubstanceQuantity>
+        <Substance>CarbonDioxide</Substance>
+        <PartialPressure readOnly="false" unit="mmHg" value="0"/>
+        <Volume readOnly="false" unit="mL" value="INF"/>
+        <VolumeFraction readOnly="false" value="0"/>
       </SubstanceQuantity>
     </GasCompartment>
     <GasCompartment>
@@ -29406,6 +29452,12 @@
       <TargetCompartment>Mouthpiece</TargetCompartment>
     </GasLink>
     <GasLink>
+      <Name>EnvironmentToOxygentank</Name>
+      <Path>EnvironmentToOxygentank</Path>
+      <SourceCompartment>Ambient</SourceCompartment>
+      <TargetCompartment>OxygenTank</TargetCompartment>
+    </GasLink>
+    <GasLink>
       <Name>EnvironmentToRightChestLeak</Name>
       <Path>EnvironmentToRightChestLeak</Path>
       <SourceCompartment>Ambient</SourceCompartment>
@@ -29508,6 +29560,24 @@
       <Path>MouthpieceToMouth</Path>
       <SourceCompartment>Mouthpiece</SourceCompartment>
       <TargetCompartment>Mouth</TargetCompartment>
+    </GasLink>
+    <GasLink>
+      <Name>NosepieceToMouth</Name>
+      <Path>NosepieceToMouth</Path>
+      <SourceCompartment>Nosepiece</SourceCompartment>
+      <TargetCompartment>Mouth</TargetCompartment>
+    </GasLink>
+    <GasLink>
+      <Name>OxygenTankToNosepiece</Name>
+      <Path>OxygenTankToNosepiece</Path>
+      <SourceCompartment>OxygenTank</SourceCompartment>
+      <TargetCompartment>Nosepiece</TargetCompartment>
+    </GasLink>
+    <GasLink>
+      <Name>ReturnFlow</Name>
+      <Path>ReturnFlow</Path>
+      <SourceCompartment>Nosepiece</SourceCompartment>
+      <TargetCompartment>Ambient</TargetCompartment>
     </GasLink>
     <GasLink>
       <Name>RightAlveoliLeakToRightPleuralCavity</Name>
@@ -29789,6 +29859,45 @@
       <Link>RightChestLeakToRightPleuralCavity</Link>
       <Link>RightPleuralCavityToEnvironment</Link>
       <Link>ConnectionToMouth</Link>
+    </GasGraph>
+    <GasGraph>
+      <Name>RespiratoryAndNasalCannula</Name>
+      <Compartment>Ambient</Compartment>
+      <Compartment>Mouth</Compartment>
+      <Compartment>Stomach</Compartment>
+      <Compartment>Trachea</Compartment>
+      <Compartment>LeftBronchi</Compartment>
+      <Compartment>LeftAlveoli</Compartment>
+      <Compartment>RightBronchi</Compartment>
+      <Compartment>RightPleuralCavity</Compartment>
+      <Compartment>LeftPleuralCavity</Compartment>
+      <Compartment>RightAlveoli</Compartment>
+      <Compartment>LeftAlveoliLeak</Compartment>
+      <Compartment>LeftChestLeak</Compartment>
+      <Compartment>RightAlveoliLeak</Compartment>
+      <Compartment>RightChestLeak</Compartment>
+      <Compartment>Nosepiece</Compartment>
+      <Compartment>OxygenTank</Compartment>
+      <Link>MouthToTrachea</Link>
+      <Link>MouthToStomach</Link>
+      <Link>TracheaToLeftBronchi</Link>
+      <Link>LeftBronchiToAlveoli</Link>
+      <Link>TracheaToRightBronchi</Link>
+      <Link>RightBronchiToAlveoli</Link>
+      <Link>EnvironmentToLeftChestLeak</Link>
+      <Link>EnvironmentToRightChestLeak</Link>
+      <Link>LeftAlveoliLeakToLeftPleuralCavity</Link>
+      <Link>LeftAlveoliToLeftAlveoliLeak</Link>
+      <Link>LeftChestLeakToLeftPleuralCavity</Link>
+      <Link>LeftPleuralCavityToEnvironment</Link>
+      <Link>RightAlveoliLeakToRightPleuralCavity</Link>
+      <Link>RightAlveoliToRightAlveoliLeak</Link>
+      <Link>RightChestLeakToRightPleuralCavity</Link>
+      <Link>RightPleuralCavityToEnvironment</Link>
+      <Link>EnvironmentToOxygentank</Link>
+      <Link>OxygenTankToNosepiece</Link>
+      <Link>ReturnFlow</Link>
+      <Link>NosepieceToMouth</Link>
     </GasGraph>
     <ThermalCompartment>
       <Name>Active</Name>
@@ -31319,6 +31428,18 @@
       <VolumeBaseline readOnly="true" unit="mL" value="36.272026157465"/>
     </FluidNode>
     <FluidNode>
+      <Name>Nosepiece</Name>
+      <Volume readOnly="true" unit="mL" value="30"/>
+      <NextVolume readOnly="false" unit="mL" value="30"/>
+      <VolumeBaseline readOnly="true" unit="mL" value="30"/>
+    </FluidNode>
+    <FluidNode>
+      <Name>OxygenTank</Name>
+      <Volume readOnly="true" unit="L" value="INF"/>
+      <NextVolume readOnly="false" unit="L" value="INF"/>
+      <VolumeBaseline readOnly="true" unit="L" value="INF"/>
+    </FluidNode>
+    <FluidNode>
       <Name>Pericardium1</Name>
       <Pressure readOnly="true" unit="mmHg" value="1"/>
       <NextPressure readOnly="true" unit="mmHg" value="1"/>
@@ -32399,6 +32520,14 @@
       <Name>EnvironmentToMouthpiece</Name>
       <SourceNode>Ambient</SourceNode>
       <TargetNode>Mouthpiece</TargetNode>
+    </FluidPath>
+    <FluidPath>
+      <Name>EnvironmentToOxygentank</Name>
+      <SourceNode>Ambient</SourceNode>
+      <TargetNode>OxygenTank</TargetNode>
+      <PressureSource readOnly="true" unit="psi" value="2000"/>
+      <NextPressureSource readOnly="false" unit="psi" value="2000"/>
+      <PressureSourceBaseline readOnly="false" unit="psi" value="2000"/>
     </FluidPath>
     <FluidPath>
       <Name>EnvironmentToReliefValve</Name>
@@ -33951,6 +34080,19 @@
       <NextFlow readOnly="true" unit="mL/s" value="14.4823764430293"/>
     </FluidPath>
     <FluidPath>
+      <Name>NosepieceToMouth</Name>
+      <SourceNode>Nosepiece</SourceNode>
+      <TargetNode>Mouth</TargetNode>
+    </FluidPath>
+    <FluidPath>
+      <Name>OxygenTankToNosepiece</Name>
+      <SourceNode>OxygenTank</SourceNode>
+      <TargetNode>Nosepiece</TargetNode>
+      <Resistance readOnly="true" unit="cmH2O s/L" value="1.01971621297793e+95"/>
+      <NextResistance readOnly="false" unit="cmH2O s/L" value="1.01971621297793e+95"/>
+      <ResistanceBaseline readOnly="false" unit="cmH2O s/L" value="1.01971621297793e+95"/>
+    </FluidPath>
+    <FluidPath>
       <Name>Pericardium1ToGround</Name>
       <SourceNode>Pericardium1</SourceNode>
       <TargetNode>Ground</TargetNode>
@@ -33980,6 +34122,11 @@
       <CardiovascularRegion>Splanchnic</CardiovascularRegion>
       <Flow readOnly="true" unit="mL/s" value="22.3412818551421"/>
       <NextFlow readOnly="true" unit="mL/s" value="22.3412818551421"/>
+    </FluidPath>
+    <FluidPath>
+      <Name>ReturnFlow</Name>
+      <SourceNode>Nosepiece</SourceNode>
+      <TargetNode>Ambient</TargetNode>
     </FluidPath>
     <FluidPath>
       <Name>RightAfferentArterioleToGlomerularCapillaries</Name>
@@ -36171,6 +36318,59 @@
       <Path>LeftPleuralCavityToRespiratoryMuscle</Path>
       <Path>MechanicalVentilatorConnectionToMouth</Path>
       <Path>MechanicalVentilatorGroundToConnection</Path>
+    </FluidCircuit>
+    <FluidCircuit>
+      <Name>RespiratoryNasalCannula</Name>
+      <ReferenceNode>Ambient</ReferenceNode>
+      <Node>Ambient</Node>
+      <Node>Mouth</Node>
+      <Node>Trachea</Node>
+      <Node>RightBronchi</Node>
+      <Node>LeftBronchi</Node>
+      <Node>RightAlveoli</Node>
+      <Node>LeftAlveoli</Node>
+      <Node>RightAlveoliLeak</Node>
+      <Node>LeftAlveoliLeak</Node>
+      <Node>RightPleuralConnection</Node>
+      <Node>LeftPleuralConnection</Node>
+      <Node>RightPleuralCavity</Node>
+      <Node>LeftPleuralCavity</Node>
+      <Node>LeftChestLeak</Node>
+      <Node>RightChestLeak</Node>
+      <Node>Stomach</Node>
+      <Node>RespiratoryMuscle</Node>
+      <Node>Nosepiece</Node>
+      <Node>OxygenTank</Node>
+      <Path>MouthToTrachea</Path>
+      <Path>TracheaToRightBronchi</Path>
+      <Path>TracheaToLeftBronchi</Path>
+      <Path>RightBronchiToRightPleuralConnection</Path>
+      <Path>LeftBronchiToLeftPleuralConnection</Path>
+      <Path>RightBronchiToRightAlveoli</Path>
+      <Path>LeftBronchiToLeftAlveoli</Path>
+      <Path>RightAlveoliToRightPleuralConnection</Path>
+      <Path>LeftAlveoliToLeftPleuralConnection</Path>
+      <Path>RightPleuralConnectionToRightPleuralCavity</Path>
+      <Path>LeftPleuralConnectionToLeftPleuralCavity</Path>
+      <Path>RightAlveoliToRightAlveoliLeak</Path>
+      <Path>RightAlveoliLeakToRightPleuralCavity</Path>
+      <Path>LeftAlveoliToLeftAlveoliLeak</Path>
+      <Path>LeftAlveoliLeakToLeftPleuralCavity</Path>
+      <Path>RightPleuralCavityToEnvironment</Path>
+      <Path>LeftPleuralCavityToEnvironment</Path>
+      <Path>EnvironmentToRightChestLeak</Path>
+      <Path>RightChestLeakToRightPleuralCavity</Path>
+      <Path>EnvironmentToLeftChestLeak</Path>
+      <Path>LeftChestLeakToLeftPleuralCavity</Path>
+      <Path>EnvironmentToRespiratoryMuscle</Path>
+      <Path>MouthToStomach</Path>
+      <Path>StomachToEnvironment</Path>
+      <Path>RightPleuralCavityToRespiratoryMuscle</Path>
+      <Path>LeftPleuralCavityToRespiratoryMuscle</Path>
+      <Path>EnvironmentToOxygentank</Path>
+      <Path>OxygenTankToNosepiece</Path>
+      <Path>ReturnFlow</Path>
+      <Path>NosepieceToMouth</Path>
     </FluidCircuit>
     <ThermalNode>
       <Name>Active</Name>
