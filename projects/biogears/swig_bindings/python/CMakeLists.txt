@@ -16,7 +16,12 @@
      #  list(APPEND CMAKE_SWIG_FLAGS "-py3;-DPY3")
      #endif()
 
-     file(GLOB_RECURSE Python_SWIGS LIST_DIRECTORIES False "${CMAKE_CURRENT_SOURCE_DIR}/../bindings/*.swg" )
+     #file(GLOB_RECURSE Python_SWIGS LIST_DIRECTORIES False "${CMAKE_CURRENT_SOURCE_DIR}/../bindings/*.swg" )
+     set(Python_SWIGS
+        ${CMAKE_CURRENT_SOURCE_DIR}/../bindings/biogears/cdm/utils/Logger.swg
+        #include other stuff here
+      )
+
      source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/bindings/*.swg" PREFIX "Source Files"  FILES ${csharp_test_files} )
      foreach(_file IN LISTS Python_SWIGS)
        set_property(SOURCE ${_file} PROPERTY CPLUSPLUS ON)

@@ -13,6 +13,7 @@
 #include <biogears/cdm/patient/actions/PatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
+#include <biogears/cdm/patient/actions/SEActionExample.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
@@ -157,6 +158,13 @@ namespace io {
       if (aStressData != nullptr) {
         auto a = std::make_unique<SEAcuteStress>();
         Scenario::Marshall(*aStressData, *a);
+        return a;
+      }
+
+      CDM::ActionExample* expData = dynamic_cast<CDM::ActionExample*>(action);
+      if (expData != nullptr) {
+        auto a = std::make_unique<SEActionExample>();
+        Scenario::Marshall(*expData, *a);
         return a;
       }
 
@@ -553,6 +561,23 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
   void PatientActions::UnMarshall(const SEAcuteStress& in, CDM::AcuteStressData& out)
+  {
+    Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
+    out.Severity(std::make_unique<CDM::Scalar0To1Data>());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
+  }
+  //----------------------------------------------------------------------------------
+  //class SEActionExample
+  void PatientActions::Marshall(const CDM::ActionExample& in, SEActionExample& out)
+  {
+    out.Clear();
+
+    Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
+
+    io::Property::Marshall(in.Severity(), out.GetSeverity());
+  }
+  //----------------------------------------------------------------------------------
+  void PatientActions::UnMarshall(const SEActionExample& in, CDM::ActionExample& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     out.Severity(std::make_unique<CDM::Scalar0To1Data>());

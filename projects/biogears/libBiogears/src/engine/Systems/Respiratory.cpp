@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
 #include <biogears/cdm/patient/actions/SEBreathHold.h>
+#include <biogears/cdm/patient/actions/SENasalCannula.h>
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
@@ -524,7 +525,7 @@ void Respiratory::PreProcess()
   Pneumothorax();
   PulmonaryShunt();
   ConsciousRespiration();
-
+  NasalCannula();
   MechanicalVentilation();
 
   RespiratoryDriver();
@@ -854,6 +855,46 @@ void Respiratory::MechanicalVentilation()
   }
 }
 
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Modifies the pressure and/or flow at the mouth
+///
+/// \details
+/// Handles the mechanical ventilation action that adds a flow and pressure source to instantaneously
+/// set the respiratory connection (mouth) to user specified values.
+//--------------------------------------------------------------------------------------------------
+void Respiratory::NasalCannula()
+{
+  if (m_data.GetActions().GetPatientActions().HasNasalCannula()) {
+    SENasalCannula* nc = m_data.GetActions().GetPatientActions().GetNasalCannula();
+    // You only get here if action is On
+    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::NasalCannula);
+
+    double flow_L_Per_min = 0.0;
+    SEFluidCircuit* RespirationCircuit = &m_data.GetCircuits().GetActiveRespiratoryCircuit();
+    SEFluidCircuitPath* OxygenTankToNosepiece = RespirationCircuit->GetPath(BGE::NasalCannulaPath::OxygenTankToNosepiece);
+    SEFluidCircuitPath* Tank = RespirationCircuit->GetPath(BGE::NasalCannulaPath::EnvironmentToOxygentank);
+
+    //check for no flow set:
+    if (!nc->HasFlowRate()) {
+      flow_L_Per_min = 3.0;
+      nc->GetFlowRate().SetValue(flow_L_Per_min, VolumePerTimeUnit::L_Per_min);
+      Info("Nasal cannula flow rate not set, setting to a default of: " + std::to_string(flow_L_Per_min) + " L per min");
+    }
+
+    //get the flow
+    flow_L_Per_min = nc->GetFlowRate().GetValue(VolumePerTimeUnit::L_Per_min);
+
+    //compute the resistance: 
+    double tankPressure_cmH2O = Tank->GetNextPressureSource(PressureUnit::cmH2O);
+    double tankResistance_cmH2O_s_Per_L = tankPressure_cmH2O / (flow_L_Per_min / 60.0);
+    OxygenTankToNosepiece->GetNextResistance().SetValue(tankResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
+
+  } else if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::NasalCannula) {
+    // Was just turned off
+    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+  }
+}
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Respiratory driver pressure source

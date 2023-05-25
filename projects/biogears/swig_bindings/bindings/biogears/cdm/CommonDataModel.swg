@@ -14,7 +14,7 @@ namespace std
   struct runtime_error {};
 }
 
-#elif defind(SWIGPYTHON)
+#elif defined(SWIGPYTHON)
   %import "python/std_string.i"
   %import "python/std_vector.i"
   %import "python/std_map.i"

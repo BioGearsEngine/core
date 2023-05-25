@@ -28,6 +28,7 @@ class SEPatientAction;
 class SEPatientAssessmentRequest;
 class SEAcuteRespiratoryDistress;
 class SEAcuteStress;
+class SEActionExample;
 class SEAirwayObstruction;
 class SEApnea;
 class SEAsthmaAttack;
@@ -99,6 +100,9 @@ namespace io {
     //class SEAcuteStress;
     static void Marshall(const CDM::AcuteStressData& in, SEAcuteStress& out);
     static void UnMarshall(const SEAcuteStress& in, CDM::AcuteStressData& out);
+    //class SEActionExample;
+    static void Marshall(const CDM::ActionExample& in, SEActionExample& out);
+    static void UnMarshall(const SEActionExample& in, CDM::ActionExample& out);
     //class SEAirwayObstruction;
     static void Marshall(const CDM::AirwayObstructionData& in, SEAirwayObstruction& out);
     static void UnMarshall(const SEAirwayObstruction& in, CDM::AirwayObstructionData& out);

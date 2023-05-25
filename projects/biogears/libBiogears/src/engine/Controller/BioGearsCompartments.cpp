@@ -52,6 +52,7 @@ void BioGearsCompartments::Clear()
   m_AnesthesiaMachineGraph = nullptr;
   m_CombinedRespiratoryAnesthesiaGraph = nullptr;
   m_CombinedRespiratoryInhalerGraph = nullptr;
+  m_CombinedRespiratoryNasalCannulaGraph = nullptr;
   m_CombinedRespiratoryMechanicalVentilatorGraph = nullptr;
   m_AerosolGraph = nullptr;
   m_CombinedAerosolInhalerGraph = nullptr;
@@ -74,6 +75,8 @@ void BioGearsCompartments::Clear()
   m_AerosolLeafCompartments.clear();
   m_InhalerCompartments.clear();
   m_InhalerLeafCompartments.clear();
+  m_NasalCannulaCompartments.clear();
+  m_NasalCannulaLeafCompartments.clear();
   m_InhalerAerosolCompartments.clear();
   m_InhalerAerosolLeafCompartments.clear();
   m_MechanicalVentilatorCompartments.clear();
@@ -126,6 +129,11 @@ bool BioGearsCompartments::Load(const CDM::CompartmentManagerData& in, SECircuit
   m_CombinedRespiratoryInhalerGraph = GetGasGraph(BGE::Graph::RespiratoryAndInhaler);
   if (m_CombinedRespiratoryInhalerGraph == nullptr) {
     Error("Could not find required Graph " + std::string(BGE::Graph::RespiratoryAndInhaler));
+    return false;
+  }
+  m_CombinedRespiratoryNasalCannulaGraph = GetGasGraph(BGE::Graph::RespiratoryAndNasalCannula);
+  if (m_CombinedRespiratoryNasalCannulaGraph == nullptr) {
+    Error("Could not find required Graph " + std::string(BGE::Graph::RespiratoryAndNasalCannula));
     return false;
   }
   m_AerosolGraph = GetLiquidGraph(BGE::Graph::Aerosol);
@@ -210,6 +218,19 @@ void BioGearsCompartments::StateChange()
     m_InhalerAerosolCompartments.push_back(cmpt);
     if (!cmpt->HasChildren())
       m_InhalerAerosolLeafCompartments.push_back(cmpt);
+  }
+
+  m_NasalCannulaCompartments.clear();
+  m_NasalCannulaLeafCompartments.clear();
+  for (const std::string& name : BGE::NasalCannulaCompartment::GetValues()) {
+    SEGasCompartment* cmpt = GetGasCompartment(name);
+    if (cmpt == nullptr) {
+      Warning("Could not find expected Nasal Cannula compartment, " + name + " in compartment manager");
+      continue;
+    }
+    m_NasalCannulaCompartments.push_back(cmpt);
+    if (!cmpt->HasChildren())
+      m_NasalCannulaLeafCompartments.push_back(cmpt);
   }
 
   m_AerosolCompartments.clear();
@@ -310,6 +331,11 @@ SEGasCompartmentGraph& BioGearsCompartments::GetActiveRespiratoryGraph()
       m_data.GetCompartments().UpdateLinks(*m_CombinedRespiratoryInhalerGraph);
     m_UpdateActiveAirwayGraph = false;
     return *m_CombinedRespiratoryInhalerGraph;
+  case CDM::enumBioGearsAirwayMode::NasalCannula:
+    if (m_UpdateActiveAirwayGraph)
+      m_data.GetCompartments().UpdateLinks(*m_CombinedRespiratoryNasalCannulaGraph);
+    m_UpdateActiveAirwayGraph = false;
+    return *m_CombinedRespiratoryNasalCannulaGraph;
   case CDM::enumBioGearsAirwayMode::MechanicalVentilator:
     if (m_UpdateActiveAirwayGraph)
       m_data.GetCompartments().UpdateLinks(*m_CombinedRespiratoryMechanicalVentilatorGraph);
@@ -344,11 +370,19 @@ SEGasCompartmentGraph& BioGearsCompartments::GetRespiratoryAndInhalerGraph()
     m_CombinedRespiratoryInhalerGraph = &CreateGasGraph(BGE::Graph::RespiratoryAndInhaler);
   return *m_CombinedRespiratoryInhalerGraph;
 }
+
+SEGasCompartmentGraph& BioGearsCompartments::GetRespiratoryAndNasalCannulaGraph()
+{
+  if (m_CombinedRespiratoryNasalCannulaGraph == nullptr)
+    m_CombinedRespiratoryNasalCannulaGraph = &CreateGasGraph(BGE::Graph::RespiratoryAndNasalCannula);
+  return *m_CombinedRespiratoryNasalCannulaGraph;
+}
 SELiquidCompartmentGraph& BioGearsCompartments::GetActiveAerosolGraph()
 {
   switch (m_data.GetAirwayMode()) {
   case CDM::enumBioGearsAirwayMode::Free:
   case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
+  case CDM::enumBioGearsAirwayMode::NasalCannula:
   case CDM::enumBioGearsAirwayMode::MechanicalVentilator: // Just use the regular graph
     if (m_UpdateActiveAerosolGraph)
       m_data.GetCompartments().UpdateLinks(*m_AerosolGraph);

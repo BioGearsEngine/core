@@ -43,6 +43,7 @@ public:
   SEFluidCircuit& GetRespiratoryCircuit();
   SEFluidCircuit& GetRespiratoryAndAnesthesiaMachineCircuit();
   SEFluidCircuit& GetRespiratoryAndInhalerCircuit();
+  SEFluidCircuit& GetRespiratoryAndNasalCannulaCircuit();
   SEFluidCircuit& GetRespiratoryAndMechanicalVentilatorCircuit();
 
   SEThermalCircuit& GetTemperatureCircuit();
@@ -77,6 +78,7 @@ protected:
   // It's quicker and easier to test these combiniation circuits
   SEFluidCircuit* m_CombinedRespiratoryAnesthesiaCircuit;
   SEFluidCircuit* m_CombinedRespiratoryInhalerCircuit;
+  SEFluidCircuit* m_CombinedRespiratoryNasalCannulaCircuit;
   SEFluidCircuit* m_CombinedRespiratoryMechanicalVentilatorCircuit;
 
   SEThermalCircuit* m_TemperatureCircuit;
@@ -103,6 +105,7 @@ namespace tatrc {
         DEFINE_STATIC_STRING(AnesthesiaMachine);
         DEFINE_STATIC_STRING(RespiratoryAnesthesia);
         DEFINE_STATIC_STRING(RespiratoryInhaler);
+        DEFINE_STATIC_STRING(RespiratoryNasalCannula);
         DEFINE_STATIC_STRING(RespiratoryMechanicalVentilator);
         DEFINE_STATIC_STRING(Temperature);
         DEFINE_STATIC_STRING(InternalTemperature);
@@ -244,6 +247,26 @@ namespace tatrc {
 
         DEFINE_STATIC_STRING(EnvironmentToMouthpiece);
         DEFINE_STATIC_STRING(MouthpieceToMouth);
+      };
+
+
+      ///////////////////////////
+      // Nasal Cannula Circuit Enums //
+      ///////////////////////////
+
+      namespace NasalCannulaNode {
+
+        DEFINE_STATIC_STRING(Nosepiece);
+        DEFINE_STATIC_STRING(OxygenTank);
+      };
+
+      namespace NasalCannulaPath {
+
+        DEFINE_STATIC_STRING(OxygenTankToNosepiece);
+        DEFINE_STATIC_STRING(EnvironmentToOxygentank);
+        DEFINE_STATIC_STRING(ReturnFlow);
+        DEFINE_STATIC_STRING(NosepieceToMouth);
+
       };
 
       //////////////////////////////////////////

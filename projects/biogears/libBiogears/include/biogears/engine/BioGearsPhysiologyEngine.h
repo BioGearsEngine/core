@@ -43,6 +43,7 @@ namespace tatrc {
         DEFINE_STATIC_STRING(Respiratory);
         DEFINE_STATIC_STRING(RespiratoryAndAnesthesiaMachine);
         DEFINE_STATIC_STRING(RespiratoryAndInhaler);
+        DEFINE_STATIC_STRING(RespiratoryAndNasalCannula);
         DEFINE_STATIC_STRING(RespiratoryAndMechanicalVentilator);
         DEFINE_STATIC_STRING(Aerosol);
         DEFINE_STATIC_STRING(AerosolAndInhaler);
@@ -51,7 +52,7 @@ namespace tatrc {
         static const std::vector<std::string>& GetValues()
         {
           static std::vector<std::string> _values = {
-            ActiveCardiovascular, Cardiovascular, Renal, Respiratory, RespiratoryAndAnesthesiaMachine, RespiratoryAndInhaler, RespiratoryAndMechanicalVentilator, Aerosol, AerosolAndInhaler, AnesthesiaMachine
+            ActiveCardiovascular, Cardiovascular, Renal, Respiratory, RespiratoryAndAnesthesiaMachine, RespiratoryAndInhaler, RespiratoryAndNasalCannula, RespiratoryAndMechanicalVentilator, Aerosol, AerosolAndInhaler, AnesthesiaMachine
           };
           return _values;
         }
@@ -656,6 +657,38 @@ namespace tatrc {
         {
           static std::vector<std::string> _values = {
             EnvironmentToMouthpiece, MouthpieceToMouth
+          };
+          return _values;
+        }
+      };
+
+      namespace NasalCannulaCompartment {
+
+        DEFINE_STATIC_STRING(Nosepiece);
+        DEFINE_STATIC_STRING(OxygenTank);
+
+
+        static const std::vector<std::string>& GetValues()
+        {
+          static std::vector<std::string> _values = {
+            Nosepiece, OxygenTank
+          };
+          return _values;
+        }
+      };
+
+      namespace NasalCannulaLink {
+
+        DEFINE_STATIC_STRING(OxygenTankToNosepiece);
+        DEFINE_STATIC_STRING(EnvironmentToOxygentank);
+        DEFINE_STATIC_STRING(ReturnFlow);
+        DEFINE_STATIC_STRING(NosepieceToMouth);
+
+
+        static const std::vector<std::string>& GetValues()
+        {
+          static std::vector<std::string> _values = {
+            OxygenTankToNosepiece, EnvironmentToOxygentank, ReturnFlow, NosepieceToMouth
           };
           return _values;
         }

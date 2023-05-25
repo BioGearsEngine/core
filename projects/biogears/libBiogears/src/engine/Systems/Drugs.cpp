@@ -475,8 +475,6 @@ void Drugs::AdministerSubstanceNasal()
       relMass[1] += (0.0 * newNasalDose_mg); // initial amount of released drug in posterior section
       unrelMass[0] += (0.6 * newNasalDose_mg); // initial amount of unreleased drug in anterior section
       unrelMass[1] += (0.4 * newNasalDose_mg); // initial amount of unreleased drug in posterior section
-      unrelMass[0] += (0.6 * newNasalDose_mg); // initial amount of released drug in anterior section
-      unrelMass[1] += (0.4 * newNasalDose_mg); // initial amount of released drug in posterior section
     }
     double nasalAnteriorUnreleasedInitial_mg = unrelMass[0]; // initial amount of unreleased drug in anterior section
     double nasalAnteriorReleasedInitial_mg = relMass[0];

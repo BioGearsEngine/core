@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
+#include <biogears/cdm/patient/actions/SEActionExample.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
@@ -34,6 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
+#include <biogears/cdm/patient/actions/SENasalCannula.h>
 #include <biogears/cdm/patient/actions/SEOverride.h>
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
@@ -160,6 +162,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
     if (aStressData != nullptr) {
       SEAcuteStress* a = new SEAcuteStress();
       a->Load(*aStressData);
+      return a;
+    }
+
+    CDM::ActionExample* expAction = dynamic_cast<CDM::ActionExample*>(action);
+    if (expAction != nullptr) {
+      SEActionExample* a = new SEActionExample();
+      a->Load(*expAction);
       return a;
     }
 
@@ -308,6 +317,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       SEInfection* infect = new SEInfection();
       infect->Load(*infData);
       return infect;
+    }
+
+    CDM::NasalCannulaData* nasalCannulaData = dynamic_cast<CDM::NasalCannulaData*>(action);
+    if (nasalCannulaData != nullptr) {
+      SENasalCannula* a = new SENasalCannula();
+      a->Load(*nasalCannulaData);
+      return a;
     }
 
     CDM::PainStimulusData* painData = dynamic_cast<CDM::PainStimulusData*>(action);

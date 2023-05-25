@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
+#include <biogears/cdm/patient/actions/SEActionExample.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
@@ -34,6 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SEIntubation.h>
+#include <biogears/cdm/patient/actions/SENasalCannula.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 #include <biogears/cdm/patient/actions/SEOverride.h>
@@ -216,6 +218,10 @@ public:
   SEAcuteStress* GetAcuteStress() const;
   void RemoveAcuteStress();
 
+  bool HasActionExample() const;
+  SEActionExample* GetActionExample() const;
+  void RemoveActionExample();
+
   bool HasAirwayObstruction() const;
   SEAirwayObstruction* GetAirwayObstruction() const;
   void RemoveAirwayObstruction();
@@ -302,6 +308,10 @@ public:
   bool HasMechanicalVentilation() const;
   SEMechanicalVentilation* GetMechanicalVentilation() const;
   void RemoveMechanicalVentilation();
+
+  bool HasNasalCannula() const;
+  SENasalCannula* GetNasalCannula() const;
+  void RemoveNasalCannula();
 
   bool HasNeedleDecompression() const;
 
@@ -392,6 +402,7 @@ protected:
 
   SEAcuteRespiratoryDistress* m_AcuteRespiratoryDistress;
   SEAcuteStress* m_AcuteStress;
+  SEActionExample* m_ActionExample;
   SEAirwayObstruction* m_AirwayObstruction;
   SEApnea* m_Apnea;
   SEAsthmaAttack* m_AsthmaAttack;
@@ -409,6 +420,7 @@ protected:
   SEInfection* m_Infection;
   SEIntubation* m_Intubation;
   SEMechanicalVentilation* m_MechanicalVentilation;
+  SENasalCannula* m_NasalCannula;
   SENeedleDecompression* m_LeftNeedleDecompression;
   SENeedleDecompression* m_RightNeedleDecompression;
   SEPericardialEffusion* m_PericardialEffusion;
