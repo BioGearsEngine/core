@@ -28,7 +28,9 @@
 #include <memory>
 #include <type_traits>
 
-namespace biogears {
+#include <biogears/common-exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
 
   // Forward declaration
   template<class T>
@@ -154,6 +156,6 @@ namespace biogears {
   template <class T>
   BillboardPair<T> make_billboard(const T& init_val);
 
-} // end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears
 
 #endif

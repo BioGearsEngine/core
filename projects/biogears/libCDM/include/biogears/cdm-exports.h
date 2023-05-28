@@ -13,6 +13,21 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
+#ifndef BIOGEARS_WITHOUT_NAMESPACES
+
+#define OPEN_BIOGEARS_NAMESPACE namespace biogears {
+#define CLOSE_BIOGEARS_NAMESPACE }
+#define BIOGEARS_NAMESPACE biogears::
+
+#else
+
+#define OPEN_BIOGEARS_NAMESPACE
+#define CLOSE_BIOGEARS_NAMESPACE
+#define BIOGEARS_NAMESPACE
+
+#endif
+
+
 #if defined(__clang__)
   #define BIOGEARS_CDM_API
 #elif defined(__gnu_linux__) 

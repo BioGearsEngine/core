@@ -26,7 +26,8 @@
 
 #include <biogears/container/concurrent_queue.tci.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
+
 template<typename Signiture>
 ThreadWorkChannel<Signiture>::ThreadWorkChannel()
 :_queue()
@@ -96,6 +97,6 @@ auto ThreadWorkChannel<Signiture>::as_sink() -> SinkPtr
 	return this->shared_from_this();
 }
 //---------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_COMMON_THREADWORKCHANNEL_IMPL

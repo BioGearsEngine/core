@@ -23,8 +23,9 @@
 //!         In general the class should never point to a null object
 
 #include <memory>
+#include <biogears/common-exports.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 template <class Implementation>
 class unique_propagate_const {
@@ -116,6 +117,6 @@ constexpr unique_propagate_const<Implementation>::operator const Implementation*
   return _impl;
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_FRAMEWORK_UNIQUE_PROPAGATE_CONST_H

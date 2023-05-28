@@ -20,7 +20,7 @@
 
 #include <biogears/threading/owning_mutex.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
   //============================================================================
   // OwningMutex definitions
@@ -114,6 +114,6 @@ namespace biogears {
     _pmutex = nullptr;
   }
 
-} // end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears
 
 #endif //BIOGEARS_THREADING_OWNING_MUTEX_TCI_H

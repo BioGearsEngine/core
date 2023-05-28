@@ -8,7 +8,7 @@
 
 @RESOURCE_INCLUDE_LIST@
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   constexpr char default_template_directory[] = "templates/";
   char const * template_file_list[] = {
@@ -122,4 +122,5 @@ namespace io {
   }
   //-----------------------------------------------------------------------------
 }
-}
+CLOSE_BIOGEARS_NAMESPACE
+

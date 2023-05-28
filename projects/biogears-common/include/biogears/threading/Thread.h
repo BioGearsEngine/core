@@ -25,9 +25,9 @@
 //!        that takes a Steppable or a void(void) and runs it with these features
 //!        Simply an attempt to unify thread usage across projects
 //!
+#include <biogears/common-exports.h>
 
-
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   class Thread {
   public:
     virtual ~Thread() {};
@@ -38,6 +38,6 @@ namespace biogears {
     virtual void suspend() = 0; //< signal main() to sleep until the next start call;
     virtual void join()  = 0; //< Block until main() has terminated execution;
   };
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_THREADING_THREAD_H

@@ -8,7 +8,7 @@
 
 @RESOURCE_INCLUDE_LIST@
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   constexpr char default_xsd_directory[] = "xsd/";
   char const * schema_file_list[] = {
@@ -121,4 +121,4 @@ namespace io {
   }
   //-----------------------------------------------------------------------------
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

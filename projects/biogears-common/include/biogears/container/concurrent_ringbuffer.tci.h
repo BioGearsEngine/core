@@ -23,7 +23,7 @@
 
 #include <biogears/container/concurrent_ringbuffer.h>
 #include <vector>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   //!
   //! Constructs a Concurrent Ring Buffer
   //!
@@ -151,5 +151,5 @@ namespace biogears {
   {
     return _active;
   }
-}
+CLOSE_BIOGEARS_NAMESPACE
 #endif

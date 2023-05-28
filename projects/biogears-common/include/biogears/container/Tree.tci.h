@@ -22,9 +22,10 @@
 //! Bounded Concurrent Queue using std::queue std::mutex.
 //!
 
+#include <biogears/common-exports.h>
 #include <biogears/container/Tree.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //!
 //! Constructs a subtree with a root node value of the given
 template <typename Data>
@@ -239,6 +240,6 @@ auto Tree<Data>::operator=(Tree&& rhs) -> Tree&
   }
   return *this;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_CONTAINER_TREE_TCI_H

@@ -8,7 +8,7 @@
 
 @RESOURCE_INCLUDE_LIST@
 
-namespace biogears {
+OPEN_NAMESPACE_BIOGEARS
 namespace io {
 
   constexpr  char default_config_directory[] = "config/";
@@ -124,4 +124,5 @@ namespace io {
   }
   //-----------------------------------------------------------------------------
 }
-}
+CLOSE_BIOGEARS_NAMESPACE
+

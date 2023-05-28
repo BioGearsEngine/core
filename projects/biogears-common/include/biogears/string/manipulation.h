@@ -23,7 +23,7 @@
 #include <sstream>
 #include <biogears/common-exports.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
   //----------------------------------------------------------------------------
   //!
@@ -92,6 +92,6 @@ namespace biogears {
   }
 
 
-} // end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears
 
 #endif // BIOGEARS_STRING_MAINPULATION_H

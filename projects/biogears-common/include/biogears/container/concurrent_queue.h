@@ -29,7 +29,7 @@
 
 #include <biogears/framework/concurrent_container.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
   template <typename T>
   class ConcurrentQueue : public concurrent_container<T> {
@@ -59,5 +59,5 @@ namespace biogears {
     std::condition_variable _cond;
   };
 
-}
+CLOSE_BIOGEARS_NAMESPACE
 #endif

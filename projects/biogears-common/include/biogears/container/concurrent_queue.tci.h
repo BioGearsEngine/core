@@ -24,7 +24,7 @@
 
 #include "concurrent_queue.h"
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //!
 //!  Constructs a ConcurrentQueue
 //!
@@ -131,5 +131,5 @@ namespace biogears {
     return _active;
   }
   //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE
 #endif

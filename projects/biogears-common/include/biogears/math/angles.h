@@ -24,8 +24,9 @@
 #include <cmath>
 #include <utility>
 
+#include <biogears/common-exports.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 inline namespace angle_literals {
 // constants
@@ -669,7 +670,7 @@ EulerAngBase<T> QuaternionBase<T>::to_euler() const {
   return EulerAngBase<T>::from_quat(*this);
 }
 
-} //end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //end namespace biogears
 
 
 

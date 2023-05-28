@@ -29,7 +29,9 @@
 #include <type_traits>
 #include <cassert>
 
-namespace biogears {
+#include <biogears/common-exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
 
 template <typename T> class Option;
 
@@ -218,6 +220,6 @@ protected:
     E dump_err();
 };
 
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif

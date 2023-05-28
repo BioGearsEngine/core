@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 //!  Functions are exposed as either biogears::filesystem::path or char const *
 //!  TODO: Migrate Biogears C++17 and replace biogears::filesystem with std::filesystem
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   BIOGEARS_IO_API bool generate_ecg_directory(const char* file);
   BIOGEARS_IO_API bool does_embedded_ecg_file_exist(const char* file);
@@ -38,4 +38,4 @@ namespace io {
   BIOGEARS_IO_API char const* get_default_ecg_directory();
   BIOGEARS_IO_API size_t      get_embedded_ecg_file_size( const char *  file);
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

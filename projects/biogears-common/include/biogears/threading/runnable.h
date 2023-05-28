@@ -23,7 +23,7 @@
 //!        which manages its own thread but can be controlled externally
 //!        to be driven by an execution engine which listens to external control signals
 //!
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
   class Runnable {
   public:
@@ -33,6 +33,6 @@ namespace biogears {
     virtual void stop()  = 0; //< Sets Stop condition so running process will finish at the next possible moment;
     virtual void join()  = 0; //< Blocks until running process is completed;
   };
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_THREADING_RUNNABLE_H

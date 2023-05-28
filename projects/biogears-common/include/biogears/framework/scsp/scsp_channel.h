@@ -23,7 +23,10 @@
 //!  interface to be handed to producers.
 #include <cstddef>
 #include <memory>
-namespace biogears {
+
+#include <biogears/common-exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
   namespace scsp {
     template<class C>
     class Channel;
@@ -81,6 +84,6 @@ namespace biogears {
     };
 
   }
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_FRAMEWORK_SCCP_CONTAINER_H

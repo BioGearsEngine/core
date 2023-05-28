@@ -24,7 +24,9 @@
 
 #include <memory>
 
-namespace biogears {
+#include <biogears/common-exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
 
 template <class Implementation>
 class shared_propagate_const {
@@ -115,6 +117,6 @@ Implementation const* const shared_propagate_const<Implementation>::get() const
   return _impl.get();
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_FRAMEWORK_SHARED_PROPAGATE_CONST_H

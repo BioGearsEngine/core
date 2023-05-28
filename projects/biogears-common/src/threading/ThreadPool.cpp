@@ -25,7 +25,7 @@
 
 #include <biogears/threading/thread_pool.h>
 #include <biogears/threading/thread_work_channel.tci.h>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 struct ThreadPool::Implementation {
   std::vector<std::thread> pool;
@@ -188,6 +188,6 @@ ThreadPool::SinkPtr const ThreadPool::get_sink()
   return _impl->workQueue->as_sink();
 }
 
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_COMMON_THREAD_POOL_IMPL

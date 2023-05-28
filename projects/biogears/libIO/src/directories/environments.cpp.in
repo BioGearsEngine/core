@@ -8,7 +8,7 @@
 
 @RESOURCE_INCLUDE_LIST@
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   constexpr  char default_environment_directory[] = "environments/";
   char const * environment_file_list[] = {
@@ -119,4 +119,4 @@ namespace io {
   }
   //-----------------------------------------------------------------------------
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

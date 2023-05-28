@@ -15,7 +15,7 @@
 
 #include <biogears/chrono/stop_watch_f.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //!
 //!  \brief Sets initial to the time of construction
 //!         call reset if this isn't the intended interval to me measured
@@ -136,6 +136,6 @@ auto StopWatch_f<ConstructedDuration>::lap_ns() -> typename nsec::rep
 {
 	return lap<nsec>();
 }
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_CHRONO_StopWatch_fFP_TCI_H

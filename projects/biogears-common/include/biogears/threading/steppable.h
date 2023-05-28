@@ -23,7 +23,7 @@
 //!        which has a primary work function that can be controlled
 //!        by a thread pool or some other execution engine
 //!
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 	template<typename Signiture>
   class Steppable {
@@ -33,6 +33,6 @@ namespace biogears {
     virtual void step()  = 0;  //< Executes a single pass of the logic loop;
     virtual std::function<Signiture> step_as_func() = 0; //< Returns a std::bind of the instance to be called multiple times ;
   };
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_THREADING_STEPPABLE_H

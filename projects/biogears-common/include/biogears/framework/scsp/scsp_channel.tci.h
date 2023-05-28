@@ -28,7 +28,7 @@
 
 #include <biogears/framework/scsp/scsp_channel.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   namespace scsp {
     //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
     //! Source
@@ -222,5 +222,5 @@ namespace biogears {
       return std::move(_source);
     }
   }
-}
+CLOSE_BIOGEARS_NAMESPACE
 #endif //BIOGEARS_FRAMEWORK_SCMP_container_TCI_H

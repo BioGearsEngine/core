@@ -23,7 +23,7 @@
 
 #include <biogears/framework/billboard.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 //==============================================================================
 // Billboard declaration
@@ -226,6 +226,6 @@ namespace biogears {
     return make_billboard<T>( std::move(T(init_val)) );
   }
 
-} // end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears
 
 #endif

@@ -29,7 +29,10 @@
 
 #include <cstddef>
 #include <memory>
-namespace biogears {
+
+#include <biogears/common-exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
   namespace mcmp {
     template<typename T>
     class Source {
@@ -79,6 +82,5 @@ namespace biogears {
       Container() = default;
     };
   }
-}
-
+CLOSE_BIOGEARS_NAMESPACE
 #endif //BIOGEARS_FRAMEWORK_CHANNEL_H

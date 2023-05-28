@@ -24,7 +24,7 @@
 #include <regex>
 #include <sstream>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 //----------------------------------------------------------------------------
 std::vector<std::string> string_split(const std::string& src, const std::string& delimiter)
@@ -254,4 +254,4 @@ std::vector<double> vstod(const std::vector<std::string>& input)
   return result;
 }
 //--------------------------------------------------------------------------------
-} // end namespace ara
+CLOSE_BIOGEARS_NAMESPACE // end namespace ara

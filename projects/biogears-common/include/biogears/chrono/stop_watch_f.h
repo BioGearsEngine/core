@@ -21,8 +21,9 @@
 //!
 
 #include <chrono>
+#include <biogears/common-exports.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
   template<typename ConstructedDuration> //<!std::chrono::duration
   class StopWatch_f {
@@ -59,7 +60,7 @@ namespace biogears {
     time_point final;
   };
   
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //BIOGEARS_COMMON_CHRONO_StopWatch_fFP_H
 

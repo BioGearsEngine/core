@@ -18,9 +18,11 @@
 //! \date 2017 Mar 20
 //!
 
+#include <biogears/common-exports.h>
 #include <biogears/framework/option.h>
 
-namespace biogears {
+
+OPEN_BIOGEARS_NAMESPACE
 
 //==============================================================================
 // Option definitions
@@ -585,6 +587,6 @@ Option<T> make_some(T&& x)
 	return Option<T>(std::move(x));
 }
 
-} // end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears
 
 #endif

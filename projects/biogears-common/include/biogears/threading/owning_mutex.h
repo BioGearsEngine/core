@@ -23,7 +23,7 @@
 
 #include <mutex>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
   // Forward declarations
   template<typename T> class OwningMutex;
@@ -120,6 +120,6 @@ namespace biogears {
                                           );
   }
 
-} // end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears
 
 #endif // BIOGEARS_THREADING_OWNINGMUTEX_H

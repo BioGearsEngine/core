@@ -22,7 +22,7 @@
 
 #include <biogears/framework/option.tci.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 //------------------------------------------------------------------------------
 //!
@@ -488,7 +488,7 @@ Result<T, E>& Result<T, E>::emplace_err(Args&& ... args)
   return *this;
 }
 
-} // end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears
 // Macros
 //======================================================================
 #define TRY_DECLARE(var, expr)                              \

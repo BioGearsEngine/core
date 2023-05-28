@@ -25,7 +25,10 @@
 
 #include <cstddef>
 #include <memory>
-namespace biogears {
+
+#include <biogears/common-exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
   namespace scmp {
     template<class C>
     class Channel;
@@ -85,6 +88,6 @@ namespace biogears {
     };
 
   }
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_FRAMEWORK_SCMP_CONTAINER_H

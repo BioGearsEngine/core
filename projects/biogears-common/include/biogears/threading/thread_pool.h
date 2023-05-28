@@ -23,11 +23,13 @@
 //! \brief Thread pool Implementation using Steppable
 //!
 
+#include <biogears/common-exports.h>
+
 #include <biogears/threading/thread_work_channel.h>
 #include <biogears/threading/steppable.h>
 
-#include <biogears/common-exports.h>
-namespace biogears {
+
+OPEN_BIOGEARS_NAMESPACE
 
   class BIOGEARS_COMMON_PUBLIC_API ThreadPool {
   public:
@@ -56,6 +58,6 @@ namespace biogears {
     struct Implementation;
     std::unique_ptr<Implementation> _impl;
   };
-}
+  CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_THREADING_POOL_H

@@ -22,7 +22,7 @@
 //!  Abstract interface for all concurrent containers in this
 //!  package
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   //! \brief Common Interface for containers to be
   //!        passed to the Sources and Channels Templates
   template <typename T>
@@ -41,6 +41,6 @@ namespace biogears {
     virtual void shutdown() = 0; //< Sets the queue to inoperable and calls abort
     virtual bool active() const = 0;   //< returns if the underlying channel is still active
   };
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif  //BIOGEARS_FRAMEWORK_CONCURRENT_CONTAINER_H

@@ -49,7 +49,7 @@ derivative works thereof, in binary and source code form.
 #include <vector>
 #include <memory>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace filesystem {
 
   /**
@@ -197,6 +197,6 @@ enum path_type {
     return p.is_directory();
   }
 } // namespace filesystem
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //BIOGEARS_COMMON_FILESYSTEM_PATH_H

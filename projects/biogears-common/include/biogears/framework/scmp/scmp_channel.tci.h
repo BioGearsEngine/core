@@ -26,7 +26,7 @@
 #include <memory>
 
 #include <biogears/framework/scmp/scmp_channel.h>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   namespace scmp {
     //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
     //! Source
@@ -217,5 +217,5 @@ namespace biogears {
       return Source<C>(_container);
     }
   }
-}
+CLOSE_BIOGEARS_NAMESPACE
 #endif //BIOGEARS_FRAMEWORK_SCMP_container_TCI_H

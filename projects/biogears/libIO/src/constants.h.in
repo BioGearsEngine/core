@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <string>
 
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
 constexpr char const * _PROJECT_NAME_ = "Biogears";
 constexpr char const * _REV_HASH_ = "${Biogears_VERSION_HASH}";
@@ -31,4 +31,4 @@ constexpr int _MINOR_VERSION_NUMBER_  = ${Biogears_VERSION_MINOR};
 constexpr int _PATCH_VERSION_NUMBER_  = ${Biogears_VERSION_PATCH};
 constexpr char const * _TWEAK_VERSION_NUMBER_  = "${Biogears_VERSION_TWEAK}";
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -21,7 +21,10 @@
 //!
 //!  Abstract interface for all non-concurrent containers in this
 //!  package
-namespace biogears {
+//! 
+#include <biogears/common-exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
 
   //! \brief Common Interface for containers to be
   //!        passed to the Source and Channel Templates
@@ -42,6 +45,6 @@ namespace biogears {
 
     virtual void abort() = 0;    //< Signals all source to abort any pending insets
   };
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_FRAMEWORK_CONTAINER_H

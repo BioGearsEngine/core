@@ -41,7 +41,7 @@
 #include <linux/limits.h>
 #endif
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace filesystem {
 
   struct path::Implementation {
@@ -794,4 +794,4 @@ namespace filesystem {
   //-------------------------------------------------------------------------------
   //-------------------------------------------------------------------------------
 } // namespace filesystem
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears

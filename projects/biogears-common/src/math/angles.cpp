@@ -18,7 +18,7 @@
 
 #include <biogears/math/angles.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
   #ifndef ANDROID
   // these are checks to ensure that the Angle methods marked as `constexpr`
@@ -227,4 +227,4 @@ std::pair<Anglef, Anglef> norm_to_sphere_360(Anglef lat, Anglef lon) {
 
 }
 
-} // end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears

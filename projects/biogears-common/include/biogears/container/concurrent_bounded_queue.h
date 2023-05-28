@@ -27,9 +27,10 @@
 #include <mutex>
 #include <condition_variable>
 
+#include <biogears/common-exports.h>
 #include <biogears/framework/concurrent_container.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
   template <typename T>
   class ConcurrentBoundedQueue : public concurrent_container<T> {
@@ -60,5 +61,5 @@ namespace biogears {
     std::mutex    _mutex;
     std::condition_variable _cond;
   };
-}
+CLOSE_BIOGEARS_NAMESPACE
 #endif //BIOGEARS_CONTAINER_CONCURRENTBOUNDEDQUEUE_TCI_H

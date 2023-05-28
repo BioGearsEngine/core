@@ -26,7 +26,9 @@
 
 #include <iostream>
 
-namespace biogears {
+#include <biogears/common-exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
 
 	class serializable {
 	public:
@@ -37,7 +39,7 @@ namespace biogears {
 		virtual void deserialize(std::istream&) = 0;
 		virtual void deserialize_text(std::istream&) = 0;
 	};
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 // Additionally implement the following in the derived type
 //

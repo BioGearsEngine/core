@@ -23,7 +23,7 @@
 //!
 #include <biogears/container/concurrent_bounded_queue.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   //!
   //! Constructs  a concurrent Bounded Queue
   //!
@@ -147,5 +147,5 @@ namespace biogears {
   {
     return _active;
   }
-}
+CLOSE_BIOGEARS_NAMESPACE
 #endif //BIOGEARS_CONTAINER_CONCURRENTBOUNDEDQUEUE_TCI_H

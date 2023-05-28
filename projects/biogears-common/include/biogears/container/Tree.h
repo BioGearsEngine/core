@@ -24,7 +24,9 @@
 
 #include <vector> 
 
-namespace biogears {
+#include <biogears/common-exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
 
 template <typename Data>
 class Tree {
@@ -92,6 +94,6 @@ protected:
   Data _value;
   std::vector<Tree> _children;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_CONTAINER_GRAPH_H

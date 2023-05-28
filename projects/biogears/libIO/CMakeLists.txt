@@ -66,7 +66,12 @@ function(configure_io_directory_file )
       set(ADDITIONAL_ARGS SHORT_NAMES)
     endif()
     
-    generate_hex_header( NAMESPACE biogears io INPUT ${_RESOURCE_PATH}/${_true_source} OUTPUT ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}
+    if ( BIOGEARS_INLINE_NAMESPACE) 
+        set (ns_list io)
+        else ()
+        set(ns_list biogears io)
+    endif()
+    generate_hex_header( NAMESPACE ${ns_list} INPUT ${_RESOURCE_PATH}/${_true_source} OUTPUT ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}
                          PATH ${src} PREFIX ${src_dir} ${ADDITIONAL_ARGS})
    
     

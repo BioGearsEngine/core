@@ -24,7 +24,9 @@
 #include <type_traits>
 #include <cassert>
 
-namespace biogears {
+#include <biogears/common-exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
 
 template <typename T, typename E> class Result;
 
@@ -209,6 +211,6 @@ Option<T> make_some(const T& x);
 template<typename T>
 Option<T> make_some(T&& x);
 
-} // end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears
 
 #endif

@@ -28,7 +28,7 @@
 #include <biogears/framework/mcmp/mcmp_sink_source.h>
 #include <biogears/container/concurrent_queue.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 	template<typename Signiture>
 	class ThreadWorkChannel : public mcmp::Container<std::function<Signiture>>
 		, public std::enable_shared_from_this<ThreadWorkChannel<Signiture>> {
@@ -55,6 +55,6 @@ namespace biogears {
 	private:
 		biogears::ConcurrentQueue<std::function<Signiture>> _queue;
 	};
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //BIOGEARS_COMMON_THREADWORKCHANNEL_H
