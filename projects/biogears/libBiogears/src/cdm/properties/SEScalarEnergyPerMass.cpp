@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const EnergyPerMassUnit EnergyPerMassUnit::J_Per_kg("J/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::kJ_Per_kg("kJ/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::mJ_Per_kg("mJ/kg");
@@ -109,4 +109,4 @@ bool SEScalarEnergyPerMass::operator!=(const SEScalarEnergyPerMass& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

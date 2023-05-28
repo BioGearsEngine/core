@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarAmount.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const AmountUnit AmountUnit::mol("mol");
 const AmountUnit AmountUnit::pmol("pmol");
 template class SEScalarQuantity<AmountUnit>;
@@ -101,4 +101,4 @@ bool SEScalarAmount::operator!=(const SEScalarAmount& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

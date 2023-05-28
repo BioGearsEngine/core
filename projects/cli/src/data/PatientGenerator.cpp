@@ -18,7 +18,7 @@
 #include <biogears/version.h>
 #include <biogears/string/manipulation.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 std::string ConvertBeatUnits(std::string unit){
   if(unit == "bpm"){
     return "1/min";
@@ -293,4 +293,4 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
 
 //-----------------------------------------------------------------------------
 
-} //end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears

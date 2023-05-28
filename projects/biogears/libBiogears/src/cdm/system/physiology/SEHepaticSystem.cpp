@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 constexpr char idKetoneProductionRate[] = "KetoneProductionRate";
 constexpr char idHepaticGluconeogenesisRate[] = "HepaticGluconeogenesisRate";
 
@@ -132,4 +132,4 @@ Tree<const char*> SEHepaticSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idKetoneProductionRate)
     .emplace_back(idHepaticGluconeogenesisRate);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

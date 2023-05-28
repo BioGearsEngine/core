@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalar;
 class SEScalar0To1;
 class SEScalarMass;
@@ -624,4 +624,4 @@ protected:
   SEScalarTime* m_InflammationTime;
   std::vector<CDM::enumInflammationSource> m_InflammationSources;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

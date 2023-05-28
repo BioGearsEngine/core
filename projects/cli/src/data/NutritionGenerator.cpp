@@ -20,7 +20,7 @@
 #include <biogears/version.h>
 #include <biogears/string/manipulation.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 NutritionGenerator::NutritionGenerator(std::string path)
   : CSVToXMLConvertor(path, "templates/Nutritions.csv")
@@ -173,5 +173,5 @@ bool NutritionGenerator::process(const std::string& name, const std::string& val
 
 //-----------------------------------------------------------------------------
 
-} //end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears
 

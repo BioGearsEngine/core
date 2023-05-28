@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarLengthPerTimePressure.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::m_Per_s_mmHg("m/s mmHg");
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::cm_Per_s_mmHg("cm/s mmHg");
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::m_Per_min_mmHg("m/min mmHg");
@@ -109,4 +109,4 @@ bool SEScalarLengthPerTimePressure::operator!=(const SEScalarLengthPerTimePressu
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

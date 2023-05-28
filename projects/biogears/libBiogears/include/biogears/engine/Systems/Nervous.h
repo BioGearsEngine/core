@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstance;
 class SEPsychomotorVigilanceTask;
 class BioGears;
@@ -159,4 +159,4 @@ protected:
   double m_VagalSignal_Hz;
 
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/TaskRunner/Task.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Constructor
@@ -40,4 +40,4 @@ void TaskProcessor::operator()()
     m_pTaskQueue->ReportTaskComplete();
   }
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

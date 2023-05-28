@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SESubstanceCompoundInfusion::SESubstanceCompoundInfusion(const SESubstanceCompound& compound)
   : SESubstanceAdministration()
   , m_Compound(compound)
@@ -128,4 +128,4 @@ bool SESubstanceCompoundInfusion::operator!=(const SESubstanceCompoundInfusion& 
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

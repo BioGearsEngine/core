@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEDecimalFormat;
 class SESubstanceManager;
 class SECondition;
@@ -148,4 +148,4 @@ namespace io {
     option_out.set(*item);
   }
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

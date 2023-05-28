@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <map>
 #include <vector>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 #define SUBSTANCE_TRANSPORTER_TEMPLATE typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit
 #define TRANSPORT_AMOUNT_TYPES ExtensiveScalar, IntensiveScalar
 template <typename ExtensiveScalar, typename IntensiveScalar>
@@ -49,9 +49,9 @@ BG_EXT template class BIOGEARS_API SESubstanceTransportAmount<SEScalarMass, SESc
 
 using SEGasTransportSubstance = SESubstanceTransportAmount<SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportSubstance = SESubstanceTransportAmount<SEScalarMass, SEScalarMassPerVolume>;
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 #define TRANSPORT_VERTEX_TYPES QuantityScalar, ExtensiveScalar, IntensiveScalar
 template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
 class SESubstanceTransportVertex {
@@ -76,9 +76,9 @@ BG_EXT template class BIOGEARS_API SESubstanceTransportVertex<SEScalarVolume, SE
 
 using SEGasTransportVertex = SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportVertex = SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 #define TRANSPORT_EDGE_TYPES FluxScalar, QuantityScalar, ExtensiveScalar, IntensiveScalar
 template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
@@ -130,7 +130,7 @@ using SELiquidTransportGraph = SESubstanceTransportGraph<SEScalarVolumePerTime, 
 
 } //namespace biogears
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template <SUBSTANCE_TRANSPORTER_TEMPLATE>
 class SESubstanceTransporter : public Loggable {
 public:
@@ -152,7 +152,7 @@ BG_EXT template class BIOGEARS_API SESubstanceTransporter<SELiquidTransportGraph
 using SEGasTransporter = SESubstanceTransporter<SEGasTransportGraph, VolumePerTimeUnit, VolumeUnit, VolumeUnit, NoUnit>;
 using SELiquidTransporter = SESubstanceTransporter<SELiquidTransportGraph, VolumePerTimeUnit, VolumeUnit, MassUnit, MassPerVolumeUnit>;
 
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportVertex*>;

@@ -92,7 +92,7 @@ void cerr_loop(boost::process::async_pipe& p, boost::asio::mutable_buffer buf)
 }
 #endif
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 Driver::Driver(char* exe_name, size_t thread_count)
   : _pool { thread_count }
   , _jobs(thread_count)
@@ -853,4 +853,4 @@ std::string Driver::process_str()
   }
   return ss.str();
 }
-} // NAMESPACE
+CLOSE_BIOGEARS_NAMESPACE // NAMESPACE

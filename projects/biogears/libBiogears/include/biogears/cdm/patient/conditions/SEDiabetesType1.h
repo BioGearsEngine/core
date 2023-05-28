@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalar0To1;
 namespace io {
   class PatientConditions;
@@ -51,4 +51,4 @@ public:
 protected:
   SEScalar0To1* m_InsulinProductionSeverity;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

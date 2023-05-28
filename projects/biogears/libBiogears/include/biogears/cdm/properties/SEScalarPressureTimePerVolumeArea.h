@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarQuantity.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API PressureTimePerVolumeAreaUnit : public CCompoundUnit {
 public:
   PressureTimePerVolumeAreaUnit(const char* u);
@@ -51,4 +51,4 @@ public:
   bool operator==(const SEScalarPressureTimePerVolumeArea&) const;
   bool operator!=(const SEScalarPressureTimePerVolumeArea&) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

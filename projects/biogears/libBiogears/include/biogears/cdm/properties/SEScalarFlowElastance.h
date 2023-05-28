@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarQuantity.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API FlowElastanceUnit : public CCompoundUnit {
 public:
   FlowElastanceUnit(const char* u);
@@ -50,4 +50,4 @@ public:
   bool operator==(const SEScalarFlowElastance&) const;
   bool operator!=(const SEScalarFlowElastance&) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

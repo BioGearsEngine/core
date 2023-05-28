@@ -72,7 +72,7 @@ template class map<biogears::SETissueCompartment*, biogears::SEFluidCircuitPath*
 template class vector<biogears::SETissueCompartment*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 double Tissue::m_hepaticCO2Produced_mol;
 double Tissue::m_hepaticO2Consumed_mol;
 
@@ -2252,5 +2252,4 @@ void Tissue::OverrideControlLoop()
   }
   return;
 }
-
-}
+CLOSE_BIOGEARS_NAMESPACE

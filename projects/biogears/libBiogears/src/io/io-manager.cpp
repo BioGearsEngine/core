@@ -50,7 +50,7 @@ specific language governing permissions and limitations under the License.
 
 #include <fstream>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 IOManager::IOManager()
   : IOManager("")
@@ -1047,4 +1047,4 @@ std::string IOManager::calculate_sha1(const char* buffer, size_t buffer_size) co
 }
 //-----------------------------------------------------------------------------
 
-} // namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears

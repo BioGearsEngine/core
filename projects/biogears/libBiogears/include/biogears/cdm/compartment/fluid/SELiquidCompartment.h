@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <map>
 #include <string>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SETissueCompartment;
 class SECompartmentManager;
 class SELiquidSubstanceQuantity;

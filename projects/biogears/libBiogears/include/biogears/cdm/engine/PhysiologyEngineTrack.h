@@ -33,7 +33,7 @@ specific language governing permissions and limitations under the License.
 namespace std {
   BG_EXT template class BIOGEARS_API vector<biogears::SESystem*>;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 enum class CompartmentUpdate { None,
                                InFlow,
@@ -90,7 +90,7 @@ namespace std {
 BG_EXT template class BIOGEARS_API map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
 } // Namespace std
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 std::ostream& operator<<(std::ostream& os, SEDataRequestScalar& v);
 class BIOGEARS_API PhysiologyEngineTrack : public Loggable {
 public:
@@ -137,4 +137,4 @@ protected:
   std::vector<SESystem*> m_EquipmentSystems;
   std::map<const SEDataRequest*, SEDataRequestScalar*> m_Request2Scalar;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

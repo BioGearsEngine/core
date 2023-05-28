@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEThermalCircuitPath::SEThermalCircuitPath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const char* name)
   :SEThermalCircuitPath(src, tgt, std::string{name})
 {}
@@ -454,4 +454,4 @@ double SEThermalCircuitPath::GetValveBreakdownTemperature(const TemperatureUnit&
   return m_ValveBreakdownPotential->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

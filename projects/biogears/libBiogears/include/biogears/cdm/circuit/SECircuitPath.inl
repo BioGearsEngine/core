@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitPath.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   template <CIRCUIT_PATH_TEMPLATE>
   SECircuitPath<CIRCUIT_PATH_TYPES>::SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const char* name)
     : SECircuitPath(src, tgt, std::string{ name })
@@ -655,4 +655,4 @@ PotentialScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetValveBreakdownPotential()
   return *m_ValveBreakdownPotential;
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

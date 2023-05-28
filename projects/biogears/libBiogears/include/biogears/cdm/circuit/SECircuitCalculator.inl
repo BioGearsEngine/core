@@ -34,7 +34,7 @@ specific language governing permissions and limitations under the License.
 //#define TIMING
 #define OPEN_RESISTANCE 1e100
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template <CIRCUIT_CALCULATOR_TEMPLATE>
 SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::SECircuitCalculator(const CapacitanceUnit& c, const FluxUnit& f, const InductanceUnit& i, const PotentialUnit& p, const QuantityUnit& q, const ResistanceUnit& r, Logger* logger)
   : Loggable(logger)
@@ -852,4 +852,4 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::PostProcess(CircuitType& cir
     p->GetNextPotentialSource().Set(p->GetPotentialSourceBaseline());
   }
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

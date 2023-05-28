@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEDataRequestManager::SEDataRequestManager(Logger* logger)
   : Loggable(logger)
   , m_SamplesPerSecond(1.0)
@@ -342,4 +342,4 @@ const std::vector<SEDataRequest*>& SEDataRequestManager::GetDataRequests()
 {
   return m_Requests;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SENutrition;
 
 #define CDM_PATIENT_NUTRITION_UNMARSHAL_HELPER(in, out, func)                        \
@@ -63,4 +63,4 @@ namespace io {
     option_out.set(*item);
   }
 } // Namespace IO
-} //Namespace Biogears
+  CLOSE_BIOGEARS_NAMESPACE // Namespace Biogears

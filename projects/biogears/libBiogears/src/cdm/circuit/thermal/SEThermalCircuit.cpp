@@ -20,7 +20,7 @@ template class map<const biogears::SEThermalCircuitNode*, vector<biogears::SEThe
 template class map<const biogears::SEThermalCircuitNode*, size_t>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 template class SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>;
 
@@ -78,4 +78,4 @@ void SEThermalCircuit::AddCircuit(SEThermalCircuit& circuit)
     AddReferenceNode(*node);
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

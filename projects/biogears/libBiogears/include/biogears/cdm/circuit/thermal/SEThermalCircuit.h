@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <vector>
 #include <map>
 
+#include <biogears/exports.h>
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
@@ -26,7 +27,7 @@ BG_EXT template class BIOGEARS_API map<const biogears::SEThermalCircuitNode*, ve
 BG_EXT template class BIOGEARS_API map<const biogears::SEThermalCircuitNode*, size_t>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SECircuitManager;
 
 BG_EXT template class BIOGEARS_API SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>;
@@ -51,4 +52,4 @@ public:
 protected:
   SECircuitManager& m_Mgr;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

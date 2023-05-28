@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SESubstanceFraction::SESubstanceFraction(SESubstance& substance)
   : m_Substance(substance)
 {
@@ -87,4 +87,4 @@ bool SESubstanceFraction::operator!=( const SESubstanceFraction& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarQuantity.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API InverseVolumeUnit : public CCompoundUnit {
 public:
   InverseVolumeUnit(const char* u);
@@ -46,4 +46,4 @@ public:
   bool operator==(const SEScalarInverseVolume&) const;
   bool operator!=(const SEScalarInverseVolume&) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

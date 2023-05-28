@@ -2,7 +2,7 @@
 
 #include <biogears/cdm/system/SESystem.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SESystem
   void System::Marshall(const CDM::SystemData& in, SESystem& out)
@@ -15,4 +15,4 @@ namespace io {
   }
   //-----------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

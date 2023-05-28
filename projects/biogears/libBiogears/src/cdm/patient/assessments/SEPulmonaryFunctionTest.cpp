@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEPulmonaryFunctionTest::SEPulmonaryFunctionTest()
 {
   m_NumberOfPlotPoints = 100;
@@ -284,4 +284,4 @@ SEFunctionVolumeVsTime& SEPulmonaryFunctionTest::GetLungVolumePlot()
     m_LungVolumePlot = new SEFunctionVolumeVsTime();
   return *m_LungVolumePlot;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

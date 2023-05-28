@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricCurrent.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const ElectricCurrentUnit ElectricCurrentUnit::A("A");
 
 template class SEScalarQuantity<ElectricCurrentUnit>;
@@ -95,4 +95,4 @@ bool SEScalarElectricCurrent::operator!=(const SEScalarElectricCurrent& obj) con
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

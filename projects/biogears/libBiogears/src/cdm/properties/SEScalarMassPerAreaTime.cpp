@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMassPerAreaTime.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const MassPerAreaTimeUnit MassPerAreaTimeUnit::g_Per_cm2_s("g/cm^2 s");
 
 template class SEScalarQuantity<MassPerAreaTimeUnit>;
@@ -95,4 +95,4 @@ bool SEScalarMassPerAreaTime::operator!=(const SEScalarMassPerAreaTime& obj) con
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

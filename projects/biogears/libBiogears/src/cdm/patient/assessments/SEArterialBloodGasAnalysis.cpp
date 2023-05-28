@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEArterialBloodGasAnalysis::SEArterialBloodGasAnalysis()
 {
   m_pH = nullptr;
@@ -151,4 +151,4 @@ SEScalar& SEArterialBloodGasAnalysis::GetOxygenSaturation()
     m_OxygenSaturation = new SEScalar();
   return *m_OxygenSaturation;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

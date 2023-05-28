@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEBrainInjury::SEBrainInjury()
   : SEPatientAction()
 {
@@ -125,4 +125,4 @@ bool SEBrainInjury::operator!=( const SEBrainInjury& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

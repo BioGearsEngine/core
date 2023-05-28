@@ -1,7 +1,7 @@
 #ifndef BIOGEARS_CDM_UTILS_UNITCONVERSION_UCEDefs_H 
 #define BIOGEARS_CDM_UTILS_UNITCONVERSION_UCEDefs_H 
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 // Prefix format:
 // PREFIX <name> <symbol> <conversion-factor>  
 // [note that symbol is single char only]
@@ -282,5 +282,5 @@ TYPEMAP		Energy		Temperature	1	kB
 
 )UCEDEFS";
 
-}
+CLOSE_BIOGEARS_NAMESPACE
 #endif //BIOGEARS_CDM_UTILS_UNITCONVERSION_UCEDefs_H 

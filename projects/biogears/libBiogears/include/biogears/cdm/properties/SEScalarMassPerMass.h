@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API MassPerMassUnit : public CCompoundUnit {
 public:
   MassPerMassUnit(const char* u);
@@ -48,4 +48,4 @@ public:
   bool operator==(const SEScalarMassPerMass&) const;
   bool operator!=(const SEScalarMassPerMass&) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstance;
 class SEGasCompartment;
 class SETissueCompartment;
@@ -34,7 +34,7 @@ class SEPatientActionCollection;
 class SEPatient;
 class SEEnergySystem;
 class BioGears;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<biogears::SETissueCompartment*, biogears::SELiquidCompartment*>;
@@ -43,7 +43,7 @@ BG_EXT template class BIOGEARS_API map<biogears::SETissueCompartment*, biogears:
 BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 /**
  * @brief This class encapsulates logic necessary to connect independent systems together.
  * @details Each system calculates the behavior that occurs within its individual physiology function; 
@@ -213,4 +213,4 @@ protected:
   std::vector<SETissueCompartment*> m_ConsumptionProdutionTissues;
   std::string m_AnaerobicTissues;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEMechanicalVentilation::SEMechanicalVentilation()
   : SEPatientAction()
 {
@@ -299,4 +299,4 @@ bool SEMechanicalVentilation::operator!=(const SEMechanicalVentilation& rhs) con
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -30,7 +30,7 @@ namespace std {
 template class vector<biogears::SECondition*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SECondition::SECondition()
   : Loggable()
 {
@@ -180,4 +180,4 @@ void SECondition::InvalidateComment()
   m_Comment = "";
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

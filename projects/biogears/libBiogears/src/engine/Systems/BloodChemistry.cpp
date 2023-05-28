@@ -41,7 +41,7 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4275)
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 auto BloodChemistry::make_unique(BioGears& bg) -> std::unique_ptr<BloodChemistry>
 {
   return std::unique_ptr<BloodChemistry>(new BloodChemistry(bg));
@@ -1865,4 +1865,4 @@ void BloodChemistry::OverrideControlLoop()
     override->SetOverrideConformance(CDM::enumOnOff::Off);
   }
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

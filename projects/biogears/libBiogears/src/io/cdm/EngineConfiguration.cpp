@@ -16,7 +16,7 @@
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/config.h>
 #endif
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class PhysiologyEngineConfiguration
   void EngineConfiguration::Marshall(const CDM::PhysiologyEngineConfigurationData& in, PhysiologyEngineConfiguration& out)
@@ -198,4 +198,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

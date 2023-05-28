@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEFunction.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class TimeUnit;
 class ElectricPotentialUnit;
 namespace io {
@@ -55,4 +55,4 @@ protected:
   const TimeUnit* m_TimeUnit;
   const ElectricPotentialUnit* m_ElectricPotentialUnit;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

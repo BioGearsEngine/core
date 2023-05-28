@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEScenarioExec::SEScenarioExec(PhysiologyEngine& engine)
   : Loggable(engine.GetLogger())
   , m_Engine(engine)
@@ -347,4 +347,4 @@ bool SEScenarioExec::ProcessAction(const SEAction& action)
   return m_Engine.ProcessAction(action);
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::W_Per_m2_K("W/m^2 K");
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::W_Per_m2_C("W/m^2 degC");
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::BTU_Per_hr_ft2_C("BTU/hr ft^2 degC");
@@ -104,4 +104,4 @@ bool SEScalarHeatConductancePerArea::operator!=(const SEScalarHeatConductancePer
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

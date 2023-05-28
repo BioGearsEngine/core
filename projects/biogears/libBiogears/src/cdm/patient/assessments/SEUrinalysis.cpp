@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEUrinalysis::SEUrinalysis()
 {
   m_Color = CDM::enumUrineColor::value(-1);
@@ -316,4 +316,4 @@ void SEUrinalysis::RemoveMicroscopicResult()
 {
   SAFE_DELETE(m_Microscopic);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

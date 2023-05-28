@@ -19,11 +19,11 @@ specific language governing permissions and limitations under the License.
 // This class will run BioGears in it's own thread and accept changes to hemorrage and iv flow as the engine is running
 
 // Forward declare what we will use in our thread
-namespace biogears{
+OPEN_BIOGEARS_NAMESPACE
   class SEHemorrhage;
   class SESubstanceCompoundInfusion;
   class PhysiologyEngine;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 int HowToThreadedBioGears();
 

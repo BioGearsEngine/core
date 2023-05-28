@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SESerializeState.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SESerializeState::SESerializeState()
   : SEAction()
 {
@@ -120,4 +120,4 @@ void SESerializeState::InvalidateFilename()
   m_Filename = "";
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

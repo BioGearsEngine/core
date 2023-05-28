@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/substance/SESubstance.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SESubstanceQuantity::SESubstanceQuantity(SESubstance& sub)
   : Loggable(sub.GetLogger())
   , m_Substance(sub)
@@ -34,4 +34,4 @@ void SESubstanceQuantity::Unload(CDM::SubstanceQuantityData& data)
 {
   data.Substance(m_Substance.GetName());
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

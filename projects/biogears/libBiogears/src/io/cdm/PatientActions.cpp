@@ -81,7 +81,7 @@
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SEActionList
   std::vector<std::unique_ptr<SEAction>> PatientActions::action_factory(const CDM::ActionListData& in, SESubstanceManager& substances)
@@ -1633,4 +1633,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

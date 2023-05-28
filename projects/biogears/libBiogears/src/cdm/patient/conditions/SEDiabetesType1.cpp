@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEDiabetesType1::SEDiabetesType1()
   : SEPatientCondition()
 {
@@ -79,4 +79,4 @@ void SEDiabetesType1::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

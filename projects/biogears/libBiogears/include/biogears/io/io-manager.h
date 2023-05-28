@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 //!  Functions are exposed as either biogears::filesystem::path or char const *
 //!  TODO: Migrate Biogears C++17 and replace biogears::filesystem with std::filesystem
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 BIOGEARS_API std::vector<filesystem::path> ListFiles(std::string const& dir, std::string const& regex, bool recurse = false);
 
@@ -199,4 +199,4 @@ public:
 private:
   std::vector<filesystem::path> find_files(std::string suffix, std::string regex, bool recurse = false) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

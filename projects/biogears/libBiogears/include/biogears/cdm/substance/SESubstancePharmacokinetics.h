@@ -20,16 +20,16 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(SubstancePharmacokineticsData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class Substance;
 }
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<string, biogears::SESubstanceTissuePharmacokinetics*>;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {
   friend io::Substance;
 
@@ -70,4 +70,4 @@ protected:
   SESubstancePhysicochemicals* m_Physicochemicals;
   std::map<std::string, SESubstanceTissuePharmacokinetics*> m_TissueKinetics;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/directories/config.h>
 #endif
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 bool PhysiologyEngineTimedStabilization::StabilizeRestingState(PhysiologyEngine& engine)
 {
   if (!GetRestingStabilizationTime().IsValid())
@@ -386,4 +386,4 @@ const SEScalarTime& PhysiologyEngineTimedStabilizationCriteria::GetTime() const
 }
 //-------------------------------------------------------------------------------
 
-}
+CLOSE_BIOGEARS_NAMESPACE

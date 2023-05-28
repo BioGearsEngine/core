@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEScalar0To1::SEScalar0To1()
   : SEScalar()
 {
@@ -52,4 +52,4 @@ bool SEScalar0To1::operator!=(const SEScalar0To1& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

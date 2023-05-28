@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SECircuitManager;
 namespace io {
   class Circuit;
@@ -112,4 +112,4 @@ protected:
   SEThermalCircuitNode& m_ThermalSourceNode;
   SEThermalCircuitNode& m_ThermalTargetNode;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

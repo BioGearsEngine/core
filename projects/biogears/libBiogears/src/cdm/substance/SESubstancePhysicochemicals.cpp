@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePhysicochemicals.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SESubstancePhysicochemicals::SESubstancePhysicochemicals(Logger* logger)
   : Loggable(logger)
 {
@@ -327,4 +327,4 @@ bool SESubstancePhysicochemicals::operator!=( const SESubstancePhysicochemicals&
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

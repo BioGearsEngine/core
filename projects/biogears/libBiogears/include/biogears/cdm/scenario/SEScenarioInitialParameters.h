@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(ScenarioInitialParametersData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class SEScenario;
 
@@ -83,4 +83,4 @@ protected:
   std::vector<SECondition*> m_Conditions;
   bool m_DoTrackStabilization;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

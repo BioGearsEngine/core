@@ -5,7 +5,7 @@
 #include <memory>
 
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)
 {
   return std::make_unique<BioGearsEngine>(logger);
@@ -40,4 +40,4 @@ std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const char* wor
 {
   return std::make_unique<BioGearsEngine>(logger, working_dir);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

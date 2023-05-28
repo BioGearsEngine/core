@@ -6,7 +6,7 @@
 
 #include <biogears/string/manipulation.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //!
 //! Constructor for Arguments
 //! \param Options vector<string>  -- List of Optional Paramaters whose values are either True or False. Keywords default to false unless present
@@ -228,4 +228,4 @@ bool Arguments::MultiWordFound(std::string key) const
     return false;
   }
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

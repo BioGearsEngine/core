@@ -21,7 +21,7 @@ BG_EXT template class BIOGEARS_API vector<biogears::SEElectricalCircuitPath*>;
 BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
 BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, size_t>;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SECircuitManager;
 
 BG_EXT template class BIOGEARS_API SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
@@ -45,4 +45,4 @@ public:
 protected:
   SECircuitManager& m_Mgr;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

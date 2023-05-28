@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarEnergy.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const EnergyUnit EnergyUnit::J("J");
 const EnergyUnit EnergyUnit::mJ("mJ");
 const EnergyUnit EnergyUnit::kJ("kJ");
@@ -111,4 +111,4 @@ bool SEScalarEnergy::operator!=(const SEScalarEnergy& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

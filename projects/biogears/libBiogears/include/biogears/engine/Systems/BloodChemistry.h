@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEArterialBloodGasAnalysis;
 class SECompleteBloodCount;
 class SEComprehensiveMetabolicPanel;
@@ -174,4 +174,4 @@ protected:
   double m_4Agglutinate_ct;
   double m_RemovedRBC_ct;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 BG_EXT template class BIOGEARS_API SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit>;
 
 class BIOGEARS_API SEFluidCircuitCalculator : public SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit> {
@@ -30,4 +30,4 @@ public:
   SEFluidCircuitCalculator(const FlowComplianceUnit&, const VolumePerTimeUnit&, const FlowInertanceUnit&, const PressureUnit&, const VolumeUnit&, const FlowResistanceUnit&, Logger* logger);
   virtual ~SEFluidCircuitCalculator();
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

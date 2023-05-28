@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarInverseVolume.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const InverseVolumeUnit InverseVolumeUnit::Inverse_L("1/L");
 const InverseVolumeUnit InverseVolumeUnit::Inverse_mL("1/mL");
 
@@ -99,4 +99,4 @@ bool SEScalarInverseVolume::operator!=(const SEScalarInverseVolume& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

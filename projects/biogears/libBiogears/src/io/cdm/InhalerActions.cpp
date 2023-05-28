@@ -8,7 +8,7 @@
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerAction.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SEInhalerAction
   void InhalerActions::Marshall(const CDM::InhalerActionData& in, SEInhalerAction& out)
@@ -42,4 +42,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

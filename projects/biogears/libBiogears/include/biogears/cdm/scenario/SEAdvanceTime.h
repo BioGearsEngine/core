@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class TimeUnit;
 namespace io {
   class Scenario;
@@ -49,4 +49,4 @@ public:
 protected:
   SEScalarTime* m_Time;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

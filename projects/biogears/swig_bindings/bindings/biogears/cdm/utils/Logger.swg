@@ -10,7 +10,7 @@
 %nspace biogears::LoggerForward;
 %nspace biogears::Loggable;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
   class Logger {
   public:
@@ -48,7 +48,4 @@ namespace biogears {
     virtual void Error(const char* msg) = 0;
     virtual void Fatal(const char* msg) = 0;
   };
-
-
-  }
-
+  CLOSE_BIOGEARS_NAMESPACE

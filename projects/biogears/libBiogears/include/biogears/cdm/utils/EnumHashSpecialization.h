@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <functional>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template <typename E>
 class enum_hash {
 public:
@@ -25,4 +25,4 @@ public:
     return std::hash<UnderlyingType>()(static_cast<UnderlyingType>(e));
   }
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

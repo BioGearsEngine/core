@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEFluidCircuitNode::SEFluidCircuitNode(const char* name, Logger* logger)
   : SECircuitNode<SEScalarPressure, SEScalarVolume>(std::string{ name }, logger)
 {
@@ -156,4 +156,4 @@ double SEFluidCircuitNode::GetVolumeBaseline(const VolumeUnit& unit) const
   return m_QuantityBaseline->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

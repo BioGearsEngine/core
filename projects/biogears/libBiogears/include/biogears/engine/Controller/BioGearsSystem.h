@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BioGearsEngine;
 
 /**
@@ -44,4 +44,4 @@ protected:
     SetUp();
   }
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

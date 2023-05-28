@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEPsychomotorVigilanceTask::SEPsychomotorVigilanceTask()
 {
   m_AttentionLapses = nullptr;
@@ -86,4 +86,4 @@ SEScalarTime& SEPsychomotorVigilanceTask::GetReactionTime()
   return *m_ReactionTime;
 }
 
-}
+CLOSE_BIOGEARS_NAMESPACE

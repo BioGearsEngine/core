@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 BG_EXT template class BIOGEARS_API SECircuitCalculator<SEThermalCircuit, SEThermalCircuitNode, SEThermalCircuitPath, HeatCapacitanceUnit, PowerUnit, HeatInductanceUnit, TemperatureUnit, EnergyUnit, HeatResistanceUnit>;
 
@@ -31,4 +31,4 @@ public:
   SEThermalCircuitCalculator(const HeatCapacitanceUnit&, const PowerUnit&, const HeatInductanceUnit&, const TemperatureUnit&, const EnergyUnit&, const HeatResistanceUnit&, Logger* logger);
   virtual ~SEThermalCircuitCalculator();
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

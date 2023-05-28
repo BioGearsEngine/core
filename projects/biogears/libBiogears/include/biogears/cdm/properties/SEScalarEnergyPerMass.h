@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarQuantity.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API EnergyPerMassUnit : public CCompoundUnit {
 public:
   EnergyPerMassUnit(const char* u);
@@ -51,4 +51,4 @@ public:
   bool operator==(const SEScalarEnergyPerMass&) const;
   bool operator!=(const SEScalarEnergyPerMass&) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

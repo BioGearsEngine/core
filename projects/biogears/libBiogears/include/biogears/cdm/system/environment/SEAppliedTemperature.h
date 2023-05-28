@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(AppliedTemperatureData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalar;
 class SEScalarTemperature;
 class TemperatureUnit;
@@ -66,4 +66,4 @@ protected:
   SEScalarFraction* m_SurfaceAreaFraction;
   CDM::enumOnOff::value m_State;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

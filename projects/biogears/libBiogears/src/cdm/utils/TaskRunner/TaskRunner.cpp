@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <iomanip>
 #include <thread>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Constructor
@@ -152,4 +152,4 @@ void TaskRunner::PrintProgress()
 
   std::cout.flags(flags);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

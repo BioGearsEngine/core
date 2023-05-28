@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(NutritionData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class SEScalar;
 class SEScalarMass;
@@ -108,4 +108,4 @@ inline std::ostream& operator<<(std::ostream& out, const SENutrition& n)
   n.ToString(out);
   return out;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

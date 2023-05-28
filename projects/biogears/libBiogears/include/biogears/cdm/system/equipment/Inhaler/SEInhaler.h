@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsEquipment.hxx>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class Serializer;
 class SESubstance;
 class SESubstanceManager;
@@ -107,4 +107,4 @@ protected:
 
   SESubstanceManager& m_Substances;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

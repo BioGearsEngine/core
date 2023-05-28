@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricInductance.h>
 
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const ElectricInductanceUnit ElectricInductanceUnit::H("H");
 
 template class SEScalarQuantity<ElectricInductanceUnit>;
@@ -95,4 +95,4 @@ bool SEScalarElectricInductance::operator!=(const SEScalarElectricInductance& ob
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

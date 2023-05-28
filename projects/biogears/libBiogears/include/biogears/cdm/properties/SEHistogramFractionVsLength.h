@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEHistogram.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class LengthUnit;
 namespace io {
   class Property;
@@ -52,4 +52,4 @@ public:
 protected:
   const LengthUnit* m_LengthUnit;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarAmount.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEUrinalysisMicroscopic::SEUrinalysisMicroscopic()
 
 {
@@ -230,4 +230,4 @@ void SEUrinalysisMicroscopic::InvalidateYeastResult()
 {
   m_Yeast = CDM::enumMicroscopicObservationAmount::value(-1);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -19,7 +19,7 @@
 #include <biogears/string/manipulation.h>
 #include <biogears/version.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 CompoundGenerator::CompoundGenerator(std::string path)
   : CSVToXMLConvertor(path, "templates/Compounds.csv")
@@ -151,4 +151,4 @@ bool CompoundGenerator::process_substance(CSV_RowItr itr)
   return rValue;
 }
 
-} // end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears

@@ -33,7 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/io/io-manager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 DataTrack::DataTrack(Logger* logger)
   : Loggable(logger)
@@ -808,4 +808,4 @@ void DataTrack::StreamProbesToFile(double time, std::ofstream& file)
   file << std::endl;
   file.flush();
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

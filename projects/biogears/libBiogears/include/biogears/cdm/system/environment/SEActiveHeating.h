@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(ActiveHeatingData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalar;
 class SEScalarFraction;
 class SEScalarPower;
@@ -65,4 +65,4 @@ protected:
   SEScalarArea* m_SurfaceArea;
   SEScalarFraction* m_SurfaceAreaFraction;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

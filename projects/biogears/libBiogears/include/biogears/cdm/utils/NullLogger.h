@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/Logger.h>
 #include <biogears/cdm/CommonDataModel.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class NullLogger;
 
 #pragma warning(push)
@@ -64,4 +64,4 @@ public:
 protected:
   virtual std::string FormatLogMessage(const std::string& origin, const std::string& msg);
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

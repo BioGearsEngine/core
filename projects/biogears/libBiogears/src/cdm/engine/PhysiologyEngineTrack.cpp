@@ -54,7 +54,7 @@ template class vector<biogears::SESystem*>;
 template class map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 std::string Space2Underscore(const std::string& str)
 {
@@ -686,4 +686,4 @@ void SEDataRequestScalar::UpdateScalar()
   }
   Error("Could not update " + Heading);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

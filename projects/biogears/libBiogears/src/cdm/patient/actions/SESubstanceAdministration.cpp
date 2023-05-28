@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SESubstanceAdministration::SESubstanceAdministration()
   : SEPatientAction()
 {
@@ -49,4 +49,4 @@ void SESubstanceAdministration::Unload(CDM::SubstanceAdministrationData& data) c
 {
   SEPatientAction::Unload(data);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

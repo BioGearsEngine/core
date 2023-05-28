@@ -8,7 +8,7 @@
 
 #include <biogears/cdm/patient/SENutrition.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SENutrition
   void PatientNutrition::Marshall(const CDM::NutritionData& in, SENutrition& out)
@@ -54,4 +54,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

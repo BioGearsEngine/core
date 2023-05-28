@@ -40,7 +40,7 @@ namespace std {
 template class map<biogears::SELiquidSubstanceQuantity*, double>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 auto Gastrointestinal::make_unique(BioGears& bg) -> std::unique_ptr<Gastrointestinal>
 {
   return std::unique_ptr<Gastrointestinal>(new Gastrointestinal(bg));
@@ -997,4 +997,4 @@ void Gastrointestinal::ProcessDrugCAT()
     m_vSmallIntestine->GetSubstanceQuantity(*sub)->GetMass().IncrementValue(totalEffluxToPortal_ug_Per_s * dT_s, MassUnit::ug);
   }
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

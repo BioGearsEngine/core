@@ -27,7 +27,7 @@ template class map<CDM::ElectroCardioGramWaveformLeadNumber, biogears::SEScalarE
 template class map<CDM::ElectroCardioGramWaveformLeadNumber, map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEElectroCardioGramInterpolator::SEElectroCardioGramInterpolator(Logger* logger)
   : Loggable(logger)
 {
@@ -273,4 +273,4 @@ void SEElectroCardioGramInterpolator::RemoveWaveform(CDM::ElectroCardioGramWavef
   w->second = nullptr;
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

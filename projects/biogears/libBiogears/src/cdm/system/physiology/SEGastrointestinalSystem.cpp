@@ -23,7 +23,7 @@ namespace std{
 template class map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 constexpr char idChymeAbsorptionRate[] = "ChymeAbsorptionRate";
 constexpr char idStomachContents[] = "StomachContents";
 
@@ -403,5 +403,4 @@ double SEDrugTransitState::GetTotalMassInEnterocytes(const MassUnit& unit)
   }
   return totalMass;
 }
-
-};
+CLOSE_BIOGEARS_NAMESPACE

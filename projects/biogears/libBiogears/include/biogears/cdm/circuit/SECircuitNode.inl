@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template <CIRCUIT_NODE_TEMPLATE>
 SECircuitNode<CIRCUIT_NODE_TYPES>::SECircuitNode(const char* name, Logger* logger)
   : SECircuitNode(std::string { name }, logger)
@@ -144,4 +144,4 @@ QuantityScalar& SECircuitNode<CIRCUIT_NODE_TYPES>::GetQuantityBaseline()
   return *m_QuantityBaseline;
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

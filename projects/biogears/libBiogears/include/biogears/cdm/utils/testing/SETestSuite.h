@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(TestSuite)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SETestReport;
 namespace io {
   class TestReport;
@@ -66,4 +66,4 @@ protected:
   std::vector<SETestCase*> m_TestCase;
   mutable SEScalarTime m_Time;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

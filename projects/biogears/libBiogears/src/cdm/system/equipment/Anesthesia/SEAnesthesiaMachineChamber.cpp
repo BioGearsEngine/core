@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEAnesthesiaMachineChamber::SEAnesthesiaMachineChamber(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
@@ -181,4 +181,4 @@ void SEAnesthesiaMachineChamber::ToString(std::ostream& str) const
   else
     str << "Action not specified properly" << std::flush;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

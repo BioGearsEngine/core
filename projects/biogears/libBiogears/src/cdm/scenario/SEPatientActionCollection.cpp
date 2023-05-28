@@ -30,7 +30,7 @@ template class map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*
 template class map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 //!
 //!  Pair Wrapper
@@ -256,9 +256,9 @@ template class MapWrapper<const SESubstance*, SESubstanceInfusion*>;
 template class MapWrapper<const SESubstance*, SESubstanceOralDose*>;
 template class MapWrapper<const SESubstance*, SESubstanceNasalDose*>;
 template class MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)

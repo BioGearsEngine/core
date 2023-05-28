@@ -19,11 +19,11 @@ specific language governing permissions and limitations under the License.
 
 int HowToNasalNaloxone();
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstanceNasalDose;
 class SESubstanceInfusion;
 class SESubstance;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 class NaloxoneThread {
 public:

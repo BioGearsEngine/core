@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/SubstanceQuantity.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class SubstanceQuantity;
 }
@@ -44,4 +44,4 @@ public:
 protected:
   SESubstance& m_Substance;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

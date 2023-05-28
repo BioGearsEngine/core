@@ -26,7 +26,7 @@ template class map<const biogears::SELiquidTransportVertex*, size_t>;
 template class map<const biogears::SELiquidTransportVertex*, vector<biogears::SELiquidTransportEdge*>*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SELiquidCompartmentGraph::SELiquidCompartmentGraph(const char* name, Logger* logger)
   : SELiquidCompartmentGraph(std::string { name }, logger) {};
 
@@ -84,4 +84,4 @@ void SELiquidCompartmentGraph::AddGraph(SELiquidCompartmentGraph& graph)
   for (SELiquidCompartmentLink* lnk : graph.GetLinks())
     AddLink(*lnk);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

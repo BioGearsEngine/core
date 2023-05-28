@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalarFraction;
 class SEScalarMass;
 class MassUnit;
@@ -69,4 +69,4 @@ protected:
   SEScalarAmountPerTime* m_InsulinSynthesisRate;
   SEScalarAmountPerTime* m_GlucagonSynthesisRate;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

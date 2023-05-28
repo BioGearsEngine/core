@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SEChronicHeartFailure : public SEPatientCondition {
 public:
   SEChronicHeartFailure();
@@ -36,4 +36,4 @@ public:
 
 protected:
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

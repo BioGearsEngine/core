@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(SystemData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstanceManager;
 class SEScalar;
    namespace io{
@@ -63,4 +63,4 @@ protected:
 
   std::stringstream m_ss;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

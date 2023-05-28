@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 #include <biogears/schema/cdm/Substance.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SESubstanceClearance::SESubstanceClearance(Logger* logger)
   : Loggable(logger)
 {
@@ -643,4 +643,4 @@ bool SESubstanceClearance::operator!=( const SESubstanceClearance& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

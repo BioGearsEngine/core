@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/Substance.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalar;
 class SEScalarNeg1To1;
 class SEScalar0To1;
@@ -63,4 +63,4 @@ protected:
   SEScalar0To1* m_InflammationCoefficient;
   SEHistogramFractionVsLength* m_ParticulateSizeDistribution;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

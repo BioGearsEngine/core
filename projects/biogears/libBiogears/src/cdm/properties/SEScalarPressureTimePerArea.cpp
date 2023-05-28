@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarPressureTimePerArea.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const PressureTimePerAreaUnit PressureTimePerAreaUnit::mmHg_Per_mL_m2("mmHg/mL m^2");
 const PressureTimePerAreaUnit PressureTimePerAreaUnit::cmH2O_Per_mL_m2("cmH2O/mL m^2");
 
@@ -100,4 +100,4 @@ bool SEScalarPressureTimePerArea::operator!=(const SEScalarPressureTimePerArea& 
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

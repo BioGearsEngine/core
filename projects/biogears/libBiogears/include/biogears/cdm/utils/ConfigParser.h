@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <string>
 #include <vector>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API ConfigSet {
 public:
   void SetKeyValues(const std::map<std::string, std::string>& keyValues);
@@ -46,4 +46,4 @@ private:
 
   bool m_parsingGlobalKeyValues = true;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::J_Per_K_kg("J/K kg");
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kJ_Per_K_kg("kJ/K kg");
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kcal_Per_K_kg("kcal/K kg");
@@ -108,4 +108,4 @@ bool SEScalarHeatCapacitancePerMass::operator!=(const SEScalarHeatCapacitancePer
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

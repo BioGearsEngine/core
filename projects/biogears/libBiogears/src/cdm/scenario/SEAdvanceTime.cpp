@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTime.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEAdvanceTime::SEAdvanceTime()
   : SEAction()
 {
@@ -80,4 +80,4 @@ double SEAdvanceTime::GetTime(const TimeUnit& unit) const
     return SEScalar::dNaN();
   return m_Time->GetValue(unit);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

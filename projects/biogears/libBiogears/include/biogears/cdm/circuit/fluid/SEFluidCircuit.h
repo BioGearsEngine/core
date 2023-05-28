@@ -26,7 +26,7 @@ BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, vect
 BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, size_t>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SECircuitManager;
 namespace io {
   class Circuit;
@@ -54,4 +54,4 @@ public:
 protected:
   SECircuitManager& m_Mgr;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

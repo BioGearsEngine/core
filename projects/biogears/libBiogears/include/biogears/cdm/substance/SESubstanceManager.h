@@ -22,18 +22,18 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(SubstanceData);
 CDM_BIND_DECL(SubstanceCompoundData);
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class Scenario;
 }
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<biogears::SESubstance*, const CDM::SubstanceData*>;
 BG_EXT template class BIOGEARS_API map<biogears::SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SESubstanceManager : public Loggable {
   friend io::Scenario;
 
@@ -89,4 +89,4 @@ private:
   std::map<SESubstance*, const CDM::SubstanceData*> m_OriginalSubstanceData;
   std::map<SESubstanceCompound*, const CDM::SubstanceCompoundData*> m_OriginalCompoundData;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

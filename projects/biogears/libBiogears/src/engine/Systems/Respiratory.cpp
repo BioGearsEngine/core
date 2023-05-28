@@ -53,7 +53,7 @@ namespace BGE = mil::tatrc::physiology::biogears;
 #pragma warning(disable : 4305 4244) // Disable some warning messages
 #endif
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //Flag for setting things constant to test
 //Should be commented out, unless debugging/tuning
 // #define TUNING
@@ -2514,4 +2514,4 @@ void Respiratory::OverrideControlLoop()
   }
   return;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

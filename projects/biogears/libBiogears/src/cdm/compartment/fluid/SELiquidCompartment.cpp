@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 SELiquidCompartment::SELiquidCompartment(const char* name, Logger* logger)
   : SELiquidCompartment(std::string{ name }, logger)
@@ -211,4 +211,4 @@ SELiquidSubstanceQuantity& SELiquidCompartment::CreateSubstanceQuantity(SESubsta
   return *subQ;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -7,7 +7,7 @@
 #include <biogears/cdm/utils/testing/SETestReport.h>
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SETestErrorStatistics
   void TestReport::Marshall(const CDM::TestErrorStatisticsData& in, SETestErrorStatistics& out)
@@ -209,4 +209,4 @@ namespace io {
   }
   //-----------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

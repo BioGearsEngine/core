@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SELiquidSubstanceQuantity;
 class BioGears;
 /**
@@ -92,4 +92,4 @@ private:
   SELiquidSubstanceQuantity* m_SplanchnicInsulin = nullptr;
   SELiquidSubstanceQuantity* m_SplanchnicGlucagon = nullptr;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

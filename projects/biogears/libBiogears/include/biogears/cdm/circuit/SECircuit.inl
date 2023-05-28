@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #define OPEN_RESISTANCE 1e100
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template <CIRCUIT_TEMPLATE>
 SECircuit<CIRCUIT_TYPES>::SECircuit(const char* name, Logger* logger)
   : Loggable(logger)
@@ -581,4 +581,4 @@ void SECircuit<CIRCUIT_TYPES>::SetNextAndCurrentFromBaselines()
     }
   }
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

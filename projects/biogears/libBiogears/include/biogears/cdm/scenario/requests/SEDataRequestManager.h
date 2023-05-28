@@ -26,7 +26,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(DataRequestsData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class Scenario;
 }
@@ -101,4 +101,4 @@ protected:
   bool DuplicateRequest(SEDataRequest* request);
   static SEDataRequest* newFromBind(const CDM::DataRequestData& dataRequest, SESubstanceManager& substances, const SEDecimalFormat* dfault = nullptr);
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const FrequencyUnit FrequencyUnit::Per_min("1/min");
 const FrequencyUnit FrequencyUnit::Per_s("1/s");
 const FrequencyUnit FrequencyUnit::Hz("Hz");
@@ -110,4 +110,4 @@ bool SEScalarFrequency::operator!=(const SEScalarFrequency& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

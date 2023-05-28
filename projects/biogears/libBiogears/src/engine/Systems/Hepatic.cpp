@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 auto Hepatic::make_unique(BioGears& bg) -> std::unique_ptr<Hepatic>
 {
   return std::unique_ptr<Hepatic>(new Hepatic(bg));
@@ -678,5 +678,4 @@ SEScalar& Hepatic::CalculateLiverSOFA()
   sofa->SetValue(sofaScore);
   return *sofa;
 }
-
-}
+CLOSE_BIOGEARS_NAMESPACE

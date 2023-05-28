@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SECompartment::SECompartment(const char* name, Logger* logger)
   : SECompartment(std::string{ name }, logger)
 {
@@ -56,4 +56,4 @@ const char* SECompartment::GetName_cStr() const
   return m_Name.c_str();
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEChronicRenalStenosis::SEChronicRenalStenosis()
   : SEPatientCondition()
 {
@@ -97,4 +97,4 @@ void SEChronicRenalStenosis::ToString(std::ostream& str) const
   HasRightKidneySeverity() ? str << *m_RightKidneySeverity : str << "NaN";
   str << std::flush;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

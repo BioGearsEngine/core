@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::rsi("rsi");
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::clo("clo");
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::rValue("rValue");
@@ -109,4 +109,4 @@ bool SEScalarHeatResistanceArea::operator!=(const SEScalarHeatResistanceArea& ob
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #define FLUID_COMPARTMENT_NODE SEFluidCircuitNode, SEScalarPressure, PressureUnit, SEScalarVolume, VolumeUnit
 #define THERMAL_COMPARTMENT_NODE SEThermalCircuitNode, SEScalarTemperature, TemperatureUnit, SEScalarEnergy, EnergyUnit
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class Compartment;
 }
@@ -66,5 +66,5 @@ BG_EXT template class BIOGEARS_API SECompartmentNodes<ELECTRICAL_COMPARTMENT_NOD
 BG_EXT template class BIOGEARS_API SECompartmentNodes<FLUID_COMPARTMENT_NODE>;
 BG_EXT template class BIOGEARS_API SECompartmentNodes<THERMAL_COMPARTMENT_NODE>;
 
-}
+CLOSE_BIOGEARS_NAMESPACE
 #include <biogears/cdm/compartment/SECompartmentNodes.inl>

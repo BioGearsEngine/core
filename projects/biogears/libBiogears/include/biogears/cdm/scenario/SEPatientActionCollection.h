@@ -66,7 +66,7 @@ BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::S
 BG_EXT template class BIOGEARS_API map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 
 //!
@@ -190,12 +190,12 @@ BG_EXT template class BIOGEARS_API MapWrapper<const SESubstance*, SESubstanceOra
 BG_EXT template class BIOGEARS_API MapWrapper<const SESubstance*, SESubstanceNasalDose*>;
 BG_EXT template class BIOGEARS_API MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
 
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 //Marks the end of Wrapper Code
 
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SEPatientActionCollection : public Loggable {
 public:
   SEPatientActionCollection(SESubstanceManager&);
@@ -454,4 +454,4 @@ protected:
   SESubstanceManager& m_Substances;
   std::stringstream m_ss;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

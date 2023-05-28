@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 CDM_BIND_DECL(RunningAverageData);
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class Property;
 }
@@ -45,4 +45,4 @@ protected:
   double m_Sum;
   unsigned int m_NumSamples;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

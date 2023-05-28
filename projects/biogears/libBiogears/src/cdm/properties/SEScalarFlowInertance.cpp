@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFlowInertance.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const FlowInertanceUnit FlowInertanceUnit::mmHg_s2_Per_mL("mmHg s^2/mL");
 const FlowInertanceUnit FlowInertanceUnit::mmHg_s2_Per_L("mmHg s^2/L");
 const FlowInertanceUnit FlowInertanceUnit::cmH2O_s2_Per_mL("cmH2O s^2/mL");
@@ -115,4 +115,4 @@ bool SEScalarFlowInertance::operator!=(const SEScalarFlowInertance& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

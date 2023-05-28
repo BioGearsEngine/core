@@ -26,7 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 /*
 ========================
 Constructors
@@ -266,4 +266,4 @@ void Inhaler::Process()
 void Inhaler::PostProcess()
 {
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

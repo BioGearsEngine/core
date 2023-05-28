@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 
 //#include <memory>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class RunningAverage;
 
 class SEDecimalFormat;
@@ -378,5 +378,4 @@ namespace io {
     option_out.set(*item);
   }
 }
-
-}
+CLOSE_BIOGEARS_NAMESPACE

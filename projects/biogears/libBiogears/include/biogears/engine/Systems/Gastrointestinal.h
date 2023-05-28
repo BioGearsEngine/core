@@ -20,18 +20,18 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
 class SEFluidCircuitPath;
 class BioGears;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<biogears::SELiquidSubstanceQuantity*, double>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 /**
 * @brief @copydoc Physiology_GastrointestinalSystemData
 */
@@ -127,4 +127,4 @@ protected:
   double m_secretionRate_mL_Per_s;
   double m_dT_s;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

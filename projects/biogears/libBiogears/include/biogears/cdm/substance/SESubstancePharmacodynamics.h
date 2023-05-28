@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(SubstancePharmacodynamicsData)
 CDM_BIND_DECL(PharmacodynamicModifierData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalarFrequency;
 class FrequencyUnit;
 class SEScalarMassPerVolume;
@@ -31,13 +31,13 @@ class SEPharmacodynamicModifier;
 namespace io {
   class Substance;
 }
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
   BG_EXT template class BIOGEARS_API map<string, biogears::SEPharmacodynamicModifier*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SESubstancePharmacodynamics : public Loggable {
   friend io::Substance;
 
@@ -190,4 +190,4 @@ private:
   SEScalarFraction* m_EMax;
   SEScalarMassPerVolume* m_EC50;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

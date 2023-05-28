@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const VolumeUnit VolumeUnit::L("L");
 const VolumeUnit VolumeUnit::dL("dL");
 const VolumeUnit VolumeUnit::mL("mL");
@@ -115,4 +115,4 @@ bool SEScalarVolume::operator!=(const SEScalarVolume& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

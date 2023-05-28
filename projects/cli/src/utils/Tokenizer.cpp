@@ -8,7 +8,7 @@
 
 #include <biogears/string/manipulation.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 Token::Token()
   : type(ETokenClass::Undefined)
@@ -244,4 +244,4 @@ auto Tokenizer::end() const -> const_iterator
   return const_cast<Tokenizer*>(this)->end();
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

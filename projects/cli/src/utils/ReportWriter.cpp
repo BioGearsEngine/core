@@ -29,7 +29,7 @@
 #include <sys/stat.h>
 #endif
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 TableRow::TableRow() { }
 TableRow::TableRow(std::string field_n, std::string expected_v, double engine_v, std::string percent_e, std::string n)
@@ -1057,4 +1057,4 @@ void ReportWriter::generate_patient_table(const std::string& Outputfile, std::ve
   file.close();
   table.clear();
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

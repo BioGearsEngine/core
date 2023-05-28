@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(ThermalCompartmentData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEThermalCompartmentLink;
 class SEScalarPower;
 class PowerUnit;
@@ -108,7 +108,7 @@ protected:
   std::vector<SEThermalCompartment*> m_Leaves;
   SECompartmentNodes<THERMAL_COMPARTMENT_NODE> m_Nodes;
 };
-}   //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std{
   BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartment*> ;

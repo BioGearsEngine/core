@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/cdm/Environment.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstance;
 class SESubstanceFraction;
 class SESubstanceManager;
@@ -134,4 +134,4 @@ protected:
 
   SESubstanceManager& m_Substances;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

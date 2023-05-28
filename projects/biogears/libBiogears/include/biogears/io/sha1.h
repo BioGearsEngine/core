@@ -33,7 +33,7 @@
 constexpr size_t SHA1_HEX_SIZE = 40 + 1;
 constexpr size_t SHA1_BASE64_SIZE = 28 + 1;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
 
 class sha1 {
@@ -287,4 +287,4 @@ public:
 };
 
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

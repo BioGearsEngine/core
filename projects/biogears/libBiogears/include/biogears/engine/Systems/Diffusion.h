@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <Eigen/Core>
 
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class MassUnit;
 class BioGears;
 class SESubstanceManager;
@@ -103,4 +103,4 @@ private:
   Eigen::VectorXd m_VolumeRatiosVascularExtra;
   Eigen::VectorXd m_VolumeRatiosExtraIntra;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

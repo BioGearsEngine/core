@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SECircuitManager;
 namespace io {
   class Circuit;
@@ -61,4 +61,4 @@ public:
   virtual SEScalarElectricCharge& GetChargeBaseline();
   virtual double GetChargeBaseline(const ElectricChargeUnit& unit) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

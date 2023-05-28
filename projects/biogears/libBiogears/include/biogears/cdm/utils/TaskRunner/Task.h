@@ -12,7 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-namespace biogears {
+#include <biogears/exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Interface from which tasks used in the TaskRunner should derive
@@ -24,4 +26,4 @@ public:
   virtual ~Task() = default;
   virtual void Run() = 0;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

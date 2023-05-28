@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class PatientConditions;
 }
@@ -47,4 +47,4 @@ public:
 protected:
   SEScalarTime* m_TimeSinceMeal;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

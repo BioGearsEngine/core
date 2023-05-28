@@ -27,7 +27,7 @@ template class vector<biogears::SEGasTransportEdge*>;
 template class map<const biogears::SEGasTransportVertex*, size_t>;
 template class map<const biogears::SEGasTransportVertex*, vector<biogears::SEGasTransportEdge*>*>;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 SEGasCompartmentGraph::SEGasCompartmentGraph(const char* name, Logger* logger)
   : SEGasCompartmentGraph(std::string { name }, logger)
@@ -119,4 +119,4 @@ void SEGasCompartmentGraph::AddGraph(SEGasCompartmentGraph& graph)
     AddLink(*lnk);
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarPowerPerAreaTemperatureToTheFourth.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const PowerPerAreaTemperatureToTheFourthUnit PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4("W/ m^2 K^4");
 
 template class SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>;
@@ -95,4 +95,4 @@ bool SEScalarPowerPerAreaTemperatureToTheFourth::operator!=(const SEScalarPowerP
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

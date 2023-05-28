@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEStarvation::SEStarvation()
   : SEPatientCondition()
 {
@@ -78,4 +78,4 @@ void SEStarvation::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

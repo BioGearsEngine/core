@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTimeMassPerVolume.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::s_g_Per_L("s g/L");
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::min_g_Per_L("min g/L");
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::hr_g_Per_L("hr g/L");
@@ -120,4 +120,4 @@ bool SEScalarTimeMassPerVolume::operator!=(const SEScalarTimeMassPerVolume& obj)
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/exports.h>
 #include <cstddef>
-namespace biogears{
+OPEN_BIOGEARS_NAMESPACE
 class CUnitDimension;
 class CQuantityConversionKey;
 
@@ -88,7 +88,7 @@ inline size_t hash_value(const CQuantityConversionKey& ref)
 {
   return ref.hash_value();
 }
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 namespace std {
 template <>

@@ -52,7 +52,7 @@ namespace std {
   BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*> ;
   BG_EXT template class BIOGEARS_API map<string, biogears::SETissueCompartment*> ;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   namespace io {
   class Compartment;
 }
@@ -277,4 +277,4 @@ protected:
   SESubstance* m_HbCO;
   SESubstanceManager& m_subMgr;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

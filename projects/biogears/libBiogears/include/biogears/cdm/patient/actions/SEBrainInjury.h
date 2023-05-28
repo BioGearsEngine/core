@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalar0To1;
 namespace io {
   class PatientActions;

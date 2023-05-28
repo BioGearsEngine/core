@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>  
 #include <biogears/engine/Controller/BioGearsSystem.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 /**
 * @brief 
 * Generic ECG machine to assess the heart rhythm.
@@ -73,4 +73,4 @@ protected:
   // Stateless member variable (Set in SetUp())
   double m_dt_s;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

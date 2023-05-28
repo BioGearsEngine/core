@@ -9,7 +9,7 @@
 #include <biogears/filesystem/path.h>
 #include <biogears/string/manipulation.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //!
 //! Constructor for Arguments
 //! \param Options vector<string>  -- List of Optional Paramaters whose values are either True or False. Keywords default to false unless present
@@ -440,4 +440,4 @@ std::string Arguments::usuage_string() const
   ss << std::endl;
   return ss.str();
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

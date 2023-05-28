@@ -7,7 +7,7 @@
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SEEnvironmentCondition
   void EnvironmentConditions::Marshall(const CDM::EnvironmentConditionData& in, SEEnvironmentCondition& out)
@@ -40,4 +40,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const ElectricPotentialUnit ElectricPotentialUnit::V("V");
 const ElectricPotentialUnit ElectricPotentialUnit::mV("mV");
 
@@ -100,4 +100,4 @@ bool SEScalarElectricPotential::operator!=(const SEScalarElectricPotential& obj)
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEPatientAssessment::SEPatientAssessment()
 {
 }
@@ -46,4 +46,4 @@ CDM::PatientAssessmentData* SEPatientAssessment::Unload()
 void SEPatientAssessment::Unload(CDM::PatientAssessmentData& data)
 {
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

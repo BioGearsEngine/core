@@ -19,7 +19,7 @@ template class vector<biogears::SEFluidCircuitPath*>;
 template class map<const biogears::SEFluidCircuitNode*, vector<biogears::SEFluidCircuitPath*>*>;
 template class map<const biogears::SEFluidCircuitNode*, size_t>;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template class SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>;
 
 SEFluidCircuit::SEFluidCircuit(const char* name, SECircuitManager& mgr)
@@ -77,4 +77,4 @@ void SEFluidCircuit::AddCircuit(SEFluidCircuit& circuit)
     AddReferenceNode(*node);
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

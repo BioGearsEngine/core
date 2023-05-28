@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <string>
 
-namespace biogears{
+OPEN_BIOGEARS_NAMESPACE
 class CPrefixDescriptor {
 public:
   CPrefixDescriptor(const char* name, const char* sym, double scaleFac);
@@ -40,4 +40,4 @@ private:
   char m_cSym;
   double m_dScaleFac;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

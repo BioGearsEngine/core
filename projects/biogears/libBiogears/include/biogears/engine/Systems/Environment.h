@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsEnvironment.hxx>
 #include "Saturation.h"
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEPatient;
 class SEPatientActionCollection;
 class SEEnvironmentActionCollection;
@@ -123,4 +123,4 @@ protected:
   SEThermalCircuitPath* m_EnvironmentSkinToGroundPath;
   SEThermalCircuitPath* m_EnvironmentCoreToGroundPath;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

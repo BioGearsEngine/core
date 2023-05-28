@@ -26,7 +26,7 @@
 
 #include "biogears/cdm/substance/SESubstanceManager.h"
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SEConditionList
   std::vector<std::unique_ptr<SECondition>> PatientConditions::condition_factory(const CDM::ConditionListData& in, SESubstanceManager& substances)
@@ -330,4 +330,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

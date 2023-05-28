@@ -28,7 +28,7 @@
 #include <biogears/cdm/substance/SESubstancePhysicochemicals.h>
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SESubstanceAerosolization
   void Substance::Marshall(const CDM::SubstanceAerosolizationData& in, SESubstanceAerosolization& out)
@@ -655,4 +655,4 @@ namespace io {
   }
   //-----------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

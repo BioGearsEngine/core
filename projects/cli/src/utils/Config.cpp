@@ -15,7 +15,7 @@
 #include <biogears/string/manipulation.h>
 
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 std::string error_context;
 
@@ -907,4 +907,4 @@ bool handle_delimited_list(const std::string& input, const char delimiter, std::
   }
   return true;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

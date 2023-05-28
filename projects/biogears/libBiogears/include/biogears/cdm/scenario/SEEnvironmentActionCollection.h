@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
 #include <biogears/schema/cdm/EnvironmentActions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SEEnvironmentActionCollection : public Loggable {
 public:
   SEEnvironmentActionCollection(SESubstanceManager&);
@@ -47,4 +47,4 @@ protected:
   SESubstanceManager& m_Substances;
   std::stringstream m_ss;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

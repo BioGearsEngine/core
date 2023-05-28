@@ -12,6 +12,20 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
+#ifndef BIOGEARS_WITHOUT_NAMESPACES
+
+#define OPEN_BIOGEARS_NAMESPACE namespace biogears {
+#define CLOSE_BIOGEARS_NAMESPACE }
+#define BIOGEARS_NAMESPACE biogears::
+
+#else
+
+#define OPEN_BIOGEARS_NAMESPACE
+#define CLOSE_BIOGEARS_NAMESPACE
+#define BIOGEARS_NAMESPACE
+
+#endif
+
 #if (0)
 #define DEBUGOUT(x) x
 #else
@@ -44,7 +58,7 @@ namespace CDM = mil::tatrc::physiology::datamodel;
 //Utilities
 
 #include <biogears/exports.h>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 #pragma warning(disable: 4251)
 #pragma warning(push,0)
@@ -56,7 +70,7 @@ struct BIOGEARS_API CommonDataModelException : public std::runtime_error {
   ~CommonDataModelException() override;
 };
 #pragma warning(pop)
-}
+CLOSE_BIOGEARS_NAMESPACE
 // Basics
 #include <biogears/cdm/Macros.h>
 #include <biogears/cdm/utils/Logger.h>

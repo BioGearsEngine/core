@@ -54,7 +54,7 @@ template class std::map<const biogears::SESubstance*, biogears::SENasalState*>;
 template class std::map<const biogears::SESubstance*, biogears::SETransmucosalState*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 auto Drugs::make_unique(BioGears& bg) -> std::unique_ptr<Drugs>
 {
   return std::unique_ptr<Drugs>(new Drugs(bg));
@@ -1407,4 +1407,4 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   //Return the amount of mass remaining in the transmucosal layers and mouth
   return totalTransmucosalMass_ug;
 }
-};
+CLOSE_BIOGEARS_NAMESPACE

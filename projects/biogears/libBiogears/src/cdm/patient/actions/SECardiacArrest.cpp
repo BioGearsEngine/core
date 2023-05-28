@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SECardiacArrest::SECardiacArrest()
   : SEPatientAction()
 {
@@ -83,4 +83,4 @@ bool SECardiacArrest::operator!=( const SECardiacArrest& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 CDM_BIND_DECL(ElectroCardioGramInterpolationWaveformData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 namespace io {
   class ElectroCardioGram;
@@ -67,4 +67,4 @@ protected:
   SEFunctionElectricPotentialVsTime* m_Data;
   std::vector<unsigned int> m_ActiveIndicies;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

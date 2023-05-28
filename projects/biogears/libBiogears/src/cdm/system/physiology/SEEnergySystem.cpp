@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 constexpr char idAchievedExerciseLevel[] = "AchievedExerciseLevel";
 constexpr char idChlorideLostToSweat[] = "ChlorideLostToSweat";
 constexpr char idCoreTemperature[] = "CoreTemperature";
@@ -524,4 +524,4 @@ Tree<const char*> SEEnergySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idTotalMetabolicRate)
     .emplace_back(idTotalWorkRateLevel);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

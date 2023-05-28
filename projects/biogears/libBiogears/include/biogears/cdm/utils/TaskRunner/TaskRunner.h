@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <mutex>
 #include <queue>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// This class handles concurrent execution of tasks
@@ -54,4 +54,4 @@ private:
   unsigned int m_totalTaskCount = 0; ///< Total number of tasks in the queue when the task running begins to execute
   unsigned int m_tasksComplete = 0; ///< Number of completed tasks
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

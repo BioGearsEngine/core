@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEExpiratoryValveObstruction::SEExpiratoryValveObstruction()
   : SEAnesthesiaMachineAction()
 {
@@ -83,4 +83,4 @@ void SEExpiratoryValveObstruction::ToString(std::ostream& str) const
   HasSeverity() ? str << *m_Severity : str << "NaN";
   str << std::flush;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

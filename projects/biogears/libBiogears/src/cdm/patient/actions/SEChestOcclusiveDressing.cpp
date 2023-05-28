@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEChestOcclusiveDressing::SEChestOcclusiveDressing()
   : SEPatientAction()
 {
@@ -114,4 +114,4 @@ bool SEChestOcclusiveDressing::operator!=(const SEChestOcclusiveDressing& rhs) c
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

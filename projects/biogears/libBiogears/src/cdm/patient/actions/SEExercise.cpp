@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEExercise::SEExercise()
   : m_mode(NONE)
 {
@@ -406,4 +406,4 @@ bool SEExercise::operator!=(const SEExercise& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

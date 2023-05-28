@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <ostream>
 #include <string>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //-------------------------------------------------------------------------------
 // I created this class for use in connecting DataRequests to SEScalars for the PhysiologyEngineTrack class
 /**
@@ -58,4 +58,4 @@ protected:
 };
 
 std::ostream& operator<<(std::ostream& os, SEGenericScalar const& v);
-}
+CLOSE_BIOGEARS_NAMESPACE

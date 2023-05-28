@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEFluidCircuitPath::SEFluidCircuitPath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const char* name)
   : SECircuitPath<SEScalarVolumePerTime, SEScalarFlowResistance, SEScalarFlowCompliance, SEScalarFlowInertance, SEScalarPressure, SEScalarVolume>(src, tgt, std::string{ name })
   , m_FluidSourceNode(src)
@@ -424,4 +424,4 @@ void SEFluidCircuitPath::InvalidateCardiovascularRegion()
 {
   m_CardiovascularRegion = (CDM::enumResistancePathType::value)-1;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

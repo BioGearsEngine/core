@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class SESubstance;
 class SEScalarPressure;
@@ -130,4 +130,4 @@ protected:
   std::vector<SEFluidCompartment*> m_FluidChildren;
   SECompartmentNodes<FLUID_COMPARTMENT_NODE> m_Nodes;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

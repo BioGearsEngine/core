@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 
 //#include <memory>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstanceManager;
 class SEAction;
 
@@ -231,4 +231,4 @@ namespace io {
     option_out.set(*item);
   }
 } // Namespace IO
-} //Namespace Biogears
+  CLOSE_BIOGEARS_NAMESPACE // Namespace Biogears

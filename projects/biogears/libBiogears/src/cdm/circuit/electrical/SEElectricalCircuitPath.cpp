@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEElectricalCircuitPath::SEElectricalCircuitPath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const char* name)
   : SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>(src, tgt, name)
   , m_ElectricalSourceNode(src)
@@ -397,4 +397,4 @@ double SEElectricalCircuitPath::GetValveBreakdownVoltage(const ElectricPotential
     return SEScalar::dNaN();
   return m_ValveBreakdownPotential->GetValue(unit);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

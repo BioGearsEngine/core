@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <string>
 
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SECompartmentManager;
 namespace io {
   class Compartment;
@@ -72,7 +72,7 @@ protected:
   SEThermalCompartment& m_TargetCmpt;
   SEThermalCircuitPath* m_Path;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 namespace std {
 BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartmentLink*>;
@@ -80,11 +80,11 @@ BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartmentLin
 }
 
 #include <biogears/cdm/compartment/SECompartmentGraph.h>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEThermalCompartmentGraph : public SECompartmentGraph<SEThermalCompartment, SEThermalCompartmentLink> {
 public:
   SEThermalCompartmentGraph(const char* name, Logger* logger);
   SEThermalCompartmentGraph(const std::string& name, Logger* logger);
   virtual ~SEThermalCompartmentGraph() override;
 };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears

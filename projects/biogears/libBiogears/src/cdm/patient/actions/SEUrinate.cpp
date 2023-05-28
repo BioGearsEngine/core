@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEUrinate::SEUrinate()
   : SEPatientAction()
 {
@@ -75,4 +75,4 @@ bool SEUrinate::operator!=( const SEUrinate& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

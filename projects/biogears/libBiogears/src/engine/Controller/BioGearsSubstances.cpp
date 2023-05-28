@@ -33,7 +33,7 @@ namespace std {
 template class map<biogears::SESubstance*, biogears::SizeIndependentDepositionEfficencyCoefficient*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 SizeIndependentDepositionEfficencyCoefficient::SizeIndependentDepositionEfficencyCoefficient()
 {
@@ -1613,4 +1613,4 @@ const SizeIndependentDepositionEfficencyCoefficient& BioGearsSubstances::GetSize
 
   return *SIDECoefficients;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -17,7 +17,7 @@
 
 #include <biogears/cdm/patient/SEPatient.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //----------------------------------------------------------------------------------
   //class SEPatient
@@ -193,4 +193,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

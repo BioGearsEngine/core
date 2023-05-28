@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SECompartmentDataRequest.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
@@ -35,4 +35,4 @@ public:
 protected:
   virtual void Unload(CDM::ThermalCompartmentDataRequestData& data) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarForce.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEChestCompressionForce::SEChestCompressionForce()
   : SEChestCompression()
 {
@@ -96,4 +96,4 @@ bool SEChestCompressionForce::operator!=( const SEChestCompressionForce& rhs) co
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

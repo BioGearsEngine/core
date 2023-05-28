@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 #include <map>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalarMass;
 class MassUnit;
 class SEScalarVolumePerTime;
@@ -27,14 +27,14 @@ class SEDrugTransitState;
 
 namespace io {
   class Physiology;
-}
-} //namespace biogears
+} 
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SEGastrointestinalSystem : public SESystem {
   friend io::Physiology;
 
@@ -116,4 +116,4 @@ protected:
   size_t m_NumTransitMasses;
 };
 
-}
+CLOSE_BIOGEARS_NAMESPACE

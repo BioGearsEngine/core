@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 #pragma warning(pop)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //--------------------------------------------------------------------------------------------------
 /// @brief
 /// This is the implementation of the PhysiologyEngine interface for the biogears engines.
@@ -149,4 +149,4 @@ BIOGEARS_API void destroy_logger(Logger** engine);
 BIOGEARS_API BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir);
 BIOGEARS_API BioGearsEngine* create_biogears_engine(const char* logger, const char* working_dir);
 BIOGEARS_API void destroy_biogears_engine(BioGearsEngine** engine);
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears

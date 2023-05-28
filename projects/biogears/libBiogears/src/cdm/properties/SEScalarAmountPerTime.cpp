@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 AmountPerTimeUnit AmountPerTimeUnit::mol_Per_day("mol/day");
 AmountPerTimeUnit AmountPerTimeUnit::mol_Per_s("mol/s");
 AmountPerTimeUnit AmountPerTimeUnit::umol_Per_s("umol/s");
@@ -121,4 +121,4 @@ bool SEScalarAmountPerTime::operator!=(const SEScalarAmountPerTime& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

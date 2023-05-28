@@ -19,7 +19,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/GeneralMath.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
+
 double SEScalar::NaN = std::numeric_limits<double>::quiet_NaN();
 
 double SEScalar::dNaN()
@@ -415,4 +416,5 @@ SEScalar& SEScalar::operator*=(const SEScalar& rhs)
   Multiply(rhs);
   return *this;
 }
-} // namespace Biogears
+
+CLOSE_BIOGEARS_NAMESPACE // namespace Biogears

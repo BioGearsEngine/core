@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 //----------------------------------------------------------------------------
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 CUnitDescriptor::CUnitDescriptor(const std::string& name, const std::string& symbol, unsigned int quantityTypeId,
                                  const std::string& targetCompoundUnit, const double& convFac, const double& bias,
                                  PrefixModeType mode, const std::string& prefixSet)
@@ -107,4 +107,4 @@ bool CUnitDescriptor::IsPrefixAllowed(char prefix) const
     return false;
   }
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

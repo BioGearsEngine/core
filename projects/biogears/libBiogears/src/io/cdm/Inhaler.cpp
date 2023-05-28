@@ -10,7 +10,7 @@
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   void Inhaler::Marshall(const CDM::InhalerData& in, SEInhaler& out)
   {
@@ -43,4 +43,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

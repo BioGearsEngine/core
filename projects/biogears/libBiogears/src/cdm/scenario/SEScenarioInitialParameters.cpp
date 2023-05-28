@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEScenarioInitialParameters::SEScenarioInitialParameters(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())
   , m_SubMgr(subMgr)
@@ -207,4 +207,4 @@ void SEScenarioInitialParameters::SetTrackStabilization(bool flag)
 }
 //-----------------------------------------------------------------------------
 
-}
+CLOSE_BIOGEARS_NAMESPACE

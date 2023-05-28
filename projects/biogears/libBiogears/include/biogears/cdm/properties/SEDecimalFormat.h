@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(DecimalFormatData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class Property;
 }
@@ -63,4 +63,4 @@ protected:
 
 namespace std{
 BG_EXT template class BIOGEARS_API map<std::string, biogears::SEDecimalFormat>;
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class SELiquidCompartment;
 class SETissueCompartment;
@@ -46,13 +46,13 @@ protected:
   double m_alveoli = 0;
 };
 
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<biogears::SESubstance*, biogears::SizeIndependentDepositionEfficencyCoefficient*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 /**
 * @brief Manages and initializes all systems with substances needed by %BioGears
@@ -179,4 +179,4 @@ protected:
 
   BioGears& m_data;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

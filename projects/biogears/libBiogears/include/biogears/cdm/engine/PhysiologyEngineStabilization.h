@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(PhysiologyEngineStabilizationData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class PhysiologyEngine;
 class PhysiologyEngineTrack;
 class PhysiologyEngineConfiguration;
@@ -61,4 +61,4 @@ protected:
 
   SEScalarTime* m_StabilizationDuration;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

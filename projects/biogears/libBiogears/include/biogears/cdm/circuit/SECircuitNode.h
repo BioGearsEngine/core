@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(CircuitNodeData);
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 #define CIRCUIT_NODE_TEMPLATE typename PotentialScalar, typename QuantityScalar
 #define CIRCUIT_NODE_TYPES PotentialScalar, QuantityScalar
@@ -86,11 +86,12 @@ protected:
   QuantityScalar* m_QuantityBaseline;
 };
 
-}
+CLOSE_BIOGEARS_NAMESPACE
+
 #include <biogears/cdm/circuit/SECircuitNode.inl>
 
-namespace biogears{
+OPEN_BIOGEARS_NAMESPACE
 BG_EXT template class SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>;
 BG_EXT template class SECircuitNode<SEScalarPressure, SEScalarVolume>;
 BG_EXT template class SECircuitNode<SEScalarTemperature, SEScalarEnergy>;
-}
+CLOSE_BIOGEARS_NAMESPACE

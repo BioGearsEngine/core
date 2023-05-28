@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEDataRequest::SEDataRequest(const SEDecimalFormat* dfault)
   : SEDecimalFormat(dfault)
 {
@@ -177,4 +177,4 @@ void SEDataRequest::Set(const std::string& name, const CCompoundUnit& unit)
   m_Hash = 0;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -27,7 +27,7 @@
 #include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SECompartment
   void Compartment::Marshall(const CDM::CompartmentData& in, SECompartment& out)
@@ -538,4 +538,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

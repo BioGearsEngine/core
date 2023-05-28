@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //----------------------------------------------------------------------------
 double CCompoundUnitElement::GetBigness() const
 {
@@ -52,4 +52,4 @@ bool CCompoundUnitElement::IsDecibel() const
   const CUnitDescriptor& ud = uce.GetUnitDescriptor(m_iUnitID);
   return ud.IsDecibel();
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

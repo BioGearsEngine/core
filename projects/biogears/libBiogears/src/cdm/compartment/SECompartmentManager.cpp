@@ -43,7 +43,7 @@ namespace std {
   template class vector<biogears::SETissueCompartment*> ;
   template class map<string, biogears::SETissueCompartment*> ;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 SECompartmentManager::SECompartmentManager(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())
@@ -1224,4 +1224,4 @@ void SECompartmentManager::AddSubstance(SESubstance& s, CompartmentType& cmpt) c
     lsubQ->SetHemoglobins(*m_Hb, *m_HbO2, *m_HbCO2, *m_HbO2CO2, *m_HbCO);
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -17,7 +17,7 @@
 #include <fstream>
 #include <iostream>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //-----------------------------------------------------------------------------
 //!
 //! \brief
@@ -666,4 +666,4 @@ PDMod_Type SubstanceGenerator::set_PDModifier(PDMod_Type modifier, std::string v
   return modifier;
 }
 
-}
+CLOSE_BIOGEARS_NAMESPACE

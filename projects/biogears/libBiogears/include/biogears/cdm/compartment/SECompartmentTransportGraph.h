@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #define COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE typename GraphType, typename GraphVertexType, typename GraphEdgeType, typename CompartmentType, typename CompartmentLinkType
 #define COMPARTMENT_TRANSPORT_GRAPH_TYPES GraphType, GraphVertexType, GraphEdgeType, CompartmentType, CompartmentLinkType
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
@@ -55,4 +55,4 @@ protected:
   std::map<const GraphVertexType*, std::vector<GraphEdgeType*>*> m_SourceEdgeMap;
   std::map<const GraphVertexType*, std::vector<GraphEdgeType*>*> m_TargetEdgeMap;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

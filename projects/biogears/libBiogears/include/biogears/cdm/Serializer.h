@@ -32,7 +32,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(ObjectData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class  Serializer {
 public:
   BIOGEARS_API static void Destroy() { SAFE_DELETE(m_me); }
@@ -70,4 +70,4 @@ private:
   bool failed_;
   std::stringstream error_;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

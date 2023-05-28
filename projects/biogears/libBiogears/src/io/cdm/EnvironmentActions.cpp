@@ -9,7 +9,7 @@
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 #include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SEEnvironmentAction
   void EnvironmentActions::Marshall(const CDM::EnvironmentActionData& in, SEEnvironmentAction& out)
@@ -86,4 +86,4 @@ namespace io {
     ::biogears::io::Copy<SEThermalApplication, CDM::ThermalApplicationData>(in, out);
   }
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

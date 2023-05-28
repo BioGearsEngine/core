@@ -30,7 +30,7 @@ BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, si
 BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, vector<biogears::SEGasTransportEdge*>*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SECompartmentManager;
 namespace io {
   class Compartment;

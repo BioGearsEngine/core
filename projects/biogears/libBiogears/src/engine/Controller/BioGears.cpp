@@ -46,7 +46,7 @@ specific language governing permissions and limitations under the License.
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 BioGears::BioGears(const std::string& logFileName)
   : BioGears(new Logger(logFileName))
 {
@@ -5449,4 +5449,4 @@ Logger* BioGears::GetLogger() const
 {
   return m_Logger;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -3,7 +3,8 @@
 #include <algorithm>
 #include <string>
 
-namespace biogears {
+
+OPEN_BIOGEARS_NAMESPACE
 //-----------------------------------------------------------------------------
 Executor::Executor()
   : Executor("Undefined", EDriver::Undefined)
@@ -218,4 +219,4 @@ std::ostream& operator<<(std::ostream& ostr, const EPlotStyle& plot_style)
   return ostr;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

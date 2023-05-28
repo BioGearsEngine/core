@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 SEBurnWound::SEBurnWound()
   : SEPatientAction()
@@ -203,4 +203,4 @@ bool SEBurnWound::operator!=(const SEBurnWound& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -1,6 +1,6 @@
 #include <biogears/cdm/utils/NullLogger.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 NullLogger::NullLogger(const std::string& logFilename) : Logger("NullLogger") {}
 NullLogger::~NullLogger() {}
@@ -37,4 +37,4 @@ std::string NullLogger::FormatLogMessage(const std::string& origin, const std::s
 {
   return "";
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

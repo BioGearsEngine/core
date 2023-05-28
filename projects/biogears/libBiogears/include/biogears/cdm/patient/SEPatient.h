@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(PatientData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class SEEventHandler;
 class SENutrition;
@@ -49,13 +49,15 @@ class VolumePerTimeUnit;
 namespace io {
   class Patient;
 }
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
+ 
 namespace std {
 BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, bool>;
 BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, void (*)(bool)>;
 BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, double>;
 }
-namespace biogears {
+
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SEPatient : public Loggable {
   friend io::Patient;
 
@@ -316,4 +318,4 @@ protected:
   SEScalarVolume* m_TotalLungCapacity;
   SEScalarVolume* m_VitalCapacity;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

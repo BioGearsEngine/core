@@ -19,8 +19,9 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 #pragma once
 #include <string>
+#include <biogears/exports.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class CCompoundUnit;
 class CUnitDimension;
 
@@ -91,4 +92,4 @@ private:
   CUnitDimension* m_CUD;
   bool m_bTwentyLogRule;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

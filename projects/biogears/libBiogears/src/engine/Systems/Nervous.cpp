@@ -41,7 +41,7 @@ namespace BGE = mil::tatrc::physiology::biogears;
 #pragma warning(disable : 4275)
 
 // #define VERBOSE
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 auto Nervous::make_unique(BioGears& bg) -> std::unique_ptr<Nervous>
 {
   return std::unique_ptr<Nervous>(new Nervous(bg));
@@ -1496,6 +1496,4 @@ int Nervous::GlasgowEstimator(double cbf)
   else
     return 15;
 }
-
-}
-
+CLOSE_BIOGEARS_NAMESPACE

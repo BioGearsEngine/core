@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitCalculator.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   template class SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>;
 SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(Logger* logger)
   : SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>(
@@ -26,4 +26,4 @@ SEElectricalCircuitCalculator::SEElectricalCircuitCalculator(const ElectricCapac
 SEElectricalCircuitCalculator::~SEElectricalCircuitCalculator()
 {
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

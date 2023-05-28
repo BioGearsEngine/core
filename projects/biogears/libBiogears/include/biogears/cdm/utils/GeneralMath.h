@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/Logger.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class SEScalarOsmolality;
 class SEScalarOsmolarity;
@@ -58,4 +58,4 @@ public:
   static double HillInhibition(double x, double n, double h);
   static double VectorSum(std::vector<double>& vec);
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

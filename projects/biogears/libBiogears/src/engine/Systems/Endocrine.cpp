@@ -32,7 +32,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 auto Endocrine::make_unique(BioGears& bg) -> std::unique_ptr<Endocrine>
 {
   return std::unique_ptr<Endocrine>(new Endocrine(bg));
@@ -399,4 +399,4 @@ void Endocrine::OverrideControlLoop()
   }
   return;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

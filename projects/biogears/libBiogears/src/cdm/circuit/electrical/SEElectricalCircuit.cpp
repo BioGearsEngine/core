@@ -19,7 +19,7 @@ namespace std {
  template class map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
  template class map<const biogears::SEElectricalCircuitNode*, size_t>;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 template class SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
 
@@ -77,4 +77,4 @@ void SEElectricalCircuit::AddCircuit(SEElectricalCircuit& circuit)
     AddReferenceNode(*node);
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

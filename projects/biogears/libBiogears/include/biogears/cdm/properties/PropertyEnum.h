@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <ostream>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 enum class SESide {
   Invalid = -1,
   Left = 0,
@@ -99,4 +99,4 @@ inline std::ostream& operator<<(std::ostream& os, const SEErrorType& e)
   os << ToString(e);
   return os;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

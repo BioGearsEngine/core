@@ -17,7 +17,10 @@
 #include <string>
 #include <vector>
 
-namespace biogears {
+#include <biogears/exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
+
 enum class EDriver { Undefined,
                      BGEUnitTestDriver,
                      CDMUnitTestDriver,
@@ -105,6 +108,7 @@ std::ostream& operator<<(std::ostream&, const Executor&);
 std::ostream& operator<<(std::ostream&, const EDriver&);
 std::ostream& operator<<(std::ostream&, const EPlotter&);
 std::ostream& operator<<(std::ostream&, const EPlotStyle&);
-} //namespace biogears
+
+CLOSE_BIOGEARS_NAMESPACE//namespace biogears
 
 #endif //CMD_BIO_UTILS_EXECUTOR_H

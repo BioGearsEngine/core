@@ -19,38 +19,36 @@ specific language governing permissions and limitations under the License.
 
 int HowToBurnWoundPainStimulus();
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEBurnWound;
 class SEEscharotomy;
 class SESubstance;
 class SESubstanceBolus;
 class SESubstanceCompoundInfusion;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 class BurnThread {
 public:
   BurnThread(const std::string logFile, double tbsa);
   virtual ~BurnThread();
 
-  void AdministerKetamine(double &bolus);
+  void AdministerKetamine(double& bolus);
   void SetRingersInfusionRate(double& volume, double& rate);
   void SetAlbuminInfusionRate(double& volume, double& rate);
   void Status();
   void FluidLoading(double tbsa);
 
-  enum fluidType
-  {
+  enum fluidType {
     ringers, ///< Label vessels with radius size
     albumin ///< Label vessels by region (serviced by the anterior, middle, or posterior cerebral artery)
   };
 
   biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
 
-  protected:
+protected:
   void AdvanceTime();
   void AdvanceTimeFluids();
   void AdvanceTimeFluidsAlbumin();
-
 
   std::thread m_burnThread;
   std::mutex m_mutex;
@@ -67,7 +65,5 @@ public:
   double m_ivBagVolumeAlbumin_mL;
   double m_TotalVolumeAlbumin_mL = 0.0;
   double m_TotalVolume_mL = 0.0;
-  fluidType fluid = ringers; //set the type of fluid here
-
-
+  fluidType fluid = ringers; // set the type of fluid here
 };

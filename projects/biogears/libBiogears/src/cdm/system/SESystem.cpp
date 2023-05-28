@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/SESystem.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 SESystem::SESystem(Logger* logger)
   : Loggable(logger)
@@ -54,4 +54,4 @@ const SEScalar* SESystem::GetScalar(const char* name, std::vector<SESystem*>* sy
 {
   return GetScalar( std::string{ name }, systems);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

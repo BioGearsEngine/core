@@ -22,10 +22,11 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 
 #pragma once
+#include <biogears/exports.h>
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 
-namespace biogears{
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API CPScalar {
 public:
   // Default ctor
@@ -502,4 +503,4 @@ bool operator!=(const T& lhs, const CPScalar& rhs)
 {
   return CPScalar(lhs) != rhs;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

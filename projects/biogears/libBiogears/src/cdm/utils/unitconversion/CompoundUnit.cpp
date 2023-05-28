@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/UnitStringLexer.h>
 #include <iostream>
 //----------------------------------------------------------------------------
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 // Default ctor
 CCompoundUnit::CCompoundUnit()
   : m_CUD(nullptr)
@@ -773,4 +773,4 @@ bool CompatibleUnits(const CCompoundUnit& from, const CCompoundUnit& to)
     return true;
   return false;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

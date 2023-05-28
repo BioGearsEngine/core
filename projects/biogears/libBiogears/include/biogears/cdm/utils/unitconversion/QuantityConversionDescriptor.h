@@ -20,7 +20,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <string>
 
-namespace biogears {
+#include <biogears/exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
+
 class CCompoundUnit;
 
 class CQuantityConversionDescriptor {
@@ -41,4 +44,5 @@ private:
 
   // Mapping Unit Identifier
   CCompoundUnit* m_CUMappingUnit;
-};}
+};
+CLOSE_BIOGEARS_NAMESPACE

@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 CDM_BIND_DECL(TestErrorStatisticsData)
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SETestCase;
 class SETestSuite;
 class SEFunction;
@@ -96,4 +96,4 @@ protected:
   SEFunction* m_PercentToleranceVsNumErrorsHistogram;
   std::vector<std::string> m_Differences;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

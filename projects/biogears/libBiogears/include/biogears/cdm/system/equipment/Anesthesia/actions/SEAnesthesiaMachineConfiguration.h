@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEAnesthesiaMachine;
 class SESubstanceManager;
 
@@ -54,4 +54,4 @@ protected:
   std::string m_ConfigurationFile;
   SEAnesthesiaMachine* m_Configuration;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

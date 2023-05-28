@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
 class  AnesthesiaActions;
 }
@@ -36,4 +36,4 @@ protected:
 public:
   virtual void ToString(std::ostream& str) const = 0;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 constexpr char idAttentionLapses[] = "AttentionLapses";
 constexpr char idBiologicalDebt[] = "BiologicalDebt";
 constexpr char idComplianceScale[] = "ComplianceScale";
@@ -613,4 +613,4 @@ Tree<const char*> SENervousSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idSleepTime)
     .emplace_back(idWakeTime);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

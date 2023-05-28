@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(ScenarioData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class BIOGEARS_API SEScenarioCustomExec {
 public:
@@ -53,4 +53,4 @@ protected:
 
   std::stringstream m_ss;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

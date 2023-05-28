@@ -30,7 +30,7 @@ namespace std {
 template class map<CDM::enumAnesthesiaMachineEvent::value, bool>;
 template class map<CDM::enumAnesthesiaMachineEvent::value, double>;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 SEAnesthesiaMachine::SEAnesthesiaMachine(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
@@ -650,4 +650,4 @@ Tree<const char*> SEAnesthesiaMachine::GetPhysiologyRequestGraph() const
 }
 //-----------------------------------------------------------------------------
 
-}
+CLOSE_BIOGEARS_NAMESPACE

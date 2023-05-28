@@ -16,14 +16,14 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(ConditionData);
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstanceManager;
 namespace io {
   class Scenario;
 }
 }//namespace biogears
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SECondition : public Loggable {
   friend io::Scenario;
 
@@ -71,4 +71,4 @@ inline std::ostream& operator<<(std::ostream& out, const SECondition& a)
 
 namespace std {
 BG_EXT template class BIOGEARS_API vector<biogears::SECondition*>;
-}
+CLOSE_BIOGEARS_NAMESPACE

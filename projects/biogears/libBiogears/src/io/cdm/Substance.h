@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Substance.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class SESubstanceManager;
 class SESubstanceAerosolization;
@@ -112,4 +112,4 @@ namespace io {
   }
 
 } // Namespace IO
-} //Namespace Biogears
+  CLOSE_BIOGEARS_NAMESPACE // Namespace Biogears

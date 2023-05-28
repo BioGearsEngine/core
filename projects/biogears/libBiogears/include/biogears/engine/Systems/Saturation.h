@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 struct error_functor;
 class SESubstance;
 class SELiquidCompartment;
@@ -94,4 +94,4 @@ protected: // Stewart Model + Dash-Bassingthwaighte Model + Henderson-Hasselbach
   double m_StrongIonDifference_mmol_Per_L; // BloodChemistrySystemData mmol/L
   double m_Phosphate_mmol_Per_L; //BloodChemistryData mmol/L
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -42,7 +42,7 @@ governing permissions and limitations under the License.
 
 using namespace std::chrono_literals;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 std::string const Loggable::empty("");
 const char* Loggable::empty_cStr("");
 
@@ -973,4 +973,5 @@ void Loggable::Fatal(std::istream&& msg) const
 }
 
 Logger* Loggable::GetLogger() const { return m_Logger; }
-}
+
+CLOSE_BIOGEARS_NAMESPACE

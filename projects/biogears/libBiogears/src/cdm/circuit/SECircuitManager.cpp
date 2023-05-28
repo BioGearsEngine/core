@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 template class SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit>;
 template class SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit>;
@@ -254,4 +254,4 @@ void SECircuitManager::SetReadOnlyThermal(bool b)
   }
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

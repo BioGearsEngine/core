@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <map>
 #include <string>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 enum class State {
   Ready, // Timer has no data and is not running
@@ -32,12 +32,12 @@ struct Timer {
   std::chrono::high_resolution_clock::time_point end;
   State state = State::Ready;
 };
-} //namespace biogearsK
+CLOSE_BIOGEARS_NAMESPACE // namespace biogearsK
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<string, biogears::Timer>;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API TimingProfile : public Loggable {
 public:
   TimingProfile();
@@ -101,4 +101,4 @@ private:
 
   std::stringstream m_ss;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

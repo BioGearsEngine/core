@@ -50,7 +50,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/directories/config.h>
 #endif
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   : PhysiologyEngineConfiguration(substances.GetLogger())
@@ -1903,5 +1903,4 @@ double BioGearsConfiguration::GetVentilatoryOcclusionPressure(const PressureUnit
     return SEScalar::dNaN();
   return m_VentilatoryOcclusionPressure->GetValue(unit);
 }
-
-}
+CLOSE_BIOGEARS_NAMESPACE

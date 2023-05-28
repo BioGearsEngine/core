@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class Logger;
 class SEScalarTime;
@@ -64,9 +64,10 @@ protected:
   std::string m_origin;
   Logger* m_Logger;
 };
-}
 
-namespace biogears {
+CLOSE_BIOGEARS_NAMESPACE
+
+OPEN_BIOGEARS_NAMESPACE
 #pragma warning(push)
 #pragma warning(disable : 4100)
 class BIOGEARS_API LoggerForward {
@@ -79,9 +80,11 @@ public:
 };
 
 #pragma warning(pop)
-}
 
-namespace biogears {
+CLOSE_BIOGEARS_NAMESPACE
+
+OPEN_BIOGEARS_NAMESPACE
+
 class BIOGEARS_API Logger {
   friend Loggable;
 
@@ -184,4 +187,5 @@ inline Logger::LogLevel FromString(std::string str)
     : ("INFO" == str)      ? Logger::eInfo
                            : Logger::eAll;
 }
-}
+
+CLOSE_BIOGEARS_NAMESPACE

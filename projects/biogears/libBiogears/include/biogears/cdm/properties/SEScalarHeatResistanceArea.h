@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarQuantity.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API HeatResistanceAreaUnit : public CCompoundUnit {
 public:
   HeatResistanceAreaUnit(const char* u);
@@ -51,4 +51,4 @@ public:
   bool operator==(const SEScalarHeatResistanceArea&) const;
   bool operator!=(const SEScalarHeatResistanceArea&) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

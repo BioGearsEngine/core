@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEAnesthesiaMachineAction::SEAnesthesiaMachineAction()
   : SEAction()
 {
@@ -50,4 +50,4 @@ void SEAnesthesiaMachineAction::Unload(CDM::AnesthesiaMachineActionData& data) c
 {
   SEAction::Unload(data);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEInhalerConfiguration::SEInhalerConfiguration(SESubstanceManager& substances)
   : SEInhalerAction()
   , m_Substances(substances)
@@ -143,4 +143,4 @@ void SEInhalerConfiguration::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

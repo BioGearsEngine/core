@@ -44,7 +44,7 @@ specific language governing permissions and limitations under the License.
 
 #include <memory>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEPatientAssessment;
 class BioGearsScenarioExec;
 
@@ -82,9 +82,9 @@ class BioGearsCircuits;
 class BioGearsCompartments;
 class BioGearsConfiguration;
 class SEScalarTime;
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 /**
 * @brief Manages and controls execution of all data/systems in %BioGears
 */
@@ -246,4 +246,4 @@ protected:
 
   std::unique_ptr<Logger> m_managedLogger;
 };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears

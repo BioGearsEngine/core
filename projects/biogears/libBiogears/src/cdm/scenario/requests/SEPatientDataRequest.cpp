@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SEPatientDataRequest.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEPatientDataRequest::SEPatientDataRequest(const SEDecimalFormat* dfault)
   : SEDataRequest(dfault)
 {
@@ -52,4 +52,4 @@ size_t SEPatientDataRequest::HashCode() const
   }
   return m_Hash;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

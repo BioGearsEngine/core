@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 
 //#define VERBOSE
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template <typename _Scalar, int NX = Eigen::Dynamic, int NY = Eigen::Dynamic>
 struct Functor {
   typedef _Scalar Scalar;
@@ -1078,4 +1078,4 @@ bool SaturationCalculator::DistributeHemoglobinBySaturation()
 
   return true;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

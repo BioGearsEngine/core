@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/config.h>
 #endif
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 bool PhysiologyEngineDynamicStabilization::StabilizeRestingState(PhysiologyEngine& engine)
 {
   Info("Converging to a steady state");
@@ -886,4 +886,4 @@ void PropertyConvergence::SetOptional(bool b)
   m_Optional = b;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

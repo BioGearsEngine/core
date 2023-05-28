@@ -17,13 +17,13 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(ElectroCardioGramWaveformInterpolatorData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEElectroCardioGramInterpolatorWaveform;
 class SEScalarElectricPotential;
 namespace io {
   class ElectroCardioGram;
 }
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>;
@@ -31,7 +31,7 @@ BG_EXT template class BIOGEARS_API map<CDM::ElectroCardioGramWaveformLeadNumber,
 BG_EXT template class BIOGEARS_API map<CDM::ElectroCardioGramWaveformLeadNumber, map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEElectroCardioGramInterpolator : public Loggable {
   friend io::ElectroCardioGram;
 
@@ -70,4 +70,4 @@ protected:
   std::map<CDM::ElectroCardioGramWaveformLeadNumber, SEScalarElectricPotential*> m_Leads;
   std::map<CDM::ElectroCardioGramWaveformLeadNumber, std::map<CDM::enumHeartRhythm, SEElectroCardioGramInterpolatorWaveform*>> m_Waveforms;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

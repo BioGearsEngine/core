@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 BioGearsScenarioExec::BioGearsScenarioExec(PhysiologyEngine& engine)
   : SEScenarioExec(engine)
 {
@@ -87,4 +87,4 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
   }
   return false;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

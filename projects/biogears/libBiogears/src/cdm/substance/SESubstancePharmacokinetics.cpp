@@ -17,7 +17,7 @@ namespace std {
 template class map<string, biogears::SESubstanceTissuePharmacokinetics*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 SESubstancePharmacokinetics::SESubstancePharmacokinetics(Logger* logger)
   : Loggable(logger)
@@ -190,4 +190,4 @@ bool SESubstancePharmacokinetics::operator!=(const SESubstancePharmacokinetics& 
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

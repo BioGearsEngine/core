@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <string>
 #include <vector>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 // Not sure why I have such a facination with enums, but..
 // This is a bit of a pet project, I have been curious to see how one can make
 // and enum that both, has string mappings and is iterable
@@ -107,4 +107,4 @@ public:
 //}
 //NOTE: You can also templitize this class with the enum type if you want, but how to you set the size?
 //I will figure that out when/if I need it
-}
+CLOSE_BIOGEARS_NAMESPACE

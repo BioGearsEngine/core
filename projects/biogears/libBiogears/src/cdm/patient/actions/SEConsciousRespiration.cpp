@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEConsciousRespiration::SEConsciousRespiration()
   : SEPatientAction()
 {
@@ -191,4 +191,4 @@ bool SEConsciousRespiration::operator!=( const SEConsciousRespiration& rhs) cons
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

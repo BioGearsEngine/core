@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SENervousSystem;
 class SEScalar;
 class SEScalarTime;
@@ -54,4 +54,4 @@ protected:
   SEScalar* m_AttentionLapses;
   SEScalarTime* m_ReactionTime;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

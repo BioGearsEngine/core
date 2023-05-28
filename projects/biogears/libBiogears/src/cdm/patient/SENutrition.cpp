@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/directories/nutrition.h>
 #endif
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SENutrition::SENutrition(Logger* logger)
   : Loggable(logger)
 {
@@ -376,4 +376,4 @@ bool SENutrition::operator!=(const SENutrition& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

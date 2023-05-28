@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 	SEInitialEnvironment::SEInitialEnvironment(SESubstanceManager& substances)
 		: SEEnvironmentCondition()
 		, m_Substances(substances)
@@ -166,4 +166,4 @@ namespace biogears {
 		str << std::flush;
 	}
   //-----------------------------------------------------------------------------
-}
+  CLOSE_BIOGEARS_NAMESPACE

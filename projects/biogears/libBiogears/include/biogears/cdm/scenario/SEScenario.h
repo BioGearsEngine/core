@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class SEDecimalFormat;
 class SEScenarioInitialParameters;
@@ -106,4 +106,4 @@ protected:
   SEDataRequestManager m_DataRequestMgr;
   std::vector<SEAction*> m_Actions;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

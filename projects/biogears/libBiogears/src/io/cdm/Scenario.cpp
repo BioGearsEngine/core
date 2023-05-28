@@ -36,7 +36,7 @@
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   void Scenario::Marshall(const CDM::ConditionData& in, SECondition& out)
   {
@@ -564,4 +564,4 @@ namespace io {
     throw CommonDataModelException("No Acceptable DataRequest Conversion Found");
   }
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

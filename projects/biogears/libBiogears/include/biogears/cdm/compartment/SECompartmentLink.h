@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(CompartmentLinkData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SECircuitManager;
 class SEScalar;
 namespace io {
@@ -49,4 +49,4 @@ public:
 protected:
   std::string m_Name;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

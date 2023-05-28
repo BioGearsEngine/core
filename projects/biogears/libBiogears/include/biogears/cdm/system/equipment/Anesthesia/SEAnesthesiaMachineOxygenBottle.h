@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(AnesthesiaMachineOxygenBottleData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEAnesthesiaMachine;
 class SESubstanceManager;
 class SEScalar;
@@ -59,4 +59,4 @@ public:
 protected:
   SEScalarVolume* m_Volume;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

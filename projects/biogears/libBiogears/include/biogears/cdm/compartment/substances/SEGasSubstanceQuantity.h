@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/substances/SESubstanceQuantity.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEGasCompartment;
 namespace io {
   class SubstanceQuantity;
@@ -71,4 +71,4 @@ protected:
   SEGasCompartment& m_Compartment;
   std::vector<SEGasSubstanceQuantity*> m_Children;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

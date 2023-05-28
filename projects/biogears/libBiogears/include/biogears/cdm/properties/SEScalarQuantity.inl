@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //-------------------------------------------------------------------------------
 template <typename Unit>
 const Unit* SEScalarQuantity<Unit>::GetUnit() const
@@ -460,4 +460,4 @@ auto SEScalarQuantity<Unit>::operator*=(const SEScalar& rhs) -> SEScalarQuantity
   return this->Multiply(rhs);
 }
 
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears

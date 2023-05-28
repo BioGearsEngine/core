@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SESubstanceOralDose::SESubstanceOralDose(const SESubstance& substance)
   : SESubstanceAdministration()
   , m_Substance(substance)
@@ -268,4 +268,4 @@ bool SETransmucosalState::SetSublingualConcentrations(std::vector<double>& slMas
   return true;
 }
 
-};
+CLOSE_BIOGEARS_NAMESPACE

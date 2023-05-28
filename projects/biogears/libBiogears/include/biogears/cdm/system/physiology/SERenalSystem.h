@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalarPressure;
 class PressureUnit;
 class SEScalarFraction;
@@ -352,4 +352,4 @@ protected:
   SEScalarVolume* m_UrineVolume;
   SEScalarMassPerVolume* m_UrineUreaNitrogenConcentration;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

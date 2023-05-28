@@ -29,7 +29,7 @@
     }
   }
 #endif
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 std::string ConvertTemperatureUnit(std::string unit);
 
 
@@ -313,4 +313,4 @@ bool EnvironmentGenerator::process_ambientaerosoldata(CSV_RowItr itr)
 
 
 
-} //Namespace
+CLOSE_BIOGEARS_NAMESPACE // Namespace

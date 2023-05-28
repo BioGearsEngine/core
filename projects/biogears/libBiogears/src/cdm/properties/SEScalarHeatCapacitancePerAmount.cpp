@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerAmount.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const HeatCapacitancePerAmountUnit HeatCapacitancePerAmountUnit::J_Per_K_mol("J/K mol");
 
 template class SEScalarQuantity<HeatCapacitancePerAmountUnit>;
@@ -94,4 +94,4 @@ bool SEScalarHeatCapacitancePerAmount::operator!=(const SEScalarHeatCapacitanceP
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -1,6 +1,6 @@
 #include <biogears/cdm/CommonDataModel.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 CommonDataModelException::CommonDataModelException()
   : std::runtime_error("")
 {
@@ -20,4 +20,4 @@ CommonDataModelException::~CommonDataModelException()
 {
 }
 
-}
+CLOSE_BIOGEARS_NAMESPACE

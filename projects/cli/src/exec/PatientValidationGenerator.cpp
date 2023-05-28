@@ -22,7 +22,7 @@
 #include <string>
 
 //
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 int runPatientScenario(const std::string patient, std::string&& XMLString);
 
 //-------------------------------------------------------------------------------
@@ -121,4 +121,4 @@ void PatientValidationGenerator::join()
 {
   _pool.join();
 }
-} // namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears

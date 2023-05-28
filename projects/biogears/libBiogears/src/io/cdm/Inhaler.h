@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Inhaler.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEInhaler;
 
 #define CDM_INHALER_UNMARSHAL_HELPER(xsd, func)                                      \
@@ -57,4 +57,4 @@ namespace io {
     option_out.set(*item);
   }
 } // Namespace IO
-} //Namespace Biogears
+  CLOSE_BIOGEARS_NAMESPACE // Namespace Biogears

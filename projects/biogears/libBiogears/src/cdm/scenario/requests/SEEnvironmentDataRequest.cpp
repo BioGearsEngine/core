@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Environment.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEEnvironmentDataRequest::SEEnvironmentDataRequest(const SEDecimalFormat* dfault)
   : SEDataRequest(dfault)
 {
@@ -54,4 +54,4 @@ size_t SEEnvironmentDataRequest::HashCode() const
   }
   return m_Hash;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

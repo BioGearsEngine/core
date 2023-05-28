@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEThermalCompartmentLink::SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const char* name)
   : SEThermalCompartmentLink(src, tgt, std::string{ name })
 {
@@ -118,9 +118,9 @@ double SEThermalCompartmentLink::GetHeatTransferRate(const PowerUnit& unit) cons
   return m_HeatTransferRate->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-}//namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEThermalCompartmentGraph::SEThermalCompartmentGraph(const char* name, Logger* logger)
   : SECompartmentGraph(std::string{ name }, logger)
 {
@@ -133,4 +133,4 @@ SEThermalCompartmentGraph::~SEThermalCompartmentGraph()
 {
 }
 //-----------------------------------------------------------------------------
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears

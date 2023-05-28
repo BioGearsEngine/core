@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class BIOGEARS_API SESleep : public SEPatientAction {
 public:

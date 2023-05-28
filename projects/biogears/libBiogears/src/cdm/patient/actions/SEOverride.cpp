@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEOverride::SEOverride()
   : SEPatientAction()
 {
@@ -2702,4 +2702,4 @@ bool SEOverride::operator!=(const SEOverride& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

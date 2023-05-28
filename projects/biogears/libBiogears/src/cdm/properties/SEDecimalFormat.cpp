@@ -21,7 +21,7 @@ namespace std {
 template class map<string, biogears::SEDecimalFormat>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEDecimalFormat::SEDecimalFormat(const SEDecimalFormat* dfault)
 {
   Reset();
@@ -128,4 +128,4 @@ bool SEDecimalFormat::operator!=(const SEDecimalFormat& rhs) const
   return !(*this == rhs);
 }
 
-}
+CLOSE_BIOGEARS_NAMESPACE

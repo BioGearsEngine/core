@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(SubstanceData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalarAmountPerVolume;
 class AmountPerVolumeUnit;
 class SEScalarMass;
@@ -224,7 +224,7 @@ protected:
   SESubstancePharmacokinetics* m_PK;
   SESubstancePharmacodynamics* m_PD;
 };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API vector<biogears::SESubstance*>;

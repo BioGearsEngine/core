@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 	SEEnvironmentCondition::SEEnvironmentCondition()
 		: SECondition()
 	{
@@ -48,4 +48,4 @@ namespace biogears {
 	{
 		SECondition::Unload(data);
 	}
-}
+  CLOSE_BIOGEARS_NAMESPACE

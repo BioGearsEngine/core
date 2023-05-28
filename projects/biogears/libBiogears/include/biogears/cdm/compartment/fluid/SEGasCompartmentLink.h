@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <map>
 #include <vector>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEGasCompartment;
 
 class SECompartmentManager;

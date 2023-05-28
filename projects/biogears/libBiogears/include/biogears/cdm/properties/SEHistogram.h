@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(HistogramData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class Property;
 }
@@ -56,4 +56,4 @@ protected:
   std::vector<double> m_Dependent;
   std::vector<double> m_Independent;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

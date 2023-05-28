@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEGenericScalar.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //-------------------------------------------------------------------------------
 SEGenericScalar::SEGenericScalar(Logger* logger)
   : Loggable(logger)
@@ -129,4 +129,4 @@ std::ostream& operator<<(std::ostream& os, SEGenericScalar const& v)
   return os;
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

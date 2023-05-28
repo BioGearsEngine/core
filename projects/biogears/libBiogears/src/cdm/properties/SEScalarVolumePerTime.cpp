@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const VolumePerTimeUnit VolumePerTimeUnit::L_Per_s("L/s");
 const VolumePerTimeUnit VolumePerTimeUnit::mL_Per_s("mL/s");
 const VolumePerTimeUnit VolumePerTimeUnit::mL_Per_day("mL/day");
@@ -130,4 +130,4 @@ bool SEScalarVolumePerTime::operator!=(const SEScalarVolumePerTime& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

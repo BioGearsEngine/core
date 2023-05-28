@@ -73,7 +73,7 @@ namespace std {
 template class vector<biogears::SEAction*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEAction::SEAction()
   : Loggable()
 {
@@ -586,4 +586,4 @@ const char* SEAction::ToString() const
   return m_StringRepresnetation.c_str();
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

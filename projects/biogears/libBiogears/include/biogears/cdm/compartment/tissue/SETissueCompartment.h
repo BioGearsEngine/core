@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <map>
 #include <string>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalar0To1;
 class SESubstance;
 class SESubstanceManager;
@@ -122,7 +122,7 @@ protected:
   std::vector<SETissueCompartment*> m_Children;
   std::vector<SETissueCompartment*> m_Leaves;
 };
-}                                     //namespac biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
   BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*> ;

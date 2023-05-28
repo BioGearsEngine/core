@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(SubstancePhysicochemicalData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   class SEScalar;
   class SEScalarFraction;
 namespace io {
@@ -94,4 +94,4 @@ protected:
   SEScalar* m_HydrogenBondCount;
   SEScalar* m_PolarSurfaceArea;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

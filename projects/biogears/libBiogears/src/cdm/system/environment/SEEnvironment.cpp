@@ -33,7 +33,7 @@ specific language governing permissions and limitations under the License.
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/environments.h>
 #endif
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEEnvironment::SEEnvironment(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
   , m_Substances(substances)
@@ -510,4 +510,4 @@ Tree<const char*> SEEnvironment::GetPhysiologyRequestGraph() const
 {
   return { "" };
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

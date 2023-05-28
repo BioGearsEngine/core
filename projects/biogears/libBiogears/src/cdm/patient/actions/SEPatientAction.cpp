@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEPatientAction::SEPatientAction()
   : SEAction()
 {
@@ -43,4 +43,4 @@ void SEPatientAction::Unload(CDM::PatientActionData& data) const
 {
   SEAction::Unload(data);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

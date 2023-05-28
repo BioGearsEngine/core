@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Substance.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalar;
 namespace io {
   class Substance;
@@ -53,4 +53,4 @@ protected:
   std::string m_Name;
   SEScalar* m_PartitionCoefficient;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

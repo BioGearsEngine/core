@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMass.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const MassUnit MassUnit::g("g");
 const MassUnit MassUnit::ug("ug");
 const MassUnit MassUnit::mg("mg");
@@ -114,4 +114,4 @@ bool SEScalarMass::operator!=(const SEScalarMass& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

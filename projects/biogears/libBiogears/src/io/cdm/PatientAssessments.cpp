@@ -16,7 +16,7 @@
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SEPatientAssessment
   void PatientAssessments::Marshall(const CDM::PatientAssessmentData& in, SEPatientAssessment& out)
@@ -334,4 +334,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

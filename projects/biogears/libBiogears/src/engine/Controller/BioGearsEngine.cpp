@@ -49,7 +49,7 @@ specific language governing permissions and limitations under the License.
 
 namespace BGE = mil::tatrc::physiology::biogears;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //-------------------------------------------------------------------------------
 BioGearsEngine::BioGearsEngine(Logger* logger)
   : BioGears(logger)
@@ -1112,4 +1112,4 @@ void destroy_biogears_engine(BioGearsEngine** engine){
     (*engine) = nullptr;
   }
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

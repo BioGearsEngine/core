@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitCalculator.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template class SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit>;
 SEFluidCircuitCalculator::SEFluidCircuitCalculator(Logger* logger)
   : SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit>(
@@ -26,4 +26,4 @@ SEFluidCircuitCalculator::SEFluidCircuitCalculator(const FlowComplianceUnit& c, 
 SEFluidCircuitCalculator::~SEFluidCircuitCalculator()
 {
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

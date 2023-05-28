@@ -28,7 +28,7 @@ template class map<CDM::enumPatientEvent::value, bool>;
 template class map<CDM::enumPatientEvent::value, void (*)(bool)>;
 template class map<CDM::enumPatientEvent::value, double>;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEPatient::SEPatient(Logger* logger)
   : Loggable(logger)
 {
@@ -1767,4 +1767,4 @@ double SEPatient::GetVitalCapacity(const VolumeUnit& unit) const
   return m_VitalCapacity->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

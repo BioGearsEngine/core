@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFlowElastance.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const FlowElastanceUnit FlowElastanceUnit::cmH2O_Per_L("cmH2O/L");
 const FlowElastanceUnit FlowElastanceUnit::mmHg_Per_mL("mmHg/mL");
 const FlowElastanceUnit FlowElastanceUnit::Pa_Per_m3("Pa/m^3");
@@ -105,4 +105,4 @@ bool SEScalarFlowElastance::operator!=(const SEScalarFlowElastance& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

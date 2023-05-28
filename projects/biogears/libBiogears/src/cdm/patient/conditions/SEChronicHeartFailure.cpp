@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/conditions/SEChronicHeartFailure.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEChronicHeartFailure::SEChronicHeartFailure()
   : SEPatientCondition()
 {
@@ -49,4 +49,4 @@ void SEChronicHeartFailure::Unload(CDM::ChronicHeartFailureData& data) const
 {
   SEPatientCondition::Unload(data);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

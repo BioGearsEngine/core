@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/compartment/SECompartmentGraph.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template <COMPARTMENT_GRAPH_TEMPLATE>
 SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::SECompartmentGraph(const char* name, Logger* logger)
   : SECompartmentGraph(std::string{ name }, logger)
@@ -205,4 +205,4 @@ void SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::RemoveLink(const std::string& 
   }
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

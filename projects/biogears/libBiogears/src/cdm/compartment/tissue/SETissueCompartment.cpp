@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SETissueCompartment::SETissueCompartment(const char* name, Logger* logger)
   : SETissueCompartment(std::string{ name }, logger)
 {
@@ -348,4 +348,4 @@ double SETissueCompartment::GetTotalMass(const MassUnit& unit) const
   return m_TotalMass->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

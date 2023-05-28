@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolumePerPressure.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const VolumePerPressureUnit VolumePerPressureUnit::L_Per_Pa("L/Pa");
 const VolumePerPressureUnit VolumePerPressureUnit::L_Per_cmH2O("L/cmH2O");
 
@@ -102,4 +102,4 @@ bool SEScalarVolumePerPressure::operator!=(const SEScalarVolumePerPressure& obj)
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

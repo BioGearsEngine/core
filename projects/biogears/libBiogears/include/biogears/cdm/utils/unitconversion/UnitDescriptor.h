@@ -18,7 +18,10 @@ specific language governing permissions and limitations under the License.
 //----------------------------------------------------------------------------
 #pragma once
 #include <string>
-namespace biogears {
+
+#include <biogears/exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
 class CUnitDescriptor {
 public:
   // Defines what kind of constraint we impose on prefixes for this unit.
@@ -72,4 +75,5 @@ private:
   PrefixModeType m_uiPrefixMode;
   std::string m_strPrefixSet;
   bool m_bDBFlag;
-};}
+};
+CLOSE_BIOGEARS_NAMESPACE

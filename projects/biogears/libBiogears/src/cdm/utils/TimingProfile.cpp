@@ -21,7 +21,7 @@ namespace std {
 template class map<string, biogears::Timer>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 TimingProfile::TimingProfile()
 {
 }
@@ -110,4 +110,4 @@ void TimingProfile::Print(const std::string& label)
     std::cout << "TimingProfile:Elapsed:" << label << ":" << GetElapsedTime_s(label) << "s" << std::endl;
   }
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 CSVToXMLConvertor::CSVToXMLConvertor(std::string path, std::string filename)
   : _path(path)
@@ -122,4 +122,4 @@ bool CSVToXMLConvertor::parse_line(std::string& line, std::pair<std::string, std
   }
   return rValue;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

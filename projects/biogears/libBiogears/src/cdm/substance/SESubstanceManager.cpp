@@ -30,7 +30,7 @@ template class map<biogears::SESubstance*, const CDM::SubstanceData*>;
 template class map<biogears::SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SESubstanceManager::SESubstanceManager(Logger* logger)
   : Loggable(logger)
 {
@@ -378,4 +378,4 @@ bool SESubstanceManager::LoadSubstanceDirectory()
   return succeeded;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(LiquidCompartmentGraphData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SECompartmentManager;
 namespace io {
   class Compartment;
@@ -38,7 +38,7 @@ BG_EXT template class BIOGEARS_API map<const biogears::SELiquidTransportVertex*,
 BG_EXT template class BIOGEARS_API map<const biogears::SELiquidTransportVertex*, vector<biogears::SELiquidTransportEdge*>*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SELiquidCompartmentGraph : public SECompartmentTransportGraph<SELiquidTransportGraph, SELiquidTransportVertex, SELiquidTransportEdge, SELiquidCompartment, SELiquidCompartmentLink> {
   friend class SECompartmentManager;
   friend io::Compartment;

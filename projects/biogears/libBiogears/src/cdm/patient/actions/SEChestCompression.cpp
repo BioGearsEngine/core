@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEChestCompression::SEChestCompression()
   : SEPatientAction()
 {
@@ -73,4 +73,4 @@ bool SEChestCompression::operator!=( const SEChestCompression& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

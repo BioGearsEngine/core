@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <string>
 #include <vector>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class Logger;
 
@@ -61,4 +61,4 @@ protected:
   std::vector<CompartmentType*> m_Compartments;
   std::vector<CompartmentLinkType*> m_CompartmentLinks;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

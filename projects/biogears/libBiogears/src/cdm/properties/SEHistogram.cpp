@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar.h> //Utils
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 static std::stringstream err;
 
 SEHistogram::SEHistogram()
@@ -140,4 +140,4 @@ bool SEHistogram::operator!=(const SEHistogram& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

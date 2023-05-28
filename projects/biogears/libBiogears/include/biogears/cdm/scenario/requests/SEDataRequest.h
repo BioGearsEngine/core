@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstanceManager;
 class SEDecimalFormat;
 class SEDataRequestManager;
@@ -79,4 +79,4 @@ protected:
   mutable size_t m_Hash;
   const CCompoundUnit* m_Unit;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

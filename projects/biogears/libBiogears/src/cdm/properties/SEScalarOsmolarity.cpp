@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarOsmolarity.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const OsmolarityUnit OsmolarityUnit::Osm_Per_L("Osm/L");
 const OsmolarityUnit OsmolarityUnit::mOsm_Per_L("mOsm/L");
 
@@ -98,4 +98,4 @@ bool SEScalarOsmolarity::operator!=(const SEScalarOsmolarity& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

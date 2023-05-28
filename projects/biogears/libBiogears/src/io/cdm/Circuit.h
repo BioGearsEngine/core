@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitPath.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template <CIRCUIT_TEMPLATE>
 class SECircuit;
 template <CIRCUIT_NODE_TEMPLATE>
@@ -209,4 +209,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 } // Namespace IO
-} //Namespace Biogears
+  CLOSE_BIOGEARS_NAMESPACE // Namespace Biogears

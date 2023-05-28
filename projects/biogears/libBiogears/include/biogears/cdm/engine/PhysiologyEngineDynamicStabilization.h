@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/schema/biogears/BioGears.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class TimeUnit;
 class PhysiologyEngineDynamicStabilizationCriteria;
 namespace io {
@@ -198,4 +198,4 @@ protected:
   PhysiologyEngineDynamicStabilizationCriteria m_MergedConditions;
   std::vector<PhysiologyEngineDynamicStabilizationCriteria*> m_ActiveConditions;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

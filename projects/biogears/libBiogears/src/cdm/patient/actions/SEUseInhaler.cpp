@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEUseInhaler::SEUseInhaler()
   : SEConsciousRespirationCommand()
 {
@@ -76,4 +76,4 @@ bool SEUseInhaler::operator!=( const SEUseInhaler& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

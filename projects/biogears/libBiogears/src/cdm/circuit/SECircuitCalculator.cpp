@@ -12,11 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/SECircuitCalculator.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 // Note this must match the enum values
 template <>
 char const* enumStrings<EigenCircuitSolver>::values[] = { "Direct", "PartialPivLu", "FullPivLu", "JacobiSvd", "HouseholderQr", "Ldlt", "Llt", "SparseLU", "SparseQR", "BiCGSTAB", "ConjugateGradient" };
 char const* EigenCircuitSolver::Value(size_t idx)
 {
   return enumStrings<EigenCircuitSolver>::values[idx];
-}}
+}
+CLOSE_BIOGEARS_NAMESPACE

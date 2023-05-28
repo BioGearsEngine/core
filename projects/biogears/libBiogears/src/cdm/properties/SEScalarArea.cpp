@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarArea.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const AreaUnit AreaUnit::cm2("cm^2");
 const AreaUnit AreaUnit::m2("m^2");
 
@@ -99,4 +99,4 @@ bool SEScalarArea::operator!=(const SEScalarArea& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(ScalarData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class Property;
 }
@@ -126,5 +126,5 @@ inline void IncrementOverride(SEScalarQuantity<Unit>& s, double value, const Uni
   s.SetReadOnly(b);
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE
 #include <biogears/cdm/properties/SEScalarQuantity.inl>

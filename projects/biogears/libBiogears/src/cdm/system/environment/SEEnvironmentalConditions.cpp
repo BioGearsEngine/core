@@ -27,7 +27,7 @@ specific language governing permissions and limitations under the License.
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/environments.h>
 #endif
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEEnvironmentalConditions::SEEnvironmentalConditions(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
@@ -645,4 +645,4 @@ void SEEnvironmentalConditions::RemoveAmbientAerosols()
   m_cAmbientAerosols.clear();
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

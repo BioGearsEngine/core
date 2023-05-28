@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/scenario/requests/SECompartmentSubstanceDataRequest.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
@@ -34,4 +34,4 @@ public:
 protected:
   virtual void Unload(CDM::LiquidCompartmentDataRequestData& data) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

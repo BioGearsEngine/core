@@ -18,7 +18,7 @@
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SEElectricalCircuit
   void Circuit::Marshall(const CDM::ElectricalCircuitData& in, SEElectricalCircuit& out)
@@ -496,4 +496,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

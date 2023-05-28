@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SETissueCompartment;
 class SEFluidCircuitPath;
 class SETissueCompartment;
@@ -28,7 +28,7 @@ class SESubstanceBolusState;
 class SENasalState;
 class SETransmucosalState;
 class SELiquidCompartment;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceBolusState*>;
@@ -36,7 +36,7 @@ BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::S
 BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SETransmucosalState*>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BioGears;
 /**
  * @brief
@@ -120,4 +120,4 @@ protected:
   SESubstance* m_Pralidoxime;
   SESubstance* m_Atropine;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

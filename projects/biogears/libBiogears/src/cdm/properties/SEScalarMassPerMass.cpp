@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMassPerMass.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const MassPerMassUnit MassPerMassUnit::ug_Per_kg("ug/kg");
 const MassPerMassUnit MassPerMassUnit::mg_Per_g("mg/g");
 
@@ -99,4 +99,4 @@ bool SEScalarMassPerMass::operator!=(const SEScalarMassPerMass& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

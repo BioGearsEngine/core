@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/TestReport.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SETestReport::SETestReport(Logger* logger)
   : Loggable(logger)
 {
@@ -97,4 +97,4 @@ const std::vector<SETestSuite*>& SETestReport::GetTestSuites() const
 {
   return m_testSuite;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

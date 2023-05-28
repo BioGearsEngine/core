@@ -22,7 +22,7 @@ CDM_BIND_DECL(CircuitManagerData);
 #define CIRCUIT_LEDGER_TEMPLATE typename NodeType, typename PathType, typename CircuitType
 #define CIRCUIT_LEDGER_TYPES NodeType, PathType, CircuitType
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class Circuit;
 }
@@ -494,4 +494,4 @@ const CircuitType* SECircuitManager::GetCircuit(const std::string& name, const S
 }
 //-------------------------------------------------------------------------------
 
-}
+CLOSE_BIOGEARS_NAMESPACE

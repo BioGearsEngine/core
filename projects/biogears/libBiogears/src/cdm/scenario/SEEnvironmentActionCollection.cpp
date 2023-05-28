@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/schema/cdm/EnvironmentActions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEEnvironmentActionCollection::SEEnvironmentActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
@@ -114,4 +114,4 @@ void SEEnvironmentActionCollection::RemoveThermalApplication()
 {
   SAFE_DELETE(m_ThermalApplication);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

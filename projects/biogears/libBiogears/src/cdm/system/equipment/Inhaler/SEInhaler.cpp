@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 #include <biogears/io/io-manager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEInhaler::SEInhaler(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
   , m_Substances(substances)
@@ -270,4 +270,4 @@ Tree<const char*> SEInhaler::GetPhysiologyRequestGraph() const
 {
   return { "" };
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/exports.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
  BIOGEARS_API std::string project_name();
  BIOGEARS_API char const* project_name_str();
@@ -52,4 +52,4 @@ namespace biogears {
 
  BIOGEARS_API std::string biogears_original_install_dir();
  BIOGEARS_API const char* biogears_original_install_dir_str();
-}
+ CLOSE_BIOGEARS_NAMESPACE

@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SELiquidCompartmentDataRequest::SELiquidCompartmentDataRequest(const SEDecimalFormat* dfault)
   : SECompartmentSubstanceDataRequest(dfault)
 {
@@ -44,4 +44,4 @@ void SELiquidCompartmentDataRequest::Unload(CDM::LiquidCompartmentDataRequestDat
   SECompartmentSubstanceDataRequest::Unload(data);
 }
 
-}
+CLOSE_BIOGEARS_NAMESPACE

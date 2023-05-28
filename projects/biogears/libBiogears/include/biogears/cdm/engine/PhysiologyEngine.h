@@ -18,7 +18,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/EngineState.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
+
 class SEEventHandler;
 class SEPatient;
 class SEPatientAssessment;
@@ -362,4 +363,4 @@ public:
   //!-------------------------------------------------------------------------------------------------
   virtual void SetTrackStabilizationFlag(bool flag) = 0;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

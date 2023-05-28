@@ -9,8 +9,8 @@
 #ifdef ANDROID
 #include<errno.h>
 #endif
-namespace biogears {
 
+OPEN_BIOGEARS_NAMESPACE
 
 //-----------------------------------------------------------------------------
 
@@ -178,4 +178,5 @@ std::string biogears_original_install_dir(){
 const char* biogears_original_install_dir_str(){
   return _CMAKE_INSTALL_PREFIX_;
 }
-}
+
+CLOSE_BIOGEARS_NAMESPACE

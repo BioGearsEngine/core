@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEHemorrhage::SEHemorrhage()
   : SEPatientAction()
   , m_InitialRate(new SEScalarVolumePerTime())
@@ -254,4 +254,4 @@ bool SEHemorrhage::operator!=(const SEHemorrhage& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

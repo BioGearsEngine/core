@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEScalar0To1;
 namespace io {
   class PatientActions;

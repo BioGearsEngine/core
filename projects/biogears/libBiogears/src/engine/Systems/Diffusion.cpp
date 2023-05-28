@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 auto DiffusionCalculator::make_unique(BioGears& bg) -> std::unique_ptr<DiffusionCalculator>
 {
@@ -751,4 +751,4 @@ double DiffusionCalculator::CalciumPump(double intraCa_M)
 
   return calciumCurrent_A_Per_mL;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

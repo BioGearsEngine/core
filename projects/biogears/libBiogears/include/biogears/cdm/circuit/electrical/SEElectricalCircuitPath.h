@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SECircuitManager;
 namespace io {
   class Circuit;
@@ -111,4 +111,4 @@ protected:
   SEElectricalCircuitNode& m_ElectricalSourceNode;
   SEElectricalCircuitNode& m_ElectricalTargetNode;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

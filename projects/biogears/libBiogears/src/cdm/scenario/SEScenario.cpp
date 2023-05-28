@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/io/io-manager.h>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEScenario::SEScenario(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())
   , m_SubMgr(subMgr)
@@ -318,4 +318,4 @@ const std::vector<SEAction*>& SEScenario::GetActions() const
   return m_Actions;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

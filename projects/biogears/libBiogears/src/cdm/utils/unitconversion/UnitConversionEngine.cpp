@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/Logger.h>
 //Private Includes
 #include "UCEDefs.h"
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 CUnitConversionEngine* CUnitConversionEngine::uce = nullptr;
 
 class InitializeUnitConversionEngine {
@@ -673,4 +673,4 @@ CCompoundUnit* CUnitConversionEngine::GetCompoundUnit(const std::string& unitStr
   // Caller is responsible for freeing.
   return new CCompoundUnit(unitString);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

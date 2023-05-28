@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEPainStimulus::SEPainStimulus()
   : SEPatientAction()
 {
@@ -163,4 +163,4 @@ bool SEPainStimulus::operator!=( const SEPainStimulus& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

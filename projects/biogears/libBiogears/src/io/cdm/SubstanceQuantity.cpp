@@ -9,7 +9,7 @@
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SESubstanceQuantity
   void SubstanceQuantity::Marshall(const CDM::SubstanceQuantityData& in, SESubstanceQuantity& out)
@@ -99,4 +99,4 @@ namespace io {
       io::Property::UnMarshall(in.GetSaturation(), out.Saturation());
   }
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

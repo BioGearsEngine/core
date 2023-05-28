@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 BioGearsScenario::BioGearsScenario(SESubstanceManager& subMgr)
   : SEScenario(subMgr)
 {
@@ -36,4 +36,4 @@ const BioGearsScenarioInitialParameters* BioGearsScenario::GetInitialParameters(
 {
   return (BioGearsScenarioInitialParameters*)m_InitialParameters;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

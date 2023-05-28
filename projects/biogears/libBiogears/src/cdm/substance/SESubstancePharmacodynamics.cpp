@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 namespace std {
 template class map<string, biogears::SEPharmacodynamicModifier*>;
 }
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   : Loggable(logger)
@@ -766,4 +766,4 @@ bool SEPharmacodynamicModifier::operator!=(const SEPharmacodynamicModifier& rhs)
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

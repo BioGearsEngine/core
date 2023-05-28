@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API AmountPerVolumeUnit : public CCompoundUnit {
 public:
   AmountPerVolumeUnit(const char* u);
@@ -53,4 +53,4 @@ public:
   bool operator==(const SEScalarAmountPerVolume&) const;
   bool operator!=(const SEScalarAmountPerVolume&) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

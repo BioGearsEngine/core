@@ -15,7 +15,7 @@
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //----------------------------------------------------------------------------------
   //class SEAnesthesiaMachine
@@ -190,4 +190,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

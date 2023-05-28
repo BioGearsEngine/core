@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 auto BioGearsCompartments::make_unique(BioGears& bg) -> std::unique_ptr<BioGearsCompartments>
 {
   return std::unique_ptr<BioGearsCompartments>(new BioGearsCompartments(bg));
@@ -382,4 +382,4 @@ SEGasCompartmentGraph& BioGearsCompartments::GetRespiratoryAndMechanicalVentilat
     m_CombinedRespiratoryMechanicalVentilatorGraph = &CreateGasGraph(BGE::Graph::RespiratoryAndMechanicalVentilator);
   return *m_CombinedRespiratoryMechanicalVentilatorGraph;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

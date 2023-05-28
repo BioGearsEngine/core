@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SECompartmentDataRequest.h>
 #include <biogears/exports.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
@@ -40,4 +40,4 @@ protected:
 public:
   virtual size_t HashCode();
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 const MassPerVolumeUnit MassPerVolumeUnit::g_Per_dL("g/dL");
 const MassPerVolumeUnit MassPerVolumeUnit::g_Per_cm3("g/cm^3");
@@ -171,4 +171,4 @@ bool SEScalarMassPerVolume::operator!=(const SEScalarMassPerVolume& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

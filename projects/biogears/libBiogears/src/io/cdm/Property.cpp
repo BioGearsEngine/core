@@ -45,7 +45,7 @@
     return;
 #endif
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SEDecimalFormat
   //template <typename SE, typename XSD>  option
@@ -744,4 +744,4 @@ namespace io {
     out.numSamples(in.m_NumSamples);
   }
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

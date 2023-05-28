@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEFunction.h>
 #include <biogears/schema/cdm/TestReport.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SETestErrorStatistics::SETestErrorStatistics(Logger* logger)
   : Loggable(logger)
 {
@@ -217,4 +217,4 @@ void SETestErrorStatistics::SetPercentToleranceVsNumErrorsHistogram(SEFunction* 
 {
   m_PercentToleranceVsNumErrorsHistogram = PercentToleranceVsNumErrors;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

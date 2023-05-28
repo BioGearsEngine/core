@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(PhysiologyEngineConfigurationData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEElectroCardioGramInterpolator;
 class PhysiologyEngineStabilization;
 class PhysiologyEngineTimedStabilization;
@@ -88,4 +88,4 @@ protected:
 
   CDM::enumOnOff::value m_WritePatientBaselineFile;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

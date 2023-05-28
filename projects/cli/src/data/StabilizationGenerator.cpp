@@ -18,7 +18,7 @@
 
 #include <biogears/version.h>
 #include <biogears/string/manipulation.h>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 //-----------------------------------------------------------------------------
 StabilizationGenerator::StabilizationGenerator(std::string path)
   : CSVToXMLConvertor(path, "templates/Stabilizations.csv")
@@ -251,4 +251,4 @@ bool StabilizationGenerator::process_ConditionStabilization(CSV_RowItr itr)
   _dynamic.ConditionStabilization().push_back(data);
   return rValue;
 }
-} //Namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // Namespace biogears

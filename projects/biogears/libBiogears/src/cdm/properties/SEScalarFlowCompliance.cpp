@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const FlowComplianceUnit FlowComplianceUnit::L_Per_cmH2O("L/cmH2O");
 const FlowComplianceUnit FlowComplianceUnit::mL_Per_mmHg("mL/mmHg");
 const FlowComplianceUnit FlowComplianceUnit::mL_Per_cmH2O("mL/cmH2O");
@@ -110,4 +110,4 @@ bool SEScalarFlowCompliance::operator!=(const SEScalarFlowCompliance& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

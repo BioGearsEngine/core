@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarNeg1To1.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEPupillaryResponse::SEPupillaryResponse()
   : m_ReactivityModifier(nullptr)
   , m_ShapeModifier(nullptr)
@@ -146,4 +146,4 @@ double SEPupillaryResponse::GetSizeModifier() const
   return m_SizeModifier->GetValue();
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

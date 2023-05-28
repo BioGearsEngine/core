@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEChronicPericardialEffusion::SEChronicPericardialEffusion()
   : SEPatientCondition()
 {
@@ -77,4 +77,4 @@ void SEChronicPericardialEffusion::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

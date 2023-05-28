@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEBreathHold::SEBreathHold()
   : SEConsciousRespirationCommand()
 {
@@ -97,4 +97,4 @@ bool SEBreathHold::operator!=( const SEBreathHold& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

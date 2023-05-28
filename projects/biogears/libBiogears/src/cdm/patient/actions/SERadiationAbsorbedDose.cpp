@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SERadiationAbsorbedDose::SERadiationAbsorbedDose()
   : SEPatientAction()
 {
@@ -97,4 +97,4 @@ bool SERadiationAbsorbedDose::operator!=(const SERadiationAbsorbedDose& rhs) con
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

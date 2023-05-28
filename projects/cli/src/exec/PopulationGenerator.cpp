@@ -46,7 +46,7 @@ std::string dateString()
   return s;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 std::vector<std::string> generate_boy_names();
 std::vector<std::string> generate_girl_names();
 //-------------------------------------------------------------------------------
@@ -703,4 +703,4 @@ std::vector<std::string> generate_boy_names()
   };
 }
 //-------------------------------------------------------------------------------
-} // namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears

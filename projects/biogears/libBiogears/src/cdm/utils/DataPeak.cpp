@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/DataPeak.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 DataPeak::DataPeak(unsigned int samples, double epsilon)
 {
   m_Samples = samples;
@@ -92,4 +92,4 @@ bool DataPeak::Peaked(double value)
   }
   return false;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

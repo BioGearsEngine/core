@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const TemperatureUnit TemperatureUnit::F("degF");
 const TemperatureUnit TemperatureUnit::C("degC");
 const TemperatureUnit TemperatureUnit::K("K");
@@ -114,4 +114,4 @@ bool SEScalarTemperature::operator!=(const SEScalarTemperature& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

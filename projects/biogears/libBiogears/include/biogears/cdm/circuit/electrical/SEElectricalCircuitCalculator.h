@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 BG_EXT template class BIOGEARS_API SECircuitCalculator<SEElectricalCircuit, SEElectricalCircuitNode, SEElectricalCircuitPath, ElectricCapacitanceUnit, ElectricCurrentUnit, ElectricInductanceUnit, ElectricPotentialUnit, ElectricChargeUnit, ElectricResistanceUnit>;
 
@@ -31,4 +31,4 @@ public:
   SEElectricalCircuitCalculator(const ElectricCapacitanceUnit&, const ElectricCurrentUnit&, const ElectricInductanceUnit&, const ElectricPotentialUnit&, const ElectricChargeUnit&, const ElectricResistanceUnit&, Logger* logger);
   virtual ~SEElectricalCircuitCalculator();
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

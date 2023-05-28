@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarQuantity.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API VolumePerTimeUnit : public CCompoundUnit {
 public:
   VolumePerTimeUnit(const char* u);
@@ -55,4 +55,4 @@ public:
   bool operator==(const SEScalarVolumePerTime&) const;
   bool operator!=(const SEScalarVolumePerTime&) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

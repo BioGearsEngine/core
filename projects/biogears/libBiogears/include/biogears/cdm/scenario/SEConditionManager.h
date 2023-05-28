@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Scenario.hxx>
 CDM_BIND_DECL(ConditionData);
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class BIOGEARS_API SEConditionManager : public Loggable {
 public:
@@ -108,4 +108,4 @@ protected:
   std::vector<SECondition*> m_Conditions;
   std::stringstream m_ss;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

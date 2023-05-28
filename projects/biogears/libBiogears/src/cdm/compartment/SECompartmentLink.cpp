@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SECompartmentLink::SECompartmentLink(const char* name, Logger* logger)
   : SECompartmentLink(std::string{ name }, logger)
 {
@@ -55,4 +55,4 @@ const char* SECompartmentLink::GetName_cStr() const
 {
   return m_Name.c_str();
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

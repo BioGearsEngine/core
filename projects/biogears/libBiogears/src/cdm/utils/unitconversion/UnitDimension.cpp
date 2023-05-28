@@ -19,7 +19,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
+
 CUnitDimension::CUnitDimension()
   : m_EList(CUnitConversionEngine::GetEngine().GetNumFundamentalQuantities())
 {
@@ -59,4 +60,4 @@ void CUnitDimension::InitElems()
     *ExpRef = 0.0;
   }
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

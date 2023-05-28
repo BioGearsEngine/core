@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BioGears;
 /**
 * @brief Manages all circuits associated with all %BioGears systems/equipement
@@ -83,7 +83,7 @@ protected:
   SEThermalCircuit* m_InternalTemperatureCircuit; // Attempt at circuit independence
   SEThermalCircuit* m_ExternalTemperatureCircuit; // Attempt at circuit independence
 };
-}
+CLOSE_BIOGEARS_NAMESPACE
 ///////////////////////////////
 // Respiratory Circuit Enums //
 ///////////////////////////////

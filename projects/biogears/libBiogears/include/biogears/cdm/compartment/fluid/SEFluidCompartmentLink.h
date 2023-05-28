@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #define FLUID_COMPARTMENT_LINK_TEMPLATE typename EdgeType, typename VertexType, typename CompartmentType
 #define FLUID_COMPARTMENT_LINK_TYPES EdgeType, VertexType, CompartmentType
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class Compartment;
 }

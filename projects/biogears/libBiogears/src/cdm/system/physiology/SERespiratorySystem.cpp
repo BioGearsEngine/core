@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 constexpr char idAlveolarArterialGradient[] = "AlveolarArterialGradient";
 constexpr char idCarricoIndex[] = "CarricoIndex";
 constexpr char idEndTidalCarbonDioxideFraction[] = "EndTidalCarbonDioxideFraction";
@@ -732,4 +732,4 @@ Tree<const char*> SERespiratorySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idTotalPulmonaryVentilation)
     .emplace_back(idTranspulmonaryPressure);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template <FLUID_COMPARTMENT_TEMPLATE>
 SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::SEFluidCompartment(const char* name, Logger* logger)
   : SEFluidCompartment(std::string{ name }, logger)

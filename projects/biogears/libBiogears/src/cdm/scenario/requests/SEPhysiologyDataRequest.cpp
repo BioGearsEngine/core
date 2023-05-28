@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/scenario/requests/SEPhysiologyDataRequest.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEPhysiologyDataRequest::SEPhysiologyDataRequest(const SEDecimalFormat* dfault)
   : SEDataRequest(dfault)
 {
@@ -53,4 +53,4 @@ size_t SEPhysiologyDataRequest::HashCode() const
   }
   return m_Hash;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

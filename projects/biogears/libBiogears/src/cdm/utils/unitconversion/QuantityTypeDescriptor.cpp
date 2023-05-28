@@ -19,7 +19,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/cdm/utils/unitconversion/UnitDimension.h>
 //----------------------------------------------------------------------------
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
+
 CQuantityTypeDescriptor::CQuantityTypeDescriptor(const char* name, int fundIdx, bool twentyLog)
   : CQuantityTypeDescriptor(std::string{ name }, fundIdx, twentyLog)
 {
@@ -77,4 +78,5 @@ const char* CQuantityTypeDescriptor::GetName_cStr() const
 {
   return m_sName.c_str();
 }
-}
+
+CLOSE_BIOGEARS_NAMESPACE

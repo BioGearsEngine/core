@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEScalarFraction::SEScalarFraction()
   : SEScalar()
 {
@@ -58,4 +58,4 @@ bool SEScalarFraction::operator!=(const SEScalarFraction& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

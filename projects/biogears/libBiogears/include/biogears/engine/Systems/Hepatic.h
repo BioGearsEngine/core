@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SETissueSystem;
 class SELiquidSubstanceQuantity;
 class SELiquidSubstanceQuantity;
@@ -123,4 +123,4 @@ protected:
   SEEnergySystem* m_energy;
   SEPatient* m_Patient;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

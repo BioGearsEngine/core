@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/utils/Logger.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEFunctionElectricPotentialVsTime::SEFunctionElectricPotentialVsTime()
   : SEFunction()
   ,m_TimeUnit(nullptr)
@@ -173,4 +173,4 @@ bool SEFunctionElectricPotentialVsTime::operator!=(const SEFunctionElectricPoten
   return !(*this == rhs);
 }
 //--------------------------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

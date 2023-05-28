@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <cmath>
 #include <functional>
 
+#include <biogears/exports.h>
 #include <biogears/cdm/Macros.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnitElement.h>
 
@@ -31,7 +32,7 @@ specific language governing permissions and limitations under the License.
 // a compound unit structure. The purpose of this object is to determine whether
 // two CompoundUnits are dimensionally compatible (i.e. whether one can be converted
 // to the other and vice-versa).
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class CUnitDimension {
 public:
   using ExponentType =  CCompoundUnitElement::ExponentType;
@@ -329,7 +330,8 @@ inline size_t hash_value(const CUnitDimension& ref)
 {
   return ref.hash_value();
 }
-}
+CLOSE_BIOGEARS_NAMESPACE
+
 namespace std {
 template <>
 struct hash<biogears::CUnitDimension> {

@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <ostream>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 enum class SEPatientAssessmentType {
   Invalid = -1,
@@ -172,4 +172,4 @@ inline std::ostream& operator<<(std::ostream& os, const SEInfectionSeverity& is)
   return os;
 }
 
-}
+CLOSE_BIOGEARS_NAMESPACE

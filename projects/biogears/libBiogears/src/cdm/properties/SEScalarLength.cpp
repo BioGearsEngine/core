@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarLength.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const LengthUnit LengthUnit::m("m");
 const LengthUnit LengthUnit::cm("cm");
 const LengthUnit LengthUnit::mm("mm");
@@ -119,4 +119,4 @@ bool SEScalarLength::operator!=(const SEScalarLength& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

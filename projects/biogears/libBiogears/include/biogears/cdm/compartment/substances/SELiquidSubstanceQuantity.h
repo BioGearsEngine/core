@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SELiquidCompartment;
 
 enum class BalanceLiquidBy {
@@ -119,4 +119,4 @@ protected:
   SESubstance* m_HbO2CO2;
   SESubstance* m_HbCO;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -23,7 +23,7 @@
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVaporizerFailure.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVentilatorPressureLoss.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   void AnesthesiaActions::UnMarshall(const SEAnesthesiaMachineActionCollection& in, std::vector<CDM::ActionData*>& out)
   {
@@ -290,4 +290,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const ElectricResistanceUnit ElectricResistanceUnit::Ohm("ohm");
 
 template class SEScalarQuantity<ElectricResistanceUnit>;
@@ -95,4 +95,4 @@ bool SEScalarElectricResistance::operator!=(const SEScalarElectricResistance& ob
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

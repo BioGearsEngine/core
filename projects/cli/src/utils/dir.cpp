@@ -8,7 +8,7 @@
 #include <exception>
 #include <iostream>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace filesystem {
   std::vector<std::string> dirlist(std::string path, std::string filter)
   {
@@ -19,4 +19,4 @@ namespace filesystem {
     return results;
   }
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

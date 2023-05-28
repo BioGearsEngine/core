@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarInversePressure.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const InversePressureUnit InversePressureUnit::Inverse_Pa("1/Pa");
 const InversePressureUnit InversePressureUnit::Inverse_mmHg("1/mmHg");
 const InversePressureUnit InversePressureUnit::Inverse_cmH2O("1/cmH2O");
@@ -108,4 +108,4 @@ bool SEScalarInversePressure::operator!=(const SEScalarInversePressure& obj) con
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

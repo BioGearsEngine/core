@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEAnesthesiaMachineActionCollection::SEAnesthesiaMachineActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
@@ -469,4 +469,4 @@ void SEAnesthesiaMachineActionCollection::RemoveYPieceDisconnect()
   SAFE_DELETE(m_YPieceDisconnect);
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

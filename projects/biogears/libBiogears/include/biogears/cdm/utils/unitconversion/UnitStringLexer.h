@@ -25,7 +25,10 @@ specific language governing permissions and limitations under the License.
 // exporting the iterator template itself.
 #include <string>
 
-namespace biogears {
+#include <biogears/exports.h>
+
+OPEN_BIOGEARS_NAMESPACE
+
 #pragma warning(disable : 4231)
 struct SUnitStringToken {
   SUnitStringToken()
@@ -135,4 +138,5 @@ private:
   bool scanNext; // Determines whether a call to PeekNextToken or GetNextToken needs to scan
   std::string::iterator end;
   std::string::iterator cursor; // current position in source string
-};}
+};
+CLOSE_BIOGEARS_NAMESPACE

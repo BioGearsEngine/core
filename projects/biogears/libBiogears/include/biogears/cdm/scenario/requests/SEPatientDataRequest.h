@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SEDataRequestManager;
 namespace io {
   class Scenario;
@@ -39,4 +39,4 @@ protected:
 public:
 protected:
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

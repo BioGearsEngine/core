@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/compartment/SECompartmentTransportGraph.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::SECompartmentTransportGraph(const char* name, Logger* logger)
   : SECompartmentTransportGraph(std::string{ name }, logger)
@@ -136,4 +136,4 @@ const std::vector<GraphEdgeType*>* SECompartmentTransportGraph<COMPARTMENT_TRANS
   return itr->second;
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

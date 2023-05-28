@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEElectricalCircuitNode::SEElectricalCircuitNode(const char* name, Logger* logger)
   : SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>(name, logger)
 //-------------------------------------------------------------------------------
@@ -156,4 +156,4 @@ double SEElectricalCircuitNode::GetChargeBaseline(const ElectricChargeUnit& unit
   return m_QuantityBaseline->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(PhysiologyEngineTimedConditionStabilizationData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class EngineConfiguration;
 }
@@ -101,4 +101,4 @@ protected:
   SEScalarTime* m_FeedbackStabilizationTime;
   std::vector<PhysiologyEngineTimedStabilizationCriteria*> m_ConditionCriteria;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

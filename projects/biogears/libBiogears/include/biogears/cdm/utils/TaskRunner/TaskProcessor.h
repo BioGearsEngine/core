@@ -13,8 +13,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <vector>
+#include <biogears/exports.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
+
 class Task;
 class TaskQueue;
 

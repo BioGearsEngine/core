@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
 #include <biogears/schema/cdm/EnvironmentConditions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class EnvironmentConditions;
 }
@@ -58,4 +58,4 @@ protected:
   std::string m_ConditionsFile;
   SEEnvironmentalConditions* m_Conditions;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

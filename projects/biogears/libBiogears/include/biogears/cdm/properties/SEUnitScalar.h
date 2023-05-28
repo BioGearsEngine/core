@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SEUnitScalar : public SEScalar {
 public:
   SEUnitScalar();
@@ -39,4 +39,4 @@ public:
   bool operator==(const SEUnitScalar&) const;
   bool operator!=(const SEUnitScalar&) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

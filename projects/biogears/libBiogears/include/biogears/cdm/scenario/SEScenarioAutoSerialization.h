@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Scenario.hxx>
 
 CDM_BIND_DECL(ScenarioAutoSerializationData)
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   class Scenario;
 }
@@ -75,4 +75,4 @@ protected:
   std::string m_Directory;
   std::string m_FileName;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

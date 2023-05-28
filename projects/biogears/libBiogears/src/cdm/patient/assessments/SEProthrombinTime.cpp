@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEProthrombinTime::SEProthrombinTime()
 {
   m_InternationalNormalizedRatio = nullptr;
@@ -69,4 +69,4 @@ SEScalar& SEProthrombinTime::GetInternationalNormalizedRatio()
     m_InternationalNormalizedRatio = new SEScalar();
   return *m_InternationalNormalizedRatio;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

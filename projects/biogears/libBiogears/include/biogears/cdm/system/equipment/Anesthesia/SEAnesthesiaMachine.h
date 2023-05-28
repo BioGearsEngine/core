@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 class SEEventHandler;
 class SESubstanceManager;
@@ -36,14 +36,14 @@ class SEScalarFraction;
 namespace io {
   class Anesthesia;
 }
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<CDM::enumAnesthesiaMachineEvent::value, bool>;
 BG_EXT template class BIOGEARS_API map<CDM::enumAnesthesiaMachineEvent::value, double>;
 }
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SEAnesthesiaMachine : public SESystem {
 protected:
   friend SEAnesthesiaMachineConfiguration;
@@ -186,4 +186,4 @@ protected:
 
   SESubstanceManager& m_Substances;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

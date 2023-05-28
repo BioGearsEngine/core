@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEBronchoconstriction.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEBronchoconstriction::SEBronchoconstriction()
   : SEPatientAction()
 {
@@ -95,4 +95,4 @@ bool SEBronchoconstriction::operator!=( const SEBronchoconstriction& rhs) const
 {
   return !(*this == rhs);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

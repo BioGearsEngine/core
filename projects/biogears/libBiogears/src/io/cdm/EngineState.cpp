@@ -5,7 +5,7 @@
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   void EngineState::Marshall(const CDM::PhysiologyEngineStateData& in, PhysiologyEngine& out)
   {
@@ -18,4 +18,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

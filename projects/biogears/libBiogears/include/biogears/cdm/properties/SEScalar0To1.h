@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SEScalar0To1 : public SEScalar {
 
 public:
@@ -32,4 +32,4 @@ public:
   bool operator!=(const SEScalar0To1&) const;
 
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

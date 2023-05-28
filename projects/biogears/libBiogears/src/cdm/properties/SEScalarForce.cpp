@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarForce.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 const ForceUnit ForceUnit::N("N");
 const ForceUnit ForceUnit::lbf("lbf");
 const ForceUnit ForceUnit::dyn("dyn");
@@ -105,4 +105,4 @@ bool SEScalarForce::operator!=(const SEScalarForce& obj) const
 {
   return !(*this == obj);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

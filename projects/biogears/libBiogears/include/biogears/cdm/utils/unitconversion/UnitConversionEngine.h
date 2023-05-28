@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <unordered_map>
 #include <cstddef>
 //Project Includes
+#include <biogears/exports.h>
 #include <biogears/cdm/utils/unitconversion/PrefixDescriptor.h>
 #include <biogears/cdm/utils/unitconversion/QuantityConversionDescriptor.h>
 #include <biogears/cdm/utils/unitconversion/QuantityConversionKey.h>
@@ -33,7 +34,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/unitconversion/UnitDescriptor.h>
 #include <biogears/cdm/utils/unitconversion/UnitDimension.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
+
 class BIOGEARS_API CUnitConversionEngine {
 private:
   static CUnitConversionEngine* uce;
@@ -199,4 +201,4 @@ private:
 
   std::string m_wrkDir; // I made this static and accessable for another project, so this is legacy and could be removed if causing issues
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

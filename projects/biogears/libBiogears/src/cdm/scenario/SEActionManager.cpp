@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/scenario/SEActionManager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SEActionManager::SEActionManager(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
   , m_PatientActions(substances)
@@ -87,4 +87,4 @@ bool SEActionManager::ProcessAction(const SEAction& action)
   return false;
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

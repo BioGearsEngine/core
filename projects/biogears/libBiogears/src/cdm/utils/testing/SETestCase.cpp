@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/schema/cdm/TestReport.hxx>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 SETestCase::SETestCase(Logger* logger)
   : Loggable(logger)
 {
@@ -143,4 +143,4 @@ const std::vector<SETestErrorStatistics*>& SETestCase::GetErrorStatistics() cons
   return m_CaseEqualsErrors;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

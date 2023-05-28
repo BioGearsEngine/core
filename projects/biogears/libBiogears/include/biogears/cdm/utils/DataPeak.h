@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 /**
  * Utility class that looks for a peak in data
  * looking at the data one point at a time.
@@ -70,4 +70,4 @@ protected:
   double m_LastTopPeak;
   double m_LastBottomPeak;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

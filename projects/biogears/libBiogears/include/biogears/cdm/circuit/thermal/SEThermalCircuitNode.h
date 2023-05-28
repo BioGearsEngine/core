@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarEnergy.h>
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SECircuitManager;
 namespace io {
   class Circuit;
@@ -60,4 +60,4 @@ public:
   virtual SEScalarEnergy& GetHeatBaseline();
   virtual double GetHeatBaseline(const EnergyUnit& unit) const;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

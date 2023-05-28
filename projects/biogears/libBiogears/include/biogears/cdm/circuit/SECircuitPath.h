@@ -42,7 +42,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(CircuitPathData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 namespace io {
   class Circuit;
@@ -201,5 +201,5 @@ BG_EXT template class BIOGEARS_API SECircuitPath<ELECTRICAL_CIRCUIT_PATH>;
 BG_EXT template class BIOGEARS_API SECircuitPath<FLUID_CIRCUIT_PATH>;
 BG_EXT template class BIOGEARS_API SECircuitPath<THERMAL_CIRCUIT_PATH>;
 
-}
+CLOSE_BIOGEARS_NAMESPACE
 #include <biogears/cdm/circuit/SECircuitPath.inl>

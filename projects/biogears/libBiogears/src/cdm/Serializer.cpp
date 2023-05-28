@@ -75,7 +75,7 @@ struct embedded_resource_resolver : DOMLSResourceResolver {
 embedded_resource_resolver g_embedded_resource_resolver;
 XERCES_CPP_NAMESPACE_END
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 std::mutex g_serializer_mutex;
 
@@ -369,4 +369,4 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, s
 }
 
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

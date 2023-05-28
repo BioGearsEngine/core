@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BioGears;
 class SEGasCompartmentGraph;
 /**
@@ -149,4 +149,4 @@ protected:
   std::map<SETissueCompartment*, SELiquidCompartment*> m_ExtracellularFluid;
   std::map<SETissueCompartment*, SELiquidCompartment*> m_IntracellularFluid;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

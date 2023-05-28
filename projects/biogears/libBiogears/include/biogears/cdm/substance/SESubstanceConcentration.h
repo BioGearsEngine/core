@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 CDM_BIND_DECL(SubstanceConcentrationData)
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class SESubstance;
 class SESubstanceManager;
 class SEEnvironmentalConditions;
@@ -58,4 +58,4 @@ protected:
   SESubstance* m_Substance;
   SEScalarMassPerVolume m_Concentration;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

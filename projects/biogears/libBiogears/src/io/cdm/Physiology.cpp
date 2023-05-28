@@ -40,7 +40,7 @@
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SEPupillaryResponse
   void Physiology::Marshall(const CDM::PupillaryResponseData& in, SEPupillaryResponse& out)
@@ -1049,4 +1049,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

@@ -28,7 +28,7 @@
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 namespace io {
   //class SEEnvironmentalConditions
   void Environment::Marshall(const CDM::EnvironmentalConditionsData& in, SEEnvironmentalConditions& out)
@@ -263,4 +263,4 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
 }
-}
+  CLOSE_BIOGEARS_NAMESPACE

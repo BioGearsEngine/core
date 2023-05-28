@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 
 namespace CDM = mil::tatrc::physiology::datamodel;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SEEventHandler {
 public:
   SEEventHandler() = default;
@@ -28,4 +28,4 @@ public:
   virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
   virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE
