@@ -3,6 +3,7 @@
 
 USING_BIOGEARS_NAMESPACE;
 using namespace CDM;
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>

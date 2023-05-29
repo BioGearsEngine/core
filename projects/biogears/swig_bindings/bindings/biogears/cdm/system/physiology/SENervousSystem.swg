@@ -1,6 +1,10 @@
 
 %{
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/scenario/SEAction.h>
+#include <biogears/cdm/scenario/SECondition.h>
+#include <biogears/cdm/patient/actions/SEPatientAction.h>
 %}
 
 %include <biogears/exports.h>

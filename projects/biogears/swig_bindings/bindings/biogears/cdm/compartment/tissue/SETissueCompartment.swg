@@ -1,6 +1,7 @@
 %{
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>

@@ -1,5 +1,10 @@
 %{
 #include <biogears/cdm/scenario/SEActionManager.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/scenario/SEAction.h>
+#include <biogears/cdm/scenario/SECondition.h>
+#include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
+#include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
 %}
 
 %include <biogears/exports.h>

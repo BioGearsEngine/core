@@ -1,6 +1,10 @@
 // Add necessary symbols to generated header
 %{
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVaporizerFailure.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+
+#include <biogears/cdm/scenario/SEAction.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
 %}
 
 %include <biogears/exports.h>

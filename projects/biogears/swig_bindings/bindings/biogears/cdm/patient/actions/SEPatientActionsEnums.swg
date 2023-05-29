@@ -1,6 +1,7 @@
 %{
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/patient/actions/PatientActionsEnums.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>

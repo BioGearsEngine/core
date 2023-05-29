@@ -2,6 +2,7 @@
 
 %{
 #include <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %import <biogears/exports.swg>

@@ -1,6 +1,7 @@
 
 %{
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>

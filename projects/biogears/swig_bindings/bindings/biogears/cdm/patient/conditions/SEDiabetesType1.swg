@@ -1,5 +1,6 @@
 %{
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>

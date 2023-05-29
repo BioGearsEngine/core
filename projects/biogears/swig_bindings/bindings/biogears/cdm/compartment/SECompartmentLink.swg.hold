@@ -3,6 +3,7 @@
 // Add necessary symbols to generated header
 %{
 #include<cdm/compartment/SECompartmentLink.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 %include <windows.i>
 %include <std_string.i>

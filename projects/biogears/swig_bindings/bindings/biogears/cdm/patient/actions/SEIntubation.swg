@@ -1,5 +1,6 @@
 %{
 #include <biogears/cdm/patient/actions/SEIntubation.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>

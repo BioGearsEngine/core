@@ -1238,7 +1238,7 @@ void Cardiovascular::Hemorrhage()
     case CDM::enumTourniquetApplicationLevel::Misapplied:
       tResModifier = 3.0; //Slow blood flow, but don't stop entirely
       break;
-    case CDM::enumTourniquetApplicationLevel::None:
+    case CDM::enumTourniquetApplicationLevel::Unapplied:
       //This case shouldn't get hit because "None" deactivates tourniquet, but account for it just in case
     default:
       tResModifier = 1.0;

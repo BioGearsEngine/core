@@ -1,5 +1,6 @@
 %{
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>

@@ -4,6 +4,7 @@
   #include <biogears/cdm/utils/unitconversion/UnitDimension.h>
   #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
   #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include "windows.i"

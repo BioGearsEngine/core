@@ -1,5 +1,6 @@
 %{
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %import <biogears/exports.swg>

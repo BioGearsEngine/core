@@ -1,5 +1,8 @@
 %{
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/scenario/SEAction.h>
+#include <biogears/cdm/scenario/SECondition.h>
 %}
 
 %include <biogears/exports.h>
@@ -66,8 +69,10 @@
 %rename (GetTrauma_const)  BIOGEARS_NAMESPACE SEInflammatoryResponse::GetTrauma() const ;
 %rename (GetTumorNecrosisFactor_const)  BIOGEARS_NAMESPACE SEInflammatoryResponse::GetTumorNecrosisFactor() const ;
 
-namespace biogears{
+%import <biogears/config.h>
+
+OPEN_BIOGEARS_NAMESPACE
   class SEInflammatoryResponse;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 %include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>

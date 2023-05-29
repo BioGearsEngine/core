@@ -1,6 +1,22 @@
 // Add necessary symbols to generated header
 %{
 #include<biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/scenario/SEAction.h>
+#include <biogears/cdm/scenario/SECondition.h>
+#include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/substance/SESubstanceAerosolization.h>
+#include <biogears/cdm/substance/SESubstanceClearance.h>
+#include <biogears/cdm/substance/SESubstanceCompound.h>
+#include <biogears/cdm/substance/SESubstanceConcentration.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
+#include <biogears/cdm/substance/SESubstancePhysicochemicals.h>
+#include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
+#include <biogears/cdm/system/SESystem.h>
+#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
+#include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
+#include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
 %}
 
 %include <biogears/exports.h>

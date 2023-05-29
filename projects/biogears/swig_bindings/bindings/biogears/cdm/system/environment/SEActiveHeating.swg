@@ -1,5 +1,8 @@
 %{
 #include <biogears/cdm/system/environment/SEActiveHeating.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/scenario/SEAction.h>
+#include <biogears/cdm/scenario/SECondition.h>
 %}
 
 %include <biogears/exports.h>

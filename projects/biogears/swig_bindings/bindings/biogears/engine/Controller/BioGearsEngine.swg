@@ -6,6 +6,7 @@
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/schema/biogears/BioGears.hxx>
 
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/config.h>

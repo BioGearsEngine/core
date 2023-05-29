@@ -1,5 +1,6 @@
 %{
 #include <biogears/cdm/system/SESystem.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>
@@ -37,9 +38,12 @@
 %ignore BIOGEARS_NAMESPACE SESystem::GetScalar(std::string const &);
 %ignore BIOGEARS_NAMESPACE SESystem::GetScalar(std::string const &,std::vector< SESystem * > *);
 
-namespace biogears{
+%import <biogears/config.h>
+
+OPEN_BIOGEARS_NAMESPACE
   class SESystem;
-}
+CLOSE_BIOGEARS_NAMESPACE
+
 %nspace std::vector<BIOGEARS_NAMESPACE SESystem*>;
 %template (vector_SESystem_ptr) std::vector<BIOGEARS_NAMESPACE SESystem*>;
 

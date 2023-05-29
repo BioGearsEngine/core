@@ -1,5 +1,7 @@
 %{
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/patient/SEPatient.h>
 %}
 
 %include <biogears/exports.h>

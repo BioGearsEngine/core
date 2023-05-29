@@ -1,6 +1,7 @@
 
 %{
   #include <biogears/cdm/utils/Logger.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %import <biogears/cdm/CommonDataModel.swg>

@@ -1,17 +1,22 @@
 %{
 #include <stdexcept>
 #include <exception>
+#include <biogears/config.h>
 #include <biogears/container/Tree.h>
 #include <biogears/container/Tree.tci.h>
+#if !(BIOGEARS_WITHOUT_NAMESPACE)
 using BIOGEARS_NAMESPACE Tree;
+#endif 
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 
 %import <biogears/exports.swg>
 %import <biogears/config.h>
 
+#if !(BIOGEARS_WITHOUT_NAMESPACE)
 %nspace BIOGEARS_NAMESPACE Tree;
-
+#endif 
 
 %rename (at) BIOGEARS_NAMESPACE Tree::operator[]( size_t pos );
 %rename (CopyFrom) BIOGEARS_NAMESPACE Tree::operator=(const Tree&);

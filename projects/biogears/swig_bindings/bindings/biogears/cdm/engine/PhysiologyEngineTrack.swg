@@ -2,6 +2,7 @@
 #include  <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>

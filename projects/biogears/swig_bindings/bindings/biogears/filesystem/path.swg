@@ -7,6 +7,7 @@
 
   #include <biogears/common-exports.h>
   #include <biogears/filesystem/path.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %import <biogears/exports.swg>

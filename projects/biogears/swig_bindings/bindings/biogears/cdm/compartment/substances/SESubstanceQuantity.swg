@@ -1,5 +1,6 @@
 %{
 #include <biogears/cdm/compartment/substances/SESubstanceQuantity.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 %include <biogears/exports.h>
 

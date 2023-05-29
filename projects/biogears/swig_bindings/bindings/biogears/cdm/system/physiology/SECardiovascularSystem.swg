@@ -1,5 +1,10 @@
 %{
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
+#include <biogears/cdm/properties/SEUnitScalar.h>
+#include <biogears/cdm/properties/SEScalarQuantity.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/scenario/SEAction.h>
+#include <biogears/cdm/scenario/SECondition.h>
 %}
 
 %include <biogears/exports.h>
@@ -10,7 +15,7 @@
 %import <biogears/cdm/system/SESystem.swg>
 
 %import <biogears/cdm/properties/SEScalar.swg>
-
+%import <biogears/cdm/properties/SEUnitScalar.swg>
 %import <biogears/cdm/properties/SEScalarPressure.swg>
 %import <biogears/cdm/properties/SEScalarVolume.swg>
 %import <biogears/cdm/properties/SEScalarVolumePerTimeArea.swg>

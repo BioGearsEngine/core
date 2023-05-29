@@ -1,5 +1,6 @@
 %{
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>

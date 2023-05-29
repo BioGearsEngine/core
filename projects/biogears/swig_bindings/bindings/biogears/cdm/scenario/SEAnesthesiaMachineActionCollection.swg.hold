@@ -3,6 +3,7 @@
 // Add necessary symbols to generated header
 %{
 #include<cdm/scenario/SEAnesthesiaMachineActionCollection.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 %include <windows.i>
 %include <std_string.i>

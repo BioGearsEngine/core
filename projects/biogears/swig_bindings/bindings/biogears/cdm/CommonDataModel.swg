@@ -2,17 +2,18 @@
 
 #pragma SWIG nowarn=320
 
+%include "windows.i"
 #if defined(SWIGCSHARP)
   %import "csharp/std_string.i"
   %import "csharp/std_vector.i"
   %import "csharp/std_map.i"
   %import "csharp/std_except.i"
 
-namespace std 
-{
-  %ignore runtime_error;
-  struct runtime_error {};
-}
+    namespace std 
+    {
+        %ignore runtime_error;
+        struct runtime_error {};
+    }
 
 #elif defind(SWIGPYTHON)
   %import "python/std_string.i"
@@ -39,13 +40,14 @@ namespace std
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 #include <biogears/schema/cdm/Physiology.hxx>
 #include <biogears/schema/cdm/Substance.hxx>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>
+%include <biogears/config.h>
 
 %nspace "BIOGEARS_NAMESPACE CommonDataModelException"
 
-%include <biogears/config.h>
 
 %ignore BIOGEARS_NAMESPACE CommonDataModelException::CommonDataModelException(std::string const &);
 

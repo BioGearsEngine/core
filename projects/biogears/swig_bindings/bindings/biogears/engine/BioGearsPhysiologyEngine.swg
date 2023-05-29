@@ -1,6 +1,7 @@
 %{
 #include <biogears/cdm/utils/Logger.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 %include "windows.i"
 #if defined(SWIGCSHARP)

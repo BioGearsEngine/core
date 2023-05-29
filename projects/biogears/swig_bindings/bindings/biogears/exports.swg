@@ -2,6 +2,7 @@
    #include <stdexcept>
    #include <string>
    #include <vector>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %import "windows.i"

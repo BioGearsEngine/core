@@ -41,7 +41,7 @@ bool SETourniquet::IsValid() const
 //-----------------------------------------------------------------------------
 bool SETourniquet::IsActive() const
 {
-  return IsValid() ? !(m_TourniquetLevel == (CDM::enumTourniquetApplicationLevel::None)) : false;
+  return IsValid() ? !(m_TourniquetLevel == (CDM::enumTourniquetApplicationLevel::Unapplied)) : false;
 }//-----------------------------------------------------------------------------
 bool SETourniquet::Load(const CDM::TourniquetData& in)
 {
@@ -115,7 +115,7 @@ void SETourniquet::SetTourniquetLevel(CDM::enumTourniquetApplicationLevel::value
 //-----------------------------------------------------------------------------
 void SETourniquet::ToString(std::ostream& str) const
 {
-  if (m_TourniquetLevel == CDM::enumTourniquetApplicationLevel::None) {
+  if (m_TourniquetLevel == CDM::enumTourniquetApplicationLevel::Unapplied) {
     str << "Patient Action : Remove tourniquet";
     if (HasComment())
       str << "\n\tComment: ";

@@ -2,6 +2,7 @@
 
 %{
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
 %include <biogears/exports.h>
