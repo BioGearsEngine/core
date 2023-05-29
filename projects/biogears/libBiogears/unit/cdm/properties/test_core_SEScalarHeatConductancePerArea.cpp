@@ -59,30 +59,30 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarHeatConductancePerArea HeatConductancePerArea = biogears::SEScalarHeatConductancePerArea();
+  BIOGEARS_NAMESPACE SEScalarHeatConductancePerArea HeatConductancePerArea = BIOGEARS_NAMESPACE SEScalarHeatConductancePerArea();
   auto ptr = HeatConductancePerArea.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::HeatConductancePerAreaUnit::IsValidUnit("W/m^2 K");
-  bool unit1 = biogears::HeatConductancePerAreaUnit::IsValidUnit("W/m^2 degC");
-  bool unit2 = biogears::HeatConductancePerAreaUnit::IsValidUnit("BTU/hr ft^2 degC");
+  bool unit0 = BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::IsValidUnit("W/m^2 K");
+  bool unit1 = BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::IsValidUnit("W/m^2 degC");
+  bool unit2 = BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::IsValidUnit("BTU/hr ft^2 degC");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
-  bool unit6 = biogears::HeatConductancePerAreaUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::HeatConductancePerAreaUnit mu0 = biogears::HeatConductancePerAreaUnit::GetCompoundUnit("W/m^2 K");
-  biogears::HeatConductancePerAreaUnit mu1 = biogears::HeatConductancePerAreaUnit::GetCompoundUnit("W/m^2 degC");
-  biogears::HeatConductancePerAreaUnit mu2 = biogears::HeatConductancePerAreaUnit::GetCompoundUnit("BTU/hr ft^2 degC");
-  EXPECT_EQ(mu0, biogears::HeatConductancePerAreaUnit::W_Per_m2_K);
-  EXPECT_EQ(mu1, biogears::HeatConductancePerAreaUnit::W_Per_m2_C);
-  EXPECT_EQ(mu2, biogears::HeatConductancePerAreaUnit::BTU_Per_hr_ft2_C);
-  EXPECT_THROW(biogears::HeatConductancePerAreaUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE HeatConductancePerAreaUnit mu0 = BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::GetCompoundUnit("W/m^2 K");
+  BIOGEARS_NAMESPACE HeatConductancePerAreaUnit mu1 = BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::GetCompoundUnit("W/m^2 degC");
+  BIOGEARS_NAMESPACE HeatConductancePerAreaUnit mu2 = BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::GetCompoundUnit("BTU/hr ft^2 degC");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::W_Per_m2_K);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::W_Per_m2_C);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::BTU_Per_hr_ft2_C);
+  EXPECT_THROW(BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

@@ -26,8 +26,8 @@ specific language governing permissions and limitations under the License.
 #endif
 
 namespace std {
-template class map<biogears::SESubstance*, const CDM::SubstanceData*>;
-template class map<biogears::SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
+template class map<BIOGEARS_NAMESPACE SESubstance*, const CDM::SubstanceData*>;
+template class map<BIOGEARS_NAMESPACE SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

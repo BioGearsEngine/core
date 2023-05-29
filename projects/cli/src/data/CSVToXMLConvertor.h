@@ -17,8 +17,10 @@
 #include <vector>
 #include <map>
 
-namespace biogears
-{
+#include <biogears/config.h>
+
+OPEN_BIOGEARS_NAMESPACE
+
   class CSVToXMLConvertor
   {
   public:
@@ -59,6 +61,6 @@ namespace biogears
   };
 
  
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //BIOGEARS_CSV_TO_XML_CONVERTOR_H

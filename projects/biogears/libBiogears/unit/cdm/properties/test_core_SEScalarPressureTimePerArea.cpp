@@ -59,26 +59,26 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarPressureTimePerArea PressureTimePerArea = biogears::SEScalarPressureTimePerArea();
+  BIOGEARS_NAMESPACE SEScalarPressureTimePerArea PressureTimePerArea = BIOGEARS_NAMESPACE SEScalarPressureTimePerArea();
   auto ptr = PressureTimePerArea.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::PressureTimePerAreaUnit::IsValidUnit("mmHg/mL m^2");
-  bool unit1 = biogears::PressureTimePerAreaUnit::IsValidUnit("cmH2O/mL m^2");
+  bool unit0 = BIOGEARS_NAMESPACE PressureTimePerAreaUnit::IsValidUnit("mmHg/mL m^2");
+  bool unit1 = BIOGEARS_NAMESPACE PressureTimePerAreaUnit::IsValidUnit("cmH2O/mL m^2");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
-  bool unit5 = biogears::PressureTimePerAreaUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE PressureTimePerAreaUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::PressureTimePerAreaUnit mu0 = biogears::PressureTimePerAreaUnit::GetCompoundUnit("mmHg/mL m^2");
-  biogears::PressureTimePerAreaUnit mu1 = biogears::PressureTimePerAreaUnit::GetCompoundUnit("cmH2O/mL m^2");
-  EXPECT_EQ(mu0, biogears::PressureTimePerAreaUnit::mmHg_Per_mL_m2);
-  EXPECT_EQ(mu1, biogears::PressureTimePerAreaUnit::cmH2O_Per_mL_m2);
-  EXPECT_THROW(biogears::PressureTimePerAreaUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE PressureTimePerAreaUnit mu0 = BIOGEARS_NAMESPACE PressureTimePerAreaUnit::GetCompoundUnit("mmHg/mL m^2");
+  BIOGEARS_NAMESPACE PressureTimePerAreaUnit mu1 = BIOGEARS_NAMESPACE PressureTimePerAreaUnit::GetCompoundUnit("cmH2O/mL m^2");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE PressureTimePerAreaUnit::mmHg_Per_mL_m2);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE PressureTimePerAreaUnit::cmH2O_Per_mL_m2);
+  EXPECT_THROW(BIOGEARS_NAMESPACE PressureTimePerAreaUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

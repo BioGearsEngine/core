@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
 namespace std {
-template class map<string, biogears::SESubstanceTissuePharmacokinetics*>;
+template class map<string, BIOGEARS_NAMESPACE SESubstanceTissuePharmacokinetics*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

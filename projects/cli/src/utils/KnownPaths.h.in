@@ -1,8 +1,9 @@
 #ifndef CMD_BIO_KNOWNPATH_H
 #define CMD_BIO_KNOWNPATH_H
 
-namespace biogears {
+#include <biogears/config.h>
+OPEN_BIOGEARS_NAMESPACE
 	const char* Baseline_Directory = "@Biogears_Baseline_DIR@";
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //CMD_BIO_KNOWNPATH_H

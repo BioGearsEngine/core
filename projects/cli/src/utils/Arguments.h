@@ -18,10 +18,12 @@
 #include <unordered_map>
 #include <vector>
 
+#include <biogears/config.h>
+
 //! \file
 //! \brief Case insensitive argument parser based on cmake_handle_arguments
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class Arguments {
 public:
   explicit Arguments(const std::vector<std::string>&, const std::vector<std::string>&, const std::vector<std::string>&);
@@ -77,6 +79,6 @@ protected:
   std::string _self_name;
 };
 
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //ARGUMENT_PARSER_HPP

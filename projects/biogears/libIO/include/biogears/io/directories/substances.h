@@ -21,8 +21,8 @@ specific language governing permissions and limitations under the License.
 //!  Functions for finding resource files that were part of the current biogears release
 //!  These functions are encoded as part of libbiogears_io
 //!
-//!  Functions are exposed as either biogears::filesystem::path or char const *
-//!  TODO: Migrate Biogears C++17 and replace biogears::filesystem with std::filesystem
+//!  Functions are exposed as either BIOGEARS_NAMESPACE filesystem::path or char const *
+//!  TODO: Migrate Biogears C++17 and replace BIOGEARS_NAMESPACE filesystem with std::filesystem
 
 OPEN_BIOGEARS_NAMESPACE
 namespace io {

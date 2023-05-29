@@ -59,34 +59,34 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarEnergyPerMass EnergyPerMass = biogears::SEScalarEnergyPerMass();
+  BIOGEARS_NAMESPACE SEScalarEnergyPerMass EnergyPerMass = BIOGEARS_NAMESPACE SEScalarEnergyPerMass();
   auto ptr = EnergyPerMass.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::EnergyPerMassUnit::IsValidUnit("J/kg");
-  bool unit1 = biogears::EnergyPerMassUnit::IsValidUnit("kJ/kg");
-  bool unit2 = biogears::EnergyPerMassUnit::IsValidUnit("mJ/kg");
-  bool unit3 = biogears::EnergyPerMassUnit::IsValidUnit("kcal/kg");
+  bool unit0 = BIOGEARS_NAMESPACE EnergyPerMassUnit::IsValidUnit("J/kg");
+  bool unit1 = BIOGEARS_NAMESPACE EnergyPerMassUnit::IsValidUnit("kJ/kg");
+  bool unit2 = BIOGEARS_NAMESPACE EnergyPerMassUnit::IsValidUnit("mJ/kg");
+  bool unit3 = BIOGEARS_NAMESPACE EnergyPerMassUnit::IsValidUnit("kcal/kg");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
-  bool unit6 = biogears::EnergyPerMassUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE EnergyPerMassUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::EnergyPerMassUnit mu0 = biogears::EnergyPerMassUnit::GetCompoundUnit("J/kg");
-  biogears::EnergyPerMassUnit mu1 = biogears::EnergyPerMassUnit::GetCompoundUnit("kJ/kg");
-  biogears::EnergyPerMassUnit mu2 = biogears::EnergyPerMassUnit::GetCompoundUnit("mJ/kg");
-  biogears::EnergyPerMassUnit mu3 = biogears::EnergyPerMassUnit::GetCompoundUnit("kcal/kg");
-  EXPECT_EQ(mu0, biogears::EnergyPerMassUnit::J_Per_kg);
-  EXPECT_EQ(mu1, biogears::EnergyPerMassUnit::kJ_Per_kg);
-  EXPECT_EQ(mu2, biogears::EnergyPerMassUnit::mJ_Per_kg);
-  EXPECT_EQ(mu3, biogears::EnergyPerMassUnit::kcal_Per_kg);
-  EXPECT_THROW(biogears::EnergyPerMassUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE EnergyPerMassUnit mu0 = BIOGEARS_NAMESPACE EnergyPerMassUnit::GetCompoundUnit("J/kg");
+  BIOGEARS_NAMESPACE EnergyPerMassUnit mu1 = BIOGEARS_NAMESPACE EnergyPerMassUnit::GetCompoundUnit("kJ/kg");
+  BIOGEARS_NAMESPACE EnergyPerMassUnit mu2 = BIOGEARS_NAMESPACE EnergyPerMassUnit::GetCompoundUnit("mJ/kg");
+  BIOGEARS_NAMESPACE EnergyPerMassUnit mu3 = BIOGEARS_NAMESPACE EnergyPerMassUnit::GetCompoundUnit("kcal/kg");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE EnergyPerMassUnit::J_Per_kg);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE EnergyPerMassUnit::kJ_Per_kg);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE EnergyPerMassUnit::mJ_Per_kg);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE EnergyPerMassUnit::kcal_Per_kg);
+  EXPECT_THROW(BIOGEARS_NAMESPACE EnergyPerMassUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

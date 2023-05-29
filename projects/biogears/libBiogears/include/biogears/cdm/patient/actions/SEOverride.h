@@ -357,4 +357,4 @@ protected:
   SEScalarMass* m_StoredProteinOverride;
   SEScalarMass* m_StoredFatOverride;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

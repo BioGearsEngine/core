@@ -59,26 +59,26 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarOsmolality Osmolality = biogears::SEScalarOsmolality();
+  BIOGEARS_NAMESPACE SEScalarOsmolality Osmolality = BIOGEARS_NAMESPACE SEScalarOsmolality();
   auto ptr = Osmolality.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::OsmolalityUnit::IsValidUnit("Osm/kg");
-  bool unit1 = biogears::OsmolalityUnit::IsValidUnit("mOsm/kg");
+  bool unit0 = BIOGEARS_NAMESPACE OsmolalityUnit::IsValidUnit("Osm/kg");
+  bool unit1 = BIOGEARS_NAMESPACE OsmolalityUnit::IsValidUnit("mOsm/kg");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
-  bool unit5 = biogears::OsmolalityUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE OsmolalityUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::OsmolalityUnit mu0 = biogears::OsmolalityUnit::GetCompoundUnit("Osm/kg");
-  biogears::OsmolalityUnit mu1 = biogears::OsmolalityUnit::GetCompoundUnit("mOsm/kg");
-  EXPECT_EQ(mu0, biogears::OsmolalityUnit::Osm_Per_kg);
-  EXPECT_EQ(mu1, biogears::OsmolalityUnit::mOsm_Per_kg);
-  EXPECT_THROW(biogears::OsmolalityUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE OsmolalityUnit mu0 = BIOGEARS_NAMESPACE OsmolalityUnit::GetCompoundUnit("Osm/kg");
+  BIOGEARS_NAMESPACE OsmolalityUnit mu1 = BIOGEARS_NAMESPACE OsmolalityUnit::GetCompoundUnit("mOsm/kg");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE OsmolalityUnit::Osm_Per_kg);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE OsmolalityUnit::mOsm_Per_kg);
+  EXPECT_THROW(BIOGEARS_NAMESPACE OsmolalityUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

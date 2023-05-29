@@ -60,9 +60,9 @@ protected:
   std::vector<SEGasCompartment*> m_Children;
   std::vector<SEGasCompartment*> m_Leaves;
 };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartment*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartment*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEGasCompartment*>;
+BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SEGasCompartment*>;
 }

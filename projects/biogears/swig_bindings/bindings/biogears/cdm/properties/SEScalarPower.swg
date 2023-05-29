@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<PowerUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<PowerUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const PowerUnit&) const;
 %rename(NotEquals)  operator!=(const PowerUnit&) const;
 %rename(Equals)  operator==(const SEScalarPower&) const;
 %rename(NotEquals)  operator!=(const SEScalarPower&) const;  
 
-%ignore biogears::PowerUnit::PowerUnit(std::string const &);
-%ignore biogears::PowerUnit::IsValidUnit(std::string const &);
-%ignore biogears::PowerUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE PowerUnit::PowerUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE PowerUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE PowerUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarPower;
-%nspace biogears::PowerUnit;
-%nspace biogears::SEScalarQuantity<PowerUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarPower;
+%nspace BIOGEARS_NAMESPACE PowerUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<PowerUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class PowerUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::PowerUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerUnit>;
 
-%ignore  biogears::SEScalarQuantity< PowerUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< PowerUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< PowerUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< PowerUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< PowerUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< PowerUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< PowerUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< PowerUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< PowerUnit >::operator!=;
 
-%template(QuantityPower) biogears::SEScalarQuantity<biogears::PowerUnit>;
+%template(QuantityPower) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerUnit>;
 
 %include <biogears/cdm/properties/SEScalarPower.h>
 

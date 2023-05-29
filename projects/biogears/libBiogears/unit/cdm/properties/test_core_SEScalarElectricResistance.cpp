@@ -59,22 +59,22 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarElectricResistance ElectricResistance = biogears::SEScalarElectricResistance();
+  BIOGEARS_NAMESPACE SEScalarElectricResistance ElectricResistance = BIOGEARS_NAMESPACE SEScalarElectricResistance();
   auto ptr = ElectricResistance.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::ElectricResistanceUnit::IsValidUnit("ohm");
+  bool unit0 = BIOGEARS_NAMESPACE ElectricResistanceUnit::IsValidUnit("ohm");
   EXPECT_EQ(unit0, true);
-  bool unit6 = biogears::ElectricResistanceUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE ElectricResistanceUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::ElectricResistanceUnit mu0 = biogears::ElectricResistanceUnit::GetCompoundUnit("ohm");
-  EXPECT_EQ(mu0, biogears::ElectricResistanceUnit::Ohm);
-  EXPECT_THROW(biogears::ElectricResistanceUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE ElectricResistanceUnit mu0 = BIOGEARS_NAMESPACE ElectricResistanceUnit::GetCompoundUnit("ohm");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE ElectricResistanceUnit::Ohm);
+  EXPECT_THROW(BIOGEARS_NAMESPACE ElectricResistanceUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

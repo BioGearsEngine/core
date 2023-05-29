@@ -8,10 +8,10 @@
 %include <biogears/exports.h>
 %import <biogears/cdm/utils/Logger.swg>
 
-%nspace biogears::BioGears;
+%nspace BIOGEARS_NAMESPACE BioGears;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   class BioGears : public Loggable{
     BioGears (Logger* logger);
   };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalar.swg>
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 
-%nspace biogears::SEPulmonaryShunt;
+%nspace BIOGEARS_NAMESPACE SEPulmonaryShunt;
 
-%ignore biogears::SEPulmonaryShunt::Unload;
-%ignore biogears::SEPulmonaryShunt::Load;
+%ignore BIOGEARS_NAMESPACE SEPulmonaryShunt::Unload;
+%ignore BIOGEARS_NAMESPACE SEPulmonaryShunt::Load;
 
 %include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>

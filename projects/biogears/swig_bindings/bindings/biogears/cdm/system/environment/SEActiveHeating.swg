@@ -13,15 +13,15 @@
 %import <biogears/cdm/properties/SEScalarFraction.swg>
 
 
-%nspace biogears::SEActiveHeating;
+%nspace BIOGEARS_NAMESPACE SEActiveHeating;
 
-%ignore biogears::SEActiveHeating::Unload;
-%ignore biogears::SEActiveHeating::Load;
-%ignore biogears::SEActiveHeating::GetScalar(const std::string& name);
-%ignore biogears::SEActiveHeating::ToString(std::ostream& str) const;
+%ignore BIOGEARS_NAMESPACE SEActiveHeating::Unload;
+%ignore BIOGEARS_NAMESPACE SEActiveHeating::Load;
+%ignore BIOGEARS_NAMESPACE SEActiveHeating::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SEActiveHeating::ToString(std::ostream& str) const;
 
-%rename (GetPower_const) biogears::SEActiveHeating::GetPower(const PowerUnit& unit) const;
-%rename (GetSurfaceArea_const) biogears::SEActiveHeating::GetSurfaceArea(const AreaUnit& unit) const;
-%rename (GetSurfaceAreaFraction_const) biogears::SEActiveHeating::GetSurfaceAreaFraction() const;
+%rename (GetPower_const) BIOGEARS_NAMESPACE SEActiveHeating::GetPower(const PowerUnit& unit) const;
+%rename (GetSurfaceArea_const) BIOGEARS_NAMESPACE SEActiveHeating::GetSurfaceArea(const AreaUnit& unit) const;
+%rename (GetSurfaceAreaFraction_const) BIOGEARS_NAMESPACE SEActiveHeating::GetSurfaceAreaFraction() const;
 
 %include <biogears/cdm/system/environment/SEActiveHeating.h>

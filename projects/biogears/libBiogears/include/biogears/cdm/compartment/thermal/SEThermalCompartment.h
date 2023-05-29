@@ -111,6 +111,6 @@ protected:
 CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std{
-  BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartment*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartment*> ;
+  BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEThermalCompartment*> ;
+  BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SEThermalCompartment*> ;
 }

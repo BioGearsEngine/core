@@ -8,9 +8,9 @@
 %import <biogears/cdm/CommonDataModel.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SENeedleDecompression;
+%nspace BIOGEARS_NAMESPACE SENeedleDecompression;
 
-%ignore biogears::SENeedleDecompression::Unload;
-%ignore biogears::SENeedleDecompression::Load;
+%ignore BIOGEARS_NAMESPACE SENeedleDecompression::Unload;
+%ignore BIOGEARS_NAMESPACE SENeedleDecompression::Load;
 
 %include <biogears/cdm/patient/actions/SENeedleDecompression.h>

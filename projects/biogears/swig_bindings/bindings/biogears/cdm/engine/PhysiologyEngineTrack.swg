@@ -19,14 +19,15 @@
 
 %import <biogears/cdm/engine/PhysiologyEngine.h>
 
-%nspace biogears::PhysiologyEngineTrack;
-%nspace biogears::SEDataRequestScalar;
+%nspace BIOGEARS_NAMESPACE PhysiologyEngineTrack;
+%nspace BIOGEARS_NAMESPACE SEDataRequestScalar;
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEDataRequestScalar::ToString() const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEDataRequestScalar::ToString() const "public override";
 #endif 
 
-namespace biogears{
+OPEN_BIOGEARS_NAMESPACE 
+
    class SEDataRequestScalar : public SEGenericScalar {
    public:
      SEDataRequestScalar(Logger* logger)
@@ -54,4 +55,5 @@ namespace biogears{
       void ForceConnection();
 
    };
-}
+
+CLOSE_BIOGEARS_NAMESPACE

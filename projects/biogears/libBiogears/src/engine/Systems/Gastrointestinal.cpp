@@ -37,7 +37,7 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 //#define logMeal
 namespace std {
-template class map<biogears::SELiquidSubstanceQuantity*, double>;
+template class map<BIOGEARS_NAMESPACE SELiquidSubstanceQuantity*, double>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

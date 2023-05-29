@@ -13,9 +13,9 @@
 
 %import <std_map.i>
 
-%nspace biogears::SEDataRequest;
+%nspace BIOGEARS_NAMESPACE SEDataRequest;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 class  SEDataRequest : public SEDecimalFormat {
 
 public:
@@ -43,5 +43,4 @@ public:
   virtual void Set(const char* name, const CCompoundUnit& unit);
   virtual void Set(const char* name, const char* unit = "");
 };
-}
-
+CLOSE_BIOGEARS_NAMESPACE

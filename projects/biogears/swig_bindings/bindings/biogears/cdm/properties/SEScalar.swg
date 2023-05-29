@@ -8,28 +8,28 @@
 
 %import <biogears/cdm/properties/SEProperty.swg>
 
-%nspace biogears::SEScalar;
-%nspace biogears::NoUnit;
+%nspace BIOGEARS_NAMESPACE SEScalar;
+%nspace BIOGEARS_NAMESPACE NoUnit;
 
-%rename (LessThan)  biogears::SEScalar::operator<;
-%rename (LessThanEqual)  biogears::SEScalar::operator<=;
-%rename (GreaterThan)  biogears::SEScalar::operator>;
-%rename (GreaterThanEqual)  biogears::SEScalar::operator>=;
+%rename (LessThan)  BIOGEARS_NAMESPACE SEScalar::operator<;
+%rename (LessThanEqual)  BIOGEARS_NAMESPACE SEScalar::operator<=;
+%rename (GreaterThan)  BIOGEARS_NAMESPACE SEScalar::operator>;
+%rename (GreaterThanEqual)  BIOGEARS_NAMESPACE SEScalar::operator>=;
  
-%ignore  biogears::SEScalar::operator>>;
-%ignore  biogears::SEScalar::operator<<;
+%ignore  BIOGEARS_NAMESPACE SEScalar::operator>>;
+%ignore  BIOGEARS_NAMESPACE SEScalar::operator<<;
 
-%ignore biogears::SEScalar::Load;
-%ignore biogears::SEScalar::Unload;
+%ignore BIOGEARS_NAMESPACE SEScalar::Load;
+%ignore BIOGEARS_NAMESPACE SEScalar::Unload;
 %ignore unitless;
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalar::ToString() const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalar::ToString() const "public override";
 #endif 
 
 %include <biogears/cdm/properties/SEScalar.h>
 
-%nspace std::vector<biogears::SEScalar*>;
-%template(vector_SEScalar_ptr)  std::vector<biogears::SEScalar*>;
+%nspace std::vector<BIOGEARS_NAMESPACE SEScalar*>;
+%template(vector_SEScalar_ptr)  std::vector<BIOGEARS_NAMESPACE SEScalar*>;
 
 

@@ -10,10 +10,10 @@
 
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 
-%nspace biogears::SEDiabetesType1;
+%nspace BIOGEARS_NAMESPACE SEDiabetesType1;
 
-%ignore biogears::SEDiabetesType1::Unload;
-%ignore biogears::SEDiabetesType1::Load;
+%ignore BIOGEARS_NAMESPACE SEDiabetesType1::Unload;
+%ignore BIOGEARS_NAMESPACE SEDiabetesType1::Load;
 
 
 %include <biogears/cdm/patient/conditions/SEDiabetesType1.h>

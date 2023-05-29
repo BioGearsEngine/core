@@ -58,7 +58,7 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 
 #define USING_TYPES(name)            \
-  using namespace biogears::io;      \
+  using namespace BIOGEARS_NAMESPACE io;      \
   using SEType = biogears :: SE ## name; \
   using CDMType = CDM :: name ## Data;
 
@@ -77,7 +77,7 @@ TEST_F(TEST_FIXTURE_NAME, DecimalFormat)
   SEType source, sink;
   CDMType data;
 
-  source.SetNotation(biogears::DecimalNotation::Fixed);
+  source.SetNotation(BIOGEARS_NAMESPACE DecimalNotation::Fixed);
   source.SetPrecision(3);
 
   EXPECT_NE(source, sink);
@@ -105,14 +105,14 @@ TEST_F(TEST_FIXTURE_NAME, FunctionElectricPotentialVsTime)
   source.GetTime().push_back(3.0);
   source.GetTime().push_back(4.0);
 
-  source.SetTimeUnit(biogears::TimeUnit::hr);
+  source.SetTimeUnit(BIOGEARS_NAMESPACE TimeUnit::hr);
 
   source.GetElectricPotential().push_back(2);
   source.GetElectricPotential().push_back(3);
   source.GetElectricPotential().push_back(4);
   source.GetElectricPotential().push_back(5);
 
-  source.SetElectricPotentialUnit(biogears::ElectricPotentialUnit::mV);
+  source.SetElectricPotentialUnit(BIOGEARS_NAMESPACE ElectricPotentialUnit::mV);
 
   EXPECT_NE(source, sink);
 
@@ -174,8 +174,8 @@ TEST_F(TEST_FIXTURE_NAME, FunctionVolumeVsTime)
   source.GetIndependent().push_back(4);
   source.GetIndependent().push_back(5);
 
-  source.SetTimeUnit(biogears::TimeUnit::hr);
-  source.SetVolumeUnit(biogears::VolumeUnit::dL);
+  source.SetTimeUnit(BIOGEARS_NAMESPACE TimeUnit::hr);
+  source.SetVolumeUnit(BIOGEARS_NAMESPACE VolumeUnit::dL);
 
   EXPECT_NE(source, sink);
 
@@ -206,7 +206,7 @@ TEST_F(TEST_FIXTURE_NAME, HistogramFractionVsLength)
   source.GetIndependent().push_back(4);
   source.GetIndependent().push_back(5);
 
-  source.SetLengthUnit(biogears::LengthUnit::ft);
+  source.SetLengthUnit(BIOGEARS_NAMESPACE LengthUnit::ft);
 
   EXPECT_NE(source, sink);
 
@@ -277,7 +277,7 @@ TEST_F(TEST_FIXTURE_NAME, Amount)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::AmountUnit::pmol);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE AmountUnit::pmol);
 
   EXPECT_NE(source, sink);
 
@@ -299,7 +299,7 @@ TEST_F(TEST_FIXTURE_NAME, AmountPerMass)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::AmountPerMassUnit::ct_Per_ug);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE AmountPerMassUnit::ct_Per_ug);
 
   EXPECT_NE(source, sink);
 
@@ -321,7 +321,7 @@ TEST_F(TEST_FIXTURE_NAME, AmountPerTime)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::AmountPerTimeUnit::pmol_Per_min);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE AmountPerTimeUnit::pmol_Per_min);
 
   EXPECT_NE(source, sink);
 
@@ -342,7 +342,7 @@ TEST_F(TEST_FIXTURE_NAME, AmountPerVolume)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::AmountPerVolumeUnit::ct_Per_uL);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE AmountPerVolumeUnit::ct_Per_uL);
 
   EXPECT_NE(source, sink);
 
@@ -363,7 +363,7 @@ TEST_F(TEST_FIXTURE_NAME, Area)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::AreaUnit::m2);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE AreaUnit::m2);
 
   EXPECT_NE(source, sink);
 
@@ -384,7 +384,7 @@ TEST_F(TEST_FIXTURE_NAME, AreaPerTimePressure)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::AreaPerTimePressureUnit::m2_Per_min_mmHg);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE AreaPerTimePressureUnit::m2_Per_min_mmHg);
 
   EXPECT_NE(source, sink);
 
@@ -406,7 +406,7 @@ TEST_F(TEST_FIXTURE_NAME, ElectricCapacitance)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::ElectricCapacitanceUnit::F);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE ElectricCapacitanceUnit::F);
 
   EXPECT_NE(source, sink);
 
@@ -428,7 +428,7 @@ TEST_F(TEST_FIXTURE_NAME, ElectricCharge)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::ElectricChargeUnit::C);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE ElectricChargeUnit::C);
 
   EXPECT_NE(source, sink);
 
@@ -450,7 +450,7 @@ TEST_F(TEST_FIXTURE_NAME, ElectricCurrent)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::ElectricCurrentUnit::A);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE ElectricCurrentUnit::A);
 
   EXPECT_NE(source, sink);
 
@@ -472,7 +472,7 @@ TEST_F(TEST_FIXTURE_NAME, ElectricInductance)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::ElectricInductanceUnit::H);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE ElectricInductanceUnit::H);
 
   EXPECT_NE(source, sink);
 
@@ -494,7 +494,7 @@ TEST_F(TEST_FIXTURE_NAME, ElectricPotential)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::ElectricPotentialUnit::mV);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE ElectricPotentialUnit::mV);
 
   EXPECT_NE(source, sink);
 
@@ -516,7 +516,7 @@ TEST_F(TEST_FIXTURE_NAME, ElectricResistance)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::ElectricResistanceUnit::Ohm);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE ElectricResistanceUnit::Ohm);
 
   EXPECT_NE(source, sink);
 
@@ -538,7 +538,7 @@ TEST_F(TEST_FIXTURE_NAME, Energy)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::EnergyUnit::kJ);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE EnergyUnit::kJ);
 
   EXPECT_NE(source, sink);
 
@@ -560,7 +560,7 @@ TEST_F(TEST_FIXTURE_NAME, EnergyPerAmount)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::EnergyPerAmountUnit::kJ_Per_mol);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE EnergyPerAmountUnit::kJ_Per_mol);
 
   EXPECT_NE(source, sink);
 
@@ -582,7 +582,7 @@ TEST_F(TEST_FIXTURE_NAME, EnergyPerMass)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::EnergyPerMassUnit::kcal_Per_kg);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE EnergyPerMassUnit::kcal_Per_kg);
 
   EXPECT_NE(source, sink);
 
@@ -604,7 +604,7 @@ TEST_F(TEST_FIXTURE_NAME, FlowCompliance)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::FlowComplianceUnit::mL_Per_cmH2O);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE FlowComplianceUnit::mL_Per_cmH2O);
 
   EXPECT_NE(source, sink);
 
@@ -626,7 +626,7 @@ TEST_F(TEST_FIXTURE_NAME, FlowElastance)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::FlowElastanceUnit::mmHg_Per_mL);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE FlowElastanceUnit::mmHg_Per_mL);
 
   EXPECT_NE(source, sink);
 
@@ -648,7 +648,7 @@ TEST_F(TEST_FIXTURE_NAME, FlowInertance)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::FlowInertanceUnit::cmH2O_s2_Per_mL);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE FlowInertanceUnit::cmH2O_s2_Per_mL);
 
   EXPECT_NE(source, sink);
 
@@ -670,7 +670,7 @@ TEST_F(TEST_FIXTURE_NAME, FlowResistance)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::FlowResistanceUnit::cmH2O_s_Per_L);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE FlowResistanceUnit::cmH2O_s_Per_L);
 
   EXPECT_NE(source, sink);
 
@@ -692,7 +692,7 @@ TEST_F(TEST_FIXTURE_NAME, Force)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::ForceUnit::dyn);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE ForceUnit::dyn);
 
   EXPECT_NE(source, sink);
 
@@ -736,7 +736,7 @@ TEST_F(TEST_FIXTURE_NAME, Frequency)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::FrequencyUnit::Per_hr);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE FrequencyUnit::Per_hr);
 
   EXPECT_NE(source, sink);
 
@@ -780,7 +780,7 @@ TEST_F(TEST_FIXTURE_NAME, HeatCapacitance)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::HeatCapacitanceUnit::kcal_Per_C);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE HeatCapacitanceUnit::kcal_Per_C);
 
   EXPECT_NE(source, sink);
 
@@ -802,7 +802,7 @@ TEST_F(TEST_FIXTURE_NAME, HeatCapacitancePerAmount)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::HeatCapacitancePerAmountUnit::J_Per_K_mol);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE HeatCapacitancePerAmountUnit::J_Per_K_mol);
 
   EXPECT_NE(source, sink);
 
@@ -824,7 +824,7 @@ TEST_F(TEST_FIXTURE_NAME, HeatCapacitancePerMass)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::HeatCapacitancePerMassUnit::kcal_Per_C_kg);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::kcal_Per_C_kg);
 
   EXPECT_NE(source, sink);
 
@@ -846,7 +846,7 @@ TEST_F(TEST_FIXTURE_NAME, HeatConductance)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::HeatConductanceUnit::kcal_Per_K_s);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE HeatConductanceUnit::kcal_Per_K_s);
 
   EXPECT_NE(source, sink);
 
@@ -868,7 +868,7 @@ TEST_F(TEST_FIXTURE_NAME, HeatConductancePerArea)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::HeatConductancePerAreaUnit::BTU_Per_hr_ft2_C);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::BTU_Per_hr_ft2_C);
 
   EXPECT_NE(source, sink);
 
@@ -890,7 +890,7 @@ TEST_F(TEST_FIXTURE_NAME, HeatInductance)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::HeatInductanceUnit::K_s_Per_W);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE HeatInductanceUnit::K_s_Per_W);
 
   EXPECT_NE(source, sink);
 
@@ -912,7 +912,7 @@ TEST_F(TEST_FIXTURE_NAME, HeatResistanceArea)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::HeatResistanceAreaUnit::tog);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE HeatResistanceAreaUnit::tog);
 
   EXPECT_NE(source, sink);
 
@@ -934,7 +934,7 @@ TEST_F(TEST_FIXTURE_NAME, HeatResistance)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::HeatResistanceUnit::C_s_Per_kcal);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE HeatResistanceUnit::C_s_Per_kcal);
 
   EXPECT_NE(source, sink);
 
@@ -956,7 +956,7 @@ TEST_F(TEST_FIXTURE_NAME, InversePressure)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::InversePressureUnit::Inverse_mmHg);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE InversePressureUnit::Inverse_mmHg);
 
   EXPECT_NE(source, sink);
 
@@ -978,7 +978,7 @@ TEST_F(TEST_FIXTURE_NAME, InverseVolume)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::InverseVolumeUnit::Inverse_L);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE InverseVolumeUnit::Inverse_L);
 
   EXPECT_NE(source, sink);
 
@@ -1000,7 +1000,7 @@ TEST_F(TEST_FIXTURE_NAME, Length)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::LengthUnit::ft);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE LengthUnit::ft);
 
   EXPECT_NE(source, sink);
 
@@ -1022,7 +1022,7 @@ TEST_F(TEST_FIXTURE_NAME, LengthPerTime)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::LengthPerTimeUnit::cm_Per_s);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE LengthPerTimeUnit::cm_Per_s);
 
   EXPECT_NE(source, sink);
 
@@ -1044,7 +1044,7 @@ TEST_F(TEST_FIXTURE_NAME, LengthPerTimePressure)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::LengthPerTimePressureUnit::cm_Per_s_mmHg);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE LengthPerTimePressureUnit::cm_Per_s_mmHg);
 
   EXPECT_NE(source, sink);
 
@@ -1066,7 +1066,7 @@ TEST_F(TEST_FIXTURE_NAME, Mass)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::MassUnit::kg);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE MassUnit::kg);
 
   EXPECT_NE(source, sink);
 
@@ -1088,7 +1088,7 @@ TEST_F(TEST_FIXTURE_NAME, MassPerAmount)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::MassPerAmountUnit::g_Per_mol);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE MassPerAmountUnit::g_Per_mol);
 
   EXPECT_NE(source, sink);
 
@@ -1110,7 +1110,7 @@ TEST_F(TEST_FIXTURE_NAME, MassPerAreaTime)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::MassPerAreaTimeUnit::g_Per_cm2_s);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE MassPerAreaTimeUnit::g_Per_cm2_s);
 
   EXPECT_NE(source, sink);
 
@@ -1132,7 +1132,7 @@ TEST_F(TEST_FIXTURE_NAME, MassPerMass)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::MassPerMassUnit::mg_Per_g);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE MassPerMassUnit::mg_Per_g);
 
   EXPECT_NE(source, sink);
 
@@ -1154,7 +1154,7 @@ TEST_F(TEST_FIXTURE_NAME, MassPerTime)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::MassPerTimeUnit::g_Per_min);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE MassPerTimeUnit::g_Per_min);
 
   EXPECT_NE(source, sink);
 
@@ -1176,7 +1176,7 @@ TEST_F(TEST_FIXTURE_NAME, MassPerVolume)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::MassPerVolumeUnit::g_Per_m3);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE MassPerVolumeUnit::g_Per_m3);
 
   EXPECT_NE(source, sink);
 
@@ -1220,7 +1220,7 @@ TEST_F(TEST_FIXTURE_NAME, Osmolality)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::OsmolalityUnit::Osm_Per_kg);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE OsmolalityUnit::Osm_Per_kg);
 
   EXPECT_NE(source, sink);
 
@@ -1242,7 +1242,7 @@ TEST_F(TEST_FIXTURE_NAME, Osmolarity)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::OsmolarityUnit::Osm_Per_L);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE OsmolarityUnit::Osm_Per_L);
 
   EXPECT_NE(source, sink);
 
@@ -1264,7 +1264,7 @@ TEST_F(TEST_FIXTURE_NAME, Power)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::PowerUnit::BTU_Per_hr);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE PowerUnit::BTU_Per_hr);
 
   EXPECT_NE(source, sink);
 
@@ -1286,7 +1286,7 @@ TEST_F(TEST_FIXTURE_NAME, PowerPerAreaTemperatureToTheFourth)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4);
 
   EXPECT_NE(source, sink);
 
@@ -1308,7 +1308,7 @@ TEST_F(TEST_FIXTURE_NAME, Pressure)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::PressureUnit::cmH2O);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE PressureUnit::cmH2O);
 
   EXPECT_NE(source, sink);
 
@@ -1330,7 +1330,7 @@ TEST_F(TEST_FIXTURE_NAME, PressurePerVolume)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::PressurePerVolumeUnit::cmH2O_Per_mL);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE PressurePerVolumeUnit::cmH2O_Per_mL);
 
   EXPECT_NE(source, sink);
 
@@ -1352,7 +1352,7 @@ TEST_F(TEST_FIXTURE_NAME, PressureTimePerArea)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::PressureTimePerAreaUnit::cmH2O_Per_mL_m2);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE PressureTimePerAreaUnit::cmH2O_Per_mL_m2);
 
   EXPECT_NE(source, sink);
 
@@ -1374,7 +1374,7 @@ TEST_F(TEST_FIXTURE_NAME, PressureTimePerVolumeArea)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::PressureTimePerVolumeAreaUnit::dyn_s_Per_cm5_m2);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE PressureTimePerVolumeAreaUnit::dyn_s_Per_cm5_m2);
 
   EXPECT_NE(source, sink);
 
@@ -1396,7 +1396,7 @@ TEST_F(TEST_FIXTURE_NAME, Temperature)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::TemperatureUnit::F);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE TemperatureUnit::F);
 
   EXPECT_NE(source, sink);
 
@@ -1418,7 +1418,7 @@ TEST_F(TEST_FIXTURE_NAME, Time)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::TimeUnit::yr);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE TimeUnit::yr);
 
   EXPECT_NE(source, sink);
 
@@ -1440,7 +1440,7 @@ TEST_F(TEST_FIXTURE_NAME, Volume)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::VolumeUnit::m3);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE VolumeUnit::m3);
 
   EXPECT_NE(source, sink);
 
@@ -1462,7 +1462,7 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerPressure)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::VolumePerPressureUnit::L_Per_Pa);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE VolumePerPressureUnit::L_Per_Pa);
 
   EXPECT_NE(source, sink);
 
@@ -1484,7 +1484,7 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTimeArea)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::VolumePerTimeAreaUnit::mL_Per_min_m2);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::mL_Per_min_m2);
 
   EXPECT_NE(source, sink);
 
@@ -1506,7 +1506,7 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTime)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::VolumePerTimeUnit::L_Per_min);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE VolumePerTimeUnit::L_Per_min);
 
   EXPECT_NE(source, sink);
 
@@ -1528,7 +1528,7 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTimeMass)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::VolumePerTimeMassUnit::mL_Per_s_kg);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE VolumePerTimeMassUnit::mL_Per_s_kg);
 
   EXPECT_NE(source, sink);
 
@@ -1550,7 +1550,7 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTimePressureArea)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
   EXPECT_NE(source, sink);
 
@@ -1572,7 +1572,7 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTimePressure)
   SEType source, sink;
   CDMType data;
 
-  source.SetValue(3.14159, biogears::VolumePerTimePressureUnit::mL_Per_min_mmHg);
+  source.SetValue(3.14159, BIOGEARS_NAMESPACE VolumePerTimePressureUnit::mL_Per_min_mmHg);
 
   EXPECT_NE(source, sink);
 

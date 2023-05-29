@@ -16,7 +16,9 @@
 #include <string>
 #include <vector>
 
-namespace biogears {
+#include <biogears/config.h>
+
+OPEN_BIOGEARS_NAMESPACE
 
 enum class ETokenClass { Undefined,
                          Whitespace,
@@ -85,5 +87,5 @@ inline std::ostream& operator<<(std::ostream& out, const Token& t)
   out << t.value;
   return out;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE
 #endif //CMD_BIO_TOKENIZER_H

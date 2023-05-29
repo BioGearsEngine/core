@@ -51,14 +51,14 @@ protected:
   // before the destructor).
   virtual void TearDown() override;
 
-  biogears::Logger* logger;
-  biogears::SERespiratorySystem* es;
+  BIOGEARS_NAMESPACE Logger* logger;
+  BIOGEARS_NAMESPACE SERespiratorySystem* es;
 };
 
 void TEST_FIXTURE_NAME::SetUp()
 {
-  logger = new biogears::Logger;
-  es = new biogears::SERespiratorySystem(logger);
+  logger = new BIOGEARS_NAMESPACE Logger;
+  es = new BIOGEARS_NAMESPACE SERespiratorySystem(logger);
 }
 
 void TEST_FIXTURE_NAME::TearDown()
@@ -73,7 +73,7 @@ TEST_F(TEST_FIXTURE_NAME, AlveolarArterialGradient)
   EXPECT_TRUE( es->HasAlveolarArterialGradient());
   EXPECT_EQ(1.0, es->GetAlveolarArterialGradient(PressureUnit::Pa));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasAlveolarArterialGradient());
   auto dvalue = ces.GetAlveolarArterialGradient(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
@@ -85,7 +85,7 @@ TEST_F(TEST_FIXTURE_NAME, CarricoIndex)
   EXPECT_TRUE( es->HasCarricoIndex());
   EXPECT_EQ(1.0, es->GetCarricoIndex(PressureUnit::Pa));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasCarricoIndex());
   auto dvalue = ces.GetCarricoIndex(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
@@ -97,7 +97,7 @@ TEST_F(TEST_FIXTURE_NAME, EndTidalCarbonDioxidePressure)
   EXPECT_TRUE( es->HasEndTidalCarbonDioxidePressure());
   EXPECT_EQ(1.0, es->GetEndTidalCarbonDioxidePressure(PressureUnit::Pa));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasEndTidalCarbonDioxidePressure());
   auto dvalue = ces.GetEndTidalCarbonDioxidePressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
@@ -109,7 +109,7 @@ TEST_F(TEST_FIXTURE_NAME, RespirationDriverPressure)
   EXPECT_TRUE( es->HasRespirationDriverPressure());
   EXPECT_EQ(1.0, es->GetRespirationDriverPressure(PressureUnit::Pa));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasRespirationDriverPressure());
   auto dvalue = ces.GetRespirationDriverPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
@@ -121,7 +121,7 @@ TEST_F(TEST_FIXTURE_NAME, RespirationMusclePressure)
   EXPECT_TRUE( es->HasRespirationMusclePressure());
   EXPECT_EQ(1.0, es->GetRespirationMusclePressure(PressureUnit::Pa));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasRespirationMusclePressure());
   auto dvalue = ces.GetRespirationMusclePressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
@@ -133,7 +133,7 @@ TEST_F(TEST_FIXTURE_NAME, TranspulmonaryPressure)
   EXPECT_TRUE( es->HasTranspulmonaryPressure());
   EXPECT_EQ(1.0, es->GetTranspulmonaryPressure(PressureUnit::Pa));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasTranspulmonaryPressure());
   auto dvalue = ces.GetTranspulmonaryPressure(PressureUnit::Pa);
   EXPECT_NE(dvalue, dvalue);
@@ -145,7 +145,7 @@ TEST_F(TEST_FIXTURE_NAME, ExpiratoryFlow)
   EXPECT_TRUE( es->HasExpiratoryFlow());
   EXPECT_EQ(1.0, es->GetExpiratoryFlow(VolumePerTimeUnit::L_Per_min));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasExpiratoryFlow());
   auto dvalue = ces.GetExpiratoryFlow(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
@@ -157,7 +157,7 @@ TEST_F(TEST_FIXTURE_NAME, InspiratoryFlow)
   EXPECT_TRUE( es->HasInspiratoryFlow());
   EXPECT_EQ(1.0, es->GetInspiratoryFlow(VolumePerTimeUnit::L_Per_min));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasInspiratoryFlow());
   auto dvalue = ces.GetInspiratoryFlow(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
@@ -169,7 +169,7 @@ TEST_F(TEST_FIXTURE_NAME, TargetPulmonaryVentilation)
   EXPECT_TRUE( es->HasTargetPulmonaryVentilation());
   EXPECT_EQ(1.0, es->GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasTargetPulmonaryVentilation());
   auto dvalue = ces.GetTargetPulmonaryVentilation(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
@@ -181,7 +181,7 @@ TEST_F(TEST_FIXTURE_NAME, TotalAlveolarVentilation)
   EXPECT_TRUE( es->HasTotalAlveolarVentilation());
   EXPECT_EQ(1.0, es->GetTotalAlveolarVentilation(VolumePerTimeUnit::L_Per_min));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasTotalAlveolarVentilation());
   auto dvalue = ces.GetTotalAlveolarVentilation(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
@@ -193,7 +193,7 @@ TEST_F(TEST_FIXTURE_NAME, TotalDeadSpaceVentilation)
   EXPECT_TRUE( es->HasTotalDeadSpaceVentilation());
   EXPECT_EQ(1.0, es->GetTotalDeadSpaceVentilation(VolumePerTimeUnit::L_Per_min));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasTotalDeadSpaceVentilation());
   auto dvalue = ces.GetTotalDeadSpaceVentilation(VolumePerTimeUnit::L_Per_min);
   EXPECT_NE(dvalue, dvalue);
@@ -205,7 +205,7 @@ TEST_F(TEST_FIXTURE_NAME, TidalVolume)
   EXPECT_TRUE( es->HasTidalVolume());
   EXPECT_EQ(1.0, es->GetTidalVolume(VolumeUnit::L));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasTidalVolume());
   auto dvalue = ces.GetTidalVolume(VolumeUnit::L);
   EXPECT_NE(dvalue, dvalue);
@@ -217,7 +217,7 @@ TEST_F(TEST_FIXTURE_NAME, TotalLungVolume)
   EXPECT_TRUE( es->HasTotalLungVolume());
   EXPECT_EQ(1.0, es->GetTotalLungVolume(VolumeUnit::L));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasTotalLungVolume());
   auto dvalue = ces.GetTotalLungVolume(VolumeUnit::L);
   EXPECT_NE(dvalue, dvalue);
@@ -229,7 +229,7 @@ TEST_F(TEST_FIXTURE_NAME, PulmonaryCompliance)
   EXPECT_TRUE( es->HasPulmonaryCompliance());
   EXPECT_EQ(1.0, es->GetPulmonaryCompliance(FlowComplianceUnit::L_Per_cmH2O));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasPulmonaryCompliance());
   auto dvalue = ces.GetPulmonaryCompliance(FlowComplianceUnit::L_Per_cmH2O);
   EXPECT_NE(dvalue, dvalue);
@@ -241,7 +241,7 @@ TEST_F(TEST_FIXTURE_NAME, PulmonaryResistance)
   EXPECT_TRUE( es->HasPulmonaryResistance());
   EXPECT_EQ(1.0, es->GetPulmonaryResistance(FlowResistanceUnit::Pa_s_Per_m3));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasPulmonaryResistance());
   auto dvalue = ces.GetPulmonaryResistance(FlowResistanceUnit::Pa_s_Per_m3);
   EXPECT_NE(dvalue, dvalue);
@@ -253,7 +253,7 @@ TEST_F(TEST_FIXTURE_NAME, RespirationRate)
   EXPECT_TRUE( es->HasRespirationRate());
   EXPECT_EQ(1.0, es->GetRespirationRate(FrequencyUnit::Hz));
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasRespirationRate());
   auto dvalue = ces.GetRespirationRate(FrequencyUnit::Hz);
   EXPECT_NE(dvalue, dvalue);
@@ -265,7 +265,7 @@ TEST_F(TEST_FIXTURE_NAME, EndTidalCarbonDioxideFraction)
   EXPECT_TRUE( es->HasEndTidalCarbonDioxideFraction());
   EXPECT_EQ(1.0, es->GetEndTidalCarbonDioxideFraction().GetValue());
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasEndTidalCarbonDioxideFraction());
   auto dvalue = ces.GetEndTidalCarbonDioxideFraction();
   EXPECT_NE(dvalue, dvalue);
@@ -277,7 +277,7 @@ TEST_F(TEST_FIXTURE_NAME, InspiratoryExpiratoryRatio)
   EXPECT_TRUE( es->HasInspiratoryExpiratoryRatio());
   EXPECT_EQ(1.0, es->GetInspiratoryExpiratoryRatio().GetValue());
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasInspiratoryExpiratoryRatio());
   auto dvalue = ces.GetInspiratoryExpiratoryRatio();
   EXPECT_NE(dvalue, dvalue);
@@ -289,7 +289,7 @@ TEST_F(TEST_FIXTURE_NAME, SpecificVentilation)
   EXPECT_TRUE( es->HasSpecificVentilation());
   EXPECT_EQ(1.0, es->GetSpecificVentilation().GetValue());
 
-  const biogears::SERespiratorySystem ces(logger);
+  const BIOGEARS_NAMESPACE SERespiratorySystem ces(logger);
   EXPECT_FALSE( ces.HasSpecificVentilation());
   auto dvalue = ces.GetSpecificVentilation();
   EXPECT_NE(dvalue, dvalue);

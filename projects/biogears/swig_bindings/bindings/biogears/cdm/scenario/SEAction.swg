@@ -7,16 +7,16 @@
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/CommonDataModel.swg>
 
-%nspace biogears::SEAction;
+%nspace BIOGEARS_NAMESPACE SEAction;
 
-%ignore biogears::SEAction::Unload;
-%ignore biogears::SEAction::Load;
+%ignore BIOGEARS_NAMESPACE SEAction::Unload;
+%ignore BIOGEARS_NAMESPACE SEAction::Load;
 %ignore newFromBind(const CDM::ActionData& action, SESubstanceManager& substances);
 %ignore SetComment(std::string const &);
 
 %ignore SEAction::ToString(std::ostream& str) const;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEAction::ToString() const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEAction::ToString() const "public override";
 #endif 
 
 %include <biogears/cdm/scenario/SEAction.h>

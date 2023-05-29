@@ -1,4 +1,4 @@
-%module "biogears::SEInhalerActionCollection"
+%module "BIOGEARS_NAMESPACE SEInhalerActionCollection"
 
 // Add necessary symbols to generated header
 %{

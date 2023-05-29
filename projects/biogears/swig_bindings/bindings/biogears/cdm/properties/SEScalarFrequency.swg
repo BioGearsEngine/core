@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<FrequencyUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<FrequencyUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const FrequencyUnit&) const;
 %rename(NotEquals)  operator!=(const FrequencyUnit&) const;
 %rename(Equals)  operator==(const SEScalarFrequency&) const;
 %rename(NotEquals)  operator!=(const SEScalarFrequency&) const;  
 
-%ignore biogears::FrequencyUnit::FrequencyUnit(std::string const &);
-%ignore biogears::FrequencyUnit::IsValidUnit(std::string const &);
-%ignore biogears::FrequencyUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE FrequencyUnit::FrequencyUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE FrequencyUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE FrequencyUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarFrequency;
-%nspace biogears::FrequencyUnit;
-%nspace biogears::SEScalarQuantity<FrequencyUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarFrequency;
+%nspace BIOGEARS_NAMESPACE FrequencyUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<FrequencyUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class FrequencyUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::FrequencyUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FrequencyUnit>;
 
-%ignore  biogears::SEScalarQuantity< FrequencyUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< FrequencyUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< FrequencyUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< FrequencyUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< FrequencyUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< FrequencyUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FrequencyUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FrequencyUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FrequencyUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FrequencyUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FrequencyUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FrequencyUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::FrequencyUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::FrequencyUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::FrequencyUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::FrequencyUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FrequencyUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FrequencyUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FrequencyUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FrequencyUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< FrequencyUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< FrequencyUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FrequencyUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< FrequencyUnit >::operator!=;
 
-%template(QuantityFrequency) biogears::SEScalarQuantity<biogears::FrequencyUnit>;
+%template(QuantityFrequency) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FrequencyUnit>;
 
 %include <biogears/cdm/properties/SEScalarFrequency.h>
 

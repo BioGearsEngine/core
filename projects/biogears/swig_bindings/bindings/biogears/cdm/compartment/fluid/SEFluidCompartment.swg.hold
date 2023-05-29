@@ -1,4 +1,4 @@
-%module "biogears::SEFluidCompartment"
+%module "BIOGEARS_NAMESPACE SEFluidCompartment"
 
 // Add necessary symbols to generated header
 %{

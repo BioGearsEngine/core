@@ -65,9 +65,6 @@ protected:
   Logger* m_Logger;
 };
 
-CLOSE_BIOGEARS_NAMESPACE
-
-OPEN_BIOGEARS_NAMESPACE
 #pragma warning(push)
 #pragma warning(disable : 4100)
 class BIOGEARS_API LoggerForward {
@@ -80,10 +77,6 @@ public:
 };
 
 #pragma warning(pop)
-
-CLOSE_BIOGEARS_NAMESPACE
-
-OPEN_BIOGEARS_NAMESPACE
 
 class BIOGEARS_API Logger {
   friend Loggable;

@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<ElectricInductanceUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<ElectricInductanceUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const ElectricInductanceUnit&) const;
 %rename(NotEquals)  operator!=(const ElectricInductanceUnit&) const;
 %rename(Equals)  operator==(const SEScalarElectricInductance&) const;
 %rename(NotEquals)  operator!=(const SEScalarElectricInductance&) const;  
 
-%ignore biogears::ElectricInductanceUnit::ElectricInductanceUnit(std::string const &);
-%ignore biogears::ElectricInductanceUnit::IsValidUnit(std::string const &);
-%ignore biogears::ElectricInductanceUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricInductanceUnit::ElectricInductanceUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricInductanceUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricInductanceUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarElectricInductance;
-%nspace biogears::ElectricInductanceUnit;
-%nspace biogears::SEScalarQuantity<ElectricInductanceUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarElectricInductance;
+%nspace BIOGEARS_NAMESPACE ElectricInductanceUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<ElectricInductanceUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class ElectricInductanceUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::ElectricInductanceUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricInductanceUnit>;
 
-%ignore  biogears::SEScalarQuantity< ElectricInductanceUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< ElectricInductanceUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< ElectricInductanceUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< ElectricInductanceUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< ElectricInductanceUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< ElectricInductanceUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricInductanceUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricInductanceUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricInductanceUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricInductanceUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricInductanceUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricInductanceUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricInductanceUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricInductanceUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricInductanceUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricInductanceUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricInductanceUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricInductanceUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricInductanceUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricInductanceUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< ElectricInductanceUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< ElectricInductanceUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricInductanceUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricInductanceUnit >::operator!=;
 
-%template(QuantityElectricInductance) biogears::SEScalarQuantity<biogears::ElectricInductanceUnit>;
+%template(QuantityElectricInductance) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricInductanceUnit>;
 
 %include <biogears/cdm/properties/SEScalarElectricInductance.h>
 

@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <string>
 
 // Include the various types you will be using in your code
+#include <biogears/config.h>
 #include "HowTo-PatientGeneration.h"
 #include "biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h"
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -41,7 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 
 void PatientRun::antibiotics_regimen()
 {
@@ -170,7 +171,7 @@ void PatientRun::refresh_treatment()
   if (_refresh_state != RefreshState::INITIAL_BOLUS
       && _time_to_reassessment_min < 1.0) {
     _time_to_reassessment_min = hours(1);
-    biogears::SEUrinalysis ua;
+    BIOGEARS_NAMESPACE SEUrinalysis ua;
     _bg->GetPatientAssessment(ua);
 
     //When MAP < 65mmHg or Systolic < 90mmHg move to TITRATE.  Additionally if Urine Output is to low apply a bolus
@@ -253,7 +254,7 @@ void PatientRun::egdt_treatment()
     case EGDTState::RAPID_FLUID_BOLUS: {
       if (_Saline_bag->GetBagVolume().GetValue(VolumeUnit::mL) < 1.) {
 
-        biogears::SEUrinalysis ua;
+        BIOGEARS_NAMESPACE SEUrinalysis ua;
         _bg->GetPatientAssessment(ua);
 
         auto is_septic = _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.
@@ -646,7 +647,7 @@ PatientRun& PatientRun::treatment_plan(std::string treatment_plan)
   return *this;
 }
 //-------------------------------------------------------------------------------
-PatientRun& PatientRun::patient_state(biogears::filesystem::path path)
+PatientRun& PatientRun::patient_state(BIOGEARS_NAMESPACE filesystem::path path)
 {
   _patient_state = path;
   return *this;

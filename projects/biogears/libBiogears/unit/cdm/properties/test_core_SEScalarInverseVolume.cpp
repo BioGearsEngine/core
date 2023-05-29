@@ -59,26 +59,26 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarInverseVolume InverseVolume = biogears::SEScalarInverseVolume();
+  BIOGEARS_NAMESPACE SEScalarInverseVolume InverseVolume = BIOGEARS_NAMESPACE SEScalarInverseVolume();
   auto ptr = InverseVolume.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::InverseVolumeUnit::IsValidUnit("1/L");
-  bool unit1 = biogears::InverseVolumeUnit::IsValidUnit("1/mL");
+  bool unit0 = BIOGEARS_NAMESPACE InverseVolumeUnit::IsValidUnit("1/L");
+  bool unit1 = BIOGEARS_NAMESPACE InverseVolumeUnit::IsValidUnit("1/mL");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
-  bool unit6 = biogears::InverseVolumeUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE InverseVolumeUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::InverseVolumeUnit mu0 = biogears::InverseVolumeUnit::GetCompoundUnit("1/L");
-  biogears::InverseVolumeUnit mu1 = biogears::InverseVolumeUnit::GetCompoundUnit("1/mL");
-  EXPECT_EQ(mu0, biogears::InverseVolumeUnit::Inverse_L);
-  EXPECT_EQ(mu1, biogears::InverseVolumeUnit::Inverse_mL);
-  EXPECT_THROW(biogears::InverseVolumeUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE InverseVolumeUnit mu0 = BIOGEARS_NAMESPACE InverseVolumeUnit::GetCompoundUnit("1/L");
+  BIOGEARS_NAMESPACE InverseVolumeUnit mu1 = BIOGEARS_NAMESPACE InverseVolumeUnit::GetCompoundUnit("1/mL");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE InverseVolumeUnit::Inverse_L);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE InverseVolumeUnit::Inverse_mL);
+  EXPECT_THROW(BIOGEARS_NAMESPACE InverseVolumeUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

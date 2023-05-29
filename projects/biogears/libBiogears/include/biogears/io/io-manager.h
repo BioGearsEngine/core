@@ -21,15 +21,15 @@ specific language governing permissions and limitations under the License.
 //!  Functions for finding resource files that were part of the current biogears release
 //!  These functions are encoded as part of libbiogears_io
 //!
-//!  Functions are exposed as either biogears::filesystem::path or char const *
-//!  TODO: Migrate Biogears C++17 and replace biogears::filesystem with std::filesystem
+//!  Functions are exposed as either BIOGEARS_NAMESPACE filesystem::path or char const *
+//!  TODO: Migrate Biogears C++17 and replace BIOGEARS_NAMESPACE filesystem with std::filesystem
 
 OPEN_BIOGEARS_NAMESPACE
 
 BIOGEARS_API std::vector<filesystem::path> ListFiles(std::string const& dir, std::string const& regex, bool recurse = false);
 
 //!
-//!  IOManager is a class for interacting with the static functions in biogears::io
+//!  IOManager is a class for interacting with the static functions in BIOGEARS_NAMESPACE io
 //!  It simplfies interaction with the various resource_file_types at the cost of running
 //!  If Checks across the entire embeded library when testing for membership
 //!

@@ -18,7 +18,7 @@ class SEScalar0To1;
 namespace io {
   class PatientActions;
 }
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SEAcuteRespiratoryDistress : public SEPatientAction {
@@ -53,4 +53,4 @@ protected:
 private:
   SEScalar0To1* m_Severity;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

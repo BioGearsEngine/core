@@ -10,10 +10,10 @@
 
 %import <biogears/cdm/properties/SEScalarTime.swg>
 
-%nspace biogears::SEStarvation;
+%nspace BIOGEARS_NAMESPACE SEStarvation;
 
-%ignore biogears::SEStarvation::Unload;
-%ignore biogears::SEStarvation::Load;
+%ignore BIOGEARS_NAMESPACE SEStarvation::Unload;
+%ignore BIOGEARS_NAMESPACE SEStarvation::Load;
 
 
 %include <biogears/cdm/patient/conditions/SEStarvation.h>

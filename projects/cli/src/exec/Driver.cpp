@@ -100,7 +100,7 @@ Driver::Driver(char* exe_name, size_t thread_count)
   , _process_count(0)
   , _total_work(0)
 {
-  biogears::filesystem::path p { exe_name };
+  BIOGEARS_NAMESPACE filesystem::path p { exe_name };
   _relative_path = p.parent_path();
 }
 //-----------------------------------------------------------------------------
@@ -285,11 +285,11 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
   scenario_launch = [&](Executor ex, bool b) { this->async_execute(ex, b); };
 #endif
 
-  biogears::IOManager io {};
-  biogears::Logger logger { "", io };
+  BIOGEARS_NAMESPACE IOManager io {};
+  BIOGEARS_NAMESPACE Logger logger { "", io };
 
   filesystem::path resolved_filepath = io.FindScenarioFile(exec.Scenario().c_str());
-  using biogears::filesystem::path;
+  using BIOGEARS_NAMESPACE filesystem::path;
   using mil::tatrc::physiology::datamodel::ScenarioData;
   std::unique_ptr<ScenarioData> scenario;
   std::unique_ptr<CDM::ObjectData> obj;
@@ -335,20 +335,20 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     std::string nc_state_file = state_file;
     std::transform(nc_state_file.begin(), nc_state_file.end(), nc_state_file.begin(), ::tolower);
     if ("all" == nc_state_file) {
-      auto state_files = biogears::ListFiles("states", R"(.*\.xml)", false);
+      auto state_files = BIOGEARS_NAMESPACE ListFiles("states", R"(.*\.xml)", false);
 #if BIOGEARS_IO_PRESENT && BIOGEARS_IO_EMBED_STATES
       if (state_files.size() == 0) {
-        auto states = biogears::io::list_patients_files();
-        state_files = std::vector<biogears::filesystem::path> { states, states + biogears::io::patients_file_count() };
+        auto states = BIOGEARS_NAMESPACE io::list_patients_files();
+        state_files = std::vector<BIOGEARS_NAMESPACE filesystem::path> { states, states + BIOGEARS_NAMESPACE io::patients_file_count() };
       }
 #endif
-      auto infection_state_files = biogears::ListFiles("states/InfectionStates", R"(.*\.xml)", false);
+      auto infection_state_files = BIOGEARS_NAMESPACE ListFiles("states/InfectionStates", R"(.*\.xml)", false);
       state_files.insert(state_files.end(), infection_state_files.begin(), infection_state_files.end());
       queue_from_sate_files(exec, state_files, scenario_launch);
       return;
     } else if (filesystem::exists(scenario->EngineStateFile().get())) {
       if (filesystem::is_directory(scenario->EngineStateFile().get())) {
-        auto state_files = biogears::ListFiles(scenario->EngineStateFile().get(), R"(.*\.xml)", false);
+        auto state_files = BIOGEARS_NAMESPACE ListFiles(scenario->EngineStateFile().get(), R"(.*\.xml)", false);
         queue_from_sate_files(exec, state_files, scenario_launch);
         return;
       } else {
@@ -359,7 +359,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
       }
     } else if (filesystem::exists("states/" + scenario->EngineStateFile().get())) {
       if (filesystem::is_directory("states/" + scenario->EngineStateFile().get())) {
-        auto state_files = biogears::ListFiles("states/" + scenario->EngineStateFile().get(), R"(.*\.xml)", false);
+        auto state_files = BIOGEARS_NAMESPACE ListFiles("states/" + scenario->EngineStateFile().get(), R"(.*\.xml)", false);
         queue_from_sate_files(exec, state_files, scenario_launch);
         return;
       } else {
@@ -381,17 +381,17 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     std::string nc_patient_file = patient_file;
     std::transform(nc_patient_file.begin(), nc_patient_file.end(), nc_patient_file.begin(), ::tolower);
     if ("all" == nc_patient_file) {
-      auto patient_files = biogears::ListFiles("patients", R"(.*\.xml)", false);
+      auto patient_files = BIOGEARS_NAMESPACE ListFiles("patients", R"(.*\.xml)", false);
 #if BIOGEARS_IO_PRESENT
       if (patient_files.size() == 0) {
-        auto patients = biogears::io::list_patients_files();
-        patient_files = std::vector<biogears::filesystem::path> { patients, patients + biogears::io::patients_file_count() };
+        auto patients = BIOGEARS_NAMESPACE io::list_patients_files();
+        patient_files = std::vector<BIOGEARS_NAMESPACE filesystem::path> { patients, patients + BIOGEARS_NAMESPACE io::patients_file_count() };
       }
 #endif
       queue_from_patient_files(exec, patient_files, scenario_launch);
     } else if (filesystem::exists(scenario->InitialParameters()->PatientFile().get())) {
       if (filesystem::is_directory(scenario->InitialParameters()->PatientFile().get())) {
-        auto patient_files = biogears::ListFiles(scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)", false);
+        auto patient_files = BIOGEARS_NAMESPACE ListFiles(scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)", false);
         queue_from_patient_files(exec, patient_files, scenario_launch);
         return;
       } else {
@@ -402,7 +402,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
       }
     } else if (filesystem::exists("patients/" + scenario->InitialParameters()->PatientFile().get())) {
       if (filesystem::is_directory("patients/" + scenario->InitialParameters()->PatientFile().get())) {
-        auto patient_files = biogears::ListFiles("patients/" + scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)", false);
+        auto patient_files = BIOGEARS_NAMESPACE ListFiles("patients/" + scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)", false);
         queue_from_patient_files(exec, patient_files, scenario_launch);
         return;
       } else {
@@ -555,9 +555,9 @@ std::vector<filesystem::path> Driver::find_matching_files(const std::string& pat
 
 //-----------------------------------------------------------------------------
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
-void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
+void Driver::subprocess_execute(BIOGEARS_NAMESPACE Executor& ex, bool multi_patient_run)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE 
   _process_count += 1;
 
   try {
@@ -568,14 +568,14 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
     options = "--quiet";
 
     if (ex.Name().size()) {
-      auto name = biogears::trim(ex.Name());
+      auto name = BIOGEARS_NAMESPACE trim(ex.Name());
       if (name.front() == '\'' && name.back() == '\'') {
-        name = biogears::trim(name, "'");
+        name = BIOGEARS_NAMESPACE trim(name, "'");
       }
       if (name.front() == '\"' && name.back() == '\"') {
-        name = biogears::trim(name, "\"");
+        name = BIOGEARS_NAMESPACE trim(name, "\"");
       }
-      options += biogears::asprintf(" --name \"%s\"", name.c_str());
+      options += BIOGEARS_NAMESPACE asprintf(" --name \"%s\"", name.c_str());
     }
 
     if (ex.Driver() != EDriver::ScenarioTestDriver) {
@@ -594,62 +594,62 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
     }
 
     if (ex.Patient().size()) {
-      auto patient = biogears::trim(ex.Patient());
+      auto patient = BIOGEARS_NAMESPACE trim(ex.Patient());
       if (patient.front() == '\'' && patient.back() == '\'') {
-        patient = biogears::trim(patient, "'");
+        patient = BIOGEARS_NAMESPACE trim(patient, "'");
       }
       if (patient.front() == '\"' && patient.back() == '\"') {
-        patient = biogears::trim(patient, "\"");
+        patient = BIOGEARS_NAMESPACE trim(patient, "\"");
       }
-      options += biogears::asprintf(" --patient \"%s\"", patient.c_str());
+      options += BIOGEARS_NAMESPACE asprintf(" --patient \"%s\"", patient.c_str());
     }
 
     if (ex.State().size()) {
-      auto state = biogears::trim(ex.State());
+      auto state = BIOGEARS_NAMESPACE trim(ex.State());
       if (state.front() == '\'' && state.back() == '\'') {
-        state = biogears::trim(state, "'");
+        state = BIOGEARS_NAMESPACE trim(state, "'");
       }
       if (state.front() == '\"' && state.back() == '\"') {
-        state = biogears::trim(state, "\"");
+        state = BIOGEARS_NAMESPACE trim(state, "\"");
       }
-      options += biogears::asprintf(" --state \"%s\"", state.c_str());
+      options += BIOGEARS_NAMESPACE asprintf(" --state \"%s\"", state.c_str());
     }
 
     if (ex.Scenario().size()) {
-      auto scenario = biogears::trim(ex.Scenario());
+      auto scenario = BIOGEARS_NAMESPACE trim(ex.Scenario());
       if (scenario.front() == '\'' && scenario.back() == '\'') {
-        scenario = biogears::trim(scenario, "'");
+        scenario = BIOGEARS_NAMESPACE trim(scenario, "'");
       }
       if (scenario.front() == '\"' && scenario.back() == '\"') {
-        scenario = biogears::trim(scenario, "\"");
+        scenario = BIOGEARS_NAMESPACE trim(scenario, "\"");
       }
-      options += biogears::asprintf(" --scenario \"%s\"", scenario.c_str());
+      options += BIOGEARS_NAMESPACE asprintf(" --scenario \"%s\"", scenario.c_str());
     }
 
     if (ex.Results().size()) {
-      auto results = biogears::trim(ex.Results()[0]);
+      auto results = BIOGEARS_NAMESPACE trim(ex.Results()[0]);
       if (results.front() == '\'' && results.back() == '\'') {
-        results = biogears::trim(results, "'");
+        results = BIOGEARS_NAMESPACE trim(results, "'");
       }
       if (results.front() == '\"' && results.back() == '\"') {
-        results = biogears::trim(results, "\"");
+        results = BIOGEARS_NAMESPACE trim(results, "\"");
       }
-      options += biogears::asprintf(" --results \"%s\"", results.c_str());
+      options += BIOGEARS_NAMESPACE asprintf(" --results \"%s\"", results.c_str());
     }
 
     if (ex.Group().size()) {
-      auto group = biogears::trim(ex.Group());
+      auto group = BIOGEARS_NAMESPACE trim(ex.Group());
       if (group.front() == '\'' && group.back() == '\'') {
-        group = biogears::trim(group, "'");
+        group = BIOGEARS_NAMESPACE trim(group, "'");
       }
       if (group.front() == '\"' && group.back() == '\"') {
-        group = biogears::trim(group, "\"");
+        group = BIOGEARS_NAMESPACE trim(group, "\"");
       }
-      options += biogears::asprintf(" --group \"%s\"", group.c_str());
+      options += BIOGEARS_NAMESPACE asprintf(" --group \"%s\"", group.c_str());
     }
 
     if (ex.TrackStabilization()) {
-      options += biogears::asprintf(" --track-stabilization");
+      options += BIOGEARS_NAMESPACE asprintf(" --track-stabilization");
     }
 
     boost::asio::io_service svc;
@@ -718,9 +718,9 @@ void Driver::subprocess_execute(biogears::Executor& ex, bool multi_patient_run)
 
 #endif
 
-void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
+void Driver::async_execute(BIOGEARS_NAMESPACE Executor& ex, bool multi_patient_run)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE;
   _thread_count += 1;
   std::string trimed_scenario_path(trim(ex.Scenario()));
   std::ifstream scenario_stream { trimed_scenario_path };
@@ -775,7 +775,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
 
   BioGearsScenario sce(eng->GetSubstanceManager());
   if (!sce.Load(trim(trimed_scenario_path))) {
-    console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
+    console_logger.Info(BIOGEARS_NAMESPACE asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
   }
 
   if (!ex.Patient().empty()) {
@@ -788,11 +788,11 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
 
     filesystem::path resolved_filepath = io->FindScenarioFile(ex.Scenario().c_str());
     if (resolved_filepath.empty()) {
-      console_logger.Info(biogears::asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
+      console_logger.Info(BIOGEARS_NAMESPACE asprintf("Error[%d]: %s failed to find the specified scenario file %s", ExecutionErrors::SCENARIO_IO_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
       _thread_count -= 1;
       return;
     }
-    using biogears::filesystem::path;
+    using BIOGEARS_NAMESPACE filesystem::path;
     using mil::tatrc::physiology::datamodel::ScenarioData;
     std::unique_ptr<ScenarioData> scenario;
     try {
@@ -807,19 +807,19 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       std::cout << "Error while processing " << ex.Scenario() << "\n";
       std::cout << e.what() << "\n"
                 << std::endl;
-      console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", ExecutionErrors::SCENARIO_PARSE_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
+      console_logger.Info(BIOGEARS_NAMESPACE asprintf("Error[%d]: %s failed parse the specified scenario file %s", ExecutionErrors::SCENARIO_PARSE_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
       _thread_count -= 1;
       return;
     } catch (xsd::cxx::tree::parsing<char> e) {
       std::cout << "Error while processing " << ex.Scenario() << "\n";
       std::cout << e << "\n"
                 << std::endl;
-      console_logger.Info(biogears::asprintf("Error[%d]: %s failed parse the specified scenario file %s", ExecutionErrors::SCENARIO_PARSE_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
+      console_logger.Info(BIOGEARS_NAMESPACE asprintf("Error[%d]: %s failed parse the specified scenario file %s", ExecutionErrors::SCENARIO_PARSE_ERROR, ex.Name().c_str(), ex.Scenario().c_str()));
       _thread_count -= 1;
       return;
     }
 
-    biogears::SEPatient patient { sce.GetLogger() };
+    BIOGEARS_NAMESPACE SEPatient patient { sce.GetLogger() };
     ex.Patient(scenario->InitialParameters()->Patient().get().Name());
     patient.Load(scenario->InitialParameters()->Patient().get());
     sce.GetInitialParameters().SetPatient(patient);

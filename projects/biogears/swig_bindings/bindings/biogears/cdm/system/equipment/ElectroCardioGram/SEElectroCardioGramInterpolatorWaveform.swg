@@ -18,8 +18,8 @@
 %rename(GetData_const) GetData() const;
 %include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
 
-%nspace std::map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>;
-%template (map_enumHeartRhythm__ECGWaveformLead_ptr) std::map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>;
+%nspace std::map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>;
+%template (map_enumHeartRhythm__ECGWaveformLead_ptr) std::map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>;
 
-//%nspace std::map<CDM::ElectroCardioGramWaveformLeadNumber, std::map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>>;
-//%template (map_ECGWaveformLead__map_enumHeartRhythm__ECGWaveformLead_ptr) std::map<CDM::ElectroCardioGramWaveformLeadNumber, std::map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>>;
+//%nspace std::map<CDM::ElectroCardioGramWaveformLeadNumber, std::map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>>;
+//%template (map_ECGWaveformLead__map_enumHeartRhythm__ECGWaveformLead_ptr) std::map<CDM::ElectroCardioGramWaveformLeadNumber, std::map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>>;

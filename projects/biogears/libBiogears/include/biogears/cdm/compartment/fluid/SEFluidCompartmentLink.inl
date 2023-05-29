@@ -135,4 +135,4 @@ double SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetFlow(const Volum
     return SEScalar::dNaN();
   return m_Flow->GetValue(unit);
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

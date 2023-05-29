@@ -59,26 +59,26 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarAmountPerMass AmountPerMass = biogears::SEScalarAmountPerMass();
+  BIOGEARS_NAMESPACE SEScalarAmountPerMass AmountPerMass = BIOGEARS_NAMESPACE SEScalarAmountPerMass();
   auto ptr = AmountPerMass.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::AmountPerMassUnit::IsValidUnit("ct/g");
-  bool unit1 = biogears::AmountPerMassUnit::IsValidUnit("ct/ug");
+  bool unit0 = BIOGEARS_NAMESPACE AmountPerMassUnit::IsValidUnit("ct/g");
+  bool unit1 = BIOGEARS_NAMESPACE AmountPerMassUnit::IsValidUnit("ct/ug");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
-  bool unit5 = biogears::AmountPerMassUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE AmountPerMassUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  auto& mu0 = biogears::AmountPerMassUnit::GetCompoundUnit("ct/g");
-  auto& mu1 = biogears::AmountPerMassUnit::GetCompoundUnit("ct/ug");
-  EXPECT_EQ(mu0, biogears::AmountPerMassUnit::ct_Per_g);
-  EXPECT_EQ(mu1, biogears::AmountPerMassUnit::ct_Per_ug);
-  EXPECT_THROW(biogears::AmountPerMassUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  auto& mu0 = BIOGEARS_NAMESPACE AmountPerMassUnit::GetCompoundUnit("ct/g");
+  auto& mu1 = BIOGEARS_NAMESPACE AmountPerMassUnit::GetCompoundUnit("ct/ug");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE AmountPerMassUnit::ct_Per_g);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE AmountPerMassUnit::ct_Per_ug);
+  EXPECT_THROW(BIOGEARS_NAMESPACE AmountPerMassUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEAsthmaAttack;
+%nspace BIOGEARS_NAMESPACE SEAsthmaAttack;
 
-%ignore biogears::SEAsthmaAttack::Unload;
-%ignore biogears::SEAsthmaAttack::Load;
+%ignore BIOGEARS_NAMESPACE SEAsthmaAttack::Unload;
+%ignore BIOGEARS_NAMESPACE SEAsthmaAttack::Load;
 
 %include <biogears/cdm/patient/actions/SEAsthmaAttack.h>

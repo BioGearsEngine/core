@@ -59,4 +59,4 @@ private:
   SEScalarNeg1To1* m_ShapeModifier;
   SEScalarNeg1To1* m_SizeModifier;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

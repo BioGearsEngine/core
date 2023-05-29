@@ -5,6 +5,12 @@
 if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
    message(STATUS "            : biogears_csharp")
    
+   option(BIOGEARS_WITHOUT_NAMESPACE "Eliminates the use of the biogears namespace for the C++ libraries. Required for Python Bindings" OFF)
+
+   if ( BIOGEARS_WITHOUT_NAMESPACE )
+    message (FATAL_ERROR "Unable to compile CSHARP SWIG Bindings when BIOGEARS_NO_NAMSPACE is enabled")
+   endif()
+
    file(GLOB_RECURSE CSharp_SWIGS LIST_DIRECTORIES False CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../bindings/*.swg" )
    source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/bindings/*.swg" PREFIX "Source Files"  FILES ${csharp_test_files} )
 

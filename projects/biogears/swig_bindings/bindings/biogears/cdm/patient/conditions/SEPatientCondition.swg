@@ -8,11 +8,11 @@
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/scenario/SECondition.swg>
 
-%nspace biogears::SEPatientCondition;
+%nspace BIOGEARS_NAMESPACE SEPatientCondition;
 
-%ignore biogears::SEPatientCondition::Unload;
-%ignore biogears::SEPatientCondition::Load;
+%ignore BIOGEARS_NAMESPACE SEPatientCondition::Unload;
+%ignore BIOGEARS_NAMESPACE SEPatientCondition::Load;
 
-%ignore biogears::SECondition::ToString(std::ostream& str) const; 
+%ignore BIOGEARS_NAMESPACE SECondition::ToString(std::ostream& str) const; 
 
 %include <biogears/cdm/patient/conditions/SEPatientCondition.h>

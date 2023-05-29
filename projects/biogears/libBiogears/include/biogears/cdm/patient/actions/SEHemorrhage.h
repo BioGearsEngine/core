@@ -81,4 +81,4 @@ protected:
   SEScalarFlowResistance* m_BleedResistance;
   std::map<std::string, std::vector<unsigned int>> m_OrganMap;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

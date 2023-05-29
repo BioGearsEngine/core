@@ -34,4 +34,4 @@ protected:
   virtual void Unload(CDM::SubstanceAdministrationData& data) const;
 
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

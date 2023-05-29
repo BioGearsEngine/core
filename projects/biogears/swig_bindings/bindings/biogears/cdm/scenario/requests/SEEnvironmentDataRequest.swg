@@ -12,7 +12,7 @@
 
 %import <biogears/cdm/scenario/requests/SEDataRequest.swg>
 
-%nspace biogears::SEEnvironmentDataRequest;
+%nspace BIOGEARS_NAMESPACE SEEnvironmentDataRequest;
 
 %include <biogears/cdm/scenario/requests/SEEnvironmentDataRequest.h>
 

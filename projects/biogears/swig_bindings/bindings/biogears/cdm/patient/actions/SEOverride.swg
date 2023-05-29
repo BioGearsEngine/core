@@ -25,18 +25,18 @@
 %import <biogears/cdm/properties/SEScalarVolume.swg>
 %import <biogears/cdm/properties/SEScalarVolumePerTime.swg>
 
-%nspace biogears::SEOverride;
+%nspace BIOGEARS_NAMESPACE SEOverride;
 
-%ignore biogears::SEOverride::Unload;
-%ignore biogears::SEOverride::Load;
+%ignore BIOGEARS_NAMESPACE SEOverride::Unload;
+%ignore BIOGEARS_NAMESPACE SEOverride::Load;
 
-%rename (GetArterialPHOverride_const)  biogears::SEOverride::GetArterialPHOverride() const ;
-%rename (GetVenousPHOverride_const)  biogears::SEOverride::GetVenousPHOverride() const ;
-%rename (GetCO2SaturationOverride_const)  biogears::SEOverride::GetCO2SaturationOverride() const ;
-%rename (GetCOSaturationOverride_const)  biogears::SEOverride::GetCOSaturationOverride() const ;
-%rename (GetO2SaturationOverride_const)  biogears::SEOverride::GetO2SaturationOverride() const ;
-%rename (GetAchievedExerciseLevelOverride_const)  biogears::SEOverride::GetAchievedExerciseLevelOverride() const ;
-%rename (GetFatigueLevelOverride_const)  biogears::SEOverride::GetFatigueLevelOverride() const ;
-%rename (GetTotalWorkRateLevelOverride_const)  biogears::SEOverride::GetTotalWorkRateLevelOverride() const ;
+%rename (GetArterialPHOverride_const)  BIOGEARS_NAMESPACE SEOverride::GetArterialPHOverride() const ;
+%rename (GetVenousPHOverride_const)  BIOGEARS_NAMESPACE SEOverride::GetVenousPHOverride() const ;
+%rename (GetCO2SaturationOverride_const)  BIOGEARS_NAMESPACE SEOverride::GetCO2SaturationOverride() const ;
+%rename (GetCOSaturationOverride_const)  BIOGEARS_NAMESPACE SEOverride::GetCOSaturationOverride() const ;
+%rename (GetO2SaturationOverride_const)  BIOGEARS_NAMESPACE SEOverride::GetO2SaturationOverride() const ;
+%rename (GetAchievedExerciseLevelOverride_const)  BIOGEARS_NAMESPACE SEOverride::GetAchievedExerciseLevelOverride() const ;
+%rename (GetFatigueLevelOverride_const)  BIOGEARS_NAMESPACE SEOverride::GetFatigueLevelOverride() const ;
+%rename (GetTotalWorkRateLevelOverride_const)  BIOGEARS_NAMESPACE SEOverride::GetTotalWorkRateLevelOverride() const ;
 
 %include <biogears/cdm/patient/actions/SEOverride.h>

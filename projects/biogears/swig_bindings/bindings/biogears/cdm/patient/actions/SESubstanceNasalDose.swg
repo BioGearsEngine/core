@@ -12,9 +12,9 @@
 %import <biogears/cdm/properties/SEScalarMass.swg>
 %import <biogears/cdm/properties/SEScalarMassPerVolume.swg>
 
-%nspace biogears::SESubstanceNasalDose;
+%nspace BIOGEARS_NAMESPACE SESubstanceNasalDose;
 
-%ignore biogears::SESubstanceNasalDose::Unload;
-%ignore biogears::SESubstanceNasalDose::Load;
+%ignore BIOGEARS_NAMESPACE SESubstanceNasalDose::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstanceNasalDose::Load;
 
 %include <biogears/cdm/patient/actions/SESubstanceNasalDose.h>

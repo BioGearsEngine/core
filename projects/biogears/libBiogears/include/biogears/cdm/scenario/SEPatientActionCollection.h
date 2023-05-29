@@ -55,15 +55,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<string, biogears::SEHemorrhage*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SETourniquet*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEEscharotomy*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEPainStimulus*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceBolus*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceInfusion*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceOralDose*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
+BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SEHemorrhage*>;
+BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SETourniquet*>;
+BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SEEscharotomy*>;
+BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SEPainStimulus*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceBolus*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceInfusion*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceOralDose*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceNasalDose*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SESubstanceCompound*, BIOGEARS_NAMESPACE SESubstanceCompoundInfusion*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

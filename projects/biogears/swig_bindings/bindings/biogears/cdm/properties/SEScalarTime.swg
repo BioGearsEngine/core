@@ -8,47 +8,45 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<TimeUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<TimeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const TimeUnit&) const;
 %rename(NotEquals)  operator!=(const TimeUnit&) const;
 %rename(Equals)  operator==(const SEScalarTime&) const;
 %rename(NotEquals)  operator!=(const SEScalarTime&) const;  
 
-%ignore biogears::TimeUnit::TimeUnit(std::string const &);
-%ignore biogears::TimeUnit::IsValidUnit(std::string const &);
-%ignore biogears::TimeUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE TimeUnit::TimeUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE TimeUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE TimeUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarTime;
-%nspace biogears::TimeUnit;
-%nspace biogears::SEScalarQuantity<TimeUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarTime;
+%nspace BIOGEARS_NAMESPACE TimeUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<TimeUnit>;
 
-namespace biogears {
    class TimeUnit;
-}
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::TimeUnit>;
+%warnfilter(842)  SEScalarQuantity< TimeUnit>;
 
-%ignore  biogears::SEScalarQuantity< TimeUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< TimeUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< TimeUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< TimeUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< TimeUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< TimeUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< TimeUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< TimeUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< TimeUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< TimeUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< TimeUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< TimeUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::TimeUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::TimeUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::TimeUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::TimeUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE TimeUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE TimeUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE TimeUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE TimeUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< TimeUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< TimeUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< TimeUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< TimeUnit >::operator!=;
 
-%template(QuantityTime) biogears::SEScalarQuantity<biogears::TimeUnit>;
+%template(QuantityTime) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE TimeUnit>;
 
 %include <biogears/cdm/properties/SEScalarTime.h>
 

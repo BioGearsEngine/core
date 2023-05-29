@@ -16,10 +16,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEElectricalCircuitNode*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SEElectricalCircuitPath*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, size_t>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEElectricalCircuitNode*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEElectricalCircuitPath*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SEElectricalCircuitNode*, vector<BIOGEARS_NAMESPACE SEElectricalCircuitPath*>*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SEElectricalCircuitNode*, size_t>;
 }
 OPEN_BIOGEARS_NAMESPACE
 class SECircuitManager;

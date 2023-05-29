@@ -70,7 +70,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
 namespace std {
-template class vector<biogears::SEAction*>;
+template class vector<BIOGEARS_NAMESPACE SEAction*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

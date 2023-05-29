@@ -51,14 +51,14 @@ protected:
   // before the destructor).
   virtual void TearDown() override;
 
-  biogears::Logger* logger;
-  biogears::SENervousSystem* es;
+  BIOGEARS_NAMESPACE Logger* logger;
+  BIOGEARS_NAMESPACE SENervousSystem* es;
 };
 
 void TEST_FIXTURE_NAME::SetUp()
 {
-  logger = new biogears::Logger;
-  es = new biogears::SENervousSystem(logger);
+  logger = new BIOGEARS_NAMESPACE Logger;
+  es = new BIOGEARS_NAMESPACE SENervousSystem(logger);
 }
 
 void TEST_FIXTURE_NAME::TearDown()
@@ -73,7 +73,7 @@ TEST_F(TEST_FIXTURE_NAME, HeartRateScale)
   EXPECT_TRUE( es->HasHeartRateScale());
   EXPECT_EQ(1.0, es->GetHeartRateScale().GetValue());
 
-  const biogears::SENervousSystem ces(logger);
+  const BIOGEARS_NAMESPACE SENervousSystem ces(logger);
   EXPECT_FALSE( ces.HasHeartRateScale());
   auto dvalue = ces.GetHeartRateScale();
   EXPECT_NE(dvalue, dvalue);
@@ -85,7 +85,7 @@ TEST_F(TEST_FIXTURE_NAME, HeartElastanceScale)
   EXPECT_TRUE( es->HasHeartElastanceScale());
   EXPECT_EQ(1.0, es->GetHeartElastanceScale().GetValue());
 
-  const biogears::SENervousSystem ces(logger);
+  const BIOGEARS_NAMESPACE SENervousSystem ces(logger);
   EXPECT_FALSE( ces.HasHeartElastanceScale());
   auto dvalue = ces.GetHeartElastanceScale();
   EXPECT_NE(dvalue, dvalue);
@@ -97,7 +97,7 @@ TEST_F(TEST_FIXTURE_NAME, ResistanceScaleExtrasplanchnic)
   EXPECT_TRUE( es->HasResistanceScaleExtrasplanchnic());
   EXPECT_EQ(1.0, es->GetResistanceScaleExtrasplanchnic().GetValue());
 
-  const biogears::SENervousSystem ces(logger);
+  const BIOGEARS_NAMESPACE SENervousSystem ces(logger);
   EXPECT_FALSE( ces.HasResistanceScaleExtrasplanchnic());
   auto dvalue = ces.GetResistanceScaleExtrasplanchnic();
   EXPECT_NE(dvalue, dvalue);
@@ -109,7 +109,7 @@ TEST_F(TEST_FIXTURE_NAME, ResistanceScaleMuscle)
   EXPECT_TRUE(es->HasResistanceScaleMuscle());
   EXPECT_EQ(1.0, es->GetResistanceScaleMuscle().GetValue());
 
-  const biogears::SENervousSystem ces(logger);
+  const BIOGEARS_NAMESPACE SENervousSystem ces(logger);
   EXPECT_FALSE(ces.HasResistanceScaleMuscle());
   auto dvalue = ces.GetResistanceScaleMuscle();
   EXPECT_NE(dvalue, dvalue);
@@ -121,7 +121,7 @@ TEST_F(TEST_FIXTURE_NAME, ResistanceScaleMyocardium)
   EXPECT_TRUE(es->HasResistanceScaleMyocardium());
   EXPECT_EQ(1.0, es->GetResistanceScaleMyocardium().GetValue());
 
-  const biogears::SENervousSystem ces(logger);
+  const BIOGEARS_NAMESPACE SENervousSystem ces(logger);
   EXPECT_FALSE(ces.HasResistanceScaleMyocardium());
   auto dvalue = ces.GetResistanceScaleMyocardium();
   EXPECT_NE(dvalue, dvalue);
@@ -133,7 +133,7 @@ TEST_F(TEST_FIXTURE_NAME, ResistanceScaleSplanchnic)
   EXPECT_TRUE(es->HasResistanceScaleSplanchnic());
   EXPECT_EQ(1.0, es->GetResistanceScaleSplanchnic().GetValue());
 
-  const biogears::SENervousSystem ces(logger);
+  const BIOGEARS_NAMESPACE SENervousSystem ces(logger);
   EXPECT_FALSE(ces.HasResistanceScaleSplanchnic());
   auto dvalue = ces.GetResistanceScaleSplanchnic();
   EXPECT_NE(dvalue, dvalue);
@@ -145,7 +145,7 @@ TEST_F(TEST_FIXTURE_NAME, ComplianceScale)
   EXPECT_TRUE( es->HasComplianceScale());
   EXPECT_EQ(1.0, es->GetComplianceScale().GetValue());
 
-  const biogears::SENervousSystem ces(logger);
+  const BIOGEARS_NAMESPACE SENervousSystem ces(logger);
   EXPECT_FALSE( ces.HasComplianceScale());
   auto dvalue = ces.GetComplianceScale();
   EXPECT_NE(dvalue, dvalue);
@@ -157,7 +157,7 @@ TEST_F(TEST_FIXTURE_NAME, PainVisualAnalogueScale)
   EXPECT_TRUE( es->HasPainVisualAnalogueScale());
   EXPECT_EQ(1.0, es->GetPainVisualAnalogueScale().GetValue());
 
-  const biogears::SENervousSystem ces(logger);
+  const BIOGEARS_NAMESPACE SENervousSystem ces(logger);
   EXPECT_FALSE( ces.HasPainVisualAnalogueScale());
   auto dvalue = ces.GetPainVisualAnalogueScale();
   EXPECT_NE(dvalue, dvalue);
@@ -170,7 +170,7 @@ TEST_F(TEST_FIXTURE_NAME, LeftEyePupillaryResponse)
   es->RemoveLeftEyePupillaryResponse();
   EXPECT_FALSE( es->HasLeftEyePupillaryResponse());
 
-  const biogears::SENervousSystem ces(logger);
+  const BIOGEARS_NAMESPACE SENervousSystem ces(logger);
   EXPECT_FALSE( ces.HasLeftEyePupillaryResponse());
   auto dvalue = ces.GetLeftEyePupillaryResponse(); // so this returns a NULL instead of a nan
   EXPECT_EQ(NULL, dvalue);
@@ -183,7 +183,7 @@ TEST_F(TEST_FIXTURE_NAME, RightEyePupillaryResponse)
   es->RemoveRightEyePupillaryResponse();
   EXPECT_FALSE( es->HasRightEyePupillaryResponse());
 
-  const biogears::SENervousSystem cds(logger);
+  const BIOGEARS_NAMESPACE SENervousSystem cds(logger);
   EXPECT_FALSE( cds.HasRightEyePupillaryResponse());
   auto dvalue = cds.GetRightEyePupillaryResponse(); // so this returns a NULL instead of a nan
   EXPECT_EQ(NULL, dvalue);

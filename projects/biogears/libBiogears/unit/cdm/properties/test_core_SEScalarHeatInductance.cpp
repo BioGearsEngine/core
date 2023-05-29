@@ -59,22 +59,22 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarHeatInductance HeatInductance = biogears::SEScalarHeatInductance();
+  BIOGEARS_NAMESPACE SEScalarHeatInductance HeatInductance = BIOGEARS_NAMESPACE SEScalarHeatInductance();
   auto ptr = HeatInductance.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::HeatInductanceUnit::IsValidUnit("K s/W");
+  bool unit0 = BIOGEARS_NAMESPACE HeatInductanceUnit::IsValidUnit("K s/W");
   EXPECT_EQ(unit0, true);
-  bool unit6 = biogears::HeatInductanceUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE HeatInductanceUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::HeatInductanceUnit mu0 = biogears::HeatInductanceUnit::GetCompoundUnit("K s/W");
-  EXPECT_EQ(mu0, biogears::HeatInductanceUnit::K_s_Per_W);
-  EXPECT_THROW(biogears::HeatInductanceUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE HeatInductanceUnit mu0 = BIOGEARS_NAMESPACE HeatInductanceUnit::GetCompoundUnit("K s/W");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE HeatInductanceUnit::K_s_Per_W);
+  EXPECT_THROW(BIOGEARS_NAMESPACE HeatInductanceUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

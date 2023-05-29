@@ -11,10 +11,10 @@
 %import <biogears/cdm/properties/SEScalarArea.swg>
 %import <biogears/cdm/properties/SEScalarVolume.swg>
 
-%nspace biogears::SEChronicPericardialEffusion;
+%nspace BIOGEARS_NAMESPACE SEChronicPericardialEffusion;
 
-%ignore biogears::SEChronicPericardialEffusion::Unload;
-%ignore biogears::SEChronicPericardialEffusion::Load;
+%ignore BIOGEARS_NAMESPACE SEChronicPericardialEffusion::Unload;
+%ignore BIOGEARS_NAMESPACE SEChronicPericardialEffusion::Load;
 
 
 %include <biogears/cdm/patient/conditions/SEChronicPericardialEffusion.h>

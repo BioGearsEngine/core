@@ -8,8 +8,8 @@
 %rename(NotEquals)  operator!=(const SEFunctionElectricPotentialVsTime&) const;
 
 %nspace std::vector<double>;
-%nspace biogears::SEScalarQuantity<TimeUnit>;
-%nspace biogears::SEScalarQuantity<ElectricPotentialUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<TimeUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<ElectricPotentialUnit>;
 
 %import <biogears/cdm/properties/SEFunction.swg>
 %import <biogears/cdm/properties/SEScalarTime.swg>

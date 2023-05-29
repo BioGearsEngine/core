@@ -21,13 +21,13 @@ specific language governing permissions and limitations under the License.
 #include <memory>
 
 OPEN_BIOGEARS_NAMESPACE
-BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(biogears::Logger* logger = nullptr);
-BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string logfile = "");
-BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const char* logfile = "");
-BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, const std::string logfile);
-BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const char* working_dir, const char* logfile);
-BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, biogears::Logger* logger);
-BIOGEARS_API std::unique_ptr<biogears::PhysiologyEngine> CreateBioGearsEngine(const char* working_dir, biogears::Logger* logger);
+BIOGEARS_API std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine> CreateBioGearsEngine(BIOGEARS_NAMESPACE Logger* logger = nullptr);
+BIOGEARS_API std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine> CreateBioGearsEngine(const std::string logfile = "");
+BIOGEARS_API std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine> CreateBioGearsEngine(const char* logfile = "");
+BIOGEARS_API std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, const std::string logfile);
+BIOGEARS_API std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine> CreateBioGearsEngine(const char* working_dir, const char* logfile);
+BIOGEARS_API std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine> CreateBioGearsEngine(const std::string working_dir, BIOGEARS_NAMESPACE Logger* logger);
+BIOGEARS_API std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine> CreateBioGearsEngine(const char* working_dir, BIOGEARS_NAMESPACE Logger* logger);
 CLOSE_BIOGEARS_NAMESPACE
 
 namespace mil {

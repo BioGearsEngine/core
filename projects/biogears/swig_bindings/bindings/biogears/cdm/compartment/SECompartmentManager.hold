@@ -9,10 +9,10 @@
 
 %import <biogears/cdm/properties/SEScalar.swg>
 
-%nspace biogears::SECompartmentManager;
+%nspace BIOGEARS_NAMESPACE SECompartmentManager;
 
-%ignore biogears::SECompartmentManager::Unload;
-%ignore biogears::SECompartmentManager::Load;
+%ignore BIOGEARS_NAMESPACE SECompartmentManager::Unload;
+%ignore BIOGEARS_NAMESPACE SECompartmentManager::Load;
 
 %import <include <biogears/cdm/circuit/SECircuitManager.swg>
 %import <include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.swg>

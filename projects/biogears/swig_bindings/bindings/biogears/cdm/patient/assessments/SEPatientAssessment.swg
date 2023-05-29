@@ -9,10 +9,10 @@
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/CommonDataModel.swg>
 
-%nspace biogears::SEProperty;
+%nspace BIOGEARS_NAMESPACE SEProperty;
 
-%ignore biogears::SEPatientAssessment::Unload;
-%ignore biogears::SEPatientAssessment::Load;
+%ignore BIOGEARS_NAMESPACE SEPatientAssessment::Unload;
+%ignore BIOGEARS_NAMESPACE SEPatientAssessment::Load;
 
 %include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 

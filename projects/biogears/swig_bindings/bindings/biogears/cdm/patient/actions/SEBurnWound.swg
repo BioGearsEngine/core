@@ -10,11 +10,11 @@
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEBurnWound;
+%nspace BIOGEARS_NAMESPACE SEBurnWound;
 
-%ignore biogears::SEBurnWound::Unload;
-%ignore biogears::SEBurnWound::Load;
+%ignore BIOGEARS_NAMESPACE SEBurnWound::Unload;
+%ignore BIOGEARS_NAMESPACE SEBurnWound::Load;
 
-%ignore biogears::SEBurnWound::SetCompartment(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEBurnWound::SetCompartment(std::string const &);
 
 %include <biogears/cdm/patient/actions/SEBurnWound.h>

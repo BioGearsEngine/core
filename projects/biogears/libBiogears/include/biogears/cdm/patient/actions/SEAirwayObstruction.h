@@ -51,4 +51,4 @@ protected:
 protected:
   SEScalar0To1* m_Severity;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

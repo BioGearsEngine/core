@@ -14,9 +14,9 @@
 %import <biogears/cdm/properties/SEScalarVolumePerTime.swg>
 
 
-%nspace biogears::SESubstanceCompoundInfusion;
+%nspace BIOGEARS_NAMESPACE SESubstanceCompoundInfusion;
 
-%ignore biogears::SESubstanceCompoundInfusion::Unload;
-%ignore biogears::SESubstanceCompoundInfusion::Load;
+%ignore BIOGEARS_NAMESPACE SESubstanceCompoundInfusion::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstanceCompoundInfusion::Load;
 
 %include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>

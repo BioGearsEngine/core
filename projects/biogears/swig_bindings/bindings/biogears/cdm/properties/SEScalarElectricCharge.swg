@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<ElectricChargeUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<ElectricChargeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const ElectricChargeUnit&) const;
 %rename(NotEquals)  operator!=(const ElectricChargeUnit&) const;
 %rename(Equals)  operator==(const SEScalarElectricCharge&) const;
 %rename(NotEquals)  operator!=(const SEScalarElectricCharge&) const;  
 
-%ignore biogears::ElectricChargeUnit::ElectricChargeUnit(std::string const &);
-%ignore biogears::ElectricChargeUnit::IsValidUnit(std::string const &);
-%ignore biogears::ElectricChargeUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricChargeUnit::ElectricChargeUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricChargeUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricChargeUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarElectricCharge;
-%nspace biogears::ElectricChargeUnit;
-%nspace biogears::SEScalarQuantity<ElectricChargeUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarElectricCharge;
+%nspace BIOGEARS_NAMESPACE ElectricChargeUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<ElectricChargeUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class ElectricChargeUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::ElectricChargeUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricChargeUnit>;
 
-%ignore  biogears::SEScalarQuantity< ElectricChargeUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< ElectricChargeUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< ElectricChargeUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< ElectricChargeUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< ElectricChargeUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< ElectricChargeUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricChargeUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricChargeUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricChargeUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricChargeUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricChargeUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricChargeUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricChargeUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricChargeUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricChargeUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricChargeUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricChargeUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricChargeUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricChargeUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricChargeUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< ElectricChargeUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< ElectricChargeUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricChargeUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricChargeUnit >::operator!=;
 
-%template(QuantityElectricCharge) biogears::SEScalarQuantity<biogears::ElectricChargeUnit>;
+%template(QuantityElectricCharge) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricChargeUnit>;
 
 %include <biogears/cdm/properties/SEScalarElectricCharge.h>
 

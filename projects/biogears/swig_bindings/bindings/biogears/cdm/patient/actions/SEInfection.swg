@@ -10,11 +10,11 @@
 
 %import <biogears/cdm/properties/SEScalarMassPerVolume.swg>
 
-%nspace biogears::SEInfection;
+%nspace BIOGEARS_NAMESPACE SEInfection;
 
-%ignore biogears::SEInfection::Unload;
-%ignore biogears::SEInfection::Load;
+%ignore BIOGEARS_NAMESPACE SEInfection::Unload;
+%ignore BIOGEARS_NAMESPACE SEInfection::Load;
 
-%ignore biogears::SEInfection::SetLocation(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SEInfection::SetLocation(const std::string& name);
 
 %include <biogears/cdm/patient/actions/SEInfection.h>

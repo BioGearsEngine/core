@@ -42,7 +42,9 @@ set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
   target_compile_definitions(libbiogears_cdm  PUBLIC ${BIO_CPPFLAGS_INTERFACE} $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},armv7-a>:XSD_NO_EXPORT>)
   target_compile_definitions(libbiogears_cdm  PRIVATE ${BIO_CPPFLAGS} )
   target_compile_options(libbiogears_cdm PUBLIC $<$<PLATFORM_ID:Android>:-w> PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
-  
+  if ( BIOGEARS_WITHOUT_NAMESPACE )
+    target_compile_definitions(libbiogears_cdm PUBLIC  BIOGEARS_WITHOUT_NAMESPACES)
+  endif()
   target_include_directories(libbiogears_cdm 
       PRIVATE  ${BIO_INCLUDE_DIR} ${BIO_PRIVATE_INCLUDE_DIR} ${BIO_GENERATED_INCLUDE_DIR} ${BIOGEARS_SOURCE_DIR}/libCDM/include
       INTERFACE 

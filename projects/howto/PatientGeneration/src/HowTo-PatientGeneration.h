@@ -79,7 +79,7 @@ public:
   PatientRun& infection_severity(std::string);
   PatientRun& treatment_plan(std::string);
 
-  PatientRun& patient_state(biogears::filesystem::path);
+  PatientRun& patient_state(BIOGEARS_NAMESPACE filesystem::path);
 
   PatientRun& mic_g_Per_l(double);
   PatientRun& apply_at_m(double);
@@ -100,7 +100,7 @@ private:
   char const* _treatment_plan_str;
   TreatmentPlan _treatment_plan = TreatmentPlan::STANDARD;
 
-  biogears::filesystem::path _patient_state;
+  BIOGEARS_NAMESPACE filesystem::path _patient_state;
 
   double _mic_g_per_l;
   double _apply_at_m;
@@ -108,13 +108,13 @@ private:
   double _duration_hr;
 
   //Implementation Details
-  biogears::SESubstanceCompoundInfusion* _PiperacillinTazobactam_bag = nullptr;
-  biogears::SESubstanceCompoundInfusion* _Saline_bag = nullptr;
-  biogears::SESubstanceCompoundInfusion* _maintenance_bag = nullptr;
+  BIOGEARS_NAMESPACE SESubstanceCompoundInfusion* _PiperacillinTazobactam_bag = nullptr;
+  BIOGEARS_NAMESPACE SESubstanceCompoundInfusion* _Saline_bag = nullptr;
+  BIOGEARS_NAMESPACE SESubstanceCompoundInfusion* _maintenance_bag = nullptr;
 
-  biogears::SESubstanceInfusion* _Norepinphrine = nullptr;
+  BIOGEARS_NAMESPACE SESubstanceInfusion* _Norepinphrine = nullptr;
 
-  biogears::PhysiologyEngine* _bg = nullptr;
+  BIOGEARS_NAMESPACE PhysiologyEngine* _bg = nullptr;
 
   double _time_remaining_min = 0.;
   double _time_since_feeding_min = 0.;

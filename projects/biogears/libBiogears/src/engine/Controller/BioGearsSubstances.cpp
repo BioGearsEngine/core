@@ -30,7 +30,7 @@ specific language governing permissions and limitations under the License.
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace std {
-template class map<biogears::SESubstance*, biogears::SizeIndependentDepositionEfficencyCoefficient*>;
+template class map<BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SizeIndependentDepositionEfficencyCoefficient*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

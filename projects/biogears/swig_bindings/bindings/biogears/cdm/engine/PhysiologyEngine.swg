@@ -9,7 +9,7 @@
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/cdm/CommonDataModel.h>
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 using namespace CDM;
 %}
 
@@ -43,24 +43,24 @@ using namespace CDM;
 %import <biogears/cdm/utils/SEEventHandler.swg>
 %import <biogears/cdm/engine/PhysiologyEngineTrack.h>
 
-%nspace "biogears::PhysiologyEngine";
-%nspace "biogears::PhysiologyEngineTrack";
+%nspace "BIOGEARS_NAMESPACE PhysiologyEngine";
+%nspace "BIOGEARS_NAMESPACE PhysiologyEngineTrack";
 
-%ignore biogears::PhysiologyEngineException::PhysiologyEngineException(const std::string& _Message);
+%ignore BIOGEARS_NAMESPACE PhysiologyEngineException::PhysiologyEngineException(const std::string& _Message);
 
-%ignore biogears::PhysiologyEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
-%ignore biogears::PhysiologyEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr);
-%ignore biogears::PhysiologyEngine::GetStateData();
-%ignore biogears::PhysiologyEngine::SaveStateToFile(const std::string& file);
-%ignore biogears::PhysiologyEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions);
-%ignore biogears::PhysiologyEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions , const PhysiologyEngineConfiguration* config );
-%ignore biogears::PhysiologyEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
-%ignore biogears::PhysiologyEngine::InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
-%ignore biogears::PhysiologyEngine::GetConfiguration();
-%ignore biogears::PhysiologyEngine::GetAnesthesiaMachine();
-%ignore biogears::PhysiologyEngine::GetElectroCardioGram();
-%ignore biogears::PhysiologyEngine::GetInhaler();
-%ignore biogears::PhysiologyEngine::GetCompartments();
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr);
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::GetStateData();
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::SaveStateToFile(const std::string& file);
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions);
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions , const PhysiologyEngineConfiguration* config );
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::GetConfiguration();
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::GetAnesthesiaMachine();
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::GetElectroCardioGram();
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::GetInhaler();
+%ignore BIOGEARS_NAMESPACE PhysiologyEngine::GetCompartments();
 
 %rename (AdvanceModelTimeBy) AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false);
 

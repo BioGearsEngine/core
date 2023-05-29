@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEBronchoconstriction;
+%nspace BIOGEARS_NAMESPACE SEBronchoconstriction;
 
-%ignore biogears::SEBronchonconstriction::Unload;
-%ignore biogears::SEBronchoconstriction::Load;
+%ignore BIOGEARS_NAMESPACE SEBronchonconstriction::Unload;
+%ignore BIOGEARS_NAMESPACE SEBronchoconstriction::Load;
 
 %include <biogears/cdm/patient/actions/SEBronchoconstriction.h>

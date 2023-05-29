@@ -51,4 +51,4 @@ public:
 protected:
   CDM::enumPatientAssessment::value m_Type;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -63,4 +63,4 @@ protected:
   SEScalarTime* m_HalfLife;
   std::string m_Location;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

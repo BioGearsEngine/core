@@ -59,24 +59,24 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarMassPerAmount MassPerAmount = biogears::SEScalarMassPerAmount();
+  BIOGEARS_NAMESPACE SEScalarMassPerAmount MassPerAmount = BIOGEARS_NAMESPACE SEScalarMassPerAmount();
   auto ptr = MassPerAmount.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0  = biogears::MassPerAmountUnit::IsValidUnit("g/ct");
-  bool unit1  = biogears::MassPerAmountUnit::IsValidUnit("g/mol");
-  bool unit2  = biogears::MassPerAmountUnit::IsValidUnit("g/mmol");
-  bool unit3  = biogears::MassPerAmountUnit::IsValidUnit("g/umol");
-  bool unit4  = biogears::MassPerAmountUnit::IsValidUnit("mg/mol");
-  bool unit5  = biogears::MassPerAmountUnit::IsValidUnit("mg/mmol");
-  bool unit6  = biogears::MassPerAmountUnit::IsValidUnit("kg/mol");
-  bool unit7  = biogears::MassPerAmountUnit::IsValidUnit("ug/mmol");
-  bool unit8  = biogears::MassPerAmountUnit::IsValidUnit("ug/mol");
-  bool unit9  = biogears::MassPerAmountUnit::IsValidUnit("ug/ct");
-  bool unit10 = biogears::MassPerAmountUnit::IsValidUnit("pg/ct");
+  bool unit0  = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("g/ct");
+  bool unit1  = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("g/mol");
+  bool unit2  = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("g/mmol");
+  bool unit3  = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("g/umol");
+  bool unit4  = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("mg/mol");
+  bool unit5  = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("mg/mmol");
+  bool unit6  = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("kg/mol");
+  bool unit7  = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("ug/mmol");
+  bool unit8  = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("ug/mol");
+  bool unit9  = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("ug/ct");
+  bool unit10 = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("pg/ct");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
@@ -88,33 +88,33 @@ TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
   EXPECT_EQ(unit8, true);
   EXPECT_EQ(unit9, true);
   EXPECT_EQ(unit10, true);
-  bool unit11 = biogears::MassPerAmountUnit::IsValidUnit("DEADBEEF");
+  bool unit11 = BIOGEARS_NAMESPACE MassPerAmountUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit11, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::MassPerAmountUnit mu0  = biogears::MassPerAmountUnit::GetCompoundUnit("g/ct");
-  biogears::MassPerAmountUnit mu1  = biogears::MassPerAmountUnit::GetCompoundUnit("g/mol");
-  biogears::MassPerAmountUnit mu2  = biogears::MassPerAmountUnit::GetCompoundUnit("g/mmol");
-  biogears::MassPerAmountUnit mu3  = biogears::MassPerAmountUnit::GetCompoundUnit("g/umol");
-  biogears::MassPerAmountUnit mu4  = biogears::MassPerAmountUnit::GetCompoundUnit("mg/mol");
-  biogears::MassPerAmountUnit mu5  = biogears::MassPerAmountUnit::GetCompoundUnit("mg/mmol");
-  biogears::MassPerAmountUnit mu6  = biogears::MassPerAmountUnit::GetCompoundUnit("kg/mol");
-  biogears::MassPerAmountUnit mu7  = biogears::MassPerAmountUnit::GetCompoundUnit("ug/mmol");
-  biogears::MassPerAmountUnit mu8  = biogears::MassPerAmountUnit::GetCompoundUnit("ug/mol");
-  biogears::MassPerAmountUnit mu9  = biogears::MassPerAmountUnit::GetCompoundUnit("ug/ct");
-  biogears::MassPerAmountUnit mu10 = biogears::MassPerAmountUnit::GetCompoundUnit("pg/ct");
-  EXPECT_EQ(mu0, biogears::MassPerAmountUnit::g_Per_ct);
-  EXPECT_EQ(mu1, biogears::MassPerAmountUnit::g_Per_mol);
-  EXPECT_EQ(mu2, biogears::MassPerAmountUnit::g_Per_mmol);
-  EXPECT_EQ(mu3, biogears::MassPerAmountUnit::g_Per_umol);
-  EXPECT_EQ(mu4, biogears::MassPerAmountUnit::mg_Per_mol);
-  EXPECT_EQ(mu5, biogears::MassPerAmountUnit::mg_Per_mmol);
-  EXPECT_EQ(mu6, biogears::MassPerAmountUnit::kg_Per_mol);
-  EXPECT_EQ(mu7, biogears::MassPerAmountUnit::ug_Per_mmol);
-  EXPECT_EQ(mu8, biogears::MassPerAmountUnit::ug_Per_mol);
-  EXPECT_EQ(mu9, biogears::MassPerAmountUnit::ug_Per_ct);
-  EXPECT_EQ(mu10, biogears::MassPerAmountUnit::pg_Per_ct);
-  EXPECT_THROW(biogears::MassPerAmountUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE MassPerAmountUnit mu0  = BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("g/ct");
+  BIOGEARS_NAMESPACE MassPerAmountUnit mu1  = BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("g/mol");
+  BIOGEARS_NAMESPACE MassPerAmountUnit mu2  = BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("g/mmol");
+  BIOGEARS_NAMESPACE MassPerAmountUnit mu3  = BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("g/umol");
+  BIOGEARS_NAMESPACE MassPerAmountUnit mu4  = BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("mg/mol");
+  BIOGEARS_NAMESPACE MassPerAmountUnit mu5  = BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("mg/mmol");
+  BIOGEARS_NAMESPACE MassPerAmountUnit mu6  = BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("kg/mol");
+  BIOGEARS_NAMESPACE MassPerAmountUnit mu7  = BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("ug/mmol");
+  BIOGEARS_NAMESPACE MassPerAmountUnit mu8  = BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("ug/mol");
+  BIOGEARS_NAMESPACE MassPerAmountUnit mu9  = BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("ug/ct");
+  BIOGEARS_NAMESPACE MassPerAmountUnit mu10 = BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("pg/ct");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE MassPerAmountUnit::g_Per_ct);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE MassPerAmountUnit::g_Per_mol);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE MassPerAmountUnit::g_Per_mmol);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE MassPerAmountUnit::g_Per_umol);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE MassPerAmountUnit::mg_Per_mol);
+  EXPECT_EQ(mu5, BIOGEARS_NAMESPACE MassPerAmountUnit::mg_Per_mmol);
+  EXPECT_EQ(mu6, BIOGEARS_NAMESPACE MassPerAmountUnit::kg_Per_mol);
+  EXPECT_EQ(mu7, BIOGEARS_NAMESPACE MassPerAmountUnit::ug_Per_mmol);
+  EXPECT_EQ(mu8, BIOGEARS_NAMESPACE MassPerAmountUnit::ug_Per_mol);
+  EXPECT_EQ(mu9, BIOGEARS_NAMESPACE MassPerAmountUnit::ug_Per_ct);
+  EXPECT_EQ(mu10, BIOGEARS_NAMESPACE MassPerAmountUnit::pg_Per_ct);
+  EXPECT_THROW(BIOGEARS_NAMESPACE MassPerAmountUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

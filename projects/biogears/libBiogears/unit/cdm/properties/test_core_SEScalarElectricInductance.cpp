@@ -59,22 +59,22 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarElectricInductance ElectricInductance = biogears::SEScalarElectricInductance();
+  BIOGEARS_NAMESPACE SEScalarElectricInductance ElectricInductance = BIOGEARS_NAMESPACE SEScalarElectricInductance();
   auto ptr = ElectricInductance.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::ElectricInductanceUnit::IsValidUnit("H");
+  bool unit0 = BIOGEARS_NAMESPACE ElectricInductanceUnit::IsValidUnit("H");
   EXPECT_EQ(unit0, true);
-  bool unit6 = biogears::ElectricInductanceUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE ElectricInductanceUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::ElectricInductanceUnit mu0 = biogears::ElectricInductanceUnit::GetCompoundUnit("H");
-  EXPECT_EQ(mu0, biogears::ElectricInductanceUnit::H);
-  EXPECT_THROW(biogears::ElectricInductanceUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE ElectricInductanceUnit mu0 = BIOGEARS_NAMESPACE ElectricInductanceUnit::GetCompoundUnit("H");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE ElectricInductanceUnit::H);
+  EXPECT_THROW(BIOGEARS_NAMESPACE ElectricInductanceUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

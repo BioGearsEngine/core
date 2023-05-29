@@ -8,11 +8,11 @@
 %import <biogears/cdm/CommonDataModel.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SETourniquet;
+%nspace BIOGEARS_NAMESPACE SETourniquet;
 
-%ignore biogears::SETourniquet::Unload;
-%ignore biogears::SETourniquet::Load;
+%ignore BIOGEARS_NAMESPACE SETourniquet::Unload;
+%ignore BIOGEARS_NAMESPACE SETourniquet::Load;
 
-%ignore biogears::SETourniquet::SetCompartment(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SETourniquet::SetCompartment(const std::string& name);
 
 %include <biogears/cdm/patient/actions/SETourniquet.h>

@@ -43,7 +43,7 @@ void PatientValidationGenerator::GenPatientValidation()
 
   auto patients = ListFiles("patients", R"(.*\.xml)");
   for (auto& patient : patients) {
-    std::function<void()> work = [=]() { biogears::runPatientScenario(patient, std::string("Scenarios/Validation/Patient-Validation.xml")); };
+    std::function<void()> work = [=]() { BIOGEARS_NAMESPACE runPatientScenario(patient, std::string("Scenarios/Validation/Patient-Validation.xml")); };
     _pool.queue_work(work);
   }
 }

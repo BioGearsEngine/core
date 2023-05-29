@@ -21,10 +21,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCircuitNode*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCircuitPath*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEThermalCircuitNode*, vector<biogears::SEThermalCircuitPath*>*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEThermalCircuitNode*, size_t>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEThermalCircuitNode*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEThermalCircuitPath*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SEThermalCircuitNode*, vector<BIOGEARS_NAMESPACE SEThermalCircuitPath*>*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SEThermalCircuitNode*, size_t>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

@@ -15,17 +15,17 @@
 %import <biogears/cdm/properties/SEScalarPressure.swg>
 
 
-%nspace biogears::SEMechanicalVentilation;
+%nspace BIOGEARS_NAMESPACE SEMechanicalVentilation;
 
-%ignore biogears::SEMechanicalVentilation::Unload;
-%ignore biogears::SEMechanicalVentilation::Load;
+%ignore BIOGEARS_NAMESPACE SEMechanicalVentilation::Unload;
+%ignore BIOGEARS_NAMESPACE SEMechanicalVentilation::Load;
 
-%rename(GetFlow_const) biogears::SEMechanicalVentilation::GetFlow(const VolumePerTimeUnit& unit) const;
-%rename(GetPressure_const) biogears::SEMechanicalVentilation::GetPressure(const PressureUnit& unit) const;
+%rename(GetFlow_const) BIOGEARS_NAMESPACE SEMechanicalVentilation::GetFlow(const VolumePerTimeUnit& unit) const;
+%rename(GetPressure_const) BIOGEARS_NAMESPACE SEMechanicalVentilation::GetPressure(const PressureUnit& unit) const;
 
-%rename(HasGasFractions) biogears::SEMechanicalVentilation::HasGasFraction() const;
-%rename(HasGasFraction_const) biogears::SEMechanicalVentilation::HasGasFraction(const SESubstance& substance) const;
-%rename(GetGasFractions_const) biogears::SEMechanicalVentilation::GetGasFractions() const;
-%rename(GetGasFraction_const) biogears::SEMechanicalVentilation::GetGasFraction(const SESubstance& substance) const;  
+%rename(HasGasFractions) BIOGEARS_NAMESPACE SEMechanicalVentilation::HasGasFraction() const;
+%rename(HasGasFraction_const) BIOGEARS_NAMESPACE SEMechanicalVentilation::HasGasFraction(const SESubstance& substance) const;
+%rename(GetGasFractions_const) BIOGEARS_NAMESPACE SEMechanicalVentilation::GetGasFractions() const;
+%rename(GetGasFraction_const) BIOGEARS_NAMESPACE SEMechanicalVentilation::GetGasFraction(const SESubstance& substance) const;  
   
 %include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>

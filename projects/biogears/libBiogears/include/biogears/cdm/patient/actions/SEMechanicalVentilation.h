@@ -86,4 +86,4 @@ protected:
   std::vector<SESubstanceFraction*> m_GasFractions;
   std::vector<const SESubstanceFraction*> m_cGasFractions;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

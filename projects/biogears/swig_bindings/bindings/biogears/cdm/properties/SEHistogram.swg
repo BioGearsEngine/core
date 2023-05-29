@@ -6,7 +6,7 @@
 
 %import <biogears/cdm/properties/SEProperty.swg>
 
-%nspace biogears::SEHistogram;
+%nspace BIOGEARS_NAMESPACE SEHistogram;
 %rename(Equals)  operator==(const SEHistogram&) const;
 %rename(NotEquals)  operator!=(const SEHistogram&) const;
 

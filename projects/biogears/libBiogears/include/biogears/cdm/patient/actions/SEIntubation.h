@@ -54,4 +54,4 @@ protected:
 protected:
   CDM::enumIntubationType::value m_Type;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

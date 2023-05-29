@@ -13,12 +13,13 @@ specific language governing permissions and limitations under the License.
 #include <regex>
 
 // Include the various types you will be using in your code
+#include <biogears/config.h>
 #include <biogears/cdm/utils/TaskRunner/TaskRunner.h>
 
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// This class derives from Task and implements Run() so it can be used in the TaskRunner.  When run,

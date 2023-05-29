@@ -11,11 +11,11 @@
 %import <biogears/cdm/substance/SESubstance.swg>
 %import <biogears/cdm/substance/SESubstanceCompound.swg>
 
-%nspace biogears::SESubstanceManager;
+%nspace BIOGEARS_NAMESPACE SESubstanceManager;
 
-%ignore biogears::SESubstanceManager::GetSubstance(const std::string& name) const;
-%ignore biogears::SESubstanceManager::ReadSubstanceFile(const std::string& name);
-%ignore biogears::SESubstanceManager::GetCompound(const std::string& name) const;
+%ignore BIOGEARS_NAMESPACE SESubstanceManager::GetSubstance(const std::string& name) const;
+%ignore BIOGEARS_NAMESPACE SESubstanceManager::ReadSubstanceFile(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstanceManager::GetCompound(const std::string& name) const;
 %include <biogears/cdm/substance/SESubstanceManager.h>
 
 

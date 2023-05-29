@@ -56,7 +56,7 @@ protected:
  //! 
 void TEST_FIXTURE_NAME::SetUp()
 {
-  biogears::filesystem::create_directory(m_prefix);
+  BIOGEARS_NAMESPACE filesystem::create_directory(m_prefix);
 }
 
 void TEST_FIXTURE_NAME::TearDown()
@@ -121,7 +121,7 @@ TEST_F(TEST_FIXTURE_NAME, FallbackOverride)
   setenv("BIOGEARS_DATA_ROOT", m_data_prefix, 1);
   setenv("BIOGEARS_SCHEMA_ROOT", m_schema_prefix, 1);
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
 
   EXPECT_EQ(iom.GetBioGearsWorkingDirectory(), m_cwd_prefix);
   EXPECT_EQ(iom.GetBioGearsSchemaRootDirectory(), m_schema_prefix);
@@ -130,7 +130,7 @@ TEST_F(TEST_FIXTURE_NAME, FallbackOverride)
 
 TEST_F(TEST_FIXTURE_NAME, DirecotryOverride)
 {
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
 
   iom.SetConfigDirectory("unittest/configs/");
   iom.SetEcgDirectory("unittest/ecg/");
@@ -160,7 +160,7 @@ TEST_F(TEST_FIXTURE_NAME, DirecotryOverride)
 #if defined(BIOGEARS_IO_PRESENT)
 TEST_F(TEST_FIXTURE_NAME, CreateRuntimeDirectory)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
   //NOTE: These test some code in path.cpp
   std::string null_t_test;
@@ -170,10 +170,10 @@ TEST_F(TEST_FIXTURE_NAME, CreateRuntimeDirectory)
   assert(null_t_test.c_str()[0] == '\0');
   assert(null_t_test.c_str()[1] == '\0');
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   EXPECT_TRUE(iom.generate_runtime_directory(m_cwd_prefix));
   auto bgc = iom.find_resource_file("BioGearsConfiguration.xml");
-  auto expected = biogears::filesystem::path(m_cwd_prefix) / "BioGearsConfiguration.xml";
+  auto expected = BIOGEARS_NAMESPACE filesystem::path(m_cwd_prefix) / "BioGearsConfiguration.xml";
   EXPECT_EQ(bgc, expected.ToString());
 }
 #endif
@@ -184,7 +184,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistConfig)
 {
   using namespace biogears;
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_config_files();
   for (auto ii = io::config_file_count(); ii != 0; --ii) {
     EXPECT_TRUE(iom.does_embedded_file_exist(file_list[ii - 1]));
@@ -198,7 +198,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistECG)
 {
   using namespace biogears;
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_ecg_files();
   for (auto ii = io::ecg_file_count(); ii != 0; --ii) {
     EXPECT_TRUE(iom.does_embedded_file_exist(file_list[ii - 1]));
@@ -212,7 +212,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistEnvironments)
 {
   using namespace biogears;
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_environments_files();
   for (auto ii = io::environments_file_count(); ii != 0; --ii) {
     EXPECT_TRUE(iom.does_embedded_file_exist(file_list[ii - 1]));
@@ -226,7 +226,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistNutrition)
 {
   using namespace biogears;
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_nutrition_files();
   for (auto ii = io::nutrition_file_count(); ii != 0; --ii) {
     EXPECT_TRUE(iom.does_embedded_file_exist(file_list[ii - 1]));
@@ -240,7 +240,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistOverride)
 {
   using namespace biogears;
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_override_files();
   for (auto ii = io::override_file_count(); ii != 0; --ii) {
     EXPECT_TRUE(iom.does_embedded_file_exist(file_list[ii - 1]));
@@ -254,7 +254,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistPatients)
 {
   using namespace biogears;
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_patients_files();
   for (auto ii = io::patients_file_count(); ii != 0; --ii) {
     EXPECT_TRUE(iom.does_embedded_file_exist(file_list[ii - 1]));
@@ -268,7 +268,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistSubstances)
 {
   using namespace biogears;
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_substances_files();
   for (auto ii = io::substances_file_count(); ii != 0; --ii) {
     EXPECT_TRUE(iom.does_embedded_file_exist(file_list[ii - 1]));
@@ -282,7 +282,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistSchema)
 {
   using namespace biogears;
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_xsd_files();
   for (auto ii = io::xsd_file_count(); ii != 0; --ii) {
     EXPECT_TRUE(iom.does_embedded_file_exist(file_list[ii - 1]));
@@ -297,7 +297,7 @@ TEST_F(TEST_FIXTURE_NAME, FindResourceFile)
 
   filesystem::path working_dir { m_cwd_prefix };
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   EXPECT_TRUE(iom.generate_runtime_directory(m_cwd_prefix));
 
   auto config = io::list_config_files();
@@ -355,7 +355,7 @@ TEST_F(TEST_FIXTURE_NAME, SHA1_Calculations)
 {
   using namespace biogears;
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   filesystem::path cwd_path = m_cwd_prefix;
 
   EXPECT_TRUE(iom.generate_runtime_directory(m_cwd_prefix));
@@ -438,7 +438,7 @@ TEST_F(TEST_FIXTURE_NAME, SHA1_Calculations)
 
 TEST_F(TEST_FIXTURE_NAME, Fallback_Routine)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
   std::string current_directory = cwd();
   path destination = current_directory;
 
@@ -447,7 +447,7 @@ TEST_F(TEST_FIXTURE_NAME, Fallback_Routine)
   destination = destination.parent_path() / "SCHEMA_ROOT";
   setenv("BIOGEARS_SCHEMA_ROOT", destination.c_str(), 1);
 
-  biogears::IOManager iom { m_cwd_prefix };
+  BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   create_directory(iom.GetBioGearsDataRootDirectory() + "/" + iom.GetSubstancesDirectory());
   create_directory(iom.GetBioGearsSchemaRootDirectory() + "/" + iom.GetSubstancesDirectory());
 

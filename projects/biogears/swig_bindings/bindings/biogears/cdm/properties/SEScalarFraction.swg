@@ -6,7 +6,7 @@
 
 %import <biogears/cdm/properties/SEScalar.swg>
 
-%nspace biogears::SEScalarFraction;
+%nspace BIOGEARS_NAMESPACE SEScalarFraction;
 
 %rename(Equals)  operator==(const SEScalarFraction&) const;
 %rename(NotEquals)  operator!=(const SEScalarFraction&) const;

@@ -1,4 +1,4 @@
-%module "biogears::SECompartmentLink"
+%module "BIOGEARS_NAMESPACE SECompartmentLink"
 
 // Add necessary symbols to generated header
 %{

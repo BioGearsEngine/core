@@ -21,7 +21,7 @@ class SESubstanceManager;
 namespace io {
   class Scenario;
 }
-}//namespace biogears
+CLOSE_BIOGEARS_NAMESPACE//namespace biogears
 
 OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SECondition : public Loggable {
@@ -66,9 +66,10 @@ inline std::ostream& operator<<(std::ostream& out, const SECondition& a)
   a.ToString(out);
   return out;
 }
-}//namespace biogears
+CLOSE_BIOGEARS_NAMESPACE//namespace biogears
 
 
-namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SECondition*>;
-CLOSE_BIOGEARS_NAMESPACE
+namespace std
+{
+  BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SECondition*>;
+}

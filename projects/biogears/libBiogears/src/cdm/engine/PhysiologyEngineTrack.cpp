@@ -50,8 +50,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 namespace std {
-template class vector<biogears::SESystem*>;
-template class map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
+template class vector<BIOGEARS_NAMESPACE SESystem*>;
+template class map<const BIOGEARS_NAMESPACE SEDataRequest*, BIOGEARS_NAMESPACE SEDataRequestScalar*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE
@@ -592,7 +592,7 @@ std::string SEDataRequestScalar::ToString() const
 
 void SEDataRequestScalar::UpdateScalar()
 {
-  if (UpdateProperty == CompartmentUpdate::None)
+  if (UpdateProperty == CompartmentUpdate::NO_UPDATE)
     return;
 
   if (GasCmpt != nullptr) {

@@ -57,4 +57,4 @@ protected:
   SEScalar0To1* m_Severity;
   CDM::enumBrainInjuryType::value m_Type;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

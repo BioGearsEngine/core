@@ -63,4 +63,4 @@ protected:
   bool m_ClearCommands;
   std::vector<SEConsciousRespirationCommand*> m_Commands;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

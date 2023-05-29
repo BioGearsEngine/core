@@ -10,9 +10,9 @@
 
 %import <biogears/cdm/properties/SEScalarVolumePerTime.swg>
 
-%nspace biogears::SEPericardialEffusion;
+%nspace BIOGEARS_NAMESPACE SEPericardialEffusion;
 
-%ignore biogears::SEPericardialEffusion::Unload;
-%ignore biogears::SEPericardialEffusion::Load;
+%ignore BIOGEARS_NAMESPACE SEPericardialEffusion::Unload;
+%ignore BIOGEARS_NAMESPACE SEPericardialEffusion::Load;
  
 %include <biogears/cdm/patient/actions/SEPericardialEffusion.h>

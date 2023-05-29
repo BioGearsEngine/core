@@ -15,11 +15,12 @@
 
 #include <string>
 #include <vector>
+
+#include <biogears/config.h>
 #include <biogears/schema/cdm/Substance.hxx>
 
 #include "CSVToXMLConvertor.h"
-namespace biogears
-{
+OPEN_BIOGEARS_NAMESPACE
 
   class CompoundGenerator : public CSVToXMLConvertor
   {
@@ -35,6 +36,6 @@ namespace biogears
   private:
     std::vector<mil::tatrc::physiology::datamodel::SubstanceCompoundData> _compounds;
   };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //BIOGEARS_COMPOUND_GENERATOR_H

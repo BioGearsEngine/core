@@ -17,19 +17,19 @@
 %import <biogears/cdm/substance/SESubstance.swg>
 %import <biogears/cdm/patient/SENutrition.swg>
 
-%nspace biogears::SEGastrointestinalSystem;
-%nspace biogears::SEDrugTransitState;
+%nspace BIOGEARS_NAMESPACE SEGastrointestinalSystem;
+%nspace BIOGEARS_NAMESPACE SEDrugTransitState;
 
-%ignore biogears::SESubstancePharmacokinetics::GetScalar(const std::string& name);
-%ignore biogears::SESubstancePharmacokinetics::Unload;
-%ignore biogears::SESubstancePharmacokinetics::Load;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Load;
 
-%rename (GetStomachContents_const) biogears::SEGastrointestinalSystem::GetStomachContents() const;
+%rename (GetStomachContents_const) BIOGEARS_NAMESPACE SEGastrointestinalSystem::GetStomachContents() const;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class SEDrugTransitState;
-}
-%nspace std::map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
-%template (map_SESubstance_ptr__SEDrugTransitState_ptr) std::map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
+CLOSE_BIOGEARS_NAMESPACE
+%nspace std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SEDrugTransitState*>;
+%template (map_SESubstance_ptr__SEDrugTransitState_ptr) std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SEDrugTransitState*>;
 
 %include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>

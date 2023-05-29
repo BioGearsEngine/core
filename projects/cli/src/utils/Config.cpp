@@ -321,7 +321,7 @@ auto Config::back() const -> const_reference
 //-----------------------------------------------------------------------------
 bool Config::load(std::string filepath, bool silent)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE;
 
   Tokenizer tokens;
 
@@ -331,7 +331,7 @@ bool Config::load(std::string filepath, bool silent)
   if (possible_path.empty()) {
     size_t content_size;
     #ifdef BIOGEARS_IO_PRESENT
-      auto content = biogears::io::get_embedded_config_file(filepath.c_str(), content_size);
+      auto content = BIOGEARS_NAMESPACE io::get_embedded_config_file(filepath.c_str(), content_size);
     std::istringstream iss { content };
     if ( tokens.tokenize(iss)) {
       return process(std::move(tokens));

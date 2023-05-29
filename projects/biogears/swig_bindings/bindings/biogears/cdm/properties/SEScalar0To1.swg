@@ -8,7 +8,7 @@
 
 %import <biogears/cdm/properties/SEScalar.swg>
 
-%nspace biogears::SEScalar0To1;
+%nspace BIOGEARS_NAMESPACE SEScalar0To1;
 
 %rename(Equals)  operator==(const SEScalar0To1&) const;
 %rename(NotEquals)  operator!=(const SEScalar0To1&) const;

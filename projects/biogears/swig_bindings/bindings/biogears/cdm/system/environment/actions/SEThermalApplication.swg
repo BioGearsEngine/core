@@ -14,11 +14,11 @@
 %import <biogears/cdm/system/environment/SEActiveHeating.swg>
 %import <biogears/cdm/system/environment/SEAppliedTemperature.swg>
 
-%nspace biogears::SEThermalApplication;
+%nspace BIOGEARS_NAMESPACE SEThermalApplication;
 
-%ignore biogears::SEThermalApplication::Unload;
-%ignore biogears::SEThermalApplication::Load;
+%ignore BIOGEARS_NAMESPACE SEThermalApplication::Unload;
+%ignore BIOGEARS_NAMESPACE SEThermalApplication::Load;
 
-%ignore biogears::SEThermalApplication::ToString(std::ostream& str) const;
+%ignore BIOGEARS_NAMESPACE SEThermalApplication::ToString(std::ostream& str) const;
 
 %include <biogears/cdm/system/environment/actions/SEThermalApplication.h>

@@ -26,15 +26,15 @@
 %import <biogears/cdm/patient/conditions/SEStarvation.swg>
 %import <biogears/cdm/system/environment/conditions/SEInitialEnvironment.swg>
 
-%nspace biogears::SEConditionManager;
+%nspace BIOGEARS_NAMESPACE SEConditionManager;
 
-%ignore biogears::SEConditionManager::Unload;
-%ignore biogears::SEConditionManager::Load;
-%ignore biogears::SEConditionManager::ProcessCondition(const CDM::ConditionData& condition);
+%ignore BIOGEARS_NAMESPACE SEConditionManager::Unload;
+%ignore BIOGEARS_NAMESPACE SEConditionManager::Load;
+%ignore BIOGEARS_NAMESPACE SEConditionManager::ProcessCondition(const CDM::ConditionData& condition);
 
-%ignore biogears::SEConditionManager::GetCondition(const std::string& name) const;
-%ignore biogears::SEConditionManager::ReadConditionFile(const std::string& name);
-%ignore biogears::SEConditionManager::GetCompound(const std::string& name) const;
+%ignore BIOGEARS_NAMESPACE SEConditionManager::GetCondition(const std::string& name) const;
+%ignore BIOGEARS_NAMESPACE SEConditionManager::ReadConditionFile(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SEConditionManager::GetCompound(const std::string& name) const;
 
 %include <biogears/cdm/scenario/SEConditionManager.h>
 

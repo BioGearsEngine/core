@@ -8,9 +8,11 @@
 
 %}
 
-%ignore   biogears::PhysiologyEngine::GetStateData();
-%ignore   biogears::PhysiologyEngine::SaveStateToFile(const std::string& file = "");
-%ignore   biogears::PhysiologyEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
+%include <biogears/config.h>
+
+%ignore   BIOGEARS_NAMESPACE PhysiologyEngine::GetStateData();
+%ignore   BIOGEARS_NAMESPACE PhysiologyEngine::SaveStateToFile(const std::string& file = "");
+%ignore   BIOGEARS_NAMESPACE PhysiologyEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
 
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/patient/SEPatient.swg>
@@ -31,36 +33,36 @@
 %import <biogears/cdm/engine/PhysiologyEngineTrack.swg>
 %import <biogears/cdm/properties/SEScalarTime.swg>
 
-%nspace "biogears::BioGearsEngine"
-%nspace "biogears::Logger"
+%nspace "BIOGEARS_NAMESPACE BioGearsEngine"
+%nspace "BIOGEARS_NAMESPACE Logger"
 
-%ignore biogears::BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
-%ignore biogears::BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr);
-%ignore biogears::BioGearsEngine::GetStateData();
-%ignore biogears::BioGearsEngine::SaveStateToFile(const std::string& file);
-%ignore biogears::BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions);
-%ignore biogears::BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions , const PhysiologyEngineConfiguration* config );
-%ignore biogears::BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
-%ignore biogears::BioGearsEngine::InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime = nullptr);
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr);
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::GetStateData();
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::SaveStateToFile(const std::string& file);
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions);
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::InitializeEngine(const char* patientFile, const std::vector<const SECondition*>* conditions , const PhysiologyEngineConfiguration* config );
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::InitializeEngine(const std::string& patientFile, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions = nullptr, const PhysiologyEngineConfiguration* config = nullptr);
 
-%ignore biogears::BioGearsEngine::GetConfiguration();
-%ignore biogears::BioGearsEngine::GetAnesthesiaMachine();
-%ignore biogears::BioGearsEngine::GetElectroCardioGram();
-%ignore biogears::BioGearsEngine::GetInhaler();
-%ignore biogears::BioGearsEngine::GetCompartments();
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::GetConfiguration();
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::GetAnesthesiaMachine();
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::GetElectroCardioGram();
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::GetInhaler();
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::GetCompartments();
 
-%ignore biogears::BioGearsEngine::BioGearsEngine(const std::string& logFileName);
-%ignore biogears::BioGearsEngine::BioGearsEngine(Logger* logger, const std::string& working_dir);
-%ignore biogears::BioGearsEngine::BioGearsEngine(const std::string&, const std::string& working_dir);
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::BioGearsEngine(const std::string& logFileName);
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::BioGearsEngine(Logger* logger, const std::string& working_dir);
+%ignore BIOGEARS_NAMESPACE BioGearsEngine::BioGearsEngine(const std::string&, const std::string& working_dir);
 
 %rename (AdvanceModelTimeBy) AdvanceModelTime(double time, const TimeUnit& unit  = TimeUnit::s, bool appendDataTrack = false);
 
-%warnfilter(401) biogears::BioGearsEngine;
+%warnfilter(401) BIOGEARS_NAMESPACE BioGearsEngine;
 
 #if defined(SWIGCSHARP)
   %ignore create_logger(const char* logfile);
   %ignore destroy_logger(Logger** engine);
-  %ignore create_biogears_engine(biogears::Logger* logger, const char* working_dir);
+  %ignore create_biogears_engine(BIOGEARS_NAMESPACE Logger* logger, const char* working_dir);
   %ignore create_biogears_engine(const char* logger, const char* working_dir);
   %ignore destroy_biogears_engine(BioGearsEngine** engine);
 #endif 

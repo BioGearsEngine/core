@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <cmath>
 // Include the various types you will be using in your code
+#include <biogears/config.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
@@ -41,7 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/string/manipulation.h>
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 // Make a custom event handler that you can connect to your code (See EngineUse for more info)
 class MechVentHandler : public SEEventHandler {
 private:

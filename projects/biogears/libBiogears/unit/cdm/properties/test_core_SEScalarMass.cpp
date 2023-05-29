@@ -59,38 +59,38 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarMass mass = biogears::SEScalarMass();
+  BIOGEARS_NAMESPACE SEScalarMass mass = BIOGEARS_NAMESPACE SEScalarMass();
   auto ptr = mass.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::MassUnit::IsValidUnit("g");
-  bool unit1 = biogears::MassUnit::IsValidUnit("ug");
-  bool unit2 = biogears::MassUnit::IsValidUnit("mg");
-  bool unit3 = biogears::MassUnit::IsValidUnit("kg");
-  bool unit4 = biogears::MassUnit::IsValidUnit("lb");
+  bool unit0 = BIOGEARS_NAMESPACE MassUnit::IsValidUnit("g");
+  bool unit1 = BIOGEARS_NAMESPACE MassUnit::IsValidUnit("ug");
+  bool unit2 = BIOGEARS_NAMESPACE MassUnit::IsValidUnit("mg");
+  bool unit3 = BIOGEARS_NAMESPACE MassUnit::IsValidUnit("kg");
+  bool unit4 = BIOGEARS_NAMESPACE MassUnit::IsValidUnit("lb");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
-  bool unit5 = biogears::MassUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE MassUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::MassUnit mu0 = biogears::MassUnit::GetCompoundUnit("g");
-  biogears::MassUnit mu1 = biogears::MassUnit::GetCompoundUnit("ug");
-  biogears::MassUnit mu2 = biogears::MassUnit::GetCompoundUnit("mg");
-  biogears::MassUnit mu3 = biogears::MassUnit::GetCompoundUnit("kg");
-  biogears::MassUnit mu4 = biogears::MassUnit::GetCompoundUnit("lb");
-  EXPECT_EQ(mu0, biogears::MassUnit::g);
-  EXPECT_EQ(mu1, biogears::MassUnit::ug);
-  EXPECT_EQ(mu2, biogears::MassUnit::mg);
-  EXPECT_EQ(mu3, biogears::MassUnit::kg);
-  EXPECT_EQ(mu4, biogears::MassUnit::lb);
-  EXPECT_THROW(biogears::MassUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE MassUnit mu0 = BIOGEARS_NAMESPACE MassUnit::GetCompoundUnit("g");
+  BIOGEARS_NAMESPACE MassUnit mu1 = BIOGEARS_NAMESPACE MassUnit::GetCompoundUnit("ug");
+  BIOGEARS_NAMESPACE MassUnit mu2 = BIOGEARS_NAMESPACE MassUnit::GetCompoundUnit("mg");
+  BIOGEARS_NAMESPACE MassUnit mu3 = BIOGEARS_NAMESPACE MassUnit::GetCompoundUnit("kg");
+  BIOGEARS_NAMESPACE MassUnit mu4 = BIOGEARS_NAMESPACE MassUnit::GetCompoundUnit("lb");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE MassUnit::g);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE MassUnit::ug);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE MassUnit::mg);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE MassUnit::kg);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE MassUnit::lb);
+  EXPECT_THROW(BIOGEARS_NAMESPACE MassUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

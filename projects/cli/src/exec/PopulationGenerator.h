@@ -11,11 +11,12 @@
 //CONDITIONS OF ANY KIND, either express or implied.See the License for the
 //specific language governing permissions and limitations under the License.
 //**************************************************************************************
+#include <biogears/config.h>
 #include <biogears/threading/thread_pool.h>
 #include <biogears/threading/runnable.h>
 
-namespace biogears
-{
+
+OPEN_BIOGEARS_NAMESPACE
   class PopulationGenerator 
   {
   public:
@@ -40,6 +41,6 @@ namespace biogears
     std::vector<std::string> _boy_names;
     std::vector<std::string> _girl_names;
   };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //BIOGEARS_STATE_GENERATOR_H

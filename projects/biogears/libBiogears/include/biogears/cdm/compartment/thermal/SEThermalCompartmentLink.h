@@ -75,8 +75,8 @@ protected:
 CLOSE_BIOGEARS_NAMESPACE
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartmentLink*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartmentLink*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEThermalCompartmentLink*>;
+BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SEThermalCompartmentLink*>;
 }
 
 #include <biogears/cdm/compartment/SECompartmentGraph.h>

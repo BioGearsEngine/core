@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace std{
-template class map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
+template class map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SEDrugTransitState*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

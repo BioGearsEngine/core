@@ -51,4 +51,4 @@ protected:
 protected:
   SEScalarVolumePerTime* m_EffusionRate;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

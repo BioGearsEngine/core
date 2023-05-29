@@ -53,4 +53,4 @@ public:
 protected:
   std::string m_Location;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

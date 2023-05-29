@@ -50,8 +50,8 @@ protected:
   // Code here will be called immediately after each test (right
   // before the destructor).
   virtual void TearDown() override;
-  biogears::Logger* logger;
-  biogears::SEEscharotomy* es;
+  BIOGEARS_NAMESPACE Logger* logger;
+  BIOGEARS_NAMESPACE SEEscharotomy* es;
 };
 
 void TEST_FIXTURE_NAME::SetUp()

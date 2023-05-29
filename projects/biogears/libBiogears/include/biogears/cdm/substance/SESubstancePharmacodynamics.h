@@ -34,7 +34,7 @@ namespace io {
 CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
-  BG_EXT template class BIOGEARS_API map<string, biogears::SEPharmacodynamicModifier*>;
+  BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SEPharmacodynamicModifier*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

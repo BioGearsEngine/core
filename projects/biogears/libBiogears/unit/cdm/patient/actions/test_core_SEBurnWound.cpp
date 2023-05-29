@@ -50,8 +50,8 @@ protected:
   // Code here will be called immediately after each test (right
   // before the destructor).
   virtual void TearDown() override;
-  biogears::Logger* logger;
-  biogears::SEBurnWound* es;
+  BIOGEARS_NAMESPACE Logger* logger;
+  BIOGEARS_NAMESPACE SEBurnWound* es;
 };
 
 void TEST_FIXTURE_NAME::SetUp()
@@ -85,8 +85,8 @@ TEST_F(TEST_FIXTURE_NAME, TBSA)
   EXPECT_TRUE(action1.HasTotalBodySurfaceArea());
   EXPECT_TRUE(action2.HasTotalBodySurfaceArea());
 
-  EXPECT_THROW(action1.GetTotalBodySurfaceArea().SetValue(-0.2), biogears::CommonDataModelException); // Too low
-  EXPECT_THROW(action2.GetTotalBodySurfaceArea().SetValue(1.2), biogears::CommonDataModelException); // Top High
+  EXPECT_THROW(action1.GetTotalBodySurfaceArea().SetValue(-0.2), BIOGEARS_NAMESPACE CommonDataModelException); // Too low
+  EXPECT_THROW(action2.GetTotalBodySurfaceArea().SetValue(1.2), BIOGEARS_NAMESPACE CommonDataModelException); // Top High
 
 }
 

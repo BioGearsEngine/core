@@ -11,14 +11,14 @@
 %import <biogears/exports.swg>
 %import <biogears/filesystem/path.swg>
 
-%nspace biogears::IOManager;
+%nspace BIOGEARS_NAMESPACE IOManager;
 
 %ignore IOManager(IOManager&& iom);
-%ignore biogears::IOManager(biogears::IOManager&& iom);
-%ignore biogears::IOManager::IOManager(biogears::IOManager&& iom);
-%ignore biogears::IOManager::IOManager(IOManager&& iom);
+%ignore BIOGEARS_NAMESPACE IOManager(BIOGEARS_NAMESPACE IOManager&& iom);
+%ignore BIOGEARS_NAMESPACE IOManager::IOManager(BIOGEARS_NAMESPACE IOManager&& iom);
+%ignore BIOGEARS_NAMESPACE IOManager::IOManager(IOManager&& iom);
 
-%ignore  biogears::IOManager::operator=(IOManager&& rhs);
-%ignore  biogears::IOManager::operator=(IOManager const& rhs);
+%ignore  BIOGEARS_NAMESPACE IOManager::operator=(IOManager&& rhs);
+%ignore  BIOGEARS_NAMESPACE IOManager::operator=(IOManager const& rhs);
 
 %include <biogears/io/io-manager.h>

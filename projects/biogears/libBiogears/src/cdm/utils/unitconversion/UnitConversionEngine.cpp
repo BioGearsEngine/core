@@ -140,7 +140,7 @@ inline bool CIEQUAL(std::string strA, std::string strB)
 void CUnitConversionEngine::LoadDefinitionsFlatFile()
 {
   std::stringstream defs;
-  defs << biogears::UCEDEFS_TEXT;
+  defs << BIOGEARS_NAMESPACE UCEDEFS_TEXT;
 
   DEBUGOUT(cerr << "Loading definitions...\n";)
   
@@ -472,7 +472,7 @@ double CUnitConversionEngine::ConvertQuantityType(const double& value, const CCo
   double mappedVal = value;
   mappedVal -= fromUnit.GetBias();
   mappedVal = std::pow(mappedVal, fromExp);
-  mappingUnit *= biogears::pow(fromUnit, fromExp);
+  mappingUnit *= BIOGEARS_NAMESPACE pow(fromUnit, fromExp);
 
   // Sanity check
   if (*(mappingUnit.GetDimension()) != *toDim) {

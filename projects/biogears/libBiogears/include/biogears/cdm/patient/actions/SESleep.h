@@ -52,4 +52,4 @@ protected:
 
 
 }; 
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -48,4 +48,4 @@ protected:
 protected:
   CDM::enumOnOff::value m_State;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

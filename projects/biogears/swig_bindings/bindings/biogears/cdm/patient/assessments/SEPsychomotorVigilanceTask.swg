@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalar.swg>
 %import <biogears/cdm/properties/SEScalarTime.swg>
 
-%nspace biogears::SEPsychomotorVigilanceTask;
+%nspace BIOGEARS_NAMESPACE SEPsychomotorVigilanceTask;
 
-%ignore biogears::SEPsychomotorVigilanceTask::Unload;
-%ignore biogears::SEPsychomotorVigilanceTask::Load;
+%ignore BIOGEARS_NAMESPACE SEPsychomotorVigilanceTask::Unload;
+%ignore BIOGEARS_NAMESPACE SEPsychomotorVigilanceTask::Load;
 
 %include <biogears/cdm/patient/assessments/SEPsychomotorVigilanceTask.h>

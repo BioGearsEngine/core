@@ -57,4 +57,4 @@ protected:
 protected:
   CDM::enumInfectionSeverity::value m_Severity;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

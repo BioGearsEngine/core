@@ -59,30 +59,30 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarVolumePerTimeArea VolumePerTimeArea = biogears::SEScalarVolumePerTimeArea();
+  BIOGEARS_NAMESPACE SEScalarVolumePerTimeArea VolumePerTimeArea = BIOGEARS_NAMESPACE SEScalarVolumePerTimeArea();
   auto ptr = VolumePerTimeArea.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::VolumePerTimeAreaUnit::IsValidUnit("mL/min m^2");
-  bool unit1 = biogears::VolumePerTimeAreaUnit::IsValidUnit("mL/s m^2");
-  bool unit2 = biogears::VolumePerTimeAreaUnit::IsValidUnit("L/min m^2");
+  bool unit0 = BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::IsValidUnit("mL/min m^2");
+  bool unit1 = BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::IsValidUnit("mL/s m^2");
+  bool unit2 = BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::IsValidUnit("L/min m^2");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
-  bool unit5 = biogears::VolumePerTimeAreaUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::VolumePerTimeAreaUnit mu0 = biogears::VolumePerTimeAreaUnit::GetCompoundUnit("mL/min m^2");
-  biogears::VolumePerTimeAreaUnit mu1 = biogears::VolumePerTimeAreaUnit::GetCompoundUnit("mL/s m^2");
-  biogears::VolumePerTimeAreaUnit mu2 = biogears::VolumePerTimeAreaUnit::GetCompoundUnit("L/min m^2");
-  EXPECT_EQ(mu0, biogears::VolumePerTimeAreaUnit::mL_Per_min_m2);
-  EXPECT_EQ(mu1, biogears::VolumePerTimeAreaUnit::mL_Per_s_m2);
-  EXPECT_EQ(mu2, biogears::VolumePerTimeAreaUnit::L_Per_min_m2);
-  EXPECT_THROW(biogears::VolumePerTimeAreaUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE VolumePerTimeAreaUnit mu0 = BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::GetCompoundUnit("mL/min m^2");
+  BIOGEARS_NAMESPACE VolumePerTimeAreaUnit mu1 = BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::GetCompoundUnit("mL/s m^2");
+  BIOGEARS_NAMESPACE VolumePerTimeAreaUnit mu2 = BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::GetCompoundUnit("L/min m^2");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::mL_Per_min_m2);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::mL_Per_s_m2);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::L_Per_min_m2);
+  EXPECT_THROW(BIOGEARS_NAMESPACE VolumePerTimeAreaUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

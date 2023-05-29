@@ -241,7 +241,9 @@ if(NOT Biogears_BUILD_STATIC)
   target_compile_definitions(libbiogears_io  PUBLIC ${BIO_CPPFLAGS_INTERFACE} $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},armv7-a>:XSD_NO_EXPORT>)
   target_compile_definitions(libbiogears_io  PRIVATE ${BIO_CPPFLAGS} PRIVATE)
   target_compile_options(libbiogears_io PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>  PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
-  
+  if ( BIOGEARS_WITHOUT_NAMESPACE )
+    target_compile_definitions(libbiogears_io PUBLIC  BIOGEARS_WITHOUT_NAMESPACES)
+  endif()
   target_include_directories(libbiogears_io 
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
               ${BIOGEARS_BINARY_DIR}/generated

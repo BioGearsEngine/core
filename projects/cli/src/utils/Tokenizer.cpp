@@ -6,6 +6,7 @@
 #include <list>
 #include <regex>
 
+#include <biogears/config.h>
 #include <biogears/string/manipulation.h>
 
 OPEN_BIOGEARS_NAMESPACE

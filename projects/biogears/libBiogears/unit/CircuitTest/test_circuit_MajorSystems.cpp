@@ -61,7 +61,7 @@ TEST_F(TEST_FIXTURE_NAME, Anesthesia)
   bg->GetLogger()->Info("AnesthesiaCircuitTest");
   BioGearsCircuits& circuits = bg->GetCircuits();
   SEFluidCircuit& anesthesia = circuits.GetAnesthesiaMachineCircuit();
-  biogears::Logger m_Logger("UnitTest.log");
+  BIOGEARS_NAMESPACE Logger m_Logger("UnitTest.log");
   SEFluidCircuitCalculator fcc{ &m_Logger };
 
   EXPECT_NO_THROW(fcc.Process(anesthesia, 1.0));
@@ -70,7 +70,7 @@ TEST_F(TEST_FIXTURE_NAME, Anesthesia)
 
 TEST_F(TEST_FIXTURE_NAME, Cardiovascular)
 {
-  biogears::Logger m_Logger("CardiovascularCircuitTest.log");
+  BIOGEARS_NAMESPACE Logger m_Logger("CardiovascularCircuitTest.log");
   std::unique_ptr<PhysiologyEngine> bge = CreateBioGearsEngine(&m_Logger);
   BioGears* bg = dynamic_cast<BioGears*>(bge.get());
   bge->LoadState("./states/StandardMale@0s.xml");
@@ -88,7 +88,7 @@ TEST_F(TEST_FIXTURE_NAME, Cardiovascular)
 
 //TEST_F(TEST_FIXTURE_NAME, Environment) //Placeholder until I can get a working Environment circuit
 //{
-//  biogears::Logger m_Logger("EnvironmentCircuitTest.log");
+//  BIOGEARS_NAMESPACE Logger m_Logger("EnvironmentCircuitTest.log");
 //  std::unique_ptr<PhysiologyEngine> bge = CreateBioGearsEngine(&m_Logger);
 //  BioGears* bg = dynamic_cast<BioGears*>(bge.get());
 //  bge->LoadState("./states/StandardMale@0s.xml");
@@ -153,7 +153,7 @@ TEST_F(TEST_FIXTURE_NAME, Cardiovascular)
 
 TEST_F(TEST_FIXTURE_NAME, Renal)
 {
-  biogears::Logger m_Logger("RenalCircuitTest.log");
+  BIOGEARS_NAMESPACE Logger m_Logger("RenalCircuitTest.log");
   std::unique_ptr<PhysiologyEngine> bge = CreateBioGearsEngine(&m_Logger);
   BioGears* bg = dynamic_cast<BioGears*>(bge.get());
   bge->LoadState("./states/StandardMale@0s.xml");
@@ -170,7 +170,7 @@ TEST_F(TEST_FIXTURE_NAME, Renal)
 
 TEST_F(TEST_FIXTURE_NAME, Respiratory)
 {
-  biogears::Logger m_Logger("RespiratoryCircuitTest.log");
+  BIOGEARS_NAMESPACE Logger m_Logger("RespiratoryCircuitTest.log");
   std::unique_ptr<PhysiologyEngine> bge = CreateBioGearsEngine(&m_Logger);
   BioGears* bg = dynamic_cast<BioGears*>(bge.get());
   bge->LoadState("./states/StandardMale@0s.xml");
@@ -187,7 +187,7 @@ TEST_F(TEST_FIXTURE_NAME, Respiratory)
 
 TEST_F(TEST_FIXTURE_NAME, Temperature)
 {
-  biogears::Logger m_Logger("TemperatureCircuitTest.log");
+  BIOGEARS_NAMESPACE Logger m_Logger("TemperatureCircuitTest.log");
   std::unique_ptr<PhysiologyEngine> bge = CreateBioGearsEngine(&m_Logger);
   BioGears* bg = dynamic_cast<BioGears*>(bge.get());
   bge->LoadState("./states/StandardMale@0s.xml");

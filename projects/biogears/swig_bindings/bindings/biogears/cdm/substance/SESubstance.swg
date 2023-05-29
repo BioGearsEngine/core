@@ -25,24 +25,24 @@
 %import <biogears/cdm/properties/SEScalarPressure.swg>
 %import <biogears/cdm/properties/SEScalarTimeMassPerVolume.swg>
 
-%nspace biogears::SESubstance;
+%nspace BIOGEARS_NAMESPACE SESubstance;
 
-%ignore biogears::SESubstance::Unload;
-%ignore biogears::SESubstance::Load;
+%ignore BIOGEARS_NAMESPACE SESubstance::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstance::Load;
 
-%ignore biogears::SESubstance::GetScalar(std::string const &);
-%ignore biogears::SESubstance::SetName(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstance::GetScalar(std::string const &);
+%ignore BIOGEARS_NAMESPACE SESubstance::SetName(const std::string& name);
 
-%rename (GetMichaelisCoefficient_const) biogears::SESubstance::GetMichaelisCoefficient() const;
-%rename (GetAerosolization_const) biogears::SESubstance::GetAerosolization() const;
-%rename (GetEndTidalFraction_const) biogears::SESubstance::GetEndTidalFraction() const;
-%rename (GetRelativeDiffusionCoefficient_const) biogears::SESubstance::GetRelativeDiffusionCoefficient() const;
-%rename (GetClearance_const) biogears::SESubstance::GetClearance() const;
-%rename (GetPK_const) biogears::SESubstance::GetPK() const;
-%rename (GetPD_const) biogears::SESubstance::GetPD() const;
+%rename (GetMichaelisCoefficient_const) BIOGEARS_NAMESPACE SESubstance::GetMichaelisCoefficient() const;
+%rename (GetAerosolization_const) BIOGEARS_NAMESPACE SESubstance::GetAerosolization() const;
+%rename (GetEndTidalFraction_const) BIOGEARS_NAMESPACE SESubstance::GetEndTidalFraction() const;
+%rename (GetRelativeDiffusionCoefficient_const) BIOGEARS_NAMESPACE SESubstance::GetRelativeDiffusionCoefficient() const;
+%rename (GetClearance_const) BIOGEARS_NAMESPACE SESubstance::GetClearance() const;
+%rename (GetPK_const) BIOGEARS_NAMESPACE SESubstance::GetPK() const;
+%rename (GetPD_const) BIOGEARS_NAMESPACE SESubstance::GetPD() const;
 
 %include <biogears/cdm/substance/SESubstance.h>
 
-%nsspace  std::vector<biogears::SESubstance*>;
-%template (vector_SESubstance_ptr)  std::vector<biogears::SESubstance*>;
+%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstance*>;
+%template (vector_SESubstance_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstance*>;
 

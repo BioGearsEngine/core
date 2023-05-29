@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <iostream>
 
+#include <biogears/config.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
@@ -22,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 
 int HowToThreadedBioGears()
 {

@@ -8,54 +8,54 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToStringToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<ForceUnit>::ToStringToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToStringToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<ForceUnit>::ToStringToString(std::ostream& str);
 
 %rename(Equals)  operator==(const ForceUnit&) const;
 %rename(NotEquals)  operator!=(const ForceUnit&) const;
 %rename(Equals)  operator==(const SEScalarForce&) const;
 %rename(NotEquals)  operator!=(const SEScalarForce&) const;  
 
-%ignore biogears::ForceUnit::ForceUnit(std::string const &);
-%ignore biogears::ForceUnit::IsValidUnit(std::string const &);
-%ignore biogears::ForceUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ForceUnit::ForceUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ForceUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ForceUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarForce;
-%nspace biogears::ForceUnit;
-%nspace biogears::SEScalarQuantity<ForceUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarForce;
+%nspace BIOGEARS_NAMESPACE ForceUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<ForceUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class ForceUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::ForceUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ForceUnit>;
 
-%ignore  biogears::SEScalarQuantity< ForceUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< ForceUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< ForceUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< ForceUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< ForceUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< ForceUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ForceUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ForceUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ForceUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ForceUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ForceUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ForceUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ForceUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ForceUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ForceUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ForceUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ForceUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ForceUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ForceUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ForceUnit>::DivideValue "public new";
 #endif 
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ForceUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ForceUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ForceUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ForceUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ForceUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ForceUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ForceUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ForceUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< ForceUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< ForceUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ForceUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< ForceUnit >::operator!=;
 
-%template(QuantityForce) biogears::SEScalarQuantity<biogears::ForceUnit>;
+%template(QuantityForce) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ForceUnit>;
 
 %include <biogears/cdm/properties/SEScalarForce.h>
 

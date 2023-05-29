@@ -26,9 +26,9 @@ namespace io {
 CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>;
-BG_EXT template class BIOGEARS_API map<CDM::ElectroCardioGramWaveformLeadNumber, biogears::SEScalarElectricPotential*>;
-BG_EXT template class BIOGEARS_API map<CDM::ElectroCardioGramWaveformLeadNumber, map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>>;
+BG_EXT template class BIOGEARS_API map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>;
+BG_EXT template class BIOGEARS_API map<CDM::ElectroCardioGramWaveformLeadNumber, BIOGEARS_NAMESPACE SEScalarElectricPotential*>;
+BG_EXT template class BIOGEARS_API map<CDM::ElectroCardioGramWaveformLeadNumber, map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

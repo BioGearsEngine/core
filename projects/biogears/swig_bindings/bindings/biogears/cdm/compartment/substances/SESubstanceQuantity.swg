@@ -9,10 +9,10 @@
 %import <biogears/cdm/substance/SESubstance.swg>
 %import <biogears/cdm/properties/SEScalar.swg>
 
-%nspace biogears::SESubstanceQuantity;
+%nspace BIOGEARS_NAMESPACE SESubstanceQuantity;
 
-%ignore biogears::SESubstanceQuantity::Unload;
-%ignore biogears::SESubstanceQuantity::Load;
+%ignore BIOGEARS_NAMESPACE SESubstanceQuantity::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstanceQuantity::Load;
 
 %ignore GetScalar(const std::string& name);
 

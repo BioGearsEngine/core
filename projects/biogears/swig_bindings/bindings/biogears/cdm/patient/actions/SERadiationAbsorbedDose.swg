@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalarEnergyPerMass.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SERadiationAbsorbedDose;
+%nspace BIOGEARS_NAMESPACE SERadiationAbsorbedDose;
 
-%ignore biogears::SERadiationAbsorbedDose::Unload;
-%ignore biogears::SERadiationAbsorbedDose::Load;
+%ignore BIOGEARS_NAMESPACE SERadiationAbsorbedDose::Unload;
+%ignore BIOGEARS_NAMESPACE SERadiationAbsorbedDose::Load;
 
 %include <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>

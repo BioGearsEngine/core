@@ -519,15 +519,15 @@ std::pair<Angle, Angle> norm_to_sphere(Angle lat, Angle lon);
 std::pair<Angle, Angle> norm_to_sphere_360(Angle lat, Angle lon);
 
 inline namespace quaternion_literals {
-  inline constexpr biogears::Quaternion operator""_q(unsigned long long xw) { return { static_cast<double>(xw), 0., 0., 0. }; }
-  inline constexpr biogears::Quaternion operator""_i(unsigned long long xi) { return { 0., static_cast<double>(xi), 0., 0. }; }
-  inline constexpr biogears::Quaternion operator""_j(unsigned long long xj) { return { 0., 0., static_cast<double>(xj), 0. }; }
-  inline constexpr biogears::Quaternion operator""_k(unsigned long long xk) { return { 0., 0., 0., static_cast<double>(xk) }; }
+  inline constexpr BIOGEARS_NAMESPACE Quaternion operator""_q(unsigned long long xw) { return { static_cast<double>(xw), 0., 0., 0. }; }
+  inline constexpr BIOGEARS_NAMESPACE Quaternion operator""_i(unsigned long long xi) { return { 0., static_cast<double>(xi), 0., 0. }; }
+  inline constexpr BIOGEARS_NAMESPACE Quaternion operator""_j(unsigned long long xj) { return { 0., 0., static_cast<double>(xj), 0. }; }
+  inline constexpr BIOGEARS_NAMESPACE Quaternion operator""_k(unsigned long long xk) { return { 0., 0., 0., static_cast<double>(xk) }; }
 
-  inline constexpr biogears::Quaternion operator""_q(long double xw) { return { static_cast<double>(xw), 0., 0., 0. }; }
-  inline constexpr biogears::Quaternion operator""_i(long double xi) { return { 0., static_cast<double>(xi), 0., 0. }; }
-  inline constexpr biogears::Quaternion operator""_j(long double xj) { return { 0., 0., static_cast<double>(xj), 0. }; }
-  inline constexpr biogears::Quaternion operator""_k(long double xk) { return { 0., 0., 0., static_cast<double>(xk) }; }
+  inline constexpr BIOGEARS_NAMESPACE Quaternion operator""_q(long double xw) { return { static_cast<double>(xw), 0., 0., 0. }; }
+  inline constexpr BIOGEARS_NAMESPACE Quaternion operator""_i(long double xi) { return { 0., static_cast<double>(xi), 0., 0. }; }
+  inline constexpr BIOGEARS_NAMESPACE Quaternion operator""_j(long double xj) { return { 0., 0., static_cast<double>(xj), 0. }; }
+  inline constexpr BIOGEARS_NAMESPACE Quaternion operator""_k(long double xk) { return { 0., 0., 0., static_cast<double>(xk) }; }
 } // inline quaternain_literals
 
 //------------------------------------------------------------------------------
@@ -620,15 +620,15 @@ std::pair<Anglef, Anglef> norm_to_sphere(Anglef lat, Anglef lon);
 std::pair<Anglef, Anglef> norm_to_sphere_360(Anglef lat, Anglef lon);
 
 inline namespace Quaternionf_literals {
-inline constexpr biogears::Quaternionf operator""_f_q(unsigned long long xw) { return biogears::Quaternionf(static_cast<float>(xw)); }
-inline constexpr biogears::Quaternionf operator""_f_i(unsigned long long xi) { return biogears::Quaternionf(0.f, static_cast<float>(xi), 0.f, 0.f); }
-inline constexpr biogears::Quaternionf operator""_f_j(unsigned long long xj) { return biogears::Quaternionf(0.f, 0.f, static_cast<float>(xj), 0.f); }
-inline constexpr biogears::Quaternionf operator""_f_k(unsigned long long xk) { return biogears::Quaternionf(0.f, 0.f, 0.f, static_cast<float>(xk)); }
+inline constexpr BIOGEARS_NAMESPACE Quaternionf operator""_f_q(unsigned long long xw) { return BIOGEARS_NAMESPACE Quaternionf(static_cast<float>(xw)); }
+inline constexpr BIOGEARS_NAMESPACE Quaternionf operator""_f_i(unsigned long long xi) { return BIOGEARS_NAMESPACE Quaternionf(0.f, static_cast<float>(xi), 0.f, 0.f); }
+inline constexpr BIOGEARS_NAMESPACE Quaternionf operator""_f_j(unsigned long long xj) { return BIOGEARS_NAMESPACE Quaternionf(0.f, 0.f, static_cast<float>(xj), 0.f); }
+inline constexpr BIOGEARS_NAMESPACE Quaternionf operator""_f_k(unsigned long long xk) { return BIOGEARS_NAMESPACE Quaternionf(0.f, 0.f, 0.f, static_cast<float>(xk)); }
 
-inline constexpr biogears::Quaternionf operator""_f_q(long double xw) { return biogears::Quaternionf(static_cast<float>(xw)); }
-inline constexpr biogears::Quaternionf operator""_f_i(long double xi) { return biogears::Quaternionf(0.f, static_cast<float>(xi), 0.f, 0.f); }
-inline constexpr biogears::Quaternionf operator""_f_j(long double xj) { return biogears::Quaternionf(0.f, 0.f, static_cast<float>(xj), 0.f); }
-inline constexpr biogears::Quaternionf operator""_f_k(long double xk) { return biogears::Quaternionf(0.f, 0.f, 0.f, static_cast<float>(xk)); }
+inline constexpr BIOGEARS_NAMESPACE Quaternionf operator""_f_q(long double xw) { return BIOGEARS_NAMESPACE Quaternionf(static_cast<float>(xw)); }
+inline constexpr BIOGEARS_NAMESPACE Quaternionf operator""_f_i(long double xi) { return BIOGEARS_NAMESPACE Quaternionf(0.f, static_cast<float>(xi), 0.f, 0.f); }
+inline constexpr BIOGEARS_NAMESPACE Quaternionf operator""_f_j(long double xj) { return BIOGEARS_NAMESPACE Quaternionf(0.f, 0.f, static_cast<float>(xj), 0.f); }
+inline constexpr BIOGEARS_NAMESPACE Quaternionf operator""_f_k(long double xk) { return BIOGEARS_NAMESPACE Quaternionf(0.f, 0.f, 0.f, static_cast<float>(xk)); }
 } // inline quaternain_literals
 
 //==============================================================================

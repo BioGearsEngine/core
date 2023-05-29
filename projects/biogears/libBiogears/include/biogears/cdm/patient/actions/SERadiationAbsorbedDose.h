@@ -51,4 +51,4 @@ protected:
 protected:
   SEScalarEnergyPerMass* m_RadiationDose;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

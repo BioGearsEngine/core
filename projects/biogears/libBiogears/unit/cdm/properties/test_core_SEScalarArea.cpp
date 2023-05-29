@@ -59,26 +59,26 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarArea Area = biogears::SEScalarArea();
+  BIOGEARS_NAMESPACE SEScalarArea Area = BIOGEARS_NAMESPACE SEScalarArea();
   auto ptr = Area.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::AreaUnit::IsValidUnit("cm^2");
-  bool unit1 = biogears::AreaUnit::IsValidUnit("m^2");
+  bool unit0 = BIOGEARS_NAMESPACE AreaUnit::IsValidUnit("cm^2");
+  bool unit1 = BIOGEARS_NAMESPACE AreaUnit::IsValidUnit("m^2");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
-  bool unit5 = biogears::AreaUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE AreaUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::AreaUnit mu0 = biogears::AreaUnit::GetCompoundUnit("cm^2");
-  biogears::AreaUnit mu1 = biogears::AreaUnit::GetCompoundUnit("m^2");
-  EXPECT_EQ(mu0, biogears::AreaUnit::cm2);
-  EXPECT_EQ(mu1, biogears::AreaUnit::m2);
-  EXPECT_THROW(biogears::AreaUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE AreaUnit mu0 = BIOGEARS_NAMESPACE AreaUnit::GetCompoundUnit("cm^2");
+  BIOGEARS_NAMESPACE AreaUnit mu1 = BIOGEARS_NAMESPACE AreaUnit::GetCompoundUnit("m^2");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE AreaUnit::cm2);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE AreaUnit::m2);
+  EXPECT_THROW(BIOGEARS_NAMESPACE AreaUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

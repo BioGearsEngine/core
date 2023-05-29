@@ -35,7 +35,7 @@ struct Timer {
 CLOSE_BIOGEARS_NAMESPACE // namespace biogearsK
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<string, biogears::Timer>;
+BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE Timer>;
 }
 OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API TimingProfile : public Loggable {
@@ -85,11 +85,11 @@ public:
   template <typename Duration>
   typename Duration::rep GetElapsedTime(const std::string& label)
   {
-    biogears::State state = m_timers[label].state;
+    BIOGEARS_NAMESPACE State state = m_timers[label].state;
 
-    if (state == biogears::State::Running) {
+    if (state == BIOGEARS_NAMESPACE State::Running) {
       return std::chrono::duration_cast<Duration>(std::chrono::high_resolution_clock::now() - m_timers[label].start).count();
-    } else if (state == biogears::State::Ran) {
+    } else if (state == BIOGEARS_NAMESPACE State::Ran) {
       return std::chrono::duration_cast<Duration>(m_timers[label].end - m_timers[label].start).count();
     } else {
       return typename Duration::rep(0);
@@ -97,7 +97,7 @@ public:
   }
 
 private:
-  std::map<std::string, biogears::Timer> m_timers;
+  std::map<std::string, BIOGEARS_NAMESPACE Timer> m_timers;
 
   std::stringstream m_ss;
 };

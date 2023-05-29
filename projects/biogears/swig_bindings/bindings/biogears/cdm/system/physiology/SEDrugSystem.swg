@@ -18,20 +18,20 @@
 %import <biogears/cdm/properties/SEScalarFrequency.swg>
 %import <biogears/cdm/properties/SEScalarVolume.swg>
 
-%nspace biogears::SEDrugSystem;
+%nspace BIOGEARS_NAMESPACE SEDrugSystem;
 
-%ignore biogears::SESubstancePharmacokinetics::GetScalar(const std::string& name);
-%ignore biogears::SESubstancePharmacokinetics::Unload;
-%ignore biogears::SESubstancePharmacokinetics::Load;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Load;
 
 
-%rename (GetAntibioticActivity_const) biogears::SEDrugSystem::GetAntibioticActivity() const;
-%rename (GetBronchodilationLevel_const) biogears::SEDrugSystem::GetBronchodilationLevel() const ;
-%rename (GetHemorrhageChange_const) biogears::SEDrugSystem::GetHemorrhageChange() const;
-%rename (GetNeuromuscularBlockLevel_const) biogears::SEDrugSystem::GetNeuromuscularBlockLevel() const;
-%rename (GetPainToleranceChange_const) biogears::SEDrugSystem::GetPainToleranceChange() const ;
-%rename (GetSedationLevel_const) biogears::SEDrugSystem::GetSedationLevel() const ;
-%rename (GetTubularPermeabilityChange_const) biogears::SEDrugSystem::GetTubularPermeabilityChange() const ;
-%rename (GetCentralNervousResponse_const) biogears::SEDrugSystem::GetCentralNervousResponse() const ;
+%rename (GetAntibioticActivity_const) BIOGEARS_NAMESPACE SEDrugSystem::GetAntibioticActivity() const;
+%rename (GetBronchodilationLevel_const) BIOGEARS_NAMESPACE SEDrugSystem::GetBronchodilationLevel() const ;
+%rename (GetHemorrhageChange_const) BIOGEARS_NAMESPACE SEDrugSystem::GetHemorrhageChange() const;
+%rename (GetNeuromuscularBlockLevel_const) BIOGEARS_NAMESPACE SEDrugSystem::GetNeuromuscularBlockLevel() const;
+%rename (GetPainToleranceChange_const) BIOGEARS_NAMESPACE SEDrugSystem::GetPainToleranceChange() const ;
+%rename (GetSedationLevel_const) BIOGEARS_NAMESPACE SEDrugSystem::GetSedationLevel() const ;
+%rename (GetTubularPermeabilityChange_const) BIOGEARS_NAMESPACE SEDrugSystem::GetTubularPermeabilityChange() const ;
+%rename (GetCentralNervousResponse_const) BIOGEARS_NAMESPACE SEDrugSystem::GetCentralNervousResponse() const ;
 
 %include <biogears/cdm/system/physiology/SEDrugSystem.h>

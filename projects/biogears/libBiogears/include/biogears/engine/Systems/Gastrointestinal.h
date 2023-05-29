@@ -28,7 +28,7 @@ class BioGears;
 CLOSE_BIOGEARS_NAMESPACE
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<biogears::SELiquidSubstanceQuantity*, double>;
+BG_EXT template class BIOGEARS_API map<BIOGEARS_NAMESPACE SELiquidSubstanceQuantity*, double>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

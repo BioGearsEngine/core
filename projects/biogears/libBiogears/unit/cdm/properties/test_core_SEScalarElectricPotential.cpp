@@ -59,26 +59,26 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarElectricPotential ElectricPotential = biogears::SEScalarElectricPotential();
+  BIOGEARS_NAMESPACE SEScalarElectricPotential ElectricPotential = BIOGEARS_NAMESPACE SEScalarElectricPotential();
   auto ptr = ElectricPotential.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::ElectricPotentialUnit::IsValidUnit("V");
-  bool unit1 = biogears::ElectricPotentialUnit::IsValidUnit("mV");
+  bool unit0 = BIOGEARS_NAMESPACE ElectricPotentialUnit::IsValidUnit("V");
+  bool unit1 = BIOGEARS_NAMESPACE ElectricPotentialUnit::IsValidUnit("mV");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
-  bool unit6 = biogears::ElectricPotentialUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE ElectricPotentialUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::ElectricPotentialUnit mu0 = biogears::ElectricPotentialUnit::GetCompoundUnit("V");
-  biogears::ElectricPotentialUnit mu1 = biogears::ElectricPotentialUnit::GetCompoundUnit("mV");
-  EXPECT_EQ(mu0, biogears::ElectricPotentialUnit::V);
-  EXPECT_EQ(mu1, biogears::ElectricPotentialUnit::mV);
-  EXPECT_THROW(biogears::ElectricPotentialUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE ElectricPotentialUnit mu0 = BIOGEARS_NAMESPACE ElectricPotentialUnit::GetCompoundUnit("V");
+  BIOGEARS_NAMESPACE ElectricPotentialUnit mu1 = BIOGEARS_NAMESPACE ElectricPotentialUnit::GetCompoundUnit("mV");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE ElectricPotentialUnit::V);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE ElectricPotentialUnit::mV);
+  EXPECT_THROW(BIOGEARS_NAMESPACE ElectricPotentialUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

@@ -14,6 +14,6 @@
 
 %import <biogears/cdm/scenario/requests/SECompartmentDataRequest.swg>
 
-%nspace biogears::SEThermalCompartmentDataRequest;
+%nspace BIOGEARS_NAMESPACE SEThermalCompartmentDataRequest;
 
 %include <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.h>

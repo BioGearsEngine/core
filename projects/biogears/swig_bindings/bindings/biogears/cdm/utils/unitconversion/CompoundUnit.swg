@@ -30,15 +30,15 @@
 %include "exception.i"
 %include <biogears/exports.h>
 
-%nspace biogears::CCompoundUnitElement;
-%nspace biogears::CUnitDimension;
-%nspace biogears::CCompoundUnit;
+%nspace BIOGEARS_NAMESPACE CCompoundUnitElement;
+%nspace BIOGEARS_NAMESPACE CUnitDimension;
+%nspace BIOGEARS_NAMESPACE CCompoundUnit;
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::CCompoundUnit::ToString() const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE CCompoundUnit::ToString() const "public override";
 #endif 
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class CCompoundUnit {
    
    public:
@@ -46,7 +46,7 @@ namespace biogears {
         return GetString();
       }
    };
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 
 

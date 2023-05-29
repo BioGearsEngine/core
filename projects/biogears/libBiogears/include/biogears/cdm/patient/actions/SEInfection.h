@@ -67,4 +67,4 @@ protected:
   CDM::enumInfectionSeverity::value m_Severity;
   SEScalarMassPerVolume* m_MinimumInhibitoryConcentration;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -59,26 +59,26 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarMassPerMass MassPerMass = biogears::SEScalarMassPerMass();
+  BIOGEARS_NAMESPACE SEScalarMassPerMass MassPerMass = BIOGEARS_NAMESPACE SEScalarMassPerMass();
   auto ptr = MassPerMass.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::MassPerMassUnit::IsValidUnit("ug/kg");
-  bool unit1 = biogears::MassPerMassUnit::IsValidUnit("mg/g");
+  bool unit0 = BIOGEARS_NAMESPACE MassPerMassUnit::IsValidUnit("ug/kg");
+  bool unit1 = BIOGEARS_NAMESPACE MassPerMassUnit::IsValidUnit("mg/g");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
-  bool unit6 = biogears::MassPerMassUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE MassPerMassUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::MassPerMassUnit mu0 = biogears::MassPerMassUnit::GetCompoundUnit("ug/kg");
-  biogears::MassPerMassUnit mu1 = biogears::MassPerMassUnit::GetCompoundUnit("mg/g");
-  EXPECT_EQ(mu0, biogears::MassPerMassUnit::ug_Per_kg);
-  EXPECT_EQ(mu1, biogears::MassPerMassUnit::mg_Per_g);
-  EXPECT_THROW(biogears::MassPerMassUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE MassPerMassUnit mu0 = BIOGEARS_NAMESPACE MassPerMassUnit::GetCompoundUnit("ug/kg");
+  BIOGEARS_NAMESPACE MassPerMassUnit mu1 = BIOGEARS_NAMESPACE MassPerMassUnit::GetCompoundUnit("mg/g");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE MassPerMassUnit::ug_Per_kg);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE MassPerMassUnit::mg_Per_g);
+  EXPECT_THROW(BIOGEARS_NAMESPACE MassPerMassUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

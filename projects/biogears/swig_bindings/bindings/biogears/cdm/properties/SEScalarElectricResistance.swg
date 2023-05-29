@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<ElectricResistanceUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<ElectricResistanceUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const ElectricResistanceUnit&) const;
 %rename(NotEquals)  operator!=(const ElectricResistanceUnit&) const;
 %rename(Equals)  operator==(const SEScalarElectricResistance&) const;
 %rename(NotEquals)  operator!=(const SEScalarElectricResistance&) const;  
 
-%ignore biogears::ElectricResistanceUnit::ElectricResistanceUnit(std::string const &);
-%ignore biogears::ElectricResistanceUnit::IsValidUnit(std::string const &);
-%ignore biogears::ElectricResistanceUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricResistanceUnit::ElectricResistanceUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricResistanceUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricResistanceUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarElectricResistance;
-%nspace biogears::ElectricResistanceUnit;
-%nspace biogears::SEScalarQuantity<ElectricResistanceUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarElectricResistance;
+%nspace BIOGEARS_NAMESPACE ElectricResistanceUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<ElectricResistanceUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class ElectricResistanceUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::ElectricResistanceUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricResistanceUnit>;
 
-%ignore  biogears::SEScalarQuantity< ElectricResistanceUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< ElectricResistanceUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< ElectricResistanceUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< ElectricResistanceUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< ElectricResistanceUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< ElectricResistanceUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricResistanceUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricResistanceUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricResistanceUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricResistanceUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricResistanceUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricResistanceUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricResistanceUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricResistanceUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricResistanceUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricResistanceUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricResistanceUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricResistanceUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricResistanceUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricResistanceUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< ElectricResistanceUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< ElectricResistanceUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricResistanceUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricResistanceUnit >::operator!=;
 
-%template(QuantityElectricResistance) biogears::SEScalarQuantity<biogears::ElectricResistanceUnit>;
+%template(QuantityElectricResistance) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricResistanceUnit>;
 
 %include <biogears/cdm/properties/SEScalarElectricResistance.h>
 

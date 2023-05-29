@@ -20,6 +20,6 @@
 
 %import <biogears/cdm/system/SESystem.swg>
 
-%rename (GetNozzleLoss_const) biogears::SEInhaler::GetNozzleLoss() const;
+%rename (GetNozzleLoss_const) BIOGEARS_NAMESPACE SEInhaler::GetNozzleLoss() const;
 
 %include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>

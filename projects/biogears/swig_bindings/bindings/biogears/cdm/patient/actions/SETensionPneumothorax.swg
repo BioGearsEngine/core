@@ -10,12 +10,12 @@
 
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 
-%nspace biogears::SETensionPneumothorax;
+%nspace BIOGEARS_NAMESPACE SETensionPneumothorax;
 
-%ignore biogears::SETensionPneumothorax::Unload;
-%ignore biogears::SETensionPneumothorax::Load;
+%ignore BIOGEARS_NAMESPACE SETensionPneumothorax::Unload;
+%ignore BIOGEARS_NAMESPACE SETensionPneumothorax::Load;
 
-%rename (SetTensionPneumothoraxType) biogears::SETensionPneumothorax::SetType;
-%rename (GetTensionPneumothoraxType) biogears::SETensionPneumothorax::GetType;
+%rename (SetTensionPneumothoraxType) BIOGEARS_NAMESPACE SETensionPneumothorax::SetType;
+%rename (GetTensionPneumothoraxType) BIOGEARS_NAMESPACE SETensionPneumothorax::GetType;
 
 %include <biogears/cdm/patient/actions/SETensionPneumothorax.h>

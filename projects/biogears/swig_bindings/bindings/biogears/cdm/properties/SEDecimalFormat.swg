@@ -1,7 +1,7 @@
 %{
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 using namespace CDM;
 %}
 
@@ -9,8 +9,8 @@ using namespace CDM;
 
 %import <biogears/cdm/CommonDataModel.swg>
 
-%nspace biogears::SEDecimalFormat;
-%nspace biogears::DecimalNotation;
+%nspace BIOGEARS_NAMESPACE SEDecimalFormat;
+%nspace BIOGEARS_NAMESPACE DecimalNotation;
 
 %ignore GetPrecision;
 %ignore SetPrecision(std::streamsize p);

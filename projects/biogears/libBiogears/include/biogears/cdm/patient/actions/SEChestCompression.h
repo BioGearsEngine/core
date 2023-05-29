@@ -43,4 +43,4 @@ protected:
 
 private:
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -13,15 +13,15 @@
 %import <biogears/cdm/properties/SEScalarFraction.swg>
 %import <biogears/cdm/properties/SEScalarTemperature.swg>
 
-%nspace biogears::SEAppliedTemperature;
+%nspace BIOGEARS_NAMESPACE SEAppliedTemperature;
 
-%ignore biogears::SEAppliedTemperature::Unload;
-%ignore biogears::SEAppliedTemperature::Load;
-%ignore biogears::SEAppliedTemperature::GetScalar(const std::string& name);
-%ignore biogears::SEAppliedTemperature::ToString(std::ostream& str) const;
+%ignore BIOGEARS_NAMESPACE SEAppliedTemperature::Unload;
+%ignore BIOGEARS_NAMESPACE SEAppliedTemperature::Load;
+%ignore BIOGEARS_NAMESPACE SEAppliedTemperature::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SEAppliedTemperature::ToString(std::ostream& str) const;
 
-%rename (GetPower_const) biogears::SEAppliedTemperature:: GetTemperature(const TemperatureUnit& unit) const;
-%rename (GetSurfaceArea_const) biogears::SEAppliedTemperature::GetSurfaceArea(const AreaUnit& unit) const;
-%rename (GetSurfaceAreaFraction_const) biogears::SEAppliedTemperature::GetSurfaceAreaFraction() const;
+%rename (GetPower_const) BIOGEARS_NAMESPACE SEAppliedTemperature:: GetTemperature(const TemperatureUnit& unit) const;
+%rename (GetSurfaceArea_const) BIOGEARS_NAMESPACE SEAppliedTemperature::GetSurfaceArea(const AreaUnit& unit) const;
+%rename (GetSurfaceAreaFraction_const) BIOGEARS_NAMESPACE SEAppliedTemperature::GetSurfaceAreaFraction() const;
 
 %include <biogears/cdm/system/environment/SEAppliedTemperature.h>

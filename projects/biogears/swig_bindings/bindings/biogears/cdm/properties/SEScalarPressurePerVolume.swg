@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<PressurePerVolumeUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<PressurePerVolumeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const PressurePerVolumeUnit&) const;
 %rename(NotEquals)  operator!=(const PressurePerVolumeUnit&) const;
 %rename(Equals)  operator==(const SEScalarPressurePerVolume&) const;
 %rename(NotEquals)  operator!=(const SEScalarPressurePerVolume&) const;  
 
-%ignore biogears::PressurePerVolumeUnit::PressurePerVolumeUnit(std::string const &);
-%ignore biogears::PressurePerVolumeUnit::IsValidUnit(std::string const &);
-%ignore biogears::PressurePerVolumeUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE PressurePerVolumeUnit::PressurePerVolumeUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE PressurePerVolumeUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE PressurePerVolumeUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarPressurePerVolume;
-%nspace biogears::PressurePerVolumeUnit;
-%nspace biogears::SEScalarQuantity<PressurePerVolumeUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarPressurePerVolume;
+%nspace BIOGEARS_NAMESPACE PressurePerVolumeUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<PressurePerVolumeUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class PressurePerVolumeUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::PressurePerVolumeUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PressurePerVolumeUnit>;
 
-%ignore  biogears::SEScalarQuantity< PressurePerVolumeUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< PressurePerVolumeUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< PressurePerVolumeUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< PressurePerVolumeUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< PressurePerVolumeUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< PressurePerVolumeUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PressurePerVolumeUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PressurePerVolumeUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PressurePerVolumeUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PressurePerVolumeUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PressurePerVolumeUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PressurePerVolumeUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PressurePerVolumeUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PressurePerVolumeUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PressurePerVolumeUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PressurePerVolumeUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PressurePerVolumeUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PressurePerVolumeUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PressurePerVolumeUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PressurePerVolumeUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< PressurePerVolumeUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< PressurePerVolumeUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PressurePerVolumeUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< PressurePerVolumeUnit >::operator!=;
 
-%template(QuantityPressurePerVolume) biogears::SEScalarQuantity<biogears::PressurePerVolumeUnit>;
+%template(QuantityPressurePerVolume) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PressurePerVolumeUnit>;
 
 %include <biogears/cdm/properties/SEScalarPressurePerVolume.h>
 

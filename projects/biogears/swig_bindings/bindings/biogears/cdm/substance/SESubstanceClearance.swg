@@ -18,18 +18,18 @@
 %import <biogears/cdm/properties/SEScalar.swg>
 %import <biogears/cdm/properties/SEScalarMassPerTime.swg>
 
-%nspace biogears::SESubstanceClearance;
+%nspace BIOGEARS_NAMESPACE SESubstanceClearance;
 
-%ignore biogears::SESubstanceClearance::Unload;
-%ignore biogears::SESubstanceClearance::Load;
+%ignore BIOGEARS_NAMESPACE SESubstanceClearance::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstanceClearance::Load;
 
-%ignore biogears::SESubstanceClearance::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstanceClearance::GetScalar(const std::string& name);
 
-%rename (GetFractionExcretedInFeces_const) biogears::SESubstanceClearance::GetFractionExcretedInFeces() const;
-%rename (GetFractionExcretedInUrine_const) biogears::SESubstanceClearance::GetFractionExcretedInUrine() const;
-%rename (GetFractionMetabolizedInGut_const) biogears::SESubstanceClearance::GetFractionMetabolizedInGut() const;
-%rename (GetFractionUnboundInPlasma_const) biogears::SESubstanceClearance::GetFractionUnboundInPlasma() const;
-%rename (GetGlomerularFilterability_const) biogears::SESubstanceClearance::GetGlomerularFilterability() const;
-%rename (GetRenalReabsorptionRatio_const) biogears::SESubstanceClearance::GetRenalReabsorptionRatio() const;
+%rename (GetFractionExcretedInFeces_const) BIOGEARS_NAMESPACE SESubstanceClearance::GetFractionExcretedInFeces() const;
+%rename (GetFractionExcretedInUrine_const) BIOGEARS_NAMESPACE SESubstanceClearance::GetFractionExcretedInUrine() const;
+%rename (GetFractionMetabolizedInGut_const) BIOGEARS_NAMESPACE SESubstanceClearance::GetFractionMetabolizedInGut() const;
+%rename (GetFractionUnboundInPlasma_const) BIOGEARS_NAMESPACE SESubstanceClearance::GetFractionUnboundInPlasma() const;
+%rename (GetGlomerularFilterability_const) BIOGEARS_NAMESPACE SESubstanceClearance::GetGlomerularFilterability() const;
+%rename (GetRenalReabsorptionRatio_const) BIOGEARS_NAMESPACE SESubstanceClearance::GetRenalReabsorptionRatio() const;
 
 %include <biogears/cdm/substance/SESubstanceClearance.h>

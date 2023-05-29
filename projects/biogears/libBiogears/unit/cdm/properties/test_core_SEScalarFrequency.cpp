@@ -59,30 +59,30 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarFrequency Frequency = biogears::SEScalarFrequency();
+  BIOGEARS_NAMESPACE SEScalarFrequency Frequency = BIOGEARS_NAMESPACE SEScalarFrequency();
   auto ptr = Frequency.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::FrequencyUnit::IsValidUnit("1/min");
-  bool unit1 = biogears::FrequencyUnit::IsValidUnit("1/s");
-  bool unit2 = biogears::FrequencyUnit::IsValidUnit("Hz");
+  bool unit0 = BIOGEARS_NAMESPACE FrequencyUnit::IsValidUnit("1/min");
+  bool unit1 = BIOGEARS_NAMESPACE FrequencyUnit::IsValidUnit("1/s");
+  bool unit2 = BIOGEARS_NAMESPACE FrequencyUnit::IsValidUnit("Hz");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
-  bool unit5 = biogears::FrequencyUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE FrequencyUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::FrequencyUnit mu0 = biogears::FrequencyUnit::GetCompoundUnit("1/min");
-  biogears::FrequencyUnit mu1 = biogears::FrequencyUnit::GetCompoundUnit("1/s");
-  biogears::FrequencyUnit mu2 = biogears::FrequencyUnit::GetCompoundUnit("Hz");
-  EXPECT_EQ(mu0, biogears::FrequencyUnit::Per_min);
-  EXPECT_EQ(mu1, biogears::FrequencyUnit::Per_s);
-  EXPECT_EQ(mu2, biogears::FrequencyUnit::Hz);
-  EXPECT_THROW(biogears::FrequencyUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE FrequencyUnit mu0 = BIOGEARS_NAMESPACE FrequencyUnit::GetCompoundUnit("1/min");
+  BIOGEARS_NAMESPACE FrequencyUnit mu1 = BIOGEARS_NAMESPACE FrequencyUnit::GetCompoundUnit("1/s");
+  BIOGEARS_NAMESPACE FrequencyUnit mu2 = BIOGEARS_NAMESPACE FrequencyUnit::GetCompoundUnit("Hz");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE FrequencyUnit::Per_min);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE FrequencyUnit::Per_s);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE FrequencyUnit::Hz);
+  EXPECT_THROW(BIOGEARS_NAMESPACE FrequencyUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

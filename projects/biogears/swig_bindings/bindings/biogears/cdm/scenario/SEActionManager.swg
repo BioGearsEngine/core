@@ -14,20 +14,20 @@
 // %import <biogears/cdm/scenario/SEInhalerActionCollection.swg>
 %import <biogears/cdm/scenario/SEPatientActionCollection.swg>
 
-%nspace biogears::SEActionManager;
+%nspace BIOGEARS_NAMESPACE SEActionManager;
 
-%ignore biogears::SEActionManager::GetAction(const std::string& name) const;
-%ignore biogears::SEActionManager::ReadActionFile(const std::string& name);
-%ignore biogears::SEActionManager::GetCompound(const std::string& name) const;
+%ignore BIOGEARS_NAMESPACE SEActionManager::GetAction(const std::string& name) const;
+%ignore BIOGEARS_NAMESPACE SEActionManager::ReadActionFile(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SEActionManager::GetCompound(const std::string& name) const;
 
-// %ignore biogears::SEActionManager::GetEnvironmentActions();
-// %ignore biogears::SEActionManager::GetPatientActions();
-%ignore biogears::SEActionManager::GetAnesthesiaMachineActions();
-%ignore biogears::SEActionManager::GetInhalerActions();
+// %ignore BIOGEARS_NAMESPACE SEActionManager::GetEnvironmentActions();
+// %ignore BIOGEARS_NAMESPACE SEActionManager::GetPatientActions();
+%ignore BIOGEARS_NAMESPACE SEActionManager::GetAnesthesiaMachineActions();
+%ignore BIOGEARS_NAMESPACE SEActionManager::GetInhalerActions();
 
-%ignore biogears::SEActionManager::ProcessAction(const CDM::ActionData& in);
-%ignore biogears::SEActionManager::Load;
-%ignore biogears::SEActionManager::Unload;
+%ignore BIOGEARS_NAMESPACE SEActionManager::ProcessAction(const CDM::ActionData& in);
+%ignore BIOGEARS_NAMESPACE SEActionManager::Load;
+%ignore BIOGEARS_NAMESPACE SEActionManager::Unload;
 
 %include <biogears/cdm/scenario/SEActionManager.h>
 

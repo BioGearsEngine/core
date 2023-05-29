@@ -53,19 +53,19 @@
 %import <biogears/cdm/patient/actions/SEUrinate.swg>
 %import <biogears/cdm/system/physiology/SEGastrointestinalSystem.swg>
 
-%nspace biogears::SEPatientActionCollection;
+%nspace BIOGEARS_NAMESPACE SEPatientActionCollection;
 
-%ignore biogears::SEPatientActionCollection::Unload;
-%ignore biogears::SEPatientActionCollection::Load;
+%ignore BIOGEARS_NAMESPACE SEPatientActionCollection::Unload;
+%ignore BIOGEARS_NAMESPACE SEPatientActionCollection::Load;
 
-%ignore biogears::SEPatientActionCollection::RemoveHemorrhage(std::string const &);
-%ignore biogears::SEPatientActionCollection::RemovePainStimulus(std::string const &);
-%ignore biogears::SEPatientActionCollection::RemoveTourniquet(std::string const &);
-%ignore biogears::SEPatientActionCollection::RemoveEscharotomy(std::string const&);
+%ignore BIOGEARS_NAMESPACE SEPatientActionCollection::RemoveHemorrhage(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEPatientActionCollection::RemovePainStimulus(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEPatientActionCollection::RemoveTourniquet(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEPatientActionCollection::RemoveEscharotomy(std::string const&);
 
-%ignore biogears::SEPatientActionCollection::GetAnesthesiaMachineActions();
-%ignore biogears::SEPatientActionCollection::GetInhalerActions();
-%ignore biogears::SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& in);
+%ignore BIOGEARS_NAMESPACE SEPatientActionCollection::GetAnesthesiaMachineActions();
+%ignore BIOGEARS_NAMESPACE SEPatientActionCollection::GetInhalerActions();
+%ignore BIOGEARS_NAMESPACE SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& in);
 
 %ignore GetEscharotomiesWrapper() const;
 %ignore GetHemorrhageWrapper() const;
@@ -79,24 +79,24 @@
 
 %include <biogears/cdm/scenario/SEPatientActionCollection.h>
 
-%nspace std::map<std::string, biogears::SEHemorrhage*>;
-%nspace std::map<std::string, biogears::SETourniquet*>;
-%nspace std::map<std::string, biogears::SEPainStimulus*>;
-%nspace std::map<std::string, biogears::SEEscharotomy*>;
+%nspace std::map<std::string, BIOGEARS_NAMESPACE SEHemorrhage*>;
+%nspace std::map<std::string, BIOGEARS_NAMESPACE SETourniquet*>;
+%nspace std::map<std::string, BIOGEARS_NAMESPACE SEPainStimulus*>;
+%nspace std::map<std::string, BIOGEARS_NAMESPACE SEEscharotomy*>;
 
-%nspace std::map<const biogears::SESubstance*, biogears::SESubstanceBolus*> ;
-%nspace std::map<const biogears::SESubstance*, biogears::SESubstanceInfusion*> ;
-%nspace std::map<const biogears::SESubstance*, biogears::SESubstanceOralDose*> ;
-%nspace std::map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*> ;
-%nspace std::map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*> ;
+%nspace std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceBolus*> ;
+%nspace std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceInfusion*> ;
+%nspace std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceOralDose*> ;
+%nspace std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceNasalDose*> ;
+%nspace std::map<const BIOGEARS_NAMESPACE SESubstanceCompound*, BIOGEARS_NAMESPACE SESubstanceCompoundInfusion*> ;
 
-%template (map_string__SEHemorrhage_ptr) std::map<std::string, biogears::SEHemorrhage*> ;
-%template (map_string__SEEscharotomy_ptr) std::map<std::string, biogears::SEEscharotomy*> ;
-%template (map_string__SETourniquet_ptr) std::map<std::string, biogears::SETourniquet*> ;
-%template (map_string__SEPainStimulus_ptr) std::map<std::string, biogears::SEPainStimulus*> ;
+%template (map_string__SEHemorrhage_ptr) std::map<std::string, BIOGEARS_NAMESPACE SEHemorrhage*> ;
+%template (map_string__SEEscharotomy_ptr) std::map<std::string, BIOGEARS_NAMESPACE SEEscharotomy*> ;
+%template (map_string__SETourniquet_ptr) std::map<std::string, BIOGEARS_NAMESPACE SETourniquet*> ;
+%template (map_string__SEPainStimulus_ptr) std::map<std::string, BIOGEARS_NAMESPACE SEPainStimulus*> ;
 
-%template (map_SESubstance_ptr__SESubstanceBolus_ptr) std::map<const biogears::SESubstance*, biogears::SESubstanceBolus*> ;
-%template (map_SESubstance_ptr__SESubstanceInfusion_ptr) std::map<const biogears::SESubstance*, biogears::SESubstanceInfusion*> ;
-%template (map_SESubstance_ptr__SESubstanceOralDose_ptr) std::map<const biogears::SESubstance*, biogears::SESubstanceOralDose*> ;
-%template (map_SESubstance_ptr__SESubstanceNasalDose_ptr) std::map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*> ;
-%template (map_SESubstanceCompound_ptr__SESubstanceCompoundInfusion_ptr) std::map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*> ;
+%template (map_SESubstance_ptr__SESubstanceBolus_ptr) std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceBolus*> ;
+%template (map_SESubstance_ptr__SESubstanceInfusion_ptr) std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceInfusion*> ;
+%template (map_SESubstance_ptr__SESubstanceOralDose_ptr) std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceOralDose*> ;
+%template (map_SESubstance_ptr__SESubstanceNasalDose_ptr) std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceNasalDose*> ;
+%template (map_SESubstanceCompound_ptr__SESubstanceCompoundInfusion_ptr) std::map<const BIOGEARS_NAMESPACE SESubstanceCompound*, BIOGEARS_NAMESPACE SESubstanceCompoundInfusion*> ;

@@ -59,34 +59,34 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarEnergy Energy = biogears::SEScalarEnergy();
+  BIOGEARS_NAMESPACE SEScalarEnergy Energy = BIOGEARS_NAMESPACE SEScalarEnergy();
   auto ptr = Energy.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::EnergyUnit::IsValidUnit("J");
-  bool unit1 = biogears::EnergyUnit::IsValidUnit("mJ");
-  bool unit2 = biogears::EnergyUnit::IsValidUnit("kJ");
-  bool unit3 = biogears::EnergyUnit::IsValidUnit("kcal");
+  bool unit0 = BIOGEARS_NAMESPACE EnergyUnit::IsValidUnit("J");
+  bool unit1 = BIOGEARS_NAMESPACE EnergyUnit::IsValidUnit("mJ");
+  bool unit2 = BIOGEARS_NAMESPACE EnergyUnit::IsValidUnit("kJ");
+  bool unit3 = BIOGEARS_NAMESPACE EnergyUnit::IsValidUnit("kcal");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
-  bool unit5 = biogears::EnergyUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE EnergyUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::EnergyUnit mu0 = biogears::EnergyUnit::GetCompoundUnit("J");
-  biogears::EnergyUnit mu1 = biogears::EnergyUnit::GetCompoundUnit("mJ");
-  biogears::EnergyUnit mu2 = biogears::EnergyUnit::GetCompoundUnit("kJ");
-  biogears::EnergyUnit mu3 = biogears::EnergyUnit::GetCompoundUnit("kcal");
-  EXPECT_EQ(mu0, biogears::EnergyUnit::J);
-  EXPECT_EQ(mu1, biogears::EnergyUnit::mJ);
-  EXPECT_EQ(mu2, biogears::EnergyUnit::kJ);
-  EXPECT_EQ(mu3, biogears::EnergyUnit::kcal);
-  EXPECT_THROW(biogears::EnergyUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE EnergyUnit mu0 = BIOGEARS_NAMESPACE EnergyUnit::GetCompoundUnit("J");
+  BIOGEARS_NAMESPACE EnergyUnit mu1 = BIOGEARS_NAMESPACE EnergyUnit::GetCompoundUnit("mJ");
+  BIOGEARS_NAMESPACE EnergyUnit mu2 = BIOGEARS_NAMESPACE EnergyUnit::GetCompoundUnit("kJ");
+  BIOGEARS_NAMESPACE EnergyUnit mu3 = BIOGEARS_NAMESPACE EnergyUnit::GetCompoundUnit("kcal");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE EnergyUnit::J);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE EnergyUnit::mJ);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE EnergyUnit::kJ);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE EnergyUnit::kcal);
+  EXPECT_THROW(BIOGEARS_NAMESPACE EnergyUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

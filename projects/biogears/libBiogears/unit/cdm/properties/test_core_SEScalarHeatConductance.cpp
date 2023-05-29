@@ -59,34 +59,34 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarHeatConductance HeatConductance = biogears::SEScalarHeatConductance();
+  BIOGEARS_NAMESPACE SEScalarHeatConductance HeatConductance = BIOGEARS_NAMESPACE SEScalarHeatConductance();
   auto ptr = HeatConductance.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::HeatConductanceUnit::IsValidUnit("W/K");
-  bool unit1 = biogears::HeatConductanceUnit::IsValidUnit("W/degC");
-  bool unit2 = biogears::HeatConductanceUnit::IsValidUnit("kcal/K s");
-  bool unit3 = biogears::HeatConductanceUnit::IsValidUnit("kcal/degC s");
+  bool unit0 = BIOGEARS_NAMESPACE HeatConductanceUnit::IsValidUnit("W/K");
+  bool unit1 = BIOGEARS_NAMESPACE HeatConductanceUnit::IsValidUnit("W/degC");
+  bool unit2 = BIOGEARS_NAMESPACE HeatConductanceUnit::IsValidUnit("kcal/K s");
+  bool unit3 = BIOGEARS_NAMESPACE HeatConductanceUnit::IsValidUnit("kcal/degC s");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
-  bool unit6 = biogears::HeatConductanceUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE HeatConductanceUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::HeatConductanceUnit mu0 = biogears::HeatConductanceUnit::GetCompoundUnit("W/K");
-  biogears::HeatConductanceUnit mu1 = biogears::HeatConductanceUnit::GetCompoundUnit("W/degC");
-  biogears::HeatConductanceUnit mu2 = biogears::HeatConductanceUnit::GetCompoundUnit("kcal/K s");
-  biogears::HeatConductanceUnit mu3 = biogears::HeatConductanceUnit::GetCompoundUnit("kcal/degC s");
-  EXPECT_EQ(mu0, biogears::HeatConductanceUnit::W_Per_K);
-  EXPECT_EQ(mu1, biogears::HeatConductanceUnit::W_Per_C);
-  EXPECT_EQ(mu2, biogears::HeatConductanceUnit::kcal_Per_K_s);
-  EXPECT_EQ(mu3, biogears::HeatConductanceUnit::kcal_Per_C_s);
-  EXPECT_THROW(biogears::HeatConductanceUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE HeatConductanceUnit mu0 = BIOGEARS_NAMESPACE HeatConductanceUnit::GetCompoundUnit("W/K");
+  BIOGEARS_NAMESPACE HeatConductanceUnit mu1 = BIOGEARS_NAMESPACE HeatConductanceUnit::GetCompoundUnit("W/degC");
+  BIOGEARS_NAMESPACE HeatConductanceUnit mu2 = BIOGEARS_NAMESPACE HeatConductanceUnit::GetCompoundUnit("kcal/K s");
+  BIOGEARS_NAMESPACE HeatConductanceUnit mu3 = BIOGEARS_NAMESPACE HeatConductanceUnit::GetCompoundUnit("kcal/degC s");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE HeatConductanceUnit::W_Per_K);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE HeatConductanceUnit::W_Per_C);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE HeatConductanceUnit::kcal_Per_K_s);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE HeatConductanceUnit::kcal_Per_C_s);
+  EXPECT_THROW(BIOGEARS_NAMESPACE HeatConductanceUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

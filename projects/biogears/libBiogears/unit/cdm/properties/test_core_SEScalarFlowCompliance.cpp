@@ -59,34 +59,34 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarFlowCompliance FlowCompliance = biogears::SEScalarFlowCompliance();
+  BIOGEARS_NAMESPACE SEScalarFlowCompliance FlowCompliance = BIOGEARS_NAMESPACE SEScalarFlowCompliance();
   auto ptr = FlowCompliance.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::FlowComplianceUnit::IsValidUnit("L/cmH2O");
-  bool unit1 = biogears::FlowComplianceUnit::IsValidUnit("mL/mmHg");
-  bool unit2 = biogears::FlowComplianceUnit::IsValidUnit("mL/cmH2O");
-  bool unit3 = biogears::FlowComplianceUnit::IsValidUnit("m^3/Pa");
+  bool unit0 = BIOGEARS_NAMESPACE FlowComplianceUnit::IsValidUnit("L/cmH2O");
+  bool unit1 = BIOGEARS_NAMESPACE FlowComplianceUnit::IsValidUnit("mL/mmHg");
+  bool unit2 = BIOGEARS_NAMESPACE FlowComplianceUnit::IsValidUnit("mL/cmH2O");
+  bool unit3 = BIOGEARS_NAMESPACE FlowComplianceUnit::IsValidUnit("m^3/Pa");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
-  bool unit6 = biogears::FlowComplianceUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE FlowComplianceUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::FlowComplianceUnit mu0 = biogears::FlowComplianceUnit::GetCompoundUnit("L/cmH2O");
-  biogears::FlowComplianceUnit mu1 = biogears::FlowComplianceUnit::GetCompoundUnit("mL/mmHg");
-  biogears::FlowComplianceUnit mu2 = biogears::FlowComplianceUnit::GetCompoundUnit("mL/cmH2O");
-  biogears::FlowComplianceUnit mu3 = biogears::FlowComplianceUnit::GetCompoundUnit("m^3/Pa");
-  EXPECT_EQ(mu0, biogears::FlowComplianceUnit::L_Per_cmH2O);
-  EXPECT_EQ(mu1, biogears::FlowComplianceUnit::mL_Per_mmHg);
-  EXPECT_EQ(mu2, biogears::FlowComplianceUnit::mL_Per_cmH2O);
-  EXPECT_EQ(mu3, biogears::FlowComplianceUnit::m3_Per_Pa);
-  EXPECT_THROW(biogears::FlowComplianceUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE FlowComplianceUnit mu0 = BIOGEARS_NAMESPACE FlowComplianceUnit::GetCompoundUnit("L/cmH2O");
+  BIOGEARS_NAMESPACE FlowComplianceUnit mu1 = BIOGEARS_NAMESPACE FlowComplianceUnit::GetCompoundUnit("mL/mmHg");
+  BIOGEARS_NAMESPACE FlowComplianceUnit mu2 = BIOGEARS_NAMESPACE FlowComplianceUnit::GetCompoundUnit("mL/cmH2O");
+  BIOGEARS_NAMESPACE FlowComplianceUnit mu3 = BIOGEARS_NAMESPACE FlowComplianceUnit::GetCompoundUnit("m^3/Pa");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE FlowComplianceUnit::L_Per_cmH2O);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE FlowComplianceUnit::mL_Per_mmHg);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE FlowComplianceUnit::mL_Per_cmH2O);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE FlowComplianceUnit::m3_Per_Pa);
+  EXPECT_THROW(BIOGEARS_NAMESPACE FlowComplianceUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

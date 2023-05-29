@@ -48,4 +48,4 @@ protected:
 protected:
   SEScalarForce* m_Force;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

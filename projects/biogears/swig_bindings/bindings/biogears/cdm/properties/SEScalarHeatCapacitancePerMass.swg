@@ -8,54 +8,54 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<HeatCapacitancePerMassUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<HeatCapacitancePerMassUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const HeatCapacitancePerMassUnit&) const;
 %rename(NotEquals)  operator!=(const HeatCapacitancePerMassUnit&) const;
 %rename(Equals)  operator==(const SEScalarHeatCapacitancePerMass&) const;
 %rename(NotEquals)  operator!=(const SEScalarHeatCapacitancePerMass&) const;  
 
-%ignore biogears::HeatCapacitancePerMassUnit::HeatCapacitancePerMassUnit(std::string const &);
-%ignore biogears::HeatCapacitancePerMassUnit::IsValidUnit(std::string const &);
-%ignore biogears::HeatCapacitancePerMassUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::HeatCapacitancePerMassUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarHeatCapacitancePerMass;
-%nspace biogears::HeatCapacitancePerMassUnit;
-%nspace biogears::SEScalarQuantity<HeatCapacitancePerMassUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarHeatCapacitancePerMass;
+%nspace BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<HeatCapacitancePerMassUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class HeatCapacitancePerMassUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit>;
 
-%ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatCapacitancePerMassUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatCapacitancePerMassUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatCapacitancePerMassUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatCapacitancePerMassUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatCapacitancePerMassUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatCapacitancePerMassUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit>::DivideValue "public new";
 #endif 
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< HeatCapacitancePerMassUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatCapacitancePerMassUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< HeatCapacitancePerMassUnit >::operator!=;
 
-%template(QuantityHeatCapacitancePerMass) biogears::SEScalarQuantity<biogears::HeatCapacitancePerMassUnit>;
+%template(QuantityHeatCapacitancePerMass) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit>;
 
 %include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
 

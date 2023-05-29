@@ -51,14 +51,14 @@ protected:
   // before the destructor).
   virtual void TearDown() override;
 
-  biogears::Logger* logger;
-  biogears::SEHepaticSystem* es;
+  BIOGEARS_NAMESPACE Logger* logger;
+  BIOGEARS_NAMESPACE SEHepaticSystem* es;
 };
 
 void TEST_FIXTURE_NAME::SetUp()
 {
-  logger = new biogears::Logger;
-  es = new biogears::SEHepaticSystem(logger);
+  logger = new BIOGEARS_NAMESPACE Logger;
+  es = new BIOGEARS_NAMESPACE SEHepaticSystem(logger);
 }
 
 void TEST_FIXTURE_NAME::TearDown()
@@ -73,7 +73,7 @@ TEST_F(TEST_FIXTURE_NAME, KetoneProductionRate)
   EXPECT_TRUE( es->HasKetoneProductionRate());
   EXPECT_EQ(1.0, es->GetKetoneProductionRate(AmountPerTimeUnit::mmol_Per_min));
 
-  const biogears::SEHepaticSystem ces(logger);
+  const BIOGEARS_NAMESPACE SEHepaticSystem ces(logger);
   EXPECT_FALSE( ces.HasKetoneProductionRate());
   auto dvalue = ces.GetKetoneProductionRate(AmountPerTimeUnit::mmol_Per_min);
   EXPECT_NE(dvalue, dvalue);
@@ -85,7 +85,7 @@ TEST_F(TEST_FIXTURE_NAME, HepaticGluconeogenesisRate)
   EXPECT_TRUE( es->HasHepaticGluconeogenesisRate());
   EXPECT_EQ(1.0, es->GetHepaticGluconeogenesisRate().GetValue(MassPerTimeUnit::g_Per_day));
 
-  const biogears::SEHepaticSystem cds(logger);
+  const BIOGEARS_NAMESPACE SEHepaticSystem cds(logger);
   EXPECT_FALSE( cds.HasHepaticGluconeogenesisRate());
   auto dvalue = cds.GetHepaticGluconeogenesisRate(MassPerTimeUnit::g_Per_day);
   EXPECT_NE(dvalue, dvalue);

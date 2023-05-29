@@ -17,7 +17,8 @@
 #include <string>
 #include <vector>
 
-#include <biogears/exports.h>
+
+#include <biogears/config.h>
 
 OPEN_BIOGEARS_NAMESPACE
 

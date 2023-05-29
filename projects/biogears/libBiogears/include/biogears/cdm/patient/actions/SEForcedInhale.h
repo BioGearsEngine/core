@@ -54,4 +54,4 @@ protected:
   SEScalar0To1* m_InspiratoryCapacityFraction;
   SEScalarTime* m_Period;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

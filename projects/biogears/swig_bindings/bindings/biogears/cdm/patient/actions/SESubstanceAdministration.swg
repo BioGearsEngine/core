@@ -8,9 +8,9 @@
 %import <biogears/cdm/CommonDataModel.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SESubstanceAdministration;
+%nspace BIOGEARS_NAMESPACE SESubstanceAdministration;
 
-%ignore biogears::SESubstanceAdministration::Unload;
-%ignore biogears::SESubstanceAdministration::Load;
+%ignore BIOGEARS_NAMESPACE SESubstanceAdministration::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstanceAdministration::Load;
   
 %include <biogears/cdm/patient/actions/SESubstanceAdministration.h>

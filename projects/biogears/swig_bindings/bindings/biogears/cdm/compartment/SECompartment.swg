@@ -9,15 +9,15 @@
 
 %import <biogears/cdm/properties/SEScalar.swg>
 
-%nspace biogears::SECompartment;
+%nspace BIOGEARS_NAMESPACE SECompartment;
 
-%ignore biogears::SECompartment::Unload;
-%ignore biogears::SECompartment::Load;
+%ignore BIOGEARS_NAMESPACE SECompartment::Unload;
+%ignore BIOGEARS_NAMESPACE SECompartment::Load;
 
-%ignore biogears::SECompartment::FindLeaves;
-%ignore biogears::SECompartment::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SECompartment::FindLeaves;
+%ignore BIOGEARS_NAMESPACE SECompartment::GetScalar(const std::string& name);
 
 %include <biogears/cdm/compartment/SECompartment.h>
 
-%nspace std::vector<biogears::SECompartment*>;
-%template (vector_SECompartment_ptr) std::vector<biogears::SECompartment*>;
+%nspace std::vector<BIOGEARS_NAMESPACE SECompartment*>;
+%template (vector_SECompartment_ptr) std::vector<BIOGEARS_NAMESPACE SECompartment*>;

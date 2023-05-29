@@ -14,11 +14,11 @@
 %import <biogears/cdm/properties/SEScalarVolumePerTime.swg>
 
 
-%nspace biogears::SESubstanceInfusion;
+%nspace BIOGEARS_NAMESPACE SESubstanceInfusion;
 
-%ignore biogears::SESubstanceInfusion::Unload;
-%ignore biogears::SESubstanceInfusion::Load;
+%ignore BIOGEARS_NAMESPACE SESubstanceInfusion::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstanceInfusion::Load;
 
-%ignore biogears::SESubstanceInfusion::ToString(std::ostream& str) const;
+%ignore BIOGEARS_NAMESPACE SESubstanceInfusion::ToString(std::ostream& str) const;
 
 %include <biogears/cdm/patient/actions/SESubstanceInfusion.h>

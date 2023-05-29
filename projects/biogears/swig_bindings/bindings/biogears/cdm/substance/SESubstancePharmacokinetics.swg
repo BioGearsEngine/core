@@ -12,22 +12,22 @@
 %import <biogears/cdm/substance/SESubstancePhysicochemicals.swg>
 %import <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.swg>
 
-%nspace biogears::SESubstancePharmacokinetics;
+%nspace BIOGEARS_NAMESPACE SESubstancePharmacokinetics;
 
-%ignore biogears::SESubstancePharmacokinetics::GetScalar(const std::string& name);
-%ignore biogears::SESubstancePharmacokinetics::Unload;
-%ignore biogears::SESubstancePharmacokinetics::Load;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Load;
 
-%ignore biogears::SESubstancePharmacokinetics::HasTissueKinetics(const std::string& name) const;
-%ignore biogears::SESubstancePharmacokinetics::GetTissueKinetics(const std::string& name);
-%ignore biogears::SESubstancePharmacokinetics::GetTissueKinetics(const std::string& name) const;
-%ignore biogears::SESubstancePharmacokinetics::RemoveTissueKinetics(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::HasTissueKinetics(const std::string& name) const;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetTissueKinetics(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetTissueKinetics(const std::string& name) const;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::RemoveTissueKinetics(const std::string& name);
 
-%rename (GetPhysicochemicals_const)biogears::SESubstancePharmacokinetics::GetPhysicochemicals() const;
-%rename (GetTissueKinetics_const)biogears::SESubstancePharmacokinetics::GetTissueKinetics(char const *) const;
+%rename (GetPhysicochemicals_const)BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetPhysicochemicals() const;
+%rename (GetTissueKinetics_const)BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetTissueKinetics(char const *) const;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   class SEPharmacokineticsModifier;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 %include <biogears/cdm/substance/SESubstancePharmacokinetics.h>

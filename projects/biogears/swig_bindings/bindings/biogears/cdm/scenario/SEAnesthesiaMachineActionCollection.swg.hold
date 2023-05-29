@@ -1,4 +1,4 @@
-%module "biogears::SEAnesthesiaMachineActionCollection"
+%module "BIOGEARS_NAMESPACE SEAnesthesiaMachineActionCollection"
 
 // Add necessary symbols to generated header
 %{

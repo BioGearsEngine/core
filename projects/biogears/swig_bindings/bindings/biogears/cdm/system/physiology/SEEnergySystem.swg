@@ -19,14 +19,14 @@
 %import <biogears/cdm/properties/SEScalarMassPerTime.swg>
 %import <biogears/cdm/properties/SEScalarPower.swg>
 
-%nspace biogears::SEEnergySystem;
+%nspace BIOGEARS_NAMESPACE SEEnergySystem;
 
-%ignore biogears::SESubstancePharmacokinetics::GetScalar(const std::string& name);
-%ignore biogears::SESubstancePharmacokinetics::Unload;
-%ignore biogears::SESubstancePharmacokinetics::Load;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Load;
 
-%rename(GetAchievedExerciseLevel_const) biogears::SEEnergySystem::GetAchievedExerciseLevel() const;
-%rename(GetFatigueLevel_const) biogears::SEEnergySystem::GetFatigueLevel() const;
-%rename(GetTotalWorkRateLevel_const) biogears::SEEnergySystem::GetTotalWorkRateLevel() const ;
+%rename(GetAchievedExerciseLevel_const) BIOGEARS_NAMESPACE SEEnergySystem::GetAchievedExerciseLevel() const;
+%rename(GetFatigueLevel_const) BIOGEARS_NAMESPACE SEEnergySystem::GetFatigueLevel() const;
+%rename(GetTotalWorkRateLevel_const) BIOGEARS_NAMESPACE SEEnergySystem::GetTotalWorkRateLevel() const ;
 
 %include <biogears/cdm/system/physiology/SEEnergySystem.h>

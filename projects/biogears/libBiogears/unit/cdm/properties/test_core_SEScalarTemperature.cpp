@@ -59,34 +59,34 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarTemperature Temperature = biogears::SEScalarTemperature();
+  BIOGEARS_NAMESPACE SEScalarTemperature Temperature = BIOGEARS_NAMESPACE SEScalarTemperature();
   auto ptr = Temperature.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::TemperatureUnit::IsValidUnit("degF");
-  bool unit1 = biogears::TemperatureUnit::IsValidUnit("degC");
-  bool unit2 = biogears::TemperatureUnit::IsValidUnit("K");
-  bool unit3 = biogears::TemperatureUnit::IsValidUnit("degR");
+  bool unit0 = BIOGEARS_NAMESPACE TemperatureUnit::IsValidUnit("degF");
+  bool unit1 = BIOGEARS_NAMESPACE TemperatureUnit::IsValidUnit("degC");
+  bool unit2 = BIOGEARS_NAMESPACE TemperatureUnit::IsValidUnit("K");
+  bool unit3 = BIOGEARS_NAMESPACE TemperatureUnit::IsValidUnit("degR");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
-  bool unit5 = biogears::TemperatureUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE TemperatureUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::TemperatureUnit mu0 = biogears::TemperatureUnit::GetCompoundUnit("degF");
-  biogears::TemperatureUnit mu1 = biogears::TemperatureUnit::GetCompoundUnit("degC");
-  biogears::TemperatureUnit mu2 = biogears::TemperatureUnit::GetCompoundUnit("K");
-  biogears::TemperatureUnit mu3 = biogears::TemperatureUnit::GetCompoundUnit("degR");
-  EXPECT_EQ(mu0, biogears::TemperatureUnit::F);
-  EXPECT_EQ(mu1, biogears::TemperatureUnit::C);
-  EXPECT_EQ(mu2, biogears::TemperatureUnit::K);
-  EXPECT_EQ(mu3, biogears::TemperatureUnit::R);
-  EXPECT_THROW(biogears::TemperatureUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE TemperatureUnit mu0 = BIOGEARS_NAMESPACE TemperatureUnit::GetCompoundUnit("degF");
+  BIOGEARS_NAMESPACE TemperatureUnit mu1 = BIOGEARS_NAMESPACE TemperatureUnit::GetCompoundUnit("degC");
+  BIOGEARS_NAMESPACE TemperatureUnit mu2 = BIOGEARS_NAMESPACE TemperatureUnit::GetCompoundUnit("K");
+  BIOGEARS_NAMESPACE TemperatureUnit mu3 = BIOGEARS_NAMESPACE TemperatureUnit::GetCompoundUnit("degR");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE TemperatureUnit::F);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE TemperatureUnit::C);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE TemperatureUnit::K);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE TemperatureUnit::R);
+  EXPECT_THROW(BIOGEARS_NAMESPACE TemperatureUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

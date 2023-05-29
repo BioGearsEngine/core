@@ -10,9 +10,9 @@
 
 %import <biogears/cdm/properties/SEScalarMassPerVolume.swg>
 
-%nspace biogears::SEUrinate;
+%nspace BIOGEARS_NAMESPACE SEUrinate;
 
-%ignore biogears::SEUrinate::Unload;
-%ignore biogears::SEUrinate::Load;
+%ignore BIOGEARS_NAMESPACE SEUrinate::Unload;
+%ignore BIOGEARS_NAMESPACE SEUrinate::Load;
 
 %include <biogears/cdm/patient/actions/SEUrinate.h>

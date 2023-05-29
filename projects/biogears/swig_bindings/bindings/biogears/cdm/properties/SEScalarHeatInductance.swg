@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<HeatInductanceUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<HeatInductanceUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const HeatInductanceUnit&) const;
 %rename(NotEquals)  operator!=(const HeatInductanceUnit&) const;
 %rename(Equals)  operator==(const SEScalarHeatInductance&) const;
 %rename(NotEquals)  operator!=(const SEScalarHeatInductance&) const;  
 
-%ignore biogears::HeatInductanceUnit::HeatInductanceUnit(std::string const &);
-%ignore biogears::HeatInductanceUnit::IsValidUnit(std::string const &);
-%ignore biogears::HeatInductanceUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatInductanceUnit::HeatInductanceUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatInductanceUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatInductanceUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarHeatInductance;
-%nspace biogears::HeatInductanceUnit;
-%nspace biogears::SEScalarQuantity<HeatInductanceUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarHeatInductance;
+%nspace BIOGEARS_NAMESPACE HeatInductanceUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<HeatInductanceUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class HeatInductanceUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::HeatInductanceUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatInductanceUnit>;
 
-%ignore  biogears::SEScalarQuantity< HeatInductanceUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< HeatInductanceUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< HeatInductanceUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< HeatInductanceUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< HeatInductanceUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< HeatInductanceUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatInductanceUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatInductanceUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatInductanceUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatInductanceUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatInductanceUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatInductanceUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatInductanceUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatInductanceUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatInductanceUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatInductanceUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatInductanceUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatInductanceUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatInductanceUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatInductanceUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< HeatInductanceUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< HeatInductanceUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatInductanceUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< HeatInductanceUnit >::operator!=;
 
-%template(QuantityHeatInductance) biogears::SEScalarQuantity<biogears::HeatInductanceUnit>;
+%template(QuantityHeatInductance) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatInductanceUnit>;
 
 %include <biogears/cdm/properties/SEScalarHeatInductance.h>
 

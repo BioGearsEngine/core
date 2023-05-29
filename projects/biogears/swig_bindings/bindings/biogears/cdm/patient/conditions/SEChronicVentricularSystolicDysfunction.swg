@@ -11,11 +11,11 @@
 
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 
-%nspace biogears::SEChronicVentricularSystolicDysfunction;
+%nspace BIOGEARS_NAMESPACE SEChronicVentricularSystolicDysfunction;
 
-%ignore biogears::SEChronicVentricularSystolicDysfunction::Unload;
-%ignore biogears::SEChronicVentricularSystolicDysfunction::Load;
+%ignore BIOGEARS_NAMESPACE SEChronicVentricularSystolicDysfunction::Unload;
+%ignore BIOGEARS_NAMESPACE SEChronicVentricularSystolicDysfunction::Load;
 
-%ignore biogears::SEChronicVentricularSystolicDysfunction::ToString(std::ostream& str) const;
+%ignore BIOGEARS_NAMESPACE SEChronicVentricularSystolicDysfunction::ToString(std::ostream& str) const;
 
 %include <biogears/cdm/patient/conditions/SEChronicVentricularSystolicDysfunction.h>

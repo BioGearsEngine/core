@@ -10,12 +10,12 @@
 %import <biogears/cdm/properties/SEScalar.swg>
 %import <biogears/cdm/utils/unitconversion/CompoundUnit.swg>
 
-%nspace biogears::SEUnitScalar;
+%nspace BIOGEARS_NAMESPACE SEUnitScalar;
  
-%ignore biogears::SEUnitScalar::GetCompoundUnit(std::string const &) const ;
-%ignore biogears::SEUnitScalar::GetValue(std::string const &) const ;
-%ignore biogears::SEUnitScalar::IncrementValue(double,std::string const &) ;
-%ignore biogears::SEUnitScalar::DecrementValue(double,std::string const &) ;
+%ignore BIOGEARS_NAMESPACE SEUnitScalar::GetCompoundUnit(std::string const &) const ;
+%ignore BIOGEARS_NAMESPACE SEUnitScalar::GetValue(std::string const &) const ;
+%ignore BIOGEARS_NAMESPACE SEUnitScalar::IncrementValue(double,std::string const &) ;
+%ignore BIOGEARS_NAMESPACE SEUnitScalar::DecrementValue(double,std::string const &) ;
 
 %include <biogears/cdm/properties/SEUnitScalar.h>
 

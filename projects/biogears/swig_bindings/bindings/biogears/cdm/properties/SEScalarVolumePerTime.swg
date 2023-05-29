@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<VolumePerTimeUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<VolumePerTimeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const VolumePerTimeUnit&) const;
 %rename(NotEquals)  operator!=(const VolumePerTimeUnit&) const;
 %rename(Equals)  operator==(const SEScalarVolumePerTime&) const;
 %rename(NotEquals)  operator!=(const SEScalarVolumePerTime&) const;  
 
-%ignore biogears::VolumePerTimeUnit::VolumePerTimeUnit(std::string const &);
-%ignore biogears::VolumePerTimeUnit::IsValidUnit(std::string const &);
-%ignore biogears::VolumePerTimeUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE VolumePerTimeUnit::VolumePerTimeUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE VolumePerTimeUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE VolumePerTimeUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarVolumePerTime;
-%nspace biogears::VolumePerTimeUnit;
-%nspace biogears::SEScalarQuantity<VolumePerTimeUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarVolumePerTime;
+%nspace BIOGEARS_NAMESPACE VolumePerTimeUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<VolumePerTimeUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class VolumePerTimeUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::VolumePerTimeUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumePerTimeUnit>;
 
-%ignore  biogears::SEScalarQuantity< VolumePerTimeUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< VolumePerTimeUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< VolumePerTimeUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< VolumePerTimeUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< VolumePerTimeUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< VolumePerTimeUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< VolumePerTimeUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< VolumePerTimeUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< VolumePerTimeUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< VolumePerTimeUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< VolumePerTimeUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< VolumePerTimeUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumePerTimeUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumePerTimeUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumePerTimeUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumePerTimeUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumePerTimeUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumePerTimeUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumePerTimeUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumePerTimeUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< VolumePerTimeUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< VolumePerTimeUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< VolumePerTimeUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< VolumePerTimeUnit >::operator!=;
 
-%template(QuantityVolumePerTime) biogears::SEScalarQuantity<biogears::VolumePerTimeUnit>;
+%template(QuantityVolumePerTime) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumePerTimeUnit>;
 
 %include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 

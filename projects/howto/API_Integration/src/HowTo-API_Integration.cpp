@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <memory>
 #include <thread>
 // Include the various types you will be using in your code
-
+#include <biogears/config.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
@@ -53,12 +53,12 @@ specific language governing permissions and limitations under the License.
 //!  SEHemorrhage has two initial values needed for this function
 //!  std::string compartment -- Where the tourniquet will be applied [LeftLeg,RightLeg,LeftArm,RightArm]
 //!  double -- Initial flow rate we assume its given in ml_Per_min
-bool action_apply_hemorrhage(std::unique_ptr<biogears::BioGearsEngine>& engine,
+bool action_apply_hemorrhage(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine,
                              std::string compartment, double initial_rate_ml_Per_min)
 {
-  auto hemorrhage = biogears::SEHemorrhage();
+  auto hemorrhage = BIOGEARS_NAMESPACE SEHemorrhage();
   hemorrhage.SetCompartment(compartment);
-  hemorrhage.GetInitialRate().SetValue(10., biogears::VolumePerTimeUnit::mL_Per_min);
+  hemorrhage.GetInitialRate().SetValue(10., BIOGEARS_NAMESPACE VolumePerTimeUnit::mL_Per_min);
   if (hemorrhage.IsValid()) {
     engine->ProcessAction(hemorrhage);
     return true;
@@ -72,10 +72,10 @@ bool action_apply_hemorrhage(std::unique_ptr<biogears::BioGearsEngine>& engine,
 //!  SETourniquet has two members
 //!  std::string compartment -- Where the tourniquet will be applied [LeftLeg,RightLeg,LeftArm,RightArm]
 //!  CDM::enumTourniquetApplicationLevel -- Applied, Misapplied, None
-bool action_apply_tourniquet(std::unique_ptr<biogears::BioGearsEngine>& engine,
+bool action_apply_tourniquet(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine,
                              std::string compartment, CDM::enumTourniquetApplicationLevel application)
 {
-  auto tourniquet = biogears::SETourniquet();
+  auto tourniquet = BIOGEARS_NAMESPACE SETourniquet();
   tourniquet.SetCompartment(compartment);
   tourniquet.SetTourniquetLevel(application);
 
@@ -91,9 +91,9 @@ bool action_apply_tourniquet(std::unique_ptr<biogears::BioGearsEngine>& engine,
 //!
 //!  SEEnvironmentalConditions has several members.
 //!
-bool action_env_change(std::unique_ptr<biogears::BioGearsEngine>& engine, biogears::SEEnvironmentalConditions& new_conditions)
+bool action_env_change(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, BIOGEARS_NAMESPACE SEEnvironmentalConditions& new_conditions)
 {
-  auto environment = biogears::SEEnvironmentChange(engine->GetSubstanceManager());
+  auto environment = BIOGEARS_NAMESPACE SEEnvironmentChange(engine->GetSubstanceManager());
 
   //This example only uses three partial gasses. You could submit a vector of name/value pairs.
   //Then this section could be modified to Get every substance in the pair list.
@@ -105,14 +105,14 @@ bool action_env_change(std::unique_ptr<biogears::BioGearsEngine>& engine, biogea
   auto conditions = environment.GetConditions();
   conditions.Clear(); //Reset he existing conditions
   conditions.SetSurroundingType(new_conditions.GetSurroundingType());
-  conditions.GetAirVelocity().SetValue(new_conditions.GetAirVelocity().GetValue(biogears::LengthPerTimeUnit::m_Per_s), biogears::LengthPerTimeUnit::m_Per_s);
-  conditions.GetAmbientTemperature().SetValue(new_conditions.GetAmbientTemperature().GetValue(biogears::TemperatureUnit::C), biogears::TemperatureUnit::C);
-  conditions.GetAtmosphericPressure().SetValue(new_conditions.GetAtmosphericPressure().GetValue(biogears::PressureUnit::mmHg), biogears::PressureUnit::mmHg);
-  conditions.GetClothingResistance().SetValue(new_conditions.GetClothingResistance().GetValue(biogears::HeatResistanceAreaUnit::clo), biogears::HeatResistanceAreaUnit::clo);
+  conditions.GetAirVelocity().SetValue(new_conditions.GetAirVelocity().GetValue(BIOGEARS_NAMESPACE LengthPerTimeUnit::m_Per_s), BIOGEARS_NAMESPACE LengthPerTimeUnit::m_Per_s);
+  conditions.GetAmbientTemperature().SetValue(new_conditions.GetAmbientTemperature().GetValue(BIOGEARS_NAMESPACE TemperatureUnit::C), BIOGEARS_NAMESPACE TemperatureUnit::C);
+  conditions.GetAtmosphericPressure().SetValue(new_conditions.GetAtmosphericPressure().GetValue(BIOGEARS_NAMESPACE PressureUnit::mmHg), BIOGEARS_NAMESPACE PressureUnit::mmHg);
+  conditions.GetClothingResistance().SetValue(new_conditions.GetClothingResistance().GetValue(BIOGEARS_NAMESPACE HeatResistanceAreaUnit::clo), BIOGEARS_NAMESPACE HeatResistanceAreaUnit::clo);
   conditions.GetEmissivity().SetValue(new_conditions.GetEmissivity().GetValue());
-  conditions.GetMeanRadiantTemperature().SetValue(new_conditions.GetMeanRadiantTemperature().GetValue(biogears::TemperatureUnit::C), biogears::TemperatureUnit::C);
+  conditions.GetMeanRadiantTemperature().SetValue(new_conditions.GetMeanRadiantTemperature().GetValue(BIOGEARS_NAMESPACE TemperatureUnit::C), BIOGEARS_NAMESPACE TemperatureUnit::C);
   conditions.GetRelativeHumidity().SetValue(new_conditions.GetRelativeHumidity().GetValue());
-  conditions.GetRespirationAmbientTemperature().SetValue(new_conditions.GetRespirationAmbientTemperature().GetValue(biogears::TemperatureUnit::C), biogears::TemperatureUnit::C);
+  conditions.GetRespirationAmbientTemperature().SetValue(new_conditions.GetRespirationAmbientTemperature().GetValue(BIOGEARS_NAMESPACE TemperatureUnit::C), BIOGEARS_NAMESPACE TemperatureUnit::C);
 
   conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(*N2).GetFractionAmount().GetValue());
   conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(*O2).GetFractionAmount().GetValue());
@@ -132,9 +132,9 @@ bool action_env_change(std::unique_ptr<biogears::BioGearsEngine>& engine, biogea
 //! \param enumSide Left, Right
 //! \param enumPneumothoraxType  Open, Closed
 //! \param double [0.0, 1.0]
-bool action_tension_pneumothorax(std::unique_ptr<biogears::BioGearsEngine>& engine, CDM::enumSide side, CDM::enumPneumothoraxType type, double severity)
+bool action_tension_pneumothorax(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, CDM::enumSide side, CDM::enumPneumothoraxType type, double severity)
 {
-  auto pneumothorax = biogears::SETensionPneumothorax();
+  auto pneumothorax = BIOGEARS_NAMESPACE SETensionPneumothorax();
   pneumothorax.SetSide(side);
   pneumothorax.SetType(type);
   pneumothorax.GetSeverity().SetValue(severity);
@@ -153,9 +153,9 @@ bool action_tension_pneumothorax(std::unique_ptr<biogears::BioGearsEngine>& engi
 //! \param enumSide Left, Right
 //! \param bool  Active/Not-Active  {On/Off}
 
-bool action_needle_decompression(std::unique_ptr<biogears::BioGearsEngine>& engine, CDM::enumSide side, bool active)
+bool action_needle_decompression(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, CDM::enumSide side, bool active)
 {
-  auto needleD = biogears::SENeedleDecompression();
+  auto needleD = BIOGEARS_NAMESPACE SENeedleDecompression();
   needleD.SetSide(side);
   needleD.SetActive(active);
   if (needleD.IsValid()) {
@@ -174,26 +174,26 @@ bool action_needle_decompression(std::unique_ptr<biogears::BioGearsEngine>& engi
 //! \param o2_fraction -- Percentage of pure O^2 supplied by the mask
 //! \param tank 1 volume -- Assumed in letters
 //! \param tank 2 volume -- Assumed in letters
-bool action_o2_mask(std::unique_ptr<biogears::BioGearsEngine>& engine, double o2_fraction, double o2_volume1, double o2_volume2)
+bool action_o2_mask(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, double o2_fraction, double o2_volume1, double o2_volume2)
 {
 
-  auto AMConfig = biogears::SEAnesthesiaMachineConfiguration(engine->GetSubstanceManager());
+  auto AMConfig = BIOGEARS_NAMESPACE SEAnesthesiaMachineConfiguration(engine->GetSubstanceManager());
   auto& config = AMConfig.GetConfiguration();
   config.GetOxygenFraction().SetValue(o2_fraction);
-  config.GetOxygenBottleOne().GetVolume().SetValue(o2_volume1, biogears::VolumeUnit::L);
-  config.GetOxygenBottleTwo().GetVolume().SetValue(o2_volume2, biogears::VolumeUnit::L);
+  config.GetOxygenBottleOne().GetVolume().SetValue(o2_volume1, BIOGEARS_NAMESPACE VolumeUnit::L);
+  config.GetOxygenBottleTwo().GetVolume().SetValue(o2_volume2, BIOGEARS_NAMESPACE VolumeUnit::L);
 
   //Any of these values could auso be adjusted, but I don't think its required
   //for this example
   config.SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
-  config.GetInletFlow().SetValue(2.0, biogears::VolumePerTimeUnit::L_Per_min);
+  config.GetInletFlow().SetValue(2.0, BIOGEARS_NAMESPACE VolumePerTimeUnit::L_Per_min);
   config.GetInspiratoryExpiratoryRatio().SetValue(.5);
   config.SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
-  config.GetPositiveEndExpiredPressure().SetValue(0.0, biogears::PressureUnit::cmH2O);
+  config.GetPositiveEndExpiredPressure().SetValue(0.0, BIOGEARS_NAMESPACE PressureUnit::cmH2O);
   config.SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
-  config.GetReliefValvePressure().SetValue(20.0, biogears::PressureUnit::cmH2O);
-  config.GetRespiratoryRate().SetValue(12, biogears::FrequencyUnit::Per_min);
-  config.GetVentilatorPressure().SetValue(0.0, biogears::PressureUnit::cmH2O);
+  config.GetReliefValvePressure().SetValue(20.0, BIOGEARS_NAMESPACE PressureUnit::cmH2O);
+  config.GetRespiratoryRate().SetValue(12, BIOGEARS_NAMESPACE FrequencyUnit::Per_min);
+  config.GetVentilatorPressure().SetValue(0.0, BIOGEARS_NAMESPACE PressureUnit::cmH2O);
 
   if (AMConfig.IsValid()) {
     engine->ProcessAction(AMConfig);
@@ -211,12 +211,12 @@ bool action_o2_mask(std::unique_ptr<biogears::BioGearsEngine>& engine, double o2
 //! \param severity  -- Eliminated, Mild, Moderate, Severe
 //! \param location -- Compartmant Key on where the Infection Starts
 //! \param mic_mg_Per_l -- Minimal Inhibitory Condition for the given infection
-bool action_infection(std::unique_ptr<biogears::BioGearsEngine>& engine, CDM::enumInfectionSeverity severity, std::string location, double mic_mg_Per_l)
+bool action_infection(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, CDM::enumInfectionSeverity severity, std::string location, double mic_mg_Per_l)
 {
-  auto sepsis = biogears::SEInfection();
+  auto sepsis = BIOGEARS_NAMESPACE SEInfection();
   sepsis.SetSeverity(severity);
   sepsis.SetLocation(location);
-  sepsis.GetMinimumInhibitoryConcentration().SetValue(mic_mg_Per_l, biogears::MassPerVolumeUnit::mg_Per_L);
+  sepsis.GetMinimumInhibitoryConcentration().SetValue(mic_mg_Per_l, BIOGEARS_NAMESPACE MassPerVolumeUnit::mg_Per_L);
   if (sepsis.IsValid()) {
     engine->ProcessAction(sepsis);
     return true;
@@ -233,12 +233,12 @@ bool action_infection(std::unique_ptr<biogears::BioGearsEngine>& engine, CDM::en
 //!
 //!  You must recall this function with a 0 flowrate to terminate the transfusion
 //-------------------------------------------------------------------------------
-bool action_bloodtransfuction(std::unique_ptr<biogears::BioGearsEngine>& engine, double blood_volume_ml, double flowrate_ml_Per_min)
+bool action_bloodtransfuction(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, double blood_volume_ml, double flowrate_ml_Per_min)
 {
   auto* o_negative = engine->GetSubstanceManager().GetCompound("Blood_ONegative");
-  auto transfusion = biogears::SESubstanceCompoundInfusion(*o_negative);
-  transfusion.GetBagVolume().SetValue(blood_volume_ml, biogears::VolumeUnit::mL); //the total volume in the bag
-  transfusion.GetRate().SetValue(flowrate_ml_Per_min, biogears::VolumePerTimeUnit::mL_Per_min); //The rate to admnister the compound in the bag
+  auto transfusion = BIOGEARS_NAMESPACE SESubstanceCompoundInfusion(*o_negative);
+  transfusion.GetBagVolume().SetValue(blood_volume_ml, BIOGEARS_NAMESPACE VolumeUnit::mL); //the total volume in the bag
+  transfusion.GetRate().SetValue(flowrate_ml_Per_min, BIOGEARS_NAMESPACE VolumePerTimeUnit::mL_Per_min); //The rate to admnister the compound in the bag
   if (transfusion.IsValid()) {
     engine->ProcessAction(transfusion);
     return true;
@@ -254,11 +254,11 @@ bool action_bloodtransfuction(std::unique_ptr<biogears::BioGearsEngine>& engine,
 //!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the heating element
 //!
 //!  Terminating this function requires applying it with 0 Wattage
-bool action_active_heating(std::unique_ptr<biogears::BioGearsEngine>& engine, double watt, double surface_area_fraction)
+bool action_active_heating(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, double watt, double surface_area_fraction)
 {
-  auto thermalApplication = biogears::SEThermalApplication();
+  auto thermalApplication = BIOGEARS_NAMESPACE SEThermalApplication();
   auto& blanket = thermalApplication.GetActiveHeating();
-  blanket.GetPower().SetValue(watt, biogears::PowerUnit::W);
+  blanket.GetPower().SetValue(watt, BIOGEARS_NAMESPACE PowerUnit::W);
   blanket.GetSurfaceAreaFraction().SetValue(surface_area_fraction);
   if (thermalApplication.IsValid()) {
     engine->ProcessAction(thermalApplication);
@@ -275,11 +275,11 @@ bool action_active_heating(std::unique_ptr<biogears::BioGearsEngine>& engine, do
 //!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the cooling element
 //!
 //! Terminating this function requires applying it with 0 wattage
-bool action_active_cooling(std::unique_ptr<biogears::BioGearsEngine>& engine, double watt, double surface_area_fraction)
+bool action_active_cooling(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, double watt, double surface_area_fraction)
 {
-  auto thermalApplication = biogears::SEThermalApplication();
+  auto thermalApplication = BIOGEARS_NAMESPACE SEThermalApplication();
   auto& icepack = thermalApplication.GetActiveCooling();
-  icepack.GetPower().SetValue(watt, biogears::PowerUnit::W);
+  icepack.GetPower().SetValue(watt, BIOGEARS_NAMESPACE PowerUnit::W);
   icepack.GetSurfaceAreaFraction().SetValue(surface_area_fraction);
   if (thermalApplication.IsValid()) {
     engine->ProcessAction(thermalApplication);
@@ -297,11 +297,11 @@ bool action_active_cooling(std::unique_ptr<biogears::BioGearsEngine>& engine, do
 //!
 //!  This function can not be undone.  SEThermalApplication supports a State member which can be set to off to terminate
 //!  an active applied_temperature, you would simply need to pass the CDM::enumOnOff as an additional paramater to this function.
-bool action_applied_temperature(std::unique_ptr<biogears::BioGearsEngine>& engine, double degrees_c, double surface_area_fraction)
+bool action_applied_temperature(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, double degrees_c, double surface_area_fraction)
 {
-  auto thermalApplication = biogears::SEThermalApplication();
+  auto thermalApplication = BIOGEARS_NAMESPACE SEThermalApplication();
   auto& heated_car_seat = thermalApplication.GetAppliedTemperature();
-  heated_car_seat.GetTemperature().SetValue(degrees_c, biogears::TemperatureUnit::C);
+  heated_car_seat.GetTemperature().SetValue(degrees_c, BIOGEARS_NAMESPACE TemperatureUnit::C);
   heated_car_seat.GetSurfaceAreaFraction().SetValue(surface_area_fraction);
   if (thermalApplication.IsValid()) {
     engine->ProcessAction(thermalApplication);
@@ -318,9 +318,9 @@ bool action_applied_temperature(std::unique_ptr<biogears::BioGearsEngine>& engin
 //!  \param severity -- [0.0,1.0] of how bad the pain is
 //!
 //!  You must recall this function with a 0 severity and the same location to terminate the stimulus
-bool action_pain_stimulus(std::unique_ptr<biogears::BioGearsEngine>& engine, std::string location, double severity)
+bool action_pain_stimulus(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, std::string location, double severity)
 {
-  auto pain = biogears::SEPainStimulus();
+  auto pain = BIOGEARS_NAMESPACE SEPainStimulus();
   pain.SetLocation(location);
   pain.GetSeverity().SetValue(severity);
   if (pain.IsValid()) {
@@ -335,9 +335,9 @@ bool action_pain_stimulus(std::unique_ptr<biogears::BioGearsEngine>& engine, std
 //!
 //! Patient will urinate until the blader nears zero volume
 //!
-bool action_urinate(std::unique_ptr<biogears::BioGearsEngine>& engine)
+bool action_urinate(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine)
 {
-  auto relief = biogears::SEUrinate();
+  auto relief = BIOGEARS_NAMESPACE SEUrinate();
   if (relief.IsValid()) {
     engine->ProcessAction(relief);
     return true;
@@ -351,11 +351,11 @@ bool action_urinate(std::unique_ptr<biogears::BioGearsEngine>& engine)
 //!  demonstrates how to get the urine color
 //-------------------------------------------------------------------------------
 
-bool action_get_urine_color(std::unique_ptr<biogears::BioGearsEngine>& engine)
+bool action_get_urine_color(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine)
 {
-  auto urineAnalysis = biogears::SEUrinalysis();
-  const biogears::Renal* constRenalSystem = dynamic_cast<const biogears::Renal*>(engine->GetRenalSystem());
-  biogears::Renal* renalSystem = const_cast<biogears::Renal*>(constRenalSystem);
+  auto urineAnalysis = BIOGEARS_NAMESPACE SEUrinalysis();
+  const BIOGEARS_NAMESPACE Renal* constRenalSystem = dynamic_cast<const BIOGEARS_NAMESPACE Renal*>(engine->GetRenalSystem());
+  BIOGEARS_NAMESPACE Renal* renalSystem = const_cast<BIOGEARS_NAMESPACE Renal*>(constRenalSystem);
 
   renalSystem->CalculateUrinalysis(urineAnalysis);
   if (urineAnalysis.HasColorResult()) {
@@ -387,7 +387,7 @@ bool action_get_urine_color(std::unique_ptr<biogears::BioGearsEngine>& engine)
 //Substance Management Functions
 //
 //-------------------------------------------------------------------------------
-std::unique_ptr<biogears::SESubstanceCompound> substance_make_compound(std::unique_ptr<biogears::BioGearsEngine>& engine)
+std::unique_ptr<BIOGEARS_NAMESPACE SESubstanceCompound> substance_make_compound(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine)
 {
   // The biggest concern with substances is unique names for storage in the map
   // In this example we make some trivial thread safe approach of naming all substances Substance_X
@@ -399,22 +399,22 @@ std::unique_ptr<biogears::SESubstanceCompound> substance_make_compound(std::uniq
   static std::atomic<int> counter { 0 };
   std::stringstream ss;
   ss << "Substance_" << ++counter;
-  return biogears::SESubstanceCompound::make_unique(ss.str().c_str(), engine->GetLogger());
+  return BIOGEARS_NAMESPACE SESubstanceCompound::make_unique(ss.str().c_str(), engine->GetLogger());
 }
 
-bool addCompoundComponents(std::unique_ptr<biogears::BioGearsEngine>& engine, std::unique_ptr<biogears::SESubstanceCompound>& compound, const char* substance_str, double concentration, biogears::MassPerVolumeUnit unit)
+bool addCompoundComponents(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, std::unique_ptr<BIOGEARS_NAMESPACE SESubstanceCompound>& compound, const char* substance_str, double concentration, BIOGEARS_NAMESPACE MassPerVolumeUnit unit)
 {
   
-  if (biogears::SESubstance* substance = engine->GetSubstanceManager().GetSubstance(substance_str)) {
-    auto substance_concentration = biogears::SESubstanceConcentration(*substance);
-    substance_concentration.GetConcentration().SetValue(10.0, biogears::MassPerVolumeUnit::mg_Per_mL);
+  if (BIOGEARS_NAMESPACE SESubstance* substance = engine->GetSubstanceManager().GetSubstance(substance_str)) {
+    auto substance_concentration = BIOGEARS_NAMESPACE SESubstanceConcentration(*substance);
+    substance_concentration.GetConcentration().SetValue(10.0, BIOGEARS_NAMESPACE MassPerVolumeUnit::mg_Per_mL);
     compound->GetComponents().push_back(substance_concentration);
 
     //Because the substance isn't register atat this point, it is possible to adjust the name based on the current mix.
     //Active infusions are stored by substance name so once registered and infuse you can no longer modify the mix name;
     return true;
 
-  } else if (biogears::SESubstanceCompound* source_compound = engine->GetSubstanceManager().GetCompound(substance_str)) {
+  } else if (BIOGEARS_NAMESPACE SESubstanceCompound* source_compound = engine->GetSubstanceManager().GetCompound(substance_str)) {
     for (auto& source_substance : source_compound->GetComponents()) {
       auto& destination_concentration = compound->GetComponent(source_substance.GetSubstance());
 
@@ -430,7 +430,7 @@ bool addCompoundComponents(std::unique_ptr<biogears::BioGearsEngine>& engine, st
   }
   return false;
 }
-std::string substance_register_compound(std::unique_ptr<biogears::BioGearsEngine>& engine, std::unique_ptr<biogears::SESubstanceCompound>&& compound)
+std::string substance_register_compound(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, std::unique_ptr<BIOGEARS_NAMESPACE SESubstanceCompound>&& compound)
 {
   //This call registeres the substance with the substance manager. At this point we are going to release control of the memory to the biogears library who will
   //delete it at the end of the run.  DLL boundries being what they are we may need to introduce a make_substancecompound function to the API.
@@ -439,10 +439,10 @@ std::string substance_register_compound(std::unique_ptr<biogears::BioGearsEngine
   return compound_name;
 }
 
-bool action_infuse_compound(std::unique_ptr<biogears::BioGearsEngine>& engine, std::string compound_name, double volume, biogears::VolumeUnit volume_unit, double rate, biogears::VolumePerTimeUnit rate_unit)
+bool action_infuse_compound(std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine>& engine, std::string compound_name, double volume, BIOGEARS_NAMESPACE VolumeUnit volume_unit, double rate, BIOGEARS_NAMESPACE VolumePerTimeUnit rate_unit)
 {
   auto& compound = *engine->GetSubstanceManager().GetCompound(compound_name);
-  biogears::SESubstanceCompoundInfusion infusion { compound };
+  BIOGEARS_NAMESPACE SESubstanceCompoundInfusion infusion { compound };
   infusion.GetBagVolume().SetValue(volume, volume_unit);
   infusion.GetRate().SetValue(rate, rate_unit);
   return engine->ProcessAction(infusion);
@@ -453,10 +453,10 @@ bool action_infuse_compound(std::unique_ptr<biogears::BioGearsEngine>& engine, s
 //!
 //!  std::thread for parallel computation of the biogears engine
 //!  std::atomic_bool for threading loop control
-//!  biogears::BioGearsEngine simulation thread for api control.
+//!  BIOGEARS_NAMESPACE BioGearsEngine simulation thread for api control.
 //-------------------------------------------------------------------------------
 struct BioGearsPlugin::Implementation {
-  std::unique_ptr<biogears::BioGearsEngine> engine;
+  std::unique_ptr<BIOGEARS_NAMESPACE BioGearsEngine> engine;
 
   std::atomic_bool simulation_running { false };
   std::atomic_bool simulation_started { false };
@@ -467,7 +467,7 @@ struct BioGearsPlugin::Implementation {
 BioGearsPlugin::BioGearsPlugin(std::string name)
   : _pimpl(std::make_unique<Implementation>())
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE;
 
   _pimpl->engine = std::make_unique<BioGearsEngine>(name + ".log");
   _pimpl->engine->GetLogger()->Info("HowToAPI_Integration");
@@ -476,19 +476,19 @@ BioGearsPlugin::BioGearsPlugin(std::string name)
 
     if (!_pimpl->engine->InitializeEngine("patients/StandardMale.xml")) {
       _pimpl->engine->GetLogger()->Warning("Could not load patient falling back to manually creating a patient.");
-      biogears::SEPatient patient { _pimpl->engine->GetLogger() };
+      BIOGEARS_NAMESPACE SEPatient patient { _pimpl->engine->GetLogger() };
       patient.SetName("StandardMale");
       patient.SetGender(CDM::enumSex::Male);
-      patient.GetAge().SetValue(44, biogears::TimeUnit::yr);
-      patient.GetWeight().SetValue(170, biogears::MassUnit::lb);
-      patient.GetHeight().SetValue(71, biogears::LengthUnit::inch);
+      patient.GetAge().SetValue(44, BIOGEARS_NAMESPACE TimeUnit::yr);
+      patient.GetWeight().SetValue(170, BIOGEARS_NAMESPACE MassUnit::lb);
+      patient.GetHeight().SetValue(71, BIOGEARS_NAMESPACE LengthUnit::inch);
       patient.GetBodyFatFraction().SetValue(0.21);
       patient.SetBloodType(CDM::enumBloodType::AB);
       patient.SetBloodRh(true);
-      patient.GetHeartRateBaseline().SetValue(72, biogears::FrequencyUnit::Per_min);
-      patient.GetRespirationRateBaseline().SetValue(16, biogears::FrequencyUnit::Per_min);
-      patient.GetDiastolicArterialPressureBaseline().SetValue(73.5, biogears::PressureUnit::mmHg);
-      patient.GetSystolicArterialPressureBaseline().SetValue(114, biogears::PressureUnit::mmHg);
+      patient.GetHeartRateBaseline().SetValue(72, BIOGEARS_NAMESPACE FrequencyUnit::Per_min);
+      patient.GetRespirationRateBaseline().SetValue(16, BIOGEARS_NAMESPACE FrequencyUnit::Per_min);
+      patient.GetDiastolicArterialPressureBaseline().SetValue(73.5, BIOGEARS_NAMESPACE PressureUnit::mmHg);
+      patient.GetSystolicArterialPressureBaseline().SetValue(114, BIOGEARS_NAMESPACE PressureUnit::mmHg);
       _pimpl->engine->InitializeEngine(patient);
     }
     _pimpl->engine->GetLogger()->Info("Initializing Patient. This could take a moment.");
@@ -510,7 +510,7 @@ BioGearsPlugin& BioGearsPlugin::operator=(BioGearsPlugin&& rhs)
 //-------------------------------------------------------------------------------
 void BioGearsPlugin::run()
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE;
   using namespace std::chrono_literals;
 
   if (!_pimpl->simulation_thread.joinable()) {
@@ -521,19 +521,19 @@ void BioGearsPlugin::run()
         while (_pimpl->simulation_running) {
           action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Misapplied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::None);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           //The effectivness of this helper-function is called in to doubt, for such a simple tutorial
           //But you could imagine creating a vector of common conditions and then pushing and poping them in to
           //This function as the patient changes locations.
           
-          auto conditions = biogears::SEEnvironmentalConditions(_pimpl->engine->GetSubstanceManager());
+          auto conditions = BIOGEARS_NAMESPACE SEEnvironmentalConditions(_pimpl->engine->GetSubstanceManager());
           auto* N2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Nitrogen");
           auto* O2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Oxygen");
           auto* CO2 = _pimpl->engine->GetSubstanceManager().GetSubstance("CarbonDioxide");
@@ -552,15 +552,15 @@ void BioGearsPlugin::run()
           conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
           
           action_env_change(_pimpl->engine, conditions);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_tension_pneumothorax(_pimpl->engine, CDM::enumSide::Left, CDM::enumPneumothoraxType::Open, 0.5);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_needle_decompression(_pimpl->engine, CDM::enumSide::Left, true);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_o2_mask(_pimpl->engine, .5, 3., 0.);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_infection(_pimpl->engine, CDM::enumInfectionSeverity::Mild, "LeftLeg", 0.2);
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_bloodtransfuction(_pimpl->engine, 500, 100);
 
           ///////////////////////////////////////
@@ -596,21 +596,21 @@ void BioGearsPlugin::run()
           if (_pimpl->engine->GetActions().GetEnvironmentActions().HasThermalApplication()) {
             _pimpl->engine->GetLogger()->Info(asprintf("ActiveHeating[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveHeating() ? "true" : "false")); // false
           }
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_active_heating(_pimpl->engine, 500, 0.5);
           _pimpl->engine->GetLogger()->Info(asprintf("ActiveHeating[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveHeating() ? "true" : "false")); // true
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           
           _pimpl->engine->GetLogger()->Info(asprintf("ActiveCooling[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveCooling() ? "true" : "false"));
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_active_cooling(_pimpl->engine, 500, 0.5);
           _pimpl->engine->GetLogger()->Info(asprintf("ActiveCooling[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveCooling() ? "true" : "false"));
           
           _pimpl->engine->GetLogger()->Info(asprintf("AppliedTempeture[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasAppliedTemperature() ? "true" : "false"));
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_applied_temperature(_pimpl->engine, 37, 0.5);
           _pimpl->engine->GetLogger()->Info(asprintf("AppliedTempeture[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasAppliedTemperature() ? "true" : "false"));
-          _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
+          _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_get_urine_color(_pimpl->engine);
           action_urinate(_pimpl->engine);
           try {

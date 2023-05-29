@@ -59,38 +59,38 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarVolumePerTimeMass VolumePerTimeMass = biogears::SEScalarVolumePerTimeMass();
+  BIOGEARS_NAMESPACE SEScalarVolumePerTimeMass VolumePerTimeMass = BIOGEARS_NAMESPACE SEScalarVolumePerTimeMass();
   auto ptr = VolumePerTimeMass.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::VolumePerTimeMassUnit::IsValidUnit("L/s g");
-  bool unit1 = biogears::VolumePerTimeMassUnit::IsValidUnit("mL / s g");
-  bool unit2 = biogears::VolumePerTimeMassUnit::IsValidUnit("mL/min kg");
-  bool unit3 = biogears::VolumePerTimeMassUnit::IsValidUnit("mL/s kg");
-  bool unit4 = biogears::VolumePerTimeMassUnit::IsValidUnit("uL/min kg");
+  bool unit0 = BIOGEARS_NAMESPACE VolumePerTimeMassUnit::IsValidUnit("L/s g");
+  bool unit1 = BIOGEARS_NAMESPACE VolumePerTimeMassUnit::IsValidUnit("mL / s g");
+  bool unit2 = BIOGEARS_NAMESPACE VolumePerTimeMassUnit::IsValidUnit("mL/min kg");
+  bool unit3 = BIOGEARS_NAMESPACE VolumePerTimeMassUnit::IsValidUnit("mL/s kg");
+  bool unit4 = BIOGEARS_NAMESPACE VolumePerTimeMassUnit::IsValidUnit("uL/min kg");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
-  bool unit8 = biogears::VolumePerTimeMassUnit::IsValidUnit("DEADBEEF");
+  bool unit8 = BIOGEARS_NAMESPACE VolumePerTimeMassUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit8, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::VolumePerTimeMassUnit mu0 = biogears::VolumePerTimeMassUnit::GetCompoundUnit("L/s g");
-  biogears::VolumePerTimeMassUnit mu1 = biogears::VolumePerTimeMassUnit::GetCompoundUnit("mL / s g");
-  biogears::VolumePerTimeMassUnit mu2 = biogears::VolumePerTimeMassUnit::GetCompoundUnit("mL/min kg");
-  biogears::VolumePerTimeMassUnit mu3 = biogears::VolumePerTimeMassUnit::GetCompoundUnit("mL/s kg");
-  biogears::VolumePerTimeMassUnit mu4 = biogears::VolumePerTimeMassUnit::GetCompoundUnit("uL/min kg");
-  EXPECT_EQ(mu0, biogears::VolumePerTimeMassUnit::L_Per_s_g);
-  EXPECT_EQ(mu1, biogears::VolumePerTimeMassUnit::mL_Per_s_g);
-  EXPECT_EQ(mu2, biogears::VolumePerTimeMassUnit::mL_Per_min_kg);
-  EXPECT_EQ(mu3, biogears::VolumePerTimeMassUnit::mL_Per_s_kg);
-  EXPECT_EQ(mu4, biogears::VolumePerTimeMassUnit::uL_Per_min_kg);
-  EXPECT_THROW(biogears::VolumePerTimeMassUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE VolumePerTimeMassUnit mu0 = BIOGEARS_NAMESPACE VolumePerTimeMassUnit::GetCompoundUnit("L/s g");
+  BIOGEARS_NAMESPACE VolumePerTimeMassUnit mu1 = BIOGEARS_NAMESPACE VolumePerTimeMassUnit::GetCompoundUnit("mL / s g");
+  BIOGEARS_NAMESPACE VolumePerTimeMassUnit mu2 = BIOGEARS_NAMESPACE VolumePerTimeMassUnit::GetCompoundUnit("mL/min kg");
+  BIOGEARS_NAMESPACE VolumePerTimeMassUnit mu3 = BIOGEARS_NAMESPACE VolumePerTimeMassUnit::GetCompoundUnit("mL/s kg");
+  BIOGEARS_NAMESPACE VolumePerTimeMassUnit mu4 = BIOGEARS_NAMESPACE VolumePerTimeMassUnit::GetCompoundUnit("uL/min kg");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE VolumePerTimeMassUnit::L_Per_s_g);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE VolumePerTimeMassUnit::mL_Per_s_g);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE VolumePerTimeMassUnit::mL_Per_min_kg);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE VolumePerTimeMassUnit::mL_Per_s_kg);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE VolumePerTimeMassUnit::uL_Per_min_kg);
+  EXPECT_THROW(BIOGEARS_NAMESPACE VolumePerTimeMassUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

@@ -12,7 +12,7 @@
 
 %import <biogears/cdm/scenario/requests/SEDataRequest.swg>
 
-%nspace biogears::SECompartmentDataRequest;
+%nspace BIOGEARS_NAMESPACE SECompartmentDataRequest;
 
 %ignore SetCompartment(const std::string& name);
 %ignore Set(const std::string& cmpt, const std::string& name, const std::string& unit = "");
@@ -20,7 +20,7 @@
 %ignore Set(const std::string& cmpt, const std::string& name, const CCompoundUnit& unit);
 
 #if defined(SWIGCSHARP)
-//%csmethodmodifiers biogears::SECompartmentDataRequest::Set(const char* cmpt, const char* name, const char* unit = "") "public";
+//%csmethodmodifiers BIOGEARS_NAMESPACE SECompartmentDataRequest::Set(const char* cmpt, const char* name, const char* unit = "") "public";
 #endif  
 
 %include <biogears/cdm/scenario/requests/SECompartmentDataRequest.h>

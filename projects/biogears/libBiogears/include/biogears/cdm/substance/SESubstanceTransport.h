@@ -128,7 +128,7 @@ BG_EXT template class BIOGEARS_API SESubstanceTransportGraph<SEScalarVolumePerTi
 using SEGasTransportGraph = SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportGraph = SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 OPEN_BIOGEARS_NAMESPACE
 template <SUBSTANCE_TRANSPORTER_TEMPLATE>
@@ -155,10 +155,10 @@ using SELiquidTransporter = SESubstanceTransporter<SELiquidTransportGraph, Volum
 CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportVertex*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportEdge*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, size_t>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, vector<biogears::SEGasTransportEdge*>*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEGasTransportVertex*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEGasTransportEdge*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SEGasTransportVertex*, size_t>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SEGasTransportVertex*, vector<BIOGEARS_NAMESPACE SEGasTransportEdge*>*>;
 }
 
 #include <biogears/cdm/substance/SESubstanceTransport.inl>

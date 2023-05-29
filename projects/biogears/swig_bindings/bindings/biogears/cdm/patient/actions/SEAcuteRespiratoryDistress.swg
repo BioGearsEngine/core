@@ -10,14 +10,14 @@
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEAcuteRespiratoryDistress;
+%nspace BIOGEARS_NAMESPACE SEAcuteRespiratoryDistress;
 
-%ignore biogears::SEAcuteRespiratoryDistress::Unload;
-%ignore biogears::SEAcuteRespiratoryDistress::Load;
+%ignore BIOGEARS_NAMESPACE SEAcuteRespiratoryDistress::Unload;
+%ignore BIOGEARS_NAMESPACE SEAcuteRespiratoryDistress::Load;
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEAcuteRespiratoryDistress::ToString() const "public override";
-%csmethodmodifiers biogears::SEAcuteRespiratoryDistress::ToString(std::ostream& str) const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEAcuteRespiratoryDistress::ToString() const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEAcuteRespiratoryDistress::ToString(std::ostream& str) const "public override";
 #endif  
 
 %include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>

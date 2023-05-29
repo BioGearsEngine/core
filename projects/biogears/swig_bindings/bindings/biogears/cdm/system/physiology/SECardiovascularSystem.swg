@@ -20,12 +20,12 @@
 %import <biogears/cdm/properties/SEScalarFlowResistance.swg>
 %import <biogears/cdm/properties/SEScalarPressureTimePerVolumeArea.swg>
 
-%nspace biogears::SECardiovascularSystem;
+%nspace BIOGEARS_NAMESPACE SECardiovascularSystem;
 
-%ignore biogears::SESubstancePharmacokinetics::GetScalar(const std::string& name);
-%ignore biogears::SESubstancePharmacokinetics::Unload;
-%ignore biogears::SESubstancePharmacokinetics::Load;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Load;
 
-%rename (GetHeartEjectionFraction_const) biogears::SECardiovascularSystem::GetHeartEjectionFraction() const;
+%rename (GetHeartEjectionFraction_const) BIOGEARS_NAMESPACE SECardiovascularSystem::GetHeartEjectionFraction() const;
 
 %include <biogears/cdm/system/physiology/SECardiovascularSystem.h>

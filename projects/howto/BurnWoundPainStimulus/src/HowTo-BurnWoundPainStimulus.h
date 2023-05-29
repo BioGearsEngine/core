@@ -43,7 +43,7 @@ public:
     albumin ///< Label vessels by region (serviced by the anterior, middle, or posterior cerebral artery)
   };
 
-  biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
+  BIOGEARS_NAMESPACE Logger* GetLogger() { return m_bg->GetLogger(); }
 
 protected:
   void AdvanceTime();
@@ -54,13 +54,13 @@ protected:
   std::mutex m_mutex;
   bool m_runThread;
 
-  std::unique_ptr<biogears::PhysiologyEngine> m_bg;
+  std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine> m_bg;
 
-  biogears::SEBurnWound* m_burnWound;
-  biogears::SEEscharotomy* m_escharotomy;
-  biogears::SESubstanceBolus* m_ketamineBolus;
-  biogears::SESubstanceCompoundInfusion* m_ringers;
-  biogears::SESubstanceCompoundInfusion* m_albumex;
+  BIOGEARS_NAMESPACE SEBurnWound* m_burnWound;
+  BIOGEARS_NAMESPACE SEEscharotomy* m_escharotomy;
+  BIOGEARS_NAMESPACE SESubstanceBolus* m_ketamineBolus;
+  BIOGEARS_NAMESPACE SESubstanceCompoundInfusion* m_ringers;
+  BIOGEARS_NAMESPACE SESubstanceCompoundInfusion* m_albumex;
   double m_ivBagVolume_mL;
   double m_ivBagVolumeAlbumin_mL;
   double m_TotalVolumeAlbumin_mL = 0.0;

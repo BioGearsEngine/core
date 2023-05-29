@@ -13,16 +13,16 @@
 %import <biogears/cdm/properties/SEScalarPressure.swg>
 %import <biogears/cdm/properties/SEScalarFraction.swg>
 
-%nspace biogears::SELiquidSubstanceQuantity;
+%nspace BIOGEARS_NAMESPACE SELiquidSubstanceQuantity;
 
-%ignore biogears::SELiquidSubstanceQuantity::Unload;
-%ignore biogears::SELiquidSubstanceQuantity::Load;
+%ignore BIOGEARS_NAMESPACE SELiquidSubstanceQuantity::Unload;
+%ignore BIOGEARS_NAMESPACE SELiquidSubstanceQuantity::Load;
 
-%rename (GetSaturation_const) biogears::SELiquidSubstanceQuantity::GetSaturation() const; 
-%ignore biogears::SELiquidSubstanceQuantity::GetScalar(std::string const &);
+%rename (GetSaturation_const) BIOGEARS_NAMESPACE SELiquidSubstanceQuantity::GetSaturation() const; 
+%ignore BIOGEARS_NAMESPACE SELiquidSubstanceQuantity::GetScalar(std::string const &);
 
-%warnfilter(401) biogears::SELiquidSubstanceQuantity;
+%warnfilter(401) BIOGEARS_NAMESPACE SELiquidSubstanceQuantity;
 %include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 
-%nspace std::vector<biogears::SELiquidSubstanceQuantity*>;
-%template (vector_SELiquidSubstanceQuantity) std::vector<biogears::SELiquidSubstanceQuantity*>;
+%nspace std::vector<BIOGEARS_NAMESPACE SELiquidSubstanceQuantity*>;
+%template (vector_SELiquidSubstanceQuantity) std::vector<BIOGEARS_NAMESPACE SELiquidSubstanceQuantity*>;

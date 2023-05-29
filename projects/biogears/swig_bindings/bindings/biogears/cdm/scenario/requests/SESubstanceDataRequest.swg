@@ -14,18 +14,18 @@
 %import <biogears/cdm/substance/SESubstance.swg>
 %import <biogears/cdm/scenario/requests/SEDataRequest.swg>
 
-%nspace biogears::SESubstanceDataRequest;
+%nspace BIOGEARS_NAMESPACE SESubstanceDataRequest;
 
 %ignore SetCompartment(std::string const &);
 
-%ignore biogears::SESubstanceDataRequest::Set(const SESubstance& substance, const char* name, const CCompoundUnit& unit);
-%ignore biogears::SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& name, const CCompoundUnit& unit);
-%ignore biogears::SESubstanceDataRequest::Set(const SESubstance& substance, const char* name, const char* unit = "");
-%ignore biogears::SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& name, const std::string& unit);
-%ignore biogears::SESubstanceDataRequest::Set(const SESubstance& substance, const char* cmpt, const char* name, const CCompoundUnit& unit);
-%rename (SetProperties)      biogears::SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const CCompoundUnit& unit);
-%rename (SetPropertiesByStr) biogears::SESubstanceDataRequest::Set(const SESubstance& substance, const char* cmpt, const char* name, const char* unit);
-%ignore biogears::SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const std::string& unit);
+%ignore BIOGEARS_NAMESPACE SESubstanceDataRequest::Set(const SESubstance& substance, const char* name, const CCompoundUnit& unit);
+%ignore BIOGEARS_NAMESPACE SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& name, const CCompoundUnit& unit);
+%ignore BIOGEARS_NAMESPACE SESubstanceDataRequest::Set(const SESubstance& substance, const char* name, const char* unit = "");
+%ignore BIOGEARS_NAMESPACE SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& name, const std::string& unit);
+%ignore BIOGEARS_NAMESPACE SESubstanceDataRequest::Set(const SESubstance& substance, const char* cmpt, const char* name, const CCompoundUnit& unit);
+%rename (SetProperties)      BIOGEARS_NAMESPACE SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const CCompoundUnit& unit);
+%rename (SetPropertiesByStr) BIOGEARS_NAMESPACE SESubstanceDataRequest::Set(const SESubstance& substance, const char* cmpt, const char* name, const char* unit);
+%ignore BIOGEARS_NAMESPACE SESubstanceDataRequest::Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const std::string& unit);
 
 //We need to update SeteventCallback from C Function Ptr to a C++ Class which other 
 //Languages can inherit from. using SWIGS director syntax

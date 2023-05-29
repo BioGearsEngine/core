@@ -12,7 +12,7 @@
 
 %import <biogears/cdm/substance/SESubstance.swg>
 
-%nspace biogears::DataTrack;
+%nspace BIOGEARS_NAMESPACE DataTrack;
 
 namespace biogears{
   class DataTrack{

@@ -61,7 +61,7 @@ void TEST_FIXTURE_NAME::TearDown()
 }
 
 #define USING_TYPES(name)             \
-  using namespace biogears::io;       \
+  using namespace BIOGEARS_NAMESPACE io;       \
   using SEType = biogears ::SE##name; \
   using CDMType = CDM ::name##Data;
 
@@ -79,7 +79,7 @@ TEST_F(TEST_FIXTURE_NAME, PatientAction)
   //SEType source, sink;
   //CDMType data;
 
-  ////source.SetValue(3.14159, biogears::VolumePerTimeMassUnit::mL_Per_s_kg);
+  ////source.SetValue(3.14159, BIOGEARS_NAMESPACE VolumePerTimeMassUnit::mL_Per_s_kg);
 
   //EXPECT_NE(source, sink);
 
@@ -344,7 +344,7 @@ TEST_F(TEST_FIXTURE_NAME, ChestCompressionForce)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.GetForce().SetValue(.79, biogears::ForceUnit::dyn);
+  source.GetForce().SetValue(.79, BIOGEARS_NAMESPACE ForceUnit::dyn);
 
   EXPECT_NE(source, sink);
 
@@ -369,7 +369,7 @@ TEST_F(TEST_FIXTURE_NAME, ChestCompressionForceScale)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.GetForcePeriod().SetValue(.79, biogears::TimeUnit::hr);
+  source.GetForcePeriod().SetValue(.79, BIOGEARS_NAMESPACE TimeUnit::hr);
   source.GetForceScale().Set(.79);
 
   EXPECT_NE(source, sink);
@@ -419,7 +419,7 @@ TEST_F(TEST_FIXTURE_NAME, ForcedInhale)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.GetPeriod().SetValue(1, biogears::TimeUnit::s);
+  source.GetPeriod().SetValue(1, BIOGEARS_NAMESPACE TimeUnit::s);
   source.GetInspiratoryCapacityFraction().Set(0.72);
 
   EXPECT_NE(source, sink);
@@ -444,7 +444,7 @@ TEST_F(TEST_FIXTURE_NAME, ForcedExhale)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.GetPeriod().SetValue(1, biogears::TimeUnit::s);
+  source.GetPeriod().SetValue(1, BIOGEARS_NAMESPACE TimeUnit::s);
   source.GetExpiratoryReserveVolumeFraction().SetValue(.72);
 
   EXPECT_NE(source, sink);
@@ -469,7 +469,7 @@ TEST_F(TEST_FIXTURE_NAME, BreathHold)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.GetPeriod().SetValue(1, biogears::TimeUnit::s);
+  source.GetPeriod().SetValue(1, BIOGEARS_NAMESPACE TimeUnit::s);
 
   EXPECT_NE(source, sink);
 
@@ -544,12 +544,12 @@ TEST_F(TEST_FIXTURE_NAME, ConsumeNutrients)
   source.SetComment("Test Comment");
   auto& nutrition = source.GetNutrition();
   nutrition.SetName("Not Real nutrition");
-  nutrition.GetCarbohydrate().SetValue(0.7777, biogears::MassUnit::g);
-  nutrition.GetFat().SetValue(0.6666, biogears::MassUnit::g);
-  nutrition.GetProtein().SetValue(0.5555, biogears::MassUnit::g);
-  nutrition.GetCalcium().SetValue(0.4444, biogears::MassUnit::g);
-  nutrition.GetSodium().SetValue(0.2222, biogears::MassUnit::g);
-  nutrition.GetWater().SetValue(0.1111, biogears::VolumeUnit::dL);
+  nutrition.GetCarbohydrate().SetValue(0.7777, BIOGEARS_NAMESPACE MassUnit::g);
+  nutrition.GetFat().SetValue(0.6666, BIOGEARS_NAMESPACE MassUnit::g);
+  nutrition.GetProtein().SetValue(0.5555, BIOGEARS_NAMESPACE MassUnit::g);
+  nutrition.GetCalcium().SetValue(0.4444, BIOGEARS_NAMESPACE MassUnit::g);
+  nutrition.GetSodium().SetValue(0.2222, BIOGEARS_NAMESPACE MassUnit::g);
+  nutrition.GetWater().SetValue(0.1111, BIOGEARS_NAMESPACE VolumeUnit::dL);
   source.SetNutritionFile("NotARealFile.txt");
 
   EXPECT_NE(source, sink);
@@ -574,11 +574,11 @@ TEST_F(TEST_FIXTURE_NAME, Exercise)
   CDMType data;
 
   source.SetComment("SECycling");
-  biogears::SEExercise::SECycling cycling;
+  BIOGEARS_NAMESPACE SEExercise::SECycling cycling;
 
-  cycling.AddedWeight.SetValue(2.5, biogears::MassUnit::g);
-  cycling.PowerCycle.SetValue(2.5, biogears::PowerUnit::W);
-  cycling.CadenceCycle.SetValue(2.5, biogears::FrequencyUnit::Hz);
+  cycling.AddedWeight.SetValue(2.5, BIOGEARS_NAMESPACE MassUnit::g);
+  cycling.PowerCycle.SetValue(2.5, BIOGEARS_NAMESPACE PowerUnit::W);
+  cycling.CadenceCycle.SetValue(2.5, BIOGEARS_NAMESPACE FrequencyUnit::Hz);
   source.SetCyclingExercise(cycling);
 
   EXPECT_NE(source, sink);
@@ -592,10 +592,10 @@ TEST_F(TEST_FIXTURE_NAME, Exercise)
   data = CDMType {};
   source.Clear();
   source.SetComment("SEGeneric");
-  biogears::SEExercise::SEGeneric generic;
+  BIOGEARS_NAMESPACE SEExercise::SEGeneric generic;
 
-  generic.DesiredWorkRate.SetValue(2.5, biogears::PowerUnit::W);
-  generic.Intensity.SetValue(0.5, biogears::NoUnit::unitless);
+  generic.DesiredWorkRate.SetValue(2.5, BIOGEARS_NAMESPACE PowerUnit::W);
+  generic.Intensity.SetValue(0.5, BIOGEARS_NAMESPACE NoUnit::unitless);
   source.SetGenericExercise(generic);
 
   EXPECT_NE(source, sink);
@@ -609,10 +609,10 @@ TEST_F(TEST_FIXTURE_NAME, Exercise)
   data = CDMType {};
   source.Clear();
   source.SetComment("SEStrengthTraining");
-  biogears::SEExercise::SEStrengthTraining strength;
+  BIOGEARS_NAMESPACE SEExercise::SEStrengthTraining strength;
 
   strength.RepsStrength.SetValue(2.5);
-  strength.WeightStrength.SetValue(2.5, biogears::MassUnit::kg);
+  strength.WeightStrength.SetValue(2.5, BIOGEARS_NAMESPACE MassUnit::kg);
   source.SetStrengthExercise(strength);
 
   EXPECT_NE(source, sink);
@@ -626,11 +626,11 @@ TEST_F(TEST_FIXTURE_NAME, Exercise)
   data = CDMType {};
   source.Clear();
   source.SetComment("SERunning");
-  biogears::SEExercise::SERunning running;
+  BIOGEARS_NAMESPACE SEExercise::SERunning running;
 
   running.InclineRun.SetValue(0.1);
-  running.AddedWeight.SetValue(2.5, biogears::MassUnit::kg);
-  running.SpeedRun.SetValue(2.5, biogears::LengthPerTimeUnit::m_Per_s);
+  running.AddedWeight.SetValue(2.5, BIOGEARS_NAMESPACE MassUnit::kg);
+  running.SpeedRun.SetValue(2.5, BIOGEARS_NAMESPACE LengthPerTimeUnit::m_Per_s);
   source.SetRunningExercise(running);
 
   EXPECT_NE(source, sink);
@@ -672,8 +672,8 @@ TEST_F(TEST_FIXTURE_NAME, Hemorrhage)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.GetInitialRate().SetValue(2.5, biogears::VolumePerTimeUnit::mL_Per_s);
-  source.GetBleedResistance().SetValue(.5, biogears::FlowResistanceUnit::cmH2O_s_Per_L);
+  source.GetInitialRate().SetValue(2.5, BIOGEARS_NAMESPACE VolumePerTimeUnit::mL_Per_s);
+  source.GetBleedResistance().SetValue(.5, BIOGEARS_NAMESPACE FlowResistanceUnit::cmH2O_s_Per_L);
   source.SetCompartment("Fake Compartment");
 
   EXPECT_NE(source, sink);
@@ -701,7 +701,7 @@ TEST_F(TEST_FIXTURE_NAME, Infection)
   source.SetComment("Test Comment");
   source.SetLocation("Fake Compartment");
   source.SetSeverity(CDM::enumInfectionSeverity::Moderate);
-  source.GetMinimumInhibitoryConcentration().SetValue(.5, biogears::MassPerVolumeUnit::g_Per_mL);
+  source.GetMinimumInhibitoryConcentration().SetValue(.5, BIOGEARS_NAMESPACE MassPerVolumeUnit::g_Per_mL);
 
   EXPECT_NE(source, sink);
 
@@ -746,16 +746,16 @@ TEST_F(TEST_FIXTURE_NAME, MechanicalVentilation)
 {
   USING_TYPES(MechanicalVentilation)
 
-  biogears::Logger logger;
-  biogears::SESubstanceManager mgr { &logger };
+  BIOGEARS_NAMESPACE Logger logger;
+  BIOGEARS_NAMESPACE SESubstanceManager mgr { &logger };
   ASSERT_TRUE(mgr.LoadSubstanceDirectory());
   SEType source, sink;
   CDMType data;
 
   source.SetComment("Test Comment");
   source.SetState(CDM::enumOnOff::Off);
-  source.GetFlow().SetValue(1.23, biogears::VolumePerTimeUnit::L_Per_s);
-  source.GetPressure().SetValue(1.23, biogears::PressureUnit::cmH2O);
+  source.GetFlow().SetValue(1.23, BIOGEARS_NAMESPACE VolumePerTimeUnit::L_Per_s);
+  source.GetPressure().SetValue(1.23, BIOGEARS_NAMESPACE PressureUnit::cmH2O);
 
   EXPECT_NE(source, sink);
 
@@ -829,7 +829,7 @@ TEST_F(TEST_FIXTURE_NAME, PericardialEffusion)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.GetEffusionRate().SetValue(0.5, biogears::VolumePerTimeUnit::L_Per_s);
+  source.GetEffusionRate().SetValue(0.5, BIOGEARS_NAMESPACE VolumePerTimeUnit::L_Per_s);
 
   EXPECT_NE(source, sink);
 
@@ -901,8 +901,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceBolus)
 {
   USING_TYPES(SubstanceBolus)
 
-  biogears::Logger logger;
-  biogears::SESubstanceManager mgr { &logger };
+  BIOGEARS_NAMESPACE Logger logger;
+  BIOGEARS_NAMESPACE SESubstanceManager mgr { &logger };
   ASSERT_TRUE(mgr.LoadSubstanceDirectory());
   auto oxygen = mgr.GetSubstance("Oxygen");
 
@@ -911,9 +911,9 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceBolus)
 
   source.SetComment("Test Comment");
   source.SetAdminRoute(CDM::enumBolusAdministration::Intramuscular);
-  source.GetAdminTime().SetValue(2.9, biogears::TimeUnit::s);
-  source.GetDose().SetValue(1.9, biogears::VolumeUnit::dL);
-  source.GetConcentration().SetValue(2.0, biogears::MassPerVolumeUnit::mg_Per_m3);
+  source.GetAdminTime().SetValue(2.9, BIOGEARS_NAMESPACE TimeUnit::s);
+  source.GetDose().SetValue(1.9, BIOGEARS_NAMESPACE VolumeUnit::dL);
+  source.GetConcentration().SetValue(2.0, BIOGEARS_NAMESPACE MassPerVolumeUnit::mg_Per_m3);
 
   EXPECT_NE(source, sink);
 
@@ -933,16 +933,16 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceBolusState)
 {
   USING_TYPES(SubstanceBolusState)
 
-  biogears::Logger logger;
-  biogears::SESubstanceManager mgr { &logger };
+  BIOGEARS_NAMESPACE Logger logger;
+  BIOGEARS_NAMESPACE SESubstanceManager mgr { &logger };
   ASSERT_TRUE(mgr.LoadSubstanceDirectory());
   auto oxygen = mgr.GetSubstance("Oxygen");
 
   SEType source { *oxygen }, sink { *oxygen };
   CDMType data;
 
-  source.GetAdministeredDose().SetValue(0.314, biogears::VolumeUnit::dL);
-  source.GetElapsedTime().SetValue(0.314, biogears::TimeUnit::min);
+  source.GetAdministeredDose().SetValue(0.314, BIOGEARS_NAMESPACE VolumeUnit::dL);
+  source.GetElapsedTime().SetValue(0.314, BIOGEARS_NAMESPACE TimeUnit::min);
 
   EXPECT_NE(source, sink);
 
@@ -963,8 +963,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceCompoundInfusion)
 {
   USING_TYPES(SubstanceCompoundInfusion)
 
-  biogears::Logger logger;
-  biogears::SESubstanceManager mgr { &logger };
+  BIOGEARS_NAMESPACE Logger logger;
+  BIOGEARS_NAMESPACE SESubstanceManager mgr { &logger };
   ASSERT_TRUE(mgr.LoadSubstanceDirectory());
   auto saline = mgr.GetCompound("Saline");
   ASSERT_TRUE(saline != nullptr);
@@ -972,8 +972,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceCompoundInfusion)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.GetBagVolume().SetValue(0.314, biogears::VolumeUnit::dL);
-  source.GetRate().SetValue(0.314, biogears::VolumePerTimeUnit::mL_Per_s);
+  source.GetBagVolume().SetValue(0.314, BIOGEARS_NAMESPACE VolumeUnit::dL);
+  source.GetRate().SetValue(0.314, BIOGEARS_NAMESPACE VolumePerTimeUnit::mL_Per_s);
 
   EXPECT_NE(source, sink);
 
@@ -994,16 +994,16 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceInfusion)
 {
   USING_TYPES(SubstanceInfusion)
 
-  biogears::Logger logger;
-  biogears::SESubstanceManager mgr { &logger };
+  BIOGEARS_NAMESPACE Logger logger;
+  BIOGEARS_NAMESPACE SESubstanceManager mgr { &logger };
   ASSERT_TRUE(mgr.LoadSubstanceDirectory());
   auto oxygen = mgr.GetSubstance("Oxygen");
   SEType source { *oxygen }, sink { *oxygen };
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.GetConcentration().SetValue(0.314, biogears::MassPerVolumeUnit::g_Per_m3);
-  source.GetRate().SetValue(0.314, biogears::VolumePerTimeUnit::mL_Per_s);
+  source.GetConcentration().SetValue(0.314, BIOGEARS_NAMESPACE MassPerVolumeUnit::g_Per_m3);
+  source.GetRate().SetValue(0.314, BIOGEARS_NAMESPACE VolumePerTimeUnit::mL_Per_s);
 
   EXPECT_NE(source, sink);
 
@@ -1049,7 +1049,7 @@ TEST_F(TEST_FIXTURE_NAME, Override)
   SEType source, sink;
   CDMType data;
 
-  source.GetBloodVolumeOverride().SetValue(3.14159, biogears::VolumeUnit::mL);
+  source.GetBloodVolumeOverride().SetValue(3.14159, BIOGEARS_NAMESPACE VolumeUnit::mL);
 
   EXPECT_NE(source, sink);
 

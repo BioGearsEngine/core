@@ -17,8 +17,11 @@
 #include <vector>
 
 #include "CSVToXMLConvertor.h"
+
+#include <biogears/config.h>
 #include <biogears/schema/cdm/Substance.hxx>
-namespace biogears {
+
+OPEN_BIOGEARS_NAMESPACE
 
 class SubstanceGenerator : public CSVToXMLConvertor {
 public:
@@ -44,6 +47,6 @@ protected:
 private:
   std::vector<XSD_Type> _substances;
 };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //BIOGEARS_SUSTANCE_GENERATOR_H

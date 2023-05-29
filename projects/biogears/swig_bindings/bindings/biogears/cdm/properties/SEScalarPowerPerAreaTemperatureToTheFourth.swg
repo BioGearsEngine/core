@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const PowerPerAreaTemperatureToTheFourthUnit&) const;
 %rename(NotEquals)  operator!=(const PowerPerAreaTemperatureToTheFourthUnit&) const;
 %rename(Equals)  operator==(const SEScalarPowerPerAreaTemperatureToTheFourth&) const;
 %rename(NotEquals)  operator!=(const SEScalarPowerPerAreaTemperatureToTheFourth&) const;  
 
-%ignore biogears::PowerPerAreaTemperatureToTheFourthUnit::PowerPerAreaTemperatureToTheFourthUnit(std::string const &);
-%ignore biogears::PowerPerAreaTemperatureToTheFourthUnit::IsValidUnit(std::string const &);
-%ignore biogears::PowerPerAreaTemperatureToTheFourthUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit::PowerPerAreaTemperatureToTheFourthUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarPowerPerAreaTemperatureToTheFourth;
-%nspace biogears::PowerPerAreaTemperatureToTheFourthUnit;
-%nspace biogears::SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarPowerPerAreaTemperatureToTheFourth;
+%nspace BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class PowerPerAreaTemperatureToTheFourthUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::PowerPerAreaTemperatureToTheFourthUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit>;
 
-%ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerPerAreaTemperatureToTheFourthUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerPerAreaTemperatureToTheFourthUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerPerAreaTemperatureToTheFourthUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::PowerPerAreaTemperatureToTheFourthUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< PowerPerAreaTemperatureToTheFourthUnit >::operator!=;
 
-%template(QuantityPowerPerAreaTemperatureToTheFourth) biogears::SEScalarQuantity<biogears::PowerPerAreaTemperatureToTheFourthUnit>;
+%template(QuantityPowerPerAreaTemperatureToTheFourth) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit>;
 
 %include <biogears/cdm/properties/SEScalarPowerPerAreaTemperatureToTheFourth.h>
 

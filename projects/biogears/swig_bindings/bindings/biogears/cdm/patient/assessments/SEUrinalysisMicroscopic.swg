@@ -10,9 +10,9 @@
 
 %import <biogears/cdm/properties/SEScalarAmount.swg>
 
-%nspace biogears::SEUrinalysisMicroscopic;
+%nspace BIOGEARS_NAMESPACE SEUrinalysisMicroscopic;
 
-%ignore biogears::SEUrinalysisMicroscopic::Unload;
-%ignore biogears::SEUrinalysisMicroscopic::Load;
+%ignore BIOGEARS_NAMESPACE SEUrinalysisMicroscopic::Unload;
+%ignore BIOGEARS_NAMESPACE SEUrinalysisMicroscopic::Load;
 
 %include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>

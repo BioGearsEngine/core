@@ -23,24 +23,24 @@
 %import <biogears/cdm/properties/SEScalarTime.swg>
 %import <biogears/cdm/properties/SEScalarVolumePerTime.swg>
 
-%nspace biogears::SEPatient;
+%nspace BIOGEARS_NAMESPACE SEPatient;
 
-%ignore biogears::SEPatient::Unload;
-%ignore biogears::SEPatient::Load;
+%ignore BIOGEARS_NAMESPACE SEPatient::Unload;
+%ignore BIOGEARS_NAMESPACE SEPatient::Load;
 
-%ignore biogears::SEPatient::GetScalar(std::string const &);
-%ignore biogears::SEPatient::SetName(std::string const &);
-%ignore biogears::SEPatient::SetAnnotation(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEPatient::GetScalar(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEPatient::SetName(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEPatient::SetAnnotation(std::string const &);
 
 //
 //  Looks like SWIG can't handle trampoling CSharp code to C++  
 //
-%ignore biogears::SEPatient::SetEventCallback;
+%ignore BIOGEARS_NAMESPACE SEPatient::SetEventCallback;
 
-%rename(GetBodyFatFraction_const) biogears::SEPatient::GetBodyFatFraction() const;
-%rename(GetHyperhidrosis_const) biogears::SEPatient::GetHyperhidrosis() const;
-%rename(GetPainSusceptibility_const) biogears::SEPatient::GetPainSusceptibility() const;
-%rename(GetRightLungRatio_const) biogears::SEPatient::GetRightLungRatio() const;
+%rename(GetBodyFatFraction_const) BIOGEARS_NAMESPACE SEPatient::GetBodyFatFraction() const;
+%rename(GetHyperhidrosis_const) BIOGEARS_NAMESPACE SEPatient::GetHyperhidrosis() const;
+%rename(GetPainSusceptibility_const) BIOGEARS_NAMESPACE SEPatient::GetPainSusceptibility() const;
+%rename(GetRightLungRatio_const) BIOGEARS_NAMESPACE SEPatient::GetRightLungRatio() const;
 
 
 %include <biogears/cdm/patient/SEPatient.h>

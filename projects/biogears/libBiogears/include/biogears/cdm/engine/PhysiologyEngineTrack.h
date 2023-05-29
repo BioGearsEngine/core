@@ -31,11 +31,11 @@ specific language governing permissions and limitations under the License.
 #include <string>
 
 namespace std {
-  BG_EXT template class BIOGEARS_API vector<biogears::SESystem*>;
+  BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SESystem*>;
 }
 OPEN_BIOGEARS_NAMESPACE
 
-enum class CompartmentUpdate { None,
+enum class CompartmentUpdate { NO_UPDATE,
                                InFlow,
                                OutFlow,
                                HeatTransferRateIn,
@@ -59,7 +59,7 @@ public:
   {
     Heading.clear();
 
-    UpdateProperty = CompartmentUpdate::None;
+    UpdateProperty = CompartmentUpdate::NO_UPDATE;
     GasCmpt = nullptr;
     GasSubstance = nullptr;
     LiquidCmpt = nullptr;
@@ -84,10 +84,10 @@ public:
   // Tissue cmpts don't have children and they don't have computed data that changes on call (like flow)
 };
 
-} //namespac biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SEDataRequest*, BIOGEARS_NAMESPACE SEDataRequestScalar*>;
 } // Namespace std
 
 OPEN_BIOGEARS_NAMESPACE

@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace std {
-template class map<string, biogears::SEDecimalFormat>;
+template class map<string, BIOGEARS_NAMESPACE SEDecimalFormat>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

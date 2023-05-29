@@ -13,11 +13,11 @@
 
 %import <biogears/cdm/scenario/requests/SECompartmentDataRequest.swg>
 
-%nspace biogears::SETissueCompartmentDataRequest;
+%nspace BIOGEARS_NAMESPACE SETissueCompartmentDataRequest;
 
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SETissueCompartmentDataRequest::HashCode() const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE SETissueCompartmentDataRequest::HashCode() const "public override";
 #endif 
 
 %include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>

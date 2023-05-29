@@ -24,7 +24,7 @@ SEHemorrhage::SEHemorrhage()
 {
   m_Compartment = ""; //User input, location of hemorrhage
   //m_MCIS;
-  m_InitialRate->SetValue(0.0, biogears::VolumePerTimeUnit::mL_Per_min); //User input, initial rate of bleeding
+  m_InitialRate->SetValue(0.0, BIOGEARS_NAMESPACE VolumePerTimeUnit::mL_Per_min); //User input, initial rate of bleeding
 
   //Place compartments in torso in a map so that we don't get too messy with nested conditionals.  Each vector is digits 2-4 of the MCIS code
   m_OrganMap["VenaCava"] = std::vector<unsigned int> { 6, 6, 0 };

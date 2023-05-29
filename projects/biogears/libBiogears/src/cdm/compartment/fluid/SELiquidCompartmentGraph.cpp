@@ -20,10 +20,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 
 namespace std {
-template class vector<biogears::SELiquidTransportVertex*>;
-template class vector<biogears::SELiquidTransportEdge*>;
-template class map<const biogears::SELiquidTransportVertex*, size_t>;
-template class map<const biogears::SELiquidTransportVertex*, vector<biogears::SELiquidTransportEdge*>*>;
+template class vector<BIOGEARS_NAMESPACE SELiquidTransportVertex*>;
+template class vector<BIOGEARS_NAMESPACE SELiquidTransportEdge*>;
+template class map<const BIOGEARS_NAMESPACE SELiquidTransportVertex*, size_t>;
+template class map<const BIOGEARS_NAMESPACE SELiquidTransportVertex*, vector<BIOGEARS_NAMESPACE SELiquidTransportEdge*>*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

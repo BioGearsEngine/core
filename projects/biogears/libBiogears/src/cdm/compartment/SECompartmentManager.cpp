@@ -20,28 +20,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 
 namespace std {
-  template class vector<biogears::SEGasCompartment*> ;
-  template class map<string, biogears::SEGasCompartment*> ;
-  template class vector<biogears::SEGasCompartmentLink*> ;
-  template class map<string, biogears::SEGasCompartmentLink*> ;
-  template class vector<biogears::SEGasCompartmentGraph*> ;
-  template class map<string, biogears::SEGasCompartmentGraph*> ;
-  template class vector<biogears::SESubstance*> ;
+  template class vector<BIOGEARS_NAMESPACE SEGasCompartment*> ;
+  template class map<string, BIOGEARS_NAMESPACE SEGasCompartment*> ;
+  template class vector<BIOGEARS_NAMESPACE SEGasCompartmentLink*> ;
+  template class map<string, BIOGEARS_NAMESPACE SEGasCompartmentLink*> ;
+  template class vector<BIOGEARS_NAMESPACE SEGasCompartmentGraph*> ;
+  template class map<string, BIOGEARS_NAMESPACE SEGasCompartmentGraph*> ;
+  template class vector<BIOGEARS_NAMESPACE SESubstance*> ;
   
-  template class vector<biogears::SELiquidCompartment*> ;
-  template class map<string, biogears::SELiquidCompartment*> ;
-  template class vector<biogears::SELiquidCompartmentLink*> ;
-  template class map<string, biogears::SELiquidCompartmentLink*> ;
-  template class vector<biogears::SELiquidCompartmentGraph*> ;
-  template class map<string, biogears::SELiquidCompartmentGraph*> ;
+  template class vector<BIOGEARS_NAMESPACE SELiquidCompartment*> ;
+  template class map<string, BIOGEARS_NAMESPACE SELiquidCompartment*> ;
+  template class vector<BIOGEARS_NAMESPACE SELiquidCompartmentLink*> ;
+  template class map<string, BIOGEARS_NAMESPACE SELiquidCompartmentLink*> ;
+  template class vector<BIOGEARS_NAMESPACE SELiquidCompartmentGraph*> ;
+  template class map<string, BIOGEARS_NAMESPACE SELiquidCompartmentGraph*> ;
   
-  template class vector<biogears::SEThermalCompartment*> ;
-  template class map<string, biogears::SEThermalCompartment*> ;
-  template class vector<biogears::SEThermalCompartmentLink*> ;
-  template class map<string, biogears::SEThermalCompartmentLink*> ;
+  template class vector<BIOGEARS_NAMESPACE SEThermalCompartment*> ;
+  template class map<string, BIOGEARS_NAMESPACE SEThermalCompartment*> ;
+  template class vector<BIOGEARS_NAMESPACE SEThermalCompartmentLink*> ;
+  template class map<string, BIOGEARS_NAMESPACE SEThermalCompartmentLink*> ;
   
-  template class vector<biogears::SETissueCompartment*> ;
-  template class map<string, biogears::SETissueCompartment*> ;
+  template class vector<BIOGEARS_NAMESPACE SETissueCompartment*> ;
+  template class map<string, BIOGEARS_NAMESPACE SETissueCompartment*> ;
 }
 OPEN_BIOGEARS_NAMESPACE
 

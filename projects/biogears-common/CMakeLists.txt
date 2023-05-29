@@ -8,6 +8,10 @@
 
  option(Biogears_COMMON_BUILD_STATIC       "If enabled Biogears biogears_common will be built as a static library"  ON)
  
+ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/config.h.in 
+ ${CMAKE_CURRENT_BINARY_DIR}/generated/biogears/config.h NEWLINE_STYLE LF)
+
+
 ###############################################################################
 # Base Variables
 ###############################################################################
@@ -16,8 +20,8 @@ set(Common_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
 set(Common_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 set(Common_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" PARENT_SCOPE)
 set(Common_PRIVATE_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src" )
-set(Common_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" PARENT_SCOPE)
-set(Common_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}" )
+set(Common_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated" PARENT_SCOPE)
+set(Common_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated" )
 set(Common_UNIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/unit" PARENT_SCOPE)
 
 ###############################################################################
@@ -76,6 +80,9 @@ set_target_properties(libbiogears_common
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   )
 target_compile_definitions(libbiogears_common PUBLIC  ${Common_INTERFACE_CPPFLAGS} PRIVATE ${Common_CPPFLAGS} )
+if ( BIOGEARS_WITHOUT_NAMESPACE )
+    target_compile_definitions(libbiogears_common PUBLIC  BIOGEARS_WITHOUT_NAMESPACES)
+endif()
 if (Biogears_COMMON_BUILD_STATIC)
     target_compile_definitions(libbiogears_common PUBLIC  "BIOGEARS_COMMON_BUILD_STATIC")
     set(LIB_TYPE STATIC)

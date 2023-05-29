@@ -59,42 +59,42 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarAmountPerVolume AmountPerVolume = biogears::SEScalarAmountPerVolume();
+  BIOGEARS_NAMESPACE SEScalarAmountPerVolume AmountPerVolume = BIOGEARS_NAMESPACE SEScalarAmountPerVolume();
   auto ptr = AmountPerVolume.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::AmountPerVolumeUnit::IsValidUnit("mol/L");
-  bool unit1 = biogears::AmountPerVolumeUnit::IsValidUnit("mol/mL");
-  bool unit2 = biogears::AmountPerVolumeUnit::IsValidUnit("mmol/L");
-  bool unit3 = biogears::AmountPerVolumeUnit::IsValidUnit("mmol/mL");
-  bool unit4 = biogears::AmountPerVolumeUnit::IsValidUnit("ct/L");
-  bool unit5 = biogears::AmountPerVolumeUnit::IsValidUnit("ct/uL");
+  bool unit0 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::IsValidUnit("mol/L");
+  bool unit1 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::IsValidUnit("mol/mL");
+  bool unit2 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::IsValidUnit("mmol/L");
+  bool unit3 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::IsValidUnit("mmol/mL");
+  bool unit4 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::IsValidUnit("ct/L");
+  bool unit5 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::IsValidUnit("ct/uL");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
   EXPECT_EQ(unit5, true);
-  bool unit6 = biogears::AmountPerVolumeUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::AmountPerVolumeUnit mu0 = biogears::AmountPerVolumeUnit::GetCompoundUnit("mol/L");
-  biogears::AmountPerVolumeUnit mu1 = biogears::AmountPerVolumeUnit::GetCompoundUnit("mol/mL");
-  biogears::AmountPerVolumeUnit mu2 = biogears::AmountPerVolumeUnit::GetCompoundUnit("mmol/L");
-  biogears::AmountPerVolumeUnit mu3 = biogears::AmountPerVolumeUnit::GetCompoundUnit("mmol/mL");
-  biogears::AmountPerVolumeUnit mu4 = biogears::AmountPerVolumeUnit::GetCompoundUnit("ct/L");
-  biogears::AmountPerVolumeUnit mu5 = biogears::AmountPerVolumeUnit::GetCompoundUnit("ct/uL");
-  EXPECT_EQ(mu0, biogears::AmountPerVolumeUnit::mol_Per_L);
-  EXPECT_EQ(mu1, biogears::AmountPerVolumeUnit::mol_Per_mL);
-  EXPECT_EQ(mu2, biogears::AmountPerVolumeUnit::mmol_Per_L);
-  EXPECT_EQ(mu3, biogears::AmountPerVolumeUnit::mmol_Per_mL);
-  EXPECT_EQ(mu4, biogears::AmountPerVolumeUnit::ct_Per_L);
-  EXPECT_EQ(mu5, biogears::AmountPerVolumeUnit::ct_Per_uL);
-  EXPECT_THROW(biogears::AmountPerVolumeUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE AmountPerVolumeUnit mu0 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::GetCompoundUnit("mol/L");
+  BIOGEARS_NAMESPACE AmountPerVolumeUnit mu1 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::GetCompoundUnit("mol/mL");
+  BIOGEARS_NAMESPACE AmountPerVolumeUnit mu2 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::GetCompoundUnit("mmol/L");
+  BIOGEARS_NAMESPACE AmountPerVolumeUnit mu3 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::GetCompoundUnit("mmol/mL");
+  BIOGEARS_NAMESPACE AmountPerVolumeUnit mu4 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::GetCompoundUnit("ct/L");
+  BIOGEARS_NAMESPACE AmountPerVolumeUnit mu5 = BIOGEARS_NAMESPACE AmountPerVolumeUnit::GetCompoundUnit("ct/uL");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE AmountPerVolumeUnit::mol_Per_L);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE AmountPerVolumeUnit::mol_Per_mL);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE AmountPerVolumeUnit::mmol_Per_L);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE AmountPerVolumeUnit::mmol_Per_mL);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE AmountPerVolumeUnit::ct_Per_L);
+  EXPECT_EQ(mu5, BIOGEARS_NAMESPACE AmountPerVolumeUnit::ct_Per_uL);
+  EXPECT_THROW(BIOGEARS_NAMESPACE AmountPerVolumeUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

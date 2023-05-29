@@ -12,9 +12,9 @@
 %import <biogears/cdm/properties/SEScalarTime.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEChestOcclusiveDressing;
+%nspace BIOGEARS_NAMESPACE SEChestOcclusiveDressing;
 
-%ignore biogears::SEChestOcclusiveDressing::Unload;
-%ignore biogears::SEChestOcclusiveDressing::Load;
+%ignore BIOGEARS_NAMESPACE SEChestOcclusiveDressing::Unload;
+%ignore BIOGEARS_NAMESPACE SEChestOcclusiveDressing::Load;
 
 %include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>

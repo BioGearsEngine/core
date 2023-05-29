@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEAirwayObstruction;
+%nspace BIOGEARS_NAMESPACE SEAirwayObstruction;
 
-%ignore biogears::SEAirwayObstruction::Unload;
-%ignore biogears::SEAirwayObstruction::Load;
+%ignore BIOGEARS_NAMESPACE SEAirwayObstruction::Unload;
+%ignore BIOGEARS_NAMESPACE SEAirwayObstruction::Load;
 
 %include <biogears/cdm/patient/actions/SEAirwayObstruction.h>

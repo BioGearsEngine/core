@@ -11,10 +11,10 @@
 
 %import <biogears/cdm/properties/SEScalarTime.swg>
 
-%nspace biogears::SEEventHandler;
+%nspace BIOGEARS_NAMESPACE SEEventHandler;
 
-%ignore biogears::SEBreathHold::Unload;
-%ignore biogears::SEBreathHold::Load;
+%ignore BIOGEARS_NAMESPACE SEBreathHold::Unload;
+%ignore BIOGEARS_NAMESPACE SEBreathHold::Load;
 
 %feature("director") SEEventHandler; 
 %include <biogears/cdm/utils/SEEventHandler.h>

@@ -14,7 +14,7 @@
 %import <biogears//cdm/substance/SESubstance.swg>
 %import <biogears/cdm/scenario/requests/SECompartmentDataRequest.swg>
 
-%nspace biogears::SECompartmentSubstanceDataRequest;
+%nspace BIOGEARS_NAMESPACE SECompartmentSubstanceDataRequest;
 
 %ignore Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const std::string& unit = "");
 %ignore Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const CCompoundUnit& unit);

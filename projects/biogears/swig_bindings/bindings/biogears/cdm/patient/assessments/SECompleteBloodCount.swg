@@ -14,9 +14,9 @@
 %import <biogears/cdm/properties/SEScalarMassPerAmount.swg>
 %import <biogears/cdm/properties/SEScalarVolume.swg>
 
-%nspace biogears::SECompleteBloodCount;
+%nspace BIOGEARS_NAMESPACE SECompleteBloodCount;
 
-%ignore biogears::SECompleteBloodCount::Unload;
-%ignore biogears::SECompleteBloodCount::Load;
+%ignore BIOGEARS_NAMESPACE SECompleteBloodCount::Unload;
+%ignore BIOGEARS_NAMESPACE SECompleteBloodCount::Load;
 
 %include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>

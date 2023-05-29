@@ -13,6 +13,6 @@
 
 %import <biogears/cdm/scenario/requests/SEDataRequest.swg>
 
-%nspace biogears::SEPhysiologyDataRequest;
+%nspace BIOGEARS_NAMESPACE SEPhysiologyDataRequest;
 
 %include <biogears/cdm/scenario/requests/SEPhysiologyDataRequest.h>

@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalarArea.swg>
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 
-%nspace biogears::SEChronicHeartFailure;
+%nspace BIOGEARS_NAMESPACE SEChronicHeartFailure;
 
-%ignore biogears::SEChronicHeartFailure::Unload;
-%ignore biogears::SEChronicHeartFailure::Load;
+%ignore BIOGEARS_NAMESPACE SEChronicHeartFailure::Unload;
+%ignore BIOGEARS_NAMESPACE SEChronicHeartFailure::Load;
 
 %include <biogears/cdm/patient/conditions/SEChronicHeartFailure.h>

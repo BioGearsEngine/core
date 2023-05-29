@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<FlowComplianceUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<FlowComplianceUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const FlowComplianceUnit&) const;
 %rename(NotEquals)  operator!=(const FlowComplianceUnit&) const;
 %rename(Equals)  operator==(const SEScalarFlowCompliance&) const;
 %rename(NotEquals)  operator!=(const SEScalarFlowCompliance&) const;  
 
-%ignore biogears::FlowComplianceUnit::FlowComplianceUnit(std::string const &);
-%ignore biogears::FlowComplianceUnit::IsValidUnit(std::string const &);
-%ignore biogears::FlowComplianceUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE FlowComplianceUnit::FlowComplianceUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE FlowComplianceUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE FlowComplianceUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarFlowCompliance;
-%nspace biogears::FlowComplianceUnit;
-%nspace biogears::SEScalarQuantity<FlowComplianceUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarFlowCompliance;
+%nspace BIOGEARS_NAMESPACE FlowComplianceUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<FlowComplianceUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class FlowComplianceUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::FlowComplianceUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FlowComplianceUnit>;
 
-%ignore  biogears::SEScalarQuantity< FlowComplianceUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< FlowComplianceUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< FlowComplianceUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< FlowComplianceUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< FlowComplianceUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< FlowComplianceUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FlowComplianceUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FlowComplianceUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FlowComplianceUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FlowComplianceUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FlowComplianceUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FlowComplianceUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowComplianceUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowComplianceUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowComplianceUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::FlowComplianceUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FlowComplianceUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FlowComplianceUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FlowComplianceUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FlowComplianceUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< FlowComplianceUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< FlowComplianceUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< FlowComplianceUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< FlowComplianceUnit >::operator!=;
 
-%template(QuantityFlowCompliance) biogears::SEScalarQuantity<biogears::FlowComplianceUnit>;
+%template(QuantityFlowCompliance) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE FlowComplianceUnit>;
 
 %include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 

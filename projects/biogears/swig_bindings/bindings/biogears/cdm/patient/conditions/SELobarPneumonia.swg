@@ -11,10 +11,10 @@
 %import <biogears/cdm/properties/SEScalarTime.swg>
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 
-%nspace biogears::SELobarPneumonia;
+%nspace BIOGEARS_NAMESPACE SELobarPneumonia;
 
-%ignore biogears::SELobarPneumonia::Unload;
-%ignore biogears::SELobarPneumonia::Load;
+%ignore BIOGEARS_NAMESPACE SELobarPneumonia::Unload;
+%ignore BIOGEARS_NAMESPACE SELobarPneumonia::Load;
 
 
 %include <biogears/cdm/patient/conditions/SELobarPneumonia.h>

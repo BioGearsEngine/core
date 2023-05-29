@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <iostream>
 // Include the various types you will be using in your code
+#include <biogears/config.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
@@ -25,7 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/string/manipulation.h>
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 ///

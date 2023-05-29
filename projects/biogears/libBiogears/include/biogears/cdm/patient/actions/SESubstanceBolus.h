@@ -93,4 +93,4 @@ protected:
   SEScalarTime m_ElapsedTime;
   SEScalarVolume m_AdministeredDose;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

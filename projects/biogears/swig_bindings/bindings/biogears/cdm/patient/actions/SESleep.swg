@@ -8,9 +8,9 @@
 %import <biogears/cdm/CommonDataModel.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SESleep;
+%nspace BIOGEARS_NAMESPACE SESleep;
 
-%ignore biogears::SESleep::Unload;
-%ignore biogears::SESleep::Load;
+%ignore BIOGEARS_NAMESPACE SESleep::Unload;
+%ignore BIOGEARS_NAMESPACE SESleep::Load;
 
 %include <biogears/cdm/patient/actions/SESleep.h>

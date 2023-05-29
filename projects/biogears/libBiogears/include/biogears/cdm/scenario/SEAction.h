@@ -74,5 +74,5 @@ inline std::ostream& operator<<(std::ostream& out, const SEAction& a)
 CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEAction*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEAction*>;
 }

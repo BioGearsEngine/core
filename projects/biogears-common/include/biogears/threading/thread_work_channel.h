@@ -33,8 +33,8 @@ OPEN_BIOGEARS_NAMESPACE
 	class ThreadWorkChannel : public mcmp::Container<std::function<Signiture>>
 		, public std::enable_shared_from_this<ThreadWorkChannel<Signiture>> {
 	public:
-		using SourcePtr = std::shared_ptr<biogears::mcmp::Source<std::function<Signiture>>>;
-		using SinkPtr = std::shared_ptr<biogears::mcmp::Sink<std::function<Signiture>>>;
+		using SourcePtr = std::shared_ptr<BIOGEARS_NAMESPACE mcmp::Source<std::function<Signiture>>>;
+		using SinkPtr = std::shared_ptr<BIOGEARS_NAMESPACE mcmp::Sink<std::function<Signiture>>>;
 
 		static auto make_shared()->std::shared_ptr<ThreadWorkChannel>;
 		bool insert(std::function<Signiture>&) final;
@@ -53,7 +53,7 @@ OPEN_BIOGEARS_NAMESPACE
 	protected:
 		ThreadWorkChannel();
 	private:
-		biogears::ConcurrentQueue<std::function<Signiture>> _queue;
+		BIOGEARS_NAMESPACE ConcurrentQueue<std::function<Signiture>> _queue;
 	};
 CLOSE_BIOGEARS_NAMESPACE
 

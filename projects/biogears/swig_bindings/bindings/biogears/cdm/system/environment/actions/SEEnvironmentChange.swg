@@ -12,15 +12,15 @@
 %import <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.swg>
 %import <biogears/cdm/system/environment/SEEnvironmentalConditions.swg>
 
-%nspace biogears::SEEnvironmentChange;
+%nspace BIOGEARS_NAMESPACE SEEnvironmentChange;
 
-%ignore biogears::SEEnvironmentChange::Unload;
-%ignore biogears::SEEnvironmentChange::Load;
+%ignore BIOGEARS_NAMESPACE SEEnvironmentChange::Unload;
+%ignore BIOGEARS_NAMESPACE SEEnvironmentChange::Load;
 
 %rename (GetConditions_config) GetConditions() const;
 
 %ignore SetConditionsFile(const std::string& name);
-%ignore biogears::SEEnvironmentChange::ToString(std::ostream& str) const;
+%ignore BIOGEARS_NAMESPACE SEEnvironmentChange::ToString(std::ostream& str) const;
 
 
 %include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>

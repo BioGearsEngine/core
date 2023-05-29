@@ -59,42 +59,42 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarLengthPerTime LengthPerTime = biogears::SEScalarLengthPerTime();
+  BIOGEARS_NAMESPACE SEScalarLengthPerTime LengthPerTime = BIOGEARS_NAMESPACE SEScalarLengthPerTime();
   auto ptr = LengthPerTime.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::LengthPerTimeUnit::IsValidUnit("m/s");
-  bool unit1 = biogears::LengthPerTimeUnit::IsValidUnit("cm/s");
-  bool unit2 = biogears::LengthPerTimeUnit::IsValidUnit("m/min");
-  bool unit3 = biogears::LengthPerTimeUnit::IsValidUnit("cm/min");
-  bool unit4 = biogears::LengthPerTimeUnit::IsValidUnit("ft/s");
-  bool unit5 = biogears::LengthPerTimeUnit::IsValidUnit("ft/min");
+  bool unit0 = BIOGEARS_NAMESPACE LengthPerTimeUnit::IsValidUnit("m/s");
+  bool unit1 = BIOGEARS_NAMESPACE LengthPerTimeUnit::IsValidUnit("cm/s");
+  bool unit2 = BIOGEARS_NAMESPACE LengthPerTimeUnit::IsValidUnit("m/min");
+  bool unit3 = BIOGEARS_NAMESPACE LengthPerTimeUnit::IsValidUnit("cm/min");
+  bool unit4 = BIOGEARS_NAMESPACE LengthPerTimeUnit::IsValidUnit("ft/s");
+  bool unit5 = BIOGEARS_NAMESPACE LengthPerTimeUnit::IsValidUnit("ft/min");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
   EXPECT_EQ(unit5, true);
-  bool unit6 = biogears::LengthPerTimeUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE LengthPerTimeUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::LengthPerTimeUnit mu0 = biogears::LengthPerTimeUnit::GetCompoundUnit("m/s");
-  biogears::LengthPerTimeUnit mu1 = biogears::LengthPerTimeUnit::GetCompoundUnit("cm/s");
-  biogears::LengthPerTimeUnit mu2 = biogears::LengthPerTimeUnit::GetCompoundUnit("m/min");
-  biogears::LengthPerTimeUnit mu3 = biogears::LengthPerTimeUnit::GetCompoundUnit("cm/min");
-  biogears::LengthPerTimeUnit mu4 = biogears::LengthPerTimeUnit::GetCompoundUnit("ft/s");
-  biogears::LengthPerTimeUnit mu5 = biogears::LengthPerTimeUnit::GetCompoundUnit("ft/min");
-  EXPECT_EQ(mu0, biogears::LengthPerTimeUnit::m_Per_s);
-  EXPECT_EQ(mu1, biogears::LengthPerTimeUnit::cm_Per_s);
-  EXPECT_EQ(mu2, biogears::LengthPerTimeUnit::m_Per_min);
-  EXPECT_EQ(mu3, biogears::LengthPerTimeUnit::cm_Per_min);
-  EXPECT_EQ(mu4, biogears::LengthPerTimeUnit::ft_Per_s);
-  EXPECT_EQ(mu5, biogears::LengthPerTimeUnit::ft_Per_min);
-  EXPECT_THROW(biogears::LengthPerTimeUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE LengthPerTimeUnit mu0 = BIOGEARS_NAMESPACE LengthPerTimeUnit::GetCompoundUnit("m/s");
+  BIOGEARS_NAMESPACE LengthPerTimeUnit mu1 = BIOGEARS_NAMESPACE LengthPerTimeUnit::GetCompoundUnit("cm/s");
+  BIOGEARS_NAMESPACE LengthPerTimeUnit mu2 = BIOGEARS_NAMESPACE LengthPerTimeUnit::GetCompoundUnit("m/min");
+  BIOGEARS_NAMESPACE LengthPerTimeUnit mu3 = BIOGEARS_NAMESPACE LengthPerTimeUnit::GetCompoundUnit("cm/min");
+  BIOGEARS_NAMESPACE LengthPerTimeUnit mu4 = BIOGEARS_NAMESPACE LengthPerTimeUnit::GetCompoundUnit("ft/s");
+  BIOGEARS_NAMESPACE LengthPerTimeUnit mu5 = BIOGEARS_NAMESPACE LengthPerTimeUnit::GetCompoundUnit("ft/min");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE LengthPerTimeUnit::m_Per_s);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE LengthPerTimeUnit::cm_Per_s);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE LengthPerTimeUnit::m_Per_min);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE LengthPerTimeUnit::cm_Per_min);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE LengthPerTimeUnit::ft_Per_s);
+  EXPECT_EQ(mu5, BIOGEARS_NAMESPACE LengthPerTimeUnit::ft_Per_min);
+  EXPECT_THROW(BIOGEARS_NAMESPACE LengthPerTimeUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

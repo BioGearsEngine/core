@@ -70,4 +70,4 @@ protected:
   SEScalar0To1* m_TBSA;
   std::vector<std::string> m_compartmentsAffected;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

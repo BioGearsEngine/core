@@ -10,12 +10,12 @@
 
 %import <biogears/cdm/properties/SEScalar.swg>
 
-%nspace biogears::SESubstanceTissuePharmacokinetics;
+%nspace BIOGEARS_NAMESPACE SESubstanceTissuePharmacokinetics;
 
-%ignore biogears::SESubstanceTissuePharmacokinetics::GetScalar(const std::string& name);
-%ignore biogears::SESubstanceTissuePharmacokinetics::Unload;
-%ignore biogears::SESubstanceTissuePharmacokinetics::Load;
+%ignore BIOGEARS_NAMESPACE SESubstanceTissuePharmacokinetics::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstanceTissuePharmacokinetics::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstanceTissuePharmacokinetics::Load;
 
-%rename (GetPartitionCoefficient_const) biogears::SESubstanceTissuePharmacokinetics::GetPartitionCoefficient() const;
+%rename (GetPartitionCoefficient_const) BIOGEARS_NAMESPACE SESubstanceTissuePharmacokinetics::GetPartitionCoefficient() const;
 
 %include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>

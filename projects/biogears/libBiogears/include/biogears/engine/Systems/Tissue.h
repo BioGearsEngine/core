@@ -37,10 +37,10 @@ class BioGears;
 CLOSE_BIOGEARS_NAMESPACE
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<biogears::SETissueCompartment*, biogears::SELiquidCompartment*>;
-BG_EXT template class BIOGEARS_API map<biogears::SELiquidCompartment*, biogears::SEFluidCircuitPath*>;
-BG_EXT template class BIOGEARS_API map<biogears::SETissueCompartment*, biogears::SEFluidCircuitPath*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*>;
+BG_EXT template class BIOGEARS_API map<BIOGEARS_NAMESPACE SETissueCompartment*, BIOGEARS_NAMESPACE SELiquidCompartment*>;
+BG_EXT template class BIOGEARS_API map<BIOGEARS_NAMESPACE SELiquidCompartment*, BIOGEARS_NAMESPACE SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API map<BIOGEARS_NAMESPACE SETissueCompartment*, BIOGEARS_NAMESPACE SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SETissueCompartment*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

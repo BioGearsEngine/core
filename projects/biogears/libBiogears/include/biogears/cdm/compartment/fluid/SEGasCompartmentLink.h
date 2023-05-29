@@ -33,9 +33,9 @@ public:
 
   virtual CDM::GasCompartmentLinkData* Unload() override;
 };
-} //namespace bigoears
+CLOSE_BIOGEARS_NAMESPACE // namespace bigoears
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentLink*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentLink*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEGasCompartmentLink*>;
+BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SEGasCompartmentLink*>;
 }

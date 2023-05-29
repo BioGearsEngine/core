@@ -11,13 +11,13 @@
 %import <biogears/cdm/scenario/SEAction.swg>
 %import <biogears/cdm/substance/SESubstanceManager.swg>
 
-%nspace biogears::SEEnvironmentAction;
+%nspace BIOGEARS_NAMESPACE SEEnvironmentAction;
 
-%ignore biogears::SEEnvironmentAction::Unload;
-%ignore biogears::SEEnvironmentAction::Load;
+%ignore BIOGEARS_NAMESPACE SEEnvironmentAction::Unload;
+%ignore BIOGEARS_NAMESPACE SEEnvironmentAction::Load;
 
-%ignore biogears::SEEnvironmentAction::newFromBind(const CDM::ActionData& action, SESubstanceManager& substances);
-%ignore biogears::SEEnvironmentAction::SetComment(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SEEnvironmentAction::newFromBind(const CDM::ActionData& action, SESubstanceManager& substances);
+%ignore BIOGEARS_NAMESPACE SEEnvironmentAction::SetComment(const std::string& name);
 
 %ignore operator<<(std::ostream& out, const SEAction& a);
 

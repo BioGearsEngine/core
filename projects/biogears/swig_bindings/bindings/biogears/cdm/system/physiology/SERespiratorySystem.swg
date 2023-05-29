@@ -19,14 +19,14 @@
 %import <biogears/cdm/properties/SEScalarFrequency.swg>
 %import <biogears/cdm/properties/SEScalarVolume.swg>
 
-%nspace biogears::SERespiratorySystem;
+%nspace BIOGEARS_NAMESPACE SERespiratorySystem;
 
-%ignore biogears::SESubstancePharmacokinetics::GetScalar(const std::string& name);
-%ignore biogears::SESubstancePharmacokinetics::Unload;
-%ignore biogears::SESubstancePharmacokinetics::Load;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Load;
 
-%rename(GetEndTidalCarbonDioxideFraction_const) biogears::SERespiratorySystem::GetEndTidalCarbonDioxideFraction() const ;
-%rename(GetInspiratoryExpiratoryRatio_const) biogears::SERespiratorySystem::GetInspiratoryExpiratoryRatio() const ;
-%rename(GetSpecificVentilation_const) biogears::SERespiratorySystem::GetSpecificVentilation() const ;
+%rename(GetEndTidalCarbonDioxideFraction_const) BIOGEARS_NAMESPACE SERespiratorySystem::GetEndTidalCarbonDioxideFraction() const ;
+%rename(GetInspiratoryExpiratoryRatio_const) BIOGEARS_NAMESPACE SERespiratorySystem::GetInspiratoryExpiratoryRatio() const ;
+%rename(GetSpecificVentilation_const) BIOGEARS_NAMESPACE SERespiratorySystem::GetSpecificVentilation() const ;
 
 %include <biogears/cdm/system/physiology/SERespiratorySystem.h>

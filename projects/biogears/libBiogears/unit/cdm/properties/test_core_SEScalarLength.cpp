@@ -59,42 +59,42 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarLength Length = biogears::SEScalarLength();
+  BIOGEARS_NAMESPACE SEScalarLength Length = BIOGEARS_NAMESPACE SEScalarLength();
   auto ptr = Length.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::LengthUnit::IsValidUnit("m");
-  bool unit1 = biogears::LengthUnit::IsValidUnit("cm");
-  bool unit2 = biogears::LengthUnit::IsValidUnit("mm");
-  bool unit3 = biogears::LengthUnit::IsValidUnit("um");
-  bool unit4 = biogears::LengthUnit::IsValidUnit("in");
-  bool unit5 = biogears::LengthUnit::IsValidUnit("ft");
+  bool unit0 = BIOGEARS_NAMESPACE LengthUnit::IsValidUnit("m");
+  bool unit1 = BIOGEARS_NAMESPACE LengthUnit::IsValidUnit("cm");
+  bool unit2 = BIOGEARS_NAMESPACE LengthUnit::IsValidUnit("mm");
+  bool unit3 = BIOGEARS_NAMESPACE LengthUnit::IsValidUnit("um");
+  bool unit4 = BIOGEARS_NAMESPACE LengthUnit::IsValidUnit("in");
+  bool unit5 = BIOGEARS_NAMESPACE LengthUnit::IsValidUnit("ft");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
   EXPECT_EQ(unit5, true);
-  bool unit6 = biogears::LengthUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE LengthUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::LengthUnit mu0 = biogears::LengthUnit::GetCompoundUnit("m");
-  biogears::LengthUnit mu1 = biogears::LengthUnit::GetCompoundUnit("cm");
-  biogears::LengthUnit mu2 = biogears::LengthUnit::GetCompoundUnit("mm");
-  biogears::LengthUnit mu3 = biogears::LengthUnit::GetCompoundUnit("um");
-  biogears::LengthUnit mu4 = biogears::LengthUnit::GetCompoundUnit("in");
-  biogears::LengthUnit mu5 = biogears::LengthUnit::GetCompoundUnit("ft");
-  EXPECT_EQ(mu0, biogears::LengthUnit::m);
-  EXPECT_EQ(mu1, biogears::LengthUnit::cm);
-  EXPECT_EQ(mu2, biogears::LengthUnit::mm);
-  EXPECT_EQ(mu3, biogears::LengthUnit::um);
-  EXPECT_EQ(mu4, biogears::LengthUnit::inch);
-  EXPECT_EQ(mu5, biogears::LengthUnit::ft);
-  EXPECT_THROW(biogears::LengthUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE LengthUnit mu0 = BIOGEARS_NAMESPACE LengthUnit::GetCompoundUnit("m");
+  BIOGEARS_NAMESPACE LengthUnit mu1 = BIOGEARS_NAMESPACE LengthUnit::GetCompoundUnit("cm");
+  BIOGEARS_NAMESPACE LengthUnit mu2 = BIOGEARS_NAMESPACE LengthUnit::GetCompoundUnit("mm");
+  BIOGEARS_NAMESPACE LengthUnit mu3 = BIOGEARS_NAMESPACE LengthUnit::GetCompoundUnit("um");
+  BIOGEARS_NAMESPACE LengthUnit mu4 = BIOGEARS_NAMESPACE LengthUnit::GetCompoundUnit("in");
+  BIOGEARS_NAMESPACE LengthUnit mu5 = BIOGEARS_NAMESPACE LengthUnit::GetCompoundUnit("ft");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE LengthUnit::m);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE LengthUnit::cm);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE LengthUnit::mm);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE LengthUnit::um);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE LengthUnit::inch);
+  EXPECT_EQ(mu5, BIOGEARS_NAMESPACE LengthUnit::ft);
+  EXPECT_THROW(BIOGEARS_NAMESPACE LengthUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

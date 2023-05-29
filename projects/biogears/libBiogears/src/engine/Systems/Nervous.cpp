@@ -1445,7 +1445,7 @@ void Nervous::CalculateSleepEffects()
 /// \details
 /// Update sleep state when action is used.
 //--------------------------------------------------------------------------------------------------
-void biogears::Nervous::UpdateSleepState()
+void BIOGEARS_NAMESPACE Nervous::UpdateSleepState()
 {
   //update state from the action
   if (m_data.GetActions().GetPatientActions().HasSleepState() && m_data.GetActions().GetPatientActions().GetSleepState()->IsActive()) {

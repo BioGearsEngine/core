@@ -51,14 +51,14 @@ protected:
   // before the destructor).
   virtual void TearDown() override;
 
-  biogears::Logger* logger;
-  biogears::SEGastrointestinalSystem* es;
+  BIOGEARS_NAMESPACE Logger* logger;
+  BIOGEARS_NAMESPACE SEGastrointestinalSystem* es;
 };
 
 void TEST_FIXTURE_NAME::SetUp()
 {
-  logger = new biogears::Logger;
-  es = new biogears::SEGastrointestinalSystem(logger);
+  logger = new BIOGEARS_NAMESPACE Logger;
+  es = new BIOGEARS_NAMESPACE SEGastrointestinalSystem(logger);
 }
 
 void TEST_FIXTURE_NAME::TearDown()
@@ -73,7 +73,7 @@ TEST_F(TEST_FIXTURE_NAME, ChymeAbsorptionRate)
   EXPECT_TRUE( es->HasChymeAbsorptionRate());
   EXPECT_EQ(1.0, es->GetChymeAbsorptionRate(VolumePerTimeUnit::L_Per_day));
 
-  const biogears::SEGastrointestinalSystem ces(logger);
+  const BIOGEARS_NAMESPACE SEGastrointestinalSystem ces(logger);
   EXPECT_FALSE( ces.HasChymeAbsorptionRate());
   auto dvalue = ces.GetChymeAbsorptionRate(VolumePerTimeUnit::L_Per_day);
   EXPECT_NE(dvalue, dvalue);
@@ -84,7 +84,7 @@ TEST_F(TEST_FIXTURE_NAME, StomachContents)
   es->GetStomachContents();
   EXPECT_TRUE( es->HasStomachContents());
 
-  const biogears::SEGastrointestinalSystem ces(logger);
+  const BIOGEARS_NAMESPACE SEGastrointestinalSystem ces(logger);
   EXPECT_FALSE( ces.HasStomachContents());
   auto dvalue = ces.GetStomachContents();
   EXPECT_EQ(NULL, dvalue);

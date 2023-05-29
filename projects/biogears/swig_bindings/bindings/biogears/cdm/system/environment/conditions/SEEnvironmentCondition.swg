@@ -11,10 +11,10 @@
 %import <biogears/cdm/scenario/SECondition.swg>
 %import <biogears/cdm/substance/SESubstanceManager.swg>
 
-%nspace biogears::SEEnvironmentCondition;
+%nspace BIOGEARS_NAMESPACE SEEnvironmentCondition;
 
-%ignore biogears::SEEnvironmentCondition::Unload;
-%ignore biogears::SEEnvironmentCondition::Load;
+%ignore BIOGEARS_NAMESPACE SEEnvironmentCondition::Unload;
+%ignore BIOGEARS_NAMESPACE SEEnvironmentCondition::Load;
 
 %ignore SEEnvironmentCondition::ToString(std::ostream& str) const;
 

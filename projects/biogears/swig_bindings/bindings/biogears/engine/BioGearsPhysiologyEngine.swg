@@ -25,6 +25,8 @@
 #endif 
 %include "exception.i"
 
-namespace biogears {
-biogears::CreateBioGearsEngine(const std::string working_dir, biogears::Logger* logger);
-}
+%include <biogears/config.h>
+
+OPEN_BIOGEARS_NAMESPACE
+BIOGEARS_NAMESPACE CreateBioGearsEngine(const std::string working_dir, BIOGEARS_NAMESPACE Logger* logger);
+CLOSE_BIOGEARS_NAMESPACE

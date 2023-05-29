@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <iostream>
 #include <stdexcept>
 
+#include <biogears/config.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
@@ -34,7 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/string/manipulation.h>
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 //This method uses the Threaded BioGears functionality
 int HowToDynamicSepsis()
 {

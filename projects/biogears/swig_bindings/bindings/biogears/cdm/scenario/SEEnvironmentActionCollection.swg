@@ -16,10 +16,10 @@
 %import <biogears/cdm/system/environment/actions/SEEnvironmentChange.swg>
 %import <biogears/cdm/system/environment/actions/SEThermalApplication.swg>
 
-%nspace biogears::SEPatientActionCollection;
+%nspace BIOGEARS_NAMESPACE SEPatientActionCollection;
 
-%ignore biogears::SEEnvironmentActionCollection::Unload;
-%ignore biogears::SEEnvironmentActionCollection::Load;
+%ignore BIOGEARS_NAMESPACE SEEnvironmentActionCollection::Unload;
+%ignore BIOGEARS_NAMESPACE SEEnvironmentActionCollection::Load;
 
 %ignore ProcessAction(const CDM::EnvironmentActionData& in);
 

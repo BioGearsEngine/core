@@ -59,21 +59,21 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarMassPerTime MassPerTime = biogears::SEScalarMassPerTime();
+  BIOGEARS_NAMESPACE SEScalarMassPerTime MassPerTime = BIOGEARS_NAMESPACE SEScalarMassPerTime();
   auto ptr = MassPerTime.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0  = biogears::MassPerTimeUnit::IsValidUnit("g/s");
-  bool unit1  = biogears::MassPerTimeUnit::IsValidUnit("g/min");
-  bool unit2  = biogears::MassPerTimeUnit::IsValidUnit("g/day");
-  bool unit3  = biogears::MassPerTimeUnit::IsValidUnit("mg/s");
-  bool unit4  = biogears::MassPerTimeUnit::IsValidUnit("mg/min");
-  bool unit5  = biogears::MassPerTimeUnit::IsValidUnit("ug/s");
-  bool unit6  = biogears::MassPerTimeUnit::IsValidUnit("kg/s");
-  bool unit7  = biogears::MassPerTimeUnit::IsValidUnit("ug/min");
+  bool unit0  = BIOGEARS_NAMESPACE MassPerTimeUnit::IsValidUnit("g/s");
+  bool unit1  = BIOGEARS_NAMESPACE MassPerTimeUnit::IsValidUnit("g/min");
+  bool unit2  = BIOGEARS_NAMESPACE MassPerTimeUnit::IsValidUnit("g/day");
+  bool unit3  = BIOGEARS_NAMESPACE MassPerTimeUnit::IsValidUnit("mg/s");
+  bool unit4  = BIOGEARS_NAMESPACE MassPerTimeUnit::IsValidUnit("mg/min");
+  bool unit5  = BIOGEARS_NAMESPACE MassPerTimeUnit::IsValidUnit("ug/s");
+  bool unit6  = BIOGEARS_NAMESPACE MassPerTimeUnit::IsValidUnit("kg/s");
+  bool unit7  = BIOGEARS_NAMESPACE MassPerTimeUnit::IsValidUnit("ug/min");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
@@ -82,27 +82,27 @@ TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
   EXPECT_EQ(unit5, true);
   EXPECT_EQ(unit6, true);
   EXPECT_EQ(unit7, true);
-  bool unit11 = biogears::MassPerTimeUnit::IsValidUnit("DEADBEEF");
+  bool unit11 = BIOGEARS_NAMESPACE MassPerTimeUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit11, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::MassPerTimeUnit mu0  = biogears::MassPerTimeUnit::GetCompoundUnit("g/s");
-  biogears::MassPerTimeUnit mu1  = biogears::MassPerTimeUnit::GetCompoundUnit("g/min");
-  biogears::MassPerTimeUnit mu2  = biogears::MassPerTimeUnit::GetCompoundUnit("g/day");
-  biogears::MassPerTimeUnit mu3  = biogears::MassPerTimeUnit::GetCompoundUnit("mg/s");
-  biogears::MassPerTimeUnit mu4  = biogears::MassPerTimeUnit::GetCompoundUnit("mg/min");
-  biogears::MassPerTimeUnit mu5  = biogears::MassPerTimeUnit::GetCompoundUnit("ug/s");
-  biogears::MassPerTimeUnit mu6  = biogears::MassPerTimeUnit::GetCompoundUnit("kg/s");
-  biogears::MassPerTimeUnit mu7  = biogears::MassPerTimeUnit::GetCompoundUnit("ug/min");
-  EXPECT_EQ(mu0, biogears::MassPerTimeUnit::g_Per_s);
-  EXPECT_EQ(mu1, biogears::MassPerTimeUnit::g_Per_min);
-  EXPECT_EQ(mu2, biogears::MassPerTimeUnit::g_Per_day);
-  EXPECT_EQ(mu3, biogears::MassPerTimeUnit::mg_Per_s);
-  EXPECT_EQ(mu4, biogears::MassPerTimeUnit::mg_Per_min);
-  EXPECT_EQ(mu5, biogears::MassPerTimeUnit::ug_Per_s);
-  EXPECT_EQ(mu6, biogears::MassPerTimeUnit::kg_Per_s);
-  EXPECT_EQ(mu7, biogears::MassPerTimeUnit::ug_Per_min);
-  EXPECT_THROW(biogears::MassPerTimeUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE MassPerTimeUnit mu0  = BIOGEARS_NAMESPACE MassPerTimeUnit::GetCompoundUnit("g/s");
+  BIOGEARS_NAMESPACE MassPerTimeUnit mu1  = BIOGEARS_NAMESPACE MassPerTimeUnit::GetCompoundUnit("g/min");
+  BIOGEARS_NAMESPACE MassPerTimeUnit mu2  = BIOGEARS_NAMESPACE MassPerTimeUnit::GetCompoundUnit("g/day");
+  BIOGEARS_NAMESPACE MassPerTimeUnit mu3  = BIOGEARS_NAMESPACE MassPerTimeUnit::GetCompoundUnit("mg/s");
+  BIOGEARS_NAMESPACE MassPerTimeUnit mu4  = BIOGEARS_NAMESPACE MassPerTimeUnit::GetCompoundUnit("mg/min");
+  BIOGEARS_NAMESPACE MassPerTimeUnit mu5  = BIOGEARS_NAMESPACE MassPerTimeUnit::GetCompoundUnit("ug/s");
+  BIOGEARS_NAMESPACE MassPerTimeUnit mu6  = BIOGEARS_NAMESPACE MassPerTimeUnit::GetCompoundUnit("kg/s");
+  BIOGEARS_NAMESPACE MassPerTimeUnit mu7  = BIOGEARS_NAMESPACE MassPerTimeUnit::GetCompoundUnit("ug/min");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE MassPerTimeUnit::g_Per_s);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE MassPerTimeUnit::g_Per_min);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE MassPerTimeUnit::g_Per_day);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE MassPerTimeUnit::mg_Per_s);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE MassPerTimeUnit::mg_Per_min);
+  EXPECT_EQ(mu5, BIOGEARS_NAMESPACE MassPerTimeUnit::ug_Per_s);
+  EXPECT_EQ(mu6, BIOGEARS_NAMESPACE MassPerTimeUnit::kg_Per_s);
+  EXPECT_EQ(mu7, BIOGEARS_NAMESPACE MassPerTimeUnit::ug_Per_min);
+  EXPECT_THROW(BIOGEARS_NAMESPACE MassPerTimeUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

@@ -59,34 +59,34 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarAreaPerTimePressure AreaPerTimePressure = biogears::SEScalarAreaPerTimePressure();
+  BIOGEARS_NAMESPACE SEScalarAreaPerTimePressure AreaPerTimePressure = BIOGEARS_NAMESPACE SEScalarAreaPerTimePressure();
   auto ptr = AreaPerTimePressure.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::AreaPerTimePressureUnit::IsValidUnit("m^2/s mmHg");
-  bool unit1 = biogears::AreaPerTimePressureUnit::IsValidUnit("cm^2/s mmHg");
-  bool unit2 = biogears::AreaPerTimePressureUnit::IsValidUnit("m^2/min mmHg");
-  bool unit3 = biogears::AreaPerTimePressureUnit::IsValidUnit("cm^2/min mmHg");
+  bool unit0 = BIOGEARS_NAMESPACE AreaPerTimePressureUnit::IsValidUnit("m^2/s mmHg");
+  bool unit1 = BIOGEARS_NAMESPACE AreaPerTimePressureUnit::IsValidUnit("cm^2/s mmHg");
+  bool unit2 = BIOGEARS_NAMESPACE AreaPerTimePressureUnit::IsValidUnit("m^2/min mmHg");
+  bool unit3 = BIOGEARS_NAMESPACE AreaPerTimePressureUnit::IsValidUnit("cm^2/min mmHg");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
-  bool unit6 = biogears::AreaPerTimePressureUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE AreaPerTimePressureUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::AreaPerTimePressureUnit mu0 = biogears::AreaPerTimePressureUnit::GetCompoundUnit("m^2/s mmHg");
-  biogears::AreaPerTimePressureUnit mu1 = biogears::AreaPerTimePressureUnit::GetCompoundUnit("cm^2/s mmHg");
-  biogears::AreaPerTimePressureUnit mu2 = biogears::AreaPerTimePressureUnit::GetCompoundUnit("m^2/min mmHg");
-  biogears::AreaPerTimePressureUnit mu3 = biogears::AreaPerTimePressureUnit::GetCompoundUnit("cm^2/min mmHg");
-  EXPECT_EQ(mu0, biogears::AreaPerTimePressureUnit::m2_Per_s_mmHg);
-  EXPECT_EQ(mu1, biogears::AreaPerTimePressureUnit::cm2_Per_s_mmHg);
-  EXPECT_EQ(mu2, biogears::AreaPerTimePressureUnit::m2_Per_min_mmHg);
-  EXPECT_EQ(mu3, biogears::AreaPerTimePressureUnit::cm2_Per_min_mmHg);
-  EXPECT_THROW(biogears::AreaPerTimePressureUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE AreaPerTimePressureUnit mu0 = BIOGEARS_NAMESPACE AreaPerTimePressureUnit::GetCompoundUnit("m^2/s mmHg");
+  BIOGEARS_NAMESPACE AreaPerTimePressureUnit mu1 = BIOGEARS_NAMESPACE AreaPerTimePressureUnit::GetCompoundUnit("cm^2/s mmHg");
+  BIOGEARS_NAMESPACE AreaPerTimePressureUnit mu2 = BIOGEARS_NAMESPACE AreaPerTimePressureUnit::GetCompoundUnit("m^2/min mmHg");
+  BIOGEARS_NAMESPACE AreaPerTimePressureUnit mu3 = BIOGEARS_NAMESPACE AreaPerTimePressureUnit::GetCompoundUnit("cm^2/min mmHg");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE AreaPerTimePressureUnit::m2_Per_s_mmHg);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE AreaPerTimePressureUnit::cm2_Per_s_mmHg);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE AreaPerTimePressureUnit::m2_Per_min_mmHg);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE AreaPerTimePressureUnit::cm2_Per_min_mmHg);
+  EXPECT_THROW(BIOGEARS_NAMESPACE AreaPerTimePressureUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

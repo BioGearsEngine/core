@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 // Include the various types you will be using in your code
+#include <biogears/config.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
@@ -26,7 +27,7 @@ specific language governing permissions and limitations under the License.
 
 #include <sstream>
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Usage for applying a Hemorrhage insult to the patient and also demonstrate how injury code can be used to initiate a hemorrhage if desired

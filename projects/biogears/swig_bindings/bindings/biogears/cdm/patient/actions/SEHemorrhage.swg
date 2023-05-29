@@ -11,16 +11,16 @@
 %import <biogears/cdm/properties/SEScalarVolumePerTime.swg>
 %import <biogears/cdm/properties/SEScalarFlowResistance.swg>
 
-%nspace biogears::SEHemorrhage;
+%nspace BIOGEARS_NAMESPACE SEHemorrhage;
 
-%ignore biogears::SEHemorrhage::Unload;
-%ignore biogears::SEHemorrhage::Load;
+%ignore BIOGEARS_NAMESPACE SEHemorrhage::Unload;
+%ignore BIOGEARS_NAMESPACE SEHemorrhage::Load;
 
-%ignore biogears::SEHemorrhage::SetCompartment(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEHemorrhage::SetCompartment(std::string const &);
 
 
-%rename(GetMCIS_Const) biogears::SEHemorrhage::GetMCIS() const;
-%rename(GetInitialRate_Const) biogears::SEHemorrhage::GetInitialRate() const;
-%rename(GetBleedResistance_Const) biogears::SEHemorrhage::GetBleedResistance() const;
+%rename(GetMCIS_Const) BIOGEARS_NAMESPACE SEHemorrhage::GetMCIS() const;
+%rename(GetInitialRate_Const) BIOGEARS_NAMESPACE SEHemorrhage::GetInitialRate() const;
+%rename(GetBleedResistance_Const) BIOGEARS_NAMESPACE SEHemorrhage::GetBleedResistance() const;
 
 %include <biogears/cdm/patient/actions/SEHemorrhage.h>

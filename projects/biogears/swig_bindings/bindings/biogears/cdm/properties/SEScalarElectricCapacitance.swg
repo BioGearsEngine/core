@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<ElectricCapacitanceUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<ElectricCapacitanceUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const ElectricCapacitanceUnit&) const;
 %rename(NotEquals)  operator!=(const ElectricCapacitanceUnit&) const;
 %rename(Equals)  operator==(const SEScalarElectricCapacitance&) const;
 %rename(NotEquals)  operator!=(const SEScalarElectricCapacitance&) const;  
 
-%ignore biogears::ElectricCapacitanceUnit::ElectricCapacitanceUnit(std::string const &);
-%ignore biogears::ElectricCapacitanceUnit::IsValidUnit(std::string const &);
-%ignore biogears::ElectricCapacitanceUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricCapacitanceUnit::ElectricCapacitanceUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricCapacitanceUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE ElectricCapacitanceUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarElectricCapacitance;
-%nspace biogears::ElectricCapacitanceUnit;
-%nspace biogears::SEScalarQuantity<ElectricCapacitanceUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarElectricCapacitance;
+%nspace BIOGEARS_NAMESPACE ElectricCapacitanceUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<ElectricCapacitanceUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class ElectricCapacitanceUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::ElectricCapacitanceUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricCapacitanceUnit>;
 
-%ignore  biogears::SEScalarQuantity< ElectricCapacitanceUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< ElectricCapacitanceUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< ElectricCapacitanceUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< ElectricCapacitanceUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< ElectricCapacitanceUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< ElectricCapacitanceUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricCapacitanceUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricCapacitanceUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricCapacitanceUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricCapacitanceUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricCapacitanceUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricCapacitanceUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricCapacitanceUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricCapacitanceUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricCapacitanceUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::ElectricCapacitanceUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricCapacitanceUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricCapacitanceUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricCapacitanceUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricCapacitanceUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< ElectricCapacitanceUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< ElectricCapacitanceUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricCapacitanceUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< ElectricCapacitanceUnit >::operator!=;
 
-%template(QuantityElectricCapacitance) biogears::SEScalarQuantity<biogears::ElectricCapacitanceUnit>;
+%template(QuantityElectricCapacitance) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE ElectricCapacitanceUnit>;
 
 %include <biogears/cdm/properties/SEScalarElectricCapacitance.h>
 

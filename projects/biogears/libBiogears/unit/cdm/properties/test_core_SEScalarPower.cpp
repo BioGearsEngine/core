@@ -59,42 +59,42 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarPower Power = biogears::SEScalarPower();
+  BIOGEARS_NAMESPACE SEScalarPower Power = BIOGEARS_NAMESPACE SEScalarPower();
   auto ptr = Power.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::PowerUnit::IsValidUnit("W");
-  bool unit1 = biogears::PowerUnit::IsValidUnit("kcal/s");
-  bool unit2 = biogears::PowerUnit::IsValidUnit("kcal/hr");
-  bool unit3 = biogears::PowerUnit::IsValidUnit("kcal/day");
-  bool unit4 = biogears::PowerUnit::IsValidUnit("J/s");
-  bool unit5 = biogears::PowerUnit::IsValidUnit("BTU/hr");
+  bool unit0 = BIOGEARS_NAMESPACE PowerUnit::IsValidUnit("W");
+  bool unit1 = BIOGEARS_NAMESPACE PowerUnit::IsValidUnit("kcal/s");
+  bool unit2 = BIOGEARS_NAMESPACE PowerUnit::IsValidUnit("kcal/hr");
+  bool unit3 = BIOGEARS_NAMESPACE PowerUnit::IsValidUnit("kcal/day");
+  bool unit4 = BIOGEARS_NAMESPACE PowerUnit::IsValidUnit("J/s");
+  bool unit5 = BIOGEARS_NAMESPACE PowerUnit::IsValidUnit("BTU/hr");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
   EXPECT_EQ(unit5, true);
-  bool unit6 = biogears::PowerUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE PowerUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::PowerUnit mu0 = biogears::PowerUnit::GetCompoundUnit("W");
-  biogears::PowerUnit mu1 = biogears::PowerUnit::GetCompoundUnit("kcal/s");
-  biogears::PowerUnit mu2 = biogears::PowerUnit::GetCompoundUnit("kcal/hr");
-  biogears::PowerUnit mu3 = biogears::PowerUnit::GetCompoundUnit("kcal/day");
-  biogears::PowerUnit mu4 = biogears::PowerUnit::GetCompoundUnit("J/s");
-  biogears::PowerUnit mu5 = biogears::PowerUnit::GetCompoundUnit("BTU/hr");
-  EXPECT_EQ(mu0, biogears::PowerUnit::W);
-  EXPECT_EQ(mu1, biogears::PowerUnit::kcal_Per_s);
-  EXPECT_EQ(mu2, biogears::PowerUnit::kcal_Per_hr);
-  EXPECT_EQ(mu3, biogears::PowerUnit::kcal_Per_day);
-  EXPECT_EQ(mu4, biogears::PowerUnit::J_Per_s);
-  EXPECT_EQ(mu5, biogears::PowerUnit::BTU_Per_hr);
-  EXPECT_THROW(biogears::PowerUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE PowerUnit mu0 = BIOGEARS_NAMESPACE PowerUnit::GetCompoundUnit("W");
+  BIOGEARS_NAMESPACE PowerUnit mu1 = BIOGEARS_NAMESPACE PowerUnit::GetCompoundUnit("kcal/s");
+  BIOGEARS_NAMESPACE PowerUnit mu2 = BIOGEARS_NAMESPACE PowerUnit::GetCompoundUnit("kcal/hr");
+  BIOGEARS_NAMESPACE PowerUnit mu3 = BIOGEARS_NAMESPACE PowerUnit::GetCompoundUnit("kcal/day");
+  BIOGEARS_NAMESPACE PowerUnit mu4 = BIOGEARS_NAMESPACE PowerUnit::GetCompoundUnit("J/s");
+  BIOGEARS_NAMESPACE PowerUnit mu5 = BIOGEARS_NAMESPACE PowerUnit::GetCompoundUnit("BTU/hr");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE PowerUnit::W);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE PowerUnit::kcal_Per_s);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE PowerUnit::kcal_Per_hr);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE PowerUnit::kcal_Per_day);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE PowerUnit::J_Per_s);
+  EXPECT_EQ(mu5, BIOGEARS_NAMESPACE PowerUnit::BTU_Per_hr);
+  EXPECT_THROW(BIOGEARS_NAMESPACE PowerUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

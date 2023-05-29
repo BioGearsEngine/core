@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<MassPerAreaTimeUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<MassPerAreaTimeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const MassPerAreaTimeUnit&) const;
 %rename(NotEquals)  operator!=(const MassPerAreaTimeUnit&) const;
 %rename(Equals)  operator==(const SEScalarMassPerAreaTime&) const;
 %rename(NotEquals)  operator!=(const SEScalarMassPerAreaTime&) const;  
 
-%ignore biogears::MassPerAreaTimeUnit::MassPerAreaTimeUnit(std::string const &);
-%ignore biogears::MassPerAreaTimeUnit::IsValidUnit(std::string const &);
-%ignore biogears::MassPerAreaTimeUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE MassPerAreaTimeUnit::MassPerAreaTimeUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE MassPerAreaTimeUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE MassPerAreaTimeUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarMassPerAreaTime;
-%nspace biogears::MassPerAreaTimeUnit;
-%nspace biogears::SEScalarQuantity<MassPerAreaTimeUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarMassPerAreaTime;
+%nspace BIOGEARS_NAMESPACE MassPerAreaTimeUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<MassPerAreaTimeUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class MassPerAreaTimeUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::MassPerAreaTimeUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerAreaTimeUnit>;
 
-%ignore  biogears::SEScalarQuantity< MassPerAreaTimeUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< MassPerAreaTimeUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< MassPerAreaTimeUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< MassPerAreaTimeUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< MassPerAreaTimeUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< MassPerAreaTimeUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerAreaTimeUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerAreaTimeUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerAreaTimeUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerAreaTimeUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerAreaTimeUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerAreaTimeUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerAreaTimeUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerAreaTimeUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerAreaTimeUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerAreaTimeUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerAreaTimeUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerAreaTimeUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerAreaTimeUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerAreaTimeUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< MassPerAreaTimeUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< MassPerAreaTimeUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerAreaTimeUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerAreaTimeUnit >::operator!=;
 
-%template(QuantityMassPerAreaTime) biogears::SEScalarQuantity<biogears::MassPerAreaTimeUnit>;
+%template(QuantityMassPerAreaTime) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerAreaTimeUnit>;
 
 %include <biogears/cdm/properties/SEScalarMassPerAreaTime.h>
 

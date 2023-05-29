@@ -23,15 +23,15 @@
 %import <biogears/cdm/properties/SEScalarOsmolality.swg>
 %import <biogears/cdm/properties/SEScalarMassPerVolume.swg>
 
-%nspace biogears::SERenalSystem;
+%nspace BIOGEARS_NAMESPACE SERenalSystem;
 
-%ignore biogears::SESubstancePharmacokinetics::GetScalar(const std::string& name);
-%ignore biogears::SESubstancePharmacokinetics::Unload;
-%ignore biogears::SESubstancePharmacokinetics::Load;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Load;
 
-%rename (GetFiltrationFraction_const) biogears::SERenalSystem::GetFiltrationFraction() const;
-%rename (GetLeftFiltrationFraction_const) biogears::SERenalSystem::GetLeftFiltrationFraction() const ;
-%rename (GetRightFiltrationFraction_const) biogears::SERenalSystem::GetRightFiltrationFraction() const;
-%rename (GetUrineSpecificGravity_const) biogears::SERenalSystem::GetUrineSpecificGravity() const ;
+%rename (GetFiltrationFraction_const) BIOGEARS_NAMESPACE SERenalSystem::GetFiltrationFraction() const;
+%rename (GetLeftFiltrationFraction_const) BIOGEARS_NAMESPACE SERenalSystem::GetLeftFiltrationFraction() const ;
+%rename (GetRightFiltrationFraction_const) BIOGEARS_NAMESPACE SERenalSystem::GetRightFiltrationFraction() const;
+%rename (GetUrineSpecificGravity_const) BIOGEARS_NAMESPACE SERenalSystem::GetUrineSpecificGravity() const ;
 
 %include <biogears/cdm/system/physiology/SERenalSystem.h>

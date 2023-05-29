@@ -59,38 +59,38 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarFlowResistance FlowResistance = biogears::SEScalarFlowResistance();
+  BIOGEARS_NAMESPACE SEScalarFlowResistance FlowResistance = BIOGEARS_NAMESPACE SEScalarFlowResistance();
   auto ptr = FlowResistance.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::FlowResistanceUnit::IsValidUnit("cmH2O s/L");
-  bool unit1 = biogears::FlowResistanceUnit::IsValidUnit("mmHg s/mL");
-  bool unit2 = biogears::FlowResistanceUnit::IsValidUnit("mmHg min/mL");
-  bool unit3 = biogears::FlowResistanceUnit::IsValidUnit("mmHg min/L");
-  bool unit4 = biogears::FlowResistanceUnit::IsValidUnit("Pa s/m^3");
+  bool unit0 = BIOGEARS_NAMESPACE FlowResistanceUnit::IsValidUnit("cmH2O s/L");
+  bool unit1 = BIOGEARS_NAMESPACE FlowResistanceUnit::IsValidUnit("mmHg s/mL");
+  bool unit2 = BIOGEARS_NAMESPACE FlowResistanceUnit::IsValidUnit("mmHg min/mL");
+  bool unit3 = BIOGEARS_NAMESPACE FlowResistanceUnit::IsValidUnit("mmHg min/L");
+  bool unit4 = BIOGEARS_NAMESPACE FlowResistanceUnit::IsValidUnit("Pa s/m^3");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
-  bool unit6 = biogears::FlowResistanceUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE FlowResistanceUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::FlowResistanceUnit mu0 = biogears::FlowResistanceUnit::GetCompoundUnit("cmH2O s/L");
-  biogears::FlowResistanceUnit mu1 = biogears::FlowResistanceUnit::GetCompoundUnit("mmHg s/mL");
-  biogears::FlowResistanceUnit mu2 = biogears::FlowResistanceUnit::GetCompoundUnit("mmHg min/mL");
-  biogears::FlowResistanceUnit mu3 = biogears::FlowResistanceUnit::GetCompoundUnit("mmHg min/L");
-  biogears::FlowResistanceUnit mu4 = biogears::FlowResistanceUnit::GetCompoundUnit("Pa s/m^3");
-  EXPECT_EQ(mu0, biogears::FlowResistanceUnit::cmH2O_s_Per_L);
-  EXPECT_EQ(mu1, biogears::FlowResistanceUnit::mmHg_s_Per_mL);
-  EXPECT_EQ(mu2, biogears::FlowResistanceUnit::mmHg_min_Per_mL);
-  EXPECT_EQ(mu3, biogears::FlowResistanceUnit::mmHg_min_Per_L);
-  EXPECT_EQ(mu4, biogears::FlowResistanceUnit::Pa_s_Per_m3);
-  EXPECT_THROW(biogears::FlowResistanceUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE FlowResistanceUnit mu0 = BIOGEARS_NAMESPACE FlowResistanceUnit::GetCompoundUnit("cmH2O s/L");
+  BIOGEARS_NAMESPACE FlowResistanceUnit mu1 = BIOGEARS_NAMESPACE FlowResistanceUnit::GetCompoundUnit("mmHg s/mL");
+  BIOGEARS_NAMESPACE FlowResistanceUnit mu2 = BIOGEARS_NAMESPACE FlowResistanceUnit::GetCompoundUnit("mmHg min/mL");
+  BIOGEARS_NAMESPACE FlowResistanceUnit mu3 = BIOGEARS_NAMESPACE FlowResistanceUnit::GetCompoundUnit("mmHg min/L");
+  BIOGEARS_NAMESPACE FlowResistanceUnit mu4 = BIOGEARS_NAMESPACE FlowResistanceUnit::GetCompoundUnit("Pa s/m^3");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE FlowResistanceUnit::cmH2O_s_Per_L);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE FlowResistanceUnit::mmHg_s_Per_mL);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE FlowResistanceUnit::mmHg_min_Per_mL);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE FlowResistanceUnit::mmHg_min_Per_L);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE FlowResistanceUnit::Pa_s_Per_m3);
+  EXPECT_THROW(BIOGEARS_NAMESPACE FlowResistanceUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

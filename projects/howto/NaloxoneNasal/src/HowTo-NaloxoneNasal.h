@@ -36,7 +36,7 @@ public:
   void FluidLoading(std::string overdoseSubstance, double opioidDose);
 
 
-  biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
+  BIOGEARS_NAMESPACE Logger* GetLogger() { return m_bg->GetLogger(); }
 
   protected:
   void AdvanceTime();
@@ -46,10 +46,10 @@ public:
   std::mutex m_mutex;
   bool m_runThread;
 
-  std::unique_ptr<biogears::PhysiologyEngine> m_bg;
+  std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine> m_bg;
 
-  biogears::SESubstanceInfusion* m_opioid;
-  biogears::SESubstanceNasalDose* m_naloxone;
+  BIOGEARS_NAMESPACE SESubstanceInfusion* m_opioid;
+  BIOGEARS_NAMESPACE SESubstanceNasalDose* m_naloxone;
   double m_totalNaloxone_mg;
   //fluidType fluid = ringers; //set the type of fluid here
 

@@ -58,4 +58,4 @@ inline std::ostream& operator<<(std::ostream& out, const SEConsciousRespirationC
   c.ToString(out);
   return out;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/TimingProfile.h>
 
 namespace std {
-template class map<string, biogears::Timer>;
+template class map<string, BIOGEARS_NAMESPACE Timer>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

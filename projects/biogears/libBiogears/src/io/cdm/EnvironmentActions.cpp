@@ -75,15 +75,15 @@ namespace io {
   //-----------------------------------------------------------------------------
   void EnvironmentActions::Copy(const SEEnvironmentAction& in, SEEnvironmentAction& out)
   {
-    ::biogears::io::Copy<SEEnvironmentAction, CDM::EnvironmentActionData>(in, out);
+    ::BIOGEARS_NAMESPACE io::Copy<SEEnvironmentAction, CDM::EnvironmentActionData>(in, out);
   }
   void EnvironmentActions::Copy(const SEEnvironmentChange& in, SEEnvironmentChange& out)
   {
-    ::biogears::io::Copy<SEEnvironmentChange, CDM::EnvironmentChangeData>(in, out);
+    ::BIOGEARS_NAMESPACE io::Copy<SEEnvironmentChange, CDM::EnvironmentChangeData>(in, out);
   }
   void EnvironmentActions::Copy(const SEThermalApplication& in, SEThermalApplication& out)
   {
-    ::biogears::io::Copy<SEThermalApplication, CDM::ThermalApplicationData>(in, out);
+    ::BIOGEARS_NAMESPACE io::Copy<SEThermalApplication, CDM::ThermalApplicationData>(in, out);
   }
 }
   CLOSE_BIOGEARS_NAMESPACE

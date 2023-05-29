@@ -59,26 +59,26 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarPressurePerVolume PressurePerVolume = biogears::SEScalarPressurePerVolume();
+  BIOGEARS_NAMESPACE SEScalarPressurePerVolume PressurePerVolume = BIOGEARS_NAMESPACE SEScalarPressurePerVolume();
   auto ptr = PressurePerVolume.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::PressurePerVolumeUnit::IsValidUnit("mmHg/mL");
-  bool unit1 = biogears::PressurePerVolumeUnit::IsValidUnit("cmH2O/mL");
+  bool unit0 = BIOGEARS_NAMESPACE PressurePerVolumeUnit::IsValidUnit("mmHg/mL");
+  bool unit1 = BIOGEARS_NAMESPACE PressurePerVolumeUnit::IsValidUnit("cmH2O/mL");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
-  bool unit5 = biogears::PressurePerVolumeUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE PressurePerVolumeUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::PressurePerVolumeUnit mu0 = biogears::PressurePerVolumeUnit::GetCompoundUnit("mmHg/mL");
-  biogears::PressurePerVolumeUnit mu1 = biogears::PressurePerVolumeUnit::GetCompoundUnit("cmH2O/mL");
-  EXPECT_EQ(mu0, biogears::PressurePerVolumeUnit::mmHg_Per_mL);
-  EXPECT_EQ(mu1, biogears::PressurePerVolumeUnit::cmH2O_Per_mL);
-  EXPECT_THROW(biogears::PressurePerVolumeUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE PressurePerVolumeUnit mu0 = BIOGEARS_NAMESPACE PressurePerVolumeUnit::GetCompoundUnit("mmHg/mL");
+  BIOGEARS_NAMESPACE PressurePerVolumeUnit mu1 = BIOGEARS_NAMESPACE PressurePerVolumeUnit::GetCompoundUnit("cmH2O/mL");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE PressurePerVolumeUnit::mmHg_Per_mL);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE PressurePerVolumeUnit::cmH2O_Per_mL);
+  EXPECT_THROW(BIOGEARS_NAMESPACE PressurePerVolumeUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

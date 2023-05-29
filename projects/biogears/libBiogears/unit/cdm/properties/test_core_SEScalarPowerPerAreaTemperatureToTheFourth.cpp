@@ -59,22 +59,22 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarPowerPerAreaTemperatureToTheFourth PowerPerAreaTemperatureToTheFourth = biogears::SEScalarPowerPerAreaTemperatureToTheFourth();
+  BIOGEARS_NAMESPACE SEScalarPowerPerAreaTemperatureToTheFourth PowerPerAreaTemperatureToTheFourth = BIOGEARS_NAMESPACE SEScalarPowerPerAreaTemperatureToTheFourth();
   auto ptr = PowerPerAreaTemperatureToTheFourth.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::PowerPerAreaTemperatureToTheFourthUnit::IsValidUnit("W/ m^2 K^4");
+  bool unit0 = BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit::IsValidUnit("W/ m^2 K^4");
   EXPECT_EQ(unit0, true);
-  bool unit6 = biogears::PowerPerAreaTemperatureToTheFourthUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::PowerPerAreaTemperatureToTheFourthUnit mu0 = biogears::PowerPerAreaTemperatureToTheFourthUnit::GetCompoundUnit("W/ m^2 K^4");
-  EXPECT_EQ(mu0, biogears::PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4);
-  EXPECT_THROW(biogears::PowerPerAreaTemperatureToTheFourthUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit mu0 = BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit::GetCompoundUnit("W/ m^2 K^4");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4);
+  EXPECT_THROW(BIOGEARS_NAMESPACE PowerPerAreaTemperatureToTheFourthUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

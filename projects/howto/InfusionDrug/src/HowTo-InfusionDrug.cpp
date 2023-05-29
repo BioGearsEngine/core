@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 
 // Include the various types you will be using in your code
+#include <biogears/config.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
@@ -29,7 +30,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Usage for adminstering a substance to the patient via a continuous infusion

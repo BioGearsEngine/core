@@ -59,26 +59,26 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarEnergyPerAmount EnergyPerAmount = biogears::SEScalarEnergyPerAmount();
+  BIOGEARS_NAMESPACE SEScalarEnergyPerAmount EnergyPerAmount = BIOGEARS_NAMESPACE SEScalarEnergyPerAmount();
   auto ptr = EnergyPerAmount.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::EnergyPerAmountUnit::IsValidUnit("kcal/mol");
-  bool unit1 = biogears::EnergyPerAmountUnit::IsValidUnit("kJ/mol");
+  bool unit0 = BIOGEARS_NAMESPACE EnergyPerAmountUnit::IsValidUnit("kcal/mol");
+  bool unit1 = BIOGEARS_NAMESPACE EnergyPerAmountUnit::IsValidUnit("kJ/mol");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
-  bool unit6 = biogears::EnergyPerAmountUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE EnergyPerAmountUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::EnergyPerAmountUnit mu0 = biogears::EnergyPerAmountUnit::GetCompoundUnit("kcal/mol");
-  biogears::EnergyPerAmountUnit mu1 = biogears::EnergyPerAmountUnit::GetCompoundUnit("kJ/mol");
-  EXPECT_EQ(mu0, biogears::EnergyPerAmountUnit::kcal_Per_mol);
-  EXPECT_EQ(mu1, biogears::EnergyPerAmountUnit::kJ_Per_mol);
-  EXPECT_THROW(biogears::EnergyPerAmountUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE EnergyPerAmountUnit mu0 = BIOGEARS_NAMESPACE EnergyPerAmountUnit::GetCompoundUnit("kcal/mol");
+  BIOGEARS_NAMESPACE EnergyPerAmountUnit mu1 = BIOGEARS_NAMESPACE EnergyPerAmountUnit::GetCompoundUnit("kJ/mol");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE EnergyPerAmountUnit::kcal_Per_mol);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE EnergyPerAmountUnit::kJ_Per_mol);
+  EXPECT_THROW(BIOGEARS_NAMESPACE EnergyPerAmountUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

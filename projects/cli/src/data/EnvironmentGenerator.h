@@ -16,10 +16,12 @@
 #include <string>
 #include <vector>
 
+#include <biogears/config.h>
 #include <biogears/schema/biogears/BioGearsEngineConfiguration.hxx>
+
 #include "CSVToXMLConvertor.h"
-namespace biogears
-{
+
+OPEN_BIOGEARS_NAMESPACE
 
   struct Environment
   {
@@ -44,6 +46,6 @@ namespace biogears
     std::vector<Environment> _input;
     std::vector<mil::tatrc::physiology::datamodel::EnvironmentalConditionsData> _environments;
   };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //BIOGEARS_ENVIRONMENT_GENERATOR_H

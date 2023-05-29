@@ -8,7 +8,7 @@
 #include "Arguments.h"
 #include "HowTo-PatientGeneration.h"
 
-
+#include <biogears/config.h>
 #include <biogears/string/manipulation.h>
 #include <biogears/threading/thread_pool.h>
 #include <biogears/filesystem/path.h>
@@ -71,7 +71,7 @@ bool parse_line(std::string& line, csv_row& row, std::ifstream& input)
     switch (*token_end) {
     case ',':
       row.emplace_back(token_start, token_end);
-      biogears::trim(row.back());
+      BIOGEARS_NAMESPACE trim(row.back());
       token_start = token_end + 1;
       break;
     case '"':
@@ -98,7 +98,7 @@ bool parse_line(std::string& line, csv_row& row, std::ifstream& input)
   }
 
   if (token_start < token_end) {
-    row.emplace_back(biogears::trim(std::string(token_start, token_end)));
+    row.emplace_back(BIOGEARS_NAMESPACE trim(std::string(token_start, token_end)));
   } else if (token_start == token_end) {
   }
   return rValue;
@@ -140,7 +140,7 @@ auto read_csv(std::string path, std::string filename) -> csv
 //!
 int main(int argc, char** argv)
 {
-  biogears::Arguments args(
+  BIOGEARS_NAMESPACE Arguments args(
     { "H", "HELP" } //Options
     ,
     { "J", "THREADS", "D", "DURATION", "P", "PATIENT", "CONFIG" } //Keywords
@@ -235,7 +235,7 @@ int main(int argc, char** argv)
 
       trials.erase(trials.begin(), trials.begin()+2);
 
-      biogears::ThreadPool pool{ thread_count };
+      BIOGEARS_NAMESPACE ThreadPool pool{ thread_count };
       auto channel = pool.get_source();
 
       auto count = 1; //Danger 1 Indexed
@@ -254,7 +254,7 @@ int main(int argc, char** argv)
             auto patient = (params.size() > 5) ? params[6]
                                                : trial_patient;
 
-            auto patientFile = biogears::filesystem::path(patient);
+            auto patientFile = BIOGEARS_NAMESPACE filesystem::path(patient);
 
             PatientRun trial;
             trial.patient_name(patient).patient_state(patientFile).infection_severity(severity).treatment_plan(plan);
@@ -284,13 +284,13 @@ int main(int argc, char** argv)
     }
   } else if (args.MultiWordFound("TRIALS")) {
     auto trials = args.MultiWord("TRIALS");
-    biogears::ThreadPool pool{ thread_count };
+    BIOGEARS_NAMESPACE ThreadPool pool{ thread_count };
     auto channel = pool.get_source();
 
     auto count = 1; //Danger 1 Indexed
 
     for (auto& trial : trials) {
-      auto params = biogears::string_split(trial, ",");
+      auto params = BIOGEARS_NAMESPACE string_split(trial, ",");
       if (params.size() >= 4) {
         try {
           std::string severity = params[0];
@@ -304,7 +304,7 @@ int main(int argc, char** argv)
           auto patient = (params.size() > 5) ? params[6]
                                              : trial_patient;
 
-          auto patientFile = biogears::filesystem::path(patient);
+          auto patientFile = BIOGEARS_NAMESPACE filesystem::path(patient);
           PatientRun trial;
 
           trial.patient_name(patient).patient_state(patient).infection_severity(severity).treatment_plan(plan);

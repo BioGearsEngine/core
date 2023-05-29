@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<MassPerMassUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<MassPerMassUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const MassPerMassUnit&) const;
 %rename(NotEquals)  operator!=(const MassPerMassUnit&) const;
 %rename(Equals)  operator==(const SEScalarMassPerMass&) const;
 %rename(NotEquals)  operator!=(const SEScalarMassPerMass&) const;  
 
-%ignore biogears::MassPerMassUnit::MassPerMassUnit(std::string const &);
-%ignore biogears::MassPerMassUnit::IsValidUnit(std::string const &);
-%ignore biogears::MassPerMassUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE MassPerMassUnit::MassPerMassUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE MassPerMassUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE MassPerMassUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarMassPerMass;
-%nspace biogears::MassPerMassUnit;
-%nspace biogears::SEScalarQuantity<MassPerMassUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarMassPerMass;
+%nspace BIOGEARS_NAMESPACE MassPerMassUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<MassPerMassUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class MassPerMassUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::MassPerMassUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerMassUnit>;
 
-%ignore  biogears::SEScalarQuantity< MassPerMassUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< MassPerMassUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< MassPerMassUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< MassPerMassUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< MassPerMassUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< MassPerMassUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerMassUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerMassUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerMassUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerMassUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerMassUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerMassUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerMassUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerMassUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerMassUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerMassUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerMassUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerMassUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerMassUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerMassUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< MassPerMassUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< MassPerMassUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerMassUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerMassUnit >::operator!=;
 
-%template(QuantityMassPerMass) biogears::SEScalarQuantity<biogears::MassPerMassUnit>;
+%template(QuantityMassPerMass) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerMassUnit>;
 
 %include <biogears/cdm/properties/SEScalarMassPerMass.h>
 

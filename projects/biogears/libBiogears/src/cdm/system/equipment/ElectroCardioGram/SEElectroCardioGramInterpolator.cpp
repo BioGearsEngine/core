@@ -22,9 +22,9 @@ specific language governing permissions and limitations under the License.
 #endif
 
 namespace std {
-template class map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>;
-template class map<CDM::ElectroCardioGramWaveformLeadNumber, biogears::SEScalarElectricPotential*>;
-template class map<CDM::ElectroCardioGramWaveformLeadNumber, map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolatorWaveform*>>;
+template class map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>;
+template class map<CDM::ElectroCardioGramWaveformLeadNumber, BIOGEARS_NAMESPACE SEScalarElectricPotential*>;
+template class map<CDM::ElectroCardioGramWaveformLeadNumber, map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

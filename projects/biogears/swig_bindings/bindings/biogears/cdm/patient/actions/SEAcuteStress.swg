@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEAcuteStress;
+%nspace BIOGEARS_NAMESPACE SEAcuteStress;
 
-%ignore biogears::SEAcuteStress::Unload;
-%ignore biogears::SEAcuteStress::Load;
+%ignore BIOGEARS_NAMESPACE SEAcuteStress::Unload;
+%ignore BIOGEARS_NAMESPACE SEAcuteStress::Load;
 
 %include <biogears/cdm/patient/actions/SEAcuteStress.h>

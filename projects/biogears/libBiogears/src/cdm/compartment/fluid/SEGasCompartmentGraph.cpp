@@ -22,10 +22,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Compartment.hxx>
 
 namespace std {
-template class vector<biogears::SEGasTransportVertex*>;
-template class vector<biogears::SEGasTransportEdge*>;
-template class map<const biogears::SEGasTransportVertex*, size_t>;
-template class map<const biogears::SEGasTransportVertex*, vector<biogears::SEGasTransportEdge*>*>;
+template class vector<BIOGEARS_NAMESPACE SEGasTransportVertex*>;
+template class vector<BIOGEARS_NAMESPACE SEGasTransportEdge*>;
+template class map<const BIOGEARS_NAMESPACE SEGasTransportVertex*, size_t>;
+template class map<const BIOGEARS_NAMESPACE SEGasTransportVertex*, vector<BIOGEARS_NAMESPACE SEGasTransportEdge*>*>;
 }
 OPEN_BIOGEARS_NAMESPACE
 

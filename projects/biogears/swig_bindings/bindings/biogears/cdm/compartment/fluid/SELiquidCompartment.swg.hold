@@ -14,25 +14,25 @@
 %import <biogears/cdm/properties/SEScalarTemperature.swg>
 
 
-%nspace biogears::SEThermalCompartment;
+%nspace BIOGEARS_NAMESPACE SEThermalCompartment;
 
-%ignore biogears::SEThermalCompartment::Unload;
-%ignore biogears::SEThermalCompartment::Load;
+%ignore BIOGEARS_NAMESPACE SEThermalCompartment::Unload;
+%ignore BIOGEARS_NAMESPACE SEThermalCompartment::Load;
 
-%ignore biogears::SEThermalCompartment::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SEThermalCompartment::GetScalar(const std::string& name);
 
-%ignore biogears::SEThermalCompartment::HasNodeMapping() const;
-%ignore biogears::SEThermalCompartment::GetNodeMapping();
-%ignore biogears::SEThermalCompartment::MapNode(SEThermalCircuitNode& node);
+%ignore BIOGEARS_NAMESPACE SEThermalCompartment::HasNodeMapping() const;
+%ignore BIOGEARS_NAMESPACE SEThermalCompartment::GetNodeMapping();
+%ignore BIOGEARS_NAMESPACE SEThermalCompartment::MapNode(SEThermalCircuitNode& node);
 
-%rename (GetHeatTransferRateIn_const) biogears::SEThermalCompartment::GetHeatTransferRateIn(const PowerUnit& unit) const;
-%rename (GetHeatTransferRateOut_const) biogears::SEThermalCompartment::GetHeatTransferRateOut(const PowerUnit& unit) const;
-%rename (GetHeat_const) biogears::SEThermalCompartment::GetHeat(const EnergyUnit& unit) const;
-%rename (GetTemperature_const) biogears::SEThermalCompartment::GetTemperature(const TemperatureUnit& unit) constt;
+%rename (GetHeatTransferRateIn_const) BIOGEARS_NAMESPACE SEThermalCompartment::GetHeatTransferRateIn(const PowerUnit& unit) const;
+%rename (GetHeatTransferRateOut_const) BIOGEARS_NAMESPACE SEThermalCompartment::GetHeatTransferRateOut(const PowerUnit& unit) const;
+%rename (GetHeat_const) BIOGEARS_NAMESPACE SEThermalCompartment::GetHeat(const EnergyUnit& unit) const;
+%rename (GetTemperature_const) BIOGEARS_NAMESPACE SEThermalCompartment::GetTemperature(const TemperatureUnit& unit) constt;
 
-%ignore biogears::SEThermalCompartment::AddLink(SEThermalCompartmentLink& link);
-%ignore biogears::SEThermalCompartment::RemoveLink(SEThermalCompartmentLink& link);
-%ignore biogears::SEThermalCompartment::RemoveLinks();
-%ignore biogears::SEThermalCompartment::GetLinks();
+%ignore BIOGEARS_NAMESPACE SEThermalCompartment::AddLink(SEThermalCompartmentLink& link);
+%ignore BIOGEARS_NAMESPACE SEThermalCompartment::RemoveLink(SEThermalCompartmentLink& link);
+%ignore BIOGEARS_NAMESPACE SEThermalCompartment::RemoveLinks();
+%ignore BIOGEARS_NAMESPACE SEThermalCompartment::GetLinks();
 
 %include <biogears/cdm/patient/actions/SEThermalCompartment.h>

@@ -66,10 +66,10 @@ namespace BGE = mil::tatrc::physiology::biogears;
 #define GAS_ONLY_PRODCOM
 
 namespace std{
-template class map<biogears::SETissueCompartment*, biogears::SELiquidCompartment*>;
-template class map<biogears::SELiquidCompartment*, biogears::SEFluidCircuitPath*>;
-template class map<biogears::SETissueCompartment*, biogears::SEFluidCircuitPath*>;
-template class vector<biogears::SETissueCompartment*>;
+template class map<BIOGEARS_NAMESPACE SETissueCompartment*, BIOGEARS_NAMESPACE SELiquidCompartment*>;
+template class map<BIOGEARS_NAMESPACE SELiquidCompartment*, BIOGEARS_NAMESPACE SEFluidCircuitPath*>;
+template class map<BIOGEARS_NAMESPACE SETissueCompartment*, BIOGEARS_NAMESPACE SEFluidCircuitPath*>;
+template class vector<BIOGEARS_NAMESPACE SETissueCompartment*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

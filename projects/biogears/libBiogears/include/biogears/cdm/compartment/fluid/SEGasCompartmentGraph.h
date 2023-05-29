@@ -24,10 +24,10 @@ CDM_BIND_DECL(GasCompartmentGraphData);
 
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportVertex*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportEdge*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, size_t>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, vector<biogears::SEGasTransportEdge*>*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEGasTransportVertex*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEGasTransportEdge*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SEGasTransportVertex*, size_t>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SEGasTransportVertex*, vector<BIOGEARS_NAMESPACE SEGasTransportEdge*>*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE
@@ -58,9 +58,9 @@ protected:
 protected:
   void BalanceByIntensive() override;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE 
 
 namespace std {
-  BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentGraph*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentGraph*> ;
+  BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEGasCompartmentGraph*> ;
+  BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SEGasCompartmentGraph*> ;
 }

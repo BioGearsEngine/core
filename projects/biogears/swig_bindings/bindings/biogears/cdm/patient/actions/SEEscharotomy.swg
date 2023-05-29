@@ -8,11 +8,11 @@
 %import <biogears/cdm/CommonDataModel.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEEscharotomy;
+%nspace BIOGEARS_NAMESPACE SEEscharotomy;
 
-%ignore biogears::SEEscharotomy::Unload;
-%ignore biogears::SEEscharotomy::Load;
+%ignore BIOGEARS_NAMESPACE SEEscharotomy::Unload;
+%ignore BIOGEARS_NAMESPACE SEEscharotomy::Load;
 
-%ignore biogears::SEEscharotomy::SetLocation(std::string const&);
+%ignore BIOGEARS_NAMESPACE SEEscharotomy::SetLocation(std::string const&);
 
 %include <biogears/cdm/patient/actions/SEEscharotomy.h>

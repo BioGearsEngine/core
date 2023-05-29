@@ -86,4 +86,4 @@ protected:
   size_t m_NumBuccalRegions;
   size_t m_NumSublingualRegions;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

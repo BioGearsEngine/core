@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<HeatResistanceUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<HeatResistanceUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const HeatResistanceUnit&) const;
 %rename(NotEquals)  operator!=(const HeatResistanceUnit&) const;
 %rename(Equals)  operator==(const SEScalarHeatResistance&) const;
 %rename(NotEquals)  operator!=(const SEScalarHeatResistance&) const;  
 
-%ignore biogears::HeatResistanceUnit::HeatResistanceUnit(std::string const &);
-%ignore biogears::HeatResistanceUnit::IsValidUnit(std::string const &);
-%ignore biogears::HeatResistanceUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatResistanceUnit::HeatResistanceUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatResistanceUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatResistanceUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarHeatResistance;
-%nspace biogears::HeatResistanceUnit;
-%nspace biogears::SEScalarQuantity<HeatResistanceUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarHeatResistance;
+%nspace BIOGEARS_NAMESPACE HeatResistanceUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<HeatResistanceUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class HeatResistanceUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::HeatResistanceUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatResistanceUnit>;
 
-%ignore  biogears::SEScalarQuantity< HeatResistanceUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< HeatResistanceUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< HeatResistanceUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< HeatResistanceUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< HeatResistanceUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< HeatResistanceUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatResistanceUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatResistanceUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatResistanceUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatResistanceUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatResistanceUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatResistanceUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatResistanceUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatResistanceUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatResistanceUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatResistanceUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatResistanceUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatResistanceUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatResistanceUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatResistanceUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< HeatResistanceUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< HeatResistanceUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatResistanceUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< HeatResistanceUnit >::operator!=;
 
-%template(QuantityHeatResistance) biogears::SEScalarQuantity<biogears::HeatResistanceUnit>;
+%template(QuantityHeatResistance) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatResistanceUnit>;
 
 %include <biogears/cdm/properties/SEScalarHeatResistance.h>
 

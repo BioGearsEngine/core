@@ -334,8 +334,8 @@ CLOSE_BIOGEARS_NAMESPACE
 
 namespace std {
 template <>
-struct hash<biogears::CUnitDimension> {
-  size_t operator()(const biogears::CUnitDimension& ref) const
+struct hash<BIOGEARS_NAMESPACE CUnitDimension> {
+  size_t operator()(const BIOGEARS_NAMESPACE CUnitDimension& ref) const
   {
     return ref.hash_value();
   }

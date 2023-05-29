@@ -64,7 +64,7 @@ bool Arguments::parse(int argc, char* argv[])
   std::vector<std::string> flags;
   const std::string prefix = "--";
 
-  _self_name = biogears::filesystem::path(argv[0]).basename();
+  _self_name = BIOGEARS_NAMESPACE filesystem::path(argv[0]).basename();
 
   size_t index = 1;
   if (argc > 1) {

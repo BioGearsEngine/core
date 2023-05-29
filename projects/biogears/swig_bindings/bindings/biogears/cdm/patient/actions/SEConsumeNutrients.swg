@@ -15,12 +15,12 @@
 %import <biogears/cdm/properties/SEScalarMassPerTime.swg>
 %import <biogears/cdm/properties/SEScalarVolume.swg>
 
-%nspace biogears::SEConsumeNutrients;
+%nspace BIOGEARS_NAMESPACE SEConsumeNutrients;
 
-%ignore biogears::SEConsumeNutrients::Unload;
-%ignore biogears::SEConsumeNutrients::Load;
+%ignore BIOGEARS_NAMESPACE SEConsumeNutrients::Unload;
+%ignore BIOGEARS_NAMESPACE SEConsumeNutrients::Load;
 
-%rename (GetNutrition_const) biogears::SEConsumeNutrients::GetNutrition() const;
-%ignore biogears::SEConsumeNutrients::SetNutritionFile(std::string const &);
+%rename (GetNutrition_const) BIOGEARS_NAMESPACE SEConsumeNutrients::GetNutrition() const;
+%ignore BIOGEARS_NAMESPACE SEConsumeNutrients::SetNutritionFile(std::string const &);
 
 %include <biogears/cdm/patient/actions/SEConsumeNutrients.h>

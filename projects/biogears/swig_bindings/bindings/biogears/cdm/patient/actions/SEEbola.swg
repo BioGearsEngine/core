@@ -10,9 +10,9 @@
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEEbola;
+%nspace BIOGEARS_NAMESPACE SEEbola;
 
-%ignore biogears::SEEbola::Unload;
-%ignore biogears::SEEbola::Load;
+%ignore BIOGEARS_NAMESPACE SEEbola::Unload;
+%ignore BIOGEARS_NAMESPACE SEEbola::Load;
 
 %include <biogears/cdm/patient/actions/SEEbola.h>

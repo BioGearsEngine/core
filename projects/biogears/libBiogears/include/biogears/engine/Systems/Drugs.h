@@ -31,9 +31,9 @@ class SELiquidCompartment;
 CLOSE_BIOGEARS_NAMESPACE
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceBolusState*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SENasalState*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SETransmucosalState*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceBolusState*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SENasalState*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SETransmucosalState*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

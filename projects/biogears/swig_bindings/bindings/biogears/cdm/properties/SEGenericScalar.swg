@@ -8,22 +8,22 @@
 %import <biogears/cdm/utils/unitconversion/CompoundUnit.swg>
 %import <biogears/cdm/properties/SEScalar.swg>
 
-%nspace biogears::SEGenericScalar;
-%nspace biogears::SEScalar;
+%nspace BIOGEARS_NAMESPACE SEGenericScalar;
+%nspace BIOGEARS_NAMESPACE SEScalar;
 
-%ignore biogears::SEGenericScalar::GetCompoundUnit(std::string const &) const ;
+%ignore BIOGEARS_NAMESPACE SEGenericScalar::GetCompoundUnit(std::string const &) const ;
 
-//%ignore biogears::SEGenericScalar::GetValue() const;
-//%rename (GetValueAs) biogears::SEGenericScalar::GetValue(const char* unit) const;
-%ignore biogears::SEGenericScalar::GetValue(std::string const &) const ;
-%ignore biogears::SEGenericScalar::IncrementValue(double,std::string const &) ;
-%ignore biogears::SEGenericScalar::DecrementValue(double,std::string const &) ;
+//%ignore BIOGEARS_NAMESPACE SEGenericScalar::GetValue() const;
+//%rename (GetValueAs) BIOGEARS_NAMESPACE SEGenericScalar::GetValue(const char* unit) const;
+%ignore BIOGEARS_NAMESPACE SEGenericScalar::GetValue(std::string const &) const ;
+%ignore BIOGEARS_NAMESPACE SEGenericScalar::IncrementValue(double,std::string const &) ;
+%ignore BIOGEARS_NAMESPACE SEGenericScalar::DecrementValue(double,std::string const &) ;
 
 %ignore operator==(const SEGenericScalar&) const;
 %ignore operator!=(const SEGenericScalar&) const;
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEGenericScalar::ToString() const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEGenericScalar::ToString() const "public override";
 #endif 
 
 %include <biogears/cdm/properties/SEGenericScalar.h>

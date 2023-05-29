@@ -38,7 +38,7 @@ public:
   void UpdateMIC(double mic);
   void Status();
 
-  biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
+  BIOGEARS_NAMESPACE Logger* GetLogger() { return m_bg->GetLogger(); }
 
 protected:
   void AdvanceTime();
@@ -49,11 +49,11 @@ protected:
 
   double m_StartTime_min;
 
-  std::unique_ptr<biogears::PhysiologyEngine> m_bg;
+  std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine> m_bg;
 
-  biogears::SEInfection* m_septicInfection;
-  biogears::SESubstanceInfusion* m_pressor;
-  biogears::SESubstanceCompoundInfusion* m_saline;
-  biogears::SESubstanceCompoundInfusion* m_ringers;
-  biogears::SESubstanceCompoundInfusion* m_antibiotic;
+  BIOGEARS_NAMESPACE SEInfection* m_septicInfection;
+  BIOGEARS_NAMESPACE SESubstanceInfusion* m_pressor;
+  BIOGEARS_NAMESPACE SESubstanceCompoundInfusion* m_saline;
+  BIOGEARS_NAMESPACE SESubstanceCompoundInfusion* m_ringers;
+  BIOGEARS_NAMESPACE SESubstanceCompoundInfusion* m_antibiotic;
 };

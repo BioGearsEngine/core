@@ -59,26 +59,26 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarAmount amount = biogears::SEScalarAmount();
+  BIOGEARS_NAMESPACE SEScalarAmount amount = BIOGEARS_NAMESPACE SEScalarAmount();
   auto ptr = amount.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::AmountUnit::IsValidUnit("mol");
-  bool unit1 = biogears::AmountUnit::IsValidUnit("pmol");
+  bool unit0 = BIOGEARS_NAMESPACE AmountUnit::IsValidUnit("mol");
+  bool unit1 = BIOGEARS_NAMESPACE AmountUnit::IsValidUnit("pmol");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
-  bool unit5 = biogears::AmountUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE AmountUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  auto& mu0 = biogears::AmountUnit::GetCompoundUnit("mol");
-  auto & mu1 = biogears::AmountUnit::GetCompoundUnit("pmol");
-  EXPECT_EQ(mu0, biogears::AmountUnit::mol);
-  EXPECT_EQ(mu1, biogears::AmountUnit::pmol);
-  EXPECT_THROW(biogears::AmountUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  auto& mu0 = BIOGEARS_NAMESPACE AmountUnit::GetCompoundUnit("mol");
+  auto & mu1 = BIOGEARS_NAMESPACE AmountUnit::GetCompoundUnit("pmol");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE AmountUnit::mol);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE AmountUnit::pmol);
+  EXPECT_THROW(BIOGEARS_NAMESPACE AmountUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

@@ -674,7 +674,7 @@ void IOManager::SetResultsDirectory(std::string const& s)
 
 bool IOManager::generate_runtime_directory(const char* runtime_directory) const
 {
-  biogears::filesystem::create_directories(runtime_directory);
+  BIOGEARS_NAMESPACE filesystem::create_directories(runtime_directory);
 
   bool result = io::generate_xsd_directory(runtime_directory);
   result &= io::generate_config_directory(runtime_directory);
@@ -764,7 +764,7 @@ char const* IOManager::get_expected_sha1(const char* file) const
 //---------------------------------------------------------------------------
 size_t IOManager::get_directory_count() const
 {
-  size_t sum = biogears::io::config_file_count()
+  size_t sum = BIOGEARS_NAMESPACE io::config_file_count()
     + io::ecg_file_count()
     + io::environments_file_count()
     + io::nutrition_file_count()
@@ -773,7 +773,7 @@ size_t IOManager::get_directory_count() const
     + io::substances_file_count()
     //+ io::scenarios_file_count()
     //+ io::templates_file_count()
-    + biogears::io::xsd_file_count();
+    + BIOGEARS_NAMESPACE io::xsd_file_count();
 #ifdef BIOGEARS_IO_EMBED_STATES
   sum += io::states_file_count();
 #endif
@@ -990,7 +990,7 @@ size_t IOManager::read_resource_file(char const*
 
   //Step 1 : Current Working Directory
   size_t content_size = 0;
-  biogears::filesystem::path test_location { find_resource_file(file) };
+  BIOGEARS_NAMESPACE filesystem::path test_location { find_resource_file(file) };
   if (test_location.exists() && test_location.is_file()) {
     std::ifstream resource_file { test_location, std::ios::in  | std::ios::binary};
     if (resource_file.is_open()) {

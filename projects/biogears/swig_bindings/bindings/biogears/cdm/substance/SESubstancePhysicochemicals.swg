@@ -14,19 +14,19 @@
 %import <biogears/cdm/properties/SEScalarFraction.swg>
 
 
-%nspace biogears::SESubstancePhysicochemicals;
-%nspace biogears::SEPharmacodynamicModifier;
+%nspace BIOGEARS_NAMESPACE SESubstancePhysicochemicals;
+%nspace BIOGEARS_NAMESPACE SEPharmacodynamicModifier;
 
-%ignore biogears::SESubstancePhysicochemicals::GetScalar(const std::string& name);
-%ignore biogears::SESubstancePhysicochemicals::Unload;
-%ignore biogears::SESubstancePhysicochemicals::Load;
+%ignore BIOGEARS_NAMESPACE SESubstancePhysicochemicals::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePhysicochemicals::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstancePhysicochemicals::Load;
 
-%rename (GetPrimaryPKA_const)  biogears::SESubstancePhysicochemicals::GetPrimaryPKA() const;
-%rename (GetSecondaryPKA_const)  biogears::SESubstancePhysicochemicals::GetSecondaryPKA() const;
-%rename (GetBloodPlasmaRatio_const)  biogears::SESubstancePhysicochemicals::GetBloodPlasmaRatio() const;
-%rename (GetFractionUnboundInPlasma_const)  biogears::SESubstancePhysicochemicals::GetFractionUnboundInPlasma() const;
-%rename (GetLogP_const)  biogears::SESubstancePhysicochemicals::GetLogP() const;
-%rename (GetHydrogenBondCount_const)  biogears::SESubstancePhysicochemicals::GetHydrogenBondCount() const;
-%rename (GetPolarSurfaceArea_const)  biogears::SESubstancePhysicochemicals::GetPolarSurfaceArea() const;
+%rename (GetPrimaryPKA_const)  BIOGEARS_NAMESPACE SESubstancePhysicochemicals::GetPrimaryPKA() const;
+%rename (GetSecondaryPKA_const)  BIOGEARS_NAMESPACE SESubstancePhysicochemicals::GetSecondaryPKA() const;
+%rename (GetBloodPlasmaRatio_const)  BIOGEARS_NAMESPACE SESubstancePhysicochemicals::GetBloodPlasmaRatio() const;
+%rename (GetFractionUnboundInPlasma_const)  BIOGEARS_NAMESPACE SESubstancePhysicochemicals::GetFractionUnboundInPlasma() const;
+%rename (GetLogP_const)  BIOGEARS_NAMESPACE SESubstancePhysicochemicals::GetLogP() const;
+%rename (GetHydrogenBondCount_const)  BIOGEARS_NAMESPACE SESubstancePhysicochemicals::GetHydrogenBondCount() const;
+%rename (GetPolarSurfaceArea_const)  BIOGEARS_NAMESPACE SESubstancePhysicochemicals::GetPolarSurfaceArea() const;
 
 %include <biogears/cdm/substance/SESubstancePhysicochemicals.h>

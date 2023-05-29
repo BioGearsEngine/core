@@ -49,9 +49,9 @@ specific language governing permissions and limitations under the License.
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace std {
-template class std::map<const biogears::SESubstance*, biogears::SESubstanceBolusState*>;
-template class std::map<const biogears::SESubstance*, biogears::SENasalState*>;
-template class std::map<const biogears::SESubstance*, biogears::SETransmucosalState*>;
+template class std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceBolusState*>;
+template class std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SENasalState*>;
+template class std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SETransmucosalState*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

@@ -35,4 +35,4 @@ public:
 private:
   TaskQueue* m_pTaskQueue = nullptr; ///< Pointer to the TaskQueue to draw Tasks from
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -16,17 +16,19 @@
 #include <atomic>
 #include <chrono>
 
+#include <biogears/config.h>
 #include <biogears/filesystem/path.h>
 #include <biogears/threading/runnable.h>
 #include <biogears/threading/thread_pool.h>
 
 #include "../utils/Config.h"
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
+
 class Executor;
 class Config;
 
-class Driver : biogears::Runnable {
+class Driver : BIOGEARS_NAMESPACE Runnable {
 public:
   Driver(char* exe_name, size_t thread_count);
   Driver(const Driver&) = delete;
@@ -45,8 +47,8 @@ public:
   bool has_work() const { return _total_work > 0; }
 
 protected:
-  void subprocess_execute(biogears::Executor& ex, bool multi_patient_run);
-  void async_execute(biogears::Executor& ex, bool multi_patient_run);
+  void subprocess_execute(BIOGEARS_NAMESPACE Executor& ex, bool multi_patient_run);
+  void async_execute(BIOGEARS_NAMESPACE Executor& ex, bool multi_patient_run);
 
   void queue_BGEUnitTest(Executor, bool as_subprocess = false);
   void queue_CDMUnitTest(Executor, bool as_subprocess = false);
@@ -69,6 +71,6 @@ private:
   size_t _total_work;
   size_t _jobs;
 };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //CMD_BIO_EXEC_DRIVER_H

@@ -23,16 +23,16 @@
 %import <biogears/cdm/properties/SEScalarPressure.swg>
 %import <biogears/cdm/properties/SEScalarTimeMassPerVolume.swg>
 
-%nspace biogears::SESubstanceCompound;
+%nspace BIOGEARS_NAMESPACE SESubstanceCompound;
 
-%ignore biogears::SESubstanceCompound::Unload;
-%ignore biogears::SESubstanceCompound::Load;
+%ignore BIOGEARS_NAMESPACE SESubstanceCompound::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstanceCompound::Load;
 
 %ignore SESubstanceCompound::GetScalar(std::string const &);
 %ignore SESubstanceCompound::SetName(const std::string& name);
 
-%rename (GetComponents_const) biogears::SESubstanceCompound::GetComponents() const;
-%rename (GetComponent_const)  biogears::SESubstanceCompound::GetComponent(SESubstance& substance) const;
+%rename (GetComponents_const) BIOGEARS_NAMESPACE SESubstanceCompound::GetComponents() const;
+%rename (GetComponent_const)  BIOGEARS_NAMESPACE SESubstanceCompound::GetComponent(SESubstance& substance) const;
 
 %ignore make_unique(const std::string& name, Logger* logger);
 
@@ -41,5 +41,5 @@
 
 %include <biogears/cdm/substance/SESubstanceCompound.h>
 
-%nsspace  std::vector<biogears::SESubstanceCompound*>;
-%template (vector_SESubstanceCompound_ptr)  std::vector<biogears::SESubstanceCompound*>;
+%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstanceCompound*>;
+%template (vector_SESubstanceCompound_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstanceCompound*>;

@@ -11,10 +11,10 @@
 %import <biogears/cdm/properties/SEScalarArea.swg>
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 
-%nspace biogears::SEChronicAnemia;
+%nspace BIOGEARS_NAMESPACE SEChronicAnemia;
 
-%ignore biogears::SEChronicAnemia::Unload;
-%ignore biogears::SEChronicAnemia::Load;
+%ignore BIOGEARS_NAMESPACE SEChronicAnemia::Unload;
+%ignore BIOGEARS_NAMESPACE SEChronicAnemia::Load;
 
 
 %include <biogears/cdm/patient/conditions/SEChronicAnemia.h>

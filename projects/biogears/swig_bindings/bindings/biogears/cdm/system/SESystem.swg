@@ -10,10 +10,10 @@
 
 %import <biogears/cdm/properties/SEScalar.swg>
 
-%nspace biogears::SESystem;
+%nspace BIOGEARS_NAMESPACE SESystem;
 
-%ignore biogears::SESystem::Unload;
-%ignore biogears::SESystem::Load;
+%ignore BIOGEARS_NAMESPACE SESystem::Unload;
+%ignore BIOGEARS_NAMESPACE SESystem::Load;
 %ignore newFromBind(const CDM::SystemData& action, SESubstanceManager& substances);
 %ignore SetComment(std::string const &);
 
@@ -34,18 +34,18 @@
   // static const SEScalar* GetScalar(const char* name, std::vector<SESystem*>* systems);
   // static const SEScalar* GetScalar(const std::string& name, std::vector<SESystem*>* systems);
 
-%ignore biogears::SESystem::GetScalar(std::string const &);
-%ignore biogears::SESystem::GetScalar(std::string const &,std::vector< SESystem * > *);
+%ignore BIOGEARS_NAMESPACE SESystem::GetScalar(std::string const &);
+%ignore BIOGEARS_NAMESPACE SESystem::GetScalar(std::string const &,std::vector< SESystem * > *);
 
 namespace biogears{
   class SESystem;
 }
-%nspace std::vector<biogears::SESystem*>;
-%template (vector_SESystem_ptr) std::vector<biogears::SESystem*>;
+%nspace std::vector<BIOGEARS_NAMESPACE SESystem*>;
+%template (vector_SESystem_ptr) std::vector<BIOGEARS_NAMESPACE SESystem*>;
 
 %ignore SESystem::ToString(std::ostream& str) const;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SESystem::ToString() const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE SESystem::ToString() const "public override";
 #endif 
 
 %include <biogears/cdm/system/SESystem.h>

@@ -21,30 +21,30 @@
 %import <biogears/cdm/properties/SEScalarPressure.swg>
 %import <biogears/cdm/properties/SEScalarFraction.swg>
 
-%nspace biogears::SEEnvironmentalConditions;
+%nspace BIOGEARS_NAMESPACE SEEnvironmentalConditions;
 
-%ignore biogears::SEEnvironmentalConditions::Unload;
-%ignore biogears::SEEnvironmentalConditions::Load;
-%rename(%s) biogears::SEEnvironmentalConditions::Load(const char* environmentFile);
-%ignore biogears::SEEnvironmentalConditions::GetScalar(std::string const &);
-%ignore biogears::SEEnvironmentalConditions::SetName(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SEEnvironmentalConditions::Unload;
+%ignore BIOGEARS_NAMESPACE SEEnvironmentalConditions::Load;
+%rename(%s) BIOGEARS_NAMESPACE SEEnvironmentalConditions::Load(const char* environmentFile);
+%ignore BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetScalar(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEEnvironmentalConditions::SetName(const std::string& name);
 
-%rename(GetAirDensity_const) biogears::SEEnvironmentalConditions::GetAirDensity(const MassPerVolumeUnit& unit) const;
-%rename(GetAirVelocity_const) biogears::SEEnvironmentalConditions::GetAirVelocity(const LengthPerTimeUnit& unit) const;
-%rename(GetAmbientTemperature_const) biogears::SEEnvironmentalConditions::GetAmbientTemperature(const TemperatureUnit& unit) const;
-%rename(GetAtmosphericPressure_const) biogears::SEEnvironmentalConditions::GetAtmosphericPressure(const PressureUnit& unit) const;
-%rename(GetClothingResistance_const) biogears::SEEnvironmentalConditions::GetClothingResistance(const HeatResistanceAreaUnit& unit) const;
-%rename(GetEmissivity_const) biogears::SEEnvironmentalConditions::GetEmissivity() const;
-%rename(GetMeanRadiantTemperature_const) biogears::SEEnvironmentalConditions::GetMeanRadiantTemperature(const TemperatureUnit& unit) const;
-%rename(GetRelativeHumidity_const) biogears::SEEnvironmentalConditions::GetRelativeHumidity() const;
-%rename(GetRespirationAmbientTemperature_const) biogears::SEEnvironmentalConditions::GetRespirationAmbientTemperature(const TemperatureUnit& unit) const;
+%rename(GetAirDensity_const) BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetAirDensity(const MassPerVolumeUnit& unit) const;
+%rename(GetAirVelocity_const) BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetAirVelocity(const LengthPerTimeUnit& unit) const;
+%rename(GetAmbientTemperature_const) BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetAmbientTemperature(const TemperatureUnit& unit) const;
+%rename(GetAtmosphericPressure_const) BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetAtmosphericPressure(const PressureUnit& unit) const;
+%rename(GetClothingResistance_const) BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetClothingResistance(const HeatResistanceAreaUnit& unit) const;
+%rename(GetEmissivity_const) BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetEmissivity() const;
+%rename(GetMeanRadiantTemperature_const) BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetMeanRadiantTemperature(const TemperatureUnit& unit) const;
+%rename(GetRelativeHumidity_const) BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetRelativeHumidity() const;
+%rename(GetRespirationAmbientTemperature_const) BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetRespirationAmbientTemperature(const TemperatureUnit& unit) const;
 
-%rename(GetAmbientGases_const)    biogears::SEEnvironmentalConditions::GetAmbientGases() const;
-%rename(GetAmbientGas_const)      biogears::SEEnvironmentalConditions::GetAmbientGas(const SESubstance& substance) const;
-%rename(GetAmbientAerosols_const) biogears::SEEnvironmentalConditions::GetAmbientAerosols() const;
-%rename(GetAmbientAerosol_const)  biogears::SEEnvironmentalConditions::GetAmbientAerosol(const SESubstance& substance) const;
+%rename(GetAmbientGases_const)    BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetAmbientGases() const;
+%rename(GetAmbientGas_const)      BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetAmbientGas(const SESubstance& substance) const;
+%rename(GetAmbientAerosols_const) BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetAmbientAerosols() const;
+%rename(GetAmbientAerosol_const)  BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetAmbientAerosol(const SESubstance& substance) const;
 
-%rename(GetConditions_const) biogears::SEEnvironmentalConditions::GetConditions() const;
+%rename(GetConditions_const) BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetConditions() const;
 
 %ignore SEEnvironmentalConditions::ToString(std::ostream& str) const;
 

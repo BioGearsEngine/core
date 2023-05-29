@@ -12,9 +12,9 @@
 %import <biogears/cdm/properties/SEScalarTime.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEConsciousRespirationCommand;
+%nspace BIOGEARS_NAMESPACE SEConsciousRespirationCommand;
 
-%ignore biogears::SEConsciousRespirationCommand::Unload;
-%ignore biogears::SEConsciousRespirationCommand::Load;
+%ignore BIOGEARS_NAMESPACE SEConsciousRespirationCommand::Unload;
+%ignore BIOGEARS_NAMESPACE SEConsciousRespirationCommand::Load;
 
 %include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>

@@ -1,6 +1,6 @@
 %{
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 using namespace CDM;
 %}
 
@@ -10,8 +10,8 @@ using namespace CDM;
 %rename(NotEquals)  operator!=(const SEFunctionElectricPotentialVsTime&) const;
 
 %nspace std::vector<double>;
-%nspace biogears::SEScalarQuantity<TimeUnit>;
-%nspace biogears::SEScalarQuantity<ElectricPotentialUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<TimeUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<ElectricPotentialUnit>;
 
 %import <biogears/cdm/properties/SEFunction.swg>
 %import <biogears/cdm/properties/SEScalarTime.swg>

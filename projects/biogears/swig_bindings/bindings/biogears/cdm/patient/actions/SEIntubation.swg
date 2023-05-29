@@ -8,12 +8,12 @@
 %import <biogears/cdm/CommonDataModel.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEIntubation;
+%nspace BIOGEARS_NAMESPACE SEIntubation;
 
-%ignore biogears::SEIntubation::Unload;
-%ignore biogears::SEIntubation::Load;
+%ignore BIOGEARS_NAMESPACE SEIntubation::Unload;
+%ignore BIOGEARS_NAMESPACE SEIntubation::Load;
 
-%rename (SetIntubationType) biogears::SEIntubation::SetType;
-%rename (GetIntubationType) biogears::SEIntubation::GetType;
+%rename (SetIntubationType) BIOGEARS_NAMESPACE SEIntubation::SetType;
+%rename (GetIntubationType) BIOGEARS_NAMESPACE SEIntubation::GetType;
 
 %include <biogears/cdm/patient/actions/SEIntubation.h>

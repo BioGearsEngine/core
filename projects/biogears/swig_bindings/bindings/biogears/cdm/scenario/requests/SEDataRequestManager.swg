@@ -24,9 +24,9 @@
 %import <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.swg>
 %import <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.swg>
 
-%nspace biogears::SEDataRequestManager;
+%nspace BIOGEARS_NAMESPACE SEDataRequestManager;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   class SEDataRequestManager {
   public: 
     SEDataRequestManager(Logger* logger);
@@ -57,4 +57,4 @@ namespace biogears {
 
     bool HasDataRequests();
   };
-}
+CLOSE_BIOGEARS_NAMESPACE

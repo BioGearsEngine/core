@@ -59,38 +59,38 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarTime time = biogears::SEScalarTime();
+  BIOGEARS_NAMESPACE SEScalarTime time = BIOGEARS_NAMESPACE SEScalarTime();
   auto ptr = time.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::TimeUnit::IsValidUnit("s");
-  bool unit1 = biogears::TimeUnit::IsValidUnit("min");
-  bool unit2 = biogears::TimeUnit::IsValidUnit("hr");
-  bool unit3 = biogears::TimeUnit::IsValidUnit("day");
-  bool unit4 = biogears::TimeUnit::IsValidUnit("yr");
+  bool unit0 = BIOGEARS_NAMESPACE TimeUnit::IsValidUnit("s");
+  bool unit1 = BIOGEARS_NAMESPACE TimeUnit::IsValidUnit("min");
+  bool unit2 = BIOGEARS_NAMESPACE TimeUnit::IsValidUnit("hr");
+  bool unit3 = BIOGEARS_NAMESPACE TimeUnit::IsValidUnit("day");
+  bool unit4 = BIOGEARS_NAMESPACE TimeUnit::IsValidUnit("yr");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
-  bool unit5 = biogears::TimeUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE TimeUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::TimeUnit mu0 = biogears::TimeUnit::GetCompoundUnit("s");
-  biogears::TimeUnit mu1 = biogears::TimeUnit::GetCompoundUnit("min");
-  biogears::TimeUnit mu2 = biogears::TimeUnit::GetCompoundUnit("hr");
-  biogears::TimeUnit mu3 = biogears::TimeUnit::GetCompoundUnit("day");
-  biogears::TimeUnit mu4 = biogears::TimeUnit::GetCompoundUnit("yr");
-  EXPECT_EQ(mu0, biogears::TimeUnit::s);
-  EXPECT_EQ(mu1, biogears::TimeUnit::min);
-  EXPECT_EQ(mu2, biogears::TimeUnit::hr);
-  EXPECT_EQ(mu3, biogears::TimeUnit::day);
-  EXPECT_EQ(mu4, biogears::TimeUnit::yr);
-  EXPECT_THROW(biogears::TimeUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE TimeUnit mu0 = BIOGEARS_NAMESPACE TimeUnit::GetCompoundUnit("s");
+  BIOGEARS_NAMESPACE TimeUnit mu1 = BIOGEARS_NAMESPACE TimeUnit::GetCompoundUnit("min");
+  BIOGEARS_NAMESPACE TimeUnit mu2 = BIOGEARS_NAMESPACE TimeUnit::GetCompoundUnit("hr");
+  BIOGEARS_NAMESPACE TimeUnit mu3 = BIOGEARS_NAMESPACE TimeUnit::GetCompoundUnit("day");
+  BIOGEARS_NAMESPACE TimeUnit mu4 = BIOGEARS_NAMESPACE TimeUnit::GetCompoundUnit("yr");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE TimeUnit::s);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE TimeUnit::min);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE TimeUnit::hr);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE TimeUnit::day);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE TimeUnit::yr);
+  EXPECT_THROW(BIOGEARS_NAMESPACE TimeUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

@@ -59,34 +59,34 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarHeatResistance HeatResistance = biogears::SEScalarHeatResistance();
+  BIOGEARS_NAMESPACE SEScalarHeatResistance HeatResistance = BIOGEARS_NAMESPACE SEScalarHeatResistance();
   auto ptr = HeatResistance.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::HeatResistanceUnit::IsValidUnit("K/W");
-  bool unit1 = biogears::HeatResistanceUnit::IsValidUnit("degC/W");
-  bool unit2 = biogears::HeatResistanceUnit::IsValidUnit("K s/kcal");
-  bool unit3 = biogears::HeatResistanceUnit::IsValidUnit("degC s/kcal");
+  bool unit0 = BIOGEARS_NAMESPACE HeatResistanceUnit::IsValidUnit("K/W");
+  bool unit1 = BIOGEARS_NAMESPACE HeatResistanceUnit::IsValidUnit("degC/W");
+  bool unit2 = BIOGEARS_NAMESPACE HeatResistanceUnit::IsValidUnit("K s/kcal");
+  bool unit3 = BIOGEARS_NAMESPACE HeatResistanceUnit::IsValidUnit("degC s/kcal");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
-  bool unit6 = biogears::HeatResistanceUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE HeatResistanceUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::HeatResistanceUnit mu0 = biogears::HeatResistanceUnit::GetCompoundUnit("K/W");
-  biogears::HeatResistanceUnit mu1 = biogears::HeatResistanceUnit::GetCompoundUnit("degC/W");
-  biogears::HeatResistanceUnit mu2 = biogears::HeatResistanceUnit::GetCompoundUnit("K s/kcal");
-  biogears::HeatResistanceUnit mu3 = biogears::HeatResistanceUnit::GetCompoundUnit("degC s/kcal");
-  EXPECT_EQ(mu0, biogears::HeatResistanceUnit::K_Per_W);
-  EXPECT_EQ(mu1, biogears::HeatResistanceUnit::C_Per_W);
-  EXPECT_EQ(mu2, biogears::HeatResistanceUnit::K_s_Per_kcal);
-  EXPECT_EQ(mu3, biogears::HeatResistanceUnit::C_s_Per_kcal);
-  EXPECT_THROW(biogears::HeatResistanceUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE HeatResistanceUnit mu0 = BIOGEARS_NAMESPACE HeatResistanceUnit::GetCompoundUnit("K/W");
+  BIOGEARS_NAMESPACE HeatResistanceUnit mu1 = BIOGEARS_NAMESPACE HeatResistanceUnit::GetCompoundUnit("degC/W");
+  BIOGEARS_NAMESPACE HeatResistanceUnit mu2 = BIOGEARS_NAMESPACE HeatResistanceUnit::GetCompoundUnit("K s/kcal");
+  BIOGEARS_NAMESPACE HeatResistanceUnit mu3 = BIOGEARS_NAMESPACE HeatResistanceUnit::GetCompoundUnit("degC s/kcal");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE HeatResistanceUnit::K_Per_W);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE HeatResistanceUnit::C_Per_W);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE HeatResistanceUnit::K_s_Per_kcal);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE HeatResistanceUnit::C_s_Per_kcal);
+  EXPECT_THROW(BIOGEARS_NAMESPACE HeatResistanceUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

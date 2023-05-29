@@ -59,38 +59,38 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarPressure Pressure = biogears::SEScalarPressure();
+  BIOGEARS_NAMESPACE SEScalarPressure Pressure = BIOGEARS_NAMESPACE SEScalarPressure();
   auto ptr = Pressure.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::PressureUnit::IsValidUnit("Pa");
-  bool unit1 = biogears::PressureUnit::IsValidUnit("mmHg");
-  bool unit2 = biogears::PressureUnit::IsValidUnit("cmH2O");
-  bool unit3 = biogears::PressureUnit::IsValidUnit("psi");
-  bool unit4 = biogears::PressureUnit::IsValidUnit("atm");
+  bool unit0 = BIOGEARS_NAMESPACE PressureUnit::IsValidUnit("Pa");
+  bool unit1 = BIOGEARS_NAMESPACE PressureUnit::IsValidUnit("mmHg");
+  bool unit2 = BIOGEARS_NAMESPACE PressureUnit::IsValidUnit("cmH2O");
+  bool unit3 = BIOGEARS_NAMESPACE PressureUnit::IsValidUnit("psi");
+  bool unit4 = BIOGEARS_NAMESPACE PressureUnit::IsValidUnit("atm");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
-  bool unit5 = biogears::PressureUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE PressureUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::PressureUnit mu0 = biogears::PressureUnit::GetCompoundUnit("Pa");
-  biogears::PressureUnit mu1 = biogears::PressureUnit::GetCompoundUnit("mmHg");
-  biogears::PressureUnit mu2 = biogears::PressureUnit::GetCompoundUnit("cmH2O");
-  biogears::PressureUnit mu3 = biogears::PressureUnit::GetCompoundUnit("psi");
-  biogears::PressureUnit mu4 = biogears::PressureUnit::GetCompoundUnit("atm");
-  EXPECT_EQ(mu0, biogears::PressureUnit::Pa);
-  EXPECT_EQ(mu1, biogears::PressureUnit::mmHg);
-  EXPECT_EQ(mu2, biogears::PressureUnit::cmH2O);
-  EXPECT_EQ(mu3, biogears::PressureUnit::psi);
-  EXPECT_EQ(mu4, biogears::PressureUnit::atm);
-  EXPECT_THROW(biogears::PressureUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE PressureUnit mu0 = BIOGEARS_NAMESPACE PressureUnit::GetCompoundUnit("Pa");
+  BIOGEARS_NAMESPACE PressureUnit mu1 = BIOGEARS_NAMESPACE PressureUnit::GetCompoundUnit("mmHg");
+  BIOGEARS_NAMESPACE PressureUnit mu2 = BIOGEARS_NAMESPACE PressureUnit::GetCompoundUnit("cmH2O");
+  BIOGEARS_NAMESPACE PressureUnit mu3 = BIOGEARS_NAMESPACE PressureUnit::GetCompoundUnit("psi");
+  BIOGEARS_NAMESPACE PressureUnit mu4 = BIOGEARS_NAMESPACE PressureUnit::GetCompoundUnit("atm");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE PressureUnit::Pa);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE PressureUnit::mmHg);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE PressureUnit::cmH2O);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE PressureUnit::psi);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE PressureUnit::atm);
+  EXPECT_THROW(BIOGEARS_NAMESPACE PressureUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

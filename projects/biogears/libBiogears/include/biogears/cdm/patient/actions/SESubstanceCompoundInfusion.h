@@ -57,4 +57,4 @@ protected:
   SEScalarVolumePerTime* m_Rate;
   const SESubstanceCompound& m_Compound;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

@@ -11,8 +11,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressure.h>
 
-namespace biogears
-{
+OPEN_BIOGEARS_NAMESPACE
   const VolumePerTimePressureUnit VolumePerTimePressureUnit::L_Per_s_mmHg("L/s mmHg");
   const VolumePerTimePressureUnit VolumePerTimePressureUnit::mL_Per_s_mmHg("mL/s mmHg");
   const VolumePerTimePressureUnit VolumePerTimePressureUnit::L_Per_min_mmHg("L/min mmHg");
@@ -111,4 +110,4 @@ namespace biogears
   {
     return !(*this == obj);
   }
-}
+CLOSE_BIOGEARS_NAMESPACE

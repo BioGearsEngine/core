@@ -12,14 +12,14 @@
 
 %import <biogears/cdm/scenario/requests/SEDataRequest.swg>
 
-%nspace biogears::SEEquipmentDataRequest;
+%nspace BIOGEARS_NAMESPACE SEEquipmentDataRequest;
 
-%ignore biogears::SEEquipmentDataRequest::SetType(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEEquipmentDataRequest::SetType(std::string const &);
 
 //#if defined(SWIGCSHARP)
-  %rename(SetDataRequestType) biogears::SEEquipmentDataRequest::SetType(const char* t);
-  %ignore biogears::SEEquipmentDataRequest::SetType(const std::string& t);
-  %rename(GetDataRequestType) biogears::SEEquipmentDataRequest::GetType() const;
+  %rename(SetDataRequestType) BIOGEARS_NAMESPACE SEEquipmentDataRequest::SetType(const char* t);
+  %ignore BIOGEARS_NAMESPACE SEEquipmentDataRequest::SetType(const std::string& t);
+  %rename(GetDataRequestType) BIOGEARS_NAMESPACE SEEquipmentDataRequest::GetType() const;
 //#endif
 
 

@@ -12,7 +12,7 @@
 
 %import <biogears/cdm/scenario/requests/SECompartmentSubstanceDataRequest.swg>
 
-%nspace biogears::SELiquidCompartmentDataRequest;
+%nspace BIOGEARS_NAMESPACE SELiquidCompartmentDataRequest;
 
 %include <biogears/cdm/scenario/requests/SELiquidCompartmentDataRequest.h>
 

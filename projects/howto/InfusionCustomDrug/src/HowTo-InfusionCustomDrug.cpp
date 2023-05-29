@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 
 // Include the various types you will be using in your code
+#include <biogears/config.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
@@ -27,10 +28,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 
 #include <atomic>
-std::unique_ptr<SESubstanceCompound> makeSubstanceCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine)
+std::unique_ptr<SESubstanceCompound> makeSubstanceCompound(std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine>& engine)
 {
   static std::atomic<int> counter { 0 };
   std::stringstream ss;
@@ -38,7 +39,7 @@ std::unique_ptr<SESubstanceCompound> makeSubstanceCompound(std::unique_ptr<bioge
   return std::make_unique<SESubstanceCompound>(ss.str().c_str(), engine->GetLogger());
 }
 
-bool mixSubstanceCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine, std::unique_ptr<SESubstanceCompound>& compound, const char* substance, double concentration, MassPerVolumeUnit unit)
+bool mixSubstanceCompound(std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine>& engine, std::unique_ptr<SESubstanceCompound>& compound, const char* substance, double concentration, MassPerVolumeUnit unit)
 {
   SESubstance* new_substance = engine->GetSubstanceManager().GetSubstance(substance);
   if (new_substance) {
@@ -53,14 +54,14 @@ bool mixSubstanceCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine, s
   return false;
 }
 
-std::string registerCompoundbiogears(std::unique_ptr<biogears::PhysiologyEngine>& engine, std::unique_ptr<SESubstanceCompound>&& compound)
+std::string registerCompoundbiogears(std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine>& engine, std::unique_ptr<SESubstanceCompound>&& compound)
 {
   std::string compound_name = compound->GetName_cStr();
   engine->GetSubstanceManager().AddCompound(*compound.release());
   return compound_name;
 }
 
-bool infuseCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine, std::string compound_name, double volume, VolumeUnit volume_unit, double rate, VolumePerTimeUnit rate_unit)
+bool infuseCompound(std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine>& engine, std::string compound_name, double volume, VolumeUnit volume_unit, double rate, VolumePerTimeUnit rate_unit)
 {
   auto& compound = *engine->GetSubstanceManager().GetCompound(compound_name);
   SESubstanceCompoundInfusion infusion{compound};

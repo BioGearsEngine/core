@@ -11,11 +11,11 @@
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 %import <biogears/cdm/properties/SEScalarTime.swg>
 
-%nspace biogears::SEPainStimulus;
+%nspace BIOGEARS_NAMESPACE SEPainStimulus;
 
-%ignore biogears::SEPainStimulus::Unload;
-%ignore biogears::SEPainStimulus::Load;
+%ignore BIOGEARS_NAMESPACE SEPainStimulus::Unload;
+%ignore BIOGEARS_NAMESPACE SEPainStimulus::Load;
 
-%ignore biogears::SEPainStimulus::SetLocation(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SEPainStimulus::SetLocation(const std::string& name);
 
 %include <biogears/cdm/patient/actions/SEPainStimulus.h>

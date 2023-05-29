@@ -59,34 +59,34 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarHeatCapacitancePerMass HeatCapacitancePerMass = biogears::SEScalarHeatCapacitancePerMass();
+  BIOGEARS_NAMESPACE SEScalarHeatCapacitancePerMass HeatCapacitancePerMass = BIOGEARS_NAMESPACE SEScalarHeatCapacitancePerMass();
   auto ptr = HeatCapacitancePerMass.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::HeatCapacitancePerMassUnit::IsValidUnit("J/K kg");
-  bool unit1 = biogears::HeatCapacitancePerMassUnit::IsValidUnit("kJ/K kg");
-  bool unit2 = biogears::HeatCapacitancePerMassUnit::IsValidUnit("kcal/K kg");
-  bool unit3 = biogears::HeatCapacitancePerMassUnit::IsValidUnit("kcal/degC kg");
+  bool unit0 = BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::IsValidUnit("J/K kg");
+  bool unit1 = BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::IsValidUnit("kJ/K kg");
+  bool unit2 = BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::IsValidUnit("kcal/K kg");
+  bool unit3 = BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::IsValidUnit("kcal/degC kg");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
-  bool unit6 = biogears::HeatCapacitancePerMassUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::HeatCapacitancePerMassUnit mu0 = biogears::HeatCapacitancePerMassUnit::GetCompoundUnit("J/K kg");
-  biogears::HeatCapacitancePerMassUnit mu1 = biogears::HeatCapacitancePerMassUnit::GetCompoundUnit("kJ/K kg");
-  biogears::HeatCapacitancePerMassUnit mu2 = biogears::HeatCapacitancePerMassUnit::GetCompoundUnit("kcal/K kg");
-  biogears::HeatCapacitancePerMassUnit mu3 = biogears::HeatCapacitancePerMassUnit::GetCompoundUnit("kcal/degC kg");
-  EXPECT_EQ(mu0, biogears::HeatCapacitancePerMassUnit::J_Per_K_kg);
-  EXPECT_EQ(mu1, biogears::HeatCapacitancePerMassUnit::kJ_Per_K_kg);
-  EXPECT_EQ(mu2, biogears::HeatCapacitancePerMassUnit::kcal_Per_K_kg);
-  EXPECT_EQ(mu3, biogears::HeatCapacitancePerMassUnit::kcal_Per_C_kg);
-  EXPECT_THROW(biogears::HeatCapacitancePerMassUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit mu0 = BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::GetCompoundUnit("J/K kg");
+  BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit mu1 = BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::GetCompoundUnit("kJ/K kg");
+  BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit mu2 = BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::GetCompoundUnit("kcal/K kg");
+  BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit mu3 = BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::GetCompoundUnit("kcal/degC kg");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::J_Per_K_kg);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::kJ_Per_K_kg);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::kcal_Per_K_kg);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::kcal_Per_C_kg);
+  EXPECT_THROW(BIOGEARS_NAMESPACE HeatCapacitancePerMassUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

@@ -83,4 +83,4 @@ void SESodaLimeFailure::ToString(std::ostream& str) const
   HasSeverity() ? str << *m_Severity : str << "NaN";
   str << std::flush;
 }
-}
+CLOSE_BIOGEARS_NAMESPACE

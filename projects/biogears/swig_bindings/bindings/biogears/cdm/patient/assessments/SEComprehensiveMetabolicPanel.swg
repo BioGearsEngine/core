@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalarMassPerVolume.swg>
 %import <biogears/cdm/properties/SEScalarAmountPerVolume.swg>
 
-%nspace biogears::SEComprehensiveMetabolicPanel;
+%nspace BIOGEARS_NAMESPACE SEComprehensiveMetabolicPanel;
 
-%ignore biogears::SEComprehensiveMetabolicPanel::Unload;
-%ignore biogears::SEComprehensiveMetabolicPanel::Load;
+%ignore BIOGEARS_NAMESPACE SEComprehensiveMetabolicPanel::Unload;
+%ignore BIOGEARS_NAMESPACE SEComprehensiveMetabolicPanel::Load;
 
 %include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>

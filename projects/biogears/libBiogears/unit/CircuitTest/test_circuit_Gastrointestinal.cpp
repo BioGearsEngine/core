@@ -72,7 +72,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Gastrointestinal_Circuit)
 {
-  biogears::BioGears bg("GastrointestinalCircuitTest.log");
+  BIOGEARS_NAMESPACE BioGears bg("GastrointestinalCircuitTest.log");
   auto m_Circuits = std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(bg));
   auto m_Compartments = std::unique_ptr<BioGearsCompartments>(new BioGearsCompartments(bg));
   SEFluidCircuit& cCombinedCardiovascular = m_Circuits->GetActiveCardiovascularCircuit();
@@ -95,7 +95,7 @@ TEST_F(TEST_FIXTURE_NAME, Gastrointestinal_Circuit)
 
 TEST_F(TEST_FIXTURE_NAME, ExternalTemperature_Circuit)
 {
-  biogears::BioGears bg("ExternalTemperatureCircuitTest.log");
+  BIOGEARS_NAMESPACE BioGears bg("ExternalTemperatureCircuitTest.log");
   auto m_Circuits = std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(bg));
   auto m_Compartments = std::unique_ptr<BioGearsCompartments>(new BioGearsCompartments(bg));
   SEThermalCircuit& exthermal = m_Circuits->GetExternalTemperatureCircuit();
@@ -181,8 +181,8 @@ TEST_F(TEST_FIXTURE_NAME, ExternalTemperature_Circuit)
 
 //TEST_F(TEST_FIXTURE_NAME, InternalTemperature_Circuit)
 //{
-//  biogears::BioGears bg("InternalTemperatureCircuitTest.log");
-//  biogears::Logger logger;
+//  BIOGEARS_NAMESPACE BioGears bg("InternalTemperatureCircuitTest.log");
+//  BIOGEARS_NAMESPACE Logger logger;
 //  auto m_Circuits = std::unique_ptr<BioGearsCircuits>(new BioGearsCircuits(bg));
 //  auto m_Compartments = std::unique_ptr<BioGearsCompartments>(new BioGearsCompartments(bg));
 //  auto m_Patient = std::unique_ptr<SEPatient>(new SEPatient(&logger));

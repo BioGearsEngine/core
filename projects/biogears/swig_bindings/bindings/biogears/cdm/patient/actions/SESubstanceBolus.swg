@@ -16,10 +16,10 @@
 %import <biogears/cdm/properties/SEScalarTime.swg>
 
 
-%nspace biogears::SESubstanceBolus;
+%nspace BIOGEARS_NAMESPACE SESubstanceBolus;
 
-%ignore biogears::SESubstanceBolus::Unload;
-%ignore biogears::SESubstanceBolus::Load;
-%ignore biogears::SESubstanceBolus::ToString(std::ostream& str) const;
+%ignore BIOGEARS_NAMESPACE SESubstanceBolus::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstanceBolus::Load;
+%ignore BIOGEARS_NAMESPACE SESubstanceBolus::ToString(std::ostream& str) const;
 
 %include <biogears/cdm/patient/actions/SESubstanceBolus.h>

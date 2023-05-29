@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalar.swg>
 
 
-%nspace biogears::SESequentialOrganFailureAssessment;
+%nspace BIOGEARS_NAMESPACE SESequentialOrganFailureAssessment;
 
-%ignore biogears::SESequentialOrganFailureAssessment::Unload;
-%ignore biogears::SESequentialOrganFailureAssessment::Load;
+%ignore BIOGEARS_NAMESPACE SESequentialOrganFailureAssessment::Unload;
+%ignore BIOGEARS_NAMESPACE SESequentialOrganFailureAssessment::Load;
 
 %include <biogears/cdm/patient/assessments/SESequentialOrganFailureAssessment.h>

@@ -31,7 +31,7 @@
 #include <biogears/string/manipulation.h>
 #include <biogears/version.h>
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 
 enum class PatientType {
   FILE,
@@ -113,12 +113,12 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
       std::cerr << "Unable to find " << ex.Scenario() << std::endl;
       return static_cast<int>(ExecutionErrors::SCENARIO_IO_ERROR);
     }
-    using biogears::filesystem::path;
+    using BIOGEARS_NAMESPACE filesystem::path;
     using mil::tatrc::physiology::datamodel::ScenarioData;
     std::unique_ptr<ScenarioData> scenario;
     try {
       std::cout << "Reading " << ex.Scenario() << std::endl;
-      auto obj = biogears::Serializer::ReadFile(resolved_filepath,
+      auto obj = BIOGEARS_NAMESPACE Serializer::ReadFile(resolved_filepath,
                                       eng->GetLogger());
       scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
       if (scenario == nullptr) {
@@ -131,7 +131,7 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
       std::cout << e << std::endl;
       return static_cast<int>(ExecutionErrors::SCENARIO_PARSE_ERROR);
     }
-    biogears::SEPatient patient { sce.GetLogger() };
+    BIOGEARS_NAMESPACE SEPatient patient { sce.GetLogger() };
     if (scenario->EngineStateFile().present()) {
       sce.SetEngineStateFile(scenario->EngineStateFile().get());
     } else if (scenario->InitialParameters()->PatientFile().present()) {
@@ -273,10 +273,10 @@ int main(int argc, char* argv[])
     if (vm.count("name")) {
       auto name = vm["name"].as<std ::string>();
       if (name.front() == '\'' && name.back() == '\'') {
-        name = biogears::trim(name, "'");
+        name = BIOGEARS_NAMESPACE trim(name, "'");
       }
       if (name.front() == '\"' && name.back() == '\"') {
-        name = biogears::trim(name, "\"");
+        name = BIOGEARS_NAMESPACE trim(name, "\"");
       }
       ex.Name(name);
     }
@@ -312,11 +312,11 @@ int main(int argc, char* argv[])
     if (vm.count("patient")) {
       auto patient = vm["patient"].as<std ::string>();
       if (patient.front() == '\'' && patient.back() == '\'') {
-        patient = biogears::trim(patient, "'");
+        patient = BIOGEARS_NAMESPACE trim(patient, "'");
       }
 
       if (patient.front() == '\"' && patient.back() == '\"') {
-        patient = biogears::trim(patient, "\"");
+        patient = BIOGEARS_NAMESPACE trim(patient, "\"");
       }
       ex.Patient(patient);
       if (!filesystem::exists(ex.Patient())) {
@@ -326,20 +326,20 @@ int main(int argc, char* argv[])
     if (vm.count("state")) {
       auto state = vm["state"].as<std ::string>();
       if (state.front() == '\'' && state.back() == '\'') {
-        state = biogears::trim(state, "'");
+        state = BIOGEARS_NAMESPACE trim(state, "'");
       }
       if (state.front() == '\"' && state.back() == '\"') {
-        state = biogears::trim(state, "\"");
+        state = BIOGEARS_NAMESPACE trim(state, "\"");
       }
       ex.State(state);
     }
     if (vm.count("scenario")) {
       auto scenario = vm["scenario"].as<std ::string>();
       if (scenario.front() == '\'' && scenario.back() == '\'') {
-        scenario = biogears::trim(scenario, "'");
+        scenario = BIOGEARS_NAMESPACE trim(scenario, "'");
       }
       if (scenario.front() == '\"' && scenario.back() == '\"') {
-        scenario = biogears::trim(scenario, "\"");
+        scenario = BIOGEARS_NAMESPACE trim(scenario, "\"");
       }
       ex.Scenario(scenario);
       if (!filesystem::exists(ex.Scenario())) {
@@ -353,12 +353,12 @@ int main(int argc, char* argv[])
     if (vm.count("results")) {
       auto results = vm["results"].as<std ::string>();
       if (results.front() == '\'' && results.back() == '\'') {
-        results = biogears::trim(results, "'");
+        results = BIOGEARS_NAMESPACE trim(results, "'");
       }
       if (results.front() == '\"' && results.back() == '\"') {
-        results = biogears::trim(results, "\"");
+        results = BIOGEARS_NAMESPACE trim(results, "\"");
       }
-      ex.Results(biogears::split(results, ','));
+      ex.Results(BIOGEARS_NAMESPACE split(results, ','));
     } else {
       std::string trimed_scenario_path(trim(ex.Scenario()));
       auto split_scenario_path = split(trimed_scenario_path, '/');
@@ -370,10 +370,10 @@ int main(int argc, char* argv[])
     if (vm.count("group")) {
       auto group = vm["group"].as<std ::string>();
       if (group.front() == '\'' && group.back() == '\'') {
-        group = biogears::trim(group, "'");
+        group = BIOGEARS_NAMESPACE trim(group, "'");
       }
       if (group.front() == '\"' && group.back() == '\"') {
-        group = biogears::trim(group, "\"");
+        group = BIOGEARS_NAMESPACE trim(group, "\"");
       }
       ex.Group(group);
     }
@@ -398,7 +398,7 @@ int main(int argc, char* argv[])
   auto log_level = Logger::eInfo;
   std::string help_message;
 
-  biogears::Arguments args(
+  BIOGEARS_NAMESPACE Arguments args(
     { "H", "HELP", "V", "VERSION", "Q", "QUIET" }, /*Options*/
     { "N", "NAME", "D", "DRIVER", "G", "GROUP", "P", "PATIENT", "S", "STATE", "R", "RESULTS", "SCENARIO", "L", "LOGLEVEL" }, /*Keywords*/
     {} /*MultiWords*/
@@ -411,7 +411,7 @@ int main(int argc, char* argv[])
       return static_cast<int>(ExecutionErrors::NONE);
     }
     if (args.Option("VERSION") || args.Option("V")) {
-      std::cout << "Using libbiogears-" << biogears::full_version_string() << std::endl;
+      std::cout << "Using libbiogears-" << BIOGEARS_NAMESPACE full_version_string() << std::endl;
       return static_cast<int>(ExecutionErrors::NONE);
     }
     std::cerr << args.error_msg();
@@ -425,7 +425,7 @@ int main(int argc, char* argv[])
   }
 
   if (args.Option("VERSION") || args.Option("V")) {
-    std::cout << "Using libbiogears-" << biogears::full_version_string() << std::endl;
+    std::cout << "Using libbiogears-" << BIOGEARS_NAMESPACE full_version_string() << std::endl;
     return static_cast<int>(ExecutionErrors::NONE);
   }
 
@@ -433,10 +433,10 @@ int main(int argc, char* argv[])
   if (args.KeywordFound("NAME") || args.KeywordFound("N")) {
     auto name = args.Keyword("name");
     if (name.front() == '\'' && name.back() == '\'') {
-      name = biogears::trim(name, "'");
+      name = BIOGEARS_NAMESPACE trim(name, "'");
     }
     if (name.front() == '\"' && name.back() == '\"') {
-      name = biogears::trim(name, "\"");
+      name = BIOGEARS_NAMESPACE trim(name, "\"");
     }
     ex.Name(name);
   }
@@ -494,11 +494,11 @@ int main(int argc, char* argv[])
   if (args.KeywordFound("PATIENT") || args.KeywordFound("P")) {
     auto patient = args.Keyword("patient");
     if (patient.front() == '\'' && patient.back() == '\'') {
-      patient = biogears::trim(patient, "'");
+      patient = BIOGEARS_NAMESPACE trim(patient, "'");
     }
 
     if (patient.front() == '\"' && patient.back() == '\"') {
-      patient = biogears::trim(patient, "\"");
+      patient = BIOGEARS_NAMESPACE trim(patient, "\"");
     }
     ex.Patient(patient);
     if (!filesystem::exists(ex.Patient())) {
@@ -508,20 +508,20 @@ int main(int argc, char* argv[])
   if (args.KeywordFound("STATE") || args.KeywordFound("S")) {
     auto state = args.Keyword("state");
     if (state.front() == '\'' && state.back() == '\'') {
-      state = biogears::trim(state, "'");
+      state = BIOGEARS_NAMESPACE trim(state, "'");
     }
     if (state.front() == '\"' && state.back() == '\"') {
-      state = biogears::trim(state, "\"");
+      state = BIOGEARS_NAMESPACE trim(state, "\"");
     }
     ex.State(state);
   }
   if (args.KeywordFound("SCENARIO")) {
     auto scenario = args.Keyword("scenario");
     if (scenario.front() == '\'' && scenario.back() == '\'') {
-      scenario = biogears::trim(scenario, "'");
+      scenario = BIOGEARS_NAMESPACE trim(scenario, "'");
     }
     if (scenario.front() == '\"' && scenario.back() == '\"') {
-      scenario = biogears::trim(scenario, "\"");
+      scenario = BIOGEARS_NAMESPACE trim(scenario, "\"");
     }
     ex.Scenario(scenario);
     if (!filesystem::exists(ex.Scenario())) {
@@ -531,12 +531,12 @@ int main(int argc, char* argv[])
   if (args.KeywordFound("RESULTS") || args.KeywordFound("R")) {
     auto results = args.Keyword("results");
     if (results.front() == '\'' && results.back() == '\'') {
-      results = biogears::trim(results, "'");
+      results = BIOGEARS_NAMESPACE trim(results, "'");
     }
     if (results.front() == '\"' && results.back() == '\"') {
-      results = biogears::trim(results, "\"");
+      results = BIOGEARS_NAMESPACE trim(results, "\"");
     }
-    ex.Results(biogears::split(results, ','));
+    ex.Results(BIOGEARS_NAMESPACE split(results, ','));
   } else {
     std::string trimed_scenario_path(trim(ex.Scenario()));
     auto split_scenario_path = split(trimed_scenario_path, '/');
@@ -548,10 +548,10 @@ int main(int argc, char* argv[])
   if (args.KeywordFound("GROUP") || args.KeywordFound("G")) {
     auto group = args.Keyword("group");
     if (group.front() == '\'' && group.back() == '\'') {
-      group = biogears::trim(group, "'");
+      group = BIOGEARS_NAMESPACE trim(group, "'");
     }
     if (group.front() == '\"' && group.back() == '\"') {
-      group = biogears::trim(group, "\"");
+      group = BIOGEARS_NAMESPACE trim(group, "\"");
     }
     ex.Group(group);
   }

@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<EnergyUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<EnergyUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const EnergyUnit&) const;
 %rename(NotEquals)  operator!=(const EnergyUnit&) const;
 %rename(Equals)  operator==(const SEScalarEnergy&) const;
 %rename(NotEquals)  operator!=(const SEScalarEnergy&) const;  
 
-%ignore biogears::EnergyUnit::EnergyUnit(std::string const &);
-%ignore biogears::EnergyUnit::IsValidUnit(std::string const &);
-%ignore biogears::EnergyUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE EnergyUnit::EnergyUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE EnergyUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE EnergyUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarEnergy;
-%nspace biogears::EnergyUnit;
-%nspace biogears::SEScalarQuantity<EnergyUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarEnergy;
+%nspace BIOGEARS_NAMESPACE EnergyUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<EnergyUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class EnergyUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::EnergyUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyUnit>;
 
-%ignore  biogears::SEScalarQuantity< EnergyUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< EnergyUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< EnergyUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< EnergyUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< EnergyUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< EnergyUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< EnergyUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< EnergyUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyUnit >::operator!=;
 
-%template(QuantityEnergy) biogears::SEScalarQuantity<biogears::EnergyUnit>;
+%template(QuantityEnergy) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyUnit>;
 
 %include <biogears/cdm/properties/SEScalarEnergy.h>
 

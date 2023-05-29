@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SECardiacArrest;
+%nspace BIOGEARS_NAMESPACE SECardiacArrest;
 
-%ignore biogears::SECardiacArrest::Unload;
-%ignore biogears::SECardiacArrest::Load;
+%ignore BIOGEARS_NAMESPACE SECardiacArrest::Unload;
+%ignore BIOGEARS_NAMESPACE SECardiacArrest::Load;
 
 %include <biogears/cdm/patient/actions/SECardiacArrest.h>

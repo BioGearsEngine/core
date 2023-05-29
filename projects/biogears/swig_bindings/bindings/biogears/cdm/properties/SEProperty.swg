@@ -8,12 +8,12 @@
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/CommonDataModel.swg>
 
-%nspace biogears::SEProperty;
+%nspace BIOGEARS_NAMESPACE SEProperty;
 %rename(Equals)  operator==(const SEProperty&) const;
 %rename(NotEquals)  operator!=(const SEProperty&) const;
 
-%ignore biogears::SEProperty::Unload;
-%ignore biogears::SEProperty::Load;
+%ignore BIOGEARS_NAMESPACE SEProperty::Unload;
+%ignore BIOGEARS_NAMESPACE SEProperty::Load;
 
 %include <biogears/cdm/properties/SEProperty.h>
 

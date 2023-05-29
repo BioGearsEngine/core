@@ -13,15 +13,15 @@
 %import <biogears/cdm/properties/SEScalarFraction.swg>
 
 
-%nspace biogears::SEActiveCooling;
+%nspace BIOGEARS_NAMESPACE SEActiveCooling;
 
-%ignore biogears::SEActiveCooling::Unload;
-%ignore biogears::SEActiveCooling::Load;
-%ignore biogears::SEActiveCooling::GetScalar(const std::string& name);
-%ignore biogears::SEActiveCooling::ToString(std::ostream& str) const;
+%ignore BIOGEARS_NAMESPACE SEActiveCooling::Unload;
+%ignore BIOGEARS_NAMESPACE SEActiveCooling::Load;
+%ignore BIOGEARS_NAMESPACE SEActiveCooling::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SEActiveCooling::ToString(std::ostream& str) const;
 
-%rename (GetPower_const) biogears::SEActiveCooling::GetPower(const PowerUnit& unit) const;
-%rename (GetSurfaceArea_const) biogears::SEActiveCooling::GetSurfaceArea(const AreaUnit& unit) const;
-%rename (GetSurfaceAreaFraction_const) biogears::SEActiveCooling::GetSurfaceAreaFraction() const;
+%rename (GetPower_const) BIOGEARS_NAMESPACE SEActiveCooling::GetPower(const PowerUnit& unit) const;
+%rename (GetSurfaceArea_const) BIOGEARS_NAMESPACE SEActiveCooling::GetSurfaceArea(const AreaUnit& unit) const;
+%rename (GetSurfaceAreaFraction_const) BIOGEARS_NAMESPACE SEActiveCooling::GetSurfaceAreaFraction() const;
 
 %include <biogears/cdm/system/environment/SEActiveCooling.h>

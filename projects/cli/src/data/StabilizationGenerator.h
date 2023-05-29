@@ -16,11 +16,12 @@
 #include <string>
 #include <vector>
 
+#include <biogears/config.h>
 #include <biogears/schema/cdm/EngineConfiguration.hxx>
+
 #include "CSVToXMLConvertor.h"
 
-namespace biogears
-{
+OPEN_BIOGEARS_NAMESPACE
 
   struct Stabilization
   {
@@ -44,6 +45,6 @@ namespace biogears
     mil::tatrc::physiology::datamodel::PhysiologyEngineDynamicStabilizationData _dynamic;
     mil::tatrc::physiology::datamodel::PhysiologyEngineTimedStabilizationData _timed;
   };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //BIOGEARS_STABILIZATION_GENERATOR_H

@@ -59,30 +59,30 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarForce Force = biogears::SEScalarForce();
+  BIOGEARS_NAMESPACE SEScalarForce Force = BIOGEARS_NAMESPACE SEScalarForce();
   auto ptr = Force.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::ForceUnit::IsValidUnit("N");
-  bool unit1 = biogears::ForceUnit::IsValidUnit("lbf");
-  bool unit2 = biogears::ForceUnit::IsValidUnit("dyn");
+  bool unit0 = BIOGEARS_NAMESPACE ForceUnit::IsValidUnit("N");
+  bool unit1 = BIOGEARS_NAMESPACE ForceUnit::IsValidUnit("lbf");
+  bool unit2 = BIOGEARS_NAMESPACE ForceUnit::IsValidUnit("dyn");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
-  bool unit5 = biogears::ForceUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE ForceUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::ForceUnit mu0 = biogears::ForceUnit::GetCompoundUnit("N");
-  biogears::ForceUnit mu1 = biogears::ForceUnit::GetCompoundUnit("lbf");
-  biogears::ForceUnit mu2 = biogears::ForceUnit::GetCompoundUnit("dyn");
-  EXPECT_EQ(mu0, biogears::ForceUnit::N);
-  EXPECT_EQ(mu1, biogears::ForceUnit::lbf);
-  EXPECT_EQ(mu2, biogears::ForceUnit::dyn);
-  EXPECT_THROW(biogears::ForceUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE ForceUnit mu0 = BIOGEARS_NAMESPACE ForceUnit::GetCompoundUnit("N");
+  BIOGEARS_NAMESPACE ForceUnit mu1 = BIOGEARS_NAMESPACE ForceUnit::GetCompoundUnit("lbf");
+  BIOGEARS_NAMESPACE ForceUnit mu2 = BIOGEARS_NAMESPACE ForceUnit::GetCompoundUnit("dyn");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE ForceUnit::N);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE ForceUnit::lbf);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE ForceUnit::dyn);
+  EXPECT_THROW(BIOGEARS_NAMESPACE ForceUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 // Include the various types you will be using in your code
+#include <biogears/config.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
@@ -31,7 +32,7 @@ specific language governing permissions and limitations under the License.
 #include <iostream>
 #include <sstream>
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// A class used to forward log messages for application specific handling logic

@@ -61,7 +61,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Value)
 {
-  biogears::SEScalar scalar1;
+  BIOGEARS_NAMESPACE SEScalar scalar1;
 #ifdef BIOGEARS_THROW_NAN_EXCEPTIONS
   EXPECT_ANY_THROW(EXPECT_TRUE(std::isnan(scalar1.GetValue())));
 #elif defined (NDEBUG)
@@ -75,7 +75,7 @@ TEST_F(TEST_FIXTURE_NAME, Value)
 
 TEST_F(TEST_FIXTURE_NAME, Validity)
 {
-  biogears::SEScalar scalar1;
+  BIOGEARS_NAMESPACE SEScalar scalar1;
 #ifdef BIOGEARS_THROW_NAN_EXCEPTIONS
   EXPECT_ANY_THROW(EXPECT_TRUE(std::isnan(scalar1.GetValue())));
 #elif defined (NDEBUG)
@@ -91,8 +91,8 @@ TEST_F(TEST_FIXTURE_NAME, Validity)
 
 TEST_F(TEST_FIXTURE_NAME, Copy)
 {
-  biogears::SEScalar scalar_1;
-  biogears::SEScalar scalar_2;
+  BIOGEARS_NAMESPACE SEScalar scalar_1;
+  BIOGEARS_NAMESPACE SEScalar scalar_2;
 
   scalar_1.SetValue (3.0);
   scalar_2.SetValue (2.0);
@@ -109,9 +109,9 @@ TEST_F(TEST_FIXTURE_NAME, Copy)
 
 TEST_F(TEST_FIXTURE_NAME, IsPositive)
 {
-  biogears::SEScalar scalar_1;
-  biogears::SEScalar scalar_2;
-  biogears::SEScalar scalar_3;
+  BIOGEARS_NAMESPACE SEScalar scalar_1;
+  BIOGEARS_NAMESPACE SEScalar scalar_2;
+  BIOGEARS_NAMESPACE SEScalar scalar_3;
 
   scalar_1.SetValue(3.0);
   scalar_2.SetValue(-2.0);
@@ -123,9 +123,9 @@ TEST_F(TEST_FIXTURE_NAME, IsPositive)
 
 TEST_F(TEST_FIXTURE_NAME, IsNegative)
 {
-  biogears::SEScalar scalar_1;
-  biogears::SEScalar scalar_2;
-  biogears::SEScalar scalar_3;
+  BIOGEARS_NAMESPACE SEScalar scalar_1;
+  BIOGEARS_NAMESPACE SEScalar scalar_2;
+  BIOGEARS_NAMESPACE SEScalar scalar_3;
 
   scalar_1.SetValue(3.0);
   scalar_2.SetValue(-2.0);
@@ -137,9 +137,9 @@ TEST_F(TEST_FIXTURE_NAME, IsNegative)
 
 TEST_F(TEST_FIXTURE_NAME, IsZero)
 {
-  biogears::SEScalar scalar_1;
-  biogears::SEScalar scalar_2;
-  biogears::SEScalar scalar_3;
+  BIOGEARS_NAMESPACE SEScalar scalar_1;
+  BIOGEARS_NAMESPACE SEScalar scalar_2;
+  BIOGEARS_NAMESPACE SEScalar scalar_3;
 
   scalar_1.SetValue(3.0);
   scalar_2.SetValue(0);
@@ -153,9 +153,9 @@ TEST_F(TEST_FIXTURE_NAME, IsZero)
 
 TEST_F(TEST_FIXTURE_NAME, ReadOnly)
 {
-  biogears::SEScalar scalar_1;
-  biogears::SEScalar scalar_2;
-  biogears::SEScalar scalar_3;
+  BIOGEARS_NAMESPACE SEScalar scalar_1;
+  BIOGEARS_NAMESPACE SEScalar scalar_2;
+  BIOGEARS_NAMESPACE SEScalar scalar_3;
 
   scalar_1.SetValue(3.0);
   scalar_2.SetValue(0);
@@ -207,9 +207,9 @@ TEST_F(TEST_FIXTURE_NAME, ReadOnly)
 
 TEST_F(TEST_FIXTURE_NAME, Incrament)
 {
-  biogears::SEScalar scalar_1;
-  biogears::SEScalar scalar_2;
-  biogears::SEScalar scalar_3;
+  BIOGEARS_NAMESPACE SEScalar scalar_1;
+  BIOGEARS_NAMESPACE SEScalar scalar_2;
+  BIOGEARS_NAMESPACE SEScalar scalar_3;
 
   scalar_1.SetValue(3.0);
   scalar_2.SetValue(0.);
@@ -232,9 +232,9 @@ TEST_F(TEST_FIXTURE_NAME, Incrament)
 }
 TEST_F(TEST_FIXTURE_NAME, Decrement)
 {
-  biogears::SEScalar scalar_1;
-  biogears::SEScalar scalar_2;
-  biogears::SEScalar scalar_3;
+  BIOGEARS_NAMESPACE SEScalar scalar_1;
+  BIOGEARS_NAMESPACE SEScalar scalar_2;
+  BIOGEARS_NAMESPACE SEScalar scalar_3;
 
   scalar_1.SetValue(3.0);
   scalar_2.SetValue(0.);
@@ -260,10 +260,10 @@ TEST_F(TEST_FIXTURE_NAME, Decrement)
 
 TEST_F(TEST_FIXTURE_NAME, Multiply)
 {
-  biogears::SEScalar scalar_1;
-  biogears::SEScalar scalar_2;
-  biogears::SEScalar scalar_3;
-  biogears::SEScalar scalar_4;
+  BIOGEARS_NAMESPACE SEScalar scalar_1;
+  BIOGEARS_NAMESPACE SEScalar scalar_2;
+  BIOGEARS_NAMESPACE SEScalar scalar_3;
+  BIOGEARS_NAMESPACE SEScalar scalar_4;
 
   scalar_1.SetValue(0.0);
   scalar_2.SetValue(1.0);
@@ -286,10 +286,10 @@ TEST_F(TEST_FIXTURE_NAME, Multiply)
 
 TEST_F(TEST_FIXTURE_NAME, Divide)
 {
-  biogears::SEScalar scalar_1;
-  biogears::SEScalar scalar_2;
-  biogears::SEScalar scalar_3;
-  biogears::SEScalar scalar_4;
+  BIOGEARS_NAMESPACE SEScalar scalar_1;
+  BIOGEARS_NAMESPACE SEScalar scalar_2;
+  BIOGEARS_NAMESPACE SEScalar scalar_3;
+  BIOGEARS_NAMESPACE SEScalar scalar_4;
 
   scalar_1.SetValue(0.0);
   scalar_2.SetValue(1.0);
@@ -313,10 +313,10 @@ TEST_F(TEST_FIXTURE_NAME, Divide)
 
 TEST_F(TEST_FIXTURE_NAME, Boolean_Operators)
 {
-  biogears::SEScalar scalar_1{ 0.0 };
-  biogears::SEScalar scalar_2{ 1.0 };
-  biogears::SEScalar scalar_3{ 2.0 };
-  biogears::SEScalar scalar_4{ 4.0 };
+  BIOGEARS_NAMESPACE SEScalar scalar_1{ 0.0 };
+  BIOGEARS_NAMESPACE SEScalar scalar_2{ 1.0 };
+  BIOGEARS_NAMESPACE SEScalar scalar_3{ 2.0 };
+  BIOGEARS_NAMESPACE SEScalar scalar_4{ 4.0 };
 
   EXPECT_TRUE(scalar_1 == scalar_1);
   EXPECT_FALSE(scalar_1 == scalar_2);
@@ -338,7 +338,7 @@ TEST_F(TEST_FIXTURE_NAME, Boolean_Operators)
 
 TEST_F(TEST_FIXTURE_NAME, Nan)
 {
-  biogears::SEScalar scalar_1;
+  BIOGEARS_NAMESPACE SEScalar scalar_1;
 
   EXPECT_TRUE( std::isnan(scalar_1.dNaN()) );
   EXPECT_NE(scalar_1.NaN, scalar_1.NaN);

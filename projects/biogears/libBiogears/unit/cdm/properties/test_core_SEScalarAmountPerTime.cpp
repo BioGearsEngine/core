@@ -59,42 +59,42 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarAmountPerTime AmountPerTime = biogears::SEScalarAmountPerTime();
+  BIOGEARS_NAMESPACE SEScalarAmountPerTime AmountPerTime = BIOGEARS_NAMESPACE SEScalarAmountPerTime();
   auto ptr = AmountPerTime.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::AmountPerTimeUnit::IsValidUnit("mol/day");
-  bool unit1 = biogears::AmountPerTimeUnit::IsValidUnit("mol/s");
-  bool unit2 = biogears::AmountPerTimeUnit::IsValidUnit("umol/s");
-  bool unit3 = biogears::AmountPerTimeUnit::IsValidUnit("mmol/min");
-  bool unit4 = biogears::AmountPerTimeUnit::IsValidUnit("pmol/min");
-  bool unit5 = biogears::AmountPerTimeUnit::IsValidUnit("umol/min");
+  bool unit0 = BIOGEARS_NAMESPACE AmountPerTimeUnit::IsValidUnit("mol/day");
+  bool unit1 = BIOGEARS_NAMESPACE AmountPerTimeUnit::IsValidUnit("mol/s");
+  bool unit2 = BIOGEARS_NAMESPACE AmountPerTimeUnit::IsValidUnit("umol/s");
+  bool unit3 = BIOGEARS_NAMESPACE AmountPerTimeUnit::IsValidUnit("mmol/min");
+  bool unit4 = BIOGEARS_NAMESPACE AmountPerTimeUnit::IsValidUnit("pmol/min");
+  bool unit5 = BIOGEARS_NAMESPACE AmountPerTimeUnit::IsValidUnit("umol/min");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
   EXPECT_EQ(unit5, true);
-  bool unit6 = biogears::AmountPerTimeUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE AmountPerTimeUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::AmountPerTimeUnit mu0 = biogears::AmountPerTimeUnit::GetCompoundUnit("mol/day");
-  biogears::AmountPerTimeUnit mu1 = biogears::AmountPerTimeUnit::GetCompoundUnit("mol/s");
-  biogears::AmountPerTimeUnit mu2 = biogears::AmountPerTimeUnit::GetCompoundUnit("umol/s");
-  biogears::AmountPerTimeUnit mu3 = biogears::AmountPerTimeUnit::GetCompoundUnit("mmol/min");
-  biogears::AmountPerTimeUnit mu4 = biogears::AmountPerTimeUnit::GetCompoundUnit("pmol/min");
-  biogears::AmountPerTimeUnit mu5 = biogears::AmountPerTimeUnit::GetCompoundUnit("umol/min");
-  EXPECT_EQ(mu0, biogears::AmountPerTimeUnit::mol_Per_day);
-  EXPECT_EQ(mu1, biogears::AmountPerTimeUnit::mol_Per_s);
-  EXPECT_EQ(mu2, biogears::AmountPerTimeUnit::umol_Per_s);
-  EXPECT_EQ(mu3, biogears::AmountPerTimeUnit::mmol_Per_min);
-  EXPECT_EQ(mu4, biogears::AmountPerTimeUnit::pmol_Per_min);
-  EXPECT_EQ(mu5, biogears::AmountPerTimeUnit::umol_Per_min);
-  EXPECT_THROW(biogears::AmountPerTimeUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE AmountPerTimeUnit mu0 = BIOGEARS_NAMESPACE AmountPerTimeUnit::GetCompoundUnit("mol/day");
+  BIOGEARS_NAMESPACE AmountPerTimeUnit mu1 = BIOGEARS_NAMESPACE AmountPerTimeUnit::GetCompoundUnit("mol/s");
+  BIOGEARS_NAMESPACE AmountPerTimeUnit mu2 = BIOGEARS_NAMESPACE AmountPerTimeUnit::GetCompoundUnit("umol/s");
+  BIOGEARS_NAMESPACE AmountPerTimeUnit mu3 = BIOGEARS_NAMESPACE AmountPerTimeUnit::GetCompoundUnit("mmol/min");
+  BIOGEARS_NAMESPACE AmountPerTimeUnit mu4 = BIOGEARS_NAMESPACE AmountPerTimeUnit::GetCompoundUnit("pmol/min");
+  BIOGEARS_NAMESPACE AmountPerTimeUnit mu5 = BIOGEARS_NAMESPACE AmountPerTimeUnit::GetCompoundUnit("umol/min");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE AmountPerTimeUnit::mol_Per_day);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE AmountPerTimeUnit::mol_Per_s);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE AmountPerTimeUnit::umol_Per_s);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE AmountPerTimeUnit::mmol_Per_min);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE AmountPerTimeUnit::pmol_Per_min);
+  EXPECT_EQ(mu5, BIOGEARS_NAMESPACE AmountPerTimeUnit::umol_Per_min);
+  EXPECT_THROW(BIOGEARS_NAMESPACE AmountPerTimeUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

@@ -1,6 +1,6 @@
 %{
 #include <biogears/cdm/properties/SEFunction.h>
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 using namespace CDM;
 %}
 
@@ -8,7 +8,7 @@ using namespace CDM;
 
 %import <biogears/cdm/properties/SEProperty.swg>
 
-%nspace biogears::SEFunction;
+%nspace BIOGEARS_NAMESPACE SEFunction;
 
 %rename(Equals)  operator==(const SEFunction&) const;
 %rename(NotEquals)  operator!=(const SEFunction&) const;

@@ -11,10 +11,10 @@
 %import <biogears/cdm/properties/SEScalarArea.swg>
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 
-%nspace biogears::SEChronicObstructivePulmonaryDisease;
+%nspace BIOGEARS_NAMESPACE SEChronicObstructivePulmonaryDisease;
 
-%ignore biogears::SEChronicObstructivePulmonaryDisease::Unload;
-%ignore biogears::SEChronicObstructivePulmonaryDisease::Load;
+%ignore BIOGEARS_NAMESPACE SEChronicObstructivePulmonaryDisease::Unload;
+%ignore BIOGEARS_NAMESPACE SEChronicObstructivePulmonaryDisease::Load;
 
 
 %include <biogears/cdm/patient/conditions/SEChronicObstructivePulmonaryDisease.h>

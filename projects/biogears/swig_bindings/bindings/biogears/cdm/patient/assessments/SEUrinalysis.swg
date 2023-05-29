@@ -12,9 +12,9 @@
 %import <biogears/cdm/properties/SEScalarMassPerVolume.swg>
 %import <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.swg>
 
-%nspace biogears::SEUrinalysis;
+%nspace BIOGEARS_NAMESPACE SEUrinalysis;
 
-%ignore biogears::SEUrinalysis::Unload;
-%ignore biogears::SEUrinalysis::Load;
+%ignore BIOGEARS_NAMESPACE SEUrinalysis::Unload;
+%ignore BIOGEARS_NAMESPACE SEUrinalysis::Load;
 
 %include <biogears/cdm/patient/assessments/SEUrinalysis.h>

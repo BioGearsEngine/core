@@ -16,9 +16,9 @@
 %import <biogears/cdm/patient/actions/SEBreathHold.swg>
 %import <biogears/cdm/patient/actions/SEUseInhaler.swg>
 
-%nspace biogears::SEConsciousRespiration;
+%nspace BIOGEARS_NAMESPACE SEConsciousRespiration;
 
-%ignore biogears::SEConsciousRespiration::Unload;
-%ignore biogears::SEConsciousRespiration::Load;
+%ignore BIOGEARS_NAMESPACE SEConsciousRespiration::Unload;
+%ignore BIOGEARS_NAMESPACE SEConsciousRespiration::Load;
 
 %include <biogears/cdm/patient/actions/SEConsciousRespiration.h>

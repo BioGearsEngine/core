@@ -27,7 +27,7 @@ namespace io {
 CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<string, biogears::SESubstanceTissuePharmacokinetics*>;
+BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SESubstanceTissuePharmacokinetics*>;
 }
 OPEN_BIOGEARS_NAMESPACE
 class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {

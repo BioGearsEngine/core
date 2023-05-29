@@ -16,10 +16,12 @@
 #include <string>
 #include <vector>
 
+#include <biogears/config.h>
 #include <biogears/schema/cdm/PatientNutrition.hxx>
+
 #include "CSVToXMLConvertor.h"
-namespace biogears
-{
+
+OPEN_BIOGEARS_NAMESPACE
 
   class NutritionGenerator : public CSVToXMLConvertor
   {
@@ -35,6 +37,6 @@ namespace biogears
   private:
     std::vector<mil::tatrc::physiology::datamodel::NutritionData> _nutrients;
   };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //BIOGEARS_NUTRITION_GENERATOR_H

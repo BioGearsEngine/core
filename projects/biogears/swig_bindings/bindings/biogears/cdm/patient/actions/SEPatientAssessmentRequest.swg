@@ -8,12 +8,12 @@
 %import <biogears/cdm/CommonDataModel.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEPatientAssessmentRequest;
+%nspace BIOGEARS_NAMESPACE SEPatientAssessmentRequest;
 
-%ignore biogears::SEPatientAssessmentRequest::Unload;
-%ignore biogears::SEPatientAssessmentRequest::Load;
+%ignore BIOGEARS_NAMESPACE SEPatientAssessmentRequest::Unload;
+%ignore BIOGEARS_NAMESPACE SEPatientAssessmentRequest::Load;
 
-%rename (SetPatientAssessmentType) biogears::SEPatientAssessmentRequest::SetType;
-%rename (GetPatientAssessmentType) biogears::SEPatientAssessmentRequest::GetType;
+%rename (SetPatientAssessmentType) BIOGEARS_NAMESPACE SEPatientAssessmentRequest::SetType;
+%rename (GetPatientAssessmentType) BIOGEARS_NAMESPACE SEPatientAssessmentRequest::GetType;
 
 %include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>

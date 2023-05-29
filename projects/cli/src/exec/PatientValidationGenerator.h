@@ -11,12 +11,13 @@
 //CONDITIONS OF ANY KIND, either express or implied.See the License for the
 //specific language governing permissions and limitations under the License.
 //**************************************************************************************
+
+#include <biogears/config.h>
 #include <biogears/threading/thread_pool.h>
 #include <biogears/threading/runnable.h>
 
-namespace biogears
-{
-  class PatientValidationGenerator : biogears::Runnable
+OPEN_BIOGEARS_NAMESPACE
+  class PatientValidationGenerator : BIOGEARS_NAMESPACE Runnable
   {
   public:
     PatientValidationGenerator( size_t thread_count);
@@ -33,6 +34,6 @@ namespace biogears
   private:
     ThreadPool _pool;
   };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //BIOGEARS_STATE_GENERATOR_H

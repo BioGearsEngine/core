@@ -10,10 +10,10 @@
 
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 
-%nspace biogears::SEDehydration;
+%nspace BIOGEARS_NAMESPACE SEDehydration;
 
-%ignore biogears::SEDehydration::Unload;
-%ignore biogears::SEDehydration::Load;
+%ignore BIOGEARS_NAMESPACE SEDehydration::Unload;
+%ignore BIOGEARS_NAMESPACE SEDehydration::Load;
 
 
 %include <biogears/cdm/patient/conditions/SEDehydration.h>

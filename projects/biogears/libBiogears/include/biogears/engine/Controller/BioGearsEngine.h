@@ -146,7 +146,7 @@ protected:
 
 BIOGEARS_API Logger* create_logger(const char* logfile);
 BIOGEARS_API void destroy_logger(Logger** engine);
-BIOGEARS_API BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir);
+BIOGEARS_API BioGearsEngine* create_biogears_engine(BIOGEARS_NAMESPACE Logger* logger, const char* working_dir);
 BIOGEARS_API BioGearsEngine* create_biogears_engine(const char* logger, const char* working_dir);
 BIOGEARS_API void destroy_biogears_engine(BioGearsEngine** engine);
 CLOSE_BIOGEARS_NAMESPACE // namespace biogears

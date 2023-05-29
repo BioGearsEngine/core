@@ -59,38 +59,38 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarVolume Volume = biogears::SEScalarVolume();
+  BIOGEARS_NAMESPACE SEScalarVolume Volume = BIOGEARS_NAMESPACE SEScalarVolume();
   auto ptr = Volume.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::VolumeUnit::IsValidUnit("L");
-  bool unit1 = biogears::VolumeUnit::IsValidUnit("dL");
-  bool unit2 = biogears::VolumeUnit::IsValidUnit("mL");
-  bool unit3 = biogears::VolumeUnit::IsValidUnit("uL");
-  bool unit4 = biogears::VolumeUnit::IsValidUnit("m^3");
+  bool unit0 = BIOGEARS_NAMESPACE VolumeUnit::IsValidUnit("L");
+  bool unit1 = BIOGEARS_NAMESPACE VolumeUnit::IsValidUnit("dL");
+  bool unit2 = BIOGEARS_NAMESPACE VolumeUnit::IsValidUnit("mL");
+  bool unit3 = BIOGEARS_NAMESPACE VolumeUnit::IsValidUnit("uL");
+  bool unit4 = BIOGEARS_NAMESPACE VolumeUnit::IsValidUnit("m^3");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
-  bool unit5 = biogears::VolumeUnit::IsValidUnit("DEADBEEF");
+  bool unit5 = BIOGEARS_NAMESPACE VolumeUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit5, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::VolumeUnit mu0 = biogears::VolumeUnit::GetCompoundUnit("L");
-  biogears::VolumeUnit mu1 = biogears::VolumeUnit::GetCompoundUnit("dL");
-  biogears::VolumeUnit mu2 = biogears::VolumeUnit::GetCompoundUnit("mL");
-  biogears::VolumeUnit mu3 = biogears::VolumeUnit::GetCompoundUnit("uL");
-  biogears::VolumeUnit mu4 = biogears::VolumeUnit::GetCompoundUnit("m^3");
-  EXPECT_EQ(mu0, biogears::VolumeUnit::L);
-  EXPECT_EQ(mu1, biogears::VolumeUnit::dL);
-  EXPECT_EQ(mu2, biogears::VolumeUnit::mL);
-  EXPECT_EQ(mu3, biogears::VolumeUnit::uL);
-  EXPECT_EQ(mu4, biogears::VolumeUnit::m3);
-  EXPECT_THROW(biogears::VolumeUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE VolumeUnit mu0 = BIOGEARS_NAMESPACE VolumeUnit::GetCompoundUnit("L");
+  BIOGEARS_NAMESPACE VolumeUnit mu1 = BIOGEARS_NAMESPACE VolumeUnit::GetCompoundUnit("dL");
+  BIOGEARS_NAMESPACE VolumeUnit mu2 = BIOGEARS_NAMESPACE VolumeUnit::GetCompoundUnit("mL");
+  BIOGEARS_NAMESPACE VolumeUnit mu3 = BIOGEARS_NAMESPACE VolumeUnit::GetCompoundUnit("uL");
+  BIOGEARS_NAMESPACE VolumeUnit mu4 = BIOGEARS_NAMESPACE VolumeUnit::GetCompoundUnit("m^3");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE VolumeUnit::L);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE VolumeUnit::dL);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE VolumeUnit::mL);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE VolumeUnit::uL);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE VolumeUnit::m3);
+  EXPECT_THROW(BIOGEARS_NAMESPACE VolumeUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

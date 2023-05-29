@@ -8,14 +8,14 @@
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/scenario/SEAction.swg>
 
-%nspace biogears::SEPatientAction;
+%nspace BIOGEARS_NAMESPACE SEPatientAction;
 
-%ignore biogears::SEPatientAction::Unload;
-%ignore biogears::SEPatientAction::Load;
+%ignore BIOGEARS_NAMESPACE SEPatientAction::Unload;
+%ignore BIOGEARS_NAMESPACE SEPatientAction::Load;
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEPatientAction::ToString() const "public override";
-%csmethodmodifiers biogears::SEPatientAction::ToString(std::ostream& str) const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEPatientAction::ToString() const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEPatientAction::ToString(std::ostream& str) const "public override";
 #endif 
 
 %include <biogears/cdm/patient/actions/SEPatientAction.h>

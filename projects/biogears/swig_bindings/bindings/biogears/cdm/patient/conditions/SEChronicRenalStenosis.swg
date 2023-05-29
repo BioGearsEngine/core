@@ -10,10 +10,10 @@
 
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 
-%nspace biogears::SEChronicRenalStenosis;
+%nspace BIOGEARS_NAMESPACE SEChronicRenalStenosis;
 
-%ignore biogears::SEChronicRenalStenosis::Unload;
-%ignore biogears::SEChronicRenalStenosis::Load;
+%ignore BIOGEARS_NAMESPACE SEChronicRenalStenosis::Unload;
+%ignore BIOGEARS_NAMESPACE SEChronicRenalStenosis::Load;
 
 
 %include <biogears/cdm/patient/conditions/SEChronicRenalStenosis.h>

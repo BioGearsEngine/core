@@ -43,9 +43,9 @@ namespace std
 
 %include <biogears/exports.h>
 
-%nspace "biogears::CommonDataModelException"
+%nspace "BIOGEARS_NAMESPACE CommonDataModelException"
 
-%ignore biogears::CommonDataModelException::CommonDataModelException(std::string const &);
+%ignore BIOGEARS_NAMESPACE CommonDataModelException::CommonDataModelException(std::string const &);
 
 %ignore Unload;
 %ignore Load; 
@@ -330,9 +330,13 @@ namespace tatrc {
     class  enumTourniquetApplicationLevel  {
     public:
       enum value {
-        Applied,
-        Misapplied,
-        None
+        Applied
+        ,Misapplied
+        #ifdef SWIGPYTHON
+            ,NotApplied
+        #else
+            ,None
+        #endif
       };
     };
     //Patient Assessment

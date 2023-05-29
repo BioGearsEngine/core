@@ -13,9 +13,9 @@
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 %import <biogears/cdm/patient/actions/SEChestCompression.swg>
 
-%nspace biogears::SEChestCompressionForceScale;
+%nspace BIOGEARS_NAMESPACE SEChestCompressionForceScale;
 
-%ignore biogears::SEChestCompressionForceScale::Unload;
-%ignore biogears::SEChestCompressionForceScale::Load;
+%ignore BIOGEARS_NAMESPACE SEChestCompressionForceScale::Unload;
+%ignore BIOGEARS_NAMESPACE SEChestCompressionForceScale::Load;
 
 %include <biogears/cdm/patient/actions/SEChestCompressionForceScale.h>

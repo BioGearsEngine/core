@@ -3,7 +3,8 @@
 ###############################################################################
 message(STATUS "  Configuring libbiogears")
 
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/config.h.in  ${CMAKE_CURRENT_BINARY_DIR}/../generated/biogears/config.h NEWLINE_STYLE LF)
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/config.h.in  
+  ${CMAKE_CURRENT_BINARY_DIR}/../generated/biogears/config.h NEWLINE_STYLE LF)
 
 #Biogears CDM
 add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\schema\\")
@@ -54,9 +55,12 @@ if(Biogears_BUILD_STATIC)
     )
     add_dependencies(libbiogears hex_bindings)
   set_target_properties(libbiogears PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
-   if(biogears_USE_OVERRIDE_CONTROL)
+  if(biogears_USE_OVERRIDE_CONTROL)
       target_compile_definitions( libbiogears PRIVATE BIOGEARS_USE_OVERRIDE_CONTROL)
-   endif()
+  endif()
+  if ( BIOGEARS_WITHOUT_NAMESPACE )
+    target_compile_definitions(libbiogears PUBLIC  BIOGEARS_WITHOUT_NAMESPACES)
+  endif()
   if(UNITTEST_biogears-core)
      target_compile_definitions( libbiogears PUBLIC ENABLE_UNIT_TEST_API)
   endif()
@@ -81,7 +85,7 @@ if(Biogears_BUILD_STATIC)
    if(Biogears_THROW_NAN_EXCEPTIONS )
         target_compile_definitions(libbiogears PUBLIC BIOGEARS_THROW_NAN_EXCEPTIONS )
   endif()
-   if(Biogears_BUILD_STATIC)
+  if(Biogears_BUILD_STATIC)
         target_compile_definitions(libbiogears PUBLIC BIOGEARS_STATIC_BUILD)
   endif()
   target_include_directories(libbiogears
@@ -152,6 +156,9 @@ else()
   endif()
   if(Biogears_USE_OVERRIDE_CONTROL)
        target_compile_definitions( libbiogears  PRIVATE BIOGEARS_USE_OVERRIDE_CONTROL)
+  endif()
+  if ( BIOGEARS_WITHOUT_NAMESPACE )
+    target_compile_definitions(libbiogears PUBLIC  BIOGEARS_WITHOUT_NAMESPACES)
   endif()
 
   target_include_directories(libbiogears 

@@ -8,16 +8,16 @@
 
 %import <biogears/cdm/properties/SEUnitScalar.swg>
 
-%nspace biogears::SEScalarQuantity;
-%nspace biogears::QuantityUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity;
+%nspace BIOGEARS_NAMESPACE QuantityUnit;
 
-%ignore biogears::SEScalarQuantity<TimeUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<TimeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const SEScalarQuantity&) const;
 %rename(NotEquals)  operator!=(const SEScalarQuantity&) const;
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity::ToString() const "public override";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity::ToString() const "public override";
 #endif 
 
 %ignore  SEScalarQuantity::GetValue(std::string const &) const ;

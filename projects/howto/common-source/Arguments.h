@@ -17,10 +17,11 @@
 #include <string>
 #include <vector>
 
+#include <biogears/config.h>
 //! \file
 //! \brief Case insensitive argument parser based on cmake_handle_arguments
 
-namespace biogears  {
+OPEN_BIOGEARS_NAMESPACE
 class Arguments {
 public:
 
@@ -55,6 +56,6 @@ protected:
   bool _empty = true;
 };
 
-}
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //ARGUMENT_PARSER_HPP

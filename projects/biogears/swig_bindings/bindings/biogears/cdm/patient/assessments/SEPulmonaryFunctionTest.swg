@@ -12,9 +12,9 @@
 %import <biogears/cdm/properties/SEScalarVolumePerTime.swg>
 %import <biogears/cdm/properties/SEFunctionVolumeVsTime.swg>
 
-%nspace biogears::SEPulmonaryFunctionTest;
+%nspace BIOGEARS_NAMESPACE SEPulmonaryFunctionTest;
 
-%ignore biogears::SEPulmonaryFunctionTest::Unload;
-%ignore biogears::SEPulmonaryFunctionTest::Load;
+%ignore BIOGEARS_NAMESPACE SEPulmonaryFunctionTest::Unload;
+%ignore BIOGEARS_NAMESPACE SEPulmonaryFunctionTest::Load;
 
 %include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>

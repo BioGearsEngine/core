@@ -13,8 +13,8 @@
 
 %import <biogears/cdm/scenario/requests/SECompartmentSubstanceDataRequest.swg>
 
-%nspace biogears::SEGasCompartmentDataRequest;
+%nspace BIOGEARS_NAMESPACE SEGasCompartmentDataRequest;
 
-%rename (SetProperties) biogears::SEGasCompartmentDataRequest::Set; 
+%rename (SetProperties) BIOGEARS_NAMESPACE SEGasCompartmentDataRequest::Set; 
 
 %include <biogears/cdm/scenario/requests/SEGasCompartmentDataRequest.h>

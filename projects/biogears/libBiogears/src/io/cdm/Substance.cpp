@@ -628,17 +628,17 @@ namespace io {
   //-----------------------------------------------------------------------------
   void Substance::Copy(const SESubstanceClearance& in, SESubstanceClearance& out)
   {
-    ::biogears::io::Copy<SESubstanceClearance, CDM::SubstanceClearanceData>(in, out);
+    ::BIOGEARS_NAMESPACE io::Copy<SESubstanceClearance, CDM::SubstanceClearanceData>(in, out);
   }
   //-----------------------------------------------------------------------------
   void Substance::Copy(const SESubstance& in, SESubstance& out)
   {
-    ::biogears::io::Copy<SESubstance, CDM::SubstanceData>(in, out);
+    ::BIOGEARS_NAMESPACE io::Copy<SESubstance, CDM::SubstanceData>(in, out);
   }
   //-----------------------------------------------------------------------------
   void Substance::Copy(const SESubstanceCompound& in, const SESubstanceManager& subMgr, SESubstanceCompound& out)
   {
-    ::biogears::io::Copy<SESubstanceCompound, CDM::SubstanceCompoundData>(in, subMgr, out);
+    ::BIOGEARS_NAMESPACE io::Copy<SESubstanceCompound, CDM::SubstanceCompoundData>(in, subMgr, out);
     CDM::SubstanceCompoundData data;
     Substance::UnMarshall(in, data);
     Substance::Marshall(data, subMgr, out);
@@ -646,12 +646,12 @@ namespace io {
   //-----------------------------------------------------------------------------
   void Substance::Copy(const SESubstanceFraction& in, SESubstanceFraction& out)
   {
-    ::biogears::io::Copy<SESubstanceFraction, CDM::SubstanceFractionData>(in, out);
+    ::BIOGEARS_NAMESPACE io::Copy<SESubstanceFraction, CDM::SubstanceFractionData>(in, out);
   }
   //-----------------------------------------------------------------------------
   void Substance::Copy(const SESubstanceConcentration& in, SESubstanceConcentration& out)
   {
-    ::biogears::io::Copy<SESubstanceConcentration, CDM::SubstanceConcentrationData>(in, out);
+    ::BIOGEARS_NAMESPACE io::Copy<SESubstanceConcentration, CDM::SubstanceConcentrationData>(in, out);
   }
   //-----------------------------------------------------------------------------
 }

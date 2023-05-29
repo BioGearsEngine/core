@@ -51,14 +51,14 @@ protected:
   // before the destructor).
   virtual void TearDown() override;
 
-  biogears::Logger* logger;
-  biogears::SEEndocrineSystem* es;
+  BIOGEARS_NAMESPACE Logger* logger;
+  BIOGEARS_NAMESPACE SEEndocrineSystem* es;
 };
 
 void TEST_FIXTURE_NAME::SetUp()
 {
-  logger = new biogears::Logger;
-  es = new biogears::SEEndocrineSystem(logger);
+  logger = new BIOGEARS_NAMESPACE Logger;
+  es = new BIOGEARS_NAMESPACE SEEndocrineSystem(logger);
 }
 
 void TEST_FIXTURE_NAME::TearDown()
@@ -73,7 +73,7 @@ TEST_F(TEST_FIXTURE_NAME, InsulinSynthesisRate)
   EXPECT_TRUE( es->HasInsulinSynthesisRate());
   EXPECT_EQ(1.0, es->GetInsulinSynthesisRate(AmountPerTimeUnit::mmol_Per_min));
 
-  const biogears::SEEndocrineSystem ces(logger);
+  const BIOGEARS_NAMESPACE SEEndocrineSystem ces(logger);
   EXPECT_FALSE( ces.HasInsulinSynthesisRate());
   auto dvalue = ces.GetInsulinSynthesisRate(AmountPerTimeUnit::mmol_Per_min);
   EXPECT_NE(dvalue, dvalue);
@@ -85,7 +85,7 @@ TEST_F(TEST_FIXTURE_NAME, GlucagonSynthesisRate)
   EXPECT_TRUE( es->HasGlucagonSynthesisRate());
   EXPECT_EQ(1.0, es->GetGlucagonSynthesisRate(AmountPerTimeUnit::mmol_Per_min));
 
-  const biogears::SEEndocrineSystem ces(logger);
+  const BIOGEARS_NAMESPACE SEEndocrineSystem ces(logger);
   EXPECT_FALSE( ces.HasGlucagonSynthesisRate());
   auto dvalue = ces.GetGlucagonSynthesisRate(AmountPerTimeUnit::mmol_Per_min);
   EXPECT_NE(dvalue, dvalue);

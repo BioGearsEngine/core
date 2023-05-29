@@ -15,9 +15,12 @@
 #include <string>
 #include <vector>
 
+#include <biogears/config.h>
+
 #include "Executor.h"
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
+
 class Tokenizer;
 
 class Config {
@@ -127,6 +130,7 @@ private:
   std::string _current_group;
   std::vector<Executor> _execs;
 };
-}
+
+CLOSE_BIOGEARS_NAMESPACE
 
 #endif //CMD_BIO_CONFIG_H

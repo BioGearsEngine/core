@@ -43,8 +43,8 @@ struct embedded_resource_resolver : DOMLSResourceResolver {
                                        XMLCh const* const baseURI)
   {
 #ifdef BIOGEARS_IO_PRESENT
-    using ::biogears::filesystem::path;
-    using namespace ::biogears::io;
+    using ::BIOGEARS_NAMESPACE filesystem::path;
+    using namespace ::BIOGEARS_NAMESPACE io;
     std::string systemId_str = xml::transcode<char>(systemId);
     std::string baseURI_str = xml::transcode<char>(baseURI);
 

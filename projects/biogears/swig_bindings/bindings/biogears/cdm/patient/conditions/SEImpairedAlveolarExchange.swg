@@ -11,11 +11,11 @@
 %import <biogears/cdm/properties/SEScalarArea.swg>
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 
-%nspace biogears::SEImpairedAlveolarExchange;
+%nspace BIOGEARS_NAMESPACE SEImpairedAlveolarExchange;
 
-%ignore biogears::SEImpairedAlveolarExchange::Unload;
-%ignore biogears::SEImpairedAlveolarExchange::Load;
+%ignore BIOGEARS_NAMESPACE SEImpairedAlveolarExchange::Unload;
+%ignore BIOGEARS_NAMESPACE SEImpairedAlveolarExchange::Load;
 
-%ignore biogears::SEImpairedAlveolarExchange::GetImpairedFraction() const;
+%ignore BIOGEARS_NAMESPACE SEImpairedAlveolarExchange::GetImpairedFraction() const;
 
 %include <biogears/cdm/patient/conditions/SEImpairedAlveolarExchange.h>

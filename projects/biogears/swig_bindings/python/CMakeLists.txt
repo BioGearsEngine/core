@@ -7,8 +7,10 @@
 
    find_package(Python3  COMPONENTS Interpreter Development REQUIRED)
 
-   if(Biogears_BUILD_PYBIND11_BINDINGS)
-     message(FATAL_ERROR "Unable to build PyBind11 and SWIG Python3 Hooks at the same time. Please disable at least one project")
+   option(BIOGEARS_WITHOUT_NAMESPACE "Eliminates the use of the biogears namespace for the C++ libraries. Required for Python Bindings" ON)
+
+   if (NOT BIOGEARS_WITHOUT_NAMESPACE) 
+    message(FATAL_ERROR "Pythong SWIG bindings will not work unless BIOGEARS_NO_NAMESPACE is enabled.")
    endif()
 
    if(Python3_FOUND)
@@ -40,6 +42,9 @@
      target_include_directories(libbiogears_py PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../bindings"
                                                       PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../libbiogears/include"
      )
+    if ( BIOGEARS_WITHOUT_NAMESPACE )
+        target_compile_definitions(libbiogears_py PUBLIC  BIOGEARS_WITHOUT_NAMESPACES)
+    endif()
      target_link_libraries(libbiogears_py PUBLIC libbiogears Python3::Python)
      set_target_properties(libbiogears_py PROPERTIES
        POSITION_INDEPENDENT_CODE ON

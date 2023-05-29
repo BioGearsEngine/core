@@ -126,4 +126,4 @@ private:
   SERunning m_runningExercise;
   SEStrengthTraining m_strengthExercise;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

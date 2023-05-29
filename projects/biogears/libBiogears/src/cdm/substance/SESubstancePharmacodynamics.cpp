@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Substance.hxx>
 
 namespace std {
-template class map<string, biogears::SEPharmacodynamicModifier*>;
+template class map<string, BIOGEARS_NAMESPACE SEPharmacodynamicModifier*>;
 }
 OPEN_BIOGEARS_NAMESPACE
 

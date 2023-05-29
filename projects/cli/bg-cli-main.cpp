@@ -31,6 +31,7 @@
 #include "utils/Config.h"
 #include "utils/ReportWriter.h"
 
+#include <biogears/config.h>
 #include <biogears/cdm/utils/ConfigParser.h>
 #include <biogears/version.h>
 
@@ -53,9 +54,9 @@ bool g_run_generate_populations = false;
 bool g_run_generate_runtime_directory = false;
 bool g_run_generate_data = false;
 
-biogears::Arguments::KeywordValue g_runtime_directory;
-biogears::Arguments::MultiwordValue g_requested_table_formats;
-biogears::Arguments::MultiwordValue g_patient_population_args;
+BIOGEARS_NAMESPACE Arguments::KeywordValue g_runtime_directory;
+BIOGEARS_NAMESPACE Arguments::MultiwordValue g_requested_table_formats;
+BIOGEARS_NAMESPACE Arguments::MultiwordValue g_patient_population_args;
 
 constexpr int BG_CLI_SUCCESS = 0;
 constexpr int BG_CLI_PARSE_ERROR = 1;
@@ -109,7 +110,7 @@ void print_help(int rc)
 #ifdef BIOGEARS_IO_PRESENT
 bool genRuntime(std::string pathName)
 {
-  biogears::IOManager iom;
+  BIOGEARS_NAMESPACE IOManager iom;
   return iom.generate_runtime_directory(pathName.c_str());
 }
 #endif
@@ -117,7 +118,7 @@ bool genRuntime(std::string pathName)
 //  This function parses the multword value list of a GENERATE
 //  keyword and proeprly queues the correct operations needed to process
 //  the command
-void parse_generate_arguments(biogears::Arguments::MultiwordValue&& args)
+void parse_generate_arguments(BIOGEARS_NAMESPACE Arguments::MultiwordValue&& args)
 {
 
   auto is_keyword = [](const std::string& v) 
@@ -198,7 +199,7 @@ void parse_generate_arguments(biogears::Arguments::MultiwordValue&& args)
 //!
 int main(int argc, char** argv)
 {
-  biogears::Arguments args(
+  BIOGEARS_NAMESPACE Arguments args(
     { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION" }, /*Options*/
     { "J", "JOBS" }, /*Keywords*/
     { "TEST", "CONFIG", "SCENARIO", "VALIDATE", "GENTABLES", "GENPATIENTS", "GENERATE", "GEN" } /*MultiWords*/
@@ -224,7 +225,7 @@ int main(int argc, char** argv)
   }
 
   if (args.Option("VERSION") || args.Option("V")) {
-    std::cout << "Using " << biogears::branded_version_string_str() << std::endl;
+    std::cout << "Using " << BIOGEARS_NAMESPACE branded_version_string_str() << std::endl;
     exit(BG_CLI_SUCCESS);
   }
 
@@ -250,7 +251,7 @@ int main(int argc, char** argv)
   }
 #ifdef BIOGEARS_IO_PRESENT
   if (args.KeywordFound("SHA1")) {
-    biogears::IOManager iom;
+    BIOGEARS_NAMESPACE IOManager iom;
     auto path = args.Keyword("SHA1");
     auto sha1 = iom.calculate_sha1(path.c_str());
     if (sha1.empty()) {
@@ -275,12 +276,12 @@ int main(int argc, char** argv)
   }
 #endif
 
-  biogears::Driver driver { argv[0], thread_count };
+  BIOGEARS_NAMESPACE Driver driver { argv[0], thread_count };
 
   //
   //  This reads a predefined configuration file to setup email notification values
   //  TODO: Implement Email Notifications
-  const biogears::Config conf { "config/Email.config", true };
+  const BIOGEARS_NAMESPACE Config conf { "config/Email.config", true };
   driver.configure(conf);
 
   bool as_subprocess = false;
@@ -325,32 +326,32 @@ int main(int argc, char** argv)
 //
 #ifdef BIOGEARS_IO_PRESENT
   if (g_run_generate_runtime_directory) {
-    std::cout << "Generating runtime for " << biogears::full_version_string() << " in " << g_runtime_directory;
+    std::cout << "Generating runtime for " << BIOGEARS_NAMESPACE full_version_string() << " in " << g_runtime_directory;
     bool success = genRuntime(g_runtime_directory);
     exit((success) ? 0 : 1);
   }
 #endif
 
   if (g_run_generate_patient_states) {
-    const biogears::Config runs { "config/GenStates.config" };
+    const BIOGEARS_NAMESPACE Config runs { "config/GenStates.config" };
     driver.queue(runs, as_subprocess);
   }
   if (g_run_generate_sepsis_states) {
-    const biogears::Config runs { "config/GenSepsisStates.config" };
+    const BIOGEARS_NAMESPACE Config runs { "config/GenSepsisStates.config" };
     driver.queue(runs, as_subprocess);
   }
   if (g_run_generate_populations) {
-    biogears::PopulationGenerator generator { g_patient_population_args };
+    BIOGEARS_NAMESPACE PopulationGenerator generator { g_patient_population_args };
     generator.Generate();
   }
   if (g_run_generate_data) { // gen-data
-    std::vector<std::unique_ptr<biogears::CSVToXMLConvertor>> generators;
-    generators.push_back(std::make_unique<biogears::SubstanceGenerator>());
-    generators.push_back(std::make_unique<biogears::EnvironmentGenerator>());
-    generators.push_back(std::make_unique<biogears::PatientGenerator>());
-    generators.push_back(std::make_unique<biogears::StabilizationGenerator>());
-    generators.push_back(std::make_unique<biogears::NutritionGenerator>());
-    generators.push_back(std::make_unique<biogears::CompoundGenerator>());
+    std::vector<std::unique_ptr<BIOGEARS_NAMESPACE CSVToXMLConvertor>> generators;
+    generators.push_back(std::make_unique<BIOGEARS_NAMESPACE SubstanceGenerator>());
+    generators.push_back(std::make_unique<BIOGEARS_NAMESPACE EnvironmentGenerator>());
+    generators.push_back(std::make_unique<BIOGEARS_NAMESPACE PatientGenerator>());
+    generators.push_back(std::make_unique<BIOGEARS_NAMESPACE StabilizationGenerator>());
+    generators.push_back(std::make_unique<BIOGEARS_NAMESPACE NutritionGenerator>());
+    generators.push_back(std::make_unique<BIOGEARS_NAMESPACE CompoundGenerator>());
     for (auto& gen : generators) {
       std::cout << "Generating Data: " << gen->Path() << gen->Filename() << "\n";
       gen->parse();
@@ -369,10 +370,10 @@ int main(int argc, char** argv)
     for (auto& test : tests) {
       std::transform(test.begin(), test.end(), test.begin(), ::tolower);
       if (test == "cdm") { // run-cdm-tests
-        biogears::Config runs { "config/CDMUnitTests.config" };
+        BIOGEARS_NAMESPACE Config runs { "config/CDMUnitTests.config" };
         driver.queue(runs, as_subprocess);
       } else if (test == "bge") {
-        biogears::Config runs { "config/BGEUnitTests.config" };
+        BIOGEARS_NAMESPACE Config runs { "config/BGEUnitTests.config" };
         driver.queue(runs, as_subprocess);
       } else {
         std::cout << "Warning: No Test known as " << test << " exists.\n";
@@ -402,38 +403,38 @@ int main(int argc, char** argv)
   }
 
   if (g_run_system_validation) { // run-system-validation
-    const auto runs = biogears::Config("config/ValidationSystems.config");
+    const auto runs = BIOGEARS_NAMESPACE Config("config/ValidationSystems.config");
     driver.queue(runs, as_subprocess);
   }
   if (g_run_patient_validation) { //run-patient-validation
-    const auto runs = biogears::Config("config/ValidationPatients.config");
+    const auto runs = BIOGEARS_NAMESPACE Config("config/ValidationPatients.config");
     driver.queue(runs, as_subprocess);
   }
   if (g_run_drug_validation) { // run-drug-validation
-    const auto runs = biogears::Config("config/ValidationDrugs.config");
+    const auto runs = BIOGEARS_NAMESPACE Config("config/ValidationDrugs.config");
     driver.queue(runs, as_subprocess);
   }
   if (g_run_verification_routine) { // run-verification
-    const auto runs = biogears::Config("config/VerificationScenarios.config");
+    const auto runs = BIOGEARS_NAMESPACE Config("config/VerificationScenarios.config");
     driver.queue(runs, as_subprocess);
   }
   if (g_run_custom_validation) { // run-custom-file
-    const auto runs = biogears::Config("CustomScenarios.config");
+    const auto runs = BIOGEARS_NAMESPACE Config("CustomScenarios.config");
     driver.queue(runs, as_subprocess);
   }
 
   if (args.MultiWordFound("CONFIG")) {
-    auto configs = biogears::Config {};
+    auto configs = BIOGEARS_NAMESPACE Config {};
     for (auto& arg : args.MultiWord("CONFIG")) {
-      const auto runs = biogears::Config(arg);
+      const auto runs = BIOGEARS_NAMESPACE Config(arg);
       driver.queue(runs, as_subprocess);
     }
   }
 
   if (args.MultiWordFound("SCENARIO")) {
-    auto configs = biogears::Config {};
+    auto configs = BIOGEARS_NAMESPACE Config {};
     for (auto& arg : args.MultiWord("SCENARIO")) {
-      auto ex = biogears::Executor { arg, biogears::EDriver::ScenarioTestDriver };
+      auto ex = BIOGEARS_NAMESPACE Executor { arg, BIOGEARS_NAMESPACE EDriver::ScenarioTestDriver };
       ex.Computed("Scenarios/");
       ex.Scenario(arg);
       configs.push_back(ex);
@@ -448,29 +449,29 @@ int main(int argc, char** argv)
   }
   //We want Gentables to run after all other work has finished
   if (g_run_generate_tables) {
-    biogears::ReportWriter report_writer;
+    BIOGEARS_NAMESPACE ReportWriter report_writer;
     for (auto& table : g_requested_table_formats) {
       std::transform(table.begin(), table.end(), table.begin(), ::tolower);
       if (table == "html") {
-        report_writer.generate_system_tables(biogears::ReportWriter::HTML);
-        report_writer.generate_patient_tables(biogears::ReportWriter::HTML);
+        report_writer.generate_system_tables(BIOGEARS_NAMESPACE ReportWriter::HTML);
+        report_writer.generate_patient_tables(BIOGEARS_NAMESPACE ReportWriter::HTML);
       } else if (table == "md") {
-        report_writer.generate_system_tables(biogears::ReportWriter::MD);
-        report_writer.generate_patient_tables(biogears::ReportWriter::MD);
+        report_writer.generate_system_tables(BIOGEARS_NAMESPACE ReportWriter::MD);
+        report_writer.generate_patient_tables(BIOGEARS_NAMESPACE ReportWriter::MD);
       } else if (table == "xml") {
-        report_writer.generate_system_tables(biogears::ReportWriter::XML);
-        report_writer.generate_patient_tables(biogears::ReportWriter::XML);
+        report_writer.generate_system_tables(BIOGEARS_NAMESPACE ReportWriter::XML);
+        report_writer.generate_patient_tables(BIOGEARS_NAMESPACE ReportWriter::XML);
       } else if (table == "web") {
-        report_writer.generate_system_tables(biogears::ReportWriter::WEB);
-        report_writer.generate_patient_tables(biogears::ReportWriter::WEB);
+        report_writer.generate_system_tables(BIOGEARS_NAMESPACE ReportWriter::WEB);
+        report_writer.generate_patient_tables(BIOGEARS_NAMESPACE ReportWriter::WEB);
       } else if (table == "all") {
-        report_writer.generate_system_tables(biogears::ReportWriter::HTML);
-        report_writer.generate_system_tables(biogears::ReportWriter::MD);
-        report_writer.generate_system_tables(biogears::ReportWriter::XML);
+        report_writer.generate_system_tables(BIOGEARS_NAMESPACE ReportWriter::HTML);
+        report_writer.generate_system_tables(BIOGEARS_NAMESPACE ReportWriter::MD);
+        report_writer.generate_system_tables(BIOGEARS_NAMESPACE ReportWriter::XML);
 
-        report_writer.generate_patient_tables(biogears::ReportWriter::HTML);
-        report_writer.generate_patient_tables(biogears::ReportWriter::MD);
-        report_writer.generate_patient_tables(biogears::ReportWriter::XML);
+        report_writer.generate_patient_tables(BIOGEARS_NAMESPACE ReportWriter::HTML);
+        report_writer.generate_patient_tables(BIOGEARS_NAMESPACE ReportWriter::MD);
+        report_writer.generate_patient_tables(BIOGEARS_NAMESPACE ReportWriter::XML);
       } else {
         std::cout << "Warning: " << table << " is not a valid keyword.\n";
       }

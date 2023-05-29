@@ -3,19 +3,19 @@
 #include <exception>
 #include <biogears/container/Tree.h>
 #include <biogears/container/Tree.tci.h>
-using biogears::Tree;
+using BIOGEARS_NAMESPACE Tree;
 %}
 
 
 %import <biogears/exports.swg>
 
-%nspace biogears::Tree;
+%nspace BIOGEARS_NAMESPACE Tree;
 
 
-%rename (at) biogears::Tree::operator[]( size_t pos );
-%rename (CopyFrom) biogears::Tree::operator=(const Tree&);
+%rename (at) BIOGEARS_NAMESPACE Tree::operator[]( size_t pos );
+%rename (CopyFrom) BIOGEARS_NAMESPACE Tree::operator=(const Tree&);
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 template <typename Data>
 class Tree {
 public:
@@ -41,8 +41,8 @@ public:
   Tree& operator[]( size_t pos );
   Tree& operator=(const Tree&);
 };
-}
-%nspace biogears::Tree<char const *>;
-%nspace std::vector<biogears::Tree<char const*>>;
-%template(vector_tree_char) std::vector<biogears::Tree<char const *>>;
-%template(Tree_cString) biogears::Tree<char const *>;
+CLOSE_BIOGEARS_NAMESPACE
+%nspace BIOGEARS_NAMESPACE Tree<char const *>;
+%nspace std::vector<BIOGEARS_NAMESPACE Tree<char const*>>;
+%template(vector_tree_char) std::vector<BIOGEARS_NAMESPACE Tree<char const *>>;
+%template(Tree_cString) BIOGEARS_NAMESPACE Tree<char const *>;

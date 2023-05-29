@@ -80,4 +80,4 @@ protected:
   size_t m_NumUnreleasedMasses;
   size_t m_NumReleasedMasses;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

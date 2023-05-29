@@ -12,13 +12,13 @@
 %import <biogears/cdm/properties/SEScalarMass.swg>
 %import <biogears/cdm/properties/SEScalarMassPerVolume.swg>
 
-%nspace biogears::SESubstanceOralDose;
-%nspace biogears::SETransmucosalState;
+%nspace BIOGEARS_NAMESPACE SESubstanceOralDose;
+%nspace BIOGEARS_NAMESPACE SETransmucosalState;
 
-%ignore biogears::SESubstanceOralDose::Unload;
-%ignore biogears::SESubstanceOralDose::Load;
+%ignore BIOGEARS_NAMESPACE SESubstanceOralDose::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstanceOralDose::Load;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
   class SETransmucosalState;
-}
+CLOSE_BIOGEARS_NAMESPACE
 %include <biogears/cdm/patient/actions/SESubstanceOralDose.h>

@@ -11,9 +11,9 @@
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 %import <biogears/cdm/patient/actions/SEPatientAction.swg>
 
-%nspace biogears::SEChestCompression;
+%nspace BIOGEARS_NAMESPACE SEChestCompression;
 
-%ignore biogears::SEChestCompression::Unload;
-%ignore biogears::SEChestCompression::Load;
+%ignore BIOGEARS_NAMESPACE SEChestCompression::Unload;
+%ignore BIOGEARS_NAMESPACE SEChestCompression::Load;
 
 %include <biogears/cdm/patient/actions/SEChestCompression.h>

@@ -49,7 +49,7 @@ protected:
 CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<biogears::SESubstance*, biogears::SizeIndependentDepositionEfficencyCoefficient*>;
+BG_EXT template class BIOGEARS_API map<BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SizeIndependentDepositionEfficencyCoefficient*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

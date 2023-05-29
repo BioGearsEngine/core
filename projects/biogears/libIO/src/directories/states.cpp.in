@@ -17,16 +17,16 @@ namespace io {
 
   constexpr size_t count_of_substance_files = @RESOURCE_FILE_COUNT@;
 
-  //biogears::filesystem::path overloads
-  bool generate_states_directory(biogears::filesystem::path path)
+  //BIOGEARS_NAMESPACE filesystem::path overloads
+  bool generate_states_directory(BIOGEARS_NAMESPACE filesystem::path path)
   {
-   biogears::filesystem::path working_dir  = path;
+   BIOGEARS_NAMESPACE filesystem::path working_dir  = path;
    std::ofstream output;
 
    bool result = true;
 
-   auto write_file = [&](biogears::filesystem::path path, char const* content, size_t content_size) {
-      biogears::filesystem::create_directories((working_dir / path).parent_path());
+   auto write_file = [&](BIOGEARS_NAMESPACE filesystem::path path, char const* content, size_t content_size) {
+      BIOGEARS_NAMESPACE filesystem::create_directories((working_dir / path).parent_path());
       output.open( working_dir / path, std::fstream::binary | std::fstream::out);
       if (output.good() && !output.is_open()) {
         return false;
@@ -35,19 +35,19 @@ namespace io {
       output.close();
       return true;
    };
-   biogears::filesystem::path dir {default_state_directory};
+   BIOGEARS_NAMESPACE filesystem::path dir {default_state_directory};
 
 @GENERATE_DIRECTORY_BODY@
 
    return true;
   }
   //-----------------------------------------------------------------------------
-  bool does_embedded_states_file_exist(biogears::filesystem::path path)
+  bool does_embedded_states_file_exist(BIOGEARS_NAMESPACE filesystem::path path)
   {
      return @DOES_EMBEDDED_FILE_EXIST_PATH_BODY@false;
   }
   //-----------------------------------------------------------------------------
-  char const* get_states_file_sha1(biogears::filesystem::path path)
+  char const* get_states_file_sha1(BIOGEARS_NAMESPACE filesystem::path path)
   {
      char const* file_sha1 = "";
      
@@ -56,7 +56,7 @@ namespace io {
      return file_sha1;
   }
   //-----------------------------------------------------------------------------
-  char const* get_embedded_states_file(biogears::filesystem::path path, size_t& content_size)
+  char const* get_embedded_states_file(BIOGEARS_NAMESPACE filesystem::path path, size_t& content_size)
   {
     char const * embedded_content = "";
 
@@ -79,7 +79,7 @@ namespace io {
   
   bool generate_states_directory(const char* root)
   {
-   biogears::filesystem::path working_dir { root };
+   BIOGEARS_NAMESPACE filesystem::path working_dir { root };
    return generate_states_directory(working_dir);
   }
   //-----------------------------------------------------------------------------

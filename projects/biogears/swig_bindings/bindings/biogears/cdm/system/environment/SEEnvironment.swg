@@ -16,15 +16,15 @@
 %import <biogears/cdm/properties/SEScalarPower.swg>
 %import <biogears/cdm/properties/SEScalarHeatConductancePerArea.swg>
 
-%nspace biogears::SEEnvironment;
+%nspace BIOGEARS_NAMESPACE SEEnvironment;
 
-%ignore biogears::SEEnvironment::Unload;
-%ignore biogears::SEEnvironment::Load;
+%ignore BIOGEARS_NAMESPACE SEEnvironment::Unload;
+%ignore BIOGEARS_NAMESPACE SEEnvironment::Load;
 
-%ignore biogears::SEEnvironment::GetScalar(std::string const &);
-%ignore biogears::SEEnvironment::SetName(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SEEnvironment::GetScalar(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEEnvironment::SetName(const std::string& name);
 
-%rename (GetConditions_const) biogears::SEEnvironment::GetConditions() const;
+%rename (GetConditions_const) BIOGEARS_NAMESPACE SEEnvironment::GetConditions() const;
 
 %ignore SEEnvironment::ToString(std::ostream& str) const;
 

@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <thread>
 
 // #include <biogears/schema/biogears-cdm.hxx>
+#include <biogears/config.h>
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 // This class will run BioGears in it's own thread and accept changes to hemorrage and iv flow as the engine is running
@@ -37,7 +38,7 @@ public:
   void SetIVFluidsFlow_mL_Per_min(double rate);
   virtual void Status();
 
-  biogears::Logger* GetLogger() { return m_bg->GetLogger(); }
+  BIOGEARS_NAMESPACE Logger* GetLogger() { return m_bg->GetLogger(); }
 
 protected:
   void AdvanceTime();
@@ -46,8 +47,8 @@ protected:
   std::mutex  m_mutex;
   bool m_runThread;
 
-  std::unique_ptr<biogears::PhysiologyEngine> m_bg;
+  std::unique_ptr<BIOGEARS_NAMESPACE PhysiologyEngine> m_bg;
 
-  biogears::SEHemorrhage*                     m_hemorrhage;
-  biogears::SESubstanceCompoundInfusion*      m_infusion;
+  BIOGEARS_NAMESPACE SEHemorrhage*                     m_hemorrhage;
+  BIOGEARS_NAMESPACE SESubstanceCompoundInfusion*      m_infusion;
 };

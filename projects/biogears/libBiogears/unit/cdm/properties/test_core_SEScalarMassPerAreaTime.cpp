@@ -59,22 +59,22 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarMassPerAreaTime MassPerAreaTime = biogears::SEScalarMassPerAreaTime();
+  BIOGEARS_NAMESPACE SEScalarMassPerAreaTime MassPerAreaTime = BIOGEARS_NAMESPACE SEScalarMassPerAreaTime();
   auto ptr = MassPerAreaTime.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::MassPerAreaTimeUnit::IsValidUnit("g/cm^2 s");
+  bool unit0 = BIOGEARS_NAMESPACE MassPerAreaTimeUnit::IsValidUnit("g/cm^2 s");
   EXPECT_EQ(unit0, true);
-  bool unit6 = biogears::MassPerAreaTimeUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE MassPerAreaTimeUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::MassPerAreaTimeUnit mu0 = biogears::MassPerAreaTimeUnit::GetCompoundUnit("g/cm^2 s");
-  EXPECT_EQ(mu0, biogears::MassPerAreaTimeUnit::g_Per_cm2_s);
-  EXPECT_THROW(biogears::MassPerAreaTimeUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE MassPerAreaTimeUnit mu0 = BIOGEARS_NAMESPACE MassPerAreaTimeUnit::GetCompoundUnit("g/cm^2 s");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE MassPerAreaTimeUnit::g_Per_cm2_s);
+  EXPECT_THROW(BIOGEARS_NAMESPACE MassPerAreaTimeUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

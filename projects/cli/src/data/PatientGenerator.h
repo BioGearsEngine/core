@@ -16,10 +16,11 @@
 #include <string>
 #include <vector>
 
+#include <biogears/config.h>
 #include <biogears/schema/cdm/Patient.hxx>
 #include "CSVToXMLConvertor.h"
-namespace biogears
-{
+
+OPEN_BIOGEARS_NAMESPACE
 
   class PatientGenerator : public CSVToXMLConvertor
   {
@@ -35,6 +36,6 @@ namespace biogears
   private:
     std::vector<mil::tatrc::physiology::datamodel::PatientData> _patients;
   };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 #endif //BIOGEARS_PATIENT_GENERATOR_H

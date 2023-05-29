@@ -9,46 +9,46 @@
 
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
-%nspace biogears::SEScalarVolume;
-%nspace biogears::VolumeUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarVolume;
+%nspace BIOGEARS_NAMESPACE VolumeUnit;
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<VolumeUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<VolumeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const VolumeUnit&) const;
 %rename(NotEquals)  operator!=(const VolumeUnit&) const;
 %rename(Equals)  operator==(const SEScalarVolume&) const;
 %rename(NotEquals)  operator!=(const SEScalarVolume&) const;  
 
-%ignore biogears::VolumeUnit::VolumeUnit(std::string const &);
-%ignore biogears::VolumeUnit::IsValidUnit(std::string const &);
-%ignore biogears::VolumeUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE VolumeUnit::VolumeUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE VolumeUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE VolumeUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarQuantity<VolumeUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<VolumeUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class VolumeUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::VolumeUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumeUnit>;
 
-%ignore  biogears::SEScalarQuantity<VolumeUnit>::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity<VolumeUnit>::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity<VolumeUnit>::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity<VolumeUnit>::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity<VolumeUnit>::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity<VolumeUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity<VolumeUnit>::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity<VolumeUnit>::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity<VolumeUnit>::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity<VolumeUnit>::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity<VolumeUnit>::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity<VolumeUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumeUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumeUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumeUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::VolumeUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumeUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumeUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumeUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumeUnit>::DivideValue "public new";
 #endif 
 
-%ignore  biogears::SEScalarQuantity<VolumeUnit>::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity<VolumeUnit>::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity<VolumeUnit>::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity<VolumeUnit>::operator!=;
 
-%template(QuantityVolume) biogears::SEScalarQuantity<biogears::VolumeUnit>;
+%template(QuantityVolume) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE VolumeUnit>;
 
 %include <biogears/cdm/properties/SEScalarVolume.h>
 

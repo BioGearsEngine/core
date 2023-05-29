@@ -59,8 +59,8 @@ protected:
   std::streamsize m_Precision;
   DecimalNotation m_Notation;
 };
-  }//namespace biogears
+CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
-namespace std{
-BG_EXT template class BIOGEARS_API map<std::string, biogears::SEDecimalFormat>;
-CLOSE_BIOGEARS_NAMESPACE
+namespace std {
+  BG_EXT template class BIOGEARS_API map<std::string, BIOGEARS_NAMESPACE SEDecimalFormat>;
+}

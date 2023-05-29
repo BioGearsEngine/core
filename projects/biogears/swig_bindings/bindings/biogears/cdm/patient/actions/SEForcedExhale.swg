@@ -12,9 +12,9 @@
 %import <biogears/cdm/properties/SEScalar0To1.swg>
 %import <biogears/cdm/properties/SEScalarTime.swg>
 
-%nspace biogears::SEForcedExhale;
+%nspace BIOGEARS_NAMESPACE SEForcedExhale;
 
-%ignore biogears::SEForcedExhale::Unload;
-%ignore biogears::SEForcedExhale::Load;
+%ignore BIOGEARS_NAMESPACE SEForcedExhale::Unload;
+%ignore BIOGEARS_NAMESPACE SEForcedExhale::Load;
 
 %include <biogears/cdm/patient/actions/SEForcedExhale.h>

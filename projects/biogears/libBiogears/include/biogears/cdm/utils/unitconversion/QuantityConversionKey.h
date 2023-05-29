@@ -92,8 +92,8 @@ CLOSE_BIOGEARS_NAMESPACE //namespace biogears
 
 namespace std {
 template <>
-struct hash<biogears::CQuantityConversionKey> {
-  size_t operator()(const biogears::CQuantityConversionKey& ref) const
+struct hash<BIOGEARS_NAMESPACE CQuantityConversionKey> {
+  size_t operator()(const BIOGEARS_NAMESPACE CQuantityConversionKey& ref) const
   {
     return ref.hash_value();
   }

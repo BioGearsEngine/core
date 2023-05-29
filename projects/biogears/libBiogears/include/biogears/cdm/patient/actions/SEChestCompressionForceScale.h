@@ -52,4 +52,4 @@ protected:
   SEScalar0To1* m_ForceScale;
   SEScalarTime* m_ForcePeriod;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

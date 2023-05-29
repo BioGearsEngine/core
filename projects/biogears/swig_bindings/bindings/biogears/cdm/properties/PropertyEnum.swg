@@ -7,15 +7,15 @@
 
 %import <biogears/cdm/CommonDataModel.swg>
 
-%nspace biogears::SESide;
-%nspace biogears::SEOpenClosed;
-%nspace biogears::SEOnOff;
-%nspace biogears::SEErrorType;
+%nspace BIOGEARS_NAMESPACE SESide;
+%nspace BIOGEARS_NAMESPACE SEOpenClosed;
+%nspace BIOGEARS_NAMESPACE SEOnOff;
+%nspace BIOGEARS_NAMESPACE SEErrorType;
 
-%rename(SESide_toString) biogears::ToString(const SESide& e);
-%rename(SEOpenClosed_toString) biogears::ToString(const SEOpenClosed& e);
-%rename(SEOnOff_toString) biogears::ToString(const SEOnOff& e);
-%rename(SEErrorType_toString) biogears::ToString(const SEErrorType& e);
+%rename(SESide_toString) BIOGEARS_NAMESPACE ToString(const SESide& e);
+%rename(SEOpenClosed_toString) BIOGEARS_NAMESPACE ToString(const SEOpenClosed& e);
+%rename(SEOnOff_toString) BIOGEARS_NAMESPACE ToString(const SEOnOff& e);
+%rename(SEErrorType_toString) BIOGEARS_NAMESPACE ToString(const SEErrorType& e);
 
 %ignore operator<<(std::ostream& os, const SESide& e);
 %ignore operator<<(std::ostream& os, const SEOpenClosed& e);

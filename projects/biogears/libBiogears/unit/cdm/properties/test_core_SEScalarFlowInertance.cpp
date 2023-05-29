@@ -59,38 +59,38 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarFlowInertance FlowInertance = biogears::SEScalarFlowInertance();
+  BIOGEARS_NAMESPACE SEScalarFlowInertance FlowInertance = BIOGEARS_NAMESPACE SEScalarFlowInertance();
   auto ptr = FlowInertance.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::FlowInertanceUnit::IsValidUnit("mmHg s^2/mL");
-  bool unit1 = biogears::FlowInertanceUnit::IsValidUnit("mmHg s^2/L");
-  bool unit2 = biogears::FlowInertanceUnit::IsValidUnit("cmH2O s^2/mL");
-  bool unit3 = biogears::FlowInertanceUnit::IsValidUnit("cmH2O s^2/L");
-  bool unit4 = biogears::FlowInertanceUnit::IsValidUnit("Pa s^2/m^3");
+  bool unit0 = BIOGEARS_NAMESPACE FlowInertanceUnit::IsValidUnit("mmHg s^2/mL");
+  bool unit1 = BIOGEARS_NAMESPACE FlowInertanceUnit::IsValidUnit("mmHg s^2/L");
+  bool unit2 = BIOGEARS_NAMESPACE FlowInertanceUnit::IsValidUnit("cmH2O s^2/mL");
+  bool unit3 = BIOGEARS_NAMESPACE FlowInertanceUnit::IsValidUnit("cmH2O s^2/L");
+  bool unit4 = BIOGEARS_NAMESPACE FlowInertanceUnit::IsValidUnit("Pa s^2/m^3");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
   EXPECT_EQ(unit4, true);
-  bool unit6 = biogears::FlowInertanceUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE FlowInertanceUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::FlowInertanceUnit mu0 = biogears::FlowInertanceUnit::GetCompoundUnit("mmHg s^2/mL");
-  biogears::FlowInertanceUnit mu1 = biogears::FlowInertanceUnit::GetCompoundUnit("mmHg s^2/L");
-  biogears::FlowInertanceUnit mu2 = biogears::FlowInertanceUnit::GetCompoundUnit("cmH2O s^2/mL");
-  biogears::FlowInertanceUnit mu3 = biogears::FlowInertanceUnit::GetCompoundUnit("cmH2O s^2/L");
-  biogears::FlowInertanceUnit mu4 = biogears::FlowInertanceUnit::GetCompoundUnit("Pa s^2/m^3");
-  EXPECT_EQ(mu0, biogears::FlowInertanceUnit::mmHg_s2_Per_mL);
-  EXPECT_EQ(mu1, biogears::FlowInertanceUnit::mmHg_s2_Per_L);
-  EXPECT_EQ(mu2, biogears::FlowInertanceUnit::cmH2O_s2_Per_mL);
-  EXPECT_EQ(mu3, biogears::FlowInertanceUnit::cmH2O_s2_Per_L);
-  EXPECT_EQ(mu4, biogears::FlowInertanceUnit::Pa_s2_Per_m3);
-  EXPECT_THROW(biogears::FlowInertanceUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE FlowInertanceUnit mu0 = BIOGEARS_NAMESPACE FlowInertanceUnit::GetCompoundUnit("mmHg s^2/mL");
+  BIOGEARS_NAMESPACE FlowInertanceUnit mu1 = BIOGEARS_NAMESPACE FlowInertanceUnit::GetCompoundUnit("mmHg s^2/L");
+  BIOGEARS_NAMESPACE FlowInertanceUnit mu2 = BIOGEARS_NAMESPACE FlowInertanceUnit::GetCompoundUnit("cmH2O s^2/mL");
+  BIOGEARS_NAMESPACE FlowInertanceUnit mu3 = BIOGEARS_NAMESPACE FlowInertanceUnit::GetCompoundUnit("cmH2O s^2/L");
+  BIOGEARS_NAMESPACE FlowInertanceUnit mu4 = BIOGEARS_NAMESPACE FlowInertanceUnit::GetCompoundUnit("Pa s^2/m^3");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE FlowInertanceUnit::mmHg_s2_Per_mL);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE FlowInertanceUnit::mmHg_s2_Per_L);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE FlowInertanceUnit::cmH2O_s2_Per_mL);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE FlowInertanceUnit::cmH2O_s2_Per_L);
+  EXPECT_EQ(mu4, BIOGEARS_NAMESPACE FlowInertanceUnit::Pa_s2_Per_m3);
+  EXPECT_THROW(BIOGEARS_NAMESPACE FlowInertanceUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

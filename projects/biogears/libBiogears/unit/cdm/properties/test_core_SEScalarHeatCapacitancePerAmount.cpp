@@ -59,22 +59,22 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarHeatCapacitancePerAmount HeatCapacitancePerAmount = biogears::SEScalarHeatCapacitancePerAmount();
+  BIOGEARS_NAMESPACE SEScalarHeatCapacitancePerAmount HeatCapacitancePerAmount = BIOGEARS_NAMESPACE SEScalarHeatCapacitancePerAmount();
   auto ptr = HeatCapacitancePerAmount.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::HeatCapacitancePerAmountUnit::IsValidUnit("J/K mol");
+  bool unit0 = BIOGEARS_NAMESPACE HeatCapacitancePerAmountUnit::IsValidUnit("J/K mol");
   EXPECT_EQ(unit0, true);
-  bool unit6 = biogears::HeatCapacitancePerAmountUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE HeatCapacitancePerAmountUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::HeatCapacitancePerAmountUnit mu0 = biogears::HeatCapacitancePerAmountUnit::GetCompoundUnit("J/K mol");
-  EXPECT_EQ(mu0, biogears::HeatCapacitancePerAmountUnit::J_Per_K_mol);
-  EXPECT_THROW(biogears::HeatCapacitancePerAmountUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE HeatCapacitancePerAmountUnit mu0 = BIOGEARS_NAMESPACE HeatCapacitancePerAmountUnit::GetCompoundUnit("J/K mol");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE HeatCapacitancePerAmountUnit::J_Per_K_mol);
+  EXPECT_THROW(BIOGEARS_NAMESPACE HeatCapacitancePerAmountUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

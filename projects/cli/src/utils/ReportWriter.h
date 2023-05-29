@@ -6,9 +6,10 @@
 #include <string>
 #include <vector>
 
+#include <biogears/config.h>
 #include <biogears/cdm/utils/Logger.h>
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
 
 enum color {
   Green = 0,
@@ -87,14 +88,14 @@ private:
   void ParseCSV(const std::string& filename, std::vector<std::vector<std::string>>& vec);
   void ParseXML(std::istream& stream);
   void ParseXML(const std::string& filename, const std::string test);
-  std::map<std::string, std::vector<biogears::TableRow>> tables;
-  std::map<std::string, biogears::TableRow> table_row_map;
-  std::vector<biogears::ReferenceValue> reference_values;
+  std::map<std::string, std::vector<BIOGEARS_NAMESPACE TableRow>> tables;
+  std::map<std::string, BIOGEARS_NAMESPACE TableRow> table_row_map;
+  std::vector<BIOGEARS_NAMESPACE ReferenceValue> reference_values;
   std::vector<std::vector<std::string>> validation_data;
   std::vector<std::vector<std::string>> biogears_results;
   std::string report;
 
-  std::unique_ptr<biogears::Logger> logger;
+  std::unique_ptr<BIOGEARS_NAMESPACE Logger> logger;
   char const* _body_begin;
   char const* _table_begin;
   char const* _table_row_begin;
@@ -110,5 +111,5 @@ private:
   char const* _file_extension;
 };
 
-} // end namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // end namespace biogears
 #endif //CMD_BIO_REPORTWRITER_H

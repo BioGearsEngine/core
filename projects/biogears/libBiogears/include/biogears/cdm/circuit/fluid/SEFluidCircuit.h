@@ -20,10 +20,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEFluidCircuitNode*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SEFluidCircuitPath*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, vector<biogears::SEFluidCircuitPath*>*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, size_t>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEFluidCircuitNode*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SEFluidCircuitPath*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SEFluidCircuitNode*, vector<BIOGEARS_NAMESPACE SEFluidCircuitPath*>*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SEFluidCircuitNode*, size_t>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

@@ -18,20 +18,20 @@
 %import <biogears/cdm/properties/SEScalar.swg>
 %import <biogears/cdm/properties/SEScalarFrequency.swg>
 
-%nspace biogears::SEExercise;
-// %nspace biogears::SEExercise::SEGenericExercise;
-// %nspace biogears::SEExercise::SECyclingExercise;
-// %nspace biogears::SEExercise::SERunningExercise;
-// %nspace biogears::SEExercise::SEStrengthExercise;
-%ignore biogears::SEExercise::Unload;
-%ignore biogears::SEExercise::Load;
+%nspace BIOGEARS_NAMESPACE SEExercise;
+// %nspace BIOGEARS_NAMESPACE SEExercise::SEGenericExercise;
+// %nspace BIOGEARS_NAMESPACE SEExercise::SECyclingExercise;
+// %nspace BIOGEARS_NAMESPACE SEExercise::SERunningExercise;
+// %nspace BIOGEARS_NAMESPACE SEExercise::SEStrengthExercise;
+%ignore BIOGEARS_NAMESPACE SEExercise::Unload;
+%ignore BIOGEARS_NAMESPACE SEExercise::Load;
 
-%rename(GetNutrition_const) biogears::SEExercise::GetNutrition() const;
-%ignore biogears::SEExercise::SetNutritionFile(std::string const &);
+%rename(GetNutrition_const) BIOGEARS_NAMESPACE SEExercise::GetNutrition() const;
+%ignore BIOGEARS_NAMESPACE SEExercise::SetNutritionFile(std::string const &);
 
-%rename(GetGenericExercise_const ) biogears::SEExercise::GetGenericExercise() const;
-%rename(GetCyclingExercise_const ) biogears::SEExercise::GetCyclingExercise() const;
-%rename(GetRunningExercise_const ) biogears::SEExercise::GetRunningExercise() const;
-%rename(GetStrengthExercise_const) biogears::SEExercise::GetStrengthExercise() const;
+%rename(GetGenericExercise_const ) BIOGEARS_NAMESPACE SEExercise::GetGenericExercise() const;
+%rename(GetCyclingExercise_const ) BIOGEARS_NAMESPACE SEExercise::GetCyclingExercise() const;
+%rename(GetRunningExercise_const ) BIOGEARS_NAMESPACE SEExercise::GetRunningExercise() const;
+%rename(GetStrengthExercise_const) BIOGEARS_NAMESPACE SEExercise::GetStrengthExercise() const;
 
 %include <biogears/cdm/patient/actions/SEExercise.h>

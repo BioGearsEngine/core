@@ -12,15 +12,15 @@
 %import <biogears/cdm/properties/SEScalarMassPerTime.swg>
 %import <biogears/cdm/properties/SEScalarVolume.swg>
 
-%nspace biogears::SENutrition;
+%nspace BIOGEARS_NAMESPACE SENutrition;
 
-%ignore biogears::SENutrition::Unload;
-%ignore biogears::SENutrition::Load;
+%ignore BIOGEARS_NAMESPACE SENutrition::Unload;
+%ignore BIOGEARS_NAMESPACE SENutrition::Load;
 
-%ignore biogears::SENutrition::GetScalar(std::string const &);
-%ignore biogears::SENutrition::SetName(std::string const &);
-%ignore biogears::SENutrition::SetAnnotation(std::string const &);
+%ignore BIOGEARS_NAMESPACE SENutrition::GetScalar(std::string const &);
+%ignore BIOGEARS_NAMESPACE SENutrition::SetName(std::string const &);
+%ignore BIOGEARS_NAMESPACE SENutrition::SetAnnotation(std::string const &);
 
-%ignore biogears::operator<<(std::ostream& out, const SENutrition& n);
+%ignore BIOGEARS_NAMESPACE operator<<(std::ostream& out, const SENutrition& n);
 
 %include <biogears/cdm/patient/SENutrition.h>

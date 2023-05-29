@@ -6,9 +6,9 @@
 %import <biogears/cdm/CommonDataModel.swg>
 %include <biogears/exports.h>
 
-%nspace biogears::Logger;
-%nspace biogears::LoggerForward;
-%nspace biogears::Loggable;
+%nspace BIOGEARS_NAMESPACE Logger;
+%nspace BIOGEARS_NAMESPACE LoggerForward;
+%nspace BIOGEARS_NAMESPACE Loggable;
 
 OPEN_BIOGEARS_NAMESPACE
 

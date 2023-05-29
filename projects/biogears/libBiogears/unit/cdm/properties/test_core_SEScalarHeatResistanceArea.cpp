@@ -59,34 +59,34 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Unload)
 {
-  biogears::SEScalarHeatResistanceArea HeatResistanceArea = biogears::SEScalarHeatResistanceArea();
+  BIOGEARS_NAMESPACE SEScalarHeatResistanceArea HeatResistanceArea = BIOGEARS_NAMESPACE SEScalarHeatResistanceArea();
   auto ptr = HeatResistanceArea.Unload();
   EXPECT_EQ(ptr, nullptr);
 }
 
 TEST_F(TEST_FIXTURE_NAME, IsValidUnit)
 {
-  bool unit0 = biogears::HeatResistanceAreaUnit::IsValidUnit("rsi");
-  bool unit1 = biogears::HeatResistanceAreaUnit::IsValidUnit("clo");
-  bool unit2 = biogears::HeatResistanceAreaUnit::IsValidUnit("rValue");
-  bool unit3 = biogears::HeatResistanceAreaUnit::IsValidUnit("tog");
+  bool unit0 = BIOGEARS_NAMESPACE HeatResistanceAreaUnit::IsValidUnit("rsi");
+  bool unit1 = BIOGEARS_NAMESPACE HeatResistanceAreaUnit::IsValidUnit("clo");
+  bool unit2 = BIOGEARS_NAMESPACE HeatResistanceAreaUnit::IsValidUnit("rValue");
+  bool unit3 = BIOGEARS_NAMESPACE HeatResistanceAreaUnit::IsValidUnit("tog");
   EXPECT_EQ(unit0, true);
   EXPECT_EQ(unit1, true);
   EXPECT_EQ(unit2, true);
   EXPECT_EQ(unit3, true);
-  bool unit6 = biogears::HeatResistanceAreaUnit::IsValidUnit("DEADBEEF");
+  bool unit6 = BIOGEARS_NAMESPACE HeatResistanceAreaUnit::IsValidUnit("DEADBEEF");
   EXPECT_EQ(unit6, false);
 }
 
 TEST_F(TEST_FIXTURE_NAME, GetCompoundUnit)
 {
-  biogears::HeatResistanceAreaUnit mu0 = biogears::HeatResistanceAreaUnit::GetCompoundUnit("rsi");
-  biogears::HeatResistanceAreaUnit mu1 = biogears::HeatResistanceAreaUnit::GetCompoundUnit("clo");
-  biogears::HeatResistanceAreaUnit mu2 = biogears::HeatResistanceAreaUnit::GetCompoundUnit("rValue");
-  biogears::HeatResistanceAreaUnit mu3 = biogears::HeatResistanceAreaUnit::GetCompoundUnit("tog");
-  EXPECT_EQ(mu0, biogears::HeatResistanceAreaUnit::rsi);
-  EXPECT_EQ(mu1, biogears::HeatResistanceAreaUnit::clo);
-  EXPECT_EQ(mu2, biogears::HeatResistanceAreaUnit::rValue);
-  EXPECT_EQ(mu3, biogears::HeatResistanceAreaUnit::tog);
-  EXPECT_THROW(biogears::HeatResistanceAreaUnit::GetCompoundUnit("DEADBEEF"),biogears::CommonDataModelException);
+  BIOGEARS_NAMESPACE HeatResistanceAreaUnit mu0 = BIOGEARS_NAMESPACE HeatResistanceAreaUnit::GetCompoundUnit("rsi");
+  BIOGEARS_NAMESPACE HeatResistanceAreaUnit mu1 = BIOGEARS_NAMESPACE HeatResistanceAreaUnit::GetCompoundUnit("clo");
+  BIOGEARS_NAMESPACE HeatResistanceAreaUnit mu2 = BIOGEARS_NAMESPACE HeatResistanceAreaUnit::GetCompoundUnit("rValue");
+  BIOGEARS_NAMESPACE HeatResistanceAreaUnit mu3 = BIOGEARS_NAMESPACE HeatResistanceAreaUnit::GetCompoundUnit("tog");
+  EXPECT_EQ(mu0, BIOGEARS_NAMESPACE HeatResistanceAreaUnit::rsi);
+  EXPECT_EQ(mu1, BIOGEARS_NAMESPACE HeatResistanceAreaUnit::clo);
+  EXPECT_EQ(mu2, BIOGEARS_NAMESPACE HeatResistanceAreaUnit::rValue);
+  EXPECT_EQ(mu3, BIOGEARS_NAMESPACE HeatResistanceAreaUnit::tog);
+  EXPECT_THROW(BIOGEARS_NAMESPACE HeatResistanceAreaUnit::GetCompoundUnit("DEADBEEF"),BIOGEARS_NAMESPACE CommonDataModelException);
 }

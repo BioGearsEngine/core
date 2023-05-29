@@ -58,4 +58,4 @@ protected:
   CDM::enumTourniquetApplicationLevel::value m_TourniquetLevel;
  
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

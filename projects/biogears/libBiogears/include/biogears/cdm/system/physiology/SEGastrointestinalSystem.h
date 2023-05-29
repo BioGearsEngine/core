@@ -31,7 +31,7 @@ namespace io {
 CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SEDrugTransitState*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

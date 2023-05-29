@@ -478,4 +478,4 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasChild(const std::string& na
   return false;
 }
 //-----------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE

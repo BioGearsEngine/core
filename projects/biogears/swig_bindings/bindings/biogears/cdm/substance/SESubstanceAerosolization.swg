@@ -14,18 +14,18 @@
 %import <biogears/cdm/properties/SEScalarMassPerVolume.swg>
 
 
-%nspace biogears::SESubstanceAerosolization;
+%nspace BIOGEARS_NAMESPACE SESubstanceAerosolization;
 
-%ignore biogears::SESubstanceAerosolization::Unload;
-%ignore biogears::SESubstanceAerosolization::Load;
+%ignore BIOGEARS_NAMESPACE SESubstanceAerosolization::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstanceAerosolization::Load;
 
-%ignore biogears::SESubstanceAerosolization::operator==(SESubstanceAerosolization const& rhs) const;
-%ignore biogears::SESubstanceAerosolization::operator!=(SESubstanceAerosolization const& rhs) const;
-%ignore biogears::SESubstanceAerosolization::operator=(SESubstanceAerosolization const& rhs);
+%ignore BIOGEARS_NAMESPACE SESubstanceAerosolization::operator==(SESubstanceAerosolization const& rhs) const;
+%ignore BIOGEARS_NAMESPACE SESubstanceAerosolization::operator!=(SESubstanceAerosolization const& rhs) const;
+%ignore BIOGEARS_NAMESPACE SESubstanceAerosolization::operator=(SESubstanceAerosolization const& rhs);
 
-%ignore biogears::SESubstanceAerosolization::GetScalar(std::string const &);
-%rename (GetBronchioleModifier_const) biogears::SESubstanceAerosolization::GetBronchioleModifier() const;
-%rename (GetInflammationCoefficient_const) biogears::SESubstanceAerosolization::GetInflammationCoefficient() const;
-%rename (GetParticulateSizeDistribution_const) biogears::SESubstanceAerosolization::GetParticulateSizeDistribution() const;
+%ignore BIOGEARS_NAMESPACE SESubstanceAerosolization::GetScalar(std::string const &);
+%rename (GetBronchioleModifier_const) BIOGEARS_NAMESPACE SESubstanceAerosolization::GetBronchioleModifier() const;
+%rename (GetInflammationCoefficient_const) BIOGEARS_NAMESPACE SESubstanceAerosolization::GetInflammationCoefficient() const;
+%rename (GetParticulateSizeDistribution_const) BIOGEARS_NAMESPACE SESubstanceAerosolization::GetParticulateSizeDistribution() const;
 
 %include <biogears/cdm/substance/SESubstanceAerosolization.h>

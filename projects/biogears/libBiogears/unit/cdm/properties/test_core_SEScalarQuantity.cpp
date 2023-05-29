@@ -342,10 +342,10 @@ TEST_F(TEST_FIXTURE_NAME, Decrement)
 
 TEST_F(TEST_FIXTURE_NAME, Multiply)
 {
-  biogears::SEScalar v_1;
-  biogears::SEScalar v_2;
-  biogears::SEScalar v_3;
-  biogears::SEScalar v_4;
+  BIOGEARS_NAMESPACE SEScalar v_1;
+  BIOGEARS_NAMESPACE SEScalar v_2;
+  BIOGEARS_NAMESPACE SEScalar v_3;
+  BIOGEARS_NAMESPACE SEScalar v_4;
 
   v_1.SetValue(0.0);
   v_2.SetValue(1.0);
@@ -368,10 +368,10 @@ TEST_F(TEST_FIXTURE_NAME, Multiply)
 
 TEST_F(TEST_FIXTURE_NAME, Divide)
 {
-  biogears::SEScalar v_1;
-  biogears::SEScalar v_2;
-  biogears::SEScalar v_3;
-  biogears::SEScalar v_4;
+  BIOGEARS_NAMESPACE SEScalar v_1;
+  BIOGEARS_NAMESPACE SEScalar v_2;
+  BIOGEARS_NAMESPACE SEScalar v_3;
+  BIOGEARS_NAMESPACE SEScalar v_4;
 
   v_1.SetValue(0.0);
   v_2.SetValue(1.0);
@@ -410,7 +410,7 @@ TEST_F(TEST_FIXTURE_NAME, Boolean_Operators)
 
 TEST_F(TEST_FIXTURE_NAME, Nan)
 {
-  biogears::SEScalar v_1;
+  BIOGEARS_NAMESPACE SEScalar v_1;
 
   EXPECT_TRUE(std::isnan(v_1.dNaN()));
   EXPECT_NE(v_1.NaN, v_1.NaN);

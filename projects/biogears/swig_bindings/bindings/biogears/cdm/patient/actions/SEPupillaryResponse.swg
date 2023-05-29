@@ -11,15 +11,15 @@
 %import <biogears/cdm/properties/SEScalar.swg>
 %import <biogears/cdm/properties/SEScalarNeg1To1.swg>
 
-%nspace biogears::SEPupillaryResponse;
+%nspace BIOGEARS_NAMESPACE SEPupillaryResponse;
 
-%ignore biogears::SEPupillaryResponse::Unload;
-%ignore biogears::SEPupillaryResponse::Load;
+%ignore BIOGEARS_NAMESPACE SEPupillaryResponse::Unload;
+%ignore BIOGEARS_NAMESPACE SEPupillaryResponse::Load;
 
-%ignore biogears::SEPupillaryResponse::GetScalar(std::string const &);
+%ignore BIOGEARS_NAMESPACE SEPupillaryResponse::GetScalar(std::string const &);
 
-%rename(GetReactivityModifier_const) biogears::SEPupillaryResponse::GetReactivityModifier() const;
-%rename(GetShapeModifier_const) biogears::SEPupillaryResponse::GetShapeModifier() const;
-%rename(GetSizeModifier_const) biogears::SEPupillaryResponse::GetSizeModifier() const;
+%rename(GetReactivityModifier_const) BIOGEARS_NAMESPACE SEPupillaryResponse::GetReactivityModifier() const;
+%rename(GetShapeModifier_const) BIOGEARS_NAMESPACE SEPupillaryResponse::GetShapeModifier() const;
+%rename(GetSizeModifier_const) BIOGEARS_NAMESPACE SEPupillaryResponse::GetSizeModifier() const;
 
 %include <biogears/cdm/patient/actions/SEPupillaryResponse.h>

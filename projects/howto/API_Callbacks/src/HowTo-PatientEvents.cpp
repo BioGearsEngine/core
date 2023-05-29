@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <iostream>
 // Include the various types you will be using in your code
+#include <biogears/config.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
@@ -25,8 +26,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
@@ -35,29 +36,27 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 
-
 //!
-//!    BioGears has two methods of handling patient events. 
-//! 
+//!    BioGears has two methods of handling patient events.
+//!
 //!    A user can override the SEEventHandler interface and setup
 //!    A class that will be called for biogears events. THis is a resonable approach
 //!    If you need to react to a plethra of events as a single function can be coded
 //!    with a switch handler for every biogears event. The downside  is as this example shows
 //!    Some biogears events happen very often and this class will be called everytime any event triggers
 //!    Not just the ones you code for
-//! 
+//!
 //!    virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
 //!    virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
-//! 
+//!
 //!    The alternative method is to provide callback functions for a single event. This is a more narrow approach where if you choose the same handler
-//!    Could be assigned to multiple events or seperate handlers for each event you wish to react to. As of biogears 7.0 this is the preferred and more 
+//!    Could be assigned to multiple events or seperate handlers for each event you wish to react to. As of biogears 7.0 this is the preferred and more
 //!    performant method of programatically reacting to biogears events.
 //!    In this example we use both methods simultaniously to provide some additonal flare to the log
 //!    In this HOwTo the anesthesia machine is used to kill a patient providing multi events to demonstrate against. Enjoy
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE;
 
-using namespace biogears;
 // Make a custom event handler that you can connect to your code (See EngineUse for more info)
 class CustomEventHandler : public SEEventHandler {
 private:
@@ -72,8 +71,8 @@ public:
   {
 
     static int event_count = 0;
-    if ( event_count++ % 31 != 0){
-      return ;
+    if (event_count++ % 31 != 0) {
+      return;
     }
 
     std::cout << "\n";
@@ -291,7 +290,6 @@ public:
   }
 };
 
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 ///
@@ -303,7 +301,7 @@ public:
 void hypoxia_callback(bool active)
 {
   std::cout << "\n"
-  << R"(
+            << R"(
 ________00000000000___________000000000000_________
 ______00000000_____00000___000000_____0000000______
 ____0000000_____________000______________00000_____
@@ -325,12 +323,12 @@ ______________________00__00_______________________
 ________________________00_________________________
 
    )"
-  << std::endl;
+            << std::endl;
 };
 void respiratory_acidosis_callback(bool active)
 {
   std::cout << "\n"
-  << R"(
+            << R"(
                                         .,,cccd$$$$$$$$$$$ccc,
                                     ,cc$$$$$$$$$$$$$$$$$$$$$$$$$cc,
                                   ,d$$$$$$$$$$$$$$$$"J$$$$$$$$$$$$$$c,
@@ -367,12 +365,12 @@ $$$$F ?$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$P",z'                3$$h   ?$F
                         `$$$$$$$P
                          `?$$$$F
    )"
-  << std::endl;
+            << std::endl;
 };
 void tachycardia_callback(bool active)
 {
   std::cout << "\n"
-  << R"(
+            << R"(
                     +T+++++++T+++
                     +++|+++++++|+++|
     Tacycardia      ++++++++++++++/+
@@ -425,12 +423,12 @@ Y88DR88888    |  .::"-----"    /_-_|~8~   |
          ~88888  |          `.___,--'
            ~~88_/
    )"
-  << std::endl;
+            << std::endl;
 };
 void hypercapnia_callback(bool active)
 {
   std::cout << "\n"
-  << R"(
+            << R"(
                              _,,aaaaa,,_
                           _,dP"''    `""""Ya,_
                        ,aP"'                `"Yb,_
@@ -487,12 +485,12 @@ Yb::::"8baa8"""'  8;:;d"::::::::d8P"'         8"
           "Ya,___ "Ya             ,ad"'
             ``""""""`Yba,,,,,,,adP"'
    )"
-  << std::endl;
+            << std::endl;
 };
 void acute_respiratory_distress_callback(bool active)
 {
   std::cout << "\n"
-  << R"(
+            << R"(
  Acute       .--._
   Respiratory  `.  `-.
     Distress   .-'    `.
@@ -508,12 +506,12 @@ void acute_respiratory_distress_callback(bool active)
 jgs ~-=  =-~_-   `-..___(  ===;
     ~-=  - -    .'     
    )"
-  << std::endl;
+            << std::endl;
 };
 void irreversible_state_callback(bool active)
 {
   std::cout << "\n"
-  << R"(
+            << R"(
 __________________|      |____________________________________________
      ,--.    ,--.          ,--.   ,--.     You Partient Died! LOLZ
     |oo  | _  \  `.       | oo | |  oo|
@@ -522,14 +520,13 @@ o  o|~~  |(_) /   ;       | ~~ | |  ~~|o  o  o  o  o  o  o  o  o  o  o
 __________________        ____________________________________________
                   |      |dwb
    )"
-  << std::endl;
+            << std::endl;
 };
 
 int HowToPatientEvents()
 {
   // Create the engine and load the patient
-  std::unique_ptr<BioGearsEngine> bg = std::make_unique<BioGearsEngine>("HowToPain.log"
-    );
+  std::unique_ptr<BioGearsEngine> bg = std::make_unique<BioGearsEngine>("HowToPain.log");
   bg->GetLogger()->Info("HowToPain");
   if (!bg->LoadState("./states/StandardMale@0s.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
@@ -537,12 +534,12 @@ int HowToPatientEvents()
   }
 
   auto biogears = dynamic_cast<BioGears*>(bg.get());
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::Hypoxia, hypoxia_callback);
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::RespiratoryAcidosis, respiratory_acidosis_callback);
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::Tachycardia, tachycardia_callback);
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::Hypercapnia, hypercapnia_callback);
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::AcuteRespiratoryDistress, acute_respiratory_distress_callback);
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::IrreversibleState, irreversible_state_callback);
+  biogears->GetPatient().SetEventCallback(CDM::enumPatientEvent::Hypoxia, hypoxia_callback);
+  biogears->GetPatient().SetEventCallback(CDM::enumPatientEvent::RespiratoryAcidosis, respiratory_acidosis_callback);
+  biogears->GetPatient().SetEventCallback(CDM::enumPatientEvent::Tachycardia, tachycardia_callback);
+  biogears->GetPatient().SetEventCallback(CDM::enumPatientEvent::Hypercapnia, hypercapnia_callback);
+  biogears->GetPatient().SetEventCallback(CDM::enumPatientEvent::AcuteRespiratoryDistress, acute_respiratory_distress_callback);
+  biogears->GetPatient().SetEventCallback(CDM::enumPatientEvent::IrreversibleState, irreversible_state_callback);
 
   CustomEventHandler eventHandler;
   bg->SetEventHandler(&eventHandler);
@@ -552,16 +549,16 @@ int HowToPatientEvents()
   bg->AdvanceModelTime(50.0, TimeUnit::s);
 
   machine_config.SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
-  machine_config.GetInletFlow().SetValue(5.0, biogears::VolumePerTimeUnit::L_Per_min);
+  machine_config.GetInletFlow().SetValue(5.0, BIOGEARS_NAMESPACE VolumePerTimeUnit::L_Per_min);
   machine_config.GetInspiratoryExpiratoryRatio().SetValue(.5);
   machine_config.GetOxygenFraction().SetValue(0.23);
   machine_config.SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
-  machine_config.GetPositiveEndExpiredPressure().SetValue(0.0, biogears::PressureUnit::cmH2O);
+  machine_config.GetPositiveEndExpiredPressure().SetValue(0.0, BIOGEARS_NAMESPACE PressureUnit::cmH2O);
   machine_config.SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
-  machine_config.GetRespiratoryRate().SetValue(16, biogears::FrequencyUnit::Per_min);
-  machine_config.GetVentilatorPressure().SetValue(0.0, biogears::PressureUnit::cmH2O);
-  machine_config.GetOxygenBottleOne().GetVolume().SetValue(660, biogears::VolumeUnit::L);
-  machine_config.GetOxygenBottleTwo().GetVolume().SetValue(660, biogears::VolumeUnit::L);
+  machine_config.GetRespiratoryRate().SetValue(16, BIOGEARS_NAMESPACE FrequencyUnit::Per_min);
+  machine_config.GetVentilatorPressure().SetValue(0.0, BIOGEARS_NAMESPACE PressureUnit::cmH2O);
+  machine_config.GetOxygenBottleOne().GetVolume().SetValue(660, BIOGEARS_NAMESPACE VolumeUnit::L);
+  machine_config.GetOxygenBottleTwo().GetVolume().SetValue(660, BIOGEARS_NAMESPACE VolumeUnit::L);
 
   bg->ProcessAction(machine);
 
@@ -582,6 +579,7 @@ int HowToPatientEvents()
   bg->GetLogger()->Info("Finished");
   return 0;
 }
-int main ( int argc, char* argv[] ) {
+int main(int argc, char* argv[])
+{
   return HowToPatientEvents();
 }

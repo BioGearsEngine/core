@@ -27,7 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 
 namespace std {
-template class vector<biogears::SECondition*>;
+template class vector<BIOGEARS_NAMESPACE SECondition*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE

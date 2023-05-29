@@ -82,4 +82,4 @@ protected:
   VertexType& m_TargetVertex;
   SEFluidCircuitPath* m_Path;
 };
-}
+CLOSE_BIOGEARS_NAMESPACE

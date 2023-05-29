@@ -18,14 +18,14 @@
 %import <biogears/cdm/properties/SEScalarMassPerVolume.swg>
 %import <biogears/cdm/properties/SEScalarMass.swg>
 
-%nspace biogears::SETissueSystem;
+%nspace BIOGEARS_NAMESPACE SETissueSystem;
 
-%ignore biogears::SESubstancePharmacokinetics::GetScalar(const std::string& name);
-%ignore biogears::SESubstancePharmacokinetics::Unload;
-%ignore biogears::SESubstancePharmacokinetics::Load;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Load;
 
-%rename (GetDehydrationFraction_const)  biogears::SETissueSystem::GetDehydrationFraction() const ;
-%rename (GetIntracellularFluidPH_const)  biogears::SETissueSystem::GetIntracellularFluidPH() const ;
-%rename (GetRespiratoryExchangeRatio_const)  biogears::SETissueSystem::GetRespiratoryExchangeRatio() const ;
+%rename (GetDehydrationFraction_const)  BIOGEARS_NAMESPACE SETissueSystem::GetDehydrationFraction() const ;
+%rename (GetIntracellularFluidPH_const)  BIOGEARS_NAMESPACE SETissueSystem::GetIntracellularFluidPH() const ;
+%rename (GetRespiratoryExchangeRatio_const)  BIOGEARS_NAMESPACE SETissueSystem::GetRespiratoryExchangeRatio() const ;
 
 %include <biogears/cdm/system/physiology/SETissueSystem.h>

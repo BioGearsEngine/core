@@ -8,54 +8,54 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<EnergyPerAmountUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<EnergyPerAmountUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const EnergyPerAmountUnit&) const;
 %rename(NotEquals)  operator!=(const EnergyPerAmountUnit&) const;
 %rename(Equals)  operator==(const SEScalarEnergyPerAmount&) const;
 %rename(NotEquals)  operator!=(const SEScalarEnergyPerAmount&) const;  
 
-%ignore biogears::EnergyPerAmountUnit::EnergyPerAmountUnit(std::string const &);
-%ignore biogears::EnergyPerAmountUnit::IsValidUnit(std::string const &);
-%ignore biogears::EnergyPerAmountUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE EnergyPerAmountUnit::EnergyPerAmountUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE EnergyPerAmountUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE EnergyPerAmountUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarEnergyPerAmount;
-%nspace biogears::EnergyPerAmountUnit;
-%nspace biogears::SEScalarQuantity<EnergyPerAmountUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarEnergyPerAmount;
+%nspace BIOGEARS_NAMESPACE EnergyPerAmountUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<EnergyPerAmountUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class EnergyPerAmountUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyPerAmountUnit>;
 
-%ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyPerAmountUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyPerAmountUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyPerAmountUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyPerAmountUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyPerAmountUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyPerAmountUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyPerAmountUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyPerAmountUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyPerAmountUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyPerAmountUnit>::DivideValue "public new";
 #endif 
 
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyPerAmountUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyPerAmountUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyPerAmountUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyPerAmountUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< EnergyPerAmountUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< EnergyPerAmountUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyPerAmountUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< EnergyPerAmountUnit >::operator!=;
 
-%template(QuantityEnergyPerAmount) biogears::SEScalarQuantity<biogears::EnergyPerAmountUnit>;
+%template(QuantityEnergyPerAmount) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE EnergyPerAmountUnit>;
 
 %include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
 

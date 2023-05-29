@@ -8,49 +8,49 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<MassPerVolumeUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<MassPerVolumeUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const MassPerVolumeUnit&) const;
 %rename(NotEquals)  operator!=(const MassPerVolumeUnit&) const;
 %rename(Equals)  operator==(const SEScalarMassPerVolume&) const;
 %rename(NotEquals)  operator!=(const SEScalarMassPerVolume&) const;  
 
-%ignore biogears::MassPerVolumeUnit::MassPerVolumeUnit(std::string const &);
-%ignore biogears::MassPerVolumeUnit::IsValidUnit(std::string const &);
-%ignore biogears::MassPerVolumeUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE MassPerVolumeUnit::MassPerVolumeUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE MassPerVolumeUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE MassPerVolumeUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarMassPerVolume;
-%nspace biogears::MassPerVolumeUnit;
-%nspace biogears::SEScalarQuantity<MassPerVolumeUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarMassPerVolume;
+%nspace BIOGEARS_NAMESPACE MassPerVolumeUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<MassPerVolumeUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class MassPerVolumeUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::MassPerVolumeUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerVolumeUnit>;
 
-%ignore  biogears::SEScalarQuantity< MassPerVolumeUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< MassPerVolumeUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< MassPerVolumeUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< MassPerVolumeUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< MassPerVolumeUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< MassPerVolumeUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerVolumeUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerVolumeUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerVolumeUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerVolumeUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerVolumeUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerVolumeUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerVolumeUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerVolumeUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerVolumeUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::MassPerVolumeUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerVolumeUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerVolumeUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerVolumeUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerVolumeUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< MassPerVolumeUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< MassPerVolumeUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerVolumeUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< MassPerVolumeUnit >::operator!=;
 
-%template(QuantityMassPerVolume) biogears::SEScalarQuantity<biogears::MassPerVolumeUnit>;
+%template(QuantityMassPerVolume) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE MassPerVolumeUnit>;
 
 %include <biogears/cdm/properties/SEScalarMassPerVolume.h>;
 
-%nspace  std::vector<biogears::SEScalarMassPerVolume*>;
-%template (vector_SEScalarMasPerVolume_ptr)  std::vector<biogears::SEScalarMassPerVolume*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEScalarMassPerVolume*>;
+%template (vector_SEScalarMasPerVolume_ptr)  std::vector<BIOGEARS_NAMESPACE SEScalarMassPerVolume*>;

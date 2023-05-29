@@ -8,47 +8,47 @@
 %import <biogears/cdm/properties/SEScalarQuantity.swg>
 
 
-%ignore biogears::SEScalarQuantity::ToString(std::ostream& str);
-%ignore biogears::SEScalarQuantity<HeatConductancePerAreaUnit>::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity::ToString(std::ostream& str);
+%ignore BIOGEARS_NAMESPACE SEScalarQuantity<HeatConductancePerAreaUnit>::ToString(std::ostream& str);
 
 %rename(Equals)  operator==(const HeatConductancePerAreaUnit&) const;
 %rename(NotEquals)  operator!=(const HeatConductancePerAreaUnit&) const;
 %rename(Equals)  operator==(const SEScalarHeatConductancePerArea&) const;
 %rename(NotEquals)  operator!=(const SEScalarHeatConductancePerArea&) const;  
 
-%ignore biogears::HeatConductancePerAreaUnit::HeatConductancePerAreaUnit(std::string const &);
-%ignore biogears::HeatConductancePerAreaUnit::IsValidUnit(std::string const &);
-%ignore biogears::HeatConductancePerAreaUnit::GetCompoundUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::HeatConductancePerAreaUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::IsValidUnit(std::string const &);
+%ignore BIOGEARS_NAMESPACE HeatConductancePerAreaUnit::GetCompoundUnit(std::string const &);
 
-%nspace biogears::SEScalarHeatConductancePerArea;
-%nspace biogears::HeatConductancePerAreaUnit;
-%nspace biogears::SEScalarQuantity<HeatConductancePerAreaUnit>;
+%nspace BIOGEARS_NAMESPACE SEScalarHeatConductancePerArea;
+%nspace BIOGEARS_NAMESPACE HeatConductancePerAreaUnit;
+%nspace BIOGEARS_NAMESPACE SEScalarQuantity<HeatConductancePerAreaUnit>;
 
-namespace biogears {
+OPEN_BIOGEARS_NAMESPACE
    class HeatConductancePerAreaUnit;
-}
+CLOSE_BIOGEARS_NAMESPACE
 
-%warnfilter(842) biogears::SEScalarQuantity<biogears::HeatConductancePerAreaUnit>;
+%warnfilter(842) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatConductancePerAreaUnit>;
 
-%ignore  biogears::SEScalarQuantity< HeatConductancePerAreaUnit >::GetValue(std::string const &) const ;
-%ignore  biogears::SEScalarQuantity< HeatConductancePerAreaUnit >::IncrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< HeatConductancePerAreaUnit >::IncrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< HeatConductancePerAreaUnit >::DecrementValue(double,std::string const &) ;
-%ignore  biogears::SEScalarQuantity< HeatConductancePerAreaUnit >::DecrementValue(double,char const *) ;
-%ignore  biogears::SEScalarQuantity< HeatConductancePerAreaUnit>::GetCompoundUnit(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatConductancePerAreaUnit >::GetValue(std::string const &) const ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatConductancePerAreaUnit >::IncrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatConductancePerAreaUnit >::IncrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatConductancePerAreaUnit >::DecrementValue(double,std::string const &) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatConductancePerAreaUnit >::DecrementValue(double,char const *) ;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatConductancePerAreaUnit>::GetCompoundUnit(std::string const &) const ;
 #if defined(SWIGCSHARP)
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatConductancePerAreaUnit>::Multiply "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatConductancePerAreaUnit>::Divide "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatConductancePerAreaUnit>::MultiplyValue "public new";
-%csmethodmodifiers biogears::SEScalarQuantity<biogears::HeatConductancePerAreaUnit>::DivideValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatConductancePerAreaUnit>::Multiply "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatConductancePerAreaUnit>::Divide "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatConductancePerAreaUnit>::MultiplyValue "public new";
+%csmethodmodifiers BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatConductancePerAreaUnit>::DivideValue "public new";
 #endif 
 
 %ignore  GetValue(std::string const &) const ;
 
-%ignore  biogears::SEScalarQuantity< HeatConductancePerAreaUnit >::operator==;
-%rename(NotEquals)  biogears::SEScalarQuantity< HeatConductancePerAreaUnit >::operator!=;
+%ignore  BIOGEARS_NAMESPACE SEScalarQuantity< HeatConductancePerAreaUnit >::operator==;
+%rename(NotEquals)  BIOGEARS_NAMESPACE SEScalarQuantity< HeatConductancePerAreaUnit >::operator!=;
 
-%template(QuantityHeatConductancePerArea) biogears::SEScalarQuantity<biogears::HeatConductancePerAreaUnit>;
+%template(QuantityHeatConductancePerArea) BIOGEARS_NAMESPACE SEScalarQuantity<BIOGEARS_NAMESPACE HeatConductancePerAreaUnit>;
 
 %include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 

@@ -29,13 +29,13 @@ class SECompartmentManager;
 namespace io {
   class Compartment;
 }
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidTransportVertex*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidTransportEdge*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SELiquidTransportVertex*, size_t>;
-BG_EXT template class BIOGEARS_API map<const biogears::SELiquidTransportVertex*, vector<biogears::SELiquidTransportEdge*>*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SELiquidTransportVertex*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SELiquidTransportEdge*>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SELiquidTransportVertex*, size_t>;
+BG_EXT template class BIOGEARS_API map<const BIOGEARS_NAMESPACE SELiquidTransportVertex*, vector<BIOGEARS_NAMESPACE SELiquidTransportEdge*>*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE
@@ -61,9 +61,9 @@ protected:
 protected:
   void BalanceByIntensive() override;
 };
-} //namespace biogears
+CLOSE_BIOGEARS_NAMESPACE // namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartmentGraph*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartmentGraph*>;
+BG_EXT template class BIOGEARS_API vector<BIOGEARS_NAMESPACE SELiquidCompartmentGraph*>;
+BG_EXT template class BIOGEARS_API map<string, BIOGEARS_NAMESPACE SELiquidCompartmentGraph*>;
 }

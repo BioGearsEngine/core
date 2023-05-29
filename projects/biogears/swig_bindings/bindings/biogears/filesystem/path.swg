@@ -12,29 +12,29 @@
 %import <biogears/exports.swg>
 %import <biogears/cdm/CommonDataModel.swg>
 
-%nspace biogears::filesystem::path;
+%nspace BIOGEARS_NAMESPACE filesystem::path;
 
 
-%ignore biogears::filesystem::path::begin;
-%ignore biogears::filesystem::path::end;
-%ignore biogears::filesystem::path::path(std::string const&);
-%ignore biogears::filesystem::path::path(path&&);
+%ignore BIOGEARS_NAMESPACE filesystem::path::begin;
+%ignore BIOGEARS_NAMESPACE filesystem::path::end;
+%ignore BIOGEARS_NAMESPACE filesystem::path::path(std::string const&);
+%ignore BIOGEARS_NAMESPACE filesystem::path::path(path&&);
 %ignore operator std::string() const; 
 
-%rename(cd) operator/=(const biogears::filesystem::path& other);
-%rename(concatinate) operator/(const  biogears::filesystem::path& other) const;
+%rename(cd) operator/=(const BIOGEARS_NAMESPACE filesystem::path& other);
+%rename(concatinate) operator/(const  BIOGEARS_NAMESPACE filesystem::path& other) const;
 %rename(CopyFrom) operator=(const path& path);
 
 %ignore operator=(path&& path);
-%rename(Equals) operator==(const biogears::filesystem::path& p) const;
-%rename(NotEquals) operator!=(const biogears::filesystem::path& p) const;
+%rename(Equals) operator==(const BIOGEARS_NAMESPACE filesystem::path& p) const;
+%rename(NotEquals) operator!=(const BIOGEARS_NAMESPACE filesystem::path& p) const;
 
 #if defined(SWIGCSHARP)
-  %csmethodmodifiers   biogears::filesystem::path::ToString() const "public override";
-  %ignore   biogears::filesystem::path::ToString(path_type type) const;
+  %csmethodmodifiers   BIOGEARS_NAMESPACE filesystem::path::ToString() const "public override";
+  %ignore   BIOGEARS_NAMESPACE filesystem::path::ToString(path_type type) const;
 #endif
 
 %include <biogears/filesystem/path.h>
 
-%nsspace  std::vector<biogears::filesystem::path>;
-%template (vector_filesystem_path)  std::vector<biogears::filesystem::path>;
+%nsspace  std::vector<BIOGEARS_NAMESPACE filesystem::path>;
+%template (vector_filesystem_path)  std::vector<BIOGEARS_NAMESPACE filesystem::path>;

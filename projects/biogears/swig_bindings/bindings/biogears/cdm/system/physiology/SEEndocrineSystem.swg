@@ -19,10 +19,10 @@
 %import <biogears/cdm/properties/SEScalarMassPerTime.swg>
 %import <biogears/cdm/properties/SEScalarPower.swg>
 
-%nspace biogears::SEEndocrineSystem;
+%nspace BIOGEARS_NAMESPACE SEEndocrineSystem;
 
-%ignore biogears::SESubstancePharmacokinetics::GetScalar(const std::string& name);
-%ignore biogears::SESubstancePharmacokinetics::Unload;
-%ignore biogears::SESubstancePharmacokinetics::Load;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::GetScalar(const std::string& name);
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Unload;
+%ignore BIOGEARS_NAMESPACE SESubstancePharmacokinetics::Load;
 
 %include <biogears/cdm/system/physiology/SEEndocrineSystem.h>

@@ -14,19 +14,19 @@
 %import <biogears/cdm/properties/SEScalarVolume.swg>
 %import <biogears/cdm/properties/SEScalarFraction.swg>
 
-%nspace biogears::SEGasSubstanceQuantity;
+%nspace BIOGEARS_NAMESPACE SEGasSubstanceQuantity;
 
-%ignore biogears::SEGasSubstanceQuantity::Unload;
-%ignore biogears::SEGasSubstanceQuantity::Load;
+%ignore BIOGEARS_NAMESPACE SEGasSubstanceQuantity::Unload;
+%ignore BIOGEARS_NAMESPACE SEGasSubstanceQuantity::Load;
 
-%ignore biogears::SEGasSubstanceQuantity::GetScalar(const std::string&& name);
+%ignore BIOGEARS_NAMESPACE SEGasSubstanceQuantity::GetScalar(const std::string&& name);
 
-%ignore biogears::SEGasSubstanceQuantity::GetScalar(std::string const &);
-%rename (GetVolumeFraction_const) biogears::SEGasSubstanceQuantity::GetVolumeFraction() const;
+%ignore BIOGEARS_NAMESPACE SEGasSubstanceQuantity::GetScalar(std::string const &);
+%rename (GetVolumeFraction_const) BIOGEARS_NAMESPACE SEGasSubstanceQuantity::GetVolumeFraction() const;
 
 
-%warnfilter(401) biogears::SEGasSubstanceQuantity;
+%warnfilter(401) BIOGEARS_NAMESPACE SEGasSubstanceQuantity;
 %include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 
-%nspace std::vector<biogears::SEGasSubstanceQuantity*>;
-%template (vector_SEGasSubstanceQuantity) std::vector<biogears::SEGasSubstanceQuantity*>;
+%nspace std::vector<BIOGEARS_NAMESPACE SEGasSubstanceQuantity*>;
+%template (vector_SEGasSubstanceQuantity) std::vector<BIOGEARS_NAMESPACE SEGasSubstanceQuantity*>;

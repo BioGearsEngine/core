@@ -19,15 +19,15 @@ specific language governing permissions and limitations under the License.
 #include <vector>
 
 namespace std {
-template class map<string, biogears::SEHemorrhage*>;
-template class map<string, biogears::SETourniquet*>;
-template class map<string, biogears::SEEscharotomy*>;
-template class map<string, biogears::SEPainStimulus*>;
-template class map<const biogears::SESubstance*, biogears::SESubstanceBolus*>;
-template class map<const biogears::SESubstance*, biogears::SESubstanceInfusion*>;
-template class map<const biogears::SESubstance*, biogears::SESubstanceOralDose*>;
-template class map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*>;
-template class map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
+template class map<string, BIOGEARS_NAMESPACE SEHemorrhage*>;
+template class map<string, BIOGEARS_NAMESPACE SETourniquet*>;
+template class map<string, BIOGEARS_NAMESPACE SEEscharotomy*>;
+template class map<string, BIOGEARS_NAMESPACE SEPainStimulus*>;
+template class map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceBolus*>;
+template class map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceInfusion*>;
+template class map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceOralDose*>;
+template class map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceNasalDose*>;
+template class map<const BIOGEARS_NAMESPACE SESubstanceCompound*, BIOGEARS_NAMESPACE SESubstanceCompoundInfusion*>;
 }
 
 OPEN_BIOGEARS_NAMESPACE
@@ -1907,4 +1907,4 @@ void SEPatientActionCollection::RemoveOverride()
   SAFE_DELETE(m_OverrideAction);
 }
 //-------------------------------------------------------------------------------
-}
+CLOSE_BIOGEARS_NAMESPACE
