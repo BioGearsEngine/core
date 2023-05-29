@@ -705,7 +705,7 @@ specific language governing permissions and limitations under the License.
     <xs:restriction base="xs:string">
       <xs:enumeration value="Applied"/>
       <xs:enumeration value="Misapplied"/>
-      <xs:enumeration value="None"/>
+      <xs:enumeration value="Unapplied"/>
     </xs:restriction>
   </xs:simpleType>
 

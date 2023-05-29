@@ -6,7 +6,7 @@
 #endif
 
 #cmakedefine01 Biogears_IO_INCLUDE_STATES
-#if Biogears_BUILD_IO_LIBRARY
+#if Biogears_IO_INCLUDE_STATES
 #define BIOGEARS_IO_EMBED_STATES 1
 #endif
 

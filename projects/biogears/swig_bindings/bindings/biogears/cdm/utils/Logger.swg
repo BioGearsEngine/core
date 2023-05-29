@@ -4,7 +4,7 @@
 %}
 
 %import <biogears/cdm/CommonDataModel.swg>
-%include <biogears/exports.h>
+#include <biogears/config.h>
 
 %nspace BIOGEARS_NAMESPACE Logger;
 %nspace BIOGEARS_NAMESPACE LoggerForward;

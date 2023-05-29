@@ -29,6 +29,7 @@
 #endif 
 %include "exception.i"
 %include <biogears/exports.h>
+%include <biogears/config.h>
 
 %nspace BIOGEARS_NAMESPACE CCompoundUnitElement;
 %nspace BIOGEARS_NAMESPACE CUnitDimension;

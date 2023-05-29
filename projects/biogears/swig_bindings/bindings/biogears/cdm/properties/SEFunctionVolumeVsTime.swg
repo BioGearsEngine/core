@@ -5,6 +5,7 @@ using namespace CDM;
 %}
 
 %include <biogears/exports.h>
+%include <biogears/config.h>
 
 %rename(Equals)  operator==(const SEFunctionElectricPotentialVsTime&) const;
 %rename(NotEquals)  operator!=(const SEFunctionElectricPotentialVsTime&) const;

@@ -45,6 +45,8 @@ namespace std
 
 %nspace "BIOGEARS_NAMESPACE CommonDataModelException"
 
+%include <biogears/config.h>
+
 %ignore BIOGEARS_NAMESPACE CommonDataModelException::CommonDataModelException(std::string const &);
 
 %ignore Unload;
@@ -332,11 +334,7 @@ namespace tatrc {
       enum value {
         Applied
         ,Misapplied
-        #ifdef SWIGPYTHON
-            ,NotApplied
-        #else
-            ,None
-        #endif
+        ,Unapplied
       };
     };
     //Patient Assessment

@@ -57,6 +57,11 @@
        RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/python" 
        PDB_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/outputs/python"
      )
+     set_target_properties(libbiogears_py PROPERTIES
+      POSITION_INDEPENDENT_CODE ON
+      FOLDER Libraries
+      CXX_STANDARD 14
+     )  
 
      get_property(support_files TARGET libbiogears_py PROPERTY SWIG_SUPPORT_FILES)
     ######################################################################################################

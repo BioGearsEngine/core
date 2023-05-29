@@ -8,6 +8,7 @@ using BIOGEARS_NAMESPACE Tree;
 
 
 %import <biogears/exports.swg>
+%import <biogears/config.h>
 
 %nspace BIOGEARS_NAMESPACE Tree;
 
