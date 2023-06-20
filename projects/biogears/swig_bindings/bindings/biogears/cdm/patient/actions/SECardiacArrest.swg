@@ -18,3 +18,6 @@
 %ignore BIOGEARS_NAMESPACE SECardiacArrest::Load;
 
 %include <biogears/cdm/patient/actions/SECardiacArrest.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SECardiacArrest*>;
+%template (vector_SECardiacArrest_ptr)  std::vector<BIOGEARS_NAMESPACE SECardiacArrest*>;

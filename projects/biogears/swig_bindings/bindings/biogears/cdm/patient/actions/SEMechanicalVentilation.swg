@@ -38,3 +38,6 @@
 %rename(GetGasFraction_const) BIOGEARS_NAMESPACE SEMechanicalVentilation::GetGasFraction(const SESubstance& substance) const;  
   
 %include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEMechanicalVentilation*>;
+%template (vector_SEMechanicalVentilation_ptr)  std::vector<BIOGEARS_NAMESPACE SEMechanicalVentilation*>;

@@ -24,3 +24,6 @@
 %rename(GetSizeModifier_const) BIOGEARS_NAMESPACE SEPupillaryResponse::GetSizeModifier() const;
 
 %include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEPupillaryResponse*>;
+%template (vector_SEPupillaryResponse_ptr)  std::vector<BIOGEARS_NAMESPACE SEPupillaryResponse*>;

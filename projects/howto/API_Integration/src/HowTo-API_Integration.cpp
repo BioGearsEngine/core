@@ -527,7 +527,7 @@ void BioGearsPlugin::run()
           _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
           _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::None);
+          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Unapplied);
           _pimpl->engine->AdvanceModelTime(1, BIOGEARS_NAMESPACE TimeUnit::s);
           //The effectivness of this helper-function is called in to doubt, for such a simple tutorial
           //But you could imagine creating a vector of common conditions and then pushing and poping them in to

@@ -19,3 +19,6 @@
 %ignore BIOGEARS_NAMESPACE SEInfection::SetLocation(const std::string& name);
 
 %include <biogears/cdm/patient/actions/SEInfection.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEInfection*>;
+%template (vector_SEInfection_ptr)  std::vector<BIOGEARS_NAMESPACE SEInfection*>;

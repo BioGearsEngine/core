@@ -19,3 +19,6 @@
 %ignore BIOGEARS_NAMESPACE SEChestCompressionForce::Load;
 
 %include <biogears/cdm/patient/actions/SEChestCompressionForce.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEChestCompressionForce*>;
+%template (vector_SEChestCompressionForce_ptr)  std::vector<BIOGEARS_NAMESPACE SEChestCompressionForce*>;

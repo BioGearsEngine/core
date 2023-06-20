@@ -23,3 +23,6 @@
 %ignore BIOGEARS_NAMESPACE SEConsciousRespiration::Load;
 
 %include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEConsciousRespiration*>;
+%template (vector_SEConsciousRespiration_ptr)  std::vector<BIOGEARS_NAMESPACE SEConsciousRespiration*>;

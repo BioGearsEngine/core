@@ -1,4 +1,4 @@
-%{
+ %{
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 %}
@@ -25,3 +25,6 @@
 %rename(GetBleedResistance_Const) BIOGEARS_NAMESPACE SEHemorrhage::GetBleedResistance() const;
 
 %include <biogears/cdm/patient/actions/SEHemorrhage.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEHemorrhage*>;
+%template (vector_SEHemorrhage_ptr)  std::vector<BIOGEARS_NAMESPACE SEHemorrhage*>;

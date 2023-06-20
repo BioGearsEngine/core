@@ -17,3 +17,6 @@
 %ignore BIOGEARS_NAMESPACE SEEscharotomy::SetLocation(std::string const&);
 
 %include <biogears/cdm/patient/actions/SEEscharotomy.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEEscharotomy*>;
+%template (vector_SEEscharotomy_ptr)  std::vector<BIOGEARS_NAMESPACE SEEscharotomy*>;

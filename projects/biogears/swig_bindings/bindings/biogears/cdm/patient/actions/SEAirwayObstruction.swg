@@ -18,3 +18,6 @@
 %ignore BIOGEARS_NAMESPACE SEAirwayObstruction::Load;
 
 %include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEAirwayObstruction*>;
+%template (vector_SEAirwayObstruction_ptr)  std::vector<BIOGEARS_NAMESPACE SEAirwayObstruction*>;

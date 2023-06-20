@@ -32,3 +32,6 @@
 %ignore BIOGEARS_NAMESPACE SESubstanceBolus::ToString(std::ostream& str) const;
 
 %include <biogears/cdm/patient/actions/SESubstanceBolus.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstanceBolus*>;
+%template (vector_SESubstanceBolus_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstanceBolus*>;

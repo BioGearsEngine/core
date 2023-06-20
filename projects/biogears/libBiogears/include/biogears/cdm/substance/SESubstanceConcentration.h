@@ -30,6 +30,7 @@ class BIOGEARS_API SESubstanceConcentration : public Loggable {
 protected:
   friend SEEnvironmentalConditions; // So it can add substances to the manager
 public:
+  SESubstanceConcentration();
   SESubstanceConcentration(SESubstance& substance);
   SESubstanceConcentration(SESubstance& substance, SEScalarMassPerVolume concentration);
   SESubstanceConcentration(SESubstance& substance, double concentration, const MassPerVolumeUnit& unit);

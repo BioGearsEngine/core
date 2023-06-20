@@ -54,5 +54,8 @@ CLOSE_BIOGEARS_NAMESPACE
 
 %include <biogears/cdm/properties/SEScalarElectricPotential.h>
 
+%nspace std::vector<BIOGEARS_NAMESPACE SEScalarElectricPotential*>;
+%template (vector_SEScalarElectricPotential_ptr) std::vector<BIOGEARS_NAMESPACE SEScalarElectricPotential*>;
+
 %nspace std::map<CDM::ElectroCardioGramWaveformLeadNumber, BIOGEARS_NAMESPACE SEScalarElectricPotential*>;
 %template (map_ElectroCardioGramWaveformLeadNumber__SEScalarElectricPotential_ptr) std::map<CDM::ElectroCardioGramWaveformLeadNumber, BIOGEARS_NAMESPACE SEScalarElectricPotential*>;

@@ -17,3 +17,6 @@
 %ignore BIOGEARS_NAMESPACE SEUrinate::Load;
 
 %include <biogears/cdm/patient/actions/SEUrinate.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEUrinate*>;
+%template (vector_SEUrinate_ptr)  std::vector<BIOGEARS_NAMESPACE SEUrinate*>;

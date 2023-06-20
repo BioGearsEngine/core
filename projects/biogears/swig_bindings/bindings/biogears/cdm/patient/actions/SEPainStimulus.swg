@@ -20,3 +20,6 @@
 %ignore BIOGEARS_NAMESPACE SEPainStimulus::SetLocation(const std::string& name);
 
 %include <biogears/cdm/patient/actions/SEPainStimulus.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEPainStimulus*>;
+%template (vector_SEPainStimulus_ptr)  std::vector<BIOGEARS_NAMESPACE SEPainStimulus*>;

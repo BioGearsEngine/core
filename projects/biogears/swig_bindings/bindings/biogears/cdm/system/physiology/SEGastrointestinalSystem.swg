@@ -40,6 +40,17 @@
 OPEN_BIOGEARS_NAMESPACE
    class SEDrugTransitState;
 CLOSE_BIOGEARS_NAMESPACE
+
+%traits_swigtype(SESubstance);
+%traits_swigtype(SESubstanceCompound);
+
+%fragment(SWIG_Traits_frag(SESubstance));
+%fragment(SWIG_Traits_frag(SESubstanceCompound));
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstance*>;
+%template (vector_SESubstance_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstance*>;
+%nspace std::vector<BIOGEARS_NAMESPACE SEDrugTransitState*>;
+%template (vector_SEDrugTransitState_ptr) std::vector<BIOGEARS_NAMESPACE SEDrugTransitState*>;
 %nspace std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SEDrugTransitState*>;
 %template (map_SESubstance_ptr__SEDrugTransitState_ptr) std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SEDrugTransitState*>;
 

@@ -23,3 +23,6 @@
 %ignore BIOGEARS_NAMESPACE SESubstanceAdministration::Load;
   
 %include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstanceAdministration*>;
+%template (vector_SESubstanceAdministration_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstanceAdministration*>;

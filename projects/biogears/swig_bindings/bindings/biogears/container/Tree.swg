@@ -48,7 +48,9 @@ public:
   Tree& operator=(const Tree&);
 };
 CLOSE_BIOGEARS_NAMESPACE
+
 %nspace BIOGEARS_NAMESPACE Tree<char const *>;
-%nspace std::vector<BIOGEARS_NAMESPACE Tree<char const*>>;
-%template(vector_tree_char) std::vector<BIOGEARS_NAMESPACE Tree<char const *>>;
+//%nspace std::vector<BIOGEARS_NAMESPACE Tree<char const*>>;
+
 %template(Tree_cString) BIOGEARS_NAMESPACE Tree<char const *>;
+//%template(vector_tree_char) std::vector<BIOGEARS_NAMESPACE Tree<char const *>>;

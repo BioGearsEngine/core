@@ -52,8 +52,10 @@ OPEN_BIOGEARS_NAMESPACE
   class SEPharmacodynamicModifier;
 CLOSE_BIOGEARS_NAMESPACE
 
+%namespace std::vector<BIOGEARS_NAMESPACE SEPharmacodynamicModifier*>;
 %namespace std::map<std::string, BIOGEARS_NAMESPACE SEPharmacodynamicModifier*>;
 
 %include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 
+%template (vector_SEPharmocodynamicModifier_ptr) std::vector<BIOGEARS_NAMESPACE SEPharmacodynamicModifier*>;
 %template (map_string_SEPharmocodynamicModifier_ptr) std::map<std::string, BIOGEARS_NAMESPACE SEPharmacodynamicModifier*>;

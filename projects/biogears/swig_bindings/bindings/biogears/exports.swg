@@ -19,6 +19,9 @@ namespace std
 }
 
 #elif defind(SWIGPYTHON)
+  %import std_container.i 
+  %import std_map.i
+  %import std_vector.i
   %import "python/std_string.i"
   %import "python/std_vector.i"
   %import "python/std_map.i"

@@ -22,3 +22,6 @@
 %rename (HasBrainInjuryType) BIOGEARS_NAMESPACE SEBrainInjury::HasType() const;
 %rename (InvalidateBrainInjuryType) BIOGEARS_NAMESPACE SEBrainInjury::InvalidateType();
 %include <biogears/cdm/patient/actions/SEBrainInjury.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEBrainInjury*>;
+%template (vector_SEBrainInjury_ptr)  std::vector<BIOGEARS_NAMESPACE SEBrainInjury*>;

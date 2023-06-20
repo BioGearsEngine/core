@@ -36,3 +36,6 @@
 %rename(GetStrengthExercise_const) BIOGEARS_NAMESPACE SEExercise::GetStrengthExercise() const;
 
 %include <biogears/cdm/patient/actions/SEExercise.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEExercise*>;
+%template (vector_SEExercise_ptr)  std::vector<BIOGEARS_NAMESPACE SEExercise*>;

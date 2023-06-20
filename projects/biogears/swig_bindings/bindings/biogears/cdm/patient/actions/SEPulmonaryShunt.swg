@@ -18,3 +18,6 @@
 %ignore BIOGEARS_NAMESPACE SEPulmonaryShunt::Load;
 
 %include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEPulmonaryShunt*>;
+%template (vector_SEPulmonaryShunt_ptr)  std::vector<BIOGEARS_NAMESPACE SEPulmonaryShunt*>;

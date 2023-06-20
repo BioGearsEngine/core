@@ -18,3 +18,6 @@
 %rename (GetPatientAssessmentType) BIOGEARS_NAMESPACE SEPatientAssessmentRequest::GetType;
 
 %include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEPatientAssessmentRequest*>;
+%template (vector_SEPatientAssessmentRequest_ptr)  std::vector<BIOGEARS_NAMESPACE SEPatientAssessmentRequest*>;

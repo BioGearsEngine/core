@@ -18,3 +18,6 @@
 %ignore BIOGEARS_NAMESPACE SEApnea::Load;
 
 %include <biogears/cdm/patient/actions/SEApnea.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEApnea*>;
+%template (vector_SEApnea_ptr)  std::vector<BIOGEARS_NAMESPACE SEApnea*>;

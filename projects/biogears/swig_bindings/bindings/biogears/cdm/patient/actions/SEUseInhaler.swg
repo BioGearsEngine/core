@@ -19,3 +19,6 @@
 %ignore BIOGEARS_NAMESPACE SEUseInhaler::Load;
 
 %include <biogears/cdm/patient/actions/SEUseInhaler.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEUseInhaler*>;
+%template (vector_SEUseInhaler_ptr)  std::vector<BIOGEARS_NAMESPACE SEUseInhaler*>;

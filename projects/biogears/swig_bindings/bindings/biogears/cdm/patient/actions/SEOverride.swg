@@ -41,3 +41,6 @@
 %rename (GetTotalWorkRateLevelOverride_const)  BIOGEARS_NAMESPACE SEOverride::GetTotalWorkRateLevelOverride() const ;
 
 %include <biogears/cdm/patient/actions/SEOverride.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEOverride*>;
+%template (vector_SEOverride_ptr)  std::vector<BIOGEARS_NAMESPACE SEOverride*>;

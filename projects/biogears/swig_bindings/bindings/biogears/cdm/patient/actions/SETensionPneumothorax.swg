@@ -20,3 +20,7 @@
 %rename (GetTensionPneumothoraxType) BIOGEARS_NAMESPACE SETensionPneumothorax::GetType;
 
 %include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
+
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SETensionPneumothorax*>;
+%template (vector_SETensionPneumothorax_ptr)  std::vector<BIOGEARS_NAMESPACE SETensionPneumothorax*>;

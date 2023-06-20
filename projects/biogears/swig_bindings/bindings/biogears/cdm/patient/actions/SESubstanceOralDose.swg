@@ -31,3 +31,7 @@ OPEN_BIOGEARS_NAMESPACE
   class SETransmucosalState;
 CLOSE_BIOGEARS_NAMESPACE
 %include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
+
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstanceOralDose*>;
+%template (vector_SESubstanceOralDose_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstanceOralDose*>;

@@ -10,9 +10,9 @@
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
-#include <biogears/cdm/substance/SESubstanceAerosolization.h
-#include <biogears/cdm/substance/SESubstanceClearance.h
-#include <biogears/cdm/substance/SESubstancePhysicochemicals.h
+#include <biogears/cdm/substance/SESubstanceAerosolization.h>
+#include <biogears/cdm/substance/SESubstanceClearance.h>
+#include <biogears/cdm/substance/SESubstancePhysicochemicals.h>
 %}
 
 %include <biogears/exports.h>

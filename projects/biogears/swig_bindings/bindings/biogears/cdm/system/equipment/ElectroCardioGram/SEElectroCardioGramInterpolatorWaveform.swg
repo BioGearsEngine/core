@@ -21,8 +21,24 @@
 %rename(GetData_const) GetData() const;
 %include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
 
+%nspace std::vector<BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>;
 %nspace std::map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>;
+
+
+%template (vector__ECGWaveformLead_ptr) std::vector<BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>;
 %template (map_enumHeartRhythm__ECGWaveformLead_ptr) std::map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>;
 
 //%nspace std::map<CDM::ElectroCardioGramWaveformLeadNumber, std::map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>>;
+//%{
+//    namespace swig {
+//    template <> struct traits<std::map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>>
+//    {
+//        typedef pointer_category category;
+//        static const char* type_name()
+//        {
+//            return "std::map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>";
+//        }
+//    };
+//    }
+//%}
 //%template (map_ECGWaveformLead__map_enumHeartRhythm__ECGWaveformLead_ptr) std::map<CDM::ElectroCardioGramWaveformLeadNumber, std::map<CDM::enumHeartRhythm, BIOGEARS_NAMESPACE SEElectroCardioGramInterpolatorWaveform*>>;

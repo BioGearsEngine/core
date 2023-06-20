@@ -85,11 +85,40 @@
 %nspace std::map<std::string, BIOGEARS_NAMESPACE SEPainStimulus*>;
 %nspace std::map<std::string, BIOGEARS_NAMESPACE SEEscharotomy*>;
 
+%traits_swigtype(SEHemorrhage);
+%traits_swigtype(SETourniquet);
+%traits_swigtype(SEPainStimulus);
+%traits_swigtype(SEEscharotomy);
+
+%fragment(SWIG_Traits_frag(SEHemorrhage));
+%fragment(SWIG_Traits_frag(SETourniquet));
+%fragment(SWIG_Traits_frag(SEPainStimulus));
+%fragment(SWIG_Traits_frag(SEEscharotomy));
+
+%traits_swigtype(SESubstanceBolus);
+%traits_swigtype(SESubstanceInfusion);
+%traits_swigtype(SESubstanceOralDose);
+%traits_swigtype(SESubstanceNasalDose);
+%traits_swigtype(SESubstanceCompoundInfusion);
+
+%fragment(SWIG_Traits_frag(SESubstanceBolus));
+%fragment(SWIG_Traits_frag(SESubstanceInfusion));
+%fragment(SWIG_Traits_frag(SESubstanceOralDose));
+%fragment(SWIG_Traits_frag(SESubstanceNasalDose));
+%fragment(SWIG_Traits_frag(SESubstanceCompoundInfusion));
+
+%traits_swigtype(SESubstance);
+%traits_swigtype(SESubstanceCompound);
+
+%fragment(SWIG_Traits_frag(SESubstance));
+%fragment(SWIG_Traits_frag(SESubstanceCompound));
+
 %nspace std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceBolus*> ;
 %nspace std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceInfusion*> ;
 %nspace std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceOralDose*> ;
 %nspace std::map<const BIOGEARS_NAMESPACE SESubstance*, BIOGEARS_NAMESPACE SESubstanceNasalDose*> ;
 %nspace std::map<const BIOGEARS_NAMESPACE SESubstanceCompound*, BIOGEARS_NAMESPACE SESubstanceCompoundInfusion*> ;
+
 
 %template (map_string__SEHemorrhage_ptr) std::map<std::string, BIOGEARS_NAMESPACE SEHemorrhage*> ;
 %template (map_string__SEEscharotomy_ptr) std::map<std::string, BIOGEARS_NAMESPACE SEEscharotomy*> ;

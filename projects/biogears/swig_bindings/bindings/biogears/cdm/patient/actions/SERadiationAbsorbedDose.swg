@@ -18,3 +18,6 @@
 %ignore BIOGEARS_NAMESPACE SERadiationAbsorbedDose::Load;
 
 %include <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SERadiationAbsorbedDose*>;
+%template (vector_SERadiationAbsorbedDose_ptr)  std::vector<BIOGEARS_NAMESPACE SERadiationAbsorbedDose*>;

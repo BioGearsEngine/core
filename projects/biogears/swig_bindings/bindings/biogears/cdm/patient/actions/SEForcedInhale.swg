@@ -19,3 +19,6 @@
 %ignore BIOGEARS_NAMESPACE ForcedInhale::Load;
 
 %include <biogears/cdm/patient/actions/SEForcedInhale.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEForcedInhale*>;
+%template (vector_SEForcedInhale_ptr)  std::vector<BIOGEARS_NAMESPACE SEForcedInhale*>;

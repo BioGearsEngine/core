@@ -19,3 +19,6 @@
 %ignore BIOGEARS_NAMESPACE SEChestOcclusiveDressing::Load;
 
 %include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEChestOcclusiveDressing*>;
+%template (vector_SEChestOcclusiveDressing_ptr)  std::vector<BIOGEARS_NAMESPACE SEChestOcclusiveDressing*>;

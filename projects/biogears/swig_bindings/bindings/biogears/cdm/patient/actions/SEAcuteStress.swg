@@ -18,3 +18,6 @@
 %ignore BIOGEARS_NAMESPACE SEAcuteStress::Load;
 
 %include <biogears/cdm/patient/actions/SEAcuteStress.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEAcuteStress*>;
+%template (vector_SEAcuteStress_ptr)  std::vector<BIOGEARS_NAMESPACE SEAcuteStress*>;

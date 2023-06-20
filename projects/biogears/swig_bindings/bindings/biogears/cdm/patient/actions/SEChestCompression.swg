@@ -18,3 +18,6 @@
 %ignore BIOGEARS_NAMESPACE SEChestCompression::Load;
 
 %include <biogears/cdm/patient/actions/SEChestCompression.h>
+
+%nsspace  std::vector<BIOGEARS_NAMESPACE SEChestCompression*>;
+%template (vector_SEChestCompression_ptr)  std::vector<BIOGEARS_NAMESPACE SEChestCompression*>;
