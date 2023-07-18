@@ -384,6 +384,7 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(Protobuf
 )
 
 if(Protobuf_FOUND)
+   if(NOT TARGET Protobuf::protobuf)
     add_library(Protobuf::protobuf IMPORTED  GLOBAL)
     set_target_properties(Protobuf::protobuf
         PROPERTIES
@@ -392,6 +393,8 @@ if(Protobuf_FOUND)
         INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
         ${Protobuf_INCLUDE_DIR}
        )
+   endif()
+   if(NOT TARGET Protobuf::protoc)
     add_library(Protobuf::protoc IMPORTED  GLOBAL)
     set_target_properties(Protobuf::protoc
         PROPERTIES
@@ -400,6 +403,8 @@ if(Protobuf_FOUND)
         INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
         ${Protobuf_INCLUDE_DIR}
         PROTOBUF_PROTOC_LIBRARY )
+  endif()
+  if(NOT TARGET Protobuf::lite)
     add_library(Protobuf::lite IMPORTED  GLOBAL)
     set_target_properties(Protobuf::lite
         PROPERTIES
@@ -408,14 +413,14 @@ if(Protobuf_FOUND)
         INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
         ${Protobuf_INCLUDE_DIR}
       PROTOBUF_LITE_LIBRARY )
-
-    set(Protobuf_INCLUDE_DIRS ${Protobuf_INCLUDE_DIR})
-	mark_as_advanced(Protobuf_INCLUDE_DIR)
-	mark_as_advanced(Protobuf_LIBRARY)
-	mark_as_advanced(Protobuf_LIBRARY_DEBUG)
-	mark_as_advanced(Protobuf_PROTOC_LIBRARY)
-	mark_as_advanced(Protobuf_PROTOC_LIBRARY_DEBUG)
-	mark_as_advanced(Protobuf_LITE_LIBRARY)
-	mark_as_advanced(Protobuf_LITE_LIBRARY_DEBUG)
-	mark_as_advanced(Protobuf_DIR)
+  endif()
+  set(Protobuf_INCLUDE_DIRS ${Protobuf_INCLUDE_DIR})
+  mark_as_advanced(Protobuf_INCLUDE_DIR)
+  mark_as_advanced(Protobuf_LIBRARY)
+  mark_as_advanced(Protobuf_LIBRARY_DEBUG)
+  mark_as_advanced(Protobuf_PROTOC_LIBRARY)
+  mark_as_advanced(Protobuf_PROTOC_LIBRARY_DEBUG)
+  mark_as_advanced(Protobuf_LITE_LIBRARY)
+  mark_as_advanced(Protobuf_LITE_LIBRARY_DEBUG)
+  mark_as_advanced(Protobuf_DIR)
 endif()

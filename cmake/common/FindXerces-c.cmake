@@ -150,18 +150,19 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(Xerces-c
                                   VERSION_VAR Xerces-c_VERSION_STRING)
 
 if(Xerces-c_FOUND)
-  add_library(Xerces::xerces ${LIBRARY_TYPE} IMPORTED GLOBAL)
-  set_target_properties(Xerces::xerces
-    PROPERTIES
-    IMPORTED_LOCATION       ${Xerces-c_LIBRARY_RELEASE}   
-    IMPORTED_LOCATION_DEBUG ${Xerces-c_LIBRARY_DEBUG}
-    IMPORTED_IMPLIB_DEBUG   ${Xerces-c_LIBRARY_DEBUG}
-    IMPORTED_IMPLIB ${Xerces-c_LIBRARY_RELEASE}
-    INTERFACE_INCLUDE_DIRECTORIES
-    ${Xerces-c_INCLUDE_DIR}
+  if(NOT TARGET Xerces::xerces)
+    add_library(Xerces::xerces ${LIBRARY_TYPE} IMPORTED GLOBAL)
+    set_target_properties(Xerces::xerces
+      PROPERTIES
+      IMPORTED_LOCATION       ${Xerces-c_LIBRARY_RELEASE}   
+      IMPORTED_LOCATION_DEBUG ${Xerces-c_LIBRARY_DEBUG}
+      IMPORTED_IMPLIB_DEBUG   ${Xerces-c_LIBRARY_DEBUG}
+      IMPORTED_IMPLIB ${Xerces-c_LIBRARY_RELEASE}
+      INTERFACE_INCLUDE_DIRECTORIES
+      ${Xerces-c_INCLUDE_DIR}
     )
-   target_compile_definitions(Xerces::xerces INTERFACE ${Xerces-c_CPPFLAGS})
-  
+    target_compile_definitions(Xerces::xerces INTERFACE ${Xerces-c_CPPFLAGS})
+  endif()
 
 
   mark_as_advanced(Xerces-c_LIBRARY_DEBUG_STATIC)

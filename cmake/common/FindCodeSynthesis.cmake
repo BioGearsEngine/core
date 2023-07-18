@@ -304,14 +304,16 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(CodeSynthesis
                                   VERSION_VAR CodeSynthesis_VERSION_STRING)
 
 if(CodeSynthesis_FOUND)
-  add_library(CodeSynthesis::XSD INTERFACE IMPORTED GLOBAL)
-  set_target_properties(CodeSynthesis::XSD
-    PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES
-    ${CodeSynthesis_INCLUDE_DIR}
-    )
-  target_link_libraries(CodeSynthesis::XSD INTERFACE Xerces::xerces)
+  if(NOT TARGET CodeSynthesis::XSD)
+    add_library(CodeSynthesis::XSD INTERFACE IMPORTED GLOBAL)
+    set_target_properties(CodeSynthesis::XSD
+      PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES
+      ${CodeSynthesis_INCLUDE_DIR}
+      )
+    target_link_libraries(CodeSynthesis::XSD INTERFACE Xerces::xerces)
 
+  endif()
   mark_as_advanced(CodeSynthesis_INCLUDE_DIR)
   mark_as_advanced(CodeSynthesis_EXECUTABLE)
   mark_as_advanced(CodeSynthesis_DIR)

@@ -50,7 +50,7 @@ if(Tbb_FOUND)
   mark_as_advanced(Tbb_LIBRARY_DEBUG)
   mark_as_advanced(Tbb_LIBRARY)
   mark_as_advanced(Tbb_DIR)
-
+  if(NOT TARGET Tbb::malloc)
       add_library(Tbb::malloc IMPORTED GLOBAL)
       set_target_properties(Tbb::malloc
         PROPERTIES
@@ -59,7 +59,8 @@ if(Tbb_FOUND)
         INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
         ${Tbb_INCLUDE_DIR}
         )
-
+  endif()
+  if(NOT TARGET Tbb::Tbb)
       add_library(Tbb::Tbb IMPORTED GLOBAL)
       set_target_properties(Tbb::Tbb
         PROPERTIES
@@ -68,6 +69,6 @@ if(Tbb_FOUND)
 
         INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
         ${Tbb_INCLUDE_DIR}
-        )
-
+     )
+  endif()
 endif(Tbb_FOUND)

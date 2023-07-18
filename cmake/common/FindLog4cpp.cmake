@@ -62,8 +62,9 @@ if(NOT Log4cpp_FOUND)
                                     )
   
   if(Log4cpp_FOUND)
-    add_library(Log4cpp::Log4cpp SHARED IMPORTED GLOBAL)
-    set_target_properties(Log4cpp::Log4cpp
+    if(NOT TARGET Log4cpp::Log4cpp)
+      add_library(Log4cpp::Log4cpp SHARED IMPORTED GLOBAL)
+      set_target_properties(Log4cpp::Log4cpp
           PROPERTIES
           IMPORTED_LOCATION ${Log4cpp_LIBRARY_RELEASE}
           IMPORTED_LOCATION_DEBUG ${Log4cpp_LIBRARY_DEBUG}
@@ -76,10 +77,10 @@ if(NOT Log4cpp_FOUND)
           INTERFACE_INCLUDE_DIRECTORIES
           ${Log4cpp_INCLUDE_DIR}
           )
-  
+  endif()
     mark_as_advanced(Log4cpp_LIBRARY_DEBUG)
     mark_as_advanced(Log4cpp_LIBRARY_RELEASE)
     mark_as_advanced(Log4cpp_INCLUDE_DIR)
-	mark_as_advanced(Log4cpp_DIR)
+    mark_as_advanced(Log4cpp_DIR)
   endif()
 endif()
