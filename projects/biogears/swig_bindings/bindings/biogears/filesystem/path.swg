@@ -1,5 +1,13 @@
-
-
+#if defined(SWIGPYTHON)
+%module(package="biogears", 
+moduleimport=
+   "# Import the low-level C/C++ module\n"
+    "if __package__ or \".\" in __name__:\n"
+    "    from . import _biogears\n"
+    "else:\n"
+    "    import _biogears\n"
+) path
+#endif
 %{
    #include <stdexcept>
    #include <string>
@@ -10,7 +18,7 @@
 #include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
-%import <biogears/exports.swg>
+%include <biogears/exports.swg>
 %import <biogears/cdm/CommonDataModel.swg>
 
 %nspace BIOGEARS_NAMESPACE filesystem::path;
@@ -37,5 +45,9 @@
 
 %include <biogears/filesystem/path.h>
 
+
+
 %nsspace  std::vector<BIOGEARS_NAMESPACE filesystem::path>;
+%traits_swigtype(::path);
+%fragment(SWIG_Traits_frag(filesystem::path));
 %template (vector_filesystem_path)  std::vector<BIOGEARS_NAMESPACE filesystem::path>;

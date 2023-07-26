@@ -17,7 +17,7 @@
      #if(Python_VERSION VERSION_GREATER_EQUAL 3)
      #  list(APPEND CMAKE_SWIG_FLAGS "-py3;-DPY3")
      #endif()
-
+     #set(Python_SWIGS  ${CMAKE_CURRENT_SOURCE_DIR}/../bindings/biogears/cdm/utils/Logger.swg ${CMAKE_CURRENT_SOURCE_DIR}/../bindings/biogears/filesystem/path.swg)
      file(GLOB_RECURSE Python_SWIGS LIST_DIRECTORIES False "${CMAKE_CURRENT_SOURCE_DIR}/../bindings/*.swg" )
      source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/bindings/*.swg" PREFIX "Source Files"  FILES ${csharp_test_files} )
      foreach(_file IN LISTS Python_SWIGS)
@@ -25,9 +25,9 @@
        set_property(SOURCE ${_file} PROPERTY UseSWIG_MODULE_VERSION 2)
        set_property(SOURCE ${_file} PROPERTY USE_TARGET_INCLUDE_DIRECTORIES ON)
 
-      set_property(SOURCE ${_file} PROPERTY COMPILE_OPTIONS "-py3;-DPY3")
+      #set_property(SOURCE ${_file} PROPERTY COMPILE_OPTIONS "-py3;-DPY3")
        get_filename_component(_file_name ${_file} NAME_WE)
-       set_property(SOURCE ${_file} PROPERTY SWIG_MODULE_NAME ${_file_name} )
+       #set_property(SOURCE ${_file} PROPERTY SWIG_MODULE_NAME ${_file_name} )
      endforeach()
      
      option(UNITTEST_biogears-swig_py     "Enable libBiogears_py UnitTest " ${Biogears_SWIG_PYTHON_BINDINGS})

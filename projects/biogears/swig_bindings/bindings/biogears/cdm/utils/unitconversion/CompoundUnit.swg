@@ -7,6 +7,17 @@
 #include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
+#if defined(SWIGPYTHON)
+%module(package="biogears", 
+moduleimport=
+   "# Import the low-level C/C++ module\n"
+    "if __package__ or \".\" in __name__:\n"
+    "    from . import _biogears\n"
+    "else:\n"
+    "    import _biogears\n"
+) CompoundUnit
+#endif 
+
 %include "windows.i"
 #if defined(SWIGCSHARP)
   %include "csharp/std_string.i"
@@ -29,7 +40,7 @@
   %include "std_except.i"
 #endif 
 %include "exception.i"
-%include <biogears/exports.h>
+%include <biogears/exports.swg>
 %include <biogears/config.h>
 
 %nspace BIOGEARS_NAMESPACE CCompoundUnitElement;

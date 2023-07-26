@@ -9,7 +9,18 @@
 #include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
-%import <biogears/exports.swg>
+#if defined(SWIGPYTHON)
+%module(package="biogears", 
+moduleimport=
+   "# Import the low-level C/C++ module\n"
+    "if __package__ or \".\" in __name__:\n"
+    "    from . import _biogears\n"
+    "else:\n"
+    "    import _biogears\n"
+) IOManager
+#endif
+
+%include <biogears/exports.swg>
 %import <biogears/filesystem/path.swg>
 
 %nspace BIOGEARS_NAMESPACE IOManager;

@@ -3,7 +3,20 @@
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 %}
+
+#if defined(SWIGPYTHON)
+%module(package="biogears", 
+moduleimport=
+   "# Import the low-level C/C++ module\n"
+    "if __package__ or \".\" in __name__:\n"
+    "    from . import _biogears\n"
+    "else:\n"
+    "    import _biogears\n"
+) BioGearsPhysiologyEngine
+#endif
+
 %include "windows.i"
+
 #if defined(SWIGCSHARP)
   %include "csharp/std_string.i"
   %include "csharp/std_vector.i"

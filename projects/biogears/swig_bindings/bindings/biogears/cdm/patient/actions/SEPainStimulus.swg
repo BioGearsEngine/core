@@ -3,7 +3,19 @@
 #include <biogears/cdm/properties/SEScalarTypes.h>
 %}
 
-%include <biogears/exports.h>
+#if defined(SWIGPYTHON)
+%module(package="biogears", 
+moduleimport=
+   "# Import the low-level C/C++ module\n"
+    "if __package__ or \".\" in __name__:\n"
+    "    from . import _biogears\n"
+    "else:\n"
+    "    import _biogears\n"
+) SEPainStimulus
+#endif
+
+
+%include <biogears/exports.swg>
 
 %import <biogears/cdm/utils/Logger.swg>
 %import <biogears/cdm/CommonDataModel.swg>
@@ -21,5 +33,8 @@
 
 %include <biogears/cdm/patient/actions/SEPainStimulus.h>
 
+
 %nsspace  std::vector<BIOGEARS_NAMESPACE SEPainStimulus*>;
+%traits_swigtype(SEPainStimulus);
+%fragment(SWIG_Traits_frag(SEPainStimulus));
 %template (vector_SEPainStimulus_ptr)  std::vector<BIOGEARS_NAMESPACE SEPainStimulus*>;
