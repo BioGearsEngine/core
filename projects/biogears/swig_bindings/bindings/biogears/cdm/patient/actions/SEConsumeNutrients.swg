@@ -38,5 +38,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEConsumeNutrients*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEConsumeNutrients*>;
 %template (vector_SEConsumeNutrients_ptr)  std::vector<BIOGEARS_NAMESPACE SEConsumeNutrients*>;

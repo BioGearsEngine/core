@@ -28,7 +28,7 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEAcuteStress.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEAcuteStress*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEAcuteStress*>;
 %traits_swigtype(SEAcuteStress);
 %fragment(SWIG_Traits_frag(SEAcuteStress));
 %template (vector_SEAcuteStress_ptr)  std::vector<BIOGEARS_NAMESPACE SEAcuteStress*>;

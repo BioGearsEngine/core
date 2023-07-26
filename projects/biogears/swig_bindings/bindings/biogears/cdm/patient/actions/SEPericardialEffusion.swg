@@ -29,5 +29,5 @@ moduleimport=
  
 %include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEPericardialEffusion*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEPericardialEffusion*>;
 %template (vector_SEPericardialEffusion_ptr)  std::vector<BIOGEARS_NAMESPACE SEPericardialEffusion*>;

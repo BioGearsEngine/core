@@ -62,5 +62,5 @@ moduleimport=
 
 %include <biogears/cdm/substance/SESubstanceCompound.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstanceCompound*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SESubstanceCompound*>;
 %template (vector_SESubstanceCompound_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstanceCompound*>;

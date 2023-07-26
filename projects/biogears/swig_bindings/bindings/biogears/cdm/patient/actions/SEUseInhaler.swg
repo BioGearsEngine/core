@@ -31,5 +31,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEUseInhaler.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEUseInhaler*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEUseInhaler*>;
 %template (vector_SEUseInhaler_ptr)  std::vector<BIOGEARS_NAMESPACE SEUseInhaler*>;

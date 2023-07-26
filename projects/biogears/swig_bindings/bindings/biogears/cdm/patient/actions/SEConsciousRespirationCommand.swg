@@ -29,5 +29,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 	
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEConsciousRespirationCommand*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEConsciousRespirationCommand*>;
 %template (vector_SEConsciousRespirationCommand_ptr)  std::vector<BIOGEARS_NAMESPACE SEConsciousRespirationCommand*>;

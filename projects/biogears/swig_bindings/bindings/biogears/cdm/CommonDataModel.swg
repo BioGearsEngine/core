@@ -27,7 +27,7 @@ moduleimport=
     }
 
 #endif
-#if defind(SWIGPYTHON)
+#if defined(SWIGPYTHON)
   %include std_container.i 
   %include std_map.i
   %include std_vector.i

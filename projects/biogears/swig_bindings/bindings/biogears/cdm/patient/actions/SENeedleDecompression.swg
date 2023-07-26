@@ -27,5 +27,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SENeedleDecompression*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SENeedleDecompression*>;
 %template (vector_SENeedleDecompression_ptr)  std::vector<BIOGEARS_NAMESPACE SENeedleDecompression*>;

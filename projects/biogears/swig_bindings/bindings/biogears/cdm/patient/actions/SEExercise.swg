@@ -48,5 +48,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEExercise.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEExercise*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEExercise*>;
 %template (vector_SEExercise_ptr)  std::vector<BIOGEARS_NAMESPACE SEExercise*>;

@@ -29,5 +29,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEChestOcclusiveDressing*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEChestOcclusiveDressing*>;
 %template (vector_SEChestOcclusiveDressing_ptr)  std::vector<BIOGEARS_NAMESPACE SEChestOcclusiveDressing*>;

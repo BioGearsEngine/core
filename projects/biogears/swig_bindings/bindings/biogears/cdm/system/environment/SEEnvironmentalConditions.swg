@@ -47,7 +47,7 @@ moduleimport=
 
 %ignore BIOGEARS_NAMESPACE SEEnvironmentalConditions::Unload;
 %ignore BIOGEARS_NAMESPACE SEEnvironmentalConditions::Load;
-%rename(%s) BIOGEARS_NAMESPACE SEEnvironmentalConditions::Load(const char* environmentFile);
+%rename(LoadFile) BIOGEARS_NAMESPACE SEEnvironmentalConditions::Load(const char* environmentFile);
 %ignore BIOGEARS_NAMESPACE SEEnvironmentalConditions::GetScalar(std::string const &);
 %ignore BIOGEARS_NAMESPACE SEEnvironmentalConditions::SetName(const std::string& name);
 

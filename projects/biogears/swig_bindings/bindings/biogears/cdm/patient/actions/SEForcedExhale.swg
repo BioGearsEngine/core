@@ -31,5 +31,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEForcedExhale.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEForcedExhale*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEForcedExhale*>;
 %template (vector_SEForcedExhale_ptr)  std::vector<BIOGEARS_NAMESPACE SEForcedExhale*>;

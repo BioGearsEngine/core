@@ -30,5 +30,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEPatientAssessmentRequest*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEPatientAssessmentRequest*>;
 %template (vector_SEPatientAssessmentRequest_ptr)  std::vector<BIOGEARS_NAMESPACE SEPatientAssessmentRequest*>;

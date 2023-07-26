@@ -36,5 +36,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEPupillaryResponse*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEPupillaryResponse*>;
 %template (vector_SEPupillaryResponse_ptr)  std::vector<BIOGEARS_NAMESPACE SEPupillaryResponse*>;

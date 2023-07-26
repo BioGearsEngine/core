@@ -41,5 +41,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstanceCompoundInfusion*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SESubstanceCompoundInfusion*>;
 %template (vector_SESubstanceCompoundInfusion_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstanceCompoundInfusion*>;

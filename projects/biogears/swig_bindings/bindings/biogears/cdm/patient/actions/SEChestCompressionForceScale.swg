@@ -30,5 +30,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEChestCompressionForceScale.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEChestCompressionForceScale*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEChestCompressionForceScale*>;
 %template (vector_SEChestCompressionForceScale_ptr)  std::vector<BIOGEARS_NAMESPACE SEChestCompressionForceScale*>;

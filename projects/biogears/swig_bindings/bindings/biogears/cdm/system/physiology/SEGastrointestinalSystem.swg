@@ -58,7 +58,7 @@ CLOSE_BIOGEARS_NAMESPACE
 %fragment(SWIG_Traits_frag(SESubstance));
 %fragment(SWIG_Traits_frag(SESubstanceCompound));
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstance*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SESubstance*>;
 %template (vector_SESubstance_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstance*>;
 %nspace std::vector<BIOGEARS_NAMESPACE SEDrugTransitState*>;
 %template (vector_SEDrugTransitState_ptr) std::vector<BIOGEARS_NAMESPACE SEDrugTransitState*>;

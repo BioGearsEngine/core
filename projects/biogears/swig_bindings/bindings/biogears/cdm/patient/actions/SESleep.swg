@@ -27,5 +27,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SESleep.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SESleep*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SESleep*>;
 %template (vector_SESleep_ptr)  std::vector<BIOGEARS_NAMESPACE SESleep*>;

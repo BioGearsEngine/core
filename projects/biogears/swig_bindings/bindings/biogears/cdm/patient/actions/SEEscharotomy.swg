@@ -29,5 +29,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEEscharotomy.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEEscharotomy*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEEscharotomy*>;
 %template (vector_SEEscharotomy_ptr)  std::vector<BIOGEARS_NAMESPACE SEEscharotomy*>;

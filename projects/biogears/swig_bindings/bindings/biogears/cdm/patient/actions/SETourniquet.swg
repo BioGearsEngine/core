@@ -29,5 +29,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SETourniquet.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SETourniquet*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SETourniquet*>;
 %template (vector_SETourniquet_ptr)  std::vector<BIOGEARS_NAMESPACE SETourniquet*>;

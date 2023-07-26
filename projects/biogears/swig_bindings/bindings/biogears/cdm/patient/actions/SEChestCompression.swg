@@ -28,5 +28,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEChestCompression.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEChestCompression*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEChestCompression*>;
 %template (vector_SEChestCompression_ptr)  std::vector<BIOGEARS_NAMESPACE SEChestCompression*>;

@@ -29,5 +29,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEBurnWound.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEBurnWound*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEBurnWound*>;
 %template (vector_SEBurnWound_ptr)  std::vector<BIOGEARS_NAMESPACE SEBurnWound*>;

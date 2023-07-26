@@ -50,5 +50,5 @@ moduleimport=
   
 %include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEMechanicalVentilation*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEMechanicalVentilation*>;
 %template (vector_SEMechanicalVentilation_ptr)  std::vector<BIOGEARS_NAMESPACE SEMechanicalVentilation*>;

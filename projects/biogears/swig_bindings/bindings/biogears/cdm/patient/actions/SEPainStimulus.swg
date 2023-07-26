@@ -34,7 +34,7 @@ moduleimport=
 %include <biogears/cdm/patient/actions/SEPainStimulus.h>
 
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEPainStimulus*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEPainStimulus*>;
 %traits_swigtype(SEPainStimulus);
 %fragment(SWIG_Traits_frag(SEPainStimulus));
 %template (vector_SEPainStimulus_ptr)  std::vector<BIOGEARS_NAMESPACE SEPainStimulus*>;

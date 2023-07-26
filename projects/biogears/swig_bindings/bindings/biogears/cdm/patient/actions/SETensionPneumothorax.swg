@@ -33,5 +33,5 @@ moduleimport=
 %include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
 
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SETensionPneumothorax*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SETensionPneumothorax*>;
 %template (vector_SETensionPneumothorax_ptr)  std::vector<BIOGEARS_NAMESPACE SETensionPneumothorax*>;

@@ -30,7 +30,7 @@ moduleimport=
   struct runtime_error {};
 }
 
-#elif defind(SWIGPYTHON)
+#elif defined(SWIGPYTHON)
   %include "python/std_string.i"
   %include "python/std_vector.i"
   %include "python/std_except.i"

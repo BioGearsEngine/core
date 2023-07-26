@@ -30,5 +30,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEBreathHold.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEBreathHold*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEBreathHold*>;
 %template (vector_SEBreathHold_ptr)  std::vector<BIOGEARS_NAMESPACE SEBreathHold*>;

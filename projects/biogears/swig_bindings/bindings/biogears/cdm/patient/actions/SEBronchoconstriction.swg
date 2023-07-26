@@ -28,5 +28,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEBronchoconstriction.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEBronchoconstriction*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEBronchoconstriction*>;
 %template (vector_SEBronchoconstriction_ptr)  std::vector<BIOGEARS_NAMESPACE SEBronchoconstriction*>;

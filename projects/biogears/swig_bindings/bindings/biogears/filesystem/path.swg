@@ -47,7 +47,7 @@ moduleimport=
 
 
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE filesystem::path>;
+%nspace  std::vector<BIOGEARS_NAMESPACE filesystem::path>;
 %traits_swigtype(::path);
 %fragment(SWIG_Traits_frag(filesystem::path));
 %template (vector_filesystem_path)  std::vector<BIOGEARS_NAMESPACE filesystem::path>;

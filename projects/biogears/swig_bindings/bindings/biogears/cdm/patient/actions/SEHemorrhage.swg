@@ -37,5 +37,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEHemorrhage.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEHemorrhage*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEHemorrhage*>;
 %template (vector_SEHemorrhage_ptr)  std::vector<BIOGEARS_NAMESPACE SEHemorrhage*>;

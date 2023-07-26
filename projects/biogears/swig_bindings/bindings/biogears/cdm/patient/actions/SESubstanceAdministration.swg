@@ -35,5 +35,5 @@ moduleimport=
   
 %include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstanceAdministration*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SESubstanceAdministration*>;
 %template (vector_SESubstanceAdministration_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstanceAdministration*>;

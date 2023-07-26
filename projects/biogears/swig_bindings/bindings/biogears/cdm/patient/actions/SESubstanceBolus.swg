@@ -44,5 +44,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstanceBolus*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SESubstanceBolus*>;
 %template (vector_SESubstanceBolus_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstanceBolus*>;

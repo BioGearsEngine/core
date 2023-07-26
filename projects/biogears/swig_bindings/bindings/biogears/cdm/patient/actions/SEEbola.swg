@@ -27,5 +27,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEEbola.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEEbola*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEEbola*>;
 %template (vector_SEEbola_ptr)  std::vector<BIOGEARS_NAMESPACE SEEbola*>;

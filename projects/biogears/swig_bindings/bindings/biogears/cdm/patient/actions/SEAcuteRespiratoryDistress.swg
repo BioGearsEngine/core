@@ -34,5 +34,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEAcuteRespiratoryDistress*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEAcuteRespiratoryDistress*>;
 %template (vector_SEAcuteRespiratoryDistress_ptr)  std::vector<BIOGEARS_NAMESPACE SEAcuteRespiratoryDistress*>;

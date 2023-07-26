@@ -37,5 +37,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SESubstanceNasalDose.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SESubstanceNasalDose*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SESubstanceNasalDose*>;
 %template (vector_SESubstanceNasalDose_ptr)  std::vector<BIOGEARS_NAMESPACE SESubstanceNasalDose*>;

@@ -28,5 +28,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEAsthmaAttack*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEAsthmaAttack*>;
 %template (vector_SEAsthmaAttack_ptr)  std::vector<BIOGEARS_NAMESPACE SEAsthmaAttack*>;

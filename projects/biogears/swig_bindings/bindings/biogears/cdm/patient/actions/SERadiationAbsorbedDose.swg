@@ -30,5 +30,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SERadiationAbsorbedDose*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SERadiationAbsorbedDose*>;
 %template (vector_SERadiationAbsorbedDose_ptr)  std::vector<BIOGEARS_NAMESPACE SERadiationAbsorbedDose*>;

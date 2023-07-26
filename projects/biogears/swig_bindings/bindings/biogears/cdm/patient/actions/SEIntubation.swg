@@ -30,5 +30,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEIntubation.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEIntubation*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEIntubation*>;
 %template (vector_SEIntubation_ptr)  std::vector<BIOGEARS_NAMESPACE SEIntubation*>;

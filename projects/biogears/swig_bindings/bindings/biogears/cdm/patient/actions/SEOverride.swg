@@ -53,5 +53,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEOverride.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEOverride*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEOverride*>;
 %template (vector_SEOverride_ptr)  std::vector<BIOGEARS_NAMESPACE SEOverride*>;

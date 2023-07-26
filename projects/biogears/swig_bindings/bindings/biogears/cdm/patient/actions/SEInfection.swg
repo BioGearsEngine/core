@@ -31,5 +31,5 @@ moduleimport=
 
 %include <biogears/cdm/patient/actions/SEInfection.h>
 
-%nsspace  std::vector<BIOGEARS_NAMESPACE SEInfection*>;
+%nspace  std::vector<BIOGEARS_NAMESPACE SEInfection*>;
 %template (vector_SEInfection_ptr)  std::vector<BIOGEARS_NAMESPACE SEInfection*>;
