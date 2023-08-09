@@ -65,8 +65,8 @@ void TEST_FIXTURE_NAME::TearDown()
 //! 
 TEST_F(TEST_FIXTURE_NAME, angles)
 {
-  using namespace biogears;
-  using namespace biogears::angle_literals;
+  USING_BIOGEARS_NAMESPACE
+  using namespace BIOGEARS_NAMESPACE angle_literals;
 	{
 		float phi = 3.14159265358979323_f_rad;
 		float theta = 180_f_deg;
@@ -82,8 +82,8 @@ TEST_F(TEST_FIXTURE_NAME, angles)
 
 TEST_F(TEST_FIXTURE_NAME, angles_quaternains)
 {
-	using namespace biogears;
-	using namespace biogears::angle_literals;
+	USING_BIOGEARS_NAMESPACE
+	using namespace BIOGEARS_NAMESPACE angle_literals;
 
 	{
 		auto first = Quaternion(1,1,1,1);
@@ -94,8 +94,8 @@ TEST_F(TEST_FIXTURE_NAME, angles_quaternains)
 
 TEST_F(TEST_FIXTURE_NAME, angles_euler)
 {
-	using namespace biogears;
-	using namespace biogears::angle_literals;
+	USING_BIOGEARS_NAMESPACE
+	using namespace BIOGEARS_NAMESPACE angle_literals;
 
 	{
 		auto first = EulerAng(1, 1, 1);

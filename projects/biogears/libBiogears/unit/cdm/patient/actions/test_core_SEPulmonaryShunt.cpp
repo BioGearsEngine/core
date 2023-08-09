@@ -30,7 +30,7 @@
 #define TEST_FIXTURE_NAME SEPulmonaryShunt_Fixture
 #endif
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE
 // The fixture for testing class SEPulmonaryShunt.
 class TEST_FIXTURE_NAME : public ::testing::Test {
 protected:

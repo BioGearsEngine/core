@@ -59,7 +59,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 #define USING_TYPES(name)            \
   using namespace BIOGEARS_NAMESPACE io;      \
-  using SEType = biogears :: SE ## name; \
+  using SEType = BIOGEARS_NAMESPACE SE ## name; \
   using CDMType = CDM :: name ## Data;
 
 #include <biogears/cdm/properties/SEScalarTypes.h>

@@ -10,17 +10,16 @@
 //-  specific language governing permissions and limitations under the License.
 //-------------------------------------------------------------------------------------------e
 
-
 //!
 //! @author David Lee
 //! @date   2017 Aug 3rd
 //!
 //! Unit Test for NGSS Config
 //!
-#include <thread>
 #include <functional>
 #include <future>
 #include <memory>
+#include <thread>
 
 #include <gtest/gtest.h>
 
@@ -28,11 +27,10 @@
 #include <biogears/framework/scmp/scmp_channel.tci.h>
 
 #ifdef DISABLE_BIOGEARS_ScMpChannel_TEST
-  #define TEST_FIXTURE_NAME DISABLED_ScMpChannelFixture
+#define TEST_FIXTURE_NAME DISABLED_ScMpChannelFixture
 #else
-  #define TEST_FIXTURE_NAME ScMpChannelFixture
+#define TEST_FIXTURE_NAME ScMpChannelFixture
 #endif
-
 
 // The fixture for testing class Foo.
 class TEST_FIXTURE_NAME : public ::testing::Test {
@@ -61,18 +59,17 @@ void TEST_FIXTURE_NAME::SetUp()
 
 void TEST_FIXTURE_NAME::TearDown()
 {
-
 }
 
 TEST_F(TEST_FIXTURE_NAME, scmp_channel_push_pop)
 {
-  using  biogears::scmp::Channel;
-  using  biogears::scmp::Source;
+  using  BIOGEARS_NAMESPACE scmp::Channel;
+  using  BIOGEARS_NAMESPACE scmp::Source;
 
-  using container = biogears::ConcurrentRingbuffer<int>;
+  using container = BIOGEARS_NAMESPACE ConcurrentRingbuffer<int>;
 
-  Channel<container> channel{ 5 };
-  auto  source = channel.as_source();
+  Channel<container> channel { 5 };
+  auto source = channel.as_source();
   for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }) {
 
     if (i < 5) {
@@ -89,14 +86,13 @@ TEST_F(TEST_FIXTURE_NAME, scmp_channel_push_pop)
 
 TEST_F(TEST_FIXTURE_NAME, scmp_channel_active)
 {
-  using  biogears::scmp::Channel;
-  using  biogears::scmp::Source;
+  using BIOGEARS_NAMESPACE scmp::Channel;
+  using BIOGEARS_NAMESPACE scmp::Source;
 
-  using container = biogears::ConcurrentRingbuffer<int>;
+  using container = BIOGEARS_NAMESPACE ConcurrentRingbuffer<int>;
 
-  Channel<container> channel{ 5 };
-  auto  source = channel.as_source();
-
+  Channel<container> channel { 5 };
+  auto source = channel.as_source();
 
   EXPECT_TRUE(channel.active());
   channel.abort();
@@ -104,27 +100,23 @@ TEST_F(TEST_FIXTURE_NAME, scmp_channel_active)
   channel.shutdown();
   EXPECT_FALSE(source.active());
   EXPECT_FALSE(channel.active());
-
 }
 
 TEST_F(TEST_FIXTURE_NAME, scmp_channel_block_pop)
 {
-  using  biogears::scmp::Channel;
-  using  biogears::scmp::Source;
+  using  BIOGEARS_NAMESPACE scmp::Channel;
+  using  BIOGEARS_NAMESPACE scmp::Source;
 
-  using container = biogears::ConcurrentRingbuffer<int>;
+  using container = BIOGEARS_NAMESPACE ConcurrentRingbuffer<int>;
 
-  Channel<container> channel{ 5 };
-  auto  source = channel.as_source();
+  Channel<container> channel { 5 };
+  auto source = channel.as_source();
 
-  auto future = std::async(std::launch::async
-  , [=]() mutable {
-    for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 })
-    {
+  auto future = std::async(std::launch::async, [=]() mutable {
+    for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }) {
       std::this_thread::sleep_for(std::chrono::milliseconds(16));
       source.insert(i);
     }
-
   });
   for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }) {
     EXPECT_EQ(0, channel.size());
@@ -136,31 +128,26 @@ TEST_F(TEST_FIXTURE_NAME, scmp_channel_block_pop)
   EXPECT_TRUE(channel.active());
   channel.shutdown();
   EXPECT_FALSE(channel.active());
-
 }
 
 TEST_F(TEST_FIXTURE_NAME, scmp_channel_shutdown)
 {
-  using  biogears::scmp::Channel;
-  using  biogears::scmp::Source;
+  using BIOGEARS_NAMESPACE scmp::Channel;
+  using BIOGEARS_NAMESPACE scmp::Source;
 
-  using container = biogears::ConcurrentRingbuffer<int>;
+  using container = BIOGEARS_NAMESPACE ConcurrentRingbuffer<int>;
 
-  Channel<container> channel{ 5 };
-  auto  source = channel.as_source();
-  auto  second_source = source;
-  auto push = std::async(std::launch::async
-  , [second_source]() mutable {
-    for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 })
-    {
+  Channel<container> channel { 5 };
+  auto source = channel.as_source();
+  auto second_source = source;
+  auto push = std::async(std::launch::async, [second_source]() mutable {
+    for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }) {
       std::this_thread::sleep_for(std::chrono::milliseconds(32));
       second_source.insert(0);
     }
-
   });
 
-  auto shutdown = std::async(std::launch::async
-  , [&channel]() {
+  auto shutdown = std::async(std::launch::async, [&channel]() {
     std::this_thread::sleep_for(std::chrono::milliseconds(48));
     channel.shutdown();
     EXPECT_FALSE(channel.active()); //< No Overflow
@@ -177,6 +164,4 @@ TEST_F(TEST_FIXTURE_NAME, scmp_channel_shutdown)
   }
 
   EXPECT_FALSE(channel.active());
-
 }
-

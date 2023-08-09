@@ -182,7 +182,7 @@ TEST_F(TEST_FIXTURE_NAME, CreateRuntimeDirectory)
 #include <biogears/io/directories/config.h>
 TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistConfig)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE
 
   BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_config_files();
@@ -196,7 +196,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistConfig)
 #include <biogears/io/directories/ecg.h>
 TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistECG)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE
 
   BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_ecg_files();
@@ -210,7 +210,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistECG)
 #include <biogears/io/directories/environments.h>
 TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistEnvironments)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE
 
   BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_environments_files();
@@ -224,7 +224,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistEnvironments)
 #include <biogears/io/directories/nutrition.h>
 TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistNutrition)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE
 
   BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_nutrition_files();
@@ -238,7 +238,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistNutrition)
 #include <biogears/io/directories/override.h>
 TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistOverride)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE
 
   BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_override_files();
@@ -252,7 +252,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistOverride)
 #include <biogears/io/directories/patients.h>
 TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistPatients)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE
 
   BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_patients_files();
@@ -266,7 +266,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistPatients)
 #include <biogears/io/directories/substances.h>
 TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistSubstances)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE
 
   BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_substances_files();
@@ -280,7 +280,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistSubstances)
 #include <biogears/io/directories/xsd.h>
 TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistSchema)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE
 
   BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   auto file_list = io::list_xsd_files();
@@ -293,7 +293,7 @@ TEST_F(TEST_FIXTURE_NAME, DoesEmbeddedFileExistSchema)
 #if defined(BIOGEARS_IO_PRESENT)
 TEST_F(TEST_FIXTURE_NAME, FindResourceFile)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE
 
   filesystem::path working_dir { m_cwd_prefix };
 
@@ -353,7 +353,7 @@ TEST_F(TEST_FIXTURE_NAME, FindResourceFile)
 #if defined(BIOGEARS_IO_PRESENT)
 TEST_F(TEST_FIXTURE_NAME, SHA1_Calculations)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE
 
   BIOGEARS_NAMESPACE IOManager iom { m_cwd_prefix };
   filesystem::path cwd_path = m_cwd_prefix;

@@ -30,7 +30,7 @@
 #define TEST_FIXTURE_NAME Core_SENervousSystem_Fixture
 #endif
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE
 // The fixture for testing class Foo.
 class TEST_FIXTURE_NAME : public ::testing::Test {
 protected:

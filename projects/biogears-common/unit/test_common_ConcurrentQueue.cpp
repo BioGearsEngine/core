@@ -22,6 +22,7 @@
 
 #include <gtest/gtest.h>
 
+#include <biogears/config.h>
 #include <biogears/container/concurrent_queue.tci.h>
 
 #ifdef DISABLE_BIOGEARS_ConcurrentQueue_TEST
@@ -63,8 +64,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_push_pop)
 {
-  using  biogears::ConcurrentQueue;
-  ConcurrentQueue<int> queue;
+  BIOGEARS_NAMESPACE ConcurrentQueue<int> queue;
 
   for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }) {
     EXPECT_EQ( i, queue.unsafe_size());
@@ -79,8 +79,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_push_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_active)
 {
-  using  biogears::ConcurrentQueue;
-  ConcurrentQueue<int> queue;
+  BIOGEARS_NAMESPACE ConcurrentQueue<int> queue;
 
 
   EXPECT_TRUE(queue.active());
@@ -93,8 +92,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_active)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_block_pop)
 {
-  using  biogears::ConcurrentQueue;
-  ConcurrentQueue<int> queue;
+  BIOGEARS_NAMESPACE ConcurrentQueue<int> queue;
 
   auto future = std::async(std::launch::async
   , [&queue]() {
@@ -119,8 +117,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_block_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentQueue_shutdown)
 {
-  using  biogears::ConcurrentQueue;
-  ConcurrentQueue<int> queue;
+  BIOGEARS_NAMESPACE ConcurrentQueue<int> queue;
 
   auto push = std::async(std::launch::async
   , [&queue]() {

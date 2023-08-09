@@ -63,8 +63,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_push_pop)
 {
-  using  biogears::ConcurrentRingbuffer;
-  ConcurrentRingbuffer<int> queue(5);
+  BIOGEARS_NAMESPACE ConcurrentRingbuffer<int> queue(5);
 
   for (auto i : { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }) {
 
@@ -85,8 +84,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_push_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_active)
 {
-  using  biogears::ConcurrentRingbuffer;
-  ConcurrentRingbuffer<int> queue;
+  BIOGEARS_NAMESPACE ConcurrentRingbuffer<int> queue;
 
 
   EXPECT_TRUE(queue.active());
@@ -99,8 +97,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_active)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_block_pop)
 {
-  using  biogears::ConcurrentRingbuffer;
-  ConcurrentRingbuffer<int> queue;
+  BIOGEARS_NAMESPACE ConcurrentRingbuffer<int> queue;
 
   auto future = std::async(std::launch::async
   , [&queue]() {
@@ -125,8 +122,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_block_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_shutdown)
 {
-  using  biogears::ConcurrentRingbuffer;
-  ConcurrentRingbuffer<int> queue;
+  BIOGEARS_NAMESPACE ConcurrentRingbuffer<int> queue;
 
   auto push = std::async(std::launch::async
   , [&queue]() {
@@ -161,8 +157,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_shutdown)
 TEST_F(TEST_FIXTURE_NAME, ConcurrentRingbuffer_no_move)
 {
 
-	using  biogears::ConcurrentRingbuffer;
-	ConcurrentRingbuffer< std::unique_ptr<double> > queue;
+	BIOGEARS_NAMESPACE ConcurrentRingbuffer<std::unique_ptr<double>> queue;
 
 	auto push = std::async(std::launch::async
 		, [&queue]() {

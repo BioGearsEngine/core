@@ -63,8 +63,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_push_pop)
 {
-  using  biogears::ConcurrentBoundedQueue;
-  ConcurrentBoundedQueue<int> queue(5);
+  BIOGEARS_NAMESPACE ConcurrentBoundedQueue<int> queue(5);
 
   for (auto i : { 0, 1, 2, 3, 4}) {
 
@@ -85,8 +84,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_push_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_active)
 {
-  using  biogears::ConcurrentBoundedQueue;
-  ConcurrentBoundedQueue<int> queue(5);
+  BIOGEARS_NAMESPACE ConcurrentBoundedQueue<int> queue(5);
 
 
   EXPECT_TRUE(queue.active());
@@ -99,8 +97,8 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_active)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_block_pop)
 {
-  using  biogears::ConcurrentBoundedQueue;
-  ConcurrentBoundedQueue<int> queue(5);
+  
+  BIOGEARS_NAMESPACE ConcurrentBoundedQueue<int> queue(5);
 
   auto future = std::async(std::launch::async
   , [&queue]() {
@@ -125,8 +123,7 @@ TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_block_pop)
 
 TEST_F(TEST_FIXTURE_NAME, ConcurrentBoundedQueue_shutdown)
 {
-  using  biogears::ConcurrentBoundedQueue;
-  ConcurrentBoundedQueue<int> queue;
+  BIOGEARS_NAMESPACE ConcurrentBoundedQueue<int> queue;
 
   auto push = std::async(std::launch::async
   , [&queue]() {

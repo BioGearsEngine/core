@@ -72,10 +72,10 @@ TEST_F(TEST_FIXTURE_NAME, StopWatch)
 
   using  std::this_thread::sleep_for;
 
-  using  biogears::StopWatch;
 
-  StopWatch<milliseconds> nano_watch;
-  StopWatch<seconds> sec_watch;
+
+  BIOGEARS_NAMESPACE StopWatch<milliseconds> nano_watch;
+  BIOGEARS_NAMESPACE StopWatch<seconds> sec_watch;
 
   nano_watch.lap();
   sec_watch.lap();

@@ -61,7 +61,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, WorkChannel_Construction)
 {
-  auto channel = biogears::ThreadWorkChannel<void(void)>::make_shared();
+  auto channel = BIOGEARS_NAMESPACE ThreadWorkChannel<void(void)>::make_shared();
   
   auto source = channel->as_source();
   auto sink   = channel->as_sink();
@@ -69,7 +69,7 @@ TEST_F(TEST_FIXTURE_NAME, WorkChannel_Construction)
 
 TEST_F(TEST_FIXTURE_NAME, WorkChannel_push_pop)
 {
-  auto channel = biogears::ThreadWorkChannel<int(void)>::make_shared();
+  auto channel = BIOGEARS_NAMESPACE ThreadWorkChannel<int(void)>::make_shared();
 
   int value = 5;
   auto source = channel->as_source();

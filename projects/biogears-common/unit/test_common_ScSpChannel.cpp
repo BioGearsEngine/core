@@ -65,10 +65,10 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, scsp_channel_push_pop)
 {
-  using  biogears::scsp::Channel;
-  using  biogears::scsp::Source;
+  using  BIOGEARS_NAMESPACE scsp::Channel;
+  using  BIOGEARS_NAMESPACE scsp::Source;
 
-  using container = biogears::ConcurrentRingbuffer<int>;
+  using container = BIOGEARS_NAMESPACE ConcurrentRingbuffer<int>;
 
   Channel<container> channel{5};
   auto  source = channel.as_source();
@@ -88,10 +88,10 @@ TEST_F(TEST_FIXTURE_NAME, scsp_channel_push_pop)
 
 TEST_F(TEST_FIXTURE_NAME, scsp_channel_active)
 {
-  using  biogears::scsp::Channel;
-  using  biogears::scsp::Source;
+  using  BIOGEARS_NAMESPACE scsp::Channel;
+  using  BIOGEARS_NAMESPACE scsp::Source;
 
-  using container = biogears::ConcurrentRingbuffer<int>;
+  using container = BIOGEARS_NAMESPACE ConcurrentRingbuffer<int>;
 
   Channel<container> channel{ 5 };
   auto  source = channel.as_source();
@@ -108,10 +108,10 @@ TEST_F(TEST_FIXTURE_NAME, scsp_channel_active)
 
 TEST_F(TEST_FIXTURE_NAME, scsp_channel_block_pop)
 {
-  using  biogears::scsp::Channel;
-  using  biogears::scsp::Source;
+  using  BIOGEARS_NAMESPACE scsp::Channel;
+  using  BIOGEARS_NAMESPACE scsp::Source;
 
-  using container = biogears::ConcurrentRingbuffer<int>;
+  using container = BIOGEARS_NAMESPACE ConcurrentRingbuffer<int>;
 
   Channel<container> channel{ 5 };
   auto  source = channel.as_source();
@@ -139,10 +139,10 @@ TEST_F(TEST_FIXTURE_NAME, scsp_channel_block_pop)
 
 TEST_F(TEST_FIXTURE_NAME, scsp_channel_shutdown)
 {
-  using  biogears::scsp::Channel;
-  using  biogears::scsp::Source;
+  using  BIOGEARS_NAMESPACE scsp::Channel;
+  using  BIOGEARS_NAMESPACE scsp::Source;
 
-  using container = biogears::ConcurrentRingbuffer<int>;
+  using container = BIOGEARS_NAMESPACE ConcurrentRingbuffer<int>;
 
   Channel<container> channel{ 5 };
   auto  source = channel.as_source();

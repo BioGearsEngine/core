@@ -48,9 +48,9 @@ protected:
   // before the destructor).
   virtual void TearDown();
 
-  biogears::filesystem::path path_empty;
-  biogears::filesystem::path path_relative;
-  biogears::filesystem::path path_absolute_root;
+  BIOGEARS_NAMESPACE filesystem::path path_empty;
+  BIOGEARS_NAMESPACE filesystem::path path_relative;
+  BIOGEARS_NAMESPACE filesystem::path path_absolute_root;
 
   char const* windows_path_str = "c:/Biogears/7.3.1";
   char const* posix_path_str = "/opt/biogears/7.3.1";
@@ -60,7 +60,7 @@ protected:
 
 void TEST_FIXTURE_NAME::SetUp()
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
   path_empty = path { "" };
   path_relative = path { "./" };
 #ifdef _WIN32
@@ -76,7 +76,7 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, Path_Constructor)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
   path path_1 { "" };
   path path_2 { "./" };
@@ -86,7 +86,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_Constructor)
 
 TEST_F(TEST_FIXTURE_NAME, Path_Empty)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
   EXPECT_TRUE(path_empty.empty());
   EXPECT_FALSE(path_relative.empty());
@@ -96,7 +96,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_Empty)
 
 TEST_F(TEST_FIXTURE_NAME, Path_Concatination)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
 #ifdef _WIN32
   auto empty_absolute = path_empty / path("c:\\biogears");
@@ -116,9 +116,9 @@ TEST_F(TEST_FIXTURE_NAME, Path_Concatination)
 
 TEST_F(TEST_FIXTURE_NAME, Path_Normalize)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
-  auto cwd = biogears::filesystem::cwd();
+  auto cwd = BIOGEARS_NAMESPACE filesystem::cwd();
   path_relative /= path("biogears") / "runtime" / path("..") / path("..");
   cwd /= path("biogears") / "runtime" / path("..") / path("..");
   auto absolute_root = path_absolute_root / path("biogears") / "runtime" / path("..") / path("..");
@@ -134,7 +134,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_Normalize)
 
 TEST_F(TEST_FIXTURE_NAME, Path_Absolute)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
   EXPECT_TRUE(path_absolute_root.is_absolute());
   EXPECT_FALSE(path_relative.is_absolute());
@@ -158,7 +158,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_Absolute)
 
 TEST_F(TEST_FIXTURE_NAME, Mode_Switch)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
   auto absolute_1 = path { windows_path_str };
   auto absolute_2 = path { posix_path_str };
@@ -190,7 +190,7 @@ TEST_F(TEST_FIXTURE_NAME, Mode_Switch)
 
 TEST_F(TEST_FIXTURE_NAME, Path_filename)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
   path test_path { "C:/Qt/README.md" };
 
@@ -199,7 +199,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_filename)
 
 TEST_F(TEST_FIXTURE_NAME, Path_Basename)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
   path test_path { "C:/Qt/README.md" };
 
@@ -208,7 +208,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_Basename)
 
 TEST_F(TEST_FIXTURE_NAME, Path_Extension)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
   path test_path { "C:/Qt/README.md" };
 
@@ -217,7 +217,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_Extension)
 
 TEST_F(TEST_FIXTURE_NAME, Path_Dirname)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
   path test_path { "C:/Qt/README.md" };
   path work_directory { "test_common_path/dir1/dir2" };
@@ -243,7 +243,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_Dirname)
 
 TEST_F(TEST_FIXTURE_NAME, Path_ParentPath)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
   path test_path { "C:/Qt/README.md" };
   path test_path2 { "C:/Qt/5.14.2" };
@@ -258,7 +258,7 @@ TEST_F(TEST_FIXTURE_NAME, Path_ParentPath)
 }
 TEST_F(TEST_FIXTURE_NAME, Path_IsDirectory)
 {
-  using namespace biogears::filesystem;
+  using namespace BIOGEARS_NAMESPACE filesystem;
 
   EXPECT_TRUE(path_absolute_root.is_directory());
   EXPECT_TRUE(path_relative.is_directory());

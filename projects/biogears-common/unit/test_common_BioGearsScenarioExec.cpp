@@ -63,8 +63,7 @@ void TEST_FIXTURE_NAME::TearDown()
 //!
 TEST_F(TEST_FIXTURE_NAME, angles)
 {
-  using namespace biogears;
-  using namespace biogears::angle_literals;
+  USING_BIOGEARS_NAMESPACE
   {
     float phi = 3.14159265358979323_f_rad;
     float theta = 180_f_deg;
@@ -72,32 +71,30 @@ TEST_F(TEST_FIXTURE_NAME, angles)
   }
 
   {
-    Angle phi = 3.14159265358979323_f_rad;
-    Angle theta = 180_f_deg;
+    BIOGEARS_NAMESPACE Angle phi = 3.14159265358979323_f_rad;
+    BIOGEARS_NAMESPACE Angle theta = 180_f_deg;
     EXPECT_NEAR(phi.in_deg(), theta.in_deg(), 0.0001);
   }
 }
 
 TEST_F(TEST_FIXTURE_NAME, angles_quaternains)
 {
-  using namespace biogears;
-  using namespace biogears::angle_literals;
-
+  USING_BIOGEARS_NAMESPACE
+  
   {
-    auto first = Quaternion(1, 1, 1, 1);
-    auto second = Quaternion(1, 1, 1, 1);
+    auto first = BIOGEARS_NAMESPACE Quaternion(1, 1, 1, 1);
+    auto second = BIOGEARS_NAMESPACE Quaternion(1, 1, 1, 1);
     EXPECT_EQ(first, second);
   }
 }
 
 TEST_F(TEST_FIXTURE_NAME, angles_euler)
 {
-  using namespace biogears;
-  using namespace biogears::angle_literals;
-
+  USING_BIOGEARS_NAMESPACE
+  
   {
-    auto first = EulerAng(1, 1, 1);
-    auto second = EulerAng(1, 1, 1);
+    auto first = BIOGEARS_NAMESPACE EulerAng(1, 1, 1);
+    auto second = BIOGEARS_NAMESPACE EulerAng(1, 1, 1);
     EXPECT_EQ(first, second);
   }
 }

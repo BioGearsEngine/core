@@ -61,9 +61,9 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME, string_asprintf)
 {
-  using namespace biogears;
+  USING_BIOGEARS_NAMESPACE
   std::string value = "Horse Monkey";
-	auto value_2 = biogears::asprintf("%s %s", "Horse", "Monkey");
+  auto value_2 = BIOGEARS_NAMESPACE asprintf("%s %s", "Horse", "Monkey");
 	ASSERT_EQ(value, value_2);
 	ASSERT_EQ(value, value_2);
 }

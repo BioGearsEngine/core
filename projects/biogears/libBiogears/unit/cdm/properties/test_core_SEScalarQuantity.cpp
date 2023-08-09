@@ -32,7 +32,7 @@
 #define TEST_FIXTURE_NAME SEScalarQuantity_Fixture
 #endif
 
-using namespace biogears;
+USING_BIOGEARS_NAMESPACE
 
   class TestUnit : public CCompoundUnit {
   public:

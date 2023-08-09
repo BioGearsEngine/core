@@ -63,12 +63,12 @@ void TEST_FIXTURE_NAME::TearDown()
 
 TEST_F(TEST_FIXTURE_NAME,ThreadPool_Construction)
 {
-  auto pool = biogears::ThreadPool(5);
+  auto pool = BIOGEARS_NAMESPACE ThreadPool(5);
 }
 
 TEST_F(TEST_FIXTURE_NAME, ThreadPool_run)
 {
-	auto pool = biogears::ThreadPool(5);
+	auto pool = BIOGEARS_NAMESPACE ThreadPool(5);
 	pool.start();
 	pool.stop();
 	pool.join();
@@ -76,7 +76,7 @@ TEST_F(TEST_FIXTURE_NAME, ThreadPool_run)
 
 TEST_F(TEST_FIXTURE_NAME, ThreadPool_sink_source)
 {
-	auto pool = biogears::ThreadPool(5);
+	auto pool = BIOGEARS_NAMESPACE ThreadPool(5);
 	pool.start();
 
 	auto source = pool.get_source();
