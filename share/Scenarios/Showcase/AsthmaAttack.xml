@@ -3,7 +3,7 @@
     <Name>AsthmaAttack</Name>
     <Description>Showcase scenario: Patient is afflicted with an severe acute asthma attack. Albuterol is administered.</Description>
     <InitialParameters>
-		<PatientFile>Carol.xml</PatientFile>
+		<PatientFile>Female_40_Overweight.xml</PatientFile>
 	</InitialParameters>
 
 	<!-- Base system data required for asthma attack showcase scenario -->

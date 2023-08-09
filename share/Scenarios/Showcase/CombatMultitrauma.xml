@@ -3,7 +3,7 @@
     <Name>CombatMultitrauma</Name>
     <Description>Showcase scenario: Soldier with closed tension pneumothorax and severe bleeding</Description>
     <InitialParameters>
-        <PatientFile>Soldier.xml</PatientFile>
+        <PatientFile>Male_22_Fit_Soldier.xml</PatientFile>
     </InitialParameters>
     
     <!-- Base system data required for combat multitrauma showcase scenario -->

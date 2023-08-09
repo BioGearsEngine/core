@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>Fentanyl1p5ug</Name>
-    <Description>Inject Nathan with Fentanyl!</Description>
-	<InitialParameters><PatientFile>Nathan.xml</PatientFile></InitialParameters>
+    <Description>Inject Patient with Fentanyl!</Description>
+	<InitialParameters><PatientFile>Male_44_Normal.xml</PatientFile></InitialParameters>
     
 	<!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">

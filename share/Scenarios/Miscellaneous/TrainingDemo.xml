@@ -3,7 +3,7 @@
 	<Name>ProlongedCareDemo</Name>
 	<Description>You are a ### operating at a Host Nation Army outpost in ###, ###.  Friendly forces include ### Army Commandos and local police forces.  You are operating under the request of the President and Government of ###, and have a well-established status of forces agreement with stipulation to not engage terrorist combatants unless in self-defense.</Description>
 
-	<EngineStateFile>./states/Soldier@0s.xml</EngineStateFile>
+	<EngineStateFile>./states/Male_22_Fit_Soldier@0s.xml</EngineStateFile>
 	
 
 

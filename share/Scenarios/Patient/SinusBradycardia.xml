@@ -3,7 +3,7 @@
     <Name>SinusBradycardia</Name>
     <Description>A patient is initialized with sinus bradycardia </Description>
     <InitialParameters>
-		<PatientFile>Bradycardic.xml</PatientFile>		
+		<PatientFile>Male_44_Bradycardic.xml</PatientFile>		
 	</InitialParameters>
     
 	<!-- Base system data required for all scenario verification -->

@@ -3,7 +3,7 @@
     <Name>MedicOneScenarioOne</Name>
     <Description> Identification of Pneumothorax using Rapid Trauma Assessment; Differentiate between Pneumothorax and Tension Pneumothorax, Appropriate Aseptic Technique for Needle Thoracostomy
 </Description>
-    <InitialParameters><PatientFile>Nathan.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>Male_40_Normal.xml</PatientFile></InitialParameters>
    
   <!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">  

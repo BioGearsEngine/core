@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>MedicOneScenarioThree</Name>
     <Description> Asthma exacerbation 2nd to construction dust. Respiratory failure</Description>
-    <InitialParameters><PatientFile>Cynthia.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>Female_30_Normal.xml</PatientFile></InitialParameters>
    
   <!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">  

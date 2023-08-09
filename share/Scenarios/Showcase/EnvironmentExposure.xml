@@ -3,7 +3,7 @@
   <Name>EnvironmentExposure</Name>
   <Description>Showcase scenario: Patient is exposed to sub-zero temperatures and develops hypothermia.</Description>
   <InitialParameters>
-		<PatientFile>Jane.xml</PatientFile>
+		<PatientFile>Female_18_Normal.xml</PatientFile>
 	</InitialParameters>
 	
   <!-- Base system data required for environment exposure showcase scenario -->

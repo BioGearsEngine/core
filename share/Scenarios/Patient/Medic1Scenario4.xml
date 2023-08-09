@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>Medic1Scenario4</Name>
     <Description> The patient is unconscious, unresponsive, GCS 3, just stopped breathing and has no gag reflex, yet still has a pulse, tains scenario 4 for AJAMS</Description>
-    <InitialParameters><PatientFile>Cynthia.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>Female_30_Normal.xml</PatientFile></InitialParameters>
    
   <!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">  

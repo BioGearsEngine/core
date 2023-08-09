@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>MedicOneScenarioOne</Name>
     <Description> You are dispatched to an adult male, slumped over on the ground at a bus stop.  The 911 caller is unsure if the patient is breathing.   The bus stop is in a public place, outdoors, mild weather, afternoon, scene is secure.  </Description>
-    <InitialParameters><PatientFile>Cynthia.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>Female_30_Normal.xml</PatientFile></InitialParameters>
    
   <!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">  

@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
   <Name>SleepStudy</Name>
   <Description>Study the metabolic and psychological impacts of sleep deprivation, a mirror of the Spiegle et al study </Description>
-    <InitialParameters><PatientFile>SleepDeprived.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>Male_44_SleepDeprived.xml</PatientFile></InitialParameters>
   <DataRequests SamplesPerSecond="0.05">
     <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
 

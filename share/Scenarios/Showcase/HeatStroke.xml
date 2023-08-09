@@ -3,7 +3,7 @@
   <Name>HeatStroke</Name>
   <Description>Showcase scenario: Heat Stroke showcase scenario.</Description>
   <InitialParameters>
-		<PatientFile>Jeff.xml</PatientFile>
+		<PatientFile>Male_25_Normal.xml</PatientFile>
 	</InitialParameters>
 	
 	<!-- Base system data required for heat stroke showcase scenario -->

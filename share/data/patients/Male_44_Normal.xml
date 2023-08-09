@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Patient xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGearsDataModel.xsd">
-  <Name>Rick</Name>
+  <Name>Austin</Name>
   <Sex>Male</Sex>
-  <Age readOnly="false" unit="yr" value="23"/>
-  <Weight readOnly="false" unit="lb" value="161"/>
-  <Height readOnly="false" unit="in" value="68"/>
+  <Age readOnly="false" unit="yr" value="44"/>
+  <Weight readOnly="false" unit="lb" value="170"/>
+  <Height readOnly="false" unit="in" value="71"/>
   <BodyFatFraction readOnly="false" value="0.18"/>
-  <DiastolicArterialPressureBaseline readOnly="false" unit="mmHg" value="80"/>
-  <HeartRateBaseline readOnly="false" unit="1/min" value="100"/>
+  <DiastolicArterialPressureBaseline readOnly="false" unit="mmHg" value="73.5"/>
+  <HeartRateBaseline readOnly="false" unit="1/min" value="72"/>
   <RespirationRateBaseline readOnly="false" unit="1/min" value="16"/>
-  <SystolicArterialPressureBaseline readOnly="false" unit="mmHg" value="120"/>
+  <SystolicArterialPressureBaseline readOnly="false" unit="mmHg" value="114"/>
 </Patient>

@@ -2,7 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
     <Name>HemorrhageCM2</Name>
     <Description>Bleeding in the spleen and leg, morphine injection and iv administration</Description>
-    <InitialParameters><PatientFile>Soldier.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>Male_22_Fit_Soldier.xml</PatientFile></InitialParameters>
     
 	<!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">
