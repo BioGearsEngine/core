@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Joel</Name>
-    <Description>
-        Airway obstruction occurs at the beginning of the scenario. The airway obstruction is removed. A Ventilator mask is placed on Joel and oxygen is supplied from an anesthesia machine. 
-		Etomidate and succinylcholine are administered and the Ventilator mask is removed. An endotracheal tube is placed.
+    <Name>Combined1Scenario</Name>
+    <Description>Inject patient with Midazolam. Reaction to sedative causes an airway obstruction. 
+        An anesthesia machine mask is applied to attempt to supply Oxygen. Ketamine is administered and the airway obstruction is cleared.
+        Rocuronium is administered. Patient is then intubated.
     </Description>
-    <InitialParameters>
-		<PatientFile>Joel.xml</PatientFile>
-	</InitialParameters>
+    <InitialParameters><PatientFile>Female_30_Normal.xml</PatientFile></InitialParameters>
     
 	<!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">
@@ -47,6 +45,8 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="UrineProductionRate"               Unit="mL/min"      Precision="3"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftAfferentArterioleResistance"   Unit="mmHg min/mL" Precision="4"/>
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="RightAfferentArterioleResistance"  Unit="mmHg min/mL" Precision="4"/>
+
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialBloodPH" Precision="2"/>
   
   <DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"                            Name="Pressure"        Unit="cmH2O" Precision="0"/>
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="LeftAlveoli"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg"  Precision="0"/>
@@ -79,78 +79,27 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="LeftEyePupillaryResponse-ReactivityModifier" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-SizeModifier" Precision="3"/>
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-ReactivityModifier" Precision="3"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Succinylcholine" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Succinylcholine"	Name="EffectSiteConcentration" Unit="ug/mL" Precision="6"/>	
-	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine"   Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Ketamine"	Name="EffectSiteConcentration" Unit="ug/mL" Precision="6"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Rocuronium" Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Rocuronium"	Name="EffectSiteConcentration" Unit="ug/mL" Precision="6"/>	
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Midazolam"  Name="PlasmaConcentration" Unit="ug/L" Precision="6"/>
+	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Midazolam"	Name="EffectSiteConcentration" Unit="ug/mL" Precision="6"/>	
   </DataRequests>
 
-    <Action xsi:type="AdvanceTimeData">
+	
+	<Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
-    
-	    <Action xsi:type="AirwayObstructionData">
-        <Severity value="1.0"/>       
+    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Midazolam</Substance>
+        <Concentration value="300" unit="ug/mL"/>
+        <Dose value="10" unit="mL"/>
     </Action>
-    
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="120" unit="s"/>       
-    </Action>
-    
-    <Action xsi:type="AirwayObstructionData">
-        <Severity value="0.0"/>       
-    </Action>
-    
     <Action xsi:type="AdvanceTimeData">
         <Time value="60" unit="s"/>       
     </Action>
-    
-    <Action xsi:type="AnesthesiaMachineConfigurationData">
-      <Configuration>
-        <Connection>Mask</Connection>
-        <InletFlow value="5.0" unit="L/min"/>
-        <InspiratoryExpiratoryRatio value="0.5"/>
-        <OxygenFraction value="0.23"/>
-        <OxygenSource>BottleOne</OxygenSource>
-        <PositiveEndExpiredPressure value="0.0" unit="cmH2O"/>
-        <PrimaryGas>Nitrogen</PrimaryGas>
-        <RespiratoryRate value="16.0" unit="1/min"/>
-        <VentilatorPressure value="0.0" unit="cmH2O"/>
-        <OxygenBottleOne>
-          <Volume value="660" unit="L"/>
-        </OxygenBottleOne>
-        <OxygenBottleTwo>
-          <Volume value="660" unit="L"/>
-        </OxygenBottleTwo>
-      </Configuration>
-    </Action>   
-    
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="60" unit="s"/>       
-    </Action>
-    
-    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
-        <Substance>Ketamine</Substance>
-        <Concentration value="8400" unit="ug/mL"/>
-        <Dose value="20" unit="mL"/>
-    </Action>
-    
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="20" unit="s"/>       
-    </Action>
-    
-    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
-        <Substance>Succinylcholine</Substance>
-        <Concentration value="5750" unit="ug/mL"/>
-        <Dose value="20" unit="mL"/>
-    </Action>
-    
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="30" unit="s"/>       
-    </Action>
-    
-    <Action xsi:type="IntubationData" Type="Tracheal"/>
-    
+	    <Action xsi:type="IntubationData" Type="Tracheal"/>
     <Action xsi:type="AnesthesiaMachineConfigurationData">
       <Configuration>
         <Connection>Tube</Connection>
@@ -161,7 +110,7 @@
         <PositiveEndExpiredPressure value="1.0" unit="cmH2O"/>
         <PrimaryGas>Nitrogen</PrimaryGas>
         <RespiratoryRate value="16.0" unit="1/min"/>
-        <VentilatorPressure value="10.5" unit="cmH2O"/>
+        <VentilatorPressure value="8.5" unit="cmH2O"/>
         <OxygenBottleOne>
           <Volume value="660" unit="L"/>
         </OxygenBottleOne>
@@ -169,10 +118,30 @@
           <Volume value="660" unit="L"/>
         </OxygenBottleTwo>
       </Configuration>
-    </Action>  
-    
+    </Action> 
+    <Action xsi:type="AirwayObstructionData">
+        <Severity value="1.0"/>
+    </Action>
     <Action xsi:type="AdvanceTimeData">
-        <Time value="200" unit="s"/>       
+        <Time value="150" unit="s"/>       
+    </Action>
+	<Action xsi:type="AirwayObstructionData">
+        <Severity value="0.0"/>
+    </Action>
+    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Ketamine</Substance>
+        <Concentration value="5000" unit="ug/mL"/>
+        <Dose value="20" unit="mL"/>
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="60" unit="s"/>       
+    </Action>
+    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+        <Substance>Rocuronium</Substance>
+        <Concentration value="3100" unit="ug/mL"/>
+        <Dose value="20" unit="mL"/>
+    </Action>  
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="500" unit="s"/>       
     </Action>
 </Scenario>
-

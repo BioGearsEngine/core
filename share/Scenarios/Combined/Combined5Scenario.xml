@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Nathan</Name>
-    <Description>Nathan is injected with Fentanyl before a Ventilator mask is placed and oxygen is administered via an anesthesia machine.
+    <Name>Combined5Scenario</Name>
+    <Description>Patient is injected with Fentanyl before a Ventilator mask is placed and oxygen is administered via an anesthesia machine.
         An oxygen wall port pressure loss occurs, and then the oxygen source is transferred to another oxygen container.
     </Description>
-    <InitialParameters><PatientFile>Nathan.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>Male_44_Normal.xml</PatientFile></InitialParameters>
   
   <!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">

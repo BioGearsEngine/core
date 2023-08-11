@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
-    <Name>Gus</Name>
+    <Name>Combined2Scenario</Name>
     <Description>
         A Ventilator mask is placed on Gus and an anesthesia machine administers oxygen. Succinylcholine is injected and
         the Ventilator mask is removed. A failed endotracheal intubation occurs, before a successful tube is set and oxygen
         flow is readministered via the anesthesia machine.
     </Description>
-    <InitialParameters><PatientFile>Gus.xml</PatientFile></InitialParameters>
+    <InitialParameters><PatientFile>Male_32_Normal_hr93_rr14.xml</PatientFile></InitialParameters>
     
 	<!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="50">
