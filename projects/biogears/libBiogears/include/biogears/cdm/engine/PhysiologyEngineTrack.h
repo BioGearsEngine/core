@@ -107,7 +107,9 @@ public:
   void Clear(); // Remove all requests and close the results file
 
   DataTrack& GetDataTrack();
-  SEDataRequestManager& GetDataRequestManager() { return m_DataRequestMgr; }
+  DataTrack const & GetDataTrack() const;
+  SEDataRequestManager& GetDataRequestManager();  
+  SEDataRequestManager const & GetDataRequestManager()const; 
 
   void ResetFile(); // Close file, so next Track Data will re hook up everything and make a new file
 

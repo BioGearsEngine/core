@@ -18,6 +18,17 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/EngineConfiguration.hxx>
 #include <type_traits>
 
+#define CDM_BIOGEARS_CONFIGURATION_UNMARSHAL_HELPER(in, out, func)                   \
+  if (in.m_##func) {                                                                 \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::EngineConfiguration::UnMarshall(*in.m_##func, out.func());                   \
+  }
+
+#define CDM_OPTIONAL_BIOGEARS_CONFIGURATION_UNMARSHAL_HELPER(in, out, func) \
+  if (in.m_##func) {                                                        \
+    io::EngineConfiguration::UnMarshall(*in.m_##func, out.func());          \
+  }
+
 namespace biogears {
 class PhysiologyEngineConfiguration;
 class PhysiologyEngineStabilization;
@@ -27,11 +38,6 @@ class PhysiologyEngineDynamicStabilization;
 class PhysiologyEngineDynamicStabilizationCriteria;
 class PhysiologyEngineTimedStabilizationCriteria;
 
-#define CDM_ENGINE_CONFIGURATION_UNMARSHAL_HELPER(xsd, func)                         \
-  if (m_##func) {                                                                    \
-    xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::Property::UnMarshall(*m_##func, xsd.func());                                 \
-  }
 namespace io {
   class BIOGEARS_PRIVATE_API EngineConfiguration {
   public:

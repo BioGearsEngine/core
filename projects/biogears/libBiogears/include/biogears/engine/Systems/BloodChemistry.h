@@ -30,6 +30,9 @@ class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
 class SEPatientActionCollection;
 class BioGears;
+namespace io {
+  class BiogearsPhysiology;
+}
 /**
  * @brief @copydoc Physiology_BloodChemistrySystemData
  * The Blood Chemistry System holds the system-level blood substance data that is computed on the compartment level by other systems.
@@ -40,6 +43,7 @@ class BioGears;
  */
 class BIOGEARS_API BloodChemistry : public SEBloodChemistrySystem, public BioGearsSystem {
   friend BioGears;
+  friend io::BiogearsPhysiology;
   friend class BioGearsEngineTest;
 
 protected:

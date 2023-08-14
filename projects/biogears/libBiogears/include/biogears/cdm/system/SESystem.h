@@ -23,8 +23,9 @@ CDM_BIND_DECL(SystemData)
 namespace biogears {
 class SESubstanceManager;
 class SEScalar;
-   namespace io{
-   class Environment;}
+namespace io {
+  class Environment;
+}
 class BIOGEARS_API SESystem : public Loggable {
 public:
   friend io::Environment;
@@ -37,19 +38,19 @@ public:
   virtual void Clear(); // Deletes all members
 
   /** @name GetScalar
-  *   @brief - A reflextion type call that will return the Scalar associated
-  *            with the string. ex. GetScalar("Hematocrit") will return the0
-  *            SEScalarPercent object associated with Hematocrit
-  *   @details - Note this is an expensive call as it will string compare many times
-  *              This is best used, and intended for, you to dynamically prepopulate
-  *              a mapping data structure that will help access what you need
-  */
+   *   @brief - A reflextion type call that will return the Scalar associated
+   *            with the string. ex. GetScalar("Hematocrit") will return the0
+   *            SEScalarPercent object associated with Hematocrit
+   *   @details - Note this is an expensive call as it will string compare many times
+   *              This is best used, and intended for, you to dynamically prepopulate
+   *              a mapping data structure that will help access what you need
+   */
   virtual const SEScalar* GetScalar(const char* name) = 0;
   virtual const SEScalar* GetScalar(const std::string& name) = 0;
 
   /** @name GetScalar
-  *   @brief - Look for the Scalar property in the systems contained in the provided vector
-  */
+   *   @brief - Look for the Scalar property in the systems contained in the provided vector
+   */
   static const SEScalar* GetScalar(const char* name, std::vector<SESystem*>* systems);
   static const SEScalar* GetScalar(const std::string& name, std::vector<SESystem*>* systems);
 

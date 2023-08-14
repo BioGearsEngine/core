@@ -25,6 +25,9 @@ class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
 class SEFluidCircuitPath;
 class BioGears;
+namespace io {
+  class BiogearsPhysiology;
+}
 }
 
 namespace std {
@@ -38,6 +41,7 @@ namespace biogears {
 class BIOGEARS_API Gastrointestinal : public SEGastrointestinalSystem, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+  friend class io::BiogearsPhysiology;
 
 protected:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<Gastrointestinal>;

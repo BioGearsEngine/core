@@ -47,8 +47,8 @@
 
 namespace biogears {
 namespace io {
-  //class SEDecimalFormat
-  //template <typename SE, typename XSD>  option
+  // class SEDecimalFormat
+  // template <typename SE, typename XSD>  option
   void Property::Marshall(xsd::cxx::tree::optional<CDM::DecimalFormatData> const& option_in, SEDecimalFormat& out)
   {
     if (!option_in.present()) {
@@ -91,7 +91,7 @@ namespace io {
     }
     }
   }
-  //class SEFunctionElectricPotentialVsTime-------------------------------------------------
+  // class SEFunctionElectricPotentialVsTime-------------------------------------------------
   void Property::Marshall(const CDM::FunctionElectricPotentialVsTimeData& in, SEFunctionElectricPotentialVsTime& out)
   {
     Property::Marshall(static_cast<CDM::FunctionData const&>(in), static_cast<SEFunction&>(out));
@@ -104,7 +104,7 @@ namespace io {
     out.IndependentUnit(in.m_TimeUnit->GetString());
     out.DependentUnit(in.m_ElectricPotentialUnit->GetString());
   }
-  //class SEFunction-------------------------------------------------
+  // class SEFunction-------------------------------------------------
   void Property::Marshall(const CDM::FunctionData& in, SEFunction& out)
   {
     out.Clear();
@@ -128,7 +128,7 @@ namespace io {
       out.Independent().DoubleList().push_back(iv);
     }
   }
-  //class SEFunctionVolumeVsTime-------------------------------------------------
+  // class SEFunctionVolumeVsTime-------------------------------------------------
   void Property::Marshall(const CDM::FunctionVolumeVsTimeData& in, SEFunctionVolumeVsTime& out)
   {
     Property::Marshall(static_cast<CDM::FunctionData const&>(in), static_cast<SEFunction&>(out));
@@ -141,7 +141,7 @@ namespace io {
     out.IndependentUnit(in.m_TimeUnit->GetString());
     out.DependentUnit(in.m_VolumeUnit->GetString());
   }
-  //class SEHistogramFractionVsLength-------------------------------------------------
+  // class SEHistogramFractionVsLength-------------------------------------------------
   void Property::Marshall(const CDM::HistogramFractionVsLengthData& in, SEHistogramFractionVsLength& out)
   {
     Property::Marshall(static_cast<CDM::HistogramData const&>(in), static_cast<SEHistogram&>(out));
@@ -152,7 +152,7 @@ namespace io {
     Property::UnMarshall(static_cast<SEHistogram const&>(in), static_cast<CDM::HistogramData&>(out));
     out.IndependentUnit(in.m_LengthUnit->GetString());
   }
-  //class SEHistogram-------------------------------------------------
+  // class SEHistogram-------------------------------------------------
   void Property::Marshall(const CDM::HistogramData& in, SEHistogram& out)
   {
     out.Clear();
@@ -172,7 +172,7 @@ namespace io {
     for (auto& iv : in.m_Independent)
       out.Independent().DoubleList().push_back(iv);
   }
-  //class SEScalar0To1-------------------------------------------------
+  // class SEScalar0To1-------------------------------------------------
   void Property::Marshall(const CDM::Scalar0To1Data& in, SEScalar0To1& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalar&>(out));
@@ -181,7 +181,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalar const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarAmount-------------------------------------------------
+  // class SEScalarAmount-------------------------------------------------
   void Property::Marshall(const CDM::ScalarAmountData& in, SEScalarAmount& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<AmountUnit>&>(out));
@@ -190,7 +190,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<AmountUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarAmountPerMass-------------------------------------------------
+  // class SEScalarAmountPerMass-------------------------------------------------
   void Property::Marshall(const CDM::ScalarAmountPerMassData& in, SEScalarAmountPerMass& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<AmountPerMassUnit>&>(out));
@@ -199,7 +199,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<AmountPerMassUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarAmountPerTime-------------------------------------------------
+  // class SEScalarAmountPerTime-------------------------------------------------
   void Property::Marshall(const CDM::ScalarAmountPerTimeData& in, SEScalarAmountPerTime& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<AmountPerTimeUnit>&>(out));
@@ -208,7 +208,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<AmountPerTimeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarAmountPerVolume-------------------------------------------------
+  // class SEScalarAmountPerVolume-------------------------------------------------
   void Property::Marshall(const CDM::ScalarAmountPerVolumeData& in, SEScalarAmountPerVolume& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<AmountPerVolumeUnit>&>(out));
@@ -217,7 +217,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<AmountPerVolumeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarArea-------------------------------------------------
+  // class SEScalarArea-------------------------------------------------
   void Property::Marshall(const CDM::ScalarAreaData& in, SEScalarArea& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<AreaUnit>&>(out));
@@ -226,7 +226,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<AreaUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarAreaPerTimePressure-------------------------------------------------
+  // class SEScalarAreaPerTimePressure-------------------------------------------------
   void Property::Marshall(const CDM::ScalarAreaPerTimePressureData& in, SEScalarAreaPerTimePressure& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<AreaPerTimePressureUnit>&>(out));
@@ -235,7 +235,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<AreaPerTimePressureUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarElectricCapacitance-------------------------------------------------
+  // class SEScalarElectricCapacitance-------------------------------------------------
   void Property::Marshall(const CDM::ScalarElectricCapacitanceData& in, SEScalarElectricCapacitance& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<ElectricCapacitanceUnit>&>(out));
@@ -244,7 +244,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<ElectricCapacitanceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarElectricCharge-------------------------------------------------
+  // class SEScalarElectricCharge-------------------------------------------------
   void Property::Marshall(const CDM::ScalarElectricChargeData& in, SEScalarElectricCharge& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<ElectricChargeUnit>&>(out));
@@ -253,7 +253,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<ElectricChargeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarElectricCurrent-------------------------------------------------
+  // class SEScalarElectricCurrent-------------------------------------------------
   void Property::Marshall(const CDM::ScalarElectricCurrentData& in, SEScalarElectricCurrent& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<ElectricCurrentUnit>&>(out));
@@ -262,7 +262,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<ElectricCurrentUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarElectricInductance-------------------------------------------------
+  // class SEScalarElectricInductance-------------------------------------------------
   void Property::Marshall(const CDM::ScalarElectricInductanceData& in, SEScalarElectricInductance& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<ElectricInductanceUnit>&>(out));
@@ -271,7 +271,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<ElectricInductanceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarElectricPotential-------------------------------------------------
+  // class SEScalarElectricPotential-------------------------------------------------
   void Property::Marshall(const CDM::ScalarElectricPotentialData& in, SEScalarElectricPotential& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<ElectricPotentialUnit>&>(out));
@@ -280,7 +280,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<ElectricPotentialUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarElectricResistance-------------------------------------------------
+  // class SEScalarElectricResistance-------------------------------------------------
   void Property::Marshall(const CDM::ScalarElectricResistanceData& in, SEScalarElectricResistance& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<ElectricResistanceUnit>&>(out));
@@ -289,7 +289,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<ElectricResistanceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarEnergy-------------------------------------------------
+  // class SEScalarEnergy-------------------------------------------------
   void Property::Marshall(const CDM::ScalarEnergyData& in, SEScalarEnergy& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<EnergyUnit>&>(out));
@@ -298,7 +298,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<EnergyUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarEnergyPerAmount-------------------------------------------------
+  // class SEScalarEnergyPerAmount-------------------------------------------------
   void Property::Marshall(const CDM::ScalarEnergyPerAmountData& in, SEScalarEnergyPerAmount& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<EnergyPerAmountUnit>&>(out));
@@ -307,7 +307,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<EnergyPerAmountUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarEnergyPerMass-------------------------------------------------
+  // class SEScalarEnergyPerMass-------------------------------------------------
   void Property::Marshall(const CDM::ScalarEnergyPerMassData& in, SEScalarEnergyPerMass& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<EnergyPerMassUnit>&>(out));
@@ -316,7 +316,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<EnergyPerMassUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarFlowCompliance-------------------------------------------------
+  // class SEScalarFlowCompliance-------------------------------------------------
   void Property::Marshall(const CDM::ScalarFlowComplianceData& in, SEScalarFlowCompliance& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<FlowComplianceUnit>&>(out));
@@ -325,7 +325,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<FlowComplianceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarFlowElastance-------------------------------------------------
+  // class SEScalarFlowElastance-------------------------------------------------
   void Property::Marshall(const CDM::ScalarFlowElastanceData& in, SEScalarFlowElastance& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<FlowElastanceUnit>&>(out));
@@ -334,7 +334,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<FlowElastanceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarFlowInertance-------------------------------------------------
+  // class SEScalarFlowInertance-------------------------------------------------
   void Property::Marshall(const CDM::ScalarFlowInertanceData& in, SEScalarFlowInertance& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<FlowInertanceUnit>&>(out));
@@ -343,7 +343,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<FlowInertanceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarFlowResistance-------------------------------------------------
+  // class SEScalarFlowResistance-------------------------------------------------
   void Property::Marshall(const CDM::ScalarFlowResistanceData& in, SEScalarFlowResistance& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<FlowResistanceUnit>&>(out));
@@ -352,7 +352,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<FlowResistanceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarForce-------------------------------------------------
+  // class SEScalarForce-------------------------------------------------
   void Property::Marshall(const CDM::ScalarForceData& in, SEScalarForce& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<ForceUnit>&>(out));
@@ -361,7 +361,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<ForceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarFraction-------------------------------------------------
+  // class SEScalarFraction-------------------------------------------------
   void Property::Marshall(const CDM::ScalarFractionData& in, SEScalarFraction& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalar&>(out));
@@ -370,7 +370,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalar const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarFrequency-------------------------------------------------
+  // class SEScalarFrequency-------------------------------------------------
   void Property::Marshall(const CDM::ScalarFrequencyData& in, SEScalarFrequency& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<FrequencyUnit>&>(out));
@@ -379,7 +379,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<FrequencyUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalar-------------------------------------------------
+  // class SEScalar-------------------------------------------------
   void Property::Marshall(const CDM::ScalarData& in, SEScalar& out)
   {
     READ_ONLY_CHECK()
@@ -399,7 +399,7 @@ namespace io {
     out.value(in.m_value);
     out.readOnly(in.m_readOnly);
   }
-  //class SEScalarHeatCapacitance-------------------------------------------------
+  // class SEScalarHeatCapacitance-------------------------------------------------
   void Property::Marshall(const CDM::ScalarHeatCapacitanceData& in, SEScalarHeatCapacitance& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<HeatCapacitanceUnit>&>(out));
@@ -408,7 +408,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<HeatCapacitanceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarHeatCapacitancePerAmount-------------------------------------------------
+  // class SEScalarHeatCapacitancePerAmount-------------------------------------------------
   void Property::Marshall(const CDM::ScalarHeatCapacitancePerAmountData& in, SEScalarHeatCapacitancePerAmount& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<HeatCapacitancePerAmountUnit>&>(out));
@@ -417,7 +417,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<HeatCapacitancePerAmountUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarHeatCapacitancePerMass-------------------------------------------------
+  // class SEScalarHeatCapacitancePerMass-------------------------------------------------
   void Property::Marshall(const CDM::ScalarHeatCapacitancePerMassData& in, SEScalarHeatCapacitancePerMass& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<HeatCapacitancePerMassUnit>&>(out));
@@ -426,7 +426,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<HeatCapacitancePerMassUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarHeatConductance-------------------------------------------------
+  // class SEScalarHeatConductance-------------------------------------------------
   void Property::Marshall(const CDM::ScalarHeatConductanceData& in, SEScalarHeatConductance& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<HeatConductanceUnit>&>(out));
@@ -435,7 +435,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<HeatConductanceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarHeatConductancePerArea-------------------------------------------------
+  // class SEScalarHeatConductancePerArea-------------------------------------------------
   void Property::Marshall(const CDM::ScalarHeatConductancePerAreaData& in, SEScalarHeatConductancePerArea& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<HeatConductancePerAreaUnit>&>(out));
@@ -444,7 +444,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<HeatConductancePerAreaUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarHeatInductance-------------------------------------------------
+  // class SEScalarHeatInductance-------------------------------------------------
   void Property::Marshall(const CDM::ScalarHeatInductanceData& in, SEScalarHeatInductance& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<HeatInductanceUnit>&>(out));
@@ -453,7 +453,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<HeatInductanceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarHeatResistanceArea-------------------------------------------------
+  // class SEScalarHeatResistanceArea-------------------------------------------------
   void Property::Marshall(const CDM::ScalarHeatResistanceAreaData& in, SEScalarHeatResistanceArea& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<HeatResistanceAreaUnit>&>(out));
@@ -462,7 +462,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<HeatResistanceAreaUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarHeatResistance-------------------------------------------------
+  // class SEScalarHeatResistance-------------------------------------------------
   void Property::Marshall(const CDM::ScalarHeatResistanceData& in, SEScalarHeatResistance& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<HeatResistanceUnit>&>(out));
@@ -471,7 +471,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<HeatResistanceUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarInversePressure-------------------------------------------------
+  // class SEScalarInversePressure-------------------------------------------------
   void Property::Marshall(const CDM::ScalarInversePressureData& in, SEScalarInversePressure& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<InversePressureUnit>&>(out));
@@ -480,7 +480,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<InversePressureUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarInverseVolume-------------------------------------------------
+  // class SEScalarInverseVolume-------------------------------------------------
   void Property::Marshall(const CDM::ScalarInverseVolumeData& in, SEScalarInverseVolume& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<InverseVolumeUnit>&>(out));
@@ -489,7 +489,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<InverseVolumeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarLength-------------------------------------------------
+  // class SEScalarLength-------------------------------------------------
   void Property::Marshall(const CDM::ScalarLengthData& in, SEScalarLength& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<LengthUnit>&>(out));
@@ -498,7 +498,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<LengthUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarLengthPerTime-------------------------------------------------
+  // class SEScalarLengthPerTime-------------------------------------------------
   void Property::Marshall(const CDM::ScalarLengthPerTimeData& in, SEScalarLengthPerTime& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<LengthPerTimeUnit>&>(out));
@@ -507,7 +507,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<LengthPerTimeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarLengthPerTimePressure-------------------------------------------------
+  // class SEScalarLengthPerTimePressure-------------------------------------------------
   void Property::Marshall(const CDM::ScalarLengthPerTimePressureData& in, SEScalarLengthPerTimePressure& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<LengthPerTimePressureUnit>&>(out));
@@ -516,7 +516,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<LengthPerTimePressureUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarMass-------------------------------------------------
+  // class SEScalarMass-------------------------------------------------
   void Property::Marshall(const CDM::ScalarMassData& in, SEScalarMass& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<MassUnit>&>(out));
@@ -525,7 +525,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<MassUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarMassPerAmount-------------------------------------------------
+  // class SEScalarMassPerAmount-------------------------------------------------
   void Property::Marshall(const CDM::ScalarMassPerAmountData& in, SEScalarMassPerAmount& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<MassPerAmountUnit>&>(out));
@@ -534,7 +534,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<MassPerAmountUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarMassPerAreaTime-------------------------------------------------
+  // class SEScalarMassPerAreaTime-------------------------------------------------
   void Property::Marshall(const CDM::ScalarMassPerAreaTimeData& in, SEScalarMassPerAreaTime& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<MassPerAreaTimeUnit>&>(out));
@@ -543,7 +543,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<MassPerAreaTimeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarMassPerMass-------------------------------------------------
+  // class SEScalarMassPerMass-------------------------------------------------
   void Property::Marshall(const CDM::ScalarMassPerMassData& in, SEScalarMassPerMass& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<MassPerMassUnit>&>(out));
@@ -552,7 +552,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<MassPerMassUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarMassPerTime-------------------------------------------------
+  // class SEScalarMassPerTime-------------------------------------------------
   void Property::Marshall(const CDM::ScalarMassPerTimeData& in, SEScalarMassPerTime& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<MassPerTimeUnit>&>(out));
@@ -561,7 +561,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<MassPerTimeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarMassPerVolume-------------------------------------------------
+  // class SEScalarMassPerVolume-------------------------------------------------
   void Property::Marshall(const CDM::ScalarMassPerVolumeData& in, SEScalarMassPerVolume& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<MassPerVolumeUnit>&>(out));
@@ -570,7 +570,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<MassPerVolumeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarNeg1To1-------------------------------------------------
+  // class SEScalarNeg1To1-------------------------------------------------
   void Property::Marshall(const CDM::ScalarNeg1To1Data& in, SEScalarNeg1To1& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalar&>(out));
@@ -579,7 +579,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalar const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarOsmolality-------------------------------------------------
+  // class SEScalarOsmolality-------------------------------------------------
   void Property::Marshall(const CDM::ScalarOsmolalityData& in, SEScalarOsmolality& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<OsmolalityUnit>&>(out));
@@ -588,7 +588,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<OsmolalityUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarOsmolarity-------------------------------------------------
+  // class SEScalarOsmolarity-------------------------------------------------
   void Property::Marshall(const CDM::ScalarOsmolarityData& in, SEScalarOsmolarity& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<OsmolarityUnit>&>(out));
@@ -597,7 +597,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<OsmolarityUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarPower-------------------------------------------------
+  // class SEScalarPower-------------------------------------------------
   void Property::Marshall(const CDM::ScalarPowerData& in, SEScalarPower& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<PowerUnit>&>(out));
@@ -606,7 +606,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<PowerUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarPowerPerAreaTemperatureToTheFourth-------------------------------------------------
+  // class SEScalarPowerPerAreaTemperatureToTheFourth-------------------------------------------------
   void Property::Marshall(const CDM::ScalarPowerPerAreaTemperatureToTheFourthData& in, SEScalarPowerPerAreaTemperatureToTheFourth& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>&>(out));
@@ -615,7 +615,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarPressure-------------------------------------------------
+  // class SEScalarPressure-------------------------------------------------
   void Property::Marshall(const CDM::ScalarPressureData& in, SEScalarPressure& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<PressureUnit>&>(out));
@@ -624,7 +624,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<PressureUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarPressurePerVolume-------------------------------------------------
+  // class SEScalarPressurePerVolume-------------------------------------------------
   void Property::Marshall(const CDM::ScalarPressurePerVolumeData& in, SEScalarPressurePerVolume& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<PressurePerVolumeUnit>&>(out));
@@ -633,7 +633,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<PressurePerVolumeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScaMlarPressureTimePerArea-------------------------------------------------
+  // class SEScaMlarPressureTimePerArea-------------------------------------------------
   void Property::Marshall(const CDM::ScalarPressureTimePerAreaData& in, SEScalarPressureTimePerArea& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<PressureTimePerAreaUnit>&>(out));
@@ -642,7 +642,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<PressureTimePerAreaUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarPressureTimePerVolumeArea-------------------------------------------------
+  // class SEScalarPressureTimePerVolumeArea-------------------------------------------------
   void Property::Marshall(const CDM::ScalarPressureTimePerVolumeAreaData& in, SEScalarPressureTimePerVolumeArea& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<PressureTimePerVolumeAreaUnit>&>(out));
@@ -651,7 +651,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<PressureTimePerVolumeAreaUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarTemperature-------------------------------------------------
+  // class SEScalarTemperature-------------------------------------------------
   void Property::Marshall(const CDM::ScalarTemperatureData& in, SEScalarTemperature& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<TemperatureUnit>&>(out));
@@ -660,7 +660,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<TemperatureUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarTime-------------------------------------------------
+  // class SEScalarTime-------------------------------------------------
   void Property::Marshall(const CDM::ScalarTimeData& in, SEScalarTime& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<TimeUnit>&>(out));
@@ -669,7 +669,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<TimeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarVolume-------------------------------------------------
+  // class SEScalarVolume-------------------------------------------------
   void Property::Marshall(const CDM::ScalarVolumeData& in, SEScalarVolume& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<VolumeUnit>&>(out));
@@ -678,7 +678,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<VolumeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarVolumePerPressure-------------------------------------------------
+  // class SEScalarVolumePerPressure-------------------------------------------------
   void Property::Marshall(const CDM::ScalarVolumePerPressureData& in, SEScalarVolumePerPressure& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<VolumePerPressureUnit>&>(out));
@@ -687,7 +687,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<VolumePerPressureUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarVolumePerTimeArea-------------------------------------------------
+  // class SEScalarVolumePerTimeArea-------------------------------------------------
   void Property::Marshall(const CDM::ScalarVolumePerTimeAreaData& in, SEScalarVolumePerTimeArea& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<VolumePerTimeAreaUnit>&>(out));
@@ -696,7 +696,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<VolumePerTimeAreaUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarVolumePerTime-------------------------------------------------
+  // class SEScalarVolumePerTime-------------------------------------------------
   void Property::Marshall(const CDM::ScalarVolumePerTimeData& in, SEScalarVolumePerTime& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<VolumePerTimeUnit>&>(out));
@@ -705,7 +705,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<VolumePerTimeUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarVolumePerTimeMass-------------------------------------------------
+  // class SEScalarVolumePerTimeMass-------------------------------------------------
   void Property::Marshall(const CDM::ScalarVolumePerTimeMassData& in, SEScalarVolumePerTimeMass& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<VolumePerTimeMassUnit>&>(out));
@@ -714,7 +714,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<VolumePerTimeMassUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarVolumePerTimePressureArea-------------------------------------------------
+  // class SEScalarVolumePerTimePressureArea-------------------------------------------------
   void Property::Marshall(const CDM::ScalarVolumePerTimePressureAreaData& in, SEScalarVolumePerTimePressureArea& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<VolumePerTimePressureAreaUnit>&>(out));
@@ -723,7 +723,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<VolumePerTimePressureAreaUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SEScalarVolumePerTimePressure-------------------------------------------------
+  // class SEScalarVolumePerTimePressure-------------------------------------------------
   void Property::Marshall(const CDM::ScalarVolumePerTimePressureData& in, SEScalarVolumePerTimePressure& out)
   {
     Property::Marshall(static_cast<CDM::ScalarData const&>(in), static_cast<SEScalarQuantity<VolumePerTimePressureUnit>&>(out));
@@ -732,7 +732,7 @@ namespace io {
   {
     Property::UnMarshall(static_cast<SEScalarQuantity<VolumePerTimePressureUnit> const&>(in), static_cast<CDM::ScalarData&>(out));
   }
-  //class SERunningAverage-------------------------------------------------
+  // class SERunningAverage-------------------------------------------------
   void Property::Marshall(const CDM::RunningAverageData& in, RunningAverage& out)
   {
     out.m_Sum = in.sum();

@@ -18,14 +18,20 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Patient.hxx>
 
+#define CDM_PATIENT_UNMARSHAL_HELPER(in, out, func)                                  \
+  if (in.m_##func) {                                                                 \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::Patient::UnMarshall(*in.m_##func, out.func());                               \
+  }
+
+#define CDM_OPTIONAL_PATIENT_UNMARSHAL_HELPER(in, out, func) \
+  if (in.m_##func) {                                         \
+    io::Patient::UnMarshall(*in.m_##func, out.func());       \
+  }
+
 namespace biogears {
 class SEPatient;
 
-#define CDM_PATIENT_UNMARSHAL_HELPER(xsd, func)                           \
-  if (m_##func) {                                                                    \
-    xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::Property::UnMarshall(*m_##func, xsd.func());                       \
-  }
 namespace io {
   class BIOGEARS_PRIVATE_API Patient {
   public:

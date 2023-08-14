@@ -27,14 +27,18 @@ class SEGasCompartment;
 class SEGasSubstanceQuantity;
 class SEFluidCircuitNode;
 class SEFluidCircuitPath;
+namespace io {
+  class BiogearsEquipment;
+}
 
 /**
- * @brief 
+ * @brief
  * Generic anesthesia machine for positive pressure ventilation.
  */
 class BIOGEARS_API AnesthesiaMachine : public SEAnesthesiaMachine, public BioGearsSystem {
   friend BioGears;
   friend class BioGearsEngineTest;
+  friend io::BiogearsEquipment;
 
 protected:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<AnesthesiaMachine>;
@@ -45,7 +49,7 @@ public:
   virtual ~AnesthesiaMachine();
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "AnesthesiaMachine"; }
+  static constexpr char const* const TypeTag() { return "AnesthesiaMachine"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 

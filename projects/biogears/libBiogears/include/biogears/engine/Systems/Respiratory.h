@@ -38,6 +38,9 @@ class SEFluidCircuit;
 class SEFluidCircuitNode;
 class SEConsciousRespirationCommand;
 class BioGears;
+namespace io {
+  class BiogearsPhysiology;
+}
 
 /**
 * @brief The %Respiratory System class handles the analysis and storage of
@@ -53,6 +56,7 @@ class BioGears;
 class BIOGEARS_API Respiratory : public SERespiratorySystem, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+  friend class io::BiogearsPhysiology;
 
 protected:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<Respiratory>;

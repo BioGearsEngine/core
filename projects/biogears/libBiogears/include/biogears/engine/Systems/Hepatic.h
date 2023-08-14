@@ -27,6 +27,9 @@ class SETissueSystem;
 class SEEnergySystem;
 class SEPatient;
 class BioGears;
+namespace io {
+  class BiogearsPhysiology;
+}
 
 /**
  * @copydoc Physiology_HepaticystemData
@@ -34,6 +37,7 @@ class BioGears;
 class BIOGEARS_API Hepatic : public SEHepaticSystem, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+  friend class io::BiogearsPhysiology;
 
 protected:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<Hepatic>;

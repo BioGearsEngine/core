@@ -31,6 +31,10 @@ class SELiquidCompartmentGraph;
 class SEFluidCircuitNode;
 class SEFluidCircuitPath;
 class BioGears;
+namespace io {
+  class BiogearsPhysiology;
+}
+
 /**
 * @brief 
 * The %Cardiovascular system utilizes circuit methodology to characterize the intravascular fluid dynamics throughout the body.
@@ -45,6 +49,7 @@ class BioGears;
 */
 class BIOGEARS_API Cardiovascular : public SECardiovascularSystem, public BioGearsSystem {
   friend class BioGears;
+  friend class io::BiogearsPhysiology;
   friend class BioGearsEngineTest;
 
 protected:

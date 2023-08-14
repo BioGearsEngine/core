@@ -28,6 +28,9 @@ class SESubstanceBolusState;
 class SENasalState;
 class SETransmucosalState;
 class SELiquidCompartment;
+namespace io {
+  class BiogearsPhysiology;
+}
 }
 
 namespace std {
@@ -48,6 +51,7 @@ class BioGears;
 class BIOGEARS_API Drugs : public SEDrugSystem, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+  friend class io::BiogearsPhysiology;
 
 protected:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<Drugs>;

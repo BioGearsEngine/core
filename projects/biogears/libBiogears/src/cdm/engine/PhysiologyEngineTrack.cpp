@@ -203,6 +203,20 @@ DataTrack& PhysiologyEngineTrack::GetDataTrack()
   return m_DataTrack;
 }
 
+DataTrack const & PhysiologyEngineTrack::GetDataTrack() const
+{
+  return const_cast<PhysiologyEngineTrack*>(this)->GetDataTrack();
+}
+
+SEDataRequestManager& PhysiologyEngineTrack::GetDataRequestManager()
+{
+  return m_DataRequestMgr;
+}
+SEDataRequestManager const& PhysiologyEngineTrack::GetDataRequestManager() const
+{
+  return m_DataRequestMgr;
+}
+
 SEDataRequestScalar* PhysiologyEngineTrack::GetScalar(SEDataRequest* dr)
 {
   if (dr) {

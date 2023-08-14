@@ -23,11 +23,17 @@ class SEEnvironmentAction;
 class SEEnvironmentChange;
 class SEThermalApplication;
 
-#define CDM_ENVIRONMENT_ACTIONS_UNMARSHAL_HELPER(xsd, func)                           \
-  if (m_##func) {                                                                    \
-    xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::Property::UnMarshall(*m_##func, xsd.func());                       \
+#define CDM_ENVIRONMENT_ACTIONS_UNMARSHAL_HELPER(in, out, func)                              \
+  if (in.m_##func) {                                                                 \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::EnvironmentActions::UnMarshall(*in.m_##func, out.func());                            \
   }
+
+#define CDM_OPTIONAL_ENVIRONMENT_ACTIONS_UNMARSHAL_HELPER(in, out, func) \
+  if (in.m_##func) {                                             \
+    io::EnvironmentActions::UnMarshall(*in.m_##func, out.func());        \
+  }
+
 namespace io {
   class BIOGEARS_PRIVATE_API EnvironmentActions {
   public:

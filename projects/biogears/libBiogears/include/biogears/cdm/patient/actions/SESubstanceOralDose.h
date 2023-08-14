@@ -19,13 +19,18 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SESubstance;
 class SETransmucosalState;
+namespace io {
+  class PatientActions;
+}
 
 class BIOGEARS_API SESubstanceOralDose : public SESubstanceAdministration {
+  friend class io::PatientActions;
+
 public:
   SESubstanceOralDose(const SESubstance& substance);
   virtual ~SESubstanceOralDose();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   virtual bool IsValid() const;
   virtual bool IsActive() const;
@@ -55,6 +60,8 @@ protected:
 };
 
 class BIOGEARS_API SETransmucosalState {
+  friend io::PatientActions;
+
 public:
   SETransmucosalState(const SESubstance& sub);
   ~SETransmucosalState();
@@ -65,7 +72,6 @@ public:
 
   bool Initialize(SEScalarMass& dose);
 
- 
   SEScalarMass& GetMouthSolidMass();
   SEScalarMassPerVolume& GetSalivaConcentration();
   std::vector<SEScalarMassPerVolume*>& GetBuccalConcentrations();
@@ -77,7 +83,7 @@ public:
 
 protected:
   virtual void Unload(CDM::TransmucosalStateData& data) const;
-  //Transumucosal specific values
+  // Transumucosal specific values
   const SESubstance* m_Substance;
   SEScalarMass* m_MouthSolidMass;
   SEScalarMassPerVolume* m_SalivaConcentration;
