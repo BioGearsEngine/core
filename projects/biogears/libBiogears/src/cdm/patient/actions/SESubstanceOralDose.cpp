@@ -21,29 +21,31 @@ SESubstanceOralDose::SESubstanceOralDose(const SESubstance& substance)
   m_AdminRoute = (CDM::enumOralAdministration::value)-1;
   m_Dose = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SESubstanceOralDose::~SESubstanceOralDose()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceOralDose::Clear()
 {
   SESubstanceAdministration::Clear();
   m_AdminRoute = (CDM::enumOralAdministration::value)-1;
   SAFE_DELETE(m_Dose);
 }
-//The oral model requires physiochemical properties
+//-------------------------------------------------------------------------------
+// The oral model requires physiochemical properties
 bool SESubstanceOralDose::IsValid() const
 {
-  return SESubstanceAdministration::IsValid() && HasDose() && HasAdminRoute() && m_Substance.GetPK()->HasPhysicochemicals();;
+  return SESubstanceAdministration::IsValid() && HasDose() && HasAdminRoute() && m_Substance.GetPK()->HasPhysicochemicals();
+  ;
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceOralDose::IsActive() const
 {
   return IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in)
 {
   SESubstanceAdministration::Load(in);
@@ -51,14 +53,14 @@ bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in)
   m_AdminRoute = in.AdminRoute();
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::SubstanceOralDoseData* SESubstanceOralDose::Unload() const
 {
   CDM::SubstanceOralDoseData* data(new CDM::SubstanceOralDoseData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceOralDose::Unload(CDM::SubstanceOralDoseData& data) const
 {
   SESubstanceAdministration::Unload(data);
@@ -68,36 +70,39 @@ void SESubstanceOralDose::Unload(CDM::SubstanceOralDoseData& data) const
     data.AdminRoute(m_AdminRoute);
   data.Substance(m_Substance.GetName());
 }
-
+//-------------------------------------------------------------------------------
 CDM::enumOralAdministration::value SESubstanceOralDose::GetAdminRoute() const
 {
   return m_AdminRoute;
 }
+//-------------------------------------------------------------------------------
 void SESubstanceOralDose::SetAdminRoute(CDM::enumOralAdministration::value route)
 {
   m_AdminRoute = route;
 }
+//-------------------------------------------------------------------------------
 bool SESubstanceOralDose::HasAdminRoute() const
 {
   return m_AdminRoute == ((CDM::enumOralAdministration::value)-1) ? false : true;
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceOralDose::HasDose() const
 {
   return m_Dose == nullptr ? false : m_Dose->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarMass& SESubstanceOralDose::GetDose()
 {
   if (m_Dose == nullptr)
     m_Dose = new SEScalarMass();
   return *m_Dose;
 }
-
+//-------------------------------------------------------------------------------
 SESubstance& SESubstanceOralDose::GetSubstance() const
 {
   return (SESubstance&)m_Substance;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceOralDose::ToString(std::ostream& str) const
 {
   str << "Patient Action : Oral Substance Administration";
@@ -108,23 +113,36 @@ void SESubstanceOralDose::ToString(std::ostream& str) const
   HasDose() ? str << *m_Dose : str << "No Dose Set";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
+bool SESubstanceOralDose::operator==(const SESubstanceOralDose& rhs) const
+{
+  bool equivilant = (m_Dose && rhs.m_Dose) ? m_Dose->operator==(*rhs.m_Dose) : m_Dose == rhs.m_Dose;
+  equivilant &= m_Substance == rhs.m_Substance;
+  equivilant &= m_Comment == rhs.m_Comment;
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceOralDose::operator!=(const SESubstanceOralDose& rhs) const
+{
+  return !(*this == rhs);
+}
 
 //-----------------------------------------------------------------------------
 // Oral Transmucosal State methods
 SETransmucosalState::SETransmucosalState(const SESubstance& sub)
   : m_Substance(&sub)
+  ,m_NumBuccalRegions(7) // Hard-coded for current model implementation!
+  ,m_NumSublingualRegions(7) // Hard-coded for current model implementation!
 {
   m_MouthSolidMass = nullptr;
   m_SalivaConcentration = nullptr;
-  m_NumBuccalRegions = 7; //Hard-coded for current model implementation!
-  m_NumSublingualRegions = 7; //Hard-coded for current model implementation!
 }
-
+//-------------------------------------------------------------------------------
 SETransmucosalState::~SETransmucosalState()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SETransmucosalState::Clear()
 {
   SAFE_DELETE(m_MouthSolidMass);
@@ -132,7 +150,7 @@ void SETransmucosalState::Clear()
   m_BuccalConcentrations.clear();
   m_SublingualConcentrations.clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SETransmucosalState::Initialize(SEScalarMass& dose)
 {
   GetMouthSolidMass().Set(dose);
@@ -143,7 +161,7 @@ bool SETransmucosalState::Initialize(SEScalarMass& dose)
   bool subSet = SetSublingualConcentrations(initSublingual, MassPerVolumeUnit::ug_Per_mL);
   return (bucSet && subSet);
 }
-
+//-------------------------------------------------------------------------------
 bool SETransmucosalState::Load(const CDM::TransmucosalStateData& in)
 {
 
@@ -151,121 +169,149 @@ bool SETransmucosalState::Load(const CDM::TransmucosalStateData& in)
   GetSalivaConcentration().Load(in.SalivaConcentration());
   m_BuccalConcentrations.clear();
   for (auto brData : in.BuccalConcentrations()) {
-    SEScalarMassPerVolume* buc = new SEScalarMassPerVolume;
-    buc->Load(brData);
+    SEScalarMassPerVolume buc;
+    buc.Load(brData);
     m_BuccalConcentrations.push_back(buc);
   }
   m_SublingualConcentrations.clear();
   for (auto slData : in.SublingualConcentrations()) {
-    SEScalarMassPerVolume* sl = new SEScalarMassPerVolume;
-    sl->Load(slData);
+    SEScalarMassPerVolume sl;
+    sl.Load(slData);
     m_SublingualConcentrations.push_back(sl);
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::TransmucosalStateData* SETransmucosalState::Unload() const
 {
   CDM::TransmucosalStateData* data = new CDM::TransmucosalStateData();
   Unload(*data);
   return data;
 }
+//-------------------------------------------------------------------------------
 void SETransmucosalState::Unload(CDM::TransmucosalStateData& data) const
 {
   data.MouthSolidMass(std::unique_ptr<CDM::ScalarMassData>(m_MouthSolidMass->Unload()));
   data.SalivaConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_SalivaConcentration->Unload()));
   for (auto bcData : m_BuccalConcentrations) {
-    data.BuccalConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(bcData->Unload()));
+    data.BuccalConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(bcData.Unload()));
   }
   for (auto slData : m_SublingualConcentrations) {
-    data.SublingualConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(slData->Unload()));
+    data.SublingualConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(slData.Unload()));
   }
   data.Substance(m_Substance->GetName());
 }
-
+//-------------------------------------------------------------------------------
 SEScalarMass& SETransmucosalState::GetMouthSolidMass()
 {
   if (m_MouthSolidMass == nullptr)
     m_MouthSolidMass = new SEScalarMass();
   return *m_MouthSolidMass;
 }
+//-------------------------------------------------------------------------------
 SEScalarMassPerVolume& SETransmucosalState::GetSalivaConcentration()
 {
   if (m_SalivaConcentration == nullptr)
     m_SalivaConcentration = new SEScalarMassPerVolume();
   return *m_SalivaConcentration;
 }
-std::vector<SEScalarMassPerVolume*>& SETransmucosalState::GetBuccalConcentrations()
+//-------------------------------------------------------------------------------
+std::vector<SEScalarMassPerVolume>& SETransmucosalState::GetBuccalConcentrations()
 {
   return m_BuccalConcentrations;
 }
+//-------------------------------------------------------------------------------
 std::vector<double> SETransmucosalState::GetBuccalConcentrations(const MassPerVolumeUnit& unit)
 {
   std::vector<double> buccalMasses;
   for (auto bMass : m_BuccalConcentrations) {
-    buccalMasses.push_back(bMass->GetValue(unit));
+    buccalMasses.push_back(bMass.GetValue(unit));
   }
   return buccalMasses;
 }
+//-------------------------------------------------------------------------------
 bool SETransmucosalState::SetBuccalConcentrations(std::vector<double>& bMasses, const MassPerVolumeUnit& unit)
 {
   if (bMasses.size() != m_NumBuccalRegions) {
-    //Don't execute if the input vector is not the correct size
+    // Don't execute if the input vector is not the correct size
     return false;
   }
   if (m_BuccalConcentrations.empty()) {
-    //The very first time we call this function, the member vector will be empty.  All values should initialize to 0
+    // The very first time we call this function, the member vector will be empty.  All values should initialize to 0
     for (size_t pos = 0; pos < m_NumBuccalRegions; pos++) {
-      SEScalarMassPerVolume* brMass = new SEScalarMassPerVolume();
-      brMass->SetValue(bMasses[0], unit);
+      SEScalarMassPerVolume brMass;
+      brMass.SetValue(bMasses[0], unit);
       m_BuccalConcentrations.push_back(brMass);
     }
   } else {
-    //Vectors should be the same size, so we can iterate over them
+    // Vectors should be the same size, so we can iterate over them
     std::vector<double>::iterator dblIt;
-    std::vector<SEScalarMassPerVolume*>::iterator scIt;
+    std::vector<SEScalarMassPerVolume>::iterator scIt;
     for (dblIt = bMasses.begin(), scIt = m_BuccalConcentrations.begin(); dblIt != bMasses.end() && scIt != m_BuccalConcentrations.end(); dblIt++, scIt++) {
-      (*scIt)->SetValue(*dblIt, unit);
+      scIt->SetValue(*dblIt, unit);
     }
   }
   return true;
 }
-
-std::vector<SEScalarMassPerVolume*>& SETransmucosalState::GetSublingualConcentrations()
+//-------------------------------------------------------------------------------
+std::vector<SEScalarMassPerVolume>& SETransmucosalState::GetSublingualConcentrations()
 {
   return m_SublingualConcentrations;
 }
+//-------------------------------------------------------------------------------
 std::vector<double> SETransmucosalState::GetSublingualConcentrations(const MassPerVolumeUnit& unit)
 {
   std::vector<double> sublingualMasses;
   for (auto slMass : m_SublingualConcentrations) {
-    sublingualMasses.push_back(slMass->GetValue(unit));
+    sublingualMasses.push_back(slMass.GetValue(unit));
   }
   return sublingualMasses;
 }
+//-------------------------------------------------------------------------------
 bool SETransmucosalState::SetSublingualConcentrations(std::vector<double>& slMasses, const MassPerVolumeUnit& unit)
 {
   if (slMasses.size() != m_NumSublingualRegions) {
-    //Don't execute if the input vector is not the correct size
+    // Don't execute if the input vector is not the correct size
     return false;
   }
   if (m_SublingualConcentrations.empty()) {
-    //The very first time we call this function, the member vector will be empty.  All values should initialize to 0
+    // The very first time we call this function, the member vector will be empty.  All values should initialize to 0
     for (size_t pos = 0; pos < m_NumSublingualRegions; pos++) {
-      SEScalarMassPerVolume* slMass = new SEScalarMassPerVolume();
-      slMass->SetValue(slMasses[0], unit);
+      SEScalarMassPerVolume slMass;
+      slMass.SetValue(slMasses[0], unit);
       m_SublingualConcentrations.push_back(slMass);
     }
   } else {
-    //Vectors should be the same size, so we can iterate over them
+    // Vectors should be the same size, so we can iterate over them
     std::vector<double>::iterator dblIt;
-    std::vector<SEScalarMassPerVolume*>::iterator scIt;
+    std::vector<SEScalarMassPerVolume>::iterator scIt;
     for (dblIt = slMasses.begin(), scIt = m_SublingualConcentrations.begin(); dblIt != slMasses.end() && scIt != m_SublingualConcentrations.end(); dblIt++, scIt++) {
-      (*scIt)->SetValue(*dblIt, unit);
+      scIt->SetValue(*dblIt, unit);
     }
   }
 
   return true;
+}
+//-------------------------------------------------------------------------------
+
+bool SETransmucosalState::operator==(const SETransmucosalState& rhs) const
+{
+
+  bool equivilant = (m_Substance && rhs.m_Substance) ? m_Substance->operator==(*rhs.m_Substance) : m_Substance == rhs.m_Substance;
+  equivilant &= (m_MouthSolidMass && rhs.m_MouthSolidMass) ? m_MouthSolidMass->operator==(*rhs.m_MouthSolidMass)
+                                                           : m_MouthSolidMass == rhs.m_MouthSolidMass;
+  equivilant &= (m_SalivaConcentration && rhs.m_SalivaConcentration) ? m_SalivaConcentration->operator==(*rhs.m_SalivaConcentration)
+                                                                     : m_SalivaConcentration == rhs.m_SalivaConcentration;
+  equivilant &= m_BuccalConcentrations == rhs.m_BuccalConcentrations;
+  equivilant &= m_SublingualConcentrations == rhs.m_SublingualConcentrations;
+  equivilant &= m_NumBuccalRegions == rhs.m_NumBuccalRegions;
+  equivilant &= m_NumSublingualRegions == rhs.m_NumSublingualRegions;
+  return equivilant;
+}
+
+bool SETransmucosalState::operator!=(const SETransmucosalState& rhs) const
+{
+  return !(*this == rhs);
 }
 
 };

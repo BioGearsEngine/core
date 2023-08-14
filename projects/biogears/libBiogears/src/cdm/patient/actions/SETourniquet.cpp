@@ -133,5 +133,19 @@ void SETourniquet::ToString(std::ostream& str) const
   }
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
+bool SETourniquet::operator==(const SETourniquet& rhs) const
+{
+  return m_Comment == rhs.m_Comment
+    && m_Compartment == rhs.m_Compartment
+    && m_TourniquetLevel == rhs.m_TourniquetLevel;
 }
+//-----------------------------------------------------------------------------
+bool SETourniquet::operator!=(const SETourniquet& rhs) const
+{
+  return !(*this == rhs);
+}
+
+}
+
 //-----------------------------------------------------------------------------

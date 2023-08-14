@@ -179,7 +179,7 @@ bool SEConsciousRespiration::operator==( const SEConsciousRespiration& rhs) cons
     for ( auto i = 0; i < m_Commands.size(); i++) {
       //NOTE: Other definitions of equivilance might be resonable
        if(m_Commands[i] && rhs.m_Commands[i]){
-         m_Commands[i]->operator==(*rhs.m_Commands[i]);
+         equivilant &= m_Commands[i]->operator==(*rhs.m_Commands[i]);
        }
     }
   }

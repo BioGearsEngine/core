@@ -149,7 +149,7 @@ namespace biogears {
 bool SEConsumeNutrients::operator==( const SEConsumeNutrients& rhs) const
 {
 bool equivilant = m_Comment == rhs.m_Comment;
-  equivilant = m_NutritionFile == rhs.m_NutritionFile;
+  equivilant &= m_NutritionFile == rhs.m_NutritionFile;
   equivilant &= (m_Nutrition && rhs.m_Nutrition) ? m_Nutrition->operator==(*rhs.m_Nutrition) : m_Nutrition == rhs.m_Nutrition;
   return equivilant;
 }

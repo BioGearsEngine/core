@@ -41,6 +41,7 @@ BG_EXT template class BIOGEARS_API SEScalarQuantity<MassUnit>;
 class BIOGEARS_API SEScalarMass : public SEScalarQuantity<MassUnit> {
 public:
   SEScalarMass();
+  SEScalarMass( double value, MassUnit const& unit);
   virtual ~SEScalarMass();
 
   CDM::ScalarMassData* Unload() const override;

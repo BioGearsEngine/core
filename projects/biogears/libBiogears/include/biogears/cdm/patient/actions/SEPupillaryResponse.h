@@ -50,6 +50,9 @@ public:
   virtual bool HasSizeModifier() const;
   virtual SEScalarNeg1To1& GetSizeModifier();
   virtual double GetSizeModifier() const;
+    
+  bool operator==(const SEPupillaryResponse& rhs) const;
+  bool operator!=(const SEPupillaryResponse& rhs) const;
 
 protected:
   virtual void Unload(CDM::PupillaryResponseData& data) const;

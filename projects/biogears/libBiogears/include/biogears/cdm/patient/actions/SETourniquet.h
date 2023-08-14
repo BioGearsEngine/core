@@ -19,8 +19,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalarVolumePerTime;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SETourniquet : public SEPatientAction {
+  friend class io::PatientActions;
+
 public:
   SETourniquet();
   virtual ~SETourniquet() override;
@@ -52,6 +56,9 @@ public:
   virtual void SetTourniquetLevel(CDM::enumTourniquetApplicationLevel::value level);
 
   virtual void ToString(std::ostream& str) const override;
+  
+  bool operator==(const SETourniquet& rhs) const;
+  bool operator!=(const SETourniquet& rhs) const;
 
 protected:
   std::string m_Compartment;

@@ -103,7 +103,7 @@ void SEEscharotomy::ToString(std::ostream& str) const
 bool SEEscharotomy::operator==(const SEEscharotomy& rhs) const
 {
   bool equivilant = m_Comment == rhs.m_Comment;
-  equivilant = m_Location == rhs.m_Location;
+  equivilant &= m_Location == rhs.m_Location;
   return equivilant;
 }
 //-------------------------------------------------------------------------------

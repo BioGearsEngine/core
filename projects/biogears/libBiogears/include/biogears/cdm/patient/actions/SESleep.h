@@ -39,19 +39,19 @@ public:
   virtual bool Load(const CDM::SleepData& in);
   virtual CDM::SleepData* Unload() const override;
 
-protected:
-  virtual void Unload(CDM::SleepData& data) const;
-
-public:
-
-
   virtual bool HasSleepState() const;
   virtual CDM::enumOnOff GetSleepState() const;
   virtual void SetSleepState(CDM::enumOnOff::value t);
 
   virtual void ToString(std::ostream& str) const override;
 
+  bool operator==(const SESleep& rhs) const;
+  bool operator!=(const SESleep& rhs) const;
+
 protected:
+  virtual void Unload(CDM::SleepData& data) const;
+
+private:
   CDM::enumOnOff::value m_SleepState;
 
 

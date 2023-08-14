@@ -38,10 +38,6 @@ public:
   virtual bool Load(const CDM::SubstanceOralDoseData& in);
   virtual CDM::SubstanceOralDoseData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstanceOralDoseData& data) const;
-
-public:
   virtual CDM::enumOralAdministration::value GetAdminRoute() const;
   virtual void SetAdminRoute(CDM::enumOralAdministration::value name);
   virtual bool HasAdminRoute() const;
@@ -53,7 +49,13 @@ public:
 
   virtual void ToString(std::ostream& str) const;
 
+  bool operator==(const SESubstanceOralDose& rhs) const;
+  bool operator!=(const SESubstanceOralDose& rhs) const;
+
 protected:
+  virtual void Unload(CDM::SubstanceOralDoseData& data) const;
+
+private:
   CDM::enumOralAdministration::value m_AdminRoute;
   SEScalarMass* m_Dose;
   const SESubstance& m_Substance;
@@ -74,21 +76,26 @@ public:
 
   SEScalarMass& GetMouthSolidMass();
   SEScalarMassPerVolume& GetSalivaConcentration();
-  std::vector<SEScalarMassPerVolume*>& GetBuccalConcentrations();
-  std::vector<SEScalarMassPerVolume*>& GetSublingualConcentrations();
+  std::vector<SEScalarMassPerVolume>& GetBuccalConcentrations();
+  std::vector<SEScalarMassPerVolume>& GetSublingualConcentrations();
   std::vector<double> GetBuccalConcentrations(const MassPerVolumeUnit& unit);
   std::vector<double> GetSublingualConcentrations(const MassPerVolumeUnit& unit);
   bool SetBuccalConcentrations(std::vector<double>& bMasses, const MassPerVolumeUnit& unit);
   bool SetSublingualConcentrations(std::vector<double>& slMasses, const MassPerVolumeUnit& unit);
 
+  bool operator==(const SETransmucosalState& rhs) const;
+  bool operator!=(const SETransmucosalState& rhs) const;
+
 protected:
   virtual void Unload(CDM::TransmucosalStateData& data) const;
+
+private:
   // Transumucosal specific values
   const SESubstance* m_Substance;
   SEScalarMass* m_MouthSolidMass;
   SEScalarMassPerVolume* m_SalivaConcentration;
-  std::vector<SEScalarMassPerVolume*> m_BuccalConcentrations;
-  std::vector<SEScalarMassPerVolume*> m_SublingualConcentrations;
+  std::vector<SEScalarMassPerVolume> m_BuccalConcentrations;
+  std::vector<SEScalarMassPerVolume> m_SublingualConcentrations;
   size_t m_NumBuccalRegions;
   size_t m_NumSublingualRegions;
 };

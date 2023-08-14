@@ -146,4 +146,16 @@ double SEPupillaryResponse::GetSizeModifier() const
   return m_SizeModifier->GetValue();
 }
 //-----------------------------------------------------------------------------
+bool SEPupillaryResponse::operator==(const SEPupillaryResponse& rhs) const
+{
+  return *m_ReactivityModifier == *rhs.m_ReactivityModifier
+    && *m_ShapeModifier == *rhs.m_ShapeModifier
+    && *m_SizeModifier == *rhs.m_SizeModifier;
+}
+//-----------------------------------------------------------------------------
+bool SEPupillaryResponse::operator!=(const SEPupillaryResponse& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

@@ -405,6 +405,30 @@ TEST_F(TEST_FIXTURE_NAME, ChestOcclusiveDressing)
   EXPECT_EQ(source, sink);
 }
 
+
+#include <biogears/cdm/patient/actions/SEEbola.h>
+// class SEEbola;
+//static void Marshall(const CDM::EbolaData& in, SEEbola& out);
+//static void UnMarshall(const SEEbola& in, CDM::EbolaData& out);
+
+TEST_F(TEST_FIXTURE_NAME, Ebola)
+{
+  USING_TYPES(Ebola)
+
+  SEType source, sink;
+  CDMType data;
+
+  source.SetComment("Test Comment");
+  source.SetSeverity(CDM::enumInfectionSeverity::Moderate);
+  
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+}
+
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
 //class SEForcedInhale;
 //!
@@ -764,6 +788,33 @@ TEST_F(TEST_FIXTURE_NAME, MechanicalVentilation)
 
   EXPECT_EQ(source, sink);
 }
+#include <biogears/cdm/patient/actions/SENasalCannula.h>
+// class SENasalCannula;
+//!
+//! TYPE NasalCannula 
+//! static void Marshall(const CDM::NasalCannulaData& in, SENasalCannula& out);
+//! static void UnMarshall(const SENasalCannula& in, CDM::NasalCannulaData& out);
+TEST_F(TEST_FIXTURE_NAME, NasalCannula)
+{
+  USING_TYPES(NasalCannula)
+
+  biogears::Logger logger;
+  biogears::SESubstanceManager mgr { &logger };
+  ASSERT_TRUE(mgr.LoadSubstanceDirectory());
+  SEType source, sink;
+  CDMType data;
+
+  source.SetComment("Test Comment");
+  source.GetFlowRate().SetValue(1.23, biogears::VolumePerTimeUnit::L_Per_s);
+  
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+}
 
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 //class SENeedleDecompression;
@@ -771,6 +822,7 @@ TEST_F(TEST_FIXTURE_NAME, MechanicalVentilation)
 //! TYPE NeedleDecompression
 //! static void Marshall(const CDM::NeedleDecompressionData& in, SENeedleDecompression& out);
 //! static void UnMarshall(const SENeedleDecompression& in, CDM::NeedleDecompressionData& out);
+//! 
 TEST_F(TEST_FIXTURE_NAME, NeedleDecompression)
 {
   USING_TYPES(NeedleDecompression)
@@ -854,33 +906,6 @@ TEST_F(TEST_FIXTURE_NAME, PulmonaryShunt)
 
   source.SetComment("Test Comment");
   source.GetFlowRateScale().SetValue(0.6);
-
-  EXPECT_NE(source, sink);
-
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
-
-  EXPECT_EQ(source, sink);
-}
-
-#include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
-//class SETensionPneumothorax;
-//!
-//! TYPE TensionPneumothorax
-//!
-//! static void Marshall(const CDM::TensionPneumothoraxData& in, SETensionPneumothorax& out);
-//! static void UnMarshall(const SETensionPneumothorax& in, CDM::TensionPneumothoraxData& out);
-TEST_F(TEST_FIXTURE_NAME, TensionPneumothorax)
-{
-  USING_TYPES(TensionPneumothorax)
-
-  SEType source, sink;
-  CDMType data;
-
-  source.SetComment("Test Comment");
-  source.GetSeverity().SetValue(0.5);
-  source.SetSide(CDM::enumSide::Left);
-  source.SetType(CDM::enumPneumothoraxType::Closed);
 
   EXPECT_NE(source, sink);
 
@@ -1013,6 +1038,200 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceInfusion)
   EXPECT_EQ(source, sink);
 }
 
+#include <biogears/cdm/patient/actions/SESleep.h>
+// class SESleep;
+//!
+//! TYPE Sleep
+//! static void Marshall(const CDM::SleepData& in, SESleep& out);
+//! static void UnMarshall(const SESleep& in, CDM::SleepData& out);
+TEST_F(TEST_FIXTURE_NAME, Sleep)
+{
+  USING_TYPES(Sleep)
+
+  biogears::Logger logger;
+  SEType source { }, sink { };
+  CDMType data;
+
+  source.SetComment("Test Comment");
+  source.SetSleepState(CDM::enumOnOff::On);
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+}
+
+#include <biogears/cdm/patient/actions/SESubstanceNasalDose.h>
+// class SESubstanceNasalDose;
+//!
+//! TYPE SubstanceNasalDose
+//! static void Marshall(const CDM::SubstanceNasalDoseData& in, SESubstanceNasalDose& out);
+//! static void UnMarshall(const SESubstanceNasalDose& in, CDM::SubstanceNasalDoseData& out);
+TEST_F(TEST_FIXTURE_NAME, SubstanceNasalDose)
+{
+  USING_TYPES(SubstanceNasalDose)
+
+  biogears::Logger logger;
+  biogears::SESubstanceManager mgr { &logger };
+  ASSERT_TRUE(mgr.LoadSubstanceDirectory());
+  auto naloxone = mgr.GetSubstance("Naloxone");
+  SEType source { *naloxone }, sink { *naloxone };
+  CDMType data;
+
+  source.SetComment("Test Comment");
+  source.GetDose().SetValue( 2.0, biogears::MassUnit::kg);
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+}
+
+// class NasalState;
+//!
+//! TYPE SENasalState
+//! static void Marshall(const CDM::NasalStateData& in, SENasalState& out);
+//! static void UnMarshall(const SENasalState& in, CDM::NasalStateData& out);
+TEST_F(TEST_FIXTURE_NAME, NasalState)
+{
+  USING_TYPES(NasalState)
+
+  biogears::Logger logger;
+  biogears::SESubstanceManager mgr { &logger };
+  ASSERT_TRUE(mgr.LoadSubstanceDirectory());
+  auto naloxone = mgr.GetSubstance("Naloxone");
+  SEType source { *naloxone }, sink { *naloxone };
+  CDMType data;
+
+  source.GetTotalNasalDose().SetValue( 1.1, biogears::MassUnit::kg);
+  //source.GetVenaCavaConcentration().SetValue(2.2, biogears::MassPerVolumeUnit::g_Per_L);
+  source.GetUnreleasedNasalMasses().emplace_back(3.2, biogears::MassUnit::g);
+  source.GetReleasedNasalMasses().emplace_back(4.3, biogears::MassUnit::g);
+  
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+}
+
+#include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
+// class SESubstanceOralDose;
+//!
+//! TYPE SubstanceOralDose
+//! static void Marshall(const CDM::SubstanceOralDoseData& in, SESubstanceOralDose& out);
+//! static void UnMarshall(const SESubstanceOralDose& in, CDM::SubstanceOralDoseData& out);
+TEST_F(TEST_FIXTURE_NAME, SubstanceOralDose)
+{
+  USING_TYPES(SubstanceOralDose)
+
+  biogears::Logger logger;
+  biogears::SESubstanceManager mgr { &logger };
+  ASSERT_TRUE(mgr.LoadSubstanceDirectory());
+  auto naloxone = mgr.GetSubstance("Naloxone");
+  SEType source { *naloxone }, sink { *naloxone };
+  CDMType data;
+
+  source.SetComment("Test Comment");
+  source.GetDose().SetValue(2.0, biogears::MassUnit::kg);
+  source.SetAdminRoute(CDM::enumOralAdministration::Transmucosal);
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+}
+// class SETransmucosalState;
+//!
+//! TYPE TransmucosalState
+//! static void Marshall(const CDM::TransmucosalStateData& in, SETransmucosalState& out);
+//! static void UnMarshall(const SETransmucosalState& in, CDM::TransmucosalStateData& out);
+TEST_F(TEST_FIXTURE_NAME, TransmucosalState)
+{
+  USING_TYPES(TransmucosalState)
+
+  biogears::Logger logger;
+  biogears::SESubstanceManager mgr { &logger };
+  ASSERT_TRUE(mgr.LoadSubstanceDirectory());
+  auto naloxone = mgr.GetSubstance("Naloxone");
+  SEType source { *naloxone }, sink { *naloxone };
+  CDMType data;
+
+  source.GetMouthSolidMass().SetValue(1.1, biogears::MassUnit::kg);
+  source.GetSalivaConcentration().SetValue(2.2, biogears::MassPerVolumeUnit::g_Per_L);
+  source.GetBuccalConcentrations().emplace_back(3.2, biogears::MassPerVolumeUnit::g_Per_L);
+  source.GetSublingualConcentrations().emplace_back(4.3, biogears::MassPerVolumeUnit::g_Per_L);
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+}
+
+#include <biogears/cdm/patient/actions/SETourniquet.h>
+// class SETourniquet;
+//!
+//! TYPE Tourniquet
+//! static void Marshall(const CDM::TourniquetData& in, SETourniquet& out);
+//! static void UnMarshall(const SETourniquet& in, CDM::TourniquetData& out);
+//! 
+TEST_F(TEST_FIXTURE_NAME, Tourniquet)
+{
+  USING_TYPES(Tourniquet)
+
+  biogears::Logger logger;
+  SEType source {  }, sink {  };
+  CDMType data;
+
+  source.SetComment("Test Comment");
+  source.SetCompartment("InferiorAnteriorLateralDistalLimb");
+  source.SetTourniquetLevel(CDM::enumTourniquetApplicationLevel::Misapplied);
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+}
+
+#include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
+//class SETensionPneumothorax;
+//!
+//! TYPE TensionPneumothorax
+//!
+//! static void Marshall(const CDM::TensionPneumothoraxData& in, SETensionPneumothorax& out);
+//! static void UnMarshall(const SETensionPneumothorax& in, CDM::TensionPneumothoraxData& out);
+TEST_F(TEST_FIXTURE_NAME, TensionPneumothorax)
+{
+  USING_TYPES(TensionPneumothorax)
+
+  SEType source, sink;
+  CDMType data;
+
+  source.SetComment("Test Comment");
+  source.GetSeverity().SetValue(0.5);
+  source.SetSide(CDM::enumSide::Left);
+  source.SetType(CDM::enumPneumothoraxType::Closed);
+
+  EXPECT_NE(source, sink);
+
+  PatientActions::UnMarshall(source, data);
+  PatientActions::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
+}
+
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 //class SEUrinate;
 //!
@@ -1058,3 +1277,6 @@ TEST_F(TEST_FIXTURE_NAME, Override)
 
   EXPECT_EQ(source, sink);
 }
+
+
+

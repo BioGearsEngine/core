@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -37,10 +38,6 @@ public:
   virtual bool Load(const CDM::SubstanceNasalDoseData& in);
   virtual CDM::SubstanceNasalDoseData* Unload() const;
 
-protected:
-  virtual void Unload(CDM::SubstanceNasalDoseData& data) const;
-
-public:
   virtual bool HasDose() const;
   virtual SEScalarMass& GetDose();
 
@@ -48,7 +45,13 @@ public:
 
   virtual void ToString(std::ostream& str) const;
 
+  bool operator==(const SESubstanceNasalDose& rhs) const;
+  bool operator!=(const SESubstanceNasalDose& rhs) const;
+
 protected:
+  virtual void Unload(CDM::SubstanceNasalDoseData& data) const;
+
+private:
   SEScalarMass* m_Dose;
   const SESubstance& m_Substance;
 };
@@ -67,22 +70,29 @@ public:
   bool Initialize(SEScalarMass& dose);
 
   SEScalarMass& GetTotalNasalDose();
-  SEScalarMassPerVolume& GetVenaCavaConcentration();
-  std::vector<SEScalarMass*>& GetUnreleasedNasalMasses();
-  std::vector<SEScalarMass*>& GetReleasedNasalMasses();
+  //SEScalarMassPerVolume& GetVenaCavaConcentration();
+
+  std::vector<SEScalarMass>& GetUnreleasedNasalMasses();
+  std::vector<SEScalarMass>& GetReleasedNasalMasses();
+
   std::vector<double> GetUnreleasedNasalMasses(const MassUnit& unit);
   std::vector<double> GetReleasedNasalMasses(const MassUnit& unit);
+
   bool SetUnreleasedNasalMasses(std::vector<double>& uMasses, const MassUnit& unit);
   bool SetReleasedNasalMasses(std::vector<double>& rMasses, const MassUnit& unit);
 
-protected:
+  bool operator==(const SENasalState& rhs) const;
+  bool operator!=(const SENasalState& rhs) const;
+
+
+private:
   virtual void Unload(CDM::NasalStateData& data) const;
   // Nasal specific values
   const SESubstance* m_Substance;
   SEScalarMass* m_TotalNasalDose;
-  SEScalarMassPerVolume* m_VenaCavaConcentration;
-  std::vector<SEScalarMass*> m_UnreleasedDrugMasses;
-  std::vector<SEScalarMass*> m_ReleasedDrugMasses;
+  //SEScalarMassPerVolume* m_VenaCavaConcentration;
+  std::vector<SEScalarMass> m_UnreleasedDrugMasses;
+  std::vector<SEScalarMass> m_ReleasedDrugMasses;
   size_t m_NumUnreleasedMasses;
   size_t m_NumReleasedMasses;
 };
