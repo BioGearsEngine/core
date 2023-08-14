@@ -37,7 +37,7 @@ auto ECG::make_unique(BioGears& bg) -> std::unique_ptr<ECG>
 ECG::ECG(BioGears& bg)
   : SEElectroCardioGram(bg.GetLogger())
   , m_data(bg)
-  , m_interpolator(bg.GetLogger())
+  , m_Waveforms(bg.GetLogger())
 {
   Clear();
 }
@@ -70,28 +70,28 @@ void ECG::Initialize()
 {
   BioGearsSystem::Initialize();
 
-  m_heartRhythmTime.SetValue(0, TimeUnit::s);
-  m_heartRhythmPeriod.SetValue(0, TimeUnit::s);
-  CDM_COPY(m_data.GetConfiguration().GetECGInterpolator(), (&m_interpolator));
+  m_HeartRhythmTime.SetValue(0, TimeUnit::s);
+  m_HeartRhythmPeriod.SetValue(0, TimeUnit::s);
+  CDM_COPY(m_data.GetConfiguration().GetECGInterpolator(), (&m_Waveforms));
   // You can uncomment this code to compare the original waveform to the interpolated waveform and make sure you are capturing the data properly
   /* Code to write out the ECG data in a format easy to view in plotting tools 
-  std::vector<double> original_s = m_interpolator.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetTime();
-  std::vector<double> original_mV = m_interpolator.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetElectricPotential();
+  std::vector<double> original_s = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetTime();
+  std::vector<double> original_mV = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetElectricPotential();
   DataTrack Original;  
   for (size_t i = 0; i < original_s.size(); i++)
     Original.Track("Original_ECG",original_s[i], original_mV[i]);
   Original.WriteTrackToFile("OriginalECG.csv");
 */
-  m_interpolator.Interpolate(m_data.GetTimeStep());
+  m_Waveforms.Interpolate(m_data.GetTimeStep());
   /* Code to write out the Interpolated ECG data in a format easy to view in plotting tools
-  std::vector<double> interpolated_s = m_interpolator.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetTime();
-  std::vector<double> interpolated_mV = m_interpolator.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetElectricPotential();
+  std::vector<double> interpolated_s = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetTime();
+  std::vector<double> interpolated_mV = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetElectricPotential();
   DataTrack Interpolated;
   for (size_t i = 0; i < interpolated_s.size(); i++)
     Interpolated.Track("Interpolated_ECG", interpolated_s[i], interpolated_mV[i]);
   Interpolated.WriteTrackToFile("InterpolatedECG.csv");
 */
-  m_interpolator.SetLeadElectricPotential(3, GetLead3ElectricPotential());
+  m_Waveforms.SetLeadElectricPotential(3, GetLead3ElectricPotential());
 }
 
 bool ECG::Load(const CDM::BioGearsElectroCardioGramData& in)
@@ -99,10 +99,10 @@ bool ECG::Load(const CDM::BioGearsElectroCardioGramData& in)
   if (!SEElectroCardioGram::Load(in))
     return false;
   BioGearsSystem::LoadState();
-  m_heartRhythmTime.Load(in.HeartRythmTime());
-  m_heartRhythmPeriod.Load(in.HeartRythmPeriod());
-  m_interpolator.Load(in.Waveforms());
-  m_interpolator.SetLeadElectricPotential(3, GetLead3ElectricPotential());
+  m_HeartRhythmTime.Load(in.HeartRythmTime());
+  m_HeartRhythmPeriod.Load(in.HeartRythmPeriod());
+  m_Waveforms.Load(in.Waveforms());
+  m_Waveforms.SetLeadElectricPotential(3, GetLead3ElectricPotential());
   return true;
 }
 CDM::BioGearsElectroCardioGramData* ECG::Unload() const
@@ -114,9 +114,9 @@ CDM::BioGearsElectroCardioGramData* ECG::Unload() const
 void ECG::Unload(CDM::BioGearsElectroCardioGramData& data) const
 {
   SEElectroCardioGram::Unload(data);
-  data.HeartRythmTime(std::unique_ptr<CDM::ScalarTimeData>(m_heartRhythmTime.Unload()));
-  data.HeartRythmPeriod(std::unique_ptr<CDM::ScalarTimeData>(m_heartRhythmPeriod.Unload()));
-  data.Waveforms(std::unique_ptr<CDM::ElectroCardioGramWaveformInterpolatorData>(m_interpolator.Unload()));
+  data.HeartRythmTime(std::unique_ptr<CDM::ScalarTimeData>(m_HeartRhythmTime.Unload()));
+  data.HeartRythmPeriod(std::unique_ptr<CDM::ScalarTimeData>(m_HeartRhythmPeriod.Unload()));
+  data.Waveforms(std::unique_ptr<CDM::ElectroCardioGramWaveformInterpolatorData>(m_Waveforms.Unload()));
 }
 
 void ECG::SetUp()
@@ -152,20 +152,20 @@ void ECG::PreProcess()
 //--------------------------------------------------------------------------------------------------
 void ECG::Process()
 {
-  m_heartRhythmTime.IncrementValue(m_dt_s, TimeUnit::s);
-  if (m_heartRhythmTime.GetValue(TimeUnit::s) >= m_heartRhythmPeriod.GetValue(TimeUnit::s)) {
-    m_heartRhythmTime.SetValue(0, TimeUnit::s);
-    m_heartRhythmPeriod.SetValue(1 / m_data.GetCardiovascular().GetHeartRate(FrequencyUnit::Per_s), TimeUnit::s);
+  m_HeartRhythmTime.IncrementValue(m_dt_s, TimeUnit::s);
+  if (m_HeartRhythmTime.GetValue(TimeUnit::s) >= m_HeartRhythmPeriod.GetValue(TimeUnit::s)) {
+    m_HeartRhythmTime.SetValue(0, TimeUnit::s);
+    m_HeartRhythmPeriod.SetValue(1 / m_data.GetCardiovascular().GetHeartRate(FrequencyUnit::Per_s), TimeUnit::s);
     // Currently we  have one data set for all currently supported Heart Rhythms
     // Eventually we will support multiple rhythmic data
     if (m_data.GetCardiovascular().GetHeartRhythm() == CDM::enumHeartRhythm::NormalSinus)
-      m_interpolator.StartNewCycle(CDM::enumHeartRhythm::NormalSinus);
+      m_Waveforms.StartNewCycle(CDM::enumHeartRhythm::NormalSinus);
     else {
       m_ss << m_data.GetCardiovascular().GetHeartRhythm() << " is not a supported Heart Rhythm for ECG";
       Error(m_ss);
     }
   }
-  m_interpolator.CalculateWaveformsElectricPotential();
+  m_Waveforms.CalculateWaveformsElectricPotential();
 }
 
 //--------------------------------------------------------------------------------------------------

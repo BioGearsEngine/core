@@ -18,6 +18,17 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Substance.hxx>
 
+#define CDM_SUBSTANCE_UNMARSHAL_HELPER(in, out, func)                                \
+  if (in.m_##func) {                                                                 \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::Substance::UnMarshall(*in.m_##func, out.func());                             \
+  }
+
+#define CDM_OPTIONAL_SUBSTANCE_UNMARSHAL_HELPER(in, out, func) \
+  if (in.m_##func) {                                           \
+    io::Substance::UnMarshall(*in.m_##func, out.func());       \
+  }
+
 namespace biogears {
 
 class SESubstanceManager;
@@ -33,11 +44,6 @@ class SESubstanceFraction;
 class SESubstanceConcentration;
 class SEPharmacodynamicModifier;
 
-#define CDM_SUBSTANCE_UNMARSHAL_HELPER(xsd, func)                                    \
-  if (m_##func) {                                                                    \
-    xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::Property::UnMarshall(*m_##func, xsd.func());                                 \
-  }
 namespace io {
   class BIOGEARS_PRIVATE_API Substance {
   public:

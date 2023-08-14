@@ -362,7 +362,7 @@ void SEDataRequestManager::SetSamplesPerSecond(double num)
   m_SamplesPerSecond = num;
 }
 //-----------------------------------------------------------------------------
-bool SEDataRequestManager::HasDataRequests()
+bool SEDataRequestManager::HasDataRequests() const
 {
   return !m_Requests.empty();
 }

@@ -60,10 +60,15 @@ class MassPerTimeUnit;
 class SEScalarVolumePerTime;
 class VolumePerTimeUnit;
 class PressureUnit;
+namespace io {
+  class BiogearsEngineConfiguration;
+}
 /**
 * @brief %BioGears specific configuration parameters for all systems/equipment
 */
 class BIOGEARS_API BioGearsConfiguration : public PhysiologyEngineConfiguration {
+  friend class io::BiogearsEngineConfiguration;
+
 public:
   BioGearsConfiguration(SESubstanceManager& substances);
   virtual ~BioGearsConfiguration();

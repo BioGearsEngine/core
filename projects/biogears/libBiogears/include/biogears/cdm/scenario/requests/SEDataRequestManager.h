@@ -65,7 +65,7 @@ public:
   double GetSamplesPerSecond() const;
   void SetSamplesPerSecond(double num);
 
-  bool HasDataRequests();
+  bool HasDataRequests() const;
   const std::vector<SEDataRequest*>& GetDataRequests();
 
   virtual bool HasDefaultDecimalFormatting() const;

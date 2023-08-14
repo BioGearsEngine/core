@@ -34,6 +34,9 @@ class SEPatientActionCollection;
 class SEPatient;
 class SEEnergySystem;
 class BioGears;
+namespace io {
+  class BiogearsPhysiology;
+}
 }
 
 namespace std {
@@ -46,14 +49,15 @@ BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*>;
 namespace biogears {
 /**
  * @brief This class encapsulates logic necessary to connect independent systems together.
- * @details Each system calculates the behavior that occurs within its individual physiology function; 
- * however, several processes extend between two systems, i.e., alveoli transfer links the %Respiratory and %Anesthesia Machine Systems. 
- * To capture this behavior, the System Interactions methodology was introduced. 
+ * @details Each system calculates the behavior that occurs within its individual physiology function;
+ * however, several processes extend between two systems, i.e., alveoli transfer links the %Respiratory and %Anesthesia Machine Systems.
+ * To capture this behavior, the System Interactions methodology was introduced.
  * The primary function of this system is to capture the substance transport that occurs between systems.
  */
 class BIOGEARS_API Tissue : public SETissueSystem, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+  friend class io::BiogearsPhysiology;
 
 protected:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<Tissue>;
@@ -107,18 +111,18 @@ protected:
   void CheckGlycogenLevels();
   void ManageSubstancesAndSaturation();
 
-  //conditions
+  // conditions
   void Dehydrate();
 
   // Tissue Nutrients
   void CalculateMetabolicConsumptionAndProduction(double time);
   void SetStarvationState();
 
-  //Tissue fluid exchange
+  // Tissue fluid exchange
   void CalculateTissueFluidFluxes();
   void CalculateOncoticPressure();
 
-  //Override
+  // Override
   void ProcessOverride();
   void OverrideControlLoop();
 

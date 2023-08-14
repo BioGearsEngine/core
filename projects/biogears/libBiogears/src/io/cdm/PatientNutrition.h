@@ -18,19 +18,19 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 
-namespace biogears {
-class SENutrition;
-
 #define CDM_PATIENT_NUTRITION_UNMARSHAL_HELPER(in, out, func)                        \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::PatientNutrition::UnMarshall(*in.m_##func, out.func());                              \
+    io::PatientNutrition::UnMarshall(*in.m_##func, out.func());                      \
   }
 
-#define CDM_OPTIONAL_PATIENT_NUTRITION_UNMARSHAL_HELPER(in, out, func)               \
-  if (in.m_##func) {                                                                 \
-    io::PatientNutrition::UnMarshall(*in.m_##func, out.func());                              \
+#define CDM_OPTIONAL_PATIENT_NUTRITION_UNMARSHAL_HELPER(in, out, func) \
+  if (in.m_##func) {                                                   \
+    io::PatientNutrition::UnMarshall(*in.m_##func, out.func());        \
   }
+
+namespace biogears {
+class SENutrition;
 
 namespace io {
   class BIOGEARS_PRIVATE_API PatientNutrition {

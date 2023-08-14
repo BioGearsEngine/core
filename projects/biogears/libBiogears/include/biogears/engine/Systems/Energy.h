@@ -30,6 +30,9 @@ class SEFluidCircuitPath;
 class SEThermalCircuit;
 class SEThermalCircuitCalculator;
 class BioGears;
+namespace io {
+ class  BiogearsPhysiology;
+}
 
 /**
  * @brief @copydoc Physiology_EnergySystemData
@@ -37,6 +40,7 @@ class BioGears;
 class BIOGEARS_API Energy : public SEEnergySystem, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+  friend class io::BiogearsPhysiology;
 
 protected:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<Energy>;

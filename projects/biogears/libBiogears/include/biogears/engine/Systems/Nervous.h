@@ -25,6 +25,9 @@ class SESubstance;
 class SEPsychomotorVigilanceTask;
 class BioGears;
 class SEPatient;
+namespace io {
+  class BiogearsPhysiology;
+}
 /**
  * @brief 
  * The nervous class holds models of the peripheral and central nervous system. Currently, on the baroreceptor reflex is modeled.
@@ -32,6 +35,7 @@ class SEPatient;
 class BIOGEARS_API Nervous : public SENervousSystem, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+  friend class io::BiogearsPhysiology;
 
 protected:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<Nervous>;

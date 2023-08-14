@@ -22,6 +22,9 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SELiquidSubstanceQuantity;
 class BioGears;
+namespace io {
+class BiogearsPhysiology;
+}
 /**
  * @brief @copydoc Physiology_EndocrineSystemData
  * @details
@@ -32,6 +35,7 @@ class BioGears;
 class BIOGEARS_API Endocrine : public SEEndocrineSystem, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+  friend class io::BiogearsPhysiology;
 
 protected:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<Endocrine>;
@@ -42,7 +46,7 @@ public:
   virtual ~Endocrine() override;
 
   static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "Endocrine"; }
+  static constexpr char const* const TypeTag() { return "Endocrine"; }
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
@@ -72,8 +76,8 @@ private:
   void SynthesizeGlucagon();
   void ReleaseEpinephrine();
 
-protected:  
-  //Override
+protected:
+  // Override
   void ProcessOverride();
   void OverrideControlLoop();
 

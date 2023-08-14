@@ -18,6 +18,17 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Physiology.hxx>
 
+#define CDM_PHYSIOLOGY_UNMARSHAL_HELPER(in, out, func)                               \
+  if (in.m_##func) {                                                                 \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::Physiology::UnMarshall(*in.m_##func, out.func());                            \
+  }
+
+#define CDM_OPTIONAL_PHYSIOLOGY_UNMARSHAL_HELPER(in, out, func) \
+  if (in.m_##func) {                                            \
+    io::Physiology::UnMarshall(*in.m_##func, out.func());       \
+  }
+
 namespace biogears {
 class SEPupillaryResponse;
 class SEInflammatoryResponse;
@@ -34,11 +45,6 @@ class SERenalSystem;
 class SERespiratorySystem;
 class SETissueSystem;
 
-#define CDM_PHYSIOLOGY_UNMARSHAL_HELPER(xsd, func)                           \
-  if (m_##func) {                                                                    \
-    xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::Property::UnMarshall(*m_##func, xsd.func());                       \
-  }
 namespace io {
   class BIOGEARS_PRIVATE_API Physiology {
   public:

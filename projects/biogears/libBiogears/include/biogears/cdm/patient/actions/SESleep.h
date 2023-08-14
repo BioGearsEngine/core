@@ -18,8 +18,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SESleep : public SEPatientAction {
+  friend class io::PatientActions;
+
 public:
     SESleep();
   virtual ~SESleep() override;
@@ -42,7 +46,7 @@ public:
 
 
   virtual bool HasSleepState() const;
-  virtual CDM::enumOnOff GetSleepState();
+  virtual CDM::enumOnOff GetSleepState() const;
   virtual void SetSleepState(CDM::enumOnOff::value t);
 
   virtual void ToString(std::ostream& str) const override;

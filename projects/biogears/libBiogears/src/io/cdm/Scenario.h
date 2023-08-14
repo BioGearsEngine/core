@@ -18,7 +18,18 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
+#define CDM_SCENARIO_UNMARSHAL_HELPER(in, out, func)                                 \
+  if (in.m_##func) {                                                                 \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::Scenario::UnMarshall(*in.m_##func, out.func());                              \
+  }
+
+#define CDM_OPTIONAL_SCENARIO_UNMARSHAL_HELPER(in, out, func) \
+  if (in.m_##func) {                                          \
+    io::Scenario::UnMarshall(*in.m_##func, out.func());       \
+  }
 namespace biogears {
+
 class SEDecimalFormat;
 class SESubstanceManager;
 class SECondition;
@@ -41,13 +52,6 @@ class SEScenarioInitialParameters;
 class SEScenarioAutoSerialization;
 class SEAdvanceTime;
 class SESerializeState;
-
-#define CDM_SCENARIO_UNMARSHAL_HELPER(xsd, func)                                     \
-  if (m_##func) {                                                                    \
-    xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::Property::UnMarshall(*m_##func, xsd.func());                                 \
-  }
-
 class SEAnesthesiaMachineActionCollection;
 class SEEnvironmentActionCollection;
 class SEInhalerActionCollection;

@@ -18,15 +18,21 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/InhalerActions.hxx>
 
+#define CDM_INHALER_ACTIONS_UNMARSHAL_HELPER(in, out, func)                          \
+  if (in.m_##func) {                                                                 \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::InhalerActions::UnMarshall(*in.m_##func, out.func());                        \
+  }
+
+#define CDM_OPTIONAL_INHALER_ACTIONS_UNMARSHAL_HELPER(in, out, func) \
+  if (in.m_##func) {                                                 \
+    io::InhalerActions::UnMarshall(*in.m_##func, out.func());        \
+  }
+
 namespace biogears {
 class SEInhalerAction;
 class SEInhalerConfiguration;
 
-  #define CDM_INHALER_ACTIONS_UNMARSHAL_HELPER(xsd, func)                           \
-  if (m_##func) {                                                                    \
-    xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::Property::UnMarshall(*m_##func, xsd.func());                       \
-  }
 namespace io {
   class BIOGEARS_PRIVATE_API InhalerActions {
   public:

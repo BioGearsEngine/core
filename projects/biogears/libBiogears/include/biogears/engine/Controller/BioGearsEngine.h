@@ -26,6 +26,9 @@ specific language governing permissions and limitations under the License.
 #pragma warning(pop)
 
 namespace biogears {
+namespace io {
+  class BioGears;
+}
 //--------------------------------------------------------------------------------------------------
 /// @brief
 /// This is the implementation of the PhysiologyEngine interface for the biogears engines.
@@ -35,6 +38,8 @@ namespace biogears {
 /// is generated containing information, warning and error data.
 //--------------------------------------------------------------------------------------------------
 class BIOGEARS_API BioGearsEngine : public PhysiologyEngine, public BioGears {
+  friend class io::BioGears;
+
 public:
   //-------------------------------------------------------------------------------
   BioGearsEngine(Logger* logger);
@@ -89,7 +94,7 @@ public:
   //! See AdvanceModelTime(bool) for additional details.
   //!
   //!-------------------------------------------------------------------------------------------------
-  virtual bool AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s, bool appendDataTrack = false) override; //NOTE: Maynot compile on clang will evaluate
+  virtual bool AdvanceModelTime(double time, const TimeUnit& unit = TimeUnit::s, bool appendDataTrack = false) override; // NOTE: Maynot compile on clang will evaluate
   virtual bool ProcessAction(const SEAction& action) override;
 
   virtual SESubstanceManager& GetSubstanceManager() override;
@@ -149,4 +154,4 @@ BIOGEARS_API void destroy_logger(Logger** engine);
 BIOGEARS_API BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir);
 BIOGEARS_API BioGearsEngine* create_biogears_engine(const char* logger, const char* working_dir);
 BIOGEARS_API void destroy_biogears_engine(BioGearsEngine** engine);
-} //namespace biogears
+} // namespace biogears

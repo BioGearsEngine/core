@@ -21,32 +21,36 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 
 namespace biogears {
+namespace io {
+  class BiogearsEquipment;
+}
 /**
 * @brief 
 * Generic ECG machine to assess the heart rhythm.
 */
 
-class BIOGEARS_API ECG : public SEElectroCardioGram, public BioGearsSystem {
+class ECG : public SEElectroCardioGram, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+  friend io::BiogearsEquipment;
 
 protected:
-  static auto make_unique(BioGears& bg) -> std::unique_ptr<ECG>;
-  ECG(BioGears& bg);
+  BIOGEARS_API static auto make_unique(BioGears& bg) -> std::unique_ptr<ECG>;
+  BIOGEARS_API ECG(BioGears& bg);
   BioGears& m_data;
 
 public:
-  virtual ~ECG() override;
+  BIOGEARS_API virtual ~ECG() override;
 
-  static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
-  static constexpr char const * const  TypeTag() { return "ECG"; }
-  const char* classname() const override { return TypeTag(); }
-  size_t hash_code() const override { return TypeHash(); }
+  BIOGEARS_API static size_t TypeHash() { return reinterpret_cast<size_t>(&TypeHash); }
+  BIOGEARS_API static constexpr char const* const TypeTag() { return "ECG"; }
+  BIOGEARS_API const char* classname() const override { return TypeTag(); }
+  BIOGEARS_API size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override;
+  BIOGEARS_API void Clear() override;
 
   // Set members to a stable homeostatic state
-  void Initialize() override;
+  BIOGEARS_API void Initialize() override;
 
   // Load a state
   virtual bool Load(const CDM::BioGearsElectroCardioGramData& in);
@@ -56,19 +60,19 @@ protected:
   virtual void Unload(CDM::BioGearsElectroCardioGramData& data) const;
 
   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
-  void SetUp() override;
+  BIOGEARS_API void SetUp() override;
 
 public:
   // main driver function responsible for calling the various ECG functions:
-  void PreProcess() override;
-  void Process() override;
-  void PostProcess() override;
+  BIOGEARS_API void PreProcess() override;
+  BIOGEARS_API void Process() override;
+  BIOGEARS_API void PostProcess() override;
 
 protected:
   // Serializable member variables (Set in Initialize and in schema)
-  SEScalarTime m_heartRhythmTime;
-  SEScalarTime m_heartRhythmPeriod;
-  SEElectroCardioGramInterpolator m_interpolator;
+  SEScalarTime m_HeartRhythmTime;
+  SEScalarTime m_HeartRhythmPeriod;
+  SEElectroCardioGramInterpolator m_Waveforms;
 
   // Stateless member variable (Set in SetUp())
   double m_dt_s;

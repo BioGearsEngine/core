@@ -18,7 +18,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
-//#include <memory>
+#define CDM_PROPERTY_UNMARSHAL_HELPER(in, out, func)                                 \
+  if (in.m_##func) {                                                                 \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::Property::UnMarshall(*in.m_##func, out.func());                              \
+  }
+
+#define CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, func) \
+  if (in.m_##func) {                                          \
+    io::Property::UnMarshall(*in.m_##func, out.func());       \
+  }
+
+#define CDM_ENUM_UNMARSHAL_HELPER(in, out, func) \
+  if (in.Has##func()) {                          \
+    out.func(in.m_##func);                       \
+  }
 
 namespace biogears {
 class RunningAverage;
@@ -94,22 +108,6 @@ class SEScalarVolumePerTimeMass;
 class SEScalarVolumePerTimePressureArea;
 class SEScalarVolumePerTimePressure;
 class SEUnitScalar;
-
-#define CDM_PROPERTY_UNMARSHAL_HELPER(in, out, func)                                 \
-  if (in.m_##func) {                                                                 \
-    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Property::UnMarshall(*in.m_##func, out.func());                              \
-  }
-
-#define CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, func)                        \
-  if (in.m_##func) {                                                                 \
-    io::Property::UnMarshall(*in.m_##func, out.func());                              \
-  }
-
-#define CDM_ENUM_UNMARSHAL_HELPER(in, out, func) \
-  if (in.Has##func()) {                          \
-    out.func(in.m_##func);                       \
-  }
 
 namespace io {
   class BIOGEARS_PRIVATE_API Property {
@@ -331,6 +329,7 @@ namespace io {
     //class SERunningAverage
     static void Marshall(const CDM::RunningAverageData& in, RunningAverage& out);
     static void UnMarshall(const RunningAverage& in, CDM::RunningAverageData& out);
+ 
   };
 
   //-------------------------------------------------------------------------------

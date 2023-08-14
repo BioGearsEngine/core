@@ -1,5 +1,7 @@
 #include "PatientActions.h"
 
+#include <memory>
+
 #include "PatientNutrition.h"
 #include "Property.h"
 #include "Scenario.h"
@@ -29,6 +31,7 @@
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
+#include <biogears/cdm/patient/actions/SEEbola.h>
 #include <biogears/cdm/patient/actions/SEEscharotomy.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
@@ -37,6 +40,7 @@
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
+#include <biogears/cdm/patient/actions/SENasalCannula.h>
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 #include <biogears/cdm/patient/actions/SEOverride.h>
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
@@ -46,27 +50,24 @@
 #include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>
+#include <biogears/cdm/patient/actions/SESleep.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+#include <biogears/cdm/patient/actions/SESubstanceNasalDose.h>
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
-
 #include <biogears/cdm/properties/SEScalarFraction.h>
-
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 #include <biogears/cdm/scenario/SESerializeState.h>
-
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 #include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
-
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEExpiratoryValveLeak.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEExpiratoryValveObstruction.h>
@@ -1656,6 +1657,134 @@ namespace io {
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MuscleGlycogenOverride)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, StoredProteinOverride)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, StoredFatOverride)
+  }
+  //----------------------------------------------------------------------------------
+  // class SEEbola
+  void PatientActions::Marshall(const CDM::EbolaData& in, SEEbola& out)
+  {
+    out.m_Severity = in.Severity();
+  }
+  void PatientActions::UnMarshall(const SEEbola& in, CDM::EbolaData& out)
+  {
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, Severity)
+  }
+  //----------------------------------------------------------------------------------
+  // class SENasalCannula
+  void PatientActions::Marshall(const CDM::NasalCannulaData& in, SENasalCannula& out)
+  {
+    io::Property::Marshall(in.FlowRate(), out.GetFlowRate());
+  }
+  void PatientActions::UnMarshall(const SENasalCannula& in, CDM::NasalCannulaData& out)
+  {
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, FlowRate)
+  }
+  //----------------------------------------------------------------------------------
+  // class SESleep
+  void PatientActions::Marshall(const CDM::SleepData& in, SESleep& out)
+  {
+    out.m_SleepState = in.Sleep();
+  }
+  void PatientActions::UnMarshall(const SESleep& in, CDM::SleepData& out)
+  {
+    out.Sleep(in.GetSleepState());
+  }
+  //----------------------------------------------------------------------------------
+  // class SETransmucosalStates
+  void PatientActions::Marshall(const CDM::TransmucosalStateData& in, SETransmucosalState& out)
+  {
+    io::Property::Marshall(in.MouthSolidMass(), out.GetMouthSolidMass());
+    io::Property::Marshall(in.SalivaConcentration(), out.GetSalivaConcentration());
+
+    out.m_BuccalConcentrations.clear();
+    for (auto brData : in.BuccalConcentrations()) {
+      auto buc = std::make_unique<SEScalarMassPerVolume>();
+      io::Property::Marshall(brData, *buc);
+      out.m_BuccalConcentrations.push_back(buc.release());
+    }
+    out.m_SublingualConcentrations.clear();
+    for (auto slData : in.SublingualConcentrations()) {
+      auto s1 = std::make_unique<SEScalarMassPerVolume>();
+      io::Property::Marshall(slData, *s1);
+      out.m_BuccalConcentrations.push_back(s1.release());
+    }
+  }
+
+  void PatientActions::UnMarshall(const SETransmucosalState& in, CDM::TransmucosalStateData& out)
+  {
+    out.MouthSolidMass(std::unique_ptr<CDM::ScalarMassData>(in.m_MouthSolidMass->Unload()));
+    out.SalivaConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(in.m_SalivaConcentration->Unload()));
+    for (auto bcData : in.m_BuccalConcentrations) {
+      out.BuccalConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(bcData->Unload()));
+    }
+    for (auto slData : in.m_SublingualConcentrations) {
+      out.SublingualConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(slData->Unload()));
+    }
+    out.Substance(in.m_Substance->GetName());
+  }
+  //----------------------------------------------------------------------------------
+  // class SENasalStates
+  void PatientActions::Marshall(const CDM::NasalStateData& in, SENasalState& out)
+  {
+    io::Property::Marshall(in.TotalNasalDose(), out.GetTotalNasalDose());
+    out.m_UnreleasedDrugMasses.clear();
+    for (auto umData : in.UnreleasedDrugMasses()) {
+      SEScalarMass* unrelMass = new SEScalarMass;
+      unrelMass->Load(umData);
+      out.m_UnreleasedDrugMasses.push_back(unrelMass);
+    }
+    out.m_ReleasedDrugMasses.clear();
+    for (auto rmData : in.ReleasedDrugMasses()) {
+      SEScalarMass* relMass = new SEScalarMass;
+      relMass->Load(rmData);
+      out.m_ReleasedDrugMasses.push_back(relMass);
+    }
+  }
+
+  void PatientActions::UnMarshall(const SENasalState& in, CDM::NasalStateData& out)
+  {
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, TotalNasalDose);
+
+    out.UnreleasedDrugMasses().clear();
+    for (auto umData : in.m_UnreleasedDrugMasses) {
+      CDM::ScalarMassData mass;
+      io::Property::UnMarshall(*umData, mass);
+      out.UnreleasedDrugMasses().push_back(mass);
+    }
+    out.ReleasedDrugMasses().clear();
+    for (auto rmData : in.m_ReleasedDrugMasses) {
+      out.ReleasedDrugMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(rmData->Unload()));
+    }
+    out.Substance(in.m_Substance->GetName());
+  }
+  //----------------------------------------------------------------------------------
+  // class SESubstanceNasalDose
+  void PatientActions::Marshall(const CDM::SubstanceNasalDoseData& in, SESubstanceNasalDose& out)
+  {
+    io::PatientActions::Marshall((CDM::SubstanceAdministrationData const&)in, (SESubstanceAdministration&)out);
+    io::Property::Marshall(in.Dose(), out.GetDose());
+  }
+  void PatientActions::UnMarshall(const SESubstanceNasalDose& in, CDM::SubstanceNasalDoseData& out)
+  {
+    io::PatientActions::UnMarshall((SESubstanceAdministration const&)in, (CDM::SubstanceAdministrationData)out);
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Dose);
+  }
+  //----------------------------------------------------------------------------------
+  // class SESubstanceOralDose
+  void PatientActions::Marshall(const CDM::SubstanceOralDoseData& in, SESubstanceOralDose& out)
+  {
+    io::PatientActions::Marshall((CDM::SubstanceAdministrationData const&)in, (SESubstanceAdministration&)out);
+    io::Property::Marshall(in.Dose(), out.GetDose());
+    out.m_AdminRoute = in.AdminRoute();
+  }
+  void PatientActions::UnMarshall(const SESubstanceOralDose& in, CDM::SubstanceOralDoseData& out)
+  {
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Dose)
+    // if (m_Dose != nullptr)
+    // data.Dose(std::unique_ptr<CDM::ScalarMassData>(m_Dose->Unload()));
+
+    if (in.HasAdminRoute())
+      out.AdminRoute(in.GetAdminRoute());
+    out.Substance(in.m_Substance.GetName());
   }
   //----------------------------------------------------------------------------------
 }

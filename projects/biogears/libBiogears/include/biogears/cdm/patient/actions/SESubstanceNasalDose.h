@@ -13,19 +13,23 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
 class SESubstance;
-
+namespace io {
+  class PatientActions;
+}
 class BIOGEARS_API SESubstanceNasalDose : public SESubstanceAdministration {
+  friend class io::PatientActions;
+
 public:
   SESubstanceNasalDose(const SESubstance& substance);
   virtual ~SESubstanceNasalDose();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   virtual bool IsValid() const;
   virtual bool IsActive() const;
@@ -50,6 +54,8 @@ protected:
 };
 
 class BIOGEARS_API SENasalState {
+  friend io::PatientActions;
+
 public:
   SENasalState(const SESubstance& sub);
   ~SENasalState();
@@ -71,7 +77,7 @@ public:
 
 protected:
   virtual void Unload(CDM::NasalStateData& data) const;
-  //Nasal specific values
+  // Nasal specific values
   const SESubstance* m_Substance;
   SEScalarMass* m_TotalNasalDose;
   SEScalarMassPerVolume* m_VenaCavaConcentration;

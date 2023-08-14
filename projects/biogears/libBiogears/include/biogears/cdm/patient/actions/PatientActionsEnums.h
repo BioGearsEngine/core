@@ -16,31 +16,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
-enum class SEPatientAssessmentType {
-  Invalid = -1,
-  PulmonaryFunctionTest = 0,
-  CompleteBloodCount,
-  ComprehensiveMetabolicPanel,
-  Urinalysis
-};
+
 enum class SEBrainInjuryType {
   Invalid = -1,
   Diffuse = 0,
   LeftFocal,
   RightFocal
-};
-enum class SEIntubationType {
-  Invalid = -1,
-  Off = 0,
-  Esophageal,
-  LeftMainstem,
-  RightMainstem,
-  Tracheal
-};
-enum class SEPneumothoraxType {
-  Invalid = -1,
-  Open = 0,
-  Closed
 };
 
 enum class SEBolusAdministration {
@@ -49,6 +30,7 @@ enum class SEBolusAdministration {
   Intramuscular,
   Intravenous
 };
+
 enum class SEInfectionSeverity {
   Eliminated,
   Mild,
@@ -56,21 +38,42 @@ enum class SEInfectionSeverity {
   Severe
 };
 
-inline std::string ToString(const SEPatientAssessmentType& pa)
-{
-  switch (pa) {
-  case SEPatientAssessmentType::PulmonaryFunctionTest:
-    return "PulmonaryFunctionTest";
-  case SEPatientAssessmentType::CompleteBloodCount:
-    return "CompleteBloodCount";
-  case SEPatientAssessmentType::ComprehensiveMetabolicPanel:
-    return "ComprehensiveMetabolicPanel";
-  case SEPatientAssessmentType::Urinalysis:
-    return "Urinalysis";
-  default:
-    return "Invalid";
-  }
-}
+enum class SEIntubationType {
+  Invalid = -1,
+  Off = 0,
+  Esophageal,
+  LeftMainstem,
+  RightMainstem,
+  Tracheal
+};
+
+enum class SEPatientAssessmentType {
+  Invalid = -1,
+  PulmonaryFunctionTest = 0,
+  CompleteBloodCount,
+  ComprehensiveMetabolicPanel,
+  Urinalysis
+};
+
+enum class SEPneumothoraxType {
+  Invalid = -1,
+  Open = 0,
+  Closed
+};
+
+enum class SEOralAdministrationType {
+  Invalid = -1,
+  Transmucosal = 0,
+  Gastrointestinal
+};
+
+enum class SETourniquetApplicationType {
+  Invalid = -1,
+  Applied = 0,
+  Misapplied,
+  NotApplied
+};
+
 inline std::string ToString(const SEBrainInjuryType& bit)
 {
   switch (bit) {
@@ -80,34 +83,6 @@ inline std::string ToString(const SEBrainInjuryType& bit)
     return "LeftFocal";
   case SEBrainInjuryType::RightFocal:
     return "RightFocal";
-  default:
-    return "Invalid";
-  }
-}
-inline std::string ToString(const SEIntubationType& it)
-{
-  switch (it) {
-  case SEIntubationType::Off:
-    return "Off";
-  case SEIntubationType::Esophageal:
-    return "Esophageal";
-  case SEIntubationType::LeftMainstem:
-    return "LeftMainstem";
-  case SEIntubationType::RightMainstem:
-    return "RightMainstem";
-  case SEIntubationType::Tracheal:
-    return "Tracheal";
-  default:
-    return "Invalid";
-  }
-}
-inline std::string ToString(const SEPneumothoraxType& pt)
-{
-  switch (pt) {
-  case SEPneumothoraxType::Open:
-    return "Open";
-  case SEPneumothoraxType::Closed:
-    return "Closed";
   default:
     return "Invalid";
   }
@@ -140,25 +115,77 @@ inline std::string ToString(const SEInfectionSeverity& ba)
     return "Invalid";
   }
 }
-
-inline std::ostream& operator<<(std::ostream& os, const SEPatientAssessmentType& pa)
+inline std::string ToString(const SEIntubationType& it)
 {
-  os << ToString(pa);
-  return os;
+  switch (it) {
+  case SEIntubationType::Off:
+    return "Off";
+  case SEIntubationType::Esophageal:
+    return "Esophageal";
+  case SEIntubationType::LeftMainstem:
+    return "LeftMainstem";
+  case SEIntubationType::RightMainstem:
+    return "RightMainstem";
+  case SEIntubationType::Tracheal:
+    return "Tracheal";
+  default:
+    return "Invalid";
+  }
 }
+inline std::string ToString(const SEPatientAssessmentType& pa)
+{
+  switch (pa) {
+  case SEPatientAssessmentType::PulmonaryFunctionTest:
+    return "PulmonaryFunctionTest";
+  case SEPatientAssessmentType::CompleteBloodCount:
+    return "CompleteBloodCount";
+  case SEPatientAssessmentType::ComprehensiveMetabolicPanel:
+    return "ComprehensiveMetabolicPanel";
+  case SEPatientAssessmentType::Urinalysis:
+    return "Urinalysis";
+  default:
+    return "Invalid";
+  }
+}
+inline std::string ToString(const SEPneumothoraxType& pt)
+{
+  switch (pt) {
+  case SEPneumothoraxType::Open:
+    return "Open";
+  case SEPneumothoraxType::Closed:
+    return "Closed";
+  default:
+    return "Invalid";
+  }
+}
+inline std::string ToString(const SEOralAdministrationType& pt)
+{
+  switch (pt) {
+  case SEOralAdministrationType::Transmucosal:
+    return "Transmucosal";
+  case SEOralAdministrationType::Gastrointestinal:
+    return "Gastrointestinal";
+  default:
+    return "Invalid";
+  }
+}
+inline std::string ToString(const SETourniquetApplicationType& pt)
+{
+  switch (pt) {
+  case SETourniquetApplicationType::Applied:
+    return "Applied";
+  case SETourniquetApplicationType::Misapplied:
+    return "Misapplied";
+  case SETourniquetApplicationType::NotApplied:
+    return "NotApplied";
+  default:
+    return "Invalid";
+  }
+}
+
 inline std::ostream& operator<<(std::ostream& os, const SEBrainInjuryType& bit)
 {
   os << ToString(bit);
-  return os;
-}
-inline std::ostream& operator<<(std::ostream& os, const SEIntubationType& it)
-{
-  os << ToString(it);
-  return os;
-}
-inline std::ostream& operator<<(std::ostream& os, const SEPneumothoraxType& pt)
-{
-  os << ToString(pt);
   return os;
 }
 inline std::ostream& operator<<(std::ostream& os, const SEBolusAdministration& ba)
@@ -169,6 +196,31 @@ inline std::ostream& operator<<(std::ostream& os, const SEBolusAdministration& b
 inline std::ostream& operator<<(std::ostream& os, const SEInfectionSeverity& is)
 {
   os << ToString(is);
+  return os;
+}
+inline std::ostream& operator<<(std::ostream& os, const SEIntubationType& it)
+{
+  os << ToString(it);
+  return os;
+}
+inline std::ostream& operator<<(std::ostream& os, const SEPatientAssessmentType& pa)
+{
+  os << ToString(pa);
+  return os;
+}
+inline std::ostream& operator<<(std::ostream& os, const SEPneumothoraxType& pt)
+{
+  os << ToString(pt);
+  return os;
+}
+inline std::ostream& operator<<(std::ostream& os, const SEOralAdministrationType& pt)
+{
+  os << ToString(pt);
+  return os;
+}
+inline std::ostream& operator<<(std::ostream& os, const SETourniquetApplicationType& pt)
+{
+  os << ToString(pt);
   return os;
 }
 

@@ -29,10 +29,14 @@ class SELiquidCompartment;
 class SEGasCompartment;
 class SELiquidSubstanceQuantity;
 class BioGears;
+namespace io {
+  class BiogearsEquipment;
+}
 
 class BIOGEARS_API Inhaler : public SEInhaler, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+  friend io::BiogearsEquipment;
 
 protected:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<Inhaler>;

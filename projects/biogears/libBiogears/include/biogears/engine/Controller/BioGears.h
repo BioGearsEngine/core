@@ -82,15 +82,19 @@ class BioGearsCircuits;
 class BioGearsCompartments;
 class BioGearsConfiguration;
 class SEScalarTime;
-} //namespace biogears
+namespace io {
+  class BioGears;
+}
+} // namespace biogears
 
 namespace biogears {
 /**
-* @brief Manages and controls execution of all data/systems in %BioGears
-*/
+ * @brief Manages and controls execution of all data/systems in %BioGears
+ */
 class BIOGEARS_API BioGears : public Loggable {
   friend class BioGearsEngineTest;
   friend class BioGearsScenarioExec;
+  friend class io::BioGears;
 
 protected:
   EngineState m_State;
@@ -247,4 +251,4 @@ protected:
 
   std::unique_ptr<Logger> m_managedLogger;
 };
-} //namespace biogears
+} // namespace biogears

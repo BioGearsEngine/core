@@ -60,7 +60,7 @@ namespace biogears
       data.Sleep(m_SleepState);
   }
   //-------------------------------------------------------------------------------
-  CDM::enumOnOff SESleep::GetSleepState()
+  CDM::enumOnOff SESleep::GetSleepState() const
   {
         return m_SleepState;
   }

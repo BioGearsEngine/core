@@ -29,12 +29,16 @@ class SEThermalCircuit;
 class SEThermalCircuitNode;
 class SEThermalCircuitPath;
 class BioGears;
+namespace io {
+  class BiogearsEnvironment;
+}
 /**
  * @brief The %Environment class characterizes the environment and manages interactions between the body its surroundings.
  */
 class BIOGEARS_API Environment : public SEEnvironment, public BioGearsSystem {
   friend class BioGears;
   friend class BioGearsEngineTest;
+  friend class io::BiogearsEnvironment;
 
 protected:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<Environment>;
