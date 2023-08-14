@@ -96,7 +96,7 @@ SEEbola::SEEbola()
   bool SEEbola::operator==(const SEEbola& rhs) const
   {
 bool equivilant = m_Comment == rhs.m_Comment;
-  equivilant = m_Severity == rhs.m_Severity;
+  equivilant &= m_Severity == rhs.m_Severity;
   return equivilant;
 }
 //-------------------------------------------------------------------------------

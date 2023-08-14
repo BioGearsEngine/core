@@ -85,4 +85,16 @@ namespace biogears
     str << std::flush;
   }
   //-------------------------------------------------------------------------------
-}
+  bool SESleep::operator==(const SESleep& rhs) const
+  {
+    bool equivilant = m_Comment == rhs.m_Comment;
+    equivilant &= m_SleepState == rhs.m_SleepState;
+    return equivilant;
+  }
+  //-------------------------------------------------------------------------------
+  bool SESleep::operator!=(const SESleep& rhs) const
+  {
+    return !(*this == rhs);
+  }
+  //-------------------------------------------------------------------------------
+  }

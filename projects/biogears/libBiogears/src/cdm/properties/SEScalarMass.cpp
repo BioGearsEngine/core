@@ -39,6 +39,12 @@ SEScalarMass::SEScalarMass()
 {
 }
 //-------------------------------------------------------------------------------
+SEScalarMass::SEScalarMass(double value, MassUnit const& unit)
+  : SEScalarQuantity(value,unit)
+{
+
+}
+//-------------------------------------------------------------------------------
 SEScalarMass::~SEScalarMass()
 {
 }

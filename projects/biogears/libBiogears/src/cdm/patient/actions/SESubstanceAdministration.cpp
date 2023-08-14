@@ -18,35 +18,45 @@ SESubstanceAdministration::SESubstanceAdministration()
   : SEPatientAction()
 {
 }
-
 SESubstanceAdministration::~SESubstanceAdministration()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceAdministration::Clear()
 {
   SEPatientAction::Clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceAdministration::IsValid() const
 {
   return SEPatientAction::IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceAdministration::IsActive() const
 {
   return IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SESubstanceAdministration::Load(const CDM::SubstanceAdministrationData& in)
 {
   SEPatientAction::Load(in);
   return true;
 }
-
+//-------------------------------------------------------------------------------
 void SESubstanceAdministration::Unload(CDM::SubstanceAdministrationData& data) const
 {
   SEPatientAction::Unload(data);
 }
+//-------------------------------------------------------------------------------
+bool SESubstanceAdministration::operator==(const SESubstanceAdministration& rhs) const
+{
+  return m_Comment == rhs.m_Comment;
+}
+//-------------------------------------------------------------------------------
+bool SESubstanceAdministration::operator!=(const SESubstanceAdministration& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

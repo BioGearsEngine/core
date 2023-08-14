@@ -51,6 +51,7 @@ class SEChestCompressionForce;
 class SEChestCompressionForceScale;
 class SEChestOcclusiveDressing;
 class SEConsciousRespirationCommand;
+class SEEbola;
 class SEEscharotomy;
 class SEForcedInhale;
 class SEForcedExhale;
@@ -63,31 +64,36 @@ class SEHemorrhage;
 class SEInfection;
 class SEIntubation;
 class SEMechanicalVentilation;
-class NasalStateData;
+class SENasalState;
+class SENasalCannula;
 class SENeedleDecompression;
 class SEPainStimulus;
 class SEPericardialEffusion;
 class SEPulmonaryShunt;
 class SERadiationAbsorbedDose;
 class SETensionPneumothorax;
+class SESleep;
 class SESubstanceAdministration;
 class SESubstanceBolus;
 class SESubstanceBolusState;
 class SESubstanceCompoundInfusion;
 class SESubstanceInfusion;
-class TourniquetData;
-class TransmucosalStateData;
+class SESubstanceNasalDose;
+class SESubstanceOralDose;
+class SETourniquet;
+class SETransmucosalState;
 class SEUrinate;
 class SEOverride;
 
-class SEEbola;
-class SENasalCannula;
-class SESleep;
-class SESleep;
-class SESubstanceNasalDose;
-class SETransmucosalState;
-class SENasalState;
-class SESubstanceOralDose;
+
+// class SEEbola;
+// class SENasalCannula;
+// class SESleep;
+// class SESubstanceNasalDose;
+// class SETransmucosalState;
+// class SETourniquet
+// class SENasalState;
+// class SESubstanceOralDose;
 
 namespace io {
   class BIOGEARS_PRIVATE_API PatientActions {
@@ -151,9 +157,15 @@ namespace io {
     // class SEConsciousRespirationCommand;
     static void Marshall(const CDM::ConsciousRespirationCommandData& in, SEConsciousRespirationCommand& out);
     static void UnMarshall(const SEConsciousRespirationCommand& in, CDM::ConsciousRespirationCommandData& out);
+    // class SEEbola;
+    static void Marshall(const CDM::EbolaData& in, SEEbola& out);
+    static void UnMarshall(const SEEbola& in, CDM::EbolaData& out);
     // class SEEscharotomy
     static void Marshall(const CDM::EscharotomyData& in, SEEscharotomy& out);
     static void UnMarshall(const SEEscharotomy& in, CDM::EscharotomyData& out);
+    // class SEExercise;
+    static void Marshall(const CDM::ExerciseData& in, SEExercise& out);
+    static void UnMarshall(const SEExercise& in, CDM::ExerciseData& out);
     // class SEForcedInhale;
     static void Marshall(const CDM::ForcedInhaleData& in, SEForcedInhale& out);
     static void UnMarshall(const SEForcedInhale& in, CDM::ForcedInhaleData& out);
@@ -172,9 +184,6 @@ namespace io {
     // class SEConsumeNutrients;
     static void Marshall(const CDM::ConsumeNutrientsData& in, SEConsumeNutrients& out);
     static void UnMarshall(const SEConsumeNutrients& in, CDM::ConsumeNutrientsData& out);
-    // class SEExercise;
-    static void Marshall(const CDM::ExerciseData& in, SEExercise& out);
-    static void UnMarshall(const SEExercise& in, CDM::ExerciseData& out);
     // class SEHemorrhage;
     static void Marshall(const CDM::HemorrhageData& in, SEHemorrhage& out);
     static void UnMarshall(const SEHemorrhage& in, CDM::HemorrhageData& out);
@@ -187,6 +196,12 @@ namespace io {
     // class SEMechanicalVentilation;
     static void Marshall(const CDM::MechanicalVentilationData& in, const SESubstanceManager& substances, SEMechanicalVentilation& out);
     static void UnMarshall(const SEMechanicalVentilation& in, CDM::MechanicalVentilationData& out);
+    // class SENasalCannula;
+    static void Marshall(const CDM::NasalCannulaData& in, SENasalCannula& out);
+    static void UnMarshall(const SENasalCannula& in, CDM::NasalCannulaData& out);
+    // class SENasalState;
+    static void Marshall(const CDM::NasalStateData& in, SENasalState& out);
+    static void UnMarshall(const SENasalState& in, CDM::NasalStateData& out);
     // class SENeedleDecompression;
     static void Marshall(const CDM::NeedleDecompressionData& in, SENeedleDecompression& out);
     static void UnMarshall(const SENeedleDecompression& in, CDM::NeedleDecompressionData& out);
@@ -202,6 +217,12 @@ namespace io {
     // class SERadiationAbsorbedDose;
     static void Marshall(const CDM::RadiationAbsorbedDoseData& in, SERadiationAbsorbedDose& out);
     static void UnMarshall(const SERadiationAbsorbedDose& in, CDM::RadiationAbsorbedDoseData& out);
+    // class SESleep;
+    static void Marshall(const CDM::SleepData& in, SESleep& out);
+    static void UnMarshall(const SESleep& in, CDM::SleepData& out);
+    // class SESubstanceNasalDose;
+    static void Marshall(const CDM::SubstanceNasalDoseData& in, SESubstanceNasalDose& out);
+    static void UnMarshall(const SESubstanceNasalDose& in, CDM::SubstanceNasalDoseData& out);
     // class SETensionPneumothorax;
     static void Marshall(const CDM::TensionPneumothoraxData& in, SETensionPneumothorax& out);
     static void UnMarshall(const SETensionPneumothorax& in, CDM::TensionPneumothoraxData& out);
@@ -220,34 +241,21 @@ namespace io {
     // class SESubstanceInfusion;
     static void Marshall(const CDM::SubstanceInfusionData& in, SESubstanceInfusion& out);
     static void UnMarshall(const SESubstanceInfusion& in, CDM::SubstanceInfusionData& out);
+    // class SESubstanceOralDose;
+    static void Marshall(const CDM::SubstanceOralDoseData& in, SESubstanceOralDose& out);
+    static void UnMarshall(const SESubstanceOralDose& in, CDM::SubstanceOralDoseData& out);
+    // class SETransmucosalState;
+    static void Marshall(const CDM::TransmucosalStateData& in, SETransmucosalState& out);
+    static void UnMarshall(const SETransmucosalState& in, CDM::TransmucosalStateData& out);
+    // class SETourniquet;
+    static void Marshall(const CDM::TourniquetData& in, SETourniquet& out);
+    static void UnMarshall(const SETourniquet& in, CDM::TourniquetData& out);
     // class SEUrinate;
     static void Marshall(const CDM::UrinateData& in, SEUrinate& out);
     static void UnMarshall(const SEUrinate& in, CDM::UrinateData& out);
     // class SEOverride;
     static void Marshall(const CDM::OverrideData& in, SEOverride& out);
     static void UnMarshall(const SEOverride& in, CDM::OverrideData& out);
-
-    // class SEEbola;
-    static void Marshall(const CDM::EbolaData& in, SEEbola& out);
-    static void UnMarshall(const SEEbola& in, CDM::EbolaData& out);
-    // class SENasalCannula;
-    static void Marshall(const CDM::NasalCannulaData& in, SENasalCannula& out);
-    static void UnMarshall(const SENasalCannula& in, CDM::NasalCannulaData& out);
-    // class SESleep;
-    static void Marshall(const CDM::SleepData& in, SESleep& out);
-    static void UnMarshall(const SESleep& in, CDM::SleepData& out);
-    // class SESubstanceNasalDose;
-    static void Marshall(const CDM::SubstanceNasalDoseData& in, SESubstanceNasalDose& out);
-    static void UnMarshall(const SESubstanceNasalDose& in, CDM::SubstanceNasalDoseData& out);
-    // class SENasalState;
-    static void Marshall(const CDM::NasalStateData& in, SENasalState& out);
-    static void UnMarshall(const SENasalState& in, CDM::NasalStateData& out);
-    // class SETransmucosalState;
-    static void Marshall(const CDM::TransmucosalStateData& in, SETransmucosalState& out);
-    static void UnMarshall(const SETransmucosalState& in, CDM::TransmucosalStateData& out);
-    // class SESubstanceOralDose;
-    static void Marshall(const CDM::SubstanceOralDoseData& in, SESubstanceOralDose& out);
-    static void UnMarshall(const SESubstanceOralDose& in, CDM::SubstanceOralDoseData& out);
   };
 
   //----------------------------------------------------------------------------------

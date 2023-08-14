@@ -30,6 +30,9 @@ public:
 
   virtual bool Load(const CDM::SubstanceAdministrationData& in);
 
+  bool operator==(const SESubstanceAdministration& rhs) const;
+  bool operator!=(const SESubstanceAdministration& rhs) const;
+
 protected:
   virtual void Unload(CDM::SubstanceAdministrationData& data) const;
 
