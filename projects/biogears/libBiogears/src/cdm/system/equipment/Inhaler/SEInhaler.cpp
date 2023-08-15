@@ -270,4 +270,22 @@ Tree<const char*> SEInhaler::GetPhysiologyRequestGraph() const
 {
   return { "" };
 }
+//-------------------------------------------------------------------------------
+bool SEInhaler::operator==(SEInhaler const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_State == rhs.m_State
+    && m_MeteredDose == rhs.m_MeteredDose
+    && m_NozzleLoss == rhs.m_NozzleLoss
+    && m_SpacerVolume == rhs.m_SpacerVolume
+    && &m_Substance == &rhs.m_Substance;
+}
+//-------------------------------------------------------------------------------
+bool SEInhaler::operator!=(SEInhaler const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

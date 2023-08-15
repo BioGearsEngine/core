@@ -20,60 +20,61 @@ SETubeCuffLeak::SETubeCuffLeak()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SETubeCuffLeak::~SETubeCuffLeak()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SETubeCuffLeak::Clear()
 {
   SEAnesthesiaMachineAction::Clear();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SETubeCuffLeak::IsValid() const
 {
   return SEAnesthesiaMachineAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SETubeCuffLeak::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SETubeCuffLeak::Load(const CDM::TubeCuffLeakData& in)
 {
   SEAnesthesiaMachineAction::Load(in);
   GetSeverity().Load(in.Severity());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::TubeCuffLeakData* SETubeCuffLeak::Unload() const
 {
   CDM::TubeCuffLeakData* data = new CDM::TubeCuffLeakData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SETubeCuffLeak::Unload(CDM::TubeCuffLeakData& data) const
 {
   SEAnesthesiaMachineAction::Unload(data);
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SETubeCuffLeak::HasSeverity() const
 {
   return m_Severity != nullptr;
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SETubeCuffLeak::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SETubeCuffLeak::ToString(std::ostream& str) const
 {
   str << "Anesthesia Machine Action : Tube Cuff Leak";
@@ -83,4 +84,20 @@ void SETubeCuffLeak::ToString(std::ostream& str) const
   HasSeverity() ? str << *m_Severity : str << "NaN";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
+bool SETubeCuffLeak::operator==(SETubeCuffLeak const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity)
+                                         : m_Severity == rhs.m_Severity)
+    && m_Comment == rhs.m_Comment;
+}
+//-------------------------------------------------------------------------------
+bool SETubeCuffLeak::operator!=(SETubeCuffLeak const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

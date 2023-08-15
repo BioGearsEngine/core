@@ -99,7 +99,7 @@ const char* SEAnesthesiaMachineConfiguration::GetConfigurationFile() const
 //-----------------------------------------------------------------------------
 void SEAnesthesiaMachineConfiguration::SetConfigurationFile(const char* fileName)
 {
-  SetConfigurationFile(std::string{ fileName });
+  SetConfigurationFile(std::string { fileName });
 }
 //-----------------------------------------------------------------------------
 void SEAnesthesiaMachineConfiguration::SetConfigurationFile(const std::string& fileName)
@@ -175,5 +175,27 @@ void SEAnesthesiaMachineConfiguration::ToString(std::ostream& str) const
   }
   str << std::flush;
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool SEAnesthesiaMachineConfiguration::operator==(SEAnesthesiaMachineConfiguration const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  // return m_ConfigurationFile == rhs.m_ConfigurationFile
+  //&& m_Configuration == rhs.m_Configuration
+  //&& &m_Substances == &rhs.m_Substances
+  //&& m_Comment == rhs.m_Comment;
+
+  bool equivilant = (m_Configuration && rhs.m_Configuration) ? m_Configuration->operator==(*rhs.m_Configuration)
+                                                             : m_Configuration == rhs.m_Configuration;
+  equivilant &= m_Substances == rhs.m_Substances;
+  equivilant &= m_Comment == rhs.m_Comment;
+  return equivilant;
+}
+//-----------------------------------------------------------------------------
+bool SEAnesthesiaMachineConfiguration::operator!=(SEAnesthesiaMachineConfiguration const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

@@ -160,6 +160,9 @@ public:
   const SEAnesthesiaMachineOxygenBottle* GetOxygenBottleTwo() const;
   void RemoveOxygenBottleTwo();
 
+  bool operator==(SEAnesthesiaMachine const& rhs) const;
+  bool operator!=(SEAnesthesiaMachine const& rhs) const;
+
 protected:
   std::stringstream m_ss;
   SEEventHandler* m_EventHandler;

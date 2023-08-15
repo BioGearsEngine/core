@@ -109,4 +109,14 @@ void SEAnesthesiaMachineOxygenBottle::ToString(std::ostream& str)
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
+bool SEAnesthesiaMachineOxygenBottle::operator==(SEAnesthesiaMachineOxygenBottle const& rhs) const
+{
+  return (m_Volume && rhs.m_Volume) ? m_Volume->operator==(*rhs.m_Volume) : m_Volume == rhs.m_Volume;
+}
+//-------------------------------------------------------------------------------
+bool SEAnesthesiaMachineOxygenBottle::operator!=(SEAnesthesiaMachineOxygenBottle const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

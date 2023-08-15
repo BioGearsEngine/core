@@ -35,6 +35,9 @@ public:
   virtual bool Load(const CDM::InspiratoryValveObstructionData& in);
   virtual CDM::InspiratoryValveObstructionData* Unload() const override;
 
+  bool operator==(SEInspiratoryValveObstruction const& rhs) const;
+  bool operator!=(SEInspiratoryValveObstruction const& rhs) const;
+
 protected:
   virtual void Unload(CDM::InspiratoryValveObstructionData& data) const;
 

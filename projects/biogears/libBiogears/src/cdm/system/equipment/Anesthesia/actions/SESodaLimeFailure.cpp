@@ -20,60 +20,61 @@ SESodaLimeFailure::SESodaLimeFailure()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SESodaLimeFailure::~SESodaLimeFailure()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SESodaLimeFailure::Clear()
 {
   SEAnesthesiaMachineAction::Clear();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SESodaLimeFailure::IsValid() const
 {
   return SEAnesthesiaMachineAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SESodaLimeFailure::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SESodaLimeFailure::Load(const CDM::SodaLimeFailureData& in)
 {
   SEAnesthesiaMachineAction::Load(in);
   GetSeverity().Load(in.Severity());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::SodaLimeFailureData* SESodaLimeFailure::Unload() const
 {
   CDM::SodaLimeFailureData* data = new CDM::SodaLimeFailureData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SESodaLimeFailure::Unload(CDM::SodaLimeFailureData& data) const
 {
   SEAnesthesiaMachineAction::Unload(data);
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SESodaLimeFailure::HasSeverity() const
 {
   return m_Severity != nullptr;
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SESodaLimeFailure::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SESodaLimeFailure::ToString(std::ostream& str) const
 {
   str << "Anesthesia Machine Action : Soda Lime Failure";
@@ -83,4 +84,20 @@ void SESodaLimeFailure::ToString(std::ostream& str) const
   HasSeverity() ? str << *m_Severity : str << "NaN";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
+bool SESodaLimeFailure::operator==(SESodaLimeFailure const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity)
+                                         : m_Severity == rhs.m_Severity)
+    && m_Comment == rhs.m_Comment;
+}
+//-------------------------------------------------------------------------------
+bool SESodaLimeFailure::operator!=(SESodaLimeFailure const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

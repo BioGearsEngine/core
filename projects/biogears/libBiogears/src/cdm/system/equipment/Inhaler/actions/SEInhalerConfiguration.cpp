@@ -143,4 +143,19 @@ void SEInhalerConfiguration::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+bool SEInhalerConfiguration::operator==(SEInhalerConfiguration const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Comment == rhs.m_Comment
+    && m_ConfigurationFile == rhs.m_ConfigurationFile
+    && m_Configuration == rhs.m_Configuration;
+}
+//-----------------------------------------------------------------------------
+bool SEInhalerConfiguration::operator!=(SEInhalerConfiguration const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

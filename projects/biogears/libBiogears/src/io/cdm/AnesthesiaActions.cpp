@@ -133,8 +133,8 @@ namespace io {
   void AnesthesiaActions::UnMarshall(const SEExpiratoryValveLeak& in, CDM::ExpiratoryValveLeakData& out)
   {
     UnMarshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    if (in.HasSeverity())
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in,out,Severity)
+      
   }
   //----------------------------------------------------------------------------------
   //class SEExpiratoryValveObstruction
@@ -147,8 +147,7 @@ namespace io {
   void AnesthesiaActions::UnMarshall(const SEExpiratoryValveObstruction& in, CDM::ExpiratoryValveObstructionData& out)
   {
     UnMarshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    if (in.HasSeverity())
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEInspiratoryValveLeak
@@ -161,8 +160,7 @@ namespace io {
   void AnesthesiaActions::UnMarshall(const SEInspiratoryValveLeak& in, CDM::InspiratoryValveLeakData& out)
   {
     UnMarshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    if (in.HasSeverity())
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEInspiratoryValveObstruction
@@ -175,8 +173,7 @@ namespace io {
   void AnesthesiaActions::UnMarshall(const SEInspiratoryValveObstruction& in, CDM::InspiratoryValveObstructionData& out)
   {
     UnMarshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    if (in.HasSeverity())
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEMaskLeak
@@ -189,8 +186,7 @@ namespace io {
   void AnesthesiaActions::UnMarshall(const SEMaskLeak& in, CDM::MaskLeakData& out)
   {
     UnMarshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    if (in.HasSeverity())
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SESodaLimeFailure
@@ -203,8 +199,7 @@ namespace io {
   void AnesthesiaActions::UnMarshall(const SESodaLimeFailure& in, CDM::SodaLimeFailureData& out)
   {
     UnMarshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    if (in.HasSeverity())
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SETubeCuffLeak
@@ -217,8 +212,7 @@ namespace io {
   void AnesthesiaActions::UnMarshall(const SETubeCuffLeak& in, CDM::TubeCuffLeakData& out)
   {
     UnMarshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    if (in.HasSeverity())
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEVaporizerFailure
@@ -231,8 +225,7 @@ namespace io {
   void AnesthesiaActions::UnMarshall(const SEVaporizerFailure& in, CDM::VaporizerFailureData& out)
   {
     UnMarshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    if (in.HasSeverity())
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEVentilatorPressureLoss
@@ -245,8 +238,7 @@ namespace io {
   void AnesthesiaActions::UnMarshall(const SEVentilatorPressureLoss& in, CDM::VentilatorPressureLossData& out)
   {
     UnMarshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    if (in.HasSeverity())
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEYPieceDisconnect
@@ -259,8 +251,7 @@ namespace io {
   void AnesthesiaActions::UnMarshall(const SEYPieceDisconnect& in, CDM::YPieceDisconnectData& out)
   {
     UnMarshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    if (in.HasSeverity())
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   //class SEOxygenWallPortPressureLoss

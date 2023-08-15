@@ -35,6 +35,9 @@ public:
   virtual bool Load(const CDM::ExpiratoryValveLeakData& in);
   virtual CDM::ExpiratoryValveLeakData* Unload() const override;
 
+  bool operator==(SEExpiratoryValveLeak const& rhs) const;
+  bool operator!=(SEExpiratoryValveLeak const& rhs) const;
+
 protected:
   virtual void Unload(CDM::ExpiratoryValveLeakData& data) const;
 

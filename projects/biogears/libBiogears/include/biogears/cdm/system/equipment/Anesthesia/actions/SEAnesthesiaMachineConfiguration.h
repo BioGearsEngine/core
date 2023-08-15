@@ -48,6 +48,10 @@ public:
 
   virtual void ToString(std::ostream& str) const override;
 
+  bool operator==( SEAnesthesiaMachineConfiguration const& rhs) const;
+  bool operator!=(SEAnesthesiaMachineConfiguration const& rhs) const;
+
+
 protected:
   SESubstanceManager& m_Substances;
 

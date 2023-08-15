@@ -67,27 +67,6 @@ void TEST_FIXTURE_NAME::TearDown()
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 
-//class SEPatientAction;
-//!
-//! TYPE PatientAction
-//! static void Marshall(const CDM::PatientActionData& in, SEPatientAction& out);
-//! static void UnMarshall(const SEPatientAction& in, CDM::PatientActionData& out);
-TEST_F(TEST_FIXTURE_NAME, PatientAction)
-{
-  //USING_TYPES(PatientAction)
-
-  //SEType source, sink;
-  //CDMType data;
-
-  ////source.SetValue(3.14159, biogears::VolumePerTimeMassUnit::mL_Per_s_kg);
-
-  //EXPECT_NE(source, sink);
-
-  //PatientActions::UnMarshall(source, data);
-  //PatientActions::Marshall(data, sink);
-
-  //EXPECT_EQ(source, sink);
-}
 
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 //class SEPatientAssessmentRequest;

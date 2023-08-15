@@ -20,60 +20,61 @@ SEVaporizerFailure::SEVaporizerFailure()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEVaporizerFailure::~SEVaporizerFailure()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEVaporizerFailure::Clear()
 {
   SEAnesthesiaMachineAction::Clear();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SEVaporizerFailure::IsValid() const
 {
   return SEAnesthesiaMachineAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SEVaporizerFailure::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEVaporizerFailure::Load(const CDM::VaporizerFailureData& in)
 {
   SEAnesthesiaMachineAction::Load(in);
   GetSeverity().Load(in.Severity());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::VaporizerFailureData* SEVaporizerFailure::Unload() const
 {
   CDM::VaporizerFailureData* data = new CDM::VaporizerFailureData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEVaporizerFailure::Unload(CDM::VaporizerFailureData& data) const
 {
   SEAnesthesiaMachineAction::Unload(data);
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEVaporizerFailure::HasSeverity() const
 {
   return m_Severity != nullptr;
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEVaporizerFailure::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SEVaporizerFailure::ToString(std::ostream& str) const
 {
   str << "Anesthesia Machine Action : Vaporizer Failure";
@@ -83,4 +84,20 @@ void SEVaporizerFailure::ToString(std::ostream& str) const
   HasSeverity() ? str << *m_Severity : str << "NaN";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
+bool SEVaporizerFailure::operator==(SEVaporizerFailure const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity)
+                                         : m_Severity == rhs.m_Severity)
+    && m_Comment == rhs.m_Comment;
+}
+//-------------------------------------------------------------------------------
+bool SEVaporizerFailure::operator!=(SEVaporizerFailure const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

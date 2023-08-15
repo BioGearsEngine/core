@@ -26,7 +26,7 @@ namespace biogears {
 namespace io {
   class Scenario;
 }
-} //namespace biogears
+} // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<biogears::SESubstance*, const CDM::SubstanceData*>;
@@ -74,6 +74,9 @@ public:
 
   virtual SESubstance* ReadSubstanceFile(const char* xmlFile);
   virtual SESubstance* ReadSubstanceFile(const std::string& xmlFile);
+
+  bool operator==(SESubstanceManager const& rhs) const;
+  bool operator!=(SESubstanceManager const& rhs) const;
 
 protected:
   std::vector<SESubstance*> m_Substances;

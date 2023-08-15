@@ -378,4 +378,31 @@ bool SESubstanceManager::LoadSubstanceDirectory()
   return succeeded;
 }
 //-----------------------------------------------------------------------------
+bool SESubstanceManager::operator==(SESubstanceManager const& rhs) const
+{
+
+  if (this == &rhs)
+    return true;
+
+  //NOTE: This equality operator needs improvment
+  //      We need to seperate SubstanceData from the SubstanceMGR
+  //      We can then hash substance data and compare the hash
+  //      Additionally we can likely only support SubstanceMgr comparrision by memory address and Data Definitions
+
+  return (m_Substances == rhs.m_Substances
+          && m_ActiveSubstances == rhs.m_ActiveSubstances
+          && m_ActiveGases == rhs.m_ActiveGases
+          && m_ActiveLiquids == rhs.m_ActiveLiquids
+          && m_ActiveDrugs == rhs.m_ActiveDrugs
+          && m_Compounds == rhs.m_Compounds
+          && m_ActiveCompounds == rhs.m_ActiveCompounds
+          && m_OriginalSubstanceData == rhs.m_OriginalSubstanceData
+          && m_OriginalCompoundData == rhs.m_OriginalCompoundData);
+}
+//-----------------------------------------------------------------------------
+bool SESubstanceManager::operator!=(SESubstanceManager const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

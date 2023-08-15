@@ -53,7 +53,6 @@ int HowToScenarioBase()
 
 
   // Let's request data do be tracked that is in the scenario
-  biogears::SEPatientActionCollection* action;
   auto& patientactions = biogears->GetActions().GetPatientActions();
 
   //pneumothorax: 

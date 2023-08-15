@@ -44,6 +44,9 @@ public:
 
   virtual void ToString(std::ostream& str) const override;
 
+  bool operator==(SETubeCuffLeak const& rhs) const;
+  bool operator!=(SETubeCuffLeak const& rhs) const;
+
 protected:
   SEScalar0To1* m_Severity;
 };

@@ -46,13 +46,13 @@ public:
   void Clear() override;
 
   /** @name GetScalar
-  *   @brief - A reflextion type call that will return the Scalar associated
-  *            with the string. ex. GetScalar("Hematocrit") will return the
-  *            SEScalarPercent object associated with Hematocrit
-  *   @details - Note this is an expensive call as it will string compare many times
-  *              This is best used, and intended for, you to dynamically prepopulate
-  *              a mapping data structure that will help access what you need
-  */
+   *   @brief - A reflextion type call that will return the Scalar associated
+   *            with the string. ex. GetScalar("Hematocrit") will return the
+   *            SEScalarPercent object associated with Hematocrit
+   *   @details - Note this is an expensive call as it will string compare many times
+   *              This is best used, and intended for, you to dynamically prepopulate
+   *              a mapping data structure that will help access what you need
+   */
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
@@ -64,11 +64,11 @@ protected:
   void Unload(CDM::InhalerData& data) const;
 
   /** @name StateChange
-  *   @brief - This method is called when ever there is a state change
-  *            Specically a new file has been loaded, configuration action, or the system reset
-  *            Engine specific methodology can then update their logic.
-  */
-  virtual void StateChange() { } //TODO: Refactor the need for this definiiton;
+   *   @brief - This method is called when ever there is a state change
+   *            Specically a new file has been loaded, configuration action, or the system reset
+   *            Engine specific methodology can then update their logic.
+   */
+  virtual void StateChange() { } // TODO: Refactor the need for this definiiton;
   void Merge(const SEInhaler& from);
   void ProcessConfiguration(const SEInhalerConfiguration& config);
 
@@ -95,6 +95,9 @@ public:
   bool HasSubstance() const;
   void SetSubstance(const SESubstance* sub);
   SESubstance* GetSubstance() const;
+
+  bool operator==(SEInhaler const&) const;
+  bool operator!=(SEInhaler const&) const;
 
 protected:
   std::stringstream m_ss;
