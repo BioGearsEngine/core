@@ -44,6 +44,9 @@ public:
 
   virtual void ToString(std::ostream& str) const override;
 
+  bool operator==(SEVaporizerFailure const& rhs) const;
+  bool operator!=(SEVaporizerFailure const& rhs) const;
+
 protected:
   SEScalar0To1* m_Severity;
 };

@@ -65,6 +65,9 @@ public:
 
   virtual void ToString(std::ostream& str) const;
 
+  bool operator==(SEAnesthesiaMachineChamber const& rhs) const;
+  bool operator!=(SEAnesthesiaMachineChamber const& rhs) const;
+
 protected:
   CDM::enumOnOff::value m_State;
   const SESubstance* m_Substance;

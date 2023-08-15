@@ -20,60 +20,61 @@ SEExpiratoryValveLeak::SEExpiratoryValveLeak()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEExpiratoryValveLeak::~SEExpiratoryValveLeak()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEExpiratoryValveLeak::Clear()
 {
   SEAnesthesiaMachineAction::Clear();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SEExpiratoryValveLeak::IsValid() const
 {
   return SEAnesthesiaMachineAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SEExpiratoryValveLeak::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEExpiratoryValveLeak::Load(const CDM::ExpiratoryValveLeakData& in)
 {
   SEAnesthesiaMachineAction::Load(in);
   GetSeverity().Load(in.Severity());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ExpiratoryValveLeakData* SEExpiratoryValveLeak::Unload() const
 {
   CDM::ExpiratoryValveLeakData* data = new CDM::ExpiratoryValveLeakData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEExpiratoryValveLeak::Unload(CDM::ExpiratoryValveLeakData& data) const
 {
   SEAnesthesiaMachineAction::Unload(data);
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEExpiratoryValveLeak::HasSeverity() const
 {
   return m_Severity != nullptr;
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEExpiratoryValveLeak::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SEExpiratoryValveLeak::ToString(std::ostream& str) const
 {
   str << "Anesthesia Machine Action : Expiratory Valve Leak";
@@ -83,4 +84,20 @@ void SEExpiratoryValveLeak::ToString(std::ostream& str) const
   HasSeverity() ? str << *m_Severity : str << "NaN";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
+bool SEExpiratoryValveLeak::operator==(SEExpiratoryValveLeak const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity)
+                                         : m_Severity == rhs.m_Severity)
+    && m_Comment == rhs.m_Comment;
+}
+//-------------------------------------------------------------------------------
+bool SEExpiratoryValveLeak::operator!=(SEExpiratoryValveLeak const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

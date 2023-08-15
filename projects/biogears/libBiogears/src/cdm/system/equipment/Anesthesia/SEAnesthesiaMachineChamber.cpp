@@ -99,7 +99,7 @@ void SEAnesthesiaMachineChamber::Merge(const SEAnesthesiaMachineChamber& from)
 //-------------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachineChamber::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachineChamber::GetScalar(const std::string& name)
@@ -180,5 +180,20 @@ void SEAnesthesiaMachineChamber::ToString(std::ostream& str) const
         << ", Substance :" << GetSubstance()->GetName() << std::flush;
   else
     str << "Action not specified properly" << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEAnesthesiaMachineChamber::operator==(SEAnesthesiaMachineChamber const& rhs) const
+{
+  return ((m_Substance && rhs.m_Substance) ? m_Substance->operator==(*rhs.m_Substance)
+                                           : m_Substance == rhs.m_Substance)
+    && m_State == rhs.m_State
+    && ((m_SubstanceFraction && rhs.m_SubstanceFraction)
+          ? m_SubstanceFraction->operator==(*rhs.m_SubstanceFraction)
+          : m_SubstanceFraction == rhs.m_SubstanceFraction);
+}
+//-------------------------------------------------------------------------------
+bool SEAnesthesiaMachineChamber::operator!=(SEAnesthesiaMachineChamber const& rhs) const
+{
+  return !(*this == rhs);
 }
 }

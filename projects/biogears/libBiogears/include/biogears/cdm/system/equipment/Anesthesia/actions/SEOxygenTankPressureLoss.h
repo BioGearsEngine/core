@@ -33,6 +33,9 @@ public:
   virtual bool Load(const CDM::OxygenTankPressureLossData& in);
   virtual CDM::OxygenTankPressureLossData* Unload() const override;
 
+  bool operator==(SEOxygenTankPressureLoss const& rhs) const;
+  bool operator!=(SEOxygenTankPressureLoss const& rhs) const;
+
 protected:
   virtual void Unload(CDM::OxygenTankPressureLossData& data) const;
 

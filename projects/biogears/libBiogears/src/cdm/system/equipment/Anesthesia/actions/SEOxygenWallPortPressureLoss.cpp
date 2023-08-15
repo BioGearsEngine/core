@@ -20,51 +20,53 @@ SEOxygenWallPortPressureLoss::SEOxygenWallPortPressureLoss()
 {
   m_State = CDM::enumOnOff::Off;
 }
-
+//-------------------------------------------------------------------------------
 SEOxygenWallPortPressureLoss::~SEOxygenWallPortPressureLoss()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEOxygenWallPortPressureLoss::Clear()
 {
   SEAnesthesiaMachineAction::Clear();
   m_State = (CDM::enumOnOff::value)-1;
 }
-
+//-------------------------------------------------------------------------------
 bool SEOxygenWallPortPressureLoss::IsValid() const
 {
   return SEAnesthesiaMachineAction::IsValid();
 }
+//-------------------------------------------------------------------------------
 bool SEOxygenWallPortPressureLoss::IsActive() const
 {
   return m_State == CDM::enumOnOff::On;
 }
+//-------------------------------------------------------------------------------
 void SEOxygenWallPortPressureLoss::SetActive(bool b)
 {
   m_State = b ? CDM::enumOnOff::On : CDM::enumOnOff::Off;
 }
-
+//-------------------------------------------------------------------------------
 bool SEOxygenWallPortPressureLoss::Load(const CDM::OxygenWallPortPressureLossData& in)
 {
   SEAnesthesiaMachineAction::Load(in);
   SetActive(in.State() == CDM::enumOnOff::On ? true : false);
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::OxygenWallPortPressureLossData* SEOxygenWallPortPressureLoss::Unload() const
 {
   CDM::OxygenWallPortPressureLossData* data = new CDM::OxygenWallPortPressureLossData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEOxygenWallPortPressureLoss::Unload(CDM::OxygenWallPortPressureLossData& data) const
 {
   SEAnesthesiaMachineAction::Unload(data);
   data.State(IsActive() ? CDM::enumOnOff::On : CDM::enumOnOff::Off);
 }
-
+//-------------------------------------------------------------------------------
 void SEOxygenWallPortPressureLoss::ToString(std::ostream& str) const
 {
   str << "Anesthesia Machine Action : Oxygen Wall Port Pressure Loss";
@@ -73,4 +75,19 @@ void SEOxygenWallPortPressureLoss::ToString(std::ostream& str) const
   str << "\n\tState: " << IsActive();
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
+bool SEOxygenWallPortPressureLoss::operator==(SEOxygenWallPortPressureLoss const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_State == rhs.m_State
+    && m_Comment == rhs.m_Comment;
+}
+//-------------------------------------------------------------------------------
+bool SEOxygenWallPortPressureLoss::operator!=(SEOxygenWallPortPressureLoss const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

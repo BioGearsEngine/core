@@ -35,6 +35,9 @@ public:
   virtual bool Load(const CDM::MaskLeakData& in);
   virtual CDM::MaskLeakData* Unload() const override;
 
+  bool operator==(SEMaskLeak const& rhs) const;
+  bool operator!=(SEMaskLeak const& rhs) const;
+
 protected:
   virtual void Unload(CDM::MaskLeakData& data) const;
 

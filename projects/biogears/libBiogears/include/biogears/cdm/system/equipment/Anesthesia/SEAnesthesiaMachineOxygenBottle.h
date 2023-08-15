@@ -56,6 +56,9 @@ public:
 
   virtual void ToString(std::ostream& str);
 
+  bool operator==(SEAnesthesiaMachineOxygenBottle const& rhs) const;
+  bool operator!=(SEAnesthesiaMachineOxygenBottle const& rhs) const;
+
 protected:
   SEScalarVolume* m_Volume;
 };

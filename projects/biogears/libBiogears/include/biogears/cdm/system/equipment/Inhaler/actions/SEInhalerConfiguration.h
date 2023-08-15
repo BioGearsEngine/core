@@ -54,6 +54,10 @@ public:
 
   virtual void ToString(std::ostream& str) const override;
 
+  bool operator==(SEInhalerConfiguration const&) const;
+  bool operator!=(SEInhalerConfiguration const&) const;
+
+
 protected:
   SESubstanceManager& m_Substances;
 

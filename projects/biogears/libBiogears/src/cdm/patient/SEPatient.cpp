@@ -74,9 +74,9 @@ SEPatient::SEPatient(Logger* logger)
   m_VitalCapacity = nullptr;
 
   for (CDM::enumPatientEvent::value key = static_cast<CDM::enumPatientEvent::value>(0); key < CDM::enumPatientEvent::TotalPatientEvents; key = static_cast<CDM::enumPatientEvent::value>(key + 1)) {
-    //CDM::enumPatientEvent::value is a code generated C style enum.
-    //To my knowladge it must be conitnguous as XSD does not support assinigng manual values to XML Enums that are use dto generated C++ counterpart
-    //Short story is the goal is to set every possible enum to a value of false and accomidate future extensions ot the enum.
+    // CDM::enumPatientEvent::value is a code generated C style enum.
+    // To my knowladge it must be conitnguous as XSD does not support assinigng manual values to XML Enums that are use dto generated C++ counterpart
+    // Short story is the goal is to set every possible enum to a value of false and accomidate future extensions ot the enum.
     m_EventState[key] = false;
     m_EventDuration_s[key] = 0;
   }
@@ -127,9 +127,9 @@ void SEPatient::Clear()
   m_EventHandler = nullptr;
 
   for (CDM::enumPatientEvent::value key = static_cast<CDM::enumPatientEvent::value>(0); key < CDM::enumPatientEvent::TotalPatientEvents; key = static_cast<CDM::enumPatientEvent::value>(key + 1)) {
-    //CDM::enumPatientEvent::value is a code generated C style enum.
-    //To my knowladge it must be conitnguous as XSD does not support assinigng manual values to XML Enums that are use dto generated C++ counterpart
-    //Short story is the goal is to set every possible enum to a value of false and accomidate future extensions ot the enum.
+    // CDM::enumPatientEvent::value is a code generated C style enum.
+    // To my knowladge it must be conitnguous as XSD does not support assinigng manual values to XML Enums that are use dto generated C++ counterpart
+    // Short story is the goal is to set every possible enum to a value of false and accomidate future extensions ot the enum.
     m_EventState[key] = false;
     m_EventDuration_s[key] = 0;
   }
@@ -529,7 +529,7 @@ void SEPatient::SetEventCallback(CDM::enumPatientEvent::value type, void (*callb
 void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time)
 {
   if (m_EventState[type] == active) {
-    return; //No Change
+    return; // No Change
   } else {
     m_ss.str("");
     m_ss << "[Event] " << time << ", ";
@@ -896,7 +896,7 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
         m_ss.str(""); // make m_ss empty and nothing will be logged, this event does not need to get logged each activation
         break;
       default:
-        m_ss << " Patient has exited state : " << type; //TODO CDM::enumPatientEvent::_xsd_enumPatientEvent_literals_[type];
+        m_ss << " Patient has exited state : " << type; // TODO CDM::enumPatientEvent::_xsd_enumPatientEvent_literals_[type];
       }
     }
     if (!m_ss.str().empty())
@@ -1767,4 +1767,56 @@ double SEPatient::GetVitalCapacity(const VolumeUnit& unit) const
   return m_VitalCapacity->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
+bool SEPatient::operator==(SEPatient const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_EventDuration_s == rhs.m_EventDuration_s
+    && m_Name == rhs.m_Name
+    && m_Annotation == rhs.m_Annotation
+    && m_Gender == rhs.m_Gender
+    && m_Age == rhs.m_Age
+    && m_Weight == rhs.m_Weight
+    && m_Height == rhs.m_Height
+    && m_BodyDensity == rhs.m_BodyDensity
+    && m_BodyFatFraction == rhs.m_BodyFatFraction
+    && m_LeanBodyMass == rhs.m_LeanBodyMass
+    && m_MaxWorkRate == rhs.m_MaxWorkRate
+    && m_MuscleMass == rhs.m_MuscleMass
+    && m_BloodType == rhs.m_BloodType
+    && m_BloodRh == rhs.m_BloodRh
+    && m_AlveoliSurfaceArea == rhs.m_AlveoliSurfaceArea
+    && m_RightLungRatio == rhs.m_RightLungRatio
+    && m_SkinSurfaceArea == rhs.m_SkinSurfaceArea
+    && m_BasalMetabolicRate == rhs.m_BasalMetabolicRate
+    && m_BloodVolumeBaseline == rhs.m_BloodVolumeBaseline
+    && m_DiastolicArterialPressureBaseline == rhs.m_DiastolicArterialPressureBaseline
+    && m_HeartRateBaseline == rhs.m_HeartRateBaseline
+    && m_Hyperhidrosis == rhs.m_Hyperhidrosis
+    && m_MeanArterialPressureBaseline == rhs.m_MeanArterialPressureBaseline
+    && m_PainSusceptibility == rhs.m_PainSusceptibility
+    && m_RespirationRateBaseline == rhs.m_RespirationRateBaseline
+    && m_RespiratoryDriverAmplitudeBaseline == rhs.m_RespiratoryDriverAmplitudeBaseline
+    && m_SleepAmount == rhs.m_SleepAmount
+    && m_SystolicArterialPressureBaseline == rhs.m_SystolicArterialPressureBaseline
+    && m_TotalVentilationBaseline == rhs.m_TotalVentilationBaseline
+    && m_TidalVolumeBaseline == rhs.m_TidalVolumeBaseline
+    && m_HeartRateMaximum == rhs.m_HeartRateMaximum
+    && m_HeartRateMinimum == rhs.m_HeartRateMinimum
+    && m_ExpiratoryReserveVolume == rhs.m_ExpiratoryReserveVolume
+    && m_FunctionalResidualCapacity == rhs.m_FunctionalResidualCapacity
+    && m_InspiratoryCapacity == rhs.m_InspiratoryCapacity
+    && m_InspiratoryReserveVolume == rhs.m_InspiratoryReserveVolume
+    && m_ResidualVolume == rhs.m_ResidualVolume
+    && m_TotalLungCapacity == rhs.m_TotalLungCapacity
+    && m_VitalCapacity == rhs.m_VitalCapacity
+    && m_EventState == rhs.m_EventState;
+}
+//-------------------------------------------------------------------------------
+bool SEPatient::operator!=(SEPatient const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

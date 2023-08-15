@@ -295,7 +295,7 @@ void SEAnesthesiaMachine::SetEvent(CDM::enumAnesthesiaMachineEvent::value type, 
   if (m_EventState.find(type) != m_EventState.end())
     b = m_EventState[type];
   if (b == active)
-    return; //No Change
+    return; // No Change
   if (active != b) {
     m_ss.str("");
     m_ss << "[Event] " << time << ", ";
@@ -311,7 +311,7 @@ void SEAnesthesiaMachine::SetEvent(CDM::enumAnesthesiaMachineEvent::value type, 
         m_ss << "Relief valve active - pressure exceeded";
         break;
       default:
-        m_ss << "Anesthesia Machine Event On : " << type; //TODO CDM::enumAnesthesiaMachineEvent::_xsd_enumAnesthesiaMachineEvent_literals_[type];
+        m_ss << "Anesthesia Machine Event On : " << type; // TODO CDM::enumAnesthesiaMachineEvent::_xsd_enumAnesthesiaMachineEvent_literals_[type];
       }
     } else {
       switch (type) {
@@ -647,6 +647,89 @@ void SEAnesthesiaMachine::RemoveOxygenBottleTwo()
 Tree<const char*> SEAnesthesiaMachine::GetPhysiologyRequestGraph() const
 {
   return { "" };
+}
+//-----------------------------------------------------------------------------
+bool SEAnesthesiaMachine::operator==(SEAnesthesiaMachine const& rhs) const
+{
+  // return m_EventState == rhs.m_EventState
+  //   && m_EventDuration_s == rhs.m_EventDuration_s
+  //   && m_Connection == rhs.m_Connection
+  //   && ((m_InletFlow && rhs.m_InletFlow)
+  //         ? m_InletFlow->operator==(*rhs.m_InletFlow)
+  //         : m_InletFlow == rhs.m_InletFlow)
+  //   && ((m_InspiratoryExpiratoryRatio && rhs.m_InspiratoryExpiratoryRatio)
+  //         ? m_InspiratoryExpiratoryRatio->operator==(*rhs.m_InspiratoryExpiratoryRatio)
+  //         : (m_InspiratoryExpiratoryRatio == rhs.m_InspiratoryExpiratoryRatio))
+  //   && m_OxygenSource == rhs.m_OxygenSource
+  //   && ((m_PositiveEndExpiredPressure && rhs.m_PositiveEndExpiredPressure)
+  //         ? m_PositiveEndExpiredPressure->operator==(*rhs.m_PositiveEndExpiredPressure)
+  //         : (m_PositiveEndExpiredPressure == rhs.m_PositiveEndExpiredPressure))
+  //   && m_PrimaryGas == rhs.m_PrimaryGas
+  //   && ((m_RespiratoryRate && rhs.m_RespiratoryRate)
+  //         ? m_RespiratoryRate->operator==(*rhs.m_RespiratoryRate)
+  //         : (m_RespiratoryRate == rhs.m_RespiratoryRate))
+  //   && ((m_ReliefValvePressure && rhs.m_ReliefValvePressure)
+  //         ? m_ReliefValvePressure->operator==(*rhs.m_ReliefValvePressure)
+  //         : (m_ReliefValvePressure == rhs.m_ReliefValvePressure))
+  //   && ((m_VentilatorPressure && rhs.m_VentilatorPressure)
+  //         ? m_VentilatorPressure->operator==(*rhs.m_VentilatorPressure)
+  //         : (m_VentilatorPressure == rhs.m_VentilatorPressure))
+  //   && ((m_LeftChamber && rhs.m_LeftChamber)
+  //         ? m_LeftChamber->operator==(*rhs.m_LeftChamber)
+  //         : (m_LeftChamber == rhs.m_LeftChamber))
+  //   && ((m_RightChamber && rhs.m_RightChamber)
+  //         ? m_RightChamber->operator==(*rhs.m_RightChamber)
+  //         : (m_RightChamber == rhs.m_RightChamber))
+  //   && ((m_OxygenBottleOne && rhs.m_OxygenBottleOne)
+  //         ? m_OxygenBottleOne->operator==(*rhs.m_OxygenBottleOne)
+  //         : (m_OxygenBottleOne == rhs.m_OxygenBottleOne))
+  //   && ((m_OxygenBottleTwo && rhs.m_OxygenBottleTwo)
+  //         ? m_OxygenBottleTwo->operator==(*rhs.m_OxygenBottleTwo)
+  //         : (m_OxygenBottleTwo == rhs.m_OxygenBottleTwo))
+  //   && (m_Substances == rhs.m_Substances);
+
+  bool equivilant = m_EventState == rhs.m_EventState;
+  equivilant &= m_EventDuration_s == rhs.m_EventDuration_s;
+  equivilant &= m_Connection == rhs.m_Connection;
+  equivilant &= ((m_InletFlow && rhs.m_InletFlow)
+                   ? m_InletFlow->operator==(*rhs.m_InletFlow)
+                   : m_InletFlow == rhs.m_InletFlow);
+  equivilant &= ((m_InspiratoryExpiratoryRatio && rhs.m_InspiratoryExpiratoryRatio)
+                   ? m_InspiratoryExpiratoryRatio->operator==(*rhs.m_InspiratoryExpiratoryRatio)
+                   : (m_InspiratoryExpiratoryRatio == rhs.m_InspiratoryExpiratoryRatio));
+  equivilant &= m_OxygenSource == rhs.m_OxygenSource;
+  equivilant &= ((m_PositiveEndExpiredPressure && rhs.m_PositiveEndExpiredPressure)
+                   ? m_PositiveEndExpiredPressure->operator==(*rhs.m_PositiveEndExpiredPressure)
+                   : (m_PositiveEndExpiredPressure == rhs.m_PositiveEndExpiredPressure));
+  equivilant &= m_PrimaryGas == rhs.m_PrimaryGas;
+  equivilant &= ((m_RespiratoryRate && rhs.m_RespiratoryRate)
+                   ? m_RespiratoryRate->operator==(*rhs.m_RespiratoryRate)
+                   : (m_RespiratoryRate == rhs.m_RespiratoryRate));
+  equivilant &= ((m_ReliefValvePressure && rhs.m_ReliefValvePressure)
+                   ? m_ReliefValvePressure->operator==(*rhs.m_ReliefValvePressure)
+                   : (m_ReliefValvePressure == rhs.m_ReliefValvePressure));
+  equivilant &= ((m_VentilatorPressure && rhs.m_VentilatorPressure)
+                   ? m_VentilatorPressure->operator==(*rhs.m_VentilatorPressure)
+                   : (m_VentilatorPressure == rhs.m_VentilatorPressure));
+  equivilant &= ((m_LeftChamber && rhs.m_LeftChamber)
+                   ? m_LeftChamber->operator==(*rhs.m_LeftChamber)
+                   : (m_LeftChamber == rhs.m_LeftChamber));
+  equivilant &= ((m_RightChamber && rhs.m_RightChamber)
+                   ? m_RightChamber->operator==(*rhs.m_RightChamber)
+                   : (m_RightChamber == rhs.m_RightChamber));
+  equivilant &= ((m_OxygenBottleOne && rhs.m_OxygenBottleOne)
+                   ? m_OxygenBottleOne->operator==(*rhs.m_OxygenBottleOne)
+                   : (m_OxygenBottleOne == rhs.m_OxygenBottleOne));
+  equivilant &= ((m_OxygenBottleTwo && rhs.m_OxygenBottleTwo)
+                   ? m_OxygenBottleTwo->operator==(*rhs.m_OxygenBottleTwo)
+                   : (m_OxygenBottleTwo == rhs.m_OxygenBottleTwo));
+  equivilant &= (m_Substances == rhs.m_Substances);
+  return equivilant;
+}
+//-----------------------------------------------------------------------------
+bool SEAnesthesiaMachine::operator!=(SEAnesthesiaMachine const& rhs) const
+{
+  return !(*this == rhs);
 }
 //-----------------------------------------------------------------------------
 

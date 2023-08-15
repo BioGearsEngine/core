@@ -49,7 +49,7 @@ class VolumePerTimeUnit;
 namespace io {
   class Patient;
 }
-} //namespace biogears
+} // namespace biogears
 namespace std {
 BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, bool>;
 BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, void (*)(bool)>;
@@ -73,13 +73,13 @@ public:
   virtual CDM::PatientData* Unload() const;
 
   /** @name GetScalar
-  *   @brief - A reflextion type call that will return the Scalar associated
-  *            with the string. ex. GetScalar("Hematocrit") will return the
-  *            SEScalarPercent object associated with Hematocrit
-  *   @details - Note this is an expensive call as it will string compare many times
-  *              This is best used, and intended for, you to dynamically prepopulate
-  *              a mapping data structure that will help access what you need
-  */
+   *   @brief - A reflextion type call that will return the Scalar associated
+   *            with the string. ex. GetScalar("Hematocrit") will return the
+   *            SEScalarPercent object associated with Hematocrit
+   *   @details - Note this is an expensive call as it will string compare many times
+   *              This is best used, and intended for, you to dynamically prepopulate
+   *              a mapping data structure that will help access what you need
+   */
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
@@ -93,7 +93,7 @@ public:
    *  @brief - Set a callback class to invoke when any event changes
    *  @details - Note that the handler callback can and will be called in the middle of a time step
    *             So system and compartment objects may not be completely up to date when called.
-   *             Use the PhysiologyEngineInterface::SetEventHandler to ensure that all engine 
+   *             Use the PhysiologyEngineInterface::SetEventHandler to ensure that all engine
    *             data is up to date at the time the callback is invoked
    */
   virtual void ForwardEvents(SEEventHandler* handler) const;
@@ -263,6 +263,9 @@ public:
   virtual bool HasVitalCapacity() const;
   virtual SEScalarVolume& GetVitalCapacity();
   virtual double GetVitalCapacity(const VolumeUnit& unit) const;
+
+  bool SEPatient::operator==(SEPatient const& rhs) const;
+  bool SEPatient::operator!=(SEPatient const& rhs) const;
 
 protected:
   virtual void Unload(CDM::PatientData& data) const;

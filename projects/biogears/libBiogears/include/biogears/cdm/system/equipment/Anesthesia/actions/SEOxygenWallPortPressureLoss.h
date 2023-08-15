@@ -33,6 +33,9 @@ public:
   virtual bool Load(const CDM::OxygenWallPortPressureLossData& in);
   virtual CDM::OxygenWallPortPressureLossData* Unload() const override;
 
+  bool operator==(SEOxygenWallPortPressureLoss const& rhs) const;
+  bool operator!=(SEOxygenWallPortPressureLoss const& rhs) const;
+
 protected:
   virtual void Unload(CDM::OxygenWallPortPressureLossData& data) const;
 

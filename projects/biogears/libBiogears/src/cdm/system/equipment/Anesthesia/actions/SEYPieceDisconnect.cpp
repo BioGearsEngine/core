@@ -20,60 +20,61 @@ SEYPieceDisconnect::SEYPieceDisconnect()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEYPieceDisconnect::~SEYPieceDisconnect()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEYPieceDisconnect::Clear()
 {
   SEAnesthesiaMachineAction::Clear();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SEYPieceDisconnect::IsValid() const
 {
   return SEAnesthesiaMachineAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SEYPieceDisconnect::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-
+//-------------------------------------------------------------------------------
 bool SEYPieceDisconnect::Load(const CDM::YPieceDisconnectData& in)
 {
   SEAnesthesiaMachineAction::Load(in);
   GetSeverity().Load(in.Severity());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::YPieceDisconnectData* SEYPieceDisconnect::Unload() const
 {
   CDM::YPieceDisconnectData* data = new CDM::YPieceDisconnectData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEYPieceDisconnect::Unload(CDM::YPieceDisconnectData& data) const
 {
   SEAnesthesiaMachineAction::Unload(data);
   if (m_Severity != nullptr)
     data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEYPieceDisconnect::HasSeverity() const
 {
   return m_Severity != nullptr;
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEYPieceDisconnect::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SEYPieceDisconnect::ToString(std::ostream& str) const
 {
   str << "Anesthesia Machine Action : YPiece Disconnect";
@@ -83,4 +84,20 @@ void SEYPieceDisconnect::ToString(std::ostream& str) const
   HasSeverity() ? str << *m_Severity : str << "NaN";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
+bool SEYPieceDisconnect::operator==(SEYPieceDisconnect const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity)
+                                         : m_Severity == rhs.m_Severity)
+    && m_Comment == rhs.m_Comment;
+}
+//-------------------------------------------------------------------------------
+bool SEYPieceDisconnect::operator!=(SEYPieceDisconnect const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }
