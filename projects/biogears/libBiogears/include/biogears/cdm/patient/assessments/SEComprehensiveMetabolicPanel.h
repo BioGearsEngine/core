@@ -31,8 +31,8 @@ public:
   static constexpr const char* TypeTag() { return "SEComprehensiveMetabolicPanel"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset() override; //reset values
-  virtual void Clear() override; //clear memory
+  virtual void Reset() override; // reset values
+  virtual void Clear() override; // clear memory
 
   virtual bool Load(const CDM::ComprehensiveMetabolicPanelData& in);
   virtual CDM::ComprehensiveMetabolicPanelData* Unload() override;
@@ -82,6 +82,9 @@ public:
 
   bool HasTotalProtein() const;
   SEScalarMassPerVolume& GetTotalProtein();
+
+  bool operator==(SEComprehensiveMetabolicPanel const&) const;
+  bool operator!=(SEComprehensiveMetabolicPanel const&) const;
 
 protected:
   SEScalarMassPerVolume* m_Albumin;

@@ -34,12 +34,12 @@ SEComprehensiveMetabolicPanel::SEComprehensiveMetabolicPanel()
   m_TotalBilirubin = nullptr;
   m_TotalProtein = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEComprehensiveMetabolicPanel::~SEComprehensiveMetabolicPanel()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEComprehensiveMetabolicPanel::Clear()
 {
   SEPatientAssessment::Clear();
@@ -58,7 +58,7 @@ void SEComprehensiveMetabolicPanel::Clear()
   SAFE_DELETE(m_TotalBilirubin);
   SAFE_DELETE(m_TotalProtein);
 }
-
+//-------------------------------------------------------------------------------
 void SEComprehensiveMetabolicPanel::Reset()
 {
   SEPatientAssessment::Reset();
@@ -77,21 +77,21 @@ void SEComprehensiveMetabolicPanel::Reset()
   INVALIDATE_PROPERTY(m_TotalBilirubin);
   INVALIDATE_PROPERTY(m_TotalProtein);
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::Load(const CDM::ComprehensiveMetabolicPanelData& in)
 {
   SEPatientAssessment::Load(in);
   // TODO
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ComprehensiveMetabolicPanelData* SEComprehensiveMetabolicPanel::Unload()
 {
   CDM::ComprehensiveMetabolicPanelData* data = new CDM::ComprehensiveMetabolicPanelData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEComprehensiveMetabolicPanel::Unload(CDM::ComprehensiveMetabolicPanelData& data)
 {
   SEPatientAssessment::Unload(data);
@@ -124,7 +124,7 @@ void SEComprehensiveMetabolicPanel::Unload(CDM::ComprehensiveMetabolicPanelData&
   if (HasTotalProtein())
     data.TotalProtein(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TotalProtein->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasAlbumin() const
 {
   return m_Albumin == nullptr ? false : m_Albumin->IsValid();
@@ -135,7 +135,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetAlbumin()
     m_Albumin = new SEScalarMassPerVolume();
   return *m_Albumin;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasALP() const
 {
   return m_ALP == nullptr ? false : m_ALP->IsValid();
@@ -146,7 +146,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetALP()
     m_ALP = new SEScalarMassPerVolume();
   return *m_ALP;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasALT() const
 {
   return m_ALT == nullptr ? false : m_ALT->IsValid();
@@ -157,7 +157,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetALT()
     m_ALT = new SEScalarMassPerVolume();
   return *m_ALT;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasAST() const
 {
   return m_AST == nullptr ? false : m_AST->IsValid();
@@ -168,7 +168,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetAST()
     m_AST = new SEScalarMassPerVolume();
   return *m_AST;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasBUN() const
 {
   return m_BUN == nullptr ? false : m_BUN->IsValid();
@@ -179,7 +179,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetBUN()
     m_BUN = new SEScalarMassPerVolume();
   return *m_BUN;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasCalcium() const
 {
   return m_Calcium == nullptr ? false : m_Calcium->IsValid();
@@ -190,7 +190,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetCalcium()
     m_Calcium = new SEScalarMassPerVolume();
   return *m_Calcium;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasChloride() const
 {
   return m_Chloride == nullptr ? false : m_Chloride->IsValid();
@@ -201,7 +201,7 @@ SEScalarAmountPerVolume& SEComprehensiveMetabolicPanel::GetChloride()
     m_Chloride = new SEScalarAmountPerVolume();
   return *m_Chloride;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasCO2() const
 {
   return m_CO2 == nullptr ? false : m_CO2->IsValid();
@@ -212,7 +212,7 @@ SEScalarAmountPerVolume& SEComprehensiveMetabolicPanel::GetCO2()
     m_CO2 = new SEScalarAmountPerVolume();
   return *m_CO2;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasCreatinine() const
 {
   return m_Creatinine == nullptr ? false : m_Creatinine->IsValid();
@@ -223,7 +223,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetCreatinine()
     m_Creatinine = new SEScalarMassPerVolume();
   return *m_Creatinine;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasGlucose() const
 {
   return m_Glucose == nullptr ? false : m_Glucose->IsValid();
@@ -234,7 +234,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetGlucose()
     m_Glucose = new SEScalarMassPerVolume();
   return *m_Glucose;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasPotassium() const
 {
   return m_Potassium == nullptr ? false : m_Potassium->IsValid();
@@ -245,7 +245,7 @@ SEScalarAmountPerVolume& SEComprehensiveMetabolicPanel::GetPotassium()
     m_Potassium = new SEScalarAmountPerVolume();
   return *m_Potassium;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasSodium() const
 {
   return m_Sodium == nullptr ? false : m_Sodium->IsValid();
@@ -256,7 +256,7 @@ SEScalarAmountPerVolume& SEComprehensiveMetabolicPanel::GetSodium()
     m_Sodium = new SEScalarAmountPerVolume();
   return *m_Sodium;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasTotalBilirubin() const
 {
   return m_TotalBilirubin == nullptr ? false : m_TotalBilirubin->IsValid();
@@ -267,7 +267,7 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetTotalBilirubin()
     m_TotalBilirubin = new SEScalarMassPerVolume();
   return *m_TotalBilirubin;
 }
-
+//-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasTotalProtein() const
 {
   return m_TotalProtein == nullptr ? false : m_TotalProtein->IsValid();
@@ -278,4 +278,31 @@ SEScalarMassPerVolume& SEComprehensiveMetabolicPanel::GetTotalProtein()
     m_TotalProtein = new SEScalarMassPerVolume();
   return *m_TotalProtein;
 }
+//-------------------------------------------------------------------------------
+bool SEComprehensiveMetabolicPanel::operator==(SEComprehensiveMetabolicPanel const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_Albumin && rhs.m_Albumin) ? m_Albumin->operator==(*rhs.m_Albumin) : m_Albumin == rhs.m_Albumin)
+    && ((m_ALP && rhs.m_ALP) ? m_ALP->operator==(*rhs.m_ALP) : m_ALP == rhs.m_ALP)
+    && ((m_ALT && rhs.m_ALT) ? m_ALT->operator==(*rhs.m_ALT) : m_ALT == rhs.m_ALT)
+    && ((m_AST && rhs.m_AST) ? m_AST->operator==(*rhs.m_AST) : m_AST == rhs.m_AST)
+    && ((m_BUN && rhs.m_BUN) ? m_BUN->operator==(*rhs.m_BUN) : m_BUN == rhs.m_BUN)
+    && ((m_Calcium && rhs.m_Calcium) ? m_Calcium->operator==(*rhs.m_Calcium) : m_Calcium == rhs.m_Calcium)
+    && ((m_Chloride && rhs.m_Chloride) ? m_Chloride->operator==(*rhs.m_Chloride) : m_Chloride == rhs.m_Chloride)
+    && ((m_CO2 && rhs.m_CO2) ? m_CO2->operator==(*rhs.m_CO2) : m_CO2 == rhs.m_CO2)
+    && ((m_Creatinine && rhs.m_Creatinine) ? m_Creatinine->operator==(*rhs.m_Creatinine) : m_Creatinine == rhs.m_Creatinine)
+    && ((m_Glucose && rhs.m_Glucose) ? m_Glucose->operator==(*rhs.m_Glucose) : m_Glucose == rhs.m_Glucose)
+    && ((m_Potassium && rhs.m_Potassium) ? m_Potassium->operator==(*rhs.m_Potassium) : m_Potassium == rhs.m_Potassium)
+    && ((m_Sodium && rhs.m_Sodium) ? m_Sodium->operator==(*rhs.m_Sodium) : m_Sodium == rhs.m_Sodium)
+    && ((m_TotalBilirubin && rhs.m_TotalBilirubin) ? m_TotalBilirubin->operator==(*rhs.m_TotalBilirubin) : m_TotalBilirubin == rhs.m_TotalBilirubin)
+    && ((m_TotalProtein && rhs.m_TotalProtein) ? m_TotalProtein->operator==(*rhs.m_TotalProtein) : m_TotalProtein == rhs.m_TotalProtein)
+  ;
+}
+bool SEComprehensiveMetabolicPanel::operator!=(SEComprehensiveMetabolicPanel const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -24,7 +24,8 @@ namespace io {
   class PatientAssessments;
 }
 class BIOGEARS_API SEPulmonaryFunctionTest : public SEPatientAssessment {
-friend io::PatientAssessments;
+  friend io::PatientAssessments;
+
 public:
   SEPulmonaryFunctionTest();
   virtual ~SEPulmonaryFunctionTest();
@@ -86,6 +87,9 @@ public:
 
   virtual bool HasLungVolumePlot();
   virtual SEFunctionVolumeVsTime& GetLungVolumePlot();
+
+  bool operator==(SEPulmonaryFunctionTest const&) const;
+  bool operator!=(SEPulmonaryFunctionTest const&) const;
 
 protected:
   int m_NumberOfPlotPoints;

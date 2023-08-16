@@ -21,40 +21,45 @@ SEPsychomotorVigilanceTask::SEPsychomotorVigilanceTask()
   m_AttentionLapses = nullptr;
   m_ReactionTime = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEPsychomotorVigilanceTask::~SEPsychomotorVigilanceTask()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEPsychomotorVigilanceTask::Clear()
 {
   SEPatientAssessment::Clear();
   SAFE_DELETE(m_AttentionLapses);
   SAFE_DELETE(m_ReactionTime);
 }
-
+//-------------------------------------------------------------------------------
 void SEPsychomotorVigilanceTask::Reset()
 {
   SEPatientAssessment::Reset();
   INVALIDATE_PROPERTY(m_AttentionLapses);
   INVALIDATE_PROPERTY(m_ReactionTime);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPsychomotorVigilanceTask::Load(const CDM::PsychomotorVigilanceTaskData& in)
 {
   SEPatientAssessment::Load(in);
-  // TODO
+  if (in.AttentionLapses().present()) {
+    GetAttentionLapses().Load(in.AttentionLapses().get());
+  }
+  if (in.ReactionTime().present()) {
+    GetReactionTime().Load(in.ReactionTime().get());
+  }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::PsychomotorVigilanceTaskData* SEPsychomotorVigilanceTask::Unload()
 {
   CDM::PsychomotorVigilanceTaskData* data = new CDM::PsychomotorVigilanceTaskData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEPsychomotorVigilanceTask::Unload(CDM::PsychomotorVigilanceTaskData& data)
 {
   SEPatientAssessment::Unload(data);
@@ -63,7 +68,7 @@ void SEPsychomotorVigilanceTask::Unload(CDM::PsychomotorVigilanceTaskData& data)
   if (HasReactionTime())
     data.ReactionTime(std::unique_ptr<CDM::ScalarTimeData>(m_ReactionTime->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEPsychomotorVigilanceTask::HasAttentionLapses()
 {
   return m_AttentionLapses == nullptr ? false : m_AttentionLapses->IsValid();
@@ -74,7 +79,7 @@ SEScalar& SEPsychomotorVigilanceTask::GetAttentionLapses()
     m_AttentionLapses = new SEScalar();
   return *m_AttentionLapses;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPsychomotorVigilanceTask::HasReactionTime()
 {
   return m_ReactionTime == nullptr ? false : m_ReactionTime->IsValid();
@@ -85,5 +90,18 @@ SEScalarTime& SEPsychomotorVigilanceTask::GetReactionTime()
     m_ReactionTime = new SEScalarTime();
   return *m_ReactionTime;
 }
+//-------------------------------------------------------------------------------
+bool SEPsychomotorVigilanceTask::operator==(SEPsychomotorVigilanceTask const& rhs) const
+{
+  if (this == &rhs)
+    return true;
 
+  return ((m_AttentionLapses && rhs.m_AttentionLapses) ? m_AttentionLapses->operator==(*rhs.m_AttentionLapses) : m_AttentionLapses == rhs.m_AttentionLapses)
+    && ((m_ReactionTime && rhs.m_ReactionTime) ? m_ReactionTime->operator==(*rhs.m_ReactionTime) : m_ReactionTime == rhs.m_ReactionTime);
+}
+bool SEPsychomotorVigilanceTask::operator!=(SEPsychomotorVigilanceTask const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

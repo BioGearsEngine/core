@@ -28,12 +28,12 @@ SEArterialBloodGasAnalysis::SEArterialBloodGasAnalysis()
   m_OxygenSaturation = nullptr;
   
 }
-
+//-------------------------------------------------------------------------------
 SEArterialBloodGasAnalysis::~SEArterialBloodGasAnalysis()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEArterialBloodGasAnalysis::Clear()
 {
   SEPatientAssessment::Clear();
@@ -44,7 +44,7 @@ void SEArterialBloodGasAnalysis::Clear()
   SAFE_DELETE(m_StandardBicarbonate);
   SAFE_DELETE(m_OxygenSaturation);
 }
-
+//-------------------------------------------------------------------------------
 void SEArterialBloodGasAnalysis::Reset()
 {
   SEPatientAssessment::Reset();
@@ -55,29 +55,29 @@ void SEArterialBloodGasAnalysis::Reset()
   INVALIDATE_PROPERTY(m_StandardBicarbonate);
   INVALIDATE_PROPERTY(m_OxygenSaturation);
 }
-
+//-------------------------------------------------------------------------------
 bool SEArterialBloodGasAnalysis::Load(const CDM::ArterialBloodGasAnalysisData& in)
 {
   SEPatientAssessment::Load(in);
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ArterialBloodGasAnalysisData* SEArterialBloodGasAnalysis::Unload()
 {
   CDM::ArterialBloodGasAnalysisData* data = new CDM::ArterialBloodGasAnalysisData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEArterialBloodGasAnalysis::Unload(CDM::ArterialBloodGasAnalysisData& data)
 {
   SEPatientAssessment::Unload(data);
   if (m_pH != nullptr)
     data.pH(std::unique_ptr<CDM::ScalarData>(m_pH->Unload()));
   if (m_PartialPressureOxygen != nullptr)
-    data.pO2(std::unique_ptr<CDM::ScalarPressureData>(m_PartialPressureOxygen->Unload()));
+    data.PartialPressureOxygen(std::unique_ptr<CDM::ScalarPressureData>(m_PartialPressureOxygen->Unload()));
   if (m_PartialPressureCarbonDioxide != nullptr)
-    data.pCO2(std::unique_ptr<CDM::ScalarPressureData>(m_PartialPressureCarbonDioxide->Unload()));
+    data.PartialPressureCarbonDioxide(std::unique_ptr<CDM::ScalarPressureData>(m_PartialPressureCarbonDioxide->Unload()));
   if (m_BaseExcess != nullptr)
     data.BaseExcess(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_BaseExcess->Unload()));
   if (m_StandardBicarbonate != nullptr)
@@ -85,7 +85,7 @@ void SEArterialBloodGasAnalysis::Unload(CDM::ArterialBloodGasAnalysisData& data)
   if (m_OxygenSaturation != nullptr)
     data.OxygenSaturation(std::unique_ptr<CDM::ScalarData>(m_OxygenSaturation->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEArterialBloodGasAnalysis::HaspH()
 {
   return m_pH == nullptr ? false : m_pH->IsValid();
@@ -96,7 +96,7 @@ SEScalar& SEArterialBloodGasAnalysis::GetpH()
     m_pH = new SEScalar();
   return *m_pH;
 }
-
+//-------------------------------------------------------------------------------
 bool SEArterialBloodGasAnalysis::HasPartialPressureOxygen()
 {
   return m_PartialPressureOxygen == nullptr ? false : m_PartialPressureOxygen->IsValid();
@@ -107,7 +107,7 @@ SEScalarPressure& SEArterialBloodGasAnalysis::GetPartialPressureOxygen()
     m_PartialPressureOxygen = new SEScalarPressure();
   return *m_PartialPressureOxygen;
 }
-
+//-------------------------------------------------------------------------------
 bool SEArterialBloodGasAnalysis::HasPartialPressureCarbonDioxide()
 {
   return m_PartialPressureCarbonDioxide == nullptr ? false : m_PartialPressureCarbonDioxide->IsValid();
@@ -118,7 +118,7 @@ SEScalarPressure& SEArterialBloodGasAnalysis::GetPartialPressureCarbonDioxide()
     m_PartialPressureCarbonDioxide = new SEScalarPressure();
   return *m_PartialPressureCarbonDioxide;
 }
-
+//-------------------------------------------------------------------------------
 bool SEArterialBloodGasAnalysis::HasBaseExcess()
 {
   return m_BaseExcess == nullptr ? false : m_BaseExcess->IsValid();
@@ -129,7 +129,7 @@ SEScalarAmountPerVolume& SEArterialBloodGasAnalysis::GetBaseExcess()
     m_BaseExcess = new SEScalarAmountPerVolume();
   return *m_BaseExcess;
 }
-
+//-------------------------------------------------------------------------------
 bool SEArterialBloodGasAnalysis::HasStandardBicarbonate()
 {
   return m_StandardBicarbonate == nullptr ? false : m_StandardBicarbonate->IsValid();
@@ -140,7 +140,7 @@ SEScalarAmountPerVolume& SEArterialBloodGasAnalysis::GetStandardBicarbonate()
     m_StandardBicarbonate = new SEScalarAmountPerVolume();
   return *m_StandardBicarbonate;
 }
-
+//-------------------------------------------------------------------------------
 bool SEArterialBloodGasAnalysis::HasOxygenSaturation()
 {
   return m_OxygenSaturation == nullptr ? false : m_OxygenSaturation->IsValid();
@@ -151,4 +151,22 @@ SEScalar& SEArterialBloodGasAnalysis::GetOxygenSaturation()
     m_OxygenSaturation = new SEScalar();
   return *m_OxygenSaturation;
 }
+//-------------------------------------------------------------------------------
+bool SEArterialBloodGasAnalysis::operator==(SEArterialBloodGasAnalysis const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_pH && rhs.m_pH) ? m_pH->operator==(*rhs.m_pH) : m_pH == rhs.m_pH)
+    && ((m_PartialPressureOxygen && rhs.m_PartialPressureOxygen) ? m_PartialPressureOxygen->operator==(*rhs.m_PartialPressureOxygen) : m_PartialPressureOxygen == rhs.m_PartialPressureOxygen)
+    && ((m_PartialPressureCarbonDioxide && rhs.m_PartialPressureCarbonDioxide) ? m_PartialPressureCarbonDioxide->operator==(*rhs.m_PartialPressureCarbonDioxide) : m_PartialPressureCarbonDioxide == rhs.m_PartialPressureCarbonDioxide)
+    && ((m_BaseExcess && rhs.m_BaseExcess) ? m_BaseExcess->operator==(*rhs.m_BaseExcess) : m_BaseExcess == rhs.m_BaseExcess)
+    && ((m_StandardBicarbonate && rhs.m_StandardBicarbonate) ? m_StandardBicarbonate->operator==(*rhs.m_StandardBicarbonate) : m_StandardBicarbonate == rhs.m_StandardBicarbonate)
+    && ((m_OxygenSaturation && rhs.m_OxygenSaturation) ? m_OxygenSaturation->operator==(*rhs.m_OxygenSaturation) : m_OxygenSaturation == rhs.m_OxygenSaturation);
+}
+bool SEArterialBloodGasAnalysis::operator!=(SEArterialBloodGasAnalysis const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

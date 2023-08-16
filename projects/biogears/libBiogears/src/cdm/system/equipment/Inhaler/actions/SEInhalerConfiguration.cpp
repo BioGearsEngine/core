@@ -150,7 +150,11 @@ bool SEInhalerConfiguration::operator==(SEInhalerConfiguration const& rhs) const
 
   return m_Comment == rhs.m_Comment
     && m_ConfigurationFile == rhs.m_ConfigurationFile
-    && m_Configuration == rhs.m_Configuration;
+    && ((m_Configuration && rhs.m_Configuration)
+          ? m_Configuration->operator==(*rhs.m_Configuration)
+          : m_Configuration == rhs.m_Configuration)
+    && m_Substances == rhs.m_Substances;
+
 }
 //-----------------------------------------------------------------------------
 bool SEInhalerConfiguration::operator!=(SEInhalerConfiguration const& rhs) const

@@ -20,45 +20,47 @@ SEProthrombinTime::SEProthrombinTime()
 {
   m_InternationalNormalizedRatio = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEProthrombinTime::~SEProthrombinTime()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEProthrombinTime::Clear()
 {
   SEPatientAssessment::Clear();
   SAFE_DELETE(m_InternationalNormalizedRatio);
 }
-
+//-------------------------------------------------------------------------------
 void SEProthrombinTime::Reset()
 {
   SEPatientAssessment::Reset();
   INVALIDATE_PROPERTY(m_InternationalNormalizedRatio);
 }
-
+//-------------------------------------------------------------------------------
 bool SEProthrombinTime::Load(const CDM::ProthrombinTimeData& in)
 {
   SEPatientAssessment::Load(in);
-  // TODO
+  if (in.InternationalNormalizedRatio().present()) {
+    GetInternationalNormalizedRatio().Load(in.InternationalNormalizedRatio().get());
+  }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ProthrombinTimeData* SEProthrombinTime::Unload()
 {
   CDM::ProthrombinTimeData* data = new CDM::ProthrombinTimeData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEProthrombinTime::Unload(CDM::ProthrombinTimeData& data)
 {
   SEPatientAssessment::Unload(data);
   if (m_InternationalNormalizedRatio != nullptr)
     data.InternationalNormalizedRatio(std::unique_ptr<CDM::ScalarData>(m_InternationalNormalizedRatio->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEProthrombinTime::HasInternationalNormalizedRatio()
 {
   return m_InternationalNormalizedRatio == nullptr ? false : m_InternationalNormalizedRatio->IsValid();
@@ -69,4 +71,19 @@ SEScalar& SEProthrombinTime::GetInternationalNormalizedRatio()
     m_InternationalNormalizedRatio = new SEScalar();
   return *m_InternationalNormalizedRatio;
 }
+//-------------------------------------------------------------------------------
+bool SEProthrombinTime::operator==(SEProthrombinTime const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_InternationalNormalizedRatio && rhs.m_InternationalNormalizedRatio)
+            ? m_InternationalNormalizedRatio->operator==(*rhs.m_InternationalNormalizedRatio)
+            : m_InternationalNormalizedRatio == rhs.m_InternationalNormalizedRatio);
+}
+bool SEProthrombinTime::operator!=(SEProthrombinTime const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

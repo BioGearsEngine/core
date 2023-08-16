@@ -34,8 +34,8 @@ public:
   static constexpr const char* TypeTag() { return "SECompleteBloodCount"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset() override; //reset values
-  virtual void Clear() override; //clear memory
+  virtual void Reset() override; // reset values
+  virtual void Clear() override; // clear memory
 
   virtual bool Load(const CDM::CompleteBloodCountData& in);
   virtual CDM::CompleteBloodCountData* Unload() override;
@@ -73,6 +73,9 @@ public:
 
   virtual bool HasWhiteBloodCellCount() const;
   virtual SEScalarAmountPerVolume& GetWhiteBloodCellCount();
+
+  bool operator==(SECompleteBloodCount const&) const;
+  bool operator!=(SECompleteBloodCount const&) const;
 
 protected:
   SEScalarFraction* m_Hematocrit;

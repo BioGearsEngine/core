@@ -27,12 +27,12 @@ SEUrinalysisMicroscopic::SEUrinalysisMicroscopic()
   m_Trichomonads = CDM::enumMicroscopicObservationAmount::value(-1);
   m_Yeast = CDM::enumMicroscopicObservationAmount::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 SEUrinalysisMicroscopic::~SEUrinalysisMicroscopic()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEUrinalysisMicroscopic::Clear()
 {
   SEPatientAssessment::Clear();
@@ -46,7 +46,7 @@ void SEUrinalysisMicroscopic::Clear()
   m_Trichomonads = CDM::enumMicroscopicObservationAmount::value(-1);
   m_Yeast = CDM::enumMicroscopicObservationAmount::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 void SEUrinalysisMicroscopic::Reset()
 {
   SEPatientAssessment::Reset();
@@ -60,20 +60,20 @@ void SEUrinalysisMicroscopic::Reset()
   m_Trichomonads = CDM::enumMicroscopicObservationAmount::value(-1);
   m_Yeast = CDM::enumMicroscopicObservationAmount::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::Load(const CDM::UrinalysisMicroscopicData& in)
 {
   SEPatientAssessment::Load(in);
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::UrinalysisMicroscopicData* SEUrinalysisMicroscopic::Unload()
 {
   CDM::UrinalysisMicroscopicData* data = new CDM::UrinalysisMicroscopicData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEUrinalysisMicroscopic::Unload(CDM::UrinalysisMicroscopicData& data)
 {
   if (HasObservationType())
@@ -95,7 +95,7 @@ void SEUrinalysisMicroscopic::Unload(CDM::UrinalysisMicroscopicData& data)
   if (HasYeastResult())
     data.Yeast(m_Yeast);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::HasRedBloodCellsResult() const
 {
   return m_RedBloodCells == nullptr ? false : m_RedBloodCells->IsValid();
@@ -106,7 +106,7 @@ SEScalarAmount& SEUrinalysisMicroscopic::GetRedBloodCellsResult()
     m_RedBloodCells = new SEScalarAmount();
   return *m_RedBloodCells;
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::HasObservationType() const
 {
   return m_ObservationType != CDM::enumMicroscopicObservationType::value(-1);
@@ -123,7 +123,7 @@ void SEUrinalysisMicroscopic::InvalidateObservationType()
 {
   m_ObservationType = CDM::enumMicroscopicObservationType::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::HasWhiteBloodCellsResult() const
 {
   return m_WhiteBloodCells == nullptr ? false : m_WhiteBloodCells->IsValid();
@@ -134,7 +134,7 @@ SEScalarAmount& SEUrinalysisMicroscopic::GetWhiteBloodCellsResult()
     m_WhiteBloodCells = new SEScalarAmount();
   return *m_WhiteBloodCells;
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::HasEpithelialCellsResult() const
 {
   return m_EpithelialCells != CDM::enumMicroscopicObservationAmount::value(-1);
@@ -151,7 +151,7 @@ void SEUrinalysisMicroscopic::InvalidateEpithelialCellsResult()
 {
   m_EpithelialCells = CDM::enumMicroscopicObservationAmount::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::HasCastsResult() const
 {
   return m_Casts == nullptr ? false : m_Casts->IsValid();
@@ -162,7 +162,7 @@ SEScalarAmount& SEUrinalysisMicroscopic::GetCastsResult()
     m_Casts = new SEScalarAmount();
   return *m_Casts;
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::HasCrystalsResult() const
 {
   return m_Crystals != CDM::enumMicroscopicObservationAmount::value(-1);
@@ -179,7 +179,7 @@ void SEUrinalysisMicroscopic::InvalidateCrystalsResult()
 {
   m_Crystals = CDM::enumMicroscopicObservationAmount::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::HasBacteriaResult() const
 {
   return m_Bacteria != CDM::enumMicroscopicObservationAmount::value(-1);
@@ -196,7 +196,7 @@ void SEUrinalysisMicroscopic::InvalidateBacteriaResult()
 {
   m_Bacteria = CDM::enumMicroscopicObservationAmount::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::HasTrichomonadsResult() const
 {
   return m_Trichomonads != CDM::enumMicroscopicObservationAmount::value(-1);
@@ -213,7 +213,7 @@ void SEUrinalysisMicroscopic::InvalidateTrichomonadsResult()
 {
   m_Trichomonads = CDM::enumMicroscopicObservationAmount::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::HasYeastResult() const
 {
   return m_Yeast != CDM::enumMicroscopicObservationAmount::value(-1);
@@ -230,4 +230,25 @@ void SEUrinalysisMicroscopic::InvalidateYeastResult()
 {
   m_Yeast = CDM::enumMicroscopicObservationAmount::value(-1);
 }
+//-------------------------------------------------------------------------------
+bool SEUrinalysisMicroscopic::operator==(SEUrinalysisMicroscopic const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_RedBloodCells && rhs.m_RedBloodCells) ? m_RedBloodCells->operator==(*rhs.m_RedBloodCells) : m_RedBloodCells == rhs.m_RedBloodCells)
+    && ((m_WhiteBloodCells && rhs.m_WhiteBloodCells) ? m_WhiteBloodCells->operator==(*rhs.m_WhiteBloodCells) : m_WhiteBloodCells == rhs.m_WhiteBloodCells)
+    && ((m_Casts && rhs.m_Casts) ? m_Casts->operator==(*rhs.m_Casts) : m_Casts == rhs.m_Casts)
+    && m_ObservationType == rhs.m_ObservationType
+    && m_EpithelialCells == rhs.m_EpithelialCells
+    && m_Crystals == rhs.m_Crystals
+    && m_Bacteria == rhs.m_Bacteria
+    && m_Trichomonads == rhs.m_Trichomonads
+    && m_Yeast == rhs.m_Yeast;
+}
+bool SEUrinalysisMicroscopic::operator!=(SEUrinalysisMicroscopic const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

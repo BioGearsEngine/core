@@ -33,12 +33,12 @@ SEUrinalysis::SEUrinalysis()
 
   m_Microscopic = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEUrinalysis::~SEUrinalysis()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEUrinalysis::Clear()
 {
   SEPatientAssessment::Clear();
@@ -57,7 +57,7 @@ void SEUrinalysis::Clear()
 
   SAFE_DELETE(m_Microscopic);
 }
-
+//-------------------------------------------------------------------------------
 void SEUrinalysis::Reset()
 {
   SEPatientAssessment::Reset();
@@ -76,20 +76,20 @@ void SEUrinalysis::Reset()
 
   SAFE_DELETE(m_Microscopic);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::Load(const CDM::UrinalysisData& in)
 {
   SEPatientAssessment::Load(in);
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::UrinalysisData* SEUrinalysis::Unload()
 {
   CDM::UrinalysisData* data = new CDM::UrinalysisData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEUrinalysis::Unload(CDM::UrinalysisData& data)
 {
   SEPatientAssessment::Unload(data);
@@ -121,7 +121,7 @@ void SEUrinalysis::Unload(CDM::UrinalysisData& data)
   if (HasMicroscopicResult())
     data.Microscopic(std::unique_ptr<CDM::UrinalysisMicroscopicData>(m_Microscopic->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasColorResult() const
 {
   return m_Color != CDM::enumUrineColor::value(-1);
@@ -138,7 +138,7 @@ void SEUrinalysis::InvalidateColorResult()
 {
   m_Color = CDM::enumUrineColor::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasAppearanceResult() const
 {
   return m_Appearance != CDM::enumClarityIndicator::value(-1);
@@ -155,7 +155,7 @@ void SEUrinalysis::InvalidateAppearanceResult()
 {
   m_Appearance = CDM::enumClarityIndicator::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasGlucoseResult() const
 {
   return m_Glucose != CDM::enumPresenceIndicator::value(-1);
@@ -172,7 +172,7 @@ void SEUrinalysis::InvalidateGlucoseResult()
 {
   m_Glucose = CDM::enumPresenceIndicator::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasKetoneResult() const
 {
   return m_Ketone != CDM::enumPresenceIndicator::value(-1);
@@ -189,7 +189,7 @@ void SEUrinalysis::InvalidateKetoneResult()
 {
   m_Ketone = CDM::enumPresenceIndicator::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasBilirubinResult() const
 {
   return m_Bilirubin == nullptr ? false : m_Bilirubin->IsValid();
@@ -200,7 +200,7 @@ SEScalar& SEUrinalysis::GetBilirubinResult()
     m_Bilirubin = new SEScalar();
   return *m_Bilirubin;
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasSpecificGravityResult() const
 {
   return m_SpecificGravity == nullptr ? false : m_SpecificGravity->IsValid();
@@ -211,7 +211,7 @@ SEScalar& SEUrinalysis::GetSpecificGravityResult()
     m_SpecificGravity = new SEScalar();
   return *m_SpecificGravity;
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasBloodResult() const
 {
   return m_Blood != CDM::enumPresenceIndicator::value(-1);
@@ -228,7 +228,7 @@ void SEUrinalysis::InvalidateBloodResult()
 {
   m_Blood = CDM::enumPresenceIndicator::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasPHResult() const
 {
   return m_pH == nullptr ? false : m_pH->IsValid();
@@ -239,7 +239,7 @@ SEScalar& SEUrinalysis::GetPHResult()
     m_pH = new SEScalar();
   return *m_pH;
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasProteinResult() const
 {
   return m_Protein != CDM::enumPresenceIndicator::value(-1);
@@ -256,7 +256,7 @@ void SEUrinalysis::InvalidateProteinResult()
 {
   m_Protein = CDM::enumPresenceIndicator::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasUrobilinogenResult() const
 {
   return m_Urobilinogen == nullptr ? false : m_Urobilinogen->IsValid();
@@ -267,7 +267,7 @@ SEScalarMassPerVolume& SEUrinalysis::GetUrobilinogenResult()
     m_Urobilinogen = new SEScalarMassPerVolume();
   return *m_Urobilinogen;
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasNitriteResult() const
 {
   return m_Nitrite != CDM::enumPresenceIndicator::value(-1);
@@ -284,7 +284,7 @@ void SEUrinalysis::InvalidateNitriteResult()
 {
   m_Nitrite = CDM::enumPresenceIndicator::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasLeukocyteEsteraseResult() const
 {
   return m_LeukocyteEsterase != CDM::enumPresenceIndicator::value(-1);
@@ -301,7 +301,7 @@ void SEUrinalysis::InvalidateLeukocyteEsteraseResult()
 {
   m_LeukocyteEsterase = CDM::enumPresenceIndicator::value(-1);
 }
-
+//-------------------------------------------------------------------------------
 bool SEUrinalysis::HasMicroscopicResult() const
 {
   return m_Microscopic != nullptr;
@@ -316,4 +316,28 @@ void SEUrinalysis::RemoveMicroscopicResult()
 {
   SAFE_DELETE(m_Microscopic);
 }
+//-------------------------------------------------------------------------------
+bool SEUrinalysis::operator==(SEUrinalysis const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_Bilirubin && rhs.m_Bilirubin) ? m_Bilirubin->operator==(*rhs.m_Bilirubin) : m_Bilirubin == rhs.m_Bilirubin)
+    && ((m_SpecificGravity && rhs.m_SpecificGravity) ? m_SpecificGravity->operator==(*rhs.m_SpecificGravity) : m_SpecificGravity == rhs.m_SpecificGravity)
+    && ((m_pH && rhs.m_pH) ? m_pH->operator==(*rhs.m_pH) : m_pH == rhs.m_pH)
+    && ((m_Urobilinogen && rhs.m_Urobilinogen) ? m_Urobilinogen->operator==(*rhs.m_Urobilinogen) : m_Urobilinogen == rhs.m_Urobilinogen)
+    && m_Color == rhs.m_Color
+    && m_Appearance == rhs.m_Appearance
+    && m_Glucose == rhs.m_Glucose
+    && m_Ketone == rhs.m_Ketone
+    && m_Blood == rhs.m_Blood
+    && m_Protein == rhs.m_Protein
+    && m_Nitrite == rhs.m_Nitrite
+    && m_LeukocyteEsterase == rhs.m_LeukocyteEsterase;
+}
+bool SEUrinalysis::operator!=(SEUrinalysis const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

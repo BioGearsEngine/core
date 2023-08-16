@@ -24,7 +24,8 @@ namespace io {
   class PatientAssessments;
 }
 class BIOGEARS_API SEArterialBloodGasAnalysis : public SEPatientAssessment {
-friend io::PatientAssessments;
+  friend io::PatientAssessments;
+
 public:
   SEArterialBloodGasAnalysis();
   virtual ~SEArterialBloodGasAnalysis();
@@ -59,6 +60,9 @@ public:
 
   virtual bool HasOxygenSaturation();
   virtual SEScalar& GetOxygenSaturation();
+
+  bool operator==(SEArterialBloodGasAnalysis const&) const;
+  bool operator!=(SEArterialBloodGasAnalysis const&) const;
 
 protected:
   SEScalar* m_pH;

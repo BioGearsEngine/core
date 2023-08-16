@@ -84,8 +84,7 @@ TEST_F(TEST_FIXTURE_NAME, InhalerConfiguration)
   SEType source(mgr), sink(mgr);
   CDMType data;
 
-  auto oxygen = mgr.GetSubstance("Oxygen");
-  auto nitrogen = mgr.GetSubstance("Nitrogen");
+  auto sarin = mgr.GetSubstance("Sarin");
 
   auto& conf = source.GetConfiguration();
 
@@ -93,7 +92,7 @@ TEST_F(TEST_FIXTURE_NAME, InhalerConfiguration)
   conf.GetMeteredDose().SetValue(55.f, biogears::MassUnit::kg);
   conf.GetNozzleLoss().SetValue(22.f);
   conf.GetSpacerVolume().SetValue(55, biogears::VolumeUnit::L);
-  conf.SetSubstance(oxygen);
+  conf.SetSubstance(sarin);
 
   EXPECT_NE(source, sink);
 

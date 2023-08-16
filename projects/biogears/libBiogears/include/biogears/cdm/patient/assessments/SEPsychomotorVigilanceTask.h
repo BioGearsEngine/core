@@ -24,7 +24,8 @@ namespace io {
 }
 
 class BIOGEARS_API SEPsychomotorVigilanceTask : public SEPatientAssessment {
-friend io::PatientAssessments;
+  friend io::PatientAssessments;
+
 public:
   SEPsychomotorVigilanceTask();
   virtual ~SEPsychomotorVigilanceTask();
@@ -32,8 +33,8 @@ public:
   static constexpr const char* TypeTag() { return "SEArterialBloodGasAnalysis"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset(); //reset values
-  virtual void Clear(); //clear memory
+  virtual void Reset(); // reset values
+  virtual void Clear(); // clear memory
 
   virtual bool Load(const CDM::PsychomotorVigilanceTaskData& in);
   virtual CDM::PsychomotorVigilanceTaskData* Unload();
@@ -48,7 +49,8 @@ public:
   bool HasReactionTime();
   SEScalarTime& GetReactionTime();
 
-
+  bool operator==(SEPsychomotorVigilanceTask  const&) const;
+  bool operator!=(SEPsychomotorVigilanceTask const&) const;
 
 protected:
   SEScalar* m_AttentionLapses;
