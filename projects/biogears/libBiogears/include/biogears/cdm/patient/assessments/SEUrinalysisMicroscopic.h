@@ -78,6 +78,9 @@ public:
   virtual void SetYeastResult(CDM::enumMicroscopicObservationAmount::value p);
   virtual void InvalidateYeastResult();
 
+  bool operator==(SEUrinalysisMicroscopic const&) const;
+  bool operator!=(SEUrinalysisMicroscopic const&) const;
+
 protected:
   CDM::enumMicroscopicObservationType::value m_ObservationType;
   SEScalarAmount* m_RedBloodCells;

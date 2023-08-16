@@ -2,37 +2,37 @@
 
 #include "Property.h"
 
-#include <biogears/cdm/properties/SEScalarArea.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
-#include <biogears/cdm/properties/SEScalarLength.h>
-#include <biogears/cdm/properties/SEScalarMass.h>
-#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/cdm/properties/SEScalarNeg1To1.h>
-#include <biogears/cdm/properties/SEScalarPower.h>
-#include <biogears/cdm/properties/SEScalarPressure.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #include <biogears/cdm/patient/SEPatient.h>
 
 namespace biogears {
 namespace io {
   //----------------------------------------------------------------------------------
-  //class SEPatient
+  // class SEPatient
   void Patient::Marshall(const CDM::PatientData& in, SEPatient& out)
   {
     out.Clear();
 
     out.m_Name = in.Name();
-    out.m_Gender = in.Sex().get();
+    if (in.Annotation().present()) {
+      out.SetAnnotation(in.Annotation().get());
+    }
 
+    if (in.Sex().present()) {
+      out.m_Gender = in.Sex().get();
+    }
     io::Property::Marshall(in.Age(), out.GetAge());
     io::Property::Marshall(in.Weight(), out.GetWeight());
     io::Property::Marshall(in.Height(), out.GetHeight());
     io::Property::Marshall(in.AlveoliSurfaceArea(), out.GetAlveoliSurfaceArea());
     io::Property::Marshall(in.BasalMetabolicRate(), out.GetBasalMetabolicRate());
+    if (in.BloodTypeRh().present()) {
+      out.m_BloodRh = in.BloodTypeRh().get();
+    }
+    if (in.BloodTypeABO().present()) {
+      out.m_BloodType = in.BloodTypeABO().get();
+    }
     io::Property::Marshall(in.BloodVolumeBaseline(), out.GetBloodVolumeBaseline());
     io::Property::Marshall(in.BodyDensity(), out.GetBodyDensity());
     io::Property::Marshall(in.BodyFatFraction(), out.GetBodyFatFraction());
@@ -52,8 +52,10 @@ namespace io {
     io::Property::Marshall(in.PainSusceptibility(), out.GetPainSusceptibility());
     io::Property::Marshall(in.ResidualVolume(), out.GetResidualVolume());
     io::Property::Marshall(in.RespirationRateBaseline(), out.GetRespirationRateBaseline());
+    io::Property::Marshall(in.RespiratoryDriverAmplitudeBaseline(), out.GetRespiratoryDriverAmplitudeBaseline());
     io::Property::Marshall(in.RightLungRatio(), out.GetRightLungRatio());
     io::Property::Marshall(in.SkinSurfaceArea(), out.GetSkinSurfaceArea());
+    io::Property::Marshall(in.SleepAmount(), out.GetSleepAmount());
     io::Property::Marshall(in.SystolicArterialPressureBaseline(), out.GetSystolicArterialPressureBaseline());
     io::Property::Marshall(in.TotalVentilationBaseline(), out.GetTotalVentilationBaseline());
     io::Property::Marshall(in.TidalVolumeBaseline(), out.GetTidalVolumeBaseline());
@@ -73,102 +75,52 @@ namespace io {
     if (in.HasName()) {
       out.Name(in.m_Name);
     }
+    if (in.HasAnnotation()) {
+      out.Annotation(in.m_Annotation);
+    }
     if (in.HasGender()) {
       out.Sex(in.m_Gender);
     }
-    if (in.m_Age != nullptr) {
-      io::Property::UnMarshall(*in.m_Age, out.Age());
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Age);
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Weight)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Height)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, AlveoliSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, BasalMetabolicRate)
+    if (in.HasBloodRh()) {
+      out.BloodTypeRh(in.m_BloodRh);
     }
-    if (in.m_Weight != nullptr) {
-      io::Property::UnMarshall(*in.m_Weight, out.Weight());
+    if (in.HasBloodType()) {
+      out.BloodTypeABO(in.m_BloodType);
     }
-    if (in.m_Height != nullptr) {
-      io::Property::UnMarshall(*in.m_Height, out.Height());
-    }
-    if (in.m_AlveoliSurfaceArea != nullptr) {
-      io::Property::UnMarshall(*in.m_AlveoliSurfaceArea, out.AlveoliSurfaceArea());
-    }
-    if (in.m_BasalMetabolicRate != nullptr) {
-      io::Property::UnMarshall(*in.m_BasalMetabolicRate, out.BasalMetabolicRate());
-    }
-    if (in.m_BloodVolumeBaseline != nullptr) {
-      io::Property::UnMarshall(*in.m_BloodVolumeBaseline, out.BloodVolumeBaseline());
-    }
-    if (in.m_BodyDensity != nullptr) {
-      io::Property::UnMarshall(*in.m_BodyDensity, out.BodyDensity());
-    }
-    if (in.m_BodyFatFraction != nullptr) {
-      io::Property::UnMarshall(*in.m_BodyFatFraction, out.BodyFatFraction());
-    }
-    if (in.m_DiastolicArterialPressureBaseline != nullptr) {
-      io::Property::UnMarshall(*in.m_DiastolicArterialPressureBaseline, out.DiastolicArterialPressureBaseline());
-    }
-    if (in.m_ExpiratoryReserveVolume != nullptr) {
-      io::Property::UnMarshall(*in.m_ExpiratoryReserveVolume, out.ExpiratoryReserveVolume());
-    }
-    if (in.m_FunctionalResidualCapacity != nullptr) {
-      io::Property::UnMarshall(*in.m_FunctionalResidualCapacity, out.FunctionalResidualCapacity());
-    }
-    if (in.m_HeartRateBaseline != nullptr) {
-      io::Property::UnMarshall(*in.m_HeartRateBaseline, out.HeartRateBaseline());
-    }
-    if (in.m_HeartRateMaximum != nullptr) {
-      io::Property::UnMarshall(*in.m_HeartRateMaximum, out.HeartRateMaximum());
-    }
-    if (in.m_HeartRateMinimum != nullptr) {
-      io::Property::UnMarshall(*in.m_HeartRateMinimum, out.HeartRateMinimum());
-    }
-    if (in.m_Hyperhidrosis != nullptr) {
-      io::Property::UnMarshall(*in.m_Hyperhidrosis, out.Hyperhidrosis());
-    }
-    if (in.m_InspiratoryCapacity != nullptr) {
-      io::Property::UnMarshall(*in.m_InspiratoryCapacity, out.InspiratoryCapacity());
-    }
-    if (in.m_InspiratoryReserveVolume != nullptr) {
-      io::Property::UnMarshall(*in.m_InspiratoryReserveVolume, out.InspiratoryReserveVolume());
-    }
-    if (in.m_LeanBodyMass != nullptr) {
-      io::Property::UnMarshall(*in.m_LeanBodyMass, out.LeanBodyMass());
-    }
-    if (in.m_MaxWorkRate != nullptr) {
-      io::Property::UnMarshall(*in.m_MaxWorkRate, out.MaxWorkRate());
-    }
-    if (in.m_MuscleMass != nullptr) {
-      io::Property::UnMarshall(*in.m_MuscleMass, out.MuscleMass());
-    }
-    if (in.m_MeanArterialPressureBaseline != nullptr) {
-      io::Property::UnMarshall(*in.m_MeanArterialPressureBaseline, out.MeanArterialPressureBaseline());
-    }
-    if (in.m_PainSusceptibility != nullptr) {
-      io::Property::UnMarshall(*in.m_PainSusceptibility, out.PainSusceptibility());
-    }
-    if (in.m_ResidualVolume != nullptr) {
-      io::Property::UnMarshall(*in.m_ResidualVolume, out.ResidualVolume());
-    }
-    if (in.m_RespirationRateBaseline != nullptr) {
-      io::Property::UnMarshall(*in.m_RespirationRateBaseline, out.RespirationRateBaseline());
-    }
-    if (in.m_RightLungRatio != nullptr) {
-      io::Property::UnMarshall(*in.m_RightLungRatio, out.RightLungRatio());
-    }
-    if (in.m_SkinSurfaceArea != nullptr) {
-      io::Property::UnMarshall(*in.m_SkinSurfaceArea, out.SkinSurfaceArea());
-    }
-    if (in.m_SystolicArterialPressureBaseline != nullptr) {
-      io::Property::UnMarshall(*in.m_SystolicArterialPressureBaseline, out.SystolicArterialPressureBaseline());
-    }
-    if (in.m_TotalVentilationBaseline != nullptr) {
-      io::Property::UnMarshall(*in.m_TotalVentilationBaseline, out.TotalVentilationBaseline());
-    }
-    if (in.m_TidalVolumeBaseline != nullptr) {
-      io::Property::UnMarshall(*in.m_TidalVolumeBaseline, out.TidalVolumeBaseline());
-    }
-    if (in.m_TotalLungCapacity != nullptr) {
-      io::Property::UnMarshall(*in.m_TotalLungCapacity, out.TotalLungCapacity());
-    }
-    if (in.m_VitalCapacity != nullptr) {
-      io::Property::UnMarshall(*in.m_VitalCapacity, out.VitalCapacity());
-    }
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, BloodVolumeBaseline)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, BodyDensity)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, BodyFatFraction)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, DiastolicArterialPressureBaseline)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ExpiratoryReserveVolume)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, FunctionalResidualCapacity)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, HeartRateBaseline)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, HeartRateMaximum)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, HeartRateMinimum)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Hyperhidrosis)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, InspiratoryCapacity)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, InspiratoryReserveVolume)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, LeanBodyMass)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MaxWorkRate)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MuscleMass)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MeanArterialPressureBaseline)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PainSusceptibility)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ResidualVolume)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RespirationRateBaseline)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RespiratoryDriverAmplitudeBaseline)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RightLungRatio)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SkinSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SleepAmount)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SystolicArterialPressureBaseline)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TotalVentilationBaseline)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TidalVolumeBaseline)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TotalLungCapacity)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, VitalCapacity)
 
     SEScalarTime time;
     for (auto itr : in.m_EventState) {

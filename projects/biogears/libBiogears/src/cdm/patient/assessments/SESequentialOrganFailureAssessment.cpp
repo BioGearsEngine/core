@@ -28,12 +28,12 @@ SESequentialOrganFailureAssessment::SESequentialOrganFailureAssessment()
   m_CentralNervousSOFA = nullptr;
   m_RenalSOFA = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SESequentialOrganFailureAssessment::~SESequentialOrganFailureAssessment()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SESequentialOrganFailureAssessment::Clear()
 {
   SEPatientAssessment::Clear();
@@ -44,7 +44,7 @@ void SESequentialOrganFailureAssessment::Clear()
   SAFE_DELETE(m_CentralNervousSOFA);
   SAFE_DELETE(m_RenalSOFA);
 }
-
+//-------------------------------------------------------------------------------
 void SESequentialOrganFailureAssessment::Reset()
 {
   SEPatientAssessment::Reset();
@@ -55,7 +55,7 @@ void SESequentialOrganFailureAssessment::Reset()
   INVALIDATE_PROPERTY(m_CentralNervousSOFA);
   INVALIDATE_PROPERTY(m_RenalSOFA);
 }
-
+//-------------------------------------------------------------------------------
 bool SESequentialOrganFailureAssessment::Load(const CDM::SequentialOrganFailureAssessmentData& in)
 {
   SEPatientAssessment::Load(in);
@@ -67,14 +67,14 @@ bool SESequentialOrganFailureAssessment::Load(const CDM::SequentialOrganFailureA
   GetRenalSOFA().Load(in.RenalSOFA());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::SequentialOrganFailureAssessmentData* SESequentialOrganFailureAssessment::Unload()
 {
   CDM::SequentialOrganFailureAssessmentData* data = new CDM::SequentialOrganFailureAssessmentData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SESequentialOrganFailureAssessment::Unload(CDM::SequentialOrganFailureAssessmentData& data)
 {
   SEPatientAssessment::Unload(data);
@@ -91,7 +91,7 @@ void SESequentialOrganFailureAssessment::Unload(CDM::SequentialOrganFailureAsses
   if (HasRenalSOFA())
     data.RenalSOFA(std::unique_ptr<CDM::ScalarData>(m_RenalSOFA->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SESequentialOrganFailureAssessment::HasRespirationSOFA()
 {
   return m_RespirationSOFA == nullptr ? false : m_RespirationSOFA->IsValid();
@@ -102,7 +102,7 @@ SEScalar& SESequentialOrganFailureAssessment::GetRespirationSOFA()
     m_RespirationSOFA = new SEScalar();
   return *m_RespirationSOFA;
 }
-
+//-------------------------------------------------------------------------------
 bool SESequentialOrganFailureAssessment::HasCoagulationSOFA()
 {
   return m_CoagulationSOFA == nullptr ? false : m_CoagulationSOFA->IsValid();
@@ -113,7 +113,7 @@ SEScalar& SESequentialOrganFailureAssessment::GetCoagulationSOFA()
     m_CoagulationSOFA = new SEScalar();
   return *m_CoagulationSOFA;
 }
-
+//-------------------------------------------------------------------------------
 bool SESequentialOrganFailureAssessment::HasLiverSOFA()
 {
   return m_LiverSOFA == nullptr ? false : m_LiverSOFA->IsValid();
@@ -124,7 +124,7 @@ SEScalar& SESequentialOrganFailureAssessment::GetLiverSOFA()
     m_LiverSOFA = new SEScalar();
   return *m_LiverSOFA;
 }
-
+//-------------------------------------------------------------------------------
 bool SESequentialOrganFailureAssessment::HasCardiovascularSOFA()
 {
   return m_CardiovascularSOFA == nullptr ? false : m_CardiovascularSOFA->IsValid();
@@ -135,7 +135,7 @@ SEScalar& SESequentialOrganFailureAssessment::GetCardiovascularSOFA()
     m_CardiovascularSOFA = new SEScalar();
   return *m_CardiovascularSOFA;
 }
-
+//-------------------------------------------------------------------------------
 bool SESequentialOrganFailureAssessment::HasCentralNervousSOFA()
 {
   return m_CentralNervousSOFA == nullptr ? false : m_CentralNervousSOFA->IsValid();
@@ -146,9 +146,7 @@ SEScalar& SESequentialOrganFailureAssessment::GetCentralNervousSOFA()
     m_CentralNervousSOFA = new SEScalar();
   return *m_CentralNervousSOFA;
 }
-
-
-
+//-------------------------------------------------------------------------------
 bool SESequentialOrganFailureAssessment::HasRenalSOFA()
 {
   return m_RenalSOFA == nullptr ? false : m_RenalSOFA->IsValid();
@@ -159,5 +157,22 @@ SEScalar& SESequentialOrganFailureAssessment::GetRenalSOFA()
     m_RenalSOFA = new SEScalar();
   return *m_RenalSOFA;
 }
+//-------------------------------------------------------------------------------
+bool SESequentialOrganFailureAssessment::operator==(SESequentialOrganFailureAssessment const& rhs) const
+{
+  if (this == &rhs)
+    return true;
 
+  return ((m_RespirationSOFA && rhs.m_RespirationSOFA) ? m_RespirationSOFA->operator==(*rhs.m_RespirationSOFA) : m_RespirationSOFA == rhs.m_RespirationSOFA)
+    && ((m_CoagulationSOFA && rhs.m_CoagulationSOFA) ? m_CoagulationSOFA->operator==(*rhs.m_CoagulationSOFA) : m_CoagulationSOFA == rhs.m_CoagulationSOFA)
+    && ((m_LiverSOFA && rhs.m_LiverSOFA) ? m_LiverSOFA->operator==(*rhs.m_LiverSOFA) : m_LiverSOFA == rhs.m_LiverSOFA)
+    && ((m_CardiovascularSOFA && rhs.m_CardiovascularSOFA) ? m_CardiovascularSOFA->operator==(*rhs.m_CardiovascularSOFA) : m_CardiovascularSOFA == rhs.m_CardiovascularSOFA)
+    && ((m_CentralNervousSOFA && rhs.m_CentralNervousSOFA) ? m_CentralNervousSOFA->operator==(*rhs.m_CentralNervousSOFA) : m_CentralNervousSOFA == rhs.m_CentralNervousSOFA)
+    && ((m_RenalSOFA && rhs.m_RenalSOFA) ? m_RenalSOFA->operator==(*rhs.m_RenalSOFA) : m_RenalSOFA == rhs.m_RenalSOFA);
+}
+bool SESequentialOrganFailureAssessment::operator!=(SESequentialOrganFailureAssessment const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

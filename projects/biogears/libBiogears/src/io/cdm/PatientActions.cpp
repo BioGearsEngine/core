@@ -583,7 +583,6 @@ namespace io {
   void PatientActions::UnMarshall(const SEAcuteRespiratoryDistress& in, CDM::AcuteRespiratoryDistressData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    out.Severity(std::make_unique<CDM::Scalar0To1Data>());
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
@@ -599,7 +598,6 @@ namespace io {
   void PatientActions::UnMarshall(const SEAcuteStress& in, CDM::AcuteStressData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    out.Severity(std::make_unique<CDM::Scalar0To1Data>());
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
@@ -615,7 +613,6 @@ namespace io {
   void PatientActions::UnMarshall(const SEActionExample& in, CDM::ActionExample& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    out.Severity(std::make_unique<CDM::Scalar0To1Data>());
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
@@ -631,7 +628,6 @@ namespace io {
   void PatientActions::UnMarshall(const SEAirwayObstruction& in, CDM::AirwayObstructionData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    out.Severity(std::make_unique<CDM::Scalar0To1Data>());
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
@@ -647,7 +643,6 @@ namespace io {
   void PatientActions::UnMarshall(const SEApnea& in, CDM::ApneaData& out)
   {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    out.Severity(std::make_unique<CDM::Scalar0To1Data>());
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------

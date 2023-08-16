@@ -322,7 +322,7 @@ bool SESubstanceManager::LoadSubstanceDirectory()
   for (auto& filepath : io->FindAllSubstanceFiles()) {
     path_string = filepath;
 #ifdef _DEBUG
-    Debug(asprintf("Reading substance file : %s", path_string.c_str()));
+    //Debugs(asprintf("Reading substance file : %s", path_string.c_str()));
 #endif
     definitions[filepath.basename()] = Serializer::ReadFile(path_string, GetLogger());
   }

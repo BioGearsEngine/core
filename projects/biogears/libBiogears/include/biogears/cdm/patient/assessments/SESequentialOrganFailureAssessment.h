@@ -11,23 +11,27 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include "biogears/cdm/properties/SEScalar.h"
+#include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
 namespace biogears {
 class SEScalar;
-
+namespace io {
+  class PatientAssessments;
+}
 class BIOGEARS_API SESequentialOrganFailureAssessment : public SEPatientAssessment {
+  friend class io::PatientAssessments;
+
 public:
   SESequentialOrganFailureAssessment();
   virtual ~SESequentialOrganFailureAssessment();
-  
-  static constexpr const char* TypeTag() {return "SESequentialOrganFailureAssessment"; };
+
+  static constexpr const char* TypeTag() { return "SESequentialOrganFailureAssessment"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset() override; //reset values
-  virtual void Clear() override; //clear memory
+  virtual void Reset() override; // reset values
+  virtual void Clear() override; // clear memory
 
   virtual bool Load(const CDM::SequentialOrganFailureAssessmentData& in);
   virtual CDM::SequentialOrganFailureAssessmentData* Unload() override;
@@ -54,6 +58,9 @@ public:
   virtual bool HasRenalSOFA();
   virtual SEScalar& GetRenalSOFA();
 
+  bool operator==(SESequentialOrganFailureAssessment const&) const;
+  bool operator!=(SESequentialOrganFailureAssessment const&) const;
+
 protected:
   SEScalar* m_RespirationSOFA;
   SEScalar* m_CoagulationSOFA;
@@ -61,6 +68,5 @@ protected:
   SEScalar* m_CardiovascularSOFA;
   SEScalar* m_CentralNervousSOFA;
   SEScalar* m_RenalSOFA;
-
 };
 }

@@ -38,12 +38,12 @@ SEPulmonaryFunctionTest::SEPulmonaryFunctionTest()
 
   m_LungVolumePlot = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEPulmonaryFunctionTest::~SEPulmonaryFunctionTest()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEPulmonaryFunctionTest::Clear()
 {
   SEPatientAssessment::Clear();
@@ -63,7 +63,7 @@ void SEPulmonaryFunctionTest::Clear()
 
   SAFE_DELETE(m_LungVolumePlot);
 }
-
+//-------------------------------------------------------------------------------
 void SEPulmonaryFunctionTest::Reset()
 {
   SEPatientAssessment::Reset();
@@ -83,21 +83,21 @@ void SEPulmonaryFunctionTest::Reset()
 
   INVALIDATE_PROPERTY(m_LungVolumePlot);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::Load(const CDM::PulmonaryFunctionTestData& in)
 {
   SEPatientAssessment::Load(in);
   // TODO
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::PulmonaryFunctionTestData* SEPulmonaryFunctionTest::Unload()
 {
   CDM::PulmonaryFunctionTestData* data = new CDM::PulmonaryFunctionTestData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEPulmonaryFunctionTest::Unload(CDM::PulmonaryFunctionTestData& data)
 {
   SEPatientAssessment::Unload(data);
@@ -130,7 +130,7 @@ void SEPulmonaryFunctionTest::Unload(CDM::PulmonaryFunctionTestData& data)
   if (m_LungVolumePlot != nullptr)
     data.LungVolumePlot(std::unique_ptr<CDM::FunctionVolumeVsTimeData>(m_LungVolumePlot->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasExpiratoryReserveVolume()
 {
   return m_ExpiratoryReserveVolume == nullptr ? false : m_ExpiratoryReserveVolume->IsValid();
@@ -141,7 +141,7 @@ SEScalarVolume& SEPulmonaryFunctionTest::GetExpiratoryReserveVolume()
     m_ExpiratoryReserveVolume = new SEScalarVolume();
   return *m_ExpiratoryReserveVolume;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasForcedVitalCapacity()
 {
   return m_ForcedVitalCapacity == nullptr ? false : m_ForcedVitalCapacity->IsValid();
@@ -152,7 +152,7 @@ SEScalarVolume& SEPulmonaryFunctionTest::GetForcedVitalCapacity()
     m_ForcedVitalCapacity = new SEScalarVolume();
   return *m_ForcedVitalCapacity;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasForcedExpiratoryVolume()
 {
   return m_ForcedExpiratoryVolume == nullptr ? false : m_ForcedExpiratoryVolume->IsValid();
@@ -163,7 +163,7 @@ SEScalarVolume& SEPulmonaryFunctionTest::GetForcedExpiratoryVolume()
     m_ForcedExpiratoryVolume = new SEScalarVolume();
   return *m_ForcedExpiratoryVolume;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasForcedExpiratoryFlow()
 {
   return m_ForcedExpiratoryFlow == nullptr ? false : m_ForcedExpiratoryFlow->IsValid();
@@ -174,7 +174,7 @@ SEScalarVolumePerTime& SEPulmonaryFunctionTest::GetForcedExpiratoryFlow()
     m_ForcedExpiratoryFlow = new SEScalarVolumePerTime();
   return *m_ForcedExpiratoryFlow;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasInspiratoryCapacity()
 {
   return m_InspiratoryCapacity == nullptr ? false : m_InspiratoryCapacity->IsValid();
@@ -185,7 +185,7 @@ SEScalarVolume& SEPulmonaryFunctionTest::GetInspiratoryCapacity()
     m_InspiratoryCapacity = new SEScalarVolume();
   return *m_InspiratoryCapacity;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasInspiratoryReserveVolume()
 {
   return m_InspiratoryReserveVolume == nullptr ? false : m_InspiratoryReserveVolume->IsValid();
@@ -196,7 +196,7 @@ SEScalarVolume& SEPulmonaryFunctionTest::GetInspiratoryReserveVolume()
     m_InspiratoryReserveVolume = new SEScalarVolume();
   return *m_InspiratoryReserveVolume;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasPeakExpiratoryFlow()
 {
   return m_PeakExpiratoryFlow == nullptr ? false : m_PeakExpiratoryFlow->IsValid();
@@ -207,7 +207,7 @@ SEScalarVolumePerTime& SEPulmonaryFunctionTest::GetPeakExpiratoryFlow()
     m_PeakExpiratoryFlow = new SEScalarVolumePerTime();
   return *m_PeakExpiratoryFlow;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasMaximumVoluntaryVentilation()
 {
   return m_MaximumVoluntaryVentilation == nullptr ? false : m_MaximumVoluntaryVentilation->IsValid();
@@ -218,7 +218,7 @@ SEScalarVolume& SEPulmonaryFunctionTest::GetMaximumVoluntaryVentilation()
     m_MaximumVoluntaryVentilation = new SEScalarVolume();
   return *m_MaximumVoluntaryVentilation;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasSlowVitalCapacity()
 {
   return m_SlowVitalCapacity == nullptr ? false : m_SlowVitalCapacity->IsValid();
@@ -229,7 +229,7 @@ SEScalarVolume& SEPulmonaryFunctionTest::GetSlowVitalCapacity()
     m_SlowVitalCapacity = new SEScalarVolume();
   return *m_SlowVitalCapacity;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasTotalLungCapacity()
 {
   return m_TotalLungCapacity == nullptr ? false : m_TotalLungCapacity->IsValid();
@@ -240,7 +240,7 @@ SEScalarVolume& SEPulmonaryFunctionTest::GetTotalLungCapacity()
     m_TotalLungCapacity = new SEScalarVolume();
   return *m_TotalLungCapacity;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasFunctionalResidualCapacity()
 {
   return m_FunctionalResidualCapacity == nullptr ? false : m_FunctionalResidualCapacity->IsValid();
@@ -251,7 +251,7 @@ SEScalarVolume& SEPulmonaryFunctionTest::GetFunctionalResidualCapacity()
     m_FunctionalResidualCapacity = new SEScalarVolume();
   return *m_FunctionalResidualCapacity;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasResidualVolume()
 {
   return m_ResidualVolume == nullptr ? false : m_ResidualVolume->IsValid();
@@ -262,7 +262,7 @@ SEScalarVolume& SEPulmonaryFunctionTest::GetResidualVolume()
     m_ResidualVolume = new SEScalarVolume();
   return *m_ResidualVolume;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasVitalCapacity()
 {
   return m_VitalCapacity == nullptr ? false : m_VitalCapacity->IsValid();
@@ -273,7 +273,7 @@ SEScalarVolume& SEPulmonaryFunctionTest::GetVitalCapacity()
     m_VitalCapacity = new SEScalarVolume();
   return *m_VitalCapacity;
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasLungVolumePlot()
 {
   return m_LungVolumePlot == nullptr ? false : m_LungVolumePlot->IsValid();
@@ -284,4 +284,33 @@ SEFunctionVolumeVsTime& SEPulmonaryFunctionTest::GetLungVolumePlot()
     m_LungVolumePlot = new SEFunctionVolumeVsTime();
   return *m_LungVolumePlot;
 }
+//-------------------------------------------------------------------------------
+bool SEPulmonaryFunctionTest::operator==(SEPulmonaryFunctionTest const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_ExpiratoryReserveVolume && rhs.m_ExpiratoryReserveVolume) ? m_ExpiratoryReserveVolume->operator==(*rhs.m_ExpiratoryReserveVolume) : m_ExpiratoryReserveVolume == rhs.m_ExpiratoryReserveVolume)
+    && ((m_ForcedVitalCapacity && rhs.m_ForcedVitalCapacity) ? m_ForcedVitalCapacity->operator==(*rhs.m_ForcedVitalCapacity) : m_ForcedVitalCapacity == rhs.m_ForcedVitalCapacity)
+    && ((m_ForcedExpiratoryVolume && rhs.m_ForcedExpiratoryVolume) ? m_ForcedExpiratoryVolume->operator==(*rhs.m_ForcedExpiratoryVolume) : m_ForcedExpiratoryVolume == rhs.m_ForcedExpiratoryVolume)
+    && ((m_ForcedExpiratoryFlow && rhs.m_ForcedExpiratoryFlow) ? m_ForcedExpiratoryFlow->operator==(*rhs.m_ForcedExpiratoryFlow) : m_ForcedExpiratoryFlow == rhs.m_ForcedExpiratoryFlow)
+    && ((m_FunctionalResidualCapacity && rhs.m_FunctionalResidualCapacity) ? m_FunctionalResidualCapacity->operator==(*rhs.m_FunctionalResidualCapacity) : m_FunctionalResidualCapacity == rhs.m_FunctionalResidualCapacity)
+    && ((m_InspiratoryCapacity && rhs.m_InspiratoryCapacity) ? m_InspiratoryCapacity->operator==(*rhs.m_InspiratoryCapacity) : m_InspiratoryCapacity == rhs.m_InspiratoryCapacity)
+    && ((m_InspiratoryReserveVolume && rhs.m_InspiratoryReserveVolume) ? m_InspiratoryReserveVolume->operator==(*rhs.m_InspiratoryReserveVolume) : m_InspiratoryReserveVolume == rhs.m_InspiratoryReserveVolume)
+    && ((m_MaximumVoluntaryVentilation && rhs.m_MaximumVoluntaryVentilation)
+          ? m_MaximumVoluntaryVentilation->operator==(*rhs.m_MaximumVoluntaryVentilation)
+          : m_MaximumVoluntaryVentilation == rhs.m_MaximumVoluntaryVentilation)
+    && ((m_PeakExpiratoryFlow && rhs.m_PeakExpiratoryFlow) ? m_PeakExpiratoryFlow->operator==(*rhs.m_PeakExpiratoryFlow) : m_PeakExpiratoryFlow == rhs.m_PeakExpiratoryFlow)
+    && ((m_ResidualVolume && rhs.m_ResidualVolume) ? m_ResidualVolume->operator==(*rhs.m_ResidualVolume) : m_ResidualVolume == rhs.m_ResidualVolume)
+    && ((m_SlowVitalCapacity && rhs.m_SlowVitalCapacity) ? m_SlowVitalCapacity->operator==(*rhs.m_SlowVitalCapacity) : m_SlowVitalCapacity == rhs.m_SlowVitalCapacity)
+    && ((m_TotalLungCapacity && rhs.m_TotalLungCapacity) ? m_TotalLungCapacity->operator==(*rhs.m_TotalLungCapacity) : m_TotalLungCapacity == rhs.m_TotalLungCapacity)
+    && ((m_VitalCapacity && rhs.m_VitalCapacity) ? m_VitalCapacity->operator==(*rhs.m_VitalCapacity) : m_VitalCapacity == rhs.m_VitalCapacity)
+    && ((m_LungVolumePlot && rhs.m_LungVolumePlot) ? m_LungVolumePlot->operator==(*rhs.m_LungVolumePlot) : m_LungVolumePlot == rhs.m_LungVolumePlot)
+    && m_NumberOfPlotPoints == rhs.m_NumberOfPlotPoints;
+}
+bool SEPulmonaryFunctionTest::operator!=(SEPulmonaryFunctionTest const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -99,6 +99,9 @@ public:
   virtual SEUrinalysisMicroscopic& GetMicroscopicResult();
   virtual void RemoveMicroscopicResult();
 
+  bool operator==(SEUrinalysis const&) const;
+  bool operator!=(SEUrinalysis const&) const;
+
 protected:
   CDM::enumUrineColor::value m_Color;
   CDM::enumClarityIndicator::value m_Appearance;

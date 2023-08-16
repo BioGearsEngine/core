@@ -434,18 +434,3 @@ TEST_F(TEST_FIXTURE_NAME, OxygenTankPressureLoss)
 
   EXPECT_EQ(source, sink);
 }
-
-//[FAILED] AnesthesiaActionsFixture.AnesthesiaMachineConfiguration;
-//[FAILED] AnesthesiaActionsFixture.ExpiratoryValveLeak;
-//[FAILED] AnesthesiaActionsFixture.ExpiratoryValveObstruction;
-//[FAILED] AnesthesiaActionsFixture.InspiratoryValveLeak;
-//[FAILED] AnesthesiaActionsFixture.InspiratoryValveObstruction;
-//[FAILED] AnesthesiaActionsFixture.MaskLeak;
-//[FAILED] AnesthesiaActionsFixture.SodaLimeFailure;
-//[FAILED] AnesthesiaActionsFixture.TubeCuffLeak;
-//[FAILED] AnesthesiaActionsFixture.VaporizerFailure;
-//[FAILED] AnesthesiaActionsFixture.VentilatorPressureLoss;
-//[FAILED] AnesthesiaActionsFixture.YPieceDisconnect;
-//[FAILED] InhalerFixture.Inhaler;
-//[FAILED] InhalerActionsFixture.InhalerConfiguration;
-//[FAILED] PatientFixture.Patient;

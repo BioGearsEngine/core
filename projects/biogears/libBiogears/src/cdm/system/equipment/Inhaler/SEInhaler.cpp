@@ -277,11 +277,20 @@ bool SEInhaler::operator==(SEInhaler const& rhs) const
     return true;
 
   return m_State == rhs.m_State
-    && m_MeteredDose == rhs.m_MeteredDose
-    && m_NozzleLoss == rhs.m_NozzleLoss
-    && m_SpacerVolume == rhs.m_SpacerVolume
-    && &m_Substance == &rhs.m_Substance;
+    && ((m_MeteredDose && rhs.m_MeteredDose)
+          ? m_MeteredDose->operator==(*rhs.m_MeteredDose)
+          : m_MeteredDose == rhs.m_MeteredDose)
+    && ((m_NozzleLoss && rhs.m_NozzleLoss)
+          ? m_NozzleLoss->operator==(*rhs.m_NozzleLoss)
+          : m_NozzleLoss == rhs.m_NozzleLoss)
+    && ((m_SpacerVolume && rhs.m_SpacerVolume)
+          ? m_SpacerVolume->operator==(*rhs.m_SpacerVolume)
+          : m_SpacerVolume == rhs.m_SpacerVolume)
+    && ((m_Substance && rhs.m_Substance)
+          ? m_Substance->operator==(*rhs.m_Substance)
+          : m_Substance == rhs.m_Substance);
 }
+
 //-------------------------------------------------------------------------------
 bool SEInhaler::operator!=(SEInhaler const& rhs) const
 {

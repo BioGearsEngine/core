@@ -29,14 +29,23 @@ specific language governing permissions and limitations under the License.
     io::PatientAssessments::UnMarshall(*in.m_##func, out.func());        \
   }
 
+
 namespace biogears {
 class SEPatientAssessment;
 class SEArterialBloodGasAnalysis;
-class SEPulmonaryFunctionTest;
 class SECompleteBloodCount;
 class SEComprehensiveMetabolicPanel;
+class SEProthrombinTime;
+class SEPsychomotorVigilanceTask;
+class SEPulmonaryFunctionTest;
+class SESequentialOrganFailureAssessment;
 class SEUrinalysis;
 class SEUrinalysisMicroscopic;
+
+// SEProthrombinTime.h
+// SEPsychomotorVigilanceTask.h
+// SESequentialOrganFailureAssessment.h
+
 
 namespace io {
   class BIOGEARS_PRIVATE_API PatientAssessments {
@@ -67,6 +76,16 @@ namespace io {
     //class SEUrinalysisMicroscopic
     static void Marshall(const CDM::UrinalysisMicroscopicData& in, SEUrinalysisMicroscopic& out);
     static void UnMarshall(const SEUrinalysisMicroscopic& in, CDM::UrinalysisMicroscopicData& out);
+    //class SEProthrombinTime.h
+    static void Marshall(const CDM::ProthrombinTimeData& in, SEProthrombinTime& out);
+    static void UnMarshall(const SEProthrombinTime& in, CDM::ProthrombinTimeData& out);
+    //class SEPsychomotorVigilanceTask.h
+    static void Marshall(const CDM::PsychomotorVigilanceTaskData& in, SEPsychomotorVigilanceTask& out);
+    static void UnMarshall(const SEPsychomotorVigilanceTask& in, CDM::PsychomotorVigilanceTaskData& out);
+    //class SESequentialOrganFailureAssessment.h
+    static void Marshall(const CDM::SequentialOrganFailureAssessmentData& in, SESequentialOrganFailureAssessment& out);
+    static void UnMarshall(const SESequentialOrganFailureAssessment& in, CDM::SequentialOrganFailureAssessmentData& out);
+
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
