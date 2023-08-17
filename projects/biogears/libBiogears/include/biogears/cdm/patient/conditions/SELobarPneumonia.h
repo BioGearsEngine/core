@@ -33,6 +33,9 @@ public:
   virtual bool Load(const CDM::LobarPneumoniaData& in);
   virtual CDM::LobarPneumoniaData* Unload() const;
 
+  bool operator==(SELobarPneumonia const&) const;
+  bool operator!=(SELobarPneumonia const&) const;
+
 protected:
   virtual void Unload(CDM::LobarPneumoniaData& data) const;
 

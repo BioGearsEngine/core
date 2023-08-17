@@ -202,13 +202,13 @@ specific language governing permissions and limitations under the License.
           <!--<< @brief The difference between the mean arterial pressure and the cerebral blood pressure. Defines the hydrostatic diffusion gradient.-->
           <xs:element name="DiastolicArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief The minimum pressure in the aorta over the course of a cardiac cycle.-->
-          <xs:element name="ExtremityPressure-LeftArm" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="ExtremityPressureLeftArm" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief Pulse pressure observable in specified extremity.-->
-          <xs:element name="ExtremityPressure-LeftLeg" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="ExtremityPressureLeftLeg" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief Pulse pressure observable in specified extremity.-->
-          <xs:element name="ExtremityPressure-RightArm" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="ExtremityPressureRightArm" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief Pulse pressure observable in specified extremity.-->
-          <xs:element name="ExtremityPressure-RightLeg" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
+          <xs:element name="ExtremityPressureRightLeg" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief Pulse pressure observable in specified extremity.-->
           <xs:element name="HeartEjectionFraction" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief The current pressure in the aorta.-->

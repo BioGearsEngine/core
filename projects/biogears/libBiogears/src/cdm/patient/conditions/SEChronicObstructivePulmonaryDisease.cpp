@@ -98,4 +98,18 @@ void SEChronicObstructivePulmonaryDisease::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+bool SEChronicObstructivePulmonaryDisease::operator==(SEChronicObstructivePulmonaryDisease const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Comment == rhs.m_Comment
+    && ((m_BronchitisSeverity && rhs.m_BronchitisSeverity) ? m_BronchitisSeverity->operator==(*rhs.m_BronchitisSeverity) : m_BronchitisSeverity == rhs.m_BronchitisSeverity)
+    && ((m_EmphysemaSeverity && rhs.m_EmphysemaSeverity) ? m_EmphysemaSeverity->operator==(*rhs.m_EmphysemaSeverity) : m_EmphysemaSeverity == rhs.m_EmphysemaSeverity);
+}
+bool SEChronicObstructivePulmonaryDisease::operator!=(SEChronicObstructivePulmonaryDisease const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

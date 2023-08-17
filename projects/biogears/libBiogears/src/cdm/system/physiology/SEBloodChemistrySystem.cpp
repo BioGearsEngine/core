@@ -1,4 +1,4 @@
-/**************************************************************************************
+﻿/**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the License
@@ -63,6 +63,14 @@ constexpr char idVenousCarbonDioxidePressure[] = "VenousCarbonDioxidePressure";
 constexpr char idVenousOxygenPressure[] = "VenousOxygenPressure";
 constexpr char idViralLoad[] = "ViralLoad";
 constexpr char idInflammtoryRespone[] = "InflammatoryResponse";
+
+//-------------------------------------------------------------------------------
+//!
+//! ┏┓┏┓┳┓┓     ┓┏┓┓      •      ┏┓
+//! ┗┓┣ ┣┫┃┏┓┏┓┏┫┃ ┣┓┏┓┏┳┓┓┏╋┏┓┓┏┗┓┓┏┏╋┏┓┏┳┓
+//! ┗┛┗┛┻┛┗┗┛┗┛┗┻┗┛┛┗┗ ┛┗┗┗┛┗┛ ┗┫┗┛┗┫┛┗┗ ┛┗┗
+//!                            ┛
+//-------------------------------------------------------------------------------
 
 SEBloodChemistrySystem::SEBloodChemistrySystem(Logger* logger)
   : SESystem(logger)
@@ -281,10 +289,10 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
     return &GetViralLoad();
   }
 
-  //This applies to InflammationState values, as they are defined AcuteInflammatoryResponse-Pathogen, e.g.
+  // This applies to InflammationState values, as they are defined AcuteInflammatoryResponse-Pathogen, e.g.
   size_t split = name.find('-');
   if (split != name.npos) {
-    std::string prop = name.substr(split + 1, name.npos); //Get property that follows dash
+    std::string prop = name.substr(split + 1, name.npos); // Get property that follows dash
     std::string parent = name.substr(0, split);
     if (parent == idInflammtoryRespone) {
       return GetInflammatoryResponse().GetScalar(prop);
@@ -1412,6 +1420,58 @@ Tree<const char*> SEBloodChemistrySystem::GetPhysiologyRequestGraph() const
   ;
 }
 
+//-------------------------------------------------------------------------------
+bool SEBloodChemistrySystem::operator==(SEBloodChemistrySystem const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = ((m_InflammatoryResponse && rhs.m_InflammatoryResponse) ? m_InflammatoryResponse->operator==(*rhs.m_InflammatoryResponse) : m_InflammatoryResponse == rhs.m_InflammatoryResponse)
+    ;equivilant &= ((m_ArterialBloodPH && rhs.m_ArterialBloodPH) ? m_ArterialBloodPH->operator==(*rhs.m_ArterialBloodPH) : m_ArterialBloodPH == rhs.m_ArterialBloodPH)
+    ;equivilant &= ((m_ArterialBloodPHBaseline && rhs.m_ArterialBloodPHBaseline) ? m_ArterialBloodPHBaseline->operator==(*rhs.m_ArterialBloodPHBaseline) : m_ArterialBloodPHBaseline == rhs.m_ArterialBloodPHBaseline)
+    ;equivilant &= ((m_VenousBloodPH && rhs.m_VenousBloodPH) ? m_VenousBloodPH->operator==(*rhs.m_VenousBloodPH) : m_VenousBloodPH == rhs.m_VenousBloodPH)
+    ;equivilant &= ((m_LymphocyteCellCount && rhs.m_LymphocyteCellCount) ? m_LymphocyteCellCount->operator==(*rhs.m_LymphocyteCellCount) : m_LymphocyteCellCount == rhs.m_LymphocyteCellCount)
+    ;equivilant &= ((m_NeutrophilCellCount && rhs.m_NeutrophilCellCount) ? m_NeutrophilCellCount->operator==(*rhs.m_NeutrophilCellCount) : m_NeutrophilCellCount == rhs.m_NeutrophilCellCount)
+    ;equivilant &= ((m_Phosphate && rhs.m_Phosphate) ? m_Phosphate->operator==(*rhs.m_Phosphate) : m_Phosphate == rhs.m_Phosphate)
+    ;equivilant &= ((m_RedBloodCellAcetylcholinesterase && rhs.m_RedBloodCellAcetylcholinesterase) ? m_RedBloodCellAcetylcholinesterase->operator==(*rhs.m_RedBloodCellAcetylcholinesterase) : m_RedBloodCellAcetylcholinesterase == rhs.m_RedBloodCellAcetylcholinesterase)
+    ;equivilant &= ((m_RedBloodCellCount && rhs.m_RedBloodCellCount) ? m_RedBloodCellCount->operator==(*rhs.m_RedBloodCellCount) : m_RedBloodCellCount == rhs.m_RedBloodCellCount)
+    ;equivilant &= ((m_StrongIonDifference && rhs.m_StrongIonDifference) ? m_StrongIonDifference->operator==(*rhs.m_StrongIonDifference) : m_StrongIonDifference == rhs.m_StrongIonDifference)
+    ;equivilant &= ((m_ViralLoad && rhs.m_ViralLoad) ? m_ViralLoad->operator==(*rhs.m_ViralLoad) : m_ViralLoad == rhs.m_ViralLoad)
+    ;equivilant &= ((m_WhiteBloodCellCount && rhs.m_WhiteBloodCellCount) ? m_WhiteBloodCellCount->operator==(*rhs.m_WhiteBloodCellCount) : m_WhiteBloodCellCount == rhs.m_WhiteBloodCellCount)
+    ;equivilant &= ((m_CarbonDioxideSaturation && rhs.m_CarbonDioxideSaturation) ? m_CarbonDioxideSaturation->operator==(*rhs.m_CarbonDioxideSaturation) : m_CarbonDioxideSaturation == rhs.m_CarbonDioxideSaturation)
+    ;equivilant &= ((m_CarbonMonoxideSaturation && rhs.m_CarbonMonoxideSaturation) ? m_CarbonMonoxideSaturation->operator==(*rhs.m_CarbonMonoxideSaturation) : m_CarbonMonoxideSaturation == rhs.m_CarbonMonoxideSaturation)
+    ;equivilant &= ((m_Hematocrit && rhs.m_Hematocrit) ? m_Hematocrit->operator==(*rhs.m_Hematocrit) : m_Hematocrit == rhs.m_Hematocrit)
+    ;equivilant &= ((m_OxygenSaturation && rhs.m_OxygenSaturation) ? m_OxygenSaturation->operator==(*rhs.m_OxygenSaturation) : m_OxygenSaturation == rhs.m_OxygenSaturation)
+    ;equivilant &= ((m_OxygenVenousSaturation && rhs.m_OxygenVenousSaturation) ? m_OxygenVenousSaturation->operator==(*rhs.m_OxygenVenousSaturation) : m_OxygenVenousSaturation == rhs.m_OxygenVenousSaturation)
+    ;equivilant &= ((m_PulseOximetry && rhs.m_PulseOximetry) ? m_PulseOximetry->operator==(*rhs.m_PulseOximetry) : m_PulseOximetry == rhs.m_PulseOximetry)
+    ;equivilant &= ((m_ShuntFraction && rhs.m_ShuntFraction) ? m_ShuntFraction->operator==(*rhs.m_ShuntFraction) : m_ShuntFraction == rhs.m_ShuntFraction)
+    ;equivilant &= ((m_VolumeFractionNeutralLipidInPlasma && rhs.m_VolumeFractionNeutralLipidInPlasma) ? m_VolumeFractionNeutralLipidInPlasma->operator==(*rhs.m_VolumeFractionNeutralLipidInPlasma) : m_VolumeFractionNeutralLipidInPlasma == rhs.m_VolumeFractionNeutralLipidInPlasma)
+    ;equivilant &= ((m_VolumeFractionNeutralPhospholipidInPlasma && rhs.m_VolumeFractionNeutralPhospholipidInPlasma) ? m_VolumeFractionNeutralPhospholipidInPlasma->operator==(*rhs.m_VolumeFractionNeutralPhospholipidInPlasma) : m_VolumeFractionNeutralPhospholipidInPlasma == rhs.m_VolumeFractionNeutralPhospholipidInPlasma)
+    ;equivilant &= ((m_BloodSpecificHeat && rhs.m_BloodSpecificHeat) ? m_BloodSpecificHeat->operator==(*rhs.m_BloodSpecificHeat) : m_BloodSpecificHeat == rhs.m_BloodSpecificHeat)
+    ;equivilant &= ((m_HemoglobinContent && rhs.m_HemoglobinContent) ? m_HemoglobinContent->operator==(*rhs.m_HemoglobinContent) : m_HemoglobinContent == rhs.m_HemoglobinContent)
+    ;equivilant &= ((m_HemoglobinLostToUrine && rhs.m_HemoglobinLostToUrine) ? m_HemoglobinLostToUrine->operator==(*rhs.m_HemoglobinLostToUrine) : m_HemoglobinLostToUrine == rhs.m_HemoglobinLostToUrine)
+    ;equivilant &= ((m_BloodDensity && rhs.m_BloodDensity) ? m_BloodDensity->operator==(*rhs.m_BloodDensity) : m_BloodDensity == rhs.m_BloodDensity)
+    ;equivilant &= ((m_BloodUreaNitrogenConcentration && rhs.m_BloodUreaNitrogenConcentration) ? m_BloodUreaNitrogenConcentration->operator==(*rhs.m_BloodUreaNitrogenConcentration) : m_BloodUreaNitrogenConcentration == rhs.m_BloodUreaNitrogenConcentration)
+    ;equivilant &= ((m_TotalBilirubin && rhs.m_TotalBilirubin) ? m_TotalBilirubin->operator==(*rhs.m_TotalBilirubin) : m_TotalBilirubin == rhs.m_TotalBilirubin)
+    ;equivilant &= ((m_TotalProteinConcentration && rhs.m_TotalProteinConcentration) ? m_TotalProteinConcentration->operator==(*rhs.m_TotalProteinConcentration) : m_TotalProteinConcentration == rhs.m_TotalProteinConcentration)
+    ;equivilant &= ((m_ArterialCarbonDioxidePressure && rhs.m_ArterialCarbonDioxidePressure) ? m_ArterialCarbonDioxidePressure->operator==(*rhs.m_ArterialCarbonDioxidePressure) : m_ArterialCarbonDioxidePressure == rhs.m_ArterialCarbonDioxidePressure)
+    ;equivilant &= ((m_ArterialOxygenPressure && rhs.m_ArterialOxygenPressure) ? m_ArterialOxygenPressure->operator==(*rhs.m_ArterialOxygenPressure) : m_ArterialOxygenPressure == rhs.m_ArterialOxygenPressure)
+    ;equivilant &= ((m_PulmonaryArterialCarbonDioxidePressure && rhs.m_PulmonaryArterialCarbonDioxidePressure) ? m_PulmonaryArterialCarbonDioxidePressure->operator==(*rhs.m_PulmonaryArterialCarbonDioxidePressure) : m_PulmonaryArterialCarbonDioxidePressure == rhs.m_PulmonaryArterialCarbonDioxidePressure)
+    ;equivilant &= ((m_PulmonaryArterialOxygenPressure && rhs.m_PulmonaryArterialOxygenPressure) ? m_PulmonaryArterialOxygenPressure->operator==(*rhs.m_PulmonaryArterialOxygenPressure) : m_PulmonaryArterialOxygenPressure == rhs.m_PulmonaryArterialOxygenPressure)
+    ;equivilant &= ((m_PulmonaryVenousCarbonDioxidePressure && rhs.m_PulmonaryVenousCarbonDioxidePressure) ? m_PulmonaryVenousCarbonDioxidePressure->operator==(*rhs.m_PulmonaryVenousCarbonDioxidePressure) : m_PulmonaryVenousCarbonDioxidePressure == rhs.m_PulmonaryVenousCarbonDioxidePressure)
+    ;equivilant &= ((m_PulmonaryVenousOxygenPressure && rhs.m_PulmonaryVenousOxygenPressure) ? m_PulmonaryVenousOxygenPressure->operator==(*rhs.m_PulmonaryVenousOxygenPressure) : m_PulmonaryVenousOxygenPressure == rhs.m_PulmonaryVenousOxygenPressure)
+    ;equivilant &= ((m_VenousCarbonDioxidePressure && rhs.m_VenousCarbonDioxidePressure) ? m_VenousCarbonDioxidePressure->operator==(*rhs.m_VenousCarbonDioxidePressure) : m_VenousCarbonDioxidePressure == rhs.m_VenousCarbonDioxidePressure)
+    ;equivilant &= ((m_VenousOxygenPressure && rhs.m_VenousOxygenPressure) ? m_VenousOxygenPressure->operator==(*rhs.m_VenousOxygenPressure) : m_VenousOxygenPressure == rhs.m_VenousOxygenPressure)
+    ;equivilant &= ((m_PlasmaVolume && rhs.m_PlasmaVolume) ? m_PlasmaVolume->operator==(*rhs.m_PlasmaVolume) : m_PlasmaVolume == rhs.m_PlasmaVolume)
+    ;equivilant &= ((m_RhTransfusionReactionVolume && rhs.m_RhTransfusionReactionVolume) ? m_RhTransfusionReactionVolume->operator==(*rhs.m_RhTransfusionReactionVolume) : m_RhTransfusionReactionVolume == rhs.m_RhTransfusionReactionVolume);
+    ;
+  return equivilant;
+}
+bool SEBloodChemistrySystem::operator!=(SEBloodChemistrySystem const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 SEInflammatoryResponse::SEInflammatoryResponse()
   : m_LocalPathogen(nullptr)
   , m_LocalMacrophage(nullptr)
@@ -1548,7 +1608,7 @@ void SEInflammatoryResponse::Unload(CDM::InflammatoryResponseData& data) const
 //-------------------------------------------------------------------------------
 void SEInflammatoryResponse::Initialize()
 {
-  //Values from Chow2005Acute
+  // Values from Chow2005Acute
   GetLocalPathogen().SetValue(0.0);
   GetLocalMacrophage().SetValue(10.0);
   GetLocalNeutrophil().SetValue(0.0);
@@ -1588,7 +1648,6 @@ const SEScalar* SEInflammatoryResponse::GetScalar(const char* name)
 {
   return GetScalar(std::string { name });
 }
-//-------------------------------------------------------------------------------
 constexpr char idLocalPathogen[] = "LocalPathogen";
 constexpr char idLocalMacrophage[] = "LocalMacrophage";
 constexpr char idLocalNeutrophil[] = "LocalNeutrophil";
@@ -1612,7 +1671,14 @@ constexpr char idInterleukin12[] = "Interleukin12";
 constexpr char idCatecholamines[] = "Catecholamines";
 constexpr char idTissueIntegrity[] = "TissueIntegrity";
 constexpr char idInflammationTime[] = "InflammationTime";
-
+//-------------------------------------------------------------------------------
+//!
+//!
+//! ┏┓┏┓┳  ┏┓                 ┳┓
+//! ┗┓┣ ┃┏┓╋┃┏┓┏┳┓┏┳┓┏┓╋┏┓┏┓┓┏┣┫┏┓┏┏┓┏┓┏┓┏┏┓
+//! ┗┛┗┛┻┛┗┛┗┗┻┛┗┗┛┗┗┗┻┗┗┛┛ ┗┫┛┗┗ ┛┣┛┗┛┛┗┛┗
+//!
+//-------------------------------------------------------------------------------
 const SEScalar* SEInflammatoryResponse::GetScalar(const std::string& name)
 {
   using namespace std::string_literals;
@@ -2217,5 +2283,43 @@ Tree<const char*> SEInflammatoryResponse::GetPhysiologyRequestGraph() const
     .emplace_back(idAutonomicResponseLevel)
     .emplace_back(idInflammationTime);
 }
+//-------------------------------------------------------------------------------
+bool SEInflammatoryResponse::operator==(SEInflammatoryResponse const& rhs) const
+{
+  if (this == &rhs)
+    return true;
 
+  bool equivilant = m_ActiveTLR == rhs.m_ActiveTLR
+   ;equivilant &= ((m_AutonomicResponseLevel && rhs.m_AutonomicResponseLevel) ? m_AutonomicResponseLevel->operator==(*rhs.m_AutonomicResponseLevel) : m_AutonomicResponseLevel == rhs.m_AutonomicResponseLevel)
+   ;equivilant &= ((m_BloodPathogen && rhs.m_BloodPathogen) ? m_BloodPathogen->operator==(*rhs.m_BloodPathogen) : m_BloodPathogen == rhs.m_BloodPathogen)
+   ;equivilant &= ((m_Catecholamines && rhs.m_Catecholamines) ? m_Catecholamines->operator==(*rhs.m_Catecholamines) : m_Catecholamines == rhs.m_Catecholamines)
+   ;equivilant &= ((m_ConstitutiveNOS && rhs.m_ConstitutiveNOS) ? m_ConstitutiveNOS->operator==(*rhs.m_ConstitutiveNOS) : m_ConstitutiveNOS == rhs.m_ConstitutiveNOS)
+   ;equivilant &= ((m_InducibleNOS && rhs.m_InducibleNOS) ? m_InducibleNOS->operator==(*rhs.m_InducibleNOS) : m_InducibleNOS == rhs.m_InducibleNOS)
+   ;equivilant &= ((m_InducibleNOSPre && rhs.m_InducibleNOSPre) ? m_InducibleNOSPre->operator==(*rhs.m_InducibleNOSPre) : m_InducibleNOSPre == rhs.m_InducibleNOSPre)
+   ;equivilant &= ((m_Interleukin10 && rhs.m_Interleukin10) ? m_Interleukin10->operator==(*rhs.m_Interleukin10) : m_Interleukin10 == rhs.m_Interleukin10)
+   ;equivilant &= ((m_Interleukin12 && rhs.m_Interleukin12) ? m_Interleukin12->operator==(*rhs.m_Interleukin12) : m_Interleukin12 == rhs.m_Interleukin12)
+   ;equivilant &= ((m_Interleukin6 && rhs.m_Interleukin6) ? m_Interleukin6->operator==(*rhs.m_Interleukin6) : m_Interleukin6 == rhs.m_Interleukin6)
+   ;equivilant &= ((m_LocalBarrier && rhs.m_LocalBarrier) ? m_LocalBarrier->operator==(*rhs.m_LocalBarrier) : m_LocalBarrier == rhs.m_LocalBarrier)
+   ;equivilant &= ((m_LocalMacrophage && rhs.m_LocalMacrophage) ? m_LocalMacrophage->operator==(*rhs.m_LocalMacrophage) : m_LocalMacrophage == rhs.m_LocalMacrophage)
+   ;equivilant &= ((m_LocalNeutrophil && rhs.m_LocalNeutrophil) ? m_LocalNeutrophil->operator==(*rhs.m_LocalNeutrophil) : m_LocalNeutrophil == rhs.m_LocalNeutrophil)
+   ;equivilant &= ((m_LocalPathogen && rhs.m_LocalPathogen) ? m_LocalPathogen->operator==(*rhs.m_LocalPathogen) : m_LocalPathogen == rhs.m_LocalPathogen)
+   ;equivilant &= ((m_MacrophageActive && rhs.m_MacrophageActive) ? m_MacrophageActive->operator==(*rhs.m_MacrophageActive) : m_MacrophageActive == rhs.m_MacrophageActive)
+   ;equivilant &= ((m_MacrophageResting && rhs.m_MacrophageResting) ? m_MacrophageResting->operator==(*rhs.m_MacrophageResting) : m_MacrophageResting == rhs.m_MacrophageResting)
+   ;equivilant &= ((m_NeutrophilActive && rhs.m_NeutrophilActive) ? m_NeutrophilActive->operator==(*rhs.m_NeutrophilActive) : m_NeutrophilActive == rhs.m_NeutrophilActive)
+   ;equivilant &= ((m_NeutrophilResting && rhs.m_NeutrophilResting) ? m_NeutrophilResting->operator==(*rhs.m_NeutrophilResting) : m_NeutrophilResting == rhs.m_NeutrophilResting)
+   ;equivilant &= ((m_Nitrate && rhs.m_Nitrate) ? m_Nitrate->operator==(*rhs.m_Nitrate) : m_Nitrate == rhs.m_Nitrate)
+   ;equivilant &= ((m_NitricOxide && rhs.m_NitricOxide) ? m_NitricOxide->operator==(*rhs.m_NitricOxide) : m_NitricOxide == rhs.m_NitricOxide)
+   ;equivilant &= ((m_Trauma && rhs.m_Trauma) ? m_Trauma->operator==(*rhs.m_Trauma) : m_Trauma == rhs.m_Trauma)
+   ;equivilant &= ((m_TumorNecrosisFactor && rhs.m_TumorNecrosisFactor) ? m_TumorNecrosisFactor->operator==(*rhs.m_TumorNecrosisFactor) : m_TumorNecrosisFactor == rhs.m_TumorNecrosisFactor)
+   ;equivilant &= ((m_TissueIntegrity && rhs.m_TissueIntegrity) ? m_TissueIntegrity->operator==(*rhs.m_TissueIntegrity) : m_TissueIntegrity == rhs.m_TissueIntegrity)
+   ;equivilant &= ((m_InflammationTime && rhs.m_InflammationTime) ? m_InflammationTime->operator==(*rhs.m_InflammationTime) : m_InflammationTime == rhs.m_InflammationTime)
+   ;equivilant &= m_InflammationSources == rhs.m_InflammationSources;
+  ;
+  return equivilant;
+}
+bool SEInflammatoryResponse::operator!=(SEInflammatoryResponse const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -44,7 +44,7 @@ void SEHepaticSystem::Clear()
 //-------------------------------------------------------------------------------
 const SEScalar* SEHepaticSystem::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEHepaticSystem::GetScalar(const std::string& name)
@@ -128,8 +128,26 @@ double SEHepaticSystem::GetHepaticGluconeogenesisRate(const MassPerTimeUnit& uni
 //-------------------------------------------------------------------------------
 Tree<const char*> SEHepaticSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{ classname() }
+  return Tree<const char*> { classname() }
     .emplace_back(idKetoneProductionRate)
     .emplace_back(idHepaticGluconeogenesisRate);
 }
+//-------------------------------------------------------------------------------
+bool SEHepaticSystem::operator==(SEHepaticSystem const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_KetoneProductionRate && rhs.m_KetoneProductionRate)
+            ? m_KetoneProductionRate->operator==(*rhs.m_KetoneProductionRate)
+            : m_KetoneProductionRate == rhs.m_KetoneProductionRate)
+    && ((m_HepaticGluconeogenesisRate && rhs.m_HepaticGluconeogenesisRate)
+          ? m_HepaticGluconeogenesisRate->operator==(*rhs.m_HepaticGluconeogenesisRate)
+          : m_HepaticGluconeogenesisRate == rhs.m_HepaticGluconeogenesisRate);
+}
+bool SEHepaticSystem::operator!=(SEHepaticSystem const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -30,61 +30,61 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 constexpr char idBladderPressure[] = "BladderPressure";
-  constexpr char idGlomerularFiltrationRate[] = "GlomerularFiltrationRate";
-  constexpr char idFiltrationFraction[] = "FiltrationFraction";
-  constexpr char idLeftAfferentArterioleResistance[] = "LeftAfferentArterioleResistance";
-  constexpr char idLeftBowmansCapsulesHydrostaticPressure[] = "LeftBowmansCapsulesHydrostaticPressure";
-  constexpr char idLeftBowmansCapsulesOsmoticPressure[] = "LeftBowmansCapsulesOsmoticPressure";
-  constexpr char idLeftEfferentArterioleResistance[] = "LeftEfferentArterioleResistance";
-  constexpr char idLeftGlomerularCapillariesHydrostaticPressure[] = "LeftGlomerularCapillariesHydrostaticPressure";
-  constexpr char idLeftGlomerularCapillariesOsmoticPressure[] = "LeftGlomerularCapillariesOsmoticPressure";
-  constexpr char idLeftGlomerularFiltrationCoefficient[] = "LeftGlomerularFiltrationCoefficient";
-  constexpr char idLeftGlomerularFiltrationRate[] = "LeftGlomerularFiltrationRate";
-  constexpr char idLeftGlomerularFiltrationSurfaceArea[] = "LeftGlomerularFiltrationSurfaceArea";
-  constexpr char idLeftGlomerularFluidPermeability[] = "LeftGlomerularFluidPermeability";
-  constexpr char idLeftFiltrationFraction[] = "LeftFiltrationFraction";
-  constexpr char idLeftNetFiltrationPressure[] = "LeftNetFiltrationPressure";
-  constexpr char idLeftNetReabsorptionPressure[] = "LeftNetReabsorptionPressure";
-  constexpr char idLeftPeritubularCapillariesHydrostaticPressure[] = "LeftPeritubularCapillariesHydrostaticPressure";
-  constexpr char idLeftPeritubularCapillariesOsmoticPressure[] = "LeftPeritubularCapillariesOsmoticPressure";
-  constexpr char idLeftReabsorptionFiltrationCoefficient[] = "LeftReabsorptionFiltrationCoefficient";
-  constexpr char idLeftReabsorptionRate[] = "LeftReabsorptionRate";
-  constexpr char idLeftTubularReabsorptionFiltrationSurfaceArea[] = "LeftTubularReabsorptionFiltrationSurfaceArea";
-  constexpr char idLeftTubularReabsorptionFluidPermeability[] = "LeftTubularReabsorptionFluidPermeability";
-  constexpr char idLeftTubularHydrostaticPressure[] = "LeftTubularHydrostaticPressure";
-  constexpr char idLeftTubularOsmoticPressure[] = "LeftTubularOsmoticPressure";
-  constexpr char idRenalBloodFlow[] = "RenalBloodFlow";
-  constexpr char idRenalPlasmaFlow[] = "RenalPlasmaFlow";
-  constexpr char idRenalVascularResistance[] = "RenalVascularResistance";
-  constexpr char idRightAfferentArterioleResistance[] = "RightAfferentArterioleResistance";
-  constexpr char idRightBowmansCapsulesHydrostaticPressure[] = "RightBowmansCapsulesHydrostaticPressure";
-  constexpr char idRightBowmansCapsulesOsmoticPressure[] = "RightBowmansCapsulesOsmoticPressure";
-  constexpr char idRightEfferentArterioleResistance[] = "RightEfferentArterioleResistance";
-  constexpr char idRightGlomerularCapillariesHydrostaticPressure[] = "RightGlomerularCapillariesHydrostaticPressure";
-  constexpr char idRightGlomerularCapillariesOsmoticPressure[] = "RightGlomerularCapillariesOsmoticPressure";
-  constexpr char idRightGlomerularFiltrationCoefficient[] = "RightGlomerularFiltrationCoefficient";
-  constexpr char idRightGlomerularFiltrationRate[] = "RightGlomerularFiltrationRate";
-  constexpr char idRightGlomerularFiltrationSurfaceArea[] = "RightGlomerularFiltrationSurfaceArea";
-  constexpr char idRightGlomerularFluidPermeability[] = "RightGlomerularFluidPermeability";
-  constexpr char idRightFiltrationFraction[] = "RightFiltrationFraction";
-  constexpr char idRightNetFiltrationPressure[] = "RightNetFiltrationPressure";
-  constexpr char idRightNetReabsorptionPressure[] = "RightNetReabsorptionPressure";
-  constexpr char idRightPeritubularCapillariesHydrostaticPressure[] = "RightPeritubularCapillariesHydrostaticPressure";
-  constexpr char idRightPeritubularCapillariesOsmoticPressure[] = "RightPeritubularCapillariesOsmoticPressure";
-  constexpr char idRightReabsorptionFiltrationCoefficient[] = "RightReabsorptionFiltrationCoefficient";
-  constexpr char idRightReabsorptionRate[] = "RightReabsorptionRate";
-  constexpr char idRightTubularReabsorptionFiltrationSurfaceArea[] = "RightTubularReabsorptionFiltrationSurfaceArea";
-  constexpr char idRightTubularReabsorptionFluidPermeability[] = "RightTubularReabsorptionFluidPermeability";
-  constexpr char idRightTubularHydrostaticPressure[] = "RightTubularHydrostaticPressure";
-  constexpr char idRightTubularOsmoticPressure[] = "RightTubularOsmoticPressure";
-  constexpr char idUrinationRate[] = "UrinationRate";
-  constexpr char idUrineOsmolality[] = "UrineOsmolality";
-  constexpr char idUrineOsmolarity[] = "UrineOsmolarity";
-  constexpr char idUrineProductionRate[] = "UrineProductionRate";
-  constexpr char idMeanUrineOutput[] = "MeanUrineOutput";
-  constexpr char idUrineSpecificGravity[] = "UrineSpecificGravity";
-  constexpr char idUrineVolume[] = "UrineVolume";
-  constexpr char idUrineUreaNitrogenConcentration[] = "UrineUreaNitrogenConcentration";
+constexpr char idGlomerularFiltrationRate[] = "GlomerularFiltrationRate";
+constexpr char idFiltrationFraction[] = "FiltrationFraction";
+constexpr char idLeftAfferentArterioleResistance[] = "LeftAfferentArterioleResistance";
+constexpr char idLeftBowmansCapsulesHydrostaticPressure[] = "LeftBowmansCapsulesHydrostaticPressure";
+constexpr char idLeftBowmansCapsulesOsmoticPressure[] = "LeftBowmansCapsulesOsmoticPressure";
+constexpr char idLeftEfferentArterioleResistance[] = "LeftEfferentArterioleResistance";
+constexpr char idLeftGlomerularCapillariesHydrostaticPressure[] = "LeftGlomerularCapillariesHydrostaticPressure";
+constexpr char idLeftGlomerularCapillariesOsmoticPressure[] = "LeftGlomerularCapillariesOsmoticPressure";
+constexpr char idLeftGlomerularFiltrationCoefficient[] = "LeftGlomerularFiltrationCoefficient";
+constexpr char idLeftGlomerularFiltrationRate[] = "LeftGlomerularFiltrationRate";
+constexpr char idLeftGlomerularFiltrationSurfaceArea[] = "LeftGlomerularFiltrationSurfaceArea";
+constexpr char idLeftGlomerularFluidPermeability[] = "LeftGlomerularFluidPermeability";
+constexpr char idLeftFiltrationFraction[] = "LeftFiltrationFraction";
+constexpr char idLeftNetFiltrationPressure[] = "LeftNetFiltrationPressure";
+constexpr char idLeftNetReabsorptionPressure[] = "LeftNetReabsorptionPressure";
+constexpr char idLeftPeritubularCapillariesHydrostaticPressure[] = "LeftPeritubularCapillariesHydrostaticPressure";
+constexpr char idLeftPeritubularCapillariesOsmoticPressure[] = "LeftPeritubularCapillariesOsmoticPressure";
+constexpr char idLeftReabsorptionFiltrationCoefficient[] = "LeftReabsorptionFiltrationCoefficient";
+constexpr char idLeftReabsorptionRate[] = "LeftReabsorptionRate";
+constexpr char idLeftTubularReabsorptionFiltrationSurfaceArea[] = "LeftTubularReabsorptionFiltrationSurfaceArea";
+constexpr char idLeftTubularReabsorptionFluidPermeability[] = "LeftTubularReabsorptionFluidPermeability";
+constexpr char idLeftTubularHydrostaticPressure[] = "LeftTubularHydrostaticPressure";
+constexpr char idLeftTubularOsmoticPressure[] = "LeftTubularOsmoticPressure";
+constexpr char idRenalBloodFlow[] = "RenalBloodFlow";
+constexpr char idRenalPlasmaFlow[] = "RenalPlasmaFlow";
+constexpr char idRenalVascularResistance[] = "RenalVascularResistance";
+constexpr char idRightAfferentArterioleResistance[] = "RightAfferentArterioleResistance";
+constexpr char idRightBowmansCapsulesHydrostaticPressure[] = "RightBowmansCapsulesHydrostaticPressure";
+constexpr char idRightBowmansCapsulesOsmoticPressure[] = "RightBowmansCapsulesOsmoticPressure";
+constexpr char idRightEfferentArterioleResistance[] = "RightEfferentArterioleResistance";
+constexpr char idRightGlomerularCapillariesHydrostaticPressure[] = "RightGlomerularCapillariesHydrostaticPressure";
+constexpr char idRightGlomerularCapillariesOsmoticPressure[] = "RightGlomerularCapillariesOsmoticPressure";
+constexpr char idRightGlomerularFiltrationCoefficient[] = "RightGlomerularFiltrationCoefficient";
+constexpr char idRightGlomerularFiltrationRate[] = "RightGlomerularFiltrationRate";
+constexpr char idRightGlomerularFiltrationSurfaceArea[] = "RightGlomerularFiltrationSurfaceArea";
+constexpr char idRightGlomerularFluidPermeability[] = "RightGlomerularFluidPermeability";
+constexpr char idRightFiltrationFraction[] = "RightFiltrationFraction";
+constexpr char idRightNetFiltrationPressure[] = "RightNetFiltrationPressure";
+constexpr char idRightNetReabsorptionPressure[] = "RightNetReabsorptionPressure";
+constexpr char idRightPeritubularCapillariesHydrostaticPressure[] = "RightPeritubularCapillariesHydrostaticPressure";
+constexpr char idRightPeritubularCapillariesOsmoticPressure[] = "RightPeritubularCapillariesOsmoticPressure";
+constexpr char idRightReabsorptionFiltrationCoefficient[] = "RightReabsorptionFiltrationCoefficient";
+constexpr char idRightReabsorptionRate[] = "RightReabsorptionRate";
+constexpr char idRightTubularReabsorptionFiltrationSurfaceArea[] = "RightTubularReabsorptionFiltrationSurfaceArea";
+constexpr char idRightTubularReabsorptionFluidPermeability[] = "RightTubularReabsorptionFluidPermeability";
+constexpr char idRightTubularHydrostaticPressure[] = "RightTubularHydrostaticPressure";
+constexpr char idRightTubularOsmoticPressure[] = "RightTubularOsmoticPressure";
+constexpr char idUrinationRate[] = "UrinationRate";
+constexpr char idUrineOsmolality[] = "UrineOsmolality";
+constexpr char idUrineOsmolarity[] = "UrineOsmolarity";
+constexpr char idUrineProductionRate[] = "UrineProductionRate";
+constexpr char idMeanUrineOutput[] = "MeanUrineOutput";
+constexpr char idUrineSpecificGravity[] = "UrineSpecificGravity";
+constexpr char idUrineVolume[] = "UrineVolume";
+constexpr char idUrineUreaNitrogenConcentration[] = "UrineUreaNitrogenConcentration";
 
 SERenalSystem::SERenalSystem(Logger* logger)
   : SESystem(logger)
@@ -226,7 +226,7 @@ void SERenalSystem::Clear()
 //-------------------------------------------------------------------------------
 const SEScalar* SERenalSystem::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SERenalSystem::GetScalar(const std::string& name)
@@ -1310,7 +1310,7 @@ double SERenalSystem::GetRightGlomerularFiltrationRate(const VolumePerTimeUnit& 
 bool SERenalSystem::HasRightGlomerularFiltrationSurfaceArea() const
 {
   return m_RightGlomerularFiltrationSurfaceArea == nullptr ? false : m_RightGlomerularFiltrationSurfaceArea->IsValid();
-}//-------------------------------------------------------------------------------
+} //-------------------------------------------------------------------------------
 SEScalarArea& SERenalSystem::GetRightGlomerularFiltrationSurfaceArea()
 {
   if (m_RightGlomerularFiltrationSurfaceArea == nullptr)
@@ -1384,7 +1384,6 @@ double SERenalSystem::GetRightNetFiltrationPressure(const PressureUnit& unit) co
     return SEScalar::dNaN();
   return m_RightNetFiltrationPressure->GetValue(unit);
 }
-
 
 bool SERenalSystem::HasRightNetReabsorptionPressure() const
 {
@@ -1727,7 +1726,7 @@ double SERenalSystem::GetUrineUreaNitrogenConcentration(const MassPerVolumeUnit&
 
 Tree<const char*> SERenalSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{classname()}
+  return Tree<const char*> { classname() }
     .emplace_back(idGlomerularFiltrationRate)
     .emplace_back(idFiltrationFraction)
     .emplace_back(idLeftAfferentArterioleResistance)
@@ -1782,7 +1781,78 @@ Tree<const char*> SERenalSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idMeanUrineOutput)
     .emplace_back(idUrineSpecificGravity)
     .emplace_back(idUrineVolume)
-    .emplace_back(idUrineUreaNitrogenConcentration)
-  ;
+    .emplace_back(idUrineUreaNitrogenConcentration);
 }
+//-------------------------------------------------------------------------------
+bool SERenalSystem::operator==(SERenalSystem const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_BladderPressure && rhs.m_BladderPressure) ? m_BladderPressure->operator==(*rhs.m_BladderPressure) : m_BladderPressure == rhs.m_BladderPressure)
+    && ((m_GlomerularFiltrationRate && rhs.m_GlomerularFiltrationRate) ? m_GlomerularFiltrationRate->operator==(*rhs.m_GlomerularFiltrationRate) : m_GlomerularFiltrationRate == rhs.m_GlomerularFiltrationRate)
+    && ((m_FiltrationFraction && rhs.m_FiltrationFraction) ? m_FiltrationFraction->operator==(*rhs.m_FiltrationFraction) : m_FiltrationFraction == rhs.m_FiltrationFraction)
+
+    && ((m_LeftAfferentArterioleResistance && rhs.m_LeftAfferentArterioleResistance) ? m_LeftAfferentArterioleResistance->operator==(*rhs.m_LeftAfferentArterioleResistance) : m_LeftAfferentArterioleResistance == rhs.m_LeftAfferentArterioleResistance)
+    && ((m_LeftBowmansCapsulesHydrostaticPressure && rhs.m_LeftBowmansCapsulesHydrostaticPressure) ? m_LeftBowmansCapsulesHydrostaticPressure->operator==(*rhs.m_LeftBowmansCapsulesHydrostaticPressure) : m_LeftBowmansCapsulesHydrostaticPressure == rhs.m_LeftBowmansCapsulesHydrostaticPressure)
+    && ((m_LeftBowmansCapsulesOsmoticPressure && rhs.m_LeftBowmansCapsulesOsmoticPressure) ? m_LeftBowmansCapsulesOsmoticPressure->operator==(*rhs.m_LeftBowmansCapsulesOsmoticPressure) : m_LeftBowmansCapsulesOsmoticPressure == rhs.m_LeftBowmansCapsulesOsmoticPressure)
+    && ((m_LeftEfferentArterioleResistance && rhs.m_LeftEfferentArterioleResistance) ? m_LeftEfferentArterioleResistance->operator==(*rhs.m_LeftEfferentArterioleResistance) : m_LeftEfferentArterioleResistance == rhs.m_LeftEfferentArterioleResistance)
+    && ((m_LeftGlomerularCapillariesHydrostaticPressure && rhs.m_LeftGlomerularCapillariesHydrostaticPressure) ? m_LeftGlomerularCapillariesHydrostaticPressure->operator==(*rhs.m_LeftGlomerularCapillariesHydrostaticPressure) : m_LeftGlomerularCapillariesHydrostaticPressure == rhs.m_LeftGlomerularCapillariesHydrostaticPressure)
+    && ((m_LeftGlomerularCapillariesOsmoticPressure && rhs.m_LeftGlomerularCapillariesOsmoticPressure) ? m_LeftGlomerularCapillariesOsmoticPressure->operator==(*rhs.m_LeftGlomerularCapillariesOsmoticPressure) : m_LeftGlomerularCapillariesOsmoticPressure == rhs.m_LeftGlomerularCapillariesOsmoticPressure)
+    && ((m_LeftGlomerularFiltrationCoefficient && rhs.m_LeftGlomerularFiltrationCoefficient) ? m_LeftGlomerularFiltrationCoefficient->operator==(*rhs.m_LeftGlomerularFiltrationCoefficient) : m_LeftGlomerularFiltrationCoefficient == rhs.m_LeftGlomerularFiltrationCoefficient)
+    && ((m_LeftGlomerularFiltrationRate && rhs.m_LeftGlomerularFiltrationRate) ? m_LeftGlomerularFiltrationRate->operator==(*rhs.m_LeftGlomerularFiltrationRate) : m_LeftGlomerularFiltrationRate == rhs.m_LeftGlomerularFiltrationRate)
+    && ((m_LeftGlomerularFiltrationSurfaceArea && rhs.m_LeftGlomerularFiltrationSurfaceArea) ? m_LeftGlomerularFiltrationSurfaceArea->operator==(*rhs.m_LeftGlomerularFiltrationSurfaceArea) : m_LeftGlomerularFiltrationSurfaceArea == rhs.m_LeftGlomerularFiltrationSurfaceArea)
+    && ((m_LeftGlomerularFluidPermeability && rhs.m_LeftGlomerularFluidPermeability) ? m_LeftGlomerularFluidPermeability->operator==(*rhs.m_LeftGlomerularFluidPermeability) : m_LeftGlomerularFluidPermeability == rhs.m_LeftGlomerularFluidPermeability)
+    && ((m_LeftFiltrationFraction && rhs.m_LeftFiltrationFraction) ? m_LeftFiltrationFraction->operator==(*rhs.m_LeftFiltrationFraction) : m_LeftFiltrationFraction == rhs.m_LeftFiltrationFraction)
+    && ((m_LeftNetFiltrationPressure && rhs.m_LeftNetFiltrationPressure) ? m_LeftNetFiltrationPressure->operator==(*rhs.m_LeftNetFiltrationPressure) : m_LeftNetFiltrationPressure == rhs.m_LeftNetFiltrationPressure)
+    && ((m_LeftNetReabsorptionPressure && rhs.m_LeftNetReabsorptionPressure) ? m_LeftNetReabsorptionPressure->operator==(*rhs.m_LeftNetReabsorptionPressure) : m_LeftNetReabsorptionPressure == rhs.m_LeftNetReabsorptionPressure)
+    && ((m_LeftPeritubularCapillariesHydrostaticPressure && rhs.m_LeftPeritubularCapillariesHydrostaticPressure) ? m_LeftPeritubularCapillariesHydrostaticPressure->operator==(*rhs.m_LeftPeritubularCapillariesHydrostaticPressure) : m_LeftPeritubularCapillariesHydrostaticPressure == rhs.m_LeftPeritubularCapillariesHydrostaticPressure)
+    && ((m_LeftPeritubularCapillariesOsmoticPressure && rhs.m_LeftPeritubularCapillariesOsmoticPressure) ? m_LeftPeritubularCapillariesOsmoticPressure->operator==(*rhs.m_LeftPeritubularCapillariesOsmoticPressure) : m_LeftPeritubularCapillariesOsmoticPressure == rhs.m_LeftPeritubularCapillariesOsmoticPressure)
+    && ((m_LeftReabsorptionFiltrationCoefficient && rhs.m_LeftReabsorptionFiltrationCoefficient) ? m_LeftReabsorptionFiltrationCoefficient->operator==(*rhs.m_LeftReabsorptionFiltrationCoefficient) : m_LeftReabsorptionFiltrationCoefficient == rhs.m_LeftReabsorptionFiltrationCoefficient)
+    && ((m_LeftReabsorptionRate && rhs.m_LeftReabsorptionRate) ? m_LeftReabsorptionRate->operator==(*rhs.m_LeftReabsorptionRate) : m_LeftReabsorptionRate == rhs.m_LeftReabsorptionRate)
+    && ((m_LeftTubularReabsorptionFiltrationSurfaceArea && rhs.m_LeftTubularReabsorptionFiltrationSurfaceArea) ? m_LeftTubularReabsorptionFiltrationSurfaceArea->operator==(*rhs.m_LeftTubularReabsorptionFiltrationSurfaceArea) : m_LeftTubularReabsorptionFiltrationSurfaceArea == rhs.m_LeftTubularReabsorptionFiltrationSurfaceArea)
+    && ((m_LeftTubularReabsorptionFluidPermeability && rhs.m_LeftTubularReabsorptionFluidPermeability) ? m_LeftTubularReabsorptionFluidPermeability->operator==(*rhs.m_LeftTubularReabsorptionFluidPermeability) : m_LeftTubularReabsorptionFluidPermeability == rhs.m_LeftTubularReabsorptionFluidPermeability)
+    && ((m_LeftTubularHydrostaticPressure && rhs.m_LeftTubularHydrostaticPressure) ? m_LeftTubularHydrostaticPressure->operator==(*rhs.m_LeftTubularHydrostaticPressure) : m_LeftTubularHydrostaticPressure == rhs.m_LeftTubularHydrostaticPressure)
+    && ((m_LeftTubularOsmoticPressure && rhs.m_LeftTubularOsmoticPressure) ? m_LeftTubularOsmoticPressure->operator==(*rhs.m_LeftTubularOsmoticPressure) : m_LeftTubularOsmoticPressure == rhs.m_LeftTubularOsmoticPressure)
+
+    && ((m_RenalBloodFlow && rhs.m_RenalBloodFlow) ? m_RenalBloodFlow->operator==(*rhs.m_RenalBloodFlow) : m_RenalBloodFlow == rhs.m_RenalBloodFlow)
+    && ((m_RenalPlasmaFlow && rhs.m_RenalPlasmaFlow) ? m_RenalPlasmaFlow->operator==(*rhs.m_RenalPlasmaFlow) : m_RenalPlasmaFlow == rhs.m_RenalPlasmaFlow)
+    && ((m_RenalVascularResistance && rhs.m_RenalVascularResistance) ? m_RenalVascularResistance->operator==(*rhs.m_RenalVascularResistance) : m_RenalVascularResistance == rhs.m_RenalVascularResistance)
+
+    && ((m_RightAfferentArterioleResistance && rhs.m_RightAfferentArterioleResistance) ? m_RightAfferentArterioleResistance->operator==(*rhs.m_RightAfferentArterioleResistance) : m_RightAfferentArterioleResistance == rhs.m_RightAfferentArterioleResistance)
+    && ((m_RightBowmansCapsulesHydrostaticPressure && rhs.m_RightBowmansCapsulesHydrostaticPressure) ? m_RightBowmansCapsulesHydrostaticPressure->operator==(*rhs.m_RightBowmansCapsulesHydrostaticPressure) : m_RightBowmansCapsulesHydrostaticPressure == rhs.m_RightBowmansCapsulesHydrostaticPressure)
+    && ((m_RightBowmansCapsulesOsmoticPressure && rhs.m_RightBowmansCapsulesOsmoticPressure) ? m_RightBowmansCapsulesOsmoticPressure->operator==(*rhs.m_RightBowmansCapsulesOsmoticPressure) : m_RightBowmansCapsulesOsmoticPressure == rhs.m_RightBowmansCapsulesOsmoticPressure)
+    && ((m_RightEfferentArterioleResistance && rhs.m_RightEfferentArterioleResistance) ? m_RightEfferentArterioleResistance->operator==(*rhs.m_RightEfferentArterioleResistance) : m_RightEfferentArterioleResistance == rhs.m_RightEfferentArterioleResistance)
+    && ((m_RightGlomerularCapillariesHydrostaticPressure && rhs.m_RightGlomerularCapillariesHydrostaticPressure) ? m_RightGlomerularCapillariesHydrostaticPressure->operator==(*rhs.m_RightGlomerularCapillariesHydrostaticPressure) : m_RightGlomerularCapillariesHydrostaticPressure == rhs.m_RightGlomerularCapillariesHydrostaticPressure)
+    && ((m_RightGlomerularCapillariesOsmoticPressure && rhs.m_RightGlomerularCapillariesOsmoticPressure) ? m_RightGlomerularCapillariesOsmoticPressure->operator==(*rhs.m_RightGlomerularCapillariesOsmoticPressure) : m_RightGlomerularCapillariesOsmoticPressure == rhs.m_RightGlomerularCapillariesOsmoticPressure)
+    && ((m_RightGlomerularFiltrationCoefficient && rhs.m_RightGlomerularFiltrationCoefficient) ? m_RightGlomerularFiltrationCoefficient->operator==(*rhs.m_RightGlomerularFiltrationCoefficient) : m_RightGlomerularFiltrationCoefficient == rhs.m_RightGlomerularFiltrationCoefficient)
+    && ((m_RightGlomerularFiltrationRate && rhs.m_RightGlomerularFiltrationRate) ? m_RightGlomerularFiltrationRate->operator==(*rhs.m_RightGlomerularFiltrationRate) : m_RightGlomerularFiltrationRate == rhs.m_RightGlomerularFiltrationRate)
+    && ((m_RightGlomerularFiltrationSurfaceArea && rhs.m_RightGlomerularFiltrationSurfaceArea) ? m_RightGlomerularFiltrationSurfaceArea->operator==(*rhs.m_RightGlomerularFiltrationSurfaceArea) : m_RightGlomerularFiltrationSurfaceArea == rhs.m_RightGlomerularFiltrationSurfaceArea)
+    && ((m_RightGlomerularFluidPermeability && rhs.m_RightGlomerularFluidPermeability) ? m_RightGlomerularFluidPermeability->operator==(*rhs.m_RightGlomerularFluidPermeability) : m_RightGlomerularFluidPermeability == rhs.m_RightGlomerularFluidPermeability)
+    && ((m_RightFiltrationFraction && rhs.m_RightFiltrationFraction) ? m_RightFiltrationFraction->operator==(*rhs.m_RightFiltrationFraction) : m_RightFiltrationFraction == rhs.m_RightFiltrationFraction)
+    && ((m_RightNetFiltrationPressure && rhs.m_RightNetFiltrationPressure) ? m_RightNetFiltrationPressure->operator==(*rhs.m_RightNetFiltrationPressure) : m_RightNetFiltrationPressure == rhs.m_RightNetFiltrationPressure)
+    && ((m_RightNetReabsorptionPressure && rhs.m_RightNetReabsorptionPressure) ? m_RightNetReabsorptionPressure->operator==(*rhs.m_RightNetReabsorptionPressure) : m_RightNetReabsorptionPressure == rhs.m_RightNetReabsorptionPressure)
+    && ((m_RightPeritubularCapillariesHydrostaticPressure && rhs.m_RightPeritubularCapillariesHydrostaticPressure) ? m_RightPeritubularCapillariesHydrostaticPressure->operator==(*rhs.m_RightPeritubularCapillariesHydrostaticPressure) : m_RightPeritubularCapillariesHydrostaticPressure == rhs.m_RightPeritubularCapillariesHydrostaticPressure)
+    && ((m_RightPeritubularCapillariesOsmoticPressure && rhs.m_RightPeritubularCapillariesOsmoticPressure) ? m_RightPeritubularCapillariesOsmoticPressure->operator==(*rhs.m_RightPeritubularCapillariesOsmoticPressure) : m_RightPeritubularCapillariesOsmoticPressure == rhs.m_RightPeritubularCapillariesOsmoticPressure)
+    && ((m_RightReabsorptionFiltrationCoefficient && rhs.m_RightReabsorptionFiltrationCoefficient) ? m_RightReabsorptionFiltrationCoefficient->operator==(*rhs.m_RightReabsorptionFiltrationCoefficient) : m_RightReabsorptionFiltrationCoefficient == rhs.m_RightReabsorptionFiltrationCoefficient)
+    && ((m_RightReabsorptionRate && rhs.m_RightReabsorptionRate) ? m_RightReabsorptionRate->operator==(*rhs.m_RightReabsorptionRate) : m_RightReabsorptionRate == rhs.m_RightReabsorptionRate)
+    && ((m_RightTubularReabsorptionFiltrationSurfaceArea && rhs.m_RightTubularReabsorptionFiltrationSurfaceArea) ? m_RightTubularReabsorptionFiltrationSurfaceArea->operator==(*rhs.m_RightTubularReabsorptionFiltrationSurfaceArea) : m_RightTubularReabsorptionFiltrationSurfaceArea == rhs.m_RightTubularReabsorptionFiltrationSurfaceArea)
+    && ((m_RightTubularReabsorptionFluidPermeability && rhs.m_RightTubularReabsorptionFluidPermeability) ? m_RightTubularReabsorptionFluidPermeability->operator==(*rhs.m_RightTubularReabsorptionFluidPermeability) : m_RightTubularReabsorptionFluidPermeability == rhs.m_RightTubularReabsorptionFluidPermeability)
+    && ((m_RightTubularHydrostaticPressure && rhs.m_RightTubularHydrostaticPressure) ? m_RightTubularHydrostaticPressure->operator==(*rhs.m_RightTubularHydrostaticPressure) : m_RightTubularHydrostaticPressure == rhs.m_RightTubularHydrostaticPressure)
+    && ((m_RightTubularOsmoticPressure && rhs.m_RightTubularOsmoticPressure) ? m_RightTubularOsmoticPressure->operator==(*rhs.m_RightTubularOsmoticPressure) : m_RightTubularOsmoticPressure == rhs.m_RightTubularOsmoticPressure)
+
+    && ((m_UrinationRate && rhs.m_UrinationRate) ? m_UrinationRate->operator==(*rhs.m_UrinationRate) : m_UrinationRate == rhs.m_UrinationRate)
+    && ((m_UrineOsmolality && rhs.m_UrineOsmolality) ? m_UrineOsmolality->operator==(*rhs.m_UrineOsmolality) : m_UrineOsmolality == rhs.m_UrineOsmolality)
+    && ((m_UrineOsmolarity && rhs.m_UrineOsmolarity) ? m_UrineOsmolarity->operator==(*rhs.m_UrineOsmolarity) : m_UrineOsmolarity == rhs.m_UrineOsmolarity)
+    && ((m_UrineProductionRate && rhs.m_UrineProductionRate) ? m_UrineProductionRate->operator==(*rhs.m_UrineProductionRate) : m_UrineProductionRate == rhs.m_UrineProductionRate)
+    && ((m_MeanUrineOutput && rhs.m_MeanUrineOutput) ? m_MeanUrineOutput->operator==(*rhs.m_MeanUrineOutput) : m_MeanUrineOutput == rhs.m_MeanUrineOutput)
+    && ((m_UrineSpecificGravity && rhs.m_UrineSpecificGravity) ? m_UrineSpecificGravity->operator==(*rhs.m_UrineSpecificGravity) : m_UrineSpecificGravity == rhs.m_UrineSpecificGravity)
+    && ((m_UrineVolume && rhs.m_UrineVolume) ? m_UrineVolume->operator==(*rhs.m_UrineVolume) : m_UrineVolume == rhs.m_UrineVolume)
+    && ((m_UrineUreaNitrogenConcentration && rhs.m_UrineUreaNitrogenConcentration) ? m_UrineUreaNitrogenConcentration->operator==(*rhs.m_UrineUreaNitrogenConcentration) : m_UrineUreaNitrogenConcentration == rhs.m_UrineUreaNitrogenConcentration);
+}
+bool SERenalSystem::operator!=(SERenalSystem const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -30,6 +30,9 @@ public:
   virtual bool Load(const CDM::ChronicVentricularSystolicDysfunctionData& in);
   virtual CDM::ChronicVentricularSystolicDysfunctionData* Unload() const;
 
+  bool operator==(SEChronicVentricularSystolicDysfunction const&) const;
+  bool operator!=(SEChronicVentricularSystolicDysfunction const&) const;
+
 protected:
   virtual void Unload(CDM::ChronicVentricularSystolicDysfunctionData& data) const;
 

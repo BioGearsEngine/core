@@ -12,6 +12,8 @@
 #include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
+#include <biogears/cdm/properties/SEProperties.h>
+
 #include <biogears/cdm/patient/actions/PatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SEActionExample.h>
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
@@ -60,7 +62,6 @@
 #include <biogears/cdm/patient/actions/SETourniquet.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
-#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 #include <biogears/cdm/scenario/SESerializeState.h>
 #include <biogears/cdm/substance/SESubstance.h>

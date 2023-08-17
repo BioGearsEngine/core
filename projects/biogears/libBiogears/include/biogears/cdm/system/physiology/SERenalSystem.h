@@ -62,6 +62,9 @@ public:
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
+  bool operator==(SERenalSystem const&) const;
+  bool operator!=(SERenalSystem const&) const;
+
 protected:
   void Unload(CDM::RenalSystemData& data) const;
 

@@ -34,6 +34,9 @@ public:
   virtual bool Load(const CDM::ImpairedAlveolarExchangeData& in);
   virtual CDM::ImpairedAlveolarExchangeData* Unload() const;
 
+  bool operator==(SEImpairedAlveolarExchange const&) const;
+  bool operator!=(SEImpairedAlveolarExchange const&) const;
+
 protected:
   virtual void Unload(CDM::ImpairedAlveolarExchangeData& data) const;
 

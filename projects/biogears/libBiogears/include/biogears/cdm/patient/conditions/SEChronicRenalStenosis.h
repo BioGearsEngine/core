@@ -36,6 +36,9 @@ public:
   virtual bool Load(const CDM::ChronicRenalStenosisData& in);
   virtual CDM::ChronicRenalStenosisData* Unload() const;
 
+  bool operator==(SEChronicRenalStenosis const&) const;
+  bool operator!=(SEChronicRenalStenosis const&) const;
+
 protected:
   virtual void Unload(CDM::ChronicRenalStenosisData& data) const;
 

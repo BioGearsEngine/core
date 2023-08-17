@@ -65,6 +65,9 @@ public:
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
+  bool operator==(SEBloodChemistrySystem const&) const;
+  bool operator!=(SEBloodChemistrySystem const&) const;
+
 protected:
   void Unload(CDM::BloodChemistrySystemData& data) const; /**< @copydoc DOXY_CDM_UNLOAD_TO */ //@}
 public:
@@ -74,8 +77,8 @@ public:
   double GetBloodDensity(const MassPerVolumeUnit& unit) const; /**< @copydoc DOXY_CDM_GET_VALUE */ //@}
 
   /** @name ArterialBloodPH
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialBloodPH
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialBloodPH
+   *  @{*/
   /// %Test if member has been allocated
   bool HasArterialBloodPH() const;
   /// Get member class, allocate if nullptr
@@ -84,8 +87,8 @@ public:
   //@}
 
   /** @name ArterialBloodPHBaseline
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialBloodPHBaseline
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialBloodPHBaseline
+   *  @{*/
   /// %Test if member has been allocated
   bool HasArterialBloodPHBaseline() const;
   /// Get member class, allocate if nullptr
@@ -94,8 +97,8 @@ public:
   //@}
 
   /** @name VenousBloodPH
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_VenousBloodPH
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_VenousBloodPH
+   *  @{*/
   /// %Test if member has been allocated
   bool HasVenousBloodPH() const;
   /// Get member class, allocate if nullptr
@@ -104,8 +107,8 @@ public:
   //@}
 
   /** @name BloodSpecificHeat
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodSpecificHeat
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodSpecificHeat
+   *  @{*/
   /// %Test if member has been allocated
   bool HasBloodSpecificHeat() const;
   /// Get member class, allocate if nullptr
@@ -114,8 +117,8 @@ public:
   //@}
 
   /** @name BloodUreaNitrogenConcentration
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodUreaNitrogenConcentration
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_BloodUreaNitrogenConcentration
+   *  @{*/
   /// %Test if member has been allocated
   bool HasBloodUreaNitrogenConcentration() const;
   /// Get member class, allocate if nullptr
@@ -124,8 +127,8 @@ public:
   //@}
 
   /** @name CarbonDioxideSaturation
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_CarbonDioxideSaturation
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_CarbonDioxideSaturation
+   *  @{*/
   /// %Test if member has been allocated
   bool HasCarbonDioxideSaturation() const;
   /// Get member class, allocate if nullptr
@@ -134,8 +137,8 @@ public:
   //@}
 
   /** @name CarbonMonoxideSaturation
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_CarbonMonoxideSaturation
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_CarbonMonoxideSaturation
+   *  @{*/
   /// %Test if member has been allocated
   bool HasCarbonMonoxideSaturation() const;
   /// Get member class, allocate if nullptr
@@ -144,8 +147,8 @@ public:
   //@}
 
   /** @name Hematocrit
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_Hematocrit
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_Hematocrit
+   *  @{*/
   /// %Test if member has been allocated
   bool HasHematocrit() const;
   /// Get member class, allocate if nullptr
@@ -154,8 +157,8 @@ public:
   //@}
 
   /** @name HemoglobinContent
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_HemoglobinContent
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_HemoglobinContent
+   *  @{*/
   /// %Test if member has been allocated
   bool HasHemoglobinContent() const;
   /// Get member class, allocate if nullptr
@@ -164,8 +167,8 @@ public:
   //@}
 
   /** @name HemoglobinLostToUrine
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_HemoglobinLostToUrine
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_HemoglobinLostToUrine
+   *  @{*/
   /// %Test if member has been allocated
   bool HasHemoglobinLostToUrine() const;
   /// Get member class, allocate if nullptr
@@ -173,8 +176,8 @@ public:
   double GetHemoglobinLostToUrine(const MassUnit& unit) const;
   //@}
   /** @name LymphocyteCellCount
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_LymphocyteCellCount
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_LymphocyteCellCount
+   *  @{*/
   /// %Test if member has been allocated
   bool HasLymphocyteCellCount() const;
   /// Get member class, allocate if nullptr
@@ -182,8 +185,8 @@ public:
   double GetLymphocyteCellCount(const AmountPerVolumeUnit& unit) const;
   //@}
   /** @name NeutrophilCellCount
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_NeutrophilCellCount
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_NeutrophilCellCount
+   *  @{*/
   /// %Test if member has been allocated
   bool HasNeutrophilCellCount() const;
   /// Get member class, allocate if nullptr
@@ -211,8 +214,8 @@ public:
   //@}
 
   /** @name Phosphate
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_Phosphate
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_Phosphate
+   *  @{*/
   /// %Test if member has been allocated
   bool HasPhosphate() const;
   /// Get member class, allocate if nullptr
@@ -221,8 +224,8 @@ public:
   //@}
 
   /** @name PlasmaVolume
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_PlasmaVolume
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_PlasmaVolume
+   *  @{*/
   /// %Test if member has been allocated
   bool HasPlasmaVolume() const;
   /// Get member class, allocate if nullptr
@@ -231,8 +234,8 @@ public:
   //@}
 
   /** @name PulseOximetry
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_PulseOximetry
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_PulseOximetry
+   *  @{*/
   /// %Test if member has been allocated
   bool HasPulseOximetry() const;
   /// Get member class, allocate if nullptr
@@ -241,8 +244,8 @@ public:
   //@}
 
   /** @name RedBloodCellAcetylcholinesteraseConcentration
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_RedBloodCellAcetylcholinesteraseConcentration
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_RedBloodCellAcetylcholinesteraseConcentration
+   *  @{*/
   /// %Test if member has been allocated
   bool HasRedBloodCellAcetylcholinesterase() const;
   /// Get member class, allocate if nullptr
@@ -261,8 +264,8 @@ public:
   //@}
 
   /** @name StrongIonDifference
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_StrongIonDifference
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_StrongIonDifference
+   *  @{*/
   /// %Test if member has been allocated
   bool HasStrongIonDifference() const;
   /// Get member class, allocate if nullptr
@@ -285,8 +288,8 @@ public:
   double GetTotalBilirubin(const MassPerVolumeUnit& unit) const;
 
   /** @name TotalProteinConcentration
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_TotalProteinConcentration
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_TotalProteinConcentration
+   *  @{*/
   /// %Test if member has been allocated
   bool HasTotalProteinConcentration() const;
   /// Get member class, allocate if nullptr
@@ -295,8 +298,8 @@ public:
   //@}
 
   /** @name RhTransfusionReactionVolume
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_RhTransfusionReactionVolume
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_RhTransfusionReactionVolume
+   *  @{*/
   /// %Test if member has been allocated
   bool HasRhTransfusionReactionVolume() const;
   /// %Test if rh mismatch
@@ -305,8 +308,8 @@ public:
   //@}
 
   /** @name ViralLoad
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_ViralLoad
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_ViralLoad
+   *  @{*/
   /// %Test if member has been allocated
   bool HasViralLoad() const;
   /// Get member class, allocate if nullptr
@@ -315,8 +318,8 @@ public:
   //@}
 
   /** @name VolumeFractionNeutralPhospholipidInPlasma
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_VolumeFractionNeutralPhospholipidInPlasma
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_VolumeFractionNeutralPhospholipidInPlasma
+   *  @{*/
   /// %Test if member has been allocated
   bool HasVolumeFractionNeutralPhospholipidInPlasma() const;
   /// Get member class, allocate if nullptr
@@ -325,8 +328,8 @@ public:
   //@}
 
   /** @name VolumeFractionNeutralLipidInPlasma
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_VolumeFractionNeutralLipidInPlasma
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_VolumeFractionNeutralLipidInPlasma
+   *  @{*/
   /// %Test if member has been allocated
   bool HasVolumeFractionNeutralLipidInPlasma() const;
   /// Get member class, allocate if nullptr
@@ -335,8 +338,8 @@ public:
   //@}
 
   /** @name WhiteBloodCellCount
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_WhiteBloodCellCount
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_WhiteBloodCellCount
+   *  @{*/
   /// %Test if member has been allocated
   bool HasWhiteBloodCellCount() const;
   /// Get member class, allocate if nullptr
@@ -345,8 +348,8 @@ public:
   //@}
 
   /** @name ArterialCarbonDioxidePressure
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialCarbonDioxidePressure
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialCarbonDioxidePressure
+   *  @{*/
   /// %Test if member has been allocated
   bool HasArterialCarbonDioxidePressure() const;
   /// Get member class, allocate if nullptr
@@ -355,8 +358,8 @@ public:
   //@}
 
   /** @name ArterialOxygenPressure
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialOxygenPressure
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_ArterialOxygenPressure
+   *  @{*/
   /// %Test if member has been allocated
   bool HasArterialOxygenPressure() const;
   /// Get member class, allocate if nullptr
@@ -365,8 +368,8 @@ public:
   //@}
 
   /** @name PulmonaryArterialCarbonDioxidePressure
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryArterialCarbonDioxidePressure
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryArterialCarbonDioxidePressure
+   *  @{*/
   /// %Test if member has been allocated
   bool HasPulmonaryArterialCarbonDioxidePressure() const;
   /// Get member class, allocate if nullptr
@@ -375,8 +378,8 @@ public:
   //@}
 
   /** @name PulmonaryArterialOxygenPressure
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryArterialOxygenPressure
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryArterialOxygenPressure
+   *  @{*/
   /// %Test if member has been allocated
   bool HasPulmonaryArterialOxygenPressure() const;
   /// Get member class, allocate if nullptr
@@ -385,8 +388,8 @@ public:
   //@}
 
   /** @name PulmonaryVenousCarbonDioxidePressure
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryVenousCarbonDioxidePressure
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryVenousCarbonDioxidePressure
+   *  @{*/
   /// %Test if member has been allocated
   bool HasPulmonaryVenousCarbonDioxidePressure() const;
   /// Get member class, allocate if nullptr
@@ -395,8 +398,8 @@ public:
   //@}
 
   /** @name PulmonaryVenousOxygenPressure
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryVenousOxygenPressure
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_PulmonaryVenousOxygenPressure
+   *  @{*/
   /// %Test if member has been allocated
   bool HasPulmonaryVenousOxygenPressure() const;
   /// Get member class, allocate if nullptr
@@ -405,8 +408,8 @@ public:
   //@}
 
   /** @name VenousCarbonDioxidePressure
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_VenousCarbonDioxidePressure
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_VenousCarbonDioxidePressure
+   *  @{*/
   /// %Test if member has been allocated
   bool HasVenousCarbonDioxidePressure() const;
   /// Get member class, allocate if nullptr
@@ -414,8 +417,8 @@ public:
   double GetVenousCarbonDioxidePressure(const PressureUnit& unit) const;
   //@}
   /** @name VenousOxygenPressure
-  *  @brief @copybrief Physiology_BloodChemistrySystemData_VenousOxygenPressure
-  *  @{*/
+   *  @brief @copybrief Physiology_BloodChemistrySystemData_VenousOxygenPressure
+   *  @{*/
   /// %Test if member has been allocated
   bool HasVenousOxygenPressure() const;
   /// Get member class, allocate if nullptr
@@ -490,6 +493,9 @@ public:
   void Initialize();
   const SEScalar* GetScalar(const char* name);
   const SEScalar* GetScalar(const std::string& name);
+
+  bool operator==(SEInflammatoryResponse const&) const;
+  bool operator!=(SEInflammatoryResponse const&) const;
 
 protected:
   void Unload(CDM::InflammatoryResponseData& data) const;

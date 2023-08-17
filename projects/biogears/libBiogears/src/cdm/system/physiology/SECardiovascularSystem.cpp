@@ -26,39 +26,39 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
-  constexpr char idArterialPressure[] = "ArterialPressure";
-  constexpr char idBloodVolume[] = "BloodVolume";
-  constexpr char idCardiacIndex[] = "CardiacIndex";
-  constexpr char idCardiacOutput[] = "CardiacOutput";
-  constexpr char idCentralVenousPressure[] = "CentralVenousPressure";
-  constexpr char idCerebralBloodFlow[] = "CerebralBloodFlow";
-  constexpr char idCerebralPerfusionPressure[] = "CerebralPerfusionPressure";
-  constexpr char idDiastolicArterialPressure[] = "DiastolicArterialPressure";
-  constexpr char idExtremityPressureLeftArm[] = "ExtremityPressure-LeftArm";
-  constexpr char idExtremityPressureLeftLeg[] = "ExtremityPressure-LeftLeg";
-  constexpr char idExtremityPressureRightArm[] = "ExtremityPressure-RightArm";
-  constexpr char idExtremityPressureRightLeg[] = "ExtremityPressure-RightLeg";
-  constexpr char idHeartEjectionFraction[] = "HeartEjectionFraction";
-  constexpr char idHeartRate[] = "HeartRate";
-  constexpr char idHeartStrokeVolume[] = "HeartStrokeVolume";
-  constexpr char idIntracranialPressure[] = "IntracranialPressure";
-  constexpr char idMeanArterialPressure[] = "MeanArterialPressure";
-  constexpr char idMeanArterialCarbonDioxidePartialPressure[] = "MeanArterialCarbonDioxidePartialPressure";
-  constexpr char idMeanArterialCarbonDioxidePartialPressureDelta[] = "MeanArterialCarbonDioxidePartialPressureDelta";
-  constexpr char idMeanCentralVenousPressure[] = "MeanCentralVenousPressure";
-  constexpr char idMeanSkinFlow[] = "MeanSkinFlow";
-  constexpr char idPulmonaryArterialPressure[] = "PulmonaryArterialPressure";
-  constexpr char idPulmonaryCapillariesWedgePressure[] = "PulmonaryCapillariesWedgePressure";
-  constexpr char idPulmonaryDiastolicArterialPressure[] = "PulmonaryDiastolicArterialPressure";
-  constexpr char idPulmonaryMeanArterialPressure[] = "PulmonaryMeanArterialPressure";
-  constexpr char idPulmonaryMeanCapillaryFlow[] = "PulmonaryMeanCapillaryFlow";
-  constexpr char idPulmonaryMeanShuntFlow[] = "PulmonaryMeanShuntFlow";
-  constexpr char idPulmonarySystolicArterialPressure[] = "PulmonarySystolicArterialPressure";
-  constexpr char idPulmonaryVascularResistance[] = "PulmonaryVascularResistance";
-  constexpr char idPulmonaryVascularResistanceIndex[] = "PulmonaryVascularResistanceIndex";
-  constexpr char idPulsePressure[] = "PulsePressure";
-  constexpr char idSystemicVascularResistance[] = "SystemicVascularResistance";
-  constexpr char idSystolicArterialPressure[] = "SystolicArterialPressure";
+constexpr char idArterialPressure[] = "ArterialPressure";
+constexpr char idBloodVolume[] = "BloodVolume";
+constexpr char idCardiacIndex[] = "CardiacIndex";
+constexpr char idCardiacOutput[] = "CardiacOutput";
+constexpr char idCentralVenousPressure[] = "CentralVenousPressure";
+constexpr char idCerebralBloodFlow[] = "CerebralBloodFlow";
+constexpr char idCerebralPerfusionPressure[] = "CerebralPerfusionPressure";
+constexpr char idDiastolicArterialPressure[] = "DiastolicArterialPressure";
+constexpr char idExtremityPressureLeftArm[] = "ExtremityPressure-LeftArm";
+constexpr char idExtremityPressureLeftLeg[] = "ExtremityPressure-LeftLeg";
+constexpr char idExtremityPressureRightArm[] = "ExtremityPressure-RightArm";
+constexpr char idExtremityPressureRightLeg[] = "ExtremityPressure-RightLeg";
+constexpr char idHeartEjectionFraction[] = "HeartEjectionFraction";
+constexpr char idHeartRate[] = "HeartRate";
+constexpr char idHeartStrokeVolume[] = "HeartStrokeVolume";
+constexpr char idIntracranialPressure[] = "IntracranialPressure";
+constexpr char idMeanArterialPressure[] = "MeanArterialPressure";
+constexpr char idMeanArterialCarbonDioxidePartialPressure[] = "MeanArterialCarbonDioxidePartialPressure";
+constexpr char idMeanArterialCarbonDioxidePartialPressureDelta[] = "MeanArterialCarbonDioxidePartialPressureDelta";
+constexpr char idMeanCentralVenousPressure[] = "MeanCentralVenousPressure";
+constexpr char idMeanSkinFlow[] = "MeanSkinFlow";
+constexpr char idPulmonaryArterialPressure[] = "PulmonaryArterialPressure";
+constexpr char idPulmonaryCapillariesWedgePressure[] = "PulmonaryCapillariesWedgePressure";
+constexpr char idPulmonaryDiastolicArterialPressure[] = "PulmonaryDiastolicArterialPressure";
+constexpr char idPulmonaryMeanArterialPressure[] = "PulmonaryMeanArterialPressure";
+constexpr char idPulmonaryMeanCapillaryFlow[] = "PulmonaryMeanCapillaryFlow";
+constexpr char idPulmonaryMeanShuntFlow[] = "PulmonaryMeanShuntFlow";
+constexpr char idPulmonarySystolicArterialPressure[] = "PulmonarySystolicArterialPressure";
+constexpr char idPulmonaryVascularResistance[] = "PulmonaryVascularResistance";
+constexpr char idPulmonaryVascularResistanceIndex[] = "PulmonaryVascularResistanceIndex";
+constexpr char idPulsePressure[] = "PulsePressure";
+constexpr char idSystemicVascularResistance[] = "SystemicVascularResistance";
+constexpr char idSystolicArterialPressure[] = "SystolicArterialPressure";
 
 SECardiovascularSystem::SECardiovascularSystem(Logger* logger)
   : SESystem(logger)
@@ -148,7 +148,7 @@ void SECardiovascularSystem::Clear()
 //-------------------------------------------------------------------------------
 const SEScalar* SECardiovascularSystem::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name } );
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SECardiovascularSystem::GetScalar(const std::string& name)
@@ -243,14 +243,14 @@ bool SECardiovascularSystem::Load(const CDM::CardiovascularSystemData& in)
     GetCerebralPerfusionPressure().Load(in.CerebralPerfusionPressure().get());
   if (in.DiastolicArterialPressure().present())
     GetDiastolicArterialPressure().Load(in.DiastolicArterialPressure().get());
-  if (in.ExtremityPressure_LeftArm().present())
-    GetExtremityPressureLeftArm().Load(in.ExtremityPressure_LeftArm().get());
-  if (in.ExtremityPressure_LeftLeg().present())
-    GetExtremityPressureLeftLeg().Load(in.ExtremityPressure_LeftLeg().get());
-  if (in.ExtremityPressure_RightArm().present())
-    GetExtremityPressureRightArm().Load(in.ExtremityPressure_RightArm().get());
-  if (in.ExtremityPressure_RightLeg().present())
-    GetExtremityPressureRightLeg().Load(in.ExtremityPressure_RightLeg().get());
+  if (in.ExtremityPressureLeftArm().present())
+    GetExtremityPressureLeftArm().Load(in.ExtremityPressureLeftArm().get());
+  if (in.ExtremityPressureLeftLeg().present())
+    GetExtremityPressureLeftLeg().Load(in.ExtremityPressureLeftLeg().get());
+  if (in.ExtremityPressureRightArm().present())
+    GetExtremityPressureRightArm().Load(in.ExtremityPressureRightArm().get());
+  if (in.ExtremityPressureRightLeg().present())
+    GetExtremityPressureRightLeg().Load(in.ExtremityPressureRightLeg().get());
   if (in.HeartEjectionFraction().present())
     GetHeartEjectionFraction().Load(in.HeartEjectionFraction().get());
   if (in.HeartRate().present())
@@ -329,13 +329,13 @@ void SECardiovascularSystem::Unload(CDM::CardiovascularSystemData& data) const
   if (m_DiastolicArterialPressure != nullptr)
     data.DiastolicArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_DiastolicArterialPressure->Unload()));
   if (m_ExtremityPressureLeftArm != nullptr)
-    data.ExtremityPressure_LeftArm(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureLeftArm->Unload()));
+    data.ExtremityPressureLeftArm(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureLeftArm->Unload()));
   if (m_ExtremityPressureLeftLeg != nullptr)
-    data.ExtremityPressure_LeftLeg(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureLeftLeg->Unload()));
+    data.ExtremityPressureLeftLeg(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureLeftLeg->Unload()));
   if (m_ExtremityPressureRightArm != nullptr)
-    data.ExtremityPressure_RightArm(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureRightArm->Unload()));
+    data.ExtremityPressureRightArm(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureRightArm->Unload()));
   if (m_ExtremityPressureRightLeg != nullptr)
-    data.ExtremityPressure_RightLeg(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureRightLeg->Unload()));
+    data.ExtremityPressureRightLeg(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureRightLeg->Unload()));
   if (m_HeartEjectionFraction != nullptr)
     data.HeartEjectionFraction(std::unique_ptr<CDM::ScalarFractionData>(m_HeartEjectionFraction->Unload()));
   if (m_HeartRate != nullptr)
@@ -1059,7 +1059,7 @@ double SECardiovascularSystem::GetSystolicArterialPressure(const PressureUnit& u
 //-------------------------------------------------------------------------------
 Tree<const char*> SECardiovascularSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{classname()}
+  return Tree<const char*> { classname() }
     .emplace_back(idArterialPressure)
     .emplace_back(idBloodVolume)
     .emplace_back(idCardiacIndex)
@@ -1088,7 +1088,53 @@ Tree<const char*> SECardiovascularSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idPulmonaryVascularResistanceIndex)
     .emplace_back(idPulsePressure)
     .emplace_back(idSystemicVascularResistance)
-    .emplace_back(idSystolicArterialPressure)
-    ;
+    .emplace_back(idSystolicArterialPressure);
 }
+//-------------------------------------------------------------------------------
+bool SECardiovascularSystem::operator==(SECardiovascularSystem const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = m_HeartRhythm == rhs.m_HeartRhythm
+   ;equivilant &= ((m_PulmonaryVascularResistance && rhs.m_PulmonaryVascularResistance) ? m_PulmonaryVascularResistance->operator==(*rhs.m_PulmonaryVascularResistance) : m_PulmonaryVascularResistance == rhs.m_PulmonaryVascularResistance)
+   ;equivilant &= ((m_SystemicVascularResistance && rhs.m_SystemicVascularResistance) ? m_SystemicVascularResistance->operator==(*rhs.m_SystemicVascularResistance) : m_SystemicVascularResistance == rhs.m_SystemicVascularResistance)
+   ;equivilant &= ((m_HeartEjectionFraction && rhs.m_HeartEjectionFraction) ? m_HeartEjectionFraction->operator==(*rhs.m_HeartEjectionFraction) : m_HeartEjectionFraction == rhs.m_HeartEjectionFraction)
+   ;equivilant &= ((m_HeartRate && rhs.m_HeartRate) ? m_HeartRate->operator==(*rhs.m_HeartRate) : m_HeartRate == rhs.m_HeartRate)
+   ;equivilant &= ((m_ArterialPressure && rhs.m_ArterialPressure) ? m_ArterialPressure->operator==(*rhs.m_ArterialPressure) : m_ArterialPressure == rhs.m_ArterialPressure)
+   ;equivilant &= ((m_CentralVenousPressure && rhs.m_CentralVenousPressure) ? m_CentralVenousPressure->operator==(*rhs.m_CentralVenousPressure) : m_CentralVenousPressure == rhs.m_CentralVenousPressure)
+   ;equivilant &= ((m_CerebralPerfusionPressure && rhs.m_CerebralPerfusionPressure) ? m_CerebralPerfusionPressure->operator==(*rhs.m_CerebralPerfusionPressure) : m_CerebralPerfusionPressure == rhs.m_CerebralPerfusionPressure)
+   ;equivilant &= ((m_DiastolicArterialPressure && rhs.m_DiastolicArterialPressure) ? m_DiastolicArterialPressure->operator==(*rhs.m_DiastolicArterialPressure) : m_DiastolicArterialPressure == rhs.m_DiastolicArterialPressure)
+   ;equivilant &= ((m_ExtremityPressureLeftArm && rhs.m_ExtremityPressureLeftArm) ? m_ExtremityPressureLeftArm->operator==(*rhs.m_ExtremityPressureLeftArm) : m_ExtremityPressureLeftArm == rhs.m_ExtremityPressureLeftArm)
+   ;equivilant &= ((m_ExtremityPressureLeftLeg && rhs.m_ExtremityPressureLeftLeg) ? m_ExtremityPressureLeftLeg->operator==(*rhs.m_ExtremityPressureLeftLeg) : m_ExtremityPressureLeftLeg == rhs.m_ExtremityPressureLeftLeg)
+   ;equivilant &= ((m_ExtremityPressureRightArm && rhs.m_ExtremityPressureRightArm) ? m_ExtremityPressureRightArm->operator==(*rhs.m_ExtremityPressureRightArm) : m_ExtremityPressureRightArm == rhs.m_ExtremityPressureRightArm)
+   ;equivilant &= ((m_ExtremityPressureRightLeg && rhs.m_ExtremityPressureRightLeg) ? m_ExtremityPressureRightLeg->operator==(*rhs.m_ExtremityPressureRightLeg) : m_ExtremityPressureRightLeg == rhs.m_ExtremityPressureRightLeg)
+   ;equivilant &= ((m_IntracranialPressure && rhs.m_IntracranialPressure) ? m_IntracranialPressure->operator==(*rhs.m_IntracranialPressure) : m_IntracranialPressure == rhs.m_IntracranialPressure)
+   ;equivilant &= ((m_MeanArterialCarbonDioxidePartialPressure && rhs.m_MeanArterialCarbonDioxidePartialPressure) ? m_MeanArterialCarbonDioxidePartialPressure->operator==(*rhs.m_MeanArterialCarbonDioxidePartialPressure) : m_MeanArterialCarbonDioxidePartialPressure == rhs.m_MeanArterialCarbonDioxidePartialPressure)
+   ;equivilant &= ((m_MeanArterialCarbonDioxidePartialPressureDelta && rhs.m_MeanArterialCarbonDioxidePartialPressureDelta) ? m_MeanArterialCarbonDioxidePartialPressureDelta->operator==(*rhs.m_MeanArterialCarbonDioxidePartialPressureDelta) : m_MeanArterialCarbonDioxidePartialPressureDelta == rhs.m_MeanArterialCarbonDioxidePartialPressureDelta)
+   ;equivilant &= ((m_MeanArterialPressure && rhs.m_MeanArterialPressure) ? m_MeanArterialPressure->operator==(*rhs.m_MeanArterialPressure) : m_MeanArterialPressure == rhs.m_MeanArterialPressure)
+   ;equivilant &= ((m_MeanCentralVenousPressure && rhs.m_MeanCentralVenousPressure) ? m_MeanCentralVenousPressure->operator==(*rhs.m_MeanCentralVenousPressure) : m_MeanCentralVenousPressure == rhs.m_MeanCentralVenousPressure)
+   ;equivilant &= ((m_PulmonaryArterialPressure && rhs.m_PulmonaryArterialPressure) ? m_PulmonaryArterialPressure->operator==(*rhs.m_PulmonaryArterialPressure) : m_PulmonaryArterialPressure == rhs.m_PulmonaryArterialPressure)
+   ;equivilant &= ((m_PulmonaryCapillariesWedgePressure && rhs.m_PulmonaryCapillariesWedgePressure) ? m_PulmonaryCapillariesWedgePressure->operator==(*rhs.m_PulmonaryCapillariesWedgePressure) : m_PulmonaryCapillariesWedgePressure == rhs.m_PulmonaryCapillariesWedgePressure)
+   ;equivilant &= ((m_PulmonaryDiastolicArterialPressure && rhs.m_PulmonaryDiastolicArterialPressure) ? m_PulmonaryDiastolicArterialPressure->operator==(*rhs.m_PulmonaryDiastolicArterialPressure) : m_PulmonaryDiastolicArterialPressure == rhs.m_PulmonaryDiastolicArterialPressure)
+   ;equivilant &= ((m_PulmonaryMeanArterialPressure && rhs.m_PulmonaryMeanArterialPressure) ? m_PulmonaryMeanArterialPressure->operator==(*rhs.m_PulmonaryMeanArterialPressure) : m_PulmonaryMeanArterialPressure == rhs.m_PulmonaryMeanArterialPressure)
+   ;equivilant &= ((m_PulmonarySystolicArterialPressure && rhs.m_PulmonarySystolicArterialPressure) ? m_PulmonarySystolicArterialPressure->operator==(*rhs.m_PulmonarySystolicArterialPressure) : m_PulmonarySystolicArterialPressure == rhs.m_PulmonarySystolicArterialPressure)
+   ;equivilant &= ((m_PulsePressure && rhs.m_PulsePressure) ? m_PulsePressure->operator==(*rhs.m_PulsePressure) : m_PulsePressure == rhs.m_PulsePressure)
+   ;equivilant &= ((m_SystolicArterialPressure && rhs.m_SystolicArterialPressure) ? m_SystolicArterialPressure->operator==(*rhs.m_SystolicArterialPressure) : m_SystolicArterialPressure == rhs.m_SystolicArterialPressure)
+   ;equivilant &= ((m_PulmonaryVascularResistanceIndex && rhs.m_PulmonaryVascularResistanceIndex) ? m_PulmonaryVascularResistanceIndex->operator==(*rhs.m_PulmonaryVascularResistanceIndex) : m_PulmonaryVascularResistanceIndex == rhs.m_PulmonaryVascularResistanceIndex)
+   ;equivilant &= ((m_BloodVolume && rhs.m_BloodVolume) ? m_BloodVolume->operator==(*rhs.m_BloodVolume) : m_BloodVolume == rhs.m_BloodVolume)
+   ;equivilant &= ((m_HeartStrokeVolume && rhs.m_HeartStrokeVolume) ? m_HeartStrokeVolume->operator==(*rhs.m_HeartStrokeVolume) : m_HeartStrokeVolume == rhs.m_HeartStrokeVolume)
+   ;equivilant &= ((m_CardiacOutput && rhs.m_CardiacOutput) ? m_CardiacOutput->operator==(*rhs.m_CardiacOutput) : m_CardiacOutput == rhs.m_CardiacOutput)
+   ;equivilant &= ((m_CerebralBloodFlow && rhs.m_CerebralBloodFlow) ? m_CerebralBloodFlow->operator==(*rhs.m_CerebralBloodFlow) : m_CerebralBloodFlow == rhs.m_CerebralBloodFlow)
+   ;equivilant &= ((m_MeanSkinFlow && rhs.m_MeanSkinFlow) ? m_MeanSkinFlow->operator==(*rhs.m_MeanSkinFlow) : m_MeanSkinFlow == rhs.m_MeanSkinFlow)
+   ;equivilant &= ((m_PulmonaryMeanCapillaryFlow && rhs.m_PulmonaryMeanCapillaryFlow) ? m_PulmonaryMeanCapillaryFlow->operator==(*rhs.m_PulmonaryMeanCapillaryFlow) : m_PulmonaryMeanCapillaryFlow == rhs.m_PulmonaryMeanCapillaryFlow)
+   ;equivilant &= ((m_PulmonaryMeanShuntFlow && rhs.m_PulmonaryMeanShuntFlow) ? m_PulmonaryMeanShuntFlow->operator==(*rhs.m_PulmonaryMeanShuntFlow) : m_PulmonaryMeanShuntFlow == rhs.m_PulmonaryMeanShuntFlow)
+   ;equivilant &= ((m_CardiacIndex && rhs.m_CardiacIndex) ? m_CardiacIndex->operator==(*rhs.m_CardiacIndex) : m_CardiacIndex == rhs.m_CardiacIndex)
+      ;return equivilant;
+}
+bool SECardiovascularSystem::operator!=(SECardiovascularSystem const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

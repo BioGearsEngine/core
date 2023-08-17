@@ -819,4 +819,38 @@ Tree<const char*> SERespiratorySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idTotalPulmonaryVentilation)
     .emplace_back(idTranspulmonaryPressure);
 }
+//-------------------------------------------------------------------------------
+bool SERespiratorySystem::operator==(SERespiratorySystem const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_AlveolarArterialGradient && rhs.m_AlveolarArterialGradient) ? m_AlveolarArterialGradient->operator==(*rhs.m_AlveolarArterialGradient) : m_AlveolarArterialGradient == rhs.m_AlveolarArterialGradient)
+    && ((m_CarricoIndex && rhs.m_CarricoIndex) ? m_CarricoIndex->operator==(*rhs.m_CarricoIndex) : m_CarricoIndex == rhs.m_CarricoIndex)
+    && ((m_EndTidalCarbonDioxideFraction && rhs.m_EndTidalCarbonDioxideFraction) ? m_EndTidalCarbonDioxideFraction->operator==(*rhs.m_EndTidalCarbonDioxideFraction) : m_EndTidalCarbonDioxideFraction == rhs.m_EndTidalCarbonDioxideFraction)
+    && ((m_EndTidalCarbonDioxidePressure && rhs.m_EndTidalCarbonDioxidePressure) ? m_EndTidalCarbonDioxidePressure->operator==(*rhs.m_EndTidalCarbonDioxidePressure) : m_EndTidalCarbonDioxidePressure == rhs.m_EndTidalCarbonDioxidePressure)
+    && ((m_ExpiratoryFlow && rhs.m_ExpiratoryFlow) ? m_ExpiratoryFlow->operator==(*rhs.m_ExpiratoryFlow) : m_ExpiratoryFlow == rhs.m_ExpiratoryFlow)
+    && ((m_InspiratoryExpiratoryRatio && rhs.m_InspiratoryExpiratoryRatio) ? m_InspiratoryExpiratoryRatio->operator==(*rhs.m_InspiratoryExpiratoryRatio) : m_InspiratoryExpiratoryRatio == rhs.m_InspiratoryExpiratoryRatio)
+    && ((m_InspiratoryFlow && rhs.m_InspiratoryFlow) ? m_InspiratoryFlow->operator==(*rhs.m_InspiratoryFlow) : m_InspiratoryFlow == rhs.m_InspiratoryFlow)
+    && ((m_MeanPleuralPressure && rhs.m_MeanPleuralPressure) ? m_MeanPleuralPressure->operator==(*rhs.m_MeanPleuralPressure) : m_MeanPleuralPressure == rhs.m_MeanPleuralPressure)
+    && ((m_PulmonaryCompliance && rhs.m_PulmonaryCompliance) ? m_PulmonaryCompliance->operator==(*rhs.m_PulmonaryCompliance) : m_PulmonaryCompliance == rhs.m_PulmonaryCompliance)
+    && ((m_PulmonaryResistance && rhs.m_PulmonaryResistance) ? m_PulmonaryResistance->operator==(*rhs.m_PulmonaryResistance) : m_PulmonaryResistance == rhs.m_PulmonaryResistance)
+    && ((m_RespirationDriverFrequency && rhs.m_RespirationDriverFrequency) ? m_RespirationDriverFrequency->operator==(*rhs.m_RespirationDriverFrequency) : m_RespirationDriverFrequency == rhs.m_RespirationDriverFrequency)
+    && ((m_RespirationDriverPressure && rhs.m_RespirationDriverPressure) ? m_RespirationDriverPressure->operator==(*rhs.m_RespirationDriverPressure) : m_RespirationDriverPressure == rhs.m_RespirationDriverPressure)
+    && ((m_RespirationMusclePressure && rhs.m_RespirationMusclePressure) ? m_RespirationMusclePressure->operator==(*rhs.m_RespirationMusclePressure) : m_RespirationMusclePressure == rhs.m_RespirationMusclePressure)
+    && ((m_RespirationRate && rhs.m_RespirationRate) ? m_RespirationRate->operator==(*rhs.m_RespirationRate) : m_RespirationRate == rhs.m_RespirationRate)
+    && ((m_SpecificVentilation && rhs.m_SpecificVentilation) ? m_SpecificVentilation->operator==(*rhs.m_SpecificVentilation) : m_SpecificVentilation == rhs.m_SpecificVentilation)
+    && ((m_TargetPulmonaryVentilation && rhs.m_TargetPulmonaryVentilation) ? m_TargetPulmonaryVentilation->operator==(*rhs.m_TargetPulmonaryVentilation) : m_TargetPulmonaryVentilation == rhs.m_TargetPulmonaryVentilation)
+    && ((m_TidalVolume && rhs.m_TidalVolume) ? m_TidalVolume->operator==(*rhs.m_TidalVolume) : m_TidalVolume == rhs.m_TidalVolume)
+    && ((m_TotalAlveolarVentilation && rhs.m_TotalAlveolarVentilation) ? m_TotalAlveolarVentilation->operator==(*rhs.m_TotalAlveolarVentilation) : m_TotalAlveolarVentilation == rhs.m_TotalAlveolarVentilation)
+    && ((m_TotalDeadSpaceVentilation && rhs.m_TotalDeadSpaceVentilation) ? m_TotalDeadSpaceVentilation->operator==(*rhs.m_TotalDeadSpaceVentilation) : m_TotalDeadSpaceVentilation == rhs.m_TotalDeadSpaceVentilation)
+    && ((m_TotalLungVolume && rhs.m_TotalLungVolume) ? m_TotalLungVolume->operator==(*rhs.m_TotalLungVolume) : m_TotalLungVolume == rhs.m_TotalLungVolume)
+    && ((m_TotalPulmonaryVentilation && rhs.m_TotalPulmonaryVentilation) ? m_TotalPulmonaryVentilation->operator==(*rhs.m_TotalPulmonaryVentilation) : m_TotalPulmonaryVentilation == rhs.m_TotalPulmonaryVentilation)
+    && ((m_TranspulmonaryPressure && rhs.m_TranspulmonaryPressure) ? m_TranspulmonaryPressure->operator==(*rhs.m_TranspulmonaryPressure) : m_TranspulmonaryPressure == rhs.m_TranspulmonaryPressure);
+}
+bool SERespiratorySystem::operator!=(SERespiratorySystem const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

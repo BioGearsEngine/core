@@ -103,7 +103,7 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
   if (in.HemorrhageChange().present())
     GetHemorrhageChange().Load(in.HemorrhageChange().get());
   if (in.MeanBloodPressureChange().present())
-      GetMeanBloodPressureChange().Load(in.MeanBloodPressureChange().get());
+    GetMeanBloodPressureChange().Load(in.MeanBloodPressureChange().get());
   if (in.NeuromuscularBlockLevel().present())
     GetNeuromuscularBlockLevel().Load(in.NeuromuscularBlockLevel().get());
   if (in.PainToleranceChange().present())
@@ -126,7 +126,7 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
 //-------------------------------------------------------------------------------
 const SEScalar* SEDrugSystem::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
@@ -441,7 +441,7 @@ double SEDrugSystem::GetTidalVolumeChange(const VolumeUnit& unit) const
   if (m_TidalVolumeChange == nullptr)
     return SEScalar::dNaN();
   return m_TidalVolumeChange->GetValue(unit);
-} 
+}
 //-------------------------------------------------------------------------------
 bool SEDrugSystem::HasTubularPermeabilityChange() const
 {
@@ -485,7 +485,7 @@ double SEDrugSystem::GetCentralNervousResponse() const
 //-------------------------------------------------------------------------------
 Tree<const char*> SEDrugSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{ classname() }
+  return Tree<const char*> { classname() }
     .emplace_back(idBronchodilationLevel)
     .emplace_back(idFeverChange)
     .emplace_back(idHeartRateChange)
@@ -500,4 +500,31 @@ Tree<const char*> SEDrugSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idTubularPermeabilityChange)
     .emplace_back(idCentralNervousResponse);
 }
+//-------------------------------------------------------------------------------
+bool SEDrugSystem::operator==(SEDrugSystem const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_AntibioticActivity && rhs.m_AntibioticActivity) ? m_AntibioticActivity->operator==(*rhs.m_AntibioticActivity) : m_AntibioticActivity == rhs.m_AntibioticActivity)
+    && ((m_BronchodilationLevel && rhs.m_BronchodilationLevel) ? m_BronchodilationLevel->operator==(*rhs.m_BronchodilationLevel) : m_BronchodilationLevel == rhs.m_BronchodilationLevel)
+    && ((m_FeverChange && rhs.m_FeverChange) ? m_FeverChange->operator==(*rhs.m_FeverChange) : m_FeverChange == rhs.m_FeverChange)
+    && ((m_HeartRateChange && rhs.m_HeartRateChange) ? m_HeartRateChange->operator==(*rhs.m_HeartRateChange) : m_HeartRateChange == rhs.m_HeartRateChange)
+    && ((m_HemorrhageChange && rhs.m_HemorrhageChange) ? m_HemorrhageChange->operator==(*rhs.m_HemorrhageChange) : m_HemorrhageChange == rhs.m_HemorrhageChange)
+    && ((m_MeanBloodPressureChange && rhs.m_MeanBloodPressureChange) ? m_MeanBloodPressureChange->operator==(*rhs.m_MeanBloodPressureChange) : m_MeanBloodPressureChange == rhs.m_MeanBloodPressureChange)
+    && ((m_NeuromuscularBlockLevel && rhs.m_NeuromuscularBlockLevel) ? m_NeuromuscularBlockLevel->operator==(*rhs.m_NeuromuscularBlockLevel) : m_NeuromuscularBlockLevel == rhs.m_NeuromuscularBlockLevel)
+    && ((m_PainToleranceChange && rhs.m_PainToleranceChange) ? m_PainToleranceChange->operator==(*rhs.m_PainToleranceChange) : m_PainToleranceChange == rhs.m_PainToleranceChange)
+    && ((m_PulsePressureChange && rhs.m_PulsePressureChange) ? m_PulsePressureChange->operator==(*rhs.m_PulsePressureChange) : m_PulsePressureChange == rhs.m_PulsePressureChange)
+    && ((m_RespirationRateChange && rhs.m_RespirationRateChange) ? m_RespirationRateChange->operator==(*rhs.m_RespirationRateChange) : m_RespirationRateChange == rhs.m_RespirationRateChange)
+    && ((m_SedationLevel && rhs.m_SedationLevel) ? m_SedationLevel->operator==(*rhs.m_SedationLevel) : m_SedationLevel == rhs.m_SedationLevel)
+    && ((m_TidalVolumeChange && rhs.m_TidalVolumeChange) ? m_TidalVolumeChange->operator==(*rhs.m_TidalVolumeChange) : m_TidalVolumeChange == rhs.m_TidalVolumeChange)
+    && ((m_TubularPermeabilityChange && rhs.m_TubularPermeabilityChange) ? m_TubularPermeabilityChange->operator==(*rhs.m_TubularPermeabilityChange) : m_TubularPermeabilityChange == rhs.m_TubularPermeabilityChange)
+    && ((m_CentralNervousResponse && rhs.m_CentralNervousResponse) ? m_CentralNervousResponse->operator==(*rhs.m_CentralNervousResponse) : m_CentralNervousResponse == rhs.m_CentralNervousResponse)
+    ;
+}
+bool SEDrugSystem::operator!=(SEDrugSystem const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

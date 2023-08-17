@@ -13,8 +13,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
-#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarPressurePerVolume.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
 
@@ -37,7 +37,6 @@ constexpr char idSleepTime[] = "SleepTime";
 constexpr char idWakeTime[] = "WakeTime";
 constexpr char idRichmondAgitationSedationScale[] = "RichmondAgitationSedationScale";
 
-
 SENervousSystem::SENervousSystem(Logger* logger)
   : SESystem(logger)
 {
@@ -56,7 +55,7 @@ SENervousSystem::SENervousSystem(Logger* logger)
   m_ResistanceScaleMuscle = nullptr;
   m_ResistanceScaleMyocardium = nullptr;
   m_SleepTime = nullptr;
-  m_SleepState = (CDM::enumSleepState::value) - 1;
+  m_SleepState = (CDM::enumSleepState::value)-1;
   m_WakeTime = nullptr;
   m_RichmondAgitationSedationScale = nullptr;
 }
@@ -86,7 +85,7 @@ void SENervousSystem::Clear()
   SAFE_DELETE(m_RightEyePupillaryResponse);
   SAFE_DELETE(m_PainVisualAnalogueScale);
   SAFE_DELETE(m_SleepTime);
-  m_SleepState = (CDM::enumSleepState::value) - 1;
+  m_SleepState = (CDM::enumSleepState::value)-1;
   SAFE_DELETE(m_WakeTime);
   SAFE_DELETE(m_RichmondAgitationSedationScale);
 }
@@ -565,12 +564,12 @@ void SENervousSystem::SetSleepState(CDM::enumSleepState::value sleep)
 //-------------------------------------------------------------------------------
 void SENervousSystem::InvalidateSleepState()
 {
-  m_SleepState = (CDM::enumSleepState::value) - 1;
+  m_SleepState = (CDM::enumSleepState::value)-1;
 }
 //-------------------------------------------------------------------------------
 bool SENervousSystem::HasSleepState() const
 {
-  return m_SleepState == ((CDM::enumSleepState::value) - 1) ? false : true;
+  return m_SleepState == ((CDM::enumSleepState::value)-1) ? false : true;
 }
 //-------------------------------------------------------------------------------
 bool SENervousSystem::IsAwake() const
@@ -613,4 +612,37 @@ Tree<const char*> SENervousSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idSleepTime)
     .emplace_back(idWakeTime);
 }
+//-------------------------------------------------------------------------------
+bool SENervousSystem::operator==(SENervousSystem const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = m_SleepState == rhs.m_SleepState;
+  equivilant &= ((m_LeftEyePupillaryResponse && rhs.m_LeftEyePupillaryResponse) ? m_LeftEyePupillaryResponse->operator==(*rhs.m_LeftEyePupillaryResponse) : m_LeftEyePupillaryResponse == rhs.m_LeftEyePupillaryResponse);
+  equivilant &= ((m_RightEyePupillaryResponse && rhs.m_RightEyePupillaryResponse) ? m_RightEyePupillaryResponse->operator==(*rhs.m_RightEyePupillaryResponse) : m_RightEyePupillaryResponse == rhs.m_RightEyePupillaryResponse);
+  equivilant &= ((m_AttentionLapses && rhs.m_AttentionLapses) ? m_AttentionLapses->operator==(*rhs.m_AttentionLapses) : m_AttentionLapses == rhs.m_AttentionLapses);
+  equivilant &= ((m_BiologicalDebt && rhs.m_BiologicalDebt) ? m_BiologicalDebt->operator==(*rhs.m_BiologicalDebt) : m_BiologicalDebt == rhs.m_BiologicalDebt);
+  equivilant &= ((m_ComplianceScale && rhs.m_ComplianceScale) ? m_ComplianceScale->operator==(*rhs.m_ComplianceScale) : m_ComplianceScale == rhs.m_ComplianceScale);
+  equivilant &= ((m_HeartElastanceScale && rhs.m_HeartElastanceScale) ? m_HeartElastanceScale->operator==(*rhs.m_HeartElastanceScale) : m_HeartElastanceScale == rhs.m_HeartElastanceScale);
+  equivilant &= ((m_HeartRateScale && rhs.m_HeartRateScale) ? m_HeartRateScale->operator==(*rhs.m_HeartRateScale) : m_HeartRateScale == rhs.m_HeartRateScale);
+  equivilant &= ((m_MentalStatus && rhs.m_MentalStatus) ? m_MentalStatus->operator==(*rhs.m_MentalStatus) : m_MentalStatus == rhs.m_MentalStatus);
+  equivilant &= ((m_PainVisualAnalogueScale && rhs.m_PainVisualAnalogueScale) ? m_PainVisualAnalogueScale->operator==(*rhs.m_PainVisualAnalogueScale) : m_PainVisualAnalogueScale == rhs.m_PainVisualAnalogueScale);
+  equivilant &= ((m_ResistanceScaleExtrasplanchnic && rhs.m_ResistanceScaleExtrasplanchnic) ? m_ResistanceScaleExtrasplanchnic->operator==(*rhs.m_ResistanceScaleExtrasplanchnic) : m_ResistanceScaleExtrasplanchnic == rhs.m_ResistanceScaleExtrasplanchnic);
+  equivilant &= ((m_ResistanceScaleMuscle && rhs.m_ResistanceScaleMuscle) ? m_ResistanceScaleMuscle->operator==(*rhs.m_ResistanceScaleMuscle) : m_ResistanceScaleMuscle == rhs.m_ResistanceScaleMuscle);
+  equivilant &= ((m_ResistanceScaleMyocardium && rhs.m_ResistanceScaleMyocardium) ? m_ResistanceScaleMyocardium->operator==(*rhs.m_ResistanceScaleMyocardium) : m_ResistanceScaleMyocardium == rhs.m_ResistanceScaleMyocardium);
+  equivilant &= ((m_ResistanceScaleSplanchnic && rhs.m_ResistanceScaleSplanchnic) ? m_ResistanceScaleSplanchnic->operator==(*rhs.m_ResistanceScaleSplanchnic) : m_ResistanceScaleSplanchnic == rhs.m_ResistanceScaleSplanchnic);
+  equivilant &= ((m_RichmondAgitationSedationScale && rhs.m_RichmondAgitationSedationScale) ? m_RichmondAgitationSedationScale->operator==(*rhs.m_RichmondAgitationSedationScale) : m_RichmondAgitationSedationScale == rhs.m_RichmondAgitationSedationScale);
+  equivilant &= ((m_ReactionTime && rhs.m_ReactionTime) ? m_ReactionTime->operator==(*rhs.m_ReactionTime) : m_ReactionTime == rhs.m_ReactionTime);
+  equivilant &= ((m_SleepTime && rhs.m_SleepTime) ? m_SleepTime->operator==(*rhs.m_SleepTime) : m_SleepTime == rhs.m_SleepTime);
+  equivilant &= ((m_WakeTime && rhs.m_WakeTime) ? m_WakeTime->operator==(*rhs.m_WakeTime) : m_WakeTime == rhs.m_WakeTime)
+
+    ;
+  return equivilant;
+}
+bool SENervousSystem::operator!=(SENervousSystem const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -77,4 +77,17 @@ void SEChronicPericardialEffusion::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+bool SEChronicPericardialEffusion::operator==(SEChronicPericardialEffusion const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Comment == rhs.m_Comment
+    && ((m_AccumulatedVolume && rhs.m_AccumulatedVolume) ? m_AccumulatedVolume->operator==(*rhs.m_AccumulatedVolume) : m_AccumulatedVolume == rhs.m_AccumulatedVolume);
+}
+bool SEChronicPericardialEffusion::operator!=(SEChronicPericardialEffusion const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

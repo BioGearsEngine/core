@@ -16,8 +16,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
-  constexpr char idInsulinSynthesisRate[] = "InsulinSynthesisRate";
-  constexpr char idGlucagonSynthesisRate[] = "GlucagonSynthesisRate";
+constexpr char idInsulinSynthesisRate[] = "InsulinSynthesisRate";
+constexpr char idGlucagonSynthesisRate[] = "GlucagonSynthesisRate";
 
 SEEndocrineSystem::SEEndocrineSystem(Logger* logger)
   : SESystem(logger)
@@ -42,7 +42,7 @@ void SEEndocrineSystem::Clear()
 //-------------------------------------------------------------------------------
 const SEScalar* SEEndocrineSystem::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEEndocrineSystem::GetScalar(const std::string& name)
@@ -125,9 +125,23 @@ double SEEndocrineSystem::GetGlucagonSynthesisRate(const AmountPerTimeUnit& unit
 //-------------------------------------------------------------------------------
 Tree<const char*> SEEndocrineSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{classname()}
+  return Tree<const char*> { classname() }
     .emplace_back(idInsulinSynthesisRate)
     .emplace_back(idGlucagonSynthesisRate);
   ;
 }
+//-------------------------------------------------------------------------------
+bool SEEndocrineSystem::operator==(SEEndocrineSystem const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_InsulinSynthesisRate && rhs.m_InsulinSynthesisRate) ? m_InsulinSynthesisRate->operator==(*rhs.m_InsulinSynthesisRate) : m_InsulinSynthesisRate == rhs.m_InsulinSynthesisRate)
+    && ((m_GlucagonSynthesisRate && rhs.m_GlucagonSynthesisRate) ? m_GlucagonSynthesisRate->operator==(*rhs.m_GlucagonSynthesisRate) : m_GlucagonSynthesisRate == rhs.m_GlucagonSynthesisRate);
+}
+bool SEEndocrineSystem::operator!=(SEEndocrineSystem const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

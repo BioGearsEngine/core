@@ -20,24 +20,24 @@ SEChronicRenalStenosis::SEChronicRenalStenosis()
   m_LeftKidneySeverity = nullptr;
   m_RightKidneySeverity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEChronicRenalStenosis::~SEChronicRenalStenosis()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEChronicRenalStenosis::Clear()
 {
   SEPatientCondition::Clear();
   SAFE_DELETE(m_LeftKidneySeverity);
   SAFE_DELETE(m_RightKidneySeverity);
 }
-
+//-------------------------------------------------------------------------------
 bool SEChronicRenalStenosis::IsValid() const
 {
   return SEPatientCondition::IsValid() && (HasLeftKidneySeverity() || HasRightKidneySeverity());
 }
-
+//-------------------------------------------------------------------------------
 bool SEChronicRenalStenosis::Load(const CDM::ChronicRenalStenosisData& in)
 {
   SEPatientCondition::Load(in);
@@ -47,14 +47,14 @@ bool SEChronicRenalStenosis::Load(const CDM::ChronicRenalStenosisData& in)
     GetRightKidneySeverity().Load(in.RightKidneySeverity().get());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ChronicRenalStenosisData* SEChronicRenalStenosis::Unload() const
 {
   CDM::ChronicRenalStenosisData* data(new CDM::ChronicRenalStenosisData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEChronicRenalStenosis::Unload(CDM::ChronicRenalStenosisData& data) const
 {
   SEPatientCondition::Unload(data);
@@ -63,29 +63,31 @@ void SEChronicRenalStenosis::Unload(CDM::ChronicRenalStenosisData& data) const
   if (HasRightKidneySeverity())
     data.RightKidneySeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_RightKidneySeverity->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEChronicRenalStenosis::HasLeftKidneySeverity() const
 {
   return m_LeftKidneySeverity == nullptr ? false : m_LeftKidneySeverity->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEChronicRenalStenosis::GetLeftKidneySeverity()
 {
   if (m_LeftKidneySeverity == nullptr)
     m_LeftKidneySeverity = new SEScalar0To1();
   return *m_LeftKidneySeverity;
 }
-
+//-------------------------------------------------------------------------------
 bool SEChronicRenalStenosis::HasRightKidneySeverity() const
 {
   return m_RightKidneySeverity == nullptr ? false : m_RightKidneySeverity->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEChronicRenalStenosis::GetRightKidneySeverity()
 {
   if (m_RightKidneySeverity == nullptr)
     m_RightKidneySeverity = new SEScalar0To1();
   return *m_RightKidneySeverity;
 }
-
+//-------------------------------------------------------------------------------
 void SEChronicRenalStenosis::ToString(std::ostream& str) const
 {
   str << "Patient Condition : Chronic Renal Stenosis";
@@ -97,4 +99,19 @@ void SEChronicRenalStenosis::ToString(std::ostream& str) const
   HasRightKidneySeverity() ? str << *m_RightKidneySeverity : str << "NaN";
   str << std::flush;
 }
+//-----------------------------------------------------------------------------
+bool SEChronicRenalStenosis::operator==(SEChronicRenalStenosis const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Comment == rhs.m_Comment
+    && ((m_LeftKidneySeverity && rhs.m_LeftKidneySeverity) ? m_LeftKidneySeverity->operator==(*rhs.m_LeftKidneySeverity) : m_LeftKidneySeverity == rhs.m_LeftKidneySeverity)
+    && ((m_RightKidneySeverity && rhs.m_RightKidneySeverity) ? m_RightKidneySeverity->operator==(*rhs.m_RightKidneySeverity) : m_RightKidneySeverity == rhs.m_RightKidneySeverity);
+}
+bool SEChronicRenalStenosis::operator!=(SEChronicRenalStenosis const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

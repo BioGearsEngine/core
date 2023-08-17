@@ -110,5 +110,20 @@ void SEImpairedAlveolarExchange::ToString(std::ostream& str) const
 
   str << std::flush;
 }
+
 //-----------------------------------------------------------------------------
+bool SEImpairedAlveolarExchange::operator==(SEImpairedAlveolarExchange const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Comment == rhs.m_Comment
+    && ((m_ImpairedSurfaceArea && rhs.m_ImpairedSurfaceArea) ? m_ImpairedSurfaceArea->operator==(*rhs.m_ImpairedSurfaceArea) : m_ImpairedSurfaceArea == rhs.m_ImpairedSurfaceArea)
+    && ((m_ImpairedFraction && rhs.m_ImpairedFraction) ? m_ImpairedFraction->operator==(*rhs.m_ImpairedFraction) : m_ImpairedFraction == rhs.m_ImpairedFraction);
+}
+bool SEImpairedAlveolarExchange::operator!=(SEImpairedAlveolarExchange const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

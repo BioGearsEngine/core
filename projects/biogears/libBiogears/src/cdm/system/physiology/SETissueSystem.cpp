@@ -23,26 +23,25 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 
 namespace biogears {
-  constexpr char idCarbonDioxideProductionRate[] = "CarbonDioxideProductionRate";
-  constexpr char idDehydrationFraction[] = "DehydrationFraction";
-  constexpr char idExtracellularFluidVolume[] = "ExtracellularFluidVolume";
-  constexpr char idExtravascularFluidVolume[] = "ExtravascularFluidVolume";
-  constexpr char idIntracellularFluidPH[] = "IntracellularFluidPH";
-  constexpr char idIntracellularFluidVolume[] = "IntracellularFluidVolume";
-  constexpr char idTotalBodyFluidVolume[] = "TotalBodyFluidVolume";
-  constexpr char idOxygenConsumptionRate[] = "OxygenConsumptionRate";
-  constexpr char idRespiratoryExchangeRatio[] = "RespiratoryExchangeRatio";
-  constexpr char idLiverInsulinSetPoint[] = "LiverInsulinSetPoint";
-  constexpr char idLiverGlucagonSetPoint[] = "LiverGlucagonSetPoint";
-  constexpr char idMuscleInsulinSetPoint[] = "MuscleInsulinSetPoint";
-  constexpr char idMuscleGlucagonSetPoint[] = "MuscleGlucagonSetPoint";
-  constexpr char idFatInsulinSetPoint[] = "FatInsulinSetPoint";
-  constexpr char idFatGlucagonSetPoint[] = "FatGlucagonSetPoint";
-  constexpr char idLiverGlycogen[] = "LiverGlycogen";
-  constexpr char idMuscleGlycogen[] = "MuscleGlycogen";
-  constexpr char idStoredProtein[] = "StoredProtein";
-  constexpr char idStoredFat[] = "StoredFat";
-
+constexpr char idCarbonDioxideProductionRate[] = "CarbonDioxideProductionRate";
+constexpr char idDehydrationFraction[] = "DehydrationFraction";
+constexpr char idExtracellularFluidVolume[] = "ExtracellularFluidVolume";
+constexpr char idExtravascularFluidVolume[] = "ExtravascularFluidVolume";
+constexpr char idIntracellularFluidPH[] = "IntracellularFluidPH";
+constexpr char idIntracellularFluidVolume[] = "IntracellularFluidVolume";
+constexpr char idTotalBodyFluidVolume[] = "TotalBodyFluidVolume";
+constexpr char idOxygenConsumptionRate[] = "OxygenConsumptionRate";
+constexpr char idRespiratoryExchangeRatio[] = "RespiratoryExchangeRatio";
+constexpr char idLiverInsulinSetPoint[] = "LiverInsulinSetPoint";
+constexpr char idLiverGlucagonSetPoint[] = "LiverGlucagonSetPoint";
+constexpr char idMuscleInsulinSetPoint[] = "MuscleInsulinSetPoint";
+constexpr char idMuscleGlucagonSetPoint[] = "MuscleGlucagonSetPoint";
+constexpr char idFatInsulinSetPoint[] = "FatInsulinSetPoint";
+constexpr char idFatGlucagonSetPoint[] = "FatGlucagonSetPoint";
+constexpr char idLiverGlycogen[] = "LiverGlycogen";
+constexpr char idMuscleGlycogen[] = "MuscleGlycogen";
+constexpr char idStoredProtein[] = "StoredProtein";
+constexpr char idStoredFat[] = "StoredFat";
 
 SETissueSystem::SETissueSystem(Logger* logger)
   : SESystem(logger)
@@ -98,7 +97,7 @@ void SETissueSystem::Clear()
 //-------------------------------------------------------------------------------
 const SEScalar* SETissueSystem::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SETissueSystem::GetScalar(const std::string& name)
@@ -378,7 +377,7 @@ bool SETissueSystem::HasOxygenConsumptionRate() const
 {
   return m_OxygenConsumptionRate == nullptr ? false : m_OxygenConsumptionRate->IsValid();
 }
-  //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 SEScalarVolumePerTime& SETissueSystem::GetOxygenConsumptionRate()
 {
   if (m_OxygenConsumptionRate == nullptr)
@@ -604,26 +603,56 @@ double SETissueSystem::GetStoredFat(const MassUnit& unit) const
 //-------------------------------------------------------------------------------
 Tree<const char*> SETissueSystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{classname()}
-  .emplace_back(idCarbonDioxideProductionRate)
-  .emplace_back(idDehydrationFraction)
-  .emplace_back(idExtracellularFluidVolume)
-  .emplace_back(idExtravascularFluidVolume)
-  .emplace_back(idIntracellularFluidPH)
-  .emplace_back(idIntracellularFluidVolume)
-  .emplace_back(idTotalBodyFluidVolume)
-  .emplace_back(idOxygenConsumptionRate)
-  .emplace_back(idRespiratoryExchangeRatio)
-  .emplace_back(idLiverInsulinSetPoint)
-  .emplace_back(idLiverGlucagonSetPoint)
-  .emplace_back(idMuscleInsulinSetPoint)
-  .emplace_back(idMuscleGlucagonSetPoint)
-  .emplace_back(idFatInsulinSetPoint)
-  .emplace_back(idFatGlucagonSetPoint)
-  .emplace_back(idLiverGlycogen)
-  .emplace_back(idMuscleGlycogen)
-  .emplace_back(idStoredProtein)
-  .emplace_back(idStoredFat)
-  ;
+  return Tree<const char*> { classname() }
+    .emplace_back(idCarbonDioxideProductionRate)
+    .emplace_back(idDehydrationFraction)
+    .emplace_back(idExtracellularFluidVolume)
+    .emplace_back(idExtravascularFluidVolume)
+    .emplace_back(idIntracellularFluidPH)
+    .emplace_back(idIntracellularFluidVolume)
+    .emplace_back(idTotalBodyFluidVolume)
+    .emplace_back(idOxygenConsumptionRate)
+    .emplace_back(idRespiratoryExchangeRatio)
+    .emplace_back(idLiverInsulinSetPoint)
+    .emplace_back(idLiverGlucagonSetPoint)
+    .emplace_back(idMuscleInsulinSetPoint)
+    .emplace_back(idMuscleGlucagonSetPoint)
+    .emplace_back(idFatInsulinSetPoint)
+    .emplace_back(idFatGlucagonSetPoint)
+    .emplace_back(idLiverGlycogen)
+    .emplace_back(idMuscleGlycogen)
+    .emplace_back(idStoredProtein)
+    .emplace_back(idStoredFat);
 }
+//-------------------------------------------------------------------------------
+bool SETissueSystem::operator==(SETissueSystem const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_IntracellularFluidPH && rhs.m_IntracellularFluidPH) ? m_IntracellularFluidPH->operator==(*rhs.m_IntracellularFluidPH) : m_IntracellularFluidPH == rhs.m_IntracellularFluidPH)
+    && ((m_RespiratoryExchangeRatio && rhs.m_RespiratoryExchangeRatio) ? m_RespiratoryExchangeRatio->operator==(*rhs.m_RespiratoryExchangeRatio) : m_RespiratoryExchangeRatio == rhs.m_RespiratoryExchangeRatio)
+    && ((m_DehydrationFraction && rhs.m_DehydrationFraction) ? m_DehydrationFraction->operator==(*rhs.m_DehydrationFraction) : m_DehydrationFraction == rhs.m_DehydrationFraction)
+    && ((m_FatInsulinSetPoint && rhs.m_FatInsulinSetPoint) ? m_FatInsulinSetPoint->operator==(*rhs.m_FatInsulinSetPoint) : m_FatInsulinSetPoint == rhs.m_FatInsulinSetPoint)
+    && ((m_LiverInsulinSetPoint && rhs.m_LiverInsulinSetPoint) ? m_LiverInsulinSetPoint->operator==(*rhs.m_LiverInsulinSetPoint) : m_LiverInsulinSetPoint == rhs.m_LiverInsulinSetPoint)
+    && ((m_MuscleInsulinSetPoint && rhs.m_MuscleInsulinSetPoint) ? m_MuscleInsulinSetPoint->operator==(*rhs.m_MuscleInsulinSetPoint) : m_MuscleInsulinSetPoint == rhs.m_MuscleInsulinSetPoint)
+    && ((m_LiverGlycogen && rhs.m_LiverGlycogen) ? m_LiverGlycogen->operator==(*rhs.m_LiverGlycogen) : m_LiverGlycogen == rhs.m_LiverGlycogen)
+    && ((m_MuscleGlycogen && rhs.m_MuscleGlycogen) ? m_MuscleGlycogen->operator==(*rhs.m_MuscleGlycogen) : m_MuscleGlycogen == rhs.m_MuscleGlycogen)
+    && ((m_StoredFat && rhs.m_StoredFat) ? m_StoredFat->operator==(*rhs.m_StoredFat) : m_StoredFat == rhs.m_StoredFat)
+    && ((m_StoredProtein && rhs.m_StoredProtein) ? m_StoredProtein->operator==(*rhs.m_StoredProtein) : m_StoredProtein == rhs.m_StoredProtein)
+    && ((m_FatGlucagonSetPoint && rhs.m_FatGlucagonSetPoint) ? m_FatGlucagonSetPoint->operator==(*rhs.m_FatGlucagonSetPoint) : m_FatGlucagonSetPoint == rhs.m_FatGlucagonSetPoint)
+    && ((m_LiverGlucagonSetPoint && rhs.m_LiverGlucagonSetPoint) ? m_LiverGlucagonSetPoint->operator==(*rhs.m_LiverGlucagonSetPoint) : m_LiverGlucagonSetPoint == rhs.m_LiverGlucagonSetPoint)
+    && ((m_MuscleGlucagonSetPoint && rhs.m_MuscleGlucagonSetPoint) ? m_MuscleGlucagonSetPoint->operator==(*rhs.m_MuscleGlucagonSetPoint) : m_MuscleGlucagonSetPoint == rhs.m_MuscleGlucagonSetPoint)
+    && ((m_ExtracellularFluidVolume && rhs.m_ExtracellularFluidVolume) ? m_ExtracellularFluidVolume->operator==(*rhs.m_ExtracellularFluidVolume) : m_ExtracellularFluidVolume == rhs.m_ExtracellularFluidVolume)
+    && ((m_ExtravascularFluidVolume && rhs.m_ExtravascularFluidVolume) ? m_ExtravascularFluidVolume->operator==(*rhs.m_ExtravascularFluidVolume) : m_ExtravascularFluidVolume == rhs.m_ExtravascularFluidVolume)
+    && ((m_IntracellularFluidVolume && rhs.m_IntracellularFluidVolume) ? m_IntracellularFluidVolume->operator==(*rhs.m_IntracellularFluidVolume) : m_IntracellularFluidVolume == rhs.m_IntracellularFluidVolume)
+    && ((m_TotalBodyFluidVolume && rhs.m_TotalBodyFluidVolume) ? m_TotalBodyFluidVolume->operator==(*rhs.m_TotalBodyFluidVolume) : m_TotalBodyFluidVolume == rhs.m_TotalBodyFluidVolume)
+    && ((m_CarbonDioxideProductionRate && rhs.m_CarbonDioxideProductionRate) ? m_CarbonDioxideProductionRate->operator==(*rhs.m_CarbonDioxideProductionRate) : m_CarbonDioxideProductionRate == rhs.m_CarbonDioxideProductionRate)
+    && ((m_OxygenConsumptionRate && rhs.m_OxygenConsumptionRate) ? m_OxygenConsumptionRate->operator==(*rhs.m_OxygenConsumptionRate) : m_OxygenConsumptionRate == rhs.m_OxygenConsumptionRate);
+}
+bool SETissueSystem::operator!=(SETissueSystem const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

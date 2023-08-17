@@ -58,5 +58,17 @@ void SEChronicVentricularSystolicDysfunction::ToString(std::ostream& str) const
     str << "\n\tComment: " << m_Comment;
   str << std::flush;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEChronicVentricularSystolicDysfunction::operator==(SEChronicVentricularSystolicDysfunction const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Comment == rhs.m_Comment;
+}
+bool SEChronicVentricularSystolicDysfunction::operator!=(SEChronicVentricularSystolicDysfunction const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }
