@@ -19,13 +19,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 #define CDM_PROPERTY_UNMARSHAL_HELPER(in, out, func)                                 \
-  if (in.m_##func) {                                                                 \
+  if (in.m_##func && in.m_##func->IsValid()) {                                       \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Property::UnMarshall(*in.m_##func, out.func());                              \
   }
 
 #define CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, func) \
-  if (in.m_##func) {                                          \
+  if (in.m_##func && in.m_##func->IsValid() ) {               \
     io::Property::UnMarshall(*in.m_##func, out.func());       \
   }
 

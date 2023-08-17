@@ -78,4 +78,18 @@ void SEStarvation::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+bool SEStarvation::operator==(SEStarvation const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Comment == rhs.m_Comment
+   && ((m_TimeSinceMeal&& rhs.m_TimeSinceMeal) ? m_TimeSinceMeal->operator==(*rhs.m_TimeSinceMeal) : m_TimeSinceMeal == rhs.m_TimeSinceMeal)
+  ;
+}
+bool SEStarvation::operator!=(SEStarvation const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -36,6 +36,9 @@ public:
   virtual bool Load(const CDM::ChronicPericardialEffusionData& in);
   virtual CDM::ChronicPericardialEffusionData* Unload() const;
 
+  bool operator==(SEChronicPericardialEffusion const&) const;
+  bool operator!=(SEChronicPericardialEffusion const&) const;
+
 protected:
   virtual void Unload(CDM::ChronicPericardialEffusionData& data) const;
 

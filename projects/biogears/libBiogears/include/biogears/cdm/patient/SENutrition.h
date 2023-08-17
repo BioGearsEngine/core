@@ -52,6 +52,9 @@ public:
 
   void Increment(const SENutrition& from);
 
+  bool operator==(const SENutrition& rhs) const;
+  bool operator!=(const SENutrition& rhs) const;
+
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;
   virtual void SetName(const char* name);
@@ -86,9 +89,6 @@ public:
   virtual double GetWeight(const MassUnit& unit) const;
 
   virtual void ToString(std::ostream& str) const;
-
-  bool operator==( const SENutrition& rhs) const;
-  bool operator!=( const SENutrition& rhs) const;
 
 protected:
   virtual void Unload(CDM::NutritionData& data) const;

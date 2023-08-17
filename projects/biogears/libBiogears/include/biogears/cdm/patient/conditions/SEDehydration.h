@@ -36,6 +36,9 @@ public:
   virtual bool Load(const CDM::DehydrationData& in);
   virtual CDM::DehydrationData* Unload() const;
 
+  bool operator==(SEDehydration const&) const;
+  bool operator!=(SEDehydration const&) const;
+
 protected:
   virtual void Unload(CDM::DehydrationData& data) const;
 

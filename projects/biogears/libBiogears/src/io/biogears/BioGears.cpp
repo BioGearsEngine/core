@@ -59,14 +59,14 @@ namespace io {
     // Conditions //
     out.m_Conditions->Clear();
     for (const CDM::ConditionData& cData : in.Condition()) {
-      if (!out.m_Conditions->ProcessCondition(cData)) {
+      if (!out.m_Conditions->ProcessCondition(cData, out)) {
         throw biogears::CommonDataModelException("Unable to load condition");
       }
     }
     // Actions //
     out.m_Actions->Clear();
     for (const CDM::ActionData& cData : in.ActiveAction()) {
-      if (!out.m_Actions->ProcessAction(cData)) {
+      if (!out.m_Actions->ProcessAction(cData, out)) {
         throw biogears::CommonDataModelException("Unable to load action");
       }
     }
@@ -137,7 +137,7 @@ namespace io {
     out.SimulationTime(std::unique_ptr<CDM::ScalarTimeData>(in.m_SimulationTime->Unload()));
     
     if (in.m_EngineTrack.GetDataRequestManager().HasDataRequests()) {
-      out.DataRequests(std::unique_ptr<CDM::DataRequestsData>(in.m_EngineTrack.GetDataRequestManager().Unload()));
+      out.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(in.m_EngineTrack.GetDataRequestManager().Unload()));
     }
 
     out.AirwayMode(in.m_AirwayMode);

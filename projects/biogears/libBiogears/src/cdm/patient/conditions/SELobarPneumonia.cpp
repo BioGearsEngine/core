@@ -117,4 +117,19 @@ void SELobarPneumonia::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+bool SELobarPneumonia::operator==(SELobarPneumonia const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Comment == rhs.m_Comment
+    && ((m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity)
+    && ((m_LeftLungAffected && rhs.m_LeftLungAffected) ? m_LeftLungAffected->operator==(*rhs.m_LeftLungAffected) : m_LeftLungAffected == rhs.m_LeftLungAffected)
+    && ((m_RightLungAffected && rhs.m_RightLungAffected) ? m_RightLungAffected->operator==(*rhs.m_RightLungAffected) : m_RightLungAffected == rhs.m_RightLungAffected);
+}
+bool SELobarPneumonia::operator!=(SELobarPneumonia const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

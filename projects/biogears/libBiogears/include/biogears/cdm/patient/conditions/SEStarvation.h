@@ -32,6 +32,9 @@ public:
   virtual bool Load(const CDM::StarvationData& in);
   virtual CDM::StarvationData* Unload() const;
 
+  bool operator==(SEStarvation const&) const;
+  bool operator!=(SEStarvation const&) const;
+
 protected:
   virtual void Unload(CDM::StarvationData& data) const;
 

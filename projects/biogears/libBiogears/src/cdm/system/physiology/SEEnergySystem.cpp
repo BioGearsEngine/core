@@ -110,7 +110,7 @@ void SEEnergySystem::Clear()
 } //-------------------------------------------------------------------------------
 const SEScalar* SEEnergySystem::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEEnergySystem::GetScalar(const std::string& name)
@@ -703,7 +703,7 @@ double SEEnergySystem::GetTotalWorkRateLevel() const
 //-------------------------------------------------------------------------------
 Tree<const char*> SEEnergySystem::GetPhysiologyRequestGraph() const
 {
-  return Tree<const char*>{ classname() }
+  return Tree<const char*> { classname() }
     .emplace_back(idAchievedExerciseLevel)
     .emplace_back(idChlorideLostToSweat)
     .emplace_back(idCoreTemperature)
@@ -725,4 +725,34 @@ Tree<const char*> SEEnergySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idTotalMetabolicRate)
     .emplace_back(idTotalWorkRateLevel);
 }
+//-------------------------------------------------------------------------------
+bool SEEnergySystem::operator==(SEEnergySystem const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = ((m_AchievedExerciseLevel && rhs.m_AchievedExerciseLevel) ? m_AchievedExerciseLevel->operator==(*rhs.m_AchievedExerciseLevel) : m_AchievedExerciseLevel == rhs.m_AchievedExerciseLevel)
+    ;equivilant &= ((m_ChlorideLostToSweat && rhs.m_ChlorideLostToSweat) ? m_ChlorideLostToSweat->operator==(*rhs.m_ChlorideLostToSweat) : m_ChlorideLostToSweat == rhs.m_ChlorideLostToSweat)
+    ;equivilant &= ((m_CoreTemperature && rhs.m_CoreTemperature) ? m_CoreTemperature->operator==(*rhs.m_CoreTemperature) : m_CoreTemperature == rhs.m_CoreTemperature)
+    ;equivilant &= ((m_CreatinineProductionRate && rhs.m_CreatinineProductionRate) ? m_CreatinineProductionRate->operator==(*rhs.m_CreatinineProductionRate) : m_CreatinineProductionRate == rhs.m_CreatinineProductionRate)
+    ;equivilant &= ((m_EnergyDeficit && rhs.m_EnergyDeficit) ? m_EnergyDeficit->operator==(*rhs.m_EnergyDeficit) : m_EnergyDeficit == rhs.m_EnergyDeficit)
+    ;equivilant &= ((m_ExerciseEnergyDemand && rhs.m_ExerciseEnergyDemand) ? m_ExerciseEnergyDemand->operator==(*rhs.m_ExerciseEnergyDemand) : m_ExerciseEnergyDemand == rhs.m_ExerciseEnergyDemand)
+    ;equivilant &= ((m_ExerciseMeanArterialPressureDelta && rhs.m_ExerciseMeanArterialPressureDelta) ? m_ExerciseMeanArterialPressureDelta->operator==(*rhs.m_ExerciseMeanArterialPressureDelta) : m_ExerciseMeanArterialPressureDelta == rhs.m_ExerciseMeanArterialPressureDelta)
+    ;equivilant &= ((m_FatigueLevel && rhs.m_FatigueLevel) ? m_FatigueLevel->operator==(*rhs.m_FatigueLevel) : m_FatigueLevel == rhs.m_FatigueLevel)
+    ;equivilant &= ((m_LactateProductionRate && rhs.m_LactateProductionRate) ? m_LactateProductionRate->operator==(*rhs.m_LactateProductionRate) : m_LactateProductionRate == rhs.m_LactateProductionRate)
+    ;equivilant &= ((m_PotassiumLostToSweat && rhs.m_PotassiumLostToSweat) ? m_PotassiumLostToSweat->operator==(*rhs.m_PotassiumLostToSweat) : m_PotassiumLostToSweat == rhs.m_PotassiumLostToSweat)
+    ;equivilant &= ((m_SkinTemperature && rhs.m_SkinTemperature) ? m_SkinTemperature->operator==(*rhs.m_SkinTemperature) : m_SkinTemperature == rhs.m_SkinTemperature)
+    ;equivilant &= ((m_SodiumLostToSweat && rhs.m_SodiumLostToSweat) ? m_SodiumLostToSweat->operator==(*rhs.m_SodiumLostToSweat) : m_SodiumLostToSweat == rhs.m_SodiumLostToSweat)
+    ;equivilant &= ((m_SweatRate && rhs.m_SweatRate) ? m_SweatRate->operator==(*rhs.m_SweatRate) : m_SweatRate == rhs.m_SweatRate)
+    ;equivilant &= ((m_TotalMetabolicRate && rhs.m_TotalMetabolicRate) ? m_TotalMetabolicRate->operator==(*rhs.m_TotalMetabolicRate) : m_TotalMetabolicRate == rhs.m_TotalMetabolicRate)
+    ;equivilant &= ((m_TotalWorkRateLevel && rhs.m_TotalWorkRateLevel) ? m_TotalWorkRateLevel->operator==(*rhs.m_TotalWorkRateLevel) : m_TotalWorkRateLevel == rhs.m_TotalWorkRateLevel);
+  ;
+  return equivilant;
+}
+bool SEEnergySystem::operator!=(SEEnergySystem const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+
 }

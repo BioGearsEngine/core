@@ -21,8 +21,7 @@
 
 #include <biogears/cdm/scenario/SECondition.h>
 
-#include <biogears/cdm/properties/SEScalar0To1.h>
-#include <biogears/cdm/properties/SEScalarArea.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #include "biogears/cdm/substance/SESubstanceManager.h"
 
@@ -142,9 +141,7 @@ namespace io {
   void PatientConditions::UnMarshall(const SEChronicAnemia& in, CDM::ChronicAnemiaData& out)
   {
     PatientConditions::UnMarshall(static_cast<const SEPatientCondition&>(in), static_cast<CDM::PatientConditionData&>(out));
-    if (in.m_ReductionFactor != nullptr) {
-      io::Property::UnMarshall(*in.m_ReductionFactor, out.ReductionFactor());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, ReductionFactor)
   }
   //----------------------------------------------------------------------------------
   //SEChronicHeartFailure
@@ -181,12 +178,9 @@ namespace io {
   {
     Scenario::UnMarshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
 
-    if (in.m_BronchitisSeverity != nullptr) {
-      io::Property::UnMarshall(*in.m_BronchitisSeverity, out.BronchitisSeverity());
-    }
-    if (in.m_EmphysemaSeverity != nullptr) {
-      io::Property::UnMarshall(*in.m_EmphysemaSeverity, out.BronchitisSeverity());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, BronchitisSeverity)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, EmphysemaSeverity)
+    
   }
   //----------------------------------------------------------------------------------
   //SEChronicPericardialEffusion
@@ -199,9 +193,7 @@ namespace io {
   void PatientConditions::UnMarshall(const SEChronicPericardialEffusion& in, CDM::ChronicPericardialEffusionData& out)
   {
     Scenario::UnMarshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    if (in.m_AccumulatedVolume != nullptr) {
-      io::Property::UnMarshall(*in.m_AccumulatedVolume, out.AccumulatedVolume());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, AccumulatedVolume)
   }
   //----------------------------------------------------------------------------------
   //SEChronicRenalStenosis
@@ -215,12 +207,8 @@ namespace io {
   void PatientConditions::UnMarshall(const SEChronicRenalStenosis& in, CDM::ChronicRenalStenosisData& out)
   {
     Scenario::UnMarshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    if (in.HasLeftKidneySeverity()) {
-      io::Property::UnMarshall(*in.m_LeftKidneySeverity, out.LeftKidneySeverity());
-    }
-    if (in.HasRightKidneySeverity()) {
-      io::Property::UnMarshall(*in.m_RightKidneySeverity, out.RightKidneySeverity());
-    }
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, LeftKidneySeverity)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RightKidneySeverity)
   }
   //----------------------------------------------------------------------------------
   //SEDehydration
@@ -233,10 +221,7 @@ namespace io {
   void PatientConditions::UnMarshall(const SEDehydration& in, CDM::DehydrationData& out)
   {
     Scenario::UnMarshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    if (in.m_DehydrationFraction != nullptr) {
-      io::Property::UnMarshall(*in.m_DehydrationFraction, out.DehydrationFraction());
-      ;
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, DehydrationFraction)
   }
   //----------------------------------------------------------------------------------
   //SEDiabetesType1
@@ -249,9 +234,7 @@ namespace io {
   void PatientConditions::UnMarshall(const SEDiabetesType1& in, CDM::DiabetesType1Data& out)
   {
     Scenario::UnMarshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    if (in.m_InsulinProductionSeverity != nullptr) {
-      io::Property::UnMarshall(*in.m_InsulinProductionSeverity, out.InsulinProductionSeverity());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, InsulinProductionSeverity)
   }
   //----------------------------------------------------------------------------------
   //SEDiabetesType2
@@ -265,12 +248,8 @@ namespace io {
   void PatientConditions::UnMarshall(const SEDiabetesType2& in, CDM::DiabetesType2Data& out)
   {
     Scenario::UnMarshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    if (in.m_InsulinProductionSeverity != nullptr) {
-      io::Property::UnMarshall(*in.m_InsulinProductionSeverity, out.InsulinProductionSeverity());
-    }
-    if (in.m_InsulinResistanceSeverity != nullptr) {
-      io::Property::UnMarshall(*in.m_InsulinResistanceSeverity, out.InsulinResistanceSeverity());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, InsulinProductionSeverity)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, InsulinResistanceSeverity)
   }
   //----------------------------------------------------------------------------------
   //SEImpairedAlveolarExchange
@@ -284,12 +263,8 @@ namespace io {
   void PatientConditions::UnMarshall(const SEImpairedAlveolarExchange& in, CDM::ImpairedAlveolarExchangeData& out)
   {
     Scenario::UnMarshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    if (in.HasImpairedSurfaceArea()) {
-      io::Property::UnMarshall(*in.m_ImpairedSurfaceArea, out.ImpairedSurfaceArea());
-    }
-    if (in.HasImpairedFraction()) {
-      io::Property::UnMarshall(*in.m_ImpairedFraction, out.ImpairedFraction());
-    }
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ImpairedSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ImpairedFraction)
   }
   //----------------------------------------------------------------------------------
   //SELobarPneumonia
@@ -304,15 +279,10 @@ namespace io {
   void PatientConditions::UnMarshall(const SELobarPneumonia& in, CDM::LobarPneumoniaData& out)
   {
     Scenario::UnMarshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    if (in.m_Severity != nullptr) {
-      io::Property::UnMarshall(*in.m_Severity, out.Severity());
-    }
-    if (in.m_LeftLungAffected != nullptr) {
-      io::Property::UnMarshall(*in.m_LeftLungAffected, out.LeftLungAffected());
-    }
-    if (in.m_RightLungAffected != nullptr) {
-      io::Property::UnMarshall(*in.m_RightLungAffected, out.RightLungAffected());
-    }
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, LeftLungAffected)
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, RightLungAffected)
+
   }
   //----------------------------------------------------------------------------------
   //SEStarvation
@@ -325,8 +295,7 @@ namespace io {
   void PatientConditions::UnMarshall(const SEStarvation& in, CDM::StarvationData& out)
   {
     Scenario::UnMarshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    if (in.m_TimeSinceMeal != nullptr)
-      io::Property::UnMarshall(*in.m_TimeSinceMeal, out.TimeSinceMeal());
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, TimeSinceMeal)
   }
   //----------------------------------------------------------------------------------
 }

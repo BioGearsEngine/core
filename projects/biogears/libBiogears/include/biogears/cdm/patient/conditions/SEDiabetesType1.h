@@ -36,6 +36,9 @@ public:
   virtual bool Load(const CDM::DiabetesType1Data& in);
   virtual CDM::DiabetesType1Data* Unload() const;
 
+  bool operator==(SEDiabetesType1 const&) const;
+  bool operator!=(SEDiabetesType1 const&) const;
+
 protected:
   virtual void Unload(CDM::DiabetesType1Data& data) const;
 

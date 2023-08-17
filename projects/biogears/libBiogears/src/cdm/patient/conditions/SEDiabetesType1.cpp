@@ -78,5 +78,19 @@ void SEDiabetesType1::ToString(std::ostream& str) const
   HasInsulinProductionSeverity() ? str << m_InsulinProductionSeverity : str << "NaN";
   str << std::flush;
 }
+
 //-----------------------------------------------------------------------------
+bool SEDiabetesType1::operator==(SEDiabetesType1 const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Comment == rhs.m_Comment
+    && ((m_InsulinProductionSeverity && rhs.m_InsulinProductionSeverity) ? m_InsulinProductionSeverity->operator==(*rhs.m_InsulinProductionSeverity) : m_InsulinProductionSeverity == rhs.m_InsulinProductionSeverity);
+}
+bool SEDiabetesType1::operator!=(SEDiabetesType1 const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

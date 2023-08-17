@@ -79,4 +79,17 @@ void SEDehydration::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+bool SEDehydration::operator==(SEDehydration const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Comment == rhs.m_Comment
+    && ((m_DehydrationFraction && rhs.m_DehydrationFraction) ? m_DehydrationFraction->operator==(*rhs.m_DehydrationFraction) : m_DehydrationFraction == rhs.m_DehydrationFraction);
+}
+bool SEDehydration::operator!=(SEDehydration const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

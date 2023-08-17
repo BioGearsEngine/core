@@ -36,6 +36,9 @@ public:
   virtual bool Load(const CDM::ChronicObstructivePulmonaryDiseaseData& in);
   virtual CDM::ChronicObstructivePulmonaryDiseaseData* Unload() const;
 
+  bool operator==(SEChronicObstructivePulmonaryDisease const&) const;
+  bool operator!=(SEChronicObstructivePulmonaryDisease const&) const;
+
 protected:
   virtual void Unload(CDM::ChronicObstructivePulmonaryDiseaseData& data) const;
 

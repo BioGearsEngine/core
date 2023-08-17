@@ -35,7 +35,7 @@ void SEPupillaryResponse::Clear()
 //-----------------------------------------------------------------------------
 const SEScalar* SEPupillaryResponse::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SEPupillaryResponse::GetScalar(const std::string& name)
@@ -148,9 +148,9 @@ double SEPupillaryResponse::GetSizeModifier() const
 //-----------------------------------------------------------------------------
 bool SEPupillaryResponse::operator==(const SEPupillaryResponse& rhs) const
 {
-  return *m_ReactivityModifier == *rhs.m_ReactivityModifier
-    && *m_ShapeModifier == *rhs.m_ShapeModifier
-    && *m_SizeModifier == *rhs.m_SizeModifier;
+  return ((m_ReactivityModifier && rhs.m_ReactivityModifier) ? m_ReactivityModifier->operator==(*rhs.m_ReactivityModifier) : m_ReactivityModifier == rhs.m_ReactivityModifier)
+    && ((m_ShapeModifier && rhs.m_ShapeModifier) ? m_ShapeModifier->operator==(*rhs.m_ShapeModifier) : m_ShapeModifier == rhs.m_ShapeModifier)
+    && ((m_SizeModifier && rhs.m_SizeModifier) ? m_SizeModifier->operator==(*rhs.m_SizeModifier) : m_SizeModifier == rhs.m_SizeModifier);
 }
 //-----------------------------------------------------------------------------
 bool SEPupillaryResponse::operator!=(const SEPupillaryResponse& rhs) const

@@ -44,6 +44,9 @@ public:
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
+  bool operator==(SEHepaticSystem const&) const;
+  bool operator!=(SEHepaticSystem const&) const;
+
 protected:
   void Unload(CDM::HepaticSystemData& data) const;
 

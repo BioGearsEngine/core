@@ -52,6 +52,9 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
+  bool operator==(SEGastrointestinalSystem const&) const;
+  bool operator!=(SEGastrointestinalSystem const&) const;
+
   bool HasChymeAbsorptionRate() const;
   SEScalarVolumePerTime& GetChymeAbsorptionRate();
   double GetChymeAbsorptionRate(const VolumePerTimeUnit& unit) const;
@@ -94,23 +97,30 @@ public:
   std::vector<double> GetLumenSolidMasses(const MassUnit& unit);
   std::vector<double> GetLumenDissolvedMasses(const MassUnit& unit);
   std::vector<double> GetEnterocyteMasses(const MassUnit& unit);
+  
   bool SetLumenSolidMasses(std::vector<double>& tsolid, const MassUnit& unit);
   bool SetLumenDissolvedMasses(std::vector<double>& tdis, const MassUnit& unit);
   bool SetEnterocyteMasses(std::vector<double>& esolid, const MassUnit& unit);
+  
   void IncrementStomachDissolvedMass(double value, const MassUnit& unit);
   void IncrementStomachSolidMass(double value, const MassUnit& unit);
+  
   double GetTotalSolidMassInLumen(const MassUnit& unit);
   double GetTotalDissolvedMassInLumen(const MassUnit& unit);
   double GetTotalMassInEnterocytes(const MassUnit& unit);
+  
   SEScalarMass& GetTotalMassMetabolized();
   SEScalarMass& GetTotalMassExcreted();
+
+  bool operator==(SEDrugTransitState const&) const;
+  bool operator!=(SEDrugTransitState const&) const;
 
 protected:
   virtual void Unload(CDM::DrugTransitStateData& data) const;
   const SESubstance* m_Substance;
-  std::vector<SEScalarMass*> m_LumenSolidMasses;
-  std::vector<SEScalarMass*> m_LumenDissolvedMasses;
-  std::vector<SEScalarMass*> m_EnterocyteMasses;
+  std::vector<SEScalarMass> m_LumenSolidMasses;
+  std::vector<SEScalarMass> m_LumenDissolvedMasses;
+  std::vector<SEScalarMass> m_EnterocyteMasses;
   SEScalarMass* m_TotalMassMetabolized;
   SEScalarMass* m_TotalMassExcreted;
   size_t m_NumTransitMasses;

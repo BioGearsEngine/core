@@ -98,4 +98,18 @@ void SEDiabetesType2::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+bool SEDiabetesType2::operator==(SEDiabetesType2 const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Comment == rhs.m_Comment
+    && ((m_InsulinProductionSeverity && rhs.m_InsulinProductionSeverity) ? m_InsulinProductionSeverity->operator==(*rhs.m_InsulinProductionSeverity) : m_InsulinProductionSeverity == rhs.m_InsulinProductionSeverity)
+    && ((m_InsulinResistanceSeverity && rhs.m_InsulinResistanceSeverity) ? m_InsulinResistanceSeverity->operator==(*rhs.m_InsulinResistanceSeverity) : m_InsulinResistanceSeverity == rhs.m_InsulinResistanceSeverity);
+}
+bool SEDiabetesType2::operator!=(SEDiabetesType2 const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

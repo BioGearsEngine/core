@@ -36,6 +36,7 @@ namespace io {
 }
 class BIOGEARS_API SECardiovascularSystem : public SESystem {
   friend io::Physiology;
+
 public:
   SECardiovascularSystem(Logger* logger);
   ~SECardiovascularSystem() override;
@@ -54,6 +55,9 @@ public:
   CDM::CardiovascularSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
+
+  bool operator==(SECardiovascularSystem const&) const;
+  bool operator!=(SECardiovascularSystem const&) const;
 
 protected:
   void Unload(CDM::CardiovascularSystemData& data) const;
