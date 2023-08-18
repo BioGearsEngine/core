@@ -266,7 +266,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
 {
   m_AcuteRespiratoryDistress = nullptr;
   m_AcuteStress = nullptr;
-  m_ActionExample = nullptr;
+  m_ExampleAction = nullptr;
   m_AirwayObstruction = nullptr;
   m_Apnea = nullptr;
   m_AsthmaAttack = nullptr;
@@ -308,7 +308,7 @@ void SEPatientActionCollection::Clear()
 {
   RemoveAcuteRespiratoryDistress();
   RemoveAcuteStress();
-  RemoveActionExample();
+  RemoveExampleAction();
   RemoveAirwayObstruction();
   RemoveApnea();
   RemoveAsthmaAttack();
@@ -358,8 +358,8 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   if (HasAcuteStress()) {
     to.push_back(GetAcuteStress()->Unload());
   }
-  if (HasActionExample()) {
-    to.push_back(GetActionExample()->Unload());
+  if (HasExampleAction()) {
+    to.push_back(GetExampleAction()->Unload());
   }
   if (HasAirwayObstruction()) {
     to.push_back(GetAirwayObstruction()->Unload());
@@ -548,17 +548,17 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
     return IsValid(*m_AcuteStress);
   }
 
-  const CDM::ActionExample* expAction = dynamic_cast<const CDM::ActionExample*>(&action);
+  const CDM::ExampleActionData* expAction = dynamic_cast<const CDM::ExampleActionData*>(&action);
   if (expAction != nullptr) {
-    if (m_ActionExample == nullptr) {
-      m_ActionExample = new SEActionExample();
+    if (m_ExampleAction == nullptr) {
+      m_ExampleAction = new SEExampleAction();
     }
-    m_ActionExample->Load(*expAction);
-    if (!m_ActionExample->IsActive()) {
-      RemoveActionExample();
+    m_ExampleAction->Load(*expAction);
+    if (!m_ExampleAction->IsActive()) {
+      RemoveExampleAction();
       return true;
     }
-    return IsValid(*m_ActionExample);
+    return IsValid(*m_ExampleAction);
   }
 
   const CDM::AirwayObstructionData* airwayObst = dynamic_cast<const CDM::AirwayObstructionData*>(&action);
@@ -1123,19 +1123,19 @@ void SEPatientActionCollection::RemoveAcuteStress()
   SAFE_DELETE(m_AcuteStress);
 }
 //-------------------------------------------------------------------------------
-bool SEPatientActionCollection::HasActionExample() const
+bool SEPatientActionCollection::HasExampleAction() const
 {
-  return m_ActionExample == nullptr ? false : true;
+  return m_ExampleAction == nullptr ? false : true;
 }
 //-------------------------------------------------------------------------------
-SEActionExample* SEPatientActionCollection::GetActionExample() const
+SEExampleAction* SEPatientActionCollection::GetExampleAction() const
 {
-  return m_ActionExample;
+  return m_ExampleAction;
 }
 //-------------------------------------------------------------------------------
-void SEPatientActionCollection::RemoveActionExample()
+void SEPatientActionCollection::RemoveExampleAction()
 {
-  SAFE_DELETE(m_ActionExample);
+  SAFE_DELETE(m_ExampleAction);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasAirwayObstruction() const

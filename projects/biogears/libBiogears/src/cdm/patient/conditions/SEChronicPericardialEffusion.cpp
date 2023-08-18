@@ -90,4 +90,19 @@ bool SEChronicPericardialEffusion::operator!=(SEChronicPericardialEffusion const
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
+bool SEChronicPericardialEffusion::operator==(SECondition const& rhs) const
+{
+  try {
+    auto& chronicPericardialEffusion = dynamic_cast<SEChronicPericardialEffusion const&>(rhs);
+    return this->operator==(chronicPericardialEffusion);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SEChronicPericardialEffusion::operator!=(SECondition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -37,6 +37,5 @@ namespace io {
     if (in.HasSubstance())
       out.Substance(in.m_Substance->GetName());
   }
-  //----------------------------------------------------------------------------------
 }
 }

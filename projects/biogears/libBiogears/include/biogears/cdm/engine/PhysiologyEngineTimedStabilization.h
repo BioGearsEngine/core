@@ -34,6 +34,9 @@ public:
   virtual bool Load(const CDM::PhysiologyEngineTimedConditionStabilizationData& in);
   virtual CDM::PhysiologyEngineTimedConditionStabilizationData* Unload() const;
 
+   bool operator==(PhysiologyEngineTimedStabilizationCriteria const&) const;
+  bool operator!=(PhysiologyEngineTimedStabilizationCriteria const&) const;
+
 protected:
   virtual void Unload(CDM::PhysiologyEngineTimedConditionStabilizationData& data) const;
 
@@ -55,7 +58,7 @@ protected:
 };
 
 CDM_BIND_DECL(PhysiologyEngineTimedStabilizationData)
-class  PhysiologyEngineTimedStabilization : public PhysiologyEngineStabilization {
+class PhysiologyEngineTimedStabilization : public PhysiologyEngineStabilization {
 public:
   friend io::EngineConfiguration;
   BIOGEARS_API PhysiologyEngineTimedStabilization(Logger* logger);
@@ -65,6 +68,9 @@ public:
 
   BIOGEARS_API virtual bool Load(const CDM::PhysiologyEngineTimedStabilizationData& in);
   BIOGEARS_API virtual CDM::PhysiologyEngineTimedStabilizationData* Unload() const override;
+
+  BIOGEARS_API bool operator==(PhysiologyEngineTimedStabilization const&) const;
+  BIOGEARS_API bool operator!=(PhysiologyEngineTimedStabilization const&) const;
 
 protected:
   BIOGEARS_API virtual void Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const;
@@ -84,7 +90,7 @@ public:
   BIOGEARS_API virtual SEScalarTime& GetFeedbackStabilizationTime();
   BIOGEARS_API virtual double GetFeedbackStabilizationTime(const TimeUnit& unit) const;
 
-  BIOGEARS_API virtual bool HasConditionCriteria(const  char* name) const;
+  BIOGEARS_API virtual bool HasConditionCriteria(const char* name) const;
   BIOGEARS_API virtual bool HasConditionCriteria(const std::string& name) const;
   BIOGEARS_API virtual void RemoveConditionCriteria(const char* name);
   BIOGEARS_API virtual void RemoveConditionCriteria(const std::string& name);

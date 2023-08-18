@@ -38,6 +38,8 @@ public:
 
   bool operator==(SEChronicObstructivePulmonaryDisease const&) const;
   bool operator!=(SEChronicObstructivePulmonaryDisease const&) const;
+  bool operator==(SECondition const& rhs) const override;
+  bool operator!=(SECondition const& rhs) const override;
 
 protected:
   virtual void Unload(CDM::ChronicObstructivePulmonaryDiseaseData& data) const;

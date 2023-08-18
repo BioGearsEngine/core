@@ -371,4 +371,22 @@ const std::vector<SEDataRequest*>& SEDataRequestManager::GetDataRequests()
 {
   return m_Requests;
 }
+//-----------------------------------------------------------------------------
+bool SEDataRequestManager::operator==(SEDataRequestManager const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_SamplesPerSecond == rhs.m_SamplesPerSecond
+    && m_Requests == rhs.m_Requests
+    && m_ResultsFile == rhs.m_ResultsFile
+    && m_WorkingDir == rhs.m_WorkingDir
+    && ((m_DefaultDecimalFormatting && rhs.m_DefaultDecimalFormatting) ? m_DefaultDecimalFormatting->operator==(*rhs.m_DefaultDecimalFormatting) : m_DefaultDecimalFormatting == rhs.m_DefaultDecimalFormatting)
+    && ((m_OverrideDecimalFormatting && rhs.m_OverrideDecimalFormatting) ? m_OverrideDecimalFormatting->operator==(*rhs.m_OverrideDecimalFormatting) : m_OverrideDecimalFormatting == rhs.m_OverrideDecimalFormatting);
+}
+bool SEDataRequestManager::operator!=(SEDataRequestManager const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

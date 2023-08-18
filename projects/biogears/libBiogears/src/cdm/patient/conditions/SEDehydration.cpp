@@ -92,4 +92,19 @@ bool SEDehydration::operator!=(SEDehydration const& rhs) const
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
+bool SEDehydration::operator==(SECondition const& rhs) const
+{
+  try {
+    auto& dehydration = dynamic_cast<SEDehydration const&>(rhs);
+    return this->operator==(dehydration);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SEDehydration::operator!=(SECondition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -30,12 +30,15 @@ public:
   SECompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SECompartmentDataRequest();
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool Load(const CDM::CompartmentDataRequestData& in);
   virtual CDM::CompartmentDataRequestData* Unload() const override = 0;
 
   size_t HashCode() const override;
+
+  bool operator==(SECompartmentDataRequest const&) const;
+  bool operator!=(SECompartmentDataRequest const&) const;
 
   virtual const char* GetCompartment() const;
   virtual void SetCompartment(const char* name);

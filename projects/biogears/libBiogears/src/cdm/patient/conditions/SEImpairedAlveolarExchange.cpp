@@ -126,4 +126,19 @@ bool SEImpairedAlveolarExchange::operator!=(SEImpairedAlveolarExchange const& rh
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
+bool SEImpairedAlveolarExchange::operator==(SECondition const& rhs) const
+{
+  try {
+    auto& eImpairedAlveolarExchange = dynamic_cast<SEImpairedAlveolarExchange const&>(rhs);
+    return this->operator==(eImpairedAlveolarExchange);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SEImpairedAlveolarExchange::operator!=(SECondition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

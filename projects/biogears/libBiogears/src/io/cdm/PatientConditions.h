@@ -52,9 +52,9 @@ namespace io {
   public:
     //class SEConditionList;
     static std::vector<std::unique_ptr<SECondition>> condition_factory(const CDM::ConditionListData& in, SESubstanceManager& substances);
-    static std::unique_ptr<SECondition> factory(const CDM::ConditionData& data, SESubstanceManager& substances);
-    //template <typename SE, typename XSD>  option
-    
+    static std::unique_ptr<SECondition> factory(const CDM::ConditionData* data, SESubstanceManager& substances);
+    static std::unique_ptr<CDM::ConditionData> factory(const SECondition* data);
+    //template <typename SE, typename XSD>  option    
     template <typename SE, typename XSD>
     static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     

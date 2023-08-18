@@ -16,28 +16,28 @@ SEPatientCondition::SEPatientCondition()
   : SECondition()
 {
 }
-
+//-------------------------------------------------------------------------------
 SEPatientCondition::~SEPatientCondition()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEPatientCondition::Clear()
 {
   SECondition::Clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientCondition::IsValid() const
 {
   return SECondition::IsValid();
 }
-
+//-------------------------------------------------------------------------------
 bool SEPatientCondition::Load(const CDM::PatientConditionData& in)
 {
   SECondition::Load(in);
   return true;
 }
-
+//-------------------------------------------------------------------------------
 void SEPatientCondition::Unload(CDM::PatientConditionData& data) const
 {
   SECondition::Unload(data);

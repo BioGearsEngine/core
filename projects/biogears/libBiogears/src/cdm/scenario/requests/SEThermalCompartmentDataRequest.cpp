@@ -42,4 +42,17 @@ void SEThermalCompartmentDataRequest::Unload(CDM::ThermalCompartmentDataRequestD
 {
   SECompartmentDataRequest::Unload(data);
 }
+//-------------------------------------------------------------------------------
+bool SEThermalCompartmentDataRequest ::operator==(SEThermalCompartmentDataRequest const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return SECompartmentDataRequest::operator==(rhs);
+}
+bool SEThermalCompartmentDataRequest ::operator!=(SEThermalCompartmentDataRequest const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

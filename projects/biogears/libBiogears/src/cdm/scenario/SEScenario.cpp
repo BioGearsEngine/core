@@ -224,7 +224,6 @@ void SEScenario::InvalidateName()
   m_Name = "";
 }
 //-----------------------------------------------------------------------------
-
 const char* SEScenario::GetPatientFile() const
 {
   return m_PatientFile.c_str();
@@ -276,7 +275,6 @@ void SEScenario::InvalidateActionFile()
   m_ActionFile = "";
 }
 //-----------------------------------------------------------------------------
-
 const char* SEScenario::GetDescription() const
 {
   return m_Description.c_str();
@@ -406,6 +404,42 @@ void SEScenario::ClearActions()
 const std::vector<SEAction*>& SEScenario::GetActions() const
 {
   return m_Actions;
+}
+//-----------------------------------------------------------------------------
+bool SEScenario::operator==(SEScenario const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = &m_SubMgr == &rhs.m_SubMgr;
+  equivilant &= m_Name == rhs.m_Name;
+  equivilant &= m_Description == rhs.m_Description;
+  equivilant &= m_EngineStateFile == rhs.m_EngineStateFile;
+  equivilant &= ((m_InitialParameters && rhs.m_InitialParameters) ? m_InitialParameters->operator==(*rhs.m_InitialParameters) : m_InitialParameters == rhs.m_InitialParameters);
+  equivilant &= ((m_AutoSerialization && rhs.m_AutoSerialization) ? m_AutoSerialization->operator==(*rhs.m_AutoSerialization) : m_AutoSerialization == rhs.m_AutoSerialization);
+  equivilant &= m_DataRequestMgr.operator==(rhs.m_DataRequestMgr);
+
+  //NOTE: SLOW_COMPARISON
+  // Ok, This is going to be really ugly if we are actually comparing polymorphic downclasses
+  //      Our ToString implementation caches, but its still uglier then other things.
+  //      We can likely vTable lookup operator== against SEAction const& and then return false
+  //      if dynamic cast fails else proceed for a faster runtimes. This pattern 
+  //      is all over Biogears so we need to investigate teh cost. That said we only 
+  //      do equality comparisons in unittest really
+  if (m_Actions.size() == rhs.m_Actions.size()) {
+    for (auto idx = 0; idx < m_Actions.size(); ++idx) {
+      if (0 == strcmp(m_Actions[idx]->classname(), rhs.m_Actions[idx]->classname())) {
+        equivilant &= 0 == strcmp(m_Actions[idx]->ToString(), rhs.m_Actions[idx]->ToString());
+      }
+    }
+  } else {
+    equivilant = false;
+  }
+  return equivilant;
+}
+bool SEScenario::operator!=(SEScenario const& rhs) const
+{
+  return !(*this == rhs);
 }
 //-----------------------------------------------------------------------------
 }

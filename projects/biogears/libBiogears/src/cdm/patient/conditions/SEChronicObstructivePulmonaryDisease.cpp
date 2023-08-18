@@ -112,4 +112,19 @@ bool SEChronicObstructivePulmonaryDisease::operator!=(SEChronicObstructivePulmon
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
+bool SEChronicObstructivePulmonaryDisease::operator==(SECondition const& rhs) const
+{
+  try {
+    auto& chronicObstructivePulmonaryDisease = dynamic_cast<SEChronicObstructivePulmonaryDisease const&>(rhs);
+    return this->operator==(chronicObstructivePulmonaryDisease);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SEChronicObstructivePulmonaryDisease::operator!=(SECondition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

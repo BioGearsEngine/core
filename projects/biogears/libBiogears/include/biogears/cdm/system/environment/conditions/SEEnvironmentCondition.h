@@ -31,6 +31,9 @@ public:
   virtual bool Load(const CDM::EnvironmentConditionData& in);
   virtual CDM::EnvironmentConditionData* Unload() const;
 
+  bool operator==(SECondition const&) const = 0;
+  bool operator!=(SECondition const&) const = 0;
+
 protected:
   virtual void Unload(CDM::EnvironmentConditionData& data) const;
 

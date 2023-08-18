@@ -34,6 +34,9 @@ public:
   virtual bool Load(const CDM::TissueCompartmentDataRequestData& in);
   virtual CDM::TissueCompartmentDataRequestData* Unload() const;
 
+  bool operator==(SETissueCompartmentDataRequest const&) const;
+  bool operator!=(SETissueCompartmentDataRequest const&) const;
+
 protected:
   virtual void Unload(CDM::TissueCompartmentDataRequestData& data) const;
 

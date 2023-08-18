@@ -203,6 +203,9 @@ bool PhysiologyEngineConfiguration::HasStabilizationCriteria() const
 //-----------------------------------------------------------------------------
 PhysiologyEngineStabilization* PhysiologyEngineConfiguration::GetStabilizationCriteria()
 {
+  if ( nullptr == m_StabilizationCriteria) {
+    m_StabilizationCriteria = &GetDynamicStabilizationCriteria();
+  }
   return m_StabilizationCriteria;
 }
 //-----------------------------------------------------------------------------
@@ -285,4 +288,26 @@ double PhysiologyEngineConfiguration::GetTimeStep(const TimeUnit& unit) const
     return SEScalar::dNaN();
   return m_TimeStep->GetValue(unit);
 }
+//-----------------------------------------------------------------------------
+bool PhysiologyEngineConfiguration::operator==(PhysiologyEngineConfiguration const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = ((m_ECGInterpolator && rhs.m_ECGInterpolator) ? m_ECGInterpolator->operator==(*rhs.m_ECGInterpolator) : m_ECGInterpolator == rhs.m_ECGInterpolator) 
+    ;equivilant &= ((m_StabilizationCriteria && rhs.m_StabilizationCriteria) ? m_StabilizationCriteria->operator==(*rhs.m_StabilizationCriteria) : m_StabilizationCriteria == rhs.m_StabilizationCriteria)
+    ;equivilant &= ((m_TimedStabilizationCriteria && rhs.m_TimedStabilizationCriteria) ? m_TimedStabilizationCriteria->operator==(*rhs.m_TimedStabilizationCriteria) : m_TimedStabilizationCriteria == rhs.m_TimedStabilizationCriteria)
+    ;equivilant &= ((m_DynamicStabilizationCriteria && rhs.m_DynamicStabilizationCriteria) ? m_DynamicStabilizationCriteria->operator==(*rhs.m_DynamicStabilizationCriteria) : m_DynamicStabilizationCriteria == rhs.m_DynamicStabilizationCriteria)
+    ;equivilant &= ((m_TimeStep && rhs.m_TimeStep) ? m_TimeStep->operator==(*rhs.m_TimeStep) : m_TimeStep == rhs.m_TimeStep)
+    ;equivilant &= ((m_Patient && rhs.m_Patient) ? m_Patient->operator==(*rhs.m_Patient) : m_Patient == rhs.m_Patient)
+    ;equivilant &= ((m_overrideMode && rhs.m_overrideMode) ? *m_overrideMode == *rhs.m_overrideMode : m_overrideMode == rhs.m_overrideMode)
+    ;equivilant &= m_WritePatientBaselineFile == rhs.m_WritePatientBaselineFile;
+  ;
+  return equivilant;
+}
+bool PhysiologyEngineConfiguration::operator!=(PhysiologyEngineConfiguration const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

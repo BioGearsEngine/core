@@ -131,6 +131,7 @@ namespace io {
     static std::unique_ptr<SEDataRequest> factory(const CDM::DataRequestData& in, SESubstanceManager const& substances,  SEDecimalFormat const* df = nullptr);
 
     static std::unique_ptr<CDM::DataRequestData> factory(const SEDataRequest* in);
+    static std::unique_ptr<CDM::ActionData> factory(const SEAction* in);
   };
 
   //----------------------------------------------------------------------------------

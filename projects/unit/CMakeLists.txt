@@ -174,7 +174,7 @@ if(Biogears_BUILD_TEST)
  
   set_target_properties(unittest PROPERTIES
                         DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
-                        CXX_STANDARD 14
+                        CXX_STANDARD 20
                         FOLDER UnitTest
                         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
                         VS_DEBUGGER_ENVIRONMENT "${VS_DEBUGGER_ENVIRONMENT_LIST}"

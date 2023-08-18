@@ -22,6 +22,7 @@ namespace io {
 }
 class BIOGEARS_API SEScenarioAutoSerialization : public Loggable {
   friend io::Scenario;
+
 public:
   SEScenarioAutoSerialization(Logger* logger);
   virtual ~SEScenarioAutoSerialization();
@@ -31,6 +32,9 @@ public:
 
   virtual bool Load(const CDM::ScenarioAutoSerializationData& in);
   virtual CDM::ScenarioAutoSerializationData* Unload() const;
+
+  bool operator==(SEScenarioAutoSerialization const&) const;
+  bool operator!=(SEScenarioAutoSerialization const&) const;
 
 protected:
   virtual void Unload(CDM::ScenarioAutoSerializationData& data) const;

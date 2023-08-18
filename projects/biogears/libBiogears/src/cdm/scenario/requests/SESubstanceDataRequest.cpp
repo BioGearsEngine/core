@@ -215,5 +215,21 @@ void SESubstanceDataRequest::Set(const SESubstance& substance, const std::string
   m_Unit = nullptr;
   m_Hash = 0;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SESubstanceDataRequest ::operator==(SESubstanceDataRequest const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return SEDataRequest::operator==(rhs)
+    && m_Compartment == rhs.m_Compartment
+    && ((m_Substance && rhs.m_Substance) ? m_Substance->operator==(*rhs.m_Substance)
+                                         : m_Substance == rhs.m_Substance);
+}
+bool SESubstanceDataRequest ::operator!=(SESubstanceDataRequest const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+
 }

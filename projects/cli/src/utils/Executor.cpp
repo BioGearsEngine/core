@@ -128,7 +128,7 @@ std::ostream& operator<<(std::ostream& ostr, const Executor& executor)
   const auto& rv = executor.Results();
   std::for_each(rv.begin(), rv.end(), [&](const std::string& piece) { results += piece + ", "; });
   if (!results.empty()) {
-    results.substr(results.size() - 2);
+    auto sstr = results.substr(results.size() - 2);
   }
   ostr << "Executor " << executor.Name();
   ostr << ",\n\tDriver=" << executor.Driver();

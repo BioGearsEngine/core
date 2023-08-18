@@ -255,9 +255,9 @@ if(NOT Biogears_BUILD_STATIC)
     COMPILE_PDB_NAME "biogears_io"
     PROJECT_LABEL "libbiogears_io"
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
-    CXX_STANDARD 20
     BUILD_RPATH   "${Biogears_BUILD_RPATH}"
     INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\$ORIGIN:\$ORIGIN/../lib:\$ORIGIN/lib">>
+    CXX_STANDARD 20
     )
   set_target_properties(libbiogears_io PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
   add_dependencies(libbiogears_io hex_bindings xsd_bindings)

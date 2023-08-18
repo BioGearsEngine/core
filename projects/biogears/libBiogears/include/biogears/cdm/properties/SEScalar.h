@@ -128,8 +128,8 @@ inline bool operator<(double lhs, const SEScalar& rhs) { return SEScalar { lhs }
 inline bool operator<=(double lhs, const SEScalar& rhs) { return SEScalar { lhs } <= rhs; };
 inline bool operator>(double lhs, const SEScalar& rhs) { return SEScalar { lhs } > rhs; };
 inline bool operator>=(double lhs, const SEScalar& rhs) { return SEScalar { lhs } >= rhs; };
-inline bool operator==(double lhs, const SEScalar& rhs) { return rhs == lhs; }
-inline bool operator!=(double lhs, const SEScalar& rhs) { return rhs != lhs; }
+inline bool operator==(double lhs, const SEScalar& rhs) { return rhs.operator==(lhs); }
+inline bool operator!=(double lhs, const SEScalar& rhs) { return rhs.operator!=(lhs); }
 //-------------------------------------------------------------------------------
 inline std::ostream& operator<<(std::ostream& out, const SEScalar* s)
 {

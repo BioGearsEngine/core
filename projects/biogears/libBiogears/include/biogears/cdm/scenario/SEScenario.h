@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
@@ -38,12 +37,15 @@ public:
 
   virtual ~SEScenario();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   bool Load(const CDM::ScenarioData& in);
   bool Load(const CDM::ActionListData& in);
 
   CDM::ScenarioData* Unload() const;
+
+  bool operator==(SEScenario const&) const;
+  bool operator!=(SEScenario const&) const;
 
 protected:
   void Unload(CDM::ScenarioData& data) const;

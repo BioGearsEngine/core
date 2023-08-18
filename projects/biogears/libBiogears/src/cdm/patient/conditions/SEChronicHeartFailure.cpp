@@ -49,4 +49,5 @@ void SEChronicHeartFailure::Unload(CDM::ChronicHeartFailureData& data) const
 {
   SEPatientCondition::Unload(data);
 }
+
 }

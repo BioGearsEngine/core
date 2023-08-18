@@ -28,6 +28,9 @@ public:
   virtual bool Load(const CDM::ChronicHeartFailureData& in);
   virtual CDM::ChronicHeartFailureData* Unload() const;
 
+  bool operator==(SECondition const& rhs) const = 0;
+  bool operator!=(SECondition const& rhs) const = 0;
+
 protected:
   virtual void Unload(CDM::ChronicHeartFailureData& data) const;
 

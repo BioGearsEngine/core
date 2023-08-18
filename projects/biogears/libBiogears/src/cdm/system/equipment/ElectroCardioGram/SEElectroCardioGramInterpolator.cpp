@@ -272,5 +272,19 @@ void SEElectroCardioGramInterpolator::RemoveWaveform(CDM::ElectroCardioGramWavef
   delete w->second;
   w->second = nullptr;
 }
-//-------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool SEElectroCardioGramInterpolator::operator==(SEElectroCardioGramInterpolator const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = m_Leads == rhs.m_Leads
+  ; equivilant &= m_Waveforms == rhs.m_Waveforms
+  ; return equivilant;
+}
+bool SEElectroCardioGramInterpolator::operator!=(SEElectroCardioGramInterpolator const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

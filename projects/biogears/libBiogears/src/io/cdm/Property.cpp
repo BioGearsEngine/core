@@ -68,6 +68,8 @@ namespace io {
   {
     out.Reset();
     if (in.DecimalFormat().present()) {
+      if (in.DecimalFormat().get() == CDM::enumDecimalFormat::Default)
+        out.m_Notation = DecimalNotation::Default;
       if (in.DecimalFormat().get() == CDM::enumDecimalFormat::FixedMantissa)
         out.m_Notation = DecimalNotation::Fixed;
       else if (in.DecimalFormat().get() == CDM::enumDecimalFormat::SignificantDigits)
@@ -80,7 +82,11 @@ namespace io {
   {
     out.Precision(static_cast<CDM::DecimalFormatData::Precision_type>(in.m_Precision));
     switch (in.m_Notation) {
-    case DecimalNotation::Default:
+    case DecimalNotation::Default: {
+      out.DecimalFormat(CDM::enumDecimalFormat::Default);
+      break;
+    }
+
     case DecimalNotation::Fixed: {
       out.DecimalFormat(CDM::enumDecimalFormat::FixedMantissa);
       break;

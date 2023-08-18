@@ -42,6 +42,9 @@ public:
   bool Load(const CDM::DataRequestManagerData& in, SESubstanceManager& subMgr);
   CDM::DataRequestManagerData* Unload() const;
 
+  bool operator==(SEDataRequestManager const&) const;
+  bool operator!=(SEDataRequestManager const&) const;
+
 protected:
   void Unload(CDM::DataRequestManagerData& data) const;
 

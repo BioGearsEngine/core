@@ -19,56 +19,56 @@ SEChronicAnemia::SEChronicAnemia()
 {
   m_ReductionFactor = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEChronicAnemia::~SEChronicAnemia()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEChronicAnemia::Clear()
 {
   SEPatientCondition::Clear();
   SAFE_DELETE(m_ReductionFactor);
 }
-
+//-------------------------------------------------------------------------------
 bool SEChronicAnemia::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasReductionFactor();
 }
-
+//-------------------------------------------------------------------------------
 bool SEChronicAnemia::Load(const CDM::ChronicAnemiaData& in)
 {
   SEPatientCondition::Load(in);
   GetReductionFactor().Load(in.ReductionFactor());
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::ChronicAnemiaData* SEChronicAnemia::Unload() const
 {
   CDM::ChronicAnemiaData* data(new CDM::ChronicAnemiaData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEChronicAnemia::Unload(CDM::ChronicAnemiaData& data) const
 {
   SEPatientCondition::Unload(data);
   if (m_ReductionFactor != nullptr)
     data.ReductionFactor(std::unique_ptr<CDM::Scalar0To1Data>(m_ReductionFactor->Unload()));
 }
-
+//-------------------------------------------------------------------------------
 bool SEChronicAnemia::HasReductionFactor() const
 {
   return m_ReductionFactor == nullptr ? false : m_ReductionFactor->IsValid();
 }
-
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEChronicAnemia::GetReductionFactor()
 {
   if (m_ReductionFactor == nullptr)
     m_ReductionFactor = new SEScalar0To1();
   return *m_ReductionFactor;
 }
-
+//-------------------------------------------------------------------------------
 void SEChronicAnemia::ToString(std::ostream& str) const
 {
   str << "Patient Condition : Anemia";
@@ -78,4 +78,34 @@ void SEChronicAnemia::ToString(std::ostream& str) const
   HasReductionFactor() ? str << m_ReductionFactor : str << "NaN";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
+bool SEChronicAnemia::operator==(SEChronicAnemia const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_ReductionFactor && rhs.m_ReductionFactor) ? m_ReductionFactor->operator==(*rhs.m_ReductionFactor)
+                                                       : (m_ReductionFactor == rhs.m_ReductionFactor))
+    && (m_Comment == rhs.m_Comment);
+}
+bool SEChronicAnemia::operator!=(SEChronicAnemia const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+bool SEChronicAnemia::operator==(SECondition const& rhs) const
+{
+  try {
+    auto& chronicAnemaRhs = dynamic_cast<SEChronicAnemia const&>(rhs);
+    return this->operator==(chronicAnemaRhs);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SEChronicAnemia::operator!=(SECondition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -83,9 +83,9 @@ void SECompartmentSubstanceDataRequest::InvalidateSubstance()
 //-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::Set(const char* cmpt, SESubstance& substance, const char* name, const char* unit)
 {
-  Set(std::string{ cmpt }, substance, std::string{ name }, std::string{ unit });
+  Set(std::string { cmpt }, substance, std::string { name }, std::string { unit });
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const std::string& unit)
 {
   m_Compartment = cmpt;
@@ -98,9 +98,9 @@ void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance
 //-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::Set(const char* cmpt, SESubstance& substance, const char* name, const CCompoundUnit& unit)
 {
-  Set(std::string{ cmpt }, substance, std::string{ name }, unit);
+  Set(std::string { cmpt }, substance, std::string { name }, unit);
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance& substance, const std::string& name, const CCompoundUnit& unit)
 {
   m_Compartment = cmpt;
@@ -110,5 +110,19 @@ void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance
   m_Unit = &unit;
   m_Hash = 0;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SECompartmentSubstanceDataRequest ::operator==(SECompartmentSubstanceDataRequest const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return SECompartmentDataRequest::operator==(rhs)
+    && ((m_Substance && rhs.m_Substance)
+          ? *m_Substance == *rhs.m_Substance
+          : m_Substance == rhs.m_Substance);
+}
+bool SECompartmentSubstanceDataRequest ::operator!=(SECompartmentSubstanceDataRequest const& rhs) const
+{
+  return !(*this == rhs);
+}
 }

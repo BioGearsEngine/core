@@ -19,65 +19,80 @@ SEAdvanceTime::SEAdvanceTime()
 {
   m_Time = nullptr;
 }
-
+//-----------------------------------------------------------------------------
 SEAdvanceTime::~SEAdvanceTime()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEAdvanceTime::Clear()
 {
   SEAction::Clear();
   SAFE_DELETE(m_Time);
 }
-
+//-----------------------------------------------------------------------------
 bool SEAdvanceTime::IsValid() const
 {
   return HasTime() && m_Time->IsValid();
 }
-
+//-----------------------------------------------------------------------------
 bool SEAdvanceTime::Load(const CDM::AdvanceTimeData& in)
 {
   SEAction::Load(in);
   GetTime().Load(in.Time());
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::AdvanceTimeData* SEAdvanceTime::Unload() const
 {
   CDM::AdvanceTimeData* data = new CDM::AdvanceTimeData();
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEAdvanceTime::Unload(CDM::AdvanceTimeData& data) const
 {
   SEAction::Unload(data);
   if (HasTime())
     data.Time(std::unique_ptr<CDM::ScalarTimeData>(m_Time->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 void SEAdvanceTime::ToString(std::ostream& str) const
 {
   if (HasComment())
     str << "\n\tComment : " << m_Comment;
   str << "Advance Time : " << m_Time;
 }
-
+//-----------------------------------------------------------------------------
 bool SEAdvanceTime::HasTime() const
 {
   return m_Time == nullptr ? false : m_Time->IsValid();
 }
+//-----------------------------------------------------------------------------
 SEScalarTime& SEAdvanceTime::GetTime()
 {
   if (m_Time == nullptr)
     m_Time = new SEScalarTime();
   return *m_Time;
 }
+//-----------------------------------------------------------------------------
 double SEAdvanceTime::GetTime(const TimeUnit& unit) const
 {
   if (m_Time == nullptr)
     return SEScalar::dNaN();
   return m_Time->GetValue(unit);
 }
+//-----------------------------------------------------------------------------
+bool SEAdvanceTime::operator==(SEAdvanceTime const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_Time && rhs.m_Time) ? m_Time->operator==(*rhs.m_Time) : m_Time == rhs.m_Time);
+}
+bool SEAdvanceTime::operator!=(SEAdvanceTime const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

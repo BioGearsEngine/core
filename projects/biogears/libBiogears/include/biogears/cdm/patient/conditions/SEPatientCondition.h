@@ -20,11 +20,14 @@ public:
   SEPatientCondition();
   virtual ~SEPatientCondition();
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool IsValid() const override = 0;
 
   virtual bool Load(const CDM::PatientConditionData& in);
+
+  virtual bool operator==(SECondition const&) const = 0;
+  virtual bool operator!=(SECondition const&) const = 0;
 
 protected:
   virtual void Unload(CDM::PatientConditionData& data) const;

@@ -27,14 +27,14 @@ namespace biogears {
 bool PhysiologyEngineTimedStabilization::StabilizeRestingState(PhysiologyEngine& engine)
 {
   if (!GetRestingStabilizationTime().IsValid())
-    return true; //No stabilization time requested
+    return true; // No stabilization time requested
   return Stabilize(engine, GetRestingStabilizationTime());
 }
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::StabilizeFeedbackState(PhysiologyEngine& engine)
 {
   if (!HasFeedbackStabilizationTime())
-    return true; //No stabilization time requested
+    return true; // No stabilization time requested
   return Stabilize(engine, GetFeedbackStabilizationTime());
 }
 //-------------------------------------------------------------------------------
@@ -63,9 +63,9 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
 {
   double sTime_s = time.GetValue(TimeUnit::s);
   if (sTime_s == 0)
-    return true; //No stabilization time requested
+    return true; // No stabilization time requested
 
-  m_Cancelled = false;
+  m_Canceled = false;
   std::stringstream ss;
   TimingProfile profiler;
   Info("Initializing BioGears : 0%");
@@ -76,14 +76,14 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
 
   ss.precision(3);
   double statusTime_s = 0; // Current time of this status cycle
-  double statusStep_s = 50; //How long did it take to simulate this much time
+  double statusStep_s = 50; // How long did it take to simulate this much time
   double dT_s = engine.GetTimeStep(TimeUnit::s);
   int count = (int)(sTime_s / dT_s);
   int ProgressStep = (int)(count * .1);
   int Progress = ProgressStep;
 
   for (int i = 0; i <= count; i++) {
-    if (m_Cancelled)
+    if (m_Canceled)
       break;
     // Instead of calling AdvanceModelTime
     // We should have a method called AdvanceToRestingState
@@ -91,12 +91,12 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
     // if it is we can break our loop. This will allow us to record our stabilization data
     engine.AdvanceModelTime();
 
-    m_currentTime_s += dT_s;
+    m_currentTime->IncrementValue(dT_s, TimeUnit::s);
     if (m_LogProgress) {
       statusTime_s += dT_s;
       if (statusTime_s > statusStep_s) {
         statusTime_s = 0;
-        ss << "Current Time is " << m_currentTime_s << "s, it took "
+        ss << "Current Time is " << m_currentTime->GetValue(TimeUnit::s) << "s, it took "
            << profiler.GetElapsedTime_s("Status") << "s to simulate the past "
            << statusStep_s << "s" << std::flush;
         profiler.Reset("Status");
@@ -114,7 +114,7 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
     Info(ss);
   }
   // Save off how long it took us to stabilize
-  GetStabilizationDuration().SetValue(m_currentTime_s, TimeUnit::s);
+  GetStabilizationDuration().Set(GetCurrentTime());
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -385,5 +385,27 @@ const SEScalarTime& PhysiologyEngineTimedStabilizationCriteria::GetTime() const
   return m_Time;
 }
 //-------------------------------------------------------------------------------
+bool PhysiologyEngineTimedStabilization::operator==(PhysiologyEngineTimedStabilization const& rhs) const
+{
+  return PhysiologyEngineStabilization::operator==((PhysiologyEngineStabilization const&)rhs.m_Canceled)
+    && m_RestingStabilizationTime == rhs.m_RestingStabilizationTime
+    && m_FeedbackStabilizationTime == rhs.m_FeedbackStabilizationTime
+    && m_ConditionCriteria == rhs.m_ConditionCriteria;
+}
+bool PhysiologyEngineTimedStabilization::operator!=(PhysiologyEngineTimedStabilization const& rhs) const
+{
+  return !(*this == rhs);
+}
 
+//-------------------------------------------------------------------------------
+bool PhysiologyEngineTimedStabilizationCriteria::operator==(PhysiologyEngineTimedStabilizationCriteria const& rhs) const
+{
+  return m_Name == rhs.m_Name
+    && m_Time.operator==(rhs.m_Time);
+}
+bool PhysiologyEngineTimedStabilizationCriteria::operator!=(PhysiologyEngineTimedStabilizationCriteria const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

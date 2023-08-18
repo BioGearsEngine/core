@@ -101,7 +101,7 @@ ThreadPool::~ThreadPool()
 //-------------------------------------------------------------------------------
 void ThreadPool::start()
 {
-  std::lock_guard<std::mutex>(_impl->poolMutex);
+  std::lock_guard<std::mutex> lock(_impl->poolMutex);
   if (!_impl->poolRunning) {
     _impl->poolRunning.store(true);
     for (auto& thread : _impl->pool) {

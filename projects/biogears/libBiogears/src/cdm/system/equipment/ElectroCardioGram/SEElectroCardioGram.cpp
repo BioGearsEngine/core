@@ -401,4 +401,29 @@ Tree<const char*> SEElectroCardioGram::GetPhysiologyRequestGraph() const
 {
   return {""};
 }
+//-----------------------------------------------------------------------------
+bool SEElectroCardioGram::operator==(SEElectroCardioGram const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return  ((m_Lead1ElectricPotential&& rhs.m_Lead1ElectricPotential) ? m_Lead1ElectricPotential->operator==(*rhs.m_Lead1ElectricPotential) : m_Lead1ElectricPotential == rhs.m_Lead1ElectricPotential)
+&& ((m_Lead2ElectricPotential&& rhs.m_Lead2ElectricPotential) ? m_Lead2ElectricPotential->operator==(*rhs.m_Lead2ElectricPotential) : m_Lead2ElectricPotential == rhs.m_Lead2ElectricPotential)
+&& ((m_Lead3ElectricPotential&& rhs.m_Lead3ElectricPotential) ? m_Lead3ElectricPotential->operator==(*rhs.m_Lead3ElectricPotential) : m_Lead3ElectricPotential == rhs.m_Lead3ElectricPotential)
+&& ((m_Lead4ElectricPotential&& rhs.m_Lead4ElectricPotential) ? m_Lead4ElectricPotential->operator==(*rhs.m_Lead4ElectricPotential) : m_Lead4ElectricPotential == rhs.m_Lead4ElectricPotential)
+&& ((m_Lead5ElectricPotential&& rhs.m_Lead5ElectricPotential) ? m_Lead5ElectricPotential->operator==(*rhs.m_Lead5ElectricPotential) : m_Lead5ElectricPotential == rhs.m_Lead5ElectricPotential)
+&& ((m_Lead6ElectricPotential&& rhs.m_Lead6ElectricPotential) ? m_Lead6ElectricPotential->operator==(*rhs.m_Lead6ElectricPotential) : m_Lead6ElectricPotential == rhs.m_Lead6ElectricPotential)
+&& ((m_Lead7ElectricPotential&& rhs.m_Lead7ElectricPotential) ? m_Lead7ElectricPotential->operator==(*rhs.m_Lead7ElectricPotential) : m_Lead7ElectricPotential == rhs.m_Lead7ElectricPotential)
+&& ((m_Lead8ElectricPotential&& rhs.m_Lead8ElectricPotential) ? m_Lead8ElectricPotential->operator==(*rhs.m_Lead8ElectricPotential) : m_Lead8ElectricPotential == rhs.m_Lead8ElectricPotential)
+&& ((m_Lead9ElectricPotential&& rhs.m_Lead9ElectricPotential) ? m_Lead9ElectricPotential->operator==(*rhs.m_Lead9ElectricPotential) : m_Lead9ElectricPotential == rhs.m_Lead9ElectricPotential)
+&& ((m_Lead10ElectricPotential&& rhs.m_Lead10ElectricPotential) ? m_Lead10ElectricPotential->operator==(*rhs.m_Lead10ElectricPotential) : m_Lead10ElectricPotential == rhs.m_Lead10ElectricPotential)
+&& ((m_Lead11ElectricPotential&& rhs.m_Lead11ElectricPotential) ? m_Lead11ElectricPotential->operator==(*rhs.m_Lead11ElectricPotential) : m_Lead11ElectricPotential == rhs.m_Lead11ElectricPotential)
+&& ((m_Lead12ElectricPotential&& rhs.m_Lead12ElectricPotential) ? m_Lead12ElectricPotential->operator==(*rhs.m_Lead12ElectricPotential) : m_Lead12ElectricPotential == rhs.m_Lead12ElectricPotential)
+    ;
+}
+bool SEElectroCardioGram::operator!=(SEElectroCardioGram const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

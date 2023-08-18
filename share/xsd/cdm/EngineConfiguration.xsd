@@ -40,6 +40,12 @@ specific language governing permissions and limitations under the License.
   <xs:complexType name="PhysiologyEngineStabilizationData" >
     <xs:complexContent>
       <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="Canceled" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="LogProgress" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="CurrentTime" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="StabilizationDuration" type="ScalarTimeData" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

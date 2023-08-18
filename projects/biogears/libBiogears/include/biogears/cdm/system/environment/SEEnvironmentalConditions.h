@@ -56,6 +56,9 @@ public:
 
   virtual void Clear();
 
+  bool operator==(SEEnvironmentalConditions const& rhs) const;
+  bool operator!=(SEEnvironmentalConditions const& rhs) const;
+
   virtual bool Load(const CDM::EnvironmentalConditionsData& in);
   virtual bool Load(const char* environmentFile);
   virtual bool Load(const std::string& environmentFile);

@@ -145,6 +145,7 @@ specific language governing permissions and limitations under the License.
           </xs:sequence>
         </xs:choice>
         <xs:attribute name="Filename" type="xs:string" use="optional"/>
+        <xs:attribute name="WorkingDir" type="xs:string" use="optional"/>
         <xs:attribute name="SamplesPerSecond" type="xs:double" use="optional"/>
       </xs:extension>
     </xs:complexContent>

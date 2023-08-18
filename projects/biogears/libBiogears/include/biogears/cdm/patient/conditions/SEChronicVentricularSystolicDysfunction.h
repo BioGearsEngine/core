@@ -32,6 +32,8 @@ public:
 
   bool operator==(SEChronicVentricularSystolicDysfunction const&) const;
   bool operator!=(SEChronicVentricularSystolicDysfunction const&) const;
+  bool operator==(SECondition const& rhs) const override;
+  bool operator!=(SECondition const& rhs) const override;
 
 protected:
   virtual void Unload(CDM::ChronicVentricularSystolicDysfunctionData& data) const;

@@ -23,36 +23,36 @@ SEDataRequest::SEDataRequest(const SEDecimalFormat* dfault)
   m_Unit = nullptr;
   m_Hash = 0;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 SEDataRequest::~SEDataRequest()
 {
   Clear();
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::Clear()
 {
   m_Name = "";
   m_RequestedUnit = "";
   m_Unit = nullptr;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 bool SEDataRequest::Load(const CDM::DataRequestData& in)
 {
-  
+
   SEDecimalFormat::Load(in);
   m_Name = in.Name();
   if (in.Unit().present())
     m_RequestedUnit = in.Unit().get();
   return true;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 CDM::DataRequestData* SEDataRequest::Unload() const
 {
   CDM::DataRequestData* data = new CDM::DataRequestData();
   Unload(*data);
   return data;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::Unload(CDM::DataRequestData& data) const
 {
   SEDecimalFormat::Unload(data);
@@ -62,97 +62,97 @@ void SEDataRequest::Unload(CDM::DataRequestData& data) const
   else if (HasRequestedUnit())
     data.Unit(m_RequestedUnit);
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 std::string SEDataRequest::GetName() const
 {
   return m_Name;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 const char* SEDataRequest::GetName_cStr() const
 {
   return m_Name.c_str();
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::SetName(const char* name)
 {
   m_Name = name;
   m_Hash = 0;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::SetName(const std::string& name)
 {
   m_Name = name;
   m_Hash = 0;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 bool SEDataRequest::HasName() const
 {
   return m_Name.empty() ? false : true;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::InvalidateName()
 {
   m_Name = "";
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 const char* SEDataRequest::GetRequestedUnit() const
 {
   return m_RequestedUnit.c_str();
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::SetRequestedUnit(const char* unit)
 {
   m_RequestedUnit = unit;
   m_Unit = nullptr;
   m_Hash = 0;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::SetRequestedUnit(const std::string& unit)
 {
   m_RequestedUnit = unit;
   m_Unit = nullptr;
   m_Hash = 0;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 bool SEDataRequest::HasRequestedUnit() const
 {
   return m_RequestedUnit.empty() ? false : true;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::InvalidateRequestedUnit()
 {
   m_RequestedUnit = "";
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 const CCompoundUnit* SEDataRequest::GetUnit() const
 {
   return m_Unit;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::SetUnit(const CCompoundUnit& unit)
 {
   m_Unit = &unit;
   m_RequestedUnit = "";
   m_Hash = 0;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 bool SEDataRequest::HasUnit() const
 {
   return m_Unit == nullptr ? false : true;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::InvalidateUnit()
 {
   m_Unit = nullptr;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::Set(const char* name, const char* unit)
 {
   m_Name = name;
   m_RequestedUnit = unit;
   m_Unit = nullptr;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::Set(const std::string& name, const std::string& unit)
 {
   m_Name = name;
@@ -160,7 +160,7 @@ void SEDataRequest::Set(const std::string& name, const std::string& unit)
   m_Unit = nullptr;
   m_Hash = 0;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::Set(const char* name, const CCompoundUnit& unit)
 {
   m_Name = name;
@@ -168,7 +168,7 @@ void SEDataRequest::Set(const char* name, const CCompoundUnit& unit)
   m_Unit = &unit;
   m_Hash = 0;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void SEDataRequest::Set(const std::string& name, const CCompoundUnit& unit)
 {
   m_Name = name;
@@ -176,5 +176,20 @@ void SEDataRequest::Set(const std::string& name, const CCompoundUnit& unit)
   m_Unit = &unit;
   m_Hash = 0;
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEDataRequest ::operator==(SEDataRequest const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return SEDecimalFormat::operator==(rhs)
+    && m_Name == rhs.m_Name
+    && m_RequestedUnit == rhs.m_RequestedUnit
+    && ((m_Unit && rhs.m_Unit) ? m_Unit->operator==(*rhs.m_Unit) : m_Unit == rhs.m_Unit);
+}
+bool SEDataRequest ::operator!=(SEDataRequest const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

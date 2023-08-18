@@ -206,5 +206,30 @@ void SEScenarioInitialParameters::SetTrackStabilization(bool flag)
   m_DoTrackStabilization = flag;
 }
 //-----------------------------------------------------------------------------
+bool SEScenarioInitialParameters::operator==(SEScenarioInitialParameters const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = &m_SubMgr == &rhs.m_SubMgr;
+  equivilant &= ((m_Configuration && rhs.m_Configuration) ? m_Configuration->operator==(*rhs.m_Configuration) : m_Configuration == rhs.m_Configuration);
+  equivilant &= ((m_Patient && rhs.m_Patient) ? m_Patient->operator==(*rhs.m_Patient) : m_Patient == rhs.m_Patient);
+  equivilant &= m_PatientFile == rhs.m_PatientFile;
+  equivilant &= m_DoTrackStabilization == rhs.m_DoTrackStabilization;
+  if (m_Conditions.size() == rhs.m_Conditions.size()) {
+    for (auto idx = 0; idx < m_Conditions.size(); ++idx) {
+      equivilant &= m_Conditions[idx]->operator==(*rhs.m_Conditions[idx]);
+    }
+  } else {
+    equivilant = false;
+  }
+
+  ;return equivilant;
+}
+bool SEScenarioInitialParameters::operator!=(SEScenarioInitialParameters const& rhs) const
+{
+    return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 
 }

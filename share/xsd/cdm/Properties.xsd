@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 
   <xs:simpleType name="enumDecimalFormat">
     <xs:restriction base="xs:string">
+      <xs:enumeration value="Default"/>
       <xs:enumeration value="FixedMantissa"/>
       <xs:enumeration value="SignificantDigits"/>
     </xs:restriction>

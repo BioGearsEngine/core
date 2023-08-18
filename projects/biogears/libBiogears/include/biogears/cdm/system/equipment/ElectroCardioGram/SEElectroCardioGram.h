@@ -22,6 +22,7 @@ namespace io {
 }
 class SEElectroCardioGram : public SESystem {
   friend io::ElectroCardioGram;
+
 protected:
 public:
   BIOGEARS_API SEElectroCardioGram(Logger* logger);
@@ -40,6 +41,9 @@ public:
   BIOGEARS_API bool Load(const CDM::ElectroCardioGramData& in);
   BIOGEARS_API CDM::ElectroCardioGramData* Unload() const override;
   BIOGEARS_API Tree<const char*> GetPhysiologyRequestGraph() const override;
+
+  BIOGEARS_API bool operator==(SEElectroCardioGram const&) const;
+  BIOGEARS_API bool operator!=(SEElectroCardioGram const&) const;
 
 protected:
   BIOGEARS_API void Unload(CDM::ElectroCardioGramData& data) const;

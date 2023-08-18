@@ -264,8 +264,8 @@ public:
   virtual SEScalarVolume& GetVitalCapacity();
   virtual double GetVitalCapacity(const VolumeUnit& unit) const;
 
-  bool SEPatient::operator==(SEPatient const& rhs) const;
-  bool SEPatient::operator!=(SEPatient const& rhs) const;
+  bool operator==(SEPatient const& rhs) const;
+  bool operator!=(SEPatient const& rhs) const;
 
 protected:
   virtual void Unload(CDM::PatientData& data) const;
