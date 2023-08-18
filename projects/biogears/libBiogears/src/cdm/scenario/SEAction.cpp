@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
-#include <biogears/cdm/patient/actions/SEActionExample.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
@@ -29,13 +28,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
 #include <biogears/cdm/patient/actions/SEEbola.h>
 #include <biogears/cdm/patient/actions/SEEscharotomy.h>
+#include <biogears/cdm/patient/actions/SEExampleAction.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
-#include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 #include <biogears/cdm/patient/actions/SENasalCannula.h>
+#include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 #include <biogears/cdm/patient/actions/SEOverride.h>
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
@@ -165,9 +165,9 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       return a;
     }
 
-    CDM::ActionExample* expAction = dynamic_cast<CDM::ActionExample*>(action);
+    CDM::ExampleActionData* expAction = dynamic_cast<CDM::ExampleActionData*>(action);
     if (expAction != nullptr) {
-      SEActionExample* a = new SEActionExample();
+      SEExampleAction* a = new SEExampleAction();
       a->Load(*expAction);
       return a;
     }
@@ -602,4 +602,14 @@ const char* SEAction::ToString() const
   return m_StringRepresnetation.c_str();
 }
 //-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEAction::operator==(const SEAction& rhs) const
+{
+  return m_Comment == rhs.m_Comment;
+}
+bool SEAction::operator!=(const SEAction& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

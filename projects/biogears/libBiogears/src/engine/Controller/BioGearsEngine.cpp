@@ -506,7 +506,7 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
 
   state->SimulationTime(std::unique_ptr<CDM::ScalarTimeData>(m_SimulationTime->Unload()));
   if (m_EngineTrack.GetDataRequestManager().HasDataRequests()) {
-    state->DataRequests(std::unique_ptr<CDM::DataRequestsData>(m_EngineTrack.GetDataRequestManager().Unload()));
+    state->DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(m_EngineTrack.GetDataRequestManager().Unload()));
   }
 
   ((CDM::BioGearsStateData*)state.get())->AirwayMode(m_AirwayMode);

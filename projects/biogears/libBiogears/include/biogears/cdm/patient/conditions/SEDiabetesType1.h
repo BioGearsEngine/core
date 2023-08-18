@@ -38,6 +38,8 @@ public:
 
   bool operator==(SEDiabetesType1 const&) const;
   bool operator!=(SEDiabetesType1 const&) const;
+  bool operator==(SECondition const& rhs) const override;
+  bool operator!=(SECondition const& rhs) const override;
 
 protected:
   virtual void Unload(CDM::DiabetesType1Data& data) const;

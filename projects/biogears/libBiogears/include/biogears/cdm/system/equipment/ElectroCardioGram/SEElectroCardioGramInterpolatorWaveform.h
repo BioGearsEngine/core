@@ -36,6 +36,9 @@ public:
   virtual bool Load(const CDM::ElectroCardioGramInterpolationWaveformData& in);
   virtual CDM::ElectroCardioGramInterpolationWaveformData* Unload() const;
 
+  bool operator==(SEElectroCardioGramInterpolatorWaveform const&) const;
+  bool operator!=(SEElectroCardioGramInterpolatorWaveform const&) const;
+
 protected:
   virtual void Unload(CDM::ElectroCardioGramInterpolationWaveformData& data) const;
 

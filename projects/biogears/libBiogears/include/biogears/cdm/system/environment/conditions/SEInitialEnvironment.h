@@ -32,6 +32,11 @@ public:
   virtual bool Load(const CDM::InitialEnvironmentData& in);
   virtual CDM::InitialEnvironmentData* Unload() const;
 
+  bool operator==(SEInitialEnvironment const& rhs) const;
+  bool operator!=(SEInitialEnvironment const& rhs) const;
+  bool operator==(SECondition const&) const override;
+  bool operator!=(SECondition const&) const override;
+
 protected:
   virtual void Unload(CDM::InitialEnvironmentData& data) const;
 

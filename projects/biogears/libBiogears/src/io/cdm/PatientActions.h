@@ -38,7 +38,7 @@ class SEPatientAction;
 class SEPatientAssessmentRequest;
 class SEAcuteRespiratoryDistress;
 class SEAcuteStress;
-class SEActionExample;
+class SEExampleAction;
 class SEAirwayObstruction;
 class SEApnea;
 class SEAsthmaAttack;
@@ -85,22 +85,13 @@ class SETransmucosalState;
 class SEUrinate;
 class SEOverride;
 
-
-// class SEEbola;
-// class SENasalCannula;
-// class SESleep;
-// class SESubstanceNasalDose;
-// class SETransmucosalState;
-// class SETourniquet
-// class SENasalState;
-// class SESubstanceOralDose;
-
 namespace io {
   class BIOGEARS_PRIVATE_API PatientActions {
   public:
-    // class SEActionList;
+    // class Factories;
     static std::vector<std::unique_ptr<SEAction>> action_factory(const CDM::ActionListData& in, SESubstanceManager& substances);
-    static std::unique_ptr<SEAction> factory(const CDM::ActionData& data, SESubstanceManager& substances);
+    static std::unique_ptr<SEAction> factory(CDM::ActionData const* actionData, SESubstanceManager& substances);
+    static std::unique_ptr<CDM::PatientActionData> factory(const SEPatientAction* data);
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
@@ -118,9 +109,9 @@ namespace io {
     // class SEAcuteStress;
     static void Marshall(const CDM::AcuteStressData& in, SEAcuteStress& out);
     static void UnMarshall(const SEAcuteStress& in, CDM::AcuteStressData& out);
-    // class SEActionExample;
-    static void Marshall(const CDM::ActionExample& in, SEActionExample& out);
-    static void UnMarshall(const SEActionExample& in, CDM::ActionExample& out);
+    // class SEExampleAction;
+    static void Marshall(const CDM::ExampleActionData& in, SEExampleAction& out);
+    static void UnMarshall(const SEExampleAction& in, CDM::ExampleActionData& out);
     // class SEAirwayObstruction;
     static void Marshall(const CDM::AirwayObstructionData& in, SEAirwayObstruction& out);
     static void UnMarshall(const SEAirwayObstruction& in, CDM::AirwayObstructionData& out);

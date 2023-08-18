@@ -36,6 +36,8 @@ public:
 
   bool operator==(SEImpairedAlveolarExchange const&) const;
   bool operator!=(SEImpairedAlveolarExchange const&) const;
+  bool operator==(SECondition const& rhs) const override;
+  bool operator!=(SECondition const& rhs) const override;
 
 protected:
   virtual void Unload(CDM::ImpairedAlveolarExchangeData& data) const;

@@ -93,7 +93,7 @@ namespace io {
       out.push_back(data.release());
     }
   }
-  //class SEAnesthesiaMachineAction
+  // class SEAnesthesiaMachineAction
   void AnesthesiaActions::Marshall(const CDM::AnesthesiaMachineActionData& in, SEAnesthesiaMachineAction& out)
   {
     io::Scenario::Marshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
@@ -104,7 +104,7 @@ namespace io {
     io::Scenario::UnMarshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
   }
   //----------------------------------------------------------------------------------
-  //class SEAnesthesiaMachineConfiguration
+  // class SEAnesthesiaMachineConfiguration
   void AnesthesiaActions::Marshall(const CDM::AnesthesiaMachineConfigurationData& in, SEAnesthesiaMachineConfiguration& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -123,7 +123,7 @@ namespace io {
       out.ConfigurationFile(in.GetConfigurationFile());
   }
   //----------------------------------------------------------------------------------
-  //class SEExpiratoryValveLeak
+  // class SEExpiratoryValveLeak
   void AnesthesiaActions::Marshall(const CDM::ExpiratoryValveLeakData& in, SEExpiratoryValveLeak& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -133,11 +133,10 @@ namespace io {
   void AnesthesiaActions::UnMarshall(const SEExpiratoryValveLeak& in, CDM::ExpiratoryValveLeakData& out)
   {
     UnMarshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    CDM_PROPERTY_UNMARSHAL_HELPER(in,out,Severity)
-      
+    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEExpiratoryValveObstruction
+  // class SEExpiratoryValveObstruction
   void AnesthesiaActions::Marshall(const CDM::ExpiratoryValveObstructionData& in, SEExpiratoryValveObstruction& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -150,7 +149,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEInspiratoryValveLeak
+  // class SEInspiratoryValveLeak
   void AnesthesiaActions::Marshall(const CDM::InspiratoryValveLeakData& in, SEInspiratoryValveLeak& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -163,7 +162,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEInspiratoryValveObstruction
+  // class SEInspiratoryValveObstruction
   void AnesthesiaActions::Marshall(const CDM::InspiratoryValveObstructionData& in, SEInspiratoryValveObstruction& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -176,7 +175,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEMaskLeak
+  // class SEMaskLeak
   void AnesthesiaActions::Marshall(const CDM::MaskLeakData& in, SEMaskLeak& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -189,7 +188,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SESodaLimeFailure
+  // class SESodaLimeFailure
   void AnesthesiaActions::Marshall(const CDM::SodaLimeFailureData& in, SESodaLimeFailure& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -202,7 +201,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SETubeCuffLeak
+  // class SETubeCuffLeak
   void AnesthesiaActions::Marshall(const CDM::TubeCuffLeakData& in, SETubeCuffLeak& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -215,7 +214,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEVaporizerFailure
+  // class SEVaporizerFailure
   void AnesthesiaActions::Marshall(const CDM::VaporizerFailureData& in, SEVaporizerFailure& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -228,7 +227,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEVentilatorPressureLoss
+  // class SEVentilatorPressureLoss
   void AnesthesiaActions::Marshall(const CDM::VentilatorPressureLossData& in, SEVentilatorPressureLoss& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -241,7 +240,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEYPieceDisconnect
+  // class SEYPieceDisconnect
   void AnesthesiaActions::Marshall(const CDM::YPieceDisconnectData& in, SEYPieceDisconnect& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -254,7 +253,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEOxygenWallPortPressureLoss
+  // class SEOxygenWallPortPressureLoss
   void AnesthesiaActions::Marshall(const CDM::OxygenWallPortPressureLossData& in, SEOxygenWallPortPressureLoss& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -267,7 +266,7 @@ namespace io {
     out.State(in.IsActive() ? CDM::enumOnOff::On : CDM::enumOnOff::Off);
   }
   //----------------------------------------------------------------------------------
-  //class SEOxygenTankPressureLoss
+  // class SEOxygenTankPressureLoss
   void AnesthesiaActions::Marshall(const CDM::OxygenTankPressureLossData& in, SEOxygenTankPressureLoss& out)
   {
     Marshall(static_cast<const CDM::AnesthesiaMachineActionData&>(in), static_cast<SEAnesthesiaMachineAction&>(out));
@@ -280,5 +279,86 @@ namespace io {
     out.State(in.IsActive() ? CDM::enumOnOff::On : CDM::enumOnOff::Off);
   }
   //----------------------------------------------------------------------------------
+  std::unique_ptr<CDM::AnesthesiaMachineActionData> AnesthesiaActions::factory(const SEAnesthesiaMachineAction* anesthesiaMachineAction)
+  {
+    if (auto oxygenTankPressureLoss = dynamic_cast<SEOxygenTankPressureLoss const*>(anesthesiaMachineAction); oxygenTankPressureLoss) {
+      auto oxygenTankPressureLossData = std::make_unique<CDM::OxygenTankPressureLossData>();
+      UnMarshall(*oxygenTankPressureLoss, *oxygenTankPressureLossData);
+      return std::move(oxygenTankPressureLossData);
+    }
+
+    if (auto oxygenWallPortPressureLoss = dynamic_cast<SEOxygenWallPortPressureLoss const*>(anesthesiaMachineAction); oxygenWallPortPressureLoss) {
+      auto oxygenWallPortPressureLossData = std::make_unique<CDM::OxygenWallPortPressureLossData>();
+      UnMarshall(*oxygenWallPortPressureLoss, *oxygenWallPortPressureLossData);
+      return std::move(oxygenWallPortPressureLossData);
+    }
+
+    if (auto yPieceDisconnect = dynamic_cast<SEYPieceDisconnect const*>(anesthesiaMachineAction); yPieceDisconnect) {
+      auto yPieceDisconnectData = std::make_unique<CDM::YPieceDisconnectData>();
+      UnMarshall(*yPieceDisconnect, *yPieceDisconnectData);
+      return std::move(yPieceDisconnectData);
+    }
+
+    if (auto ventilatorPressureLoss = dynamic_cast<SEVentilatorPressureLoss const*>(anesthesiaMachineAction); ventilatorPressureLoss) {
+      auto ventilatorPressureLossData = std::make_unique<CDM::VentilatorPressureLossData>();
+      UnMarshall(*ventilatorPressureLoss, *ventilatorPressureLossData);
+      return std::move(ventilatorPressureLossData);
+    }
+
+    if (auto vaporizerFailure = dynamic_cast<SEVaporizerFailure const*>(anesthesiaMachineAction); vaporizerFailure) {
+      auto vaporizerFailureData = std::make_unique<CDM::VaporizerFailureData>();
+      UnMarshall(*vaporizerFailure, *vaporizerFailureData);
+      return std::move(vaporizerFailureData);
+    }
+
+    if (auto tubeCuffLeak = dynamic_cast<SETubeCuffLeak const*>(anesthesiaMachineAction); tubeCuffLeak) {
+      auto tubeCuffLeakData = std::make_unique<CDM::TubeCuffLeakData>();
+      UnMarshall(*tubeCuffLeak, *tubeCuffLeakData);
+      return std::move(tubeCuffLeakData);
+    }
+
+    if (auto sodaLimeFailure = dynamic_cast<SESodaLimeFailure const*>(anesthesiaMachineAction); sodaLimeFailure) {
+      auto sodaLimeFailureData = std::make_unique<CDM::SodaLimeFailureData>();
+      UnMarshall(*sodaLimeFailure, *sodaLimeFailureData);
+      return std::move(sodaLimeFailureData);
+    }
+
+    if (auto maskLeak = dynamic_cast<SEMaskLeak const*>(anesthesiaMachineAction); maskLeak) {
+      auto maskLeakData = std::make_unique<CDM::MaskLeakData>();
+      UnMarshall(*maskLeak, *maskLeakData);
+      return std::move(maskLeakData);
+    }
+
+    if (auto inspiratoryValveObstruction = dynamic_cast<SEInspiratoryValveObstruction const*>(anesthesiaMachineAction); inspiratoryValveObstruction) {
+      auto inspiratoryValveObstructionData = std::make_unique<CDM::InspiratoryValveObstructionData>();
+      UnMarshall(*inspiratoryValveObstruction, *inspiratoryValveObstructionData);
+      return std::move(inspiratoryValveObstructionData);
+    }
+
+    if (auto inspiratoryValveLeak = dynamic_cast<SEInspiratoryValveLeak const*>(anesthesiaMachineAction); inspiratoryValveLeak) {
+      auto inspiratoryValveLeakData = std::make_unique<CDM::InspiratoryValveLeakData>();
+      UnMarshall(*inspiratoryValveLeak, *inspiratoryValveLeakData);
+      return std::move(inspiratoryValveLeakData);
+    }
+
+    if (auto expiratoryValveObstruction = dynamic_cast<SEExpiratoryValveObstruction const*>(anesthesiaMachineAction); expiratoryValveObstruction) {
+      auto expiratoryValveObstructionData = std::make_unique<CDM::ExpiratoryValveObstructionData>();
+      UnMarshall(*expiratoryValveObstruction, *expiratoryValveObstructionData);
+      return std::move(expiratoryValveObstructionData);
+    }
+
+    if (auto expiratoryValveLeak = dynamic_cast<SEExpiratoryValveLeak const*>(anesthesiaMachineAction); expiratoryValveLeak) {
+      auto expiratoryValveLeakData = std::make_unique<CDM::ExpiratoryValveLeakData>();
+      UnMarshall(*expiratoryValveLeak, *expiratoryValveLeakData);
+      return std::move(expiratoryValveLeakData);
+    }
+
+    if (auto anesthesiaMachineConfiguration = dynamic_cast<SEAnesthesiaMachineConfiguration const*>(anesthesiaMachineAction); anesthesiaMachineConfiguration) {
+      auto anesthesiaMachineConfigurationData = std::make_unique<CDM::AnesthesiaMachineConfigurationData>();
+      UnMarshall(*anesthesiaMachineConfiguration, *anesthesiaMachineConfigurationData);
+      return std::move(anesthesiaMachineConfigurationData);
+    }
+    throw biogears::CommonDataModelException("AnesthesiaActions::factory does not support the derived SEAnesthesiaMachineAction. If you are not a developer contact upstream for support.");
+  }
 }
 }

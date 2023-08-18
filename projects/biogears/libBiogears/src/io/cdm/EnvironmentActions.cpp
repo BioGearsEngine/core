@@ -11,7 +11,7 @@
 #include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
 namespace biogears {
 namespace io {
-  //class SEEnvironmentAction
+  // class SEEnvironmentAction
   void EnvironmentActions::Marshall(const CDM::EnvironmentActionData& in, SEEnvironmentAction& out)
   {
     io::Scenario::Marshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
@@ -22,7 +22,7 @@ namespace io {
     io::Scenario::UnMarshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
   }
   //----------------------------------------------------------------------------------
-  //class SEEnvironmentChange
+  // class SEEnvironmentChange
   void EnvironmentActions::Marshall(const CDM::EnvironmentChangeData& in, SEEnvironmentChange& out)
   {
     io::Scenario::Marshall(static_cast<const CDM::EnvironmentActionData&>(in), static_cast<SEEnvironmentAction&>(out));
@@ -41,7 +41,7 @@ namespace io {
       out.ConditionsFile(in.m_ConditionsFile);
   }
   //----------------------------------------------------------------------------------
-  //class SEThermalApplication
+  // class SEThermalApplication
   void EnvironmentActions::Marshall(const CDM::ThermalApplicationData& in, SEThermalApplication& out)
   {
     io::Scenario::Marshall(static_cast<const CDM::EnvironmentActionData&>(in), static_cast<SEEnvironmentAction&>(out));
@@ -84,6 +84,23 @@ namespace io {
   void EnvironmentActions::Copy(const SEThermalApplication& in, SEThermalApplication& out)
   {
     ::biogears::io::Copy<SEThermalApplication, CDM::ThermalApplicationData>(in, out);
+  }
+  //-----------------------------------------------------------------------------
+  //! Can throw NULLPTR to indicate a failure
+  std::unique_ptr<CDM::EnvironmentActionData> EnvironmentActions::factory(const SEEnvironmentAction* environmentAction)
+  {
+    if (auto environmentChangeAction = dynamic_cast<SEEnvironmentChange const*>(environmentAction); environmentChangeAction) {
+      auto environmentChangeActionData = std::make_unique<CDM::EnvironmentChangeData>();
+      UnMarshall(*environmentChangeAction, *environmentChangeActionData);
+      return std::move(environmentChangeActionData);
+    }
+    
+    if (auto thermalApplication = dynamic_cast<SEThermalApplication const*>(environmentAction); thermalApplication) {
+      auto thermalApplicationData = std::make_unique<CDM::EnvironmentChangeData>();
+      UnMarshall(*thermalApplication, *thermalApplicationData);
+      return std::move(thermalApplicationData);
+    }
+    throw biogears::CommonDataModelException("EnvironmentActions::factory does not support the derived SEEnvironmentAction. If you are not a developer contact upstream for support.");
   }
 }
 }

@@ -137,7 +137,7 @@ namespace io {
     out.SimulationTime(std::unique_ptr<CDM::ScalarTimeData>(in.m_SimulationTime->Unload()));
     
     if (in.m_EngineTrack.GetDataRequestManager().HasDataRequests()) {
-      out.DataRequests(std::unique_ptr<CDM::DataRequestsData>(in.m_EngineTrack.GetDataRequestManager().Unload()));
+      out.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(in.m_EngineTrack.GetDataRequestManager().Unload()));
     }
 
     out.AirwayMode(in.m_AirwayMode);

@@ -32,6 +32,9 @@ public:
   virtual bool Load(const CDM::ThermalCompartmentDataRequestData& in);
   virtual CDM::ThermalCompartmentDataRequestData* Unload() const;
 
+  bool operator==(SEThermalCompartmentDataRequest const&) const;
+  bool operator!=(SEThermalCompartmentDataRequest const&) const;
+
 protected:
   virtual void Unload(CDM::ThermalCompartmentDataRequestData& data) const;
 };

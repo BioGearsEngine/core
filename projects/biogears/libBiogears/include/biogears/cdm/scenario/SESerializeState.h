@@ -37,6 +37,9 @@ public:
   virtual bool Load(const CDM::SerializeStateData& in);
   virtual CDM::SerializeStateData* Unload() const override;
 
+  bool operator==(SESerializeState const&) const;
+  bool operator!=(SESerializeState const&) const;
+
 protected:
   virtual void Unload(CDM::SerializeStateData& data) const;
 

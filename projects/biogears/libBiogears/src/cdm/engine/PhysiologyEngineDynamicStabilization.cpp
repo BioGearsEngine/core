@@ -11,9 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
 
-//Standad Includes
+// Standad Includes
 #include <cmath>
-//Project Includes
+// Project Includes
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
@@ -76,9 +76,9 @@ bool PhysiologyEngineDynamicStabilization::Stabilize(PhysiologyEngine& engine, c
 {
   const std::vector<PropertyConvergence*>& properties = criteria.GetPropertyConvergence();
   if (properties.empty())
-    return true; //nothing to do here...
+    return true; // nothing to do here...
 
-  m_Cancelled = false;
+  m_Canceled = false;
   std::stringstream ss;
   TimingProfile profiler;
   if (m_LogProgress) {
@@ -105,20 +105,20 @@ bool PhysiologyEngineDynamicStabilization::Stabilize(PhysiologyEngine& engine, c
 
   ss.precision(3);
   double statusTime_s = 0; // Current time of this status cycle
-  double statusStep_s = 10; //How long did it take to simulate this much time
+  double statusStep_s = 10; // How long did it take to simulate this much time
   double stablizationTime_s = 0;
   double dT_s = engine.GetTimeStep(TimeUnit::s);
 
   PhysiologyEngineDynamicStabilizer stabilizer(dT_s, criteria);
   while (!(stabilizer.HasConverged() && stabilizer.HasConvergedOptional())) {
-    if (m_Cancelled)
+    if (m_Canceled)
       break;
     if (stabilizer.HasExceededTime())
       break;
 
     engine.AdvanceModelTime();
     stablizationTime_s += dT_s;
-    m_currentTime_s += dT_s;
+    m_currentTime->IncrementValue(dT_s, biogears::TimeUnit::s);
     if (m_LogProgress) {
       statusTime_s += dT_s;
       if (statusTime_s > statusStep_s) {
@@ -551,9 +551,15 @@ CDM::PhysiologyEngineDynamicStabilizationCriteriaData* PhysiologyEngineDynamicSt
 //-----------------------------------------------------------------------------
 void PhysiologyEngineDynamicStabilizationCriteria::Unload(CDM::PhysiologyEngineDynamicStabilizationCriteriaData& data) const
 {
-  data.ConvergenceTime(std::unique_ptr<CDM::ScalarTimeData>(m_ConvergenceTime->Unload()));
-  data.MinimumReactionTime(std::unique_ptr<CDM::ScalarTimeData>(m_MinimumReactionTime->Unload()));
-  data.MaximumAllowedStabilizationTime(std::unique_ptr<CDM::ScalarTimeData>(m_MaximumAllowedStabilizationTime->Unload()));
+  if (m_ConvergenceTime) {
+    data.ConvergenceTime(std::unique_ptr<CDM::ScalarTimeData>(m_ConvergenceTime->Unload()));
+  }
+  if (m_MinimumReactionTime) {
+    data.MinimumReactionTime(std::unique_ptr<CDM::ScalarTimeData>(m_MinimumReactionTime->Unload()));
+  }
+  if (m_MaximumAllowedStabilizationTime) {
+    data.MaximumAllowedStabilizationTime(std::unique_ptr<CDM::ScalarTimeData>(m_MaximumAllowedStabilizationTime->Unload()));
+  }
   for (auto pc : m_PropertyConvergence) {
     std::unique_ptr<CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData> pcData(new CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData());
     pcData->Name(pc->GetDataRequest().GetName());

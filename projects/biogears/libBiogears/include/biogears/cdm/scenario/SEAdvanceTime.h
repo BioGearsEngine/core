@@ -29,12 +29,15 @@ public:
   static constexpr const char* TypeTag() { return "SEAdvanceTime"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool IsValid() const override;
 
   virtual bool Load(const CDM::AdvanceTimeData& in);
   virtual CDM::AdvanceTimeData* Unload() const override;
+
+  bool operator==(SEAdvanceTime const&) const;
+  bool operator!=(SEAdvanceTime const&) const;
 
 protected:
   virtual void Unload(CDM::AdvanceTimeData& data) const;

@@ -35,6 +35,8 @@ public:
 
   bool operator==(SELobarPneumonia const&) const;
   bool operator!=(SELobarPneumonia const&) const;
+  bool operator==(SECondition const& rhs) const override;
+  bool operator!=(SECondition const& rhs) const override;
 
 protected:
   virtual void Unload(CDM::LobarPneumoniaData& data) const;

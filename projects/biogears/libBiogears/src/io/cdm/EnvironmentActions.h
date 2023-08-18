@@ -51,7 +51,8 @@ namespace io {
     //class SEThermalApplication
     static void Marshall(const CDM::ThermalApplicationData& in, SEThermalApplication& out);
     static void UnMarshall(const SEThermalApplication& in, CDM::ThermalApplicationData& out);
-
+    // Factories
+    static std::unique_ptr<CDM::EnvironmentActionData> factory(const SEEnvironmentAction*);
 
     //-----------------------------------------------------------------------------
     static void Copy(const SEEnvironmentAction& in, SEEnvironmentAction& out);

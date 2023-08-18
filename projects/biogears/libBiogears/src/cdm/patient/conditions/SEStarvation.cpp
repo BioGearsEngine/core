@@ -87,7 +87,24 @@ bool SEStarvation::operator==(SEStarvation const& rhs) const
    && ((m_TimeSinceMeal&& rhs.m_TimeSinceMeal) ? m_TimeSinceMeal->operator==(*rhs.m_TimeSinceMeal) : m_TimeSinceMeal == rhs.m_TimeSinceMeal)
   ;
 }
-bool SEStarvation::operator!=(SEStarvation const& rhs) const
+bool SEStarvation::operator!=(SEStarvation const& rhs) const 
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+bool SEStarvation::operator==(SECondition const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+  try {
+    auto& starvationRhs = dynamic_cast<SEStarvation const&>(rhs);
+    return this->operator==(starvationRhs);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SEStarvation::operator!=(SECondition const& rhs) const
 {
   return !(*this == rhs);
 }

@@ -25,12 +25,12 @@ SEElectroCardioGramInterpolatorWaveform::SEElectroCardioGramInterpolatorWaveform
   m_Rhythm = (CDM::enumHeartRhythm::value)-1;
   m_LeadNumber = 0;
 }
-
+//-----------------------------------------------------------------------------
 SEElectroCardioGramInterpolatorWaveform::~SEElectroCardioGramInterpolatorWaveform()
 {
   Clear();
 }
-
+//-----------------------------------------------------------------------------
 void SEElectroCardioGramInterpolatorWaveform::Clear()
 {
   m_LeadNumber = 0;
@@ -39,7 +39,7 @@ void SEElectroCardioGramInterpolatorWaveform::Clear()
   SAFE_DELETE(m_Data);
   m_ActiveIndicies.clear();
 }
-
+//-----------------------------------------------------------------------------
 bool SEElectroCardioGramInterpolatorWaveform::Load(const CDM::ElectroCardioGramInterpolationWaveformData& in)
 {
   Clear();
@@ -54,14 +54,14 @@ bool SEElectroCardioGramInterpolatorWaveform::Load(const CDM::ElectroCardioGramI
   }
   return true;
 }
-
+//-----------------------------------------------------------------------------
 CDM::ElectroCardioGramInterpolationWaveformData* SEElectroCardioGramInterpolatorWaveform::Unload() const
 {
   CDM::ElectroCardioGramInterpolationWaveformData* data(new CDM::ElectroCardioGramInterpolationWaveformData());
   Unload(*data);
   return data;
 }
-
+//-----------------------------------------------------------------------------
 void SEElectroCardioGramInterpolatorWaveform::Unload(CDM::ElectroCardioGramInterpolationWaveformData& data) const
 {
   if (HasRhythm())
@@ -78,7 +78,7 @@ void SEElectroCardioGramInterpolatorWaveform::Unload(CDM::ElectroCardioGramInter
   if (HasTimeStep())
     data.TimeStep(std::unique_ptr<CDM::ScalarTimeData>(m_TimeStep->Unload()));
 }
-
+//-----------------------------------------------------------------------------
 CDM::ElectroCardioGramWaveformLeadNumber SEElectroCardioGramInterpolatorWaveform::GetLeadNumber() const
 {
   return m_LeadNumber;
@@ -95,7 +95,7 @@ void SEElectroCardioGramInterpolatorWaveform::InvalidateLeadNumber()
 {
   m_LeadNumber = 0;
 }
-
+//-----------------------------------------------------------------------------
 CDM::enumHeartRhythm::value SEElectroCardioGramInterpolatorWaveform::GetRhythm() const
 {
   return m_Rhythm;
@@ -112,7 +112,7 @@ void SEElectroCardioGramInterpolatorWaveform::InvalidateRhythm()
 {
   m_Rhythm = (CDM::enumHeartRhythm::value)-1;
 }
-
+//-----------------------------------------------------------------------------
 bool SEElectroCardioGramInterpolatorWaveform::HasData() const
 {
   return m_Data == nullptr ? false : m_Data->IsValid();
@@ -127,7 +127,7 @@ const SEFunctionElectricPotentialVsTime* SEElectroCardioGramInterpolatorWaveform
 {
   return m_Data;
 }
-
+//-----------------------------------------------------------------------------
 bool SEElectroCardioGramInterpolatorWaveform::HasTimeStep() const
 {
   return m_TimeStep == nullptr ? false : m_TimeStep->IsValid();
@@ -144,4 +144,21 @@ double SEElectroCardioGramInterpolatorWaveform::GetTimeStep(const TimeUnit& unit
     return SEScalar::dNaN();
   return m_TimeStep->GetValue(unit);
 }
+//-----------------------------------------------------------------------------
+bool SEElectroCardioGramInterpolatorWaveform::operator==(SEElectroCardioGramInterpolatorWaveform const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_LeadNumber == rhs.m_LeadNumber
+    && m_Rhythm == rhs.m_Rhythm
+    && ((m_TimeStep && rhs.m_TimeStep) ? m_TimeStep->operator==(*rhs.m_TimeStep) : m_TimeStep == rhs.m_TimeStep)
+    && ((m_Data && rhs.m_Data) ? m_Data->operator==(*rhs.m_Data) : m_Data == rhs.m_Data)
+    && m_ActiveIndicies == rhs.m_ActiveIndicies;
+}
+bool SEElectroCardioGramInterpolatorWaveform::operator!=(SEElectroCardioGramInterpolatorWaveform const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

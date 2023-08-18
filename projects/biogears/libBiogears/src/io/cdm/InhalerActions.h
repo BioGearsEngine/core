@@ -47,6 +47,8 @@ namespace io {
     //class SEInhalerConfiguration
     static void Marshall(const CDM::InhalerConfigurationData& in, SEInhalerConfiguration& out);
     static void UnMarshall(const SEInhalerConfiguration& in, CDM::InhalerConfigurationData& out);
+    // Factories
+    static std::unique_ptr<CDM::InhalerActionData> factory(const SEInhalerAction*);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>

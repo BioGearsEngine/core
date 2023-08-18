@@ -18,14 +18,14 @@ class SEScalar0To1;
 namespace io {
   class PatientActions;
 }
-class BIOGEARS_API SEActionExample : public SEPatientAction {
+class BIOGEARS_API SEExampleAction : public SEPatientAction {
   friend io::PatientActions;
 
 public:
-  SEActionExample();
-  virtual ~SEActionExample() override;
+  SEExampleAction();
+  virtual ~SEExampleAction() override;
 
-  static constexpr const char* TypeTag() { return "SEActionExample"; };
+  static constexpr const char* TypeTag() { return "SEExampleAction"; };
   const char* classname() const override { return TypeTag(); }
 
   virtual void Clear() override;
@@ -33,19 +33,19 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ActionExample& in);
-  virtual CDM::ActionExample* Unload() const override;
+  virtual bool Load(const CDM::ExampleActionData& in);
+  virtual CDM::ExampleActionData* Unload() const override;
 
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
   virtual void ToString(std::ostream& str) const override;
  
-  bool operator==(const SEActionExample& rhs) const;
-  bool operator!=(const SEActionExample& rhs) const;
+  bool operator==(const SEExampleAction& rhs) const;
+  bool operator!=(const SEExampleAction& rhs) const;
 
 protected:
-  virtual void Unload(CDM::ActionExample& data) const;
+  virtual void Unload(CDM::ExampleActionData& data) const;
 
 private:
   SEScalar0To1* m_Severity;

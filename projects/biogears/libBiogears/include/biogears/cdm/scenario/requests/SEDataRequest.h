@@ -38,6 +38,9 @@ public:
   virtual bool Load(const CDM::DataRequestData& in);
   virtual CDM::DataRequestData* Unload() const;
 
+  bool operator==(SEDataRequest const&) const;
+  bool operator!=(SEDataRequest const&) const;
+
 protected:
   virtual void Unload(CDM::DataRequestData& data) const;
 

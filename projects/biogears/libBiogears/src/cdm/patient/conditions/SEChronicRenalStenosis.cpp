@@ -114,4 +114,19 @@ bool SEChronicRenalStenosis::operator!=(SEChronicRenalStenosis const& rhs) const
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
+bool SEChronicRenalStenosis::operator==(SECondition const& rhs) const
+{
+  try {
+    auto& chronicRenalStenosis = dynamic_cast<SEChronicRenalStenosis const&>(rhs);
+    return this->operator==(chronicRenalStenosis);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SEChronicRenalStenosis::operator!=(SECondition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

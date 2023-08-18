@@ -93,4 +93,19 @@ bool SEDiabetesType1::operator!=(SEDiabetesType1 const& rhs) const
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
+bool SEDiabetesType1::operator==(SECondition const& rhs) const
+{
+  try {
+    auto& diabetesType1 = dynamic_cast<SEDiabetesType1 const&>(rhs);
+    return this->operator==(diabetesType1);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SEDiabetesType1::operator!=(SECondition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -1,0 +1,207 @@
+[?25l[J[J[J[J[J[J[?25h[?1049h[22;0;0t[>4;2m[?1h=[?2004h[1;103r[?12h[?12l[22;2t[22;1t[27m[23m[29m[m[H[2J[?25l[103;1H"projects/biogears/libBiogears/CMakeLists.txt" 213L, 10769C[1;1H#############################################################################
+#Sorce and Header Defines
+###############################################################################
+message(STATUS "  Configuring libbiogears")
+
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/config.h.in  ${CMAKE_CURRENT_BINARY_DIR}/../generated/biogears/config.h NEWLINE_STYLE  [7;1HLF)
+
+#Biogears CDM
+add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\schema\\")
+add_source_files(CDM_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.hxx" SOURCE_GROUP "Headers\\Public\\schema\\")
+add_source_files(CDM_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.cxx" SOURCE_GROUP "Sources\\schema\\")
+
+#Biogears IO
+add_source_files(IO_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libIO/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
+add_source_files(IO_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/io REGEX "*.h" SOURCE_GROUP "Headers\\Public\\generated\\")
+add_source_files(IO_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogears/io REGEX "*.cpp" SOURCE_GROUP "Sources\\generated\\")
+add_source_files(IO_EMBEDED_HDRS LOCATION "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}" REGEX "*.hxx" SOURCE_GROUP "Headers\\[19;1H\Public\\generated\\")
+add_source_files(IO_EMBEDED_SRCS LOCATION  "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}/" REGEX "*.cxx" SOURCE_GROUP "Sourcee[21;1Hs\\generated\\")
+
+#Biogears Core
+add_source_files(CORE_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/src REGEX "*.h" SOURCE_GROUP "Headers\\Private\\")
+add_source_files(CORE_SRCS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/src REGEX "*.cpp" SOURCE_GROUP "Sources\\")
+add_source_files(CORE_GEN_SRCS LOCATION ${BIOGEARS_BINARY_DIR}/libBiogears/src REGEX "version.cpp" SOURCE_GROUP"Sources\\")
+add_source_files(CORE_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
+add_source_files(CORE_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/include REGEX "*.inl" SOURCE_GROUP "Headers\\Public\\")
+
+set(BIO_CDM_HEADERS ${CDM_HDRS} ${CDM_PUBLIC_HDRS} ${CDM_GEN_HDRS})
+set(BIO_CDM_SOURCES ${CDM_SRCS} ${CDM_GEN_SRCS})
+
+set(BIO_IO_HEADERS ${IO_HDRS} ${IO_EMBEDED_HDRS} ${IO_GEN_HDRS})
+set(BIO_IO_SOURCES ${IO_EMBEDED_SRCS} ${IO_GEN_SRCS})
+
+set(BIO_CORE_HEADERS ${CORE_HDRS} ${CORE_PUBLIC_HDRS} ${CORE_GEN_HDRS})
+set(BIO_CORE_SOURCES ${CORE_SRCS} ${CORE_GEN_SRCS})
+
+###############################################################################
+#Define Logic
+###############################################################################
+if(Biogears_BUILD_STATIC)
+  add_library(libbiogears STATIC ${BIO_CORE_SOURCES} ${BIO_CORE_HEADERS}[44;34H${BIO_CDM_HEADERS}  ${BIO_CDM_SOURCES}[45;34H${BIO_IO_HEADERS}   ${BIO_IO_SOURCES}
+  )
+  add_library(Biogears::libbiogears ALIAS libbiogears)
+  set_target_properties(libbiogears
+    PROPERTIES
+    DEFINE_SYMBOL biogears_EXPORTS
+    FOLDER "Libraries"
+    OUTPUT_NAME "biogears"
+    COMPILE_PDB_NAME "biogears"
+    PROJECT_LABEL "libbiogears"
+    DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
+<<<<<<< HEAD
+    CXX_STANDARD 14
+    BUILD_RPATH   "${Biogears_BUILD_RPATH}"
+    INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\${ORIGIN}:\${ORIGIN}/../lii[60;1Hb:\${ORIGIN}/lib">>
+=======
+    CXX_STANDARD 20
+>>>>>>> 059a0cd1 (Finished up io::Scenario required the improvment of multiple operator== and some XSD changes. Bumped C++20 to make this commit exx[64;1Htra confusing and use initializer statments in if statments while refactorign factories.)
+    )
+    add_dependencies(libbiogears hex_bindings)
+  set_target_properties(libbiogears PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
+   if(biogears_USE_OVERRIDE_CONTROL)[69;7Htarget_compile_definitions( libbiogears PRIVATE BIOGEARS_USE_OVERRIDE_CONTROL)
+   endif()
+  if(UNITTEST_biogears-core)[72;6Htarget_compile_definitions( libbiogears PUBLIC ENABLE_UNIT_TEST_API)
+  endif()
+  if(WIN32)
+    list(APPEND BIO_CPPFLAGS _SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX $ENV{PARALLEL_COMPILE} )
+  elseif(CMAKE_COMPILER_IS_GNUCXX)
+    list(APPEND BIO_CPPFLAGS "-Wattributes" ${CodeSynthesis_CPPFLAGS})
+    list(APPEND BIO_LDFLAGS "-Wl,--no-as-needed" )
+    set_target_properties(libbiogears PROPERTIES LINK_FLAGS ${BIO_LDFLAGS})
+  endif()
+  ###############################################################################
+  # COMPILATION & LINKAGE MODIFICATIONS
+  ###############################################################################
+  target_compile_definitions(libbiogears PUBLIC BIO_BUILT_AS_STATIC ${BIO_CPPFLAGS_INTERFACE} $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},armv7-a>:XSD_NN[85;1HO_EXPORT>)
+  target_compile_definitions(libbiogears PRIVATE ${BIO_CPPFLAGS} )
+  target_compile_options(libbiogears PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>[88;45HPRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>[89;45H)
+  if(Biogears_THROW_READONLY_EXCEPTIONS)[91;9Htarget_compile_definitions(libbiogears PUBLIC BIOGEARS_THROW_READONLY_EXCEPTIONS)
+  endif()
+   if(Biogears_THROW_NAN_EXCEPTIONS )[94;9Htarget_compile_definitions(libbiogears PUBLIC BIOGEARS_THROW_NAN_EXCEPTIONS )
+  endif()
+   if(Biogears_BUILD_STATIC)[97;9Htarget_compile_definitions(libbiogears PUBLIC BIOGEARS_STATIC_BUILD)
+  endif()
+  target_include_directories(libbiogears[100;7HPRIVATE  ${BIO_INCLUDE_DIR} ${BIO_PRIVATE_INCLUDE_DIR} ${BIO_GENERATED_INCLUDE_DIR}[101;17H${BIO_CDM_INCLUDE_DIR} # CDM[102;17H${BIO_CIRCUIT_INCLUDE_DIR} # Circuit[1;1H[?25h
+
+
+m
+
+[?25l[103;1HType  :qa  and press <Enter> to exit Vim[103;41H[K[6;1H[?25h
+
+
+
+
+
+
+
+[27m[23m[29m[m[H[2J[?25l[1;1H#Biogears CDM
+add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/includd[3;1He/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\schema\\")
+add_source_files(CDM_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogeaa[5;1Hrs/schema REGEX "*.hxx" SOURCE_GROUP "Headers\\Public\\schema\\")
+add_source_files(CDM_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogee[7;1Hars/schema REGEX "*.cxx" SOURCE_GROUP "Sources\\schema\\")
+
+#Biogears IO
+add_source_files(IO_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libIO/include REGEX ""[11;1H*.h" SOURCE_GROUP "Headers\\Public\\")
+add_source_files(IO_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogearr[13;1Hs/io REGEX "*.h" SOURCE_GROUP "Headers\\Public\\generated\\")
+add_source_files(IO_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogeaa[15;1Hrs/io REGEX "*.cpp" SOURCE_GROUP "Sources\\generated\\")
+add_source_files(IO_EMBEDED_HDRS LOCATION "${BIOGEARS_BINARY_DIR}/generated/c__[17;1Hencoded/${Biogears_LIB_VERSION}" REGEX "*.hxx" SOURCE_GROUP "Headers\\Public\\\[18;1Hgenerated\\")
+add_source_files(IO_EMBEDED_SRCS LOCATION  "${BIOGEARS_BINARY_DIR}/generated/cc[20;1H_encoded/${Biogears_LIB_VERSION}/" REGEX "*.cxx" SOURCE_GROUP "Sources\\generaa[21;1Hted\\")
+
+#Biogears Core
+add_source_files(CORE_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/src REGG[25;1HEX "*.h" SOURCE_GROUP "Headers\\Private\\")
+add_source_files(CORE_SRCS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/src REGG[27;1HEX "*.cpp" SOURCE_GROUP "Sources\\")
+add_source_files(CORE_GEN_SRCS LOCATION ${BIOGEARS_BINARY_DIR}/libBiogears/srcc[29;1H REGEX "version.cpp" SOURCE_GROUP"Sources\\")
+add_source_files(CORE_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears//[31;1Hinclude REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
+add_source_files(CORE_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears//[33;1Hinclude REGEX "*.inl" SOURCE_GROUP "Headers\\Public\\")
+
+set(BIO_CDM_HEADERS ${CDM_HDRS} ${CDM_PUBLIC_HDRS} ${CDM_GEN_HDRS})
+set(BIO_CDM_SOURCES ${CDM_SRCS} ${CDM_GEN_SRCS})
+
+set(BIO_IO_HEADERS ${IO_HDRS} ${IO_EMBEDED_HDRS} ${IO_GEN_HDRS})
+set(BIO_IO_SOURCES ${IO_EMBEDED_SRCS} ${IO_GEN_SRCS})
+
+set(BIO_CORE_HEADERS ${CORE_HDRS} ${CORE_PUBLIC_HDRS} ${CORE_GEN_HDRS})[9;1H[?25h[27m[23m[29m[m[H[2J[?25l[1;1H#############################################################################
+#Sorce and Header Defines
+###############################################################################
+message(STATUS "  Configuring libbiogears")
+
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/config.h.in  ${CMAKE_CURRENT_BINARY_DIR}/../generated/biogears/config.h NEWLINE_STYLE  [7;1HLF)
+
+#Biogears CDM
+add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\schema\\")
+add_source_files(CDM_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.hxx" SOURCE_GROUP "Headers\\Public\\schema\\")
+add_source_files(CDM_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.cxx" SOURCE_GROUP "Sources\\schema\\")
+
+#Biogears IO
+add_source_files(IO_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libIO/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
+add_source_files(IO_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/io REGEX "*.h" SOURCE_GROUP "Headers\\Public\\generated\\")
+add_source_files(IO_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogears/io REGEX "*.cpp" SOURCE_GROUP "Sources\\generated\\")
+add_source_files(IO_EMBEDED_HDRS LOCATION "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}" REGEX "*.hxx" SOURCE_GROUP "Headers\\[19;1H\Public\\generated\\")
+add_source_files(IO_EMBEDED_SRCS LOCATION  "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}/" REGEX "*.cxx" SOURCE_GROUP "Sourcee[21;1Hs\\generated\\")
+
+#Biogears Core
+add_source_files(CORE_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/src REGEX "*.h" SOURCE_GROUP "Headers\\Private\\")
+add_source_files(CORE_SRCS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/src REGEX "*.cpp" SOURCE_GROUP "Sources\\")
+add_source_files(CORE_GEN_SRCS LOCATION ${BIOGEARS_BINARY_DIR}/libBiogears/src REGEX "version.cpp" SOURCE_GROUP"Sources\\")
+add_source_files(CORE_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
+add_source_files(CORE_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/include REGEX "*.inl" SOURCE_GROUP "Headers\\Public\\")
+
+set(BIO_CDM_HEADERS ${CDM_HDRS} ${CDM_PUBLIC_HDRS} ${CDM_GEN_HDRS})
+set(BIO_CDM_SOURCES ${CDM_SRCS} ${CDM_GEN_SRCS})
+
+set(BIO_IO_HEADERS ${IO_HDRS} ${IO_EMBEDED_HDRS} ${IO_GEN_HDRS})
+set(BIO_IO_SOURCES ${IO_EMBEDED_SRCS} ${IO_GEN_SRCS})
+
+set(BIO_CORE_HEADERS ${CORE_HDRS} ${CORE_PUBLIC_HDRS} ${CORE_GEN_HDRS})
+set(BIO_CORE_SOURCES ${CORE_SRCS} ${CORE_GEN_SRCS})
+
+###############################################################################
+#Define Logic
+###############################################################################
+if(Biogears_BUILD_STATIC)
+  add_library(libbiogears STATIC ${BIO_CORE_SOURCES} ${BIO_CORE_HEADERS}[44;34H${BIO_CDM_HEADERS}  ${BIO_CDM_SOURCES}[45;34H${BIO_IO_HEADERS}   ${BIO_IO_SOURCES}
+  )
+  add_library(Biogears::libbiogears ALIAS libbiogears)
+  set_target_properties(libbiogears
+    PROPERTIES
+    DEFINE_SYMBOL biogears_EXPORTS
+    FOLDER "Libraries"
+    OUTPUT_NAME "biogears"
+    COMPILE_PDB_NAME "biogears"
+    PROJECT_LABEL "libbiogears"
+    DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
+<<<<<<< HEAD
+    CXX_STANDARD 14
+    BUILD_RPATH   "${Biogears_BUILD_RPATH}"
+    INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\${ORIGIN}:\${ORIGIN}/../lii[60;1Hb:\${ORIGIN}/lib">>
+=======
+    CXX_STANDARD 20
+>>>>>>> 059a0cd1 (Finished up io::Scenario required the improvment of multiple operator== and some XSD changes. Bumped C++20 to make this commit exx[64;1Htra confusing and use initializer statments in if statments while refactorign factories.)
+    )
+    add_dependencies(libbiogears hex_bindings)
+  set_target_properties(libbiogears PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
+   if(biogears_USE_OVERRIDE_CONTROL)[69;7Htarget_compile_definitions( libbiogears PRIVATE BIOGEARS_USE_OVERRIDE_CONTROL)
+   endif()
+  if(UNITTEST_biogears-core)[72;6Htarget_compile_definitions( libbiogears PUBLIC ENABLE_UNIT_TEST_API)
+  endif()
+  if(WIN32)
+    list(APPEND BIO_CPPFLAGS _SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS NOMINMAX $ENV{PARALLEL_COMPILE} )
+  elseif(CMAKE_COMPILER_IS_GNUCXX)
+    list(APPEND BIO_CPPFLAGS "-Wattributes" ${CodeSynthesis_CPPFLAGS})
+    list(APPEND BIO_LDFLAGS "-Wl,--no-as-needed" )
+    set_target_properties(libbiogears PROPERTIES LINK_FLAGS ${BIO_LDFLAGS})
+  endif()
+  ###############################################################################
+  # COMPILATION & LINKAGE MODIFICATIONS
+  ###############################################################################
+  target_compile_definitions(libbiogears PUBLIC BIO_BUILT_AS_STATIC ${BIO_CPPFLAGS_INTERFACE} $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},armv7-a>:XSD_NN[85;1HO_EXPORT>)
+  target_compile_definitions(libbiogears PRIVATE ${BIO_CPPFLAGS} )
+  target_compile_options(libbiogears PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj>[88;45HPRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>[89;45H)
+  if(Biogears_THROW_READONLY_EXCEPTIONS)[91;9Htarget_compile_definitions(libbiogears PUBLIC BIOGEARS_THROW_READONLY_EXCEPTIONS)
+  endif()
+   if(Biogears_THROW_NAN_EXCEPTIONS )[94;9Htarget_compile_definitions(libbiogears PUBLIC BIOGEARS_THROW_NAN_EXCEPTIONS )
+  endif()
+   if(Biogears_BUILD_STATIC)[97;9Htarget_compile_definitions(libbiogears PUBLIC BIOGEARS_STATIC_BUILD)
+  endif()
+  target_include_directories(libbiogears[100;7HPRIVATE  ${BIO_INCLUDE_DIR} ${BIO_PRIVATE_INCLUDE_DIR} ${BIO_GENERATED_INCLUDE_DIR}[101;17H${BIO_CDM_INCLUDE_DIR} # CDM[102;17H${BIO_CIRCUIT_INCLUDE_DIR} # Circuit[14;1H[?25h
+[103;1H
+[?2004l[?1l>[>4;m[?1049l[23;0;0t

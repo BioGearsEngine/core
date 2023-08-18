@@ -41,5 +41,15 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
+  // Factories
+  std::unique_ptr<CDM::InhalerActionData> InhalerActions::factory(const SEInhalerAction* inhalerAction)
+  {
+    if (auto inhalerConfiguration = dynamic_cast<SEInhalerConfiguration const*>(inhalerAction); inhalerConfiguration) {
+      auto inhalerConfigurationData = std::make_unique<CDM::InhalerConfigurationData>();
+      UnMarshall(*inhalerConfiguration, *inhalerConfigurationData);
+      return std::move(inhalerConfigurationData);
+    }
+    throw biogears::CommonDataModelException("InhalerActions::factory does not support the derived SEInhalerAction. If you are not a developer contact upstream for support.");
+  }
 }
 }

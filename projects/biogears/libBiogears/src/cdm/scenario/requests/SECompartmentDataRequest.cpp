@@ -115,4 +115,17 @@ void SECompartmentDataRequest::Set(const std::string& cmpt, const std::string& n
   m_Hash = 0;
 }
 //-------------------------------------------------------------------------------
+bool SECompartmentDataRequest ::operator==(SECompartmentDataRequest const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return SEDataRequest::operator==(rhs)
+    && m_Compartment == rhs.m_Compartment;
+}
+bool SECompartmentDataRequest ::operator!=(SECompartmentDataRequest const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

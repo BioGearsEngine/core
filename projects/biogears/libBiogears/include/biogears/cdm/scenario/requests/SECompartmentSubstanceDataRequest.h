@@ -29,10 +29,13 @@ public:
   SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SECompartmentSubstanceDataRequest() override;
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool Load(const CDM::CompartmentSubstanceDataRequestData& in, const SESubstanceManager& substances);
   virtual CDM::CompartmentSubstanceDataRequestData* Unload() const override = 0;
+
+  bool operator==(SECompartmentSubstanceDataRequest const&) const;
+  bool operator!=(SECompartmentSubstanceDataRequest const&) const;
 
 protected:
   virtual void Unload(CDM::CompartmentSubstanceDataRequestData& data) const;

@@ -50,6 +50,8 @@ bool SEDecimalFormat::Load(const CDM::DecimalFormatData& in)
 {
   Reset();
   if (in.DecimalFormat().present()) {
+    if (in.DecimalFormat().get() == CDM::enumDecimalFormat::Default)
+      m_Notation = DecimalNotation::Default;
     if (in.DecimalFormat().get() == CDM::enumDecimalFormat::FixedMantissa)
       m_Notation = DecimalNotation::Fixed;
     else if (in.DecimalFormat().get() == CDM::enumDecimalFormat::SignificantDigits)

@@ -81,7 +81,7 @@ void SEDataRequestManager::Clear()
   SAFE_DELETE(m_OverrideDecimalFormatting);
 }
 //-----------------------------------------------------------------------------
-bool SEDataRequestManager::Load(const CDM::DataRequestsData& in, SESubstanceManager& subMgr)
+bool SEDataRequestManager::Load(const CDM::DataRequestManagerData& in, SESubstanceManager& subMgr)
 {
   Clear();
   if (in.Filename().present())
@@ -104,14 +104,14 @@ bool SEDataRequestManager::Load(const CDM::DataRequestsData& in, SESubstanceMana
   return true;
 }
 //-----------------------------------------------------------------------------
-CDM::DataRequestsData* SEDataRequestManager::Unload() const
+CDM::DataRequestManagerData* SEDataRequestManager::Unload() const
 {
-  CDM::DataRequestsData* data = new CDM::DataRequestsData();
+  CDM::DataRequestManagerData* data = new CDM::DataRequestManagerData();
   Unload(*data);
   return data;
 }
 //-----------------------------------------------------------------------------
-void SEDataRequestManager::Unload(CDM::DataRequestsData& data) const
+void SEDataRequestManager::Unload(CDM::DataRequestManagerData& data) const
 {
   data.SamplesPerSecond(m_SamplesPerSecond);
   if (HasResultsFilename()) {
@@ -342,4 +342,22 @@ const std::vector<SEDataRequest*>& SEDataRequestManager::GetDataRequests()
 {
   return m_Requests;
 }
+//-----------------------------------------------------------------------------
+bool SEDataRequestManager::operator==(SEDataRequestManager const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_SamplesPerSecond == rhs.m_SamplesPerSecond
+    && m_Requests == rhs.m_Requests
+    && m_ResultsFile == rhs.m_ResultsFile
+    && m_WorkingDir == rhs.m_WorkingDir
+    && ((m_DefaultDecimalFormatting && rhs.m_DefaultDecimalFormatting) ? m_DefaultDecimalFormatting->operator==(*rhs.m_DefaultDecimalFormatting) : m_DefaultDecimalFormatting == rhs.m_DefaultDecimalFormatting)
+    && ((m_OverrideDecimalFormatting && rhs.m_OverrideDecimalFormatting) ? m_OverrideDecimalFormatting->operator==(*rhs.m_OverrideDecimalFormatting) : m_OverrideDecimalFormatting == rhs.m_OverrideDecimalFormatting);
+}
+bool SEDataRequestManager::operator!=(SEDataRequestManager const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

@@ -35,6 +35,9 @@ public:
   BIOGEARS_API virtual bool Load(const CDM::PhysiologyEngineStabilizationData& in);
   BIOGEARS_API virtual CDM::PhysiologyEngineStabilizationData* Unload() const;
 
+  BIOGEARS_API bool operator==(PhysiologyEngineStabilization const&) const;
+  BIOGEARS_API bool operator!=(PhysiologyEngineStabilization const&) const;
+
 protected:
   BIOGEARS_API virtual void Unload(CDM::PhysiologyEngineStabilizationData& data) const;
 
@@ -50,13 +53,16 @@ public:
 
   BIOGEARS_API virtual void CancelStabilization();
 
-  BIOGEARS_API virtual bool HasStabilizationDuration();
+  BIOGEARS_API virtual bool HasCurrentTime() const;
+  BIOGEARS_API virtual SEScalarTime& GetCurrentTime();
+
+  BIOGEARS_API virtual bool HasStabilizationDuration() const;
   BIOGEARS_API virtual SEScalarTime& GetStabilizationDuration();
 
 protected:
-  bool m_Cancelled;
+  bool m_Canceled;
   bool m_LogProgress;
-  double m_currentTime_s;
+  SEScalarTime* m_currentTime;
   std::stringstream m_ss;
 
   SEScalarTime* m_StabilizationDuration;

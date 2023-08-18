@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
-#include <biogears/cdm/patient/actions/SEActionExample.h>
+#include <biogears/cdm/patient/actions/SEExampleAction.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
@@ -218,9 +218,9 @@ public:
   SEAcuteStress* GetAcuteStress() const;
   void RemoveAcuteStress();
 
-  bool HasActionExample() const;
-  SEActionExample* GetActionExample() const;
-  void RemoveActionExample();
+  bool HasExampleAction() const;
+  SEExampleAction* GetExampleAction() const;
+  void RemoveExampleAction();
 
   bool HasAirwayObstruction() const;
   SEAirwayObstruction* GetAirwayObstruction() const;
@@ -402,7 +402,7 @@ protected:
 
   SEAcuteRespiratoryDistress* m_AcuteRespiratoryDistress;
   SEAcuteStress* m_AcuteStress;
-  SEActionExample* m_ActionExample;
+  SEExampleAction* m_ExampleAction;
   SEAirwayObstruction* m_AirwayObstruction;
   SEApnea* m_Apnea;
   SEAsthmaAttack* m_AsthmaAttack;

@@ -20,27 +20,40 @@ SEGasCompartmentDataRequest::SEGasCompartmentDataRequest(const SEDecimalFormat* 
   : SECompartmentSubstanceDataRequest(dfault)
 {
 }
-
+//-------------------------------------------------------------------------------
 SEGasCompartmentDataRequest::~SEGasCompartmentDataRequest()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SEGasCompartmentDataRequest::Load(const CDM::GasCompartmentDataRequestData& in, const SESubstanceManager& substances)
 {
   SECompartmentSubstanceDataRequest::Load(in, substances);
   return true;
 }
-
+//-------------------------------------------------------------------------------
 CDM::GasCompartmentDataRequestData* SEGasCompartmentDataRequest::Unload() const
 {
   CDM::GasCompartmentDataRequestData* data = new CDM::GasCompartmentDataRequestData();
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SEGasCompartmentDataRequest::Unload(CDM::GasCompartmentDataRequestData& data) const
 {
   SECompartmentSubstanceDataRequest::Unload(data);
 }
+//-------------------------------------------------------------------------------
+bool SEGasCompartmentDataRequest ::operator==(SEGasCompartmentDataRequest const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return SECompartmentSubstanceDataRequest::operator==(rhs);
+}
+bool SEGasCompartmentDataRequest ::operator!=(SEGasCompartmentDataRequest const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -75,7 +75,7 @@ specific language governing permissions and limitations under the License.
   </xs:complexType>
 
   <!-- @brief Fight or flight.  The body prepares to defend itself. -->
-  <xs:complexType name="ActionExample">
+  <xs:complexType name="ExampleActionData">
     <xs:complexContent>
       <xs:extension base="PatientActionData">
         <xs:sequence>

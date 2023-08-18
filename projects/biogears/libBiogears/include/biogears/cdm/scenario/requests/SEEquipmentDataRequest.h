@@ -25,7 +25,6 @@ class BIOGEARS_API SEEquipmentDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
   friend io::Scenario;
 
-
 public:
   SEEquipmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEEquipmentDataRequest();
@@ -34,6 +33,9 @@ public:
   size_t HashCode() const override;
   virtual bool Load(const CDM::EquipmentDataRequestData& in);
   virtual CDM::EquipmentDataRequestData* Unload() const override;
+
+  bool operator==(SEEquipmentDataRequest const&) const;
+  bool operator!=(SEEquipmentDataRequest const&) const;
 
 protected:
   virtual void Unload(CDM::EquipmentDataRequestData& data) const;

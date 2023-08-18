@@ -71,7 +71,7 @@ set_target_properties(libbiogears_common
   OUTPUT_NAME "biogears_common"
   PROJECT_LABEL "libbiogears_common"
   DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
-  CXX_STANDARD 14
+  CXX_STANDARD 20
   POSITION_INDEPENDENT_CODE TRUE
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   BUILD_RPATH   "${Biogears_BUILD_RPATH}"

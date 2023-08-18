@@ -31,16 +31,18 @@ namespace io {
 }
 
 class BIOGEARS_API SEScenarioInitialParameters : public Loggable {
+  friend SEScenario;
   friend io::Scenario;
 
-protected:
-  friend SEScenario;
-
+public:
   SEScenarioInitialParameters(SESubstanceManager& subMgr);
   virtual ~SEScenarioInitialParameters();
 
+  bool operator==(SEScenarioInitialParameters const&) const;
+  bool operator!=(SEScenarioInitialParameters const&) const;
+
 public:
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   bool Load(const CDM::ScenarioInitialParametersData& in);
   CDM::ScenarioInitialParametersData* Unload() const;

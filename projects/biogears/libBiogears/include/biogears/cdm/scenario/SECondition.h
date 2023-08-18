@@ -21,7 +21,7 @@ class SESubstanceManager;
 namespace io {
   class Scenario;
 }
-}//namespace biogears
+} // namespace biogears
 
 namespace biogears {
 class BIOGEARS_API SECondition : public Loggable {
@@ -37,6 +37,9 @@ public:
 
   virtual bool Load(const CDM::ConditionData& in);
   virtual CDM::ConditionData* Unload() const;
+
+  virtual bool operator==(SECondition const&) const = 0;
+  virtual bool operator!=(SECondition const&) const = 0;
 
 protected:
   void Unload(CDM::ConditionData& data) const;
@@ -66,8 +69,7 @@ inline std::ostream& operator<<(std::ostream& out, const SECondition& a)
   a.ToString(out);
   return out;
 }
-}//namespace biogears
-
+} // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API vector<biogears::SECondition*>;

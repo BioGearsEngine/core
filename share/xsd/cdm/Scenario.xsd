@@ -124,7 +124,7 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="DataRequestsData">
+  <xs:complexType name="DataRequestManagerData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
@@ -135,11 +135,12 @@ specific language governing permissions and limitations under the License.
           <xs:element name="DataRequest" type="DataRequestData" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="Filename" type="xs:string" use="optional"/>
+        <xs:attribute name="WorkingDir" type="xs:string" use="optional"/>
         <xs:attribute name="SamplesPerSecond" type="xs:double" use="optional"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="DataRequests" type="DataRequestsData"/>
+  <xs:element name="DataRequests" type="DataRequestManagerData"/>
 
   <!-- @brief  A set of instructions used to execute an engine, and write out a data file. -->
   <xs:complexType name="ScenarioData">
@@ -153,7 +154,7 @@ specific language governing permissions and limitations under the License.
             <xs:element name="InitialParameters" type="ScenarioInitialParametersData"/>
           </xs:choice>
           <xs:element name="AutoSerialization" type="ScenarioAutoSerializationData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="DataRequests" type="DataRequestsData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="DataRequests" type="DataRequestManagerData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="Action" type="ActionData" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>

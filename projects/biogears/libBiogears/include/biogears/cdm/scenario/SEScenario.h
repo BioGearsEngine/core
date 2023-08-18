@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
@@ -38,10 +37,13 @@ public:
 
   virtual ~SEScenario();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   bool Load(const CDM::ScenarioData& in);
   CDM::ScenarioData* Unload() const;
+
+  bool operator==(SEScenario const&) const;
+  bool operator!=(SEScenario const&) const;
 
 protected:
   void Unload(CDM::ScenarioData& data) const;
@@ -57,12 +59,6 @@ public:
   virtual void SetName(const std::string& name);
   virtual bool HasName() const;
   virtual void InvalidateName();
-
-  virtual const char* GetPatientFile() const;
-  virtual void SetPatientFile(const char* PatientFile);
-  virtual void SetPatientFile(const std::string& PatientFile);
-  virtual bool HasPatientFile() const;
-  virtual void InvalidatePatientFile();
 
   virtual const char* GetDescription() const;
   virtual void SetDescription(const char* desc);
@@ -99,8 +95,6 @@ protected:
   std::string m_Name;
   std::string m_Description;
   std::string m_EngineStateFile;
-  std::string m_PatientFile;
-  std::string m_workingDir;
   SEScenarioInitialParameters* m_InitialParameters;
   SEScenarioAutoSerialization* m_AutoSerialization;
   SEDataRequestManager m_DataRequestMgr;

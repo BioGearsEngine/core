@@ -48,6 +48,9 @@ public:
   virtual bool Load(const CDM::ActionData& in);
   virtual CDM::ActionData* Unload() const;
 
+  bool operator==(const SEAction& rhs) const;
+  bool operator!=(const SEAction& rhs) const;
+
 protected:
   void Unload(CDM::ActionData& data) const;
 

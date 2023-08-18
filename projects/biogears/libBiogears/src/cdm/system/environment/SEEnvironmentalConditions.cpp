@@ -645,4 +645,30 @@ void SEEnvironmentalConditions::RemoveAmbientAerosols()
   m_cAmbientAerosols.clear();
 }
 //-----------------------------------------------------------------------------
+bool SEEnvironmentalConditions::operator==(SEEnvironmentalConditions const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Name == rhs.m_Name
+    && ((m_AirDensity && rhs.m_AirDensity) ? m_AirDensity->operator==(*rhs.m_AirDensity) : m_AirDensity == rhs.m_AirDensity)
+    && ((m_AirVelocity && rhs.m_AirVelocity) ? m_AirVelocity->operator==(*rhs.m_AirVelocity) : m_AirVelocity == rhs.m_AirVelocity)
+    && ((m_AmbientTemperature && rhs.m_AmbientTemperature) ? m_AmbientTemperature->operator==(*rhs.m_AmbientTemperature) : m_AmbientTemperature == rhs.m_AmbientTemperature)
+    && ((m_AtmosphericPressure && rhs.m_AtmosphericPressure) ? m_AtmosphericPressure->operator==(*rhs.m_AtmosphericPressure) : m_AtmosphericPressure == rhs.m_AtmosphericPressure)
+    && ((m_ClothingResistance && rhs.m_ClothingResistance) ? m_ClothingResistance->operator==(*rhs.m_ClothingResistance) : m_ClothingResistance == rhs.m_ClothingResistance)
+    && ((m_Emissivity && rhs.m_Emissivity) ? m_Emissivity->operator==(*rhs.m_Emissivity) : m_Emissivity == rhs.m_Emissivity)
+    && ((m_MeanRadiantTemperature && rhs.m_MeanRadiantTemperature) ? m_MeanRadiantTemperature->operator==(*rhs.m_MeanRadiantTemperature) : m_MeanRadiantTemperature == rhs.m_MeanRadiantTemperature)
+    && ((m_RelativeHumidity && rhs.m_RelativeHumidity) ? m_RelativeHumidity->operator==(*rhs.m_RelativeHumidity) : m_RelativeHumidity == rhs.m_RelativeHumidity)
+    && ((m_RespirationAmbientTemperature && rhs.m_RespirationAmbientTemperature) ? m_RespirationAmbientTemperature->operator==(*rhs.m_RespirationAmbientTemperature) : m_RespirationAmbientTemperature == rhs.m_RespirationAmbientTemperature)
+    && m_AmbientGases == rhs.m_AmbientGases
+    && m_cAmbientGases == rhs.m_cAmbientGases
+    && m_AmbientAerosols == rhs.m_AmbientAerosols
+    && m_cAmbientAerosols == rhs.m_cAmbientAerosols
+    && &m_Substances == &rhs.m_Substances;
+}
+bool SEEnvironmentalConditions::operator!=(SEEnvironmentalConditions const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

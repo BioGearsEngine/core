@@ -84,4 +84,18 @@ size_t SEEquipmentDataRequest::HashCode() const
   }
   return m_Hash;
 }
+//-------------------------------------------------------------------------------
+bool SEEquipmentDataRequest ::operator==(SEEquipmentDataRequest const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return SEDataRequest::operator==(rhs)
+    && m_Type == rhs.m_Type;
+}
+bool SEEquipmentDataRequest ::operator!=(SEEquipmentDataRequest const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

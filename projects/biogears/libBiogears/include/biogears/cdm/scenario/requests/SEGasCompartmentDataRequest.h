@@ -32,6 +32,9 @@ public:
   virtual bool Load(const CDM::GasCompartmentDataRequestData& in, const SESubstanceManager& substances);
   virtual CDM::GasCompartmentDataRequestData* Unload() const;
 
+  bool operator==(SEGasCompartmentDataRequest const&) const;
+  bool operator!=(SEGasCompartmentDataRequest const&) const;
+
 protected:
   virtual void Unload(CDM::GasCompartmentDataRequestData& data) const;
 };

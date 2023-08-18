@@ -46,6 +46,9 @@ public:
   BIOGEARS_API virtual bool Load(const CDM::ElectroCardioGramWaveformInterpolatorData& in);
   BIOGEARS_API virtual CDM::ElectroCardioGramWaveformInterpolatorData* Unload() const;
 
+  BIOGEARS_API bool operator==(SEElectroCardioGramInterpolator const&) const;
+  BIOGEARS_API bool operator!=(SEElectroCardioGramInterpolator const&) const;
+
 protected:
   BIOGEARS_API virtual void Unload(CDM::ElectroCardioGramWaveformInterpolatorData& data) const;
 

@@ -61,6 +61,9 @@ public:
   virtual void Set(const SESubstance& substance, const char* cmpt, const char* name, const char* unit = "");
   virtual void Set(const SESubstance& substance, const std::string& cmpt, const std::string& name, const std::string& unit = "");
 
+  bool operator==(SESubstanceDataRequest const&) const;
+  bool operator!=(SESubstanceDataRequest const&) const;
+
 protected:
   std::string m_Compartment;
   const SESubstance* m_Substance;

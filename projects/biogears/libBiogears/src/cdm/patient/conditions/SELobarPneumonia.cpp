@@ -132,4 +132,19 @@ bool SELobarPneumonia::operator!=(SELobarPneumonia const& rhs) const
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
+bool SELobarPneumonia::operator==(SECondition const& rhs) const
+{
+  try {
+    auto& lobarPneumonia = dynamic_cast<SELobarPneumonia const&>(rhs);
+    return this->operator==(lobarPneumonia);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SELobarPneumonia::operator!=(SECondition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

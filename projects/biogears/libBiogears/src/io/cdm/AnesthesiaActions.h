@@ -98,6 +98,8 @@ namespace io {
     //class SEOxygenTankPressureLoss
     static void Marshall(const CDM::OxygenTankPressureLossData& in, SEOxygenTankPressureLoss& out);
     static void UnMarshall(const SEOxygenTankPressureLoss& in, CDM::OxygenTankPressureLossData& out);
+    //Factories
+    static std::unique_ptr<CDM::AnesthesiaMachineActionData> factory(const SEAnesthesiaMachineAction*);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>

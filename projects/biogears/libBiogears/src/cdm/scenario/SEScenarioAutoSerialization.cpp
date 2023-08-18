@@ -222,5 +222,23 @@ void SEScenarioAutoSerialization::InvalidateFileName()
 {
   m_FileName = "";
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool SEScenarioAutoSerialization::operator==(SEScenarioAutoSerialization const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = ((m_Period && rhs.m_Period) ? m_Period->operator==(*rhs.m_Period) : m_Period == rhs.m_Period)
+    ;equivilant &= m_PeriodTimeStamps == rhs.m_PeriodTimeStamps
+    ;equivilant &= m_AfterActions == rhs.m_AfterActions
+    ;equivilant &= m_ReloadState == rhs.m_ReloadState
+    ;equivilant &= m_Directory == rhs.m_Directory
+    ;equivilant &= m_FileName == rhs.m_FileName;
+  return equivilant;
+}
+bool SEScenarioAutoSerialization::operator!=(SEScenarioAutoSerialization const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

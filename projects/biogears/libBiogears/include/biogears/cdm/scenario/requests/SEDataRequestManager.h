@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.h>
 #include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
 
-CDM_BIND_DECL(DataRequestsData)
+CDM_BIND_DECL(DataRequestManagerData)
 
 namespace biogears {
 namespace io {
@@ -39,11 +39,14 @@ public:
 
   void Clear();
 
-  bool Load(const CDM::DataRequestsData& in, SESubstanceManager& subMgr);
-  CDM::DataRequestsData* Unload() const;
+  bool Load(const CDM::DataRequestManagerData& in, SESubstanceManager& subMgr);
+  CDM::DataRequestManagerData* Unload() const;
+
+  bool operator==(SEDataRequestManager const&) const;
+  bool operator!=(SEDataRequestManager const&) const;
 
 protected:
-  void Unload(CDM::DataRequestsData& data) const;
+  void Unload(CDM::DataRequestManagerData& data) const;
 
 public:
   bool HasResultsFilename() const;

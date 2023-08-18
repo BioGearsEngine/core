@@ -44,6 +44,9 @@ public:
   virtual bool Load(const char* file);
   virtual bool Load(const std::string& file);
 
+  bool operator==(PhysiologyEngineConfiguration const&) const;
+  bool operator!=(PhysiologyEngineConfiguration const&) const;
+
   virtual bool HasECGInterpolator() const;
   virtual SEElectroCardioGramInterpolator& GetECGInterpolator();
   virtual const SEElectroCardioGramInterpolator* GetECGInterpolator() const;

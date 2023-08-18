@@ -43,7 +43,7 @@ specific language governing permissions and limitations under the License.
           <!-- Stabilization criteria should not be it's own file.. right? just put it in configuration file -->
           <xs:element name="CircuitManager" type="CircuitManagerData" minOccurs="0" maxOccurs="1"/>
           <!--<< @brief Circuits used by the engine. -->
-          <xs:element name="DataRequests" type="DataRequestsData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="DataRequests" type="DataRequestManagerData" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

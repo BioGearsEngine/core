@@ -120,4 +120,17 @@ void SESerializeState::InvalidateFilename()
   m_Filename = "";
 }
 //-----------------------------------------------------------------------------
+bool SESerializeState::operator==(SESerializeState const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Filename == rhs.m_Filename
+    && m_Type == m_Type;
+}
+bool SESerializeState::operator!=(SESerializeState const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

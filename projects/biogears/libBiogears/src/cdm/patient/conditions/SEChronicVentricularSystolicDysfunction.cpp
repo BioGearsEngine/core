@@ -71,4 +71,19 @@ bool SEChronicVentricularSystolicDysfunction::operator!=(SEChronicVentricularSys
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
+bool SEChronicVentricularSystolicDysfunction::operator==(SECondition const& rhs) const
+{
+  try {
+    auto& chronicVentricularSystolicDysfunction = dynamic_cast<SEChronicVentricularSystolicDysfunction const&>(rhs);
+    return this->operator==(chronicVentricularSystolicDysfunction);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SEChronicVentricularSystolicDysfunction::operator!=(SECondition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }
