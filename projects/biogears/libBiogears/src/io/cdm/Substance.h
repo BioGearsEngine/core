@@ -18,14 +18,14 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Substance.hxx>
 
-#define CDM_SUBSTANCE_UNMARSHAL_HELPER(in, out, func)                                \
-  if (in.m_##func) {                                                                 \
+#define CDM_SUBSTANCE_UNMARSHAL_HELPER(in, out, func)                                 \
+  if (in.m_##func && in.m_##func->IsValid()) {                                       \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Substance::UnMarshall(*in.m_##func, out.func());                             \
+    io::Substance::UnMarshall(*in.m_##func, out.func());                              \
   }
 
 #define CDM_OPTIONAL_SUBSTANCE_UNMARSHAL_HELPER(in, out, func) \
-  if (in.m_##func) {                                           \
+  if (in.m_##func && in.m_##func->IsValid()) {                \
     io::Substance::UnMarshall(*in.m_##func, out.func());       \
   }
 
@@ -34,7 +34,7 @@ namespace biogears {
 class SESubstanceManager;
 class SESubstanceAerosolization;
 class SESubstancePharmacokinetics;
-class SESubstancePhysicochemicals;
+class SESubstancePhysicochemical;
 class SESubstanceTissuePharmacokinetics;
 class SESubstancePharmacodynamics;
 class SESubstanceClearance;
@@ -65,8 +65,8 @@ namespace io {
     static void Marshall(const CDM::SubstancePharmacokineticsData& in, SESubstancePharmacokinetics& out);
     static void UnMarshall(const SESubstancePharmacokinetics& in, CDM::SubstancePharmacokineticsData& out);
     //class SESubstancePhysicochemical
-    static void Marshall(const CDM::SubstancePhysicochemicalData& in, SESubstancePhysicochemicals& out);
-    static void UnMarshall(const SESubstancePhysicochemicals& in, CDM::SubstancePhysicochemicalData& out);
+    static void Marshall(const CDM::SubstancePhysicochemicalData& in, SESubstancePhysicochemical& out);
+    static void UnMarshall(const SESubstancePhysicochemical& in, CDM::SubstancePhysicochemicalData& out);
     //class SESubstanceTissuePharmacokinetics
     static void Marshall(const CDM::SubstanceTissuePharmacokineticsData& in, SESubstanceTissuePharmacokinetics& out);
     static void UnMarshall(const SESubstanceTissuePharmacokinetics& in, CDM::SubstanceTissuePharmacokineticsData& out);
@@ -97,7 +97,7 @@ namespace io {
     static void Copy(const SESubstanceCompound& in, const SESubstanceManager& subMgr, SESubstanceCompound& out);
     static void Copy(const SESubstanceFraction& in, SESubstanceFraction& out);
     static void Copy(const SESubstanceConcentration& in, SESubstanceConcentration& out);
-  };
+  };    
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
   void Substance::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)

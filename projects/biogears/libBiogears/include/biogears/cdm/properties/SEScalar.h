@@ -40,7 +40,7 @@ protected:
 public:
   friend io::Property;
   SEScalar();
-  SEScalar(double);
+  SEScalar(double v, bool ro=false);
 
   virtual ~SEScalar();
 
@@ -99,6 +99,8 @@ public:
 
   static const std::string unitless;
 
+  SEScalar& operator=(const SEScalar& rhs);
+
   bool operator<(const SEScalar& rhs) const;
   bool operator<=(const SEScalar& rhs) const;
   bool operator>(const SEScalar& rhs) const;
@@ -115,6 +117,7 @@ public:
   SEScalar& operator/=(const SEScalar& rhs);
   SEScalar operator*(const SEScalar& rhs) const;
   SEScalar& operator*=(const SEScalar& rhs);
+
 
 protected:
   virtual void Unload(CDM::ScalarData& s) const;

@@ -18,6 +18,7 @@ namespace biogears {
 class BIOGEARS_API SEScalarFraction : public SEScalar {
 
 public:
+  SEScalarFraction(double value, bool readOnly = false);
   SEScalarFraction();
 
   virtual ~SEScalarFraction(); 

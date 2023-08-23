@@ -39,7 +39,7 @@ NoUnit::~NoUnit()
 {
 }
 //-------------------------------------------------------------------------------
-SEScalar::SEScalar(double v)
+SEScalar::SEScalar(double v, bool ro)
   : SEScalar()
 
 {
@@ -325,6 +325,17 @@ bool SEScalar::IsZero(double d, double limit)
   if (d < limit && d > -limit)
     return true;
   return false;
+}
+//-------------------------------------------------------------------------------
+SEScalar& SEScalar::operator=(const SEScalar& rhs)
+{
+  if (this == &rhs)
+    return *this;
+
+  this->m_value = rhs.m_value;
+  this->m_readOnly = rhs.m_readOnly;
+
+  return *this;
 }
 //-------------------------------------------------------------------------------
 bool SEScalar::operator<(const SEScalar& rhs) const

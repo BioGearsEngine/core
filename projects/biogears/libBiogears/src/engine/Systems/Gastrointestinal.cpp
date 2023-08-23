@@ -857,7 +857,7 @@ void Gastrointestinal::ProcessDrugCAT()
     const double fBlood = 1.0 / 8.0;
     const double bodyMass_g = m_data.GetPatient().GetWeight(MassUnit::g); //Used to estimate enterocyte volume, assuming density 1.0 g/mL
     //Physiochemical data
-    const SESubstancePhysicochemicals* subData = sub->GetPK()->GetPhysicochemicals();
+    const SESubstancePhysicochemical* subData = sub->GetPK()->GetPhysicochemicals();
     const CDM::enumSubstanceIonicState ionState = sub->GetPK()->GetPhysicochemicals()->GetIonicState();
     const double hydrogenBondCount = subData->GetHydrogenBondCount();
     const double polarSurfaceArea = subData->GetPolarSurfaceArea();

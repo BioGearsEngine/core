@@ -102,14 +102,14 @@ bool SESubstancePharmacokinetics::HasPhysicochemicals() const
   return m_Physicochemicals == nullptr ? false : m_Physicochemicals->IsValid();
 }
 //-----------------------------------------------------------------------------
-SESubstancePhysicochemicals& SESubstancePharmacokinetics::GetPhysicochemicals()
+SESubstancePhysicochemical& SESubstancePharmacokinetics::GetPhysicochemicals()
 {
   if (m_Physicochemicals == nullptr)
-    m_Physicochemicals = new SESubstancePhysicochemicals(GetLogger());
+    m_Physicochemicals = new SESubstancePhysicochemical(GetLogger());
   return *m_Physicochemicals;
 }
 //-----------------------------------------------------------------------------
-const SESubstancePhysicochemicals* SESubstancePharmacokinetics::GetPhysicochemicals() const
+const SESubstancePhysicochemical* SESubstancePharmacokinetics::GetPhysicochemicals() const
 {
   return m_Physicochemicals;
 }

@@ -32,10 +32,14 @@ class SEScalarFraction;
 namespace io {
   class Substance;
 }
-enum class RenalDynamic { Clearance,
-                          Regulation };
+enum class RenalDynamic {
+  Clearance,
+  Regulation
+};
+
 class BIOGEARS_API SESubstanceClearance : public Loggable {
   friend io::Substance;
+
 public:
   SESubstanceClearance(Logger* logger);
   virtual ~SESubstanceClearance();
@@ -48,6 +52,7 @@ public:
 
   virtual bool Load(const CDM::SubstanceClearanceData& in);
   virtual CDM::SubstanceClearanceData* Unload() const;
+
 public:
   virtual bool HasSystemic() const { return m_hasSystemic; }
   virtual void SetSystemic(bool b) { m_hasSystemic = b; }
@@ -124,13 +129,12 @@ public:
   virtual bool HasSystemicClearance() const;
   virtual SEScalarVolumePerTimeMass& GetSystemicClearance();
   virtual double GetSystemicClearance(const VolumePerTimeMassUnit& unit) const;
-    
-  bool operator==( const SESubstanceClearance& rhs) const;
-  bool operator!=( const SESubstanceClearance& rhs) const;
+
+  bool operator==(const SESubstanceClearance& rhs) const;
+  bool operator!=(const SESubstanceClearance& rhs) const;
 
 protected:
   virtual void Unload(CDM::SubstanceClearanceData& data) const;
-
 
 protected:
   bool m_hasSystemic;

@@ -221,8 +221,8 @@ protected:
   SEScalarInversePressure* m_SolubilityCoefficient;
 
   SESubstanceClearance* m_Clearance;
-  SESubstancePharmacokinetics* m_PK;
-  SESubstancePharmacodynamics* m_PD;
+  SESubstancePharmacokinetics* m_Pharmacokinetics;
+  SESubstancePharmacodynamics* m_Pharmacodynamics;
 };
 } //namespace biogears
 

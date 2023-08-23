@@ -121,9 +121,9 @@ const SEScalar* SESubstancePharmacodynamics::GetScalar(const char* name)
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name)
 {
-  //For modifiers that use SEPharmacodynamicModifier type, assuming request will be passed as "HeartRateModifer-EMax"
-  //Search to see if modifier name is a substring of request, then pass name to SEPharmacodynamicModifier::GetScalar,
-  //which will search for the subrequest (EMax, EC50)
+  // For modifiers that use SEPharmacodynamicModifier type, assuming request will be passed as "HeartRateModifer-EMax"
+  // Search to see if modifier name is a substring of request, then pass name to SEPharmacodynamicModifier::GetScalar,
+  // which will search for the subrequest (EMax, EC50)
   if (name.compare("EMaxShapeParameter") == 0)
     return &GetEMaxShapeParameter();
   if (name.compare("AntibacterialEffect") == 0)
@@ -184,7 +184,7 @@ bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData&
   GetAntibacterialEffect().Load(in.AntibacterialEffect());
   GetEffectSiteRateConstant().Load(in.EffectSiteRateConstant());
 
-  //Set up map (Antibiotic effect not added to modifier list because it is implemented different from other modifiers)
+  // Set up map (Antibiotic effect not added to modifier list because it is implemented different from other modifiers)
   m_Modifiers.clear();
   m_Modifiers["Bronchodilation"] = m_Bronchodilation;
   m_Modifiers["CentralNervous"] = m_CentralNervousModifier;
@@ -609,10 +609,17 @@ std::map<std::string, SEPharmacodynamicModifier*> SESubstancePharmacodynamics::G
   return m_Modifiers;
 }
 
-SEPharmacodynamicModifier::SEPharmacodynamicModifier()
+SEPharmacodynamicModifier::SEPharmacodynamicModifier(SEScalarMassPerVolume const& ec50, SEScalarFraction const& max)
+  : m_EC50(nullptr)
+  , m_EMax(nullptr)
 {
-  m_EMax = nullptr;
-  m_EC50 = nullptr;
+  GetEMax() = max;
+  GetEC50() = ec50;
+}
+SEPharmacodynamicModifier::SEPharmacodynamicModifier()
+  : m_EC50(nullptr)
+  , m_EMax(nullptr)
+{
 }
 //-----------------------------------------------------------------------------
 SEPharmacodynamicModifier::~SEPharmacodynamicModifier()
@@ -717,7 +724,12 @@ double SEPharmacodynamicModifier::GetEC50(const MassPerVolumeUnit& unit) const
   return m_EC50->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
-//-------------------------------------------------------------------------------
+void SEPharmacodynamicModifier::Set(SEScalarFraction const& eMax, SEScalarMassPerVolume const& ec50)
+{
+  this->GetEMax() = eMax;
+  this->GetEC50() = ec50;
+}
+//-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::operator==(const SESubstancePharmacodynamics& rhs) const
 {
   bool equivilant = (m_AntibacterialEffect && rhs.m_AntibacterialEffect) ? m_AntibacterialEffect->operator==(*rhs.m_AntibacterialEffect) : m_AntibacterialEffect == rhs.m_AntibacterialEffect;
@@ -740,7 +752,7 @@ bool SESubstancePharmacodynamics::operator==(const SESubstancePharmacodynamics& 
   equivilant &= (m_EffectSiteRateConstant && rhs.m_EffectSiteRateConstant) ? m_EffectSiteRateConstant->operator==(*rhs.m_EffectSiteRateConstant) : m_EffectSiteRateConstant == rhs.m_EffectSiteRateConstant;
   if (equivilant) {
     for (auto& pair : m_Modifiers) {
-      //auto lh = m_TissueKinetics.find(pair.first);
+      // auto lh = m_TissueKinetics.find(pair.first);
       auto rh = rhs.m_Modifiers.find(pair.first);
       if (rh != rhs.m_Modifiers.end()) {
         equivilant &= (pair.second && rh->second) ? *pair.second == *rh->second : pair.second == rh->second;

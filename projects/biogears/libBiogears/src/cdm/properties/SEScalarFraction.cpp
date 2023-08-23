@@ -13,6 +13,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 
 namespace biogears {
+SEScalarFraction::SEScalarFraction( double value, bool readOnly)
+  : SEScalar(value, readOnly)
+{
+}
+//-------------------------------------------------------------------------------
 SEScalarFraction::SEScalarFraction()
   : SEScalar()
 {

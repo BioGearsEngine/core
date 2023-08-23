@@ -790,7 +790,7 @@ void Drugs::CalculatePartitionCoefficients()
       if (!sub->GetPK().HasPhysicochemicals())
         continue;
 
-      SESubstancePhysicochemicals& pk = sub->GetPK().GetPhysicochemicals();
+      SESubstancePhysicochemical& pk = sub->GetPK().GetPhysicochemicals();
       CDM::enumSubstanceIonicState::value IonicState = pk.GetIonicState();
       double pKA1 = pk.GetPrimaryPKA().GetValue();
       double pKA2 = 0.0; //Only for zwitterions

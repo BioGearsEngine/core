@@ -38,8 +38,8 @@ SEScalarQuantity<Unit>::SEScalarQuantity(const SEScalarQuantity& obj)
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
-SEScalarQuantity<Unit>::SEScalarQuantity(double d, const Unit& u)
-  : SEUnitScalar()
+SEScalarQuantity<Unit>::SEScalarQuantity(double d, const Unit& u, bool ro)
+  : SEUnitScalar(ro)
   , m_unit(nullptr)
 {
   SetValue(d, u);
@@ -361,6 +361,18 @@ auto SEScalarQuantity<Unit>::Divide(const SEScalar& s) -> SEScalarQuantity&
   return *this;
 }
 //-------------------------------------------------------------------------------
+template <typename Unit>
+auto SEScalarQuantity<Unit>::operator=(const SEScalarQuantity& rhs) -> SEScalarQuantity&
+{
+  if (this == &rhs)
+    return *this;
+
+    this->SEScalar::operator=(rhs);
+    this->m_unit = rhs.m_unit;
+
+    return *this;
+}
+  //-------------------------------------------------------------------------------
 template <typename Unit>
 auto SEScalarQuantity<Unit>::DivideValue(double d) -> SEScalarQuantity&
 {

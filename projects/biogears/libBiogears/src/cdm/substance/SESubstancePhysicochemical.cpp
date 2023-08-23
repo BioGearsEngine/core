@@ -11,11 +11,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/substance/SESubstancePhysicochemicals.h>
+#include <biogears/cdm/substance/SESubstancePhysicochemical.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
-SESubstancePhysicochemicals::SESubstancePhysicochemicals(Logger* logger)
+SESubstancePhysicochemical::SESubstancePhysicochemical(Logger* logger)
   : Loggable(logger)
 {
   m_AcidDissociationConstants.clear();
@@ -28,12 +28,12 @@ SESubstancePhysicochemicals::SESubstancePhysicochemicals(Logger* logger)
   m_PolarSurfaceArea = nullptr;
 }
 //-----------------------------------------------------------------------------
-SESubstancePhysicochemicals::~SESubstancePhysicochemicals()
+SESubstancePhysicochemical::~SESubstancePhysicochemical()
 {
   Clear();
 }
 //-----------------------------------------------------------------------------
-void SESubstancePhysicochemicals::Clear()
+void SESubstancePhysicochemical::Clear()
 {
   m_AcidDissociationConstants.clear();
   m_BindingProtein = (CDM::enumSubstanceBindingProtein::value)-1;
@@ -45,7 +45,7 @@ void SESubstancePhysicochemicals::Clear()
   SAFE_DELETE(m_PolarSurfaceArea);
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::IsValid() const
+bool SESubstancePhysicochemical::IsValid() const
 {
   if (!HasPrimaryPKA())
     return false;
@@ -62,12 +62,12 @@ bool SESubstancePhysicochemicals::IsValid() const
   return true;
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstancePhysicochemicals::GetScalar(const char* name)
+const SEScalar* SESubstancePhysicochemical::GetScalar(const char* name)
 {
   return GetScalar(std::string{ name });
 }
 //-----------------------------------------------------------------------------
-const SEScalar* SESubstancePhysicochemicals::GetScalar(const std::string& name)
+const SEScalar* SESubstancePhysicochemical::GetScalar(const std::string& name)
 {
   if (name.compare("PrimaryPKA") == 0)
     return &GetPrimaryPKA();
@@ -87,7 +87,7 @@ const SEScalar* SESubstancePhysicochemicals::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::Load(const CDM::SubstancePhysicochemicalData& in)
+bool SESubstancePhysicochemical::Load(const CDM::SubstancePhysicochemicalData& in)
 {
   Clear();
 
@@ -108,7 +108,7 @@ bool SESubstancePhysicochemicals::Load(const CDM::SubstancePhysicochemicalData& 
   return true;
 }
 //-----------------------------------------------------------------------------
-CDM::SubstancePhysicochemicalData* SESubstancePhysicochemicals::Unload() const
+CDM::SubstancePhysicochemicalData* SESubstancePhysicochemical::Unload() const
 {
   if (!IsValid())
     return nullptr;
@@ -117,7 +117,7 @@ CDM::SubstancePhysicochemicalData* SESubstancePhysicochemicals::Unload() const
   return data;
 }
 //-----------------------------------------------------------------------------
-void SESubstancePhysicochemicals::Unload(CDM::SubstancePhysicochemicalData& data) const
+void SESubstancePhysicochemical::Unload(CDM::SubstancePhysicochemicalData& data) const
 {
   for (auto pKa : m_AcidDissociationConstants) {
     data.AcidDissociationConstant().push_back(std::unique_ptr<CDM::ScalarData>(pKa->Unload()));
@@ -138,11 +138,11 @@ void SESubstancePhysicochemicals::Unload(CDM::SubstancePhysicochemicalData& data
     data.PolarSurfaceArea(std::unique_ptr<CDM::ScalarData>(m_PolarSurfaceArea->Unload()));
 };
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::HasPrimaryPKA() const
+bool SESubstancePhysicochemical::HasPrimaryPKA() const
 {
   return (!m_AcidDissociationConstants.empty());
 }
-SEScalar& SESubstancePhysicochemicals::GetPrimaryPKA()
+SEScalar& SESubstancePhysicochemical::GetPrimaryPKA()
 {
   if (m_AcidDissociationConstants.empty()) {
     SEScalar* pKA1 = new SEScalar();
@@ -150,18 +150,18 @@ SEScalar& SESubstancePhysicochemicals::GetPrimaryPKA()
   }
   return *m_AcidDissociationConstants[0];
 }
-double SESubstancePhysicochemicals::GetPrimaryPKA() const
+double SESubstancePhysicochemical::GetPrimaryPKA() const
 {
   if (m_AcidDissociationConstants.empty())
     return SEScalar::dNaN();
   return m_AcidDissociationConstants[0]->GetValue();
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::HasSecondaryPKA() const
+bool SESubstancePhysicochemical::HasSecondaryPKA() const
 {
   return m_AcidDissociationConstants.size() < 2 ? false : true;
 }
-SEScalar& SESubstancePhysicochemicals::GetSecondaryPKA()
+SEScalar& SESubstancePhysicochemical::GetSecondaryPKA()
 {
   if (m_AcidDissociationConstants.size() < 2) {
     SEScalar* pKA2 = new SEScalar();
@@ -169,92 +169,92 @@ SEScalar& SESubstancePhysicochemicals::GetSecondaryPKA()
   }
   return *m_AcidDissociationConstants[1];
 }
-double SESubstancePhysicochemicals::GetSecondaryPKA() const
+double SESubstancePhysicochemical::GetSecondaryPKA() const
 {
   if (m_AcidDissociationConstants.size()<2)
     return SEScalar::dNaN();
   return m_AcidDissociationConstants[1]->GetValue();
 }
 ////-----------------------------------------------------------------------------
-CDM::enumSubstanceBindingProtein::value SESubstancePhysicochemicals::GetBindingProtein() const
+CDM::enumSubstanceBindingProtein::value SESubstancePhysicochemical::GetBindingProtein() const
 {
   return m_BindingProtein;
 }
-void SESubstancePhysicochemicals::SetBindingProtein(CDM::enumSubstanceBindingProtein::value protein)
+void SESubstancePhysicochemical::SetBindingProtein(CDM::enumSubstanceBindingProtein::value protein)
 {
   m_BindingProtein = protein;
 }
-bool SESubstancePhysicochemicals::HasBindingProtein() const
+bool SESubstancePhysicochemical::HasBindingProtein() const
 {
   return m_BindingProtein == ((CDM::enumSubstanceBindingProtein::value)-1) ? false : true;
 }
-void SESubstancePhysicochemicals::InvalidateBindingProtein()
+void SESubstancePhysicochemical::InvalidateBindingProtein()
 {
   m_BindingProtein = (CDM::enumSubstanceBindingProtein::value)-1;
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::HasBloodPlasmaRatio() const
+bool SESubstancePhysicochemical::HasBloodPlasmaRatio() const
 {
   return (m_BloodPlasmaRatio == nullptr) ? false : m_BloodPlasmaRatio->IsValid();
 }
-SEScalar& SESubstancePhysicochemicals::GetBloodPlasmaRatio()
+SEScalar& SESubstancePhysicochemical::GetBloodPlasmaRatio()
 {
   if (m_BloodPlasmaRatio == nullptr)
     m_BloodPlasmaRatio = new SEScalar();
   return *m_BloodPlasmaRatio;
 }
-double SESubstancePhysicochemicals::GetBloodPlasmaRatio() const
+double SESubstancePhysicochemical::GetBloodPlasmaRatio() const
 {
   if (m_BloodPlasmaRatio == nullptr)
     return SEScalar::dNaN();
   return m_BloodPlasmaRatio->GetValue();
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::HasFractionUnboundInPlasma() const
+bool SESubstancePhysicochemical::HasFractionUnboundInPlasma() const
 {
   return (m_FractionUnboundInPlasma == nullptr) ? false : m_FractionUnboundInPlasma->IsValid();
 }
-SEScalarFraction& SESubstancePhysicochemicals::GetFractionUnboundInPlasma()
+SEScalarFraction& SESubstancePhysicochemical::GetFractionUnboundInPlasma()
 {
   if (m_FractionUnboundInPlasma == nullptr)
     m_FractionUnboundInPlasma = new SEScalarFraction();
   return *m_FractionUnboundInPlasma;
 }
-double SESubstancePhysicochemicals::GetFractionUnboundInPlasma() const
+double SESubstancePhysicochemical::GetFractionUnboundInPlasma() const
 {
   if (m_FractionUnboundInPlasma == nullptr)
     return SEScalar::dNaN();
   return m_FractionUnboundInPlasma->GetValue();
 }
 //-----------------------------------------------------------------------------
-CDM::enumSubstanceIonicState::value SESubstancePhysicochemicals::GetIonicState() const
+CDM::enumSubstanceIonicState::value SESubstancePhysicochemical::GetIonicState() const
 {
   return m_IonicState;
 }
-void SESubstancePhysicochemicals::SetIonicState(CDM::enumSubstanceIonicState::value state)
+void SESubstancePhysicochemical::SetIonicState(CDM::enumSubstanceIonicState::value state)
 {
   m_IonicState = state;
 }
-bool SESubstancePhysicochemicals::HasIonicState() const
+bool SESubstancePhysicochemical::HasIonicState() const
 {
   return m_IonicState == ((CDM::enumSubstanceIonicState::value)-1) ? false : true;
 }
-void SESubstancePhysicochemicals::InvalidateIonicState()
+void SESubstancePhysicochemical::InvalidateIonicState()
 {
   m_IonicState = (CDM::enumSubstanceIonicState::value)-1;
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::HasLogP() const
+bool SESubstancePhysicochemical::HasLogP() const
 {
   return (m_LogP == nullptr) ? false : m_LogP->IsValid();
 }
-SEScalar& SESubstancePhysicochemicals::GetLogP()
+SEScalar& SESubstancePhysicochemical::GetLogP()
 {
   if (m_LogP == nullptr)
     m_LogP = new SEScalar();
   return *m_LogP;
 }
-double SESubstancePhysicochemicals::GetLogP() const
+double SESubstancePhysicochemical::GetLogP() const
 {
   if (m_LogP == nullptr)
     return SEScalar::dNaN();
@@ -262,34 +262,34 @@ double SESubstancePhysicochemicals::GetLogP() const
 }
 
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::HasHydrogenBondCount() const
+bool SESubstancePhysicochemical::HasHydrogenBondCount() const
 {
   return (m_HydrogenBondCount == nullptr) ? false : m_HydrogenBondCount->IsValid();
 }
-SEScalar& SESubstancePhysicochemicals::GetHydrogenBondCount()
+SEScalar& SESubstancePhysicochemical::GetHydrogenBondCount()
 {
   if (m_HydrogenBondCount == nullptr)
     m_HydrogenBondCount = new SEScalar();
   return *m_HydrogenBondCount;
 }
-double SESubstancePhysicochemicals::GetHydrogenBondCount() const
+double SESubstancePhysicochemical::GetHydrogenBondCount() const
 {
   if (m_HydrogenBondCount == nullptr)
     return SEScalar::dNaN();
   return m_HydrogenBondCount->GetValue();
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::HasPolarSurfaceArea() const
+bool SESubstancePhysicochemical::HasPolarSurfaceArea() const
 {
   return (m_PolarSurfaceArea == nullptr) ? false : m_PolarSurfaceArea->IsValid();
 }
-SEScalar& SESubstancePhysicochemicals::GetPolarSurfaceArea()
+SEScalar& SESubstancePhysicochemical::GetPolarSurfaceArea()
 {
   if (m_PolarSurfaceArea == nullptr)
     m_PolarSurfaceArea = new SEScalar();
   return *m_PolarSurfaceArea;
 }
-double SESubstancePhysicochemicals::GetPolarSurfaceArea() const
+double SESubstancePhysicochemical::GetPolarSurfaceArea() const
 {
   if (m_PolarSurfaceArea == nullptr)
     return SEScalar::dNaN();
@@ -297,14 +297,9 @@ double SESubstancePhysicochemicals::GetPolarSurfaceArea() const
 }
 
 //-------------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::operator==( const SESubstancePhysicochemicals& rhs) const
+bool SESubstancePhysicochemical::operator==( const SESubstancePhysicochemical& rhs) const
 {
-  /*
-    std::vector<SEScalar*> m_AcidDissociationConstants;
 
-
-};
-  */
 bool equivilant = m_BindingProtein == rhs.m_BindingProtein;
   equivilant &= m_IonicState == rhs.m_IonicState;
   equivilant &= (m_BloodPlasmaRatio && rhs.m_BloodPlasmaRatio) ? m_BloodPlasmaRatio->operator==(*rhs.m_BloodPlasmaRatio) : m_BloodPlasmaRatio == rhs.m_BloodPlasmaRatio;
@@ -323,7 +318,7 @@ bool equivilant = m_BindingProtein == rhs.m_BindingProtein;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SESubstancePhysicochemicals::operator!=( const SESubstancePhysicochemicals& rhs) const
+bool SESubstancePhysicochemical::operator!=( const SESubstancePhysicochemical& rhs) const
 {
   return !(*this == rhs);
 }
