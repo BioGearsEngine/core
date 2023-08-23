@@ -294,6 +294,7 @@ bool SESubstanceClearance::HasCellBirthRate() const
 SEScalarFrequency& SESubstanceClearance::GetCellBirthRate()
 {
   if (m_CellBirthRate == nullptr)
+    m_hasCellular = true;
     m_CellBirthRate = new SEScalarFrequency();
   return *m_CellBirthRate;
 }
@@ -314,6 +315,7 @@ bool SESubstanceClearance::HasCellDeathRate() const
 SEScalarFrequency& SESubstanceClearance::GetCellDeathRate()
 {
   if (m_CellDeathRate == nullptr)
+    m_hasCellular = true;
     m_CellDeathRate = new SEScalarFrequency();
   return *m_CellDeathRate;
 }

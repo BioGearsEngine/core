@@ -24,12 +24,12 @@ namespace biogears {
 namespace io {
   class Substance;
 }
-class BIOGEARS_API SESubstancePhysicochemicals : public Loggable {
+class BIOGEARS_API SESubstancePhysicochemical : public Loggable {
   friend io::Substance;
 
 public:
-  SESubstancePhysicochemicals(Logger* logger);
-  virtual ~SESubstancePhysicochemicals();
+  SESubstancePhysicochemical(Logger* logger);
+  virtual ~SESubstancePhysicochemical();
 
   virtual void Clear();
   virtual bool IsValid() const;
@@ -78,8 +78,8 @@ public:
   virtual SEScalar& GetPolarSurfaceArea();
   virtual double GetPolarSurfaceArea() const;       
   
-  bool operator==( const SESubstancePhysicochemicals& rhs) const;
-  bool operator!=( const SESubstancePhysicochemicals& rhs) const;
+  bool operator==( const SESubstancePhysicochemical& rhs) const;
+  bool operator!=( const SESubstancePhysicochemical& rhs) const;
 
 protected:
   virtual void Unload(CDM::SubstancePhysicochemicalData& data) const;

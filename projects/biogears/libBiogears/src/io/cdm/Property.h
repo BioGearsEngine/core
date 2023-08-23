@@ -18,10 +18,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+//Question: To Serialize Invalid units or not to Serialize?
+//          TO Throw an exception when a member is invalid?
 #define CDM_PROPERTY_UNMARSHAL_HELPER(in, out, func)                                 \
   if (in.m_##func && in.m_##func->IsValid()) {                                       \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Property::UnMarshall(*in.m_##func, out.func());                              \
+  } else if (in.m_##func && !in.m_##func->IsValid()) {                               \
+     throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
   }
 
 #define CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, func) \

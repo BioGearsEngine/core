@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class BIOGEARS_API SEUnitScalar : public SEScalar {
 public:
-  SEUnitScalar();
+  SEUnitScalar(bool ro = false);
   SEUnitScalar(const SEUnitScalar&);
 
   ~SEUnitScalar() override;
@@ -27,7 +27,7 @@ public:
   virtual const CCompoundUnit* GetUnit() const = 0;
   virtual const CCompoundUnit* GetCompoundUnit(const char* unit) const = 0;
   virtual const CCompoundUnit* GetCompoundUnit(const std::string& unit) const = 0;
-  virtual double GetValue() const override ;
+  virtual double GetValue() const override;
   virtual double GetValue(const char* unit) const = 0;
   virtual double GetValue(const std::string& unit) const = 0;
 
@@ -35,7 +35,7 @@ public:
   virtual SEUnitScalar& IncrementValue(double d, const std::string& unit) = 0;
   virtual SEUnitScalar& DecrementValue(double d, const char* unit) = 0;
   virtual SEUnitScalar& DecrementValue(double d, const std::string& unit) = 0;
-  
+
   bool operator==(const SEUnitScalar&) const;
   bool operator!=(const SEUnitScalar&) const;
 };

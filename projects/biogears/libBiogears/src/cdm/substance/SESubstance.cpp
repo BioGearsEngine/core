@@ -63,8 +63,8 @@ SESubstance::SESubstance(Logger* logger)
   m_RelativeDiffusionCoefficient = nullptr;
 
   m_Clearance = nullptr;
-  m_PK = nullptr;
-  m_PD = nullptr;
+  m_Pharmacokinetics = nullptr;
+  m_Pharmacodynamics = nullptr;
 }
 //-----------------------------------------------------------------------------
 SESubstance::~SESubstance()
@@ -102,8 +102,8 @@ void SESubstance::Clear()
 
   SAFE_DELETE(m_Aerosolization);
   SAFE_DELETE(m_Clearance);
-  SAFE_DELETE(m_PK);
-  SAFE_DELETE(m_PD);
+  SAFE_DELETE(m_Pharmacokinetics);
+  SAFE_DELETE(m_Pharmacodynamics);
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstance::GetScalar(const char* name)
@@ -307,9 +307,9 @@ void SESubstance::Unload(CDM::SubstanceData& data) const
   if (HasClearance())
     data.Clearance(std::unique_ptr<CDM::SubstanceClearanceData>(m_Clearance->Unload()));
   if (HasPK())
-    data.Pharmacokinetics(std::unique_ptr<CDM::SubstancePharmacokineticsData>(m_PK->Unload()));
+    data.Pharmacokinetics(std::unique_ptr<CDM::SubstancePharmacokineticsData>(m_Pharmacokinetics->Unload()));
   if (HasPD())
-    data.Pharmacodynamics(std::unique_ptr<CDM::SubstancePharmacodynamicsData>(m_PD->Unload()));
+    data.Pharmacodynamics(std::unique_ptr<CDM::SubstancePharmacodynamicsData>(m_Pharmacodynamics->Unload()));
 };
 //-----------------------------------------------------------------------------
 std::string SESubstance::GetName() const
@@ -808,46 +808,46 @@ void SESubstance::RemoveClearance()
 //-----------------------------------------------------------------------------
 bool SESubstance::HasPK() const
 {
-  return (m_PK != nullptr && m_PK->IsValid());
+  return (m_Pharmacokinetics != nullptr && m_Pharmacokinetics->IsValid());
 }
 //-----------------------------------------------------------------------------
 SESubstancePharmacokinetics& SESubstance::GetPK()
 {
-  if (m_PK == nullptr)
-    m_PK = new SESubstancePharmacokinetics(GetLogger());
-  return *m_PK;
+  if (m_Pharmacokinetics == nullptr)
+    m_Pharmacokinetics = new SESubstancePharmacokinetics(GetLogger());
+  return *m_Pharmacokinetics;
 }
 //-----------------------------------------------------------------------------
 const SESubstancePharmacokinetics* SESubstance::GetPK() const
 {
-  return m_PK;
+  return m_Pharmacokinetics;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::RemovePK()
 {
-  SAFE_DELETE(m_PK);
+  SAFE_DELETE(m_Pharmacokinetics);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasPD() const
 {
-  return (m_PD != nullptr && m_PD->IsValid());
+  return (m_Pharmacodynamics != nullptr && m_Pharmacodynamics->IsValid());
 }
 //-----------------------------------------------------------------------------
 SESubstancePharmacodynamics& SESubstance::GetPD()
 {
-  if (m_PD == nullptr)
-    m_PD = new SESubstancePharmacodynamics(GetLogger());
-  return *m_PD;
+  if (m_Pharmacodynamics == nullptr)
+    m_Pharmacodynamics = new SESubstancePharmacodynamics(GetLogger());
+  return *m_Pharmacodynamics;
 }
 //-----------------------------------------------------------------------------
 const SESubstancePharmacodynamics* SESubstance::GetPD() const
 {
-  return m_PD;
+  return m_Pharmacodynamics;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::RemovePD()
 {
-  SAFE_DELETE(m_PD);
+  SAFE_DELETE(m_Pharmacodynamics);
 }
 //-------------------------------------------------------------------------------
 bool SESubstance::operator==(const SESubstance& rhs) const
@@ -856,39 +856,40 @@ bool SESubstance::operator==(const SESubstance& rhs) const
   if (this == &rhs)
     return true;
 
-  return m_Name == rhs.m_Name
-    && m_Classification == rhs.m_Classification
-    && m_State == rhs.m_State
+   bool equivilant =m_Name == rhs.m_Name
+    ;equivilant&= m_Classification == rhs.m_Classification
+    ;equivilant&= m_State == rhs.m_State
+ 
+    ;equivilant&= ((m_Density && rhs.m_Density) ? m_Density->operator==(*rhs.m_Density) : m_Density == rhs.m_Density)
+    ;equivilant&= ((m_MolarMass && rhs.m_MolarMass) ? m_MolarMass->operator==(*rhs.m_MolarMass) : m_MolarMass == rhs.m_MolarMass)
 
-    && ((m_Density && rhs.m_Density) ? m_Density->operator==(*rhs.m_Density) : m_Density == rhs.m_Density)
-    && ((m_MolarMass && rhs.m_MolarMass) ? m_MolarMass->operator==(*rhs.m_MolarMass) : m_MolarMass == rhs.m_MolarMass)
+    ;equivilant&= ((m_MaximumDiffusionFlux && rhs.m_MaximumDiffusionFlux) ? m_MaximumDiffusionFlux->operator==(*rhs.m_MaximumDiffusionFlux) : m_MaximumDiffusionFlux == rhs.m_MaximumDiffusionFlux)
+    ;equivilant&= ((m_MichaelisCoefficient && rhs.m_MichaelisCoefficient) ? m_MichaelisCoefficient->operator==(*rhs.m_MichaelisCoefficient) : m_MichaelisCoefficient == rhs.m_MichaelisCoefficient)
+    ;equivilant&= ((m_MembraneResistance && rhs.m_MembraneResistance) ? m_MembraneResistance->operator==(*rhs.m_MembraneResistance) : m_MembraneResistance == rhs.m_MembraneResistance)
 
-    && ((m_MaximumDiffusionFlux && rhs.m_MaximumDiffusionFlux) ? m_MaximumDiffusionFlux->operator==(*rhs.m_MaximumDiffusionFlux) : m_MaximumDiffusionFlux == rhs.m_MaximumDiffusionFlux)
-    && ((m_MichaelisCoefficient && rhs.m_MichaelisCoefficient) ? m_MichaelisCoefficient->operator==(*rhs.m_MichaelisCoefficient) : m_MichaelisCoefficient == rhs.m_MichaelisCoefficient)
-    && ((m_MembraneResistance && rhs.m_MembraneResistance) ? m_MembraneResistance->operator==(*rhs.m_MembraneResistance) : m_MembraneResistance == rhs.m_MembraneResistance)
+    ;equivilant&= ((m_Aerosolization && rhs.m_Aerosolization) ? m_Aerosolization->operator==(*rhs.m_Aerosolization) : m_Aerosolization == rhs.m_Aerosolization)
+    ;equivilant&= ((m_AreaUnderCurve && rhs.m_AreaUnderCurve) ? m_AreaUnderCurve->operator==(*rhs.m_AreaUnderCurve) : m_AreaUnderCurve == rhs.m_AreaUnderCurve)
+    ;equivilant&= ((m_BloodConcentration && rhs.m_BloodConcentration) ? m_BloodConcentration->operator==(*rhs.m_BloodConcentration) : m_BloodConcentration == rhs.m_BloodConcentration)
+    ;equivilant&= ((m_EffectSiteConcentration && rhs.m_EffectSiteConcentration) ? m_EffectSiteConcentration->operator==(*rhs.m_EffectSiteConcentration) : m_EffectSiteConcentration == rhs.m_EffectSiteConcentration)
+    ;equivilant&= ((m_MassInBody && rhs.m_MassInBody) ? m_MassInBody->operator==(*rhs.m_MassInBody) : m_MassInBody == rhs.m_MassInBody)
+    ;equivilant&= ((m_MassInBlood && rhs.m_MassInBlood) ? m_MassInBlood->operator==(*rhs.m_MassInBlood) : m_MassInBlood == rhs.m_MassInBlood)
+    ;equivilant&= ((m_MassInTissue && rhs.m_MassInTissue) ? m_MassInTissue->operator==(*rhs.m_MassInTissue) : m_MassInTissue == rhs.m_MassInTissue)
+    ;equivilant&= ((m_PlasmaConcentration && rhs.m_PlasmaConcentration) ? m_PlasmaConcentration->operator==(*rhs.m_PlasmaConcentration) : m_PlasmaConcentration == rhs.m_PlasmaConcentration)
+    ;equivilant&= ((m_SystemicMassCleared && rhs.m_SystemicMassCleared) ? m_SystemicMassCleared->operator==(*rhs.m_SystemicMassCleared) : m_SystemicMassCleared == rhs.m_SystemicMassCleared)
+    ;equivilant&= ((m_TissueConcentration && rhs.m_TissueConcentration) ? m_TissueConcentration->operator==(*rhs.m_TissueConcentration) : m_TissueConcentration == rhs.m_TissueConcentration)
 
-    && ((m_Aerosolization && rhs.m_Aerosolization) ? m_Aerosolization->operator==(*rhs.m_Aerosolization) : m_Aerosolization == rhs.m_Aerosolization)
-    && ((m_AreaUnderCurve && rhs.m_AreaUnderCurve) ? m_AreaUnderCurve->operator==(*rhs.m_AreaUnderCurve) : m_AreaUnderCurve == rhs.m_AreaUnderCurve)
-    && ((m_BloodConcentration && rhs.m_BloodConcentration) ? m_BloodConcentration->operator==(*rhs.m_BloodConcentration) : m_BloodConcentration == rhs.m_BloodConcentration)
-    && ((m_EffectSiteConcentration && rhs.m_EffectSiteConcentration) ? m_EffectSiteConcentration->operator==(*rhs.m_EffectSiteConcentration) : m_EffectSiteConcentration == rhs.m_EffectSiteConcentration)
-    && ((m_MassInBody && rhs.m_MassInBody) ? m_MassInBody->operator==(*rhs.m_MassInBody) : m_MassInBody == rhs.m_MassInBody)
-    && ((m_MassInBlood && rhs.m_MassInBlood) ? m_MassInBlood->operator==(*rhs.m_MassInBlood) : m_MassInBlood == rhs.m_MassInBlood)
-    && ((m_MassInTissue && rhs.m_MassInTissue) ? m_MassInTissue->operator==(*rhs.m_MassInTissue) : m_MassInTissue == rhs.m_MassInTissue)
-    && ((m_PlasmaConcentration && rhs.m_PlasmaConcentration) ? m_PlasmaConcentration->operator==(*rhs.m_PlasmaConcentration) : m_PlasmaConcentration == rhs.m_PlasmaConcentration)
-    && ((m_SystemicMassCleared && rhs.m_SystemicMassCleared) ? m_SystemicMassCleared->operator==(*rhs.m_SystemicMassCleared) : m_SystemicMassCleared == rhs.m_SystemicMassCleared)
-    && ((m_TissueConcentration && rhs.m_TissueConcentration) ? m_TissueConcentration->operator==(*rhs.m_TissueConcentration) : m_TissueConcentration == rhs.m_TissueConcentration)
-
-    && ((m_AlveolarTransfer && rhs.m_AlveolarTransfer) ? m_AlveolarTransfer->operator==(*rhs.m_AlveolarTransfer) : m_AlveolarTransfer == rhs.m_AlveolarTransfer)
-    && ((m_DiffusingCapacity && rhs.m_DiffusingCapacity) ? m_DiffusingCapacity->operator==(*rhs.m_DiffusingCapacity) : m_DiffusingCapacity == rhs.m_DiffusingCapacity)
-    && ((m_EndTidalFraction && rhs.m_EndTidalFraction) ? m_EndTidalFraction->operator==(*rhs.m_EndTidalFraction) : m_EndTidalFraction == rhs.m_EndTidalFraction)
-    && ((m_EndTidalPressure && rhs.m_EndTidalPressure) ? m_EndTidalPressure->operator==(*rhs.m_EndTidalPressure) : m_EndTidalPressure == rhs.m_EndTidalPressure)
-    && ((m_RelativeDiffusionCoefficient && rhs.m_RelativeDiffusionCoefficient) ? m_RelativeDiffusionCoefficient->operator==(*rhs.m_RelativeDiffusionCoefficient) : m_RelativeDiffusionCoefficient == rhs.m_RelativeDiffusionCoefficient)
-    && ((m_SolubilityCoefficient && rhs.m_SolubilityCoefficient) ? m_SolubilityCoefficient->operator==(*rhs.m_SolubilityCoefficient) : m_SolubilityCoefficient == rhs.m_SolubilityCoefficient)
-
-    && ((m_Clearance && rhs.m_Clearance) ? m_Clearance->operator==(*rhs.m_Clearance) : m_Clearance == rhs.m_Clearance)
-    && ((m_PK && rhs.m_PK) ? m_PK->operator==(*rhs.m_PK) : m_PK == rhs.m_PK)
-    && ((m_PD && rhs.m_PD) ? m_PD->operator==(*rhs.m_PD) : m_PD == rhs.m_PD)
+    ;equivilant&= ((m_AlveolarTransfer && rhs.m_AlveolarTransfer) ? m_AlveolarTransfer->operator==(*rhs.m_AlveolarTransfer) : m_AlveolarTransfer == rhs.m_AlveolarTransfer)
+    ;equivilant&= ((m_DiffusingCapacity && rhs.m_DiffusingCapacity) ? m_DiffusingCapacity->operator==(*rhs.m_DiffusingCapacity) : m_DiffusingCapacity == rhs.m_DiffusingCapacity)
+    ;equivilant&= ((m_EndTidalFraction && rhs.m_EndTidalFraction) ? m_EndTidalFraction->operator==(*rhs.m_EndTidalFraction) : m_EndTidalFraction == rhs.m_EndTidalFraction)
+    ;equivilant&= ((m_EndTidalPressure && rhs.m_EndTidalPressure) ? m_EndTidalPressure->operator==(*rhs.m_EndTidalPressure) : m_EndTidalPressure == rhs.m_EndTidalPressure)
+    ;equivilant&= ((m_RelativeDiffusionCoefficient && rhs.m_RelativeDiffusionCoefficient) ? m_RelativeDiffusionCoefficient->operator==(*rhs.m_RelativeDiffusionCoefficient) : m_RelativeDiffusionCoefficient == rhs.m_RelativeDiffusionCoefficient)
+    ;equivilant&= ((m_SolubilityCoefficient && rhs.m_SolubilityCoefficient) ? m_SolubilityCoefficient->operator==(*rhs.m_SolubilityCoefficient) : m_SolubilityCoefficient == rhs.m_SolubilityCoefficient)
+ 
+    ;equivilant&= ((m_Clearance && rhs.m_Clearance) ? m_Clearance->operator==(*rhs.m_Clearance) : m_Clearance == rhs.m_Clearance)
+    ;equivilant&= ((m_Pharmacokinetics && rhs.m_Pharmacokinetics) ? m_Pharmacokinetics->operator==(*rhs.m_Pharmacokinetics) : m_Pharmacokinetics == rhs.m_Pharmacokinetics)
+    ;equivilant&= ((m_Pharmacodynamics && rhs.m_Pharmacodynamics) ? m_Pharmacodynamics->operator==(*rhs.m_Pharmacodynamics) : m_Pharmacodynamics == rhs.m_Pharmacodynamics)
     ;
+  return equivilant;
 }
 //-------------------------------------------------------------------------------
 bool SESubstance::operator!=(const SESubstance& rhs) const

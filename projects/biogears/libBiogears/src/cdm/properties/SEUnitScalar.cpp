@@ -13,10 +13,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEUnitScalar.h>
 
 namespace biogears {
-SEUnitScalar::SEUnitScalar()
-  : SEScalar()
+SEUnitScalar::SEUnitScalar(bool ro)
+  : SEScalar(1.0,ro)
 {
 }
+
 //------------------------------------------------------------------------------
 SEUnitScalar::SEUnitScalar(const SEUnitScalar& obj)
   : SEScalar(obj)

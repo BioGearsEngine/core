@@ -25,13 +25,12 @@ namespace io {
 template <typename Unit>
 class SEScalarQuantity : public SEUnitScalar {
 public:
-
   using unit = Unit;
 
   friend io::Property;
   SEScalarQuantity();
   SEScalarQuantity(const SEScalarQuantity&);
-  explicit SEScalarQuantity(double, const Unit&);
+  explicit SEScalarQuantity(double, const Unit&, bool ro=false);
 
   ~SEScalarQuantity() override;
 
@@ -66,6 +65,8 @@ public:
   SEScalarQuantity& Multiply(const SEScalar& s);
   SEScalarQuantity& DivideValue(double d);
   SEScalarQuantity& Divide(const SEScalar& s);
+
+  SEScalarQuantity& operator=(const SEScalarQuantity& rhs);
 
   bool operator<(const SEScalarQuantity& rhs) const;
   bool operator<=(const SEScalarQuantity& rhs) const;

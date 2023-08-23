@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/cdm/substance/SESubstancePhysicochemicals.h>
+#include <biogears/cdm/substance/SESubstancePhysicochemical.h>
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
 #include <biogears/schema/cdm/Substance.hxx>
 
@@ -47,8 +47,8 @@ public:
   virtual CDM::SubstancePharmacokineticsData* Unload() const;
 
   virtual bool HasPhysicochemicals() const;
-  virtual SESubstancePhysicochemicals& GetPhysicochemicals();
-  virtual const SESubstancePhysicochemicals* GetPhysicochemicals() const;
+  virtual SESubstancePhysicochemical& GetPhysicochemicals();
+  virtual const SESubstancePhysicochemical* GetPhysicochemicals() const;
 
   virtual bool HasTissueKinetics() const;
   virtual bool HasTissueKinetics(const char* name) const;
@@ -67,7 +67,7 @@ protected:
   virtual void Unload(CDM::SubstancePharmacokineticsData& data) const;
 
 protected:
-  SESubstancePhysicochemicals* m_Physicochemicals;
+  SESubstancePhysicochemical* m_Physicochemicals;
   std::map<std::string, SESubstanceTissuePharmacokinetics*> m_TissueKinetics;
 };
 }

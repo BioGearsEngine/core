@@ -161,24 +161,27 @@ class BIOGEARS_API SEPharmacodynamicModifier {
   friend io::Substance;
 
 public:
+  SEPharmacodynamicModifier(SEScalarMassPerVolume const&, SEScalarFraction const&);
   SEPharmacodynamicModifier();
-  virtual ~SEPharmacodynamicModifier();
+  ~SEPharmacodynamicModifier();
 
-  virtual void Clear();
-  virtual bool IsValid() const;
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  void Clear();
+  bool IsValid() const;
+  const SEScalar* GetScalar(const char* name);
+  const SEScalar* GetScalar(const std::string& name);
 
-  virtual bool Load(const CDM::PharmacodynamicModifierData& in);
-  virtual CDM::PharmacodynamicModifierData* Unload() const;
+  bool Load(const CDM::PharmacodynamicModifierData& in);
+  CDM::PharmacodynamicModifierData* Unload() const;
 
-  virtual bool HasEMax() const;
-  virtual SEScalarFraction& GetEMax();
-  virtual double GetEMax() const;
+  bool HasEMax() const;
+  SEScalarFraction& GetEMax();
+  double GetEMax() const;
 
-  virtual bool HasEC50() const;
-  virtual SEScalarMassPerVolume& GetEC50();
-  virtual double GetEC50(const MassPerVolumeUnit& unit) const;
+  bool HasEC50() const;
+  SEScalarMassPerVolume& GetEC50();
+  double GetEC50(const MassPerVolumeUnit& unit) const;
+
+  void Set(SEScalarFraction const& eMax, SEScalarMassPerVolume const& ec50);
 
   bool operator==(const SEPharmacodynamicModifier& rhs) const;
   bool operator!=(const SEPharmacodynamicModifier& rhs) const;
