@@ -231,13 +231,13 @@ set(SHARE_FILES  ${SHARE_DATA_FILES} ${SHARE_XSD_FILES} ${SHARE_SCENARIO_FILES})
 
 add_custom_target( hex_bindings 
                    COMMENT "Generating hex encoding headers" 
-                   DEPENDS ${GEN_HDRS} ${GEN_SRCS}
+                   DEPENDS ${GEN_HDRS} ${GEN_SRCS} 
                    SOURCES ${SHARE_FILES}
 )
 set_target_properties( hex_bindings PROPERTIES 
         FOLDER "Code Generators" )
 
-source_group( TREE  ${PROJECT_SOURCE_DIR}/share/ PREFIX share
+source_group( TREE  ${PROJECT_SOURCE_DIR}/share/ PREFIX share 
               FILES ${SHARE_FILES}
             )
 
