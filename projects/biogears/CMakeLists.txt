@@ -57,10 +57,20 @@ REGISTER_XSD_DIR(  "${PROJECT_SOURCE_DIR}/share/xsd/"
                     PROJECT "generated/biogears" COMPONENT "schema" RESOURCE_FOLDER "resources/schema"
                     NO_TARGETS SOURCES_VAR XSD_SRCS HEADERS_VAR XSD_HDRS VERBOSITY 1)
 
+
+file(GLOB_RECURSE XSD_FILES CMAKE_CONFIGURE_DEPENDS  ${PROJECT_SOURCE_DIR}/share/xsd/*.xsd )
+
 add_custom_target(xsd_bindings 
   COMMENT "Generates XML Bindings from XSD Files" 
+  SOURCES ${XSD_FILES}
   DEPENDS ${XSD_SRCS} ${XSD_HDRS}
 )
+source_group( TREE  ${PROJECT_SOURCE_DIR}/share/xsd/ PREFIX schema FILES ${XSD_FILES})
+set_source_files_properties(${XSD_FILES} PROPERTIES 
+                HEADER_FILE_ONLY 
+                TRUE FOLDER schema
+)
+
 set_target_properties(xsd_bindings PROPERTIES FOLDER "Code Generators")
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src/version.cpp.in  ${CMAKE_CURRENT_BINARY_DIR}/libBiogears/src/version.cpp NEWLINE_STYLE LF)
 ###############################################################################
