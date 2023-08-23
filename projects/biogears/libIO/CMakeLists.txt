@@ -180,15 +180,15 @@ configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/substances.cpp.in" 
 option(Biogears_IO_INCLUDE_DATA_TEMPLATES "Add default data templates which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" OFF)
 if (Biogears_IO_INCLUDE_DATA_TEMPLATES)
 message(STATUS "            : data/templates")
-FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/templates" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/templates/*.csv")
-configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/templates.cpp.in" TYPE "templates/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
+FILE(GLOB_RECURSE DATA_CSV_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/templates" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/templates/*.csv")
+configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/templates.cpp.in" TYPE "templates/" FILE_LIST ${DATA_CSV_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
 endif()
 
 option(Biogears_IO_INCLUDE_SCENARIOS "Add default scenarios which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" ON)
 if (Biogears_IO_INCLUDE_SCENARIOS)
 message(STATUS "            : Scenarios")
-FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/Scenarios" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/Scenarios/*.xml")
-configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/Scenarios.cpp.in" TYPE "Scenarios/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/ HEADERS GEN_HDRS SOURCES GEN_SRCS )
+FILE(GLOB_RECURSE DATA_SCENARIO_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/Scenarios" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/Scenarios/*.xml")
+configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/Scenarios.cpp.in" TYPE "Scenarios/" FILE_LIST ${DATA_SCENARIO_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/ HEADERS GEN_HDRS SOURCES GEN_SRCS )
 endif()
 
 configure_file( src/constants.h.in  ${BIOGEARS_BINARY_DIR}/generated/biogears/io/constants.h NEWLINE_STYLE LF)
@@ -200,12 +200,23 @@ add_source_files(INTERFACE_SOURCES LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/
                REGEX "*.cpp" SOURCE_GROUP  "Sources\\")
 ##############################################################################
 # Generator Target
-##############################################################################
+#############################################################################
+
+FILE(GLOB_RECURSE SHARE_DATA_FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd")
+FILE(GLOB_RECURSE SHARE_XSD_FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/*.xml" "${PROJECT_SOURCE_DIR}/share/data/*.csv")
+FILE(GLOB_RECURSE SHARE_SCENARIO_FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/scnearios/*.xml")
+set(SHARE_FILES  ${SHARE_DATA_FILES} ${SHARE_XSD_FILES} ${SHARE_SCENARIO_FILES})
 add_custom_target( hex_bindings 
                    COMMENT "Generating hex encoding headers" 
-                   DEPENDS ${GEN_HDRS} ${GEN_SRCS} )
+                   DEPENDS ${GEN_HDRS} ${GEN_SRCS} 
+                   SOURCES ${SHARE_FILES}
+)
 set_target_properties( hex_bindings PROPERTIES 
         FOLDER "Code Generators" )
+
+source_group( TREE  ${PROJECT_SOURCE_DIR}/share/ PREFIX share 
+              FILES ${SHARE_FILES}
+            )
 
 ###############################################################################
 # libBiogears_io
