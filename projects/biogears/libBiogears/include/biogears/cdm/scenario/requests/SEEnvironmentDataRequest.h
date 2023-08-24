@@ -22,7 +22,6 @@ class BIOGEARS_API SEEnvironmentDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
   friend io::Scenario;
 
-
 public:
   SEEnvironmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEEnvironmentDataRequest();

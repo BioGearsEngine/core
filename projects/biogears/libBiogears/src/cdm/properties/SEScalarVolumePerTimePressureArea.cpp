@@ -87,16 +87,5 @@ bool VolumePerTimePressureAreaUnit::operator!=(const VolumePerTimePressureAreaUn
 {
   return !(*this == obj);
 }
-//-------------------------------------------------------------------------------
 
-bool SEScalarVolumePerTimePressureArea::operator==(const SEScalarVolumePerTimePressureArea& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarVolumePerTimePressureArea::operator!=(const SEScalarVolumePerTimePressureArea& obj) const
-{
-  return !(*this == obj);
-}
 }

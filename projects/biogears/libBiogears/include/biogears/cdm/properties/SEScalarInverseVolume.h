@@ -42,8 +42,5 @@ public:
   virtual ~SEScalarInverseVolume();
 
   CDM::ScalarInverseVolumeData* Unload() const override;
-
-  bool operator==(const SEScalarInverseVolume&) const;
-  bool operator!=(const SEScalarInverseVolume&) const;
 };
 }

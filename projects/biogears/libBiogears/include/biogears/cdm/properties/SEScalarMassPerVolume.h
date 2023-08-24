@@ -59,8 +59,5 @@ public:
 
   using SEScalarQuantity<MassPerVolumeUnit>::SetValue;
   using SEScalarQuantity<MassPerVolumeUnit>::GetValue;
-
-  bool operator==(const SEScalarMassPerVolume&) const;
-  bool operator!=(const SEScalarMassPerVolume&) const;
 };
 }

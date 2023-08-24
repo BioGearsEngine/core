@@ -89,15 +89,4 @@ bool PressureTimePerAreaUnit::operator!=(const PressureTimePerAreaUnit& obj) con
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarPressureTimePerArea::operator==(const SEScalarPressureTimePerArea& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarPressureTimePerArea::operator!=(const SEScalarPressureTimePerArea& obj) const
-{
-  return !(*this == obj);
-}
 }

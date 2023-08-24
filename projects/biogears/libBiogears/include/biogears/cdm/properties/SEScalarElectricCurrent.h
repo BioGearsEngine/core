@@ -45,7 +45,5 @@ public:
   using SEScalarQuantity<ElectricCurrentUnit>::SetValue;
   using SEScalarQuantity<ElectricCurrentUnit>::GetValue;
 
-  bool operator==(const SEScalarElectricCurrent&) const;
-  bool operator!=(const SEScalarElectricCurrent&) const;
 };
 }

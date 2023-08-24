@@ -47,8 +47,5 @@ public:
 
   using SEScalarQuantity<FrequencyUnit>::SetValue;
   using SEScalarQuantity<FrequencyUnit>::GetValue;
-
-  bool operator==(const SEScalarFrequency&) const;
-  bool operator!=(const SEScalarFrequency&) const;
 };
 }

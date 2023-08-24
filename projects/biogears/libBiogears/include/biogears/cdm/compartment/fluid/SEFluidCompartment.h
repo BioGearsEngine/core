@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <vector>
-//Project Includes
+// Project Includes
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/compartment/SECompartment.h>
@@ -58,6 +58,9 @@ public:
 
   virtual bool Load(const CDM::FluidCompartmentData& in, SECircuitManager* circuits = nullptr);
   CDM::FluidCompartmentData* Unload() override = 0;
+
+  virtual bool operator==(SEFluidCompartment const&) const = 0;
+  virtual bool operator!=(SEFluidCompartment const&) const = 0;
 
 protected:
   virtual void Unload(CDM::FluidCompartmentData& data);

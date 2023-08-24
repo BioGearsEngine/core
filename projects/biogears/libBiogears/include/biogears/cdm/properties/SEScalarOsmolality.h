@@ -46,7 +46,5 @@ public:
   using SEScalarQuantity<OsmolalityUnit>::SetValue;
   using SEScalarQuantity<OsmolalityUnit>::GetValue;
 
-  bool operator==(const SEScalarOsmolality&) const;
-  bool operator!=(const SEScalarOsmolality&) const;
 };
 }

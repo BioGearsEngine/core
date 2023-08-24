@@ -82,15 +82,4 @@ bool ElectricCapacitanceUnit::operator!=(const ElectricCapacitanceUnit& obj) con
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarElectricCapacitance::operator==(const SEScalarElectricCapacitance& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarElectricCapacitance::operator!=(const SEScalarElectricCapacitance& obj) const
-{
-  return !(*this == obj);
-}
 }

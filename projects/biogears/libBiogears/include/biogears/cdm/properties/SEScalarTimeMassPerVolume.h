@@ -49,8 +49,5 @@ public:
 
   using SEScalarQuantity<TimeMassPerVolumeUnit>::SetValue;
   using SEScalarQuantity<TimeMassPerVolumeUnit>::GetValue;
-
-  bool operator==(const SEScalarTimeMassPerVolume&) const;
-  bool operator!=(const SEScalarTimeMassPerVolume&) const;
 };
 }

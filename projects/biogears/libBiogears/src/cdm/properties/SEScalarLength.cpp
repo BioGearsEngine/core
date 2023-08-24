@@ -109,14 +109,4 @@ bool LengthUnit::operator!=(const LengthUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-bool SEScalarLength::operator==(const SEScalarLength& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarLength::operator!=(const SEScalarLength& obj) const
-{
-  return !(*this == obj);
-}
 }

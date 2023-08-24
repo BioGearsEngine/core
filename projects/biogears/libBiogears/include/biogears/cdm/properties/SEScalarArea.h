@@ -46,7 +46,5 @@ public:
   using SEScalarQuantity<AreaUnit>::SetValue;
   using SEScalarQuantity<AreaUnit>::GetValue;
 
-  bool operator==(const SEScalarArea&) const;
-  bool operator!=(const SEScalarArea&) const;
 };
 }

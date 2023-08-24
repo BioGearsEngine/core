@@ -94,15 +94,4 @@ bool ForceUnit::operator!=(const ForceUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarForce::operator==(const SEScalarForce& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarForce::operator!=(const SEScalarForce& obj) const
-{
-  return !(*this == obj);
-}
 }

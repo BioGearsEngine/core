@@ -29,6 +29,9 @@ public:
   virtual void Clear() = 0; //clear memory
   virtual void Invalidate() = 0;
 
+  virtual bool operator==(SESubstanceQuantity const&) const = 0;
+  virtual bool operator!=(SESubstanceQuantity const&) const = 0;
+
   virtual bool Load(const CDM::SubstanceQuantityData& in);
   virtual CDM::SubstanceQuantityData* Unload() = 0;
 

@@ -48,8 +48,5 @@ public:
 
   using SEScalarQuantity<LengthPerTimeUnit>::SetValue;
   using SEScalarQuantity<LengthPerTimeUnit>::GetValue;
-
-  bool operator==(const SEScalarLengthPerTime&) const;
-  bool operator!=(const SEScalarLengthPerTime&) const;
 };
 }

@@ -47,8 +47,5 @@ public:
 
   using SEScalarQuantity<TemperatureUnit>::SetValue;
   double GetValue(const TemperatureUnit& unit) const override; // Zero is not Zero for all units, gotta remove that logic for this scalar type    
-
-  bool operator==(const SEScalarTemperature&) const;
-  bool operator!=(const SEScalarTemperature&) const;
 };
 }

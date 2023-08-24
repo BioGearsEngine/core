@@ -51,8 +51,5 @@ public:
 
   using SEScalarQuantity<VolumePerTimeUnit>::SetValue;
   using SEScalarQuantity<VolumePerTimeUnit>::GetValue;
-
-  bool operator==(const SEScalarVolumePerTime&) const;
-  bool operator!=(const SEScalarVolumePerTime&) const;
 };
 }

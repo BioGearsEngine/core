@@ -27,7 +27,7 @@ public:
   virtual const CCompoundUnit* GetUnit() const = 0;
   virtual const CCompoundUnit* GetCompoundUnit(const char* unit) const = 0;
   virtual const CCompoundUnit* GetCompoundUnit(const std::string& unit) const = 0;
-  virtual double GetValue() const override;
+  virtual double GetValue() const = 0;
   virtual double GetValue(const char* unit) const = 0;
   virtual double GetValue(const std::string& unit) const = 0;
 
@@ -36,7 +36,7 @@ public:
   virtual SEUnitScalar& DecrementValue(double d, const char* unit) = 0;
   virtual SEUnitScalar& DecrementValue(double d, const std::string& unit) = 0;
 
-  bool operator==(const SEUnitScalar&) const;
-  bool operator!=(const SEUnitScalar&) const;
+  virtual bool operator==(const SEUnitScalar&) const = 0;
+  virtual bool operator!=(const SEUnitScalar&) const = 0;
 };
 }

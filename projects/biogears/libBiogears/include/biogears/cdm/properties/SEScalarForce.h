@@ -46,8 +46,5 @@ public:
 
   using SEScalarQuantity<ForceUnit>::SetValue;
   using SEScalarQuantity<ForceUnit>::GetValue;
-
-  bool operator==(const SEScalarForce&) const;
-  bool operator!=(const SEScalarForce&) const;
 };
 }

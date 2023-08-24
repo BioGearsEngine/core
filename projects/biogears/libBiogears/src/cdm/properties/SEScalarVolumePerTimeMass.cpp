@@ -107,15 +107,4 @@ bool VolumePerTimeMassUnit::operator!=(const VolumePerTimeMassUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarVolumePerTimeMass::operator==(const SEScalarVolumePerTimeMass& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarVolumePerTimeMass::operator!=(const SEScalarVolumePerTimeMass& obj) const
-{
-  return !(*this == obj);
-}
 }

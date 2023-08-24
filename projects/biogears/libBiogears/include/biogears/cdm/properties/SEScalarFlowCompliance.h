@@ -48,7 +48,5 @@ public:
   using SEScalarQuantity<FlowComplianceUnit>::SetValue;
   using SEScalarQuantity<FlowComplianceUnit>::GetValue;
 
-  bool operator==(const SEScalarFlowCompliance&) const;
-  bool operator!=(const SEScalarFlowCompliance&) const;
 };
 }

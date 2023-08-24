@@ -104,15 +104,4 @@ bool FlowResistanceUnit::operator!=(const FlowResistanceUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarFlowResistance::operator==(const SEScalarFlowResistance& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarFlowResistance::operator!=(const SEScalarFlowResistance& obj) const
-{
-  return !(*this == obj);
-}
 }

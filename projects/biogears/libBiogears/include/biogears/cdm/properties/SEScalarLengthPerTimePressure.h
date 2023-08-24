@@ -47,8 +47,5 @@ public:
 
   using SEScalarQuantity<LengthPerTimePressureUnit>::SetValue;
   using SEScalarQuantity<LengthPerTimePressureUnit>::GetValue;
-
-  bool operator==(const SEScalarLengthPerTimePressure&) const;
-  bool operator!=(const SEScalarLengthPerTimePressure&) const;
 };
 }

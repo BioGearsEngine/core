@@ -104,15 +104,4 @@ bool VolumeUnit::operator!=(const VolumeUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarVolume::operator==(const SEScalarVolume& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarVolume::operator!=(const SEScalarVolume& obj) const
-{
-  return !(*this == obj);
-}
 }

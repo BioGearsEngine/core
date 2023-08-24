@@ -47,7 +47,5 @@ public:
 
   CDM::ScalarAmountPerMassData* Unload() const override;    
 
-  bool operator==(const SEScalarAmountPerMass&) const;
-  bool operator!=(const SEScalarAmountPerMass&) const;
 };
 }

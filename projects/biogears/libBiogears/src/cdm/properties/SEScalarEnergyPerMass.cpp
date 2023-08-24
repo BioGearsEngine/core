@@ -98,15 +98,4 @@ bool EnergyPerMassUnit::operator!=(const EnergyPerMassUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarEnergyPerMass::operator==(const SEScalarEnergyPerMass& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarEnergyPerMass::operator!=(const SEScalarEnergyPerMass& obj) const
-{
-  return !(*this == obj);
-}
 }

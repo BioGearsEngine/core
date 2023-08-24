@@ -49,8 +49,5 @@ public:
 
   using SEScalarQuantity<LengthUnit>::SetValue;
   using SEScalarQuantity<LengthUnit>::GetValue;
-
-  bool operator==(const SEScalarLength&) const;
-  bool operator!=(const SEScalarLength&) const;
 };
 }

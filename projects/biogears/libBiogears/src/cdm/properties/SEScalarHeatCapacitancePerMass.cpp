@@ -98,14 +98,4 @@ bool HeatCapacitancePerMassUnit::operator!=(const HeatCapacitancePerMassUnit& ob
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-bool SEScalarHeatCapacitancePerMass::operator==(const SEScalarHeatCapacitancePerMass& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarHeatCapacitancePerMass::operator!=(const SEScalarHeatCapacitancePerMass& obj) const
-{
-  return !(*this == obj);
-}
 }

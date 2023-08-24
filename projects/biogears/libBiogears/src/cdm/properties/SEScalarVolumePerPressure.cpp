@@ -91,15 +91,4 @@ bool VolumePerPressureUnit::operator!=(const VolumePerPressureUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarVolumePerPressure::operator==(const SEScalarVolumePerPressure& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarVolumePerPressure::operator!=(const SEScalarVolumePerPressure& obj) const
-{
-  return !(*this == obj);
-}
 }

@@ -51,8 +51,5 @@ public:
 
   using SEScalarQuantity<MassPerTimeUnit>::SetValue;
   using SEScalarQuantity<MassPerTimeUnit>::GetValue;
-
-  bool operator==(const SEScalarMassPerTime&) const;
-  bool operator!=(const SEScalarMassPerTime&) const;
 };
 }

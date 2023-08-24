@@ -100,15 +100,4 @@ namespace biogears
     return !(*this == obj);
   }
   //-------------------------------------------------------------------------------
-
-  bool SEScalarVolumePerTimePressure::operator==(const SEScalarVolumePerTimePressure& obj) const
-  {
-    return m_unit == obj.m_unit
-      && m_value == obj.m_value;
-  }
-  //-------------------------------------------------------------------------------
-  bool SEScalarVolumePerTimePressure::operator!=(const SEScalarVolumePerTimePressure& obj) const
-  {
-    return !(*this == obj);
-  }
 }

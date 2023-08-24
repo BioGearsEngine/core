@@ -30,7 +30,7 @@ public:
   friend io::Property;
   SEScalarQuantity();
   SEScalarQuantity(const SEScalarQuantity&);
-  explicit SEScalarQuantity(double, const Unit&, bool ro=false);
+  explicit SEScalarQuantity(double, const Unit&, bool ro = false);
 
   ~SEScalarQuantity() override;
 
@@ -75,6 +75,8 @@ public:
 
   bool operator==(const SEScalarQuantity& rhs) const;
   bool operator!=(const SEScalarQuantity& rhs) const;
+  bool operator==(const SEUnitScalar& rhs) const final;
+  bool operator!=(const SEUnitScalar& rhs) const final;
 
   SEScalarQuantity operator+(const SEScalarQuantity& rhs) const;
   SEScalarQuantity& operator+=(const SEScalarQuantity& rhs);

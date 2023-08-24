@@ -45,8 +45,5 @@ public:
 
   using SEScalarQuantity<ElectricPotentialUnit>::SetValue;
   using SEScalarQuantity<ElectricPotentialUnit>::GetValue;
-
-  bool operator==(const SEScalarElectricPotential&) const;
-  bool operator!=(const SEScalarElectricPotential&) const;
 };
 }

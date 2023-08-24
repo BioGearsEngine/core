@@ -47,7 +47,5 @@ public:
   using SEScalarQuantity<HeatConductancePerAreaUnit>::SetValue;
   using SEScalarQuantity<HeatConductancePerAreaUnit>::GetValue;
 
-  bool operator==(const SEScalarHeatConductancePerArea&) const;
-  bool operator!=(const SEScalarHeatConductancePerArea&) const;
 };
 }

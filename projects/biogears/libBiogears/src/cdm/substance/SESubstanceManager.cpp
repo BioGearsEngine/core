@@ -389,7 +389,12 @@ bool SESubstanceManager::operator==(SESubstanceManager const& rhs) const
   //      We can then hash substance data and compare the hash
   //      Additionally we can likely only support SubstanceMgr comparrision by memory address and Data Definitions
 
-  return (m_Substances == rhs.m_Substances
+
+  //TODO: Iterate over substances and call operator== on the data element. This just checks
+  //      If the pointers are equal which is hardly true
+  return (
+      
+          m_Substances == rhs.m_Substances
           && m_ActiveSubstances == rhs.m_ActiveSubstances
           && m_ActiveGases == rhs.m_ActiveGases
           && m_ActiveLiquids == rhs.m_ActiveLiquids

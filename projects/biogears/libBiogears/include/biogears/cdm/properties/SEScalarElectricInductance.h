@@ -45,7 +45,5 @@ public:
   using SEScalarQuantity<ElectricInductanceUnit>::SetValue;
   using SEScalarQuantity<ElectricInductanceUnit>::GetValue;
 
-  bool operator==(const SEScalarElectricInductance&) const;
-  bool operator!=(const SEScalarElectricInductance&) const;
 };
 }

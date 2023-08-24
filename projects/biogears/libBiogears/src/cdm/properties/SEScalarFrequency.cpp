@@ -100,14 +100,4 @@ bool FrequencyUnit::operator!=(const FrequencyUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-bool SEScalarFrequency::operator==(const SEScalarFrequency& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarFrequency::operator!=(const SEScalarFrequency& obj) const
-{
-  return !(*this == obj);
-}
 }

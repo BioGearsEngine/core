@@ -48,8 +48,5 @@ public:
 
   using SEScalarQuantity<FlowResistanceUnit>::SetValue;
   using SEScalarQuantity<FlowResistanceUnit>::GetValue;
-
-  bool operator==(const SEScalarFlowResistance&) const;
-  bool operator!=(const SEScalarFlowResistance&) const;
 };
 }

@@ -84,15 +84,4 @@ bool ElectricChargeUnit::operator!=(const ElectricChargeUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarElectricCharge::operator==(const SEScalarElectricCharge& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarElectricCharge::operator!=(const SEScalarElectricCharge& obj) const
-{
-  return !(*this == obj);
-}
 }

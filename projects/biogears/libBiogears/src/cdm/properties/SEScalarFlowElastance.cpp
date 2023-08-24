@@ -94,15 +94,4 @@ bool FlowElastanceUnit::operator!=(const FlowElastanceUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarFlowElastance::operator==(const SEScalarFlowElastance& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarFlowElastance::operator!=(const SEScalarFlowElastance& obj) const
-{
-  return !(*this == obj);
-}
 }

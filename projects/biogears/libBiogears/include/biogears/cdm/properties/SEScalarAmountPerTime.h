@@ -50,8 +50,5 @@ public:
 
   using SEScalarQuantity<AmountPerTimeUnit>::SetValue;
   using SEScalarQuantity<AmountPerTimeUnit>::GetValue;
-
-  bool operator==(const SEScalarAmountPerTime&) const;
-  bool operator!=(const SEScalarAmountPerTime&) const;
 };
 }

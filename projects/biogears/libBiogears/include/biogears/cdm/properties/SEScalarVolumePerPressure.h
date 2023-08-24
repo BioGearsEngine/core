@@ -45,8 +45,5 @@ public:
 
   using SEScalarQuantity<VolumePerPressureUnit>::SetValue;
   using SEScalarQuantity<VolumePerPressureUnit>::GetValue;
-
-  bool operator==(const SEScalarVolumePerPressure&) const;
-  bool operator!=(const SEScalarVolumePerPressure&) const;
 };
 }

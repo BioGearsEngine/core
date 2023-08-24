@@ -89,15 +89,4 @@ bool ElectricPotentialUnit::operator!=(const ElectricPotentialUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarElectricPotential::operator==(const SEScalarElectricPotential& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarElectricPotential::operator!=(const SEScalarElectricPotential& obj) const
-{
-  return !(*this == obj);
-}
 }

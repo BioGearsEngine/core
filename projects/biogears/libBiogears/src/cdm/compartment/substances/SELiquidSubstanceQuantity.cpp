@@ -46,11 +46,11 @@ SELiquidSubstanceQuantity::SELiquidSubstanceQuantity(SESubstance& sub, SELiquidC
   m_isO2 = false;
   m_isCO2 = false;
   m_isCO = false;
-  if (sub.GetName()  == "Oxygen")
+  if (sub.GetName() == "Oxygen")
     m_isO2 = true;
-  else if (sub.GetName()  == "CarbonMonoxide")
+  else if (sub.GetName() == "CarbonMonoxide")
     m_isCO = true;
-  else if (sub.GetName()  == "CarbonDioxide")
+  else if (sub.GetName() == "CarbonDioxide")
     m_isCO2 = true;
 
   if (m_Substance.GetState() != CDM::enumSubstanceState::Gas)
@@ -162,7 +162,7 @@ void SELiquidSubstanceQuantity::SetToZero()
 //-----------------------------------------------------------------------------
 const SEScalar* SELiquidSubstanceQuantity::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SELiquidSubstanceQuantity::GetScalar(const std::string& name)
@@ -589,6 +589,76 @@ void SELiquidSubstanceQuantity::AddChild(SELiquidSubstanceQuantity& subQ)
 {
   if (!Contains(m_Children, subQ))
     m_Children.push_back(&subQ);
+}
+//-----------------------------------------------------------------------------
+bool SELiquidSubstanceQuantity::operator==(SELiquidSubstanceQuantity const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = ((m_Concentration && rhs.m_Concentration) ? m_Concentration->operator==(*rhs.m_Concentration) : m_Concentration == rhs.m_Concentration)
+    && ((m_Mass && rhs.m_Mass) ? m_Mass->operator==(*rhs.m_Mass) : m_Mass == rhs.m_Mass)
+    && ((m_MassCleared && rhs.m_MassCleared) ? m_MassCleared->operator==(*rhs.m_MassCleared) : m_MassCleared == rhs.m_MassCleared)
+    && ((m_MassDeposited && rhs.m_MassDeposited) ? m_MassDeposited->operator==(*rhs.m_MassDeposited) : m_MassDeposited == rhs.m_MassDeposited)
+    && ((m_MassExcreted && rhs.m_MassExcreted) ? m_MassExcreted->operator==(*rhs.m_MassExcreted) : m_MassExcreted == rhs.m_MassExcreted)
+    && ((m_Molarity && rhs.m_Molarity) ? m_Molarity->operator==(*rhs.m_Molarity) : m_Molarity == rhs.m_Molarity)
+    && ((m_PartialPressure && rhs.m_PartialPressure) ? m_PartialPressure->operator==(*rhs.m_PartialPressure) : m_PartialPressure == rhs.m_PartialPressure)
+    && ((m_Saturation && rhs.m_Saturation) ? m_Saturation->operator==(*rhs.m_Saturation) : m_Saturation == rhs.m_Saturation)   
+    && m_Compartment.operator==(rhs.m_Compartment);
+
+  //m_Children is not part of the serializtion of SELiquidSubstanceQuantity so we will not 
+  //           concider it as part of the equivilance
+  //if (equivilant) {
+  //  for (auto i = 0; i < m_Children.size(); ++i) {
+  //    equivilant &= (m_Children[i] && rhs.m_Children[i])
+  //      ? m_Children[i]->operator==(*rhs.m_Children[i])
+  //      : m_Children[i] == rhs.m_Children[i];
+  //  }
+  //}
+  equivilant &= m_isO2 == rhs.m_isO2 && m_isCO == rhs.m_isCO && m_isCO2 == rhs.m_isCO2
+    // Inorder to caluclate a hierarchical saturation, we need these substances
+    && ((m_Hb && rhs.m_Hb) ? m_Hb->operator==(*rhs.m_Hb) : m_Hb == rhs.m_Hb)
+    && ((m_HbO2 && rhs.m_HbO2) ? m_HbO2->operator==(*rhs.m_HbO2) : m_HbO2 == rhs.m_HbO2)
+    && ((m_HbCO2 && rhs.m_HbCO2) ? m_HbCO2->operator==(*rhs.m_HbCO2) : m_HbCO2 == rhs.m_HbCO2)
+    && ((m_HbO2CO2 && rhs.m_HbO2CO2) ? m_HbO2CO2->operator==(*rhs.m_HbO2CO2) : m_HbO2CO2 == rhs.m_HbO2CO2)
+    && ((m_HbCO && rhs.m_HbCO) ? m_HbCO->operator==(*rhs.m_HbCO) : m_HbCO == rhs.m_HbCO);
+
+  return equivilant;
+}
+
+bool SELiquidSubstanceQuantity::operator!=(SELiquidSubstanceQuantity const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
+bool SELiquidSubstanceQuantity::operator==(SESubstanceQuantity const& rhs) const
+{
+  try {
+    auto& gasSubstanceQuantity = dynamic_cast<SELiquidSubstanceQuantity const&>(rhs);
+    return this->operator==(gasSubstanceQuantity);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SELiquidSubstanceQuantity::operator!=(SESubstanceQuantity const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
+bool SELiquidSubstanceQuantity::operator==(SELiquidTransportSubstance const& rhs) const
+{
+  try {
+    auto& liquidSubstanceQuantity = dynamic_cast<SELiquidSubstanceQuantity const&>(rhs);
+    return this->operator==(liquidSubstanceQuantity);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SELiquidSubstanceQuantity::operator!=(SELiquidTransportSubstance const& rhs) const
+{
+  return !(*this == rhs);
 }
 //-----------------------------------------------------------------------------
 }

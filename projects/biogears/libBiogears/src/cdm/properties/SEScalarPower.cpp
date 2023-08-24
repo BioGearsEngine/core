@@ -109,15 +109,4 @@ bool PowerUnit::operator!=(const PowerUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarPower::operator==(const SEScalarPower& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarPower::operator!=(const SEScalarPower& obj) const
-{
-  return !(*this == obj);
-}
 }

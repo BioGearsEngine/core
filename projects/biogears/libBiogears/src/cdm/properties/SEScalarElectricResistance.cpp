@@ -87,8 +87,7 @@ bool ElectricResistanceUnit::operator!=(const ElectricResistanceUnit& obj) const
 
 bool SEScalarElectricResistance::operator==(const SEScalarElectricResistance& obj) const
 {
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
+  return SEScalarQuantity::operator==(obj);
 }
 //-------------------------------------------------------------------------------
 bool SEScalarElectricResistance::operator!=(const SEScalarElectricResistance& obj) const

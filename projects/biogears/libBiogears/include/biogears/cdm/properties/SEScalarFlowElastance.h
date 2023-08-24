@@ -46,8 +46,5 @@ public:
 
   using SEScalarQuantity<FlowElastanceUnit>::SetValue;
   using SEScalarQuantity<FlowElastanceUnit>::GetValue;
-
-  bool operator==(const SEScalarFlowElastance&) const;
-  bool operator!=(const SEScalarFlowElastance&) const;
 };
 }

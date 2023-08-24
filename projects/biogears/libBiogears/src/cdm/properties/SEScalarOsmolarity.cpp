@@ -87,15 +87,4 @@ bool OsmolarityUnit::operator!=(const OsmolarityUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarOsmolarity::operator==(const SEScalarOsmolarity& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarOsmolarity::operator!=(const SEScalarOsmolarity& obj) const
-{
-  return !(*this == obj);
-}
 }

@@ -58,24 +58,4 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-
-
-  <xs:complexType name="TissueSubstanceQuantityData">
-    <xs:complexContent>
-      <xs:extension base="SubstanceQuantityData">
-        <xs:sequence>
-          <xs:element name="Mass" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
-
-          <xs:element name="TissueConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
-          <xs:element name="TissueMolarity" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
-
-          <xs:element name="ExtravascularConcentration" type="ScalarMassPerVolumeData" minOccurs="0"  maxOccurs="1"/>
-          <xs:element name="ExtravascularMolarity" type="ScalarAmountPerVolumeData" minOccurs="0"  maxOccurs="1"/>
-          <xs:element name="ExtravascularPartialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
-          <xs:element name="ExtravascularSaturation" type="ScalarFractionData" minOccurs="0"  maxOccurs="1"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
 </xs:schema>

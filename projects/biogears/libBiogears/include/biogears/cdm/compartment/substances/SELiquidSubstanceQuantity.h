@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
+class SubstanceQuantityFixture_LiquidSubstanceQuantity_Test;
+
 namespace biogears {
 class SELiquidCompartment;
 
@@ -31,7 +33,8 @@ namespace io {
 }
 class BIOGEARS_API SELiquidSubstanceQuantity : public SESubstanceQuantity, public SELiquidTransportSubstance {
   friend class SELiquidCompartment;
-  friend io::SubstanceQuantity;
+  friend class io::SubstanceQuantity;
+  friend class ::SubstanceQuantityFixture_LiquidSubstanceQuantity_Test;
 
 protected:
   SELiquidSubstanceQuantity(SESubstance& sub, SELiquidCompartment& compartment);
@@ -44,6 +47,13 @@ public:
 
   virtual bool Load(const CDM::LiquidSubstanceQuantityData& in);
   virtual CDM::LiquidSubstanceQuantityData* Unload() override;
+
+  bool operator==(SELiquidTransportSubstance const&) const override;
+  bool operator!=(SELiquidTransportSubstance const&) const override;
+  bool operator==(SESubstanceQuantity const&) const override;
+  bool operator!=(SESubstanceQuantity const&) const override;
+  bool operator==(SELiquidSubstanceQuantity const&) const;
+  bool operator!=(SELiquidSubstanceQuantity const&) const;
 
 protected:
   virtual void Unload(CDM::LiquidSubstanceQuantityData& data);

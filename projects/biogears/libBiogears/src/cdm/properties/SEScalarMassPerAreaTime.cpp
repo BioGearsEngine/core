@@ -84,15 +84,4 @@ bool MassPerAreaTimeUnit::operator!=(const MassPerAreaTimeUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarMassPerAreaTime::operator==(const SEScalarMassPerAreaTime& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarMassPerAreaTime::operator!=(const SEScalarMassPerAreaTime& obj) const
-{
-  return !(*this == obj);
-}
 }

@@ -99,14 +99,4 @@ bool HeatResistanceUnit::operator!=(const HeatResistanceUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-bool SEScalarHeatResistance::operator==(const SEScalarHeatResistance& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarHeatResistance::operator!=(const SEScalarHeatResistance& obj) const
-{
-  return !(*this == obj);
-}
 }
