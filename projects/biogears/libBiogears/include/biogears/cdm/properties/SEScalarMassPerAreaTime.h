@@ -45,7 +45,5 @@ public:
   using SEScalarQuantity<MassPerAreaTimeUnit>::SetValue;
   using SEScalarQuantity<MassPerAreaTimeUnit>::GetValue;
 
-  bool operator==(const SEScalarMassPerAreaTime&) const;
-  bool operator!=(const SEScalarMassPerAreaTime&) const;
 };
 }

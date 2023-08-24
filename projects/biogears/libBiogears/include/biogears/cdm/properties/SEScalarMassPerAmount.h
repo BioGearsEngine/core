@@ -54,8 +54,5 @@ public:
 
   using SEScalarQuantity<MassPerAmountUnit>::SetValue;
   using SEScalarQuantity<MassPerAmountUnit>::GetValue;
-
-  bool operator==(const SEScalarMassPerAmount&) const;
-  bool operator!=(const SEScalarMassPerAmount&) const;
 };
 }

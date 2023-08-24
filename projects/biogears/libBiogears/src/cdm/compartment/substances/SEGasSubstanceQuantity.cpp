@@ -97,7 +97,7 @@ void SEGasSubstanceQuantity::SetToZero()
 //-------------------------------------------------------------------------------
 const SEScalar* SEGasSubstanceQuantity::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEGasSubstanceQuantity::GetScalar(const std::string& name)
@@ -236,5 +236,62 @@ void SEGasSubstanceQuantity::AddChild(SEGasSubstanceQuantity& subQ)
   if (!Contains(m_Children, subQ))
     m_Children.push_back(&subQ);
 }
-//-------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+
+bool SEGasSubstanceQuantity::operator==(SEGasSubstanceQuantity const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = ((m_PartialPressure && rhs.m_PartialPressure) ? m_PartialPressure->operator==(*rhs.m_PartialPressure) : m_PartialPressure == rhs.m_PartialPressure)
+    && ((m_Volume && rhs.m_Volume) ? m_Volume->operator==(*rhs.m_Volume) : m_Volume == rhs.m_Volume)
+    && ((m_VolumeFraction && rhs.m_VolumeFraction) ? m_VolumeFraction->operator==(*rhs.m_VolumeFraction) : m_VolumeFraction == rhs.m_VolumeFraction)
+    && m_Compartment.operator==(rhs.m_Compartment);
+
+  if (equivilant) {
+    for (auto i = 0; i < m_Children.size(); ++i) {
+      equivilant &= (m_Children[i] && rhs.m_Children[i])
+        ? m_Children[i]->operator==(*rhs.m_Children[i])
+        : m_Children[i] == rhs.m_Children[i];
+    }
+  }
+
+  return equivilant;
+}
+
+bool SEGasSubstanceQuantity::operator!=(SEGasSubstanceQuantity const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
+bool SEGasSubstanceQuantity::operator==(SESubstanceQuantity const& rhs) const
+{
+  try {
+    auto& gasSubstanceQuantity = dynamic_cast<SEGasSubstanceQuantity const&>(rhs);
+    return this->operator==(gasSubstanceQuantity);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SEGasSubstanceQuantity::operator!=(SESubstanceQuantity const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
+bool SEGasSubstanceQuantity::operator==(SEGasTransportSubstance const& rhs) const
+{
+  try {
+    auto& gasSubstanceQuantity = dynamic_cast<SEGasSubstanceQuantity const&>(rhs);
+    return this->operator==(gasSubstanceQuantity);
+  } catch (std::exception) {
+    return false;
+  }
+  return false;
+}
+bool SEGasSubstanceQuantity::operator!=(SEGasTransportSubstance const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 }

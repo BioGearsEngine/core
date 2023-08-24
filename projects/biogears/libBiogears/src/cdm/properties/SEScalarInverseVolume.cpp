@@ -89,14 +89,4 @@ bool InverseVolumeUnit::operator!=(const InverseVolumeUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-bool SEScalarInverseVolume::operator==(const SEScalarInverseVolume& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarInverseVolume::operator!=(const SEScalarInverseVolume& obj) const
-{
-  return !(*this == obj);
-}
 }

@@ -94,14 +94,4 @@ bool HeatConductancePerAreaUnit::operator!=(const HeatConductancePerAreaUnit& ob
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-bool SEScalarHeatConductancePerArea::operator==(const SEScalarHeatConductancePerArea& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarHeatConductancePerArea::operator!=(const SEScalarHeatConductancePerArea& obj) const
-{
-  return !(*this == obj);
-}
 }

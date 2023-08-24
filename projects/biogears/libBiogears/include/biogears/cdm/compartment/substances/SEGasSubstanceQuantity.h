@@ -14,6 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/substances/SESubstanceQuantity.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
+class SubstanceQuantityFixture_GasSubstanceQuantity_Test;
+
 namespace biogears {
 class SEGasCompartment;
 namespace io {
@@ -21,7 +23,8 @@ namespace io {
 }
 class BIOGEARS_API SEGasSubstanceQuantity : public SESubstanceQuantity, public SEGasTransportSubstance {
   friend class SEGasCompartment;
-  friend io::SubstanceQuantity;
+  friend class io::SubstanceQuantity;
+  friend class ::SubstanceQuantityFixture_GasSubstanceQuantity_Test;
 
 protected:
   SEGasSubstanceQuantity(SESubstance& sub, SEGasCompartment& compartment);
@@ -34,6 +37,13 @@ public:
 
   virtual bool Load(const CDM::GasSubstanceQuantityData& in);
   virtual CDM::GasSubstanceQuantityData* Unload() override;
+
+  bool operator==(SEGasTransportSubstance const&) const override;
+  bool operator!=(SEGasTransportSubstance const&) const override;
+  bool operator==(SESubstanceQuantity const&) const override;
+  bool operator!=(SESubstanceQuantity const&) const override;
+  bool operator==(const SEGasSubstanceQuantity&) const;
+  bool operator!=(const SEGasSubstanceQuantity&) const;
 
 protected:
   virtual void Unload(CDM::GasSubstanceQuantityData& data);
@@ -64,11 +74,11 @@ protected:
   virtual bool HasIntensive() const override { return HasVolumeFraction(); }
   virtual SEScalarFraction& GetIntensive() override { return GetVolumeFraction(); }
 
-  SEScalarPressure* m_PartialPressure;
-  SEScalarVolume* m_Volume;
-  SEScalarFraction* m_VolumeFraction;
+	  SEScalarPressure* m_PartialPressure;
+	  SEScalarVolume* m_Volume;
+	  SEScalarFraction* m_VolumeFraction;
 
-  SEGasCompartment& m_Compartment;
-  std::vector<SEGasSubstanceQuantity*> m_Children;
+	  SEGasCompartment& m_Compartment;
+	  std::vector<SEGasSubstanceQuantity*> m_Children;
 };
 }

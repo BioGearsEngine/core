@@ -104,15 +104,4 @@ bool FlowInertanceUnit::operator!=(const FlowInertanceUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarFlowInertance::operator==(const SEScalarFlowInertance& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarFlowInertance::operator!=(const SEScalarFlowInertance& obj) const
-{
-  return !(*this == obj);
-}
 }

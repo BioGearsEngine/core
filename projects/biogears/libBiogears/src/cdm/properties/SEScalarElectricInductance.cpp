@@ -84,15 +84,4 @@ bool ElectricInductanceUnit::operator!=(const ElectricInductanceUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarElectricInductance::operator==(const SEScalarElectricInductance& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarElectricInductance::operator!=(const SEScalarElectricInductance& obj) const
-{
-  return !(*this == obj);
-}
 }

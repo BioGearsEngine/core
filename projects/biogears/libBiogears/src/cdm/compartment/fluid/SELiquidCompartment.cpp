@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 
 SELiquidCompartment::SELiquidCompartment(const char* name, Logger* logger)
-  : SELiquidCompartment(std::string{ name }, logger)
+  : SELiquidCompartment(std::string { name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ bool SELiquidCompartment::Load(const CDM::LiquidCompartmentData& in, SESubstance
     for (const CDM::LiquidSubstanceQuantityData& d : in.SubstanceQuantity()) {
       SESubstance* sub = subMgr.GetSubstance(d.Substance());
       if (sub == nullptr) {
-        Error("Could not find a substance for " + std::string{ d.Substance() });
+        Error("Could not find a substance for " + std::string { d.Substance() });
         return false;
       }
       CreateSubstanceQuantity(*sub).Load(d);
@@ -86,7 +86,7 @@ void SELiquidCompartment::Unload(CDM::LiquidCompartmentData& data)
 //-----------------------------------------------------------------------------
 const SEScalar* SELiquidCompartment::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SELiquidCompartment::GetScalar(const std::string& name)
@@ -114,7 +114,7 @@ void SELiquidCompartment::Balance(BalanceLiquidBy by)
     if (by == BalanceLiquidBy::PartialPressure && subQ->GetSubstance().GetState() != CDM::enumSubstanceState::Gas)
       continue;
 
-    //Partial pressures only make sense for gases in liquids
+    // Partial pressures only make sense for gases in liquids
     if (HasVolume())
       subQ->Balance(by);
   }
@@ -209,6 +209,47 @@ SELiquidSubstanceQuantity& SELiquidCompartment::CreateSubstanceQuantity(SESubsta
       subQ->AddChild(child->CreateSubstanceQuantity(substance));
   }
   return *subQ;
+}
+//-----------------------------------------------------------------------------
+bool SELiquidCompartment::operator==(SELiquidCompartment const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = ((m_pH && rhs.m_pH) ? m_pH->operator==(*rhs.m_pH) : m_pH == rhs.m_pH)
+    && ((m_WaterVolumeFraction && rhs.m_WaterVolumeFraction) ? m_WaterVolumeFraction->operator==(*rhs.m_WaterVolumeFraction) : m_WaterVolumeFraction == rhs.m_WaterVolumeFraction);
+  if (equivilant) {
+    for (auto i = 0; i < m_Children.size(); ++i) {
+      equivilant &= (m_Children[i] && rhs.m_Children[i])
+        ? m_Children[i]->operator==(*rhs.m_Children[i])
+        : m_Children[i] == rhs.m_Children[i];
+    }
+  }
+
+  if (equivilant) {
+    for (auto i = 0; i < m_Leaves.size(); ++i) {
+      equivilant &= (m_Leaves[i] && rhs.m_Leaves[i])
+        ? m_Leaves[i]->operator==(*rhs.m_Leaves[i])
+        : m_Leaves[i] == rhs.m_Leaves[i];
+    }
+  }
+
+  return equivilant;
+}
+
+bool SELiquidCompartment::operator!=(SELiquidCompartment const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
+bool SELiquidCompartment::operator==(SEFluidCompartment const& rhs) const
+{
+  auto ptr = dynamic_cast<decltype(this)>(&rhs);
+  return (ptr) ? this->operator==(*ptr) : false;
+}
+bool SELiquidCompartment::operator!=(SEFluidCompartment const& rhs) const
+{
+  return !(*this == rhs);
 }
 //-----------------------------------------------------------------------------
 }

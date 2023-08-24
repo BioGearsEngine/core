@@ -153,7 +153,7 @@ template <typename Unit>
 double SEScalarQuantity<Unit>::GetValue() const
 {
   if (m_unit) {
-    return GetValue(*m_unit); 
+    return GetValue(*m_unit);
   }
   return SEScalar::dNaN();
 }
@@ -221,20 +221,32 @@ void SEScalarQuantity<Unit>::SetValue(double d, const Unit& unit)
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
-bool SEScalarQuantity<Unit>::Equals(const SEScalarQuantity<Unit>& to) const
+bool SEScalarQuantity<Unit>::Equals(const SEScalarQuantity<Unit>& rhs) const
 {
-  if (m_unit == nullptr)
-    return false;
-  if (std::isnan(m_value) && std::isnan(to.m_value)) //This Violates C++ Spec
+  if (this == &rhs)
     return true;
-  if (std::isnan(m_value) || std::isnan(to.m_value))
-    return false;
-  if (std::isinf(m_value) && std::isinf(to.m_value)) //This implies -> -inf == +inf
-    return true;
-  if (std::isinf(m_value) || std::isinf(to.m_value))
-    return false;
-  double t = to.GetValue(*m_unit);
-  return std::abs(GeneralMath::PercentDifference(m_value, t)) <= 1e-15;
+
+  if (this->m_unit && rhs.m_unit) {
+    // Nan != Nan is a fundamental part of IEEE1394
+    // We should move towards supporting Nan != Nan
+    // If we want to support NotValid == NotValid we should express it
+    // as !unit == !unit or something, but our real problem is
+
+    if (std::isfinite(m_value) && std::isfinite(rhs.m_value)) {
+      double t = rhs.GetValue(*m_unit);
+      return std::abs(GeneralMath::PercentDifference(m_value, t)) <= 1e-15;
+    }
+
+    if (m_unit == rhs.m_unit) {
+      if (std::isinf(m_value) && std::isinf(rhs.m_value) // This implies -> -inf == +inf
+          || (std::isnan(m_value) && std::isnan(rhs.m_value))) // This Violates C++ Spec
+      {
+        return true;
+      }
+    }
+  }
+
+  return !this->m_unit && !rhs.m_unit;
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
@@ -256,13 +268,12 @@ std::string SEScalarQuantity<Unit>::ToString() const
     std::stringstream ss;
     ss << m_value;
     return ss.str();
-    //return std::to_string(m_value);
-  }
-  else {
+    // return std::to_string(m_value);
+  } else {
     std::stringstream ss;
-    ss << m_value << "(" <<  m_unit->ToString() << ")";
+    ss << m_value << "(" << m_unit->ToString() << ")";
     return ss.str();
-   //return std::to_string(m_value) + "(" + m_unit->ToString() + ")" ;
+    // return std::to_string(m_value) + "(" + m_unit->ToString() + ")" ;
   }
 }
 //-------------------------------------------------------------------------------
@@ -367,12 +378,12 @@ auto SEScalarQuantity<Unit>::operator=(const SEScalarQuantity& rhs) -> SEScalarQ
   if (this == &rhs)
     return *this;
 
-    this->SEScalar::operator=(rhs);
-    this->m_unit = rhs.m_unit;
+  this->SEScalar::operator=(rhs);
+  this->m_unit = rhs.m_unit;
 
-    return *this;
+  return *this;
 }
-  //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 template <typename Unit>
 auto SEScalarQuantity<Unit>::DivideValue(double d) -> SEScalarQuantity&
 {
@@ -418,6 +429,19 @@ template <typename Unit>
 bool SEScalarQuantity<Unit>::operator!=(const SEScalarQuantity& rhs) const
 {
   return !Equals(rhs);
+}
+//-------------------------------------------------------------------------------
+template <typename Unit>
+bool SEScalarQuantity<Unit>::operator==(const SEUnitScalar& rhs) const 
+{
+  auto rhs_ptr = dynamic_cast<decltype(this)>(&rhs);
+  return (rhs_ptr) ? this->operator==(*rhs_ptr) : false;
+}
+//-------------------------------------------------------------------------------
+template <typename Unit>
+bool SEScalarQuantity<Unit>::operator!=(const SEUnitScalar& rhs) const 
+{
+  return !this->operator==(rhs);
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
@@ -472,4 +496,4 @@ auto SEScalarQuantity<Unit>::operator*=(const SEScalar& rhs) -> SEScalarQuantity
   return this->Multiply(rhs);
 }
 
-} //namespace biogears
+} // namespace biogears

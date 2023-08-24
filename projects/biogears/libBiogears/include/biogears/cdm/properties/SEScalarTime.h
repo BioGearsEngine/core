@@ -48,8 +48,5 @@ public:
 
   using SEScalarQuantity<TimeUnit>::SetValue;
   using SEScalarQuantity<TimeUnit>::GetValue;
-
-  bool operator==(const SEScalarTime&) const;
-  bool operator!=(const SEScalarTime&) const;
 };
 }

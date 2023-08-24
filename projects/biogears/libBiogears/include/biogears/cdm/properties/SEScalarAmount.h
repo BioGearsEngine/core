@@ -47,7 +47,5 @@ public:
   using SEScalarQuantity<AmountUnit>::SetValue;
   using SEScalarQuantity<AmountUnit>::GetValue;
 
-  bool operator==(const SEScalarAmount&) const;
-  bool operator!=(const SEScalarAmount&) const;
 };
 }

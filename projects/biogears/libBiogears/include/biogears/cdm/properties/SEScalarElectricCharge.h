@@ -45,7 +45,6 @@ public:
   using SEScalarQuantity<ElectricChargeUnit>::SetValue;
   using SEScalarQuantity<ElectricChargeUnit>::GetValue;
 
-  bool operator==(const SEScalarElectricCharge&) const;
-  bool operator!=(const SEScalarElectricCharge&) const;
+
 };
 }

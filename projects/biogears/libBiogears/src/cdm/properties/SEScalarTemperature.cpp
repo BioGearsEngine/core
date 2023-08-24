@@ -101,17 +101,9 @@ bool TemperatureUnit::operator!=(const TemperatureUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-SEScalarTemperature::SEScalarTemperature(){}
+SEScalarTemperature::SEScalarTemperature()
+:SEScalarQuantity()
+{}
 SEScalarTemperature::~SEScalarTemperature(){}
 //-------------------------------------------------------------------------------
-bool SEScalarTemperature::operator==(const SEScalarTemperature& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarTemperature::operator!=(const SEScalarTemperature& obj) const
-{
-  return !(*this == obj);
-}
 }

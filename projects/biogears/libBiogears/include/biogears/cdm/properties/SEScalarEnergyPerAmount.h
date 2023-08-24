@@ -45,8 +45,5 @@ public:
 
   using SEScalarQuantity<EnergyPerAmountUnit>::SetValue;
   using SEScalarQuantity<EnergyPerAmountUnit>::GetValue;
-
-  bool operator==(const SEScalarEnergyPerAmount&) const;
-  bool operator!=(const SEScalarEnergyPerAmount&) const;
 };
 }

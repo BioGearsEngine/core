@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 SEUnitScalar::SEUnitScalar(bool ro)
-  : SEScalar(1.0,ro)
+  : SEScalar(NaN,ro)
 {
 }
 
@@ -28,25 +28,5 @@ SEUnitScalar::~SEUnitScalar()
 {
   //TODO:Convert Unit PTR to a shared_ptr or a non reference
 }
-//------------------------------------------------------------------------------
-double SEUnitScalar::GetValue() const
-{
-  if (GetUnit()) {
-    return GetValue(GetUnit()->GetString());
-  } else {
-    return std::numeric_limits<double>::quiet_NaN();
-  }
-}
-  bool SEUnitScalar::operator==(const SEUnitScalar& obj) const{
-    return m_value == obj.m_value
-      && GetUnit() != nullptr 
-      && obj.GetUnit() != nullptr
-      && *GetUnit() == *obj.GetUnit();
 
-  }
-  //------------------------------------------------------------------------------
-  bool SEUnitScalar::operator!=(const SEUnitScalar& obj) const{
-      return !(*this == obj);
-  }
-  //------------------------------------------------------------------------------
 }

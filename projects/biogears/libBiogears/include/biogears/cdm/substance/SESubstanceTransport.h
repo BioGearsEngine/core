@@ -43,6 +43,9 @@ public:
 
   virtual bool HasIntensive() const = 0;
   virtual IntensiveScalar& GetIntensive() = 0;
+
+  virtual bool operator==(SESubstanceTransportAmount const&) const = 0;
+  virtual bool operator!=(SESubstanceTransportAmount const&) const = 0;
 };
 BG_EXT template class BIOGEARS_API SESubstanceTransportAmount<SEScalarVolume, SEScalarFraction>;
 BG_EXT template class BIOGEARS_API SESubstanceTransportAmount<SEScalarMass, SEScalarMassPerVolume>;

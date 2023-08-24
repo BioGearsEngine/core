@@ -109,14 +109,4 @@ bool LengthPerTimeUnit::operator!=(const LengthPerTimeUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-bool SEScalarLengthPerTime::operator==(const SEScalarLengthPerTime& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarLengthPerTime::operator!=(const SEScalarLengthPerTime& obj) const
-{
-  return !(*this == obj);
-}
 }

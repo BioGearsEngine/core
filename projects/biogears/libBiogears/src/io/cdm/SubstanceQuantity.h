@@ -34,8 +34,6 @@ namespace biogears {
 class SESubstanceQuantity;
 class SEGasSubstanceQuantity;
 class SELiquidSubstanceQuantity;
-//TODO:Remove from CDM
-//class SETissueSubstanceQuantity;
 
 namespace io {
   class BIOGEARS_PRIVATE_API SubstanceQuantity {

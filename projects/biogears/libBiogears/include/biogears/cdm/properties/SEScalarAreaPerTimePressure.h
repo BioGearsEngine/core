@@ -47,8 +47,5 @@ public:
 
   using SEScalarQuantity<AreaPerTimePressureUnit>::SetValue;
   using SEScalarQuantity<AreaPerTimePressureUnit>::GetValue;
-
-  bool operator==(const SEScalarAreaPerTimePressure&) const;
-  bool operator!=(const SEScalarAreaPerTimePressure&) const;
 };
 }

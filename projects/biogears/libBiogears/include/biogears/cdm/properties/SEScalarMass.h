@@ -48,8 +48,5 @@ public:
 
   using SEScalarQuantity<MassUnit>::SetValue;
   using SEScalarQuantity<MassUnit>::GetValue;
-
-  bool operator==(const SEScalarMass&) const;
-  bool operator!=(const SEScalarMass&) const;
 };
 }

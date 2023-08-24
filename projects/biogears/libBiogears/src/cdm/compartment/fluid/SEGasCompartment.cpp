@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 SEGasCompartment::SEGasCompartment(const char* name, Logger* logger)
-  : SEGasCompartment(std::string{ name }, logger)
+  : SEGasCompartment(std::string { name }, logger)
 {
 }
 //-------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ bool SEGasCompartment::Load(const CDM::GasCompartmentData& in, SESubstanceManage
     for (const CDM::GasSubstanceQuantityData& d : in.SubstanceQuantity()) {
       SESubstance* sub = subMgr.GetSubstance(d.Substance());
       if (sub == nullptr) {
-        Error("Could not find a substance for " + std::string{ d.Substance() });
+        Error("Could not find a substance for " + std::string { d.Substance() });
         return false;
       }
       CreateSubstanceQuantity(*sub).Load(d);
@@ -78,7 +78,7 @@ void SEGasCompartment::Balance(BalanceGasBy by)
     Fatal("You cannot balance a quantity with children", "SEGasCompartment::Balance");
   switch (by) {
   case BalanceGasBy::Volume: {
-    //Note: We won't modify the compartment volume, just the fractions
+    // Note: We won't modify the compartment volume, just the fractions
     double totalVolume_mL = 0;
     for (SEGasSubstanceQuantity* subQ : GetSubstanceQuantities()) {
       if (subQ->HasVolume())
@@ -126,7 +126,7 @@ void SEGasCompartment::Balance(BalanceGasBy by)
           GeneralMath::CalculatePartialPressureInGas(subQ->GetVolumeFraction(), GetPressure(), subQ->GetPartialPressure(), m_Logger);
       }
       if (!SEScalar::IsZero(1 - totalFraction, ZERO_APPROX))
-        Fatal(std::string{ GetName() } +" Compartment's volume fractions do not sum up to 1");
+        Fatal(std::string { GetName() } + " Compartment's volume fractions do not sum up to 1");
     }
     break;
   }
@@ -161,6 +161,48 @@ SEGasSubstanceQuantity& SEGasCompartment::CreateSubstanceQuantity(SESubstance& s
       subQ->AddChild(child->CreateSubstanceQuantity(substance));
   }
   return *subQ;
+}
+//-------------------------------------------------------------------------------
+bool SEGasCompartment::operator==(SEGasCompartment const& rhs) const
+{
+  if (this == &rhs) {
+    return true;
+  }
+  bool equivilant = true;
+
+  if (equivilant) {
+    for (auto i = 0; i < m_Children.size(); ++i) {
+      equivilant &= (m_Children[i] && rhs.m_Children[i])
+        ? m_Children[i]->operator==(*rhs.m_Children[i])
+        : m_Children[i] == rhs.m_Children[i];
+    }
+  }
+
+  if (equivilant) {
+    for (auto i = 0; i < m_Children.size(); ++i) {
+      equivilant &= (m_Children[i] && rhs.m_Children[i])
+        ? m_Children[i]->operator==(*rhs.m_Children[i])
+        : m_Children[i] == rhs.m_Children[i];
+    }
+  }
+
+  return equivilant;
+}
+
+bool SEGasCompartment::operator!=(SEGasCompartment const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+bool SEGasCompartment::operator==(SEFluidCompartment const& rhs) const
+{
+  auto ptr = dynamic_cast<decltype(this)>(&rhs);
+  return (ptr) ? this->operator==(*ptr) : false;
+}
+
+bool SEGasCompartment::operator!=(SEFluidCompartment const& rhs) const
+{
+  return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
 }

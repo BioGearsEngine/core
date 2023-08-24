@@ -99,14 +99,4 @@ bool LengthPerTimePressureUnit::operator!=(const LengthPerTimePressureUnit& obj)
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-bool SEScalarLengthPerTimePressure::operator==(const SEScalarLengthPerTimePressure& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarLengthPerTimePressure::operator!=(const SEScalarLengthPerTimePressure& obj) const
-{
-  return !(*this == obj);
-}
 }

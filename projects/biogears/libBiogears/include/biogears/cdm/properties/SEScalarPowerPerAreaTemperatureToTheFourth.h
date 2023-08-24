@@ -44,8 +44,5 @@ public:
 
   using SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::SetValue;
   using SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::GetValue;
-
-  bool operator==(const SEScalarPowerPerAreaTemperatureToTheFourth&) const;
-  bool operator!=(const SEScalarPowerPerAreaTemperatureToTheFourth&) const;
 };
 }

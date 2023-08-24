@@ -50,7 +50,5 @@ public:
   using SEScalarQuantity<PowerUnit>::SetValue;
   using SEScalarQuantity<PowerUnit>::GetValue;
 
-  bool operator==(const SEScalarPower&) const;
-  bool operator!=(const SEScalarPower&) const;
 };
 }

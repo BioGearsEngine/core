@@ -134,14 +134,4 @@ bool MassPerAmountUnit::operator!=(const MassPerAmountUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-bool SEScalarMassPerAmount::operator==(const SEScalarMassPerAmount& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarMassPerAmount::operator!=(const SEScalarMassPerAmount& obj) const
-{
-  return !(*this == obj);
-}
 }

@@ -49,8 +49,5 @@ public:
 
   using SEScalarQuantity<AmountPerVolumeUnit>::SetValue;
   using SEScalarQuantity<AmountPerVolumeUnit>::GetValue;
-
-  bool operator==(const SEScalarAmountPerVolume&) const;
-  bool operator!=(const SEScalarAmountPerVolume&) const;
 };
 }

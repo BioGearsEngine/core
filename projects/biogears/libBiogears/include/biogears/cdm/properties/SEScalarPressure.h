@@ -48,8 +48,5 @@ public:
 
   using SEScalarQuantity<PressureUnit>::SetValue;
   using SEScalarQuantity<PressureUnit>::GetValue;
-
-  bool operator==(const SEScalarPressure&) const;
-  bool operator!=(const SEScalarPressure&) const;
 };
 }

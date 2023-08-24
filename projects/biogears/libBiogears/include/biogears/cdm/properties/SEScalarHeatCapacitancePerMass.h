@@ -48,7 +48,5 @@ public:
   using SEScalarQuantity<HeatCapacitancePerMassUnit>::SetValue;
   using SEScalarQuantity<HeatCapacitancePerMassUnit>::GetValue;
 
-  bool operator==(const SEScalarHeatCapacitancePerMass&) const;
-  bool operator!=(const SEScalarHeatCapacitancePerMass&) const;
 };
 }

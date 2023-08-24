@@ -84,15 +84,4 @@ bool ElectricCurrentUnit::operator!=(const ElectricCurrentUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarElectricCurrent::operator==(const SEScalarElectricCurrent& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarElectricCurrent::operator!=(const SEScalarElectricCurrent& obj) const
-{
-  return !(*this == obj);
-}
 }

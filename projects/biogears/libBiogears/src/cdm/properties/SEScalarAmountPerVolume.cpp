@@ -108,15 +108,4 @@ bool AmountPerVolumeUnit::operator!=(const AmountPerVolumeUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-
-bool SEScalarAmountPerVolume::operator==(const SEScalarAmountPerVolume& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarAmountPerVolume::operator!=(const SEScalarAmountPerVolume& obj) const
-{
-  return !(*this == obj);
-}
 }

@@ -98,14 +98,4 @@ bool InversePressureUnit::operator!=(const InversePressureUnit& obj) const
   return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
-bool SEScalarInversePressure::operator==(const SEScalarInversePressure& obj) const
-{
-  return m_unit == obj.m_unit
-    && m_value == obj.m_value;
-}
-//-------------------------------------------------------------------------------
-bool SEScalarInversePressure::operator!=(const SEScalarInversePressure& obj) const
-{
-  return !(*this == obj);
-}
 }

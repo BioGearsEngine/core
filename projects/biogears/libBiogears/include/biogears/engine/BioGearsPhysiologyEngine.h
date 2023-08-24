@@ -554,6 +554,7 @@ namespace tatrc {
         DEFINE_STATIC_STRING(ExternalCoreToGround);
         DEFINE_STATIC_STRING(GroundToActive);
         DEFINE_STATIC_STRING(GroundToClothing);
+
         DEFINE_STATIC_STRING(GroundToEnclosure);
         DEFINE_STATIC_STRING(GroundToEnvironment);
         DEFINE_STATIC_STRING(ExternalSkinToGround);
