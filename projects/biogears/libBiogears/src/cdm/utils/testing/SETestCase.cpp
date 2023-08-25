@@ -46,12 +46,12 @@ void SETestCase::Reset()
   DELETE_VECTOR(m_CaseEqualsErrors);
 }
 //-----------------------------------------------------------------------------
-bool SETestCase::Load(const CDM::TestCase& in)
+bool SETestCase::Load(const CDM::TestCaseData& in)
 {
   Reset();
 
   m_Name = in.Name();
-  GetDuration().Load(in.Time());
+  GetDuration().Load(in.Duration());
 
   SETestErrorStatistics* ex;
   CDM::TestErrorStatisticsData* eData;
@@ -71,18 +71,18 @@ bool SETestCase::Load(const CDM::TestCase& in)
   return true;
 }
 //-----------------------------------------------------------------------------
-std::unique_ptr<CDM::TestCase> SETestCase::Unload() const
+std::unique_ptr<CDM::TestCaseData> SETestCase::Unload() const
 {
-  std::unique_ptr<CDM::TestCase> data(new CDM::TestCase());
+  std::unique_ptr<CDM::TestCaseData> data(new CDM::TestCaseData());
   Unload(*data);
   return data;
 }
 //-----------------------------------------------------------------------------
-void SETestCase::Unload(CDM::TestCase& data) const
+void SETestCase::Unload(CDM::TestCaseData& data) const
 {
   data.Name(m_Name);
 
-  data.Time(std::unique_ptr<CDM::ScalarTimeData>(m_Duration.Unload()));
+  data.Duration(std::unique_ptr<CDM::ScalarTimeData>(m_Duration.Unload()));
 
   for (unsigned int i = 0; i < m_Failure.size(); i++) {
     data.Failure().push_back(m_Failure.at(i));
@@ -126,7 +126,7 @@ void SETestCase::AddFailure(const std::string& err)
   Error(err);
 }
 //-----------------------------------------------------------------------------
-const std::vector<std::string>& SETestCase::GetFailures()
+const std::vector<std::string>& SETestCase::GetFailures() const
 {
   return m_Failure;
 }
@@ -141,6 +141,30 @@ SETestErrorStatistics& SETestCase::CreateErrorStatistic()
 const std::vector<SETestErrorStatistics*>& SETestCase::GetErrorStatistics() const
 {
   return m_CaseEqualsErrors;
+}
+//-----------------------------------------------------------------------------
+
+bool SETestCase::operator==(const SETestCase& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = m_Name == rhs.m_Name
+    && m_Duration == rhs.m_Duration
+    && m_Failure == rhs.m_Failure
+    && m_CaseEqualsErrors.size() == rhs.m_CaseEqualsErrors.size();
+
+  for (auto i = 0; equivilant && i < m_CaseEqualsErrors.size(); ++i) {
+    equivilant &= (m_CaseEqualsErrors[i] && rhs.m_CaseEqualsErrors[i])
+      ? m_CaseEqualsErrors[i]->operator==(*rhs.m_CaseEqualsErrors[i])
+      : m_CaseEqualsErrors[i] == rhs.m_CaseEqualsErrors[i];
+  }
+
+  return equivilant;
+}
+bool SETestCase::operator!=(const SETestCase& rhs) const
+{
+  return !(this->operator==(rhs));
 }
 //-----------------------------------------------------------------------------
 }

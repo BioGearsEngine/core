@@ -9,9 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <algorithm>
 #include <fstream>
+#include <functional>
+#include <numeric>
 
 #include <biogears/cdm/utils/testing/SETestReport.h>
+#include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/TestReport.hxx>
 
@@ -21,29 +25,29 @@ SETestReport::SETestReport(Logger* logger)
 {
   assert(m_Logger != nullptr);
 }
-
+//-------------------------------------------------------------------------------
 SETestReport::~SETestReport()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SETestReport::Clear()
 {
   DELETE_VECTOR(m_testSuite);
 }
-
+//-------------------------------------------------------------------------------
 void SETestReport::Reset()
 {
 }
-
+//-------------------------------------------------------------------------------
 bool SETestReport::Load(const CDM::TestReportData& in)
 {
   Reset();
 
   SETestSuite* sx;
-  CDM::TestSuite* sData;
+  CDM::TestSuiteData* sData;
   for (unsigned int i = 0; i < in.TestSuite().size(); i++) {
-    sData = (CDM::TestSuite*)&in.TestSuite().at(i);
+    sData = (CDM::TestSuiteData*)&in.TestSuite().at(i);
     if (sData != nullptr) {
       sx = new SETestSuite(GetLogger());
       sx->Load(*sData);
@@ -53,21 +57,21 @@ bool SETestReport::Load(const CDM::TestReportData& in)
 
   return true;
 }
-
+//-------------------------------------------------------------------------------
 std::unique_ptr<CDM::TestReportData> SETestReport::Unload() const
 {
   std::unique_ptr<CDM::TestReportData> data(new CDM::TestReportData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SETestReport::Unload(CDM::TestReportData& data) const
 {
   for (unsigned int i = 0; i < m_testSuite.size(); i++) {
     data.TestSuite().push_back(*m_testSuite.at(i)->Unload());
   }
 }
-
+//-------------------------------------------------------------------------------
 bool SETestReport::WriteFile(const std::string& fileName)
 {
   xml_schema::namespace_infomap map;
@@ -86,15 +90,38 @@ bool SETestReport::WriteFile(const std::string& fileName)
   }
   return true;
 }
-
+//-------------------------------------------------------------------------------
 SETestSuite& SETestReport::CreateTestSuite()
 {
   SETestSuite* suite = new SETestSuite(GetLogger());
   m_testSuite.push_back(suite);
   return *suite;
 }
+//-------------------------------------------------------------------------------
 const std::vector<SETestSuite*>& SETestReport::GetTestSuites() const
 {
   return m_testSuite;
 }
+//-------------------------------------------------------------------------------
+bool SETestReport::operator==(SETestReport const& rhs) const
+{
+
+  if (this == &rhs)
+    return true;
+
+  bool equivilant = m_testSuite.size() == rhs.m_testSuite.size();
+  for (auto i = 0; equivilant && i < m_testSuite.size(); ++i) {
+    equivilant &= (m_testSuite[i] && rhs.m_testSuite[i])
+      ? m_testSuite[i]->operator==(*rhs.m_testSuite[i])
+      : m_testSuite[i] == rhs.m_testSuite[i];
+  }
+
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SETestReport::operator!=(SETestReport const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -33,17 +33,18 @@ class BIOGEARS_API SETestErrorStatistics : public Loggable {
   friend SETestSuite;
   friend io::TestReport;
 
-protected:
-  SETestErrorStatistics(Logger* logger);
-
 public:
+  SETestErrorStatistics(Logger* logger);
   virtual ~SETestErrorStatistics();
 
-  virtual void Reset(); //reset values
-  virtual void Clear(); //clear memory
+  virtual void Reset(); // reset values
+  virtual void Clear(); // clear memory
 
   bool Load(const CDM::TestErrorStatisticsData& in);
   std::unique_ptr<CDM::TestErrorStatisticsData> Unload() const;
+
+  bool operator==(const SETestErrorStatistics&) const;
+  bool operator!=(const SETestErrorStatistics&) const;
 
 protected:
   void Unload(CDM::TestErrorStatisticsData& data) const;
@@ -75,13 +76,16 @@ public:
   void SetStandardDeviation(double StandardDeviation);
   double GetStandardDeviation() const;
 
+  void SetPercentTolerance(double PercentTolerance);
+  double GetPercentTolerance() const;
+
   void AddDifference(const std::string& difference);
   const std::vector<std::string>* GetDifferences() const;
 
   // This a histogram that shows a percent tolerance and how many errors fall with in each bin
-  bool HasPercentTolerancevsNumErrorsHistogram() const;
-  SEFunction& GetPercentToleranceVsNumErrorsHistogram();
-  void SetPercentToleranceVsNumErrorsHistogram(SEFunction* PercentToleranceVsNumErrors);
+  bool HasPercentToleranceVsNumErrors() const;
+  SEFunction& GetPercentToleranceVsNumErrors();
+  void SetPercentToleranceVsNumErrors(SEFunction* PercentToleranceVsNumErrors);
 
 protected:
   int m_NumberOfErrors;
@@ -93,7 +97,7 @@ protected:
   std::string m_PropertyName;
   std::string m_ComputedPropertyID;
   std::string m_ExpectedPropertyID;
-  SEFunction* m_PercentToleranceVsNumErrorsHistogram;
+  SEFunction* m_PercentToleranceVsNumErrors;
   std::vector<std::string> m_Differences;
 };
 }

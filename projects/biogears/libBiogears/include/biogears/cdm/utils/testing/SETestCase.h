@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/utils/testing/SETestErrorStatistics.h>
-CDM_BIND_DECL(TestCase)
+CDM_BIND_DECL(TestCaseData)
 
 namespace biogears {
 class SETestSuite;
@@ -24,21 +24,20 @@ class BIOGEARS_API SETestCase : public Loggable {
   friend SETestSuite;
   friend io::TestReport;
 
-protected:
+public:
   SETestCase(Logger* logger);
   SETestCase(const std::string& name, Logger* logger);
 
-public:
   virtual ~SETestCase();
 
-  virtual void Reset(); //reset values
-  virtual void Clear(); //clear memory
+  virtual void Reset(); // reset values
+  virtual void Clear(); // clear memory
 
-  bool Load(const CDM::TestCase& in);
-  std::unique_ptr<CDM::TestCase> Unload() const;
+  bool Load(const CDM::TestCaseData& in);
+  std::unique_ptr<CDM::TestCaseData> Unload() const;
 
 protected:
-  void Unload(CDM::TestCase& data) const;
+  void Unload(CDM::TestCaseData& data) const;
 
 public:
   void SetName(const std::string& name);
@@ -47,10 +46,13 @@ public:
   SEScalarTime& GetDuration();
   void AddFailure(std::stringstream& msg);
   void AddFailure(const std::string& err);
-  const std::vector<std::string>& GetFailures();
+  const std::vector<std::string>& GetFailures() const;
 
   SETestErrorStatistics& CreateErrorStatistic();
   const std::vector<SETestErrorStatistics*>& GetErrorStatistics() const;
+
+  bool operator==(const SETestCase&) const;
+  bool operator!=(const SETestCase&) const;
 
 protected:
   std::string m_Name;
