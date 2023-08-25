@@ -14,13 +14,23 @@ source.Get$1().SetValue( 1.0);
 
 
 # Iterator Equivilance Check
+  equivilant &= m_testSuite.size() == rhs.m_testSuite.size()
   if (equivilant) {
-    for (auto i = 0; i < m_Children.size(); ++i) {
+    for (auto i = 0; equivilant && i < m_Children.size(); ++i) {
       equivilant &= (m_Children[i] && rhs.m_Children[i])
         ? m_Children[i]->operator==(*rhs.m_Children[i])
         : m_Children[i] == rhs.m_Children[i];
     }
+  }
 # Override operator==
 
     auto ptr = dynamic_cast<decltype(this)>(&rhs);
     return (ptr) ? this->operator==(*ptr) : false;
+
+# regular operator==
+
+if (this == & rhs){
+    return true;
+}
+
+return ...

@@ -30,30 +30,32 @@ specific language governing permissions and limitations under the License.
     <xs:attribute name="PropertyName" type="xs:string" use="required"/>
   </xs:complexType>
 
+  <xs:complexType name="TestCaseData">
+    <xs:sequence>
+      <xs:element name="CaseEqualError" type="TestErrorStatisticsData" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Failure" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Duration" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="TestSuiteData">
+    <xs:sequence>
+      <xs:element name="Requirement" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="SuiteEqualError" type="TestErrorStatisticsData" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Duration" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="TestCase" type="TestCaseData" minOccurs="0" maxOccurs="unbounded">
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Performed" type="xs:boolean" default="true"/>
+    <xs:attribute name="Errors" type="xs:int" use="required"/>
+    <xs:attribute name="Tests" type="xs:int" use="required"/>
+    <xs:attribute name="Name" type="xs:string" use="required"/>
+  </xs:complexType>
+  
   <xs:complexType name="TestReportData">
     <xs:sequence>
-      <xs:element name="TestSuite" minOccurs="1" maxOccurs="unbounded">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="Requirement" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="SuiteEqualError" type="TestErrorStatisticsData" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="Time" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="TestCase" minOccurs="0" maxOccurs="unbounded">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="CaseEqualError" type="TestErrorStatisticsData" minOccurs="0" maxOccurs="unbounded"/>
-                  <xs:element name="Failure" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-                  <xs:element name="Time" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-                </xs:sequence>
-                <xs:attribute name="Name" type="xs:string" use="required"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:sequence>
-          <xs:attribute name="Performed" type="xs:boolean" default="true"/>
-          <xs:attribute name="Errors" type="xs:int" use="required"/>
-          <xs:attribute name="Tests" type="xs:int" use="required"/>
-          <xs:attribute name="Name" type="xs:string" use="required"/>
-        </xs:complexType>
+      <xs:element name="TestSuite" type="TestSuiteData" minOccurs="1" maxOccurs="unbounded">
       </xs:element>
     </xs:sequence>
   </xs:complexType>

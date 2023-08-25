@@ -31,6 +31,9 @@ public:
   bool Load(const CDM::TestReportData& in);
   std::unique_ptr<CDM::TestReportData> Unload() const;
 
+  bool operator==(SETestReport const&) const;
+  bool operator!=(SETestReport const&) const;
+
 protected:
   void Unload(CDM::TestReportData& data) const;
 

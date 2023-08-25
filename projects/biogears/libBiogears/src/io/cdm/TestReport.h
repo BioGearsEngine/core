@@ -50,11 +50,11 @@ namespace io {
     static void Marshall(const CDM::TestReportData& in, SETestReport& out);
     static void UnMarshall(const SETestReport& in, CDM::TestReportData& out);
     //class SETestSuite
-    static void Marshall(const CDM::TestSuite& in, SETestSuite& out);
-    static void UnMarshall(const SETestSuite& in, CDM::TestSuite& out);
+    static void Marshall(const CDM::TestSuiteData& in, SETestSuite& out);
+    static void UnMarshall(const SETestSuite& in, CDM::TestSuiteData& out);
     //class SETestCase
-    static void Marshall(const CDM::TestCase& in, SETestCase& out);
-    static void UnMarshall(const SETestCase& in, CDM::TestCase& out);
+    static void Marshall(const CDM::TestCaseData& in, SETestCase& out);
+    static void UnMarshall(const SETestCase& in, CDM::TestCaseData& out);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>

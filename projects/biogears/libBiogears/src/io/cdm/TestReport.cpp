@@ -2,6 +2,9 @@
 
 #include "Property.h"
 
+#include <biogears/cdm/properties/SEFunction.h>
+#include <biogears/cdm/properties/SEProperties.h>
+
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/cdm/utils/testing/SETestErrorStatistics.h>
 #include <biogears/cdm/utils/testing/SETestReport.h>
@@ -9,7 +12,7 @@
 
 namespace biogears {
 namespace io {
-  //class SETestErrorStatistics
+  // class SETestErrorStatistics
   void TestReport::Marshall(const CDM::TestErrorStatisticsData& in, SETestErrorStatistics& out)
   {
     out.Reset();
@@ -30,6 +33,9 @@ namespace io {
     out.m_NumberOfErrors = in.NumberOfErrors().get();
     out.m_PercentTolerance = in.PercentTolerance();
     out.m_PropertyName = in.PropertyName();
+
+    io::Property::Marshall(in.PercentToleranceVsNumErrors(), out.GetPercentToleranceVsNumErrors());
+
     if (!out.IsValid()) {
       throw CommonDataModelException("Unable to Marhsall SETestErrorStatistics from the given TestErrorStatisticsData");
     }
@@ -57,31 +63,26 @@ namespace io {
         out.Differences().push_back(dData);
       }
     }
-    if (!in.m_ComputedPropertyID.empty()) {
-      out.ComputedPropertyID(in.m_ComputedPropertyID);
-    }
-    if (!in.m_ExpectedPropertyID.empty()) {
-      out.ExpectedPropertyID(in.m_ExpectedPropertyID);
-    }
+
+    out.ComputedPropertyID(in.m_ComputedPropertyID);
+    out.ExpectedPropertyID(in.m_ExpectedPropertyID);
+
     out.NumberOfErrors(in.m_NumberOfErrors);
     out.PercentTolerance(in.m_PercentTolerance);
-    if (!in.m_PropertyName.empty()) {
-      out.PropertyName(in.m_PropertyName);
-    }
-    if (in.m_PercentToleranceVsNumErrorsHistogram != nullptr) {
-      io::Property::UnMarshall(*in.m_PercentToleranceVsNumErrorsHistogram, out.PercentToleranceVsNumErrors());
-    }
+    out.PropertyName(in.m_PropertyName);
+
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PercentToleranceVsNumErrors);
   }
   //-----------------------------------------------------------------------------
-  //class SETestReport
+  // class SETestReport
   void TestReport::Marshall(const CDM::TestReportData& in, SETestReport& out)
   {
     out.Reset();
 
     SETestSuite* sx;
-    CDM::TestSuite* sData;
+    CDM::TestSuiteData* sData;
     for (unsigned int i = 0; i < in.TestSuite().size(); i++) {
-      sData = (CDM::TestSuite*)&in.TestSuite().at(i);
+      sData = (CDM::TestSuiteData*)&in.TestSuite().at(i);
       if (sData != nullptr) {
         sx = new SETestSuite(out.GetLogger());
         Marshall(*sData, *sx);
@@ -93,16 +94,18 @@ namespace io {
   void TestReport::UnMarshall(const SETestReport& in, CDM::TestReportData& out)
   {
     for (unsigned int i = 0; i < in.m_testSuite.size(); i++) {
-      auto data = CDM::TestSuite();
+      auto data = CDM::TestSuiteData();
       UnMarshall(*in.m_testSuite.at(i), data);
       out.TestSuite().push_back(data);
     }
   }
   //-----------------------------------------------------------------------------
-  //class SETestSuite
-  void TestReport::Marshall(const CDM::TestSuite& in, SETestSuite& out)
+  // class SETestSuite
+  void TestReport::Marshall(const CDM::TestSuiteData& in, SETestSuite& out)
   {
     out.Reset();
+    out.m_Performed = in.Performed();
+    out.m_Name = in.Name();
 
     std::string sData;
     for (unsigned int i = 0; i < in.Requirement().size(); i++) {
@@ -124,20 +127,18 @@ namespace io {
     }
 
     SETestCase* tx;
-    CDM::TestCase* tData;
+    CDM::TestCaseData* tData;
     for (unsigned int i = 0; i < in.TestCase().size(); i++) {
-      tData = (CDM::TestCase*)&in.SuiteEqualError().at(i);
+      tData = (CDM::TestCaseData*)&in.TestCase().at(i);
       if (tData != nullptr) {
         tx = new SETestCase(out.m_Name, out.GetLogger());
         Marshall(*tData, *tx);
       }
       out.m_TestCase.push_back(tx);
     }
-    out.m_Performed = in.Performed();
-    out.m_Name = in.Name();
   }
   //-----------------------------------------------------------------------------
-  void TestReport::UnMarshall(const SETestSuite& in, CDM::TestSuite& out)
+  void TestReport::UnMarshall(const SETestSuite& in, CDM::TestSuiteData& out)
   {
     std::string sData;
     for (unsigned int i = 0; i < in.m_Requirements.size(); i++) {
@@ -151,40 +152,46 @@ namespace io {
       out.SuiteEqualError().push_back(tesData);
     }
     for (unsigned int i = 0; i < in.m_TestCase.size(); i++) {
-      auto data = CDM::TestCase();
+      auto data = CDM::TestCaseData();
       UnMarshall(*in.m_TestCase.at(i), data);
       out.TestCase().push_back(data);
     }
 
     out.Performed(in.m_Performed);
+    out.Duration(std::make_unique<std::remove_reference<decltype(out.Duration())>::type>());
+    out.Duration().value(0);
+    out.Duration().unit("s");
     if (in.GetNumberOfTests() != 0) {
       out.Tests(in.GetNumberOfTests());
 
-      io::Property::UnMarshall(in.GetDuration(), out.Time());
+      if (in.m_Duration.IsValid()) {
+        io::Property::UnMarshall(in.m_Duration, out.Duration());
+      }
       out.Errors(in.GetNumberOfErrors());
     }
 
-    if (in.m_Name.compare("") != 0)
-      out.Name(in.m_Name);
+    out.Name(in.m_Name);
   }
   //-----------------------------------------------------------------------------
-  //class SETestCase
-  void TestReport::Marshall(const CDM::TestCase& in, SETestCase& out)
+  // class SETestCase
+  void TestReport::Marshall(const CDM::TestCaseData& in, SETestCase& out)
   {
+    SETestErrorStatistics* ex;
+    CDM::TestErrorStatisticsData* eData;
+
     out.Reset();
 
     out.m_Name = in.Name();
 
-    io::Property::Marshall(in.Time(), out.GetDuration());
-    SETestErrorStatistics* ex;
-    CDM::TestErrorStatisticsData* eData;
+    io::Property::Marshall(in.Duration(), out.GetDuration());
+
     for (unsigned int i = 0; i < in.CaseEqualError().size(); i++) {
       eData = (CDM::TestErrorStatisticsData*)&in.CaseEqualError().at(i);
       if (eData != nullptr) {
         ex = new SETestErrorStatistics(out.GetLogger());
         Marshall(*eData, *ex);
+        out.m_CaseEqualsErrors.push_back(ex);
       }
-      out.m_CaseEqualsErrors.push_back(ex);
     }
 
     for (unsigned int i = 0; i < in.Failure().size(); i++) {
@@ -192,19 +199,26 @@ namespace io {
     }
   }
   //-----------------------------------------------------------------------------
-  void TestReport::UnMarshall(const SETestCase& in, CDM::TestCase& out)
+  void TestReport::UnMarshall(const SETestCase& in, CDM::TestCaseData& out)
   {
     out.Name(in.m_Name);
 
-    io::Property::UnMarshall(in.m_Duration, out.Time());
+    // Duration is not optional in the format
+    out.Duration(std::make_unique<std::remove_reference<decltype(out.Duration())>::type>());
+    out.Duration().value(0);
+    out.Duration().unit("s");
+    if (in.m_Duration.IsValid()) {
+      io::Property::UnMarshall(in.m_Duration, out.Duration());
+    }
+
     for (unsigned int i = 0; i < in.m_Failure.size(); i++) {
       out.Failure().push_back(in.m_Failure.at(i));
     }
 
     for (unsigned int i = 0; i < in.m_CaseEqualsErrors.size(); i++) {
-      auto data = CDM::TestErrorStatisticsData();
-      UnMarshall(*in.m_CaseEqualsErrors.at(i), data);
-      out.CaseEqualError().push_back(data);
+      auto data = std::make_unique<CDM::TestErrorStatisticsData>();
+      UnMarshall(*in.m_CaseEqualsErrors.at(i), *data);
+      out.CaseEqualError().push_back(std::move(data));
     }
   }
   //-----------------------------------------------------------------------------

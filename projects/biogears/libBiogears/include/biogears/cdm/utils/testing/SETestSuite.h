@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/utils/testing/SETestCase.h>
 
-CDM_BIND_DECL(TestSuite)
+CDM_BIND_DECL(TestSuiteData)
 
 namespace biogears {
 class SETestReport;
@@ -24,20 +24,21 @@ class BIOGEARS_API SETestSuite : public Loggable {
   friend SETestReport;
   friend io::TestReport;
 
-protected:
-  SETestSuite(Logger* logger);
-
 public:
+  SETestSuite(Logger* logger);
   virtual ~SETestSuite();
 
   virtual void Reset(); //reset values
   virtual void Clear(); //clear memory
 
-  bool Load(const CDM::TestSuite& in);
-  std::unique_ptr<CDM::TestSuite> Unload() const;
+  bool Load(const CDM::TestSuiteData& in);
+  std::unique_ptr<CDM::TestSuiteData> Unload() const;
+
+  bool operator==(SETestSuite const&) const;
+  bool operator!=(SETestSuite const&) const;
 
 protected:
-  void Unload(CDM::TestSuite& data) const;
+  void Unload(CDM::TestSuiteData& data) const;
 
 public:
   void SetName(const std::string& Name);
@@ -55,8 +56,10 @@ public:
   const std::vector<SETestCase*>& GetTestCases() const;
 
   int GetNumberOfErrors() const;
-
   int GetNumberOfTests() const;
+
+  std::vector<SETestErrorStatistics*>& GetSuiteEqualError();
+  std::vector<SETestCase*>& GetTestCase();
 
 protected:
   bool m_Performed;
@@ -64,6 +67,6 @@ protected:
   std::vector<std::string> m_Requirements;
   std::vector<SETestErrorStatistics*> m_SuiteEqualError;
   std::vector<SETestCase*> m_TestCase;
-  mutable SEScalarTime m_Time;
+  mutable SEScalarTime m_Duration;
 };
 }

@@ -9,7 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-
+#include <functional>
+#include <numeric>
 
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/schema/cdm/Properties.hxx>
@@ -22,18 +23,18 @@ SETestSuite::SETestSuite(Logger* logger)
   m_Performed = true;
   m_Name = "";
 }
-
+//-------------------------------------------------------------------------------
 SETestSuite::~SETestSuite()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SETestSuite::Clear()
 {
   DELETE_VECTOR(m_SuiteEqualError);
   DELETE_VECTOR(m_TestCase);
 }
-
+//-------------------------------------------------------------------------------
 void SETestSuite::Reset()
 {
   for (unsigned int i = 0; i < m_TestCase.size(); i++) {
@@ -42,8 +43,8 @@ void SETestSuite::Reset()
   m_Performed = false;
   m_Name = "";
 }
-
-bool SETestSuite::Load(const CDM::TestSuite& in)
+//-------------------------------------------------------------------------------
+bool SETestSuite::Load(const CDM::TestSuiteData& in)
 {
   Reset();
 
@@ -66,9 +67,9 @@ bool SETestSuite::Load(const CDM::TestSuite& in)
   }
 
   SETestCase* tx;
-  CDM::TestCase* tData;
+  CDM::TestCaseData* tData;
   for (unsigned int i = 0; i < in.TestCase().size(); i++) {
-    tData = (CDM::TestCase*)&in.SuiteEqualError().at(i);
+    tData = (CDM::TestCaseData*)&in.SuiteEqualError().at(i);
     if (tData != nullptr) {
       tx = new SETestCase(m_Name, GetLogger());
       tx->Load(*tData);
@@ -80,15 +81,15 @@ bool SETestSuite::Load(const CDM::TestSuite& in)
 
   return true;
 }
-
-std::unique_ptr<CDM::TestSuite> SETestSuite::Unload() const
+//-------------------------------------------------------------------------------
+std::unique_ptr<CDM::TestSuiteData> SETestSuite::Unload() const
 {
-  std::unique_ptr<CDM::TestSuite> data(new CDM::TestSuite());
+  std::unique_ptr<CDM::TestSuiteData> data(new CDM::TestSuiteData());
   Unload(*data);
   return data;
 }
-
-void SETestSuite::Unload(CDM::TestSuite& data) const
+//-------------------------------------------------------------------------------
+void SETestSuite::Unload(CDM::TestSuiteData& data) const
 {
   std::string sData;
   for (unsigned int i = 0; i < m_Requirements.size(); i++) {
@@ -106,83 +107,114 @@ void SETestSuite::Unload(CDM::TestSuite& data) const
   data.Performed(m_Performed);
   if (GetNumberOfTests() != 0) {
     data.Tests(GetNumberOfTests());
-    data.Time(std::unique_ptr<CDM::ScalarTimeData>(GetDuration().Unload()));
+    data.Duration(std::unique_ptr<CDM::ScalarTimeData>(GetDuration().Unload()));
     data.Errors(GetNumberOfErrors());
   }
 
   if (m_Name.compare("") != 0)
     data.Name(m_Name);
 }
-
+//-------------------------------------------------------------------------------
 void SETestSuite::SetName(const std::string& Name)
 {
   m_Name = Name;
 }
-
+//-------------------------------------------------------------------------------
 std::string SETestSuite::GetName() const
 {
   return m_Name;
 }
-
+//-------------------------------------------------------------------------------
 const char* SETestSuite::GetName_cStr() const
 {
   return m_Name.c_str();
 }
+//-------------------------------------------------------------------------------
 void SETestSuite::PerformSuite(bool performed)
 {
   m_Performed = performed;
 }
-
+//-------------------------------------------------------------------------------
 bool SETestSuite::PerformedSuite()
 {
   return m_Performed;
 }
-
+//-------------------------------------------------------------------------------
 const SEScalarTime& SETestSuite::GetDuration() const
 {
-  double time = 0;
+  double Duration = 0;
   for (unsigned int i = 0; i < m_TestCase.size(); i++)
-    time += m_TestCase.at(i)->GetDuration().GetValue(TimeUnit::s);
-  m_Time.SetValue(time, TimeUnit::s);
-  return m_Time;
+    Duration += m_TestCase.at(i)->GetDuration().GetValue(TimeUnit::s);
+  m_Duration.SetValue(Duration, TimeUnit::s);
+  return m_Duration;
 }
-
+//-------------------------------------------------------------------------------
 std::vector<std::string>& SETestSuite::GetRequirements()
 {
   return m_Requirements;
 }
-
+//-------------------------------------------------------------------------------
 SETestCase& SETestSuite::CreateTestCase()
 {
   SETestCase* test = new SETestCase(GetLogger());
   m_TestCase.push_back(test);
   return *test;
 }
-
+//-------------------------------------------------------------------------------
 const std::vector<SETestCase*>& SETestSuite::GetTestCases() const
 {
   return m_TestCase;
 }
-
+//-------------------------------------------------------------------------------
 int SETestSuite::GetNumberOfErrors() const
 {
-  size_t count = 0;
-
-  for (size_t i = 0; i < m_TestCase.size(); i++) {
-    count += m_TestCase.at(i)->GetFailures().size();
-  }
-
-  return static_cast<int>(count); //Major Possibility of a clamp
+  return std::accumulate(m_TestCase.begin(), m_TestCase.end(),
+                         0, [](int a, biogears::SETestCase* b) { return a + static_cast<int>(b->GetFailures().size()); });
 }
-
+//-------------------------------------------------------------------------------
 int SETestSuite::GetNumberOfTests() const
 {
-  int count = 0;
+  return static_cast<int>(m_TestCase.size());
+}
+//-------------------------------------------------------------------------------
+std::vector<SETestErrorStatistics*>& SETestSuite::GetSuiteEqualError()
+{
+  return m_SuiteEqualError;
+}
+//-------------------------------------------------------------------------------
+std::vector<SETestCase*>& SETestSuite::GetTestCase()
+{
+  return m_TestCase;
+}
+//-------------------------------------------------------------------------------
+bool SETestSuite::operator==(SETestSuite const& rhs) const
+{
+  if (this == &rhs)
+    return true;
 
-  for (unsigned int i = 0; i < m_TestCase.size(); i++) {
-    count++;
+  bool equivilant = m_Performed == rhs.m_Performed
+    && m_Name == rhs.m_Name
+    && m_Requirements == rhs.m_Requirements
+    && m_SuiteEqualError.size() == rhs.m_SuiteEqualError.size()
+    && m_TestCase.size() == rhs.m_TestCase.size();
+
+  for (auto i = 0; equivilant && i < m_SuiteEqualError.size(); ++i) {
+    equivilant &= (m_SuiteEqualError[i] && rhs.m_SuiteEqualError[i])
+      ? m_SuiteEqualError[i]->operator==(*rhs.m_SuiteEqualError[i])
+      : m_SuiteEqualError[i] == rhs.m_SuiteEqualError[i];
   }
 
-  return count;
+  for (auto i = 0; equivilant && i < m_TestCase.size(); ++i) {
+    equivilant &= (m_TestCase[i] && rhs.m_TestCase[i])
+      ? m_TestCase[i]->operator==(*rhs.m_TestCase[i])
+      : m_TestCase[i] == rhs.m_TestCase[i];
+  }
+
+  return equivilant;
 }
+bool SETestSuite::operator!=(SETestSuite const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

@@ -17,24 +17,25 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 SETestErrorStatistics::SETestErrorStatistics(Logger* logger)
   : Loggable(logger)
+  , m_PercentTolerance(0.0001)
 {
-  m_PercentToleranceVsNumErrorsHistogram = nullptr;
+  m_PercentToleranceVsNumErrors = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SETestErrorStatistics::~SETestErrorStatistics()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::Clear()
 {
-  SAFE_DELETE(m_PercentToleranceVsNumErrorsHistogram);
+  SAFE_DELETE(m_PercentToleranceVsNumErrors);
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::Reset()
 {
 }
-
+//-------------------------------------------------------------------------------
 bool SETestErrorStatistics::Load(const CDM::TestErrorStatisticsData& in)
 {
   Reset();
@@ -56,14 +57,14 @@ bool SETestErrorStatistics::Load(const CDM::TestErrorStatisticsData& in)
   m_PropertyName = in.PropertyName();
   return IsValid();
 }
-
+//-------------------------------------------------------------------------------
 std::unique_ptr<CDM::TestErrorStatisticsData> SETestErrorStatistics::Unload() const
 {
   std::unique_ptr<CDM::TestErrorStatisticsData> data(new CDM::TestErrorStatisticsData());
   Unload(*data);
   return data;
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::Unload(CDM::TestErrorStatisticsData& data) const
 {
   if (!std::isnan(m_MinimumError))
@@ -89,56 +90,56 @@ void SETestErrorStatistics::Unload(CDM::TestErrorStatisticsData& data) const
   data.PercentTolerance(m_PercentTolerance);
   if (!m_PropertyName.empty())
     data.PropertyName(m_PropertyName);
-  if (m_PercentToleranceVsNumErrorsHistogram != nullptr) {
-    data.PercentToleranceVsNumErrors(std::unique_ptr<CDM::FunctionData>(m_PercentToleranceVsNumErrorsHistogram->Unload()));
+  if (m_PercentToleranceVsNumErrors != nullptr) {
+    data.PercentToleranceVsNumErrors(std::unique_ptr<CDM::FunctionData>(m_PercentToleranceVsNumErrors->Unload()));
   }
 }
-
+//-------------------------------------------------------------------------------
 bool SETestErrorStatistics::IsValid()
 {
   return true;
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::SetMinimumError(double MinimumError)
 {
   m_MinimumError = MinimumError;
 }
-
+//-------------------------------------------------------------------------------
 double SETestErrorStatistics::GetMinimumError() const
 {
   return m_MinimumError;
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::SetMaximumError(double MaximumError)
 {
   m_MaximumError = MaximumError;
 }
-
+//-------------------------------------------------------------------------------
 double SETestErrorStatistics::GetMaximumError() const
 {
   return m_MaximumError;
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::SetAverageError(double AverageError)
 {
   m_AverageError = AverageError;
 }
-
+//-------------------------------------------------------------------------------
 double SETestErrorStatistics::GetAverageError() const
 {
   return m_AverageError;
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::SetStandardDeviation(double StandardDeviation)
 {
   m_StandardDeviation = StandardDeviation;
 }
-
+//-------------------------------------------------------------------------------
 double SETestErrorStatistics::GetStandardDeviation() const
 {
   return m_StandardDeviation;
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::AddDifference(const std::string& difference)
 {
   std::string n;
@@ -149,72 +150,104 @@ void SETestErrorStatistics::AddDifference(const std::string& difference)
   }
   m_Differences.push_back(difference);
 }
-
+//-------------------------------------------------------------------------------
+void SETestErrorStatistics::SetPercentTolerance(double PercentTolerance)
+{
+  m_PercentTolerance = PercentTolerance;
+}
+//-------------------------------------------------------------------------------
+double SETestErrorStatistics::GetPercentTolerance() const
+{
+  return m_PercentTolerance;
+}
+//-------------------------------------------------------------------------------
 const std::vector<std::string>* SETestErrorStatistics::GetDifferences() const
 {
   return &m_Differences;
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::SetComputedPropertyID(const std::string& ComputedPropertyID)
 {
   m_ComputedPropertyID = ComputedPropertyID;
 }
-
+//-------------------------------------------------------------------------------
 std::string SETestErrorStatistics::GetComputedPropertyID() const
 {
   return m_ComputedPropertyID;
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::SetExpectedPropertyID(const std::string& ExpectedPropertyID)
 {
   m_ExpectedPropertyID = ExpectedPropertyID;
 }
-
+//-------------------------------------------------------------------------------
 std::string SETestErrorStatistics::GetExpectedPropertyID() const
 {
   return m_ExpectedPropertyID;
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::SetNumberOfErrors(int NumberOfErrors)
 {
   m_NumberOfErrors = NumberOfErrors;
 }
-
+//-------------------------------------------------------------------------------
 int SETestErrorStatistics::GetNumberOfErrors() const
 {
   return m_NumberOfErrors;
 }
-
+//-------------------------------------------------------------------------------
 void SETestErrorStatistics::SetPropertyName(const std::string& PropertyName)
 {
   m_PropertyName = PropertyName;
 }
-
+//-------------------------------------------------------------------------------
 std::string SETestErrorStatistics::GetPropertyName() const
 {
   return m_PropertyName;
 }
-
-bool SETestErrorStatistics::HasPercentTolerancevsNumErrorsHistogram() const
+//-------------------------------------------------------------------------------
+bool SETestErrorStatistics::HasPercentToleranceVsNumErrors() const
 {
-  if (m_PercentToleranceVsNumErrorsHistogram == nullptr)
+  if (m_PercentToleranceVsNumErrors == nullptr)
     return false;
   return true;
 }
-
-SEFunction& SETestErrorStatistics::GetPercentToleranceVsNumErrorsHistogram()
+//-------------------------------------------------------------------------------
+SEFunction& SETestErrorStatistics::GetPercentToleranceVsNumErrors()
 {
-  if (HasPercentTolerancevsNumErrorsHistogram())
-    return *m_PercentToleranceVsNumErrorsHistogram;
+  if (HasPercentToleranceVsNumErrors())
+    return *m_PercentToleranceVsNumErrors;
 
-  m_PercentToleranceVsNumErrorsHistogram = new SEFunction();
-  m_PercentToleranceVsNumErrorsHistogram->GetIndependent().push_back(m_PercentTolerance);
-  m_PercentToleranceVsNumErrorsHistogram->GetDependent().push_back(m_NumberOfErrors);
-  return *m_PercentToleranceVsNumErrorsHistogram;
+  m_PercentToleranceVsNumErrors = new SEFunction();
+  m_PercentToleranceVsNumErrors->GetIndependent().push_back(m_PercentTolerance);
+  m_PercentToleranceVsNumErrors->GetDependent().push_back(m_NumberOfErrors);
+  return *m_PercentToleranceVsNumErrors;
 }
-
-void SETestErrorStatistics::SetPercentToleranceVsNumErrorsHistogram(SEFunction* PercentToleranceVsNumErrors)
+//-------------------------------------------------------------------------------
+void SETestErrorStatistics::SetPercentToleranceVsNumErrors(SEFunction* PercentToleranceVsNumErrors)
 {
-  m_PercentToleranceVsNumErrorsHistogram = PercentToleranceVsNumErrors;
+  m_PercentToleranceVsNumErrors = PercentToleranceVsNumErrors;
 }
+//-------------------------------------------------------------------------------
+bool SETestErrorStatistics::operator==(const SETestErrorStatistics& rhs) const
+{
+  return m_NumberOfErrors == rhs.m_NumberOfErrors
+    && m_MinimumError == rhs.m_MinimumError
+    && m_MaximumError == rhs.m_MaximumError
+    && m_AverageError == rhs.m_AverageError
+    && m_StandardDeviation == rhs.m_StandardDeviation
+    && m_PercentTolerance == rhs.m_PercentTolerance
+    && m_PropertyName == rhs.m_PropertyName
+    && m_ComputedPropertyID == rhs.m_ComputedPropertyID
+    && m_ExpectedPropertyID == rhs.m_ExpectedPropertyID
+    && ((m_PercentToleranceVsNumErrors && rhs.m_PercentToleranceVsNumErrors)
+          ? m_PercentToleranceVsNumErrors->operator==(*rhs.m_PercentToleranceVsNumErrors)
+          : m_PercentToleranceVsNumErrors == rhs.m_PercentToleranceVsNumErrors)
+    && m_Differences == rhs.m_Differences;
+}
+bool SETestErrorStatistics::operator!=(const SETestErrorStatistics& rhs) const
+{
+  return !(this->operator==(rhs));
+}
+//-------------------------------------------------------------------------------
 }
