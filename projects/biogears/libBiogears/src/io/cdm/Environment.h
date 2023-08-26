@@ -30,11 +30,11 @@ specific language governing permissions and limitations under the License.
   }
 
 namespace biogears {
+class SEEnvironment;
 class SEEnvironmentalConditions;
 class SEActiveHeating;
 class SEActiveCooling;
 class SEAppliedTemperature;
-class SEEnvironment;
 
 namespace io {
   class BIOGEARS_PRIVATE_API Environment {

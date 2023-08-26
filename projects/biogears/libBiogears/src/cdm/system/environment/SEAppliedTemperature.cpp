@@ -42,7 +42,7 @@ void SEAppliedTemperature::Clear()
 //-----------------------------------------------------------------------------
 const SEScalar* SEAppliedTemperature::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SEAppliedTemperature::GetScalar(const std::string& name)
@@ -168,4 +168,19 @@ void SEAppliedTemperature::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+bool SEAppliedTemperature::operator==(SEAppliedTemperature const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_State == rhs.m_State
+    && ((m_Temperature && rhs.m_Temperature) ? m_Temperature->operator==(*rhs.m_Temperature) : m_Temperature == rhs.m_Temperature)
+    && ((m_SurfaceArea && rhs.m_SurfaceArea) ? m_SurfaceArea->operator==(*rhs.m_SurfaceArea) : m_SurfaceArea == rhs.m_SurfaceArea)
+    && ((m_SurfaceAreaFraction && rhs.m_SurfaceAreaFraction) ? m_SurfaceAreaFraction->operator==(*rhs.m_SurfaceAreaFraction) : m_SurfaceAreaFraction == rhs.m_SurfaceAreaFraction);
+  
+}
+bool SEAppliedTemperature::operator!=(SEAppliedTemperature const& rhs) const
+{
+  return !(this->operator==(rhs));
+}
 }

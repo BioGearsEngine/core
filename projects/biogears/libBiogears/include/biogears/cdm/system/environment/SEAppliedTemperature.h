@@ -36,6 +36,9 @@ public:
   virtual bool Load(const CDM::AppliedTemperatureData& in);
   virtual CDM::AppliedTemperatureData* Unload() const;
 
+  bool operator==(SEAppliedTemperature const&) const;
+  bool operator!=(SEAppliedTemperature const&) const;
+
 protected:
   virtual void Unload(CDM::AppliedTemperatureData& data) const;
 

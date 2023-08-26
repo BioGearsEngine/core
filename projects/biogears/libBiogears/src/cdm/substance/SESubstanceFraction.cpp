@@ -16,10 +16,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
-SESubstanceFraction::SESubstanceFraction(SESubstance& substance)
+SESubstanceFraction::SESubstanceFraction(SESubstance const& substance)
   : m_Substance(substance)
 {
   m_FractionAmount = nullptr;
+}
+SESubstanceFraction::SESubstanceFraction(SESubstance const& substance, SEScalarFraction const& fraction)
+  : m_Substance(substance)
+  , m_FractionAmount(nullptr)
+{
+  GetFractionAmount() = fraction;
 }
 //-------------------------------------------------------------------------------
 SESubstanceFraction::~SESubstanceFraction()
@@ -73,17 +79,17 @@ double SESubstanceFraction::GetFractionAmount() const
 //-------------------------------------------------------------------------------
 SESubstance& SESubstanceFraction::GetSubstance() const
 {
-  return m_Substance;
+  return const_cast<SESubstance&>(m_Substance);
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceFraction::operator==( const SESubstanceFraction& rhs) const
+bool SESubstanceFraction::operator==(const SESubstanceFraction& rhs) const
 {
-  bool equivilant =  m_Substance == rhs.m_Substance;
-  equivilant &=  (m_FractionAmount && rhs.m_FractionAmount) ? m_FractionAmount->operator==(*rhs.m_FractionAmount) : m_FractionAmount == rhs.m_FractionAmount;
+  bool equivilant = m_Substance == rhs.m_Substance;
+  equivilant &= (m_FractionAmount && rhs.m_FractionAmount) ? m_FractionAmount->operator==(*rhs.m_FractionAmount) : m_FractionAmount == rhs.m_FractionAmount;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceFraction::operator!=( const SESubstanceFraction& rhs) const
+bool SESubstanceFraction::operator!=(const SESubstanceFraction& rhs) const
 {
   return !(*this == rhs);
 }

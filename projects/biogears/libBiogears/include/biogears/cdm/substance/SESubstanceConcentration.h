@@ -30,9 +30,9 @@ class BIOGEARS_API SESubstanceConcentration : public Loggable {
 protected:
   friend SEEnvironmentalConditions; // So it can add substances to the manager
 public:
-  SESubstanceConcentration(SESubstance& substance);
-  SESubstanceConcentration(SESubstance& substance, SEScalarMassPerVolume concentration);
-  SESubstanceConcentration(SESubstance& substance, double concentration, const MassPerVolumeUnit& unit);
+  SESubstanceConcentration(SESubstance const& substance);
+  SESubstanceConcentration(SESubstance const& substance, SEScalarMassPerVolume const& concentration);
+  SESubstanceConcentration(SESubstance const& substance, double concentration, const MassPerVolumeUnit& unit);
   virtual ~SESubstanceConcentration();
 
   virtual void Clear();
@@ -50,12 +50,12 @@ public:
 
   virtual SESubstance& GetSubstance() const;
 
-  bool operator==( const SESubstanceConcentration& rhs) const;
-  bool operator!=( const SESubstanceConcentration& rhs) const;
+  bool operator==(const SESubstanceConcentration& rhs) const;
+  bool operator!=(const SESubstanceConcentration& rhs) const;
   SESubstanceConcentration& operator=(SESubstanceConcentration const& rhs);
 
 protected:
-  SESubstance* m_Substance;
+  SESubstance const* m_Substance;
   SEScalarMassPerVolume m_Concentration;
 };
 }

@@ -31,7 +31,8 @@ class BIOGEARS_API SESubstanceFraction : public Loggable {
 protected:
   friend SEEnvironmentalConditions; // So it can add substances to the manager
 public:
-  SESubstanceFraction(SESubstance&);
+  SESubstanceFraction(SESubstance const&);
+  SESubstanceFraction(SESubstance const&, SEScalarFraction const& );
   virtual ~SESubstanceFraction();
 
   virtual void Clear();
@@ -52,7 +53,7 @@ protected:
   virtual void Unload(CDM::SubstanceFractionData& data) const;
 
 protected:
-  SESubstance& m_Substance;
+  SESubstance const& m_Substance;
   SEScalarFraction* m_FractionAmount;
 };
 }
