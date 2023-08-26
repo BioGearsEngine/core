@@ -154,4 +154,17 @@ void SEActiveHeating::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+bool SEActiveHeating::operator==(SEActiveHeating const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_Power && rhs.m_Power) ? m_Power->operator==(*rhs.m_Power) : m_Power == rhs.m_Power)
+    && ((m_SurfaceArea && rhs.m_SurfaceArea) ? m_SurfaceArea->operator==(*rhs.m_SurfaceArea) : m_SurfaceArea == rhs.m_SurfaceArea)
+    && ((m_SurfaceAreaFraction && rhs.m_SurfaceAreaFraction) ? m_SurfaceAreaFraction->operator==(*rhs.m_SurfaceAreaFraction) : m_SurfaceAreaFraction == rhs.m_SurfaceAreaFraction);
+}
+bool SEActiveHeating::operator!=(SEActiveHeating const& rhs) const
+{
+  return !(this->operator==(rhs));
+}
 }

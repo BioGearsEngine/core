@@ -559,6 +559,13 @@ const SESubstanceFraction* SEEnvironmentalConditions::GetAmbientGas(const SESubs
   return sf;
 }
 //-----------------------------------------------------------------------------
+void SEEnvironmentalConditions::AddAmbientGas(SESubstance const& substance, SEScalarFraction const& fraction)
+{
+  auto substanceFraction = new SESubstanceFraction(substance, fraction);
+  m_AmbientGases.push_back(substanceFraction);
+  m_cAmbientGases.push_back(substanceFraction);
+}
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::RemoveAmbientGas(const SESubstance& s)
 {
   const SESubstanceFraction* sf;
@@ -626,6 +633,13 @@ const SESubstanceConcentration* SEEnvironmentalConditions::GetAmbientAerosol(con
   return sc;
 }
 //-----------------------------------------------------------------------------
+void SEEnvironmentalConditions::AddAmbientAerosol(const SESubstance& substance, SEScalarMassPerVolume const& concentration)
+{
+  auto substanceConcentration = new SESubstanceConcentration { substance, concentration };
+  m_AmbientAerosols.push_back(substanceConcentration);
+  m_cAmbientAerosols.push_back(substanceConcentration);
+}
+//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::RemoveAmbientAerosol(const SESubstance& substance)
 {
   const SESubstanceConcentration* sc;
@@ -650,7 +664,7 @@ bool SEEnvironmentalConditions::operator==(SEEnvironmentalConditions const& rhs)
   if (this == &rhs)
     return true;
 
-  return m_Name == rhs.m_Name
+  bool equivilant = m_Name == rhs.m_Name
     && ((m_AirDensity && rhs.m_AirDensity) ? m_AirDensity->operator==(*rhs.m_AirDensity) : m_AirDensity == rhs.m_AirDensity)
     && ((m_AirVelocity && rhs.m_AirVelocity) ? m_AirVelocity->operator==(*rhs.m_AirVelocity) : m_AirVelocity == rhs.m_AirVelocity)
     && ((m_AmbientTemperature && rhs.m_AmbientTemperature) ? m_AmbientTemperature->operator==(*rhs.m_AmbientTemperature) : m_AmbientTemperature == rhs.m_AmbientTemperature)
@@ -660,11 +674,30 @@ bool SEEnvironmentalConditions::operator==(SEEnvironmentalConditions const& rhs)
     && ((m_MeanRadiantTemperature && rhs.m_MeanRadiantTemperature) ? m_MeanRadiantTemperature->operator==(*rhs.m_MeanRadiantTemperature) : m_MeanRadiantTemperature == rhs.m_MeanRadiantTemperature)
     && ((m_RelativeHumidity && rhs.m_RelativeHumidity) ? m_RelativeHumidity->operator==(*rhs.m_RelativeHumidity) : m_RelativeHumidity == rhs.m_RelativeHumidity)
     && ((m_RespirationAmbientTemperature && rhs.m_RespirationAmbientTemperature) ? m_RespirationAmbientTemperature->operator==(*rhs.m_RespirationAmbientTemperature) : m_RespirationAmbientTemperature == rhs.m_RespirationAmbientTemperature)
-    && m_AmbientGases == rhs.m_AmbientGases
-    && m_cAmbientGases == rhs.m_cAmbientGases
-    && m_AmbientAerosols == rhs.m_AmbientAerosols
-    && m_cAmbientAerosols == rhs.m_cAmbientAerosols
-    && &m_Substances == &rhs.m_Substances;
+    && &m_Substances == &rhs.m_Substances
+    && m_AmbientGases.size() == rhs.m_AmbientGases.size()
+    && m_AmbientAerosols.size() == rhs.m_AmbientAerosols.size();
+
+  if (equivilant) {
+    if (equivilant) {
+      for (auto i = 0; equivilant && i < m_AmbientGases.size(); ++i) {
+        equivilant &= (m_AmbientGases[i] && rhs.m_AmbientGases[i])
+          ? m_AmbientGases[i]->operator==(*rhs.m_AmbientGases[i])
+          : m_AmbientGases[i] == rhs.m_AmbientGases[i];
+      }
+    }
+  }
+
+  if (equivilant) {
+    if (equivilant) {
+      for (auto i = 0; equivilant && i < m_AmbientAerosols.size(); ++i) {
+        equivilant &= (m_AmbientAerosols[i] && rhs.m_AmbientAerosols[i])
+          ? m_AmbientAerosols[i]->operator==(*rhs.m_AmbientAerosols[i])
+          : m_AmbientAerosols[i] == rhs.m_AmbientAerosols[i];
+      }
+    }
+  }
+  return equivilant;
 }
 bool SEEnvironmentalConditions::operator!=(SEEnvironmentalConditions const& rhs) const
 {

@@ -45,7 +45,7 @@ void SEActiveCooling::Reset()
 //-----------------------------------------------------------------------------
 const SEScalar* SEActiveCooling::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SEActiveCooling::GetScalar(const std::string& name)
@@ -155,4 +155,18 @@ void SEActiveCooling::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-----------------------------------------------------------------------------
+bool SEActiveCooling::operator==(SEActiveCooling const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return ((m_Power && rhs.m_Power) ? m_Power->operator==(*rhs.m_Power) : m_Power == rhs.m_Power)
+    && ((m_SurfaceArea && rhs.m_SurfaceArea) ? m_SurfaceArea->operator==(*rhs.m_SurfaceArea) : m_SurfaceArea == rhs.m_SurfaceArea)
+    && ((m_SurfaceAreaFraction && rhs.m_SurfaceAreaFraction) ? m_SurfaceAreaFraction->operator==(*rhs.m_SurfaceAreaFraction) : m_SurfaceAreaFraction == rhs.m_SurfaceAreaFraction);
+}
+bool SEActiveCooling::operator!=(SEActiveCooling const& rhs) const
+{
+  return !(this->operator==(rhs));
+}
+
 }

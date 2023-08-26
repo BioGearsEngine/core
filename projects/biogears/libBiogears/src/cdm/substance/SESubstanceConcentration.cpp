@@ -16,21 +16,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
-SESubstanceConcentration::SESubstanceConcentration(SESubstance& substance)
+SESubstanceConcentration::SESubstanceConcentration(SESubstance const& substance)
   : Loggable(substance.GetLogger())
   , m_Substance(&substance)
 {
 
 }
 //-------------------------------------------------------------------------------
-SESubstanceConcentration::SESubstanceConcentration(SESubstance& substance, SEScalarMassPerVolume concentration)
+SESubstanceConcentration::SESubstanceConcentration(SESubstance const& substance, SEScalarMassPerVolume const& concentration)
   : Loggable(substance.GetLogger())
   , m_Substance(&substance)
-  , m_Concentration( concentration)
+  , m_Concentration(concentration)
 {
 }
 //-------------------------------------------------------------------------------
-SESubstanceConcentration::SESubstanceConcentration(SESubstance& substance, double concentration, const MassPerVolumeUnit& unit)
+SESubstanceConcentration::SESubstanceConcentration(SESubstance const& substance, double concentration, const MassPerVolumeUnit& unit)
   : Loggable(substance.GetLogger())
   , m_Substance(&substance)
   , m_Concentration(concentration, unit)
@@ -84,7 +84,7 @@ double SESubstanceConcentration::GetConcentration(const MassPerVolumeUnit& unit)
 //-------------------------------------------------------------------------------
 SESubstance& SESubstanceConcentration::GetSubstance() const
 {
-  return *m_Substance;
+  return const_cast<SESubstance&>(*m_Substance);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceConcentration::operator==(SESubstanceConcentration const& rhs) const

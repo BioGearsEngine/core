@@ -121,6 +121,7 @@ public:
   const std::vector<const SESubstanceFraction*>& GetAmbientGases() const;
   SESubstanceFraction& GetAmbientGas(SESubstance& substance);
   const SESubstanceFraction* GetAmbientGas(const SESubstance& substance) const;
+  void AddAmbientGas(const SESubstance& substance, SEScalarFraction const& concentration);
   void RemoveAmbientGas(const SESubstance& substance);
   void RemoveAmbientGases();
 
@@ -130,6 +131,7 @@ public:
   const std::vector<const SESubstanceConcentration*>& GetAmbientAerosols() const;
   SESubstanceConcentration& GetAmbientAerosol(SESubstance& substance);
   const SESubstanceConcentration* GetAmbientAerosol(const SESubstance& substance) const;
+  void AddAmbientAerosol(const SESubstance& substance, SEScalarMassPerVolume const& concentration);
   void RemoveAmbientAerosol(const SESubstance& substance);
   void RemoveAmbientAerosols();
 

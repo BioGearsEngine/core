@@ -33,8 +33,9 @@ namespace io {
   class Environment;
 }
 class BIOGEARS_API SEEnvironment : public SESystem {
-public:
   friend io::Environment;
+
+public:
   SEEnvironment(SESubstanceManager& substances);
   ~SEEnvironment() override;
 
@@ -46,29 +47,31 @@ public:
   void Clear() override;
 
   bool Load(const CDM::EnvironmentData& in);
-  bool Load(const char* patientFile);
-  bool Load(const std::string& patientFile);
+  bool Load(const char* environmentFile);
+  bool Load(const std::string& environmentFile);
+
+  bool operator==(SEEnvironment const&) const;
+  bool operator!=(SEEnvironment const&) const;
 
   CDM::EnvironmentData* Unload() const override;
   Tree<const char*> GetPhysiologyRequestGraph() const override;
   /** @name ProcessChange
-  * @brief - Will change this class as directed by the Action
-  */
+   * @brief - Will change this class as directed by the Action
+   */
   bool ProcessChange(const SEEnvironmentChange& action);
 
   /** @name ProcessChange
-  * @brief - Will change this class as directed by the Condition
-  */
+   * @brief - Will change this class as directed by the Condition
+   */
   bool ProcessChange(const SEInitialEnvironment& change);
 
   /** @name StateChange
-  *   @brief - This method is called when ever there is a state change
-  *            Specically a new file has been loaded, configuration action, or the system reset
-  *            Engine specific methodology can then update their logic.
-  */
+   *   @brief - This method is called when ever there is a state change
+   *            Specically a new file has been loaded, configuration action, or the system reset
+   *            Engine specific methodology can then update their logic.
+   */
   virtual void StateChange() = 0;
 
-public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 

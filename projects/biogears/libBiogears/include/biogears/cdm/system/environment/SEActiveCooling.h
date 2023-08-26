@@ -37,6 +37,9 @@ public:
   virtual bool Load(const CDM::ActiveCoolingData& in);
   virtual CDM::ActiveCoolingData* Unload() const;
 
+  bool operator==(SEActiveCooling const&) const;
+  bool operator!=(SEActiveCooling const&) const;
+
 protected:
   virtual void Unload(CDM::ActiveCoolingData& data) const;
 

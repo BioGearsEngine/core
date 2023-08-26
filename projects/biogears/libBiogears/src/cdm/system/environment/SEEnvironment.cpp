@@ -50,13 +50,11 @@ SEEnvironment::SEEnvironment(SESubstanceManager& substances)
   m_SkinHeatLoss = nullptr;
 }
 //-------------------------------------------------------------------------------
-
 SEEnvironment::~SEEnvironment()
 {
   Clear();
 }
 //-------------------------------------------------------------------------------
-
 void SEEnvironment::Clear()
 {
   SESystem::Clear();
@@ -115,7 +113,6 @@ const SEScalar* SEEnvironment::GetScalar(const std::string& name)
   return nullptr;
 }
 //-------------------------------------------------------------------------------
-
 bool SEEnvironment::Load(const CDM::EnvironmentData& in)
 {
   SESystem::Load(in);
@@ -189,7 +186,6 @@ bool SEEnvironment::Load(const std::string& given)
   return Load(*pData);
 }
 //-------------------------------------------------------------------------------
-
 CDM::EnvironmentData* SEEnvironment::Unload() const
 {
   CDM::EnvironmentData* data = new CDM::EnvironmentData();
@@ -197,7 +193,6 @@ CDM::EnvironmentData* SEEnvironment::Unload() const
   return data;
 }
 //-------------------------------------------------------------------------------
-
 void SEEnvironment::Unload(CDM::EnvironmentData& data) const
 {
   SESystem::Unload(data);
@@ -237,7 +232,6 @@ void SEEnvironment::Unload(CDM::EnvironmentData& data) const
   }
 };
 //-------------------------------------------------------------------------------
-
 bool SEEnvironment::ProcessChange(const SEInitialEnvironment& change)
 {
   // If we have data then we merge it, if a file was provided
@@ -256,7 +250,6 @@ bool SEEnvironment::ProcessChange(const SEInitialEnvironment& change)
   return true;
 }
 //-------------------------------------------------------------------------------
-
 bool SEEnvironment::ProcessChange(const SEEnvironmentChange& change)
 {
   // If we have data then we merge it, if a file was provided
@@ -275,13 +268,11 @@ bool SEEnvironment::ProcessChange(const SEEnvironmentChange& change)
   return true;
 }
 //-------------------------------------------------------------------------------
-
 std::string SEEnvironment::GetName() const
 {
   return m_Name;
 }
 //-------------------------------------------------------------------------------
-
 const char* SEEnvironment::GetName_cStr() const
 {
   return m_Name.c_str();
@@ -330,7 +321,6 @@ void SEEnvironment::RemoveConditions()
   SAFE_DELETE(m_Conditions);
 }
 //-------------------------------------------------------------------------------
-
 bool SEEnvironment::HasConvectiveHeatLoss() const
 {
   return m_ConvectiveHeatLoss == nullptr ? false : m_ConvectiveHeatLoss->IsValid();
@@ -352,7 +342,6 @@ double SEEnvironment::GetConvectiveHeatLoss(const PowerUnit& unit) const
   return m_ConvectiveHeatLoss->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-
 bool SEEnvironment::HasConvectiveHeatTranferCoefficient() const
 {
   return m_ConvectiveHeatTranferCoefficient == nullptr ? false : m_ConvectiveHeatTranferCoefficient->IsValid();
@@ -374,7 +363,6 @@ double SEEnvironment::GetConvectiveHeatTranferCoefficient(const HeatConductanceP
   return m_ConvectiveHeatTranferCoefficient->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-
 bool SEEnvironment::HasEvaporativeHeatLoss() const
 {
   return m_EvaporativeHeatLoss == nullptr ? false : m_EvaporativeHeatLoss->IsValid();
@@ -396,7 +384,6 @@ double SEEnvironment::GetEvaporativeHeatLoss(const PowerUnit& unit) const
   return m_EvaporativeHeatLoss->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-
 bool SEEnvironment::HasEvaporativeHeatTranferCoefficient() const
 {
   return m_EvaporativeHeatTranferCoefficient == nullptr ? false : m_EvaporativeHeatTranferCoefficient->IsValid();
@@ -418,7 +405,6 @@ double SEEnvironment::GetEvaporativeHeatTranferCoefficient(const HeatConductance
   return m_EvaporativeHeatTranferCoefficient->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-
 bool SEEnvironment::HasRadiativeHeatLoss() const
 {
   return m_RadiativeHeatLoss == nullptr ? false : m_RadiativeHeatLoss->IsValid();
@@ -440,7 +426,6 @@ double SEEnvironment::GetRadiativeHeatLoss(const PowerUnit& unit) const
   return m_RadiativeHeatLoss->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-
 bool SEEnvironment::HasRadiativeHeatTranferCoefficient() const
 {
   return m_RadiativeHeatTranferCoefficient == nullptr ? false : m_RadiativeHeatTranferCoefficient->IsValid();
@@ -462,7 +447,6 @@ double SEEnvironment::GetRadiativeHeatTranferCoefficient(const HeatConductancePe
   return m_RadiativeHeatTranferCoefficient->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-
 bool SEEnvironment::HasRespirationHeatLoss() const
 {
   return m_RespirationHeatLoss == nullptr ? false : m_RespirationHeatLoss->IsValid();
@@ -484,7 +468,6 @@ double SEEnvironment::GetRespirationHeatLoss(const PowerUnit& unit) const
   return m_RespirationHeatLoss->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-
 bool SEEnvironment::HasSkinHeatLoss() const
 {
   return m_SkinHeatLoss == nullptr ? false : m_SkinHeatLoss->IsValid();
@@ -509,5 +492,27 @@ double SEEnvironment::GetSkinHeatLoss(const PowerUnit& unit) const
 Tree<const char*> SEEnvironment::GetPhysiologyRequestGraph() const
 {
   return { "" };
+}
+//-----------------------------------------------------------------------------
+bool SEEnvironment::operator==(SEEnvironment const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return m_Name == rhs.m_Name
+    && (&m_Substances == &rhs.m_Substances)
+    && ((m_ConvectiveHeatLoss && rhs.m_ConvectiveHeatLoss) ? m_ConvectiveHeatLoss->operator==(*rhs.m_ConvectiveHeatLoss) : m_ConvectiveHeatLoss == rhs.m_ConvectiveHeatLoss)
+    && ((m_ConvectiveHeatTranferCoefficient && rhs.m_ConvectiveHeatTranferCoefficient) ? m_ConvectiveHeatTranferCoefficient->operator==(*rhs.m_ConvectiveHeatTranferCoefficient) : m_ConvectiveHeatTranferCoefficient == rhs.m_ConvectiveHeatTranferCoefficient)
+    && ((m_EvaporativeHeatLoss && rhs.m_EvaporativeHeatLoss) ? m_EvaporativeHeatLoss->operator==(*rhs.m_EvaporativeHeatLoss) : m_EvaporativeHeatLoss == rhs.m_EvaporativeHeatLoss)
+    && ((m_EvaporativeHeatTranferCoefficient && rhs.m_EvaporativeHeatTranferCoefficient) ? m_EvaporativeHeatTranferCoefficient->operator==(*rhs.m_EvaporativeHeatTranferCoefficient) : m_EvaporativeHeatTranferCoefficient == rhs.m_EvaporativeHeatTranferCoefficient)
+    && ((m_RadiativeHeatLoss && rhs.m_RadiativeHeatLoss) ? m_RadiativeHeatLoss->operator==(*rhs.m_RadiativeHeatLoss) : m_RadiativeHeatLoss == rhs.m_RadiativeHeatLoss)
+    && ((m_RadiativeHeatTranferCoefficient && rhs.m_RadiativeHeatTranferCoefficient) ? m_RadiativeHeatTranferCoefficient->operator==(*rhs.m_RadiativeHeatTranferCoefficient) : m_RadiativeHeatTranferCoefficient == rhs.m_RadiativeHeatTranferCoefficient)
+    && ((m_RespirationHeatLoss && rhs.m_RespirationHeatLoss) ? m_RespirationHeatLoss->operator==(*rhs.m_RespirationHeatLoss) : m_RespirationHeatLoss == rhs.m_RespirationHeatLoss)
+    && ((m_SkinHeatLoss && rhs.m_SkinHeatLoss) ? m_SkinHeatLoss->operator==(*rhs.m_SkinHeatLoss) : m_SkinHeatLoss == rhs.m_SkinHeatLoss)
+    && ((m_Conditions && rhs.m_Conditions) ? m_Conditions->operator==(*rhs.m_Conditions) : m_Conditions == rhs.m_Conditions);
+}
+bool SEEnvironment::operator!=(SEEnvironment const& rhs) const
+{
+  return !(this->operator==(rhs));
 }
 }

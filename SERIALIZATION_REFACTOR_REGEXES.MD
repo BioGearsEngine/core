@@ -2,7 +2,7 @@
 
 # REGEXES
 .*m_(.*);
-.*(m_.*);
+
 if \(in.Has(.*)\(\)\)\s+\n\s+UnMarshall.*
 if \(in.Has(.*)\(\)\) \{\s+\n\s+io::Property::UnMarshall.*;\s+\n\s+}
 if \(in.Has(.*)\(\)\) \{\s+\n\s+UnMarshall.*;\n\s+}
