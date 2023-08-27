@@ -4,12 +4,13 @@
 
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolationWaveform.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
-#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramWaveformLeadNumber.h>
 
 namespace biogears {
 namespace io {
-  //class SEElectroCardioGram
+  // class SEElectroCardioGram
   void ElectroCardioGram::Marshall(const CDM::ElectroCardioGramData& in, SEElectroCardioGram& out)
   {
     io::Property::Marshall(in.Lead1ElectricPotential(), out.GetLead1ElectricPotential());
@@ -25,37 +26,33 @@ namespace io {
     io::Property::Marshall(in.Lead11ElectricPotential(), out.GetLead11ElectricPotential());
     io::Property::Marshall(in.Lead12ElectricPotential(), out.GetLead12ElectricPotential());
   }
-  //----------------------------------------------------------------------------------
   void ElectroCardioGram::UnMarshall(const SEElectroCardioGram& in, CDM::ElectroCardioGramData& out)
   {
-    if (in.m_Lead1ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead1ElectricPotential, out.Lead1ElectricPotential());
-    if (in.m_Lead2ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead2ElectricPotential, out.Lead2ElectricPotential());
-    if (in.m_Lead3ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead3ElectricPotential, out.Lead3ElectricPotential());
-    if (in.m_Lead4ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead4ElectricPotential, out.Lead4ElectricPotential());
-    if (in.m_Lead5ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead5ElectricPotential, out.Lead5ElectricPotential());
-    if (in.m_Lead6ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead6ElectricPotential, out.Lead6ElectricPotential());
-    if (in.m_Lead7ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead7ElectricPotential, out.Lead7ElectricPotential());
-    if (in.m_Lead8ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead8ElectricPotential, out.Lead8ElectricPotential());
-    if (in.m_Lead9ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead9ElectricPotential, out.Lead9ElectricPotential());
-    if (in.m_Lead10ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead10ElectricPotential, out.Lead10ElectricPotential());
-    if (in.m_Lead11ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead11ElectricPotential, out.Lead11ElectricPotential());
-    if (in.m_Lead12ElectricPotential != nullptr)
-      io::Property::UnMarshall(*in.m_Lead12ElectricPotential, out.Lead12ElectricPotential());
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead1ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead2ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead3ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead4ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead5ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead6ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead7ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead8ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead9ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead10ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead11ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Lead12ElectricPotential)
+  }
+  // class SEElectroCardioGram
+  void ElectroCardioGram::Marshall(const CDM::ElectroCardioGramWaveformLeadNumberData& in, SEElectroCardioGramWaveformLeadNumber& out)
+  {
+    out.m_value = static_cast<int>(in);
+  }
+  void ElectroCardioGram::UnMarshall(const SEElectroCardioGramWaveformLeadNumber& in, CDM::ElectroCardioGramWaveformLeadNumberData& out)
+  {
+    out = in.m_value;
   }
   //----------------------------------------------------------------------------------
-  //class SEElectroCardioGramInterpolationWaveform
-  void ElectroCardioGram::Marshall(const CDM::ElectroCardioGramInterpolationWaveformData& in, SEElectroCardioGramInterpolatorWaveform& out)
+  // class SEElectroCardioGramInterpolationWaveform
+  void ElectroCardioGram::Marshall(const CDM::ElectroCardioGramInterpolationWaveformData& in, SEElectroCardioGramInterpolationWaveform& out)
   {
     out.Clear();
     out.m_Rhythm = in.Rhythm();
@@ -68,36 +65,43 @@ namespace io {
         out.m_ActiveIndicies.push_back(in.ActiveIndicies().get().IntegerList()[i]);
     }
   }
-  //----------------------------------------------------------------------------------
-  void ElectroCardioGram::UnMarshall(const SEElectroCardioGramInterpolatorWaveform& in, CDM::ElectroCardioGramInterpolationWaveformData& out)
+  void ElectroCardioGram::UnMarshall(const SEElectroCardioGramInterpolationWaveform& in, CDM::ElectroCardioGramInterpolationWaveformData& out)
   {
-    if (in.HasRhythm())
-      out.Rhythm(in.m_Rhythm);
+    out.Rhythm("");
+    CDM_ENUM_UNMARSHAL_HELPER(in, out, Rhythm);
+
+    out.Lead(std::make_unique<CDM::ElectroCardioGramWaveformLeadNumberData>());
     if (in.HasLeadNumber())
       out.Lead(in.m_LeadNumber);
+
+    out.Data(std::make_unique<CDM::FunctionElectricPotentialVsTimeData>());
     if (in.HasData()) {
-      io::Property::UnMarshall(*in.m_Data, out.Data());
+      CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Data)
       out.ActiveIndicies(std::unique_ptr<CDM::IntegerArray>(new CDM::IntegerArray()));
       out.ActiveIndicies().get().IntegerList(std::unique_ptr<CDM::IntegerList>(new CDM::IntegerList()));
       for (int i : in.m_ActiveIndicies)
         out.ActiveIndicies().get().IntegerList().push_back(i);
     }
-    if (in.HasTimeStep())
-      io::Property::UnMarshall(*in.m_TimeStep, out.TimeStep());
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TimeStep)
   }
   //----------------------------------------------------------------------------------
-  //class SEElectroCardioGramWaveformInterpolator
-  void ElectroCardioGram::Marshall(const CDM::ElectroCardioGramWaveformInterpolatorData& in, SEElectroCardioGramInterpolator& out)
+  // class SEElectroCardioGramInterpolator
+  void ElectroCardioGram::Marshall(const CDM::ElectroCardioGramInterpolatorData& in, SEElectroCardioGramInterpolator& out)
   {
     out.Clear();
     for (auto w : in.Waveform()) {
-      SEElectroCardioGramInterpolatorWaveform* waveform = new SEElectroCardioGramInterpolatorWaveform(out.GetLogger());
+      SEElectroCardioGramInterpolationWaveform* waveform = new SEElectroCardioGramInterpolationWaveform(out.GetLogger());
       Marshall(w, *waveform);
       out.m_Waveforms[waveform->GetLeadNumber()][waveform->GetRhythm()] = waveform;
     }
+
+    for (auto lead : in.Leads()) {
+      auto potential = std::make_unique<SEScalarElectricPotential>();
+      io::Property::Marshall(lead.ExlectricalPotential(), *potential);
+      out.m_Leads[lead.Lead()] = potential.release();
+    }
   }
-  //----------------------------------------------------------------------------------
-  void ElectroCardioGram::UnMarshall(const SEElectroCardioGramInterpolator& in, CDM::ElectroCardioGramWaveformInterpolatorData& out)
+  void ElectroCardioGram::UnMarshall(const SEElectroCardioGramInterpolator& in, CDM::ElectroCardioGramInterpolatorData& out)
   {
     for (auto i : in.m_Waveforms) {
       for (auto j : i.second) {
@@ -105,6 +109,15 @@ namespace io {
         UnMarshall(*j.second, ecgiwfData);
         out.Waveform().push_back(ecgiwfData);
       }
+    }
+
+    for (auto lead : in.m_Leads) {
+      auto potential = CDM::ElectroCardioGramLeadPotentialData();
+      potential.Lead(lead.first);
+      auto ecp = CDM::ScalarElectricPotentialData();
+      io::Property::UnMarshall(*lead.second, ecp);
+      potential.ExlectricalPotential(ecp);
+      out.Leads().push_back(potential);
     }
   }
   //----------------------------------------------------------------------------------

@@ -30,7 +30,7 @@
 #ifdef DISABLE_BIOGEARS_Scenario_TEST
 #define TEST_FIXTURE_NAME DISABLED_ScenarioFixture
 #else
-#define TEST_FIXTURE_NAME ScenarioFixture
+#define TEST_FIXTURE_NAME IO_ScenarioFixture
 #endif
 
 // The fixture for testing class Foo.
@@ -384,7 +384,7 @@ TEST_F(TEST_FIXTURE_NAME, DataRequestManager)
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
-#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolationWaveform.h>
 TEST_F(TEST_FIXTURE_NAME, Scenario)
 {
   USING_TYPES(Scenario)

@@ -38,7 +38,7 @@ BG_EXT template class BIOGEARS_API SEScalarQuantity<ElectricPotentialUnit>;
 
 class BIOGEARS_API SEScalarElectricPotential : public SEScalarQuantity<ElectricPotentialUnit> {
 public:
-  SEScalarElectricPotential();
+  using SEScalarQuantity::SEScalarQuantity;
   virtual ~SEScalarElectricPotential();
 
   CDM::ScalarElectricPotentialData* Unload() const override;

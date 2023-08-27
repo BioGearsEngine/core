@@ -31,7 +31,7 @@
 #ifdef DISABLE_BIOGEARS_Substance_TEST
 #define TEST_FIXTURE_NAME DISABLED_SubstanceFixture
 #else
-#define TEST_FIXTURE_NAME SubstanceFixture
+#define TEST_FIXTURE_NAME IO_SubstanceFixture
 #endif
 
 // The fixture for testing class Foo.

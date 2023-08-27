@@ -31,10 +31,7 @@ ElectricPotentialUnit::ElectricPotentialUnit(const std::string& u)
 ElectricPotentialUnit::~ElectricPotentialUnit()
 {
 }
-//-----------------------------------------------------------------------------
-SEScalarElectricPotential::SEScalarElectricPotential()
-{
-}
+
 //-----------------------------------------------------------------------------
 SEScalarElectricPotential::~SEScalarElectricPotential()
 {

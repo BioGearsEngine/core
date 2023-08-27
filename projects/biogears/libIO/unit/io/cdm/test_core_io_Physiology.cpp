@@ -30,7 +30,7 @@
 #ifdef DISABLE_BIOGEARS_Physiology_TEST
 #define TEST_FIXTURE_NAME DISABLED_PhysiologyFixture
 #else
-#define TEST_FIXTURE_NAME PhysiologyFixture
+#define TEST_FIXTURE_NAME IO_PhysiologyFixture
 #endif
 
 // The fixture for testing class Foo.

@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
-class SubstanceQuantityFixture_LiquidSubstanceQuantity_Test;
+class IO_SubstanceQuantityFixture_LiquidSubstanceQuantity_Test;
 
 namespace biogears {
 class SELiquidCompartment;
@@ -34,7 +34,7 @@ namespace io {
 class BIOGEARS_API SELiquidSubstanceQuantity : public SESubstanceQuantity, public SELiquidTransportSubstance {
   friend class SELiquidCompartment;
   friend class io::SubstanceQuantity;
-  friend class ::SubstanceQuantityFixture_LiquidSubstanceQuantity_Test;
+  friend class ::IO_SubstanceQuantityFixture_LiquidSubstanceQuantity_Test;
 
 protected:
   SELiquidSubstanceQuantity(SESubstance& sub, SELiquidCompartment& compartment);

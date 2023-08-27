@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="WritePatientBaselineFile" type="enumOnOff" minOccurs="0" maxOccurs="1"/>
 
           <xs:choice minOccurs="0" maxOccurs="1">
-            <xs:element name="ElectroCardioGramInterpolator" type="ElectroCardioGramWaveformInterpolatorData"/>
+            <xs:element name="ElectroCardioGramInterpolator" type="ElectroCardioGramInterpolatorData"/>
             <xs:element name="ElectroCardioGramInterpolatorFile" type="xs:string"/>
           </xs:choice>
           <xs:choice minOccurs="0" maxOccurs="1">

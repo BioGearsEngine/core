@@ -33,7 +33,7 @@
 #ifdef DISABLE_BIOGEARS_Anesthesia_Actions_TEST
 #define TEST_FIXTURE_NAME DISABLED_Anesthesia_ActionsFixture
 #else
-#define TEST_FIXTURE_NAME AnesthesiaActionsFixture
+#define TEST_FIXTURE_NAME IO_AnesthesiaActionsFixture
 #endif
 
 // The fixture for testing class Foo.

@@ -30,7 +30,7 @@
 #ifdef DISABLE_BIOGEARS_InhalerActions_TEST
 #define TEST_FIXTURE_NAME DISABLED_InhalerActionsFixture
 #else
-#define TEST_FIXTURE_NAME InhalerActionsFixture
+#define TEST_FIXTURE_NAME IO_InhalerActionsFixture
 #endif
 
 // The fixture for testing class Foo.

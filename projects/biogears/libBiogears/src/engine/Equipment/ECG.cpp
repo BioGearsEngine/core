@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Cardiovascular.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
-#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolatorWaveform.h>
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolationWaveform.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
 
 #include <biogears/engine/Controller/BioGears.h>
@@ -116,7 +116,7 @@ void ECG::Unload(CDM::BioGearsElectroCardioGramData& data) const
   SEElectroCardioGram::Unload(data);
   data.HeartRythmTime(std::unique_ptr<CDM::ScalarTimeData>(m_HeartRhythmTime.Unload()));
   data.HeartRythmPeriod(std::unique_ptr<CDM::ScalarTimeData>(m_HeartRhythmPeriod.Unload()));
-  data.Waveforms(std::unique_ptr<CDM::ElectroCardioGramWaveformInterpolatorData>(m_Waveforms.Unload()));
+  data.Waveforms(std::unique_ptr<CDM::ElectroCardioGramInterpolatorData>(m_Waveforms.Unload()));
 }
 
 void ECG::SetUp()
