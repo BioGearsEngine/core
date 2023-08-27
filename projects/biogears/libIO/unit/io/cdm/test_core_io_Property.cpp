@@ -25,7 +25,7 @@
 #ifdef DISABLE_BIOGEARS_Property_TEST
 #define TEST_FIXTURE_NAME DISABLED_PropertiesFixture
 #else
-#define TEST_FIXTURE_NAME PropertiesFixture
+#define TEST_FIXTURE_NAME IO_PropertiesFixture
 #endif
 
 // The fixture for testing class Foo.

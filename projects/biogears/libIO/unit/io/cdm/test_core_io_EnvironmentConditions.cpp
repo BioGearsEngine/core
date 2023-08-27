@@ -29,7 +29,7 @@
 #ifdef DISABLE_BIOGEARS_EnvironmentConditions_TEST
 #define TEST_FIXTURE_NAME DISABLED_EnvironmentConditionsFixture
 #else
-#define TEST_FIXTURE_NAME EnvironmentConditionsFixture
+#define TEST_FIXTURE_NAME IO_EnvironmentConditionsFixture
 #endif
 
 // The fixture for testing class Foo.

@@ -2,7 +2,7 @@
 
 # REGEXES
 .*m_(.*);
-
+.*(m_.*);
 if \(in.Has(.*)\(\)\)\s+\n\s+UnMarshall.*
 if \(in.Has(.*)\(\)\) \{\s+\n\s+io::Property::UnMarshall.*;\s+\n\s+}
 if \(in.Has(.*)\(\)\) \{\s+\n\s+UnMarshall.*;\n\s+}
@@ -14,7 +14,7 @@ source.Get$1().SetValue( 1.0);
 
 
 # Iterator Equivilance Check
-  equivilant &= m_testSuite.size() == rhs.m_testSuite.size()
+  equivilant &= m_Children.size() == rhs.m_Children.size();
   if (equivilant) {
     for (auto i = 0; equivilant && i < m_Children.size(); ++i) {
       equivilant &= (m_Children[i] && rhs.m_Children[i])

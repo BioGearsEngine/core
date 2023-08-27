@@ -29,28 +29,33 @@ specific language governing permissions and limitations under the License.
     io::ElectroCardioGram::UnMarshall(*in.m_##func, out.func());        \
   }
 
+
 namespace biogears {
 class SEElectroCardioGram;
-class SEElectroCardioGramInterpolatorWaveform;
+class SEElectroCardioGramInterpolationWaveform;
 class SEElectroCardioGramInterpolator;
+class SEElectroCardioGramWaveformLeadNumber;
 
 namespace io {
   class BIOGEARS_PRIVATE_API ElectroCardioGram {
   public:
-    //template <typename SE, typename XSD>  option
+    // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
     static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
-    //class SEElectroCardioGram
+    // class SEElectroCardioGram
     static void Marshall(const CDM::ElectroCardioGramData& in, SEElectroCardioGram& out);
     static void UnMarshall(const SEElectroCardioGram& in, CDM::ElectroCardioGramData& out);
-    //class SEElectroCardioGramInterpolationWaveform
-    static void Marshall(const CDM::ElectroCardioGramInterpolationWaveformData& in, SEElectroCardioGramInterpolatorWaveform& out);
-    static void UnMarshall(const SEElectroCardioGramInterpolatorWaveform& in, CDM::ElectroCardioGramInterpolationWaveformData& out);
-    //class SEElectroCardioGramWaveformInterpolator
-    static void Marshall(const CDM::ElectroCardioGramWaveformInterpolatorData& in, SEElectroCardioGramInterpolator& out);
-    static void UnMarshall(const SEElectroCardioGramInterpolator& in, CDM::ElectroCardioGramWaveformInterpolatorData& out);
+    // class SEElectroCardioGram
+    static void Marshall(const CDM::ElectroCardioGramWaveformLeadNumberData& in, SEElectroCardioGramWaveformLeadNumber& out);
+    static void UnMarshall(const SEElectroCardioGramWaveformLeadNumber& in, CDM::ElectroCardioGramWaveformLeadNumberData& out);
+    // class SEElectroCardioGramInterpolationWaveform
+    static void Marshall(const CDM::ElectroCardioGramInterpolationWaveformData& in, SEElectroCardioGramInterpolationWaveform& out);
+    static void UnMarshall(const SEElectroCardioGramInterpolationWaveform& in, CDM::ElectroCardioGramInterpolationWaveformData& out);
+    // class SEElectroCardioGramWaveformInterpolator
+    static void Marshall(const CDM::ElectroCardioGramInterpolatorData& in, SEElectroCardioGramInterpolator& out);
+    static void UnMarshall(const SEElectroCardioGramInterpolator& in, CDM::ElectroCardioGramInterpolatorData& out);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
@@ -71,4 +76,4 @@ namespace io {
     option_out.set(*item);
   }
 } // Namespace IO
-} //Namespace Biogears
+} // Namespace Biogears

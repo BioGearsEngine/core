@@ -30,7 +30,7 @@
 #ifdef DISABLE_BIOGEARS_PatientAssessments_TEST
 #define TEST_FIXTURE_NAME DISABLED_PatientAssessmentsFixture
 #else
-#define TEST_FIXTURE_NAME PatientAssessmentsFixture
+#define TEST_FIXTURE_NAME IO_PatientAssessmentsFixture
 #endif
 
 // The fixture for testing class Foo.

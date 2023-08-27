@@ -80,7 +80,7 @@ namespace io {
   void EngineConfiguration::UnMarshall(const PhysiologyEngineConfiguration& in, CDM::PhysiologyEngineConfigurationData& out)
   {
     if (in.HasECGInterpolator())
-      out.ElectroCardioGramInterpolator(std::unique_ptr<CDM::ElectroCardioGramWaveformInterpolatorData>(in.m_ECGInterpolator->Unload()));
+      out.ElectroCardioGramInterpolator(std::unique_ptr<CDM::ElectroCardioGramInterpolatorData>(in.m_ECGInterpolator->Unload()));
     if (in.HasStabilizationCriteria())
       out.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(in.m_StabilizationCriteria->Unload()));
     if (in.HasTimeStep())

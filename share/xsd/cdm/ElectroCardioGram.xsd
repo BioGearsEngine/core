@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
 
   <xs:include schemaLocation="Physiology.xsd"/>
+  <xs:include schemaLocation="Properties.xsd"/>
 
   <!-- @brief Generic ECG machine to assess the heart rhythm. -->
   <xs:complexType name="ElectroCardioGramData">
@@ -49,12 +50,13 @@ specific language governing permissions and limitations under the License.
   </xs:complexType>
   <xs:element name="ElectroCardioGram" type="ElectroCardioGramData"/>
 
-  <xs:simpleType name="ElectroCardioGramWaveformLeadNumber">
-    <xs:restriction base="xs:int">
+  <xs:simpleType name="ElectroCardioGramWaveformLeadNumberData">
+    <xs:restriction base="xs:integer">
       <xs:minInclusive value="1"/>
       <xs:maxInclusive value="12"/>
     </xs:restriction>
   </xs:simpleType>
+
   <!-- @brief Explicit waveform data for a particular heart rhythm. -->
   <xs:complexType name="ElectroCardioGramInterpolationWaveformData">
     <xs:complexContent>
@@ -67,7 +69,7 @@ specific language governing permissions and limitations under the License.
           <xs:element name="ActiveIndicies" type="IntegerArray" minOccurs="0" maxOccurs="1"/>
           <!--<< @brief Active indicies of the WaveForm Data used to interpolate the current electric potential. -->
         </xs:sequence>
-        <xs:attribute name="Lead" type="ElectroCardioGramWaveformLeadNumber" use="required"/>
+        <xs:attribute name="Lead" type="ElectroCardioGramWaveformLeadNumberData" use="required"/>
         <!--<< @brief Rhythm type of the waveform provided. -->
         <xs:attribute name="Rhythm" type="enumHeartRhythm" use="required"/>
         <!--<< @brief Rhythm type of the waveform provided. -->
@@ -75,16 +77,28 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
 
-  <!-- @brief Version of ElectroCardioGramWaveformInterpolatorData. -->
-  <xs:complexType name="ElectroCardioGramWaveformInterpolatorData">
+  <xs:complexType name="ElectroCardioGramLeadPotentialData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:sequence>
+          <xs:element name="ExlectricalPotential" type="ScalarElectricPotentialData" />
+        </xs:sequence>
+        <xs:attribute name="Lead" type="ElectroCardioGramWaveformLeadNumberData" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- @brief Version of ElectroCardioGramInterpolatorData. -->
+  <xs:complexType name="ElectroCardioGramInterpolatorData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
           <xs:element name="Waveform" type="ElectroCardioGramInterpolationWaveformData" minOccurs="1" maxOccurs="unbounded"/>
+          <xs:element name="Leads" type="ElectroCardioGramLeadPotentialData" minOccurs="0" maxOccurs="12"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="ElectroCardioGramWaveformInterpolator" type="ElectroCardioGramWaveformInterpolatorData"/>
+  <xs:element name="ElectroCardioGramWaveformInterpolator" type="ElectroCardioGramInterpolatorData"/>
 
 </xs:schema>

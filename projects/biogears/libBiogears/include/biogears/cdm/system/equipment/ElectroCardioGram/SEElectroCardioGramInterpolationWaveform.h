@@ -24,28 +24,28 @@ namespace biogears {
 namespace io {
   class ElectroCardioGram;
 }
-class BIOGEARS_API SEElectroCardioGramInterpolatorWaveform : public Loggable {
+class BIOGEARS_API SEElectroCardioGramInterpolationWaveform : public Loggable {
   friend io::ElectroCardioGram;
 
 public:
-  SEElectroCardioGramInterpolatorWaveform(Logger* logger);
-  virtual ~SEElectroCardioGramInterpolatorWaveform();
+  SEElectroCardioGramInterpolationWaveform(Logger* logger);
+  virtual ~SEElectroCardioGramInterpolationWaveform();
 
   virtual void Clear(); // Deletes all members
 
   virtual bool Load(const CDM::ElectroCardioGramInterpolationWaveformData& in);
   virtual CDM::ElectroCardioGramInterpolationWaveformData* Unload() const;
 
-  bool operator==(SEElectroCardioGramInterpolatorWaveform const&) const;
-  bool operator!=(SEElectroCardioGramInterpolatorWaveform const&) const;
+  bool operator==(SEElectroCardioGramInterpolationWaveform const&) const;
+  bool operator!=(SEElectroCardioGramInterpolationWaveform const&) const;
 
 protected:
   virtual void Unload(CDM::ElectroCardioGramInterpolationWaveformData& data) const;
 
 public:
   virtual bool HasLeadNumber() const;
-  virtual CDM::ElectroCardioGramWaveformLeadNumber GetLeadNumber() const;
-  virtual void SetLeadNumber(CDM::ElectroCardioGramWaveformLeadNumber n);
+  virtual CDM::ElectroCardioGramWaveformLeadNumberData GetLeadNumber() const;
+  virtual void SetLeadNumber(CDM::ElectroCardioGramWaveformLeadNumberData n);
   virtual void InvalidateLeadNumber();
 
   virtual CDM::enumHeartRhythm::value GetRhythm() const;
@@ -64,7 +64,7 @@ public:
   virtual std::vector<unsigned int>& GetActiveIndicies() { return m_ActiveIndicies; }
 
 protected:
-  CDM::ElectroCardioGramWaveformLeadNumber m_LeadNumber;
+  CDM::ElectroCardioGramWaveformLeadNumberData m_LeadNumber;
   CDM::enumHeartRhythm::value m_Rhythm;
   SEScalarTime* m_TimeStep;
   SEFunctionElectricPotentialVsTime* m_Data;
