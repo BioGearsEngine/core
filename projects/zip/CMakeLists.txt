@@ -532,7 +532,8 @@ set_target_properties(libminizip PROPERTIES
                         SOVERSION ${SOVERSION}
                         FOLDER "Libraries/extern"
                         LINKER_LANGUAGE C
-                        DEFINE_SYMBOL "MZ_EXPORTS")
+                        DEFINE_SYMBOL "MZ_EXPORTS"
+)
 
 target_include_directories(libminizip PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

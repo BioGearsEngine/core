@@ -52,6 +52,7 @@ function(add_howto name)
         CXX_STANDARD 14
         VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
         VS_DEBUGGER_ENVIRONMENT "${VS_DEBUGGER_ENVIRONMENT_LIST}"
+        INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"@loader_path:@loader_path/../lib:@loader_path/lib">$<$<PLATFORM_ID:Linux,Android>:"\${ORIGIN}:\${ORIGIN}/../lib:\${ORIGIN}/lib">
         )
 
      target_compile_definitions(${TARGET_NAME} PRIVATE ${${PREFIX}_CPPFLAGS} PRIVATE $<$<PLATFORM_ID:Windows>:"_CRT_SECURE_NO_WARNINGS"> )

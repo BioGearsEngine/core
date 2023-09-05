@@ -74,6 +74,7 @@ set_target_properties(libbiogears_common
   CXX_STANDARD 14
   POSITION_INDEPENDENT_CODE TRUE
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
+  INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"@loader_path:@loader_path/../lib:@loader_path/lib">$<$<PLATFORM_ID:Linux,Android>:"\${ORIGIN}:\${ORIGIN}/../lib:\${ORIGIN}/lib">
   )
 target_compile_definitions(libbiogears_common PUBLIC  ${Common_INTERFACE_CPPFLAGS} PRIVATE ${Common_CPPFLAGS} )
 if (Biogears_COMMON_BUILD_STATIC)

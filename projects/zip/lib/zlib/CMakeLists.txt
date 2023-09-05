@@ -188,7 +188,8 @@ add_library(zlib SHARED ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC
 add_library(zlib::zlib ALIAS zlib)
 set_target_properties(zlib PROPERTIES 
   FOLDER "Libraries/extern"
-  DEFINE_SYMBOL ZLIB_DLL
+  DEFINE_SYMBOL ZLIB_DLL  
+  INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"@loader_path:@loader_path/../lib:@loader_path/lib">$<$<PLATFORM_ID:Linux,Android>:"\${ORIGIN}:\${ORIGIN}/../lib:\${ORIGIN}/lib">
  SOVERSION 1
  )
 else()
