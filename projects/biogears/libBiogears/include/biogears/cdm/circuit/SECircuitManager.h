@@ -76,8 +76,6 @@ protected:
 public:
   void SetReadOnly(bool b);
 
-protected:
-public:
   virtual SEElectricalCircuitNode& CreateElectricalNode(const char* name) { return CreateNode<ELECTRICAL_LEDGER_TYPES>(name, m_ElectricalLedger); }
   virtual void DeleteElectricalNode(const char* name) { DeleteNode<ELECTRICAL_LEDGER_TYPES>(name, m_ElectricalLedger); }
   virtual bool HasElectricalNode(const char* name) const { return HasNode<ELECTRICAL_LEDGER_TYPES>(name, m_ElectricalLedger); }
