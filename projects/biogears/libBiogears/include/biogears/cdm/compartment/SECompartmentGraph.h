@@ -14,9 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <string>
 #include <vector>
 
-namespace biogears {
+#include <biogears/cdm/utils/Logger.h>
 
-class Logger;
+namespace biogears {
 
 #define COMPARTMENT_GRAPH_TEMPLATE typename CompartmentType, typename CompartmentLinkType
 #define COMPARTMENT_GRAPH_TYPES CompartmentType, CompartmentLinkType

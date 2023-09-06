@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 SEThermalCompartment::SEThermalCompartment(const char* name, Logger* logger)
-  : SEThermalCompartment(std::string{ name }, logger)
+  : SEThermalCompartment(std::string { name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
@@ -66,7 +66,7 @@ bool SEThermalCompartment::Load(const CDM::ThermalCompartmentData& in, SECircuit
     for (auto name : in.Node()) {
       SEThermalCircuitNode* node = circuits->GetThermalNode(name);
       if (node == nullptr) {
-        Error("Compartment is mapped to circuit node, " + std::string{ name } +", but provided circuit manager did not have that node");
+        Error("Compartment is mapped to circuit node, " + std::string { name } + ", but provided circuit manager did not have that node");
         return false;
       }
       MapNode(*node);
@@ -107,7 +107,7 @@ void SEThermalCompartment::Unload(CDM::ThermalCompartmentData& data)
 //-----------------------------------------------------------------------------
 const SEScalar* SEThermalCompartment::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SEThermalCompartment::GetScalar(const std::string& name)
@@ -386,7 +386,7 @@ const std::vector<SEThermalCompartmentLink*>& SEThermalCompartment::GetLinks()
 //-----------------------------------------------------------------------------
 bool SEThermalCompartment::HasChild(const char* name)
 {
-  return HasChild(std::string{ name });
+  return HasChild(std::string { name });
 }
 //-----------------------------------------------------------------------------
 bool SEThermalCompartment::HasChild(const std::string& name)
@@ -409,4 +409,34 @@ void SEThermalCompartment::AddChild(SEThermalCompartment& child)
   m_Children.push_back(&child);
 }
 //-----------------------------------------------------------------------------
+bool SEThermalCompartment::operator==(SEThermalCompartment const& rhs) const
+{
+  if (this == &rhs) {
+    return true;
+  }
+  bool equivilant = m_Name == rhs.m_Name;
+
+  if (equivilant) {
+    for (auto i = 0; i < m_Children.size(); ++i) {
+      equivilant &= (m_Children[i] && rhs.m_Children[i])
+        ? m_Children[i]->operator==(*rhs.m_Children[i])
+        : m_Children[i] == rhs.m_Children[i];
+    }
+  }
+
+  if (equivilant) {
+    for (auto i = 0; i < m_Children.size(); ++i) {
+      equivilant &= (m_Children[i] && rhs.m_Children[i])
+        ? m_Children[i]->operator==(*rhs.m_Children[i])
+        : m_Children[i] == rhs.m_Children[i];
+    }
+  }
+
+  return equivilant;
+}
+
+bool SEThermalCompartment::operator!=(SEThermalCompartment const& rhs) const
+{
+  return !(*this == rhs);
+}
 }

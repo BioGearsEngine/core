@@ -52,7 +52,7 @@ BG_EXT template class BIOGEARS_API SESubstanceTransportAmount<SEScalarMass, SESc
 
 using SEGasTransportSubstance = SESubstanceTransportAmount<SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportSubstance = SESubstanceTransportAmount<SEScalarMass, SEScalarMassPerVolume>;
-} //namespace biogears
+} // namespace biogears
 
 namespace biogears {
 #define TRANSPORT_VERTEX_TYPES QuantityScalar, ExtensiveScalar, IntensiveScalar
@@ -60,6 +60,8 @@ template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveS
 class SESubstanceTransportVertex {
   template <SUBSTANCE_TRANSPORTER_TEMPLATE>
   friend class SESubstanceTransporter;
+  template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
+  friend bool operator==(SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& lhs, SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& rhs);
 
 public:
   virtual ~SESubstanceTransportVertex() { }
@@ -72,14 +74,45 @@ protected:
   virtual QuantityScalar& GetQuantity() = 0;
 
   virtual std::vector<SESubstanceTransportAmount<TRANSPORT_AMOUNT_TYPES>*>& GetTransportSubstances() = 0;
+  virtual std::vector<SESubstanceTransportAmount<TRANSPORT_AMOUNT_TYPES>*> const & GetTransportSubstances() const= 0;
 };
+
+template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
+bool operator==(SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& lhs, SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& rhs)
+{
+  if (&lhs == &rhs)
+    return true;
+
+  auto& lAmounts = lhs.GetTransportSubstances();
+  auto& rAmounts = rhs.GetTransportSubstances();
+
+  bool equivilant = lAmounts.size() == rAmounts.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < lAmounts.size(); ++i) {
+      equivilant &= (lAmounts.at(i) && rAmounts.at(i))
+        ? lAmounts.at(i)->operator==(*rAmounts.at(i))
+        : lAmounts.at(i) == rAmounts.at(i);
+    }
+  }
+  return equivilant;
+}
+template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
+bool operator!=(SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& lhs, SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& rhs)
+{
+  return !(lhs == rhs);
+}
+
+using SEGasTransportVertex = SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction>;
+using SELiquidTransportVertex = SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
 BG_EXT template class BIOGEARS_API SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction>;
 BG_EXT template class BIOGEARS_API SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
-using SEGasTransportVertex = SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction>;
-using SELiquidTransportVertex = SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
-} //namespace biogears
+BG_EXT template bool BIOGEARS_API operator==(SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction> const& lhs, SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction> const& rhs);
+BG_EXT template bool BIOGEARS_API operator==(SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume> const& lhs, SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume> const& rhs);
+BG_EXT template bool BIOGEARS_API operator!=(SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction> const& lhs, SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction> const& rhs);
+BG_EXT template bool BIOGEARS_API operator!=(SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume> const& lhs, SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume> const& rhs);
+} // namespace biogears
 
 namespace biogears {
 
@@ -131,7 +164,7 @@ BG_EXT template class BIOGEARS_API SESubstanceTransportGraph<SEScalarVolumePerTi
 using SEGasTransportGraph = SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportGraph = SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
-} //namespace biogears
+} // namespace biogears
 
 namespace biogears {
 template <SUBSTANCE_TRANSPORTER_TEMPLATE>
@@ -155,7 +188,7 @@ BG_EXT template class BIOGEARS_API SESubstanceTransporter<SELiquidTransportGraph
 using SEGasTransporter = SESubstanceTransporter<SEGasTransportGraph, VolumePerTimeUnit, VolumeUnit, VolumeUnit, NoUnit>;
 using SELiquidTransporter = SESubstanceTransporter<SELiquidTransportGraph, VolumePerTimeUnit, VolumeUnit, MassUnit, MassPerVolumeUnit>;
 
-} //namespace biogears
+} // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportVertex*>;

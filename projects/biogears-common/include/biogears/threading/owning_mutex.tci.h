@@ -28,6 +28,10 @@ namespace biogears {
   template<typename T>
   OwningMutex<T>::OwningMutex(T&& item) : _item(std::move(item)),_on_loan(false) {}
 
+  template <typename T>
+  OwningMutex<T>::~OwningMutex()
+  {
+  }
   //----------------------------------------------------------------------------
   template<typename T>
   OwningMutex<T>::OwningMutex(const T& item) : _item(item),_on_loan(false) {}

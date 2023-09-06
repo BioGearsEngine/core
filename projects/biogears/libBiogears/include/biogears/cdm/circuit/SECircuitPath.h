@@ -66,6 +66,9 @@ public:
   virtual bool Load(const CDM::CircuitPathData& in);
   virtual CDM::CircuitPathData* Unload() const = 0;
 
+  bool operator==(SECircuitPath& rhs) const;
+  bool operator!=(SECircuitPath& rhs) const;
+
 protected:
   virtual void Unload(CDM::CircuitPathData& data) const;
 

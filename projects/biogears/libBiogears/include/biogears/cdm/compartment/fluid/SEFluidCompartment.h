@@ -118,6 +118,7 @@ protected:
   virtual double CalculateOutFlow_mL_Per_s() const;
 
   virtual std::vector<TransportSubstanceType*>& GetTransportSubstances() override { return m_TransportSubstances; }
+  virtual std::vector<TransportSubstanceType*>const & GetTransportSubstances() const override { return m_TransportSubstances; }
 
   SEScalarVolumePerTime* m_InFlow;
   SEScalarVolumePerTime* m_OutFlow;

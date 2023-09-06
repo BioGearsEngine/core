@@ -10,7 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
-//Project Includes
+// Project Includes
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 
@@ -142,6 +142,22 @@ QuantityScalar& SECircuitNode<CIRCUIT_NODE_TYPES>::GetQuantityBaseline()
   if (m_QuantityBaseline == nullptr)
     m_QuantityBaseline = new QuantityScalar();
   return *m_QuantityBaseline;
+}
+//-------------------------------------------------------------------------------
+template <CIRCUIT_NODE_TEMPLATE>
+bool SECircuitNode<CIRCUIT_NODE_TYPES>::operator==(SECircuitNode& rhs) const
+{
+  return m_Name == rhs.m_Name
+    && ((m_Potential && rhs.m_Potential) ? m_Potential->operator==(*rhs.m_Potential) : m_Potential == rhs.m_Potential)
+    && ((m_NextPotential && rhs.m_NextPotential) ? m_NextPotential->operator==(*rhs.m_NextPotential) : m_NextPotential == rhs.m_NextPotential)
+    && ((m_Quantity && rhs.m_Quantity) ? m_Quantity->operator==(*rhs.m_Quantity) : m_Quantity == rhs.m_Quantity)
+    && ((m_NextQuantity && rhs.m_NextQuantity) ? m_NextQuantity->operator==(*rhs.m_NextQuantity) : m_NextQuantity == rhs.m_NextQuantity)
+    && ((m_QuantityBaseline && rhs.m_QuantityBaseline) ? m_QuantityBaseline->operator==(*rhs.m_QuantityBaseline) : m_QuantityBaseline == rhs.m_QuantityBaseline);
+}
+template <CIRCUIT_NODE_TEMPLATE>
+bool SECircuitNode<CIRCUIT_NODE_TYPES>::operator!=(SECircuitNode& rhs) const
+{
+  return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
 }

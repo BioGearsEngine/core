@@ -19,8 +19,9 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::SEFluidCompartmentLink(CompartmentType& src, CompartmentType& tgt, const char* name)
-  : SEFluidCompartmentLink(src, tgt, std::string{ name })
-{  }
+  : SEFluidCompartmentLink(src, tgt, std::string { name })
+{
+}
 //-------------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::SEFluidCompartmentLink(CompartmentType& src, CompartmentType& tgt, const std::string& name)
@@ -46,12 +47,12 @@ bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::Load(const CDM::Fluid
     return false;
   if (in.Path().present()) {
     if (circuits == nullptr) {
-      Error("Link is mapped to circuit path, " + std::string{ in.Path().get() } +", but no circuit manager was provided, cannot load");
+      Error("Link is mapped to circuit path, " + std::string { in.Path().get() } + ", but no circuit manager was provided, cannot load");
       return false;
     }
     SEFluidCircuitPath* path = circuits->GetFluidPath(in.Path().get());
     if (path == nullptr) {
-      Error("Link is mapped to circuit path, " + std::string{ in.Path().get() } +", but provided circuit manager did not have that path");
+      Error("Link is mapped to circuit path, " + std::string { in.Path().get() } + ", but provided circuit manager did not have that path");
       return false;
     }
     MapPath(*path);
@@ -85,7 +86,7 @@ void SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::Clear()
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 const SEScalar* SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
@@ -134,5 +135,37 @@ double SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetFlow(const Volum
   if (m_Flow == nullptr)
     return SEScalar::dNaN();
   return m_Flow->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
+bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator==(const SEFluidCompartmentLink& rhs) const
+{
+  bool equivilant = ((m_Flow && rhs.m_Flow) ? m_Flow->operator==(*rhs.m_Flow) : m_Flow == rhs.m_Flow)
+    && m_SourceCmpt == rhs.m_SourceCmpt
+    && m_TargetCmpt == rhs.m_TargetCmpt
+    && m_SourceVertex == rhs.m_SourceVertex
+    && m_TargetVertex == rhs.m_TargetVertex
+    && ((m_Path && rhs.m_Path) ? m_Path->operator==(*rhs.m_Path) : m_Path == rhs.m_Path);
+
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
+bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator!=(const SEFluidCompartmentLink& rhs) const
+{
+  return !this->operator==(rhs);
+}
+//-------------------------------------------------------------------------------
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
+bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator==(const SECompartmentLink& rhs) const
+{
+  auto rhs_ptr = dynamic_cast<decltype(this)>(&rhs);
+  return (rhs_ptr) ? this->operator==(*rhs_ptr) : false;
+}
+//-------------------------------------------------------------------------------
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
+bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator!=(const SECompartmentLink& rhs) const
+{
+  return !this->operator==(rhs);
 }
 }
