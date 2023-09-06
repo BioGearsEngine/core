@@ -9,15 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
 #include <biogears/cdm/compartment/SECompartmentGraph.inl>
+#include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
 
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 
 namespace biogears {
 SEThermalCompartmentLink::SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const char* name)
-  : SEThermalCompartmentLink(src, tgt, std::string{ name })
+  : SEThermalCompartmentLink(src, tgt, std::string { name })
 {
 }
 //-------------------------------------------------------------------------------
@@ -40,12 +40,12 @@ bool SEThermalCompartmentLink::Load(const CDM::ThermalCompartmentLinkData& in, S
     return false;
   if (in.Path().present()) {
     if (circuits == nullptr) {
-      Error("Link is mapped to circuit path, " + std::string{ in.Path().get() } +", but no circuit manager was provided, cannot load");
+      Error("Link is mapped to circuit path, " + std::string { in.Path().get() } + ", but no circuit manager was provided, cannot load");
       return false;
     }
     SEThermalCircuitPath* path = circuits->GetThermalPath(in.Path().get());
     if (path == nullptr) {
-      Error("Link is mapped to circuit path, " + std::string{ in.Path().get() }+", but provided circuit manager did not have that path");
+      Error("Link is mapped to circuit path, " + std::string { in.Path().get() } + ", but provided circuit manager did not have that path");
       return false;
     }
     MapPath(*path);
@@ -83,7 +83,7 @@ void SEThermalCompartmentLink::Clear()
 //-------------------------------------------------------------------------------
 const SEScalar* SEThermalCompartmentLink::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEThermalCompartmentLink::GetScalar(const std::string& name)
@@ -118,19 +118,51 @@ double SEThermalCompartmentLink::GetHeatTransferRate(const PowerUnit& unit) cons
   return m_HeatTransferRate->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-}//namespace biogears
+
+bool SEThermalCompartmentLink::operator==(const SEThermalCompartmentLink& rhs) const
+{
+  bool equivilant = ((m_HeatTransferRate && rhs.m_HeatTransferRate)
+                       ? m_HeatTransferRate->operator==(*rhs.m_HeatTransferRate)
+                       : m_HeatTransferRate == rhs.m_HeatTransferRate)
+    && m_SourceCmpt == m_SourceCmpt
+    && m_TargetCmpt == m_TargetCmpt
+    && ((m_Path && rhs.m_Path) ? m_Path->operator==(*rhs.m_Path) : m_Path == rhs.m_Path);
+
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+
+bool SEThermalCompartmentLink::operator!=(const SEThermalCompartmentLink& rhs) const
+{
+  return !this->operator==(rhs);
+}
+//-------------------------------------------------------------------------------
+
+bool SEThermalCompartmentLink::operator==(const SECompartmentLink& rhs) const
+{
+  auto rhs_ptr = dynamic_cast<decltype(this)>(&rhs);
+  return (rhs_ptr) ? this->operator==(*rhs_ptr) : false;
+}
+//-------------------------------------------------------------------------------
+
+bool SEThermalCompartmentLink::operator!=(const SECompartmentLink& rhs) const
+{
+  return !this->operator==(rhs);
+}
+
+} // namespace biogears
 
 namespace biogears {
 SEThermalCompartmentGraph::SEThermalCompartmentGraph(const char* name, Logger* logger)
-  : SECompartmentGraph(std::string{ name }, logger)
+  : SECompartmentGraph(std::string { name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
 SEThermalCompartmentGraph::SEThermalCompartmentGraph(const std::string& name, Logger* logger)
-  : SECompartmentGraph(name, logger){};
+  : SECompartmentGraph(name, logger) {};
 //-----------------------------------------------------------------------------
 SEThermalCompartmentGraph::~SEThermalCompartmentGraph()
 {
 }
-//-----------------------------------------------------------------------------
-} //namespace biogears
+
+} // namespace biogears

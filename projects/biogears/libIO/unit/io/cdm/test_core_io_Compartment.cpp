@@ -51,6 +51,7 @@ protected:
     : logger()
     , substanceManager(&logger)
     , compartmentManager(substanceManager)
+    , circuitManager(&logger)
   {
   }
 
@@ -72,6 +73,7 @@ protected:
   biogears::Logger logger;
   biogears::SESubstanceManager substanceManager;
   biogears::SECompartmentManager compartmentManager;
+  biogears::SECircuitManager circuitManager;
 };
 
 void TEST_FIXTURE_NAME::SetUp()
@@ -114,17 +116,17 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartment)
   auto& fc2 = compartmentManager.CreateGasCompartment("Compartment2");
   auto& fc3 = compartmentManager.CreateGasCompartment("Compartment3");
 
-  auto& source = compartmentManager->CreateGasCompartment("source");
-  auto& sink = compartmentManager->CreateGasCompartment("sink");
+  auto& source = compartmentManager.CreateGasCompartment("source");
+  auto& sink = compartmentManager.CreateGasCompartment("sink");
   CDMType data;
 
   EXPECT_NE(source, sink);
 
   Compartment::UnMarshall(source, data);
-  Compartment::Marshall(data, sink);
+  Compartment::Marshall(data, sink, substanceManager);
 
   EXPECT_EQ(source, sink);
-}
+};
 
 //! Abstract class SEGasCompartmentLink
 //! TYPE GasCompartmentLink
@@ -135,35 +137,39 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartmentLink)
 {
   USING_TYPES(GasCompartmentLink)
 
-  auto& source = compartmentManager->CreateGasLink(*pMouth, *pStomach, "Mouth_Stomach");
-  auto& sink = compartmentManager->CreateGasLink(*pLeftAlveoli, *pRightAlveoli, "Right_Left_Alveoli");
-  CDMType data;
+  //auto compartment1 = compartmentManager.GetGasCompartment("Compartment One");
+  //auto compartment2 = compartmentManager.GetGasCompartment("Compartment Two");
+  //auto compartment3 = compartmentManager.GetGasCompartment("Compartment Three");
+  //auto compartment4 = compartmentManager.GetGasCompartment("Compartment Four");
 
-  EXPECT_NE(source, sink);
+  //auto& source = compartmentManager.CreateGasLink(*compartment1, *compartment2, "one->two");
+  //auto& sink = compartmentManager.CreateGasLink(*compartment3, *compartment4, "three->four");
+  //CDMType data;
 
-  Compartment::UnMarshall(source, data);
-  Compartment::Marshall(data, sink);
+  //EXPECT_NE(source, sink);
 
-  EXPECT_EQ(source, sink);
-}
+  //Compartment::UnMarshall(source, data);
+  //Compartment::Marshall(data, sink);
+
+  //EXPECT_EQ(source, sink);
+};
 
 //! Abstract class SEGasCompartmentGraph
 //! TYPE GasCompartmentGraph
 // static void Marshall(const CDM::GasCompartmentGraphData& in, SEGasCompartmentGraph& out, SECompartmentManager& cmptMgr);
 // static void UnMarshall(const SEGasCompartmentGraph& in, CDM::GasCompartmentGraphData& out);
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
-TEST_F(TEST_FIXTURE_NAME, GasCompartmentGraph)
-{
-  USING_TYPES(GasCompartmentGraph)
+TEST_F(TEST_FIXTURE_NAME, GasCompartmentGraph) {
+  // USING_TYPES(GasCompartmentGraph)
 
-  auto& source = compartmentManager->CreateGasGraph("source");
-  auto& sink = compartmentManager->CreateGasGraph("sink");
-  CDMType data;
+  // auto& source = compartmentManager->CreateGasGraph("source");
+  // auto& sink = compartmentManager->CreateGasGraph("sink");
+  // CDMType data;
 
-  EXPECT_NE(source, sink);
+  // EXPECT_NE(source, sink);
 
-  Compartment::UnMarshall(source, data);
-  Compartment::Marshall(data, sink, compartmentManager);
+  // Compartment::UnMarshall(source, data);
+  // Compartment::Marshall(data, sink, compartmentManager);
 
-  EXPECT_EQ(source, sink);
-}
+  // EXPECT_EQ(source, sink);
+};

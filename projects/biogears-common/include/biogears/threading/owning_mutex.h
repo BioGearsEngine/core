@@ -50,6 +50,7 @@ namespace biogears {
   class OwningMutex {
   public:
     OwningMutex() = delete;
+    ~OwningMutex();
     OwningMutex(const OwningMutex<T>&) = delete;
     OwningMutex<T>& operator=(const OwningMutex<T>&) = delete;
 

@@ -142,7 +142,7 @@ namespace io {
   //class SEGasCompartment
   void Compartment::Marshall(const CDM::GasCompartmentData& in, SEGasCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits)
   {
-    Marshall(static_cast<const CDM::FluidCompartmentData>(in), static_cast<SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity>&>(out), circuits);
+    Marshall<>(static_cast<const CDM::FluidCompartmentData>(in), static_cast<SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity>&>(out), circuits);
     if (in.Child().empty()) {
       for (const CDM::GasSubstanceQuantityData& d : in.SubstanceQuantity()) {
         SESubstance* sub = subMgr.GetSubstance(d.Substance());
@@ -157,7 +157,7 @@ namespace io {
   //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SEGasCompartment& in, CDM::GasCompartmentData& out)
   {
-    UnMarshall(static_cast<const SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity>&>(in), static_cast<CDM::FluidCompartmentData&>(out));
+    UnMarshall<>(static_cast<const SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity>&>(in), static_cast<CDM::FluidCompartmentData&>(out));
     for (SEGasSubstanceQuantity* subQ : in.m_SubstanceQuantities) {
       auto gsqData = CDM::GasSubstanceQuantityData();
       io::SubstanceQuantity::UnMarshall(*subQ, gsqData);

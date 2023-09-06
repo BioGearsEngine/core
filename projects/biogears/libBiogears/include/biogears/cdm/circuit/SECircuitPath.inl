@@ -15,10 +15,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Circuit.hxx>
 
 namespace biogears {
-  template <CIRCUIT_PATH_TEMPLATE>
-  SECircuitPath<CIRCUIT_PATH_TYPES>::SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const char* name)
-    : SECircuitPath(src, tgt, std::string{ name })
-{}
+template <CIRCUIT_PATH_TEMPLATE>
+SECircuitPath<CIRCUIT_PATH_TYPES>::SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const char* name)
+  : SECircuitPath(src, tgt, std::string { name })
+{
+}
 //-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 SECircuitPath<CIRCUIT_PATH_TYPES>::SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const std::string& name)
@@ -45,12 +46,12 @@ SECircuitPath<CIRCUIT_PATH_TYPES>::SECircuitPath(SECircuitNode<PotentialScalar, 
   m_NextPotentialSource = nullptr;
   m_PotentialSourceBaseline = nullptr;
   m_ValveBreakdownPotential = nullptr;
-  m_Switch = (CDM::enumOpenClosed::value) - 1;
-  m_Valve = (CDM::enumOpenClosed::value) - 1;
-  m_NextSwitch = (CDM::enumOpenClosed::value) - 1;
-  m_NextValve = (CDM::enumOpenClosed::value) - 1;
-  m_NextPolarizedState = (CDM::enumOpenClosed::value) - 1;
-  m_PolarizedState = (CDM::enumOpenClosed::value) - 1;
+  m_Switch = (CDM::enumOpenClosed::value)-1;
+  m_Valve = (CDM::enumOpenClosed::value)-1;
+  m_NextSwitch = (CDM::enumOpenClosed::value)-1;
+  m_NextValve = (CDM::enumOpenClosed::value)-1;
+  m_NextPolarizedState = (CDM::enumOpenClosed::value)-1;
+  m_PolarizedState = (CDM::enumOpenClosed::value)-1;
 
   m_NumElements = 0;
   m_NumNextElements = 0;
@@ -653,6 +654,52 @@ PotentialScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetValveBreakdownPotential()
   if (m_ValveBreakdownPotential == nullptr)
     m_ValveBreakdownPotential = new PotentialScalar();
   return *m_ValveBreakdownPotential;
+}
+//-------------------------------------------------------------------------------
+template <CIRCUIT_PATH_TEMPLATE>
+bool SECircuitPath<CIRCUIT_PATH_TYPES>::operator==(SECircuitPath& rhs) const
+{
+  return m_Name == rhs.m_Name
+    && m_SourceNode == rhs.m_SourceNode
+    && m_TargetNode == rhs.m_TargetNode
+    && m_NumElements == rhs.m_NumElements
+    && m_NumNextElements == rhs.m_NumNextElements
+
+    && m_Switch == rhs.m_Switch
+    && m_NextSwitch == rhs.m_NextSwitch
+    && m_Valve == rhs.m_Valve
+    && m_NextValve == rhs.m_NextValve
+    && m_PolarizedState == rhs.m_PolarizedState
+    && m_NextPolarizedState == rhs.m_NextPolarizedState
+
+    && ((m_Resistance && rhs.m_Resistance) ? m_Resistance->operator==(*rhs.m_Resistance) : m_Resistance == rhs.m_Resistance)
+    && ((m_NextResistance && rhs.m_NextResistance) ? m_NextResistance->operator==(*rhs.m_NextResistance) : m_NextResistance == rhs.m_NextResistance)
+    && ((m_ResistanceBaseline && rhs.m_ResistanceBaseline) ? m_ResistanceBaseline->operator==(*rhs.m_ResistanceBaseline) : m_ResistanceBaseline == rhs.m_ResistanceBaseline)
+
+    && ((m_Capacitance && rhs.m_Capacitance) ? m_Capacitance->operator==(*rhs.m_Capacitance) : m_Capacitance == rhs.m_Capacitance)
+    && ((m_NextCapacitance && rhs.m_NextCapacitance) ? m_NextCapacitance->operator==(*rhs.m_NextCapacitance) : m_NextCapacitance == rhs.m_NextCapacitance)
+    && ((m_CapacitanceBaseline && rhs.m_CapacitanceBaseline) ? m_CapacitanceBaseline->operator==(*rhs.m_CapacitanceBaseline) : m_CapacitanceBaseline == rhs.m_CapacitanceBaseline)
+
+    && ((m_Inductance && rhs.m_Inductance) ? m_Inductance->operator==(*rhs.m_Inductance) : m_Inductance == rhs.m_Inductance)
+    && ((m_NextInductance && rhs.m_NextInductance) ? m_NextInductance->operator==(*rhs.m_NextInductance) : m_NextInductance == rhs.m_NextInductance)
+    && ((m_InductanceBaseline && rhs.m_InductanceBaseline) ? m_InductanceBaseline->operator==(*rhs.m_InductanceBaseline) : m_InductanceBaseline == rhs.m_InductanceBaseline)
+
+    && ((m_Flux && rhs.m_Flux) ? m_Flux->operator==(*rhs.m_Flux) : m_Flux == rhs.m_Flux)
+    && ((m_NextFlux && rhs.m_NextFlux) ? m_NextFlux->operator==(*rhs.m_NextFlux) : m_NextFlux == rhs.m_NextFlux)
+    && ((m_FluxSource && rhs.m_FluxSource) ? m_FluxSource->operator==(*rhs.m_FluxSource) : m_FluxSource == rhs.m_FluxSource)
+    && ((m_NextFluxSource && rhs.m_NextFluxSource) ? m_NextFluxSource->operator==(*rhs.m_NextFluxSource) : m_NextFluxSource == rhs.m_NextFluxSource)
+    && ((m_FluxSourceBaseline && rhs.m_FluxSourceBaseline) ? m_FluxSourceBaseline->operator==(*rhs.m_FluxSourceBaseline) : m_FluxSourceBaseline == rhs.m_FluxSourceBaseline)
+
+    && ((m_PotentialSource && rhs.m_PotentialSource) ? m_PotentialSource->operator==(*rhs.m_PotentialSource) : m_PotentialSource == rhs.m_PotentialSource)
+    && ((m_NextPotentialSource && rhs.m_NextPotentialSource) ? m_NextPotentialSource->operator==(*rhs.m_NextPotentialSource) : m_NextPotentialSource == rhs.m_NextPotentialSource)
+    && ((m_PotentialSourceBaseline && rhs.m_PotentialSourceBaseline) ? m_PotentialSourceBaseline->operator==(*rhs.m_PotentialSourceBaseline) : m_PotentialSourceBaseline == rhs.m_PotentialSourceBaseline)
+    && ((m_ValveBreakdownPotential && rhs.m_ValveBreakdownPotential) ? m_ValveBreakdownPotential->operator==(*rhs.m_ValveBreakdownPotential) : m_ValveBreakdownPotential == rhs.m_ValveBreakdownPotential);
+}
+
+template <CIRCUIT_PATH_TEMPLATE>
+bool SECircuitPath<CIRCUIT_PATH_TYPES>::operator!=(SECircuitPath& rhs) const
+{
+  return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
 }

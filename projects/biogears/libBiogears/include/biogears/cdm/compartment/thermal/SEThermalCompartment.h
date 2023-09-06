@@ -15,9 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentNodes.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
-#include <vector>
 #include <map>
 #include <string>
+#include <vector>
 
 CDM_BIND_DECL(ThermalCompartmentData)
 
@@ -48,6 +48,9 @@ public:
 
   virtual bool Load(const CDM::ThermalCompartmentData& in, SECircuitManager* circuits = nullptr);
   virtual CDM::ThermalCompartmentData* Unload() override;
+
+  bool operator==(SEThermalCompartment const&) const;
+  bool operator!=(SEThermalCompartment const&) const;
 
 protected:
   virtual void Unload(CDM::ThermalCompartmentData& data);
@@ -108,9 +111,9 @@ protected:
   std::vector<SEThermalCompartment*> m_Leaves;
   SECompartmentNodes<THERMAL_COMPARTMENT_NODE> m_Nodes;
 };
-}   //namespace biogears
+} // namespace biogears
 
-namespace std{
-  BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartment*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartment*> ;
+namespace std {
+BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartment*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartment*>;
 }

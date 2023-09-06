@@ -17,10 +17,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
-#include <vector>
 #include <map>
 #include <string>
-
+#include <vector>
 
 namespace biogears {
 class SECompartmentManager;
@@ -42,6 +41,11 @@ public:
 
   virtual bool Load(const CDM::ThermalCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
   virtual CDM::ThermalCompartmentLinkData* Unload() override;
+
+  bool operator==(const SEThermalCompartmentLink& rhs) const;
+  bool operator!=(const SEThermalCompartmentLink& rhs) const;
+  bool operator==(const SECompartmentLink& rhs) const final;
+  bool operator!=(const SECompartmentLink& rhs) const final;
 
 protected:
   virtual void Unload(CDM::ThermalCompartmentLinkData& data);
@@ -87,4 +91,4 @@ public:
   SEThermalCompartmentGraph(const std::string& name, Logger* logger);
   virtual ~SEThermalCompartmentGraph() override;
 };
-} //namespace biogears
+} // namespace biogears

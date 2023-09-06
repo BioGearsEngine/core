@@ -205,7 +205,7 @@ template<typename E, typename ErrFuncT>
 auto Option<T>::ok_or_else(ErrFuncT err_func) &&->Result<T, E>
 {
 	static_assert(
-		std::is_same<typename std::result_of<ErrFuncT()>::type, E>::value
+		std::is_same<typename std::invoke_result<ErrFuncT()>::type, E>::value
 		, "function passed to `Option::ok_or_else` does not have correct return type, E"
 		);
 	return is_some()

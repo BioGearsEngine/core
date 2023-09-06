@@ -168,7 +168,7 @@ bool SEGasCompartment::operator==(SEGasCompartment const& rhs) const
   if (this == &rhs) {
     return true;
   }
-  bool equivilant = true;
+  bool equivilant = m_Name == rhs.m_Name;
 
   if (equivilant) {
     for (auto i = 0; i < m_Children.size(); ++i) {
@@ -179,10 +179,10 @@ bool SEGasCompartment::operator==(SEGasCompartment const& rhs) const
   }
 
   if (equivilant) {
-    for (auto i = 0; i < m_Children.size(); ++i) {
-      equivilant &= (m_Children[i] && rhs.m_Children[i])
-        ? m_Children[i]->operator==(*rhs.m_Children[i])
-        : m_Children[i] == rhs.m_Children[i];
+    for (auto i = 0; i < m_Leaves.size(); ++i) {
+      equivilant &= (m_Leaves[i] && rhs.m_Leaves[i])
+        ? m_Leaves[i]->operator==(*rhs.m_Leaves[i])
+        : m_Leaves[i] == rhs.m_Leaves[i];
     }
   }
 

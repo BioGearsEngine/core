@@ -48,10 +48,13 @@ protected:
 public:
   virtual ~SECircuitNode();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   virtual bool Load(const CDM::CircuitNodeData& in);
   virtual CDM::CircuitNodeData* Unload() const = 0;
+
+  bool operator==(SECircuitNode& rhs) const;
+  bool operator!=(SECircuitNode& rhs) const;
 
 protected:
   virtual void Unload(CDM::CircuitNodeData& data) const;
@@ -89,7 +92,7 @@ protected:
 }
 #include <biogears/cdm/circuit/SECircuitNode.inl>
 
-namespace biogears{
+namespace biogears {
 BG_EXT template class SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>;
 BG_EXT template class SECircuitNode<SEScalarPressure, SEScalarVolume>;
 BG_EXT template class SECircuitNode<SEScalarTemperature, SEScalarEnergy>;

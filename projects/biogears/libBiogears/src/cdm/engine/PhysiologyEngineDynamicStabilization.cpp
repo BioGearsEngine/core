@@ -118,7 +118,7 @@ bool PhysiologyEngineDynamicStabilization::Stabilize(PhysiologyEngine& engine, c
 
     engine.AdvanceModelTime();
     stablizationTime_s += dT_s;
-    m_currentTime->IncrementValue(dT_s, biogears::TimeUnit::s);
+    GetCurrentTime().IncrementValue(dT_s, biogears::TimeUnit::s);
     if (m_LogProgress) {
       statusTime_s += dT_s;
       if (statusTime_s > statusStep_s) {

@@ -23,11 +23,10 @@
 #include <biogears/threading/owning_mutex.tci.h>
 
 #ifdef DISABLE_BIOGEARS_OwningMutex_TEST
-  #define TEST_FIXTURE_NAME DISABLED_OwningMutex_Fixture
+#define TEST_FIXTURE_NAME DISABLED_OwningMutex_Fixture
 #else
-  #define TEST_FIXTURE_NAME OwningMutex_Fixture
+#define TEST_FIXTURE_NAME OwningMutex_Fixture
 #endif
-
 
 // The fixture for testing class Foo.
 class TEST_FIXTURE_NAME : public ::testing::Test {
@@ -56,7 +55,6 @@ void TEST_FIXTURE_NAME::SetUp()
 
 void TEST_FIXTURE_NAME::TearDown()
 {
-
 }
 
 TEST_F(TEST_FIXTURE_NAME, OwningMutex_Construction)
@@ -64,9 +62,8 @@ TEST_F(TEST_FIXTURE_NAME, OwningMutex_Construction)
   using namespace biogears;
   std::string value = "Donkey_King_Country";
   OwningMutex<std::string> om1(value);
-  OwningMutex<std::string> om2( std::move(value) );
-  OwningMutex<std::string> om3( "Wonky_Tonkey");
-
+  OwningMutex<std::string> om2(std::move(value));
+  OwningMutex<std::string> om3("Wonky_Tonkey");
 }
 
 TEST_F(TEST_FIXTURE_NAME, OwningMutex_Aquire)
@@ -74,8 +71,8 @@ TEST_F(TEST_FIXTURE_NAME, OwningMutex_Aquire)
   using namespace biogears;
   std::string value = "Donkey_King_Country";
   auto mutex = OwningMutex<std::string>::make(value);
-	auto acquired = mutex.acquire();
-  EXPECT_EQ( acquired.get(), value );
+  auto acquired = mutex.acquire();
+  EXPECT_EQ(acquired.get(), value);
 }
 
 TEST_F(TEST_FIXTURE_NAME, OwningMutex_try_aquire)
@@ -100,18 +97,20 @@ TEST_F(TEST_FIXTURE_NAME, OwningMutex_only_one)
   std::string value = "Donkey_King_Country";
 
   OwningMutex<std::string> mutex(value);
-  
-
-	std::function<void(void)> thread_main = [&guard = mutex.acquire()](void) {
-		guard.get();
-		std::this_thread::sleep_for(2s);
-	};
-  auto thread = std::thread( std::bind( thread_main ));
-
-  auto locked = mutex.acquire();
-	if(thread.joinable())
-	{  thread.join();  }
-
+  {
+    auto guard = mutex.acquire();
+  }
+  std::function<void(void)> thread_main = [&mutex](void) mutable {
+    mutex.acquire();
+    std::this_thread::sleep_for(2s);
+  };
+  auto thread = std::thread(std::bind(thread_main));
+  {
+    auto locked = mutex.acquire();
+  }
+  if (thread.joinable()) {
+    thread.join();
+  }
 }
 #endif
 
@@ -124,14 +123,12 @@ TEST_F(TEST_FIXTURE_NAME, OwningMutex_shared_mutex)
   auto shared_mutex = make_shared_mutex<std::string>(value);
 
   auto thread = std::thread([=]() {
-		auto aquired = shared_mutex->acquire();
+    auto aquired = shared_mutex->acquire();
     std::this_thread::sleep_for(2s);
   });
-	std::this_thread::sleep_for(4s);
+  std::this_thread::sleep_for(4s);
   auto lock = shared_mutex->acquire();
-	if ( thread.joinable())
-	{
-		thread.join();
-	}
-
+  if (thread.joinable()) {
+    thread.join();
+  }
 }
