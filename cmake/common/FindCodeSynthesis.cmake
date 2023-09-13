@@ -285,7 +285,7 @@ find_path(CodeSynthesis_INCLUDE_DIR
             include/
 )
   find_program(CodeSynthesis_EXECUTABLE
-            NAMES "xsd"
+            NAMES "xsd" "xsdcxx"
             ENV XSD_ROOTDIR 
             HINTS "${CodeSynthesis_INCLUDE_DIR}/../bin"
             PATH_SUFFIXES "bin" )
