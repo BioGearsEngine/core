@@ -323,7 +323,7 @@ void Environment::ProcessActions()
     //In the event of a burn, modify the skin to clothing, clothing to enclosure (radiation), and clothing to environment (convection)
     //paths based on the burn surface area fraction.  Reducing skin to clothing resistance assumes that burn patient will have large
     //surface area uncovered. We calculate change in evaporative resistance in CalcEvaporation since that involves adjustment of funtion level parameters
-    const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+    const double burnSurfaceAreaIntensityFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
 
     //The "next" resistance are those just calculated in PreProcess, CalcRadiation, and CalcConvection -- these are essentially baselines
     // since they are calculated from the baseline clothing and environment variables.  We can't grab baseline resistances because
@@ -338,9 +338,9 @@ void Environment::ProcessActions()
     const double lastConvectiveResistance = m_ClothingToEnvironmentPath->GetResistance(HeatResistanceUnit::K_Per_W);
 
     //Target resistance are based on burn surface area (using "next" values since they were just set to basal values earlier in PreProcess)
-    const double targetSkinToClothingResistance = nextSkinToClothingResistance * std::pow(1.0 - burnSurfaceAreaFraction, 4.0);
-    const double targetRadiativeResistance = nextRadiativeResistance * std::pow(1.0 - burnSurfaceAreaFraction, 4.0);
-    const double targetConvectiveResistance = nextConvectiveResistance * std::pow(1.0 - burnSurfaceAreaFraction, 4.0);
+    const double targetSkinToClothingResistance = nextSkinToClothingResistance * std::pow(1.0 - burnSurfaceAreaIntensityFraction, 4.0);
+    const double targetRadiativeResistance = nextRadiativeResistance * std::pow(1.0 - burnSurfaceAreaIntensityFraction, 4.0);
+    const double targetConvectiveResistance = nextConvectiveResistance * std::pow(1.0 - burnSurfaceAreaIntensityFraction, 4.0);
 
     const double rampGain = 1.0e-5; //Smooth the response so that we reach targets over several minutes
 
@@ -683,7 +683,7 @@ void Environment::CalculateEvaporation()
     auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), CDM::enumInflammationSource::Burn);
     if ( burn_inflamation != inflamationSources.end() ) {
       if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-        skinWettednessDiffusion = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+        skinWettednessDiffusion = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
         dClothingResistance_m2_kPa_Per_W = 0.0;
         fCl = 1.0;
       }  else {

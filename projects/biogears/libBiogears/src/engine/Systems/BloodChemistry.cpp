@@ -1376,7 +1376,7 @@ void BloodChemistry::ManageSIRS()
 void BloodChemistry::InflammatoryResponse()
 {
   std::vector<CDM::enumInflammationSource> sources = m_InflammatoryResponse->GetInflammationSources();
-  double burnTotalBodySurfaceArea = 0.0;
+  double burnTotalBodySurfaceAreaIntensity = 0.0;
   double ebolaTemp = 0.0;
 
   if (m_data.GetActions().GetPatientActions().HasInfection()) {
@@ -1439,9 +1439,9 @@ void BloodChemistry::InflammatoryResponse()
     m_InflammatoryResponse->GetTrauma().SetValue(ebolaTemp); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
   }
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-    burnTotalBodySurfaceArea = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+    burnTotalBodySurfaceAreaIntensity = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
-      m_InflammatoryResponse->GetTrauma().SetValue(burnTotalBodySurfaceArea); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
+      m_InflammatoryResponse->GetTrauma().SetValue(burnTotalBodySurfaceAreaIntensity); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
       m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Burn);
     }
   }
@@ -1551,10 +1551,10 @@ void BloodChemistry::InflammatoryResponse()
   double antibacterialEffect = m_data.GetDrugs().GetAntibioticActivity().GetValue();
 
   //------------------Inflammation source specific modifications and/or actions --------------------------------
-  if (burnTotalBodySurfaceArea != 0) {
+  if (burnTotalBodySurfaceAreaIntensity != 0) {
     //Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
-    kDTR = 11.0 * burnTotalBodySurfaceArea; //We assume that larger burns inflict damage more rapidly
-    kTr = 0.25 / burnTotalBodySurfaceArea; //We assume that larger burns take longer for trauma to resolve
+    kDTR = 11.0 * burnTotalBodySurfaceAreaIntensity; //We assume that larger burns inflict damage more rapidly
+    kTr = 0.25 / burnTotalBodySurfaceAreaIntensity; //We assume that larger burns take longer for trauma to resolve
     tiMin = 0.008; //Promotes faster damage accumulation
     kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;

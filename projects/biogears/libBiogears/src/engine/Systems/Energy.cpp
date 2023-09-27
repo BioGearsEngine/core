@@ -660,8 +660,8 @@ void Energy::UpdateHeatResistance()
 
   double alphaScale = 0.5; //Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
   if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
-    const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
-    const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0); //Make >50% burn the worse case scenario
+    const double burnSurfaceAreaIntensityFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
+    const double resInput = std::min(2.0 * burnSurfaceAreaIntensityFraction, 1.0); // Make >50% burn the worse case scenario
     const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 20.0, resInput);
     const double lastAlpha = 1.0 / (m_coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W) * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
     const double rampGain = 1.0e-5;
