@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
       <xs:enumeration value="Urinalysis"/>
     </xs:restriction>
   </xs:simpleType>
+  
   <!-- @brief -->
   <xs:complexType name="PatientAssessmentRequestData">
     <xs:complexContent>
@@ -155,13 +156,23 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+  
+  <!-- @brief -->
+  <xs:simpleType name="enumBurnDegree">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="First"/>
+      <xs:enumeration value="Second"/>
+      <xs:enumeration value="Third"/>
+    </xs:restriction>
+  </xs:simpleType>
 
   <!--@brief A burn wound, severity of which is determined by proportion of body surface area affected-->
   <xs:complexType name="BurnWoundData">
     <xs:complexContent>
       <xs:extension base="PatientActionData">
         <xs:sequence>
-          <xs:element name="TotalBodySurfaceArea" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="DegreeOfBurn" type="enumBurnDegree" minOccurs="0" maxOccurs="1"/>
+		  <xs:element name="TotalBodySurfaceArea" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
           <xs:element name="Compartments" type="xs:string" minOccurs="0" maxOccurs="5"/>
           <!--Primarily used in calculating comaprtment syndrome. Not specifying will assume trunk-->
         </xs:sequence>

@@ -21,6 +21,8 @@ SEBurnWound::SEBurnWound()
 {
   m_Inflammation = false; //When the burn wound is constructed, the corresponding inflammation state has not been established
   m_TBSA = nullptr; //User input, size of wound measured by total body surface area
+  m_BurnIntensity = 0.0; //Calculated value of intensity using TBSA and burn degree
+  m_DegreeOfBurn = (CDM::enumBurnDegree::value)-1; // User input, burn degree afflicting specified TBSA
 }
 //-----------------------------------------------------------------------------
 SEBurnWound::~SEBurnWound()
@@ -33,6 +35,8 @@ void SEBurnWound::Clear()
   SEPatientAction::Clear();
   m_Inflammation = false;
   m_compartmentsAffected.clear();
+  m_DegreeOfBurn = (CDM::enumBurnDegree::value)-1;
+  m_BurnIntensity = 0.0;
   SAFE_DELETE(m_TBSA);
 }
 //-----------------------------------------------------------------------------
@@ -50,6 +54,25 @@ bool SEBurnWound::Load(const CDM::BurnWoundData& in)
 {
   SEPatientAction::Load(in);
   GetTotalBodySurfaceArea().Load(in.TotalBodySurfaceArea());
+  double degreeModifier;
+  if (in.DegreeOfBurn().present()) {
+    m_DegreeOfBurn = in.DegreeOfBurn().get();
+    switch (m_DegreeOfBurn) {
+    case CDM::enumBurnDegree::First:
+      degreeModifier = 0.05; // Even super small fractions are kicking off inflammation responses and blood volume losses that we do not want. Need to just turn it off until if/when first degree becomes more necessary
+      break;
+    case CDM::enumBurnDegree::Second:
+      degreeModifier = 0.99;
+      break;
+    case CDM::enumBurnDegree::Third:
+      degreeModifier = 1.0;
+      break;
+    default:
+      degreeModifier = 1.0; // Just a default error catch
+    }
+  } else {
+    degreeModifier = 1.0; // If no degree specified, leave unchanged. This is for legacy scenarios. Implemented (September 2023)
+  }
 
   m_compartmentsAffected.clear();
   std::string compt;
@@ -69,6 +92,26 @@ bool SEBurnWound::Load(const CDM::BurnWoundData& in)
     m_compartmentsAffected.push_back("Trunk");
   }
 
+  double allowableTBSA = 0.0;
+  for (const std::string compData : m_compartmentsAffected) {
+    if (compData == "Trunk") {
+      allowableTBSA += 0.36;
+    } else if (compData == "LeftArm") {
+      allowableTBSA += 0.09;
+    } else if (compData == "RightArm") {
+      allowableTBSA += 0.09;
+    } else if (compData == "LeftLeg") {
+      allowableTBSA += 0.18;
+    } else if (compData == "RightLeg") {
+      allowableTBSA += 0.18;
+    }
+  }
+  if (allowableTBSA < GetTotalBodySurfaceArea().GetValue()) {
+    Info("The TBSA provided exceeds the area permitted using the Rule of 9's and the compartments selected. The TBSA will be changed to:" + std::to_string(allowableTBSA));
+    GetTotalBodySurfaceArea().SetValue(allowableTBSA);
+  }
+  m_BurnIntensity = degreeModifier * GetTotalBodySurfaceArea().GetValue();
+
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -84,6 +127,8 @@ void SEBurnWound::Unload(CDM::BurnWoundData& data) const
   SEPatientAction::Unload(data);
   if (m_TBSA != nullptr)
     data.TotalBodySurfaceArea(std::unique_ptr<CDM::Scalar0To1Data>(m_TBSA->Unload()));
+  if (HasDegreeOfBurn())
+    data.DegreeOfBurn(m_DegreeOfBurn);
   for (std::string compData : m_compartmentsAffected) {
     data.Compartments().push_back(compData);
   }
@@ -99,6 +144,21 @@ SEScalar0To1& SEBurnWound::GetTotalBodySurfaceArea()
   if (m_TBSA == nullptr)
     m_TBSA = new SEScalar0To1();
   return *m_TBSA;
+}
+//-----------------------------------------------------------------------------
+bool SEBurnWound::HasDegreeOfBurn() const
+{
+  return m_DegreeOfBurn == ((CDM::enumBurnDegree::value)-1) ? false : true;
+}
+//-----------------------------------------------------------------------------
+CDM::enumBurnDegree::value SEBurnWound::GetDegreeOfBurn() const
+{
+  return m_DegreeOfBurn;
+}
+//-----------------------------------------------------------------------------
+double SEBurnWound::GetBurnIntensity() const
+{
+  return m_BurnIntensity;
 }
 //-----------------------------------------------------------------------------
 bool SEBurnWound::HasInflammation() const
@@ -176,6 +236,8 @@ void SEBurnWound::ToString(std::ostream& str) const
     str << "\n\tComment: " << m_Comment;
   str << "\n\tTotal Body Surface Area:  ";
   str << *m_TBSA;
+  str << "\n\tDegree of Burn: ";
+  HasDegreeOfBurn() ? str << GetDegreeOfBurn() : str << "Not Set";
   str << "\n\tCompartment(s): ";
   if (HasCompartment()) {
     for (unsigned int i = 0; i < m_compartmentsAffected.size(); i++) {
@@ -195,6 +257,7 @@ bool SEBurnWound::operator==(const SEBurnWound& rhs) const
 {
   bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_TBSA && rhs.m_TBSA) ? m_TBSA->operator==(*rhs.m_TBSA) : m_TBSA == rhs.m_TBSA;
+  equivilant &= m_DegreeOfBurn == rhs.m_DegreeOfBurn;
   equivilant &= m_compartmentsAffected == rhs.m_compartmentsAffected;
   return equivilant;
 }

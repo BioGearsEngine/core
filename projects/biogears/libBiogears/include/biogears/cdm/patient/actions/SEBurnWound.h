@@ -43,6 +43,9 @@ public:
 
   virtual bool HasTotalBodySurfaceArea() const;
   virtual SEScalar0To1& GetTotalBodySurfaceArea();
+  virtual bool HasDegreeOfBurn() const;
+  virtual CDM::enumBurnDegree::value GetDegreeOfBurn() const;
+  virtual double GetBurnIntensity() const;
 
   bool HasCompartment() const;
   bool HasCompartment(const std::string compartment) const;
@@ -67,7 +70,9 @@ protected:
 
 protected:
   bool m_Inflammation;
+  CDM::enumBurnDegree::value m_DegreeOfBurn;
   SEScalar0To1* m_TBSA;
+  double m_BurnIntensity;
   std::vector<std::string> m_compartmentsAffected;
 };
 }
