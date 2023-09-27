@@ -54,12 +54,14 @@ bool SEBurnWound::Load(const CDM::BurnWoundData& in)
 {
   SEPatientAction::Load(in);
   GetTotalBodySurfaceArea().Load(in.TotalBodySurfaceArea());
+  // The degree modifier is a v1.0 methodology for scaling burn response based on instantiated degree of burn specific to the minimal physiology response of first degree as compared to second and third.
+  // Minimal validation data exists differentiating the physiology of the three in the hours following a burn, so inital values for second and third are tuned to mimic TBSA data of both.
   double degreeModifier;
   if (in.DegreeOfBurn().present()) {
     m_DegreeOfBurn = in.DegreeOfBurn().get();
     switch (m_DegreeOfBurn) {
     case CDM::enumBurnDegree::First:
-      degreeModifier = 0.05; // Even super small fractions are kicking off inflammation responses and blood volume losses that we do not want. Need to just turn it off until if/when first degree becomes more necessary
+      degreeModifier = 0.05; 
       break;
     case CDM::enumBurnDegree::Second:
       degreeModifier = 0.99;
