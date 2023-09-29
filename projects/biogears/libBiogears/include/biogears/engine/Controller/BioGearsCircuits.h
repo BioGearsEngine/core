@@ -303,7 +303,8 @@ namespace tatrc {
         DEFINE_STATIC_STRING(Clothing);
         DEFINE_STATIC_STRING(Enclosure);
         DEFINE_STATIC_STRING(ExternalCore);
-        DEFINE_STATIC_STRING(ExternalSkin);
+        DEFINE_STATIC_STRING(ExternalUpperSkin);
+        DEFINE_STATIC_STRING(ExternalLowerSkin);
         DEFINE_STATIC_STRING(ExternalGround);
         DEFINE_STATIC_STRING(Ambient);
       };
@@ -318,8 +319,10 @@ namespace tatrc {
         DEFINE_STATIC_STRING(GroundToClothing);
         DEFINE_STATIC_STRING(GroundToEnclosure);
         DEFINE_STATIC_STRING(GroundToEnvironment);
-        DEFINE_STATIC_STRING(ExternalSkinToGround);
-        DEFINE_STATIC_STRING(ExternalSkinToClothing);
+        DEFINE_STATIC_STRING(ExternalUpperSkinToGround);
+        DEFINE_STATIC_STRING(ExternalUpperSkinToUpperClothing);
+        DEFINE_STATIC_STRING(ExternalLowerSkinToGround);
+        DEFINE_STATIC_STRING(ExternalLowerSkinToLowerClothing);
       };
 
       ////////////////////////////////////////
@@ -329,16 +332,43 @@ namespace tatrc {
       namespace InternalTemperatureNode {
 
         DEFINE_STATIC_STRING(InternalCore);
-        DEFINE_STATIC_STRING(InternalSkin);
         DEFINE_STATIC_STRING(InternalGround);
+
+        DEFINE_STATIC_STRING(CentralBlood);
+        DEFINE_STATIC_STRING(UpperMuscle);
+        DEFINE_STATIC_STRING(UpperFat);
+        DEFINE_STATIC_STRING(InternalUpperSkin);
+        DEFINE_STATIC_STRING(LowerMuscle);
+        DEFINE_STATIC_STRING(LowerFat);
+        DEFINE_STATIC_STRING(InternalLowerSkin);
       };
 
       namespace InternalTemperaturePath {
 
         DEFINE_STATIC_STRING(GroundToInternalCore);
-        DEFINE_STATIC_STRING(InternalCoreToInternalSkin);
         DEFINE_STATIC_STRING(InternalCoreToGround);
-        DEFINE_STATIC_STRING(InternalSkinToGround);
+
+        DEFINE_STATIC_STRING(CentralBloodToTemperatureGround);
+        DEFINE_STATIC_STRING(UpperMuscleToTemperatureGround);
+        DEFINE_STATIC_STRING(UpperFatToTemperatureGround);
+        DEFINE_STATIC_STRING(InternalUpperSkinToTemperatureGround);
+        DEFINE_STATIC_STRING(UpperCoreToCentralBlood);
+        DEFINE_STATIC_STRING(UpperMuscleToCentralBlood);
+        DEFINE_STATIC_STRING(UpperFatToCentralBlood);
+        DEFINE_STATIC_STRING(InternalUpperSkinToCentralBlood);
+        DEFINE_STATIC_STRING(CoreToUpperMuscle);
+        DEFINE_STATIC_STRING(UpperMuscleToUpperFat);
+        DEFINE_STATIC_STRING(UpperFatToInternalUpperSkin);
+        DEFINE_STATIC_STRING(LowerMuscleToTemperatureGround);
+        DEFINE_STATIC_STRING(LowerFatToTemperatureGround);
+        DEFINE_STATIC_STRING(InternalLowerSkinToTemperatureGround);
+        DEFINE_STATIC_STRING(LowerCoreToCentralBlood);
+        DEFINE_STATIC_STRING(LowerMuscleToCentralBlood);
+        DEFINE_STATIC_STRING(LowerFatToCentralBlood);
+        DEFINE_STATIC_STRING(InternalLowerSkinToCentralBlood);
+        DEFINE_STATIC_STRING(CoreToLowerMuscle);
+        DEFINE_STATIC_STRING(LowerMuscleToLowerFat);
+        DEFINE_STATIC_STRING(LowerFatToInternalLowerSkin);
       };
 
       ////////////////////////////////////////
@@ -348,7 +378,8 @@ namespace tatrc {
       namespace CombinedTemperaturePath {
 
         DEFINE_STATIC_STRING(InternalCoreToExternalCore);
-        DEFINE_STATIC_STRING(InternalSkinToExternalSkin);
+        DEFINE_STATIC_STRING(UpperSkinToExternalUpperSkin);
+        DEFINE_STATIC_STRING(LowerSkinToExternalLowerSkin);
       };
 
       namespace CardiovascularNode {
