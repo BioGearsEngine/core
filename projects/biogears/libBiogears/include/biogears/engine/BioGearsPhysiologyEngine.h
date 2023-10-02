@@ -531,16 +531,18 @@ namespace tatrc {
         DEFINE_STATIC_STRING(Clothing);
         DEFINE_STATIC_STRING(Enclosure);
         DEFINE_STATIC_STRING(ExternalCore);
-        DEFINE_STATIC_STRING(ExternalSkin);
+        DEFINE_STATIC_STRING(ExternalTorsoSkin);
+        DEFINE_STATIC_STRING(ExternalHeadSkin);
         DEFINE_STATIC_STRING(ExternalGround);
         DEFINE_STATIC_STRING(InternalCore);
-        DEFINE_STATIC_STRING(InternalSkin);
+        DEFINE_STATIC_STRING(InternalTorsoSkin);
+        DEFINE_STATIC_STRING(InternalHeadSkin);
         DEFINE_STATIC_STRING(InternalGround);
 
         static const std::vector<std::string>& GetValues()
         {
           static std::vector<std::string> _values = {
-            Active, Ambient, Clothing, Enclosure, ExternalCore, ExternalSkin, ExternalGround, InternalCore, InternalSkin, InternalGround
+            Active, Ambient, Clothing, Enclosure, ExternalCore, ExternalTorsoSkin, ExternalHeadSkin, ExternalGround, InternalCore, InternalTorsoSkin, InternalHeadSkin, InternalGround
           };
           return _values;
         }
@@ -556,19 +558,24 @@ namespace tatrc {
         DEFINE_STATIC_STRING(GroundToClothing);
         DEFINE_STATIC_STRING(GroundToEnclosure);
         DEFINE_STATIC_STRING(GroundToEnvironment);
-        DEFINE_STATIC_STRING(ExternalSkinToGround);
-        DEFINE_STATIC_STRING(ExternalSkinToClothing);
+        DEFINE_STATIC_STRING(ExternalTorsoSkinToGround);
+        DEFINE_STATIC_STRING(ExternalHeadSkinToGround);
+        DEFINE_STATIC_STRING(ExternalTorsoSkinToClothing);
+        DEFINE_STATIC_STRING(ExternalHeadSkinToClothing);
         DEFINE_STATIC_STRING(GroundToInternalCore);
-        DEFINE_STATIC_STRING(InternalCoreToInternalSkin);
+        DEFINE_STATIC_STRING(InternalCoreToInternalTorsoSkin);
+        DEFINE_STATIC_STRING(InternalCoreToInternalHeadSkin);
         DEFINE_STATIC_STRING(InternalCoreToGround);
-        DEFINE_STATIC_STRING(InternalSkinToGround);
+        DEFINE_STATIC_STRING(InternalTorsoSkinToGround);
+        DEFINE_STATIC_STRING(InternalHeadSkinToGround);
         DEFINE_STATIC_STRING(InternalCoreToExternalCore);
-        DEFINE_STATIC_STRING(InternalSkinToExternalSkin);
+        DEFINE_STATIC_STRING(InternalTorsoSkinToExternalTorsoSkin);
+        DEFINE_STATIC_STRING(InternalHeadSkinToExternalHeadSkin);
 
         static const std::vector<std::string>& GetValues()
         {
           static std::vector<std::string> _values = {
-            ActiveToClothing, ClothingToEnclosure, ClothingToEnvironment, ExternalCoreToGround, GroundToActive, GroundToClothing, GroundToEnclosure, GroundToEnvironment, ExternalSkinToGround, ExternalSkinToClothing, GroundToInternalCore, InternalCoreToInternalSkin, InternalCoreToGround, InternalSkinToGround, InternalCoreToExternalCore, InternalSkinToExternalSkin
+            ActiveToClothing, ClothingToEnclosure, ClothingToEnvironment, ExternalCoreToGround, GroundToActive, GroundToClothing, GroundToEnclosure, GroundToEnvironment, ExternalTorsoSkinToGround, ExternalHeadSkinToGround, ExternalTorsoSkinToClothing, ExternalHeadSkinToClothing, GroundToInternalCore, InternalCoreToInternalTorsoSkin, InternalCoreToInternalHeadSkin, InternalCoreToGround, InternalTorsoSkinToGround, InternalHeadSkinToGround, InternalCoreToExternalCore, InternalTorsoSkinToExternalTorsoSkin, InternalHeadSkinToExternalHeadSkin
           };
           return _values;
         }

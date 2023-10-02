@@ -112,7 +112,7 @@ protected:
   SEThermalCircuitNode* m_ClothingNode;
   SEThermalCircuitNode* m_EnclosureNode;
   //Paths
-  SEThermalCircuitPath* m_SkinToClothing;
+  std::vector<SEThermalCircuitPath*> m_SkinToClothingPaths;
   SEThermalCircuitPath* m_ActiveHeatTransferRatePath;
   SEThermalCircuitPath* m_ActiveTemperaturePath;
   SEThermalCircuitPath* m_ActiveSwitchPath;
@@ -120,7 +120,7 @@ protected:
   SEThermalCircuitPath* m_GroundToEnclosurePath;
   SEThermalCircuitPath* m_ClothingToEnvironmentPath;
   SEThermalCircuitPath* m_GroundToEnvironmentPath;
-  SEThermalCircuitPath* m_EnvironmentSkinToGroundPath;
+  std::vector<SEThermalCircuitPath*> m_EnvironmentSkinToGroundPaths;
   SEThermalCircuitPath* m_EnvironmentCoreToGroundPath;
 };
 }
