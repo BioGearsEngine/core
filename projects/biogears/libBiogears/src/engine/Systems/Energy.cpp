@@ -82,7 +82,6 @@ void Energy::Clear()
   m_coreNode = nullptr;
   m_skinNode = nullptr;
   m_temperatureGroundToCorePath = nullptr;
-  m_coreToSkinPath = nullptr;
   m_skinExtravascularToSweatingGroundPath = nullptr;
   m_InternalTemperatureCircuit = nullptr;
   m_TemperatureCircuit = nullptr;
@@ -183,11 +182,13 @@ void Energy::SetUp()
   m_InternalTemperatureCircuit = &m_data.GetCircuits().GetInternalTemperatureCircuit();
   //Nodes
   m_coreNode = m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalCore);
-  m_skinNode = m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalSkin);
+  m_skinNode = m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalTorsoSkin); // NOTE this is currently used for vitals and sweat rate. First pass will use torso being the largest of the skin nodes
   //Paths
   m_temperatureGroundToCorePath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalCore);
-  m_coreToSkinPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalSkin);
   m_skinExtravascularToSweatingGroundPath = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinSweating);
+  m_coreToSkinPaths.clear();
+  m_coreToSkinPaths.push_back(m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalTorsoSkin));
+  m_coreToSkinPaths.push_back(m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalHeadSkin));
 }
 
 void Energy::AtSteadyState()
@@ -654,28 +655,30 @@ void Energy::CalculateSweatRate()
 //--------------------------------------------------------------------------------------------------
 void Energy::UpdateHeatResistance()
 {
-  double skinBloodFlow_m3_Per_s = m_data.GetCardiovascular().GetMeanSkinFlow().GetValue(VolumePerTimeUnit::m3_Per_s);
-  double bloodDensity_kg_Per_m3 = m_data.GetBloodChemistry().GetBloodDensity().GetValue(MassPerVolumeUnit::kg_Per_m3);
-  double bloodSpecificHeat_J_Per_K_kg = m_data.GetBloodChemistry().GetBloodSpecificHeat().GetValue(HeatCapacitancePerMassUnit::J_Per_K_kg);
+  for (SEThermalCircuitPath* coreToSkinPath : m_coreToSkinPaths) {
+    double skinBloodFlow_m3_Per_s = m_data.GetCardiovascular().GetMeanSkinFlow().GetValue(VolumePerTimeUnit::m3_Per_s);
+    double bloodDensity_kg_Per_m3 = m_data.GetBloodChemistry().GetBloodDensity().GetValue(MassPerVolumeUnit::kg_Per_m3);
+    double bloodSpecificHeat_J_Per_K_kg = m_data.GetBloodChemistry().GetBloodSpecificHeat().GetValue(HeatCapacitancePerMassUnit::J_Per_K_kg);
 
-  double alphaScale = 0.5; //Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
-    const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
-    const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0); //Make >50% burn the worse case scenario
-    const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 20.0, resInput);
-    const double lastAlpha = 1.0 / (m_coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W) * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
-    const double rampGain = 1.0e-5;
-    alphaScale = lastAlpha + rampGain * (targetAlpha - lastAlpha);
+    double alphaScale = 0.5; // Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
+    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+      const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+      const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0); // Make >50% burn the worse case scenario
+      const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 20.0, resInput);
+      const double lastAlpha = 1.0 / (coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W) * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
+      const double rampGain = 1.0e-5;
+      alphaScale = lastAlpha + rampGain * (targetAlpha - lastAlpha);
+    }
+
+    // The heat transfer resistance from the core to the skin is inversely proportional to the skin blood flow.
+    // When skin blood flow increases, then heat transfer resistance decreases leading to more heat transfer from core to skin.
+    // The opposite occurs for skin blood flow decrease.
+    double coreToSkinResistance_K_Per_W = 1.0 / (alphaScale * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
+
+    coreToSkinResistance_K_Per_W = BLIM(coreToSkinResistance_K_Per_W, 0.0001, 20.0);
+
+    coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
   }
-
-  //The heat transfer resistance from the core to the skin is inversely proportional to the skin blood flow.
-  //When skin blood flow increases, then heat transfer resistance decreases leading to more heat transfer from core to skin.
-  //The opposite occurs for skin blood flow decrease.
-  double coreToSkinResistance_K_Per_W = 1.0 / (alphaScale * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * skinBloodFlow_m3_Per_s);
-
-  coreToSkinResistance_K_Per_W = BLIM(coreToSkinResistance_K_Per_W, 0.0001, 20.0);
-
-  m_coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
 }
 
 //--------------------------------------------------------------------------------------------------

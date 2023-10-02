@@ -1089,22 +1089,29 @@ bool BioGears::CreateCircuitsAndCompartments()
   cThermal.AddCircuit(CInthermal);
   cThermal.AddCircuit(cExthermal);
   SEThermalCircuitNode* exCore = cExthermal.GetNode(BGE::ExternalTemperatureNode::ExternalCore);
-  SEThermalCircuitNode* exSkin = cExthermal.GetNode(BGE::ExternalTemperatureNode::ExternalSkin);
+  SEThermalCircuitNode* exTorsoSkin = cExthermal.GetNode(BGE::ExternalTemperatureNode::ExternalTorsoSkin);
+  SEThermalCircuitNode* exHeadSkin = cExthermal.GetNode(BGE::ExternalTemperatureNode::ExternalHeadSkin);
   SEThermalCircuitNode* inCore = CInthermal.GetNode(BGE::InternalTemperatureNode::InternalCore);
-  SEThermalCircuitNode* inSkin = CInthermal.GetNode(BGE::InternalTemperatureNode::InternalSkin);
+  SEThermalCircuitNode* inTorsoSkin = CInthermal.GetNode(BGE::InternalTemperatureNode::InternalTorsoSkin);
+  SEThermalCircuitNode* inHeadSkin = CInthermal.GetNode(BGE::InternalTemperatureNode::InternalHeadSkin);
   SEThermalCircuitPath& CoreTemperatureConnection = cThermal.CreatePath(*inCore, *exCore, BGE::CombinedTemperaturePath::InternalCoreToExternalCore);
-  SEThermalCircuitPath& SkinTemperatureConnection = cThermal.CreatePath(*inSkin, *exSkin, BGE::CombinedTemperaturePath::InternalSkinToExternalSkin);
+  SEThermalCircuitPath& TorsoSkinTemperatureConnection = cThermal.CreatePath(*inTorsoSkin, *exTorsoSkin, BGE::CombinedTemperaturePath::InternalTorsoSkinToExternalTorsoSkin);
+  SEThermalCircuitPath& HeadSkinTemperatureConnection = cThermal.CreatePath(*inHeadSkin, *exHeadSkin, BGE::CombinedTemperaturePath::InternalHeadSkinToExternalHeadSkin);
   cThermal.SetNextAndCurrentFromBaselines();
   cThermal.StateChange();
 
   SEThermalCompartment* cExCore = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::ExternalCore);
-  SEThermalCompartment* cExSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::ExternalSkin);
+  SEThermalCompartment* cExTorsoSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::ExternalTorsoSkin);
+  SEThermalCompartment* cExHeadSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::ExternalHeadSkin);
   SEThermalCompartment* cInCore = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::InternalCore);
-  SEThermalCompartment* cInSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::InternalSkin);
+  SEThermalCompartment* cInTorsoSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::InternalTorsoSkin);
+  SEThermalCompartment* cInHeadSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::InternalHeadSkin);
   SEThermalCompartmentLink& InternalCoreToExternalCore = m_Compartments->CreateThermalLink(*cInCore, *cExCore, BGE::TemperatureLink::InternalCoreToExternalCore);
   InternalCoreToExternalCore.MapPath(CoreTemperatureConnection);
-  SEThermalCompartmentLink& InternalSkinToExternalSkin = m_Compartments->CreateThermalLink(*cInSkin, *cExSkin, BGE::TemperatureLink::InternalSkinToExternalSkin);
-  InternalSkinToExternalSkin.MapPath(SkinTemperatureConnection);
+  SEThermalCompartmentLink& InternalTorsoSkinToExternalTorsoSkin = m_Compartments->CreateThermalLink(*cInTorsoSkin, *cExTorsoSkin, BGE::TemperatureLink::InternalTorsoSkinToExternalTorsoSkin);
+  InternalTorsoSkinToExternalTorsoSkin.MapPath(TorsoSkinTemperatureConnection);
+  SEThermalCompartmentLink& InternalHeadSkinToExternalHeadSkin = m_Compartments->CreateThermalLink(*cInHeadSkin, *cExHeadSkin, BGE::TemperatureLink::InternalHeadSkinToExternalHeadSkin);
+  InternalHeadSkinToExternalHeadSkin.MapPath(HeadSkinTemperatureConnection);
 
   // This node is shared between the respiratory, anesthesia, and inhaler circuits
   SEFluidCircuitNode& Ambient = m_Circuits->CreateFluidNode(BGE::EnvironmentNode::Ambient);
@@ -5393,10 +5400,10 @@ void BioGears::SetupExternalTemperature()
   //Note: All resistances are bound by the default open and closed switch resistances
   SEThermalCircuitNode& ThermalEnvironment = exthermal.CreateNode(BGE::ExternalTemperatureNode::Ambient);
   ThermalEnvironment.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
-  SEThermalCircuitNode& UpperSkin = exthermal.CreateNode(BGE::ExternalTemperatureNode::ExternalUpperSkin);
-  UpperSkin.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
-  SEThermalCircuitNode& LowerSkin = exthermal.CreateNode(BGE::ExternalTemperatureNode::ExternalLowerSkin);
-  LowerSkin.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
+  SEThermalCircuitNode& TorsoSkin = exthermal.CreateNode(BGE::ExternalTemperatureNode::ExternalTorsoSkin);
+  TorsoSkin.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
+  SEThermalCircuitNode& HeadSkin = exthermal.CreateNode(BGE::ExternalTemperatureNode::ExternalHeadSkin);
+  HeadSkin.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
   SEThermalCircuitNode& Core = exthermal.CreateNode(BGE::ExternalTemperatureNode::ExternalCore);
   Core.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
   SEThermalCircuitNode& Clothing = exthermal.CreateNode(BGE::ExternalTemperatureNode::Clothing);
@@ -5414,14 +5421,14 @@ void BioGears::SetupExternalTemperature()
   //Everything will be properly initialized in Evironment::Reset
   SEThermalCircuitPath& EnvironmentCoreToAbsoluteReferencePath = exthermal.CreatePath(Core, Ground, BGE::ExternalTemperaturePath::ExternalCoreToGround);
   EnvironmentCoreToAbsoluteReferencePath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
-  SEThermalCircuitPath& EnvironmentUpperSkinToAbsoluteReferencePath = exthermal.CreatePath(UpperSkin, Ground, BGE::ExternalTemperaturePath::ExternalUpperSkinToGround);
-  EnvironmentUpperSkinToAbsoluteReferencePath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
-  SEThermalCircuitPath& EnvironmentUpperSkinToClothingPath = exthermal.CreatePath(UpperSkin, Clothing, BGE::ExternalTemperaturePath::ExternalUpperSkinToUpperClothing);
-  EnvironmentUpperSkinToClothingPath.GetNextResistance().SetValue(dNoResistance, HeatResistanceUnit::K_Per_W);
-  SEThermalCircuitPath& EnvironmentLowerSkinToAbsoluteReferencePath = exthermal.CreatePath(LowerSkin, Ground, BGE::ExternalTemperaturePath::ExternalLowerSkinToGround);
-  EnvironmentLowerSkinToAbsoluteReferencePath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
-  SEThermalCircuitPath& EnvironmentLowerSkinToClothingPath = exthermal.CreatePath(LowerSkin, Clothing, BGE::ExternalTemperaturePath::ExternalLowerSkinToLowerClothing);
-  EnvironmentLowerSkinToClothingPath.GetNextResistance().SetValue(dNoResistance, HeatResistanceUnit::K_Per_W);
+  SEThermalCircuitPath& EnvironmentTorsoSkinToAbsoluteReferencePath = exthermal.CreatePath(TorsoSkin, Ground, BGE::ExternalTemperaturePath::ExternalTorsoSkinToGround);
+  EnvironmentTorsoSkinToAbsoluteReferencePath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
+  SEThermalCircuitPath& EnvironmentTorsoSkinToClothingPath = exthermal.CreatePath(TorsoSkin, Clothing, BGE::ExternalTemperaturePath::ExternalTorsoSkinToClothing);
+  EnvironmentTorsoSkinToClothingPath.GetNextResistance().SetValue(dNoResistance, HeatResistanceUnit::K_Per_W);
+  SEThermalCircuitPath& EnvironmentHeadSkinToAbsoluteReferencePath = exthermal.CreatePath(HeadSkin, Ground, BGE::ExternalTemperaturePath::ExternalHeadSkinToGround);
+  EnvironmentHeadSkinToAbsoluteReferencePath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
+  SEThermalCircuitPath& EnvironmentHeadSkinToClothingPath = exthermal.CreatePath(HeadSkin, Clothing, BGE::ExternalTemperaturePath::ExternalHeadSkinToClothing);
+  EnvironmentHeadSkinToClothingPath.GetNextResistance().SetValue(dNoResistance, HeatResistanceUnit::K_Per_W);
   SEThermalCircuitPath& AbsoluteReferenceToClothingPath = exthermal.CreatePath(Ground, Clothing, BGE::ExternalTemperaturePath::GroundToClothing);
   AbsoluteReferenceToClothingPath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
   SEThermalCircuitPath& ClothingToAmbientEnvironmentPath = exthermal.CreatePath(Clothing, ThermalEnvironment, BGE::ExternalTemperaturePath::ClothingToEnvironment);
@@ -5440,9 +5447,6 @@ void BioGears::SetupExternalTemperature()
   exthermal.SetNextAndCurrentFromBaselines();
   exthermal.StateChange();
 
-  ///////////////////////////////////////////////////////
-  // Do we need new compartments and compartment links???
-  ///////////////////////////////////////////////////////
   SEThermalCompartment& cActive = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::Active);
   cActive.MapNode(Active);
   SEThermalCompartment& cClothing = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::Clothing);
@@ -5451,10 +5455,10 @@ void BioGears::SetupExternalTemperature()
   cEnclosure.MapNode(Enclosure);
   SEThermalCompartment& cExternalCore = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalCore);
   cExternalCore.MapNode(Core);
-  //SEThermalCompartment& cExternalUpperSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalUpperSkin);
-  //cExternalUpperSkin.MapNode(UpperSkin);
-  //SEThermalCompartment& cExternalLowerSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalLowerSkin);
-  //cExternalLowerSkin.MapNode(LowerSkin);
+  SEThermalCompartment& cExternalTorsoSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalTorsoSkin);
+  cExternalTorsoSkin.MapNode(TorsoSkin);
+  SEThermalCompartment& cExternalHeadSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalHeadSkin);
+  cExternalHeadSkin.MapNode(HeadSkin);
   SEThermalCompartment& cExternalGround = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalGround);
   cExternalGround.MapNode(Ground);
   SEThermalCompartment& cAmbient = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::Ambient);
@@ -5462,6 +5466,14 @@ void BioGears::SetupExternalTemperature()
 
   SEThermalCompartmentLink& lActiveToClothing = m_Compartments->CreateThermalLink(cActive, cClothing, BGE::TemperatureLink::ActiveToClothing);
   lActiveToClothing.MapPath(ActiveToClothing);
+  SEThermalCompartmentLink& lExternalTorsoSkinToClothing = m_Compartments->CreateThermalLink(cExternalTorsoSkin, cClothing, BGE::TemperatureLink::ExternalTorsoSkinToClothing);
+  lExternalTorsoSkinToClothing.MapPath(EnvironmentTorsoSkinToClothingPath);
+  SEThermalCompartmentLink& lExternalHeadSkinToClothing = m_Compartments->CreateThermalLink(cExternalHeadSkin, cClothing, BGE::TemperatureLink::ExternalHeadSkinToClothing);
+  lExternalHeadSkinToClothing.MapPath(EnvironmentHeadSkinToClothingPath);
+  SEThermalCompartmentLink& lExternalTorsoSkinToGround = m_Compartments->CreateThermalLink(cExternalTorsoSkin, cExternalGround, BGE::TemperatureLink::ExternalTorsoSkinToGround);
+  lExternalTorsoSkinToGround.MapPath(EnvironmentTorsoSkinToAbsoluteReferencePath);
+  SEThermalCompartmentLink& lExternalHeadSkinToGround = m_Compartments->CreateThermalLink(cExternalHeadSkin, cExternalGround, BGE::TemperatureLink::ExternalHeadSkinToGround);
+  lExternalHeadSkinToGround.MapPath(EnvironmentHeadSkinToAbsoluteReferencePath);
   SEThermalCompartmentLink& lClothingToEnclosure = m_Compartments->CreateThermalLink(cClothing, cEnclosure, BGE::TemperatureLink::ClothingToEnclosure);
   lClothingToEnclosure.MapPath(ClothingToEnclosure);
   SEThermalCompartmentLink& lClothingToEnvironment = m_Compartments->CreateThermalLink(cClothing, cAmbient, BGE::TemperatureLink::ClothingToEnvironment);
@@ -5496,95 +5508,35 @@ void BioGears::SetupInternalTemperature()
   SEThermalCircuitPath& TemperatureGroundToCore = cIntemperature.CreatePath(Ground, Core, BGE::InternalTemperaturePath::GroundToInternalCore);
   TemperatureGroundToCore.GetHeatSourceBaseline().SetValue(0.0, PowerUnit::W);
   
-  // NEW NEW //
-  // New universal nodes and connections
-  SEThermalCircuitNode& CentralBlood = cIntemperature.CreateNode(BGE::InternalTemperatureNode::CentralBlood);
-  CentralBlood.GetTemperature().SetValue(37.0, TemperatureUnit::C);
-  SEThermalCircuitPath& CentralBloodToTemperatureGround = cIntemperature.CreatePath(CentralBlood, Ground, BGE::InternalTemperaturePath::CentralBloodToTemperatureGround);
-  CentralBloodToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
-  CentralBlood.GetHeatBaseline().SetValue(CentralBloodToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * Core.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
-  // New nodes for upper body
-  SEThermalCircuitNode& UpperMuscle = cIntemperature.CreateNode(BGE::InternalTemperatureNode::UpperMuscle);
-  UpperMuscle.GetTemperature().SetValue(37.0, TemperatureUnit::C);
-  SEThermalCircuitPath& UpperMuscleToTemperatureGround = cIntemperature.CreatePath(UpperMuscle, Ground, BGE::InternalTemperaturePath::UpperMuscleToTemperatureGround);
-  UpperMuscleToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
-  UpperMuscle.GetHeatBaseline().SetValue(UpperMuscleToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * UpperMuscle.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
-  SEThermalCircuitNode& UpperFat = cIntemperature.CreateNode(BGE::InternalTemperatureNode::UpperFat);
-  UpperFat.GetTemperature().SetValue(37.0, TemperatureUnit::C);
-  SEThermalCircuitPath& UpperFatToTemperatureGround = cIntemperature.CreatePath(UpperFat, Ground, BGE::InternalTemperaturePath::UpperFatToTemperatureGround);
-  UpperFatToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
-  UpperFat.GetHeatBaseline().SetValue(UpperFatToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * UpperFat.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
-  SEThermalCircuitNode& UpperSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalUpperSkin);
-  UpperSkin.GetTemperature().SetValue(37.0, TemperatureUnit::C);
-  SEThermalCircuitPath& UpperSkinToTemperatureGround = cIntemperature.CreatePath(UpperSkin, Ground, BGE::InternalTemperaturePath::InternalUpperSkinToTemperatureGround);
-  UpperSkinToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
-  UpperSkin.GetHeatBaseline().SetValue(UpperSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * UpperSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
-  // New paths for nodes to central blood in upper body
-  SEThermalCircuitPath& UpperCoreToCentralBlood = cIntemperature.CreatePath(CentralBlood, Core, BGE::InternalTemperaturePath::UpperCoreToCentralBlood);
-  UpperCoreToCentralBlood.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  SEThermalCircuitPath& UpperMuscleToCentralBlood = cIntemperature.CreatePath(CentralBlood, UpperMuscle, BGE::InternalTemperaturePath::UpperMuscleToCentralBlood);
-  UpperMuscleToCentralBlood.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  SEThermalCircuitPath& UpperFatToCentralBlood = cIntemperature.CreatePath(CentralBlood, UpperFat, BGE::InternalTemperaturePath::UpperFatToCentralBlood);
-  UpperFatToCentralBlood.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  SEThermalCircuitPath& UpperSkinToCentralBlood = cIntemperature.CreatePath(CentralBlood, UpperSkin, BGE::InternalTemperaturePath::InternalUpperSkinToCentralBlood);
-  UpperSkinToCentralBlood.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  // New paths connecting upper body nodes
-  SEThermalCircuitPath& CoreToUpperMuscle = cIntemperature.CreatePath(Core, UpperMuscle, BGE::InternalTemperaturePath::CoreToUpperMuscle);
-  CoreToUpperMuscle.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  SEThermalCircuitPath& UpperMuscleToUpperFat = cIntemperature.CreatePath(UpperMuscle, UpperFat, BGE::InternalTemperaturePath::UpperMuscleToUpperFat);
-  UpperMuscleToUpperFat.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  SEThermalCircuitPath& UpperFatToUpperSkin = cIntemperature.CreatePath(UpperFat, UpperSkin, BGE::InternalTemperaturePath::UpperFatToInternalUpperSkin);
-  UpperFatToUpperSkin.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  // New nodes for lower body
-  SEThermalCircuitNode& LowerMuscle = cIntemperature.CreateNode(BGE::InternalTemperatureNode::LowerMuscle);
-  LowerMuscle.GetTemperature().SetValue(37.0, TemperatureUnit::C);
-  SEThermalCircuitPath& LowerMuscleToTemperatureGround = cIntemperature.CreatePath(LowerMuscle, Ground, BGE::InternalTemperaturePath::LowerMuscleToTemperatureGround);
-  LowerMuscleToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
-  LowerMuscle.GetHeatBaseline().SetValue(LowerMuscleToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * LowerMuscle.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
-  SEThermalCircuitNode& LowerFat = cIntemperature.CreateNode(BGE::InternalTemperatureNode::LowerFat);
-  LowerFat.GetTemperature().SetValue(37.0, TemperatureUnit::C);
-  SEThermalCircuitPath& LowerFatToTemperatureGround = cIntemperature.CreatePath(LowerFat, Ground, BGE::InternalTemperaturePath::LowerFatToTemperatureGround);
-  LowerFatToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
-  LowerFat.GetHeatBaseline().SetValue(LowerFatToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * LowerFat.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
-  SEThermalCircuitNode& LowerSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalLowerSkin);
-  LowerSkin.GetTemperature().SetValue(37.0, TemperatureUnit::C);
-  SEThermalCircuitPath& LowerSkinToTemperatureGround = cIntemperature.CreatePath(LowerSkin, Ground, BGE::InternalTemperaturePath::InternalLowerSkinToTemperatureGround);
-  LowerSkinToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
-  LowerSkin.GetHeatBaseline().SetValue(LowerSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * LowerSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
-  // New paths for nodes to central blood in lower body
-  SEThermalCircuitPath& LowerCoreToCentralBlood = cIntemperature.CreatePath(CentralBlood, Core, BGE::InternalTemperaturePath::LowerCoreToCentralBlood);
-  LowerCoreToCentralBlood.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  SEThermalCircuitPath& LowerMuscleToCentralBlood = cIntemperature.CreatePath(CentralBlood, LowerMuscle, BGE::InternalTemperaturePath::LowerMuscleToCentralBlood);
-  LowerMuscleToCentralBlood.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  SEThermalCircuitPath& LowerFatToCentralBlood = cIntemperature.CreatePath(CentralBlood, LowerFat, BGE::InternalTemperaturePath::LowerFatToCentralBlood);
-  LowerFatToCentralBlood.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  SEThermalCircuitPath& LowerSkinToCentralBlood = cIntemperature.CreatePath(CentralBlood, LowerSkin, BGE::InternalTemperaturePath::InternalLowerSkinToCentralBlood);
-  LowerSkinToCentralBlood.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  // New paths connecting lower body nodes
-  SEThermalCircuitPath& CoreToLowerMuscle = cIntemperature.CreatePath(Core, LowerMuscle, BGE::InternalTemperaturePath::CoreToLowerMuscle);
-  CoreToLowerMuscle.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  SEThermalCircuitPath& LowerMuscleToLowerFat = cIntemperature.CreatePath(LowerMuscle, LowerFat, BGE::InternalTemperaturePath::LowerMuscleToLowerFat);
-  LowerMuscleToLowerFat.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-  SEThermalCircuitPath& LowerFatToLowerSkin = cIntemperature.CreatePath(LowerFat, LowerSkin, BGE::InternalTemperaturePath::LowerFatToInternalLowerSkin);
-  LowerFatToLowerSkin.GetResistanceBaseline().SetValue(0.056, HeatResistanceUnit::K_Per_W);
-
+  SEThermalCircuitNode& TorsoSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalTorsoSkin);
+  TorsoSkin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
+  SEThermalCircuitPath& TorsoSkinToTemperatureGround = cIntemperature.CreatePath(TorsoSkin, Ground, BGE::InternalTemperaturePath::InternalTorsoSkinToTemperatureGround);
+  TorsoSkinToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
+  TorsoSkin.GetHeatBaseline().SetValue(TorsoSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * TorsoSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
+  
+  SEThermalCircuitNode& HeadSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalHeadSkin);
+  HeadSkin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
+  SEThermalCircuitPath& HeadSkinToTemperatureGround = cIntemperature.CreatePath(HeadSkin, Ground, BGE::InternalTemperaturePath::InternalHeadSkinToTemperatureGround);
+  HeadSkinToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
+  HeadSkin.GetHeatBaseline().SetValue(HeadSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * HeadSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
 
   SEThermalCircuitPath& CoreToTemperatureGround = cIntemperature.CreatePath(Core, Ground, BGE::InternalTemperaturePath::InternalCoreToGround);
   CoreToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
   Core.GetHeatBaseline().SetValue(CoreToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * Core.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
+  SEThermalCircuitPath& CoreToTorsoSkin = cIntemperature.CreatePath(Core, TorsoSkin, BGE::InternalTemperaturePath::InternalCoreToInternalTorsoSkin);
+  CoreToTorsoSkin.GetResistanceBaseline().SetValue(34.3, HeatResistanceUnit::K_Per_W);
+  SEThermalCircuitPath& CoreToHeadSkin = cIntemperature.CreatePath(Core, HeadSkin, BGE::InternalTemperaturePath::InternalCoreToInternalHeadSkin);
+  CoreToHeadSkin.GetResistanceBaseline().SetValue(34.4, HeatResistanceUnit::K_Per_W);
 
   cIntemperature.SetNextAndCurrentFromBaselines();
   cIntemperature.StateChange();
 
-  ///////////////////////////////////////////////////////
-  // Do we need new compartments and compartment links???
-  ///////////////////////////////////////////////////////
   SEThermalCompartment& InternalCore = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::InternalCore);
   InternalCore.MapNode(Core);
-  //SEThermalCompartment& UpperBodySkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::UpperBodySkin);
-  //UpperBodySkin.MapNode(UpperSkin);
-  //SEThermalCompartment& LowerBodySkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::LowerBodySkin);
-  //LowerBodySkin.MapNode(LowerSkin);
+  SEThermalCompartment& InternalTorsoSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::InternalTorsoSkin);
+  InternalTorsoSkin.MapNode(TorsoSkin);
+  SEThermalCompartment& InternalHeadSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::InternalHeadSkin);
+  InternalHeadSkin.MapNode(HeadSkin);
   SEThermalCompartment& InternalGround = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::InternalGround);
   InternalCore.MapNode(Ground);
 
@@ -5592,6 +5544,14 @@ void BioGears::SetupInternalTemperature()
   GroundToInternalCore.MapPath(TemperatureGroundToCore);
   SEThermalCompartmentLink& InternalCoreToGround = m_Compartments->CreateThermalLink(InternalGround, InternalCore, BGE::TemperatureLink::InternalCoreToGround);
   InternalCoreToGround.MapPath(CoreToTemperatureGround);
+  SEThermalCompartmentLink& InternalTorsoSkinToGround = m_Compartments->CreateThermalLink(InternalGround, InternalTorsoSkin, BGE::TemperatureLink::InternalTorsoSkinToGround);
+  InternalTorsoSkinToGround.MapPath(TorsoSkinToTemperatureGround);
+  SEThermalCompartmentLink& InternalHeadSkinToGround = m_Compartments->CreateThermalLink(InternalGround, InternalHeadSkin, BGE::TemperatureLink::InternalHeadSkinToGround);
+  InternalHeadSkinToGround.MapPath(HeadSkinToTemperatureGround);
+  SEThermalCompartmentLink& InternalCoreToInternalTorsoSkin = m_Compartments->CreateThermalLink(InternalCore, InternalTorsoSkin, BGE::TemperatureLink::InternalCoreToInternalTorsoSkin);
+  InternalCoreToInternalTorsoSkin.MapPath(CoreToTorsoSkin);
+  SEThermalCompartmentLink& InternalCoreToInternalHeadSkin = m_Compartments->CreateThermalLink(InternalCore, InternalHeadSkin, BGE::TemperatureLink::InternalCoreToInternalHeadSkin);
+  InternalCoreToInternalHeadSkin.MapPath(CoreToHeadSkin);
 
 }
 Logger* BioGears::GetLogger() const

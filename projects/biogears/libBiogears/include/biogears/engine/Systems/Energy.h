@@ -115,7 +115,7 @@ private:
   SEThermalCircuitNode* m_skinNode;
   //Paths
   SEThermalCircuitPath* m_temperatureGroundToCorePath;
-  SEThermalCircuitPath* m_coreToSkinPath;
+  std::vector<SEThermalCircuitPath*> m_coreToSkinPaths;
   SEFluidCircuitPath* m_skinExtravascularToSweatingGroundPath;
   //Circuits
   SEThermalCircuit* m_InternalTemperatureCircuit;
