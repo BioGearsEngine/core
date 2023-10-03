@@ -18,6 +18,7 @@ namespace biogears {
 class SEScalarPressure;
 class PressureUnit;
 class SEScalarFraction;
+class SEScalar0To1;
 class SEScalarVolumePerTime;
 class VolumePerTimeUnit;
 class SEScalarFlowCompliance;
@@ -97,6 +98,10 @@ public:
   SEScalarFlowResistance& GetPulmonaryResistance();
   double GetPulmonaryResistance(const FlowResistanceUnit& unit) const;
 
+  bool HasRespirationCyclePercentComplete() const;
+  SEScalar0To1& GetRespirationCyclePercentComplete();
+  double GetRespirationCyclePercentComplete() const;
+
   bool HasRespirationDriverFrequency() const;
   SEScalarFrequency& GetRespirationDriverFrequency();
   double GetRespirationDriverFrequency(const FrequencyUnit& unit) const;
@@ -137,6 +142,14 @@ public:
   SEScalarVolumePerTime& GetTotalPulmonaryVentilation();
   double GetTotalPulmonaryVentilation(const VolumePerTimeUnit& unit) const;
 
+  bool HasLeftLungVolume() const;
+  SEScalarVolume& GetLeftLungVolume();
+  double GetLeftLungVolume(const VolumeUnit& unit) const;
+
+  bool HasRightLungVolume() const;
+  SEScalarVolume& GetRightLungVolume();
+  double GetRightLungVolume(const VolumeUnit& unit) const;
+
   bool HasTotalLungVolume() const;
   SEScalarVolume& GetTotalLungVolume();
   double GetTotalLungVolume(const VolumeUnit& unit) const;
@@ -156,6 +169,7 @@ protected:
   SEScalarPressure* m_MeanPleuralPressure;
   SEScalarFlowCompliance* m_PulmonaryCompliance;
   SEScalarFlowResistance* m_PulmonaryResistance;
+  SEScalar0To1* m_RespirationCyclePercentComplete;
   SEScalarFrequency* m_RespirationDriverFrequency;
   SEScalarPressure* m_RespirationDriverPressure;
   SEScalarPressure* m_RespirationMusclePressure;
@@ -165,6 +179,8 @@ protected:
   SEScalarVolume* m_TidalVolume;
   SEScalarVolumePerTime* m_TotalAlveolarVentilation;
   SEScalarVolumePerTime* m_TotalDeadSpaceVentilation;
+  SEScalarVolume* m_LeftLungVolume;
+  SEScalarVolume* m_RightLungVolume;
   SEScalarVolume* m_TotalLungVolume;
   SEScalarVolumePerTime* m_TotalPulmonaryVentilation;
   SEScalarPressure* m_TranspulmonaryPressure;

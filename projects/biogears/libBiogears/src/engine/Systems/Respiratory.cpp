@@ -93,6 +93,8 @@ void Respiratory::Clear()
   m_AerosolLeftAlveoli = nullptr;
   m_AerosolRightBronchi = nullptr;
   m_AerosolRightAlveoli = nullptr;
+  m_LeftLung = nullptr;
+  m_RightLung = nullptr;
   m_Lungs = nullptr;
   m_LeftLungExtravascular = nullptr;
   m_RightLungExtravascular = nullptr;
@@ -214,9 +216,12 @@ void Respiratory::Initialize()
   double DeadSpace_L = m_LeftBronchi->GetVolumeBaseline(VolumeUnit::L) + m_RightBronchi->GetVolumeBaseline(VolumeUnit::L) + m_Trachea->GetVolume(VolumeUnit::L);
   double EnvironmentPressure_mmHg = m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient)->GetPressure(PressureUnit::mmHg);
   double AbsolutePleuralPressure_mmHg = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg);
+  GetLeftLungVolume().SetValue(m_LeftLung->GetVolume(VolumeUnit::L), VolumeUnit::L);
+  GetRightLungVolume().SetValue(m_RightLung->GetVolume(VolumeUnit::L), VolumeUnit::L);
   GetTotalLungVolume().SetValue(m_PreviousTotalLungVolume_L, VolumeUnit::L);
   GetTidalVolume().SetValue(TidalVolume_L, VolumeUnit::L);
   GetRespirationRate().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
+  GetRespirationCyclePercentComplete().SetValue(0.0);
   GetRespirationDriverFrequency().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverPressure().SetValue(m_PeakRespiratoryDrivePressure_cmH2O, PressureUnit::cmH2O);
   GetCarricoIndex().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
@@ -372,6 +377,8 @@ void Respiratory::SetUp()
   m_AerosolLeftAlveoli = m_data.GetCompartments().GetLiquidCompartment(BGE::PulmonaryCompartment::LeftAlveoli);
   m_AerosolRightBronchi = m_data.GetCompartments().GetLiquidCompartment(BGE::PulmonaryCompartment::RightBronchi);
   m_AerosolRightAlveoli = m_data.GetCompartments().GetLiquidCompartment(BGE::PulmonaryCompartment::RightAlveoli);
+  m_LeftLung = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftLung);
+  m_RightLung = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightLung);
   m_Lungs = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Lungs);
   m_LeftLungExtravascular = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::LeftLungIntracellular);
   m_RightLungExtravascular = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::RightLungIntracellular);
@@ -1003,6 +1010,8 @@ void Respiratory::RespiratoryDriver()
   //Push Driving Data to the Circuit -------------------------------------------------------------------------------
   m_DriverPressurePath->GetNextPressureSource().SetValue(m_DriverPressure_cmH2O, PressureUnit::cmH2O);
 
+  // Update respiration cycle percentage
+  GetRespirationCyclePercentComplete().SetValue(m_BreathingCycleTime_s / (60.0 / m_VentilationFrequency_Per_min));
 }
 //-------------------------------------------------------------------------------------------------
 ///\brief
@@ -1773,6 +1782,8 @@ void Respiratory::CalculateVitalSigns()
   std::stringstream ss;
   //Total Respiratory Volume - this should not include the Pleural Space
   GetTotalLungVolume().Set(m_Lungs->GetVolume());
+  GetLeftLungVolume().Set(m_LeftLung->GetVolume());
+  GetRightLungVolume().Set(m_RightLung->GetVolume());
 
   //Record values each time-step
   double tracheaFlow_L_Per_s = m_MouthToTrachea->GetNextFlow().GetValue(VolumePerTimeUnit::L_Per_s);

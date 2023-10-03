@@ -223,6 +223,8 @@ private:
   SELiquidCompartment* m_AerosolRightAlveoli;
   SELiquidCompartment* m_LeftLungExtravascular;
   SELiquidCompartment* m_RightLungExtravascular;
+  SEGasCompartment* m_LeftLung;
+  SEGasCompartment* m_RightLung;
   SEGasCompartment* m_Lungs;
   SEGasCompartment* m_Trachea;
   SEGasSubstanceQuantity* m_TracheaO2;
