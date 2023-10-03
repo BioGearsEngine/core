@@ -619,7 +619,7 @@ void Tissue::CalculateCompartmentalBurn()
 
   // Burn action data
   SEBurnWound* BurnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
-  double burnTBSA = BurnAction->GetTotalBodySurfaceArea().GetValue();
+  double burnTBSA = BurnAction->GetTotalBodySurfaceArea();
   double burnIntensity = BurnAction->GetBurnIntensity();
   std::vector<std::string> burnComptVector = BurnAction->GetCompartments();
   double numBurnLocations = static_cast<double>(burnComptVector.size()); //Currently assume tbsa is evenly spread across multiple locations; future update can correct this

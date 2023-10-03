@@ -2,7 +2,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.8.0)
 CMAKE_POLICY(VERSION 3.8.0) 
 
 enable_language(CXX)
-find_package(GTest)
+
+#find_package(GTest)
+
 option(Biogears_BUILD_TEST        "Select to Build Tests." ${GTest_FOUND})
 
 if(Biogears_BUILD_TEST)

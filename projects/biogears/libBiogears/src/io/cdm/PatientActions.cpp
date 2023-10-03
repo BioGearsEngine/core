@@ -11,9 +11,9 @@
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
 #include <biogears/cdm/patient/actions/PatientActionsEnums.h>
+#include <biogears/cdm/patient/actions/SEActionExample.h>
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
-#include <biogears/cdm/patient/actions/SEActionExample.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
@@ -84,7 +84,7 @@
 
 namespace biogears {
 namespace io {
-  //class SEActionList
+  // class SEActionList
   std::vector<std::unique_ptr<SEAction>> PatientActions::action_factory(const CDM::ActionListData& in, SESubstanceManager& substances)
   {
     std::vector<std::unique_ptr<SEAction>> r_vec;
@@ -94,7 +94,7 @@ namespace io {
     return std::move(r_vec);
   }
   //----------------------------------------------------------------------------------
-  //class SECondition
+  // class SECondition
   std::unique_ptr<SEAction> PatientActions::factory(const CDM::ActionData& data, SESubstanceManager& substances)
   {
     std::stringstream ss;
@@ -506,7 +506,7 @@ namespace io {
     return nullptr;
   }
   //----------------------------------------------------------------------------------
-  //class SEPatientAction
+  // class SEPatientAction
   void PatientActions::Marshall(const CDM::PatientActionData& in, SEPatientAction& out)
   {
     Scenario::Marshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
@@ -517,7 +517,7 @@ namespace io {
     Scenario::UnMarshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
   }
   //----------------------------------------------------------------------------------
-  //class SEPatientAssessmentRequest
+  // class SEPatientAssessmentRequest
   void PatientActions::Marshall(const CDM::PatientAssessmentRequestData& in, SEPatientAssessmentRequest& out)
   {
     out.Clear();
@@ -534,7 +534,7 @@ namespace io {
       out.Type(in.m_Type);
     }
   }
-  //class SEAcuteRespiratoryDistressStress;
+  // class SEAcuteRespiratoryDistressStress;
   void PatientActions::Marshall(const CDM::AcuteRespiratoryDistressData& in, SEAcuteRespiratoryDistress& out)
   {
     out.Clear();
@@ -550,7 +550,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEAcuteStress
+  // class SEAcuteStress
   void PatientActions::Marshall(const CDM::AcuteStressData& in, SEAcuteStress& out)
   {
     out.Clear();
@@ -567,7 +567,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEActionExample
+  // class SEActionExample
   void PatientActions::Marshall(const CDM::ActionExample& in, SEActionExample& out)
   {
     out.Clear();
@@ -584,7 +584,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEAirwayObstruction
+  // class SEAirwayObstruction
   void PatientActions::Marshall(const CDM::AirwayObstructionData& in, SEAirwayObstruction& out)
   {
     out.Clear();
@@ -601,7 +601,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEApnea
+  // class SEApnea
   void PatientActions::Marshall(const CDM::ApneaData& in, SEApnea& out)
   {
     out.Clear();
@@ -618,7 +618,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEAsthmaAttack
+  // class SEAsthmaAttack
   void PatientActions::Marshall(const CDM::AsthmaAttackData& in, SEAsthmaAttack& out)
   {
     out.Clear();
@@ -634,7 +634,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEBrainInjury
+  // class SEBrainInjury
   void PatientActions::Marshall(const CDM::BrainInjuryData& in, SEBrainInjury& out)
   {
     out.Clear();
@@ -652,7 +652,7 @@ namespace io {
     CDM_ENUM_UNMARSHAL_HELPER(in, out, Type)
   }
   //----------------------------------------------------------------------------------
-  //class SEBronchoconstriction
+  // class SEBronchoconstriction
   void PatientActions::Marshall(const CDM::BronchoconstrictionData& in, SEBronchoconstriction& out)
   {
     out.Clear();
@@ -668,14 +668,15 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEBurnWound
+  // class SEBurnWound
   void PatientActions::Marshall(const CDM::BurnWoundData& in, SEBurnWound& out)
   {
+    //TODO: UPDATE TO SUPPORT NEW MEMBERS
     out.Clear();
 
     Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
 
-    io::Property::Marshall(in.TotalBodySurfaceArea(), out.GetTotalBodySurfaceArea());
+    out.SetTotalBodySurfaceArea(in.TotalBodySurfaceArea().value());
 
     out.m_compartmentsAffected.clear();
     for (const std::string compData : in.Compartments()) {
@@ -697,7 +698,7 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
-  //class SECardiacArrest
+  // class SECardiacArrest
   void PatientActions::Marshall(const CDM::CardiacArrestData& in, SECardiacArrest& out)
   {
     out.Clear();
@@ -713,7 +714,7 @@ namespace io {
     out.State(in.m_State);
   }
   //----------------------------------------------------------------------------------
-  //class SEChestCompression
+  // class SEChestCompression
   void PatientActions::Marshall(const CDM::ChestCompressionData& in, SEChestCompression& out)
   {
     out.Clear();
@@ -726,7 +727,7 @@ namespace io {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
   }
   //----------------------------------------------------------------------------------
-  //class SEChestCompressionForce
+  // class SEChestCompressionForce
   void PatientActions::Marshall(const CDM::ChestCompressionForceData& in, SEChestCompressionForce& out)
   {
     out.Clear();
@@ -742,7 +743,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Force)
   }
   //----------------------------------------------------------------------------------
-  //class SEChestCompressionForceScale
+  // class SEChestCompressionForceScale
   void PatientActions::Marshall(const CDM::ChestCompressionForceScaleData& in, SEChestCompressionForceScale& out)
   {
     out.Clear();
@@ -762,7 +763,7 @@ namespace io {
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ForcePeriod)
   }
   //----------------------------------------------------------------------------------
-  //class SEChestOcclusiveDressing
+  // class SEChestOcclusiveDressing
   void PatientActions::Marshall(const CDM::ChestOcclusiveDressingData& in, SEChestOcclusiveDressing& out)
   {
     out.Clear();
@@ -780,7 +781,7 @@ namespace io {
     CDM_ENUM_UNMARSHAL_HELPER(in, out, Side)
   }
   //----------------------------------------------------------------------------------
-  //class SEConsciousRespirationCommand
+  // class SEConsciousRespirationCommand
   void PatientActions::Marshall(const CDM::ConsciousRespirationCommandData& in, SEConsciousRespirationCommand& out)
   {
     if (in.Comment().present()) {
@@ -793,7 +794,7 @@ namespace io {
     out.Comment(in.m_Comment);
   }
   //----------------------------------------------------------------------------------
-  //class SEEscharotomy
+  // class SEEscharotomy
   void PatientActions::Marshall(const CDM::EscharotomyData& in, SEEscharotomy& out)
   {
     out.Clear();
@@ -809,7 +810,7 @@ namespace io {
     out.Location(in.m_Location);
   }
   //----------------------------------------------------------------------------------
-  //class SEForcedInhale
+  // class SEForcedInhale
   void PatientActions::Marshall(const CDM::ForcedInhaleData& in, SEForcedInhale& out)
   {
     PatientActions::Marshall(static_cast<const CDM::ConsciousRespirationCommandData&>(in), static_cast<SEConsciousRespirationCommand&>(out));
@@ -824,7 +825,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, InspiratoryCapacityFraction)
   }
   //----------------------------------------------------------------------------------
-  //class SEForcedExhale
+  // class SEForcedExhale
   void PatientActions::Marshall(const CDM::ForcedExhaleData& in, SEForcedExhale& out)
   {
     PatientActions::Marshall(static_cast<const CDM::ConsciousRespirationCommandData&>(in), static_cast<SEConsciousRespirationCommand&>(out));
@@ -839,7 +840,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, ExpiratoryReserveVolumeFraction)
   }
   //----------------------------------------------------------------------------------
-  //class SEBreathHold
+  // class SEBreathHold
   void PatientActions::Marshall(const CDM::BreathHoldData& in, SEBreathHold& out)
   {
     PatientActions::Marshall(static_cast<const CDM::ConsciousRespirationCommandData&>(in), static_cast<SEConsciousRespirationCommand&>(out));
@@ -852,7 +853,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Period)
   }
   //----------------------------------------------------------------------------------
-  //class SEUseInhaler
+  // class SEUseInhaler
   void PatientActions::Marshall(const CDM::UseInhalerData& in, SEUseInhaler& out)
   {
     PatientActions::Marshall(static_cast<const CDM::ConsciousRespirationCommandData&>(in), static_cast<SEConsciousRespirationCommand&>(out));
@@ -863,7 +864,7 @@ namespace io {
     PatientActions::UnMarshall(static_cast<const SEConsciousRespirationCommand&>(in), static_cast<CDM::ConsciousRespirationCommandData&>(out));
   }
   //----------------------------------------------------------------------------------
-  //class SEConsciousRespiration
+  // class SEConsciousRespiration
   void PatientActions::Marshall(const CDM::ConsciousRespirationData& in, SEConsciousRespiration& out)
   {
     PatientActions::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
@@ -912,7 +913,7 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
-  //class SEConsumeNutrients
+  // class SEConsumeNutrients
   void PatientActions::Marshall(const CDM::ConsumeNutrientsData& in, SEConsumeNutrients& out)
   {
     PatientActions::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
@@ -930,7 +931,7 @@ namespace io {
     out.NutritionFile(in.m_NutritionFile);
   }
   //----------------------------------------------------------------------------------
-  //class SEExercise
+  // class SEExercise
   void Marshall(const CDM::GenericExerciseData& in, SEExercise::SEGeneric& out)
   {
     io::Property::Marshall(in.Intensity(), out.Intensity);
@@ -1049,7 +1050,7 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
-  //class SEHemorrhage
+  // class SEHemorrhage
   void PatientActions::Marshall(const CDM::HemorrhageData& in, SEHemorrhage& out)
   {
     out.Clear();
@@ -1070,7 +1071,7 @@ namespace io {
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, BleedResistance)
   }
   //----------------------------------------------------------------------------------
-  //class SESepsis
+  // class SESepsis
   void PatientActions::Marshall(const CDM::InfectionData& in, SEInfection& out)
   {
     out.Clear();
@@ -1082,7 +1083,7 @@ namespace io {
     io::Property::Marshall(in.MinimumInhibitoryConcentration(), out.GetMinimumInhibitoryConcentration());
   }
   //----------------------------------------------------------------------------------
-  //class SEInfection
+  // class SEInfection
   void PatientActions::UnMarshall(const SEInfection& in, CDM::InfectionData& out)
   {
 
@@ -1092,7 +1093,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, MinimumInhibitoryConcentration)
   }
   //----------------------------------------------------------------------------------
-  //class SEIntubation
+  // class SEIntubation
   void PatientActions::Marshall(const CDM::IntubationData& in, SEIntubation& out)
   {
     out.Clear();
@@ -1108,7 +1109,7 @@ namespace io {
     CDM_ENUM_UNMARSHAL_HELPER(in, out, Type)
   }
   //----------------------------------------------------------------------------------
-  //class SEMechanicalVentilation
+  // class SEMechanicalVentilation
   void PatientActions::Marshall(const CDM::MechanicalVentilationData& in, const SESubstanceManager& substances, SEMechanicalVentilation& out)
   {
     out.Clear();
@@ -1161,7 +1162,7 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
-  //class SENeedleDecompression
+  // class SENeedleDecompression
   void PatientActions::Marshall(const CDM::NeedleDecompressionData& in, SENeedleDecompression& out)
   {
     out.Clear();
@@ -1179,7 +1180,7 @@ namespace io {
     CDM_ENUM_UNMARSHAL_HELPER(in, out, Side)
   }
   //----------------------------------------------------------------------------------
-  //class SEPainStimulus
+  // class SEPainStimulus
   void PatientActions::Marshall(const CDM::PainStimulusData& in, SEPainStimulus& out)
   {
     out.Clear();
@@ -1198,7 +1199,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
-  //class SEPericardialEffusion
+  // class SEPericardialEffusion
   void PatientActions::Marshall(const CDM::PericardialEffusionData& in, SEPericardialEffusion& out)
   {
     out.Clear();
@@ -1214,7 +1215,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, EffusionRate)
   }
   //----------------------------------------------------------------------------------
-  //class SEPulmonaryShunt
+  // class SEPulmonaryShunt
   void PatientActions::Marshall(const CDM::PulmonaryShuntData& in, SEPulmonaryShunt& out)
   {
     out.Clear();
@@ -1230,7 +1231,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, FlowRateScaling)
   }
   //----------------------------------------------------------------------------------
-  //class SERadiationAbsorbedDose
+  // class SERadiationAbsorbedDose
   void PatientActions::Marshall(const CDM::RadiationAbsorbedDoseData& in, SERadiationAbsorbedDose& out)
   {
     out.Clear();
@@ -1246,7 +1247,7 @@ namespace io {
     CDM_PROPERTY_UNMARSHAL_HELPER(in, out, RadiationDose)
   }
   //----------------------------------------------------------------------------------
-  //class SETensionPneumothorax
+  // class SETensionPneumothorax
   void PatientActions::Marshall(const CDM::TensionPneumothoraxData& in, SETensionPneumothorax& out)
   {
     out.Clear();
@@ -1266,7 +1267,7 @@ namespace io {
     CDM_ENUM_UNMARSHAL_HELPER(in, out, Side)
   }
   //----------------------------------------------------------------------------------
-  //class SESubstanceAdministration
+  // class SESubstanceAdministration
   void PatientActions::Marshall(const CDM::SubstanceAdministrationData& in, SESubstanceAdministration& out)
   {
     out.Clear();
@@ -1279,7 +1280,7 @@ namespace io {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
   }
   //----------------------------------------------------------------------------------
-  //class SESubstanceBolus
+  // class SESubstanceBolus
   void PatientActions::Marshall(const CDM::SubstanceBolusData& in, SESubstanceBolus& out)
   {
     Scenario::Marshall(static_cast<const CDM::SubstanceAdministrationData&>(in), static_cast<SESubstanceAdministration&>(out));
@@ -1299,12 +1300,12 @@ namespace io {
     out.Substance(in.m_Substance.GetName());
   }
   //----------------------------------------------------------------------------------
-  //class SESubstanceBolusState
+  // class SESubstanceBolusState
   void PatientActions::Marshall(const CDM::SubstanceBolusStateData& in, SESubstanceBolusState& out)
   {
-    //TODO: Need to pass SubstanceManager to populate Substance based on name
-    //NOTE: This might require us to throw exception
-    //NOTE: This deffintly requires a refactor to not store internal substances as references
+    // TODO: Need to pass SubstanceManager to populate Substance based on name
+    // NOTE: This might require us to throw exception
+    // NOTE: This deffintly requires a refactor to not store internal substances as references
 
     io::Property::Marshall(in.ElapsedTime(), out.m_ElapsedTime);
     io::Property::Marshall(in.AdministeredDose(), out.m_AdministeredDose);
@@ -1319,7 +1320,7 @@ namespace io {
     io::Property::UnMarshall(in.m_AdministeredDose, out.AdministeredDose());
   }
   //----------------------------------------------------------------------------------
-  //class SESubstanceCompoundInfusion
+  // class SESubstanceCompoundInfusion
   void PatientActions::Marshall(const CDM::SubstanceCompoundInfusionData& in, SESubstanceCompoundInfusion& out)
   {
     Scenario::Marshall(static_cast<const CDM::SubstanceAdministrationData&>(in), static_cast<SESubstanceAdministration&>(out));
@@ -1335,7 +1336,7 @@ namespace io {
     out.SubstanceCompound(in.m_Compound.GetName());
   }
   //----------------------------------------------------------------------------------
-  //class SESubstanceInfusion
+  // class SESubstanceInfusion
   void PatientActions::Marshall(const CDM::SubstanceInfusionData& in, SESubstanceInfusion& out)
   {
     Scenario::Marshall(static_cast<const CDM::SubstanceAdministrationData&>(in), static_cast<SESubstanceAdministration&>(out));
@@ -1351,7 +1352,7 @@ namespace io {
     out.Substance(in.m_Substance.GetName());
   }
   //----------------------------------------------------------------------------------
-  //class SEUrinate
+  // class SEUrinate
   void PatientActions::Marshall(const CDM::UrinateData& in, SEUrinate& out)
   {
     out.Clear();
@@ -1364,7 +1365,7 @@ namespace io {
     Scenario::UnMarshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
   }
   //----------------------------------------------------------------------------------
-  //class SEOverride
+  // class SEOverride
   void PatientActions::Marshall(const CDM::OverrideData& in, SEOverride& out)
   {
     out.Clear();
@@ -1585,7 +1586,7 @@ namespace io {
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, CarbonDioxideSaturationOverride)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, CarbonMonoxideSaturationOverride)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, OxygenSaturationOverride)
-    //GetBloodVolumeOverride
+    // GetBloodVolumeOverride
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PhosphateOverride)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, WhiteBloodCellCountOverride)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TotalBilirubinOverride)
