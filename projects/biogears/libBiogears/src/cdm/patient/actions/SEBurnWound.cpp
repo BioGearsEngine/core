@@ -33,6 +33,7 @@ SEBurnWound::SEBurnWound()
 SEBurnWound::~SEBurnWound()
 {
   Clear();
+  SAFE_DELETE(m_TBSA);
 }
 //-----------------------------------------------------------------------------
 void SEBurnWound::Clear()
@@ -42,7 +43,7 @@ void SEBurnWound::Clear()
   m_compartmentsAffected.clear();
   m_DegreeOfBurn = (CDM::enumBurnDegree::value)-1;
   m_BurnIntensity = 0.0;
-  SAFE_DELETE(m_TBSA);
+  m_TBSA->Clear();
 }
 //-----------------------------------------------------------------------------
 bool SEBurnWound::IsValid() const
@@ -377,7 +378,13 @@ std::vector<double> SEBurnWound::GetTBSACompartmentDistribution() const
 //-------------------------------------------------------------------------------
 double SEBurnWound::getLeftArmSA() const { return m_compartments[0].GetValue(); }
 double SEBurnWound::getRightArmSA() const { return m_compartments[1].GetValue(); }
-double SEBurnWound::getTrunk() const { return m_compartments[2].GetValue(); }
+double SEBurnWound::getTrunkSA() const { return m_compartments[2].GetValue(); }
 double SEBurnWound::getLeftLegSA() const { return m_compartments[3].GetValue(); }
 double SEBurnWound::getRightLegSA() const { return m_compartments[4].GetValue(); }
+//-------------------------------------------------------------------------------
+double SEBurnWound::getLeftArmBurnIntensity() const { return m_DegreeModifier * m_compartments[0].GetValue(); }
+double SEBurnWound::getRightArmBurnIntensity() const { return m_DegreeModifier * m_compartments[1].GetValue(); }
+double SEBurnWound::getTrunkBurnIntensity() const { return m_DegreeModifier * m_compartments[2].GetValue(); }
+double SEBurnWound::getLeftLegBurnIntensity() const { return m_DegreeModifier * m_compartments[3].GetValue(); }
+double SEBurnWound::getRightLegBurnIntensity() const { return m_DegreeModifier * m_compartments[4].GetValue(); }
 }
