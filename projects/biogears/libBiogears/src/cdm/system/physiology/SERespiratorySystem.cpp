@@ -291,7 +291,7 @@ void SERespiratorySystem::Unload(CDM::RespiratorySystemData& data) const
   if (m_LeftLungVolume != nullptr)
     data.LeftLungVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_LeftLungVolume->Unload()));
   if (m_RightLungVolume != nullptr)
-    data.RightLungVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_RightLungVolume->Unload()));\
+    data.RightLungVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_RightLungVolume->Unload()));
   if (m_TotalLungVolume != nullptr)
     data.TotalLungVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_TotalLungVolume->Unload()));
   if (m_TotalPulmonaryVentilation != nullptr)
