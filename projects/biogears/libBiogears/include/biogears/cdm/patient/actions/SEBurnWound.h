@@ -23,6 +23,13 @@ class SEScalar;
 namespace io {
   class PatientActions;
 }
+
+constexpr double MAXIMUM_LEFT_ARM = .09;
+constexpr double MAXIMUM_RIGHT_ARM = .09;
+constexpr double MAXIMUM_TRUNK = .370; // Trunk + 1%
+constexpr double MAXIMUM_LEFT_LEG = .180;
+constexpr double MAXIMUM_RIGHT_LEG = .180;
+
 class BIOGEARS_API SEBurnWound : public SEPatientAction {
   friend io::PatientActions;
 
@@ -33,45 +40,60 @@ public:
   static constexpr const char* TypeTag() { return "SEBurnWound"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::BurnWoundData& in);
+  bool Load(const CDM::BurnWoundData& in);
   virtual CDM::BurnWoundData* Unload() const override;
 
-  virtual bool HasTotalBodySurfaceArea() const;
-  virtual SEScalar0To1& GetTotalBodySurfaceArea();
-  virtual bool HasDegreeOfBurn() const;
-  virtual CDM::enumBurnDegree::value GetDegreeOfBurn() const;
-  virtual double GetBurnIntensity() const;
+  bool HasTotalBodySurfaceArea() const;
+  double GetTotalBodySurfaceArea() const;
+  void SetTotalBodySurfaceArea(double);
+
+  bool HasDegreeOfBurn() const;
+  CDM::enumBurnDegree::value GetDegreeOfBurn() const;
+  void SetDegreeOfBurn(CDM::enumBurnDegree::value value);
+
+  double GetBurnIntensity() const;
 
   bool HasCompartment() const;
   bool HasCompartment(const std::string compartment) const;
   const std::vector<std::string>& GetCompartments();
   const std::string GetCompartment(const std::string compartment) const;
-  void SetCompartment(const char* name);
-  void SetCompartment(const std::string& name);
+  void AddCompartment(const char* name);
+  void AddCompartment(const std::string& name);
   void RemoveCompartment(const std::string compartment);
   void RemoveCompartments();
 
-  virtual bool HasInflammation() const;
-  virtual void SetInflammation(bool activate);
+  bool HasInflammation() const;
+  void SetInflammation(bool activate);
 
-  virtual void ToString(std::ostream& str) const override;
+  void ToString(std::ostream& str) const override;
 
-  bool operator==( const SEBurnWound& rhs) const;
-  bool operator!=( const SEBurnWound& rhs) const;
+  bool operator==(const SEBurnWound& rhs) const;
+  bool operator!=(const SEBurnWound& rhs) const;
+
+  std::vector<double> GetTBSACompartmentDistribution() const;
+
+  double getLeftArmSA() const;
+  double getRightArmSA() const;
+  double getTrunk() const;
+  double getLeftLegSA() const;
+  double getRightLegSA() const;
 
 protected:
   virtual void Unload(CDM::BurnWoundData& data) const;
+  void calculateCompartmentDistribution();
 
-
-protected:
+private:
   bool m_Inflammation;
+  double m_DegreeModifier;
   CDM::enumBurnDegree::value m_DegreeOfBurn;
   SEScalar0To1* m_TBSA;
+  std::vector<SEScalar0To1> m_compartments;
+
   double m_BurnIntensity;
   std::vector<std::string> m_compartmentsAffected;
 };

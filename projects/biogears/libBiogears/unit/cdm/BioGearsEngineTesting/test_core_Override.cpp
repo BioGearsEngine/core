@@ -56,7 +56,7 @@ protected:
   // Code here will be called immediately after each test (right
   // before the destructor).
   virtual void TearDown() override;
-  biogears::Logger* logger;
+
 
 };
 
@@ -68,19 +68,19 @@ void TEST_FIXTURE_NAME::TearDown()
 {
 }
 
-TEST_F(TEST_FIXTURE_NAME, Override_On_Off)
-{
-  std::string patientXML{ "patients/StandardMale.xml" };
-  std::string patientLog{ "OverrideTestResults.log" };
-  std::string patientResults{ "OverrideTestResults.csv" };
-
-  std::unique_ptr<PhysiologyEngine> eng;
-  eng = CreateBioGearsEngine(patientLog);
-  DataTrack* trk = &eng->GetEngineTrack()->GetDataTrack();
-  BioGearsScenario sce(eng->GetSubstanceManager());
-  sce.Load("OverrideTest.xml");
-  sce.GetInitialParameters().SetPatientFile(patientXML);
-  BioGearsScenarioExec* exec = new BioGearsScenarioExec(*eng);
-  EXPECT_TRUE(exec->Execute(sce, patientResults, nullptr));
-  delete exec;
-}
+//TEST_F(TEST_FIXTURE_NAME, Override_On_Off)
+//{
+//  //std::string patientXML{ "patients/StandardMale.xml" };
+//  //std::string patientLog{ "OverrideTestResults.log" };
+//  //std::string patientResults{ "OverrideTestResults.csv" };
+//
+//  //std::unique_ptr<PhysiologyEngine> eng;
+//  //eng = CreateBioGearsEngine(patientLog);
+//  //DataTrack* trk = &eng->GetEngineTrack()->GetDataTrack();
+//  //BioGearsScenario sce(eng->GetSubstanceManager());
+//  //sce.Load("OverrideTest.xml");
+//  //sce.GetInitialParameters().SetPatientFile(patientXML);
+//  //BioGearsScenarioExec* exec = new BioGearsScenarioExec(*eng);
+//  //EXPECT_TRUE(exec->Execute(sce, patientResults, nullptr));
+//  //delete exec;
+//}

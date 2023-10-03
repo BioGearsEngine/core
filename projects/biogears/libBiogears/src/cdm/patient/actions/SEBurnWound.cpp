@@ -18,11 +18,16 @@ namespace biogears {
 
 SEBurnWound::SEBurnWound()
   : SEPatientAction()
+  , m_DegreeModifier(1.0)
+  , m_TBSA(new SEScalar0To1()) // User input, size of wound measured by total body surface area
+  , m_compartments(5)
 {
-  m_Inflammation = false; //When the burn wound is constructed, the corresponding inflammation state has not been established
-  m_TBSA = nullptr; //User input, size of wound measured by total body surface area
-  m_BurnIntensity = 0.0; //Calculated value of intensity using TBSA and burn degree
+  m_Inflammation = false; // When the burn wound is constructed, the corresponding inflammation state has not been established
+  m_BurnIntensity = 0.0; // Calculated value of intensity using TBSA and burn degree
   m_DegreeOfBurn = (CDM::enumBurnDegree::value)-1; // User input, burn degree afflicting specified TBSA
+  for (auto& sa : m_compartments) {
+    sa.SetValue(0.0);
+  }
 }
 //-----------------------------------------------------------------------------
 SEBurnWound::~SEBurnWound()
@@ -53,40 +58,18 @@ bool SEBurnWound::IsActive() const
 bool SEBurnWound::Load(const CDM::BurnWoundData& in)
 {
   SEPatientAction::Load(in);
-  GetTotalBodySurfaceArea().Load(in.TotalBodySurfaceArea());
+  SetTotalBodySurfaceArea(0.);
   // The degree modifier is a v1.0 methodology for scaling burn response based on instantiated degree of burn specific to the minimal physiology response of first degree as compared to second and third.
   // Minimal validation data exists differentiating the physiology of the three in the hours following a burn, so inital values for second and third are tuned to mimic TBSA data of both.
-  double degreeModifier;
+
   if (in.DegreeOfBurn().present()) {
-    m_DegreeOfBurn = in.DegreeOfBurn().get();
-    switch (m_DegreeOfBurn) {
-    case CDM::enumBurnDegree::First:
-      degreeModifier = 0.05; 
-      break;
-    case CDM::enumBurnDegree::Second:
-      degreeModifier = 0.99;
-      break;
-    case CDM::enumBurnDegree::Third:
-      degreeModifier = 1.0;
-      break;
-    default:
-      degreeModifier = 1.0; // Just a default error catch
-    }
-  } else {
-    degreeModifier = 1.0; // If no degree specified, leave unchanged. This is for legacy scenarios. Implemented (September 2023)
+    SetDegreeOfBurn(in.DegreeOfBurn().get());
   }
 
   m_compartmentsAffected.clear();
   std::string compt;
   for (const std::string compData : in.Compartments()) {
-    compt = compData;
-    if (compt != "LeftArm" && compt != "RightArm" && compt != "LeftLeg" && compt != "RightLeg" && compt != "Trunk") {
-      Warning("Compartment not found or not valid : " + compt);
-    } else {
-      std::string compartmentAffected = "";
-      compartmentAffected = (compt);
-      m_compartmentsAffected.push_back(compartmentAffected);
-    }
+    AddCompartment(compData);
   }
 
   if (!HasCompartment()) {
@@ -94,25 +77,9 @@ bool SEBurnWound::Load(const CDM::BurnWoundData& in)
     m_compartmentsAffected.push_back("Trunk");
   }
 
-  double allowableTBSA = 0.0;
-  for (const std::string compData : m_compartmentsAffected) {
-    if (compData == "Trunk") {
-      allowableTBSA += 0.36;
-    } else if (compData == "LeftArm") {
-      allowableTBSA += 0.09;
-    } else if (compData == "RightArm") {
-      allowableTBSA += 0.09;
-    } else if (compData == "LeftLeg") {
-      allowableTBSA += 0.18;
-    } else if (compData == "RightLeg") {
-      allowableTBSA += 0.18;
-    }
-  }
-  if (allowableTBSA < GetTotalBodySurfaceArea().GetValue()) {
-    Info("The TBSA provided exceeds the area permitted using the Rule of 9's and the compartments selected. The TBSA will be changed to:" + std::to_string(allowableTBSA));
-    GetTotalBodySurfaceArea().SetValue(allowableTBSA);
-  }
-  m_BurnIntensity = degreeModifier * GetTotalBodySurfaceArea().GetValue();
+  SetTotalBodySurfaceArea(in.TotalBodySurfaceArea().value());
+
+  m_BurnIntensity = m_DegreeModifier * GetTotalBodySurfaceArea();
 
   return true;
 }
@@ -141,11 +108,35 @@ bool SEBurnWound::HasTotalBodySurfaceArea() const
   return m_TBSA == nullptr ? false : m_TBSA->IsValid();
 }
 //-----------------------------------------------------------------------------
-SEScalar0To1& SEBurnWound::GetTotalBodySurfaceArea()
+double SEBurnWound::GetTotalBodySurfaceArea() const
 {
-  if (m_TBSA == nullptr)
-    m_TBSA = new SEScalar0To1();
-  return *m_TBSA;
+  return m_TBSA->GetValue();
+}
+//-----------------------------------------------------------------------------
+void SEBurnWound::SetTotalBodySurfaceArea(double rhs)
+{
+  double allowableTBSA = 0.0;
+  for (auto& compData : m_compartmentsAffected) {
+    if (compData == "Trunk") {
+      allowableTBSA += MAXIMUM_TRUNK;
+    } else if (compData == "LeftArm") {
+      allowableTBSA += MAXIMUM_LEFT_ARM;
+    } else if (compData == "RightArm") {
+      allowableTBSA += MAXIMUM_RIGHT_ARM;
+    } else if (compData == "LeftLeg") {
+      allowableTBSA += MAXIMUM_LEFT_LEG;
+    } else if (compData == "RightLeg") {
+      allowableTBSA += MAXIMUM_RIGHT_LEG;
+    }
+  }
+  if (allowableTBSA < rhs) {
+    Info("The TBSA provided exceeds the area permitted using the Rule of 9's and the compartments selected. The TBSA will be changed to:" + std::to_string(allowableTBSA));
+    m_TBSA->SetValue(allowableTBSA);
+  } else {
+    m_TBSA->SetValue(rhs);
+  }
+
+  calculateCompartmentDistribution();
 }
 //-----------------------------------------------------------------------------
 bool SEBurnWound::HasDegreeOfBurn() const
@@ -156,6 +147,24 @@ bool SEBurnWound::HasDegreeOfBurn() const
 CDM::enumBurnDegree::value SEBurnWound::GetDegreeOfBurn() const
 {
   return m_DegreeOfBurn;
+}
+//-----------------------------------------------------------------------------
+void SEBurnWound::SetDegreeOfBurn(CDM::enumBurnDegree::value bd)
+{
+  m_DegreeOfBurn = bd;
+  switch (bd) {
+  case CDM::enumBurnDegree::First:
+    m_DegreeModifier = 0.05;
+    break;
+  case CDM::enumBurnDegree::Second:
+    m_DegreeModifier = 0.99;
+    break;
+  case CDM::enumBurnDegree::Third:
+    m_DegreeModifier = 1.0;
+    break;
+  default:
+    m_DegreeModifier = 1.0; // Just a default error catch
+  }
 }
 //-----------------------------------------------------------------------------
 double SEBurnWound::GetBurnIntensity() const
@@ -201,16 +210,27 @@ const std::string SEBurnWound::GetCompartment(const std::string c) const
   return "";
 }
 //-------------------------------------------------------------------------------
-void SEBurnWound::SetCompartment(const char* name)
+void SEBurnWound::AddCompartment(const char* name)
 {
-  return SetCompartment(std::string { name });
+  return AddCompartment(std::string { name });
 }
 //-------------------------------------------------------------------------------
-void SEBurnWound::SetCompartment(const std::string& name)
+void SEBurnWound::AddCompartment(const std::string& name)
 {
-  //int nextComptAffected = m_compartmentsAffected.size();
-  //m_compartmentsAffected[nextComptAffected] = name;
-  m_compartmentsAffected.push_back(name);
+  auto not_found = std::find(m_compartmentsAffected.begin(), m_compartmentsAffected.end(), name)
+    == m_compartmentsAffected.end();
+  if (name == "Trunk"
+      || name == "LeftArm"
+      || name == "RightArm"
+      || name == "LeftLeg"
+      || name == "RightLeg") {
+    if (not_found) {
+      m_compartmentsAffected.push_back(name);
+    }
+  } else {
+    Warning("Compartment not found or not valid : " + name);
+  }
+  calculateCompartmentDistribution();
 }
 //-----------------------------------------------------------------------------
 void SEBurnWound::RemoveCompartment(const std::string c)
@@ -223,6 +243,7 @@ void SEBurnWound::RemoveCompartment(const std::string c)
       ca = "";
     }
   }
+  calculateCompartmentDistribution();
 }
 //-----------------------------------------------------------------------------
 void SEBurnWound::RemoveCompartments()
@@ -230,7 +251,6 @@ void SEBurnWound::RemoveCompartments()
   m_compartmentsAffected.clear();
 }
 //-----------------------------------------------------------------------------
-
 void SEBurnWound::ToString(std::ostream& str) const
 {
   str << "Patient Action : Burn Wound";
@@ -268,4 +288,96 @@ bool SEBurnWound::operator!=(const SEBurnWound& rhs) const
 {
   return !(*this == rhs);
 }
+//-------------------------------------------------------------------------------
+//!
+//!   Evenly distributes the TBSA across the given compartments.
+//!   This is done using a drop method which maximizes each compartment and
+//!   puts remainder across compartments with sufficent remaing area.
+void SEBurnWound::calculateCompartmentDistribution()
+{
+  if (!m_TBSA->IsValid()) {
+    return;
+  }
+  double remaining_tbsa = m_TBSA->GetValue();
+
+  for (auto& compartment : m_compartments) {
+    compartment.SetValue(0);
+  }
+  size_t full_compartments = 0;
+  while (remaining_tbsa > 0.001 && m_compartmentsAffected.size() > 0 && m_compartmentsAffected.size() > full_compartments) {
+    double even_divide = remaining_tbsa / (m_compartmentsAffected.size() - full_compartments);
+    for (auto compartment : m_compartmentsAffected) {
+      if (compartment == "Trunk" && m_compartments[2].GetValue() < MAXIMUM_TRUNK) {
+        if (even_divide < MAXIMUM_TRUNK - m_compartments[2].GetValue()) {
+          remaining_tbsa -= even_divide;
+          m_compartments[2].IncrementValue(even_divide);
+        } else {
+          remaining_tbsa -= MAXIMUM_TRUNK - m_compartments[2].GetValue();
+          m_compartments[2].IncrementValue(MAXIMUM_TRUNK - m_compartments[2].GetValue());
+        }
+        if (m_compartments[2].GetValue() >= MAXIMUM_TRUNK) {
+          full_compartments += 1;
+        }
+      } else if (compartment == "LeftArm" && m_compartments[0].GetValue() < MAXIMUM_LEFT_ARM) {
+        if (even_divide < MAXIMUM_LEFT_ARM - m_compartments[0].GetValue()) {
+          remaining_tbsa -= even_divide;
+          m_compartments[0].IncrementValue(even_divide);
+        } else {
+          remaining_tbsa -= MAXIMUM_LEFT_ARM - m_compartments[0].GetValue();
+          m_compartments[0].IncrementValue(MAXIMUM_LEFT_ARM - m_compartments[0].GetValue());
+        }
+        if (m_compartments[0].GetValue() >= MAXIMUM_LEFT_ARM) {
+          full_compartments += 1;
+        }
+      } else if (compartment == "RightArm" && m_compartments[1].GetValue() < MAXIMUM_RIGHT_ARM) {
+        if (even_divide < MAXIMUM_RIGHT_ARM - m_compartments[1].GetValue()) {
+          remaining_tbsa -= even_divide;
+          m_compartments[1].IncrementValue(even_divide);
+        } else {
+          remaining_tbsa -= MAXIMUM_RIGHT_ARM - m_compartments[1].GetValue();
+          m_compartments[1].IncrementValue(MAXIMUM_RIGHT_ARM - m_compartments[1].GetValue());
+        }
+        if (m_compartments[1].GetValue() >= MAXIMUM_RIGHT_ARM) {
+          full_compartments += 1;
+        }
+      } else if (compartment == "LeftLeg" && m_compartments[3].GetValue() < MAXIMUM_LEFT_LEG) {
+        if (even_divide < MAXIMUM_LEFT_LEG - m_compartments[3].GetValue()) {
+          remaining_tbsa -= even_divide;
+          m_compartments[3].IncrementValue(even_divide);
+        } else {
+          remaining_tbsa -= MAXIMUM_LEFT_LEG - m_compartments[3].GetValue();
+          m_compartments[3].IncrementValue(MAXIMUM_LEFT_LEG - m_compartments[3].GetValue());
+        }
+        if (m_compartments[3].GetValue() >= MAXIMUM_LEFT_LEG) {
+          full_compartments += 1;
+        }
+      } else if (compartment == "RightLeg" && m_compartments[4].GetValue() < MAXIMUM_RIGHT_LEG) {
+        if (even_divide < MAXIMUM_RIGHT_LEG - m_compartments[4].GetValue()) {
+          remaining_tbsa -= even_divide;
+          m_compartments[4].IncrementValue(even_divide);
+        } else {
+          remaining_tbsa -= MAXIMUM_RIGHT_LEG - m_compartments[4].GetValue();
+          m_compartments[4].IncrementValue(MAXIMUM_RIGHT_LEG - m_compartments[4].GetValue());
+        }
+        if (m_compartments[4].GetValue() >= MAXIMUM_RIGHT_LEG) {
+          full_compartments += 1;
+        }
+      }
+    }
+  }
+}
+//-------------------------------------------------------------------------------
+std::vector<double> SEBurnWound::GetTBSACompartmentDistribution() const
+{
+
+  return { m_compartments[0].GetValue(), m_compartments[1].GetValue(),
+           m_compartments[2].GetValue(), m_compartments[3].GetValue(),
+           m_compartments[4].GetValue() };
+}
+//-------------------------------------------------------------------------------
+double SEBurnWound::getLeftArmSA() const { return m_compartments[0].GetValue(); }
+double SEBurnWound::getRightArmSA() const { return m_compartments[1].GetValue(); }
+double SEBurnWound::getTrunk() const { return m_compartments[2].GetValue(); }
+double SEBurnWound::getLeftLegSA() const { return m_compartments[3].GetValue(); }
+double SEBurnWound::getRightLegSA() const { return m_compartments[4].GetValue(); }
 }
