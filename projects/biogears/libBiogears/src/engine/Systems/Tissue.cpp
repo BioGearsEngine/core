@@ -659,7 +659,7 @@ void Tissue::CalculateCompartmentalBurn()
 
     double tunedDeltaR_mmHg_s_Per_mL = 0.0;
     if (burnCompt == "Trunk" && m_trunkEscharotomy == false) {
-      burnSpread = (burnIntensity) / (0.36 * numBurnLocations); // 0.36 refers to rule of nines maximum percent of tbsa allocated to location
+      burnSpread = BurnAction->getTrunkBurnIntensity() / 0.37; // 0.37 refers to rule of nines maximum percent of tbsa allocated to trunk (0.36) plus the 0.01 for groin
       ULIM(burnSpread, 1.0); // 1.0 represents a full circumferential burn
       m_trunkDeltaResistance_mmHg_s_Per_mL += ((fluidCreepTuningFactor * burnSpread * deltaR_mmHg_s_Per_mL) / csTuningFactor);
       tunedDeltaR_mmHg_s_Per_mL = m_trunkDeltaResistance_mmHg_s_Per_mL;
@@ -675,7 +675,7 @@ void Tissue::CalculateCompartmentalBurn()
       //m_data.GetCircuits().GetRenalCircuit().GetNode(BGE::RenalNode::Bladder)->GetNextPressure().SetValue(bladderPressure * bladderPressureMultiplier, PressureUnit::mmHg);
 
     } else if (burnCompt == "LeftArm" && m_leftArmEscharotomy == false) {
-      burnSpread = (burnIntensity) / (0.09 * numBurnLocations); // 0.09 refers to rule of nines maximum percent of tbsa allocated to location
+      burnSpread = BurnAction->getTrunkBurnIntensity() / 0.09; // 0.09 refers to rule of nines maximum percent of tbsa allocated to location
       ULIM(burnSpread, 1.0); // 1.0 represents a full circumferential burn
       m_leftArmDeltaResistance_mmHg_s_Per_mL += ((fluidCreepTuningFactor * burnSpread * deltaR_mmHg_s_Per_mL) / csTuningFactor);
       tunedDeltaR_mmHg_s_Per_mL = m_leftArmDeltaResistance_mmHg_s_Per_mL;
@@ -684,7 +684,7 @@ void Tissue::CalculateCompartmentalBurn()
         m_compartmentSyndromeCount += 1.0;
       }
     } else if (burnCompt == "RightArm" && m_rightArmEscharotomy == false) {
-      burnSpread = (burnIntensity) / (0.09 * numBurnLocations); // 0.09 refers to rule of nines maximum percent of tbsa allocated to location
+      burnSpread = BurnAction->getTrunkBurnIntensity() / 0.09; // 0.09 refers to rule of nines maximum percent of tbsa allocated to location
       ULIM(burnSpread, 1.0); // 1.0 represents a full circumferential burn
       m_rightArmDeltaResistance_mmHg_s_Per_mL += ((fluidCreepTuningFactor * burnSpread * deltaR_mmHg_s_Per_mL) / csTuningFactor);
       tunedDeltaR_mmHg_s_Per_mL = m_rightArmDeltaResistance_mmHg_s_Per_mL;
@@ -693,7 +693,7 @@ void Tissue::CalculateCompartmentalBurn()
         m_compartmentSyndromeCount += 1.0;
       }
     } else if (burnCompt == "LeftLeg" && m_leftLegEscharotomy == false) {
-      burnSpread = (burnIntensity) / (0.18 * numBurnLocations); // 0.18 refers to rule of nines maximum percent of tbsa allocated to location
+      burnSpread = BurnAction->getTrunkBurnIntensity() / 0.18; // 0.18 refers to rule of nines maximum percent of tbsa allocated to location
       ULIM(burnSpread, 1.0); // 1.0 represents a full circumferential burn
       m_leftLegDeltaResistance_mmHg_s_Per_mL += ((fluidCreepTuningFactor * burnSpread * deltaR_mmHg_s_Per_mL) / csTuningFactor);
       tunedDeltaR_mmHg_s_Per_mL = m_leftLegDeltaResistance_mmHg_s_Per_mL;
@@ -702,7 +702,7 @@ void Tissue::CalculateCompartmentalBurn()
         m_compartmentSyndromeCount += 1.0;
       }
     } else if (burnCompt == "RightLeg" && m_rightLegEscharotomy == false) {
-      burnSpread = (burnIntensity) / (0.18 * numBurnLocations); // 0.18 refers to rule of nines maximum percent of tbsa allocated to location
+      burnSpread = BurnAction->getTrunkBurnIntensity() / 0.18; // 0.18 refers to rule of nines maximum percent of tbsa allocated to location
       ULIM(burnSpread, 1.0); // 1.0 represents a full circumferential burn
       m_rightLegDeltaResistance_mmHg_s_Per_mL += ((fluidCreepTuningFactor * burnSpread * deltaR_mmHg_s_Per_mL) / csTuningFactor);
       tunedDeltaR_mmHg_s_Per_mL = m_rightLegDeltaResistance_mmHg_s_Per_mL;

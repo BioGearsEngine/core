@@ -79,9 +79,15 @@ public:
 
   double getLeftArmSA() const;
   double getRightArmSA() const;
-  double getTrunk() const;
+  double getTrunkSA() const;
   double getLeftLegSA() const;
   double getRightLegSA() const;
+
+  double getLeftArmBurnIntensity() const;
+  double getRightArmBurnIntensity() const;
+  double getTrunkBurnIntensity() const;
+  double getLeftLegBurnIntensity() const;
+  double getRightLegBurnIntensity() const;
 
 protected:
   virtual void Unload(CDM::BurnWoundData& data) const;
