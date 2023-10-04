@@ -2,19 +2,42 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
 	<Name>BasicStandard</Name>
 	<Description>Basic scenario measuring patient vitals with no insults or interventions</Description>
-	<EngineStateFile>./states/StandardMale@0s.xml</EngineStateFile>
+	<InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 	
 	<!-- Base system data required for all scenario verification -->
-  <DataRequests SamplesPerSecond="50">
-    <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
-		
+	<DataRequests SamplesPerSecond="50">
+		<DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                         Unit="1/min"       Precision="2"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"                 Unit="mL"          Precision="1"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="BloodVolume"                       Unit="L"          Precision="2"/>	
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="L"          Precision="1"/>
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="IntracellularFluidVolume"          Unit="L"          Precision="1"/>
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtracellularFluidVolume"          Unit="L"          Precision="1"/>
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalBodyFluidVolume"          Unit="L"          Precision="1"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExpiratoryFlow"          Unit="L/s"          Precision="4"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="InspiratoryFlow"          Unit="L/s"          Precision="4"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationDriverFrequency"          Unit="1/min"          Precision="4"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryCapillaries"     Name="Pressure" Unit="mmHg" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryCapillaries"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryCapillaries" Substance="Hemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryCapillaries" Substance="Carboxyhemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryCapillaries" Substance="OxyCarbaminohemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryCapillaries" Substance="Oxyhemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryArteries"     Name="Pressure" Unit="mmHg" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryArteries"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryArteries" Substance="Hemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryArteries" Substance="Carboxyhemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryArteries" Substance="OxyCarbaminohemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryArteries" Substance="Oxyhemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryVeins"     Name="Pressure" Unit="mmHg" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryVeins"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryVeins" Substance="Hemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryVeins" Substance="Carboxyhemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryVeins" Substance="OxyCarbaminohemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="PulmonaryVeins" Substance="Oxyhemoglobin"        Name="Concentration" Unit="ug/L" Precision="6"/>
+		
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtravascularFluidVolume"          Unit="L"          Precision="1"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="IntracellularFluidVolume"          Unit="L"          Precision="1"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExtracellularFluidVolume"          Unit="L"          Precision="1"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalBodyFluidVolume"          Unit="L"          Precision="1"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialPressure"                  Unit="mmHg"        Precision="1"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"              Unit="mmHg"        Precision="1"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"          Unit="mmHg"        Precision="0"/>
@@ -34,7 +57,8 @@
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="TranspulmonaryPressure"            Unit="cmH2O"       Precision="2"/>
 		
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="CoreTemperature"                   Unit="degC"        Precision="1"/>
-		<DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperature"                   Unit="degC"        Precision="1"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperatureTorso"                   Unit="degC"        Precision="1"/>
+		<DataRequest xsi:type="PhysiologyDataRequestData" Name="SkinTemperatureHead"                   Unit="degC"        Precision="1"/>
 		
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="RespiratoryExchangeRatio"          Unit="unitless"    Precision="3"/>
 		<DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenConsumptionRate"             Unit="mL/min"      Precision="3"/>
@@ -55,7 +79,7 @@
 		<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="Oxygen"        Name="PartialPressure" Unit="cmH2O" Precision="0"/>
 		<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Trachea"       Substance="CarbonDioxide" Name="PartialPressure" Unit="cmH2O" Precision="1"/>
 		
-		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
+		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="4"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta"     Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="1"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava"  Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
@@ -70,20 +94,18 @@
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Substance="Insulin"        Name="Concentration" Unit="ug/L" Precision="3"/>
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="VenaCava" Substance="Glucagon"        Name="Concentration" Unit="ug/L" Precision="6"/>
 		  <DataRequest xsi:type="PhysiologyDataRequestData" Name="LiverGlycogen" Unit="g" Precision="2"/>
-  <DataRequest xsi:type="PhysiologyDataRequestData" Name="MuscleGlycogen" Unit="g" Precision="2"/>
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="MuscleGlycogen" Unit="g" Precision="2"/>
 		
-		<!-- Specific to this scenario -->
 
-
-		<!-- Data needed for senario condition validation -->    
-	  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartEjectionFraction" Precision="3"/>
+	<!-- Data needed for senario condition validation -->    
+	<DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartEjectionFraction" Precision="3"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystemicVascularResistance" Unit="mmHg s/mL" Precision="3"/>
-	  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Pericardium" Name="Volume"   Unit="mL" Precision="0"/>
-	  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Pericardium" Name="Pressure" Unit="mmHg" Precision="2"/> 
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Pericardium" Name="Volume"   Unit="mL" Precision="0"/>
+	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Pericardium" Name="Pressure" Unit="mmHg" Precision="2"/> 
 	</DataRequests>
 
 	<Action xsi:type="AdvanceTimeData">
-		<Time value="6" unit="min"/>		
+		<Time value="10" unit="min"/>		
 	</Action>
   
 </Scenario>

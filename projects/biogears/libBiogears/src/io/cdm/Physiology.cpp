@@ -477,7 +477,8 @@ namespace io {
     io::Property::Marshall(in.FatigueLevel(), out.GetFatigueLevel());
     io::Property::Marshall(in.LactateProductionRate(), out.GetLactateProductionRate());
     io::Property::Marshall(in.PotassiumLostToSweat(), out.GetPotassiumLostToSweat());
-    io::Property::Marshall(in.SkinTemperature(), out.GetSkinTemperature());
+    io::Property::Marshall(in.SkinTemperatureTorso(), out.GetSkinTemperatureTorso());
+    io::Property::Marshall(in.SkinTemperatureHead(), out.GetSkinTemperatureHead());
     io::Property::Marshall(in.SodiumLostToSweat(), out.GetSodiumLostToSweat());
     io::Property::Marshall(in.SweatRate(), out.GetSweatRate());
     io::Property::Marshall(in.TotalMetabolicRate(), out.GetTotalMetabolicRate());
@@ -514,8 +515,11 @@ namespace io {
     if (in.m_PotassiumLostToSweat != nullptr) {
       io::Property::UnMarshall(*in.m_PotassiumLostToSweat, out.PotassiumLostToSweat());
     }
-    if (in.m_SkinTemperature != nullptr) {
-      io::Property::UnMarshall(*in.m_SkinTemperature, out.SkinTemperature());
+    if (in.m_SkinTemperatureTorso != nullptr) {
+      io::Property::UnMarshall(*in.m_SkinTemperatureTorso, out.SkinTemperatureTorso());
+    }
+    if (in.m_SkinTemperatureHead != nullptr) {
+      io::Property::UnMarshall(*in.m_SkinTemperatureHead, out.SkinTemperatureHead());
     }
     if (in.m_SodiumLostToSweat != nullptr) {
       io::Property::UnMarshall(*in.m_SodiumLostToSweat, out.SodiumLostToSweat());

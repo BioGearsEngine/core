@@ -162,16 +162,28 @@ TEST_F(TEST_FIXTURE_NAME, PotassiumLostToSweat)
   auto dvalue = cds.GetPotassiumLostToSweat(MassUnit::g);
   EXPECT_NE(dvalue, dvalue);
 }
-TEST_F(TEST_FIXTURE_NAME, SkinTemperature)
+TEST_F(TEST_FIXTURE_NAME, SkinTemperatureTorso)
 {
-  EXPECT_FALSE( ds->HasSkinTemperature());
-  ds->GetSkinTemperature().SetValue(1.0, TemperatureUnit::C);
-  EXPECT_TRUE( ds->HasSkinTemperature());
-  EXPECT_EQ(1.0, ds->GetSkinTemperature().GetValue(TemperatureUnit::C));
+  EXPECT_FALSE( ds->HasSkinTemperatureTorso());
+  ds->GetSkinTemperatureTorso().SetValue(1.0, TemperatureUnit::C);
+  EXPECT_TRUE(ds->HasSkinTemperatureTorso());
+  EXPECT_EQ(1.0, ds->GetSkinTemperatureTorso().GetValue(TemperatureUnit::C));
 
   const biogears::SEEnergySystem cds(logger);
-  EXPECT_FALSE( cds.HasSkinTemperature());
-  auto dvalue = cds.GetSkinTemperature(TemperatureUnit::C);
+  EXPECT_FALSE(cds.HasSkinTemperatureTorso());
+  auto dvalue = cds.GetSkinTemperatureTorso(TemperatureUnit::C);
+  EXPECT_NE(dvalue, dvalue);
+}
+TEST_F(TEST_FIXTURE_NAME, SkinTemperatureHead)
+{
+  EXPECT_FALSE(ds->HasSkinTemperatureHead());
+  ds->GetSkinTemperatureHead().SetValue(1.0, TemperatureUnit::C);
+  EXPECT_TRUE(ds->HasSkinTemperatureHead());
+  EXPECT_EQ(1.0, ds->GetSkinTemperatureHead().GetValue(TemperatureUnit::C));
+
+  const biogears::SEEnergySystem cds(logger);
+  EXPECT_FALSE(cds.HasSkinTemperatureHead());
+  auto dvalue = cds.GetSkinTemperatureHead(TemperatureUnit::C);
   EXPECT_NE(dvalue, dvalue);
 }
 TEST_F(TEST_FIXTURE_NAME, SodiumLostToSweat)

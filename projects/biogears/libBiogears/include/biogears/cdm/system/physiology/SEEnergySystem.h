@@ -98,9 +98,13 @@ public:
   SEScalarMass& GetPotassiumLostToSweat();
   double GetPotassiumLostToSweat(const MassUnit& unit) const;
 
-  bool HasSkinTemperature() const;
-  SEScalarTemperature& GetSkinTemperature();
-  double GetSkinTemperature(const TemperatureUnit& unit) const;
+  bool HasSkinTemperatureTorso() const;
+  SEScalarTemperature& GetSkinTemperatureTorso();
+  double GetSkinTemperatureTorso(const TemperatureUnit& unit) const;
+
+  bool HasSkinTemperatureHead() const;
+  SEScalarTemperature& GetSkinTemperatureHead();
+  double GetSkinTemperatureHead(const TemperatureUnit& unit) const;
 
   bool HasSodiumLostToSweat() const;
   SEScalarMass& GetSodiumLostToSweat();
@@ -129,7 +133,8 @@ protected:
   SEScalarFraction* m_FatigueLevel;
   SEScalarAmountPerTime* m_LactateProductionRate;
   SEScalarMass* m_PotassiumLostToSweat;
-  SEScalarTemperature* m_SkinTemperature;
+  SEScalarTemperature* m_SkinTemperatureTorso;
+  SEScalarTemperature* m_SkinTemperatureHead;
   SEScalarMass* m_SodiumLostToSweat;
   SEScalarMassPerTime* m_SweatRate;
   SEScalarPower* m_TotalMetabolicRate;
