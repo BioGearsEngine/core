@@ -1,0 +1,486 @@
+/*
+Copyright 2015 Applied Research Associates, Inc.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the License
+at: http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+*/
+
+syntax = "proto3";
+
+package mil.tatrc.physiology.datamodel;
+
+enum EnumDecimalFormat {
+  ENUM_DECIMAL_FORMAT_UNSPECIFIED = 0;
+  ENUM_DECIMAL_FORMAT_FIXED_MANTISSA = 1;
+  ENUM_DECIMAL_FORMAT_SIGNIFICANT_DIGITS = 2;
+}
+
+enum EnumErrorType {
+  ENUM_ERROR_TYPE_UNSPECIFIED = 0;
+  ENUM_ERROR_TYPE_STANDARD = 1;
+}
+
+// Enumeration for specifying an on or off state
+enum EnumOnOff {
+  ENUM_ON_OFF_UNSPECIFIED = 0;
+  ENUM_ON_OFF_OFF = 1;
+  ENUM_ON_OFF_ON = 2;
+}
+
+// Enumeration for specifying an open or closed state
+enum EnumOpenClosed {
+  ENUM_OPEN_CLOSED_UNSPECIFIED = 0;
+  ENUM_OPEN_CLOSED_CLOSED = 1;
+  ENUM_OPEN_CLOSED_OPEN = 2;
+}
+
+// Enumeration for specifying patient side
+enum EnumSide {
+  ENUM_SIDE_UNSPECIFIED = 0;
+  ENUM_SIDE_LEFT = 1;
+  ENUM_SIDE_RIGHT = 2;
+}
+
+message ArrayData {
+  DoubleArray value = 1;
+  string unit = 2;
+}
+
+message ArrayTimeData {
+  DoubleArray value = 1;
+  string unit = 2;
+}
+
+message DecimalFormatData {
+  EnumDecimalFormat decimal_format = 1;
+  uint32 precision = 2;
+}
+
+// Double array specification
+message DoubleArray {
+  repeated double double_list = 1;
+}
+
+message ErrorData {
+  double value = 1;
+  EnumErrorType type = 2;
+}
+
+message ErrorList {
+  DoubleArray value = 1;
+  EnumErrorType type = 2;
+}
+
+// Two arrays paired where the lists are of the same size
+message FunctionData {
+  DoubleArray independent = 1;
+  DoubleArray dependent = 2;
+  string independent_unit = 3;
+  string dependent_unit = 4;
+}
+
+// Electric potential as a function of time
+message FunctionElectricPotentialVsTimeData {
+  DoubleArray independent = 1;
+  DoubleArray dependent = 2;
+  string independent_unit = 3;
+  string dependent_unit = 4;
+}
+
+// Volumes as a function of time
+message FunctionVolumeVsTimeData {
+  DoubleArray independent = 1;
+  DoubleArray dependent = 2;
+  string independent_unit = 3;
+  string dependent_unit = 4;
+}
+
+// Two arrays paired where the independent list is 1 + the length of the dependent list, for bins
+message HistogramData {
+  DoubleArray independent = 1;
+  DoubleArray dependent = 2;
+  string independent_unit = 3;
+  string dependent_unit = 4;
+}
+
+// Two arrays paired where the independent list is 1 + the length of the dependent list, for bins
+message HistogramFractionVsLengthData {
+  DoubleArray independent = 1;
+  DoubleArray dependent = 2;
+  string independent_unit = 3;
+  string dependent_unit = 4;
+}
+
+// Integer array specification
+message IntegerArray {
+  repeated int32 integer_list = 1;
+}
+
+message RunningAverageData {
+  double sum = 1;
+  uint32 num_samples = 2;
+}
+
+// A scalar for holding amount quantities (ex. ct, mol)
+message ScalarAmountData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding amount per mass quantities (ex. mol/g)
+message ScalarAmountPerMassData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding amount per time quantities (ex. mol/min)
+message ScalarAmountPerTimeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding amount per volume quantities (ex. mol/L)
+message ScalarAmountPerVolumeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding area quantities (ex. m^2)
+message ScalarAreaData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding area per time quantities (ex. m^2/s)
+message ScalarAreaPerTimePressureData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A unitless scalar
+message ScalarData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding electric capacitance quantities (ex. F)
+message ScalarElectricCapacitanceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding electric charge quantities (ex. C)
+message ScalarElectricChargeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding electric current quantities (ex. A)
+message ScalarElectricCurrentData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding electric inductance quantities (ex. H)
+message ScalarElectricInductanceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding electric potential quantities (ex. V)
+message ScalarElectricPotentialData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding electric resistance quantities (ex. ohm)
+message ScalarElectricResistanceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding energy quantities (ex. J)
+message ScalarEnergyData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding energy per amount quantities (ex. J/mol)
+message ScalarEnergyPerAmountData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding energy per mass quantities (ex. J/kg)
+message ScalarEnergyPerMassData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding flow compliance quantities (ex. L/cmH2O)
+message ScalarFlowComplianceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding flow elastance quantities (ex. cmH2O/L)
+message ScalarFlowElastanceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding flow inertance quantities (ex. mmHg s^2/mL)
+message ScalarFlowInertanceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding flow resistance quantities (ex. Pa s/m^3)
+message ScalarFlowResistanceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding force quantities (ex.  kg m/s^2)
+message ScalarForceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A unitless scalar greater or equal to -1 and less than or equal to 1
+message ScalarFractionData {
+  string unit = 2;
+  double value = 3;
+}
+
+// A scalar for holding frequency quantities (ex. 1/s)
+message ScalarFrequencyData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding heat capacitance quantities (ex. J/K)
+message ScalarHeatCapacitanceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding heat capacitance per amount quantities (ex. J/K mol)
+message ScalarHeatCapacitancePerAmountData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding heat capacitance per mass quantities (ex. J/K kg)
+message ScalarHeatCapacitancePerMassData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding heat conductance quantities (ex. W/K)
+message ScalarHeatConductanceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding heat conductance per area quantities (ex. W/m^2 K)
+message ScalarHeatConductancePerAreaData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding heat inductance quantities (ex. K s/W)
+message ScalarHeatInductanceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding heat resistance area quantities (ex. rsi)
+message ScalarHeatResistanceAreaData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding heat resistance quantities (ex. K/W)
+message ScalarHeatResistanceData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding inverse pressure quantities (ex. 1/Pa)
+message ScalarInversePressureData {
+  double value = 1;
+  string unit = 2;
+}
+
+message ScalarInverseVolumeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding length quantities (ex. ft)
+message ScalarLengthData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding length per time quantities (ex. ft/s^2)
+message ScalarLengthPerTimeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding length per time per pressure quantities (ex. m/s mmHg)
+message ScalarLengthPerTimePressureData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding mass quantities (ex. g)
+message ScalarMassData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding mass per amount quantities (ex. g/mol)
+message ScalarMassPerAmountData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding mass per time quantities (ex. ug/s)
+message ScalarMassPerAreaTimeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding mass per mass quantities (ex. ug/kg)
+message ScalarMassPerMassData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding mass per time quantities (ex. ug/s)
+message ScalarMassPerTimeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding mass per volume quantities (ex. ug/mL)
+message ScalarMassPerVolumeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding osmolality quantities (ex. Osm/kg)
+message ScalarOsmolalityData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding osmolarity quantities (ex. Osm/L)
+message ScalarOsmolarityData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding power quantities (ex. W)
+message ScalarPowerData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding Radiative Heat Transfer Powers such as Stefan Boltzman quantities (ex. W / m^2 K^4)
+message ScalarPowerPerAreaTemperatureToTheFourthData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding pressure quantities (ex. mmHg)
+message ScalarPressureData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding pressure per volume quantities (ex. mmHg/mL)
+message ScalarPressurePerVolumeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding pressure time per area quantities (ex. mmHg s/m2)
+message ScalarPressureTimePerAreaData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding pressure time area per volume quantities (ex. dyn s /cm^5 m^2)
+message ScalarPressureTimePerVolumeAreaData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding temperature quantities (ex. degC)
+message ScalarTemperatureData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding time quantities (ex. s)
+message ScalarTimeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding time-mass per volume quantities for drug area under curve measurements (ex. g-min/mL)
+message ScalarTimeMassPerVolumeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding volume quantities (ex. mL)
+message ScalarVolumeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding volume per pressure quantities (ex. mL/cmH2O)
+message ScalarVolumePerPressureData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding volume per time per area quantities (ex. mL/s cm2 g)
+message ScalarVolumePerTimeAreaData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding volume per time quantities (ex. mL/s)
+message ScalarVolumePerTimeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding volume per time per mass quantities (ex. mL/s g)
+message ScalarVolumePerTimeMassData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding volume per time per pressure per are quantities (ex. mL/s mmHg cm2)
+message ScalarVolumePerTimePressureAreaData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding volume per time per pressure quantities (ex. mL/s mmHg)
+message ScalarVolumePerTimePressureData {
+  double value = 1;
+  string unit = 2;
+}
