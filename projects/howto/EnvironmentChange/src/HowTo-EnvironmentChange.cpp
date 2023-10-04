@@ -98,7 +98,8 @@ int HowToEnvironmentChange()
   bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Skin Temperature : %f %s", bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature Torso : %f %s", bg->GetEnergySystem()->GetSkinTemperatureTorso(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature Head : %f %s", bg->GetEnergySystem()->GetSkinTemperatureHead(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W"));
   bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
@@ -130,7 +131,8 @@ int HowToEnvironmentChange()
   bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Skin Temperature : %f %s", bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature Torso : %f %s", bg->GetEnergySystem()->GetSkinTemperatureTorso(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature Head : %f %s", bg->GetEnergySystem()->GetSkinTemperatureHead(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W"));
   bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
@@ -158,7 +160,8 @@ int HowToEnvironmentChange()
   bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Skin Temperature : %f %s", bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature Torso : %f %s", bg->GetEnergySystem()->GetSkinTemperatureTorso(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature Head : %f %s", bg->GetEnergySystem()->GetSkinTemperatureHead(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W"));
   bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));
@@ -176,7 +179,8 @@ int HowToEnvironmentChange()
   bg->GetLogger()->Info(asprintf("Systolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
-  bg->GetLogger()->Info(asprintf("Skin Temperature : %f %s", bg->GetEnergySystem()->GetSkinTemperature(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature Torso : %f %s", bg->GetEnergySystem()->GetSkinTemperatureTorso(TemperatureUnit::C), "C"));
+  bg->GetLogger()->Info(asprintf("Skin Temperature Head : %f %s", bg->GetEnergySystem()->GetSkinTemperatureHead(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("Core Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
   bg->GetLogger()->Info(asprintf("Total Metabolic Rate : %f %s", bg->GetEnergySystem()->GetTotalMetabolicRate(PowerUnit::W), "W"));
   bg->GetLogger()->Info(asprintf("Systemic Vascular Resistance : %f %s", bg->GetCardiovascularSystem()->GetSystemicVascularResistance(FlowResistanceUnit::mmHg_s_Per_mL), "mmHg_s_Per_mL"));

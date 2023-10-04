@@ -112,7 +112,9 @@ private:
   SELiquidSubstanceQuantity* m_SkinPotassium;
   //Nodes
   SEThermalCircuitNode* m_coreNode;
-  SEThermalCircuitNode* m_skinNode;
+  SEThermalCircuitNode* m_torsoSkinNode;
+  SEThermalCircuitNode* m_headSkinNode;
+  std::vector<SEThermalCircuitNode*> m_skinNodes;
   //Paths
   SEThermalCircuitPath* m_temperatureGroundToCorePath;
   std::vector<SEThermalCircuitPath*> m_coreToSkinPaths;

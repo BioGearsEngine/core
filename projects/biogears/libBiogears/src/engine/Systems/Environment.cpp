@@ -252,7 +252,7 @@ void Environment::PreProcess()
   // 0 is torso, gets 40 percent of clo
   // 1 is head, gets no clo (assume not hat/hair for now)
   m_SkinToClothingPaths[0]->GetNextResistance().SetValue(0.4 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[1]->GetNextResistance().SetValue(0.0 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[1]->GetNextResistance().SetValue(0.01 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
 
   //Set the skin heat loss
   double dSkinHeatLoss_W = 0.0;

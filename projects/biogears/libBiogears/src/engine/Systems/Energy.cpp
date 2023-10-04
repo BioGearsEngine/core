@@ -80,7 +80,6 @@ void Energy::Clear()
   m_SkinChloride = nullptr;
   m_SkinPotassium = nullptr;
   m_coreNode = nullptr;
-  m_skinNode = nullptr;
   m_temperatureGroundToCorePath = nullptr;
   m_skinExtravascularToSweatingGroundPath = nullptr;
   m_InternalTemperatureCircuit = nullptr;
@@ -104,7 +103,8 @@ void Energy::Initialize()
   //Initialization of other system variables
   /// \cite herman2008physics
   GetCoreTemperature().SetValue(37.0, TemperatureUnit::C);
-  GetSkinTemperature().SetValue(33.0, TemperatureUnit::C);
+  GetSkinTemperatureTorso().SetValue(33.0, TemperatureUnit::C);
+  GetSkinTemperatureHead().SetValue(33.0, TemperatureUnit::C);
   /// \cite phypers2006lactate
   GetLactateProductionRate().SetValue(1.3, AmountPerTimeUnit::mol_Per_day);
   /// \cite guyton2006medical
@@ -182,7 +182,9 @@ void Energy::SetUp()
   m_InternalTemperatureCircuit = &m_data.GetCircuits().GetInternalTemperatureCircuit();
   //Nodes
   m_coreNode = m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalCore);
-  m_skinNode = m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalTorsoSkin); // NOTE this is currently used for vitals and sweat rate. First pass will use torso being the largest of the skin nodes
+  m_skinNodes.clear();
+  m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalTorsoSkin));
+  m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalHeadSkin));
   //Paths
   m_temperatureGroundToCorePath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalCore);
   m_skinExtravascularToSweatingGroundPath = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinSweating);
@@ -401,13 +403,15 @@ void Energy::PostProcess()
 void Energy::CalculateVitalSigns()
 {
   double coreTemperature_degC = m_coreNode->GetTemperature(TemperatureUnit::C);
-  double skinTemperature_degC = m_skinNode->GetTemperature(TemperatureUnit::C);
+  double skinTemperatureTorso_degC = m_skinNodes[0]->GetTemperature(TemperatureUnit::C);
+  double skinTemperatureHead_degC = m_skinNodes[1]->GetTemperature(TemperatureUnit::C);
   if (m_data.GetDrugs().HasFeverChange() && GetCoreTemperature().GetValue(TemperatureUnit::C) > 37.0) { // Modifier for current drugs should not be able to increase core temperature
     coreTemperature_degC += m_data.GetDrugs().GetFeverChange().GetValue(TemperatureUnit::C);
     LLIM(coreTemperature_degC, 36.5); // Tylenol will not lower your basal core temperature
   }
   GetCoreTemperature().SetValue(coreTemperature_degC, TemperatureUnit::C);
-  GetSkinTemperature().SetValue(skinTemperature_degC, TemperatureUnit::C);
+  GetSkinTemperatureTorso().SetValue(skinTemperatureTorso_degC, TemperatureUnit::C);
+  GetSkinTemperatureHead().SetValue(skinTemperatureHead_degC, TemperatureUnit::C);
   std::stringstream ss;
 
   //Hypothermia check
@@ -581,48 +585,51 @@ void Energy::CalculateSweatRate()
   double dWaterVaporPressureInAmbientAir_mmHg = GeneralMath::AntoineEquation(dAirTemperature_C);
   double m_dWaterVaporPressureInAmbientAir_Pa = Convert(dWaterVaporPressureInAmbientAir_mmHg, PressureUnit::mmHg, PressureUnit::Pa);
   // double ambientAtmosphericPressure_Pa = m_data.GetEnvironment().GetConditions().GetAtmosphericPressure().GetValue(PressureUnit::Pa);
-  double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * (133.322 * (std::pow(10, (8.1076 - (1750.286 / (235.0 + (m_skinNode->GetTemperature(TemperatureUnit::C))))))) - ((m_dWaterVaporPressureInAmbientAir_Pa))); //Still needs effective clothing evaporation
-
   double vaporizationEnergy_J_Per_kg = m_data.GetConfiguration().GetVaporizationEnergy(EnergyPerMassUnit::J_Per_kg);
   double sweatSodiumConcentration_mM = 51.0; /// \cite shirreffs1997whole
   double sweatPotassiumConcentration_mM = 6.0; /// \cite shirreffs1997whole
   double sweatChlorideConcentration_mM = 48.0; /// \cite shirreffs1997whole
-    // static double totalSweatLost_mL = 0; --Used to figure out total sweat loss during exercise scenario during debugging
+  // static double totalSweatLost_mL = 0; --Used to figure out total sweat loss during exercise scenario during debugging
 
-  double currentEvaporativeCapacity_W = sweatHeatTranferCoefficient_W_Per_K * (m_skinNode->GetTemperature(TemperatureUnit::K));
-  if (currentEvaporativeCapacity_W > maximumEvaporativeCapacity_W) {
-
-    sweatHeatTranferCoefficient_W_Per_K = maximumEvaporativeCapacity_W / (m_skinNode->GetTemperature(TemperatureUnit::K));
-  }
-
-  /// \todo Convert to sweat density once specific gravity calculation is in
+  double overallSweatRate_kg_Per_s = 0.0;
   SEScalarMassPerVolume sweatDensity;
-  GeneralMath::CalculateWaterDensity(m_skinNode->GetTemperature(), sweatDensity);
-  double dehydrationFraction = m_data.GetTissue().GetDehydrationFraction().GetValue();
+  for (SEThermalCircuitNode* skinNode : m_skinNodes) {
+    double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * (133.322 * (std::pow(10, (8.1076 - (1750.286 / (235.0 + (skinNode->GetTemperature(TemperatureUnit::C))))))) - ((m_dWaterVaporPressureInAmbientAir_Pa))); // Still needs effective clothing evaporation
+    double currentEvaporativeCapacity_W = sweatHeatTranferCoefficient_W_Per_K * (skinNode->GetTemperature(TemperatureUnit::K));
+    if (currentEvaporativeCapacity_W > maximumEvaporativeCapacity_W) {
 
-  //Calculate sweat rate (in kg/s) from core temperature feedback.
-  //The sweat rate heat transfer is determined from a control equation that attempts to keep the core temperature in line
-  /// \cite herman2008physics
-  //Sweat rate decreases as dehydration becomes more severe, with max reduction seen at 10% dehydration
-  double dehydrationScalingFactor = GeneralMath::LinearInterpolator(0, .1, 1, 0, dehydrationFraction);
-  BLIM(dehydrationScalingFactor, 0, 1);
-  double sweatRate_kg_Per_s = dehydrationScalingFactor * (0.25 * sweatHeatTranferCoefficient_W_Per_K / vaporizationEnergy_J_Per_kg) * (coreTemperature_degC - coreTemperatureHigh_degC);
+      sweatHeatTranferCoefficient_W_Per_K = maximumEvaporativeCapacity_W / (skinNode->GetTemperature(TemperatureUnit::K));
+    }
 
-  //The Sweat Scaling Factor is caused by changes in the Hyperhidrosis patient parameter to invoke either hyperhidrosis or hypohidrosis
-  /// \cite shih1983autonomic
-  double sweatScalingFactor = 0.0;
-  if (m_Patient->HasHyperhidrosis()) {
-    sweatScalingFactor = m_Patient->GetHyperhidrosis().GetValue();
-    sweatRate_kg_Per_s = (1 + sweatScalingFactor) * sweatRate_kg_Per_s;
+    double dehydrationFraction = m_data.GetTissue().GetDehydrationFraction().GetValue();
+
+    // Calculate sweat rate (in kg/s) from core temperature feedback.
+    // The sweat rate heat transfer is determined from a control equation that attempts to keep the core temperature in line
+    /// \cite herman2008physics
+    // Sweat rate decreases as dehydration becomes more severe, with max reduction seen at 10% dehydration
+    double dehydrationScalingFactor = GeneralMath::LinearInterpolator(0, .1, 1, 0, dehydrationFraction);
+    BLIM(dehydrationScalingFactor, 0, 1);
+    double sweatRate_kg_Per_s = dehydrationScalingFactor * (0.25 * sweatHeatTranferCoefficient_W_Per_K / vaporizationEnergy_J_Per_kg) * (coreTemperature_degC - coreTemperatureHigh_degC);
+
+    // The Sweat Scaling Factor is caused by changes in the Hyperhidrosis patient parameter to invoke either hyperhidrosis or hypohidrosis
+    /// \cite shih1983autonomic
+    double sweatScalingFactor = 0.0;
+    if (m_Patient->HasHyperhidrosis()) {
+      sweatScalingFactor = m_Patient->GetHyperhidrosis().GetValue();
+      sweatRate_kg_Per_s = (1 + sweatScalingFactor) * sweatRate_kg_Per_s;
+    }
+    overallSweatRate_kg_Per_s += sweatRate_kg_Per_s;
   }
+  /// \todo Convert to sweat density once specific gravity calculation is in
+  GeneralMath::CalculateWaterDensity(m_skinNodes[0]->GetTemperature(), sweatDensity); // using trunk as representation due to it having the largest surface area. This will likely be vectorized out later
 
   double maxSweatRate_kg_Per_s = 12.5 * m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2) / 60.0 / 1000.0; //10 - 15 g/min/m2
-  BLIM(sweatRate_kg_Per_s, 0.0, maxSweatRate_kg_Per_s);
+  BLIM(overallSweatRate_kg_Per_s, 0.0, maxSweatRate_kg_Per_s);
 
   //Account for mass lost by subtracting from the current patient mass
-  double massLost_kg = sweatRate_kg_Per_s * m_dT_s;
+  double massLost_kg = overallSweatRate_kg_Per_s * m_dT_s;
   m_Patient->GetWeight().IncrementValue(-massLost_kg, MassUnit::kg);
-  GetSweatRate().SetValue(sweatRate_kg_Per_s, MassPerTimeUnit::kg_Per_s);
+  GetSweatRate().SetValue(overallSweatRate_kg_Per_s, MassPerTimeUnit::kg_Per_s);
 
   //Calculate mass of ions lost in sweat (sodium, potassium, and chloride):  Converts kg sweat lost -> L sweat lost -> mmol ion lost -> mg ion lost
   double sodiumLost_mg = massLost_kg / sweatDensity.GetValue(MassPerVolumeUnit::kg_Per_L) * sweatSodiumConcentration_mM * m_data.GetSubstances().GetSodium().GetMolarMass(MassPerAmountUnit::mg_Per_mmol);
@@ -641,7 +648,7 @@ void Energy::CalculateSweatRate()
   m_SkinChloride->Balance(BalanceLiquidBy::Mass);
 
   //Set the flow source on the extravascular circuit to begin removing the fluid that is excreted
-  double sweatRate_mL_Per_s = sweatRate_kg_Per_s / sweatDensity.GetValue(MassPerVolumeUnit::kg_Per_mL);
+  double sweatRate_mL_Per_s = overallSweatRate_kg_Per_s / sweatDensity.GetValue(MassPerVolumeUnit::kg_Per_mL);
   m_skinExtravascularToSweatingGroundPath->GetNextFlowSource().SetValue(sweatRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
 }
 
@@ -778,8 +785,10 @@ void Energy::ProcessOverride()
   if (override->HasLactateProductionRateOverride()) {
     GetLactateProductionRate().SetValue(override->GetLactateProductionRateOverride(AmountPerTimeUnit::mol_Per_s), AmountPerTimeUnit::mol_Per_s);
   }
+  // All skin nodes currently adjusted for a skin temperature override
   if (override->HasSkinTemperatureOverride()) {
-    GetSkinTemperature().SetValue(override->GetSkinTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
+    GetSkinTemperatureTorso().SetValue(override->GetSkinTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
+    GetSkinTemperatureHead().SetValue(override->GetSkinTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
   }
   if (override->HasSweatRateOverride()) {
     GetSweatRate().SetValue(override->GetSweatRateOverride(MassPerTimeUnit::g_Per_s), MassPerTimeUnit::g_Per_s);

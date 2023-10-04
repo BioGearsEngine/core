@@ -12,7 +12,8 @@
     <PropertyConvergence Name="OxygenSaturation" PercentDifference="0.25"/>
     <PropertyConvergence Name="EndTidalCarbonDioxideFraction" PercentDifference="0.25"/>
     <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-    <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+    <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	<PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
   </RestingStabilizationCriteria>
   <FeedbackStabilizationCriteria>
     <ConvergenceTime readOnly="false" unit="s" value="15"/>
@@ -28,7 +29,9 @@
     <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
     <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
     <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-    <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+    <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+    <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	<PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
   </FeedbackStabilizationCriteria>
   <ConditionStabilization Name="ChronicAnemia" contentVersion="Biogears_7.5.0+85">
     <Criteria>
@@ -45,7 +48,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
   <ConditionStabilization Name="ChronicVentricularSystolicDysfunction" contentVersion="Biogears_7.5.0+85">
@@ -63,7 +68,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
   <ConditionStabilization Name="ChronicPericardialEffusion" contentVersion="Biogears_7.5.0+85">
@@ -81,7 +88,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
   <ConditionStabilization Name="ChronicObstructivePulmonaryDisease" contentVersion="Biogears_7.5.0+85">
@@ -99,7 +108,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
   <ConditionStabilization Name="LobarPneumonia" contentVersion="Biogears_7.5.0+85">
@@ -117,7 +128,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
   <ConditionStabilization Name="InitialEnvironment" contentVersion="Biogears_7.5.0+85">
@@ -135,7 +148,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
   <ConditionStabilization Name="ChronicRenalStenosis" contentVersion="Biogears_7.5.0+85">
@@ -153,7 +168,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
   <ConditionStabilization Name="ImpairedAlveolarExchange" contentVersion="Biogears_7.5.0+85">
@@ -171,7 +188,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
   <ConditionStabilization Name="Dehydration" contentVersion="Biogears_7.5.0+85">
@@ -189,7 +208,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="1.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="1.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="1.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="1.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
   <ConditionStabilization Name="Starvation" contentVersion="Biogears_7.5.0+85">
@@ -207,7 +228,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
   <ConditionStabilization Name="DiabetesType1" contentVersion="Biogears_7.5.0+85">
@@ -225,7 +248,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
   <ConditionStabilization Name="DiabetesType2" contentVersion="Biogears_7.5.0+85">
@@ -243,7 +268,9 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="SkinTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
+      <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
+	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
     </Criteria>
   </ConditionStabilization>
 </PhysiologyEngineDynamicStabilization>
