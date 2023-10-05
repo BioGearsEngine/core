@@ -1,0 +1,427 @@
+/*
+Copyright 2015 Applied Research Associates, Inc.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the License
+at: http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+*/
+
+syntax = "proto3";
+
+package mil.tatrc.physiology.datamodel;
+
+// Enumeration for Blood ABO antigens
+enum EnumBloodType {
+  ENUM_BLOOD_TYPE_UNSPECIFIED = 0;
+  ENUM_BLOOD_TYPE_A = 1;
+  ENUM_BLOOD_TYPE_B = 2;
+  ENUM_BLOOD_TYPE_AB = 3;
+  ENUM_BLOOD_TYPE_O = 4;
+}
+
+// Enumeration for states the patient can enter and exit out of.
+enum EnumPatientEvent {
+  ENUM_PATIENT_EVENT_UNSPECIFIED = 0;
+  // Moderate impairment of the alveoli, reducing gas exchange within the lungs (CarricoIndex [200, 300] mmHg)
+  ENUM_PATIENT_EVENT_ACUTE_LUNG_INJURY = 1;
+  // Severe impairment of the alveoli, reducing gas exchange within the lungs (Carrico Index [100, 200] mmHg)
+  ENUM_PATIENT_EVENT_ACUTE_RESPIRATORY_DISTRESS = 2;
+  // Low urine flow
+  ENUM_PATIENT_EVENT_ANTIDIURESIS = 3;
+  // Represents no cardiac electrical activity
+  ENUM_PATIENT_EVENT_ASYSTOLE = 4;
+  // The heart rate is slowed to below 60 beats per minute
+  ENUM_PATIENT_EVENT_BRADYCARDIA = 5;
+  // The state at which the respiratory rate has fallen 10 breaths per minute
+  ENUM_PATIENT_EVENT_BRADYPNEA = 6;
+  // A lack of oxygen in the brain. Death will occur ~30min
+  ENUM_PATIENT_EVENT_BRAIN_OXYGEN_DEFICIT = 7;
+  // Sudden, unexpected loss of heart function, breathing, and consciousness
+  ENUM_PATIENT_EVENT_CARDIAC_ARREST = 8;
+  // Inadequate blood circulation due to failure of the heart ventricles (Cardiac Index < 2.2 L/min m2)
+  ENUM_PATIENT_EVENT_CARDIOGENIC_SHOCK = 9;
+  // Loss of blood flow into the left arm and intrathoracic pressure from extremity burn
+  ENUM_PATIENT_EVENT_COMPARTMENT_SYNDROME_LEFT_ARM = 10;
+  // Loss of blood flow into the right arm and intrathoracic pressure from extremity burn
+  ENUM_PATIENT_EVENT_COMPARTMENT_SYNDROME_RIGHT_ARM = 11;
+  // Loss of blood flow into the left leg and intrathoracic pressure from extremity burn
+  ENUM_PATIENT_EVENT_COMPARTMENT_SYNDROME_LEFT_LEG = 12;
+  // Loss of blood flow into the right leg and intrathoracic pressure from extremity burn
+  ENUM_PATIENT_EVENT_COMPARTMENT_SYNDROME_RIGHT_LEG = 13;
+  // Loss of blood flow into the abdominal and intrathoracic pressure from trunk burn
+  ENUM_PATIENT_EVENT_COMPARTMENT_SYNDROME_ABDOMINAL = 14;
+  // A critical lack of oxygen in the brain. Death in under 10min
+  ENUM_PATIENT_EVENT_CRITICAL_BRAIN_OXYGEN_DEFICIT = 15;
+  // A loss of more fluid than is taken in (More than 3% loss of resting fluid mass)
+  ENUM_PATIENT_EVENT_DEHYDRATION = 16;
+  // High urine flow
+  ENUM_PATIENT_EVENT_DIURESIS = 17;
+  // Mild diarrhea
+  ENUM_PATIENT_EVENT_MILD_DIARRHEA = 18;
+  // Severe diarrhea
+  ENUM_PATIENT_EVENT_SEVERE_DIARRHEA = 19;
+  // Brief spontaneous contractions of muscle fibers
+  ENUM_PATIENT_EVENT_FASCICULATION = 20;
+  // The body is using energy above the Basal Metabolic Rate
+  ENUM_PATIENT_EVENT_FATIGUE = 21;
+  // RBCACE > 90% complete paralysis
+  ENUM_PATIENT_EVENT_FLACCID_PARALYSIS = 22;
+  // Uncontrolled bladder release due to a full bladder
+  ENUM_PATIENT_EVENT_FUNCTIONAL_INCONTINENCE = 23;
+  // Mild headache
+  ENUM_PATIENT_EVENT_MILD_HEADACHE = 24;
+  // Severe headache
+  ENUM_PATIENT_EVENT_SEVERE_HEADACHE = 25;
+  // Incompatible transfusion reaction
+  ENUM_PATIENT_EVENT_HEMOLYTIC_TRANSFUSION_REACTION = 26;
+  // State at which the arterial carbon dioxide partial pressure has exceeded 60 mmHg
+  ENUM_PATIENT_EVENT_HYPERCAPNIA = 27;
+  // An excess of glucose in the bloodstream (> 200 mg/dL)
+  ENUM_PATIENT_EVENT_HYPERGLYCEMIA = 28;
+  // A loss of more fluid than is taken in (More than 3% loss of resting fluid mass)
+  ENUM_PATIENT_EVENT_MILD_DIAPHORESIS = 29;
+  // A loss of more fluid than is taken in (More than 3% loss of resting fluid mass)
+  ENUM_PATIENT_EVENT_MODERATE_DIAPHORESIS = 30;
+  // A loss of more fluid than is taken in (More than 3% loss of resting fluid mass)
+  ENUM_PATIENT_EVENT_SEVERE_DIAPHORESIS = 31;
+  // An excess of potassium in the bloodstream (>5.5 mM)
+  ENUM_PATIENT_EVENT_MILD_HYPERKALEMIA = 32;
+  // An excess of potassium in the bloodstream (>6.2 mM)
+  ENUM_PATIENT_EVENT_SEVERE_HYPERKALEMIA = 33;
+  // An excess of sodium in the bloodstream (>148 mM)
+  ENUM_PATIENT_EVENT_MILD_HYPERNATREMIA = 34;
+  // An excess of sodium in the bloodstream (>160 mM)
+  ENUM_PATIENT_EVENT_SEVERE_HYPERNATREMIA = 35;
+  // The condition of having a body temperature greatly above normal (> 38° C)
+  ENUM_PATIENT_EVENT_HYPERTHERMIA = 36;
+  // Low glucose in the bloodstream (< 70 mg/dL)
+  ENUM_PATIENT_EVENT_HYPOGLYCEMIA = 37;
+  // Very low glucose in the bloodstream (< 50 mg/dL)
+  ENUM_PATIENT_EVENT_HYPOGLYCEMIC_SHOCK = 38;
+  // Dangerously low glucose in the bloodstream (< 20 mg/dL)
+  ENUM_PATIENT_EVENT_HYPOGLYCEMIC_COMA = 39;
+  // The condition of having a body temperature greatly below normal (< 35° C)
+  ENUM_PATIENT_EVENT_HYPOTHERMIA = 40;
+  // An deficit of potassium in the bloodstream (<3.2 mM)
+  ENUM_PATIENT_EVENT_MILD_HYPOKALEMIA = 41;
+  // An deficit of potassium in the bloodstream (<2.5 mM)
+  ENUM_PATIENT_EVENT_SEVERE_HYPOKALEMIA = 42;
+  // An deficit of sodium in the bloodstream (<136 mM)
+  ENUM_PATIENT_EVENT_MILD_HYPONATREMIA = 43;
+  // An deficit of sodium in the bloodstream (<120 mM)
+  ENUM_PATIENT_EVENT_SEVERE_HYPONATREMIA = 44;
+  // State at which the arterial oxygen partial pressure has fallen below 65 mmHg
+  ENUM_PATIENT_EVENT_HYPOXIA = 45;
+  // The blood volume has dropped below 65% of its normal value
+  ENUM_PATIENT_EVENT_HYPOVOLEMIC_SHOCK = 46;
+  // Intracranial pressure is greater than 25 mmHg
+  ENUM_PATIENT_EVENT_INTRACRANIAL_HYPERTENSION = 47;
+  // Intracranial pressure is lower than 7 mmHg
+  ENUM_PATIENT_EVENT_INTRACRANIAL_HYPOTENSION = 48;
+  // An unrecoverable patient state. The engine will cease calculating when this event occurs
+  ENUM_PATIENT_EVENT_IRREVERSIBLE_STATE = 49;
+  // A form of metabolic acidosis where the anion gap is driven by the rise in ketones
+  ENUM_PATIENT_EVENT_KETOACIDOSIS = 50;
+  // A form of metabolic acidosis where the blood lactate concentration rises
+  ENUM_PATIENT_EVENT_LACTIC_ACIDOSIS = 51;
+  // The glycogen stored in the liver has been used up
+  ENUM_PATIENT_EVENT_LIVER_GLYCOGEN_DEPLETED = 52;
+  // The maximum pulmonary ventilation rate has been reached
+  ENUM_PATIENT_EVENT_MAXIMUM_PULMONARY_VENTILATION_RATE = 53;
+  // A condition where the body is producing excess acids (pH < 7.35)
+  ENUM_PATIENT_EVENT_METABOLIC_ACIDOSIS = 54;
+  // A condition where the body is producing excess bases (pH > 7.45)
+  ENUM_PATIENT_EVENT_METABOLIC_ALKALOSIS = 55;
+  // Weakness due to exposure to CBRNE, mild ~ 40% RBCACE
+  ENUM_PATIENT_EVENT_MILD_WEAKNESS = 56;
+  // Weakness due to exposure to CBRNE, mild ~ 75% RBCACE
+  ENUM_PATIENT_EVENT_MODERATE_WEAKNESS = 57;
+  // Weakness due to exposure to CBRNE, mild ~ 40% RBCACE
+  ENUM_PATIENT_EVENT_MILD_SECRETIONS = 58;
+  // Weakness due to exposure to CBRNE, mild ~ 40% RBCACE
+  ENUM_PATIENT_EVENT_MODERATE_SECRETIONS = 59;
+  // The temporary protein stores have been used, and the patient is now consuming their muscle tissue for protein
+  ENUM_PATIENT_EVENT_MUSCLE_CATABOLISM = 60;
+  // The glycogen stored in the muscle tissue has been used up
+  ENUM_PATIENT_EVENT_MUSCLE_GLYCOGEN_DEPLETED = 61;
+  // The myocardium oxygen level has decreased below 5 mmHg
+  ENUM_PATIENT_EVENT_MYOCARDIUM_OXYGEN_DEFICIT = 62;
+  // Sodium excretion above normal levels
+  ENUM_PATIENT_EVENT_NATRIURESIS = 63;
+  // Patient is nauseated
+  ENUM_PATIENT_EVENT_NAUSEA = 64;
+  // The stomach is empty
+  ENUM_PATIENT_EVENT_NUTRITION_DEPLETED = 65;
+  // The state at which the heart has stopped beating
+  ENUM_PATIENT_EVENT_PULSELESS_RHYTHM = 66;
+  // Low blood flow to the kidneys
+  ENUM_PATIENT_EVENT_RENAL_HYPOPERFUSION = 67;
+  // An increase of CO2 concentration in the bloodstream and a decrease in blood pH
+  ENUM_PATIENT_EVENT_RESPIRATORY_ACIDOSIS = 68;
+  // An decrease of CO2 concentration in the bloodstream and a increase in blood pH
+  ENUM_PATIENT_EVENT_RESPIRATORY_ALKALOSIS = 69;
+  // Severe impairment of the alveoli, reducing gas exchange within the lungs (Carrico Index < 100 mmHg)
+  ENUM_PATIENT_EVENT_SEVERE_ACUTE_RESPIRATORY_DISTRESS = 70;
+  // Weakness due to exposure to CBRNE, mild ~ 40% RBCACE
+  ENUM_PATIENT_EVENT_SEVERE_SECRETIONS = 71;
+  // Patient seizures. (RBCACE > 40% bound)
+  ENUM_PATIENT_EVENT_SEIZURES = 72;
+  // The Patient is starting a new heart beat
+  ENUM_PATIENT_EVENT_START_OF_CARDIAC_CYCLE = 73;
+  // Patient is starting to exhale
+  ENUM_PATIENT_EVENT_START_OF_EXHALE = 74;
+  // Patient is starting to inhale
+  ENUM_PATIENT_EVENT_START_OF_INHALE = 75;
+  // Sepsis accompanied by systolic pressure < 90 and urine output < 0.5 mL/kg/hr
+  ENUM_PATIENT_EVENT_SEVERE_SEPSIS = 76;
+  // The heart rate is elevated above 100 beats per minute
+  ENUM_PATIENT_EVENT_TACHYCARDIA = 77;
+  // A breathing rate above 20 breaths per minute
+  ENUM_PATIENT_EVENT_TACHYPNEA = 78;
+  // A breathing rate above 20 breaths per minute
+  ENUM_PATIENT_EVENT_VOMITING = 79;
+  ENUM_PATIENT_EVENT_TOTAL_PATIENT_EVENTS = 80;
+}
+
+// Enumeration for patient sex
+enum EnumSex {
+  ENUM_SEX_UNSPECIFIED = 0;
+  ENUM_SEX_MALE = 1;
+  ENUM_SEX_FEMALE = 2;
+}
+
+message ActivePatientEventData {
+  EnumPatientEvent event = 1;
+  ScalarTimeData duration = 2;
+}
+
+// Parameters for defining a Bernoulli distribution of [0,1] with p(0) = weight
+message BernoulliDistributionData {
+  double weight = 1;
+  string group = 2;
+}
+
+// Parameters for defining a discrete distribution for enum selection. Each
+// weight will be used as a probability for numbers [0..N) based on W_i/sum(W)
+message DiscreteDistributionRangeData {
+  repeated int32 weight = 1;
+  string group = 2;
+}
+
+// Parameters for defining a normal distribution for the range of a population template
+//     mean = The population mean
+//     deviation = The standard deviation from the mean
+//     unit = What unit will the generate range be recorded in
+//     group = Decides what heterogametic sex group the range will apply to.
+//             All groups default to using the "" or "Male" group unless another one exists
+message NormalDistributionRangeData {
+  double mean = 1;
+  double deviation = 2;
+  string unit = 3;
+  string group = 4;
+}
+
+// Data used to configure the patient.
+message PatientData {
+  // Patient Annotation for the purpose of patient data. Intended for use mostly in patient files
+  string annotation = 1;
+  // Patient identifier
+  string name = 2;
+  // Patient sex
+  EnumSex sex = 3;
+  // Patient age
+  ScalarTimeData age = 4;
+  // Patient weight
+  ScalarMassData weight = 5;
+  // Patient height
+  ScalarLengthData height = 6;
+  // The mass of the body divided by the volume of the body
+  ScalarMassPerVolumeData body_density = 7;
+  // Total mass of fat divided by total body mass; body fat includes essential body fat and storage body fat
+  ScalarFractionData body_fat_fraction = 8;
+  // Component of body composition after subtracting body fat weight
+  ScalarMassData lean_body_mass = 9;
+  // The maximal work rate
+  ScalarPowerData max_work_rate = 10;
+  // The mass of muscle only
+  ScalarMassData muscle_mass = 11;
+  // ABO antigen blood type
+  EnumBloodType blood_type_abo = 12;
+  // Whether blood type is positive or negative for Rh factor. Initializes to 0 or 1
+  bool blood_type_rh = 13;
+  // The surface area of the alveoli for gas diffusion
+  ScalarAreaData alveoli_surface_area = 14;
+  // The patients’ susceptibility to sweating with negative indicating lack of sweat and positive showing excess
+  ScalarData hyperhidrosis = 15;
+  // The ratio of total lung surface area that is associated with the right lung
+  ScalarFractionData right_lung_ratio = 16;
+  // The surface area of the skin
+  ScalarAreaData skin_surface_area = 17;
+  // How much sleep has the patient gotten over the past night
+  ScalarTimeData sleep_amount = 18;
+  // The patient's qualitative pain susceptibility
+  ScalarData pain_susceptibility = 19;
+  // The life-sustaining metabolic rate
+  ScalarPowerData basal_metabolic_rate = 20;
+  // The total volume of fluid within the cardiovascular system
+  ScalarVolumeData blood_volume_baseline = 21;
+  // The starting minimum pressure in the aorta over the course of a cardiac cycle
+  ScalarPressureData diastolic_arterial_pressure_baseline = 22;
+  // The resting heart rate
+  ScalarFrequencyData heart_rate_baseline = 23;
+  // The resting mean arterial pressure
+  ScalarPressureData mean_arterial_pressure_baseline = 24;
+  // The resting respiration rate
+  ScalarFrequencyData respiration_rate_baseline = 25;
+  // The starting maximum pressure in the aorta over the course of a cardiac cycle
+  ScalarPressureData systolic_arterial_pressure_baseline = 26;
+  // The starting volume of air moved into or out of the lungs during normal respiration
+  ScalarVolumeData tidal_volume_baseline = 27;
+  // The maximum heart rate the patient can withstand
+  ScalarFrequencyData heart_rate_maximum = 28;
+  // The minimum heart rate the patient can withstand
+  ScalarFrequencyData heart_rate_minimum = 29;
+  // The maximum amount of air that can be exhaled from the end-expiratory position
+  ScalarVolumeData expiratory_reserve_volume = 30;
+  // The volume of air remaining in the lungs after a passive expiration
+  ScalarVolumeData functional_residual_capacity = 31;
+  // The sum of IRV and TV
+  ScalarVolumeData inspiratory_capacity = 32;
+  // The maximal volume that can be inhaled from the end-inspiratory level
+  ScalarVolumeData inspiratory_reserve_volume = 33;
+  // The volume of air remaining in the lungs after a maximal exhalation
+  ScalarVolumeData residual_volume = 34;
+  // The peak amplitude of the respiratory driver
+  ScalarPressureData respiratory_driver_amplitude_baseline = 35;
+  // The volume of air in the lungs at maximal inflation
+  ScalarVolumeData total_lung_capacity = 36;
+  // The patient's normal target ventilation in the absence of disruptions to arterial oxygen and carbon dioxide partial pressures
+  ScalarVolumePerTimeData total_ventilation_baseline = 37;
+  // The maximum amount of air a person can expel from their lungs after a maximum inhalation
+  ScalarVolumeData vital_capacity = 38;
+  // Active Patient Events and their duration
+  ActivePatientEventData active_event = 39;
+}
+
+// Patient template data is a way of defining the range of input parameters for a group of patients. It is primarily
+// used for development. All entries can occur twice except heterogametic sex distribution. For now, heterogametic
+// sex distribution is a binomial distribution [0,1] where you give the probability: 0 = male and 1 = female. Future
+// support for other group classifications may be introduced, but at this time using the group field of any distribution
+// allows you to mark population distribution differences between heterogametic male and heterogametic female members of
+// the population. Additional variability may be introduced in the future, but for now, multiple PopulationData pools
+// are used.
+//
+// Each field in this data type represents the possible population distribution for a line item in PatientData. Some
+// fields are missing as they are not intended as input for a patient but are instead generated by stabilization.
+message PopulationData {
+  double heterogametic_sex_distribution = 1;
+  repeated NormalDistributionRangeData age_distribution = 2;
+  repeated NormalDistributionRangeData weight_distribution = 3;
+  repeated NormalDistributionRangeData height_distribution = 4;
+  // BodyDensity CANNOT be set by the user. It is determined using body fat fraction
+  repeated NormalDistributionRangeData body_fat_fraction_distribution = 5;
+  // LeanBodyMass CANNOT be set by the user. It is determined using weight and body fat fraction
+  repeated NormalDistributionRangeData max_work_rate_distribution = 6;
+  // MuscleMass CANNOT be set by the user
+  repeated DiscreteDistributionRangeData blood_type_a_b_o_distribution = 7;
+  repeated BernoulliDistributionData blood_type_rh_distribution = 8;
+  repeated NormalDistributionRangeData alveoli_surface_area_distribution = 9;
+  repeated NormalDistributionRangeData hyperhidrosis_distribution = 10;
+  repeated NormalDistributionRangeData right_lung_ratio_distribution = 11;
+  repeated NormalDistributionRangeData skin_surface_area_distribution = 12;
+  repeated NormalDistributionRangeData sleep_amount_distribution = 13;
+  repeated NormalDistributionRangeData pain_susceptibility_distribution = 14;
+  repeated NormalDistributionRangeData basal_metabolic_rate_distribution = 15;
+  repeated NormalDistributionRangeData blood_volume_baseline_distribution = 16;
+  repeated NormalDistributionRangeData diastolic_arterial_pressure_baseline_distribution = 17;
+  repeated NormalDistributionRangeData heart_rate_baseline_distribution = 18;
+  // MeanArterialPressureBaseline CANNOT be set by the user
+  repeated NormalDistributionRangeData respiration_rate_baseline_distribution = 19;
+  repeated NormalDistributionRangeData systolic_arterial_pressure_baseline_distribution = 20;
+  // TidalVolumeBaseline CANNOT be set by the user
+  repeated NormalDistributionRangeData heart_rate_maximum_distribution = 21;
+  repeated NormalDistributionRangeData heart_rate_minimum_distribution = 22;
+  // ExpiratoryReserveVolume CANNOT be set by the user
+  repeated NormalDistributionRangeData functional_residual_capacity_distribution = 23;
+  // InspiratoryCapacity CANNOT be set by the user
+  // InspiratoryReserveVolume CANNOT be set by the user
+  repeated NormalDistributionRangeData residual_volume_distribution = 24;
+  repeated NormalDistributionRangeData total_lung_capacity_distribution = 25;
+  // VitalCapacity CANNOT be set by the user
+}
+
+// A scalar for holding area quantities (ex. m^2)
+message ScalarAreaData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A unitless scalar
+message ScalarData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A unitless scalar greater or equal to -1 and less than or equal to 1
+message ScalarFractionData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding frequency quantities (ex. 1/s)
+message ScalarFrequencyData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding length quantities (ex. ft)
+message ScalarLengthData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding mass quantities (ex. g)
+message ScalarMassData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding mass per volume quantities (ex. ug/mL)
+message ScalarMassPerVolumeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding power quantities (ex. W)
+message ScalarPowerData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding pressure quantities (ex. mmHg)
+message ScalarPressureData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding time quantities (ex. s)
+message ScalarTimeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding volume quantities (ex. mL)
+message ScalarVolumeData {
+  double value = 1;
+  string unit = 2;
+}
+
+// A scalar for holding volume per time quantities (ex. mL/s)
+message ScalarVolumePerTimeData {
+  double value = 1;
+  string unit = 2;
+}
