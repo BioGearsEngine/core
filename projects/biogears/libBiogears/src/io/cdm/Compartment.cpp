@@ -34,23 +34,23 @@ namespace io {
   {
     out.Clear();
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SECompartment& in, CDM::CompartmentData& out)
   {
     out.Name(in.m_Name);
   }
   //----------------------------------------------------------------------------------
+  
   //class SECompartmentLink
   void Compartment::Marshall(const CDM::CompartmentLinkData& in, SECompartmentLink& out)
   {
     out.Clear();
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SECompartmentLink& in, CDM::CompartmentLinkData& out)
   {
     out.Name(in.m_Name);
   }
   //----------------------------------------------------------------------------------
+  
   //class SEFluidCompartment
   template <FLUID_COMPARTMENT_TEMPLATE>
   void Compartment::Marshall(const CDM::FluidCompartmentData& in, SEFluidCompartment<FLUID_COMPARTMENT_TYPES>& out, SECircuitManager* circuits)
@@ -78,7 +78,6 @@ namespace io {
       }
     }
   }
-  //----------------------------------------------------------------------------------
   template <FLUID_COMPARTMENT_TEMPLATE>
   void Compartment::UnMarshall(const SEFluidCompartment<FLUID_COMPARTMENT_TYPES>& in, CDM::FluidCompartmentData& out)
   {
@@ -105,8 +104,8 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
+  
   //class SEFluidCompartmentLink
-
   template <FLUID_COMPARTMENT_LINK_TEMPLATE>
   void Compartment::Marshall(const CDM::FluidCompartmentLinkData& in, SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>& out, SECircuitManager* circuits)
   {
@@ -125,7 +124,6 @@ namespace io {
         io::Property::Marshall(in.Flow(), out.GetFlow());
     }
   }
-  //----------------------------------------------------------------------------------
   template <FLUID_COMPARTMENT_LINK_TEMPLATE>
   void Compartment::UnMarshall(const SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>& in, CDM::FluidCompartmentLinkData& out)
   {
@@ -139,6 +137,7 @@ namespace io {
       io::Property::UnMarshall(const_cast<SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>&>(in).GetFlow(), out.Flow());
   }
   //----------------------------------------------------------------------------------
+  
   //class SEGasCompartment
   void Compartment::Marshall(const CDM::GasCompartmentData& in, SEGasCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits)
   {
@@ -154,7 +153,6 @@ namespace io {
       }
     }
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SEGasCompartment& in, CDM::GasCompartmentData& out)
   {
     UnMarshall<>(static_cast<const SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity>&>(in), static_cast<CDM::FluidCompartmentData&>(out));
@@ -165,17 +163,18 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
+  
   //class SEGasCompartmentLink
   void Compartment::Marshall(const CDM::GasCompartmentLinkData& in, SEGasCompartmentLink& out)
   {
     Marshall(static_cast<const CDM::CompartmentLinkData&>(in), static_cast<SECompartmentLink&>(out));
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SEGasCompartmentLink& in, CDM::GasCompartmentLinkData& out)
   {
     UnMarshall(static_cast<const SECompartmentLink&>(in), static_cast<CDM::GasCompartmentLinkData&>(out));
   }
   //----------------------------------------------------------------------------------
+  
   //class SEGasCompartmentGraph
   void Compartment::Marshall(const CDM::GasCompartmentGraphData& in, SEGasCompartmentGraph& out, SECompartmentManager& cmptMgr)
   {
@@ -195,7 +194,6 @@ namespace io {
       out.AddLink(*link);
     }
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SEGasCompartmentGraph& in, CDM::GasCompartmentGraphData& out)
   {
     out.Name(in.m_Name);
@@ -226,7 +224,6 @@ namespace io {
       }
     }
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SELiquidCompartment& in, CDM::LiquidCompartmentData& out)
   {
     UnMarshall(static_cast<const SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity>&>(in), static_cast<CDM::FluidCompartmentData&>(out));
@@ -243,17 +240,18 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
+  
   //class SELiquidCompartmentLink
   void Compartment::Marshall(const CDM::LiquidCompartmentLinkData& in, SELiquidCompartmentLink& out)
   {
     Marshall(static_cast<const CDM::FluidCompartmentLinkData&>(in), static_cast<SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment>&>(out));
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SELiquidCompartmentLink& in, CDM::LiquidCompartmentLinkData& out)
   {
     UnMarshall(static_cast<const SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment>&>(in), static_cast<CDM::FluidCompartmentLinkData&>(out));
   }
   //----------------------------------------------------------------------------------
+  
   //class SELiquidCompartmentGraph
   void Compartment::Marshall(const CDM::LiquidCompartmentGraphData& in, SELiquidCompartmentGraph& out, SECompartmentManager& cmptMgr)
   {
@@ -273,7 +271,6 @@ namespace io {
       out.AddLink(*link);
     }
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SELiquidCompartmentGraph& in, CDM::LiquidCompartmentGraphData& out)
   {
     out.Name(in.m_Name);
@@ -283,6 +280,7 @@ namespace io {
       out.Link().push_back(link->GetName());
   }
   //----------------------------------------------------------------------------------
+  
   //class SETissueCompartment
   void Compartment::Marshall(const CDM::TissueCompartmentData& in, SETissueCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits)
   {
@@ -299,7 +297,6 @@ namespace io {
     io::Property::Marshall(in.TissueToPlasmaLipoproteinRatio(), out.GetTissueToPlasmaLipoproteinRatio());
     io::Property::Marshall(in.TotalMass(), out.GetTotalMass());
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SETissueCompartment& in, CDM::TissueCompartmentData& out)
   {
 
@@ -328,6 +325,7 @@ namespace io {
       io::Property::UnMarshall(*in.m_TotalMass, out.TotalMass());
   }
   //----------------------------------------------------------------------------------
+  
   //class SEThermalCompartment
   void Compartment::Marshall(const CDM::ThermalCompartmentData& in, SEThermalCompartment& out, SECircuitManager* circuits)
   {
@@ -351,7 +349,6 @@ namespace io {
       io::Property::Marshall(in.Temperature(), out.GetTemperature());
     }
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(SEThermalCompartment& in, CDM::ThermalCompartmentData& out)
   {
     UnMarshall(static_cast<const SECompartment&>(in), static_cast<CDM::CompartmentData&>(out));
@@ -370,6 +367,7 @@ namespace io {
       io::Property::UnMarshall(in.GetTemperature(), out.Temperature());
   }
   //----------------------------------------------------------------------------------
+  
   //class SEThermalCompartmentLink
   void Compartment::Marshall(const CDM::ThermalCompartmentLinkData& in, SEThermalCompartmentLink& out, SECircuitManager* circuits)
   {
@@ -390,7 +388,6 @@ namespace io {
       }
     }
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SEThermalCompartmentLink& in, CDM::ThermalCompartmentLinkData& out)
   {
     UnMarshall(static_cast<const SECompartmentLink&>(in), static_cast<CDM::CompartmentLinkData&>(out));
@@ -479,7 +476,6 @@ namespace io {
 
     out.StateChange();
   }
-  //----------------------------------------------------------------------------------
   void Compartment::UnMarshall(const SECompartmentManager& in, CDM::CompartmentManagerData& out)
   {
     for (SELiquidCompartment* cmpt : in.m_LiquidCompartments) {

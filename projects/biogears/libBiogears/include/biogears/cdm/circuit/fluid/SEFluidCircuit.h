@@ -51,6 +51,9 @@ public:
 
   void AddCircuit(SEFluidCircuit& circuit);
 
+  using SECircuit::operator==;
+  using SECircuit::operator!=;
+
 protected:
   SECircuitManager& m_Mgr;
 };

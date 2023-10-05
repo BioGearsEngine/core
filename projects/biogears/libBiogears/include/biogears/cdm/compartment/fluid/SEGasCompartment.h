@@ -44,8 +44,8 @@ public:
 
   bool operator==(SEGasCompartment const&) const;
   bool operator!=(SEGasCompartment const&) const;
-  bool operator==(SEFluidCompartment const&) const override;
-  bool operator!=(SEFluidCompartment const&) const override;
+  bool operator==(SESubstanceTransportVertex const&) const override;
+  bool operator!=(SESubstanceTransportVertex const&) const override;
 
 protected:
   virtual void Unload(CDM::GasCompartmentData& data);

@@ -52,8 +52,8 @@ public:
 
   bool operator==(SELiquidCompartment const&) const;
   bool operator!=(SELiquidCompartment const&) const;
-  bool operator==(SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity> const&) const override;
-  bool operator!=(SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity> const&) const override;
+  bool operator==(SESubstanceTransportVertex const&) const override;
+  bool operator!=(SESubstanceTransportVertex const&) const override;
 
 protected:
   virtual void Unload(CDM::LiquidCompartmentData& data);

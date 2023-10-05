@@ -69,6 +69,9 @@ public:
   virtual std::string GetName() const = 0;
   virtual const char* GetName_cStr() const = 0;
 
+  virtual bool operator==(SESubstanceTransportVertex const& rhs) const = 0;
+  virtual bool operator!=(SESubstanceTransportVertex const& rhs) const = 0;
+
 protected:
   virtual bool HasQuantity() const = 0;
   virtual QuantityScalar& GetQuantity() = 0;
@@ -127,6 +130,9 @@ public:
 
   virtual std::string GetName() const = 0;
   virtual const char* GetName_cStr() const = 0;
+
+  virtual bool operator==(SESubstanceTransportEdge const&) const = 0;
+  virtual bool operator!=(SESubstanceTransportEdge const&) const = 0;
 
 protected:
   virtual bool HasFlux() const = 0;

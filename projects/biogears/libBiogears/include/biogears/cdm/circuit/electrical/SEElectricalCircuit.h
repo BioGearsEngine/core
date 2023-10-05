@@ -42,6 +42,9 @@ public:
   SEElectricalCircuitPath& CreatePath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const char* name);
   void AddCircuit(SEElectricalCircuit& circuit);
 
+  using SECircuit::operator==;
+  using SECircuit::operator!=;
+
 protected:
   SECircuitManager& m_Mgr;
 };

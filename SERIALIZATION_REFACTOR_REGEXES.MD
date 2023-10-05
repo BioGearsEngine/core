@@ -13,7 +13,7 @@ source.Get$1().SetValue( 1.0);
 && ((m_$1&& rhs.m_$1) ? m_$1->operator==(*rhs.m_$1) : m_$1 == rhs.m_$1)
 
 
-# Iterator Equivilance Check
+# Vector Equivilance Check
   equivilant &= m_Children.size() == rhs.m_Children.size();
   if (equivilant) {
     for (auto i = 0; equivilant && i < m_Children.size(); ++i) {
@@ -22,6 +22,15 @@ source.Get$1().SetValue( 1.0);
         : m_Children[i] == rhs.m_Children[i];
     }
   }
+  # Map Equivilance Check
+  equivilant &= m_Leads.size() == rhs.m_Leads.size();
+    if (equivilant) {
+      for (auto itr = m_Leads.begin(); equivilant && itr != m_Leads.end(); ++itr) {
+        equivilant &= (itr->second && rhs.m_Leads.at(itr->first))
+          ? itr->second->operator==(*rhs.m_Leads.at(itr->first))
+          : itr->second == rhs.m_Leads.at(itr->first);
+      }
+    }
 # Override operator==
 
     auto ptr = dynamic_cast<decltype(this)>(&rhs);

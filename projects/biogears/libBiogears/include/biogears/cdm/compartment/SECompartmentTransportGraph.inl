@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::SECompartmentTransportGraph(const char* name, Logger* logger)
-  : SECompartmentTransportGraph(std::string{ name }, logger)
+  : SECompartmentTransportGraph(std::string { name }, logger)
 {
 }
 //-------------------------------------------------------------------------------
@@ -136,4 +136,71 @@ const std::vector<GraphEdgeType*>* SECompartmentTransportGraph<COMPARTMENT_TRANS
   return itr->second;
 }
 //-------------------------------------------------------------------------------
+template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
+bool SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::operator==(SECompartmentTransportGraph const& rhs) const
+{
+
+  bool equivilant = m_Verticies.size() == rhs.m_Verticies.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < m_Verticies.size(); ++i) {
+      equivilant &= (m_Verticies[i] && rhs.m_Verticies[i])
+        ? m_Verticies[i]->operator==(*rhs.m_Verticies[i])
+        : m_Verticies[i] == rhs.m_Verticies[i];
+    }
+  }
+
+  equivilant &= m_VertexIndicies.size() == rhs.m_VertexIndicies.size();
+  if (equivilant) {
+    for (auto itr = m_VertexIndicies.begin(); equivilant && itr != m_VertexIndicies.end(); ++itr) {
+      equivilant &= (itr->second && rhs.m_VertexIndicies.at(itr->first))
+        ? itr->second == rhs.m_VertexIndicies.at(itr->first)
+        : itr->second == rhs.m_VertexIndicies.at(itr->first);
+    }
+  }
+
+  equivilant &= m_SourceEdgeMap.size() == rhs.m_SourceEdgeMap.size();
+  if (equivilant) {
+    for (auto itr = m_SourceEdgeMap.begin(); equivilant && itr != m_SourceEdgeMap.end(); ++itr) {
+      auto rhs_itr = rhs.m_SourceEdgeMap.at(itr->first);
+      equivilant &= (itr->second->size() && rhs_itr->size());
+      for (auto i = 0; equivilant && i < itr->second->size(); ++i) {
+        equivilant &= (itr->second->operator[](i) && rhs_itr->operator[](i))
+          ? itr->second->operator[](i)->operator==(*rhs_itr->operator[](i))
+          : itr->second->operator[](i) == rhs_itr->operator[](i);
+      }
+    }
+  }
+
+  equivilant &= m_TargetEdgeMap.size() == rhs.m_TargetEdgeMap.size();
+  if (equivilant) {
+    for (auto itr = m_TargetEdgeMap.begin(); equivilant && itr != m_TargetEdgeMap.end(); ++itr) {
+      auto rhs_itr = rhs.m_TargetEdgeMap.at(itr->first);
+      equivilant &= (itr->second->size() && rhs_itr->size());
+      for (auto i = 0; equivilant && i < itr->second->size(); ++i) {
+        equivilant &= (itr->second->operator[](i) && rhs_itr->operator[](i))
+          ? itr->second->operator[](i)->operator==(*rhs_itr->operator[](i))
+          : itr->second->operator[](i) == rhs_itr->operator[](i);
+      }
+    }
+  }
+  return equivilant;
+}
+
+template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
+bool SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::operator!=(SECompartmentTransportGraph const& rhs) const
+{
+  return !(this->operator==(rhs));
+}
+//-------------------------------------------------------------------------------
+template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
+bool SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::operator==(GraphEdgeType const& rhs) const
+{
+  auto ptr = dynamic_cast<decltype(this)>(&rhs);
+  return (ptr) ? this->operator==(*ptr) : false;
+}
+template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
+bool SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::operator!=(GraphEdgeType const& rhs) const
+{
+  return !(this->operator==(rhs));
+}
 }

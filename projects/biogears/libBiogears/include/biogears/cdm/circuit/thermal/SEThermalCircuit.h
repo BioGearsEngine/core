@@ -47,7 +47,9 @@ public:
   SEThermalCircuitPath& CreatePath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const std::string& name);
 
   void AddCircuit(SEThermalCircuit& circuit);
-
+  
+  using SECircuit::operator==;
+  using SECircuit::operator!=;
 protected:
   SECircuitManager& m_Mgr;
 };

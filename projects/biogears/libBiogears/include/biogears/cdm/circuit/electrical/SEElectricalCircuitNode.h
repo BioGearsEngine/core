@@ -37,6 +37,9 @@ public:
   virtual bool Load(const CDM::ElectricalCircuitNodeData& in);
   virtual CDM::ElectricalCircuitNodeData* Unload() const;
 
+  using SECircuitNode::operator==;
+  using SECircuitNode::operator!=;
+
 protected:
   virtual void Unload(CDM::ElectricalCircuitNodeData& data) const;
 

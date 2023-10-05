@@ -657,7 +657,9 @@ PotentialScalar& SECircuitPath<CIRCUIT_PATH_TYPES>::GetValveBreakdownPotential()
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
-bool SECircuitPath<CIRCUIT_PATH_TYPES>::operator==(SECircuitPath& rhs) const
+
+bool SECircuitPath<CIRCUIT_PATH_TYPES>::operator==(SECircuitPath const& rhs) const
+
 {
   return m_Name == rhs.m_Name
     && m_SourceNode == rhs.m_SourceNode
@@ -665,6 +667,9 @@ bool SECircuitPath<CIRCUIT_PATH_TYPES>::operator==(SECircuitPath& rhs) const
     && m_NumElements == rhs.m_NumElements
     && m_NumNextElements == rhs.m_NumNextElements
 
+
+    // Valves and Switches //
+    /////////////////////////
     && m_Switch == rhs.m_Switch
     && m_NextSwitch == rhs.m_NextSwitch
     && m_Valve == rhs.m_Valve
@@ -697,9 +702,9 @@ bool SECircuitPath<CIRCUIT_PATH_TYPES>::operator==(SECircuitPath& rhs) const
 }
 
 template <CIRCUIT_PATH_TEMPLATE>
-bool SECircuitPath<CIRCUIT_PATH_TYPES>::operator!=(SECircuitPath& rhs) const
+bool SECircuitPath<CIRCUIT_PATH_TYPES>::operator!=(SECircuitPath const& rhs) const
 {
   return !(*this == rhs);
 }
-//-------------------------------------------------------------------------------
+
 }

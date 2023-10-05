@@ -23,16 +23,18 @@ namespace biogears {
 
 template <COMPARTMENT_GRAPH_TEMPLATE>
 class SECompartmentGraph : public Loggable {
-protected:
+
+public:
   SECompartmentGraph(const std::string& name, Logger* logger);
   SECompartmentGraph(const char* name, Logger* logger);
 
-public:
   virtual ~SECompartmentGraph();
 
   virtual void Clear();
+  
+  bool operator==(SECompartmentGraph const&) const;
+  bool operator!=(SECompartmentGraph const&) const;
 
-public:
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;
 

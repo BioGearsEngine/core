@@ -138,34 +138,32 @@ double SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::GetFlow(const Volum
 }
 //-------------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
-bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator==(const SEFluidCompartmentLink& rhs) const
+bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator==(SEFluidCompartmentLink const& rhs) const
 {
-  bool equivilant = ((m_Flow && rhs.m_Flow) ? m_Flow->operator==(*rhs.m_Flow) : m_Flow == rhs.m_Flow)
-    && m_SourceCmpt == rhs.m_SourceCmpt
-    && m_TargetCmpt == rhs.m_TargetCmpt
-    && m_SourceVertex == rhs.m_SourceVertex
-    && m_TargetVertex == rhs.m_TargetVertex
+  return SECompartmentLink::operator==(rhs)
+    && ((m_Flow && rhs.m_Flow) ? m_Flow->operator==(*rhs.m_Flow) : m_Flow == rhs.m_Flow)
+    && m_SourceCmpt.operator==(rhs.m_SourceCmpt)
+    && m_TargetCmpt.operator==(rhs.m_TargetCmpt)
+    && m_SourceVertex.operator==(rhs.m_SourceVertex)
+    && m_TargetVertex.operator==(rhs.m_TargetVertex)
     && ((m_Path && rhs.m_Path) ? m_Path->operator==(*rhs.m_Path) : m_Path == rhs.m_Path);
-
-  return equivilant;
+}
+template <FLUID_COMPARTMENT_LINK_TEMPLATE>
+bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator!=(SEFluidCompartmentLink const& rhs) const
+{
+  return !(this->operator==(rhs));
 }
 //-------------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
-bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator!=(const SEFluidCompartmentLink& rhs) const
+bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator==(EdgeType const& rhs) const
 {
-  return !this->operator==(rhs);
+  auto ptr = dynamic_cast<decltype(this)>(&rhs);
+  return (ptr) ? this->operator==(*ptr) : false;
 }
-//-------------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
-bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator==(const SECompartmentLink& rhs) const
+bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator!=(EdgeType const& rhs) const
 {
-  auto rhs_ptr = dynamic_cast<decltype(this)>(&rhs);
-  return (rhs_ptr) ? this->operator==(*rhs_ptr) : false;
-}
-//-------------------------------------------------------------------------------
-template <FLUID_COMPARTMENT_LINK_TEMPLATE>
-bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::operator!=(const SECompartmentLink& rhs) const
-{
-  return !this->operator==(rhs);
+  auto ptr = dynamic_cast<decltype(this)>(&rhs);
+  return (ptr) ? !this->operator==(*ptr) : true;
 }
 }

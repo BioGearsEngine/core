@@ -54,11 +54,10 @@ class SECircuitPath : public Loggable {
   friend class SECircuit;
   friend io::Circuit;
 
-protected:
+public:
   SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const char* name);
   SECircuitPath(SECircuitNode<PotentialScalar, QuantityScalar>& src, SECircuitNode<PotentialScalar, QuantityScalar>& tgt, const std::string& name);
 
-public:
   virtual ~SECircuitPath();
 
   virtual void Clear();
@@ -66,8 +65,10 @@ public:
   virtual bool Load(const CDM::CircuitPathData& in);
   virtual CDM::CircuitPathData* Unload() const = 0;
 
-  bool operator==(SECircuitPath& rhs) const;
-  bool operator!=(SECircuitPath& rhs) const;
+
+  bool operator==(SECircuitPath const& rhs) const;
+  bool operator!=(SECircuitPath const& rhs) const;
+
 
 protected:
   virtual void Unload(CDM::CircuitPathData& data) const;

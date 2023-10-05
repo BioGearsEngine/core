@@ -33,6 +33,9 @@ public:
   SECompartmentNodes(Logger* logger);
   virtual ~SECompartmentNodes();
 
+  bool operator==(SECompartmentNodes const& rhs) const;
+  bool operator!=(SECompartmentNodes const& rhs) const;
+
   virtual void Clear();
   virtual void StateChange(); //analyze and cache for optimization
 

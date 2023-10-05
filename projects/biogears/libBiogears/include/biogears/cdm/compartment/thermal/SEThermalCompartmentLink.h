@@ -44,8 +44,8 @@ public:
 
   bool operator==(const SEThermalCompartmentLink& rhs) const;
   bool operator!=(const SEThermalCompartmentLink& rhs) const;
-  bool operator==(const SECompartmentLink& rhs) const final;
-  bool operator!=(const SECompartmentLink& rhs) const final;
+  virtual bool operator==(const SECompartmentLink& rhs) const final;
+  virtual bool operator!=(const SECompartmentLink& rhs) const final;
 
 protected:
   virtual void Unload(CDM::ThermalCompartmentLinkData& data);

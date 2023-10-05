@@ -32,6 +32,7 @@ public:
   ~SEGasCompartmentLink();
 
   virtual CDM::GasCompartmentLinkData* Unload() override;
+
 };
 } //namespace bigoears
 

@@ -55,4 +55,14 @@ const char* SECompartmentLink::GetName_cStr() const
 {
   return m_Name.c_str();
 }
+//-------------------------------------------------------------------------------
+bool SECompartmentLink::operator==(SECompartmentLink const& rhs) const
+{
+  return m_Name == rhs.m_Name;
+}
+bool SECompartmentLink::operator!=(SECompartmentLink const& rhs) const
+{
+  return !(this->operator==(rhs));
+}
+
 }

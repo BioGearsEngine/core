@@ -21,13 +21,13 @@ SECompartmentNodes<COMPARTMENT_NODE_TYPES>::SECompartmentNodes(Logger* logger)
   m_Quantity = nullptr;
   m_Potential = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 template <COMPARTMENT_NODE_TEMPLATE>
 SECompartmentNodes<COMPARTMENT_NODE_TYPES>::~SECompartmentNodes()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 template <COMPARTMENT_NODE_TEMPLATE>
 void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::Clear()
 {
@@ -36,7 +36,7 @@ void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::Clear()
   SAFE_DELETE(m_Quantity);
   SAFE_DELETE(m_Potential);
 }
-
+//-------------------------------------------------------------------------------
 template <COMPARTMENT_NODE_TEMPLATE>
 void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::MapNode(NodeType& node)
 {
@@ -50,7 +50,7 @@ void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::RemoveNode(NodeType& node)
   Remove(m_AllNodes, &node);
   StateChange();
 }
-
+//-------------------------------------------------------------------------------
 template <COMPARTMENT_NODE_TEMPLATE>
 QuantityScalar& SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetQuantity()
 {
@@ -77,7 +77,7 @@ double SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetQuantity(const QuantityUni
     d += n->GetNextQuantity().GetValue(unit);
   return d;
 }
-
+//-------------------------------------------------------------------------------
 template <COMPARTMENT_NODE_TEMPLATE>
 bool SECompartmentNodes<COMPARTMENT_NODE_TYPES>::HasPotential() const
 {
@@ -136,7 +136,7 @@ double SECompartmentNodes<COMPARTMENT_NODE_TYPES>::GetPotential(const PotentialU
   }
   return t;
 }
-
+//-------------------------------------------------------------------------------
 template <COMPARTMENT_NODE_TEMPLATE>
 void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::SortNode(NodeType& node)
 {
@@ -154,5 +154,39 @@ void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::StateChange()
   m_QuantityNodes.clear();
   for (NodeType* node : m_AllNodes)
     SortNode(*node);
+}
+//-------------------------------------------------------------------------------
+template <COMPARTMENT_NODE_TEMPLATE>
+bool SECompartmentNodes<COMPARTMENT_NODE_TYPES>::operator==(SECompartmentNodes const& rhs) const
+{
+  bool equivilant = ((m_Quantity && rhs.m_Quantity) ? m_Quantity->operator==(*rhs.m_Quantity) : m_Quantity == rhs.m_Quantity)
+    && ((m_Potential && rhs.m_Potential) ? m_Potential->operator==(*rhs.m_Potential) : m_Potential == rhs.m_Potential);
+
+  // std::vector<NodeType*> m_QuantityNodes;
+  equivilant &= m_QuantityNodes.size() == rhs.m_QuantityNodes.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < m_QuantityNodes.size(); ++i) {
+      equivilant &= (m_QuantityNodes[i] && rhs.m_QuantityNodes[i])
+        ? m_QuantityNodes[i]->operator==(*rhs.m_QuantityNodes[i])
+        : m_QuantityNodes[i] == rhs.m_QuantityNodes[i];
+    }
+  }
+
+  // std::vector<NodeType*> m_AllNodes;
+  equivilant &= m_AllNodes.size() == rhs.m_AllNodes.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < m_AllNodes.size(); ++i) {
+      equivilant &= (m_AllNodes[i] && rhs.m_AllNodes[i])
+        ? m_AllNodes[i]->operator==(*rhs.m_AllNodes[i])
+        : m_AllNodes[i] == rhs.m_AllNodes[i];
+    }
+  }
+
+  return equivilant;
+}
+template <COMPARTMENT_NODE_TEMPLATE>
+bool SECompartmentNodes<COMPARTMENT_NODE_TYPES>::operator!=(SECompartmentNodes const& rhs) const
+{
+  return !this->operator==(rhs);
 }
 }

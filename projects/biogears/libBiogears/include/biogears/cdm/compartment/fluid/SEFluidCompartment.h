@@ -47,11 +47,10 @@ class SEFluidCompartment : public SECompartment, public VertexType {
   template <typename CompartmentType, typename CompartmentLinkType>
   friend class SECompartmentGraph;
 
-protected:
+public:
   SEFluidCompartment(const char* name, Logger* logger);
   SEFluidCompartment(const std::string& name, Logger* logger);
 
-public:
   virtual ~SEFluidCompartment();
 
   void Clear() override;
@@ -59,8 +58,8 @@ public:
   virtual bool Load(const CDM::FluidCompartmentData& in, SECircuitManager* circuits = nullptr);
   CDM::FluidCompartmentData* Unload() override = 0;
 
-  virtual bool operator==(SEFluidCompartment const&) const = 0;
-  virtual bool operator!=(SEFluidCompartment const&) const = 0;
+  virtual bool operator==(SEFluidCompartment const&) const;
+  virtual bool operator!=(SEFluidCompartment const&) const;
 
 protected:
   virtual void Unload(CDM::FluidCompartmentData& data);

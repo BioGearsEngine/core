@@ -29,11 +29,10 @@ template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 class SEFluidCompartmentLink : public SECompartmentLink, public EdgeType {
   friend io::Compartment;
 
-protected:
+public:
   SEFluidCompartmentLink(CompartmentType& src, CompartmentType& tgt, const char* name);
   SEFluidCompartmentLink(CompartmentType& src, CompartmentType& tgt, const std::string& name);
 
-public:
   virtual ~SEFluidCompartmentLink();
 
   virtual void Clear() override;
@@ -41,10 +40,12 @@ public:
   virtual bool Load(const CDM::FluidCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
   virtual CDM::FluidCompartmentLinkData* Unload() override = 0;
 
-  bool operator==(const SEFluidCompartmentLink& rhs) const;
-  bool operator!=(const SEFluidCompartmentLink& rhs) const;
-  bool operator==(const SECompartmentLink& rhs) const final;
-  bool operator!=(const SECompartmentLink& rhs) const final;
+
+  bool operator==(SEFluidCompartmentLink const& rhs) const;
+  bool operator!=(SEFluidCompartmentLink const& rhs) const;
+  bool operator==(EdgeType const&) const;
+  bool operator!=(EdgeType const&) const;
+
 
 protected:
   virtual void Unload(CDM::FluidCompartmentLinkData& data);

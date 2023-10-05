@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 template <FLUID_COMPARTMENT_TEMPLATE>
 SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::SEFluidCompartment(const char* name, Logger* logger)
-  : SEFluidCompartment(std::string{ name }, logger)
+  : SEFluidCompartment(std::string { name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
@@ -73,7 +73,7 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Load(const CDM::FluidCompartme
     for (auto name : in.Node()) {
       SEFluidCircuitNode* node = circuits->GetFluidNode(name);
       if (node == nullptr) {
-        Error("Compartment is mapped to circuit node, " + std::string{ name } +", but provided circuit manager did not have that node");
+        Error("Compartment is mapped to circuit node, " + std::string { name } + ", but provided circuit manager did not have that node");
         return false;
       }
       MapNode(*node);
@@ -121,7 +121,7 @@ const char* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetName_cStr() const
 template <FLUID_COMPARTMENT_TEMPLATE>
 const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
@@ -465,7 +465,7 @@ const std::vector<LinkType*>& SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetLi
 template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasChild(const char* name)
 {
-  return HasChild( std::string{ name } );
+  return HasChild(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
@@ -478,4 +478,80 @@ bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasChild(const std::string& na
   return false;
 }
 //-----------------------------------------------------------------------------
+template <FLUID_COMPARTMENT_TEMPLATE>
+bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::operator==(SEFluidCompartment const& rhs) const
+{
+  if (this == &rhs) {
+    return true;
+  }
+
+  bool equivilant = ((m_InFlow && rhs.m_InFlow) ? m_InFlow->operator==(*rhs.m_InFlow) : m_InFlow == rhs.m_InFlow)
+    && ((m_OutFlow && rhs.m_OutFlow) ? m_OutFlow->operator==(*rhs.m_OutFlow) : m_OutFlow == rhs.m_OutFlow)
+    && ((m_Pressure && rhs.m_Pressure) ? m_Pressure->operator==(*rhs.m_Pressure) : m_Pressure == rhs.m_Pressure)
+    && ((m_Volume && rhs.m_Volume) ? m_Volume->operator==(*rhs.m_Volume) : m_Volume == rhs.m_Volume)
+    && m_Nodes == rhs.m_Nodes;
+
+  // std::vector<SubstanceQuantityType*> m_SubstanceQuantities;
+  equivilant &= m_SubstanceQuantities.size() == rhs.m_SubstanceQuantities.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < m_SubstanceQuantities.size(); ++i) {
+      equivilant &= (m_SubstanceQuantities[i] && rhs.m_SubstanceQuantities[i])
+        ? m_SubstanceQuantities[i]->operator==(*rhs.m_SubstanceQuantities[i])
+        : m_SubstanceQuantities[i] == rhs.m_SubstanceQuantities[i];
+    }
+  }
+
+  // std::vector<TransportSubstanceType*> m_TransportSubstances;
+  equivilant &= m_TransportSubstances.size() == rhs.m_TransportSubstances.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < m_TransportSubstances.size(); ++i) {
+      equivilant &= (m_TransportSubstances[i] && rhs.m_TransportSubstances[i])
+        ? m_TransportSubstances[i]->operator==(*rhs.m_TransportSubstances[i])
+        : m_TransportSubstances[i] == rhs.m_TransportSubstances[i];
+    }
+  }
+  // std::vector<LinkType*> m_Links;
+  equivilant &= m_Links.size() == rhs.m_Links.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < m_Links.size(); ++i) {
+      equivilant &= (m_Links[i] && rhs.m_Links[i])
+        ? m_Links[i]->operator==(*rhs.m_Links[i])
+        : m_Links[i] == rhs.m_Links[i];
+    }
+  }
+  // std::vector<LinkType*> m_IncomingLinks;
+  equivilant &= m_IncomingLinks.size() == rhs.m_IncomingLinks.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < m_IncomingLinks.size(); ++i) {
+      equivilant &= (m_IncomingLinks[i] && rhs.m_IncomingLinks[i])
+        ? m_IncomingLinks[i]->operator==(*rhs.m_IncomingLinks[i])
+        : m_IncomingLinks[i] == rhs.m_IncomingLinks[i];
+    }
+  }
+  // std::vector<LinkType*> m_OutgoingLinks;
+  equivilant &= m_OutgoingLinks.size() == rhs.m_OutgoingLinks.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < m_OutgoingLinks.size(); ++i) {
+      equivilant &= (m_OutgoingLinks[i] && rhs.m_OutgoingLinks[i])
+        ? m_OutgoingLinks[i]->operator==(*rhs.m_OutgoingLinks[i])
+        : m_OutgoingLinks[i] == rhs.m_OutgoingLinks[i];
+    }
+  }
+  // std::vector<SEFluidCompartment*> m_FluidChildren;
+  equivilant &= m_FluidChildren.size() == rhs.m_FluidChildren.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < m_FluidChildren.size(); ++i) {
+      equivilant &= (m_FluidChildren[i] && rhs.m_FluidChildren[i])
+        ? m_FluidChildren[i]->operator==(*rhs.m_FluidChildren[i])
+        : m_FluidChildren[i] == rhs.m_FluidChildren[i];
+    }
+  }
+
+  return equivilant;
+}
+template <FLUID_COMPARTMENT_TEMPLATE>
+bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::operator!=(SEFluidCompartment const& rhs) const
+{
+  return !this->operator==(rhs);
+}
 }

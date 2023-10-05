@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 template <COMPARTMENT_GRAPH_TEMPLATE>
 SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::SECompartmentGraph(const char* name, Logger* logger)
-  : SECompartmentGraph(std::string{ name }, logger)
+  : SECompartmentGraph(std::string { name }, logger)
 {
 }
 //-----------------------------------------------------------------------------
@@ -61,7 +61,7 @@ void SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::AddCompartment(CompartmentType
 template <COMPARTMENT_GRAPH_TEMPLATE>
 CompartmentType* SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::GetCompartment(const char* name)
 {
-  return GetCompartment(std::string{ name });
+  return GetCompartment(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <COMPARTMENT_GRAPH_TEMPLATE>
@@ -77,7 +77,7 @@ CompartmentType* SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::GetCompartment(con
 template <COMPARTMENT_GRAPH_TEMPLATE>
 const CompartmentType* SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::GetCompartment(const char* name) const
 {
-  return GetCompartment(std::string{ name });
+  return GetCompartment(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <COMPARTMENT_GRAPH_TEMPLATE>
@@ -112,7 +112,7 @@ void SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::RemoveCompartment(const Compar
 template <COMPARTMENT_GRAPH_TEMPLATE>
 void SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::RemoveCompartment(const char* name)
 {
-  RemoveCompartment(std::string{ name });
+  RemoveCompartment(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <COMPARTMENT_GRAPH_TEMPLATE>
@@ -138,7 +138,7 @@ void SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::AddLink(CompartmentLinkType& l
 template <COMPARTMENT_GRAPH_TEMPLATE>
 CompartmentLinkType* SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::GetLink(const char* name)
 {
-  return GetLink(std::string{ name });
+  return GetLink(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <COMPARTMENT_GRAPH_TEMPLATE>
@@ -154,7 +154,7 @@ CompartmentLinkType* SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::GetLink(const 
 template <COMPARTMENT_GRAPH_TEMPLATE>
 const CompartmentLinkType* SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::GetLink(const char* name) const
 {
-  return GetLink(std::string{ name });
+  return GetLink(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <COMPARTMENT_GRAPH_TEMPLATE>
@@ -189,7 +189,7 @@ void SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::RemoveLink(const CompartmentLi
 template <COMPARTMENT_GRAPH_TEMPLATE>
 void SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::RemoveLink(const char* name)
 {
-  RemoveLink(std::string{ name });
+  RemoveLink(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <COMPARTMENT_GRAPH_TEMPLATE>
@@ -205,4 +205,40 @@ void SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::RemoveLink(const std::string& 
   }
 }
 //-----------------------------------------------------------------------------
+template <COMPARTMENT_GRAPH_TEMPLATE>
+bool SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::operator==(SECompartmentGraph<COMPARTMENT_GRAPH_TYPES> const& rhs) const
+{
+  if (this == &rhs) {
+    return true;
+  }
+
+  bool equivilant = m_Name == rhs.m_Name;
+
+  // std::vector<CompartmentLinkType*> m_CompartmentLinks;
+  equivilant &= m_CompartmentLinks.size() == rhs.m_CompartmentLinks.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < m_CompartmentLinks.size(); ++i) {
+      equivilant &= (m_CompartmentLinks[i] && rhs.m_CompartmentLinks[i])
+        ? m_CompartmentLinks[i]->operator==(*rhs.m_CompartmentLinks[i])
+        : m_CompartmentLinks[i] == rhs.m_CompartmentLinks[i];
+    }
+  }
+
+  // std::vector<CompartmentType*> m_Compartments;
+  equivilant &= m_Compartments.size() == rhs.m_Compartments.size();
+  if (equivilant) {
+    for (auto i = 0; equivilant && i < m_Compartments.size(); ++i) {
+      equivilant &= (m_Compartments[i] && rhs.m_Compartments[i])
+        ? m_Compartments[i]->operator==(*rhs.m_Compartments[i])
+        : m_Compartments[i] == rhs.m_Compartments[i];
+    }
+  }
+  return equivilant;
+}
+template <COMPARTMENT_GRAPH_TEMPLATE>
+bool SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::operator!=(SECompartmentGraph<COMPARTMENT_GRAPH_TYPES> const& rhs) const
+{
+  return !(*this == rhs);
+}
+
 }

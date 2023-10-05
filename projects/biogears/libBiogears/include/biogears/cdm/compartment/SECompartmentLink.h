@@ -24,11 +24,11 @@ namespace io {
 class BIOGEARS_API SECompartmentLink : public Loggable {
   friend io::Compartment;
 
-protected:
+public:
+
   SECompartmentLink(const char* name, Logger* logger);
   SECompartmentLink(const std::string& name, Logger* logger);
 
-public:
   virtual ~SECompartmentLink();
 
   virtual void Clear();
@@ -36,8 +36,8 @@ public:
   virtual bool Load(const CDM::CompartmentLinkData& in, SECircuitManager* circuits = nullptr);
   virtual CDM::CompartmentLinkData* Unload() = 0;
 
-  virtual bool operator==(const SECompartmentLink& rhs) const = 0;
-  virtual bool operator!=(const SECompartmentLink& rhs) const = 0;
+  bool operator==(SECompartmentLink const& rhs) const;
+  bool operator!=(SECompartmentLink const& rhs) const;
 
 protected:
   virtual void Unload(CDM::CompartmentLinkData& data);

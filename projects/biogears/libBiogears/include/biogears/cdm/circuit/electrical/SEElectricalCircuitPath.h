@@ -36,10 +36,13 @@ protected:
 public:
   virtual ~SEElectricalCircuitPath();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   bool Load(const CDM::ElectricalCircuitPathData& in);
   CDM::ElectricalCircuitPathData* Unload() const;
+
+  using SECircuitPath::operator==;
+  using SECircuitPath::operator!=;
 
 protected:
   void Unload(CDM::ElectricalCircuitPathData& data) const;

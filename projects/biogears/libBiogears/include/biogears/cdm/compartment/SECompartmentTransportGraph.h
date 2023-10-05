@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
-
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 class SECompartmentTransportGraph : public GraphType, public SECompartmentGraph<COMPARTMENT_GRAPH_TYPES> {
 public:
@@ -30,20 +29,23 @@ public:
   virtual ~SECompartmentTransportGraph();
 
   virtual void Clear() override;
-  /*
-  virtual bool Load(const BindType& in);
-  virtual BindType* Unload() = 0;
-protected:
-  virtual void Unload(BindType& data);
-*/
 
-public:
   virtual std::string GetName() const override;
   virtual const char* GetName_cStr() const override;
 
   virtual void StateChange();
 
+  //  virtual bool Load(const BindType& in);
+  //  virtual BindType* Unload() = 0;
+
+  bool operator==(SECompartmentTransportGraph const&) const;
+  bool operator!=(SECompartmentTransportGraph const&) const;
+
+  bool operator==(GraphEdgeType const&) const;
+  bool operator!=(GraphEdgeType const&) const;
+
 protected:
+  //  virtual void Unload(BindType& data);
   virtual void BalanceByIntensive() override = 0;
   virtual size_t GetVertexIndex(const GraphVertexType& v) const override;
   virtual const std::vector<GraphVertexType*>& GetVerticies() const override;

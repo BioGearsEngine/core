@@ -112,18 +112,21 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartment)
   using namespace biogears;
   USING_TYPES(GasCompartment)
 
-  auto& fc1 = compartmentManager.CreateGasCompartment("Compartment1");
-  auto& fc2 = compartmentManager.CreateGasCompartment("Compartment2");
-  auto& fc3 = compartmentManager.CreateGasCompartment("Compartment3");
-
+  // Compartment
   auto& source = compartmentManager.CreateGasCompartment("source");
   auto& sink = compartmentManager.CreateGasCompartment("sink");
-  CDMType data;
+  auto& sub_compartment_1 = compartmentManager.CreateGasCompartment("sub_compartment_1");
+  auto& sub_compartment_1_1 = compartmentManager.CreateGasCompartment("sub_compartment_1_1");
+  auto& sub_compartment_1_2 = compartmentManager.CreateGasCompartment("sub_compartment_1_2");
+
+  sub_compartment_1.AddChild(sub_compartment_1_1);
+  sub_compartment_1.AddChild(sub_compartment_1_2);
+  source.AddChild(sub_compartment_1);
 
   EXPECT_NE(source, sink);
 
   Compartment::UnMarshall(source, data);
-  Compartment::Marshall(data, sink, substanceManager);
+  Compartment::Marshall(data, sink, substanceManager, &circuitManager);
 
   EXPECT_EQ(source, sink);
 };
@@ -136,22 +139,28 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartment)
 TEST_F(TEST_FIXTURE_NAME, GasCompartmentLink)
 {
   USING_TYPES(GasCompartmentLink)
+  CDMType data;
 
-  //auto compartment1 = compartmentManager.GetGasCompartment("Compartment One");
-  //auto compartment2 = compartmentManager.GetGasCompartment("Compartment Two");
-  //auto compartment3 = compartmentManager.GetGasCompartment("Compartment Three");
-  //auto compartment4 = compartmentManager.GetGasCompartment("Compartment Four");
+  // Left Compartment
+  auto& left = compartmentManager.CreateGasCompartment("Left");
+  // Middle Compartment
+  auto& middle = compartmentManager.CreateGasCompartment("Middle");
+  // Right Compartment
+  auto& right = compartmentManager.CreateGasCompartment("Right");
+  // Compartment Links
 
-  //auto& source = compartmentManager.CreateGasLink(*compartment1, *compartment2, "one->two");
-  //auto& sink = compartmentManager.CreateGasLink(*compartment3, *compartment4, "three->four");
-  //CDMType data;
+  auto& source = compartmentManager.CreateGasLink(left, middle, "source");
+  source.GetFlow().SetValue(2.0, biogears::VolumePerTimeUnit::mL_Per_s);
 
-  //EXPECT_NE(source, sink);
+  auto& sink = compartmentManager.CreateGasLink(middle, right, "sink");
+  sink.GetFlow().SetValue(5.5, biogears::VolumePerTimeUnit::mL_Per_s);
 
-  //Compartment::UnMarshall(source, data);
-  //Compartment::Marshall(data, sink);
+  EXPECT_NE(source, sink);
 
-  //EXPECT_EQ(source, sink);
+  Compartment::UnMarshall(source, data);
+  Compartment::Marshall(data, sink);
+
+  EXPECT_EQ(source, sink);
 };
 
 //! Abstract class SEGasCompartmentGraph
@@ -159,17 +168,36 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartmentLink)
 // static void Marshall(const CDM::GasCompartmentGraphData& in, SEGasCompartmentGraph& out, SECompartmentManager& cmptMgr);
 // static void UnMarshall(const SEGasCompartmentGraph& in, CDM::GasCompartmentGraphData& out);
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
-TEST_F(TEST_FIXTURE_NAME, GasCompartmentGraph) {
-  // USING_TYPES(GasCompartmentGraph)
+TEST_F(TEST_FIXTURE_NAME, GasCompartmentGraph)
+{
+  USING_TYPES(GasCompartmentGraph)
+  CDMType data;
 
-  // auto& source = compartmentManager->CreateGasGraph("source");
-  // auto& sink = compartmentManager->CreateGasGraph("sink");
-  // CDMType data;
+  auto& source = compartmentManager.CreateGasGraph("source");
+  auto& sink = compartmentManager.CreateGasGraph("sink");
 
-  // EXPECT_NE(source, sink);
+  // Compartmen
+  auto& sub_compartment_1 = compartmentManager.CreateGasCompartment("sub_compartment_1");
+  auto& sub_compartment_1_1 = compartmentManager.CreateGasCompartment("sub_compartment_1_1");
+  auto& sub_compartment_1_2 = compartmentManager.CreateGasCompartment("sub_compartment_1_2");
 
-  // Compartment::UnMarshall(source, data);
-  // Compartment::Marshall(data, sink, compartmentManager);
+  auto& link_1_1_1 = compartmentManager.CreateGasLink(sub_compartment_1, sub_compartment_1_1, "link_1_1_1");
+  link_1_1_1.GetFlow().SetValue(2.0, biogears::VolumePerTimeUnit::mL_Per_s);
 
-  // EXPECT_EQ(source, sink);
+  auto& link_1_1_2 = compartmentManager.CreateGasLink(sub_compartment_1, sub_compartment_1_2, "link1_1_2");
+  link_1_1_2.GetFlow().SetValue(5.5, biogears::VolumePerTimeUnit::mL_Per_s);
+
+  source.AddCompartment(sub_compartment_1);
+  source.AddCompartment(sub_compartment_1_1);
+  source.AddCompartment(sub_compartment_1_2);
+
+  source.AddLink(link_1_1_1);
+  source.AddLink(link_1_1_2);
+
+  EXPECT_NE(source, sink);
+
+  Compartment::UnMarshall(source, data);
+  Compartment::Marshall(data, sink, compartmentManager);
+
+  EXPECT_EQ(source, sink);
 };

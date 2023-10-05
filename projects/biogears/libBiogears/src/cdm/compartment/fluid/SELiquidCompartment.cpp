@@ -242,12 +242,12 @@ bool SELiquidCompartment::operator!=(SELiquidCompartment const& rhs) const
   return !(*this == rhs);
 }
 //-----------------------------------------------------------------------------
-bool SELiquidCompartment::operator==(SEFluidCompartment const& rhs) const
+bool SELiquidCompartment::operator==(SESubstanceTransportVertex const& rhs) const
 {
   auto ptr = dynamic_cast<decltype(this)>(&rhs);
   return (ptr) ? this->operator==(*ptr) : false;
 }
-bool SELiquidCompartment::operator!=(SEFluidCompartment const& rhs) const
+bool SELiquidCompartment::operator!=(SESubstanceTransportVertex const& rhs) const
 {
   return !(*this == rhs);
 }

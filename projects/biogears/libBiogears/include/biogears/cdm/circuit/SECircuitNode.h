@@ -41,20 +41,19 @@ class SECircuitNode : public Loggable {
   friend class SECircuit;
   friend class io::Circuit;
 
-protected:
+public:
   SECircuitNode(const char* name, Logger* logger);
   SECircuitNode(const std::string& name, Logger* logger);
 
-public:
+  bool operator==(SECircuitNode const& rhs) const;
+  bool operator!=(SECircuitNode const& rhs) const;
+
   virtual ~SECircuitNode();
 
   virtual void Clear(); // clear memory
 
   virtual bool Load(const CDM::CircuitNodeData& in);
   virtual CDM::CircuitNodeData* Unload() const = 0;
-
-  bool operator==(SECircuitNode& rhs) const;
-  bool operator!=(SECircuitNode& rhs) const;
 
 protected:
   virtual void Unload(CDM::CircuitNodeData& data) const;

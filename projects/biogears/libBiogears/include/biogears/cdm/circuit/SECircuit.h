@@ -39,6 +39,9 @@ public:
   virtual bool Load(const CircuitBindType& in, const std::map<std::string, NodeType*>& nodes, const std::map<std::string, PathType*>& paths);
   virtual CircuitBindType* Unload() const;
 
+  bool operator==(SECircuit const& rhs) const;
+  bool operator!=(SECircuit const& rhs) const;
+
 protected:
   virtual void Unload(CircuitBindType& data) const;
 

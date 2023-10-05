@@ -145,7 +145,7 @@ QuantityScalar& SECircuitNode<CIRCUIT_NODE_TYPES>::GetQuantityBaseline()
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_NODE_TEMPLATE>
-bool SECircuitNode<CIRCUIT_NODE_TYPES>::operator==(SECircuitNode& rhs) const
+bool SECircuitNode<CIRCUIT_NODE_TYPES>::operator==(SECircuitNode const& rhs) const
 {
   return m_Name == rhs.m_Name
     && ((m_Potential && rhs.m_Potential) ? m_Potential->operator==(*rhs.m_Potential) : m_Potential == rhs.m_Potential)
@@ -155,9 +155,9 @@ bool SECircuitNode<CIRCUIT_NODE_TYPES>::operator==(SECircuitNode& rhs) const
     && ((m_QuantityBaseline && rhs.m_QuantityBaseline) ? m_QuantityBaseline->operator==(*rhs.m_QuantityBaseline) : m_QuantityBaseline == rhs.m_QuantityBaseline);
 }
 template <CIRCUIT_NODE_TEMPLATE>
-bool SECircuitNode<CIRCUIT_NODE_TYPES>::operator!=(SECircuitNode& rhs) const
+bool SECircuitNode<CIRCUIT_NODE_TYPES>::operator!=(SECircuitNode const& rhs) const
 {
   return !(*this == rhs);
 }
-//-------------------------------------------------------------------------------
+
 }
