@@ -44,6 +44,8 @@ constexpr char idTargetPulmonaryVentilation[] = "TargetPulmonaryVentilation";
 constexpr char idTidalVolume[] = "TidalVolume";
 constexpr char idTotalAlveolarVentilation[] = "TotalAlveolarVentilation";
 constexpr char idTotalDeadSpaceVentilation[] = "TotalDeadSpaceVentilation";
+constexpr char idLeftPleuralVolume[] = "LeftPleuralVolume";
+constexpr char idRightPleuralVolume[] = "RightPleuralVolume";
 constexpr char idLeftLungVolume[] = "LeftLungVolume";
 constexpr char idRightLungVolume[] = "RightLungVolume";
 constexpr char idTotalLungVolume[] = "TotalLungVolume";
@@ -72,6 +74,8 @@ SERespiratorySystem::SERespiratorySystem(Logger* logger)
   m_TidalVolume = nullptr;
   m_TotalAlveolarVentilation = nullptr;
   m_TotalDeadSpaceVentilation = nullptr;
+  m_LeftPleuralVolume = nullptr;
+  m_RightPleuralVolume = nullptr;
   m_LeftLungVolume = nullptr;
   m_RightLungVolume = nullptr;
   m_TotalLungVolume = nullptr;
@@ -109,6 +113,8 @@ void SERespiratorySystem::Clear()
   SAFE_DELETE(m_TidalVolume);
   SAFE_DELETE(m_TotalAlveolarVentilation);
   SAFE_DELETE(m_TotalDeadSpaceVentilation);
+  SAFE_DELETE(m_LeftPleuralVolume);
+  SAFE_DELETE(m_RightPleuralVolume);
   SAFE_DELETE(m_LeftLungVolume);
   SAFE_DELETE(m_RightLungVolume);
   SAFE_DELETE(m_TotalLungVolume);
@@ -163,6 +169,10 @@ const SEScalar* SERespiratorySystem::GetScalar(const std::string& name)
     return &GetTotalAlveolarVentilation();
   if (name == idTotalDeadSpaceVentilation)
     return &GetTotalDeadSpaceVentilation();
+  if (name == idLeftPleuralVolume)
+    return &GetLeftPleuralVolume();
+  if (name == idRightPleuralVolume)
+    return &GetRightPleuralVolume();
   if (name == idLeftLungVolume)
     return &GetLeftLungVolume();
   if (name == idRightLungVolume)
@@ -221,6 +231,10 @@ bool SERespiratorySystem::Load(const CDM::RespiratorySystemData& in)
     GetTotalAlveolarVentilation().Load(in.TotalAlveolarVentilation().get());
   if (in.TotalDeadSpaceVentilation().present())
     GetTotalDeadSpaceVentilation().Load(in.TotalDeadSpaceVentilation().get());
+  if (in.LeftPleuralVolume().present())
+    GetLeftPleuralVolume().Load(in.LeftPleuralVolume().get());
+  if (in.RightPleuralVolume().present())
+    GetRightPleuralVolume().Load(in.RightPleuralVolume().get());
   if (in.LeftLungVolume().present())
     GetLeftLungVolume().Load(in.LeftLungVolume().get());
   if (in.RightLungVolume().present())
@@ -288,6 +302,10 @@ void SERespiratorySystem::Unload(CDM::RespiratorySystemData& data) const
     data.TotalAlveolarVentilation(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TotalAlveolarVentilation->Unload()));
   if (m_TotalDeadSpaceVentilation != nullptr)
     data.TotalDeadSpaceVentilation(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TotalDeadSpaceVentilation->Unload()));
+  if (m_LeftPleuralVolume != nullptr)
+    data.LeftPleuralVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_LeftPleuralVolume->Unload()));
+  if (m_RightPleuralVolume != nullptr)
+    data.RightPleuralVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_RightPleuralVolume->Unload()));
   if (m_LeftLungVolume != nullptr)
     data.LeftLungVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_LeftLungVolume->Unload()));
   if (m_RightLungVolume != nullptr)
@@ -695,6 +713,44 @@ double SERespiratorySystem::GetTotalDeadSpaceVentilation(const VolumePerTimeUnit
   return m_TotalDeadSpaceVentilation->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
+bool SERespiratorySystem::HasLeftPleuralVolume() const
+{
+  return m_LeftPleuralVolume == nullptr ? false : m_LeftPleuralVolume->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarVolume& SERespiratorySystem::GetLeftPleuralVolume()
+{
+  if (m_LeftPleuralVolume == nullptr)
+    m_LeftPleuralVolume = new SEScalarVolume();
+  return *m_LeftPleuralVolume;
+}
+//-------------------------------------------------------------------------------
+double SERespiratorySystem::GetLeftPleuralVolume(const VolumeUnit& unit) const
+{
+  if (m_LeftPleuralVolume == nullptr)
+    return SEScalar::dNaN();
+  return m_LeftPleuralVolume->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
+bool SERespiratorySystem::HasRightPleuralVolume() const
+{
+  return m_RightPleuralVolume == nullptr ? false : m_RightPleuralVolume->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarVolume& SERespiratorySystem::GetRightPleuralVolume()
+{
+  if (m_RightPleuralVolume == nullptr)
+    m_RightPleuralVolume = new SEScalarVolume();
+  return *m_RightPleuralVolume;
+}
+//-------------------------------------------------------------------------------
+double SERespiratorySystem::GetRightPleuralVolume(const VolumeUnit& unit) const
+{
+  if (m_RightPleuralVolume == nullptr)
+    return SEScalar::dNaN();
+  return m_RightPleuralVolume->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
 bool SERespiratorySystem::HasLeftLungVolume() const
 {
   return m_LeftLungVolume == nullptr ? false : m_LeftLungVolume->IsValid();
@@ -813,6 +869,8 @@ Tree<const char*> SERespiratorySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idTidalVolume)
     .emplace_back(idTotalAlveolarVentilation)
     .emplace_back(idTotalDeadSpaceVentilation)
+    .emplace_back(idLeftPleuralVolume)
+    .emplace_back(idRightPleuralVolume)
     .emplace_back(idLeftLungVolume)
     .emplace_back(idRightLungVolume)
     .emplace_back(idTotalLungVolume)

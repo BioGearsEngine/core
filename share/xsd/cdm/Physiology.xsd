@@ -627,6 +627,8 @@ specific language governing permissions and limitations under the License.
           <!--<< @brief TInstantaneous airflow into the lungs (negative value when exhaling).-->
 		  <xs:element name="LeftLungVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief The total volume of air within the left lung at any given time.-->
+		  <xs:element name="LeftPleuralVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total volume of air within the left pleural space at any given time.-->
           <xs:element name="MeanPleuralPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief Running average pleural pressure-->
           <xs:element name="PulmonaryCompliance" type="ScalarFlowComplianceData" minOccurs="0"  maxOccurs="1"/>
@@ -645,6 +647,8 @@ specific language governing permissions and limitations under the License.
           <!--<< @brief The frequency of the respiratory cycle.-->
 		  <xs:element name="RightLungVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief The total volume of air within the right lung at any given time.-->
+		  <xs:element name="RightPleuralVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total volume of air within the right pleural space at any given time.-->
           <xs:element name="SpecificVentilation" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief The ratio of the volume of gas entering a region of the lung following an inspiration and the end-expiratory volume of that same lung region.-->
           <xs:element name="TidalVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>

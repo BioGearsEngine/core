@@ -142,6 +142,14 @@ public:
   SEScalarVolumePerTime& GetTotalPulmonaryVentilation();
   double GetTotalPulmonaryVentilation(const VolumePerTimeUnit& unit) const;
 
+  bool HasLeftPleuralVolume() const;
+  SEScalarVolume& GetLeftPleuralVolume();
+  double GetLeftPleuralVolume(const VolumeUnit& unit) const;
+
+  bool HasRightPleuralVolume() const;
+  SEScalarVolume& GetRightPleuralVolume();
+  double GetRightPleuralVolume(const VolumeUnit& unit) const;
+
   bool HasLeftLungVolume() const;
   SEScalarVolume& GetLeftLungVolume();
   double GetLeftLungVolume(const VolumeUnit& unit) const;
@@ -179,6 +187,8 @@ protected:
   SEScalarVolume* m_TidalVolume;
   SEScalarVolumePerTime* m_TotalAlveolarVentilation;
   SEScalarVolumePerTime* m_TotalDeadSpaceVentilation;
+  SEScalarVolume* m_LeftPleuralVolume;
+  SEScalarVolume* m_RightPleuralVolume;
   SEScalarVolume* m_LeftLungVolume;
   SEScalarVolume* m_RightLungVolume;
   SEScalarVolume* m_TotalLungVolume;

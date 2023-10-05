@@ -216,6 +216,8 @@ void Respiratory::Initialize()
   double DeadSpace_L = m_LeftBronchi->GetVolumeBaseline(VolumeUnit::L) + m_RightBronchi->GetVolumeBaseline(VolumeUnit::L) + m_Trachea->GetVolume(VolumeUnit::L);
   double EnvironmentPressure_mmHg = m_data.GetCompartments().GetGasCompartment(BGE::EnvironmentCompartment::Ambient)->GetPressure(PressureUnit::mmHg);
   double AbsolutePleuralPressure_mmHg = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity)->GetPressure(PressureUnit::mmHg);
+  GetRightPleuralVolume().SetValue(m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightPleuralCavity)->GetVolume(VolumeUnit::L), VolumeUnit::L);
+  GetLeftPleuralVolume().SetValue(m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftPleuralCavity)->GetVolume(VolumeUnit::L), VolumeUnit::L);
   GetLeftLungVolume().SetValue(m_LeftLung->GetVolume(VolumeUnit::L), VolumeUnit::L);
   GetRightLungVolume().SetValue(m_RightLung->GetVolume(VolumeUnit::L), VolumeUnit::L);
   GetTotalLungVolume().SetValue(m_PreviousTotalLungVolume_L, VolumeUnit::L);
@@ -1784,6 +1786,8 @@ void Respiratory::CalculateVitalSigns()
   GetTotalLungVolume().Set(m_Lungs->GetVolume());
   GetLeftLungVolume().Set(m_LeftLung->GetVolume());
   GetRightLungVolume().Set(m_RightLung->GetVolume());
+  GetRightPleuralVolume().SetValue(m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightPleuralCavity)->GetVolume(VolumeUnit::L), VolumeUnit::L);
+  GetLeftPleuralVolume().SetValue(m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftPleuralCavity)->GetVolume(VolumeUnit::L), VolumeUnit::L);
 
   //Record values each time-step
   double tracheaFlow_L_Per_s = m_MouthToTrachea->GetNextFlow().GetValue(VolumePerTimeUnit::L_Per_s);
