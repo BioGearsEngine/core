@@ -9,15 +9,17 @@ option(UNITTEST_biogears-core_cdm "Enable libBiogears_cdm UnitTest "  ON)
 
 #Biogears CDM
 add_source_files(CDM_PUBLIC_HDRS OCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/biogears/ REGEX "*.h" SOURCE_GROUP "Header Files\\Public\\")
+#add_source_files(CDM_XSD_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.hxx" SOURCE_GROUP  "Headers\\Public\\")
+#add_source_files(CDM_XSD_SRCS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.cxx" SOURCE_GROUP "Sources\\")
+add_source_files(CDM_PROTO_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.pb.h" SOURCE_GROUP  "Headers\\Public\\")
+add_source_files(CDM_PROTO_SRCS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.pb.cc" SOURCE_GROUP "Sources\\")
 
 set(LIBBIO_CDM_HEADERS ${CDM_PUBLIC_HDRS} ${XSD_SRCS} ${XSD_HDRS})
 set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
-message (STATUS
-"
-set(LIBBIO_CDM_HEADERS ${CDM_PUBLIC_HDRS} ${CDM_GEN_HDRS})
-set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
-"
-)
+
+set(LIBBIO_CDM_HEADERS ${CDM_PUBLIC_HDRS} ${CDM_XSD_HDRS} ${CDM_PROTO_SRCS})
+set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_XSD_SRCS} ${CDM_PROTO_SRCS})
+
 ###############################################################################
 #Code Generation
 ###############################################################################
@@ -37,10 +39,11 @@ set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
     BUILD_RPATH   "${Biogears_BUILD_RPATH}"
     INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\$ORIGIN:\$ORIGIN/../lib:\$ORIGIN/lib">>
+    COMPILE_OPTIONS  $<$<PLATFORM_ID:Windows>:/FI"${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/cdm-exports.h">
     CXX_STANDARD 20
     )
   set_target_properties(libbiogears_cdm PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
-  add_dependencies(libbiogears_cdm xsd_bindings)
+  add_dependencies(libbiogears_cdm xsd_bindings proto_bindings)
 
   ###############################################################################
   # libBiogears_cdm COMPILATION & LINKAGE MODIFICATIONS
@@ -59,6 +62,7 @@ set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
   
   set(BIO_cdm_LIBS
             CodeSynthesis::XSD
+            protobuf::libprotobuf
             Eigen3::Eigen
   )
   target_link_libraries(libbiogears_cdm  PUBLIC ${BIO_cdm_LIBS} )

@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 syntax = "proto3";
 
-package mil.tatrc.physiology.datamodel;
+package biogears.schema;
 
 enum EnumDecimalFormat {
   ENUM_DECIMAL_FORMAT_UNSPECIFIED = 0;

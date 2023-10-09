@@ -35,15 +35,20 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 if(WIN32)
   set(Boost_USE_STATIC_LIBS ON) 
 endif()
+
 verify_package(Threads REQUIRED)
 verify_package(Eigen3 REQUIRED)
 verify_package(CodeSynthesis REQUIRED)
+verify_package(Protobuf REQUIRED)
+
 if(Biogears_BUILD_PYTHON_BINDINGS)
   verify_package(pybind11 REQUIRED)
 endif()
 ###############################################################################
 #Code Generation
 ###############################################################################
+
+## Code Synthesis XSD
 file(GLOB_RECURSE biogears_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/biogears/*.xsd")
 file(GLOB_RECURSE cdm_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/cdm/*.xsd")
 
@@ -52,7 +57,7 @@ set (BIOGEARS_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/$<CONFIG>)
 set (BIOGEARS_BINARY_BARE_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/)
 
 
-REGISTER_XSD_DIR(  "${PROJECT_SOURCE_DIR}/share/xsd/"
+REGISTER_XSD_DIR( "${PROJECT_SOURCE_DIR}/share/xsd/"
                     CONFIG "${PROJECT_SOURCE_DIR}/share/xsd/BioGearsDataModel.cfg"
                     PROJECT "generated/$<CONFIG>/biogears" COMPONENT "schema" RESOURCE_FOLDER "resources/schema"
                     NO_TARGETS SOURCES_VAR XSD_SRCS HEADERS_VAR XSD_HDRS VERBOSITY 1)
@@ -65,12 +70,40 @@ add_custom_target(xsd_bindings
   SOURCES ${XSD_FILES}
   DEPENDS ${XSD_SRCS} ${XSD_HDRS}
 )
+
 source_group( TREE  ${PROJECT_SOURCE_DIR}/share/xsd/ PREFIX schema FILES ${XSD_FILES})
 set_source_files_properties(${XSD_FILES} PROPERTIES 
                 HEADER_FILE_ONLY 
                 TRUE FOLDER schema
 )
 
+# Proto Buffs
+file(GLOB_RECURSE PROTO_FILES CMAKE_CONFIGURE_DEPENDS  ${PROJECT_SOURCE_DIR}/share/proto/*.proto)
+
+protobuf_generate(
+ LANGUAGE cpp
+ OUT_VAR  PROTO_SOURCES
+ PROTOC_OUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/biogears/schema/proto
+ EXPORT_MACRO BIOGEARS_CDM_API 
+ IMPORT_DIRS "${CMAKE_SOURCE_DIR}/share/proto"
+ PROTOS ${PROTO_FILES})
+
+add_custom_target(proto_bindings 
+  COMMENT "Generates XML Bindings from Proto Files" 
+  SOURCES ${PROTO_FILES}
+  DEPENDS ${PROTO_SOURCES}
+)
+
+set_target_properties(proto_bindings
+                    PROPERTIES
+                    FOLDER "Code Generators/")
+
+source_group( TREE  ${PROJECT_SOURCE_DIR}/share/proto/ PREFIX schema FILES ${PROTO_FILES})
+set_source_files_properties(${PROTO_FILES} PROPERTIES 
+                HEADER_FILE_ONLY 
+                TRUE FOLDER schema)
+
+# Version Source Code
 set_target_properties(xsd_bindings PROPERTIES FOLDER "Code Generators")
 
 file(READ  ${BIOGEARS_SOURCE_DIR}/libBiogears/src/version.cpp.in contents)

@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 syntax = "proto3";
 
-package mil.tatrc.physiology.datamodel;
+package biogears.schema;
 
 // Enumeration for Blood ABO antigens
 enum EnumBloodType {
