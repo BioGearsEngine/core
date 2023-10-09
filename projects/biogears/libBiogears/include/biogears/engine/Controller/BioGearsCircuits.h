@@ -305,6 +305,10 @@ namespace tatrc {
         DEFINE_STATIC_STRING(ExternalCore);
         DEFINE_STATIC_STRING(ExternalTorsoSkin);
         DEFINE_STATIC_STRING(ExternalHeadSkin);
+        DEFINE_STATIC_STRING(ExternalLeftArmSkin);
+        DEFINE_STATIC_STRING(ExternalRightArmSkin);
+        DEFINE_STATIC_STRING(ExternalLeftLegSkin);
+        DEFINE_STATIC_STRING(ExternalRightLegSkin);
         DEFINE_STATIC_STRING(ExternalGround);
         DEFINE_STATIC_STRING(Ambient);
       };
@@ -323,6 +327,14 @@ namespace tatrc {
         DEFINE_STATIC_STRING(ExternalTorsoSkinToClothing);
         DEFINE_STATIC_STRING(ExternalHeadSkinToGround);
         DEFINE_STATIC_STRING(ExternalHeadSkinToClothing);
+        DEFINE_STATIC_STRING(ExternalLeftArmSkinToGround);
+        DEFINE_STATIC_STRING(ExternalLeftArmSkinToClothing);
+        DEFINE_STATIC_STRING(ExternalRightArmSkinToGround);
+        DEFINE_STATIC_STRING(ExternalRightArmSkinToClothing);
+        DEFINE_STATIC_STRING(ExternalLeftLegSkinToGround);
+        DEFINE_STATIC_STRING(ExternalLeftLegSkinToClothing);
+        DEFINE_STATIC_STRING(ExternalRightLegSkinToGround);
+        DEFINE_STATIC_STRING(ExternalRightLegSkinToClothing);
       };
 
       ////////////////////////////////////////
@@ -333,14 +345,12 @@ namespace tatrc {
 
         DEFINE_STATIC_STRING(InternalCore);
         DEFINE_STATIC_STRING(InternalGround);
-        // Leaving out central blood, fat, and muscle nodes for proof of concept
-        //DEFINE_STATIC_STRING(CentralBlood);
-        //DEFINE_STATIC_STRING(TorsoMuscle);
-        //DEFINE_STATIC_STRING(TorsoFat);
-        //DEFINE_STATIC_STRING(TorsoMuscle);
-        //DEFINE_STATIC_STRING(TorsoFat);
         DEFINE_STATIC_STRING(InternalTorsoSkin);
         DEFINE_STATIC_STRING(InternalHeadSkin);
+        DEFINE_STATIC_STRING(InternalLeftArmSkin);
+        DEFINE_STATIC_STRING(InternalRightArmSkin);
+        DEFINE_STATIC_STRING(InternalLeftLegSkin);
+        DEFINE_STATIC_STRING(InternalRightLegSkin);
       };
 
       namespace InternalTemperaturePath {
@@ -349,9 +359,18 @@ namespace tatrc {
         DEFINE_STATIC_STRING(InternalCoreToGround);
 
         DEFINE_STATIC_STRING(InternalTorsoSkinToTemperatureGround);
-        DEFINE_STATIC_STRING(InternalHeadSkinToTemperatureGround);
         DEFINE_STATIC_STRING(InternalCoreToInternalTorsoSkin);
+        DEFINE_STATIC_STRING(InternalHeadSkinToTemperatureGround);
         DEFINE_STATIC_STRING(InternalCoreToInternalHeadSkin);
+
+        DEFINE_STATIC_STRING(InternalLeftArmSkinToTemperatureGround);
+        DEFINE_STATIC_STRING(InternalCoreToInternalLeftArmSkin);
+        DEFINE_STATIC_STRING(InternalRightArmSkinToTemperatureGround);
+        DEFINE_STATIC_STRING(InternalCoreToInternalRightArmSkin);
+        DEFINE_STATIC_STRING(InternalLeftLegSkinToTemperatureGround);
+        DEFINE_STATIC_STRING(InternalCoreToInternalLeftLegSkin);
+        DEFINE_STATIC_STRING(InternalRightLegSkinToTemperatureGround);
+        DEFINE_STATIC_STRING(InternalCoreToInternalRightLegSkin);
       };
 
       ////////////////////////////////////////
@@ -363,6 +382,10 @@ namespace tatrc {
         DEFINE_STATIC_STRING(InternalCoreToExternalCore);
         DEFINE_STATIC_STRING(InternalTorsoSkinToExternalTorsoSkin);
         DEFINE_STATIC_STRING(InternalHeadSkinToExternalHeadSkin);
+        DEFINE_STATIC_STRING(InternalLeftArmSkinToExternalLeftArmSkin);
+        DEFINE_STATIC_STRING(InternalRightArmSkinToExternalRightArmSkin);
+        DEFINE_STATIC_STRING(InternalLeftLegSkinToExternalLeftLegSkin);
+        DEFINE_STATIC_STRING(InternalRightLegSkinToExternalRightLegSkin);
       };
 
       namespace CardiovascularNode {

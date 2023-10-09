@@ -160,9 +160,18 @@ void Environment::SetUp()
   m_SkinToClothingPaths.clear();
   m_SkinToClothingPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalTorsoSkinToClothing));
   m_SkinToClothingPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalHeadSkinToClothing));
+  m_SkinToClothingPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalLeftArmSkinToClothing));
+  m_SkinToClothingPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalRightArmSkinToClothing));
+  m_SkinToClothingPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalLeftLegSkinToClothing));
+  m_SkinToClothingPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalRightLegSkinToClothing));
+
   m_EnvironmentSkinToGroundPaths.clear();
   m_EnvironmentSkinToGroundPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalTorsoSkinToGround));
   m_EnvironmentSkinToGroundPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalHeadSkinToGround));
+  m_EnvironmentSkinToGroundPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalLeftArmSkinToGround));
+  m_EnvironmentSkinToGroundPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalRightArmSkinToGround));
+  m_EnvironmentSkinToGroundPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalLeftLegSkinToGround));
+  m_EnvironmentSkinToGroundPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalRightLegSkinToGround));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -249,10 +258,16 @@ void Environment::PreProcess()
   const double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
   double skinToClothingResistance = std::max(dClothingResistance_rsi / dSurfaceArea_m2, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
 
-  // 0 is torso, gets 40 percent of clo
-  // 1 is head, gets no clo (assume not hat/hair for now)
-  m_SkinToClothingPaths[0]->GetNextResistance().SetValue(0.4 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  // 0 is torso, gets 39 percent of clo
+  // 1 is head, gets no clo (0.01, assume not hat/hair for now)
+  // arms each get 5 percent of clo
+  // legs each get 25 percent of clo
+  m_SkinToClothingPaths[0]->GetNextResistance().SetValue(0.39 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
   m_SkinToClothingPaths[1]->GetNextResistance().SetValue(0.01 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[2]->GetNextResistance().SetValue(0.05 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[3]->GetNextResistance().SetValue(0.25 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[4]->GetNextResistance().SetValue(0.05 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[5]->GetNextResistance().SetValue(0.25 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
 
   //Set the skin heat loss
   double dSkinHeatLoss_W = 0.0;
