@@ -479,6 +479,10 @@ namespace io {
     io::Property::Marshall(in.PotassiumLostToSweat(), out.GetPotassiumLostToSweat());
     io::Property::Marshall(in.SkinTemperatureTorso(), out.GetSkinTemperatureTorso());
     io::Property::Marshall(in.SkinTemperatureHead(), out.GetSkinTemperatureHead());
+    io::Property::Marshall(in.SkinTemperatureLeftArm(), out.GetSkinTemperatureLeftArm());
+    io::Property::Marshall(in.SkinTemperatureRightArm(), out.GetSkinTemperatureRightArm());
+    io::Property::Marshall(in.SkinTemperatureLeftLeg(), out.GetSkinTemperatureLeftLeg());
+    io::Property::Marshall(in.SkinTemperatureRightLeg(), out.GetSkinTemperatureRightLeg());
     io::Property::Marshall(in.SodiumLostToSweat(), out.GetSodiumLostToSweat());
     io::Property::Marshall(in.SweatRate(), out.GetSweatRate());
     io::Property::Marshall(in.TotalMetabolicRate(), out.GetTotalMetabolicRate());
@@ -520,6 +524,18 @@ namespace io {
     }
     if (in.m_SkinTemperatureHead != nullptr) {
       io::Property::UnMarshall(*in.m_SkinTemperatureHead, out.SkinTemperatureHead());
+    }
+    if (in.m_SkinTemperatureLeftArm != nullptr) {
+      io::Property::UnMarshall(*in.m_SkinTemperatureLeftArm, out.SkinTemperatureLeftArm());
+    }
+    if (in.m_SkinTemperatureRightArm != nullptr) {
+      io::Property::UnMarshall(*in.m_SkinTemperatureRightArm, out.SkinTemperatureRightArm());
+    }
+    if (in.m_SkinTemperatureLeftLeg != nullptr) {
+      io::Property::UnMarshall(*in.m_SkinTemperatureLeftLeg, out.SkinTemperatureLeftLeg());
+    }
+    if (in.m_SkinTemperatureRightLeg != nullptr) {
+      io::Property::UnMarshall(*in.m_SkinTemperatureRightLeg, out.SkinTemperatureRightLeg());
     }
     if (in.m_SodiumLostToSweat != nullptr) {
       io::Property::UnMarshall(*in.m_SodiumLostToSweat, out.SodiumLostToSweat());

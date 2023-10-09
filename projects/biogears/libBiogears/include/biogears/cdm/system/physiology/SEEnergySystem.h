@@ -106,6 +106,22 @@ public:
   SEScalarTemperature& GetSkinTemperatureHead();
   double GetSkinTemperatureHead(const TemperatureUnit& unit) const;
 
+  bool HasSkinTemperatureLeftArm() const;
+  SEScalarTemperature& GetSkinTemperatureLeftArm();
+  double GetSkinTemperatureLeftArm(const TemperatureUnit& unit) const;
+
+  bool HasSkinTemperatureRightArm() const;
+  SEScalarTemperature& GetSkinTemperatureRightArm();
+  double GetSkinTemperatureRightArm(const TemperatureUnit& unit) const;
+
+  bool HasSkinTemperatureLeftLeg() const;
+  SEScalarTemperature& GetSkinTemperatureLeftLeg();
+  double GetSkinTemperatureLeftLeg(const TemperatureUnit& unit) const;
+
+  bool HasSkinTemperatureRightLeg() const;
+  SEScalarTemperature& GetSkinTemperatureRightLeg();
+  double GetSkinTemperatureRightLeg(const TemperatureUnit& unit) const;
+
   bool HasSodiumLostToSweat() const;
   SEScalarMass& GetSodiumLostToSweat();
   double GetSodiumLostToSweat(const MassUnit& unit) const;
@@ -135,6 +151,10 @@ protected:
   SEScalarMass* m_PotassiumLostToSweat;
   SEScalarTemperature* m_SkinTemperatureTorso;
   SEScalarTemperature* m_SkinTemperatureHead;
+  SEScalarTemperature* m_SkinTemperatureLeftArm;
+  SEScalarTemperature* m_SkinTemperatureRightArm;
+  SEScalarTemperature* m_SkinTemperatureLeftLeg;
+  SEScalarTemperature* m_SkinTemperatureRightLeg;
   SEScalarMass* m_SodiumLostToSweat;
   SEScalarMassPerTime* m_SweatRate;
   SEScalarPower* m_TotalMetabolicRate;

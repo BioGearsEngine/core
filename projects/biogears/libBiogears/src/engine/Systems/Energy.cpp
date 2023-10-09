@@ -105,6 +105,10 @@ void Energy::Initialize()
   GetCoreTemperature().SetValue(37.0, TemperatureUnit::C);
   GetSkinTemperatureTorso().SetValue(33.0, TemperatureUnit::C);
   GetSkinTemperatureHead().SetValue(33.0, TemperatureUnit::C);
+  GetSkinTemperatureLeftArm().SetValue(33.0, TemperatureUnit::C);
+  GetSkinTemperatureRightArm().SetValue(33.0, TemperatureUnit::C);
+  GetSkinTemperatureLeftLeg().SetValue(33.0, TemperatureUnit::C);
+  GetSkinTemperatureRightLeg().SetValue(33.0, TemperatureUnit::C);
   /// \cite phypers2006lactate
   GetLactateProductionRate().SetValue(1.3, AmountPerTimeUnit::mol_Per_day);
   /// \cite guyton2006medical
@@ -185,12 +189,20 @@ void Energy::SetUp()
   m_skinNodes.clear();
   m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalTorsoSkin));
   m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalHeadSkin));
+  m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalLeftArmSkin));
+  m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalRightArmSkin));
+  m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalLeftLegSkin));
+  m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalRightLegSkin));
   //Paths
   m_temperatureGroundToCorePath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalCore);
   m_skinExtravascularToSweatingGroundPath = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinSweating);
   m_coreToSkinPaths.clear();
   m_coreToSkinPaths.push_back(m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalTorsoSkin));
   m_coreToSkinPaths.push_back(m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalHeadSkin));
+  m_coreToSkinPaths.push_back(m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalLeftArmSkin));
+  m_coreToSkinPaths.push_back(m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalRightArmSkin));
+  m_coreToSkinPaths.push_back(m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalLeftLegSkin));
+  m_coreToSkinPaths.push_back(m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalRightLegSkin));
 }
 
 void Energy::AtSteadyState()
@@ -405,6 +417,10 @@ void Energy::CalculateVitalSigns()
   double coreTemperature_degC = m_coreNode->GetTemperature(TemperatureUnit::C);
   double skinTemperatureTorso_degC = m_skinNodes[0]->GetTemperature(TemperatureUnit::C);
   double skinTemperatureHead_degC = m_skinNodes[1]->GetTemperature(TemperatureUnit::C);
+  double skinTemperatureLeftArm_degC = m_skinNodes[2]->GetTemperature(TemperatureUnit::C);
+  double skinTemperatureRightArm_degC = m_skinNodes[3]->GetTemperature(TemperatureUnit::C);
+  double skinTemperatureLeftLeg_degC = m_skinNodes[4]->GetTemperature(TemperatureUnit::C);
+  double skinTemperatureRightLeg_degC = m_skinNodes[5]->GetTemperature(TemperatureUnit::C);
   if (m_data.GetDrugs().HasFeverChange() && GetCoreTemperature().GetValue(TemperatureUnit::C) > 37.0) { // Modifier for current drugs should not be able to increase core temperature
     coreTemperature_degC += m_data.GetDrugs().GetFeverChange().GetValue(TemperatureUnit::C);
     LLIM(coreTemperature_degC, 36.5); // Tylenol will not lower your basal core temperature
@@ -412,6 +428,10 @@ void Energy::CalculateVitalSigns()
   GetCoreTemperature().SetValue(coreTemperature_degC, TemperatureUnit::C);
   GetSkinTemperatureTorso().SetValue(skinTemperatureTorso_degC, TemperatureUnit::C);
   GetSkinTemperatureHead().SetValue(skinTemperatureHead_degC, TemperatureUnit::C);
+  GetSkinTemperatureLeftArm().SetValue(skinTemperatureLeftArm_degC, TemperatureUnit::C);
+  GetSkinTemperatureRightArm().SetValue(skinTemperatureRightArm_degC, TemperatureUnit::C);
+  GetSkinTemperatureLeftLeg().SetValue(skinTemperatureLeftLeg_degC, TemperatureUnit::C);
+  GetSkinTemperatureRightLeg().SetValue(skinTemperatureRightLeg_degC, TemperatureUnit::C);
   std::stringstream ss;
 
   //Hypothermia check
@@ -789,6 +809,11 @@ void Energy::ProcessOverride()
   if (override->HasSkinTemperatureOverride()) {
     GetSkinTemperatureTorso().SetValue(override->GetSkinTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
     GetSkinTemperatureHead().SetValue(override->GetSkinTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
+
+    GetSkinTemperatureLeftArm().SetValue(override->GetSkinTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
+    GetSkinTemperatureRightArm().SetValue(override->GetSkinTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
+    GetSkinTemperatureLeftLeg().SetValue(override->GetSkinTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
+    GetSkinTemperatureRightLeg().SetValue(override->GetSkinTemperatureOverride(TemperatureUnit::C), TemperatureUnit::C);
   }
   if (override->HasSweatRateOverride()) {
     GetSweatRate().SetValue(override->GetSweatRateOverride(MassPerTimeUnit::g_Per_s), MassPerTimeUnit::g_Per_s);

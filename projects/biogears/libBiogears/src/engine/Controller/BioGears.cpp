@@ -1097,11 +1097,26 @@ bool BioGears::CreateCircuitsAndCompartments()
   SEThermalCircuitNode* exCore = cExthermal.GetNode(BGE::ExternalTemperatureNode::ExternalCore);
   SEThermalCircuitNode* exTorsoSkin = cExthermal.GetNode(BGE::ExternalTemperatureNode::ExternalTorsoSkin);
   SEThermalCircuitNode* exHeadSkin = cExthermal.GetNode(BGE::ExternalTemperatureNode::ExternalHeadSkin);
+  SEThermalCircuitNode* exLeftArmSkin = cExthermal.GetNode(BGE::ExternalTemperatureNode::ExternalLeftArmSkin);
+  SEThermalCircuitNode* exRightArmSkin = cExthermal.GetNode(BGE::ExternalTemperatureNode::ExternalRightArmSkin);
+  SEThermalCircuitNode* exLeftLegSkin = cExthermal.GetNode(BGE::ExternalTemperatureNode::ExternalLeftLegSkin);
+  SEThermalCircuitNode* exRightLegSkin = cExthermal.GetNode(BGE::ExternalTemperatureNode::ExternalRightLegSkin);
+
   SEThermalCircuitNode* inCore = CInthermal.GetNode(BGE::InternalTemperatureNode::InternalCore);
   SEThermalCircuitNode* inTorsoSkin = CInthermal.GetNode(BGE::InternalTemperatureNode::InternalTorsoSkin);
+  SEThermalCircuitNode* inLeftArmSkin = CInthermal.GetNode(BGE::InternalTemperatureNode::InternalLeftArmSkin);
+  SEThermalCircuitNode* inRightArmSkin = CInthermal.GetNode(BGE::InternalTemperatureNode::InternalRightArmSkin);
+  SEThermalCircuitNode* inLeftLegSkin = CInthermal.GetNode(BGE::InternalTemperatureNode::InternalLeftLegSkin);
+  SEThermalCircuitNode* inRightLegSkin = CInthermal.GetNode(BGE::InternalTemperatureNode::InternalRightLegSkin);
+
   SEThermalCircuitNode* inHeadSkin = CInthermal.GetNode(BGE::InternalTemperatureNode::InternalHeadSkin);
   SEThermalCircuitPath& CoreTemperatureConnection = cThermal.CreatePath(*inCore, *exCore, BGE::CombinedTemperaturePath::InternalCoreToExternalCore);
   SEThermalCircuitPath& TorsoSkinTemperatureConnection = cThermal.CreatePath(*inTorsoSkin, *exTorsoSkin, BGE::CombinedTemperaturePath::InternalTorsoSkinToExternalTorsoSkin);
+  SEThermalCircuitPath& LeftArmSkinTemperatureConnection = cThermal.CreatePath(*inLeftArmSkin, *exLeftArmSkin, BGE::CombinedTemperaturePath::InternalLeftArmSkinToExternalLeftArmSkin);
+  SEThermalCircuitPath& RightArmSkinTemperatureConnection = cThermal.CreatePath(*inRightArmSkin, *exRightArmSkin, BGE::CombinedTemperaturePath::InternalRightArmSkinToExternalRightArmSkin);
+  SEThermalCircuitPath& LeftLegSkinTemperatureConnection = cThermal.CreatePath(*inLeftLegSkin, *exLeftLegSkin, BGE::CombinedTemperaturePath::InternalLeftLegSkinToExternalLeftLegSkin);
+  SEThermalCircuitPath& RightLegSkinTemperatureConnection = cThermal.CreatePath(*inRightLegSkin, *exRightLegSkin, BGE::CombinedTemperaturePath::InternalRightLegSkinToExternalRightLegSkin);
+
   SEThermalCircuitPath& HeadSkinTemperatureConnection = cThermal.CreatePath(*inHeadSkin, *exHeadSkin, BGE::CombinedTemperaturePath::InternalHeadSkinToExternalHeadSkin);
   cThermal.SetNextAndCurrentFromBaselines();
   cThermal.StateChange();
@@ -1109,15 +1124,33 @@ bool BioGears::CreateCircuitsAndCompartments()
   SEThermalCompartment* cExCore = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::ExternalCore);
   SEThermalCompartment* cExTorsoSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::ExternalTorsoSkin);
   SEThermalCompartment* cExHeadSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::ExternalHeadSkin);
+  SEThermalCompartment* cExLeftArmSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::ExternalLeftArmSkin);
+  SEThermalCompartment* cExRightArmSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::ExternalRightArmSkin);
+  SEThermalCompartment* cExLeftLegSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::ExternalLeftLegSkin);
+  SEThermalCompartment* cExRightLegSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::ExternalRightLegSkin);
+
   SEThermalCompartment* cInCore = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::InternalCore);
   SEThermalCompartment* cInTorsoSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::InternalTorsoSkin);
   SEThermalCompartment* cInHeadSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::InternalHeadSkin);
+  SEThermalCompartment* cInLeftArmSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::InternalLeftArmSkin);
+  SEThermalCompartment* cInRightArmSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::InternalRightArmSkin);
+  SEThermalCompartment* cInLeftLegSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::InternalLeftLegSkin);
+  SEThermalCompartment* cInRightLegSkin = m_Compartments->GetThermalCompartment(BGE::TemperatureCompartment::InternalRightLegSkin);
+
   SEThermalCompartmentLink& InternalCoreToExternalCore = m_Compartments->CreateThermalLink(*cInCore, *cExCore, BGE::TemperatureLink::InternalCoreToExternalCore);
   InternalCoreToExternalCore.MapPath(CoreTemperatureConnection);
   SEThermalCompartmentLink& InternalTorsoSkinToExternalTorsoSkin = m_Compartments->CreateThermalLink(*cInTorsoSkin, *cExTorsoSkin, BGE::TemperatureLink::InternalTorsoSkinToExternalTorsoSkin);
   InternalTorsoSkinToExternalTorsoSkin.MapPath(TorsoSkinTemperatureConnection);
   SEThermalCompartmentLink& InternalHeadSkinToExternalHeadSkin = m_Compartments->CreateThermalLink(*cInHeadSkin, *cExHeadSkin, BGE::TemperatureLink::InternalHeadSkinToExternalHeadSkin);
   InternalHeadSkinToExternalHeadSkin.MapPath(HeadSkinTemperatureConnection);
+  SEThermalCompartmentLink& InternalLeftArmSkinToExternalLeftArmSkin = m_Compartments->CreateThermalLink(*cInLeftArmSkin, *cExLeftArmSkin, BGE::TemperatureLink::InternalLeftArmSkinToExternalLeftArmSkin);
+  InternalLeftArmSkinToExternalLeftArmSkin.MapPath(LeftArmSkinTemperatureConnection);
+  SEThermalCompartmentLink& InternalRightArmSkinToExternalRightArmSkin = m_Compartments->CreateThermalLink(*cInRightArmSkin, *cExRightArmSkin, BGE::TemperatureLink::InternalRightArmSkinToExternalRightArmSkin);
+  InternalRightArmSkinToExternalRightArmSkin.MapPath(RightArmSkinTemperatureConnection);
+  SEThermalCompartmentLink& InternalLeftLegSkinToExternalLeftLegSkin = m_Compartments->CreateThermalLink(*cInLeftLegSkin, *cExLeftLegSkin, BGE::TemperatureLink::InternalLeftLegSkinToExternalLeftLegSkin);
+  InternalLeftLegSkinToExternalLeftLegSkin.MapPath(LeftLegSkinTemperatureConnection);
+  SEThermalCompartmentLink& InternalRightLegSkinToExternalRightLegSkin = m_Compartments->CreateThermalLink(*cInRightLegSkin, *cExRightLegSkin, BGE::TemperatureLink::InternalRightLegSkinToExternalRightLegSkin);
+  InternalRightLegSkinToExternalRightLegSkin.MapPath(RightLegSkinTemperatureConnection);
 
   // This node is shared between the respiratory, anesthesia, and inhaler circuits
   SEFluidCircuitNode& Ambient = m_Circuits->CreateFluidNode(BGE::EnvironmentNode::Ambient);
@@ -5414,6 +5447,14 @@ void BioGears::SetupExternalTemperature()
   TorsoSkin.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
   SEThermalCircuitNode& HeadSkin = exthermal.CreateNode(BGE::ExternalTemperatureNode::ExternalHeadSkin);
   HeadSkin.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
+  SEThermalCircuitNode& LeftArmSkin = exthermal.CreateNode(BGE::ExternalTemperatureNode::ExternalLeftArmSkin);
+  LeftArmSkin.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
+  SEThermalCircuitNode& RightArmSkin = exthermal.CreateNode(BGE::ExternalTemperatureNode::ExternalRightArmSkin);
+  RightArmSkin.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
+  SEThermalCircuitNode& LeftLegSkin = exthermal.CreateNode(BGE::ExternalTemperatureNode::ExternalLeftLegSkin);
+  LeftLegSkin.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
+  SEThermalCircuitNode& RightLegSkin = exthermal.CreateNode(BGE::ExternalTemperatureNode::ExternalRightLegSkin);
+  RightLegSkin.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
   SEThermalCircuitNode& Core = exthermal.CreateNode(BGE::ExternalTemperatureNode::ExternalCore);
   Core.GetTemperature().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
   SEThermalCircuitNode& Clothing = exthermal.CreateNode(BGE::ExternalTemperatureNode::Clothing);
@@ -5439,6 +5480,22 @@ void BioGears::SetupExternalTemperature()
   EnvironmentHeadSkinToAbsoluteReferencePath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
   SEThermalCircuitPath& EnvironmentHeadSkinToClothingPath = exthermal.CreatePath(HeadSkin, Clothing, BGE::ExternalTemperaturePath::ExternalHeadSkinToClothing);
   EnvironmentHeadSkinToClothingPath.GetNextResistance().SetValue(dNoResistance, HeatResistanceUnit::K_Per_W);
+  SEThermalCircuitPath& EnvironmentLeftArmSkinToAbsoluteReferencePath = exthermal.CreatePath(LeftArmSkin, Ground, BGE::ExternalTemperaturePath::ExternalLeftArmSkinToGround);
+  EnvironmentLeftArmSkinToAbsoluteReferencePath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
+  SEThermalCircuitPath& EnvironmentLeftArmSkinToClothingPath = exthermal.CreatePath(LeftArmSkin, Clothing, BGE::ExternalTemperaturePath::ExternalLeftArmSkinToClothing);
+  EnvironmentLeftArmSkinToClothingPath.GetNextResistance().SetValue(dNoResistance, HeatResistanceUnit::K_Per_W);
+  SEThermalCircuitPath& EnvironmentRightArmSkinToAbsoluteReferencePath = exthermal.CreatePath(RightArmSkin, Ground, BGE::ExternalTemperaturePath::ExternalRightArmSkinToGround);
+  EnvironmentRightArmSkinToAbsoluteReferencePath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
+  SEThermalCircuitPath& EnvironmentRightArmSkinToClothingPath = exthermal.CreatePath(RightArmSkin, Clothing, BGE::ExternalTemperaturePath::ExternalRightArmSkinToClothing);
+  EnvironmentRightArmSkinToClothingPath.GetNextResistance().SetValue(dNoResistance, HeatResistanceUnit::K_Per_W);
+  SEThermalCircuitPath& EnvironmentLeftLegSkinToAbsoluteReferencePath = exthermal.CreatePath(LeftLegSkin, Ground, BGE::ExternalTemperaturePath::ExternalLeftLegSkinToGround);
+  EnvironmentLeftLegSkinToAbsoluteReferencePath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
+  SEThermalCircuitPath& EnvironmentLeftLegSkinToClothingPath = exthermal.CreatePath(LeftLegSkin, Clothing, BGE::ExternalTemperaturePath::ExternalLeftLegSkinToClothing);
+  EnvironmentLeftLegSkinToClothingPath.GetNextResistance().SetValue(dNoResistance, HeatResistanceUnit::K_Per_W);
+  SEThermalCircuitPath& EnvironmentRightLegSkinToAbsoluteReferencePath = exthermal.CreatePath(RightLegSkin, Ground, BGE::ExternalTemperaturePath::ExternalRightLegSkinToGround);
+  EnvironmentRightLegSkinToAbsoluteReferencePath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
+  SEThermalCircuitPath& EnvironmentRightLegSkinToClothingPath = exthermal.CreatePath(RightLegSkin, Clothing, BGE::ExternalTemperaturePath::ExternalRightLegSkinToClothing);
+  EnvironmentRightLegSkinToClothingPath.GetNextResistance().SetValue(dNoResistance, HeatResistanceUnit::K_Per_W);
   SEThermalCircuitPath& AbsoluteReferenceToClothingPath = exthermal.CreatePath(Ground, Clothing, BGE::ExternalTemperaturePath::GroundToClothing);
   AbsoluteReferenceToClothingPath.GetNextHeatSource().SetValue(0.0, PowerUnit::W);
   SEThermalCircuitPath& ClothingToAmbientEnvironmentPath = exthermal.CreatePath(Clothing, ThermalEnvironment, BGE::ExternalTemperaturePath::ClothingToEnvironment);
@@ -5469,6 +5526,14 @@ void BioGears::SetupExternalTemperature()
   cExternalTorsoSkin.MapNode(TorsoSkin);
   SEThermalCompartment& cExternalHeadSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalHeadSkin);
   cExternalHeadSkin.MapNode(HeadSkin);
+  SEThermalCompartment& cExternalLeftArmSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalLeftArmSkin);
+  cExternalLeftArmSkin.MapNode(LeftArmSkin);
+  SEThermalCompartment& cExternalRightArmSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalRightArmSkin);
+  cExternalRightArmSkin.MapNode(RightArmSkin);
+  SEThermalCompartment& cExternalLeftLegSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalLeftLegSkin);
+  cExternalLeftLegSkin.MapNode(LeftLegSkin);
+  SEThermalCompartment& cExternalRightLegSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalRightLegSkin);
+  cExternalRightLegSkin.MapNode(RightLegSkin);
   SEThermalCompartment& cExternalGround = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::ExternalGround);
   cExternalGround.MapNode(Ground);
   SEThermalCompartment& cAmbient = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::Ambient);
@@ -5478,12 +5543,28 @@ void BioGears::SetupExternalTemperature()
   lActiveToClothing.MapPath(ActiveToClothing);
   SEThermalCompartmentLink& lExternalTorsoSkinToClothing = m_Compartments->CreateThermalLink(cExternalTorsoSkin, cClothing, BGE::TemperatureLink::ExternalTorsoSkinToClothing);
   lExternalTorsoSkinToClothing.MapPath(EnvironmentTorsoSkinToClothingPath);
-  SEThermalCompartmentLink& lExternalHeadSkinToClothing = m_Compartments->CreateThermalLink(cExternalHeadSkin, cClothing, BGE::TemperatureLink::ExternalHeadSkinToClothing);
-  lExternalHeadSkinToClothing.MapPath(EnvironmentHeadSkinToClothingPath);
   SEThermalCompartmentLink& lExternalTorsoSkinToGround = m_Compartments->CreateThermalLink(cExternalTorsoSkin, cExternalGround, BGE::TemperatureLink::ExternalTorsoSkinToGround);
   lExternalTorsoSkinToGround.MapPath(EnvironmentTorsoSkinToAbsoluteReferencePath);
+  SEThermalCompartmentLink& lExternalHeadSkinToClothing = m_Compartments->CreateThermalLink(cExternalHeadSkin, cClothing, BGE::TemperatureLink::ExternalHeadSkinToClothing);
+  lExternalHeadSkinToClothing.MapPath(EnvironmentHeadSkinToClothingPath);
   SEThermalCompartmentLink& lExternalHeadSkinToGround = m_Compartments->CreateThermalLink(cExternalHeadSkin, cExternalGround, BGE::TemperatureLink::ExternalHeadSkinToGround);
   lExternalHeadSkinToGround.MapPath(EnvironmentHeadSkinToAbsoluteReferencePath);
+  SEThermalCompartmentLink& lExternalLeftArmSkinToClothing = m_Compartments->CreateThermalLink(cExternalLeftArmSkin, cClothing, BGE::TemperatureLink::ExternalLeftArmSkinToClothing);
+  lExternalLeftArmSkinToClothing.MapPath(EnvironmentLeftArmSkinToClothingPath);
+  SEThermalCompartmentLink& lExternalLeftArmSkinToGround = m_Compartments->CreateThermalLink(cExternalLeftArmSkin, cExternalGround, BGE::TemperatureLink::ExternalLeftArmSkinToGround);
+  lExternalLeftArmSkinToGround.MapPath(EnvironmentLeftArmSkinToAbsoluteReferencePath);
+  SEThermalCompartmentLink& lExternalRightArmSkinToClothing = m_Compartments->CreateThermalLink(cExternalRightArmSkin, cClothing, BGE::TemperatureLink::ExternalRightArmSkinToClothing);
+  lExternalRightArmSkinToClothing.MapPath(EnvironmentRightArmSkinToClothingPath);
+  SEThermalCompartmentLink& lExternalRightArmSkinToGround = m_Compartments->CreateThermalLink(cExternalRightArmSkin, cExternalGround, BGE::TemperatureLink::ExternalRightArmSkinToGround);
+  lExternalRightArmSkinToGround.MapPath(EnvironmentRightArmSkinToAbsoluteReferencePath);
+  SEThermalCompartmentLink& lExternalLeftLegSkinToClothing = m_Compartments->CreateThermalLink(cExternalLeftLegSkin, cClothing, BGE::TemperatureLink::ExternalLeftLegSkinToClothing);
+  lExternalLeftLegSkinToClothing.MapPath(EnvironmentLeftLegSkinToClothingPath);
+  SEThermalCompartmentLink& lExternalLeftLegSkinToGround = m_Compartments->CreateThermalLink(cExternalLeftLegSkin, cExternalGround, BGE::TemperatureLink::ExternalLeftLegSkinToGround);
+  lExternalLeftLegSkinToGround.MapPath(EnvironmentLeftLegSkinToAbsoluteReferencePath);
+  SEThermalCompartmentLink& lExternalRightLegSkinToClothing = m_Compartments->CreateThermalLink(cExternalRightLegSkin, cClothing, BGE::TemperatureLink::ExternalRightLegSkinToClothing);
+  lExternalRightLegSkinToClothing.MapPath(EnvironmentRightLegSkinToClothingPath);
+  SEThermalCompartmentLink& lExternalRightLegSkinToGround = m_Compartments->CreateThermalLink(cExternalRightLegSkin, cExternalGround, BGE::TemperatureLink::ExternalRightLegSkinToGround);
+  lExternalRightLegSkinToGround.MapPath(EnvironmentRightLegSkinToAbsoluteReferencePath);
   SEThermalCompartmentLink& lClothingToEnclosure = m_Compartments->CreateThermalLink(cClothing, cEnclosure, BGE::TemperatureLink::ClothingToEnclosure);
   lClothingToEnclosure.MapPath(ClothingToEnclosure);
   SEThermalCompartmentLink& lClothingToEnvironment = m_Compartments->CreateThermalLink(cClothing, cAmbient, BGE::TemperatureLink::ClothingToEnvironment);
@@ -5530,6 +5611,30 @@ void BioGears::SetupInternalTemperature()
   HeadSkinToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
   HeadSkin.GetHeatBaseline().SetValue(HeadSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * HeadSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
 
+  SEThermalCircuitNode& LeftArmSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalLeftArmSkin);
+  LeftArmSkin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
+  SEThermalCircuitPath& LeftArmSkinToTemperatureGround = cIntemperature.CreatePath(LeftArmSkin, Ground, BGE::InternalTemperaturePath::InternalLeftArmSkinToTemperatureGround);
+  LeftArmSkinToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
+  LeftArmSkin.GetHeatBaseline().SetValue(LeftArmSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * LeftArmSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
+  
+  SEThermalCircuitNode& RightArmSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalRightArmSkin);
+  RightArmSkin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
+  SEThermalCircuitPath& RightArmSkinToTemperatureGround = cIntemperature.CreatePath(RightArmSkin, Ground, BGE::InternalTemperaturePath::InternalRightArmSkinToTemperatureGround);
+  RightArmSkinToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
+  RightArmSkin.GetHeatBaseline().SetValue(RightArmSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * RightArmSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
+  
+  SEThermalCircuitNode& LeftLegSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalLeftLegSkin);
+  LeftLegSkin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
+  SEThermalCircuitPath& LeftLegSkinToTemperatureGround = cIntemperature.CreatePath(LeftLegSkin, Ground, BGE::InternalTemperaturePath::InternalLeftLegSkinToTemperatureGround);
+  LeftLegSkinToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
+  LeftLegSkin.GetHeatBaseline().SetValue(LeftLegSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * LeftLegSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
+  
+  SEThermalCircuitNode& RightLegSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalRightLegSkin);
+  RightLegSkin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
+  SEThermalCircuitPath& RightLegSkinToTemperatureGround = cIntemperature.CreatePath(RightLegSkin, Ground, BGE::InternalTemperaturePath::InternalRightLegSkinToTemperatureGround);
+  RightLegSkinToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
+  RightLegSkin.GetHeatBaseline().SetValue(RightLegSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * RightLegSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
+
   SEThermalCircuitPath& CoreToTemperatureGround = cIntemperature.CreatePath(Core, Ground, BGE::InternalTemperaturePath::InternalCoreToGround);
   CoreToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
   Core.GetHeatBaseline().SetValue(CoreToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * Core.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
@@ -5537,6 +5642,14 @@ void BioGears::SetupInternalTemperature()
   CoreToTorsoSkin.GetResistanceBaseline().SetValue(34.3, HeatResistanceUnit::K_Per_W);
   SEThermalCircuitPath& CoreToHeadSkin = cIntemperature.CreatePath(Core, HeadSkin, BGE::InternalTemperaturePath::InternalCoreToInternalHeadSkin);
   CoreToHeadSkin.GetResistanceBaseline().SetValue(34.4, HeatResistanceUnit::K_Per_W);
+  SEThermalCircuitPath& CoreToLeftArmSkin = cIntemperature.CreatePath(Core, LeftArmSkin, BGE::InternalTemperaturePath::InternalCoreToInternalLeftArmSkin);
+  CoreToLeftArmSkin.GetResistanceBaseline().SetValue(27.3, HeatResistanceUnit::K_Per_W);
+  SEThermalCircuitPath& CoreToRightArmSkin = cIntemperature.CreatePath(Core, RightArmSkin, BGE::InternalTemperaturePath::InternalCoreToInternalRightArmSkin);
+  CoreToRightArmSkin.GetResistanceBaseline().SetValue(27.3, HeatResistanceUnit::K_Per_W);
+  SEThermalCircuitPath& CoreToLeftLegSkin = cIntemperature.CreatePath(Core, LeftLegSkin, BGE::InternalTemperaturePath::InternalCoreToInternalLeftLegSkin);
+  CoreToLeftLegSkin.GetResistanceBaseline().SetValue(44.5, HeatResistanceUnit::K_Per_W);
+  SEThermalCircuitPath& CoreToRightLegSkin = cIntemperature.CreatePath(Core, RightLegSkin, BGE::InternalTemperaturePath::InternalCoreToInternalRightLegSkin);
+  CoreToRightLegSkin.GetResistanceBaseline().SetValue(44.5, HeatResistanceUnit::K_Per_W);
 
   cIntemperature.SetNextAndCurrentFromBaselines();
   cIntemperature.StateChange();
@@ -5547,6 +5660,14 @@ void BioGears::SetupInternalTemperature()
   InternalTorsoSkin.MapNode(TorsoSkin);
   SEThermalCompartment& InternalHeadSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::InternalHeadSkin);
   InternalHeadSkin.MapNode(HeadSkin);
+  SEThermalCompartment& InternalLeftArmSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::InternalLeftArmSkin);
+  InternalLeftArmSkin.MapNode(LeftArmSkin);
+  SEThermalCompartment& InternalRightArmSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::InternalRightArmSkin);
+  InternalRightArmSkin.MapNode(RightArmSkin);
+  SEThermalCompartment& InternalLeftLegSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::InternalLeftLegSkin);
+  InternalLeftLegSkin.MapNode(LeftLegSkin);
+  SEThermalCompartment& InternalRightLegSkin = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::InternalRightLegSkin);
+  InternalRightLegSkin.MapNode(RightLegSkin);
   SEThermalCompartment& InternalGround = m_Compartments->CreateThermalCompartment(BGE::TemperatureCompartment::InternalGround);
   InternalCore.MapNode(Ground);
 
@@ -5556,12 +5677,28 @@ void BioGears::SetupInternalTemperature()
   InternalCoreToGround.MapPath(CoreToTemperatureGround);
   SEThermalCompartmentLink& InternalTorsoSkinToGround = m_Compartments->CreateThermalLink(InternalGround, InternalTorsoSkin, BGE::TemperatureLink::InternalTorsoSkinToGround);
   InternalTorsoSkinToGround.MapPath(TorsoSkinToTemperatureGround);
-  SEThermalCompartmentLink& InternalHeadSkinToGround = m_Compartments->CreateThermalLink(InternalGround, InternalHeadSkin, BGE::TemperatureLink::InternalHeadSkinToGround);
-  InternalHeadSkinToGround.MapPath(HeadSkinToTemperatureGround);
   SEThermalCompartmentLink& InternalCoreToInternalTorsoSkin = m_Compartments->CreateThermalLink(InternalCore, InternalTorsoSkin, BGE::TemperatureLink::InternalCoreToInternalTorsoSkin);
   InternalCoreToInternalTorsoSkin.MapPath(CoreToTorsoSkin);
+  SEThermalCompartmentLink& InternalHeadSkinToGround = m_Compartments->CreateThermalLink(InternalGround, InternalHeadSkin, BGE::TemperatureLink::InternalHeadSkinToGround);
+  InternalHeadSkinToGround.MapPath(HeadSkinToTemperatureGround);
   SEThermalCompartmentLink& InternalCoreToInternalHeadSkin = m_Compartments->CreateThermalLink(InternalCore, InternalHeadSkin, BGE::TemperatureLink::InternalCoreToInternalHeadSkin);
   InternalCoreToInternalHeadSkin.MapPath(CoreToHeadSkin);
+  SEThermalCompartmentLink& InternalLeftArmSkinToGround = m_Compartments->CreateThermalLink(InternalGround, InternalLeftArmSkin, BGE::TemperatureLink::InternalLeftArmSkinToGround);
+  InternalLeftArmSkinToGround.MapPath(LeftArmSkinToTemperatureGround);
+  SEThermalCompartmentLink& InternalCoreToInternalLeftArmSkin = m_Compartments->CreateThermalLink(InternalCore, InternalLeftArmSkin, BGE::TemperatureLink::InternalCoreToInternalLeftArmSkin);
+  InternalCoreToInternalLeftArmSkin.MapPath(CoreToLeftArmSkin);
+  SEThermalCompartmentLink& InternalRightArmSkinToGround = m_Compartments->CreateThermalLink(InternalGround, InternalRightArmSkin, BGE::TemperatureLink::InternalRightArmSkinToGround);
+  InternalRightArmSkinToGround.MapPath(RightArmSkinToTemperatureGround);
+  SEThermalCompartmentLink& InternalCoreToInternalRightArmSkin = m_Compartments->CreateThermalLink(InternalCore, InternalRightArmSkin, BGE::TemperatureLink::InternalCoreToInternalRightArmSkin);
+  InternalCoreToInternalRightArmSkin.MapPath(CoreToRightArmSkin);
+  SEThermalCompartmentLink& InternalLeftLegSkinToGround = m_Compartments->CreateThermalLink(InternalGround, InternalLeftLegSkin, BGE::TemperatureLink::InternalLeftLegSkinToGround);
+  InternalLeftLegSkinToGround.MapPath(LeftLegSkinToTemperatureGround);
+  SEThermalCompartmentLink& InternalCoreToInternalLeftLegSkin = m_Compartments->CreateThermalLink(InternalCore, InternalLeftLegSkin, BGE::TemperatureLink::InternalCoreToInternalLeftLegSkin);
+  InternalCoreToInternalLeftLegSkin.MapPath(CoreToLeftLegSkin);
+  SEThermalCompartmentLink& InternalRightLegSkinToGround = m_Compartments->CreateThermalLink(InternalGround, InternalRightLegSkin, BGE::TemperatureLink::InternalRightLegSkinToGround);
+  InternalRightLegSkinToGround.MapPath(RightLegSkinToTemperatureGround);
+  SEThermalCompartmentLink& InternalCoreToInternalRightLegSkin = m_Compartments->CreateThermalLink(InternalCore, InternalRightLegSkin, BGE::TemperatureLink::InternalCoreToInternalRightLegSkin);
+  InternalCoreToInternalRightLegSkin.MapPath(CoreToRightLegSkin);
 
 }
 Logger* BioGears::GetLogger() const
