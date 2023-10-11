@@ -700,6 +700,14 @@ void Environment::CalculateEvaporation()
   } else // Air
   {
     // Calculate the coefficient
+    std::vector<double> segmentedSkinSurfaceAreaPercents; //Using male values for testing
+    segmentedSkinSurfaceAreaPercents.push_back(0.36); // Trunk
+    segmentedSkinSurfaceAreaPercents.push_back(0.07); // Head
+    segmentedSkinSurfaceAreaPercents.push_back(0.184); // LArm
+    segmentedSkinSurfaceAreaPercents.push_back(0.184); // RArm
+    segmentedSkinSurfaceAreaPercents.push_back(0.386); // LLeg
+    segmentedSkinSurfaceAreaPercents.push_back(0.386); // RLeg
+    int index = 0;
     for (SEThermalCircuitPath* envSkinToGround : m_EnvironmentSkinToGroundPaths) {
       double dConvectiveTransferCoefficient_W_Per_m2_K = GetConvectiveHeatTranferCoefficient(HeatConductancePerAreaUnit::W_Per_m2_K);
       const double dLewisRelation_K_Per_kPa = 16.5;
@@ -730,7 +738,7 @@ void Environment::CalculateEvaporation()
       GetEvaporativeHeatTranferCoefficient().SetValue(dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa, HeatConductancePerAreaUnit::W_Per_m2_K);
 
       double dMaxEvaporativePotential = (1.0 / 1000.0) * (m_dWaterVaporPressureAtSkin_Pa - m_dWaterVaporPressureInAmbientAir_Pa) / (dClothingResistance_m2_kPa_Per_W + 1.0 / (fCl * dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa));
-      double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
+      double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2) * segmentedSkinSurfaceAreaPercents[index];
 
       double dSweatRate_kgPers = 0.0;
       if (m_data.GetEnergy().HasSweatRate()) {
