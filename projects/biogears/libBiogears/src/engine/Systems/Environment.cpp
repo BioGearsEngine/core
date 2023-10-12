@@ -156,6 +156,14 @@ void Environment::SetUp()
   m_ClothingToEnvironmentPath = m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ClothingToEnvironment);
   m_GroundToEnvironmentPath = m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::GroundToEnvironment);
   m_EnvironmentCoreToGroundPath = m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalCoreToGround);
+
+  m_cloSegmentation.clear();
+  m_cloSegmentation.push_back(0.39);// torso, gets 39 percent of clo
+  m_cloSegmentation.push_back(0.01); // head, gets no clo (0.01, assume not hat/hair for now)
+  m_cloSegmentation.push_back(0.05); // arms each get 5 percent of clo
+  m_cloSegmentation.push_back(0.05); // arms each get 5 percent of clo
+  m_cloSegmentation.push_back(0.25); // legs each get 25 percent of clo
+  m_cloSegmentation.push_back(0.25); // legs each get 25 percent of clo
   
   m_SkinToClothingPaths.clear();
   m_SkinToClothingPaths.push_back(m_EnvironmentCircuit->GetPath(BGE::ExternalTemperaturePath::ExternalTorsoSkinToClothing));
@@ -262,12 +270,12 @@ void Environment::PreProcess()
   // 1 is head, gets no clo (0.01, assume not hat/hair for now)
   // arms each get 5 percent of clo
   // legs each get 25 percent of clo
-  m_SkinToClothingPaths[0]->GetNextResistance().SetValue(0.39 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[1]->GetNextResistance().SetValue(0.01 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[2]->GetNextResistance().SetValue(0.05 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[3]->GetNextResistance().SetValue(0.25 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[4]->GetNextResistance().SetValue(0.05 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[5]->GetNextResistance().SetValue(0.25 * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[0]->GetNextResistance().SetValue(m_cloSegmentation[0] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[1]->GetNextResistance().SetValue(m_cloSegmentation[1] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[2]->GetNextResistance().SetValue(m_cloSegmentation[2] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[3]->GetNextResistance().SetValue(m_cloSegmentation[3] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[4]->GetNextResistance().SetValue(m_cloSegmentation[4] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[5]->GetNextResistance().SetValue(m_cloSegmentation[5] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
 
   //Set the skin heat loss
   double dSkinHeatLoss_W = 0.0;
@@ -715,7 +723,7 @@ void Environment::CalculateEvaporation()
       const double dClothingResistance_clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo);
       const double clo_To_m2_K_Per_W = 0.155;
       const double iCl = 0.35;
-      double dClothingResistance_m2_kPa_Per_W = clo_To_m2_K_Per_W * dClothingResistance_clo / (iCl * dLewisRelation_K_Per_kPa);
+      double dClothingResistance_m2_kPa_Per_W = clo_To_m2_K_Per_W * dClothingResistance_clo * m_cloSegmentation[index] / (iCl * dLewisRelation_K_Per_kPa);
       double fCl = 1.0 + 0.3 * dClothingResistance_clo;
       double skinWettednessDiffusion = 0.06;
 

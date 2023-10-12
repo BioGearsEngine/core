@@ -87,6 +87,7 @@ protected:
   double m_dHeatOfVaporizationOfWater_J_Per_kg;
   double m_dWaterVaporPressureInAmbientAir_Pa;
   double m_dWaterVaporPressureAtSkin_Pa;
+  std::vector<double> m_cloSegmentation;
   //Prandtl number calculation
   double m_WaterSpecificHeat_J_Per_kg_K;
   double m_WaterViscosity_N_s_Per_m2;

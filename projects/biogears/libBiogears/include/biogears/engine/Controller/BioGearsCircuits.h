@@ -358,6 +358,13 @@ namespace tatrc {
         DEFINE_STATIC_STRING(GroundToInternalCore);
         DEFINE_STATIC_STRING(InternalCoreToGround);
 
+        DEFINE_STATIC_STRING(GroundToInternalTorsoSkin);
+        DEFINE_STATIC_STRING(GroundToInternalHeadSkin);
+        DEFINE_STATIC_STRING(GroundToInternalLeftArmSkin);
+        DEFINE_STATIC_STRING(GroundToInternalRightArmSkin);
+        DEFINE_STATIC_STRING(GroundToInternalLeftLegSkin);
+        DEFINE_STATIC_STRING(GroundToInternalRightLegSkin);
+
         DEFINE_STATIC_STRING(InternalTorsoSkinToTemperatureGround);
         DEFINE_STATIC_STRING(InternalCoreToInternalTorsoSkin);
         DEFINE_STATIC_STRING(InternalHeadSkinToTemperatureGround);
