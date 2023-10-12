@@ -579,6 +579,12 @@ namespace tatrc {
         DEFINE_STATIC_STRING(ExternalLeftLegSkinToClothing);
         DEFINE_STATIC_STRING(ExternalRightLegSkinToClothing);
         DEFINE_STATIC_STRING(GroundToInternalCore);
+        DEFINE_STATIC_STRING(GroundToInternalTorsoSkin);
+        DEFINE_STATIC_STRING(GroundToInternalHeadSkin);
+        DEFINE_STATIC_STRING(GroundToInternalLeftArmSkin);
+        DEFINE_STATIC_STRING(GroundToInternalRightArmSkin);
+        DEFINE_STATIC_STRING(GroundToInternalLeftLegSkin);
+        DEFINE_STATIC_STRING(GroundToInternalRightLegSkin);
         DEFINE_STATIC_STRING(InternalCoreToInternalTorsoSkin);
         DEFINE_STATIC_STRING(InternalCoreToInternalHeadSkin);
         DEFINE_STATIC_STRING(InternalCoreToInternalLeftArmSkin);
@@ -603,7 +609,7 @@ namespace tatrc {
         static const std::vector<std::string>& GetValues()
         {
           static std::vector<std::string> _values = {
-            ActiveToClothing, ClothingToEnclosure, ClothingToEnvironment, ExternalCoreToGround, GroundToActive, GroundToClothing, GroundToEnclosure, GroundToEnvironment, ExternalTorsoSkinToGround, ExternalHeadSkinToGround, ExternalLeftArmSkinToGround, ExternalRightArmSkinToGround, ExternalLeftLegSkinToGround, ExternalRightLegSkinToGround, ExternalTorsoSkinToClothing, ExternalHeadSkinToClothing, ExternalLeftArmSkinToClothing, ExternalRightArmSkinToClothing, ExternalLeftLegSkinToClothing, ExternalRightLegSkinToClothing, GroundToInternalCore, InternalCoreToInternalTorsoSkin, InternalCoreToInternalHeadSkin, InternalCoreToInternalLeftArmSkin, InternalCoreToInternalRightArmSkin, InternalCoreToInternalLeftLegSkin, InternalCoreToInternalRightLegSkin, InternalCoreToGround, InternalTorsoSkinToGround, InternalHeadSkinToGround, InternalLeftArmSkinToGround, InternalRightArmSkinToGround, InternalLeftLegSkinToGround, InternalRightLegSkinToGround, InternalCoreToExternalCore, InternalTorsoSkinToExternalTorsoSkin, InternalHeadSkinToExternalHeadSkin, InternalLeftArmSkinToExternalLeftArmSkin, InternalRightArmSkinToExternalRightArmSkin, InternalLeftLegSkinToExternalLeftLegSkin, InternalRightLegSkinToExternalRightLegSkin
+            ActiveToClothing, ClothingToEnclosure, ClothingToEnvironment, ExternalCoreToGround, GroundToActive, GroundToClothing, GroundToEnclosure, GroundToEnvironment, ExternalTorsoSkinToGround, ExternalHeadSkinToGround, ExternalLeftArmSkinToGround, ExternalRightArmSkinToGround, ExternalLeftLegSkinToGround, ExternalRightLegSkinToGround, ExternalTorsoSkinToClothing, ExternalHeadSkinToClothing, ExternalLeftArmSkinToClothing, ExternalRightArmSkinToClothing, ExternalLeftLegSkinToClothing, ExternalRightLegSkinToClothing, GroundToInternalCore, GroundToInternalTorsoSkin, GroundToInternalHeadSkin, GroundToInternalLeftArmSkin, GroundToInternalRightArmSkin, GroundToInternalLeftLegSkin, GroundToInternalRightLegSkin, InternalCoreToInternalTorsoSkin, InternalCoreToInternalHeadSkin, InternalCoreToInternalLeftArmSkin, InternalCoreToInternalRightArmSkin, InternalCoreToInternalLeftLegSkin, InternalCoreToInternalRightLegSkin, InternalCoreToGround, InternalTorsoSkinToGround, InternalHeadSkinToGround, InternalLeftArmSkinToGround, InternalRightArmSkinToGround, InternalLeftLegSkinToGround, InternalRightLegSkinToGround, InternalCoreToExternalCore, InternalTorsoSkinToExternalTorsoSkin, InternalHeadSkinToExternalHeadSkin, InternalLeftArmSkinToExternalLeftArmSkin, InternalRightArmSkinToExternalRightArmSkin, InternalLeftLegSkinToExternalLeftLegSkin, InternalRightLegSkinToExternalRightLegSkin
           };
           return _values;
         }
