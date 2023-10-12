@@ -23,7 +23,6 @@ SEBurnWound::SEBurnWound()
   , m_compartments(5)
 {
   m_Inflammation = false; // When the burn wound is constructed, the corresponding inflammation state has not been established
-  m_BurnIntensity = 0.0; // Calculated value of intensity using TBSA and burn degree
   m_DegreeOfBurn = (CDM::enumBurnDegree::value)-1; // User input, burn degree afflicting specified TBSA
   for (auto& sa : m_compartments) {
     sa.SetValue(0.0);
@@ -42,7 +41,6 @@ void SEBurnWound::Clear()
   m_Inflammation = false;
   m_compartmentsAffected.clear();
   m_DegreeOfBurn = (CDM::enumBurnDegree::value)-1;
-  m_BurnIntensity = 0.0;
   m_TBSA->Clear();
 }
 //-----------------------------------------------------------------------------
@@ -80,7 +78,6 @@ bool SEBurnWound::Load(const CDM::BurnWoundData& in)
 
   SetTotalBodySurfaceArea(in.TotalBodySurfaceArea().value());
 
-  m_BurnIntensity = m_DegreeModifier * GetTotalBodySurfaceArea();
 
   return true;
 }
@@ -170,7 +167,7 @@ void SEBurnWound::SetDegreeOfBurn(CDM::enumBurnDegree::value bd)
 //-----------------------------------------------------------------------------
 double SEBurnWound::GetBurnIntensity() const
 {
-  return m_BurnIntensity;
+    return m_DegreeModifier * GetTotalBodySurfaceArea();
 }
 //-----------------------------------------------------------------------------
 bool SEBurnWound::HasInflammation() const
@@ -382,9 +379,9 @@ double SEBurnWound::getTrunkSA() const { return m_compartments[2].GetValue(); }
 double SEBurnWound::getLeftLegSA() const { return m_compartments[3].GetValue(); }
 double SEBurnWound::getRightLegSA() const { return m_compartments[4].GetValue(); }
 //-------------------------------------------------------------------------------
-double SEBurnWound::getLeftArmBurnIntensity() const { return m_DegreeModifier * m_compartments[0].GetValue(); }
-double SEBurnWound::getRightArmBurnIntensity() const { return m_DegreeModifier * m_compartments[1].GetValue(); }
-double SEBurnWound::getTrunkBurnIntensity() const { return m_DegreeModifier * m_compartments[2].GetValue(); }
-double SEBurnWound::getLeftLegBurnIntensity() const { return m_DegreeModifier * m_compartments[3].GetValue(); }
-double SEBurnWound::getRightLegBurnIntensity() const { return m_DegreeModifier * m_compartments[4].GetValue(); }
+double SEBurnWound::getLeftArmBurnIntensity() const { return m_DegreeModifier * m_compartments[0].GetValue() / MAXIMUM_LEFT_ARM; }
+double SEBurnWound::getRightArmBurnIntensity() const { return m_DegreeModifier * m_compartments[1].GetValue() / MAXIMUM_RIGHT_ARM; }
+double SEBurnWound::getTrunkBurnIntensity() const { return m_DegreeModifier * m_compartments[2].GetValue() / MAXIMUM_TRUNK; }
+double SEBurnWound::getLeftLegBurnIntensity() const { return m_DegreeModifier * m_compartments[3].GetValue() / MAXIMUM_LEFT_LEG; }
+double SEBurnWound::getRightLegBurnIntensity() const { return m_DegreeModifier * m_compartments[4].GetValue() / MAXIMUM_RIGHT_LEG; }
 }
