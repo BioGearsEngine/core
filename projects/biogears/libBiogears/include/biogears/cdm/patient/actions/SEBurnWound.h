@@ -45,7 +45,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  bool Load(const CDM::BurnWoundData& in);
+  virtual bool Load(const CDM::BurnWoundData& in);
   virtual CDM::BurnWoundData* Unload() const override;
 
   bool HasTotalBodySurfaceArea() const;
@@ -100,7 +100,6 @@ private:
   SEScalar0To1* m_TBSA;
   std::vector<SEScalar0To1> m_compartments;
 
-  double m_BurnIntensity;
   std::vector<std::string> m_compartmentsAffected;
 };
 }
