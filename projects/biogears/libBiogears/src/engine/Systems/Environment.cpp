@@ -694,7 +694,6 @@ void Environment::CalculateEvaporation()
 {
   if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
     //Submerged - therefore, no evaporation
-
     //Invalidate the coefficient
     GetEvaporativeHeatTranferCoefficient().Invalidate();
 
@@ -720,10 +719,10 @@ void Environment::CalculateEvaporation()
       double dConvectiveTransferCoefficient_W_Per_m2_K = GetConvectiveHeatTranferCoefficient(HeatConductancePerAreaUnit::W_Per_m2_K);
       const double dLewisRelation_K_Per_kPa = 16.5;
       const double dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa = dConvectiveTransferCoefficient_W_Per_m2_K * dLewisRelation_K_Per_kPa;
-      const double dClothingResistance_clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo);
+      const double dClothingResistance_clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo) * m_cloSegmentation[index];
       const double clo_To_m2_K_Per_W = 0.155;
       const double iCl = 0.35;
-      double dClothingResistance_m2_kPa_Per_W = clo_To_m2_K_Per_W * dClothingResistance_clo * m_cloSegmentation[index] / (iCl * dLewisRelation_K_Per_kPa);
+      double dClothingResistance_m2_kPa_Per_W = clo_To_m2_K_Per_W * dClothingResistance_clo / (iCl * dLewisRelation_K_Per_kPa);
       double fCl = 1.0 + 0.3 * dClothingResistance_clo;
       double skinWettednessDiffusion = 0.06;
 

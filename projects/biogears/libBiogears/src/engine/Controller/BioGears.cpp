@@ -5653,17 +5653,17 @@ void BioGears::SetupInternalTemperature()
   CoreToTemperatureGround.GetCapacitanceBaseline().SetValue((1.0 - skinMassFraction) * m_Patient->GetWeight(MassUnit::kg) * GetConfiguration().GetBodySpecificHeat(HeatCapacitancePerMassUnit::J_Per_K_kg), HeatCapacitanceUnit::J_Per_K);
   Core.GetHeatBaseline().SetValue(CoreToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * Core.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
   SEThermalCircuitPath& CoreToTorsoSkin = cIntemperature.CreatePath(Core, TorsoSkin, BGE::InternalTemperaturePath::InternalCoreToInternalTorsoSkin);
-  CoreToTorsoSkin.GetResistanceBaseline().SetValue(2.315, HeatResistanceUnit::C_s_Per_kcal);
+  CoreToTorsoSkin.GetResistanceBaseline().SetValue(2.315/3.0, HeatResistanceUnit::C_s_Per_kcal);
   SEThermalCircuitPath& CoreToHeadSkin = cIntemperature.CreatePath(Core, HeadSkin, BGE::InternalTemperaturePath::InternalCoreToInternalHeadSkin);
-  CoreToHeadSkin.GetResistanceBaseline().SetValue(2.257, HeatResistanceUnit::C_s_Per_kcal);
+  CoreToHeadSkin.GetResistanceBaseline().SetValue(2.257 / 3.0, HeatResistanceUnit::C_s_Per_kcal);
   SEThermalCircuitPath& CoreToLeftArmSkin = cIntemperature.CreatePath(Core, LeftArmSkin, BGE::InternalTemperaturePath::InternalCoreToInternalLeftArmSkin);
-  CoreToLeftArmSkin.GetResistanceBaseline().SetValue(1.653, HeatResistanceUnit::C_s_Per_kcal);
+  CoreToLeftArmSkin.GetResistanceBaseline().SetValue(1.653 / 3.0, HeatResistanceUnit::C_s_Per_kcal);
   SEThermalCircuitPath& CoreToRightArmSkin = cIntemperature.CreatePath(Core, RightArmSkin, BGE::InternalTemperaturePath::InternalCoreToInternalRightArmSkin);
-  CoreToRightArmSkin.GetResistanceBaseline().SetValue(1.653, HeatResistanceUnit::C_s_Per_kcal);
+  CoreToRightArmSkin.GetResistanceBaseline().SetValue(1.653 / 3.0, HeatResistanceUnit::C_s_Per_kcal);
   SEThermalCircuitPath& CoreToLeftLegSkin = cIntemperature.CreatePath(Core, LeftLegSkin, BGE::InternalTemperaturePath::InternalCoreToInternalLeftLegSkin);
-  CoreToLeftLegSkin.GetResistanceBaseline().SetValue(0.703, HeatResistanceUnit::C_s_Per_kcal);
+  CoreToLeftLegSkin.GetResistanceBaseline().SetValue(0.703 / 3.0, HeatResistanceUnit::C_s_Per_kcal);
   SEThermalCircuitPath& CoreToRightLegSkin = cIntemperature.CreatePath(Core, RightLegSkin, BGE::InternalTemperaturePath::InternalCoreToInternalRightLegSkin);
-  CoreToRightLegSkin.GetResistanceBaseline().SetValue(0.703, HeatResistanceUnit::C_s_Per_kcal);
+  CoreToRightLegSkin.GetResistanceBaseline().SetValue(0.703 / 3.0, HeatResistanceUnit::C_s_Per_kcal);
 
   cIntemperature.SetNextAndCurrentFromBaselines();
   cIntemperature.StateChange();
