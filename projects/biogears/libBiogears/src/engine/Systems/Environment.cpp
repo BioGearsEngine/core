@@ -270,12 +270,12 @@ void Environment::PreProcess()
   // 1 is head, gets no clo (0.01, assume not hat/hair for now)
   // arms each get 5 percent of clo
   // legs each get 25 percent of clo
-  m_SkinToClothingPaths[0]->GetNextResistance().SetValue(m_cloSegmentation[0] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[1]->GetNextResistance().SetValue(m_cloSegmentation[1] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[2]->GetNextResistance().SetValue(m_cloSegmentation[2] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[3]->GetNextResistance().SetValue(m_cloSegmentation[3] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[4]->GetNextResistance().SetValue(m_cloSegmentation[4] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[5]->GetNextResistance().SetValue(m_cloSegmentation[5] * skinToClothingResistance, HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[0]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[0], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[1]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[1], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[2]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[2], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[3]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[3], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[4]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[4], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[5]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[5], HeatResistanceUnit::K_Per_W);
 
   //Set the skin heat loss
   double dSkinHeatLoss_W = 0.0;
@@ -707,7 +707,7 @@ void Environment::CalculateEvaporation()
   } else // Air
   {
     // Calculate the coefficient
-    std::vector<double> segmentedSkinSurfaceAreaPercents; //Using male values for testing
+    std::vector<double> segmentedSkinSurfaceAreaPercents; //Default is for males. Minimal difference but could be expanded by gender in the future.
     segmentedSkinSurfaceAreaPercents.push_back(0.36); // Trunk
     segmentedSkinSurfaceAreaPercents.push_back(0.07); // Head
     segmentedSkinSurfaceAreaPercents.push_back(0.092); // LArm
@@ -719,7 +719,7 @@ void Environment::CalculateEvaporation()
       double dConvectiveTransferCoefficient_W_Per_m2_K = GetConvectiveHeatTranferCoefficient(HeatConductancePerAreaUnit::W_Per_m2_K);
       const double dLewisRelation_K_Per_kPa = 16.5;
       const double dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa = dConvectiveTransferCoefficient_W_Per_m2_K * dLewisRelation_K_Per_kPa;
-      const double dClothingResistance_clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo) * m_cloSegmentation[index];
+      const double dClothingResistance_clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo) / m_cloSegmentation[index];
       const double clo_To_m2_K_Per_W = 0.155;
       const double iCl = 0.35;
       double dClothingResistance_m2_kPa_Per_W = clo_To_m2_K_Per_W * dClothingResistance_clo / (iCl * dLewisRelation_K_Per_kPa);
