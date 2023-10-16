@@ -971,7 +971,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double ketones_CellularEfficiency = glucose_CellularEfficiency; //Assuming the same as glucose
   double mandatoryMuscleAnaerobicFraction = 0.028; //There is always some anaerobic consumption in the body, particularly in muscle fibers with few mitochondria \cite boron2012medical
   double kcal_Per_day_Per_Watt = 20.6362855;
-  double maxWorkRate_W = 1200; //see Energy::Exercise
+  double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
 
   double sleepTime_min = m_data.GetNervous().GetSleepTime().GetValue(TimeUnit::min); //update value from last computation
   double wakeTime_min = m_data.GetNervous().GetWakeTime().GetValue(TimeUnit::min); //update value from last computation

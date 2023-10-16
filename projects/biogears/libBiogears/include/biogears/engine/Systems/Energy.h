@@ -101,6 +101,12 @@ private:
   bool m_packOn;
   double m_previousWeightPack_kg;
 
+  double m_test;
+  double m_test1;
+  double m_test2;
+  double m_test3;
+  double m_test4;
+
   // Stateless member variable (Set in SetUp())
   double m_dT_s;
   SEPatient* m_Patient;

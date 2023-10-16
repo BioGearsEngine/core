@@ -710,10 +710,10 @@ void Environment::CalculateEvaporation()
     std::vector<double> segmentedSkinSurfaceAreaPercents; //Using male values for testing
     segmentedSkinSurfaceAreaPercents.push_back(0.36); // Trunk
     segmentedSkinSurfaceAreaPercents.push_back(0.07); // Head
-    segmentedSkinSurfaceAreaPercents.push_back(0.184); // LArm
-    segmentedSkinSurfaceAreaPercents.push_back(0.184); // RArm
-    segmentedSkinSurfaceAreaPercents.push_back(0.386); // LLeg
-    segmentedSkinSurfaceAreaPercents.push_back(0.386); // RLeg
+    segmentedSkinSurfaceAreaPercents.push_back(0.092); // LArm
+    segmentedSkinSurfaceAreaPercents.push_back(0.092); // RArm
+    segmentedSkinSurfaceAreaPercents.push_back(0.193); // LLeg
+    segmentedSkinSurfaceAreaPercents.push_back(0.193); // RLeg
     int index = 0;
     for (SEThermalCircuitPath* envSkinToGround : m_EnvironmentSkinToGroundPaths) {
       double dConvectiveTransferCoefficient_W_Per_m2_K = GetConvectiveHeatTranferCoefficient(HeatConductancePerAreaUnit::W_Per_m2_K);
@@ -761,6 +761,7 @@ void Environment::CalculateEvaporation()
 
       // Set the source
       envSkinToGround->GetNextHeatSource().SetValue(dSurfaceArea_m2 * EvaporativeHeatLossFromSkin_W, PowerUnit::W);
+      index += 1;
     }
   }
 }
