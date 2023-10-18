@@ -46,6 +46,8 @@ set_target_properties(bg-cli
   CXX_STANDARD 14
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   VS_DEBUGGER_ENVIRONMENT "${VS_DEBUGGER_ENVIRONMENT_LIST}"
+  BUILD_RPATH   "${Biogears_BUILD_RPATH}"
+  INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\${ORIGIN}:\${ORIGIN}/../lib:\${ORIGIN}/lib">>
   )
 if(WIN32)
   target_sources(bg-cli  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bg-cli.rc)
@@ -80,6 +82,8 @@ set_target_properties(bg-scenario
   CXX_STANDARD 14
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   VS_DEBUGGER_ENVIRONMENT "${VS_DEBUGGER_ENVIRONMENT_LIST}"
+  BUILD_RPATH   "${Biogears_BUILD_RPATH}"
+  INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\${ORIGIN}:\${ORIGIN}/../lib:\${ORIGIN}/lib">>
   )
   if(WIN32)
     target_sources(bg-scenario  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bg-scenario.rc)
