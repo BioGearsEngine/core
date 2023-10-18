@@ -1,13 +1,13 @@
 //**********************************************************************************
-//Copyright 2015 Applied Research Associates, Inc.
-//Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-//this file except in compliance with the License.You may obtain a copy of the License
-//at :
-//http://www.apache.org/licenses/LICENSE-2.0
-//Unless required by applicable law or agreed to in writing, software distributed under
-//the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-//CONDITIONS OF ANY KIND, either express or implied.See the License for the
-//specific language governing permissions and limitations under the License.
+// Copyright 2015 Applied Research Associates, Inc.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License.You may obtain a copy of the License
+// at :
+// http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software distributed under
+// the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied.See the License for the
+// specific language governing permissions and limitations under the License.
 //**************************************************************************************
 
 #include <biogears/exports.h>
@@ -120,12 +120,11 @@ bool genRuntime(std::string pathName)
 void parse_generate_arguments(biogears::Arguments::MultiwordValue&& args)
 {
 
-  auto is_keyword = [](const std::string& v) 
-           { return v == "data" || v == "patients" || v == "runtime" || v == "states" || v == "sepsis" || v == "tables"; };
+  auto is_keyword = [](const std::string& v) { return v == "data" || v == "patients" || v == "runtime" || v == "states" || v == "sepsis" || v == "tables"; };
 
   auto current = args.begin();
   auto end = args.end();
-  for (; current != end;  ++current) {
+  for (; current != end; ++current) {
     const auto& arg = *current;
     if (arg == "data") {
       g_run_generate_data = true;
@@ -211,15 +210,15 @@ int main(int argc, char** argv)
   args.append_keywords({ "SHA1", "GENRUNTIME" });
 #endif
 
-  unsigned int thread_count = (std::thread::hardware_concurrency() > 2 ) ? std::thread::hardware_concurrency() - 2 : 1;
+  unsigned int thread_count = (std::thread::hardware_concurrency() > 2) ? std::thread::hardware_concurrency() - 2 : 1;
 
-  if (!args.parse(argc, argv) ) {
+  if (!args.parse(argc, argv)) {
     std::cerr << args.error_msg() << "\n";
     print_help(BG_CLI_PARSE_ERROR);
-  } else if (args.empty())  {
-     std::cerr << "No arguments supplied\n.";
+  } else if (args.empty()) {
+    std::cerr << "No arguments supplied\n.";
     print_help(BG_CLI_PARSE_ERROR);
-  } else if(  args.Option("HELP") || args.Option("H") ) {
+  } else if (args.Option("HELP") || args.Option("H")) {
     print_help(BG_CLI_SUCCESS);
   }
 
@@ -245,8 +244,8 @@ int main(int argc, char** argv)
     }
   }
   if (thread_count < 1) {
-     std::cerr << "Option J given" << thread_count << "but, must be given a number greater 0 \n";
-     print_help(BG_CLI_THREAD_COUNT);
+    std::cerr << "Option J given" << thread_count << "but, must be given a number greater 0 \n";
+    print_help(BG_CLI_THREAD_COUNT);
   }
 #ifdef BIOGEARS_IO_PRESENT
   if (args.KeywordFound("SHA1")) {
@@ -289,13 +288,13 @@ int main(int argc, char** argv)
   as_subprocess = !(args.Option("THREADED") || args.Option("T"));
 #endif
 
-  //Argument Parsing for 2.0 Arguments
-  //                     and legacy 1.0 GEN args
+  // Argument Parsing for 2.0 Arguments
+  //                      and legacy 1.0 GEN args
   if (args.MultiWordFound("GENERATE")) {
-    parse_generate_arguments( args.MultiWord("GENERATE") );
+    parse_generate_arguments(args.MultiWord("GENERATE"));
   }
   if (args.MultiWordFound("GEN")) {
-    parse_generate_arguments( args.MultiWord("GEN"));
+    parse_generate_arguments(args.MultiWord("GEN"));
   }
   if (args.Option("GENSTATES")) {
     g_run_generate_patient_states = true;
@@ -405,7 +404,7 @@ int main(int argc, char** argv)
     const auto runs = biogears::Config("config/ValidationSystems.config");
     driver.queue(runs, as_subprocess);
   }
-  if (g_run_patient_validation) { //run-patient-validation
+  if (g_run_patient_validation) { // run-patient-validation
     const auto runs = biogears::Config("config/ValidationPatients.config");
     driver.queue(runs, as_subprocess);
   }
@@ -426,7 +425,12 @@ int main(int argc, char** argv)
     auto configs = biogears::Config {};
     for (auto& arg : args.MultiWord("CONFIG")) {
       const auto runs = biogears::Config(arg);
-      driver.queue(runs, as_subprocess);
+      if (runs) {
+        driver.queue(runs, as_subprocess);
+      } else {
+        std::cout << "Unable to run " << biogears::branded_version_string_str() << std::endl;
+        exit(BG_CLI_SUCCESS);
+      }
     }
   }
 
@@ -446,7 +450,7 @@ int main(int argc, char** argv)
     driver.stop_when_empty();
     driver.join();
   }
-  //We want Gentables to run after all other work has finished
+  // We want Gentables to run after all other work has finished
   if (g_run_generate_tables) {
     biogears::ReportWriter report_writer;
     for (auto& table : g_requested_table_formats) {

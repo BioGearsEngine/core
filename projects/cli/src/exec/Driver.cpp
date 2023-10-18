@@ -389,7 +389,8 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
       }
 #endif
       queue_from_patient_files(exec, patient_files, scenario_launch);
-    } else if (filesystem::exists(scenario->InitialParameters()->PatientFile().get())) {
+    } 
+    else if (filesystem::exists(scenario->InitialParameters()->PatientFile().get())) {
       if (filesystem::is_directory(scenario->InitialParameters()->PatientFile().get())) {
         auto patient_files = biogears::ListFiles(scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)", false);
         queue_from_patient_files(exec, patient_files, scenario_launch);
@@ -739,9 +740,9 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   // NOTE: This loses non relative prefixes as the split will eat the leading path_separator
   filesystem::path parent_dir = split_scenario_path.parent_path();
 
-  if (multi_patient_run) {
-    ex.Name(ex.Name() + "-" + patient_no_extension);
-  }
+  //if (multi_patient_run) {
+  //  ex.Name(ex.Name() + "-" + patient_no_extension);
+  //}
 
   std::string base_file_name = (multi_patient_run) ? scenario_no_extension + "-" + patient_no_extension : scenario_no_extension;
   std::string console_file = base_file_name + ".log";

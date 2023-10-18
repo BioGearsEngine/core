@@ -14,7 +14,6 @@
 #include <biogears/io/io-manager.h>
 #include <biogears/string/manipulation.h>
 
-
 namespace biogears {
 
 std::string error_context;
@@ -319,6 +318,21 @@ auto Config::back() const -> const_reference
   return _execs.back();
 }
 //-----------------------------------------------------------------------------
+size_t Config::size() const
+{
+  return _execs.size();
+}
+//-----------------------------------------------------------------------------
+bool Config::isValid() const
+{
+  return size() != 0;
+}
+//-----------------------------------------------------------------------------
+Config::operator bool() const
+{
+  return isValid();
+}
+//-----------------------------------------------------------------------------
 bool Config::load(std::string filepath, bool silent)
 {
   using namespace biogears;
@@ -330,13 +344,17 @@ bool Config::load(std::string filepath, bool silent)
   auto possible_path = logger->GetIoManager().lock()->FindConfigFile(filepath.c_str());
   if (possible_path.empty()) {
     size_t content_size;
-    #ifdef BIOGEARS_IO_PRESENT
-      auto content = biogears::io::get_embedded_config_file(filepath.c_str(), content_size);
+#ifdef BIOGEARS_IO_PRESENT
+    auto content = biogears::io::get_embedded_config_file(filepath.c_str(), content_size);
     std::istringstream iss { content };
-    if ( tokens.tokenize(iss)) {
+    if (iss.eof() && tokens.tokenize(iss)) {
       return process(std::move(tokens));
     }
-    #endif
+#endif
+    if (!silent) {
+      std::cerr << "Unable to Load " << filepath << "!!!\n";
+    }
+    return false;
   } else {
     std::ifstream ifs { possible_path };
     if (ifs.is_open() && tokens.tokenize(ifs)) {
