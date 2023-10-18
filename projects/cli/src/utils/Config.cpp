@@ -347,7 +347,7 @@ bool Config::load(std::string filepath, bool silent)
 #ifdef BIOGEARS_IO_PRESENT
     auto content = biogears::io::get_embedded_config_file(filepath.c_str(), content_size);
     std::istringstream iss { content };
-    if (iss.eof() && tokens.tokenize(iss)) {
+    if (!iss.eof() && tokens.tokenize(iss)) {
       return process(std::move(tokens));
     }
 #endif
