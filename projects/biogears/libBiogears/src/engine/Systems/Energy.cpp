@@ -682,12 +682,12 @@ void Energy::UpdateHeatResistance()
   double skinBloodFlow_m3_Per_s = m_data.GetCardiovascular().GetMeanSkinFlow().GetValue(VolumePerTimeUnit::m3_Per_s);
   std::vector<double> segmentedSkinBloodFlows;
   // mean * 6 compts * compartmental fraction for each segments blood flow
-  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (220.66 / 302.91)); // Trunk
-  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (46.69 / 302.91)); // Head
-  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (5.06 / 302.91)); // LArm
-  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (5.06 / 302.91)); // RArm
-  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (12.72 / 302.91)); // LLeg
-  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (12.72 / 302.91)); // RLeg
+  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (2.10 / 11.89)); // Trunk
+  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (1.44 / 11.89)); // Head
+  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (1.25 / 11.89)); // LArm
+  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (1.25 / 11.89)); // RArm
+  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (2.925 / 11.89)); // LLeg
+  segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (2.925 / 11.89)); // RLeg
   int index = 0;
   for (SEThermalCircuitPath* coreToSkinPath : m_coreToSkinPaths) {
     double bloodDensity_kg_Per_m3 = m_data.GetBloodChemistry().GetBloodDensity().GetValue(MassPerVolumeUnit::kg_Per_m3);

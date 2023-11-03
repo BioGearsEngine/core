@@ -270,12 +270,13 @@ void Environment::PreProcess()
   // 1 is head, gets no clo (0.01, assume not hat/hair for now)
   // arms each get 5 percent of clo
   // legs each get 25 percent of clo
-  m_SkinToClothingPaths[0]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[0], HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[1]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[1], HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[2]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[2], HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[3]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[3], HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[4]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[4], HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[5]->GetNextResistance().SetValue(skinToClothingResistance / m_cloSegmentation[5], HeatResistanceUnit::K_Per_W);
+  double clotTest = 1.0;
+  m_SkinToClothingPaths[0]->GetNextResistance().SetValue(clotTest * skinToClothingResistance * m_cloSegmentation[0], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[1]->GetNextResistance().SetValue(clotTest  * skinToClothingResistance * m_cloSegmentation[1], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[2]->GetNextResistance().SetValue(clotTest * skinToClothingResistance * m_cloSegmentation[2], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[3]->GetNextResistance().SetValue(clotTest * skinToClothingResistance * m_cloSegmentation[3], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[4]->GetNextResistance().SetValue(clotTest * skinToClothingResistance * m_cloSegmentation[4], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[5]->GetNextResistance().SetValue(clotTest * skinToClothingResistance * m_cloSegmentation[5], HeatResistanceUnit::K_Per_W);
 
   //Set the skin heat loss
   double dSkinHeatLoss_W = 0.0;
@@ -296,6 +297,7 @@ void Environment::PreProcess()
 
   //Record heat fluxes after we have processed all actions
   double dTotalHeatLoss_W = 0.0;
+  double eHeatLoss_W = 0.0;
   if (m_ClothingToEnclosurePath->HasHeatTransferRate()) {
     dTotalHeatLoss_W = m_ClothingToEnclosurePath->GetHeatTransferRate().GetValue(PowerUnit::W);
   }
@@ -306,8 +308,11 @@ void Environment::PreProcess()
   GetConvectiveHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
   for (SEThermalCircuitPath* envSkinToGround : m_EnvironmentSkinToGroundPaths) {
     if (envSkinToGround->HasHeatTransferRate()) {
-      dTotalHeatLoss_W += envSkinToGround->GetHeatTransferRate().GetValue(PowerUnit::W);
+      eHeatLoss_W += envSkinToGround->GetHeatTransferRate().GetValue(PowerUnit::W);
     }
+  }
+  if (eHeatLoss_W > 0.) {
+    dTotalHeatLoss_W = eHeatLoss_W;
   }
   GetEvaporativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
 }
