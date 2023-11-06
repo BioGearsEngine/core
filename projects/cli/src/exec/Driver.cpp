@@ -380,6 +380,8 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     const auto patient_file = scenario->InitialParameters()->PatientFile().get();
     std::string nc_patient_file = patient_file;
     std::transform(nc_patient_file.begin(), nc_patient_file.end(), nc_patient_file.begin(), ::tolower);
+    //When the user provides the ALL directive
+    //We will load one file for every patient in patients/
     if ("all" == nc_patient_file) {
       auto patient_files = biogears::ListFiles("patients", R"(.*\.xml)", false);
 #if BIOGEARS_IO_PRESENT
@@ -390,20 +392,27 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
 #endif
       queue_from_patient_files(exec, patient_files, scenario_launch);
     } 
-    else if (filesystem::exists(scenario->InitialParameters()->PatientFile().get())) {
-      if (filesystem::is_directory(scenario->InitialParameters()->PatientFile().get())) {
-        auto patient_files = biogears::ListFiles(scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)", false);
+    //When the user provides a directory we treat it as an ALL
+    //But for the directory given
+    else if (filesystem::exists(patient_file)) {
+      if (filesystem::is_directory(patient_file)) {
+        auto patient_files = biogears::ListFiles(patient_file, R"(.*\.xml)", false);
         queue_from_patient_files(exec, patient_files, scenario_launch);
         return;
-      } else {
+      }
+      else {
         exec.Patient(patient_file);
         _pool.queue_work(std::bind(scenario_launch, std::move(exec), false));
         ++_total_work;
         return;
       }
-    } else if (filesystem::exists("patients/" + scenario->InitialParameters()->PatientFile().get())) {
-      if (filesystem::is_directory("patients/" + scenario->InitialParameters()->PatientFile().get())) {
-        auto patient_files = biogears::ListFiles("patients/" + scenario->InitialParameters()->PatientFile().get(), R"(.*\.xml)", false);
+    } 
+    //Historically biogears auto falls back on a assumed directory structure
+    //If the given exist in patients/ and is a directory we will treat it as
+    //if ALL was given but for the provided directory
+    else if (filesystem::exists("patients/" + patient_file)) {
+      if (filesystem::is_directory("patients/" + patient_file)) {
+        auto patient_files = biogears::ListFiles("patients/" + patient_file, R"(.*\.xml)", false);
         queue_from_patient_files(exec, patient_files, scenario_launch);
         return;
       } else {
@@ -412,11 +421,21 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
         ++_total_work;
         return;
       }
-    } else {
-      auto matching_patients = find_matching_files(scenario->InitialParameters()->PatientFile().get());
+    } 
+    //As the user has not provided ALL or given a directory we will now
+    //find matching files across all the IO call backs and queue correctly.
+    //We support some wild cards so we may have more then one result. 
+    else {
+       auto matching_patients = find_matching_files(patient_file);
       if (matching_patients.empty()) {
-        matching_patients = find_matching_files("patients/" + scenario->InitialParameters()->PatientFile().get());
+        matching_patients = find_matching_files("patients/" + patient_file);
+      } 
+      if (matching_patients.empty()){
+        // As all fallback locations have failed we have no furtherways to process the patient and should abort processing.
+        std::cout << "Error unable to process InitialParameter Patient " << patient_file << " no patient specified.\n";
+        return;
       }
+
       queue_from_patient_files(exec, matching_patients, scenario_launch);
     }
   } else if (scenario->InitialParameters().present() && scenario->InitialParameters()->Patient().present()) {
@@ -460,7 +479,9 @@ void Driver::queue_from_sate_files(const Executor& exec, const std::vector<files
 void Driver::queue_from_patient_files(const Executor& exec, const std::vector<filesystem::path>& patient_files, std::function<void(Executor, bool)> scenario_launch_func)
 {
   for (auto& patient_file : patient_files) {
-    std::cout << "\t" << patient_file << std::endl;
+    if (patient_files.size() != 1) {
+        std::cout << "\t" << patient_file << std::endl;
+    }
     Executor patientEx { exec };
     patientEx.Patient(patient_file);
 
@@ -740,9 +761,9 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   // NOTE: This loses non relative prefixes as the split will eat the leading path_separator
   filesystem::path parent_dir = split_scenario_path.parent_path();
 
-  //if (multi_patient_run) {
-  //  ex.Name(ex.Name() + "-" + patient_no_extension);
-  //}
+  // if (multi_patient_run) {
+  //   ex.Name(ex.Name() + "-" + patient_no_extension);
+  // }
 
   std::string base_file_name = (multi_patient_run) ? scenario_no_extension + "-" + patient_no_extension : scenario_no_extension;
   std::string console_file = base_file_name + ".log";

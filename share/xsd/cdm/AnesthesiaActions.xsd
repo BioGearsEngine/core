@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
   <xs:include schemaLocation="Anesthesia.xsd"/>
 
   <!-- @brief Base anesthesia machine action type. -->
-  <xs:complexType name="AnesthesiaMachineActionData" abstract="true">
+  <xs:complexType name="AnesthesiaMachineActionData" >
     <xs:complexContent>
       <xs:extension base="ActionData"/>
     </xs:complexContent>

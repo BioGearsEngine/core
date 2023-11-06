@@ -15,14 +15,14 @@ specific language governing permissions and limitations under the License.
        @details Properties are structures that actually contain data, they are analogous to basic inherient data types of a language
        - Examples: Enumerations/Strings, Arrays, Scalars and Booleans. Double values are represented by Scalars which are doubles AND a unit of measure.       
   -->
-  <xs:complexType name="PropertyData" abstract="true"/>
+  <xs:complexType name="PropertyData" />
 
 
   <!-- @brief The basic data encapsulating class.
        @details Objects are structures that are organize Properties into an Object Oriented Design Pattern. Objects can contain properteis and other 'child' objects
        - Examples: Substances/Drugs, Patients, Physiological systems, Circuits, etc.
   -->
-  <xs:complexType name="ObjectData" abstract="true">
+  <xs:complexType name="ObjectData" >
     <xs:attribute name="contentVersion" type="xs:string" use="optional"/>
   </xs:complexType>
 

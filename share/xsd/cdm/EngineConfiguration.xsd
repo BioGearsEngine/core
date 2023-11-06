@@ -37,14 +37,14 @@ specific language governing permissions and limitations under the License.
 
 
 
-  <xs:complexType name="PhysiologyEngineStabilizationData" abstract="true">
+  <xs:complexType name="PhysiologyEngineStabilizationData" >
     <xs:complexContent>
       <xs:extension base="ObjectData">
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="PhysiologyEngineConditionStabilizationData" abstract="true">
+  <xs:complexType name="PhysiologyEngineConditionStabilizationData" >
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:attribute name="Name" type="xs:string" use="required"/>

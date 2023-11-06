@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
   <xs:include schemaLocation="Inhaler.xsd"/>
 
   <!-- @brief Base inhaler action type. -->
-  <xs:complexType name="InhalerActionData" abstract="true">
+  <xs:complexType name="InhalerActionData" >
     <xs:complexContent>
       <xs:extension base="ActionData"/>
     </xs:complexContent>

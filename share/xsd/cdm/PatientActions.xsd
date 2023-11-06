@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
   <xs:include schemaLocation="Substance.xsd"/>
 
   <!-- @brief Base Patient Action type -->
-  <xs:complexType name="PatientActionData" abstract="true">
+  <xs:complexType name="PatientActionData" >
     <xs:annotation>
       <xs:documentation>Base Patient Action Type</xs:documentation>
     </xs:annotation>
@@ -190,7 +190,7 @@ specific language governing permissions and limitations under the License.
   </xs:complexType>
 
   <!-- @brief Base CPR action type. -->
-  <xs:complexType name="ChestCompressionData" abstract="true">
+  <xs:complexType name="ChestCompressionData" >
     <xs:complexContent>
       <xs:extension base="PatientActionData"/>
     </xs:complexContent>
@@ -233,7 +233,7 @@ specific language governing permissions and limitations under the License.
   </xs:complexType>
 
   <!-- @brief Base class of all concious breathing controls. -->
-  <xs:complexType name="ConsciousRespirationCommandData" abstract="true">
+  <xs:complexType name="ConsciousRespirationCommandData" >
     <xs:complexContent>
       <xs:extension base="ObjectData">
         <xs:sequence>
@@ -638,7 +638,7 @@ specific language governing permissions and limitations under the License.
   </xs:simpleType>
 
   <!-- @brief The administration of a substance or other compound that is given to raise its concentration in blood to an effective level. -->
-  <xs:complexType name="SubstanceAdministrationData" abstract="true">
+  <xs:complexType name="SubstanceAdministrationData" >
     <xs:complexContent>
       <xs:extension base="PatientActionData"/>
     </xs:complexContent>

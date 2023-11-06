@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
   <xs:include schemaLocation="PatientNutrition.xsd"/>
 
   <!-- @brief Base Patient Condition type -->
-  <xs:complexType name="PatientConditionData" abstract="true">
+  <xs:complexType name="PatientConditionData" >
     <xs:complexContent>
       <xs:extension base="ConditionData"/>
     </xs:complexContent>
@@ -33,7 +33,7 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
   <!-- @brief Any condition causing the heart muscle not to pump sufficient blood. -->
-  <xs:complexType name="ChronicHeartFailureData" abstract="true">
+  <xs:complexType name="ChronicHeartFailureData" >
     <xs:complexContent>
       <xs:extension base="PatientConditionData"/>
     </xs:complexContent>

@@ -117,7 +117,9 @@ bool genRuntime(std::string pathName)
 //  This function parses the multword value list of a GENERATE
 //  keyword and proeprly queues the correct operations needed to process
 //  the command
-void parse_generate_arguments(biogears::Arguments::MultiwordValue&& args)
+void parse_generate_arguments
+
+(biogears::Arguments::MultiwordValue&& args)
 {
 
   auto is_keyword = [](const std::string& v) { return v == "data" || v == "patients" || v == "runtime" || v == "states" || v == "sepsis" || v == "tables"; };
@@ -126,6 +128,8 @@ void parse_generate_arguments(biogears::Arguments::MultiwordValue&& args)
   auto end = args.end();
   for (; current != end; ++current) {
     const auto& arg = *current;
+    std::transform(current->begin(), current->end(), current->begin(), ::tolower);
+    
     if (arg == "data") {
       g_run_generate_data = true;
     } else if (arg == "patients") {
@@ -428,8 +432,8 @@ int main(int argc, char** argv)
       if (runs) {
         driver.queue(runs, as_subprocess);
       } else {
-        std::cout << "Unable to run " << biogears::branded_version_string_str() << std::endl;
-        exit(BG_CLI_SUCCESS);
+        std::cout << "Failed to read " << arg << std::endl;
+        exit(BG_CLI_PARSE_ERROR);
       }
     }
   }

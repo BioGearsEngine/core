@@ -858,7 +858,6 @@ bool grab_next_word_or_fail(Tokenizer::token_list::iterator& tokenItr, Tokenizer
     ++next;
     if (next == end) {
       std::cerr << "Error: Unexpected EOF after " << error_context << "\n";
-
     } else if (next->type == ETokenClass::Whitespace) {
       continue;
     } else if (next->type == ETokenClass::Newline) {
