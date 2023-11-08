@@ -154,7 +154,7 @@ if(NOT (CMAKE_CROSSCOMPILING OR APPLE))
     include(BundleUtilities)
 
     function(EXELIST result curdir)
-    get_filename_component( absolute_path ${curdir} REAL_PATH BASE_DIR ${PROJECT_BINARY_DIR})
+    get_filename_component( absolute_path ${curdir} REALPATH BASE_DIR ${PROJECT_BINARY_DIR})
     file(GLOB children RELATIVE \"\${absolute_path}/\" \"\${absolute_path}/*\")
     set(dirlist \"\")
     foreach(child \${children})

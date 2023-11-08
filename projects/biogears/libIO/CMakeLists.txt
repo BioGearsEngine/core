@@ -188,7 +188,7 @@ option(Biogears_IO_INCLUDE_SCENARIOS "Add default scenarios which can be generat
 if (Biogears_IO_INCLUDE_SCENARIOS)
 message(STATUS "            : Scenarios")
 FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/Scenarios" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/Scenarios/*.xml")
-configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/Scenarios.cpp.in" TYPE "Scenarios/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/ HEADERS GEN_HDRS SOURCES GEN_SRCS )
+configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/scenarios.cpp.in" TYPE "Scenarios/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/ HEADERS GEN_HDRS SOURCES GEN_SRCS )
 endif()
 
 configure_file( src/constants.h.in  ${BIOGEARS_BINARY_DIR}/generated/biogears/io/constants.h NEWLINE_STYLE LF)
@@ -223,7 +223,7 @@ if(NOT Biogears_BUILD_STATIC)
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
     CXX_STANDARD 14
     BUILD_RPATH   "${Biogears_BUILD_RPATH}"
-    INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\${ORIGIN}:\${ORIGIN}/../lib:\${ORIGIN}/lib">>
+    INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\$ORIGIN:\$ORIGIN/../lib:\$ORIGIN/lib">>
     )
   set_target_properties(libbiogears_io PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
   add_dependencies(libbiogears_io hex_bindings xsd_bindings)
