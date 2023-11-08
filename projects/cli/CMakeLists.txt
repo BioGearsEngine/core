@@ -149,7 +149,7 @@ if(NOT (CMAKE_CROSSCOMPILING OR APPLE))
     include(BundleUtilities)
 
     function(EXELIST result curdir)
-    get_filename_component( absolute_path ${curdir} REALPATH BASE_DIR ${PROJECT_BINARY_DIR})
+    get_filename_component( absolute_path \${curdir} REALPATH BASE_DIR ${PROJECT_BINARY_DIR})
     file(GLOB children RELATIVE \${absolute_path} \${absolute_path}/*)
     set(dirlist \"\")
     foreach(child \${children})
@@ -173,7 +173,7 @@ if(NOT (CMAKE_CROSSCOMPILING OR APPLE))
 		
    	FILE(TO_CMAKE_PATH   \"\${CMAKE_INSTALL_PREFIX}\"  INSTALL_PATH)
 
-	  set( Biogears_RUNTIME_DESTINATION \"\${INSTALL_PATH}/bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+	set( Biogears_RUNTIME_DESTINATION \"\${INSTALL_PATH}/bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
     set( Biogears_LIBRARY_DESTINATION \"\${INSTALL_PATH}/${LIBRARY_INSTALL_DIR}/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
     set( Biogears_ARCHIVE_DESTINATION \"\${INSTALL_PATH}/lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
 
