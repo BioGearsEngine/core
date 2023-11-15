@@ -110,6 +110,7 @@ void Energy::Initialize()
   GetSkinTemperatureRightArm().SetValue(33.0, TemperatureUnit::C);
   GetSkinTemperatureLeftLeg().SetValue(33.0, TemperatureUnit::C);
   GetSkinTemperatureRightLeg().SetValue(33.0, TemperatureUnit::C);
+  GetSkinTemperature().SetValue(33.0, TemperatureUnit::C);
   /// \cite phypers2006lactate
   GetLactateProductionRate().SetValue(1.3, AmountPerTimeUnit::mol_Per_day);
   /// \cite guyton2006medical
@@ -422,6 +423,7 @@ void Energy::CalculateVitalSigns()
   double skinTemperatureRightArm_degC = m_skinNodes[3]->GetTemperature(TemperatureUnit::C);
   double skinTemperatureLeftLeg_degC = m_skinNodes[4]->GetTemperature(TemperatureUnit::C);
   double skinTemperatureRightLeg_degC = m_skinNodes[5]->GetTemperature(TemperatureUnit::C);
+  double meanSkinTemp_degC = (0.36 * skinTemperatureTorso_degC) + (0.07 * skinTemperatureHead_degC) + (0.092 * skinTemperatureLeftArm_degC) + (0.092 * skinTemperatureRightArm_degC) + (0.193 * skinTemperatureLeftLeg_degC) + (0.193 * skinTemperatureRightLeg_degC);
   if (m_data.GetDrugs().HasFeverChange() && GetCoreTemperature().GetValue(TemperatureUnit::C) > 37.0) { // Modifier for current drugs should not be able to increase core temperature
     coreTemperature_degC += m_data.GetDrugs().GetFeverChange().GetValue(TemperatureUnit::C);
     LLIM(coreTemperature_degC, 36.5); // Tylenol will not lower your basal core temperature
@@ -433,6 +435,7 @@ void Energy::CalculateVitalSigns()
   GetSkinTemperatureRightArm().SetValue(skinTemperatureRightArm_degC, TemperatureUnit::C);
   GetSkinTemperatureLeftLeg().SetValue(skinTemperatureLeftLeg_degC, TemperatureUnit::C);
   GetSkinTemperatureRightLeg().SetValue(skinTemperatureRightLeg_degC, TemperatureUnit::C);
+  GetSkinTemperature().SetValue(meanSkinTemp_degC, TemperatureUnit::C);
   std::stringstream ss;
 
   //Hypothermia check
