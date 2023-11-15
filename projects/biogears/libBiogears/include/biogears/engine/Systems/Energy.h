@@ -100,7 +100,7 @@ private:
   RunningAverage m_BicarbonateMolarity_mmol_Per_L;
   bool m_packOn;
   double m_previousWeightPack_kg;
-
+  double m_meanSkinTemperature;
   // Stateless member variable (Set in SetUp())
   double m_dT_s;
   SEPatient* m_Patient;
@@ -112,8 +112,6 @@ private:
   SELiquidSubstanceQuantity* m_SkinPotassium;
   //Nodes
   SEThermalCircuitNode* m_coreNode;
-  SEThermalCircuitNode* m_torsoSkinNode;
-  SEThermalCircuitNode* m_headSkinNode;
   std::vector<SEThermalCircuitNode*> m_skinNodes;
   //Paths
   SEThermalCircuitPath* m_temperatureGroundToCorePath;

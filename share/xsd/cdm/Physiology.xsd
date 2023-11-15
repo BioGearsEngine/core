@@ -341,7 +341,9 @@ specific language governing permissions and limitations under the License.
           <!--<< @brief The exhaustion level of the body, or inability to perform physical exercise @details The amount of energy available for activity divided by the normal rested energy -->
           <xs:element name="LactateProductionRate" type="ScalarAmountPerTimeData" minOccurs="0" maxOccurs="1"/>
           <!--<< @brief The molar amount of lactate generated on the tissue level from anaerobic metabolism -->
-          <xs:element name="SkinTemperatureTorso" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="SkinTemperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The mean skin surface temperature based on segmented areas.-->
+		  <xs:element name="SkinTemperatureTorso" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
           <!--<< @brief The torso skin surface temperature.-->
 		  <xs:element name="SkinTemperatureHead" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
           <!--<< @brief The head skin surface temperature.-->

@@ -5599,7 +5599,7 @@ void BioGears::SetupInternalTemperature()
   SEThermalCircuitPath& TemperatureGroundToCore = cIntemperature.CreatePath(Ground, Core, BGE::InternalTemperaturePath::GroundToInternalCore);
   TemperatureGroundToCore.GetHeatSourceBaseline().SetValue(0.0, PowerUnit::W);
 
-  double skinCapTuningFactor = 6.0;
+  double skinCapTuningFactor = 1.0;
   
   SEThermalCircuitNode& TorsoSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalTorsoSkin);
   TorsoSkin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
