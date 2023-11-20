@@ -664,7 +664,7 @@ void Logger::LogMessage(std::string const& msg, std::string const& origin, LogLe
     }
   }
 
-  if (impl.userDefinedLogger != nullptr) {
+  if (impl.userDefinedLogger) {
     switch (priority) {
     case Logger::eDebug:
       impl.userDefinedLogger->Debug(msg.c_str());

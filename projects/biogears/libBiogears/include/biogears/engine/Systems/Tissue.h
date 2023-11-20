@@ -98,6 +98,7 @@ protected:
   void FatStorageAndRelease();
 
   // Process Methods
+  double CalculateBurnIntensity(double burnTBSA, CDM::enumBurnDegree::value degreeOfBurn) const;
   void CalculateCompartmentalBurn();
   void CalculateDiffusion();
   void CalculatePulmonaryCapillarySubstanceTransfer();

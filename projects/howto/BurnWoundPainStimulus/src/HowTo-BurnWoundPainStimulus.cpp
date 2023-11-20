@@ -175,7 +175,7 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
   m_ketamineBolus = new SESubstanceBolus(*ketamine);
   //m_genState = new SESerializeState();
   m_burnWound = new SEBurnWound();
-  m_burnWound->GetTotalBodySurfaceArea().SetValue(tbsa / 100.0);
+  m_burnWound->SetTotalBodySurfaceArea(tbsa / 100.0);
   m_bg->ProcessAction(*m_burnWound);
 
   m_runThread = true;

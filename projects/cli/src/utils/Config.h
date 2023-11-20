@@ -104,6 +104,11 @@ public:
   reference back();
   const_reference back() const;
 
+  size_t size() const;
+
+  bool isValid() const;
+  explicit operator bool() const;
+
   void push_back(const Executor&);
   void push_back(Executor&&);
   void merge(Config&&);

@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
   <xs:include schemaLocation="Patient.xsd"/>
   <xs:include schemaLocation="EngineConfiguration.xsd"/>
 
-  <xs:complexType name="ConditionData" abstract="true">
+  <xs:complexType name="ConditionData" >
     <xs:sequence>
       <xs:element name="Comment" type="xs:string" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
@@ -44,7 +44,7 @@ specific language governing permissions and limitations under the License.
   </xs:complexType>
   <xs:element name="ActionList" type="ActionListData"/>
 
-  <xs:complexType name="DataRequestData" abstract="true">
+  <xs:complexType name="DataRequestData" >
     <xs:complexContent>
       <xs:extension base="DecimalFormatData">
         <xs:attribute name="Name" type="xs:string" use="required"/>
@@ -79,14 +79,14 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="CompartmentDataRequestData" abstract="true">
+  <xs:complexType name="CompartmentDataRequestData" >
     <xs:complexContent>
       <xs:extension base="DataRequestData">
         <xs:attribute name="Compartment" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:complexType name="CompartmentSubstanceDataRequestData" abstract="true">
+  <xs:complexType name="CompartmentSubstanceDataRequestData" >
     <xs:complexContent>
       <xs:extension base="CompartmentDataRequestData">
         <xs:attribute name="Substance" type="xs:string" use="optional"/>

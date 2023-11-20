@@ -361,7 +361,7 @@ void Environment::ProcessActions()
     //In the event of a burn, modify the skin to clothing, clothing to enclosure (radiation), and clothing to environment (convection)
     //paths based on the burn surface area fraction.  Reducing skin to clothing resistance assumes that burn patient will have large
     //surface area uncovered. We calculate change in evaporative resistance in CalcEvaporation since that involves adjustment of funtion level parameters
-    const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+    const double burnSurfaceAreaIntensityFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
 
     //The "next" resistance are those just calculated in PreProcess, CalcRadiation, and CalcConvection -- these are essentially baselines
     // since they are calculated from the baseline clothing and environment variables.  We can't grab baseline resistances because
@@ -731,19 +731,18 @@ void Environment::CalculateEvaporation()
       double fCl = 1.0 + 0.3 * dClothingResistance_clo;
       double skinWettednessDiffusion = 0.06;
 
-      auto& inflamationSources = m_data.GetBloodChemistry().GetInflammatoryResponse().GetInflammationSources();
-      auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), CDM::enumInflammationSource::Burn);
-      if (burn_inflamation != inflamationSources.end()) {
-        if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-          skinWettednessDiffusion = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
-          dClothingResistance_m2_kPa_Per_W = 0.0;
-          fCl = 1.0;
-        } else {
-          // Ok, so we likely want to evaluate the vector of inflamations
-          // This really slows down optimization of adding/removing and accessing InflamationSources
-          // If we can not have duplicate InflamationSources of a type then why store it as a vector.
-          inflamationSources.erase(burn_inflamation);
-        }
+    auto& inflamationSources = m_data.GetBloodChemistry().GetInflammatoryResponse().GetInflammationSources();
+    auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), CDM::enumInflammationSource::Burn);
+    if ( burn_inflamation != inflamationSources.end() ) {
+      if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
+        skinWettednessDiffusion = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
+        dClothingResistance_m2_kPa_Per_W = 0.0;
+        fCl = 1.0;
+      }  else {
+         //Ok, so we likely want to evaluate the vector of inflamations
+         //This really slows down optimization of adding/removing and accessing InflamationSources
+         //If we can not have duplicate InflamationSources of a type then why store it as a vector.
+         inflamationSources.erase(burn_inflamation);
       }
 
       ///\ToDo:  The units of this constant are incorrect on the CDM--they should be W_Per_m2_Pa (no support for this unit currently)

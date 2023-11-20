@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
   <xs:include schemaLocation="Scenario.xsd"/>
 
   <!-- @brief Base Environmental Action type -->
-  <xs:complexType name="EnvironmentActionData" abstract="true">
+  <xs:complexType name="EnvironmentActionData" >
     <xs:complexContent>
       <xs:extension base="ActionData"/>
     </xs:complexContent>

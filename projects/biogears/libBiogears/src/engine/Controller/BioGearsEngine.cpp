@@ -12,12 +12,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsEngine.h>
 
 #include <memory>
-//Project Includes
+// Project Includes
 
 #include <biogears/filesystem/path.h>
 #include <biogears/string/manipulation.h>
 
-#include <biogears/cdm/utils/Logger.h>
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -27,15 +26,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SEArterialBloodGasAnalysis.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
-#include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/patient/assessments/SEProthrombinTime.h>
 #include <biogears/cdm/patient/assessments/SEPsychomotorVigilanceTask.h>
+#include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/patient/assessments/SESequentialOrganFailureAssessment.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SESerializeState.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
+#include <biogears/cdm/utils/Logger.h>
 #include <biogears/container/Tree.tci.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
@@ -110,7 +110,6 @@ BioGearsEngine::BioGearsEngine(const char* logFileName, const char* working_dir)
 //-------------------------------------------------------------------------------
 BioGearsEngine::~BioGearsEngine()
 {
-  m_Logger->Debug("biogears::BioGearsEngine Deconstructor Finished");
 }
 //-------------------------------------------------------------------------------
 Logger* BioGearsEngine::GetLogger()
@@ -126,7 +125,7 @@ PhysiologyEngineTrack* BioGearsEngine::GetEngineTrack()
 //!
 //!  \param char* - Coniocal Path to be loaded
 //!  \param SEScalarTime*  -  Overrides the internal states Simulation time with the given. Defaults to nullptr which assumes the state files time.
-//! 
+//!
 //!  Load sate is biogears_io aware.  If the file path given is embedded it will fall back
 //!  to the embeded version if non of the default search locations are found.
 bool BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
@@ -135,7 +134,7 @@ bool BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 }
 //-------------------------------------------------------------------------------
 //!
-//!  Override of LoadState 
+//!  Override of LoadState
 //! \\see   BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime)
 {
@@ -165,13 +164,13 @@ bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simT
 //!
 //!  \param char const* buffer -- String literal ASCII encoding of a biogears EngineState file
 //!  \param size_t - Ammount of data in the buffer
-//! 
-//!  \note This function allows integrators to perform IO for Biogears and avoid 
+//!
+//!  \note This function allows integrators to perform IO for Biogears and avoid
 //!        assumptons of the underlying filesystem.
 bool BioGearsEngine::LoadState(char const* buffer, size_t size)
 {
 
-  std::unique_ptr<CDM::ObjectData> obj = Serializer::ReadBuffer((XMLByte const*)buffer,size,GetLogger());
+  std::unique_ptr<CDM::ObjectData> obj = Serializer::ReadBuffer((XMLByte const*)buffer, size, GetLogger());
   auto state = dynamic_cast<const CDM::BioGearsStateData*>(obj.get());
   if (state != nullptr) {
     return LoadState(*state, nullptr);
@@ -209,11 +208,11 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
     return false;
   }
 
-  //if (state.DataRequests().present()) {
-  //  m_EngineTrack.GetDataRequestManager().Clear();
-  //  m_EngineTrack.GetDataRequestManager().Load(state.DataRequests().get(), *m_Substances);
-  //  m_EngineTrack.ForceConnection(); // I don't want to rest the file because I would loose all my data
-  //}
+  // if (state.DataRequests().present()) {
+  //   m_EngineTrack.GetDataRequestManager().Clear();
+  //   m_EngineTrack.GetDataRequestManager().Load(state.DataRequests().get(), *m_Substances);
+  //   m_EngineTrack.ForceConnection(); // I don't want to rest the file because I would loose all my data
+  // }
 
   if (simTime != nullptr) {
     m_CurrentTime->Set(*simTime);
@@ -308,10 +307,10 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
   }
   // Now, Let's see if there is anything to merge into our base configuration
   // At this point I don't think we should be doing this... but maybe you want to...
-  //m_Logger->Info("Merging OnDisk Configuration");
-  //BioGearsConfiguration cFile(*m_Substances);
-  //cFile.Load("BioGearsConfiguration.xml");
-  //m_Config->Merge(cFile);
+  // m_Logger->Info("Merging OnDisk Configuration");
+  // BioGearsConfiguration cFile(*m_Substances);
+  // cFile.Load("BioGearsConfiguration.xml");
+  // m_Config->Merge(cFile);
 
   /////////////
   // Systems //
@@ -485,20 +484,21 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
   m_Compartments->GetActiveAerosolGraph();
 
   // It helps to unload what you just loaded and to a compare if you have issues
-  //SaveStateToFile("WhatIJustLoaded.xml");
+  // SaveStateToFile("WhatIJustLoaded.xml");
 
   // Good to go, save it off and carry on!
   m_State = EngineState::Active;
-  if(state.Patient().present()){
-    m_Logger->Info("Biogears has sucesfully loaded "+ state.Patient()->Name()+ ".");
+  if (state.Patient().present()) {
+    m_Logger->Info("Biogears has sucesfully loaded " + state.Patient()->Name() + ".");
   } else {
     m_Logger->Info("Biogears has sucesfully loaded the given statefile");
   }
-  
+
   return true; // return CheckDataRequirements/IsValid() or something
 }
 //-------------------------------------------------------------------------------
-std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData(){
+std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
+{
 
   std::unique_ptr<CDM::PhysiologyEngineStateData> state(new CDM::BioGearsStateData());
 
@@ -567,7 +567,7 @@ void BioGearsEngine::SaveStateToFile(const std::string& file)
 {
   auto state = GetStateData();
 
-    if (!file.empty()) {
+  if (!file.empty()) {
     filesystem::path qualified_path = m_Logger->GetIoManager().lock()->ResolveStateFileLocation(file);
     filesystem::create_directories(qualified_path.parent_path());
     // Write out the engine state
@@ -703,7 +703,7 @@ double BioGearsEngine::GetSimulationTime(const TimeUnit& unit)
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::AdvanceModelTime(bool appendDataTrack)
 {
-  //TODO: I am starting to think this should be a protected function
+  // TODO: I am starting to think this should be a protected function
   if (!IsReady()) {
     return false;
   }
@@ -765,11 +765,15 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
   if (serialize != nullptr) {
     if (serialize->GetType() == CDM::enumSerializationType::Save) {
       if (serialize->HasFilename()) {
-        SaveStateToFile(serialize->GetFilename());
+        if (filesystem::is_directory(serialize->GetFilename()) || (filesystem::is_directory("states/" + serialize->GetFilename()))) {
+          SaveStateToFile(asprintf("%s%s@%.0fs.xml", serialize->GetFilename(), m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));
+        } else {
+          SaveStateToFile(serialize->GetFilename());
+        }
       } else {
         SaveStateToFile(asprintf("%s@%.0fs.xml", m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));
       }
-    } else {   
+    } else {
       return LoadState(serialize->GetFilename());
     }
     return true;
@@ -1091,22 +1095,27 @@ void BioGearsEngine::SetTrackStabilizationFlag(bool flag)
 }
 
 //-------------------------------------------------------------------------------
-biogears::Logger* create_logger(const char* logfile){
-  return  new Logger(logfile);
+biogears::Logger* create_logger(const char* logfile)
+{
+  return new Logger(logfile);
 }
-void destroy_logger(Logger** logger){
-  if(logger) {
-  delete (*logger);
-  (*logger) = nullptr;
+void destroy_logger(Logger** logger)
+{
+  if (logger) {
+    delete (*logger);
+    (*logger) = nullptr;
   }
 }
-biogears::BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir){
-  return  new BioGearsEngine(logger, working_dir);
+biogears::BioGearsEngine* create_biogears_engine(biogears::Logger* logger, const char* working_dir)
+{
+  return new BioGearsEngine(logger, working_dir);
 }
-biogears::BioGearsEngine* create_biogears_engine(const char* log_file, const char* working_dir){
-  return  new BioGearsEngine(log_file, working_dir);
+biogears::BioGearsEngine* create_biogears_engine(const char* log_file, const char* working_dir)
+{
+  return new BioGearsEngine(log_file, working_dir);
 }
-void destroy_biogears_engine(BioGearsEngine** engine){
+void destroy_biogears_engine(BioGearsEngine** engine)
+{
   if (engine) {
     delete (*engine);
     (*engine) = nullptr;

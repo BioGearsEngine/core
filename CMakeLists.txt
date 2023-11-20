@@ -31,6 +31,10 @@ project( Biogears  LANGUAGES CXX C )
     CMAKE_FIND_ROOT_PATH = ${CMAKE_FIND_ROOT_PATH}
     ")
 
+foreach( p IN LISTS CMAKE_PREFIX_PATH )
+    LIST(APPEND Biogears_BUILD_RPATH "${p}/lib")
+endforeach()
+
 find_package(Git QUIET)
 configure_version_information(GIT_SUCESS MAJOR 7 MINOR 5 PATCH 0 TWEAK "Source" )
 if(GIT_FOUND AND NOT GIT_SUCESS)

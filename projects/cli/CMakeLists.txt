@@ -46,6 +46,8 @@ set_target_properties(bg-cli
   CXX_STANDARD 14
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   VS_DEBUGGER_ENVIRONMENT "${VS_DEBUGGER_ENVIRONMENT_LIST}"
+  BUILD_RPATH   "${Biogears_BUILD_RPATH}"
+  INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\$ORIGIN:\$ORIGIN/../lib:\$ORIGIN/lib">>
   )
 if(WIN32)
   target_sources(bg-cli  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bg-cli.rc)
@@ -80,6 +82,8 @@ set_target_properties(bg-scenario
   CXX_STANDARD 14
   VS_DEBUGGER_WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/runtime
   VS_DEBUGGER_ENVIRONMENT "${VS_DEBUGGER_ENVIRONMENT_LIST}"
+  BUILD_RPATH   "${Biogears_BUILD_RPATH}"
+  INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\$ORIGIN:\$ORIGIN/../lib:\$ORIGIN/lib">>
   )
   if(WIN32)
     target_sources(bg-scenario  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bg-scenario.rc)
@@ -145,7 +149,7 @@ if(NOT (CMAKE_CROSSCOMPILING OR APPLE))
     include(BundleUtilities)
 
     function(EXELIST result curdir)
-    get_filename_component( absolute_path ${curdir} REAL_PATH BASE_DIR ${PROJECT_BINARY_DIR})
+    get_filename_component( absolute_path \${curdir} REALPATH BASE_DIR ${PROJECT_BINARY_DIR})
     file(GLOB children RELATIVE \${absolute_path} \${absolute_path}/*)
     set(dirlist \"\")
     foreach(child \${children})
@@ -169,7 +173,7 @@ if(NOT (CMAKE_CROSSCOMPILING OR APPLE))
 		
    	FILE(TO_CMAKE_PATH   \"\${CMAKE_INSTALL_PREFIX}\"  INSTALL_PATH)
 
-	  set( Biogears_RUNTIME_DESTINATION \"\${INSTALL_PATH}/bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+	set( Biogears_RUNTIME_DESTINATION \"\${INSTALL_PATH}/bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
     set( Biogears_LIBRARY_DESTINATION \"\${INSTALL_PATH}/${LIBRARY_INSTALL_DIR}/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
     set( Biogears_ARCHIVE_DESTINATION \"\${INSTALL_PATH}/lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
 

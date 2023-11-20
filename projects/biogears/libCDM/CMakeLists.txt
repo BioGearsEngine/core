@@ -31,6 +31,8 @@ set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
     PROJECT_LABEL "libbiogears_cdm"
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
     CXX_STANDARD 14
+    BUILD_RPATH   "${Biogears_BUILD_RPATH}"
+    INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\$ORIGIN:\$ORIGIN/../lib:\$ORIGIN/lib">>
     )
   set_target_properties(libbiogears_cdm PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
   add_dependencies(libbiogears_cdm xsd_bindings)

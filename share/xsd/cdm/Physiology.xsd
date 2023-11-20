@@ -637,12 +637,16 @@ specific language governing permissions and limitations under the License.
           <!--<< @brief The ratio of the length of time of inspiration to the length of time of expiration.-->
           <xs:element name="InspiratoryFlow" type="ScalarVolumePerTimeData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief TInstantaneous airflow into the lungs (negative value when exhaling).-->
+		  <xs:element name="LeftLungVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total volume of air within the left lung at any given time.-->
           <xs:element name="MeanPleuralPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief Running average pleural pressure-->
           <xs:element name="PulmonaryCompliance" type="ScalarFlowComplianceData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief The total compliance of the lungs.-->
           <xs:element name="PulmonaryResistance" type="ScalarFlowResistanceData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief The total resistance to airflow through the lungs.-->
+		  <xs:element name="RespirationCyclePercentComplete" type="Scalar0To1Data" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The percentage through any individual respiratory cycle the patient is at a given time point.-->
           <xs:element name="RespirationDriverFrequency" type="ScalarFrequencyData" minOccurs="0" maxOccurs="1"/>
           <!--<< @brief Target frequency of respiratory driver communicated by chemoreceptors-->
           <xs:element name="RespirationDriverPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
@@ -651,6 +655,8 @@ specific language governing permissions and limitations under the License.
           <!--<< @brief Combined driver pressure of the muscles that contribute to inhalation and exhalation, by aiding in the expansion and contraction of the thoracic cavity.-->
           <xs:element name="RespirationRate" type="ScalarFrequencyData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief The frequency of the respiratory cycle.-->
+		  <xs:element name="RightLungVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The total volume of air within the right lung at any given time.-->
           <xs:element name="SpecificVentilation" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief The ratio of the volume of gas entering a region of the lung following an inspiration and the end-expiratory volume of that same lung region.-->
           <xs:element name="TidalVolume" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>

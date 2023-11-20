@@ -372,18 +372,24 @@ bool BioGears::SetupPatient()
   weight_kg = m_Patient->GetWeight(MassUnit::kg);
   BMI_kg_per_m2 = weight_kg / std::pow(m_Patient->GetHeight().GetValue(LengthUnit::m), 2);
   if (BMI_kg_per_m2 > BMIObese_kg_per_m2) {
-    Error(asprintf("Patient Body Mass Index (BMI) of %f  kg/m^2 is too high. Obese patients must be modeled by adding/using a condition. Maximum BMI allowed is %f kg/m^2.", BMI_kg_per_m2, BMIObese_kg_per_m2));
-    err = true;
+    Warning(asprintf("Patient Body Mass Index (BMI) of %f  kg/m^2 is too high. Obese patients must be modeled by adding/using a condition. Adjusting patient weight using the maximum BMI allowed of %f kg/m^2.", BMI_kg_per_m2, BMIObese_kg_per_m2));
+    weight_kg = BMIObese_kg_per_m2 * std::pow(m_Patient->GetHeight().GetValue(LengthUnit::m), 2);
+    BMI_kg_per_m2 = weight_kg / std::pow(m_Patient->GetHeight().GetValue(LengthUnit::m), 2);
+    Warning(asprintf("Patient weight has been overwritten to a value of %f kg.", weight_kg));
+    m_Patient->GetWeight().SetValue(weight_kg, MassUnit::kg);
   }
   if (BMI_kg_per_m2 > BMIOverweight_kg_per_m2) {
     Warning(asprintf("Patient Body Mass Index (BMI) of %f kg/m^2 is overweight. No guarantees of model validity.", BMI_kg_per_m2));
   }
+  if (BMI_kg_per_m2 < BMISeverelyUnderweight_kg_per_m2) {
+    Warning(asprintf("Patient Body Mass Index (BMI) of %f kg/m^2 is too low. Severly underweight patients must be modeled by adding/using a condition. Adjusting patient weight using the minimum BMI allowed of %f kg/m^2.", BMI_kg_per_m2, BMISeverelyUnderweight_kg_per_m2));
+    weight_kg = BMISeverelyUnderweight_kg_per_m2 * std::pow(m_Patient->GetHeight().GetValue(LengthUnit::m), 2);
+    BMI_kg_per_m2 = weight_kg / std::pow(m_Patient->GetHeight().GetValue(LengthUnit::m), 2);
+    Warning(asprintf("Patient weight has been overwritten to a value of %f kg.", weight_kg));
+    m_Patient->GetWeight().SetValue(weight_kg, MassUnit::kg);
+  }
   if (BMI_kg_per_m2 < BMIUnderweight_kg_per_m2) {
     Warning(asprintf("Patient Body Mass Index (BMI) of %f kg/m^2 is underweight. No guarantees of model validity.", BMI_kg_per_m2));
-  }
-  if (BMI_kg_per_m2 < BMISeverelyUnderweight_kg_per_m2) {
-    Error(asprintf("Patient Body Mass Index (BMI) of %f kg/m^2 is too low. Severly underweight patients must be modeled by adding/using a condition. Maximum BMI allowed is %f kg/m^2.", BMI_kg_per_m2, BMISeverelyUnderweight_kg_per_m2));
-    err = true;
   }
 
   //BODY FAT FRACTION ---------------------------------------------------------------

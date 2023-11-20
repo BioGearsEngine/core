@@ -1067,8 +1067,8 @@ void Nervous::CheckPainStimulus()
 
   //determine pain response from inflammation caused by burn trauma
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-    double traumaPain = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
-    traumaPain *= 20.0; //25% TBSA burn will give pain scale = 5, 40% TBSA will give pain scale = 8.0
+    double traumaPain = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
+    traumaPain *= 20.0; //25% (3rd degree) TBSA burn will give pain scale = 5, 40% (3rd degree) TBSA will give pain scale = 8.0
     tempPainVAS += (traumaPain * susceptabilityMapping * PainBuffer) / (1 + exp(-m_painStimulusDuration_s + 4.0));
   }
 

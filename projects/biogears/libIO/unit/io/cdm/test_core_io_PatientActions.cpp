@@ -273,7 +273,7 @@ TEST_F(TEST_FIXTURE_NAME, BurnWound)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.GetTotalBodySurfaceArea().Set(.79);
+  source.SetTotalBodySurfaceArea(.79);
 
   EXPECT_NE(source, sink);
 
