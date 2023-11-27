@@ -697,10 +697,25 @@ void Energy::UpdateHeatResistance()
     double bloodSpecificHeat_J_Per_K_kg = m_data.GetBloodChemistry().GetBloodSpecificHeat().GetValue(HeatCapacitancePerMassUnit::J_Per_K_kg);
 
     double alphaScale = 0.5; // Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
-    // Rough implementation to correlate burn location to skin location
-    // ?????????????????????????? Wait until we can merge the burn updates to get better segmentation
+    bool isBurnWound = false;
     if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
-      const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetTotalBodySurfaceArea().GetValue();
+      SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
+      std::vector<std::string> burnComptVector = burnAction->GetCompartments();
+      // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
+      if (index == 0 && burnAction->HasCompartment("Trunk")) {
+        isBurnWound = true;
+      } else if (index == 2 && burnAction->HasCompartment("LeftArm")) {
+        isBurnWound = true;
+      } else if (index == 3 && burnAction->HasCompartment("RightArm")) {
+        isBurnWound = true;
+      } else if (index == 4 && burnAction->HasCompartment("LeftLeg")) {
+        isBurnWound = true;
+      } else if (index == 5 && burnAction->HasCompartment("RightLeg")) {
+        isBurnWound = true;
+      }
+    }
+    if (isBurnWound) {
+      const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
       const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0); // Make >50% burn the worse case scenario
       const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 20.0, resInput);
       const double lastAlpha = 1.0 / (coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W) * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * segmentedSkinBloodFlows[index]);

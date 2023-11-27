@@ -374,8 +374,8 @@ void Environment::ProcessActions()
     const double lastConvectiveResistance = m_ClothingToEnvironmentPath->GetResistance(HeatResistanceUnit::K_Per_W);
 
     //Target resistance are based on burn surface area (using "next" values since they were just set to basal values earlier in PreProcess)
-    const double targetRadiativeResistance = nextRadiativeResistance * std::pow(1.0 - burnSurfaceAreaFraction, 4.0);
-    const double targetConvectiveResistance = nextConvectiveResistance * std::pow(1.0 - burnSurfaceAreaFraction, 4.0);
+    const double targetRadiativeResistance = nextRadiativeResistance * std::pow(1.0 - burnSurfaceAreaIntensityFraction, 4.0);
+    const double targetConvectiveResistance = nextConvectiveResistance * std::pow(1.0 - burnSurfaceAreaIntensityFraction, 4.0);
 
     const double rampGain = 1.0e-5; //Smooth the response so that we reach targets over several minutes
 
@@ -389,7 +389,7 @@ void Environment::ProcessActions()
     for (SEThermalCircuitPath* skinToClothing : m_SkinToClothingPaths) {
       double nextSkinToClothingResistance = skinToClothing->GetNextResistance(HeatResistanceUnit::K_Per_W);
       const double lastSkinToClothingResistance = skinToClothing->GetResistance(HeatResistanceUnit::K_Per_W);
-      const double targetSkinToClothingResistance = nextSkinToClothingResistance * std::pow(1.0 - burnSurfaceAreaFraction, 4.0);
+      const double targetSkinToClothingResistance = nextSkinToClothingResistance * std::pow(1.0 - burnSurfaceAreaIntensityFraction, 4.0);
       nextSkinToClothingResistance = lastSkinToClothingResistance + rampGain * (targetSkinToClothingResistance - lastSkinToClothingResistance);
       skinToClothing->GetNextResistance().SetValue(nextSkinToClothingResistance, HeatResistanceUnit::K_Per_W);
     }
@@ -731,41 +731,61 @@ void Environment::CalculateEvaporation()
       double fCl = 1.0 + 0.3 * dClothingResistance_clo;
       double skinWettednessDiffusion = 0.06;
 
-    auto& inflamationSources = m_data.GetBloodChemistry().GetInflammatoryResponse().GetInflammationSources();
-    auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), CDM::enumInflammationSource::Burn);
-    if ( burn_inflamation != inflamationSources.end() ) {
-      if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
-        skinWettednessDiffusion = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
-        dClothingResistance_m2_kPa_Per_W = 0.0;
-        fCl = 1.0;
-      }  else {
-         //Ok, so we likely want to evaluate the vector of inflamations
-         //This really slows down optimization of adding/removing and accessing InflamationSources
-         //If we can not have duplicate InflamationSources of a type then why store it as a vector.
-         inflamationSources.erase(burn_inflamation);
+      auto& inflamationSources = m_data.GetBloodChemistry().GetInflammatoryResponse().GetInflammationSources();
+      auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), CDM::enumInflammationSource::Burn);
+      if (burn_inflamation != inflamationSources.end()) {
+        if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
+          bool isBurnWoundLocal = false;
+          if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+            SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
+            std::vector<std::string> burnComptVector = burnAction->GetCompartments();
+            // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
+            if (index == 0 && burnAction->HasCompartment("Trunk")) {
+              isBurnWoundLocal = true;
+            } else if (index == 2 && burnAction->HasCompartment("LeftArm")) {
+              isBurnWoundLocal = true;
+            } else if (index == 3 && burnAction->HasCompartment("RightArm")) {
+              isBurnWoundLocal = true;
+            } else if (index == 4 && burnAction->HasCompartment("LeftLeg")) {
+              isBurnWoundLocal = true;
+            } else if (index == 5 && burnAction->HasCompartment("RightLeg")) {
+              isBurnWoundLocal = true;
+            }
+          }
+          if (isBurnWoundLocal) {
+            skinWettednessDiffusion = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
+            dClothingResistance_m2_kPa_Per_W = 0.0;
+            fCl = 1.0;
+          }
+        } else {
+          // Ok, so we likely want to evaluate the vector of inflamations
+          // This really slows down optimization of adding/removing and accessing InflamationSources
+          // If we can not have duplicate InflamationSources of a type then why store it as a vector.
+          inflamationSources.erase(burn_inflamation);
+        }
+
+        ///\ToDo:  The units of this constant are incorrect on the CDM--they should be W_Per_m2_Pa (no support for this unit currently)
+        GetEvaporativeHeatTranferCoefficient().SetValue(dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa, HeatConductancePerAreaUnit::W_Per_m2_K);
+
+        double dMaxEvaporativePotential = (1.0 / 1000.0) * (m_dWaterVaporPressureAtSkin_Pa - m_dWaterVaporPressureInAmbientAir_Pa) / (dClothingResistance_m2_kPa_Per_W + 1.0 / (fCl * dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa));
+        double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2) * segmentedSkinSurfaceAreaPercents[index];
+
+        double dSweatRate_kgPers = 0.0;
+        if (m_data.GetEnergy().HasSweatRate()) {
+          dSweatRate_kgPers = m_data.GetEnergy().GetSweatRate(MassPerTimeUnit::kg_Per_s) / dSurfaceArea_m2;
+        }
+        double dSweatingControlMechanisms = dSweatRate_kgPers * m_dHeatOfVaporizationOfWater_J_Per_kg;
+        double dWettedPortion = 0.0;
+        if (dMaxEvaporativePotential != 0) {
+          dWettedPortion = dSweatingControlMechanisms / dMaxEvaporativePotential;
+        }
+        double dDiffusionOfWater = (1.0 - dWettedPortion) * skinWettednessDiffusion * dMaxEvaporativePotential;
+        double EvaporativeHeatLossFromSkin_W = dSweatingControlMechanisms + dDiffusionOfWater;
+
+        // Set the source
+        envSkinToGround->GetNextHeatSource().SetValue(dSurfaceArea_m2 * EvaporativeHeatLossFromSkin_W, PowerUnit::W);
+        index += 1;
       }
-
-      ///\ToDo:  The units of this constant are incorrect on the CDM--they should be W_Per_m2_Pa (no support for this unit currently)
-      GetEvaporativeHeatTranferCoefficient().SetValue(dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa, HeatConductancePerAreaUnit::W_Per_m2_K);
-
-      double dMaxEvaporativePotential = (1.0 / 1000.0) * (m_dWaterVaporPressureAtSkin_Pa - m_dWaterVaporPressureInAmbientAir_Pa) / (dClothingResistance_m2_kPa_Per_W + 1.0 / (fCl * dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa));
-      double dSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2) * segmentedSkinSurfaceAreaPercents[index];
-
-      double dSweatRate_kgPers = 0.0;
-      if (m_data.GetEnergy().HasSweatRate()) {
-        dSweatRate_kgPers = m_data.GetEnergy().GetSweatRate(MassPerTimeUnit::kg_Per_s) / dSurfaceArea_m2;
-      }
-      double dSweatingControlMechanisms = dSweatRate_kgPers * m_dHeatOfVaporizationOfWater_J_Per_kg;
-      double dWettedPortion = 0.0;
-      if (dMaxEvaporativePotential != 0) {
-        dWettedPortion = dSweatingControlMechanisms / dMaxEvaporativePotential;
-      }
-      double dDiffusionOfWater = (1.0 - dWettedPortion) * skinWettednessDiffusion * dMaxEvaporativePotential;
-      double EvaporativeHeatLossFromSkin_W = dSweatingControlMechanisms + dDiffusionOfWater;
-
-      // Set the source
-      envSkinToGround->GetNextHeatSource().SetValue(dSurfaceArea_m2 * EvaporativeHeatLossFromSkin_W, PowerUnit::W);
-      index += 1;
     }
   }
 }
