@@ -935,7 +935,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     return true;
   }
 
-  return GetActions().ProcessAction(action);
+  return GetActions().ProcessAction(action, *this);
 }
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::IsReady()
