@@ -69,7 +69,7 @@ BG_EXT template class BIOGEARS_API map<const biogears::SESubstanceCompound*, bio
 }
 
 namespace biogears {
-
+class PhysiologyEngine;
 
 //!
 //! This is an emergency fix for working with UE4

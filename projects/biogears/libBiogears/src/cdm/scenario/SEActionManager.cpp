@@ -72,16 +72,16 @@ bool SEActionManager::ProcessAction(const SEAction& action, const PhysiologyEngi
   m_ProcessedActions.push_back(action.Unload());
 
   if (dynamic_cast<const SEPatientAction*>(&action) != nullptr)
-    return m_PatientActions.ProcessAction(dynamic_cast<const CDM::PatientActionData&>(*aData, engine));
+    return m_PatientActions.ProcessAction(dynamic_cast<const CDM::PatientActionData&>(*aData), engine);
 
   if (dynamic_cast<const SEAnesthesiaMachineAction*>(&action) != nullptr)
-    return m_AnesthesiaMachineActions.ProcessAction(dynamic_cast<const CDM::AnesthesiaMachineActionData&>(*aData, engine));
+    return m_AnesthesiaMachineActions.ProcessAction(dynamic_cast<const CDM::AnesthesiaMachineActionData&>(*aData), engine);
 
   if (dynamic_cast<const SEEnvironmentAction*>(&action) != nullptr)
-    return m_EnvironmentActions.ProcessAction(dynamic_cast<const CDM::EnvironmentActionData&>(*aData, engine));
+    return m_EnvironmentActions.ProcessAction(dynamic_cast<const CDM::EnvironmentActionData&>(*aData), engine);
 
   if (dynamic_cast<const SEInhalerAction*>(&action) != nullptr)
-    return m_InhalerActions.ProcessAction(dynamic_cast<const CDM::InhalerActionData&>(*aData, engine));
+    return m_InhalerActions.ProcessAction(dynamic_cast<const CDM::InhalerActionData&>(*aData), engine);
 
   /// \error Unsupported Action
   Error("Unsupported Action");
