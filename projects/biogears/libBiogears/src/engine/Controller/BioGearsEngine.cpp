@@ -238,14 +238,14 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
   // Conditions //
   m_Conditions->Clear();
   for (const CDM::ConditionData& cData : bgState->Condition()) {
-    if (!m_Conditions->ProcessCondition(cData)) {
+    if (!m_Conditions->ProcessCondition(cData, *this)) {
       m_ss << "Unable to load condition" << std::endl;
     }
   }
   // Actions //
   m_Actions->Clear();
   for (const CDM::ActionData& cData : bgState->ActiveAction()) {
-    if (!m_Actions->ProcessAction(cData)) {
+    if (!m_Actions->ProcessAction(cData, *this)) {
       m_ss << "Unable to load action" << std::endl;
     }
   }
@@ -646,7 +646,7 @@ bool BioGearsEngine::InitializeEngine(const std::vector<const SECondition*>* con
     for (const SECondition* c : *conditions) {
       m_ss << "[Condition] " << *c;
       m_Logger->Info(m_ss.str(), "BioGearsEngine");
-      if (!m_Conditions->ProcessCondition(*c)) {
+      if (!m_Conditions->ProcessCondition(*c, *this)) {
         return false;
       }
     }
@@ -696,7 +696,7 @@ double BioGearsEngine::GetTimeStep(const TimeUnit& unit)
   return m_Config->GetTimeStep(unit);
 }
 //-------------------------------------------------------------------------------
-double BioGearsEngine::GetSimulationTime(const TimeUnit& unit)
+double BioGearsEngine::GetSimulationTime(const TimeUnit& unit) const
 {
   return m_SimulationTime->GetValue(unit);
 }

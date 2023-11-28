@@ -43,17 +43,17 @@ void SEEnvironmentActionCollection::Unload(std::vector<CDM::ActionData*>& to)
     to.push_back(GetThermalApplication()->Unload());
 }
 
-bool SEEnvironmentActionCollection::ProcessAction(const SEEnvironmentAction& action)
+bool SEEnvironmentActionCollection::ProcessAction(const SEEnvironmentAction& action, const PhysiologyEngine& engine)
 {
   if (!IsValid(action))
     return false;
   CDM::EnvironmentActionData* bind = action.Unload();
-  bool b = ProcessAction(*bind);
+  bool b = ProcessAction(*bind, engine);
   delete bind;
   return b;
 }
 
-bool SEEnvironmentActionCollection::ProcessAction(const CDM::EnvironmentActionData& action)
+bool SEEnvironmentActionCollection::ProcessAction(const CDM::EnvironmentActionData& action, const PhysiologyEngine& engine)
 {
   const CDM::EnvironmentChangeData* change = dynamic_cast<const CDM::EnvironmentChangeData*>(&action);
   if (change != nullptr) {

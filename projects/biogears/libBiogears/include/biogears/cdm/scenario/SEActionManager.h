@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SESubstanceManager;
 class SEAction;
+class PhysiologyEngine;
 
 class BIOGEARS_API SEActionManager : public Loggable {
 public:
@@ -29,8 +30,8 @@ public:
 
   void Unload(std::vector<CDM::ActionData*>& to);
 
-  bool ProcessAction(const SEAction& action);
-  bool ProcessAction(const CDM::ActionData& in);
+  bool ProcessAction(const SEAction& action, const PhysiologyEngine& engine);
+  bool ProcessAction(const CDM::ActionData& in, const PhysiologyEngine& engine);
 
   SEEnvironmentActionCollection& GetEnvironmentActions() { return m_EnvironmentActions; }
   SEPatientActionCollection& GetPatientActions() { return m_PatientActions; }

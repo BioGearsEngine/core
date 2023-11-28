@@ -74,17 +74,17 @@ void SEConditionManager::Unload(std::vector<CDM::ConditionData*>& to)
     to.push_back(c->Unload());
 }
 
-bool SEConditionManager::ProcessCondition(const SECondition& condition)
+bool SEConditionManager::ProcessCondition(const SECondition& condition, const PhysiologyEngine& engine)
 {
   //if (!IsValid(action))
   //  return false;
   CDM::ConditionData* bind = condition.Unload();
-  bool b = ProcessCondition(*bind);
+  bool b = ProcessCondition(*bind, engine);
   delete bind;
   return b;
 }
 
-bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition)
+bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, const PhysiologyEngine& engine)
 {
   const CDM::ChronicAnemiaData* anemiaData = dynamic_cast<const CDM::ChronicAnemiaData*>(&condition);
   if (anemiaData != nullptr) {
