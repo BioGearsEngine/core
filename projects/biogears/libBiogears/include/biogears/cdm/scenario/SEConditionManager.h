@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(ConditionData);
 
 namespace biogears {
+class PhysiologyEngine;
 
 class BIOGEARS_API SEConditionManager : public Loggable {
 public:
@@ -42,8 +43,8 @@ public:
 
   void Unload(std::vector<CDM::ConditionData*>& to);
 
-  bool ProcessCondition(const SECondition& condition);
-  bool ProcessCondition(const CDM::ConditionData& condition);
+  bool ProcessCondition(const SECondition& condition, const PhysiologyEngine& engine);
+  bool ProcessCondition(const CDM::ConditionData& condition, const PhysiologyEngine& engine);
 
   // Not too many conditions, so just have one manager
   // If we start getting alot, I will make patient/environment/equipment condition managers, like the action managers

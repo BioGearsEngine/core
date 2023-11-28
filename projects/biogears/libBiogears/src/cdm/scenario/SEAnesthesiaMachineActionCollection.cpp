@@ -97,17 +97,17 @@ void SEAnesthesiaMachineActionCollection::Unload(std::vector<CDM::ActionData*>& 
     to.push_back(GetYPieceDisconnect()->Unload());
 }
 //-------------------------------------------------------------------------------
-bool SEAnesthesiaMachineActionCollection::ProcessAction(const SEAnesthesiaMachineAction& action)
+bool SEAnesthesiaMachineActionCollection::ProcessAction(const SEAnesthesiaMachineAction& action, const PhysiologyEngine& engine)
 {
   if (!IsValid(action))
     return false;
   CDM::AnesthesiaMachineActionData* bind = action.Unload();
-  bool b = ProcessAction(*bind);
+  bool b = ProcessAction(*bind, engine);
   delete bind;
   return b;
 }
 //-------------------------------------------------------------------------------
-bool SEAnesthesiaMachineActionCollection::ProcessAction(const CDM::AnesthesiaMachineActionData& action)
+bool SEAnesthesiaMachineActionCollection::ProcessAction(const CDM::AnesthesiaMachineActionData& action, const PhysiologyEngine& engine)
 {
   const CDM::AnesthesiaMachineConfigurationData* config = dynamic_cast<const CDM::AnesthesiaMachineConfigurationData*>(&action);
   if (config != nullptr) {

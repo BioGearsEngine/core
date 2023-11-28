@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
+#include <biogears/cdm/engine/PhysiologyEngine.h>
 
 #include <map>
 #include <vector>
@@ -487,18 +488,18 @@ void SEPatientActionCollection::Unload(std::vector<CDM::ActionData*>& to)
   }
 }
 //-------------------------------------------------------------------------------
-bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action)
+bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action, const PhysiologyEngine& engine)
 {
   if (!IsValid(action)) {
     return false;
   }
   CDM::PatientActionData* bind = action.Unload();
-  bool b = ProcessAction(*bind);
+  bool b = ProcessAction(*bind, engine);
   delete bind;
   return b;
 }
 //-------------------------------------------------------------------------------
-bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& action)
+bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& action, const PhysiologyEngine& engine)
 {
   const CDM::PatientAssessmentRequestData* patientAssessment = dynamic_cast<const CDM::PatientAssessmentRequestData*>(&action);
   if (patientAssessment != nullptr) {
@@ -630,7 +631,10 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
     if (m_BurnWound == nullptr) {
       m_BurnWound = new SEBurnWound();
     }
+
+
     m_BurnWound->Load(*burn);
+    m_BurnIntroductionTimeStamp = engine.GetSimulationTime(TimeUnit::s);
     if (!m_BurnWound->IsActive()) {
       RemoveBurnWound();
       return true;

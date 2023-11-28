@@ -29,6 +29,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEYPieceDisconnect.h>
 
 namespace biogears {
+class PhysiologyEngine;
+
 class BIOGEARS_API SEAnesthesiaMachineActionCollection : public Loggable {
 public:
   SEAnesthesiaMachineActionCollection(SESubstanceManager&);
@@ -38,8 +40,8 @@ public:
 
   void Unload(std::vector<CDM::ActionData*>& to);
 
-  bool ProcessAction(const SEAnesthesiaMachineAction& action);
-  bool ProcessAction(const CDM::AnesthesiaMachineActionData& action);
+  bool ProcessAction(const SEAnesthesiaMachineAction& action, const PhysiologyEngine& engine);
+  bool ProcessAction(const CDM::AnesthesiaMachineActionData& action, const PhysiologyEngine& engine);
 
   // STATE ACTION
   bool HasConfiguration() const;

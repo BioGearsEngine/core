@@ -37,17 +37,17 @@ void SEInhalerActionCollection::Unload(std::vector<CDM::ActionData*>& to)
     to.push_back(GetConfiguration()->Unload());
 }
 
-bool SEInhalerActionCollection::ProcessAction(const SEInhalerAction& action)
+bool SEInhalerActionCollection::ProcessAction(const SEInhalerAction& action, const PhysiologyEngine& engine)
 {
   if (!IsValid(action))
     return false;
   CDM::InhalerActionData* bind = action.Unload();
-  bool b = ProcessAction(*bind);
+  bool b = ProcessAction(*bind, engine);
   delete bind;
   return b;
 }
 
-bool SEInhalerActionCollection::ProcessAction(const CDM::InhalerActionData& action)
+bool SEInhalerActionCollection::ProcessAction(const CDM::InhalerActionData& action, const PhysiologyEngine& engine)
 {
   const CDM::InhalerConfigurationData* config = dynamic_cast<const CDM::InhalerConfigurationData*>(&action);
   if (config != nullptr) {

@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/EnvironmentActions.hxx>
 
 namespace biogears {
+class PhysiologyEngine;
+
 class BIOGEARS_API SEEnvironmentActionCollection : public Loggable {
 public:
   SEEnvironmentActionCollection(SESubstanceManager&);
@@ -26,8 +28,8 @@ public:
 
   void Unload(std::vector<CDM::ActionData*>& to);
 
-  bool ProcessAction(const SEEnvironmentAction& action);
-  bool ProcessAction(const CDM::EnvironmentActionData& action);
+  bool ProcessAction(const SEEnvironmentAction& action, const PhysiologyEngine& engine);
+  bool ProcessAction(const CDM::EnvironmentActionData& action, const PhysiologyEngine& engine);
 
   // STATE ACTION
   bool HasChange() const;
