@@ -41,6 +41,7 @@ constexpr char idSkinTemperatureLeftArm[] = "SkinTemperatureLeftArm";
 constexpr char idSkinTemperatureRightArm[] = "SkinTemperatureRightArm";
 constexpr char idSkinTemperatureLeftLeg[] = "SkinTemperatureLeftLeg";
 constexpr char idSkinTemperatureRightLeg[] = "SkinTemperatureRightLeg";
+constexpr char idBurnSkinTemperature[] = "BurnSkinTemperature";
 constexpr char idSodiumLostToSweat[] = "SodiumLostToSweat";
 constexpr char idSweatRate[] = "SweatRate";
 constexpr char idTotalMetabolicRate[] = "TotalMetabolicRate";
@@ -66,6 +67,7 @@ SEEnergySystem::SEEnergySystem(Logger* logger)
   m_SkinTemperatureRightArm = nullptr;
   m_SkinTemperatureLeftLeg = nullptr;
   m_SkinTemperatureRightLeg = nullptr;
+  m_BurnSkinTemperature = nullptr;
   m_SodiumLostToSweat = nullptr;
   m_SweatRate = nullptr;
   m_TotalMetabolicRate = nullptr;
@@ -100,6 +102,7 @@ void SEEnergySystem::Clear()
   SAFE_DELETE(m_SkinTemperatureRightArm);
   SAFE_DELETE(m_SkinTemperatureLeftLeg);
   SAFE_DELETE(m_SkinTemperatureRightLeg);
+  SAFE_DELETE(m_BurnSkinTemperature);
   SAFE_DELETE(m_SodiumLostToSweat);
   SAFE_DELETE(m_SweatRate);
   SAFE_DELETE(m_TotalMetabolicRate);
@@ -146,6 +149,8 @@ const SEScalar* SEEnergySystem::GetScalar(const std::string& name)
     return &GetSkinTemperatureLeftLeg();
   if (name == idSkinTemperatureRightLeg)
     return &GetSkinTemperatureRightLeg();
+  if (name == idBurnSkinTemperature)
+    return &GetBurnSkinTemperature();
   if (name == idSodiumLostToSweat)
     return &GetSodiumLostToSweat();
   if (name == idSweatRate)
@@ -196,6 +201,8 @@ bool SEEnergySystem::Load(const CDM::EnergySystemData& in)
     GetSkinTemperatureLeftLeg().Load(in.SkinTemperatureLeftLeg().get());
   if (in.SkinTemperatureRightLeg().present())
     GetSkinTemperatureRightLeg().Load(in.SkinTemperatureRightLeg().get());
+  if (in.BurnSkinTemperature().present())
+    GetBurnSkinTemperature().Load(in.BurnSkinTemperature().get());
   if (in.SodiumLostToSweat().present())
     GetSodiumLostToSweat().Load(in.SodiumLostToSweat().get());
   if (in.SweatRate().present())
@@ -255,6 +262,8 @@ void SEEnergySystem::Unload(CDM::EnergySystemData& data) const
     data.SkinTemperatureLeftLeg(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureLeftLeg->Unload()));
   if (m_SkinTemperatureRightLeg != nullptr)
     data.SkinTemperatureRightLeg(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureRightLeg->Unload()));
+  if (m_BurnSkinTemperature != nullptr)
+    data.BurnSkinTemperature(std::unique_ptr<CDM::ScalarTemperatureData>(m_BurnSkinTemperature->Unload()));
   if (m_SodiumLostToSweat != nullptr)
     data.SodiumLostToSweat(std::unique_ptr<CDM::ScalarMassData>(m_SodiumLostToSweat->Unload()));
   if (m_SweatRate != nullptr)
@@ -594,6 +603,25 @@ double SEEnergySystem::GetSkinTemperatureRightLeg(const TemperatureUnit& unit) c
   return m_SkinTemperatureRightLeg->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
+bool SEEnergySystem::HasBurnSkinTemperature() const
+{
+  return m_BurnSkinTemperature == nullptr ? false : m_BurnSkinTemperature->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarTemperature& SEEnergySystem::GetBurnSkinTemperature()
+{
+  if (m_BurnSkinTemperature == nullptr)
+    m_BurnSkinTemperature = new SEScalarTemperature();
+  return *m_BurnSkinTemperature;
+}
+//-------------------------------------------------------------------------------
+double SEEnergySystem::GetBurnSkinTemperature(const TemperatureUnit& unit) const
+{
+  if (m_BurnSkinTemperature == nullptr)
+    return SEScalar::dNaN();
+  return m_BurnSkinTemperature->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
 bool SEEnergySystem::HasSodiumLostToSweat() const
 {
   return m_SodiumLostToSweat == nullptr ? false : m_SodiumLostToSweat->IsValid();
@@ -691,6 +719,7 @@ Tree<const char*> SEEnergySystem::GetPhysiologyRequestGraph() const
     .emplace_back(idSkinTemperatureRightArm)
     .emplace_back(idSkinTemperatureLeftLeg)
     .emplace_back(idSkinTemperatureRightLeg)
+    .emplace_back(idBurnSkinTemperature)
     .emplace_back(idSodiumLostToSweat)
     .emplace_back(idSweatRate)
     .emplace_back(idTotalMetabolicRate)

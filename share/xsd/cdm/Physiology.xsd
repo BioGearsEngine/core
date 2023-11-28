@@ -355,6 +355,8 @@ specific language governing permissions and limitations under the License.
           <!--<< @brief The left leg skin surface temperature.-->
 		  <xs:element name="SkinTemperatureRightLeg" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
           <!--<< @brief The right leg skin surface temperature.-->
+		  <xs:element name="BurnSkinTemperature" type="ScalarTemperatureData" minOccurs="0" maxOccurs="1"/>
+          <!--<< @brief The surface temperature of afflicted burn area.-->
           <xs:element name="SweatRate" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/>
           <!--<< @brief Mass of sweat generated per unit time due to elevated core temperature -->
           <xs:element name="TotalMetabolicRate" type="ScalarPowerData" minOccurs="0" maxOccurs="1"/>
