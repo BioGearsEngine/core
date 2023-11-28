@@ -55,7 +55,8 @@ public:
   bool HasDegreeOfBurn() const;
   CDM::enumBurnDegree::value GetDegreeOfBurn() const;
   void SetDegreeOfBurn(CDM::enumBurnDegree::value value);
-  void SEBurnWound::SetTimeOfBurn(SEScalarTime burnTime);
+  void SEBurnWound::SetTimeOfBurn(double burnTime);
+  double SEBurnWound::GetTimeOfBurn() const;
 
   double GetBurnIntensity() const;
 
