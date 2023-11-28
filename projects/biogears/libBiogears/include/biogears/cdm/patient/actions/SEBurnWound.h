@@ -55,6 +55,7 @@ public:
   bool HasDegreeOfBurn() const;
   CDM::enumBurnDegree::value GetDegreeOfBurn() const;
   void SetDegreeOfBurn(CDM::enumBurnDegree::value value);
+  void SEBurnWound::SetTimeOfBurn(SEScalarTime burnTime);
 
   double GetBurnIntensity() const;
 
@@ -76,6 +77,7 @@ public:
   bool operator!=(const SEBurnWound& rhs) const;
 
   std::vector<double> GetTBSACompartmentDistribution() const;
+  double SEBurnWound::GetTimeSinceBurn(SEScalarTime currentTime) const;
 
   double getLeftArmSA() const;
   double getRightArmSA() const;
@@ -96,6 +98,7 @@ protected:
 private:
   bool m_Inflammation;
   double m_DegreeModifier;
+  double m_burnInitiationTime;
   CDM::enumBurnDegree::value m_DegreeOfBurn;
   SEScalar0To1* m_TBSA;
   std::vector<SEScalar0To1> m_compartments;

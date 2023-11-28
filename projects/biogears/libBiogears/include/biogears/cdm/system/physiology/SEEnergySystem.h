@@ -126,6 +126,10 @@ public:
   SEScalarTemperature& GetSkinTemperatureRightLeg();
   double GetSkinTemperatureRightLeg(const TemperatureUnit& unit) const;
 
+  bool HasBurnSkinTemperature() const;
+  SEScalarTemperature& GetBurnSkinTemperature();
+  double GetBurnSkinTemperature(const TemperatureUnit& unit) const;
+
   bool HasSodiumLostToSweat() const;
   SEScalarMass& GetSodiumLostToSweat();
   double GetSodiumLostToSweat(const MassUnit& unit) const;
@@ -160,6 +164,7 @@ protected:
   SEScalarTemperature* m_SkinTemperatureRightArm;
   SEScalarTemperature* m_SkinTemperatureLeftLeg;
   SEScalarTemperature* m_SkinTemperatureRightLeg;
+  SEScalarTemperature* m_BurnSkinTemperature;
   SEScalarMass* m_SodiumLostToSweat;
   SEScalarMassPerTime* m_SweatRate;
   SEScalarPower* m_TotalMetabolicRate;

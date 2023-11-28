@@ -110,6 +110,7 @@ void Energy::Initialize()
   GetSkinTemperatureRightArm().SetValue(33.0, TemperatureUnit::C);
   GetSkinTemperatureLeftLeg().SetValue(33.0, TemperatureUnit::C);
   GetSkinTemperatureRightLeg().SetValue(33.0, TemperatureUnit::C);
+  GetBurnSkinTemperature().SetValue(33.0, TemperatureUnit::C);
   GetSkinTemperature().SetValue(33.0, TemperatureUnit::C);
   /// \cite phypers2006lactate
   GetLactateProductionRate().SetValue(1.3, AmountPerTimeUnit::mol_Per_day);
@@ -692,6 +693,7 @@ void Energy::UpdateHeatResistance()
   segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (2.925 / 11.89)); // LLeg
   segmentedSkinBloodFlows.push_back(6.0 * skinBloodFlow_m3_Per_s * (2.925 / 11.89)); // RLeg
   int index = 0;
+  bool isAnySegmentBurned = false;
   for (SEThermalCircuitPath* coreToSkinPath : m_coreToSkinPaths) {
     double bloodDensity_kg_Per_m3 = m_data.GetBloodChemistry().GetBloodDensity().GetValue(MassPerVolumeUnit::kg_Per_m3);
     double bloodSpecificHeat_J_Per_K_kg = m_data.GetBloodChemistry().GetBloodSpecificHeat().GetValue(HeatCapacitancePerMassUnit::J_Per_K_kg);
@@ -715,6 +717,7 @@ void Energy::UpdateHeatResistance()
       }
     }
     if (isBurnWound) {
+      isAnySegmentBurned = true;
       const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
       const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0); // Make >50% burn the worse case scenario
       const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 20.0, resInput);
@@ -732,6 +735,17 @@ void Energy::UpdateHeatResistance()
 
     coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
     index += 1;
+  }
+  if (isAnySegmentBurned) {
+    SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
+    double timeSinceBurn = burnAction->GetTimeSinceBurn(m_data.GetSimulationTime());
+    if (timeSinceBurn != 0.0) {
+      double t = timeSinceBurn;
+      double burnTemperature = (30.3 * std::exp(-1.0 * std::pow(t - 7.81, 2) / 11.7)) + GetSkinTemperature(TemperatureUnit::C);
+      GetBurnSkinTemperature().SetValue(burnTemperature, TemperatureUnit::C);
+    } else {
+      burnAction->SetTimeOfBurn(m_data.GetSimulationTime());
+    }
   }
 }
 

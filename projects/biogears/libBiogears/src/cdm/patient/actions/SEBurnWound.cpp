@@ -19,6 +19,7 @@ namespace biogears {
 SEBurnWound::SEBurnWound()
   : SEPatientAction()
   , m_DegreeModifier(1.0)
+  , m_burnInitiationTime(0.0)
   , m_TBSA(new SEScalar0To1()) // User input, size of wound measured by total body surface area
   , m_compartments(5)
 {
@@ -163,6 +164,11 @@ void SEBurnWound::SetDegreeOfBurn(CDM::enumBurnDegree::value bd)
   default:
     m_DegreeModifier = 1.0; // Just a default error catch
   }
+}
+//-----------------------------------------------------------------------------
+void SEBurnWound::SetTimeOfBurn(SEScalarTime burnTime)
+{
+  m_burnInitiationTime = burnTime.GetValue();
 }
 //-----------------------------------------------------------------------------
 double SEBurnWound::GetBurnIntensity() const
@@ -371,6 +377,12 @@ std::vector<double> SEBurnWound::GetTBSACompartmentDistribution() const
   return { m_compartments[0].GetValue(), m_compartments[1].GetValue(),
            m_compartments[2].GetValue(), m_compartments[3].GetValue(),
            m_compartments[4].GetValue() };
+}
+//-------------------------------------------------------------------------------
+double SEBurnWound::GetTimeSinceBurn(SEScalarTime currentTime) const
+{
+
+  return currentTime.GetValue() - m_burnInitiationTime;
 }
 //-------------------------------------------------------------------------------
 double SEBurnWound::getLeftArmSA() const { return m_compartments[0].GetValue(); }
