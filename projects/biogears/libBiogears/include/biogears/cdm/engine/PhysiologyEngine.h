@@ -158,7 +158,7 @@ public:
   //! \brief
   //! returns the current time of the simulation.
   //!-------------------------------------------------------------------------------------------------
-  virtual double GetSimulationTime(const TimeUnit& unit) = 0;
+  virtual double GetSimulationTime(const TimeUnit& unit) const = 0;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief

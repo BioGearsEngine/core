@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/scenario/SEActionManager.h>
+#include <biogears/cdm/engine/PhysiologyEngine.h>
 
 namespace biogears {
 SEActionManager::SEActionManager(SESubstanceManager& substances)
@@ -37,20 +38,20 @@ void SEActionManager::Clear()
   m_ProcessedActions.clear();
 }
 //-------------------------------------------------------------------------------
-bool SEActionManager::ProcessAction(const CDM::ActionData& in)
+bool SEActionManager::ProcessAction(const CDM::ActionData& in, const PhysiologyEngine& engine)
 {
   const CDM::PatientActionData* pAction = dynamic_cast<const CDM::PatientActionData*>(&in);
   if (pAction != nullptr)
-    return m_PatientActions.ProcessAction(*pAction);
+    return m_PatientActions.ProcessAction(*pAction, engine);
   const CDM::EnvironmentActionData* eAction = dynamic_cast<const CDM::EnvironmentActionData*>(&in);
   if (eAction != nullptr)
-    return m_EnvironmentActions.ProcessAction(*eAction);
+    return m_EnvironmentActions.ProcessAction(*eAction, engine);
   const CDM::AnesthesiaMachineActionData* aAction = dynamic_cast<const CDM::AnesthesiaMachineActionData*>(&in);
   if (aAction != nullptr)
-    return m_AnesthesiaMachineActions.ProcessAction(*aAction);
+    return m_AnesthesiaMachineActions.ProcessAction(*aAction, engine);
   const CDM::InhalerActionData* iAction = dynamic_cast<const CDM::InhalerActionData*>(&in);
   if (iAction != nullptr)
-    return m_InhalerActions.ProcessAction(*iAction);
+    return m_InhalerActions.ProcessAction(*iAction, engine);
   Error("Unknown Action Type");
   return false;
 }
@@ -63,7 +64,7 @@ void SEActionManager::Unload(std::vector<CDM::ActionData*>& to)
   m_InhalerActions.Unload(to);
 }
 //-------------------------------------------------------------------------------
-bool SEActionManager::ProcessAction(const SEAction& action)
+bool SEActionManager::ProcessAction(const SEAction& action, const PhysiologyEngine& engine)
 {
   // Store the action data. This is intended to be able to
   // Serialize out all the actions that the engine was asked to perform
@@ -71,16 +72,16 @@ bool SEActionManager::ProcessAction(const SEAction& action)
   m_ProcessedActions.push_back(action.Unload());
 
   if (dynamic_cast<const SEPatientAction*>(&action) != nullptr)
-    return m_PatientActions.ProcessAction(dynamic_cast<const CDM::PatientActionData&>(*aData));
+    return m_PatientActions.ProcessAction(dynamic_cast<const CDM::PatientActionData&>(*aData, engine));
 
   if (dynamic_cast<const SEAnesthesiaMachineAction*>(&action) != nullptr)
-    return m_AnesthesiaMachineActions.ProcessAction(dynamic_cast<const CDM::AnesthesiaMachineActionData&>(*aData));
+    return m_AnesthesiaMachineActions.ProcessAction(dynamic_cast<const CDM::AnesthesiaMachineActionData&>(*aData, engine));
 
   if (dynamic_cast<const SEEnvironmentAction*>(&action) != nullptr)
-    return m_EnvironmentActions.ProcessAction(dynamic_cast<const CDM::EnvironmentActionData&>(*aData));
+    return m_EnvironmentActions.ProcessAction(dynamic_cast<const CDM::EnvironmentActionData&>(*aData, engine));
 
   if (dynamic_cast<const SEInhalerAction*>(&action) != nullptr)
-    return m_InhalerActions.ProcessAction(dynamic_cast<const CDM::InhalerActionData&>(*aData));
+    return m_InhalerActions.ProcessAction(dynamic_cast<const CDM::InhalerActionData&>(*aData, engine));
 
   /// \error Unsupported Action
   Error("Unsupported Action");

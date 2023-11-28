@@ -207,8 +207,8 @@ public:
 
   void Unload(std::vector<CDM::ActionData*>& to);
 
-  bool ProcessAction(const SEPatientAction& action);
-  bool ProcessAction(const CDM::PatientActionData& action);
+  bool ProcessAction(const SEPatientAction& action, const PhysiologyEngine& engine);
+  bool ProcessAction(const CDM::PatientActionData& action, const PhysiologyEngine& engine);
 
   bool HasAcuteRespiratoryDistress() const;
   SEAcuteRespiratoryDistress* GetAcuteRespiratoryDistress() const;
@@ -433,6 +433,8 @@ protected:
   SETensionPneumothorax* m_RightOpenTensionPneumothorax;
   SEUrinate* m_Urinate;
   SEOverride* m_OverrideAction;
+
+  double m_BurnIntroductionTimeStamp;
 
   std::map<std::string, SEHemorrhage*> m_Hemorrhages;
   mutable std::map<std::string, SEHemorrhage*>::const_iterator m_HemorrhageItr;

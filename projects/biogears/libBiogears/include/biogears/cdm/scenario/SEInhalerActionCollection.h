@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
 namespace biogears {
+class PhysiologyEngine;
+
 class BIOGEARS_API SEInhalerActionCollection : public Loggable {
 public:
   SEInhalerActionCollection(SESubstanceManager&);
@@ -26,8 +28,8 @@ public:
 
   void Unload(std::vector<CDM::ActionData*>& to);
 
-  bool ProcessAction(const SEInhalerAction& action);
-  bool ProcessAction(const CDM::InhalerActionData& action);
+  bool ProcessAction(const SEInhalerAction& action, const PhysiologyEngine& engine);
+  bool ProcessAction(const CDM::InhalerActionData& action, const PhysiologyEngine& engine);
 
   // STATE ACTION
   bool HasConfiguration() const;

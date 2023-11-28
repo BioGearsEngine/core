@@ -69,7 +69,7 @@ public:
   virtual const PhysiologyEngineConfiguration* GetConfiguration() override;
 
   virtual double GetTimeStep(const TimeUnit& unit) override;
-  virtual double GetSimulationTime(const TimeUnit& unit) override;
+  virtual double GetSimulationTime(const TimeUnit& unit) const override;
 
   //!-------------------------------------------------------------------------------------------------
   //! \brief
