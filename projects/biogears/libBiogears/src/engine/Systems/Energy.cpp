@@ -744,7 +744,7 @@ void Energy::UpdateHeatResistance()
       double burnTemperature = (30.3 * std::exp(-1.0 * std::pow(t - 7.81, 2) / 11.7)) + GetSkinTemperature(TemperatureUnit::C);
       GetBurnSkinTemperature().SetValue(burnTemperature, TemperatureUnit::C);
     } else {
-      burnAction->SetTimeOfBurn(m_data.GetSimulationTime());
+      burnAction->SetTimeOfBurn(m_data.GetSimulationTime().GetValue());
     }
   }
 }

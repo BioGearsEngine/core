@@ -19,7 +19,7 @@ namespace biogears {
 SEBurnWound::SEBurnWound()
   : SEPatientAction()
   , m_DegreeModifier(1.0)
-  , m_burnInitiationTime(0.0)
+  , m_burnInitiationTime(0.0) // Automatically set on burn instantiation. Exists in xsd for state loading/unloading 
   , m_TBSA(new SEScalar0To1()) // User input, size of wound measured by total body surface area
   , m_compartments(5)
 {
@@ -42,6 +42,7 @@ void SEBurnWound::Clear()
   m_Inflammation = false;
   m_compartmentsAffected.clear();
   m_DegreeOfBurn = (CDM::enumBurnDegree::value)-1;
+  m_burnInitiationTime = 0.;
   m_TBSA->Clear();
 }
 //-----------------------------------------------------------------------------
@@ -64,6 +65,10 @@ bool SEBurnWound::Load(const CDM::BurnWoundData& in)
 
   if (in.DegreeOfBurn().present()) {
     SetDegreeOfBurn(in.DegreeOfBurn().get());
+  }
+
+  if (in.BurnInitiationTime().present()) {
+    SetTimeOfBurn(in.BurnInitiationTime().get());
   }
 
   m_compartmentsAffected.clear();
@@ -97,6 +102,9 @@ void SEBurnWound::Unload(CDM::BurnWoundData& data) const
     data.TotalBodySurfaceArea(std::unique_ptr<CDM::Scalar0To1Data>(m_TBSA->Unload()));
   if (HasDegreeOfBurn())
     data.DegreeOfBurn(m_DegreeOfBurn);
+  if (m_burnInitiationTime != 0.) {
+    data.BurnInitiationTime(m_burnInitiationTime);
+  }
   for (std::string compData : m_compartmentsAffected) {
     data.Compartments().push_back(compData);
   }
@@ -166,9 +174,14 @@ void SEBurnWound::SetDegreeOfBurn(CDM::enumBurnDegree::value bd)
   }
 }
 //-----------------------------------------------------------------------------
-void SEBurnWound::SetTimeOfBurn(SEScalarTime burnTime)
+void SEBurnWound::SetTimeOfBurn(double burnTime)
 {
-  m_burnInitiationTime = burnTime.GetValue();
+  m_burnInitiationTime = burnTime;
+}
+//-----------------------------------------------------------------------------
+double SEBurnWound::GetTimeOfBurn() const
+{
+  return m_burnInitiationTime;
 }
 //-----------------------------------------------------------------------------
 double SEBurnWound::GetBurnIntensity() const

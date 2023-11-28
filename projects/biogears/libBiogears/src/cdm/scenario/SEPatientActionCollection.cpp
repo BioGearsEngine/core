@@ -634,7 +634,9 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
 
 
     m_BurnWound->Load(*burn);
-    m_BurnIntroductionTimeStamp = engine.GetSimulationTime(TimeUnit::s);
+    if (m_BurnWound->GetTimeOfBurn() == 0.0) {
+      m_BurnWound->SetTimeOfBurn(engine.GetSimulationTime(TimeUnit::s));
+    }
     if (!m_BurnWound->IsActive()) {
       RemoveBurnWound();
       return true;

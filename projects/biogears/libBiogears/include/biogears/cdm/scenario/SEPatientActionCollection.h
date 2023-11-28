@@ -434,8 +434,6 @@ protected:
   SEUrinate* m_Urinate;
   SEOverride* m_OverrideAction;
 
-  double m_BurnIntroductionTimeStamp;
-
   std::map<std::string, SEHemorrhage*> m_Hemorrhages;
   mutable std::map<std::string, SEHemorrhage*>::const_iterator m_HemorrhageItr;
 
