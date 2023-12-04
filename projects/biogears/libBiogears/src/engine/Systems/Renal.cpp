@@ -871,9 +871,9 @@ void Renal::CalculateGlomerularTransport(SESubstance& sub)
 
     double massToMove_mg = concentration_mg_Per_mL * flow_mL_Per_s * m_dt * filterability * fractionUnbound;
 
-
-    if (sub.GetName() == "Lactate" && m_data.GetBloodChemistry().GetArterialBloodPH().GetValue() < 7.32) {
-      massToMove_mg *= 8.5;
+    //scale the mass to move of the lactate during acidosis: 
+    if (sub.GetName() == "Lactate") {
+      massToMove_mg *= (10.0 / (1 + 24.5 * exp(100 * (m_data.GetBloodChemistry().GetArterialBloodPH().GetValue() - 7.35)))) + 1.0;
     }
 
     //Make sure we don't try to move too much
