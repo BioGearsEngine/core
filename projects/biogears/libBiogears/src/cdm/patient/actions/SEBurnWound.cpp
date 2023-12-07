@@ -207,7 +207,7 @@ bool SEBurnWound::HasCompartment() const
 bool SEBurnWound::HasCompartment(const std::string compartment) const
 {
   for (const std::string ca : m_compartmentsAffected) {
-    if (compartment == ca)
+    if (compartment == ca && m_DegreeOfBurn != CDM::enumBurnDegree::First)
       return true;
   }
   return false;
@@ -390,12 +390,6 @@ std::vector<double> SEBurnWound::GetTBSACompartmentDistribution() const
   return { m_compartments[0].GetValue(), m_compartments[1].GetValue(),
            m_compartments[2].GetValue(), m_compartments[3].GetValue(),
            m_compartments[4].GetValue() };
-}
-//-------------------------------------------------------------------------------
-double SEBurnWound::GetTimeSinceBurn(SEScalarTime currentTime) const
-{
-
-  return currentTime.GetValue() - m_burnInitiationTime;
 }
 //-------------------------------------------------------------------------------
 double SEBurnWound::getLeftArmSA() const { return m_compartments[0].GetValue(); }

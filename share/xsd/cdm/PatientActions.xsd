@@ -171,7 +171,8 @@ specific language governing permissions and limitations under the License.
     <xs:complexContent>
       <xs:extension base="PatientActionData">
         <xs:sequence>
-          <xs:element name="BurnInitiationTime" type="xs:double" minOccurs="0" maxOccurs="1"/> <!--Automatically set on burn instantiation. Exists here for state loading/unloading-->
+          <xs:element name="BurnInitiationTime" type="xs:double" minOccurs="0" maxOccurs="1"> <!--Automatically set on burn instantiation. Exists here for state loading/unloading-->
+		  </xs:element>
 		  <xs:element name="DegreeOfBurn" type="enumBurnDegree" minOccurs="0" maxOccurs="1"/>
 		  <xs:element name="TotalBodySurfaceArea" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
           <xs:element name="Compartments" type="xs:string" minOccurs="0" maxOccurs="5"/>

@@ -78,7 +78,6 @@ public:
   bool operator!=(const SEBurnWound& rhs) const;
 
   std::vector<double> GetTBSACompartmentDistribution() const;
-  double SEBurnWound::GetTimeSinceBurn(SEScalarTime currentTime) const;
 
   double getLeftArmSA() const;
   double getRightArmSA() const;

@@ -738,7 +738,7 @@ void Energy::UpdateHeatResistance()
   }
   if (isAnySegmentBurned) {
     SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
-    double timeSinceBurn = burnAction->GetTimeSinceBurn(m_data.GetSimulationTime());
+    double timeSinceBurn = m_data.GetSimulationTime().GetValue()  - burnAction->GetTimeOfBurn();
     if (timeSinceBurn != 0.0) {
       double t = timeSinceBurn;
       double burnTemperature = (30.3 * std::exp(-1.0 * std::pow(t - 7.81, 2) / 11.7)) + GetSkinTemperature(TemperatureUnit::C);
