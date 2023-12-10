@@ -479,7 +479,7 @@ void Energy::CalculateVitalSigns()
   // The hydrogen ion concentration is a property of the blood
   // The events related to blood concentrations should be detected and set in blood chemistry.
   double highPh = 8.5;
-  double lowPh = 6.5; // \cite Edge2006AcidosisConscious
+  double lowPh = 6.3; // \cite Edge2006AcidosisConscious
   m_BloodpH.Sample(m_data.GetBloodChemistry().GetArterialBloodPH().GetValue());
   m_BicarbonateMolarity_mmol_Per_L.Sample(m_AortaHCO3->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
   //Only check these at the end of a cardiac cycle and reset at start of cardiac cycle
