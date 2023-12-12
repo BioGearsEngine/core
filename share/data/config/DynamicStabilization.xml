@@ -12,12 +12,12 @@
     <PropertyConvergence Name="OxygenSaturation" PercentDifference="0.25"/>
     <PropertyConvergence Name="EndTidalCarbonDioxideFraction" PercentDifference="0.25"/>
     <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-    <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
-	<PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
-	<PropertyConvergence Name="SkinTemperatureLeftArm" PercentDifference="0.25"/>
-	<PropertyConvergence Name="SkinTemperatureRightArm" PercentDifference="0.25"/>
-	<PropertyConvergence Name="SkinTemperatureLeftLeg" PercentDifference="0.25"/>
-	<PropertyConvergence Name="SkinTemperatureRightLeg" PercentDifference="0.25"/>
+	<PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="1.0"/>
+	<PropertyConvergence Name="SkinTemperatureHead" PercentDifference="1.0"/>
+	<PropertyConvergence Name="SkinTemperatureLeftArm" PercentDifference="1.0"/>
+	<PropertyConvergence Name="SkinTemperatureRightArm" PercentDifference="1.0"/>
+	<PropertyConvergence Name="SkinTemperatureLeftLeg" PercentDifference="1.0"/>
+	<PropertyConvergence Name="SkinTemperatureRightLeg" PercentDifference="1.0"/>
   </RestingStabilizationCriteria>
   <FeedbackStabilizationCriteria>
     <ConvergenceTime readOnly="false" unit="s" value="15"/>
@@ -33,13 +33,12 @@
     <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
     <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
     <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-    <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-    <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
-	<PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
-	<PropertyConvergence Name="SkinTemperatureLeftArm" PercentDifference="0.25"/>
-	<PropertyConvergence Name="SkinTemperatureRightArm" PercentDifference="0.25"/>
-	<PropertyConvergence Name="SkinTemperatureLeftLeg" PercentDifference="0.25"/>
-	<PropertyConvergence Name="SkinTemperatureRightLeg" PercentDifference="0.25"/>
+    <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="1.0"/>
+	<PropertyConvergence Name="SkinTemperatureHead" PercentDifference="1.0"/>
+	<PropertyConvergence Name="SkinTemperatureLeftArm" PercentDifference="1.0"/>
+	<PropertyConvergence Name="SkinTemperatureRightArm" PercentDifference="1.0"/>
+	<PropertyConvergence Name="SkinTemperatureLeftLeg" PercentDifference="1.0"/>
+	<PropertyConvergence Name="SkinTemperatureRightLeg" PercentDifference="1.0"/>
   </FeedbackStabilizationCriteria>
   <ConditionStabilization Name="ChronicAnemia" contentVersion="Biogears_7.5.0+85">
     <Criteria>
@@ -55,7 +54,6 @@
       <PropertyConvergence Name="EndTidalCarbonDioxideFraction" PercentDifference="0.25"/>
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
@@ -80,7 +78,6 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureLeftArm" PercentDifference="0.25"/>
@@ -103,7 +100,6 @@
       <PropertyConvergence Name="EndTidalCarbonDioxideFraction" PercentDifference="0.25"/>
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
@@ -128,7 +124,6 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureLeftArm" PercentDifference="0.25"/>
@@ -151,7 +146,6 @@
       <PropertyConvergence Name="EndTidalCarbonDioxideFraction" PercentDifference="0.25"/>
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
@@ -176,7 +170,6 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureLeftArm" PercentDifference="0.25"/>
@@ -199,7 +192,6 @@
       <PropertyConvergence Name="EndTidalCarbonDioxideFraction" PercentDifference="0.25"/>
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
@@ -224,7 +216,6 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureLeftArm" PercentDifference="0.25"/>
@@ -248,7 +239,6 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="1.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="1.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="1.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureLeftArm" PercentDifference="0.25"/>
@@ -271,7 +261,6 @@
       <PropertyConvergence Name="EndTidalCarbonDioxideFraction" PercentDifference="0.25"/>
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
@@ -296,7 +285,6 @@
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureLeftArm" PercentDifference="0.25"/>
@@ -319,7 +307,6 @@
       <PropertyConvergence Name="EndTidalCarbonDioxideFraction" PercentDifference="0.25"/>
       <PropertyConvergence Name="LeftAfferentArterioleResistance" PercentDifference="0.25"/>
       <PropertyConvergence Name="RightAfferentArterioleResistance" PercentDifference="0.25"/>
-      <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="CoreTemperature" PercentDifference="0.25"/>
       <PropertyConvergence Name="SkinTemperatureTorso" PercentDifference="0.25"/>
 	  <PropertyConvergence Name="SkinTemperatureHead" PercentDifference="0.25"/>
