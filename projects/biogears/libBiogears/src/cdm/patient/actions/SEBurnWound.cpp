@@ -65,6 +65,8 @@ bool SEBurnWound::Load(const CDM::BurnWoundData& in)
 
   if (in.DegreeOfBurn().present()) {
     SetDegreeOfBurn(in.DegreeOfBurn().get());
+  } else {
+    SetDegreeOfBurn(CDM::enumBurnDegree::Third);
   }
 
   if (in.BurnInitiationTime().present()) {

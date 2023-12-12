@@ -5598,25 +5598,25 @@ void BioGears::SetupInternalTemperature()
   double skinCapTuningFactor = 1.0;
   
   SEThermalCircuitNode& TorsoSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalTorsoSkin);
-  TorsoSkin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
+  TorsoSkin.GetTemperature().SetValue(34.4, TemperatureUnit::C);
   SEThermalCircuitPath& TorsoSkinToTemperatureGround = cIntemperature.CreatePath(TorsoSkin, Ground, BGE::InternalTemperaturePath::InternalTorsoSkinToTemperatureGround);
   TorsoSkinToTemperatureGround.GetCapacitanceBaseline().SetValue(skinCapTuningFactor * 1.21, HeatCapacitanceUnit::kcal_Per_C);
   TorsoSkin.GetHeatBaseline().SetValue(TorsoSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * TorsoSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
   
   SEThermalCircuitNode& HeadSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalHeadSkin);
-  HeadSkin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
+  HeadSkin.GetTemperature().SetValue(35.2, TemperatureUnit::C);
   SEThermalCircuitPath& HeadSkinToTemperatureGround = cIntemperature.CreatePath(HeadSkin, Ground, BGE::InternalTemperaturePath::InternalHeadSkinToTemperatureGround);
   HeadSkinToTemperatureGround.GetCapacitanceBaseline().SetValue(skinCapTuningFactor * 0.24, HeatCapacitanceUnit::kcal_Per_C);
   HeadSkin.GetHeatBaseline().SetValue(HeadSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * HeadSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
 
   SEThermalCircuitNode& LeftArmSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalLeftArmSkin);
-  LeftArmSkin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
+  LeftArmSkin.GetTemperature().SetValue(33.6, TemperatureUnit::C);
   SEThermalCircuitPath& LeftArmSkinToTemperatureGround = cIntemperature.CreatePath(LeftArmSkin, Ground, BGE::InternalTemperaturePath::InternalLeftArmSkinToTemperatureGround);
   LeftArmSkinToTemperatureGround.GetCapacitanceBaseline().SetValue(skinCapTuningFactor * 0.30, HeatCapacitanceUnit::kcal_Per_C);
   LeftArmSkin.GetHeatBaseline().SetValue(LeftArmSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * LeftArmSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);
   
   SEThermalCircuitNode& RightArmSkin = cIntemperature.CreateNode(BGE::InternalTemperatureNode::InternalRightArmSkin);
-  RightArmSkin.GetTemperature().SetValue(33.0, TemperatureUnit::C);
+  RightArmSkin.GetTemperature().SetValue(33.6, TemperatureUnit::C);
   SEThermalCircuitPath& RightArmSkinToTemperatureGround = cIntemperature.CreatePath(RightArmSkin, Ground, BGE::InternalTemperaturePath::InternalRightArmSkinToTemperatureGround);
   RightArmSkinToTemperatureGround.GetCapacitanceBaseline().SetValue(skinCapTuningFactor * 0.30, HeatCapacitanceUnit::kcal_Per_C);
   RightArmSkin.GetHeatBaseline().SetValue(RightArmSkinToTemperatureGround.GetCapacitanceBaseline().GetValue(HeatCapacitanceUnit::J_Per_K) * RightArmSkin.GetTemperature().GetValue(TemperatureUnit::K), EnergyUnit::J);

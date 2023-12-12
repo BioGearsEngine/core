@@ -270,13 +270,12 @@ void Environment::PreProcess()
   // 1 is head, gets no clo (0.01, assume not hat/hair for now)
   // arms each get 5 percent of clo
   // legs each get 25 percent of clo
-  double clotTest = 1.0;
-  m_SkinToClothingPaths[0]->GetNextResistance().SetValue(clotTest * skinToClothingResistance * m_cloSegmentation[0], HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[1]->GetNextResistance().SetValue(clotTest  * skinToClothingResistance * m_cloSegmentation[1], HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[2]->GetNextResistance().SetValue(clotTest * skinToClothingResistance * m_cloSegmentation[2], HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[3]->GetNextResistance().SetValue(clotTest * skinToClothingResistance * m_cloSegmentation[3], HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[4]->GetNextResistance().SetValue(clotTest * skinToClothingResistance * m_cloSegmentation[4], HeatResistanceUnit::K_Per_W);
-  m_SkinToClothingPaths[5]->GetNextResistance().SetValue(clotTest * skinToClothingResistance * m_cloSegmentation[5], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[0]->GetNextResistance().SetValue(skinToClothingResistance * m_cloSegmentation[0], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[1]->GetNextResistance().SetValue(skinToClothingResistance * m_cloSegmentation[1], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[2]->GetNextResistance().SetValue(skinToClothingResistance * m_cloSegmentation[2], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[3]->GetNextResistance().SetValue(skinToClothingResistance * m_cloSegmentation[3], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[4]->GetNextResistance().SetValue(skinToClothingResistance * m_cloSegmentation[4], HeatResistanceUnit::K_Per_W);
+  m_SkinToClothingPaths[5]->GetNextResistance().SetValue(skinToClothingResistance * m_cloSegmentation[5], HeatResistanceUnit::K_Per_W);
 
   //Set the skin heat loss
   double dSkinHeatLoss_W = 0.0;
@@ -310,9 +309,6 @@ void Environment::PreProcess()
     if (envSkinToGround->HasHeatTransferRate()) {
       eHeatLoss_W += envSkinToGround->GetHeatTransferRate().GetValue(PowerUnit::W);
     }
-  }
-  if (eHeatLoss_W > 0.) {
-    dTotalHeatLoss_W = eHeatLoss_W;
   }
   GetEvaporativeHeatLoss().SetValue(dTotalHeatLoss_W, PowerUnit::W);
 }
@@ -386,12 +382,33 @@ void Environment::ProcessActions()
     m_ClothingToEnvironmentPath->GetNextResistance().SetValue(nextConvectiveResistance, HeatResistanceUnit::K_Per_W);
 
     // Repeat the above steps for each discretized skin node pathway
+    int index = 0;
+    const double burnRampGain = 1.0e-5;
     for (SEThermalCircuitPath* skinToClothing : m_SkinToClothingPaths) {
+      double burnSurfaceAreaFraction = 0.0;
+      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+        SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
+        std::vector<std::string> burnComptVector = burnAction->GetCompartments();
+        // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
+        if (index == 0 && burnAction->HasCompartment("Trunk")) {
+          burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getTrunkBurnIntensity();
+        } else if (index == 2 && burnAction->HasCompartment("LeftArm")) {
+          burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getLeftArmBurnIntensity();
+        } else if (index == 3 && burnAction->HasCompartment("RightArm")) {
+          burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getRightArmBurnIntensity();
+        } else if (index == 4 && burnAction->HasCompartment("LeftLeg")) {
+          burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getLeftLegBurnIntensity();
+        } else if (index == 5 && burnAction->HasCompartment("RightLeg")) {
+          burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getRightLegBurnIntensity();
+        }
+      }
+        
       double nextSkinToClothingResistance = skinToClothing->GetNextResistance(HeatResistanceUnit::K_Per_W);
       const double lastSkinToClothingResistance = skinToClothing->GetResistance(HeatResistanceUnit::K_Per_W);
-      const double targetSkinToClothingResistance = nextSkinToClothingResistance * std::pow(1.0 - burnSurfaceAreaIntensityFraction, 4.0);
-      nextSkinToClothingResistance = lastSkinToClothingResistance + rampGain * (targetSkinToClothingResistance - lastSkinToClothingResistance);
+      const double targetSkinToClothingResistance = nextSkinToClothingResistance * std::pow(1.0 - burnSurfaceAreaFraction, 4.0);
+      nextSkinToClothingResistance = lastSkinToClothingResistance + burnRampGain * (targetSkinToClothingResistance - lastSkinToClothingResistance);
       skinToClothing->GetNextResistance().SetValue(nextSkinToClothingResistance, HeatResistanceUnit::K_Per_W);
+      index++;
     }
   }
 
@@ -720,13 +737,14 @@ void Environment::CalculateEvaporation()
     segmentedSkinSurfaceAreaPercents.push_back(0.193); // LLeg
     segmentedSkinSurfaceAreaPercents.push_back(0.193); // RLeg
     int index = 0;
+    const double dConvectiveTransferCoefficient_W_Per_m2_K = GetConvectiveHeatTranferCoefficient(HeatConductancePerAreaUnit::W_Per_m2_K);
+    const double dLewisRelation_K_Per_kPa = 16.5;
+    const double dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa = dConvectiveTransferCoefficient_W_Per_m2_K * dLewisRelation_K_Per_kPa;
+    const double clo_To_m2_K_Per_W = 0.155;
+    const double iCl = 0.35;
+
     for (SEThermalCircuitPath* envSkinToGround : m_EnvironmentSkinToGroundPaths) {
-      double dConvectiveTransferCoefficient_W_Per_m2_K = GetConvectiveHeatTranferCoefficient(HeatConductancePerAreaUnit::W_Per_m2_K);
-      const double dLewisRelation_K_Per_kPa = 16.5;
-      const double dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa = dConvectiveTransferCoefficient_W_Per_m2_K * dLewisRelation_K_Per_kPa;
-      const double dClothingResistance_clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo) / m_cloSegmentation[index];
-      const double clo_To_m2_K_Per_W = 0.155;
-      const double iCl = 0.35;
+      double dClothingResistance_clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo) * m_cloSegmentation[index];
       double dClothingResistance_m2_kPa_Per_W = clo_To_m2_K_Per_W * dClothingResistance_clo / (iCl * dLewisRelation_K_Per_kPa);
       double fCl = 1.0 + 0.3 * dClothingResistance_clo;
       double skinWettednessDiffusion = 0.06;
@@ -736,24 +754,30 @@ void Environment::CalculateEvaporation()
       if (burn_inflamation != inflamationSources.end()) {
         if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
           bool isBurnWoundLocal = false;
+          double localBurnIntensity = 0.0;
           if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
             SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
             std::vector<std::string> burnComptVector = burnAction->GetCompartments();
             // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
             if (index == 0 && burnAction->HasCompartment("Trunk")) {
               isBurnWoundLocal = true;
+              localBurnIntensity = m_data.GetActions().GetPatientActions().GetBurnWound()->getTrunkBurnIntensity();
             } else if (index == 2 && burnAction->HasCompartment("LeftArm")) {
               isBurnWoundLocal = true;
+              localBurnIntensity = m_data.GetActions().GetPatientActions().GetBurnWound()->getLeftArmBurnIntensity();
             } else if (index == 3 && burnAction->HasCompartment("RightArm")) {
               isBurnWoundLocal = true;
+              localBurnIntensity = m_data.GetActions().GetPatientActions().GetBurnWound()->getRightArmBurnIntensity();
             } else if (index == 4 && burnAction->HasCompartment("LeftLeg")) {
               isBurnWoundLocal = true;
+              localBurnIntensity = m_data.GetActions().GetPatientActions().GetBurnWound()->getLeftLegBurnIntensity();
             } else if (index == 5 && burnAction->HasCompartment("RightLeg")) {
               isBurnWoundLocal = true;
+              localBurnIntensity = m_data.GetActions().GetPatientActions().GetBurnWound()->getRightLegBurnIntensity();
             }
           }
           if (isBurnWoundLocal) {
-            skinWettednessDiffusion = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
+            skinWettednessDiffusion = localBurnIntensity;
             dClothingResistance_m2_kPa_Per_W = 0.0;
             fCl = 1.0;
           }
@@ -763,6 +787,7 @@ void Environment::CalculateEvaporation()
           // If we can not have duplicate InflamationSources of a type then why store it as a vector.
           inflamationSources.erase(burn_inflamation);
         }
+      }
 
         ///\ToDo:  The units of this constant are incorrect on the CDM--they should be W_Per_m2_Pa (no support for this unit currently)
         GetEvaporativeHeatTranferCoefficient().SetValue(dEvaporativeHeatTransferCoefficient_W_Per_m2_kPa, HeatConductancePerAreaUnit::W_Per_m2_K);
@@ -772,7 +797,7 @@ void Environment::CalculateEvaporation()
 
         double dSweatRate_kgPers = 0.0;
         if (m_data.GetEnergy().HasSweatRate()) {
-          dSweatRate_kgPers = m_data.GetEnergy().GetSweatRate(MassPerTimeUnit::kg_Per_s) / dSurfaceArea_m2;
+          dSweatRate_kgPers = m_data.GetEnergy().GetSweatRate(MassPerTimeUnit::kg_Per_s);
         }
         double dSweatingControlMechanisms = dSweatRate_kgPers * m_dHeatOfVaporizationOfWater_J_Per_kg;
         double dWettedPortion = 0.0;
@@ -785,7 +810,6 @@ void Environment::CalculateEvaporation()
         // Set the source
         envSkinToGround->GetNextHeatSource().SetValue(dSurfaceArea_m2 * EvaporativeHeatLossFromSkin_W, PowerUnit::W);
         index += 1;
-      }
     }
   }
 }

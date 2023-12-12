@@ -100,7 +100,7 @@ private:
   RunningAverage m_BicarbonateMolarity_mmol_Per_L;
   bool m_packOn;
   double m_previousWeightPack_kg;
-  double m_meanSkinTemperature;
+  double m_Test;
   // Stateless member variable (Set in SetUp())
   double m_dT_s;
   SEPatient* m_Patient;

@@ -88,6 +88,7 @@ void Energy::Clear()
   m_BloodpH.Reset();
   m_BicarbonateMolarity_mmol_Per_L.Reset();
   m_previousWeightPack_kg = 0.0;
+  m_Test = 0.0;
 
   m_packOn = false;
 }
@@ -104,14 +105,14 @@ void Energy::Initialize()
   //Initialization of other system variables
   /// \cite herman2008physics
   GetCoreTemperature().SetValue(37.0, TemperatureUnit::C);
-  GetSkinTemperatureTorso().SetValue(33.0, TemperatureUnit::C);
-  GetSkinTemperatureHead().SetValue(33.0, TemperatureUnit::C);
-  GetSkinTemperatureLeftArm().SetValue(33.0, TemperatureUnit::C);
-  GetSkinTemperatureRightArm().SetValue(33.0, TemperatureUnit::C);
+  GetSkinTemperatureTorso().SetValue(34.4, TemperatureUnit::C);
+  GetSkinTemperatureHead().SetValue(35.2, TemperatureUnit::C);
+  GetSkinTemperatureLeftArm().SetValue(33.6, TemperatureUnit::C);
+  GetSkinTemperatureRightArm().SetValue(33.6, TemperatureUnit::C);
   GetSkinTemperatureLeftLeg().SetValue(33.0, TemperatureUnit::C);
   GetSkinTemperatureRightLeg().SetValue(33.0, TemperatureUnit::C);
-  GetBurnSkinTemperature().SetValue(33.0, TemperatureUnit::C);
-  GetSkinTemperature().SetValue(33.0, TemperatureUnit::C);
+  GetBurnSkinTemperature().SetValue(34.4, TemperatureUnit::C);
+  GetSkinTemperature().SetValue(34.4, TemperatureUnit::C);
   /// \cite phypers2006lactate
   GetLactateProductionRate().SetValue(1.3, AmountPerTimeUnit::mol_Per_day);
   /// \cite guyton2006medical
@@ -225,6 +226,7 @@ void Energy::AtSteadyState()
 void Energy::PreProcess()
 {
   CalculateMetabolicHeatGeneration();
+  m_data.GetDataTrack().Probe("CTSresistance", m_Test);
   CalculateSweatRate();
   UpdateHeatResistance();
   //ManageEnergyDeficit();
@@ -610,7 +612,7 @@ void Energy::CalculateSweatRate()
   double dWaterVaporPressureInAmbientAir_mmHg = GeneralMath::AntoineEquation(dAirTemperature_C);
   double m_dWaterVaporPressureInAmbientAir_Pa = Convert(dWaterVaporPressureInAmbientAir_mmHg, PressureUnit::mmHg, PressureUnit::Pa);
   // double ambientAtmosphericPressure_Pa = m_data.GetEnvironment().GetConditions().GetAtmosphericPressure().GetValue(PressureUnit::Pa);
-  double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * (133.322 * (std::pow(10, (8.1076 - (1750.286 / (235.0 + (m_skinNodes[0]->GetTemperature(TemperatureUnit::C))))))) - (m_dWaterVaporPressureInAmbientAir_Pa)); // Still needs effective clothing evaporation
+  double maximumEvaporativeCapacity_W = 14.21 * (m_Patient->GetSkinSurfaceArea().GetValue(AreaUnit::m2)) * effectiveClothingEvaporation_im_Per_clo * (133.322 * (std::pow(10, (8.1076 - (1750.286 / (235.0 + (GetSkinTemperature(TemperatureUnit::C))))))) - (m_dWaterVaporPressureInAmbientAir_Pa)); // Still needs effective clothing evaporation
 
   double vaporizationEnergy_J_Per_kg = m_data.GetConfiguration().GetVaporizationEnergy(EnergyPerMassUnit::J_Per_kg);
   double sweatSodiumConcentration_mM = 51.0; /// \cite shirreffs1997whole
@@ -620,7 +622,6 @@ void Energy::CalculateSweatRate()
 
   double currentEvaporativeCapacity_W = sweatHeatTranferCoefficient_W_Per_K * (m_skinNodes[0]->GetTemperature(TemperatureUnit::K));
   if (currentEvaporativeCapacity_W > maximumEvaporativeCapacity_W) {
-
     sweatHeatTranferCoefficient_W_Per_K = maximumEvaporativeCapacity_W / (m_skinNodes[0]->GetTemperature(TemperatureUnit::K));
   }
 
@@ -698,27 +699,32 @@ void Energy::UpdateHeatResistance()
     double bloodDensity_kg_Per_m3 = m_data.GetBloodChemistry().GetBloodDensity().GetValue(MassPerVolumeUnit::kg_Per_m3);
     double bloodSpecificHeat_J_Per_K_kg = m_data.GetBloodChemistry().GetBloodSpecificHeat().GetValue(HeatCapacitancePerMassUnit::J_Per_K_kg);
 
-    double alphaScale = 0.5; // Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
+    double alphaScale = 0.42; // Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
     bool isBurnWound = false;
+    double burnSurfaceAreaFraction = 0.0;
     if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
       SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
       std::vector<std::string> burnComptVector = burnAction->GetCompartments();
       // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
       if (index == 0 && burnAction->HasCompartment("Trunk")) {
         isBurnWound = true;
+        burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getTrunkBurnIntensity();
       } else if (index == 2 && burnAction->HasCompartment("LeftArm")) {
         isBurnWound = true;
+        burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getLeftArmBurnIntensity();
       } else if (index == 3 && burnAction->HasCompartment("RightArm")) {
         isBurnWound = true;
+        burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getRightArmBurnIntensity();
       } else if (index == 4 && burnAction->HasCompartment("LeftLeg")) {
         isBurnWound = true;
+        burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getLeftLegBurnIntensity();
       } else if (index == 5 && burnAction->HasCompartment("RightLeg")) {
         isBurnWound = true;
+        burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getRightLegBurnIntensity();
       }
     }
     if (isBurnWound) {
       isAnySegmentBurned = true;
-      const double burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
       const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0); // Make >50% burn the worse case scenario
       const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 20.0, resInput);
       const double lastAlpha = 1.0 / (coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W) * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * segmentedSkinBloodFlows[index]);
@@ -730,9 +736,9 @@ void Energy::UpdateHeatResistance()
     // When skin blood flow increases, then heat transfer resistance decreases leading to more heat transfer from core to skin.
     // The opposite occurs for skin blood flow decrease.
     double coreToSkinResistance_K_Per_W = 1.0 / (alphaScale * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * segmentedSkinBloodFlows[index]);
-
+    
     coreToSkinResistance_K_Per_W = BLIM(coreToSkinResistance_K_Per_W, 0.0001, 20.0);
-
+    m_Test = coreToSkinResistance_K_Per_W;
     coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
     index += 1;
   }
