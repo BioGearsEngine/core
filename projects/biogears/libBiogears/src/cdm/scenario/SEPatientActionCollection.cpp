@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEPatientActionCollection.h>
 
+#include <biogears/container/Pair.tci.h>
+
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
@@ -32,31 +34,7 @@ template class map<const biogears::SESubstanceCompound*, biogears::SESubstanceCo
 
 namespace biogears {
 
-//!
-//!  Pair Wrapper
-//!
-template <typename KeyType, typename ValueType>
-PairWrapper<KeyType, ValueType>::PairWrapper(typename std::pair<const KeyType, ValueType>* pair)
-  : _ptr(pair)
-{
-}
 
-template <typename KeyType, typename ValueType>
-PairWrapper<KeyType, ValueType>::~PairWrapper()
-{
-}
-
-template <typename KeyType, typename ValueType>
-KeyType const& PairWrapper<KeyType, ValueType>::first()
-{
-  return _ptr->first;
-}
-
-template <typename KeyType, typename ValueType>
-ValueType& PairWrapper<KeyType, ValueType>::second()
-{
-  return _ptr->second;
-}
 //!
 //! MapIteratorWrapper
 //!
@@ -85,17 +63,17 @@ bool MapIteratorWrapper<KeyType, ValueType>::operator!=(MapIteratorWrapper const
 
 
 template <typename KeyType, typename ValueType>
-auto MapIteratorWrapper<KeyType, ValueType>::operator()() const ->  PairWrapper<KeyType, ValueType> 
+auto MapIteratorWrapper<KeyType, ValueType>::operator()() const ->  Pair<KeyType, ValueType> 
 {
-  return PairWrapper<KeyType, ValueType>(_iterator.operator->());
+  return Pair<KeyType, ValueType>(_iterator->first, _iterator->second);
 }
 
 template <typename KeyType, typename ValueType>
-auto MapIteratorWrapper<KeyType, ValueType>::operator*() const -> PairWrapper<KeyType, ValueType>
+auto MapIteratorWrapper<KeyType, ValueType>::operator*() const -> Pair<KeyType, ValueType>
 {
   //Prefix  Operator
 
-  return PairWrapper<KeyType, ValueType>(_iterator.operator->());
+  return Pair<KeyType, ValueType>(_iterator->first, _iterator->second);
 }
 
 template <typename KeyType, typename ValueType>
@@ -227,15 +205,15 @@ auto VectorWrapper<ValueType>::end() const -> VectorIteratorWrapper<ValueType>
 }
 
 //Template Specializations
-template class PairWrapper<std::string, SEHemorrhage*>;
-template class PairWrapper<std::string, SETourniquet*>;
-template class PairWrapper<std::string, SEEscharotomy*>;
-template class PairWrapper<std::string, SEPainStimulus*>;
-template class PairWrapper<const SESubstance*, SESubstanceBolus*>;
-template class PairWrapper<const SESubstance*, SESubstanceInfusion*>;
-template class PairWrapper<const SESubstance*, SESubstanceOralDose*>;
-template class PairWrapper<const SESubstance*, SESubstanceNasalDose*>;
-template class PairWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
+template class Pair<std::string, SEHemorrhage*>;
+template class Pair<std::string, SETourniquet*>;
+template class Pair<std::string, SEEscharotomy*>;
+template class Pair<std::string, SEPainStimulus*>;
+template class Pair<const SESubstance*, SESubstanceBolus*>;
+template class Pair<const SESubstance*, SESubstanceInfusion*>;
+template class Pair<const SESubstance*, SESubstanceOralDose*>;
+template class Pair<const SESubstance*, SESubstanceNasalDose*>;
+template class Pair<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
 
 template class MapIteratorWrapper<std::string, SEHemorrhage*>;
 template class MapIteratorWrapper<std::string, SETourniquet*>;

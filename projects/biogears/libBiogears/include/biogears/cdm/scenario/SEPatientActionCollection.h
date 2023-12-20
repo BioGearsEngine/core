@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
+#include <biogears/container/Pair.h>
+
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
@@ -82,17 +84,7 @@ namespace biogears {
 //! To avoid crashes when different sides of the DLL boundry disagree on the size of std_iterator
 //! When executing foreach loops
   
-template <typename KeyType, typename ValueType>
-class PairWrapper {
-public:
-  PairWrapper(typename std::pair<const KeyType, ValueType>*);
-  ~PairWrapper();
 
-  KeyType const& first();
-  ValueType& second();
-private:
-  typename std::pair<const KeyType, ValueType>* _ptr;
-};
 
 template <typename KeyType, typename ValueType>
 class MapIteratorWrapper {
@@ -105,8 +97,8 @@ public:
   bool operator!=(MapIteratorWrapper const& rhs) const;
 
  
-  auto operator()() const -> PairWrapper<KeyType, ValueType>;
-  auto operator*()  const -> PairWrapper<KeyType, ValueType>;
+  auto operator()() const -> Pair<KeyType, ValueType>;
+  auto operator*()  const -> Pair<KeyType, ValueType>;
 
   MapIteratorWrapper& operator++(); //Prefix  Operator
   MapIteratorWrapper  operator++(int); //Postfix Operator
@@ -162,15 +154,15 @@ private:
   std::vector<ValueType>& _vector;
 };
 
-BG_EXT template class BIOGEARS_API PairWrapper<std::string, SEHemorrhage*>;
-BG_EXT template class BIOGEARS_API PairWrapper<std::string, SETourniquet*>;
-BG_EXT template class BIOGEARS_API PairWrapper<std::string, SEEscharotomy*>;
-BG_EXT template class BIOGEARS_API PairWrapper<std::string, SEPainStimulus*>;
-BG_EXT template class BIOGEARS_API PairWrapper<const SESubstance*, SESubstanceBolus*>;
-BG_EXT template class BIOGEARS_API PairWrapper<const SESubstance*, SESubstanceInfusion*>;
-BG_EXT template class BIOGEARS_API PairWrapper<const SESubstance*, SESubstanceOralDose*>;
-BG_EXT template class BIOGEARS_API PairWrapper<const SESubstance*, SESubstanceNasalDose*>;
-BG_EXT template class BIOGEARS_API PairWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
+BG_EXT template class BIOGEARS_API Pair<std::string, SEHemorrhage*>;
+BG_EXT template class BIOGEARS_API Pair<std::string, SETourniquet*>;
+BG_EXT template class BIOGEARS_API Pair<std::string, SEEscharotomy*>;
+BG_EXT template class BIOGEARS_API Pair<std::string, SEPainStimulus*>;
+BG_EXT template class BIOGEARS_API Pair<const SESubstance*, SESubstanceBolus*>;
+BG_EXT template class BIOGEARS_API Pair<const SESubstance*, SESubstanceInfusion*>;
+BG_EXT template class BIOGEARS_API Pair<const SESubstance*, SESubstanceOralDose*>;
+BG_EXT template class BIOGEARS_API Pair<const SESubstance*, SESubstanceNasalDose*>;
+BG_EXT template class BIOGEARS_API Pair<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
 
 BG_EXT template class BIOGEARS_API MapIteratorWrapper<std::string, SEHemorrhage*>;
 BG_EXT template class BIOGEARS_API MapIteratorWrapper<std::string, SETourniquet*>;
