@@ -1050,7 +1050,7 @@ void Nervous::CheckPainStimulus()
 
   //initialize:
   SEPainStimulus* p;
-  const std::map<std::string, SEPainStimulus*>& pains = m_data.GetActions().GetPatientActions().GetPainStimuli();
+  const auto& pains = m_data.GetActions().GetPatientActions().GetPainStimuli();
   double patientSusceptability = m_Patient->GetPainSusceptibility().GetValue();
   double susceptabilityMapping = GeneralMath::LinearInterpolator(-1.0, 1.0, 0.0, 2.0, patientSusceptability); //mapping [-1,1] -> [0, 2] for scaling the pain stimulus
   double severity = 0.0;

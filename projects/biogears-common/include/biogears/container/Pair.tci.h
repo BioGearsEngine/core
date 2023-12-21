@@ -27,7 +27,7 @@ Pair<Type1, Type2>::Pair(Type1&& f, Type2&& s)
 }
 //-------------------------------------------------------------------------------
 template <typename Type1, typename Type2>
-Pair<Type1, Type2>::Pair(const Pair& p)
+Pair<Type1, Type2>::Pair(Pair const& p)
   : first(p.first)
   , second(p.second)
 {
@@ -57,8 +57,8 @@ auto Pair<Type1, Type2>::operator=(const Pair& p) -> Pair&
 template <typename Type1, typename Type2>
 auto Pair<Type1, Type2>::operator=(Pair&& p) -> Pair&
 {
-  first = std::move(p.first);
-  second = std::move(p.second);
+  this->first  = std::move(p.first);
+  this->second = std::move(p.second);
   return *this;
 }
 //-------------------------------------------------------------------------------
@@ -99,4 +99,4 @@ bool Pair<Type1, Type2>::operator>=(const Pair& p)
 }
 
 }
-#endif // BIOGEARS_CONTAINER_GRAPH_TCI_H
+#endif

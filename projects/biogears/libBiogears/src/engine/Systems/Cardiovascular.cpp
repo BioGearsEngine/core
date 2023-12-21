@@ -1176,8 +1176,8 @@ void Cardiovascular::Hemorrhage()
   const double bloodVolume_mL = GetBloodVolume(VolumeUnit::mL);
   const double baselineBloodVolume_mL = m_patient->GetBloodVolumeBaseline(VolumeUnit::mL);
 
-  const std::map<std::string, SEHemorrhage*>& hems = m_data.GetActions().GetPatientActions().GetHemorrhages();
-  const std::map<std::string, SETourniquet*>& tourniquets = m_data.GetActions().GetPatientActions().GetTourniquets();
+  const auto& hems = m_data.GetActions().GetPatientActions().GetHemorrhages();
+  const auto& tourniquets = m_data.GetActions().GetPatientActions().GetTourniquets();
   for (auto hem : hems) {
     targetHemorrhage = hem.second;
     hemCmpt = targetHemorrhage->GetCompartment();
@@ -2212,7 +2212,7 @@ SEScalar& Cardiovascular::CalculateCardiovascularSOFA()
   double sofaScore = 0.0;
   const double meanPressure = GetMeanArterialPressure(PressureUnit::mmHg);
   SESubstance* norEpi = m_data.GetSubstances().GetSubstance("Norepinephrine");
-  std::map<const SESubstance*, SESubstanceInfusion*> infusionMap = m_data.GetActions().GetPatientActions().GetSubstanceInfusions();
+  auto infusionMap = m_data.GetActions().GetPatientActions().GetSubstanceInfusions();
   if (meanPressure >= 70.0) {
     //Normal, leave sofaScore = 0
   } else if (m_data.GetSubstances().IsActive(*norEpi) && infusionMap.find(norEpi) != infusionMap.end()) {

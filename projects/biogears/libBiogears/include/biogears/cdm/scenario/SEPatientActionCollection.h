@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/container/Pair.h>
+#include <biogears/container/Map.h>
 
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
@@ -58,19 +59,28 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 
-namespace std {
-BG_EXT template class BIOGEARS_API map<string, biogears::SEHemorrhage*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SETourniquet*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEEscharotomy*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEPainStimulus*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceBolus*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceInfusion*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceOralDose*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
-}
 
 namespace biogears {
+
+BG_EXT template class BIOGEARS_API Pair<std::string, biogears::SEHemorrhage*>;
+BG_EXT template class BIOGEARS_API Pair<std::string, biogears::SETourniquet*>;
+BG_EXT template class BIOGEARS_API Pair<std::string, biogears::SEEscharotomy*>;
+BG_EXT template class BIOGEARS_API Pair<std::string, biogears::SEPainStimulus*>;
+BG_EXT template class BIOGEARS_API Pair<biogears::SESubstance const*, biogears::SESubstanceBolus*>;
+BG_EXT template class BIOGEARS_API Pair<biogears::SESubstance const*, biogears::SESubstanceInfusion*>;
+BG_EXT template class BIOGEARS_API Pair<biogears::SESubstance const*, biogears::SESubstanceOralDose*>;
+BG_EXT template class BIOGEARS_API Pair<biogears::SESubstance const*, biogears::SESubstanceNasalDose*>;
+BG_EXT template class BIOGEARS_API Pair<biogears::SESubstanceCompound const*, biogears::SESubstanceCompoundInfusion*>;
+
+BG_EXT template class BIOGEARS_API Map<std::string, biogears::SEHemorrhage*>;
+BG_EXT template class BIOGEARS_API Map<std::string, biogears::SETourniquet*>;
+BG_EXT template class BIOGEARS_API Map<std::string, biogears::SEEscharotomy*>;
+BG_EXT template class BIOGEARS_API Map<std::string, biogears::SEPainStimulus*>;
+BG_EXT template class BIOGEARS_API Map<const biogears::SESubstance*, biogears::SESubstanceBolus*>;
+BG_EXT template class BIOGEARS_API Map<const biogears::SESubstance*, biogears::SESubstanceInfusion*>;
+BG_EXT template class BIOGEARS_API Map<const biogears::SESubstance*, biogears::SESubstanceOralDose*>;
+BG_EXT template class BIOGEARS_API Map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*>;
+BG_EXT template class BIOGEARS_API Map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
 
 
 //!
@@ -84,41 +94,6 @@ namespace biogears {
 //! To avoid crashes when different sides of the DLL boundry disagree on the size of std_iterator
 //! When executing foreach loops
   
-
-
-template <typename KeyType, typename ValueType>
-class MapIteratorWrapper {
-public:
-  MapIteratorWrapper(typename std::map<KeyType, ValueType>::iterator itr);
-  ~MapIteratorWrapper();
-
-
-  bool operator==(MapIteratorWrapper const& rhs) const;
-  bool operator!=(MapIteratorWrapper const& rhs) const;
-
- 
-  auto operator()() const -> Pair<KeyType, ValueType>;
-  auto operator*()  const -> Pair<KeyType, ValueType>;
-
-  MapIteratorWrapper& operator++(); //Prefix  Operator
-  MapIteratorWrapper  operator++(int); //Postfix Operator
-
-private:
-  typename std::map<KeyType, ValueType>::iterator _iterator;
-};
-
-template <typename KeyType, typename ValueType>
-class MapWrapper {
-public:
-  MapWrapper(std::map<KeyType, ValueType>& given);
-  ~MapWrapper();
-
-  auto begin() const -> MapIteratorWrapper<KeyType, ValueType>;
-  auto end() const -> MapIteratorWrapper<KeyType, ValueType>;
-
-private:
-  std::map<KeyType, ValueType>& _map;
-};
 
 template <typename ValueType>
 class VectorIteratorWrapper {
@@ -164,25 +139,15 @@ BG_EXT template class BIOGEARS_API Pair<const SESubstance*, SESubstanceOralDose*
 BG_EXT template class BIOGEARS_API Pair<const SESubstance*, SESubstanceNasalDose*>;
 BG_EXT template class BIOGEARS_API Pair<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
 
-BG_EXT template class BIOGEARS_API MapIteratorWrapper<std::string, SEHemorrhage*>;
-BG_EXT template class BIOGEARS_API MapIteratorWrapper<std::string, SETourniquet*>;
-BG_EXT template class BIOGEARS_API MapIteratorWrapper<std::string, SEEscharotomy*>;
-BG_EXT template class BIOGEARS_API MapIteratorWrapper<std::string, SEPainStimulus*>;
-BG_EXT template class BIOGEARS_API MapIteratorWrapper<const SESubstance*, SESubstanceBolus*>;
-BG_EXT template class BIOGEARS_API MapIteratorWrapper<const SESubstance*, SESubstanceInfusion*>;
-BG_EXT template class BIOGEARS_API MapIteratorWrapper<const SESubstance*, SESubstanceOralDose*>;
-BG_EXT template class BIOGEARS_API MapIteratorWrapper<const SESubstance*, SESubstanceNasalDose*>;
-BG_EXT template class BIOGEARS_API MapIteratorWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
-
-BG_EXT template class BIOGEARS_API MapWrapper<std::string, SEHemorrhage*>;
-BG_EXT template class BIOGEARS_API MapWrapper<std::string, SETourniquet*>;
-BG_EXT template class BIOGEARS_API MapWrapper<std::string, SEEscharotomy*>;
-BG_EXT template class BIOGEARS_API MapWrapper<std::string, SEPainStimulus*>;
-BG_EXT template class BIOGEARS_API MapWrapper<const SESubstance*, SESubstanceBolus*>;
-BG_EXT template class BIOGEARS_API MapWrapper<const SESubstance*, SESubstanceInfusion*>;
-BG_EXT template class BIOGEARS_API MapWrapper<const SESubstance*, SESubstanceOralDose*>;
-BG_EXT template class BIOGEARS_API MapWrapper<const SESubstance*, SESubstanceNasalDose*>;
-BG_EXT template class BIOGEARS_API MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
+BG_EXT template class BIOGEARS_API Map<std::string, SEHemorrhage*>;
+BG_EXT template class BIOGEARS_API Map<std::string, SETourniquet*>;
+BG_EXT template class BIOGEARS_API Map<std::string, SEEscharotomy*>;
+BG_EXT template class BIOGEARS_API Map<std::string, SEPainStimulus*>;
+BG_EXT template class BIOGEARS_API Map<const SESubstance*, SESubstanceBolus*>;
+BG_EXT template class BIOGEARS_API Map<const SESubstance*, SESubstanceInfusion*>;
+BG_EXT template class BIOGEARS_API Map<const SESubstance*, SESubstanceOralDose*>;
+BG_EXT template class BIOGEARS_API Map<const SESubstance*, SESubstanceNasalDose*>;
+BG_EXT template class BIOGEARS_API Map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
 
 }
 
@@ -266,8 +231,7 @@ public:
   void RemoveConsumeNutrients();
 
   bool HasEscharotomy() const;
-  const std::map<std::string, SEEscharotomy*>& GetEscharotomies() const;
-  const MapWrapper<std::string, SEEscharotomy*> GetEscharotomiesWrapper() const;
+  const Map<std::string, SEEscharotomy*>& GetEscharotomies() const;
   void RemoveEscharotomy(const char* cmpt);
   void RemoveEscharotomy(const std::string& cmpt);
 
@@ -280,8 +244,7 @@ public:
   void RemoveExercise();
 
   bool HasHemorrhage() const;
-  const std::map<std::string, SEHemorrhage*>& GetHemorrhages() const;
-  const MapWrapper<std::string, SEHemorrhage*> GetHemorrhageWrapper() const;
+  const Map<std::string, SEHemorrhage*>& GetHemorrhages() const;
 
   SEHemorrhage const* GetFirstHemorrhage() const; //< Must be called after anything that would invalidate the underlying map
   SEHemorrhage const* GetNextHemorrhage() const; //< returns the iterators target or nullptr when itr == end.  Assumes no nullptr will ever be stored in Active hemmorhage map.
@@ -316,8 +279,7 @@ public:
   void RemoveRightNeedleDecompression();
 
   bool HasPainStimulus() const;
-  const std::map<std::string, SEPainStimulus*>& GetPainStimuli() const;
-  const MapWrapper<std::string, SEPainStimulus*> GetPainStimuliWrapper() const;
+  const Map<std::string, SEPainStimulus*>& GetPainStimuli() const;
   void RemovePainStimulus(const char* loc);
   void RemovePainStimulus(const std::string& loc);
 
@@ -355,29 +317,23 @@ public:
   SETensionPneumothorax* GetRightOpenTensionPneumothorax() const;
   void RemoveRightOpenTensionPneumothorax();
 
-  const std::map<const SESubstance*, SESubstanceBolus*>& GetSubstanceBoluses() const;
-  const MapWrapper<const SESubstance*, SESubstanceBolus*> GetSubstanceBolusesWrapper() const;
+  const Map<const SESubstance*, SESubstanceBolus*>& GetSubstanceBoluses() const;
   void RemoveSubstanceBolus(const SESubstance& sub);
 
-  const std::map<const SESubstance*, SESubstanceInfusion*>& GetSubstanceInfusions() const;
-  const MapWrapper<const SESubstance*, SESubstanceInfusion*> GetSubstanceInfusionsWrapper() const;
+  const Map<const SESubstance*, SESubstanceInfusion*>& GetSubstanceInfusions() const;
   void RemoveSubstanceInfusion(const SESubstance& sub);
 
-  const std::map<const SESubstance*, SESubstanceNasalDose*>& GetSubstanceNasalDoses() const;
-  const MapWrapper<const SESubstance*, SESubstanceNasalDose*> GetSubstanceNasalDosesWrapper() const;
+  const Map<const SESubstance*, SESubstanceNasalDose*>& GetSubstanceNasalDoses() const;
   void RemoveSubstanceNasalDose(const SESubstance& sub);
 
-  const std::map<const SESubstance*, SESubstanceOralDose*>& GetSubstanceOralDoses() const;
-  const MapWrapper<const SESubstance*, SESubstanceOralDose*> GetSubstanceOralDosesWrapper() const;
+  const Map<const SESubstance*, SESubstanceOralDose*>& GetSubstanceOralDoses() const;
   void RemoveSubstanceOralDose(const SESubstance& sub);
 
-  const std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>& GetSubstanceCompoundInfusions() const;
-  const MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*> GetSubstanceCompoundInfusionsWrapper() const;
+  const Map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>& GetSubstanceCompoundInfusions() const;
   void RemoveSubstanceCompoundInfusion(const SESubstanceCompound& sub);
 
   bool HasTourniquet() const;
-  const std::map<std::string, SETourniquet*>& GetTourniquets() const;
-  const MapWrapper<std::string, SETourniquet*> GetTourniquetsWrapper() const;
+  const Map<std::string, SETourniquet*>& GetTourniquets() const;
   void RemoveTourniquet(const char* cmpt);
   void RemoveTourniquet(const std::string& cmpt);
 
@@ -426,32 +382,32 @@ protected:
   SEUrinate* m_Urinate;
   SEOverride* m_OverrideAction;
 
-  std::map<std::string, SEHemorrhage*> m_Hemorrhages;
-  mutable std::map<std::string, SEHemorrhage*>::const_iterator m_HemorrhageItr;
+  Map<std::string, SEHemorrhage*> m_Hemorrhages;
+  mutable Map<std::string, SEHemorrhage*>::iterator m_HemorrhageItr;
 
-  std::map<std::string, SETourniquet*> m_Tourniquets;
-  mutable std::map<std::string, SETourniquet*>::const_iterator m_TourniquetsItr;
+  Map<std::string, SETourniquet*> m_Tourniquets;
+  mutable Map<std::string, SETourniquet*>::iterator m_TourniquetsItr;
 
-  std::map<std::string, SEEscharotomy*> m_Escharotomies;
-  mutable std::map<std::string, SEEscharotomy*>::const_iterator m_EscharotomiesItr;
+  Map<std::string, SEEscharotomy*> m_Escharotomies;
+  mutable Map<std::string, SEEscharotomy*>::iterator m_EscharotomiesItr;
 
-  std::map<std::string, SEPainStimulus*> m_PainStimuli;
-  mutable std::map<std::string, SEPainStimulus*>::const_iterator m_PainStimuliItr;
+  Map<std::string, SEPainStimulus*> m_PainStimuli;
+  mutable Map<std::string, SEPainStimulus*>::iterator m_PainStimuliItr;
 
-  std::map<const SESubstance*, SESubstanceBolus*> m_SubstanceBolus;
-  mutable std::map<const SESubstance*, SESubstanceBolus*>::const_iterator m_SubstanceBolusItr;
+  Map<const SESubstance*, SESubstanceBolus*> m_SubstanceBolus;
+  mutable Map<const SESubstance*, SESubstanceBolus*>::iterator m_SubstanceBolusItr;
 
-  std::map<const SESubstance*, SESubstanceInfusion*> m_SubstanceInfusions;
-  mutable std::map<const SESubstance*, SESubstanceInfusion*>::const_iterator m_SubstanceInfusionsItr;
+  Map<const SESubstance*, SESubstanceInfusion*> m_SubstanceInfusions;
+  mutable Map<const SESubstance*, SESubstanceInfusion*>::iterator m_SubstanceInfusionsItr;
 
-  std::map<const SESubstance*, SESubstanceOralDose*> m_SubstanceOralDoses;
-  mutable std::map<const SESubstance*, SESubstanceOralDose*>::const_iterator m_SubstanceOralDosesItr;
+  Map<const SESubstance*, SESubstanceOralDose*> m_SubstanceOralDoses;
+  mutable Map<const SESubstance*, SESubstanceOralDose*>::iterator m_SubstanceOralDosesItr;
 
-  std::map<const SESubstance*, SESubstanceNasalDose*> m_SubstanceNasalDoses;
-  mutable std::map<const SESubstance*, SESubstanceNasalDose*>::const_iterator m_SubstanceNasalDosesItr;
+  Map<const SESubstance*, SESubstanceNasalDose*> m_SubstanceNasalDoses;
+  mutable Map<const SESubstance*, SESubstanceNasalDose*>::iterator m_SubstanceNasalDosesItr;
 
-  std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*> m_SubstanceCompoundInfusions;
-  mutable std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>::const_iterator m_SubstanceCompoundInfusionsItr;
+  Map<const SESubstanceCompound*, SESubstanceCompoundInfusion*> m_SubstanceCompoundInfusions;
+  mutable Map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>::iterator m_SubstanceCompoundInfusionsItr;
 
   bool AdministerSubstance(const CDM::SubstanceAdministrationData& subAdmin);
 

@@ -32,7 +32,7 @@ class Pair {
 public:
   Pair();
   Pair(const Type1&, const Type2&);
-  Pair(Type1&&, Type2&&);
+  Pair(Type1&&,  Type2&&);
   Pair(const Pair&);
   Pair(Pair&&);
 

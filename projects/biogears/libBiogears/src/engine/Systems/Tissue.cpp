@@ -753,8 +753,8 @@ void Tissue::CalculateCompartmentalBurn()
 
   if (m_data.GetActions().GetPatientActions().HasEscharotomy()) {
     //By placing within the Burn Check, an escharatomy will not happen without a burn; however, still needs to check for compartment compliance
-    std::map<std::string, SEEscharotomy*> vectorEscharotomies = m_data.GetActions().GetPatientActions().GetEscharotomies();
-    for (auto eschData : vectorEscharotomies) {
+    auto& vectorEscharotomies = m_data.GetActions().GetPatientActions().GetEscharotomies();
+    for (auto& eschData : vectorEscharotomies) {
       e = eschData.second;
       std::string eschPath = "Aorta1To";
       double releasedResistance = 0.0;

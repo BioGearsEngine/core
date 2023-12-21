@@ -119,6 +119,15 @@ inline void DELETE_MAP_SECOND(std::map<T, K>& map)
   map.clear();
 }
 
+// This will delete all of the second items in a map and then clear the map to destroy all dangling pointers
+template <typename T>
+inline void DELETE_MAP_SECOND(T& map)
+{
+  for (auto& pair : map) {
+    delete pair.second;
+  }
+  map.clear();
+}
 template <typename valueType>
 bool SameSign(valueType x, valueType y)
 {
