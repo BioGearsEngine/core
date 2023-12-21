@@ -1297,7 +1297,6 @@ void BioGears::SetupCardiovascular()
   SEFluidCircuitNode& Brain1 = cCardiovascular.CreateNode(BGE::CardiovascularNode::Brain1);
   SEFluidCircuitNode& Brain2 = cCardiovascular.CreateNode(BGE::CardiovascularNode::Brain2);
   Brain1.GetVolumeBaseline().SetValue(VolumeFractionBrain * bloodVolume_mL, VolumeUnit::mL);
-  Brain1.GetPressure().SetValue(0.0, PressureUnit::mmHg);
   Brain1.GetPressure().SetValue(VascularPressureTargetBrain, PressureUnit::mmHg);
 
   SEFluidCircuitNode& Bone1 = cCardiovascular.CreateNode(BGE::CardiovascularNode::Bone1);
@@ -1662,8 +1661,8 @@ void BioGears::SetupCardiovascular()
   //Hemorrhage--Include major organs, if there is a right/left side just adjust the resistance of the right side
   SEFluidCircuitPath& AortaBleed = cCardiovascular.CreatePath(Aorta1, Ground, BGE::CardiovascularPath::AortaBleed);
   AortaBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
-  SEFluidCircuitPath& BrainBleed = cCardiovascular.CreatePath(Brain1, Ground, BGE::CardiovascularPath::BrainBleed);
-  BrainBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  //SEFluidCircuitPath& BrainBleed = cCardiovascular.CreatePath(Brain1, Ground, BGE::CardiovascularPath::BrainBleed);
+  //BrainBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& HeartBleed = cCardiovascular.CreatePath(Myocardium1, Ground, BGE::CardiovascularPath::MyocardiumBleed);
   HeartBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& LeftLungBleed = cCardiovascular.CreatePath(LeftPulmonaryArteries, Ground, BGE::CardiovascularPath::LeftLungBleed);
@@ -2109,8 +2108,8 @@ void BioGears::SetupCardiovascular()
   vVenaCavaHemorrhage.MapPath(VenaCavaBleed);
   SELiquidCompartmentLink& vAortaHemorrhage = m_Compartments->CreateLiquidLink(vAorta, vGround, BGE::VascularLink::AortaHemorrhage);
   vAortaHemorrhage.MapPath(AortaBleed);
-  SELiquidCompartmentLink& vBrainHemorrhage = m_Compartments->CreateLiquidLink(vBrain, vGround, BGE::VascularLink::BrainHemorrhage);
-  vBrainHemorrhage.MapPath(BrainBleed);
+  //SELiquidCompartmentLink& vBrainHemorrhage = m_Compartments->CreateLiquidLink(vBrain, vGround, BGE::VascularLink::BrainHemorrhage);
+  //vBrainHemorrhage.MapPath(BrainBleed);
   SELiquidCompartmentLink& vHeartHemorrhage = m_Compartments->CreateLiquidLink(vMyocardium, vGround, BGE::VascularLink::HeartHemorrhage);
   vHeartHemorrhage.MapPath(HeartBleed);
   SELiquidCompartmentLink& vLeftLungHemorrhage = m_Compartments->CreateLiquidLink(vLeftPulmonaryArteries, vGround, BGE::VascularLink::LeftLungHemorrhage);
@@ -2218,7 +2217,7 @@ void BioGears::SetupCardiovascular()
   gCardiovascular.AddLink(vVenaCavaHemorrhage);
   gCardiovascular.AddLink(vVenaCavaIV);
   gCardiovascular.AddLink(vAortaHemorrhage);
-  gCardiovascular.AddLink(vBrainHemorrhage);
+  //gCardiovascular.AddLink(vBrainHemorrhage);
   gCardiovascular.AddLink(vHeartHemorrhage);
   gCardiovascular.AddLink(vLeftLungHemorrhage);
   gCardiovascular.AddLink(vRightLungHemorrhage);
@@ -2377,7 +2376,7 @@ void BioGears::SetupCerebral()
   CerebralCircuit.SetNextAndCurrentFromBaselines();
   CerebralCircuit.StateChange();
 
-  // Delete the three-element Windkessel brain and add the cerebral circuit to the active combined CV circuit
+  // Delete the three-element Windkessel brain and add the cerebral circuit to the active combined CV circuit HERE
   SEFluidCircuit& CombinedCardioCircuit = m_Circuits->GetActiveCardiovascularCircuit();
   m_Circuits->DeleteFluidNode(BGE::CardiovascularNode::Brain1);
   m_Circuits->DeleteFluidNode(BGE::CardiovascularNode::Brain2);
@@ -2385,6 +2384,9 @@ void BioGears::SetupCerebral()
   m_Circuits->DeleteFluidPath(BGE::CardiovascularPath::Brain1ToBrain2);
   m_Circuits->DeleteFluidPath(BGE::CardiovascularPath::Brain1ToGround);
   m_Circuits->DeleteFluidPath(BGE::CardiovascularPath::Brain2ToVenaCava);
+
+  SEFluidCircuitPath& BrainBleed = CerebralCircuit.CreatePath(nCerebralCapillaries, nGround, BGE::CardiovascularPath::BrainBleed);
+  BrainBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
 
   CombinedCardioCircuit.AddCircuit(CerebralCircuit);
   // Grab the nodes that we will be connecting between the 2 circuits
@@ -2461,6 +2463,11 @@ void BioGears::SetupCerebral()
   //Delete cerebral hemorrhage link (re-define after some more testing), otherwise graph will go searching for old BrainVasculature cmpt, which is called by this link
   m_Compartments->DeleteLiquidLink(BGE::VascularLink::BrainHemorrhage);
 
+  SELiquidCompartment& cGround = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::Ground);
+  cGround.MapNode(nGround);
+  SELiquidCompartmentLink& lBrainHemorrhage = m_Compartments->CreateLiquidLink(cCerebralCapillaries, cGround, BGE::VascularLink::BrainHemorrhage);
+  lBrainHemorrhage.MapPath(BrainBleed);
+
   //Add compartments and links to cerebral graph
   SELiquidCompartmentGraph& gCerebral = m_Compartments->GetCerebralGraph();
   gCerebral.AddCompartment(cAorta);
@@ -2477,6 +2484,7 @@ void BioGears::SetupCerebral()
   gCerebral.AddLink(lCerebralCapillariesToVeins);
   gCerebral.AddLink(lCerebralVeinsToNeckVeins);
   gCerebral.AddLink(lNeckVeinsToVenaCava);
+  gCerebral.AddLink(lBrainHemorrhage);
 
   gCerebral.StateChange();
 
