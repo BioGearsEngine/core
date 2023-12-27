@@ -1183,7 +1183,7 @@ void Cardiovascular::Hemorrhage()
     hemCmpt = targetHemorrhage->GetCompartment();
 
     targetPath = m_CirculatoryCircuit->GetPath(hemCmpt + "Bleed");
-    locationPressure_mmHg = targetPath->GetSourceNode().GetPressure(PressureUnit::mmHg); // BUG FLAGGING HERE BECAUSE BRAINBLEED IS NOT GRABBING TARGETPATH...HEMcMPT IS BRAIN
+    locationPressure_mmHg = targetPath->GetSourceNode().GetPressure(PressureUnit::mmHg);
     bleedRate_mL_Per_s = targetHemorrhage->GetInitialRate().GetValue(VolumePerTimeUnit::mL_Per_s);
 
     //enforce strict restictions on bleed rate for circuit stability
