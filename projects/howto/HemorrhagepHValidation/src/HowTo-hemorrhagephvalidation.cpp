@@ -32,35 +32,49 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/string/manipulation.h>
+#include <filesystem>
 
+
+namespace fs = std::filesystem;
 
 int main(int argc, char* argv[])
 {
   // To run multiple hemorrhages 
   double lowestBloodFlow_mL_Per_min = 50.0;
-  double highestBloodFlow_mL_Per_min = 250.0;
+  double highestBloodFlow_mL_Per_min = 200.0;
   double flowIncrement = 25.0;
-  for (double hemFlow = lowestBloodFlow_mL_Per_min; hemFlow <= highestBloodFlow_mL_Per_min; hemFlow += flowIncrement) {
-    int docFlow = (int)(hemFlow);
-    std::string strFlow = std::to_string(docFlow);
-    std::string logName = "./states/HempHValidationStates/HowToHemorrhagepHValidation";
-    logName.append(strFlow);
-    logName.append(".log");
-    HemThread hemorrhage(logName, hemFlow);
-    hemorrhage.FluidLoading(hemFlow);
+  std::filesystem::path states =  "./states";
+  std::string state;
+
+  for (const auto& dirEntry : fs::recursive_directory_iterator(states, std::filesystem::directory_options::skip_permission_denied)) {
+    std::cout << dirEntry << std::endl;
+    state = dirEntry.path().filename().string();
+    for (double hemFlow = lowestBloodFlow_mL_Per_min; hemFlow <= highestBloodFlow_mL_Per_min; hemFlow += flowIncrement) {
+      int docFlow = (int)(hemFlow);
+      std::string strFlow = std::to_string(docFlow);
+      std::string logName = "./hemorrhageData/HowToHemorrhagepHValidation";
+      logName.append(state);
+      logName.append(strFlow);
+      logName.append(".log");
+      HemThread hemorrhage(logName, hemFlow, state);
+      hemorrhage.FluidLoading(hemFlow);
+    }
   }
 }
 
 
 using namespace biogears;
 
-HemThread::HemThread(const std::string logFile, double hemFlow)
+HemThread::HemThread(const std::string logFile, double hemFlow, std::string stateFile)
   : m_hemThread()
 {
   //Create the engine and load patient state
   m_bg = CreateBioGearsEngine(logFile);
-  m_bg->GetLogger()->Info(asprintf("Initiating %f %s", hemFlow, "% hemorrhage flow rate"));
-  if (!m_bg->LoadState("./states/Bob@0s.xml")) {
+  m_bg->GetLogger()->Info(asprintf("Initiating %f %s", hemFlow, "% hemorrhage flow rate, for patient"));
+  std::string statePath = "./states/";
+  statePath.append(stateFile);
+  m_bg->GetLogger()->Info(statePath);
+  if (!m_bg->LoadState(statePath)) {
     m_bg->GetLogger()->Error("Could not load state, check the error");
     throw std::runtime_error("Could not load state, check the error");
   }
@@ -68,8 +82,9 @@ HemThread::HemThread(const std::string logFile, double hemFlow)
   //Create CSV results file and set up data that we want to be tracked (tracking done in AdvanceModelTime)
   int dochem = (int)(hemFlow);
   std::string resultsFileHem = std::to_string(dochem);
-  std::string resultsFile = "HowToHemValidationpH";
+  std::string resultsFile = "./hemorrhageData/HowToHemValidationpH";
   resultsFile.append(resultsFileHem);
+  resultsFile.append(stateFile);
   resultsFile.append(".csv");
 
   //Load substances and compounds
@@ -111,7 +126,9 @@ HemThread::HemThread(const std::string logFile, double hemFlow)
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanArterialPressure", "mmHg");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystolicArterialPressure", "mmHg");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("DiastolicArterialPressure", "mmHg");
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("EndTidalCarbonDioxideFraction", "unitless");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("RespirationRate", "1/min");
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("GlomerularFiltrationRate", "mL/min");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("TidalVolume", "mL");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SystemicVascularResistance", "mmHg s/mL");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("StrongIonDifference", "mmol/L");
@@ -119,6 +136,8 @@ HemThread::HemThread(const std::string logFile, double hemFlow)
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("MeanUrineOutput", "mL/hr");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("PainVisualAnalogueScale");
   m_bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("VenaCava", *lactate, "Molarity", AmountPerVolumeUnit::mmol_Per_L);
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set("Aorta", "OutFlow", VolumePerTimeUnit::mL_Per_min);
+  m_bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*lactate, "Clearance-RenalClearance", VolumePerTimeMassUnit::mL_Per_min_kg);
   m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluid_mL", m_TotalVolume_mL);
   m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolume_mL", m_ivBagVolume_mL);
   m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolumeBlood_mL", m_ivBagVolumeBlood_mL);
