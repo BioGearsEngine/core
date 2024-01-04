@@ -28,7 +28,7 @@ class SESubstanceCompoundInfusion;
 
 class HemThread {
 public:
-  HemThread(const std::string logFile, double hemFlow);
+  HemThread(const std::string logFile, double hemFlow, std::string stateFile);
   virtual ~HemThread();
 
   void AdministerVasopressin(double &bolus);
