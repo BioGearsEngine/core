@@ -180,7 +180,7 @@ endif()
 
 message(STATUS "            : data/substances")
 FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/substances" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/substances/*.xml")
-configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/substances.cpp.in" TYPE "substances/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
+configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/substances.cpp.in" TYPE "substances/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
 
 option(Biogears_IO_INCLUDE_DATA_TEMPLATES "Add default data templates which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" OFF)
 if (Biogears_IO_INCLUDE_DATA_TEMPLATES)
@@ -195,7 +195,6 @@ endif()
 
 option(Biogears_IO_INCLUDE_SCENARIOS "Add default scenarios which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" ON)
 if (Biogears_IO_INCLUDE_SCENARIOS)
-
   message(STATUS "            : Scenarios")
   FILE(GLOB_RECURSE DATA_SCENARIOS_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/Scenarios" 
     LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/Scenarios/*.xml"
@@ -223,12 +222,24 @@ add_source_files(INTERFACE_SOURCES LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/
               
 ##############################################################################
 # Generator Target
-##############################################################################
+#############################################################################
+
+FILE(GLOB_RECURSE SHARE_DATA_FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/xsd/*.xsd")
+FILE(GLOB_RECURSE SHARE_XSD_FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/*.xml" "${PROJECT_SOURCE_DIR}/share/data/*.csv")
+FILE(GLOB_RECURSE SHARE_SCENARIO_FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/scnearios/*.xml")
+set(SHARE_FILES  ${SHARE_DATA_FILES} ${SHARE_XSD_FILES} ${SHARE_SCENARIO_FILES})
+
 add_custom_target( hex_bindings 
                    COMMENT "Generating hex encoding headers" 
-                   DEPENDS ${GEN_HDRS} ${GEN_SRCS} )
+                   DEPENDS ${GEN_HDRS} ${GEN_SRCS}
+                   SOURCES ${SHARE_FILES}
+)
 set_target_properties( hex_bindings PROPERTIES 
         FOLDER "Code Generators" )
+
+source_group( TREE  ${PROJECT_SOURCE_DIR}/share/ PREFIX share
+              FILES ${SHARE_FILES}
+            )
 
 ###############################################################################
 # libBiogears_io
@@ -244,7 +255,7 @@ if(NOT Biogears_BUILD_STATIC)
     COMPILE_PDB_NAME "biogears_io"
     PROJECT_LABEL "libbiogears_io"
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
-    CXX_STANDARD 14
+    CXX_STANDARD 20
     BUILD_RPATH   "${Biogears_BUILD_RPATH}"
     INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\$ORIGIN:\$ORIGIN/../lib:\$ORIGIN/lib">>
     )
