@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/io/io-manager.h>
+#include <biogears/string/manipulation.h>
+
 namespace biogears {
 SEScenario::SEScenario(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())
@@ -63,10 +65,47 @@ bool SEScenario::Load(const CDM::ScenarioData& in)
     GetAutoSerialization().Load(in.AutoSerialization().get());
   if (in.DataRequests().present())
     m_DataRequestMgr.Load(in.DataRequests().get(), m_SubMgr);
+  if (in.Actions().ActionFile().present()) {
+    biogears::filesystem::path actionFile = in.Actions().ActionFile().get();
+    auto weak_io = GetLogger()->GetIoManager();
+    auto iom = weak_io.lock();
+    m_ActionFile = actionFile.ToString();
+    if (actionFile.exists()) {
+      auto sData = Serializer::ReadFile(actionFile.ToString(), GetLogger());
+      if (auto actionList = dynamic_cast<CDM::ActionListData*>(sData.get())) {
+        // We are ignoring recursive ActionListData where an ActionListData has an ActionFile reference
+        for (auto& action : actionList->Action()) {
+          auto new_action = SEAction::newFromBind(action, m_SubMgr);
+          if (new_action != nullptr) {
+            m_Actions.push_back(new_action);
+          }
+        }
+      }
+    } else {
+      m_Logger->Error(asprintf("Can not find %s", actionFile.ToString().c_str()), "SEScenario");
+    }
+  } else {
+    for (auto& action : in.Actions().Action()) {
+      auto new_action = SEAction::newFromBind(action, m_SubMgr);
+      if (new_action != nullptr) {
+        m_Actions.push_back(new_action);
+      }
+    }
+  }
+
+  return IsValid();
+}
+//-----------------------------------------------------------------------------
+bool SEScenario::Load(const CDM::ActionListData& in)
+{
+  m_Actions.clear();
+  bool loadSuccess = true;
   for (unsigned int i = 0; i < in.Action().size(); i++) {
     SEAction* a = SEAction::newFromBind(in.Action()[i], m_SubMgr);
-    if (a != nullptr)
+    if (a != nullptr) {
       m_Actions.push_back(a);
+      loadSuccess &= a->IsValid();
+    }
   }
   return IsValid();
 }
@@ -84,11 +123,29 @@ void SEScenario::Unload(CDM::ScenarioData& data) const
   data.Description(m_Description);
   if (HasEngineStateFile())
     data.EngineStateFile(m_EngineStateFile);
-  else if (HasInitialParameters())
+  else if (HasInitialParameters()) {
     data.InitialParameters(std::unique_ptr<CDM::ScenarioInitialParametersData>(m_InitialParameters->Unload()));
-  if (HasAutoSerialization())
+  }
+  if (HasAutoSerialization()) {
     data.AutoSerialization(std::unique_ptr<CDM::ScenarioAutoSerializationData>(m_AutoSerialization->Unload()));
+  }
   data.DataRequests(std::unique_ptr<CDM::DataRequestsData>(m_DataRequestMgr.Unload()));
+  data.Actions(std::make_unique<CDM::ActionListData>());
+  if (HasActionFile()) {
+
+    ::xml_schema::string item = m_ActionFile;
+    data.Actions().ActionFile().set(item);
+
+    m_Logger->Warning("The ActionFile property has a value so no Actions will be unloaded.");
+    m_Logger->Debug("Use UnLoad (CDM::ActionFileListData) to populate an ActionFile Object.");
+  } else {
+    for (SEAction* a : m_Actions)
+      data.Actions().Action().push_back(std::unique_ptr<CDM::ActionData>(a->Unload()));
+  }
+}
+//-----------------------------------------------------------------------------
+void SEScenario::Unload(CDM::ActionListData& data) const
+{
   for (SEAction* a : m_Actions)
     data.Action().push_back(std::unique_ptr<CDM::ActionData>(a->Unload()));
 }
@@ -136,6 +193,7 @@ bool SEScenario::IsValid() const
   return true;
 }
 //-----------------------------------------------------------------------------
+
 std::string SEScenario::GetName() const
 {
   return m_Name;
@@ -166,6 +224,7 @@ void SEScenario::InvalidateName()
   m_Name = "";
 }
 //-----------------------------------------------------------------------------
+
 const char* SEScenario::GetPatientFile() const
 {
   return m_PatientFile.c_str();
@@ -191,6 +250,33 @@ void SEScenario::InvalidatePatientFile()
   m_PatientFile = "";
 }
 //-----------------------------------------------------------------------------
+
+const char* SEScenario::GetActionFile() const
+{
+  return m_ActionFile.c_str();
+}
+//-----------------------------------------------------------------------------
+void SEScenario::SetActionFile(const char* ActionFile)
+{
+  m_ActionFile = ActionFile;
+}
+//-----------------------------------------------------------------------------
+void SEScenario::SetActionFile(const std::string& ActionFile)
+{
+  m_ActionFile = ActionFile;
+}
+//-----------------------------------------------------------------------------
+bool SEScenario::HasActionFile() const
+{
+  return m_ActionFile.empty() ? false : true;
+}
+//-----------------------------------------------------------------------------
+void SEScenario::InvalidateActionFile()
+{
+  m_ActionFile = "";
+}
+//-----------------------------------------------------------------------------
+
 const char* SEScenario::GetDescription() const
 {
   return m_Description.c_str();
@@ -215,6 +301,7 @@ void SEScenario::InvalidateDescription()
 {
   m_Description = "";
 }
+
 //-----------------------------------------------------------------------------
 const char* SEScenario::GetEngineStateFile() const
 {
@@ -242,6 +329,7 @@ void SEScenario::InvalidateEngineStateFile()
 {
   m_EngineStateFile = "";
 }
+
 //-----------------------------------------------------------------------------
 SEScenarioInitialParameters& SEScenario::GetInitialParameters()
 {
@@ -265,6 +353,7 @@ void SEScenario::InvalidateInitialParameters()
 {
   SAFE_DELETE(m_InitialParameters);
 }
+
 //-----------------------------------------------------------------------------
 bool SEScenario::HasAutoSerialization() const
 {
@@ -287,6 +376,7 @@ void SEScenario::RemoveAutoSerialization()
 {
   SAFE_DELETE(m_AutoSerialization);
 }
+
 //-----------------------------------------------------------------------------
 void SEScenario::AddAction(const SEAction& a)
 {

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Actions xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_8.0.0" xsi:schemaLocation="">
+    <Action xsi:type="AdvanceTimeData">
+        <Time value="1" unit="min" deviation="0.45"/>       
+    </Action>
+    <Action xsi:type="AsthmaAttackData">
+		<Comment>Insult: Severe acute asthma attack</Comment>
+        <Severity value="0.7" deviation="0.45"/>       
+    </Action>
+    <Action xsi:type="AdvanceTimeData">
+		<Time value="10" unit="min" deviation="0.45"/>
+	</Action>  
+	
+	<Action xsi:type="InhalerConfigurationData">
+		<Comment>Intervention: Administer bronchodilator (albuterol) through inhaler</Comment>
+		<Configuration>
+			<Substance>Albuterol</Substance>
+			<MeteredDose value="90.0" unit="ug" deviation="0.45"/>
+			<NozzleLoss value="0.04" deviation="0.45"/>
+			<SpacerVolume value="500.0" unit="mL" deviation="0.45"/>
+		</Configuration>
+	</Action>  
+	<Action xsi:type="ConsciousRespirationData" AppendToPrevious="true">
+		<Command xsi:type="ForcedExhaleData">
+			<ExpiratoryReserveVolumeFraction value="1.0" deviation="0.45"/>
+			<Period value="3.0" unit="s" deviation="0.45"/>			
+		</Command>  
+		<Command xsi:type="UseInhalerData"/>	
+		<Command xsi:type="ForcedInhaleData">
+			<InspiratoryCapacityFraction value="1.0" deviation="0.45"/>
+			<Period value="5.0" unit="s"  deviation="0.45"/>          
+		</Command> 
+		<Command xsi:type="BreathHoldData">
+			<Period value="10.0" unit="s"  deviation="0.45"/>          
+		</Command> 
+		<Command xsi:type="ForcedExhaleData">
+			<ExpiratoryReserveVolumeFraction value="0.0"  deviation="0.45"/>
+			<Period value="3.0" unit="s"  deviation="0.45"/>			
+		</Command>
+    </Action>	
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="5" unit="min"  deviation="0.45"/>
+	</Action>
+	
+	<Action xsi:type="PatientAssessmentRequestData" Type="PulmonaryFunctionTest">
+		<Comment>Assessment: Pulmonary function test</Comment>
+	</Action>
+	
+	<Action xsi:type="AdvanceTimeData">
+		<Time value="1" unit="min"  deviation="0.45"/>
+	</Action>
+</Actions>

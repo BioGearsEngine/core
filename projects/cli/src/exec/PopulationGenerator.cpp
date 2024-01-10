@@ -165,6 +165,8 @@ void PopulationGenerator::Generate()
           patient.Age(standard_distribution(gen));
           patient.Age()->unit(unit_str);
         }
+
+
         if (!population->WeightDistribution().empty()) {
           unit_str = population->WeightDistribution()[0].unit();
           standard_distribution = std::normal_distribution<>(population->WeightDistribution()[0].mean(),

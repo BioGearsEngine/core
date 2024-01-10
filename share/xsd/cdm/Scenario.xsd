@@ -38,11 +38,19 @@ specific language governing permissions and limitations under the License.
   </xs:complexType>
 
   <xs:complexType name="ActionListData">
-    <xs:sequence>
-      <xs:element name="Action" type="ActionData" minOccurs="1" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:choice>
+          <xs:element name="ActionFile" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:sequence>
+            <xs:element name="Action" type="ActionData" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
-  <xs:element name="ActionList" type="ActionListData"/>
+
+  <xs:element name="Actions" type="ActionListData" />
 
   <xs:complexType name="DataRequestData" >
     <xs:complexContent>
@@ -154,7 +162,7 @@ specific language governing permissions and limitations under the License.
           </xs:choice>
           <xs:element name="AutoSerialization" type="ScenarioAutoSerializationData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="DataRequests" type="DataRequestsData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="Action" type="ActionData" minOccurs="1" maxOccurs="unbounded"/>
+          <xs:element name="Actions" type="ActionListData" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

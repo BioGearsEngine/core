@@ -23,54 +23,7 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="0"/>
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="0"/>
   </DataRequests>
-	
-    <Action xsi:type="AdvanceTimeData">
-        <Time value="1" unit="min"/>       
-    </Action>
-    <Action xsi:type="AsthmaAttackData">
-		<Comment>Insult: Severe acute asthma attack</Comment>
-        <Severity value="0.7"/>       
-    </Action>
-    <Action xsi:type="AdvanceTimeData">
-		<Time value="10" unit="min"/>
-	</Action>  
-	
-	<Action xsi:type="InhalerConfigurationData">
-		<Comment>Intervention: Administer bronchodilator (albuterol) through inhaler</Comment>
-		<Configuration>
-			<Substance>Albuterol</Substance>
-			<MeteredDose value="90.0" unit="ug"/>
-			<NozzleLoss value="0.04"/>
-			<SpacerVolume value="500.0" unit="mL"/>
-		</Configuration>
-	</Action>  
-	<Action xsi:type="ConsciousRespirationData" AppendToPrevious="true">
-		<Command xsi:type="ForcedExhaleData">
-			<ExpiratoryReserveVolumeFraction value="1.0"/>
-			<Period value="3.0" unit="s"/>			
-		</Command>  
-		<Command xsi:type="UseInhalerData"/>	
-		<Command xsi:type="ForcedInhaleData">
-			<InspiratoryCapacityFraction value="1.0"/>
-			<Period value="5.0" unit="s"/>          
-		</Command> 
-		<Command xsi:type="BreathHoldData">
-			<Period value="10.0" unit="s"/>          
-		</Command> 
-		<Command xsi:type="ForcedExhaleData">
-			<ExpiratoryReserveVolumeFraction value="0.0"/>
-			<Period value="3.0" unit="s"/>			
-		</Command>
-    </Action>	
-	<Action xsi:type="AdvanceTimeData">
-		<Time value="5" unit="min"/>
-	</Action>
-	
-	<Action xsi:type="PatientAssessmentRequestData" Type="PulmonaryFunctionTest">
-		<Comment>Assessment: Pulmonary function test</Comment>
-	</Action>
-	
-	<Action xsi:type="AdvanceTimeData">
-		<Time value="1" unit="min"/>
-	</Action>		
+	<Actions>
+		<ActionFile>Timelines/AsthmaAttack.xml</ActionFile>
+	</Actions>		
 </Scenario>

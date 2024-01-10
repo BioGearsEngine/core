@@ -180,7 +180,7 @@ endif()
 
 message(STATUS "            : data/substances")
 FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/substances" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/substances/*.xml")
-configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/substances.cpp.in" TYPE "substances/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
+configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/substances.cpp.in" TYPE "substances/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
 
 option(Biogears_IO_INCLUDE_DATA_TEMPLATES "Add default data templates which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" OFF)
 if (Biogears_IO_INCLUDE_DATA_TEMPLATES)

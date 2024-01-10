@@ -41,10 +41,13 @@ public:
   virtual void Clear(); //clear memory
 
   bool Load(const CDM::ScenarioData& in);
+  bool Load(const CDM::ActionListData& in);
+
   CDM::ScenarioData* Unload() const;
 
 protected:
   void Unload(CDM::ScenarioData& data) const;
+  void Unload(CDM::ActionListData& data) const;
 
 public:
   bool Load(const char* scenarioFile);
@@ -63,6 +66,18 @@ public:
   virtual void SetPatientFile(const std::string& PatientFile);
   virtual bool HasPatientFile() const;
   virtual void InvalidatePatientFile();
+
+  //!
+  //! \brief The presence of ActionFile means ActionList will be ignored on
+  //!        UnLoad as the serialization file treats the two as a choice.
+  //!	     A second Unload and Load have been added to this class
+  //!        to allow generation of ActionList files
+  //! 
+  virtual const char* GetActionFile() const;
+  virtual void SetActionFile(const char* ActionFile);
+  virtual void SetActionFile(const std::string& ActionFile);
+  virtual bool HasActionFile() const;
+  virtual void InvalidateActionFile();
 
   virtual const char* GetDescription() const;
   virtual void SetDescription(const char* desc);
@@ -100,6 +115,7 @@ protected:
   std::string m_Description;
   std::string m_EngineStateFile;
   std::string m_PatientFile;
+  std::string m_ActionFile;
   std::string m_workingDir;
   SEScenarioInitialParameters* m_InitialParameters;
   SEScenarioAutoSerialization* m_AutoSerialization;

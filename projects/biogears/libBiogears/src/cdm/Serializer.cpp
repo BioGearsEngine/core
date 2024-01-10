@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/io-manager.h>
 
 #include <biogears/schema/biogears/BioGears.hxx>
+#include <biogears/schema/cdm/Scenario.hxx>
 
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/framework/Wrapper4InputSource.hpp>
@@ -361,6 +362,8 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, s
     return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsState(*doc).release());
   if (name.compare("DataRequests") == 0)
     return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::DataRequests(*doc).release());
+  if (name.compare("Actions") == 0)
+    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Actions(*doc).release());
 
   /// \error Unsupported root tag
   err << "Unsupported root tag " << name << " found in buffer" << std::ends;
