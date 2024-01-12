@@ -129,7 +129,7 @@ void SEScenario::Unload(CDM::ScenarioData& data) const
   if (HasAutoSerialization()) {
     data.AutoSerialization(std::unique_ptr<CDM::ScenarioAutoSerializationData>(m_AutoSerialization->Unload()));
   }
-  data.DataRequests(std::unique_ptr<CDM::DataRequestsData>(m_DataRequestMgr.Unload()));
+  data.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(m_DataRequestMgr.Unload()));
   data.Actions(std::make_unique<CDM::ActionListData>());
   if (HasActionFile()) {
 

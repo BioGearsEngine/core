@@ -72,7 +72,7 @@ namespace io {
   }
   //-----------------------------------------------------------------------------
   // class SEDataRequestManager
-  void Scenario::Marshall(const CDM::DataRequestsData& in, const SESubstanceManager& subMgr, SEDataRequestManager& out)
+  void Scenario::Marshall(const CDM::DataRequestManagerData& in, const SESubstanceManager& subMgr, SEDataRequestManager& out)
   {
     out.Clear();
     if (in.Filename().present())
@@ -94,7 +94,7 @@ namespace io {
     }
   }
   //-----------------------------------------------------------------------------
-  void Scenario::UnMarshall(const SEDataRequestManager& in, CDM::DataRequestsData& out)
+  void Scenario::UnMarshall(const SEDataRequestManager& in, CDM::DataRequestManagerData& out)
   {
     out.SamplesPerSecond(in.m_SamplesPerSecond);
     if (in.HasResultsFilename())
@@ -342,7 +342,7 @@ namespace io {
       out.AutoSerialization(std::make_unique<CDM::ScenarioAutoSerializationData>());
       UnMarshall(*in.m_AutoSerialization, out.AutoSerialization());
     }
-    out.DataRequests(std::unique_ptr<CDM::DataRequestsData>(in.m_DataRequestMgr.Unload()));
+    out.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(in.m_DataRequestMgr.Unload()));
 
     out.Actions(std::make_unique<CDM::ActionListData>());
     if (in.HasActionFile()) {

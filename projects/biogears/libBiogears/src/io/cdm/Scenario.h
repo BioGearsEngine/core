@@ -70,8 +70,8 @@ namespace io {
     static void Marshall(const CDM::ActionData& in, SEAction& out);
     static void UnMarshall(const SEAction& in, CDM::ActionData& out);
     //class SEDataRequestManager
-    static void Marshall(const CDM::DataRequestsData& in, const SESubstanceManager& subMgr, SEDataRequestManager& out);
-    static void UnMarshall(const SEDataRequestManager& in, CDM::DataRequestsData& out);
+    static void Marshall(const CDM::DataRequestManagerData& in, const SESubstanceManager& subMgr, SEDataRequestManager& out);
+    static void UnMarshall(const SEDataRequestManager& in, CDM::DataRequestManagerData& out);
     //class SEDataRequest;
     static void Marshall(const CDM::DataRequestData& in, SEDataRequest& out);
     static void UnMarshall(const SEDataRequest& in, CDM::DataRequestData& out);

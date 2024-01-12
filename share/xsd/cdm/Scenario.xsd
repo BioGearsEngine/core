@@ -49,7 +49,6 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-
   <xs:element name="Actions" type="ActionListData" />
 
   <xs:complexType name="DataRequestData" >
@@ -132,22 +131,25 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="DataRequestsData">
+  <xs:complexType name="DataRequestManagerData">
     <xs:complexContent>
       <xs:extension base="ObjectData">
-        <xs:sequence>
-          <xs:element name="DefaultDecimalFormatting" type="DecimalFormatData" minOccurs="0" maxOccurs="1"/>
-          <!-- @brief If no precision is set, you can set what is used, initial default is Fixed,6 -->
-          <xs:element name="OverrideDecimalFormatting" type="DecimalFormatData" minOccurs="0" maxOccurs="1"/>
-          <!-- @brief You can override all precision for all outputs to use what is specified here -->
-          <xs:element name="DataRequest" type="DataRequestData" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
+        <xs:choice>
+          <xs:element name="DataRequestFile" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:sequence>
+            <xs:element name="DefaultDecimalFormatting" type="DecimalFormatData" minOccurs="0" maxOccurs="1"/>
+            <!-- @brief If no precision is set, you can set what is used, initial default is Fixed,6 -->
+            <xs:element name="OverrideDecimalFormatting" type="DecimalFormatData" minOccurs="0" maxOccurs="1"/>
+            <!-- @brief You can override all precision for all outputs to use what is specified here -->
+            <xs:element name="DataRequest" type="DataRequestData" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:choice>
         <xs:attribute name="Filename" type="xs:string" use="optional"/>
         <xs:attribute name="SamplesPerSecond" type="xs:double" use="optional"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="DataRequests" type="DataRequestsData"/>
+  <xs:element name="DataRequests" type="DataRequestManagerData"/>
 
   <!-- @brief  A set of instructions used to execute an engine, and write out a data file. -->
   <xs:complexType name="ScenarioData">
@@ -161,7 +163,7 @@ specific language governing permissions and limitations under the License.
             <xs:element name="InitialParameters" type="ScenarioInitialParametersData"/>
           </xs:choice>
           <xs:element name="AutoSerialization" type="ScenarioAutoSerializationData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="DataRequests" type="DataRequestsData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="DataRequests" type="DataRequestManagerData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="Actions" type="ActionListData" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>

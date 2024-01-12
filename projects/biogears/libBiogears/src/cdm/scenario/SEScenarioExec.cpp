@@ -79,7 +79,7 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
 
       // WE ARE OVERWRITING ANY DATA REQUESTS IN THE STATE WITH WHATS IN THE SCENARIO!!!
       // Make a copy of the data requests, not this clears out data requests from the engine
-      CDM::DataRequestsData* drData = memory_safe_scenario->GetDataRequestManager().Unload();
+      CDM::DataRequestManagerData* drData = memory_safe_scenario->GetDataRequestManager().Unload();
       m_Engine.GetEngineTrack()->GetDataRequestManager().Load(*drData, m_Engine.GetSubstanceManager());
       delete drData;
       //if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())

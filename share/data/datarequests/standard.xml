@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataRequests  xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_8.0.0" xsi:schemaLocation=""
+               SamplesPerSecond="50">
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalLungVolume"               Unit="L"          Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume"                   Unit="mL"          Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"              Unit="unitless"    Precision="3"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="CardiacOutput"                 Unit="L/min"      Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartRate"                     Unit="1/min"       Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="HeartStrokeVolume"             Unit="mL"          Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="MeanArterialPressure"          Unit="mmHg"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure"      Unit="mmHg"        Precision="1"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="RespirationRate"               Unit="1/min"       Precision="2"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxideFraction" Unit="unitless"    Precision="4"/>
+  <DataRequest xsi:type="PhysiologyDataRequestData" Name="ArterialBloodPH"                       Unit="unitless"    Precision="2"/>
+
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Oxygen"        Name="PartialPressure" Unit="mmHg" Precision="0"/>
+  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="0"/>
+</DataRequests>
