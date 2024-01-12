@@ -72,7 +72,8 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="ExpiratoryFlow" Unit="L/s" Precision="3"/>
   </DataRequests>
 	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	
@@ -98,4 +99,5 @@
         <Time value="1" unit="min"/>       
     </Action>
 	
+  </Actions>
 </Scenario>

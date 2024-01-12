@@ -48,7 +48,8 @@
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="SystolicArterialPressure" Unit="mmHg" Precision="4"/>
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="TidalVolume" Unit="mL" Precision="0"/>
   </DataRequests>
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="0.02" unit="s"/>        
     </Action>
     <Action xsi:type="OverrideData" State="On" Conformant="On">
@@ -61,4 +62,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="0.02" unit="s"/>        
     </Action>
+  </Actions>
 </Scenario>

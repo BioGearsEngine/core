@@ -106,7 +106,8 @@
   </DataRequests>
 	
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<!-- Exercise at about the anaerobic threshold -->
@@ -166,6 +167,7 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>
 
 

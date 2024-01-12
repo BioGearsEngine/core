@@ -71,7 +71,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Acetaminophen" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="1" unit="s"/>       
     </Action>  
     <Action xsi:type="PainStimulusData" Location="Leg">
@@ -87,4 +88,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="480" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

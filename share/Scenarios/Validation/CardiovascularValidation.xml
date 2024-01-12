@@ -106,7 +106,9 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Name="InFlow" Compartment="VenaCava" Unit="mL/s" Precision="2"/>
   </DataRequests>
 
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>	
     </Action>
+  </Actions>
 </Scenario>

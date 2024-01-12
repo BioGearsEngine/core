@@ -16,6 +16,7 @@
 
   </DataRequests>
 
+  <Actions>
   <Action xsi:type="AdvanceTimeData">
     <Time value="1" unit="min"/>
   </Action>
@@ -46,4 +47,5 @@
     <Time value="1" unit="min"/>
   </Action>
 
+  </Actions>
 </Scenario>

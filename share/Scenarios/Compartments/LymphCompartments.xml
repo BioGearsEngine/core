@@ -14,7 +14,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Lymph" Name="Volume"  Unit="mL" Precision="0"/>		
   </DataRequests>
 	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="s"/>       
     </Action>
 	<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
@@ -25,4 +26,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="25" unit="s"/>
     </Action>
+  </Actions>
 </Scenario>

@@ -75,6 +75,7 @@
 
   </DataRequests>
 
+  <Actions>
   <Action xsi:type="InfectionData" Severity="Severe">
     <MinimumInhibitoryConcentration value="8.0" unit="mg/L"/>
     <Location>Skin</Location>
@@ -638,4 +639,5 @@
   <Action xsi:type="SerializeStateData" Type="Save">
     <Filename>./states/InfectionStates/SevereInfection@48hr_Treatment@8hr.xml</Filename>
   </Action>
+  </Actions>
 </Scenario>

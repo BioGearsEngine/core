@@ -48,7 +48,8 @@
    
     </DataRequests>
     
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30.0" unit="s"/>
     </Action>
     <Action xsi:type="AcuteRespiratoryDistressData">
@@ -100,4 +101,5 @@
         <Time value="45" unit="min"/>       
     </Action>
     
+  </Actions>
 </Scenario>

@@ -100,7 +100,8 @@
 		<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SmallIntestineVasculature" Substance="AminoAcids"       Name="Mass" Unit="mg" Precision="2"/>  
 		</DataRequests>
 
-<Action xsi:type="ConsumeNutrientsData">
+<Actions>
+  <Action xsi:type="ConsumeNutrientsData">
 		<Nutrition>
 			<Carbohydrate value="40.0" unit="g"/>
 		</Nutrition>       
@@ -110,4 +111,5 @@
 <Action xsi:type="AdvanceTimeData">
 		<Time value="8" unit="hr"/>		
 	</Action>
+  </Actions>
 </Scenario>

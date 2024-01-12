@@ -82,11 +82,13 @@
 	  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Pericardium" Name="Pressure" Unit="mmHg" Precision="2"/> 
 	</DataRequests>
 	
-	<Action xsi:type="OverrideData" State="On" Conformant="On">
+	<Actions>
+  <Action xsi:type="OverrideData" State="On" Conformant="On">
 		<CoreTemperatureOverride value="104" unit="degC"/>		
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="2" unit="min"/>		
 	</Action>
   
+  </Actions>
 </Scenario>

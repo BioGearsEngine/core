@@ -90,7 +90,8 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="MuscleGlycogen" Unit="g" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<Action xsi:type="AirwayObstructionData">
@@ -330,6 +331,7 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>
 
 

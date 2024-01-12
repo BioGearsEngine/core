@@ -116,7 +116,8 @@
 		-VenaCava
 	-To stop a hemorrhage: enter target compartment with initial bleeding rate = 0
 -->  
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
     <Action xsi:type="HemorrhageData" Compartment="Spleen">
@@ -154,4 +155,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="500" unit="s"/>     
     </Action>
+  </Actions>
 </Scenario>

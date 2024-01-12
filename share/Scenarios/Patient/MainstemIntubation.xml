@@ -79,7 +79,8 @@
   </DataRequests>
     
 	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
     <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
@@ -125,4 +126,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

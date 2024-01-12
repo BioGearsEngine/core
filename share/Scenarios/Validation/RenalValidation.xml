@@ -212,10 +212,12 @@
   </DataRequests>
 	
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>	  
     </Action>
 	
 	<Action xsi:type="PatientAssessmentRequestData" Type="Urinalysis"/>
+  </Actions>
 </Scenario>
 

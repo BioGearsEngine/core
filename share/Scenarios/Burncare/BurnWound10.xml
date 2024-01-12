@@ -77,11 +77,13 @@
 	  
 	</DataRequests>
 	
-	<Action xsi:type="BurnWoundData">
+	<Actions>
+  <Action xsi:type="BurnWoundData">
 		<TotalBodySurfaceArea value="0.1"/>
 	</Action>
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="5" unit="hr"/>		
 	</Action>
 	
+  </Actions>
 </Scenario>

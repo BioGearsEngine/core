@@ -108,7 +108,8 @@
   
 
 	<!-- Stage 1 -->
-    <Action xsi:type="ExerciseData">
+    <Actions>
+  <Action xsi:type="ExerciseData">
 		<GenericExercise>
 			<Intensity value="0.5"></Intensity>
 		</GenericExercise>
@@ -124,4 +125,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

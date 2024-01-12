@@ -42,7 +42,8 @@
   </DataRequests>
 	
 	
-    <Action xsi:type="SubstanceInfusionData">
+    <Actions>
+  <Action xsi:type="SubstanceInfusionData">
         <Substance>TranexamicAcid</Substance>
         <Concentration value="0.1" unit="g/mL"/>
         <Rate value="0.03333" unit="mL/s"/>
@@ -58,4 +59,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="8" unit="hr"/>       
     </Action>
+  </Actions>
 </Scenario>

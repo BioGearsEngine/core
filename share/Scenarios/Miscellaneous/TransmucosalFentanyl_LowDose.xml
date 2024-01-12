@@ -145,7 +145,8 @@
 	
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<!--Administer transmucosal lozenge with 200 ug of fentanyl--> 
@@ -156,4 +157,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="60" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

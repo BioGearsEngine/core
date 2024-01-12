@@ -35,7 +35,8 @@
 	
   </DataRequests>
 	
-	<Action xsi:type="SubstanceInfusionData">
+	<Actions>
+  <Action xsi:type="SubstanceInfusionData">
         <Substance>Vasopressin</Substance>
         <Concentration value="0.0117" unit="ug/mL"/>
         <Rate value="1.0" unit="mL/min"/>
@@ -51,5 +52,6 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="55" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>
 

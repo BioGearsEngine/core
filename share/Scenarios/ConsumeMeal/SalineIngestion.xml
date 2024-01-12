@@ -86,7 +86,8 @@
   </DataRequests>
 
 	
-	<Action xsi:type="ConsumeNutrientsData">
+	<Actions>
+  <Action xsi:type="ConsumeNutrientsData">
 		<Nutrition>
     <Name>GoodMeal</Name>
 			<Carbohydrate value="0.0" unit="g"/>
@@ -101,4 +102,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="20" unit="min"/>
     </Action>
+  </Actions>
 </Scenario>

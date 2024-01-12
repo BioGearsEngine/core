@@ -36,7 +36,8 @@
   </DataRequests>
 	
 	
-	<Action xsi:type="HemorrhageData" Compartment="VenaCava">
+	<Actions>
+  <Action xsi:type="HemorrhageData" Compartment="VenaCava">
         <InitialRate value="350" unit="mL/min"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
@@ -84,5 +85,6 @@
         <Time value="10" unit="min"/>       
     </Action>
 	
+  </Actions>
 </Scenario>
 

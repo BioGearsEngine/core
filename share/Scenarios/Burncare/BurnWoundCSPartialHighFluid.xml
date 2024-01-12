@@ -128,7 +128,8 @@
 	</DataRequests>
 	
 
-	<Action xsi:type="BurnWoundData">
+	<Actions>
+  <Action xsi:type="BurnWoundData">
 		<TotalBodySurfaceArea value="0.05"/>
 		<Compartments>RightArm</Compartments>
 	</Action>
@@ -144,4 +145,5 @@
 		<Time value="11" unit="hr"/>		
 	</Action>
 	
+  </Actions>
 </Scenario>

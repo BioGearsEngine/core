@@ -41,7 +41,8 @@
   </DataRequests>
 	
 	
-    <Action xsi:type="SubstanceBolusData" AdminRoute="Intramuscular">
+    <Actions>
+  <Action xsi:type="SubstanceBolusData" AdminRoute="Intramuscular">
         <Substance>Pralidoxime</Substance>
         <Concentration value="350" unit="mg/mL"/>
         <Dose value="2" unit="mL"/>
@@ -49,4 +50,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="12" unit="hr"/>       
     </Action>
+  </Actions>
 </Scenario>

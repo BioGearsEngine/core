@@ -141,7 +141,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Succinylcholine" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
     <Action xsi:type="SubstanceInfusionData">
@@ -160,4 +161,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="1000" unit="s"/>       
     </Action>
+  </Actions>
 </Scenario>

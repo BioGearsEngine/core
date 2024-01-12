@@ -39,7 +39,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Albuterol" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<Action xsi:type="InhalerConfigurationData">
@@ -71,4 +72,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="720" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

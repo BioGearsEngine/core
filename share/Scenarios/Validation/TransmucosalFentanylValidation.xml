@@ -39,7 +39,8 @@
   </DataRequests>
 	
 	<!--Administer transmucosal lozenge with 800 ug of fentanyl--> 
-    <Action xsi:type="SubstanceOralDoseData" AdminRoute="Transmucosal">
+    <Actions>
+  <Action xsi:type="SubstanceOralDoseData" AdminRoute="Transmucosal">
 		<Substance>Fentanyl</Substance>
 		<Dose value="800" unit="ug"/>
     </Action>
@@ -47,4 +48,5 @@
         <Time value="12" unit="hr"/>       
     </Action>
   
+  </Actions>
 </Scenario>

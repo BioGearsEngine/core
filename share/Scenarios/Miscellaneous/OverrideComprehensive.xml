@@ -84,7 +84,8 @@
 	</DataRequests>
 	
 
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
 		<Time value="2" unit="min"/>		
 	</Action>
 	<Action xsi:type="OverrideData" State="On" Conformant="On">
@@ -155,4 +156,5 @@
 	</Action>
 	
   
+  </Actions>
 </Scenario>

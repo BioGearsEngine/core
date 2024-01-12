@@ -41,7 +41,8 @@
   </DataRequests>
 	
 	<!--Administer 0.5 g of Tazobactam over 30 minutes--> 
-    <Action xsi:type="SubstanceInfusionData">
+    <Actions>
+  <Action xsi:type="SubstanceInfusionData">
         <Substance>Tazobactam</Substance>
         <Concentration value="0.025" unit="g/mL"/>
         <Rate value="0.667" unit="mL/min"/>
@@ -57,4 +58,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="5.5" unit="hr"/>  
 	</Action>
+  </Actions>
 </Scenario>

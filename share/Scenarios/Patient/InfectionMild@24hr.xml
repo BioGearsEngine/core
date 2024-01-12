@@ -72,6 +72,7 @@
 
   </DataRequests>
 
+  <Actions>
   <Action xsi:type="ConsumeNutrientsData">
     <Nutrition>
       <Name>Food</Name>
@@ -309,4 +310,5 @@
   <Action xsi:type="SerializeStateData" Type="Save">
     <Filename>./states/InfectionStates/MildInfection@48hr.xml</Filename>
   </Action>
+  </Actions>
 </Scenario>

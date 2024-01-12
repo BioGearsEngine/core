@@ -87,7 +87,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Ondansetron" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<!--Give 8 mg.  seems to be fairly standard dose--> 
@@ -100,4 +101,5 @@
         <Time value="15" unit="min"/>       
     </Action>
 
+  </Actions>
 </Scenario>

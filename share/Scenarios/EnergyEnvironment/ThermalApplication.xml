@@ -73,7 +73,8 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="SweatRate"                  Unit="mg/min" Precision="2"/>
   </DataRequests>
     
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="50" unit="s"/>       
     </Action>	
     <!-- Turn on heating -->
@@ -154,5 +155,6 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>
 

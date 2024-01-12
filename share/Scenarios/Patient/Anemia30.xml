@@ -79,9 +79,11 @@
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Hemoglobin" Name="BloodConcentration"                 Unit="g/dL" Precision="1"/>
   </DataRequests>
     	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>
     </Action>
+  </Actions>
 </Scenario>
 
 

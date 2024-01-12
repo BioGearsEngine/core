@@ -101,7 +101,8 @@
 
   </DataRequests>
   
-    <Action xsi:type="EnvironmentChangeData">
+    <Actions>
+  <Action xsi:type="EnvironmentChangeData">
 		<Conditions>
     <Name>LocalEnvironment</Name>
 			<SurroundingType>Air</SurroundingType>
@@ -145,4 +146,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

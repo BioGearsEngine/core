@@ -86,7 +86,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Fentanyl" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<!--Infuse 7.1ug/kg of fentanyl over 90 s.  Patient should exhibit severe respiratory depression--> 
@@ -107,4 +108,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

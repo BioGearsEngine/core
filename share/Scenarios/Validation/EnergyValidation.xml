@@ -14,8 +14,10 @@
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="TotalMetabolicRate" Unit="kcal/day" Precision="0"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>	
     </Action>
+  </Actions>
 </Scenario>
 

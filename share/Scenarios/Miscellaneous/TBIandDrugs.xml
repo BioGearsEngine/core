@@ -86,7 +86,8 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="RightEyePupillaryResponse-ReactivityModifier" Precision="3"/>
 	</DataRequests>
 	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
 		<Time value="20.0" unit="s"/>
 	</Action>
 	<Action xsi:type="BrainInjuryData" Type="Diffuse">
@@ -103,4 +104,5 @@
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="500" unit="s"/>       
 	</Action>
+  </Actions>
 </Scenario>

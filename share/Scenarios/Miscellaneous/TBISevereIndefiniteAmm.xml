@@ -14,10 +14,12 @@
         <DataRequest xsi:type="PhysiologyDataRequestData" Name="CerebralBloodFlow" Unit="mL/min"/>
     </DataRequests>
 	
-    <Action xsi:type="BrainInjuryData" Type="Diffuse">
+    <Actions>
+  <Action xsi:type="BrainInjuryData" Type="Diffuse">
         <Severity value="1.0"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="30.0" unit="min"/>
     </Action>
+  </Actions>
 </Scenario>

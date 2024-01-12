@@ -41,7 +41,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Propofol" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 
-	<Action xsi:type="SubstanceInfusionData">
+	<Actions>
+  <Action xsi:type="SubstanceInfusionData">
         <Substance>Propofol</Substance>
         <Concentration value="4" unit="mg/mL"/>
         <Rate value="1" unit="mL/s"/>
@@ -57,4 +58,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="20" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

@@ -144,7 +144,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Etomidate" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<!--Rapid induction dose = 0.3 m / kg (21 mg total for 77 kg BG standard male) -->
@@ -160,4 +161,5 @@
 
 	
 	
+  </Actions>
 </Scenario>

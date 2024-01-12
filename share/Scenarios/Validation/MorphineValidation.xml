@@ -41,7 +41,8 @@
   </DataRequests>
 	
 	
-    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+    <Actions>
+  <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
         <Substance>Morphine</Substance>
         <Concentration value="1000" unit="ug/mL"/>
         <Dose value="5.64" unit="mL"/>
@@ -49,4 +50,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="540" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

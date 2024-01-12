@@ -147,7 +147,8 @@
 	
   </DataRequests>
 	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
 		<Time value="30" unit="s"/>       
 	</Action>
 	<!-- Environment with sarin -->
@@ -172,4 +173,5 @@
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="5" unit="min"/>
 	</Action>
+  </Actions>
 </Scenario>

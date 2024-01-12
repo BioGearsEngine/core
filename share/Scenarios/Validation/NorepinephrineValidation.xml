@@ -141,7 +141,8 @@
   </DataRequests>
 	
 
-	<Action xsi:type="SubstanceInfusionData">
+	<Actions>
+  <Action xsi:type="SubstanceInfusionData">
 		<Substance>Norepinephrine</Substance>
 		<Concentration value="48.8" unit="ug/mL"/>
 		<Rate value="0.016" unit="mL/min"/>
@@ -182,4 +183,5 @@
         <Time value="30" unit="min"/>       
     </Action>
 	
+  </Actions>
 </Scenario>

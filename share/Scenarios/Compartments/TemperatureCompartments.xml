@@ -46,7 +46,9 @@
 	<DataRequest xsi:type="ThermalCompartmentDataRequestData" Compartment="Ambient" Name="Heat"                Unit="J" Precision="3"/>	
   </DataRequests>	
   
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
      <Time value="30" unit="s"/>       
   </Action>
+  </Actions>
 </Scenario>

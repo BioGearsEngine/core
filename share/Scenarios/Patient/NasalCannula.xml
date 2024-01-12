@@ -87,7 +87,8 @@
   </DataRequests>
 	
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="3" unit="s"/>       
     </Action>
     <Action xsi:type="AirwayObstructionData">
@@ -105,4 +106,5 @@
 	<Action xsi:type="AdvanceTimeData">
 		<Time value="350" unit="s"/>
 	</Action>
+  </Actions>
 </Scenario>

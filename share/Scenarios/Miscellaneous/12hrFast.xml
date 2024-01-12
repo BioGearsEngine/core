@@ -137,7 +137,9 @@
 	<DataRequest xsi:type="SubstanceDataRequestData" Substance="Lactate" Name="MassInBlood"  Unit="mg" Precision="0"/>
   </DataRequests>
 	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="12" unit="hr"/>       
     </Action>		
+  </Actions>
 </Scenario>

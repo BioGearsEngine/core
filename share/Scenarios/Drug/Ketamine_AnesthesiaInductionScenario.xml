@@ -142,7 +142,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Ketamine" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<!--1.5 mg/kg induction dose over 10 minutes (77 kg standard BG patient)-->
@@ -169,4 +170,5 @@
 		<Concentration value="0.0" unit="mg/mL"/>
 		<Rate value="0.0" unit="mL/min"/>
 	</Action>
+  </Actions>
 </Scenario>

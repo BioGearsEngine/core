@@ -80,7 +80,8 @@
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="RightLungPulmonary" Substance="CarbonDioxide" Name="PartialPressure" Unit="mmHg" Precision="1"/>
   </DataRequests>
 	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<!-- Min severeity shouldn't do anything -->
@@ -116,5 +117,6 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>
 

@@ -39,7 +39,8 @@
   </DataRequests>
 	
 	<!--Administer 1 g of ertapenem of 30 min (1.0 g/mL * 0.033 mL /min * 30 min = 1.0 g--> 
-    <Action xsi:type="SubstanceInfusionData">
+    <Actions>
+  <Action xsi:type="SubstanceInfusionData">
 		<Substance>Ertapenem</Substance>
 		<Concentration value="1.0" unit="g/mL"/>
 		<Rate value="0.0333" unit="mL/min"/>
@@ -57,4 +58,5 @@
     </Action>
 
 	
+  </Actions>
 </Scenario>

@@ -20,7 +20,8 @@
         <DataRequest xsi:type="PhysiologyDataRequestData" Name="PulmonaryArterialPressure" Unit="mmHg"/>
     </DataRequests>
 
-    <Action xsi:type="TensionPneumothoraxData" Type="Closed" Side="Right">
+    <Actions>
+  <Action xsi:type="TensionPneumothoraxData" Type="Closed" Side="Right">
         <Severity value="0.6"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
@@ -32,4 +33,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="3.0" unit="min"/>
     </Action>
+  </Actions>
 </Scenario>

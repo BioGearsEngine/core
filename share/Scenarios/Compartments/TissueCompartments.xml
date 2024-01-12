@@ -864,7 +864,8 @@
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SpleenTissueIntracellular" Substance="Succinylcholine"        Name="Molarity"        Unit="mmol/L" Precision="2"/>
   </DataRequests>
   
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="s"/>       
     </Action>
 	<Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
@@ -875,4 +876,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="25" unit="s"/>
     </Action>
+  </Actions>
 </Scenario>

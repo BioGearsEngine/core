@@ -105,7 +105,8 @@
 	-To stop a hemorrhage: enter target compartment with initial bleeding rate = 0
 -->      
 
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<Action xsi:type="HemorrhageData" Compartment="Aorta">
@@ -129,6 +130,7 @@
         <Time value="4" unit="hr"/>       
     </Action>
 	<Action xsi:type="PatientAssessmentRequestData" Type="Urinalysis"/>
+  </Actions>
 </Scenario>
 
 

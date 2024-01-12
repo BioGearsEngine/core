@@ -118,7 +118,9 @@
   <DataRequest xsi:type="PhysiologyDataRequestData" Name="SweatRate" Unit="ug/s" Precision="2"/>  
   </DataRequests>
 	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="500" unit="s"/>       
     </Action>
+  </Actions>
 </Scenario>

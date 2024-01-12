@@ -13,8 +13,10 @@
     <ReloadState>On</ReloadState>
 	</AutoSerialization>
  --> 
+  <Actions>
   <Action xsi:type="AdvanceTimeData">
 		<Time value="2" unit="min"/>		
 	</Action>
   
+  </Actions>
 </Scenario>

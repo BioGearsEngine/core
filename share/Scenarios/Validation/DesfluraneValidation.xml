@@ -43,7 +43,8 @@
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Desflurane" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="50" unit="s"/>       
     </Action>
     <Action xsi:type="AnesthesiaMachineConfigurationData">
@@ -90,5 +91,6 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="hr"/>       
     </Action>
+  </Actions>
 </Scenario>
 

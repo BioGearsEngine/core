@@ -64,11 +64,13 @@
 
   </DataRequests> 
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>       
     </Action>	
 	
 	<Action xsi:type="PatientAssessmentRequestData" Type="PulmonaryFunctionTest"/>
+  </Actions>
 </Scenario>
 <!--PFT Test not currently included: Forced Vital Capacity, Forced Expiratory Flow 25-75%, Maximum Voluntary Ventilation, Peak Expiratory Flow, Slow Vital Capacity, Forced Expiratory Flow 1 minute,
 FEV1/FVC-->

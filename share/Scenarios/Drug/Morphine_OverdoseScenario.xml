@@ -85,7 +85,8 @@
   </DataRequests>
 	
 
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
       <Time value="30" unit="s"/>       
 	</Action>
 	<Action xsi:type="SubstanceInfusionData">
@@ -105,4 +106,5 @@
         <Time value="90" unit="min"/>
 	</Action>
 
+  </Actions>
 </Scenario>

@@ -41,7 +41,8 @@
   </DataRequests>
 	
 	
-    <Action xsi:type="SubstanceInfusionData">
+    <Actions>
+  <Action xsi:type="SubstanceInfusionData">
         <Substance>Ketamine</Substance>
         <Concentration value="3.9" unit="mg/mL"/>
         <Rate value="0.5" unit="mL/s"/>
@@ -57,4 +58,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="180" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

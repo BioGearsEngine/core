@@ -79,7 +79,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftUreter"                     Name="InFlow"   Unit="mL/min" Precision="2"/>
   </DataRequests>
 	
-	<Action xsi:type="ConsumeNutrientsData">
+	<Actions>
+  <Action xsi:type="ConsumeNutrientsData">
 		<Nutrition>
       <Name>GoodMeal</Name>
 			<Water value="1.0" unit="L"/>
@@ -89,4 +90,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="4" unit="hr"/>
     </Action>
+  </Actions>
 </Scenario>

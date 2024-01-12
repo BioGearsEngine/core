@@ -77,7 +77,8 @@
 	  
 	</DataRequests>
 	
-	<Action xsi:type="SerializeStateData" Type="Save">
+	<Actions>
+  <Action xsi:type="SerializeStateData" Type="Save">
       <Filename>BurnMale0.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->        
 	</Action>
 
@@ -115,4 +116,5 @@
       <Filename>BurnMale5.xml</Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->        
 	</Action>
 	
+  </Actions>
 </Scenario>

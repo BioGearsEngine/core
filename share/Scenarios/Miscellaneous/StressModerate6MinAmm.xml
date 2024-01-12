@@ -18,7 +18,8 @@
         <DataRequest xsi:type="PhysiologyDataRequestData" Name="EndTidalCarbonDioxidePressure" Unit="mmHg"/>
     </DataRequests>
 	
-    <Action xsi:type="AcuteStressData">
+    <Actions>
+  <Action xsi:type="AcuteStressData">
         <Severity value="0.8"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
@@ -30,4 +31,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="3.0" unit="min"/>
     </Action>
+  </Actions>
 </Scenario>

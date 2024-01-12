@@ -41,11 +41,13 @@
   </DataRequests>
 	
 	
-    <Action xsi:type="SubstanceOralDoseData" AdminRoute="Gastrointestinal">
+    <Actions>
+  <Action xsi:type="SubstanceOralDoseData" AdminRoute="Gastrointestinal">
 		<Substance>Acetaminophen</Substance>
 		<Dose value="500" unit="mg"/>
     </Action>
 	<Action xsi:type="AdvanceTimeData">
         <Time value="120" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

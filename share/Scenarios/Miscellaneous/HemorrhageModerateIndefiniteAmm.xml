@@ -41,10 +41,12 @@
 	-To stop a hemorrhage: enter target compartment with initial bleeding rate = 0
 -->      
 	<!--AMM team has a flat bleed rate of 100 mL/min-->
-    <Action xsi:type="HemorrhageData" Compartment="RightLeg">
+    <Actions>
+  <Action xsi:type="HemorrhageData" Compartment="RightLeg">
         <InitialRate value="100.0" unit="mL/min"/>
     </Action>
     <Action xsi:type="AdvanceTimeData">
         <Time value="4.0" unit="hr"/>
     </Action>
+  </Actions>
 </Scenario>

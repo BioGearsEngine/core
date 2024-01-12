@@ -145,7 +145,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Naloxone" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
       <Time value="30" unit="s"/>       
 	</Action>
 	<!--Inject 0.15 mg/kg morphine (about 11mg for a 75kg individual).  Assume injusion occurs over the course of 2 minutes-->
@@ -166,4 +167,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

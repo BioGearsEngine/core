@@ -26,7 +26,8 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="AchievedExerciseLevel"     Unit="unitless" Precision="2"/>
   </DataRequests>
 	
-	<Action xsi:type="EnvironmentChangeData">
+	<Actions>
+  <Action xsi:type="EnvironmentChangeData">
 		<Comment>Insult: High altitude</Comment>
 		<ConditionsFile>CheyenneMountainAprilCool.xml</ConditionsFile>
     </Action>
@@ -154,4 +155,5 @@
 	<!-- Assessment Metabolic Panel -->
 	<Action xsi:type="PatientAssessmentRequestData" Type="ComprehensiveMetabolicPanel"/>
 	
+  </Actions>
 </Scenario>

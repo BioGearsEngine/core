@@ -28,7 +28,8 @@
   </DataRequests>
     
     <!-- Segment 1: Initialization -->
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="1" unit="min"/>       
     </Action>
     <!-- Segment 2: Begin Pneumothorax and Hemorrhage -->
@@ -83,5 +84,6 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="2.667" unit="min"/>
     </Action>
+  </Actions>
 </Scenario>
 

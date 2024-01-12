@@ -70,7 +70,8 @@
   </DataRequests>
 	<!-- Anything action specific data needed for verification of this scenario -->
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
     <Action xsi:type="AirwayObstructionData">
@@ -109,4 +110,5 @@
     <Action xsi:type="AdvanceTimeData">
 		<Time value="500" unit="s"/>		
     </Action>
+  </Actions>
 </Scenario>

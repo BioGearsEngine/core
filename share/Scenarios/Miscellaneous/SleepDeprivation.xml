@@ -37,10 +37,12 @@
   </DataRequests>
 
 <!-- Patient wakes up at 5am, eats at 9 -->
+  <Actions>
   <Action xsi:type="AdvanceTimeData">
         <Time value="48" unit="hr"/>       
     </Action>
 
 
 
+  </Actions>
 </Scenario>

@@ -41,7 +41,8 @@
   </DataRequests>
 	
 	
-	 <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+	 <Actions>
+  <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
         <Substance>Succinylcholine</Substance>
         <Concentration value="1.0" unit="mg/mL"/>
         <Dose value="77" unit="mL"/>
@@ -49,4 +50,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="7" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

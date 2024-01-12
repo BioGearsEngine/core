@@ -54,12 +54,14 @@
   
   </DataRequests>
 		
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>		
     </Action>
 	
 	<Action xsi:type="PatientAssessmentRequestData" Type="CompleteBloodCount"/>
 	<Action xsi:type="PatientAssessmentRequestData" Type="ComprehensiveMetabolicPanel"/>
 	
+  </Actions>
 </Scenario>
 

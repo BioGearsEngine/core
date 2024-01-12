@@ -108,7 +108,8 @@
 	
 	<!-- Initial Submersion -->
 
-	<Action xsi:type="EnvironmentChangeData">
+	<Actions>
+  <Action xsi:type="EnvironmentChangeData">
 		<Conditions>
     <Name>LocalEnvironment</Name>
 			<SurroundingType>Water</SurroundingType>
@@ -175,6 +176,7 @@
         <Time value="40" unit="min"/>       
     </Action>
 
+  </Actions>
 </Scenario>
 
 

@@ -42,7 +42,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Vasopressin" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-	<Action xsi:type="SubstanceInfusionData">
+	<Actions>
+  <Action xsi:type="SubstanceInfusionData">
 		<Substance>Vasopressin</Substance>
 		<Concentration value="0.174" unit="ug/mL"/>
 		<Rate value="1" unit="mL/min"/>
@@ -58,4 +59,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="60" unit="min"/>  
 	</Action>
+  </Actions>
 </Scenario>

@@ -8,8 +8,10 @@
     <DataRequest xsi:type="PhysiologyDataRequestData" Name="ChymeAbsorptionRate" Unit="mL/min" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>	  
     </Action>
+  </Actions>
 </Scenario>
 

@@ -155,7 +155,8 @@
 		<Concentration value="150" unit="ug/mL"/>
 		<Rate value="1.0" unit="mL/min"/>
     </Action>
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="1.5" unit="min"/>       
     </Action>
 	<Stop infusion-->
@@ -175,4 +176,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="15" unit="min"/>       
     </Action>
+  </Actions>
 </Scenario>

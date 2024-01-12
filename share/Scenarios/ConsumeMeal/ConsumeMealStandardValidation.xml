@@ -106,7 +106,8 @@
 	  <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Pericardium" Name="Pressure" Unit="mmHg" Precision="2"/> 
 	</DataRequests>
 
-<Action xsi:type="AdvanceTimeData">
+<Actions>
+  <Action xsi:type="AdvanceTimeData">
 		<Time value="30" unit="s"/>		
 	</Action>
 
@@ -126,4 +127,5 @@
 <Action xsi:type="AdvanceTimeData">
 		<Time value="4" unit="hr"/>		
 	</Action>
+  </Actions>
 </Scenario>

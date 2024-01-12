@@ -81,7 +81,8 @@
   <DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="Ambient" Substance="Nitrogen"      Name="VolumeFraction" Precision="3"/>
   </DataRequests>
   
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="50" unit="s"/>       
     </Action>
     <Action xsi:type="EnvironmentChangeData">
@@ -145,5 +146,6 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="1200" unit="s"/>       
     </Action>
+  </Actions>
 </Scenario>
 

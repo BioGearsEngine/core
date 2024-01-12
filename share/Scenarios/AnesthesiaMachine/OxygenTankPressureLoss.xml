@@ -77,7 +77,8 @@
 	<DataRequest xsi:type="GasCompartmentDataRequestData" Compartment="GasInlet"        Name="VolumeFraction" Substance="CarbonDioxide" Precision="4"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<!--Propofol Induction Dose for general anesthesia and maintenance infusion-->
@@ -138,5 +139,6 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="120" unit="s"/>       
     </Action>
+  </Actions>
 </Scenario>
 

@@ -105,9 +105,11 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="SmallIntestineVasculature" Substance="Urea"       Name="Concentration" Unit="mg/dL" Precision="1"/>
   </DataRequests>
 	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="100" unit="min"/>
     </Action> 
+  </Actions>
 </Scenario>
 
 

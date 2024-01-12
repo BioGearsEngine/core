@@ -60,7 +60,8 @@
 	<DataRequest xsi:type="PhysiologyDataRequestData" Name="OxygenSaturation"                  Unit="unitless"    Precision="3"/>
   </DataRequests>
 
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>	
     </Action>
 	<Action xsi:type="EnvironmentChangeData">
@@ -156,4 +157,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="20" unit="min"/>	
     </Action>
+  </Actions>
 </Scenario>

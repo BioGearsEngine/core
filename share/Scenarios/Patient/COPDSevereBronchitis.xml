@@ -81,9 +81,11 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="Aorta" Substance="Lactate"        Name="Concentration" Unit="mg/dL" Precision="1"/>
   </DataRequests>
     
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>
     </Action>
+  </Actions>
 </Scenario>
 
 

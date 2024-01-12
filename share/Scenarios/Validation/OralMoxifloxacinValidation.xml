@@ -86,7 +86,8 @@
   </DataRequests>
 	
 	<!--Administer 400 mg of Moxifloxacin as a pill--> 
-    <Action xsi:type="SubstanceOralDoseData" AdminRoute="Gastrointestinal">
+    <Actions>
+  <Action xsi:type="SubstanceOralDoseData" AdminRoute="Gastrointestinal">
 		<Substance>Moxifloxacin</Substance>
 		<Dose value="400" unit="mg"/>
     </Action>
@@ -95,4 +96,5 @@
     </Action>
 
 	
+  </Actions>
 </Scenario>

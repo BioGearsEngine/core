@@ -92,7 +92,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftPulmonaryCapillaries"  Name="InFlow" Unit="mL/s" Precision="0"/>
   </DataRequests>
     	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="1" unit="s"/>
     </Action>
 <Action xsi:type="EbolaData" Severity="Moderate"/>
@@ -100,4 +101,5 @@
     <Action xsi:type="AdvanceTimeData">
         <Time value="24" unit="hr"/>
     </Action>
+  </Actions>
 </Scenario>

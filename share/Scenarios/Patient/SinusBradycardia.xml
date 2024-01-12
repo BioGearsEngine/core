@@ -73,7 +73,9 @@
 
 	<!-- Anything action specific data needed for verification of this scenario -->
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>
     </Action>
+  </Actions>
 </Scenario>

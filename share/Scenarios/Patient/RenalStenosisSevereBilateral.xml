@@ -79,8 +79,10 @@
   <DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="RightRenalArtery"               Name="InFlow"   Unit="mL/min" Precision="1"/>
   </DataRequests>
     
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>
     </Action>
+  </Actions>
 </Scenario>
 

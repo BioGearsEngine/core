@@ -90,7 +90,8 @@
 	  
 	</DataRequests>
 
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
 		<Time value="5.5" unit="hr"/>		
 	</Action>
 	 
@@ -105,4 +106,5 @@
 	</Action>
 
   
+  </Actions>
 </Scenario>

@@ -81,7 +81,9 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LeftPulmonaryCapillaries"  Name="InFlow" Unit="mL/s" Precision="0"/>
   </DataRequests>
     	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="2" unit="min"/>
     </Action>
+  </Actions>
 </Scenario>

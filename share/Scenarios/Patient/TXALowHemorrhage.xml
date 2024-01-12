@@ -40,7 +40,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="TranexamicAcid" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-	<Action xsi:type="HemorrhageData" Compartment="RightLeg">
+	<Actions>
+  <Action xsi:type="HemorrhageData" Compartment="RightLeg">
         <InitialRate value="5.0" unit="mL/min"/>
     </Action>
     <Action xsi:type="SubstanceInfusionData">
@@ -59,4 +60,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="11.75" unit="hr"/>       
     </Action>
+  </Actions>
 </Scenario>

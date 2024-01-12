@@ -144,7 +144,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Propofol" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="AdvanceTimeData">
+    <Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="30" unit="s"/>       
     </Action>
 	<!--Loading dose = 140 mg (1.8 mg/kg for 77 kg BG standard male) -->
@@ -176,4 +177,5 @@
     </Action>
 	
 	
+  </Actions>
 </Scenario>

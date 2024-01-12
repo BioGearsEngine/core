@@ -42,7 +42,8 @@
   </DataRequests>
 	
 	<!--Administer 4.0 g of Piperacillin over 30 minutes--> 
-    <Action xsi:type="SubstanceInfusionData">
+    <Actions>
+  <Action xsi:type="SubstanceInfusionData">
         <Substance>Piperacillin</Substance>
         <Concentration value="0.2" unit="g/mL"/>
         <Rate value="0.667" unit="mL/min"/>
@@ -58,4 +59,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="5.5" unit="hr"/>  
 	</Action>
+  </Actions>
 </Scenario>

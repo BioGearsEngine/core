@@ -4,7 +4,9 @@
   <Description>Stabilize a patient and save out the engines state at time zero</Description>
   <InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
   
+  <Actions>
   <Action xsi:type="SerializeStateData" Type="Save">
 		<Filename></Filename><!-- No Filename, engine is going to auto generate a name, BioGears will do something like : StandardMale@0s.xml -->		
   </Action>
+  </Actions>
 </Scenario>

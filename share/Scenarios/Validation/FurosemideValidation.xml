@@ -42,7 +42,8 @@
 	<DataRequest xsi:type="LiquidCompartmentDataRequestData" Compartment="LiverTissueIntracellular"       Substance="Furosemide" Name="MassExcreted" Unit="ug" Precision="2"/>
   </DataRequests>
 	
-    <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
+    <Actions>
+  <Action xsi:type="SubstanceBolusData" AdminRoute="Intravenous">
         <Substance>Furosemide</Substance>
         <Concentration value="4000" unit="ug/mL"/>
         <Dose value="10" unit="mL"/>
@@ -50,4 +51,5 @@
 	<Action xsi:type="AdvanceTimeData">
         <Time value="450" unit="min"/>  
 	</Action>		
+  </Actions>
 </Scenario>

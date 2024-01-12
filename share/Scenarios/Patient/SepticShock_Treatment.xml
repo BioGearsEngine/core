@@ -82,6 +82,7 @@
   </DataRequests>
 
   <!--Administer initial rescue bolus-->
+  <Actions>
   <Action xsi:type="SubstanceCompoundInfusionData">
     <SubstanceCompound>Saline</SubstanceCompound>
     <BagVolume value="500" unit="mL"/>
@@ -168,4 +169,5 @@
   <Action xsi:type="SerializeStateData" Type="Save">
     <Filename>./states/InfectionStates/SepsisTreatment_8hr.xml</Filename>
   </Action>
+  </Actions>
 </Scenario>

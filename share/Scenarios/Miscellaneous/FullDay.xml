@@ -155,7 +155,8 @@
 	
 	<!-- Stomach is defaulted to have a meal, we'll call that breakfast -->	
 	<!-- 8am -->	
-	<Action xsi:type="AdvanceTimeData">
+	<Actions>
+  <Action xsi:type="AdvanceTimeData">
         <Time value="1" unit="hr"/>       
     </Action>	
 	<Action xsi:type="ConsumeNutrientsData"><!-- 9am -->
@@ -273,4 +274,5 @@
         <Time value="1" unit="hr"/>       
     </Action>	
 	<!-- Goto bed around 10pm -->
+  </Actions>
 </Scenario>
