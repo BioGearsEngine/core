@@ -1011,7 +1011,7 @@ void Respiratory::RespiratoryDriver()
   m_DriverPressurePath->GetNextPressureSource().SetValue(m_DriverPressure_cmH2O, PressureUnit::cmH2O);
 
   // Update respiration cycle percentage
-  GetRespirationCyclePercentComplete().SetValue(m_BreathingCycleTime_s / (60.0 / m_VentilationFrequency_Per_min));
+  GetRespirationCyclePercentComplete().SetValue(std::min(1.0, std::max(0.0, m_BreathingCycleTime_s / (60.0 / m_VentilationFrequency_Per_min))));
 }
 //-------------------------------------------------------------------------------------------------
 ///\brief
