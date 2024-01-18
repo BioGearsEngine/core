@@ -766,7 +766,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     if (serialize->GetType() == CDM::enumSerializationType::Save) {
       if (serialize->HasFilename()) {
         if (filesystem::is_directory(serialize->GetFilename()) || (filesystem::is_directory("states/" + serialize->GetFilename()))) {
-          SaveStateToFile(asprintf("%s%s@%.0fs.xml", serialize->GetFilename(), m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));
+          SaveStateToFile(asprintf("%s%s@%.0fs.xml", serialize->GetFilename().c_str(), m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));
         } else {
           SaveStateToFile(serialize->GetFilename());
         }
