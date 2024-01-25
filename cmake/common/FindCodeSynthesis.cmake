@@ -23,7 +23,8 @@
 # See the License for more information.
 #=============================================================================
 
-
+cmake_policy(SET CMP0070 NEW)
+cmake_policy(SET CMP0118 NEW)
 
 if(NOT CodeSynthesis_FOUND)
 option (XSD_USE_SHORT_TARGET_NAMES "Reduces the name of targets to a minimum" OFF)
@@ -185,28 +186,7 @@ if (NOT _l_WORKING_DIR)
   set(CodeSynthesis_FLAGS --output-dir ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component} --options-file ${_config_file} ${_filepath})
   
   get_filename_component(_schema ${_filepath} NAME_WLE  )
-  if( NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.hxx OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}/${_schema}.cxx )
-    message(STATUS "Generating ${_project}/${_component}${_schema}{.hxx,.cxx}")
-    execute_process( 
-                     WORKING_DIRECTORY ${_l_WORKING_DIR}
-                     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component} 
-                     COMMAND ${CMAKE_COMMAND} -E env  LD_LIBRARY_PATH=${Biogears_EXTERNAL}/lib ${CodeSynthesis_EXECUTABLE} cxx-tree ${CodeSynthesis_FLAGS} 
-                     ERROR_VARIABLE XSD_ERROR
-                   )
-    if(XSD_ERROR )
-      if (XSD_ERROR MATCHES "[Ee][Rr][Rr][Oo][Rr]|failure")
-      message(FATAL_ERROR "XSD Generation Failed? Check the value of CodeSynthesis_EXECUTABLE\n"
-                          "Error Msg:\n"
-                          "${XSD_ERROR}\n"
-                          )
-      else()
-      message(STATUS "XSD Generation Warrning? Check the value of CodeSynthesis_EXECUTABLE\n"
-                          "Error Msg:\n"
-                          "${XSD_ERROR}\n"
-                          )
-      endif()        
-    endif(XSD_ERROR)
-  endif()
+  message(STATUS "Generating ${CMAKE_CURRENT_BINARY_DIR}/${_project}/${_component}${_schema}{.hxx,.cxx}")
 
   string(REPLACE  "//" "/" _safe_unique_name ${_component}/${_schema}  )
   string(MAKE_C_IDENTIFIER   ${_component}/${_schema} _safe_unique_name)

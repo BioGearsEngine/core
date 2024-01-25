@@ -12,7 +12,7 @@ namespace biogears {
 namespace io {
   constexpr char default_scenario_directory[] = "Scenarios/";
   char const * scenario_file_list[] = {
-@RESOURCE_FILE_LIST@
+    @RESOURCE_FILE_LIST@
   };
 
   constexpr size_t count_of_substance_files = @RESOURCE_FILE_COUNT@;

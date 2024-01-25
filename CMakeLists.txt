@@ -8,8 +8,8 @@
 #                                           (also required for toolchain file)
 #   ANDROID         GRADLE_EXECUTABLE   Location of the Gradle executable
 ###############################################################################
-set(Biogears_CMAKE_MIN_VERSION 3.11.0)
-set(Biogears_CMAKE_POLICY 3.11.0)
+set(Biogears_CMAKE_MIN_VERSION 3.20.0)
+set(Biogears_CMAKE_POLICY 3.20.0)
 
 cmake_minimum_required(VERSION ${Biogears_CMAKE_MIN_VERSION})
 
@@ -36,7 +36,7 @@ foreach( p IN LISTS CMAKE_PREFIX_PATH )
 endforeach()
 
 find_package(Git QUIET)
-configure_version_information(GIT_SUCESS MAJOR 7 MINOR 5 PATCH 0 TWEAK "Source" )
+configure_version_information(GIT_SUCESS MAJOR 8 MINOR 0 PATCH 0 TWEAK "Source" )
 if(GIT_FOUND AND NOT GIT_SUCESS)
   # Update these variables to ensure out of source build have some sane tags
   message(WARNING "GIT_EXECUTABLE was not found or no corresponding GIT_REPO is available." 

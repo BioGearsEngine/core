@@ -1,3 +1,5 @@
+cmake_policy(SET CMP0070 NEW)
+cmake_policy(SET CMP0118 NEW)
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################
@@ -6,13 +8,16 @@ message(STATUS "  Configuring libbiogears_cdm")
 option(UNITTEST_biogears-core_cdm "Enable libBiogears_cdm UnitTest "  ON)
 
 #Biogears CDM
-add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/biogears/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
-add_source_files(CDM_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.hxx" SOURCE_GROUP  "Headers\\Public\\")
-add_source_files(CDM_GEN_SRCS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.cxx" SOURCE_GROUP "Sources\\")
+add_source_files(CDM_PUBLIC_HDRS OCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/biogears/ REGEX "*.h" SOURCE_GROUP "Header Files\\Public\\")
 
+set(LIBBIO_CDM_HEADERS ${CDM_PUBLIC_HDRS} ${XSD_SRCS} ${XSD_HDRS})
+set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
+message (STATUS
+"
 set(LIBBIO_CDM_HEADERS ${CDM_PUBLIC_HDRS} ${CDM_GEN_HDRS})
 set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
-
+"
+)
 ###############################################################################
 #Code Generation
 ###############################################################################
@@ -20,7 +25,7 @@ set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
   ###############################################################################
   # libBiogears_cdm
   ###############################################################################
-  add_library(libbiogears_cdm    SHARED ${LIBBIO_CDM_SOURCES} ${LIBBIO_CDM_HEADERS})
+  add_library(libbiogears_cdm  SHARED ${LIBBIO_CDM_SOURCES} ${LIBBIO_CDM_HEADERS})
   add_library(Biogears::libbiogears_cdm ALIAS libbiogears_cdm)
   set_target_properties(libbiogears_cdm
     PROPERTIES
@@ -31,6 +36,7 @@ set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_GEN_SRCS})
     PROJECT_LABEL "libbiogears_cdm"
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
     CXX_STANDARD 14
+    LANGUAGE CXX
     BUILD_RPATH   "${Biogears_BUILD_RPATH}"
     INSTALL_RPATH $<$<PLATFORM_ID:Darwin>:"\@loader_path:@loader_path/../lib:@loader_path /lib">> $<UNIX AND NOT APPLE:"\$ORIGIN:\$ORIGIN/../lib:\$ORIGIN/lib">>
     )

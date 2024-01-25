@@ -2,8 +2,8 @@
 # Policy adjustments
 ###############################################################################
 
-cmake_minimum_required(VERSION 3.8.0)
-cmake_policy(VERSION 3.8.0)
+cmake_minimum_required(VERSION 3.20.0)
+cmake_policy(VERSION 3.20.0)
 
 ###############################################################################
 # Options
@@ -65,7 +65,11 @@ if(Biogears_BUILD_WEBSITE)
     ###############################################################################
 
     message(STATUS "Configuring www")
-    configure_file(${PROJECT_SOURCE_DIR}/share/doc/doxygen/doxyfile.in ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/Doxyfile @ONLY)
+    file(READ ${PROJECT_SOURCE_DIR}/share/doc/doxygen/doxyfile.in  contents)
+    string(CONFIGURE "${contents}" contents @ONLY)
+    FILE(GENERATE OUTPUT ${PROJECT_BINARY_DIR}/runtime/doc/doxygen/Doxyfile 
+                  CONTENT "${contents}"
+         @ONLY)
 
     ###############################################################################
     #Define Logic

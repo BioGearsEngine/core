@@ -47,14 +47,14 @@ endif()
 file(GLOB_RECURSE biogears_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/biogears/*.xsd")
 file(GLOB_RECURSE cdm_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/cdm/*.xsd")
 
-
 set (BIOGEARS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set (BIOGEARS_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
+set (BIOGEARS_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/$<CONFIG>)
+set (BIOGEARS_BINARY_BARE_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/)
 
 
 REGISTER_XSD_DIR(  "${PROJECT_SOURCE_DIR}/share/xsd/"
                     CONFIG "${PROJECT_SOURCE_DIR}/share/xsd/BioGearsDataModel.cfg"
-                    PROJECT "generated/biogears" COMPONENT "schema" RESOURCE_FOLDER "resources/schema"
+                    PROJECT "generated/$<CONFIG>/biogears" COMPONENT "schema" RESOURCE_FOLDER "resources/schema"
                     NO_TARGETS SOURCES_VAR XSD_SRCS HEADERS_VAR XSD_HDRS VERBOSITY 1)
 
 add_custom_target(xsd_bindings 
@@ -62,7 +62,12 @@ add_custom_target(xsd_bindings
   DEPENDS ${XSD_SRCS} ${XSD_HDRS}
 )
 set_target_properties(xsd_bindings PROPERTIES FOLDER "Code Generators")
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/libBiogears/src/version.cpp.in  ${CMAKE_CURRENT_BINARY_DIR}/libBiogears/src/version.cpp NEWLINE_STYLE LF)
+
+file(READ  ${BIOGEARS_SOURCE_DIR}/libBiogears/src/version.cpp.in contents)
+string(CONFIGURE "${contents}" contents )
+FILE(GENERATE OUTPUT ${BIOGEARS_BINARY_DIR}/libBiogears/src/version.cpp 
+  CONTENT "${contents}"
+  NEWLINE_STYLE LF)
 ###############################################################################
 #Sorce and Header Defines
 ###############################################################################

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18.0)
+cmake_minimum_required(VERSION 3.20.0)
 message(STATUS "  Configuring libbiogears_io")
 
 option(UNITTEST_biogears-core_io "Enable libBiogears_io UnitTest "  ON)
@@ -66,15 +66,15 @@ function(configure_io_directory_file )
       set(ADDITIONAL_ARGS SHORT_NAMES)
     endif()
     
-    generate_hex_header( NAMESPACE biogears io INPUT ${_RESOURCE_PATH}/${_true_source} OUTPUT ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}
+    generate_hex_header( NAMESPACE biogears io INPUT ${_RESOURCE_PATH}/${_true_source} OUTPUT ${BIOGEARS_BINARY_DIR}/${IO_INCLUDE}/biogears/io/${_true_source}
                          PATH ${src} PREFIX ${src_dir} ${ADDITIONAL_ARGS})
    
     
-    LIST(APPEND ${_HEADERS}  "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}.hxx")
-    LIST(APPEND ${_SOURCES}  "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}.cxx")
+    LIST(APPEND ${_HEADERS}  "${BIOGEARS_BINARY_DIR}/${IO_INCLUDE}/biogears/io/${_true_source}.hxx")
+    LIST(APPEND ${_SOURCES}  "${BIOGEARS_BINARY_DIR}/${IO_INCLUDE}/biogears/io/${_true_source}.cxx")
 
-    source_group("Headers/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}.hxx" )
-    source_group("Sources/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}/biogears/io/${_true_source}.cxx" )
+    # source_group("Header Files/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/${IO_INCLUDE}/biogears/io/${_true_source}.hxx" )
+    # source_group("Source Files/Generated/${IO_VERSION}/${src_dir}" FILES "${BIOGEARS_BINARY_DIR}/${IO_INCLUDE}/biogears/io/${_true_source}.cxx" )
 
   if(src STREQUAL "BioGearsConfiguration.xml")
     string(APPEND RESOURCE_INCLUDE_LIST "#include <biogears/io/${src}.hxx>\n")
@@ -114,15 +114,20 @@ function(configure_io_directory_file )
   get_filename_component( base_name ${_OUTPUT} NAME_WE)
   get_filename_component( base_directory ${_OUTPUT} DIRECTORY)
 
-  configure_file( "src/${_OUTPUT}" ${BIOGEARS_BINARY_DIR}/generated/biogears/io/${base_directory}/${base_name}.cpp @ONLY NEWLINE_STYLE LF)
+  file(READ "src/${_OUTPUT}"   contents)
+  string(CONFIGURE "${contents}" contents @ONLY)
+  FILE(GENERATE  OUTPUT ${BIOGEARS_BINARY_DIR}/biogears/io/${base_directory}/${base_name}.cpp  
+                 CONTENT "${contents}"
+                 NEWLINE_STYLE LF)
 
-  add_source_files(${_SOURCES} LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/io/${base_directory}
-               REGEX "${base_name}.cpp" SOURCE_GROUP  "Sources\\")
+  # add_source_files(${_SOURCES} LOCATION ${BIOGEARS_BINARY_DIR}/biogears/io/${base_directory}
+  #              REGEX "${base_name}.cpp" SOURCE_GROUP  "Sources\\")
   
-  LIST(APPEND ${_SOURCES}  "${BIOGEARS_BINARY_DIR}/generated/biogears/io/${base_directory}/${base_name}.cpp")
-  source_group("Sources/${base_directory}/${base_name}.cpp" FILES ${BIOGEARS_BINARY_DIR}/generated/biogears/io/${base_directory}/${base_name}.cpp )
+  # LIST(APPEND ${_HEADERS}  "${BIOGEARS_BINARY_DIR}/biogears/io/${base_directory}/${base_name}.h")
+  LIST(APPEND ${_SOURCES}  "${BIOGEARS_BINARY_DIR}/biogears/io/${base_directory}/${base_name}.cpp")
+  #source_group("Source Files/${base_directory}/${base_name}.cpp" FILES ${BIOGEARS_BINARY_DIR}/biogears/io/${base_directory}/${base_name}.cpp )
 
-  set(${_HEADERS} ${${_SOURCES}} PARENT_SCOPE)
+  set(${_HEADERS} ${${_HEADERS}} PARENT_SCOPE)
   set(${_SOURCES} ${${_SOURCES}} PARENT_SCOPE)
 
 endfunction(configure_io_directory_file)
@@ -168,9 +173,9 @@ configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/patients.cpp.in"  T
 
 option(Biogears_IO_INCLUDE_STATES "Add default states which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" OFF)
 if (Biogears_IO_INCLUDE_STATES)
-message(STATUS "            : data/states")
-FILE(GLOB_RECURSE DATA_STATE_FILES       RELATIVE "${PROJECT_SOURCE_DIR}/share/data/states" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/states/*.xml")
-configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/states.cpp.in" TYPE "states/" FILE_LIST ${DATA_STATE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
+  message(STATUS "            : data/states")
+  FILE(GLOB_RECURSE DATA_STATE_FILES       RELATIVE "${PROJECT_SOURCE_DIR}/share/data/states" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/states/*.xml")
+  configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/states.cpp.in" TYPE "states/" FILE_LIST ${DATA_STATE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS)
 endif()
 
 message(STATUS "            : data/substances")
@@ -179,25 +184,43 @@ configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/substances.cpp.in" 
 
 option(Biogears_IO_INCLUDE_DATA_TEMPLATES "Add default data templates which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" OFF)
 if (Biogears_IO_INCLUDE_DATA_TEMPLATES)
-message(STATUS "            : data/templates")
-FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/templates" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/templates/*.csv")
-configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/templates.cpp.in" TYPE "templates/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data HEADERS GEN_HDRS SOURCES GEN_SRCS )
+  message(STATUS "            : data/templates")
+  FILE(GLOB_RECURSE DATA_TEMPLATE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/data/templates" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/data/templates/*.csv")
+  configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/templates.cpp.in" 
+  TYPE "templates/" FILE_LIST ${DATA_TEMPLATE_FILES} 
+  RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/data 
+  HEADERS GEN_HDRS SOURCES GEN_SRCS 
+  )
 endif()
 
 option(Biogears_IO_INCLUDE_SCENARIOS "Add default scenarios which can be generated using bg-cli to the IO library. This greatly increases the size of the io library" ON)
 if (Biogears_IO_INCLUDE_SCENARIOS)
-message(STATUS "            : Scenarios")
-FILE(GLOB_RECURSE DATA_SUBSTANCE_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/Scenarios" LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/Scenarios/*.xml")
-configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/scenarios.cpp.in" TYPE "Scenarios/" FILE_LIST ${DATA_SUBSTANCE_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/ HEADERS GEN_HDRS SOURCES GEN_SRCS )
+
+  message(STATUS "            : Scenarios")
+  FILE(GLOB_RECURSE DATA_SCENARIOS_FILES   RELATIVE "${PROJECT_SOURCE_DIR}/share/Scenarios" 
+    LIST_DIRECTORIES false CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/share/Scenarios/*.xml"
+  )
+  configure_io_directory_file( ${NAME_ARG} OUTPUT "directories/scenarios.cpp.in" TYPE "Scenarios/" 
+    FILE_LIST ${DATA_SCENARIOS_FILES} RESOURCE_PATH ${PROJECT_SOURCE_DIR}/share/ 
+    HEADERS GEN_HDRS SOURCES GEN_SRCS 
+  )
 endif()
 
-configure_file( src/constants.h.in  ${BIOGEARS_BINARY_DIR}/generated/biogears/io/constants.h NEWLINE_STYLE LF)
-add_source_files(GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/io/
-               REGEX "constants.h" SOURCE_GROUP  "Headers\\Private\\")
+# message(FATAL_ERROR ${GEN_HDRS})
+
+FILE(READ src/constants.h.in contents)
+STRING(CONFIGURE "${contents}" contents )
+FILE(GENERATE OUTPUT  ${BIOGEARS_BINARY_DIR}/biogears/io/constants.h 
+     CONTENT  "${contents}"  
+     NEWLINE_STYLE LF)
+
+add_source_files(GEN_HDRS LOCATION  ${BIOGEARS_BINARY_DIR}/biogears/io/
+               REGEX "constants.h" SOURCE_GROUP  "Header Files\\Private\\")
 add_source_files(INTERFACE_HEADERS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/include/
-               REGEX "*.h" SOURCE_GROUP  "Headers\\Public\\")
+               REGEX "*.h" SOURCE_GROUP  "Header Files\\Public\\")
 add_source_files(INTERFACE_SOURCES LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/
-               REGEX "*.cpp" SOURCE_GROUP  "Sources\\")
+               REGEX "*.cpp" SOURCE_GROUP  "Source Files\\")
+              
 ##############################################################################
 # Generator Target
 ##############################################################################
@@ -241,11 +264,11 @@ if(NOT Biogears_BUILD_STATIC)
   
   target_include_directories(libbiogears_io 
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
-              ${BIOGEARS_BINARY_DIR}/generated
-              ${BIOGEARS_BINARY_DIR}/generated/${IO_INCLUDE}
+              ${BIOGEARS_BINARY_DIR}
+              ${BIOGEARS_BINARY_DIR}/${IO_INCLUDE}
       
       INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-      INTERFACE $<BUILD_INTERFACE:${BIOGEARS_BINARY_DIR}/generated>
+      INTERFACE $<BUILD_INTERFACE:${BIOGEARS_BINARY_DIR}>
       INTERFACE $<INSTALL_INTERFACE:include>
   )
   

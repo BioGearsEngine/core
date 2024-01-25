@@ -1476,10 +1476,9 @@ function(export_jars)
     endforeach()
 
     # Generate exports file
-    configure_file(
-      ${_JAVA_EXPORT_TARGETS_SCRIPT}
-      ${_export_jars_FILE}
-      @ONLY
+    FILE(GENERATE
+      OUTPUT ${_export_jars_FILE}
+      INPUT ${_JAVA_EXPORT_TARGETS_SCRIPT}
     )
 endfunction()
 

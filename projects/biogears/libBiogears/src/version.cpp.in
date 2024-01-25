@@ -25,7 +25,7 @@ constexpr int _MINOR_VERSION_NUMBER_  = ${Biogears_VERSION_MINOR};
 constexpr int _PATCH_VERSION_NUMBER_  = ${Biogears_VERSION_PATCH};
 constexpr char const * _TWEAK_VERSION_NUMBER_  = "${Biogears_VERSION_TWEAK}";
 
-constexpr char const* _CMAKE_INSTALL_PREFIX_ = "${CMAKE_PREFIX_PATH}";
+constexpr char const* _CMAKE_INSTALL_PREFIX_ = "${CMAKE_INSTALL_PREFIX}";
 
 using namespace std::string_literals;
 //-----------------------------------------------------------------------------

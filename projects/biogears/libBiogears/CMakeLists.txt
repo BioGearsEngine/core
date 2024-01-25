@@ -3,29 +3,32 @@
 ###############################################################################
 message(STATUS "  Configuring libbiogears")
 
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/config.h.in  ${CMAKE_CURRENT_BINARY_DIR}/../generated/biogears/config.h NEWLINE_STYLE LF)
+file(READ ${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/config.h.in contents)
+string(CONFIGURE "${contents}" contents @ONLY)
+FILE(GENERATE OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/../generated/$<CONFIG>/biogears/config.h 
+              CONTENT   "${contents}"
+     NEWLINE_STYLE LF)
 
 #Biogears CDM
 add_source_files(CDM_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libCDM/include/ REGEX "*.h" SOURCE_GROUP "Headers\\Public\\schema\\")
-add_source_files(CDM_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.hxx" SOURCE_GROUP "Headers\\Public\\schema\\")
-add_source_files(CDM_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogears/schema REGEX "*.cxx" SOURCE_GROUP "Sources\\schema\\")
 
 #Biogears IO
 add_source_files(IO_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libIO/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
-add_source_files(IO_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/generated/biogears/io REGEX "*.h" SOURCE_GROUP "Headers\\Public\\generated\\")
-add_source_files(IO_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/generated/biogears/io REGEX "*.cpp" SOURCE_GROUP "Sources\\generated\\")
-add_source_files(IO_EMBEDED_HDRS LOCATION "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}" REGEX "*.hxx" SOURCE_GROUP "Headers\\Public\\generated\\")
-add_source_files(IO_EMBEDED_SRCS LOCATION  "${BIOGEARS_BINARY_DIR}/generated/c_encoded/${Biogears_LIB_VERSION}/" REGEX "*.cxx" SOURCE_GROUP "Sources\\generated\\")
+add_source_files(IO_GEN_HDRS LOCATION ${BIOGEARS_BINARY_DIR}/biogears/io REGEX "*.h" SOURCE_GROUP "Headers\\Public\\generated\\")
+add_source_files(IO_GEN_SRCS LOCATION  ${BIOGEARS_BINARY_DIR}/biogears/io REGEX "*.cpp" SOURCE_GROUP "Sources\\generated\\")
+add_source_files(IO_EMBEDED_HDRS LOCATION "${BIOGEARS_BINARY_DIR}/${Biogears_LIB_VERSION}" REGEX "*.hxx" SOURCE_GROUP "Headers\\Public\\generated\\")
+add_source_files(IO_EMBEDED_SRCS LOCATION  "${BIOGEARS_BINARY_DIR}/${Biogears_LIB_VERSION}/" REGEX "*.cxx" SOURCE_GROUP "Sources\\generated\\")
 
 #Biogears Core
 add_source_files(CORE_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/src REGEX "*.h" SOURCE_GROUP "Headers\\Private\\")
 add_source_files(CORE_SRCS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/src REGEX "*.cpp" SOURCE_GROUP "Sources\\")
-add_source_files(CORE_GEN_SRCS LOCATION ${BIOGEARS_BINARY_DIR}/libBiogears/src REGEX "version.cpp" SOURCE_GROUP"Sources\\")
+set(CORE_GEN_SRCS  "${BIOGEARS_BINARY_DIR}/libBiogears/src/version.cpp" )
+source_group(TREE ${CMAKE_BINARY_DIR}/projects PREFIX generated  )
 add_source_files(CORE_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/include REGEX "*.h" SOURCE_GROUP "Headers\\Public\\")
 add_source_files(CORE_PUBLIC_HDRS LOCATION ${BIOGEARS_SOURCE_DIR}/libBiogears/include REGEX "*.inl" SOURCE_GROUP "Headers\\Public\\")
 
-set(BIO_CDM_HEADERS ${CDM_HDRS} ${CDM_PUBLIC_HDRS} ${CDM_GEN_HDRS})
-set(BIO_CDM_SOURCES ${CDM_SRCS} ${CDM_GEN_SRCS})
+set(BIO_CDM_HEADERS ${CDM_HDRS} ${CDM_PUBLIC_HDRS} ${XSD_HDRS})
+set(BIO_CDM_SOURCES ${CDM_SRCS} ${XSD_SRCS})
 
 set(BIO_IO_HEADERS ${IO_HDRS} ${IO_EMBEDED_HDRS} ${IO_GEN_HDRS})
 set(BIO_IO_SOURCES ${IO_EMBEDED_SRCS} ${IO_GEN_SRCS})

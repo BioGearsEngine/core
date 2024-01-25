@@ -1,9 +1,10 @@
 ###############################################################################
 # Policy adjustments
 ###############################################################################
-cmake_minimum_required(VERSION 3.8.0)
-cmake_policy(VERSION 3.8.0)
+cmake_minimum_required(VERSION 3.20.0)
+cmake_policy(VERSION 3.20.0)
 cmake_policy(SET CMP0087 NEW)
+cmake_policy(SET CMP0070 NEW)
 ###############################################################################
 # Options
 ###############################################################################
@@ -29,7 +30,12 @@ add_source_files(HEADERS LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/include REGEX "*.h
 add_source_files(SOURCES LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/ REGEX "*.cpp" SOURCE_GROUP "Sources\\")
 add_source_files(CONTROLLER_SOURCES LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/ REGEX "bg-cli-main.cpp" SOURCE_GROUP "Sources\\")
 add_source_files(DRONE_SOURCES LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/ REGEX "bg-scenario-main.cpp" SOURCE_GROUP "Sources\\")
-configure_file(src/utils/KnownPaths.h.in src/utils/KnownPaths.h )
+
+set(GENERATED_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/)
+file(READ "src/utils/KnownPaths.h.in"   contents)
+string(CONFIGURE "${contents}" contents @ONLY)
+FILE(GENERATE OUTPUT ${GENERATED_INCLUDE_DIR}/src/utils/KnownPaths.h
+              CONTENT  "${contents}" )
 
 ##########################
 #  Biogears Command Line #
@@ -54,7 +60,7 @@ if(WIN32)
 endif()
 target_compile_definitions(bg-cli PRIVATE DEBUG_POSTFIX=$<$<CONFIG:Debug>:"${CMAKE_DEBUG_POSTFIX}">)
 target_compile_options(bg-cli PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
-target_include_directories(bg-cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+target_include_directories(bg-cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${GENERATED_INCLUDE_DIR}/src/utils PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 
 target_link_libraries(bg-cli 
@@ -94,7 +100,7 @@ set_target_properties(bg-scenario
 
 target_compile_definitions(bg-scenario PRIVATE DEBUG_POSTFIX=$<$<CONFIG:Debug>:"${CMAKE_DEBUG_POSTFIX}">)
 target_compile_options(bg-scenario PRIVATE $<$<PLATFORM_ID:Windows>:/bigobj> PRIVATE $<$<PLATFORM_ID:Windows>:/MP${Biogears_BUILD_PARALLEL_LEVEL}>)
-target_include_directories(bg-scenario PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+target_include_directories(bg-scenario PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${GENERATED_INCLUDE_DIR}/src/utils/ PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 target_link_libraries(bg-scenario 
       Biogears::libbiogears
       minizip::lib )
