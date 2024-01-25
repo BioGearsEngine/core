@@ -271,6 +271,12 @@ bool SEPatient::Load(const CDM::PatientData& in)
   if (in.Height().present()) {
     GetHeight().Load(in.Height().get());
   }
+  if (!in.Weight().present() && in.BMI().present()) {
+    CalculateWeightByBMI(in.BMI().get());
+  }
+  if (!in.Height().present() && in.BMI().present()) {
+    CalculateHeightByBMI(in.BMI().get());
+  }
   if (in.AlveoliSurfaceArea().present()) {
     GetAlveoliSurfaceArea().Load(in.AlveoliSurfaceArea().get());
   }
@@ -1099,6 +1105,28 @@ double SEPatient::GetHeight(const LengthUnit& unit) const
     return SEScalar::dNaN();
   }
   return m_Height->GetValue(unit);
+}
+//-----------------------------------------------------------------------------
+void SEPatient::CalculateWeightByBMI(const CDM::ScalarData& bmi)
+{
+  if (!HasWeight()) {
+    m_Weight = new SEScalarMass();
+    double height_m = GetHeight(LengthUnit::m);
+    double weightByBMI_kg = bmi.value() * std::pow(height_m, 2.);
+
+    m_Weight->SetValue(weightByBMI_kg, MassUnit::kg);
+  }
+}
+//-----------------------------------------------------------------------------
+void SEPatient::CalculateHeightByBMI(const CDM::ScalarData& bmi)
+{
+  if (!HasHeight()) {
+    m_Height = new SEScalarLength();
+    double weight_kg = GetWeight(MassUnit::kg);
+    double heightByBMI_m = std::sqrt(weight_kg / bmi.value());
+
+    m_Height->SetValue(heightByBMI_m, LengthUnit::m);
+  }
 }
 //-----------------------------------------------------------------------------
 bool SEPatient::HasAlveoliSurfaceArea() const
