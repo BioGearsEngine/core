@@ -43,8 +43,10 @@ set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_XSD_SRCS} ${CDM_PROTO_SRCS})
     CXX_STANDARD 20
     )
   set_target_properties(libbiogears_cdm PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
-  add_dependencies(libbiogears_cdm xsd_bindings proto_bindings)
-
+  add_dependencies(libbiogears_cdm xsd_bindings )
+  if (Biogears_USE_PROTO)
+    add_dependencies(libbiogears_cdm proto_bindings>)
+  endif()
   ###############################################################################
   # libBiogears_cdm COMPILATION & LINKAGE MODIFICATIONS
   ###############################################################################
@@ -62,7 +64,7 @@ set(LIBBIO_CDM_SOURCES ${CDM_PUBLIC_SRCS} ${CDM_XSD_SRCS} ${CDM_PROTO_SRCS})
   
   set(BIO_cdm_LIBS
             CodeSynthesis::XSD
-            protobuf::libprotobuf
+            $<$<BOOL:${Biogears_USE_PROTO}>:protobuf::libprotobuf>
             Eigen3::Eigen
   )
   target_link_libraries(libbiogears_cdm  PUBLIC ${BIO_cdm_LIBS} )

@@ -39,7 +39,7 @@ endif()
 verify_package(Threads REQUIRED)
 verify_package(Eigen3 REQUIRED)
 verify_package(CodeSynthesis REQUIRED)
-verify_package(Protobuf REQUIRED)
+verify_package(Protobuf QUIET)
 
 if(Biogears_BUILD_PYTHON_BINDINGS)
   verify_package(pybind11 REQUIRED)
@@ -77,6 +77,9 @@ set_source_files_properties(${XSD_FILES} PROPERTIES
                 TRUE FOLDER schema
 )
 
+
+option(Biogears_USE_PROTO "Enable very experimental PROTOBUFF Support [DEVELOPER ONLY]" OFF)
+if (Biogears_USE_PROTO)
 # Proto Buffs
 file(GLOB_RECURSE PROTO_FILES CMAKE_CONFIGURE_DEPENDS  ${PROJECT_SOURCE_DIR}/share/proto/*.proto)
 
@@ -103,6 +106,7 @@ set_source_files_properties(${PROTO_FILES} PROPERTIES
                 HEADER_FILE_ONLY 
                 TRUE FOLDER schema)
 
+endif()
 # Version Source Code
 set_target_properties(xsd_bindings PROPERTIES FOLDER "Code Generators")
 
