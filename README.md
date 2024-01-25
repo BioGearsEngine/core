@@ -28,11 +28,9 @@ The BioGears source is structured as follows:
   - `common/` - package files for common CMake deps
   - `toolchains/` - Templates for CMake toolchain files
 - `share/` - Non-source files
-  - `astyle/`  - Astyle template for formating source (deprecated)
   - `data/` - BioGears configuration files for various scenarios 
   - `doc/` - BioGears documentation files (doxygen, markdown, ...)
   - `etc/` - Other
-  - `jar/` - Jar files for BioGears JAVA based components hopefully deprecated soon
   - `xsd/` - XSD definition files for the Common Data Model
 - `projects/`
   - `biogears` - Main Engine Source for building libbiogears libbiogears-cdm
@@ -43,15 +41,6 @@ The BioGears source is structured as follows:
   - `unit/`  - Unit test harness used for testing libbiogears components
   - `zip/`   - Self hosted copy of https://github.com/nmoinvaz/minizip. A bg-cli third part dep
   
-<!-- biogears
-biogears-common
-circuit_profiler
-bg-cli
-howto
-java
-test_driver
-unit
-zip -->
 
 
 Citing BioGears 
@@ -64,87 +53,23 @@ We have made available to the medical simulation community a large set of burn i
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4606078.svg)](https://doi.org/10.5281/zenodo.4606078)
 
-## Rielease Notes 
+## Release Notes 
 
-### 7.5.0 (October 3rd 2021)
-- SWIG support can now generate C# bindings for Unity. 
-- Experimental Python hooks have been removed. A future 7.5.X update will include Pyhton bindings using the new SWIG templates.
-- Most STL templates using BioGears types have been specialized and exported in the API. This is intended to assist UE4 developers and other C++ integrators.
-- A new header makes it easier to test if libBiogears_IO was part of the current build
-- Changes to how code generation occurs reduces the number of named targets in the build system
-- Major Model additions realted to Burncare and some CBRN scenarios
-- Minor Bug Fixes
+### 8.0.0 (November 2024)
+- Modified Scenario CDM to require <ACTIONS> Tag around individual actions
+- Allowed import of external ActionList and DataRequestList
+- Updated CMAKE to minimum 3.20
+- Improved various features
 
-### 7.4.0 (Jun 13, 2021)
-- Created a series of burn scenarios 
-- Updates to support gcc 9 
-- Added new operators (== !=) for all properties 
-- New **Python language hooks **
-- New albumin fluid substances to support more complex burn care scenarios
-- Updated all utilities to python (website creation, rebase, testing, ect...)
-- Updated Cmake version to 3.18 
-- Created **embedded resource files** to support BioGears running with a generic runtime directory
-  - No knowledge needed for where .xml resources are 
-- Removed Log4Cpp dependencies (depreciated third party project) and created logging in the engine
-  - Supports call backs and custom logs
-  - Tested for timing and performance, at or surpassing previous implementation 
-- New Burn API how to that is complex and able to generate large sets of data 
-- New model for compartment syndrome complication during burn TBSA (for large burns)
-  - Interfaces with a new action, **escharotomy**  reversing tissue pressure
-  - Validated timing, pulse pressures, and reversal
-- Swig binding supports, including **new csharp (C#) hooks**
-  - extensible for other language bindings in the future
-- Major updates to Sarin validation 
-  - Tidal volume, patient events, reversal timings all validated with Madigan Army Medical Center
-- New pulmonary shunt action that is validated for cardiac output and oxygen saturation changes 
-- Added bladder pressure as a physiology data request
-  - interfaces with the new compartment syndrome model 
-- Patient population generation, able to generate large statistical populations over supported inputs
-- Minor bug fixes and validation changes to models and software
-- Updated release of the UI with performance and stability improvements
-- **New drug** Atropine, validated as a reversal agent for Sarin exposure
-  - Validated with Madigan Army Medical Center
-
-
- 
-
-### 7.3.2 and 7.3.1 (Dec 10, 2020)
-- **ver 1.0 release of the UI**
-- **ver 1.0 release of BioGears Lite**
-- Plasma Lyte compound substance added 
-- **New drug administration route** nasal administration 
-- **New drug** nasal naloxone
-- CPACK installer functionality added 
-- Moved data tracking to advance model time method
-- Added sequential organ failure (SOFA score) as an assessment
-- Changed website documentation tools to python, removed Java requirements 
-- Minor drug model updates for LD50 and PD modifiers
-- Implemented improved command line interface, named bg-cli to support better threading and logging
-- Integrated inflammation model into hemorrhage model to make it more physiologically accurate
-- Implemented acute respiratory distress model 
-- Implemented a model of sleep and the metabolic consequences of sleep
-- added new psychomotor vigilance test (PVT) patient assessment
-- Removed legacy functionality of the GI system 
-- Implemented Richmond agitation sedation (RASS) scale as a patient request 
-  - Is a function of the pharmacokinetics of propofol and other anesthesia drugs
-- Implemented a **new exercise model** that supported weighted exercise, cycling, and rowing
-- Updated nervous system model, validated for inflammation and other injury responses
-  - Including localized autoregulation 
-- Implemented a tourniquet action for specific body regions
-  - will perform locally, reducing hemorrhage in downstream vessels
-- Compatibility updates to support Unreal Engine integration 
-- General CMAKE updates to the build system 
-- Minor bug updates and validation changes to models
-- Finished all conformant override parameters (pressure, heart rate, respiration rate, and oxygen saturation)
-
-
-For a list of historical releases please see our [website](https://www.biogearsengine.com/documentation/index.html).
+### 7.6.0 (December 2023)
+- Improved SWIG bindings
+- Improved Various Models
 
 
 Programmatics
 ===============
 BioGears was originally developed under the TATRC funded project: W81XWH-13-2-0068  
-BioGears development is currently funded under the following contracts:
+BioGears has additionally been developed under the following contracts:
   - W81XWH-17-C-0172
   - W911NF-17-D-0006
   - W81XWH-18-C-0169
