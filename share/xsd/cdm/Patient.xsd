@@ -224,6 +224,8 @@ specific language governing permissions and limitations under the License.
           <!--<< @brief Patient weight. -->
           <xs:element name="Height" type="ScalarLengthData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief Patient height. -->
+		  <xs:element name="BMI" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Patient BMI. Optional value to be used INSTEAD of height OR weight to back calculate. -->
           <xs:element name="BodyDensity" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
           <!--<< @brief  The mass of the body divided by the volume of the body. -->
           <xs:element name="BodyFatFraction" type="ScalarFractionData" minOccurs="0" maxOccurs="1"/>
