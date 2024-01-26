@@ -17,7 +17,8 @@ specific language governing permissions and limitations under the License.
   #define BIOGEARS_PRIVATE_API 
   #define BG_EXT extern
 #elif defined(__gnu_linux__)
-  #define BIOGEARS_API __attribute__((visibility("default")))
+  #define BIOGEARS_API 
+//__attribute__((visibility("default")))
     #ifdef ENABLE_UNIT_TEST_API
       #define BIOGEARS_PRIVATE_API __attribute__((visibility("default")))
     #else 
