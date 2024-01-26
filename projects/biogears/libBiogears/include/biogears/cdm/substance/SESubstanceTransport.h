@@ -25,9 +25,28 @@ specific language governing permissions and limitations under the License.
 #include <map>
 #include <vector>
 
-namespace biogears {
 #define SUBSTANCE_TRANSPORTER_TEMPLATE typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit
 #define TRANSPORT_AMOUNT_TYPES ExtensiveScalar, IntensiveScalar
+#define TRANSPORT_VERTEX_TYPES QuantityScalar, ExtensiveScalar, IntensiveScalar
+#define TRANSPORT_EDGE_TYPES FluxScalar, QuantityScalar, ExtensiveScalar, IntensiveScalar
+
+namespace biogears {
+
+template <typename ExtensiveScalar, typename IntensiveScalar>
+class SESubstanceTransportAmount ;
+template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
+class SESubstanceTransportVertex ;
+template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
+class SESubstanceTransportEdge ;
+template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
+class SESubstanceTransportGraph ;
+template <SUBSTANCE_TRANSPORTER_TEMPLATE>
+class SESubstanceTransporter;
+
+template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
+bool operator==(SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& lhs, SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& rhs);
+
+
 template <typename ExtensiveScalar, typename IntensiveScalar>
 class SESubstanceTransportAmount {
   template <SUBSTANCE_TRANSPORTER_TEMPLATE>
@@ -55,13 +74,12 @@ using SELiquidTransportSubstance = SESubstanceTransportAmount<SEScalarMass, SESc
 } // namespace biogears
 
 namespace biogears {
-#define TRANSPORT_VERTEX_TYPES QuantityScalar, ExtensiveScalar, IntensiveScalar
 template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
 class SESubstanceTransportVertex {
   template <SUBSTANCE_TRANSPORTER_TEMPLATE>
   friend class SESubstanceTransporter;
-  template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
-  friend bool operator==(SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& lhs, SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& rhs);
+ 
+  friend bool operator==<>(SESubstanceTransportVertex const& lhs, SESubstanceTransportVertex const& rhs);
 
 public:
   virtual ~SESubstanceTransportVertex() { }
@@ -116,7 +134,6 @@ BG_EXT template bool BIOGEARS_API operator!=(SESubstanceTransportVertex<SEScalar
 
 namespace biogears {
 
-#define TRANSPORT_EDGE_TYPES FluxScalar, QuantityScalar, ExtensiveScalar, IntensiveScalar
 template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
 class SESubstanceTransportEdge {
   template <SUBSTANCE_TRANSPORTER_TEMPLATE>
