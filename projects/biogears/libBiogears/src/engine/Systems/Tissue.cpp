@@ -973,7 +973,9 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double mandatoryMuscleAnaerobicFraction = 0.028; //There is always some anaerobic consumption in the body, particularly in muscle fibers with few mitochondria \cite boron2012medical
   double kcal_Per_day_Per_Watt = 20.6362855;
   double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
-  double lactateScale = 8.0;
+  double lactateScale = 1.0;
+  double currentBloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume().GetValue(VolumeUnit::mL);
+  double bloodVolumeBaseline_mL = m_data.GetPatient().GetBloodVolumeBaseline().GetValue(VolumeUnit::mL);
 
   double sleepTime_min = m_data.GetNervous().GetSleepTime().GetValue(TimeUnit::min); //update value from last computation
   double wakeTime_min = m_data.GetNervous().GetWakeTime().GetValue(TimeUnit::min); //update value from last computation
@@ -988,6 +990,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     double maxBleedingRate_mL_Per_min = 200.0;
     double bleedingRate_mL_Per_min = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Ground)->GetInFlow(VolumePerTimeUnit::mL_Per_min);
     mandatoryMuscleAnaerobicFraction = (bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min);
+    //also scale based on total blood loss in increase lactate scaling (this perturbes blood volume as a function of hypovolemia up to 8 times production)
+    lactateScale = 15.5 / (1 + 5.4 * exp(25.0 * ((currentBloodVolume_mL / bloodVolumeBaseline_mL) - 1.0))) + 1;
     lactateScale += mandatoryMuscleAnaerobicFraction;
   }
 
@@ -1436,7 +1440,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     if (tissueNeededEnergy_kcal > 0 && totalEnergyAsTissueIntracellularGlucose_kcal >= tissueNeededEnergy_kcal) {
       double glucoseToConsume_mol = tissueNeededEnergy_kcal / energyPerMolATP_kcal / anaerobic_ATP_Per_Glucose;
       TissueGlucose->GetMass().IncrementValue(-glucoseToConsume_mol * m_Glucose->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
-      TissueLactate->GetMass().IncrementValue(glucoseToConsume_mol * lactate_Per_Glucose * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
+      TissueLactate->GetMass().IncrementValue(lactateScale * glucoseToConsume_mol * lactate_Per_Glucose * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
       tissueNeededEnergy_kcal = 0;
       lactateProductionRate_mol_Per_s += glucoseToConsume_mol * lactate_Per_Glucose / time_s;
       if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos) //for tracking only
