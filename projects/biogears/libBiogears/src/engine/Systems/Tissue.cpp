@@ -973,7 +973,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double mandatoryMuscleAnaerobicFraction = 0.028; //There is always some anaerobic consumption in the body, particularly in muscle fibers with few mitochondria \cite boron2012medical
   double kcal_Per_day_Per_Watt = 20.6362855;
   double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
-  double lactateScale = 5.0;
+  double lactateScale = 8.0;
 
   double sleepTime_min = m_data.GetNervous().GetSleepTime().GetValue(TimeUnit::min); //update value from last computation
   double wakeTime_min = m_data.GetNervous().GetWakeTime().GetValue(TimeUnit::min); //update value from last computation
