@@ -926,7 +926,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   const double biologicalDebt = m_data.GetNervous().GetBiologicalDebt().GetValue();
   const double exerciseEnergyRequested_kcal = m_data.GetEnergy().GetExerciseEnergyDemand(PowerUnit::kcal_Per_s) * time_s; //Will get added to muscle in tissue loop below
   const double otherEnergyDemandAboveBasal_kcal = std::max((TMR_kcal_Per_s - BMR_kcal_Per_s) * time_s * (1.0 - biologicalDebt) - exerciseEnergyRequested_kcal, 0.0); //Due to other factors like shivering -- will get split between muscles and fat stores in tissue loop below
-  const double hypoperfusionDeficit_kcal = m_data.GetEnergy().GetEnergyDeficit(PowerUnit::kcal_Per_s) * time_s; //Hypoperfusion deficit is "faux" energy value -- it makes system perceive an energy deficit and enter anaerobic production earlier during hemorrhage and sepsis
+  const double hypoperfusionDeficit_kcal = 1000.0*m_data.GetEnergy().GetEnergyDeficit(PowerUnit::kcal_Per_s) * time_s; //Hypoperfusion deficit is "faux" energy value -- it makes system perceive an energy deficit and enter anaerobic production earlier during hemorrhage and sepsis
   double brainNeededEnergy_kcal = .2 * baseEnergyRequested_kcal; //brain requires a roughly constant 20% of basal energy regardless of exercise \cite raichle2002appraising
   double nonbrainNeededEnergy_kcal = 0.8 * baseEnergyRequested_kcal + hypoperfusionDeficit_kcal;
   double totalEnergyRequested_kcal = brainNeededEnergy_kcal + nonbrainNeededEnergy_kcal + exerciseEnergyRequested_kcal + otherEnergyDemandAboveBasal_kcal; //Use to check math below
@@ -973,6 +973,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   double mandatoryMuscleAnaerobicFraction = 0.028; //There is always some anaerobic consumption in the body, particularly in muscle fibers with few mitochondria \cite boron2012medical
   double kcal_Per_day_Per_Watt = 20.6362855;
   double maxWorkRate_W = m_Patient->GetMaxWorkRate().GetValue(PowerUnit::W);
+  double lactateScale = 5.0;
 
   double sleepTime_min = m_data.GetNervous().GetSleepTime().GetValue(TimeUnit::min); //update value from last computation
   double wakeTime_min = m_data.GetNervous().GetWakeTime().GetValue(TimeUnit::min); //update value from last computation
@@ -986,7 +987,8 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   if (m_PatientActions->HasHemorrhage()) {
     double maxBleedingRate_mL_Per_min = 200.0;
     double bleedingRate_mL_Per_min = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Ground)->GetInFlow(VolumePerTimeUnit::mL_Per_min);
-    mandatoryMuscleAnaerobicFraction = 0.5 * bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min;
+    mandatoryMuscleAnaerobicFraction = (bleedingRate_mL_Per_min / maxBleedingRate_mL_Per_min);
+    lactateScale += mandatoryMuscleAnaerobicFraction;
   }
 
   //if a patient is sleep deprived scale back how much glucose the brain is using (7%)
@@ -1444,7 +1446,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
     else if (tissueNeededEnergy_kcal > 0) {
       double glucoseToConsume_mol = totalEnergyAsTissueIntracellularGlucose_kcal / energyPerMolATP_kcal / anaerobic_ATP_Per_Glucose;
       TissueGlucose->GetMass().SetValue(0, MassUnit::g);
-      TissueLactate->GetMass().IncrementValue(glucoseToConsume_mol * lactate_Per_Glucose * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
+      TissueLactate->GetMass().IncrementValue(lactateScale * glucoseToConsume_mol * lactate_Per_Glucose * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
       tissueNeededEnergy_kcal -= glucoseToConsume_mol * anaerobic_ATP_Per_Glucose * energyPerMolATP_kcal;
       lactateProductionRate_mol_Per_s += glucoseToConsume_mol * lactate_Per_Glucose / time_s;
       if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos) //for tracking only
@@ -1461,7 +1463,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
         double glycogenConsumed_g = ((tissueNeededEnergy_kcal + muscleMandatoryAnaerobicNeededEnergy_kcal) / energyAsMuscleGlycogen_kcal) * GetMuscleGlycogen(MassUnit::g);
         double glycogenConsumed_mol = glycogenConsumed_g / m_Glucose->GetMolarMass(MassPerAmountUnit::g_Per_mol);
         GetMuscleGlycogen().IncrementValue(-glycogenConsumed_g, MassUnit::g);
-        TissueLactate->GetMass().IncrementValue(glycogenConsumed_mol * lactate_Per_Glycogen * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
+        TissueLactate->GetMass().IncrementValue(lactateScale * glycogenConsumed_mol * lactate_Per_Glycogen * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         lactateProductionRate_mol_Per_s += glycogenConsumed_mol * lactate_Per_Glycogen / time_s;
         if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos && tissueNeededEnergy_kcal != 0) //for tracking only
           m_AnaerobicTissues.append(std::string { tissue->GetName() } + " ");
@@ -1472,7 +1474,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
       else {
         double glycogenConsumed_mol = GetMuscleGlycogen(MassUnit::g) / m_Glucose->GetMolarMass(MassPerAmountUnit::g_Per_mol);
         GetMuscleGlycogen().SetValue(0, MassUnit::g);
-        TissueLactate->GetMass().IncrementValue(glycogenConsumed_mol * lactate_Per_Glycogen * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
+        TissueLactate->GetMass().IncrementValue(lactateScale * glycogenConsumed_mol * lactate_Per_Glycogen * m_Lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), MassUnit::g);
         tissueNeededEnergy_kcal -= glycogenConsumed_mol * anaerobic_ATP_Per_Glycogen * energyPerMolATP_kcal;
         lactateProductionRate_mol_Per_s += glycogenConsumed_mol * lactate_Per_Glycogen / time_s;
         if (m_AnaerobicTissues.find(tissue->GetName()) == std::string::npos && tissueNeededEnergy_kcal != 0) //for tracking only

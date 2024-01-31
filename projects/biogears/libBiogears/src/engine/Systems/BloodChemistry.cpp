@@ -132,7 +132,10 @@ void BloodChemistry::Initialize()
   GetVolumeFractionNeutralLipidInPlasma().SetValue(0.0023);
   GetVolumeFractionNeutralPhospholipidInPlasma().SetValue(0.0013);
   GetPhosphate().SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
-  GetStrongIonDifference().SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
+  double otherIons_mmol_Per_L = 0.0;
+  double strongIonDifference_mmol_Per_L = m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) - (m_venaCavaChloride->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + (m_venaCavaLactate->GetMolarity(AmountPerVolumeUnit::mmol_Per_L))) + otherIons_mmol_Per_L;
+  //strongIonDifference_mmol_Per_L = 40.5;
+  GetStrongIonDifference().SetValue(strongIonDifference_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
   GetTotalBilirubin().SetValue(0.70, MassPerVolumeUnit::mg_Per_dL); //Reference range is 0.2-1.0
   GetLymphocyteCellCount().SetValue(1.9e9, AmountPerVolumeUnit::ct_Per_L); //Reference range is 1.3-3.5e9 per liter
   GetNeutrophilCellCount().SetValue(3.0e9, AmountPerVolumeUnit::ct_Per_L);  //Reference range is 1.5-3.8e9 per liter
@@ -455,9 +458,9 @@ void BloodChemistry::Process()
   m_data.GetSubstances().GetTriacylglycerol().GetBloodConcentration().Set(m_venaCavaTriacylglycerol->GetConcentration());
   m_data.GetSubstances().GetUrea().GetBloodConcentration().Set(m_venaCavaUrea->GetConcentration());
 
-  double otherIons_mmol_Per_L = -5.4; //Na, K, and Cl baseline concentrations give SID = 45.83, we assume baseline SID = 40.5, thus "other ions" (i.e. Mg, Ca, Ketones) make up -5.3 mmol_Per_L equivalent of charge
+  double otherIons_mmol_Per_L = 0.0; //Na, K, and Cl baseline concentrations give SID = 45.83, we assume baseline SID = 40.5, thus "other ions" (i.e. Mg, Ca, Ketones) make up -5.3 mmol_Per_L equivalent of charge
   double strongIonDifference_mmol_Per_L = m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) - (m_venaCavaChloride->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) + (m_venaCavaLactate->GetMolarity(AmountPerVolumeUnit::mmol_Per_L))) + otherIons_mmol_Per_L;
-  //GetStrongIonDifference().SetValue(strongIonDifference_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
+  GetStrongIonDifference().SetValue(strongIonDifference_mmol_Per_L, AmountPerVolumeUnit::mmol_Per_L);
 
   // Calculate pH
   GetArterialBloodPH().Set(m_aorta->GetPH());
