@@ -251,13 +251,13 @@
   <AgeDistribution group="MiddleAge" mean="57" diviation="3.75" unit="yr"/> 
   
   <!-- May want to update data for height given it is now sub-distributions as opposed to random sampling -->
-  <HeightDistribution  group="Male;Short"  mean="165" diviation="1.0" unit="in"/>
-  <HeightDistribution  group="Male;Average"  mean="165" diviation="1.0" unit="in"/>
-  <HeightDistribution  group="Male;Tall"  mean="165" diviation="1.0" unit="in"/>
+  <HeightDistribution  group="Male;Short"  mean="64" diviation="1.0" unit="in"/>
+  <HeightDistribution  group="Male;Average"  mean="70" diviation="1.0" unit="in"/>
+  <HeightDistribution  group="Male;Tall"  mean="76" diviation="1.0" unit="in"/>
   
-  <HeightDistribution  group="Female;Short"  mean="165" diviation="1.0" unit="in"/>
-  <HeightDistribution  group="Female;Average"  mean="165" diviation="1.0" unit="in"/>
-  <HeightDistribution  group="Female;Tall"  mean="165" diviation="1.0" unit="in"/>
+  <HeightDistribution  group="Female;Short"  mean="61.5" diviation="1.0" unit="in"/>
+  <HeightDistribution  group="Female;Average"  mean="65.5" diviation="1.0" unit="in"/>
+  <HeightDistribution  group="Female;Tall"  mean="70.5" diviation="1.0" unit="in"/>
   
   <!-- Need to add a patient parameter for BMI which back calculates weight using BMI sample and height -->
   <BMIDistribution group="Underweight"   mean="18.5" diviation="1.0" unit="unitless"/>
