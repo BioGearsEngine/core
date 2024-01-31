@@ -358,7 +358,6 @@ bool BioGears::SetupPatient()
   //WEIGHT ---------------------------------------------------------------
   /// \cite World2006bmi
   double weight_kg;
-  // SHOULD BMI UPDATE GO HERE ---- REMOVE COMMENT BEFORE MERGING
   double BMI_kg_per_m2;
   double BMIStandard_kg_per_m2 = 21.75;
   double BMIObese_kg_per_m2 = 30.0;
