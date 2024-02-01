@@ -18,15 +18,15 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/BioGearsDataModel.hxx>
 
-#define CDM_BIOGEARS_DATA_UNMARSHAL_HELPER(xsd, func)                                \
+#define CDM_BIOGEARS_DATA_MARSHALL_HELPER(xsd, func)                                \
   if (m_##func) {                                                                    \
     xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::BiogearsDataModel::UnMarshall(*m_##func, xsd.func());                        \
+    io::BiogearsDataModel::Marshall(*m_##func, xsd.func());                        \
   }
 
-#define CDM_OPTIONAL_BIOGEARS_DATA_UNMARSHAL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_BIOGEARS_DATA_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                               \
-    io::BiogearsDataModel::UnMarshall(*in.m_##func, out.func());   \
+    io::BiogearsDataModel::Marshall(*in.m_##func, out.func());   \
   }
 
 namespace biogears {

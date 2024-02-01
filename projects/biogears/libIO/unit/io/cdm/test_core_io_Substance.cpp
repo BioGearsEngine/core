@@ -117,8 +117,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceAerosolization)
   source.GetParticulateSizeDistribution().SetLengthUnit(biogears::LengthUnit::m);
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -158,8 +158,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstancePharmacokinetics)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -193,8 +193,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstancePhysicochemical)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -219,8 +219,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceTissuePharmacokinetics)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -267,8 +267,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstancePharmacodynamics)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -319,8 +319,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceClearance)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -418,8 +418,8 @@ TEST_F(TEST_FIXTURE_NAME, Substance)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -452,8 +452,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceCompound)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, mgr, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, mgr, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -480,8 +480,8 @@ source.GetFractionAmount().SetValue( 0.99);
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -508,8 +508,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceConcentration)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -537,8 +537,8 @@ TEST_F(TEST_FIXTURE_NAME, PharmacodynamicModifier)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

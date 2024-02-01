@@ -118,8 +118,8 @@ TEST_F(TEST_FIXTURE_NAME, InitialEnvironment)
 
   EXPECT_NE(source, sink);
 
-  EnvironmentConditions::UnMarshall(source, data);
-  EnvironmentConditions::Marshall(data, sink);
+  EnvironmentConditions::Marshall(source, data);
+  EnvironmentConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

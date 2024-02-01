@@ -151,8 +151,8 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineConfiguration)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -175,8 +175,8 @@ TEST_F(TEST_FIXTURE_NAME, ExpiratoryValveLeak)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -199,8 +199,8 @@ TEST_F(TEST_FIXTURE_NAME, ExpiratoryValveObstruction)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -222,8 +222,8 @@ TEST_F(TEST_FIXTURE_NAME, InspiratoryValveLeak)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -245,8 +245,8 @@ TEST_F(TEST_FIXTURE_NAME, InspiratoryValveObstruction)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -268,8 +268,8 @@ TEST_F(TEST_FIXTURE_NAME, MaskLeak)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -291,8 +291,8 @@ TEST_F(TEST_FIXTURE_NAME, SodaLimeFailure)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -314,8 +314,8 @@ TEST_F(TEST_FIXTURE_NAME, TubeCuffLeak)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -337,8 +337,8 @@ TEST_F(TEST_FIXTURE_NAME, VaporizerFailure)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -360,8 +360,8 @@ TEST_F(TEST_FIXTURE_NAME, VentilatorPressureLoss)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -383,8 +383,8 @@ TEST_F(TEST_FIXTURE_NAME, YPieceDisconnect)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -406,8 +406,8 @@ TEST_F(TEST_FIXTURE_NAME, OxygenWallPortPressureLoss)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -429,8 +429,8 @@ TEST_F(TEST_FIXTURE_NAME, OxygenTankPressureLoss)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

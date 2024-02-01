@@ -93,8 +93,8 @@ TEST_F(TEST_FIXTURE_NAME, Inhaler)
 
   EXPECT_NE(source, sink);
 
-  Inhaler::UnMarshall(source, data);
-  Inhaler::Marshall(data, sink);
+  Inhaler::Marshall(source, data);
+  Inhaler::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

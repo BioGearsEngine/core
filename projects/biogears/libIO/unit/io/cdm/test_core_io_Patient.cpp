@@ -129,8 +129,8 @@ TEST_F(TEST_FIXTURE_NAME, Patient)
 
   EXPECT_NE(source, sink);
 
-  Patient::UnMarshall(source, data);
-  Patient::Marshall(data, sink);
+  Patient::Marshall(source, data);
+  Patient::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

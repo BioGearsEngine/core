@@ -94,8 +94,8 @@ TEST_F(TEST_FIXTURE_NAME, ArterialBloodGasAnalysis)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -136,8 +136,8 @@ TEST_F(TEST_FIXTURE_NAME, PulmonaryFunctionTest)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -172,8 +172,8 @@ TEST_F(TEST_FIXTURE_NAME, CompleteBloodCount)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -211,8 +211,8 @@ TEST_F(TEST_FIXTURE_NAME, ComprehensiveMetabolicPanel)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -264,8 +264,8 @@ TEST_F(TEST_FIXTURE_NAME, Urinalysis)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -301,8 +301,8 @@ TEST_F(TEST_FIXTURE_NAME, UrinalysisMicroscopic)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -330,8 +330,8 @@ TEST_F(TEST_FIXTURE_NAME, ProthrombinTime)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -358,8 +358,8 @@ TEST_F(TEST_FIXTURE_NAME, PsychomotorVigilanceTask)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -391,8 +391,8 @@ TEST_F(TEST_FIXTURE_NAME, SequentialOrganFailureAssessment)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

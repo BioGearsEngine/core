@@ -122,8 +122,8 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartment)
 
   EXPECT_NE(source, sink);
 
-  Compartment::UnMarshall(source, data);
-  Compartment::Marshall(data, sink, substanceManager);
+  Compartment::Marshall(source, data);
+  Compartment::UnMarshall(data, sink, substanceManager);
 
   EXPECT_EQ(source, sink);
 };
@@ -148,8 +148,8 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartmentLink)
 
   //EXPECT_NE(source, sink);
 
-  //Compartment::UnMarshall(source, data);
-  //Compartment::Marshall(data, sink);
+  //Compartment::Marshall(source, data);
+  //Compartment::UnMarshall(data, sink);
 
   //EXPECT_EQ(source, sink);
 };
@@ -168,8 +168,8 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartmentGraph) {
 
   // EXPECT_NE(source, sink);
 
-  // Compartment::UnMarshall(source, data);
-  // Compartment::Marshall(data, sink, compartmentManager);
+  // Compartment::Marshall(source, data);
+  // Compartment::UnMarshall(data, sink, compartmentManager);
 
   // EXPECT_EQ(source, sink);
 };

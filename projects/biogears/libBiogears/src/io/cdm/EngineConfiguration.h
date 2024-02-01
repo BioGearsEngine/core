@@ -18,15 +18,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/EngineConfiguration.hxx>
 #include <type_traits>
 
-#define CDM_BIOGEARS_CONFIGURATION_UNMARSHAL_HELPER(in, out, func)                   \
+#define CDM_BIOGEARS_CONFIGURATION_MARSHALL_HELPER(in, out, func)                    \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::EngineConfiguration::UnMarshall(*in.m_##func, out.func());                   \
+    io::EngineConfiguration::Marshall(*in.m_##func, out.func());                   \
   }
 
-#define CDM_OPTIONAL_BIOGEARS_CONFIGURATION_UNMARSHAL_HELPER(in, out, func) \
-  if (in.m_##func) {                                                        \
-    io::EngineConfiguration::UnMarshall(*in.m_##func, out.func());          \
+#define CDM_OPTIONAL_BIOGEARS_CONFIGURATION_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func) {                                                       \
+    io::EngineConfiguration::Marshall(*in.m_##func, out.func());         \
   }
 
 namespace biogears {
@@ -41,47 +41,47 @@ class PhysiologyEngineTimedStabilizationCriteria;
 namespace io {
   class BIOGEARS_PRIVATE_API EngineConfiguration {
   public:
-    //template <typename SE, typename XSD>  option
+    // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
-    //class PhysiologyEngineConfiguration
-    static void Marshall(const CDM::PhysiologyEngineConfigurationData& in, PhysiologyEngineConfiguration& out);
-    static void UnMarshall(const PhysiologyEngineConfiguration& in, CDM::PhysiologyEngineConfigurationData& out);
-    //class PhysiologyEngineStabilization
-    static void Marshall(const CDM::PhysiologyEngineStabilizationData& in, PhysiologyEngineStabilization& out);
-    static void UnMarshall(const PhysiologyEngineStabilization& in, CDM::PhysiologyEngineStabilizationData& out);
-    //class PhysiologyEngineTimedStabilization
-    static void Marshall(const CDM::PhysiologyEngineTimedStabilizationData& in, PhysiologyEngineTimedStabilization& out);
-    static void UnMarshall(const PhysiologyEngineTimedStabilization& in, CDM::PhysiologyEngineTimedStabilizationData& out);
-    //class PhysiologyEngineTimedConditionStabilization
-    static void Marshall(const CDM::PhysiologyEngineTimedConditionStabilizationData& in, PhysiologyEngineTimedStabilizationCriteria& out);
-    static void UnMarshall(const PhysiologyEngineTimedStabilizationCriteria& in, CDM::PhysiologyEngineTimedConditionStabilizationData& out);
-    //class PhysiologyEngineDynamicStabilization
-    static void Marshall(const CDM::PhysiologyEngineDynamicStabilizationData& in, PhysiologyEngineDynamicStabilization& out);
-    static void UnMarshall(const PhysiologyEngineDynamicStabilization& in, CDM::PhysiologyEngineDynamicStabilizationData& out);
-    //class PhysiologyEngineDynamicStabilizationCriteria
-    static void Marshall(const CDM::PhysiologyEngineDynamicStabilizationCriteriaData& in, PhysiologyEngineDynamicStabilizationCriteria& out);
-    static void UnMarshall(const PhysiologyEngineDynamicStabilizationCriteria& in, CDM::PhysiologyEngineDynamicStabilizationCriteriaData& out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    // class PhysiologyEngineConfiguration
+    static void UnMarshall(const CDM::PhysiologyEngineConfigurationData& in, PhysiologyEngineConfiguration& out);
+    static void Marshall(const PhysiologyEngineConfiguration& in, CDM::PhysiologyEngineConfigurationData& out);
+    // class PhysiologyEngineStabilization
+    static void UnMarshall(const CDM::PhysiologyEngineStabilizationData& in, PhysiologyEngineStabilization& out);
+    static void Marshall(const PhysiologyEngineStabilization& in, CDM::PhysiologyEngineStabilizationData& out);
+    // class PhysiologyEngineTimedStabilization
+    static void UnMarshall(const CDM::PhysiologyEngineTimedStabilizationData& in, PhysiologyEngineTimedStabilization& out);
+    static void Marshall(const PhysiologyEngineTimedStabilization& in, CDM::PhysiologyEngineTimedStabilizationData& out);
+    // class PhysiologyEngineTimedConditionStabilization
+    static void UnMarshall(const CDM::PhysiologyEngineTimedConditionStabilizationData& in, PhysiologyEngineTimedStabilizationCriteria& out);
+    static void Marshall(const PhysiologyEngineTimedStabilizationCriteria& in, CDM::PhysiologyEngineTimedConditionStabilizationData& out);
+    // class PhysiologyEngineDynamicStabilization
+    static void UnMarshall(const CDM::PhysiologyEngineDynamicStabilizationData& in, PhysiologyEngineDynamicStabilization& out);
+    static void Marshall(const PhysiologyEngineDynamicStabilization& in, CDM::PhysiologyEngineDynamicStabilizationData& out);
+    // class PhysiologyEngineDynamicStabilizationCriteria
+    static void UnMarshall(const CDM::PhysiologyEngineDynamicStabilizationCriteriaData& in, PhysiologyEngineDynamicStabilizationCriteria& out);
+    static void Marshall(const PhysiologyEngineDynamicStabilizationCriteria& in, CDM::PhysiologyEngineDynamicStabilizationCriteriaData& out);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void EngineConfiguration::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void EngineConfiguration::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Clear();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void EngineConfiguration::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void EngineConfiguration::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 } // Namespace IO
-} //Namespace Biogears
+} // Namespace Biogears

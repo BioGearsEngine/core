@@ -115,8 +115,8 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachine)
 
   EXPECT_NE(source, sink);
 
-  Anesthesia::UnMarshall(source, data);
-  Anesthesia::Marshall(data, sink);
+  Anesthesia::Marshall(source, data);
+  Anesthesia::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -145,8 +145,8 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineChamber)
 
   EXPECT_NE(source, sink);
 
-  Anesthesia::UnMarshall(source, data);
-  Anesthesia::Marshall(data, sink);
+  Anesthesia::Marshall(source, data);
+  Anesthesia::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -173,8 +173,8 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineOxygenBottle)
 
   EXPECT_NE(source, sink);
 
-  Anesthesia::UnMarshall(source, data);
-  Anesthesia::Marshall(data, sink);
+  Anesthesia::Marshall(source, data);
+  Anesthesia::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

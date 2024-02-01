@@ -109,8 +109,8 @@ TEST_F(TEST_FIXTURE_NAME, GasSubstanceQuantity)
 
   EXPECT_NE(source, sink);
 
-  SubstanceQuantity::UnMarshall(source, data);
-  SubstanceQuantity::Marshall(data, sink);
+  SubstanceQuantity::Marshall(source, data);
+  SubstanceQuantity::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -155,8 +155,8 @@ TEST_F(TEST_FIXTURE_NAME, LiquidSubstanceQuantity)
 
   EXPECT_NE(source, sink);
 
-  SubstanceQuantity::UnMarshall(source, data);
-  SubstanceQuantity::Marshall(data, sink);
+  SubstanceQuantity::Marshall(source, data);
+  SubstanceQuantity::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

@@ -12,15 +12,15 @@
 
 namespace biogears {
 namespace io {
-  void Inhaler::Marshall(const CDM::InhalerData& in, SEInhaler& out)
+  void Inhaler::UnMarshall(const CDM::InhalerData& in, SEInhaler& out)
   {
     out.Clear();
     if (in.State().present())
       out.SetState(in.State().get());
 
-      io::Property::Marshall(in.MeteredDose(), out.GetMeteredDose());
-      io::Property::Marshall(in.NozzleLoss(), out.GetNozzleLoss());
-      io::Property::Marshall(in.SpacerVolume(), out.GetSpacerVolume());
+    io::Property::UnMarshall(in.MeteredDose(), out.GetMeteredDose());
+    io::Property::UnMarshall(in.NozzleLoss(), out.GetNozzleLoss());
+    io::Property::UnMarshall(in.SpacerVolume(), out.GetSpacerVolume());
 
     if (in.Substance().present())
       out.SetSubstance(out.m_Substances.GetSubstance(in.Substance().get()));
@@ -28,12 +28,13 @@ namespace io {
     out.StateChange();
   }
   //----------------------------------------------------------------------------------
-  void Inhaler::UnMarshall(const SEInhaler& in, CDM::InhalerData& out)
+  void Inhaler::Marshall(const SEInhaler& in, CDM::InhalerData& out)
   {
-    CDM_ENUM_UNMARSHAL_HELPER(in,out,State)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MeteredDose)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, NozzleLoss)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SpacerVolume)
+    CDM_ENUM_MARSHALL_HELPER(in, out, State)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeteredDose)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, NozzleLoss)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SpacerVolume)
+
     if (in.HasSubstance())
       out.Substance(in.m_Substance->GetName());
   }

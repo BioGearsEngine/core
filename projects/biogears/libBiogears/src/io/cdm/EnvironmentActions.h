@@ -23,36 +23,37 @@ class SEEnvironmentAction;
 class SEEnvironmentChange;
 class SEThermalApplication;
 
-#define CDM_ENVIRONMENT_ACTIONS_UNMARSHAL_HELPER(in, out, func)                              \
+#define CDM_ENVIRONMENT_ACTIONS_MARSHALL_HELPER(in, out, func)                       \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::EnvironmentActions::UnMarshall(*in.m_##func, out.func());                            \
+    io::EnvironmentActions::Marshall(*in.m_##func, out.func());                    \
   }
 
-#define CDM_OPTIONAL_ENVIRONMENT_ACTIONS_UNMARSHAL_HELPER(in, out, func) \
-  if (in.m_##func) {                                             \
-    io::EnvironmentActions::UnMarshall(*in.m_##func, out.func());        \
+#define CDM_OPTIONAL_ENVIRONMENT_ACTIONS_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func) {                                                    \
+    io::EnvironmentActions::Marshall(*in.m_##func, out.func());       \
   }
 
 namespace io {
   class BIOGEARS_PRIVATE_API EnvironmentActions {
   public:
-    //template <typename SE, typename XSD>  option
+    // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
-    //class SEEnvironmentAction
-    static void Marshall(const CDM::EnvironmentActionData& in, SEEnvironmentAction& out);
-    static void UnMarshall(const SEEnvironmentAction& in, CDM::EnvironmentActionData& out);
-    //class SEEnvironmentChange
-    static void Marshall(const CDM::EnvironmentChangeData& in, SEEnvironmentChange& out);
-    static void UnMarshall(const SEEnvironmentChange& in, CDM::EnvironmentChangeData& out);
-    //class SEThermalApplication
-    static void Marshall(const CDM::ThermalApplicationData& in, SEThermalApplication& out);
-    static void UnMarshall(const SEThermalApplication& in, CDM::ThermalApplicationData& out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    // class SEEnvironmentAction
+    static void UnMarshall(const CDM::EnvironmentActionData& in, SEEnvironmentAction& out);
+    static void Marshall(const SEEnvironmentAction& in, CDM::EnvironmentActionData& out);
+    // class SEEnvironmentChange
+    static void UnMarshall(const CDM::EnvironmentChangeData& in, SEEnvironmentChange& out);
+    static void Marshall(const SEEnvironmentChange& in, CDM::EnvironmentChangeData& out);
+    // class SEThermalApplication
+    static void UnMarshall(const CDM::ThermalApplicationData& in, SEThermalApplication& out);
+    static void Marshall(const SEThermalApplication& in, CDM::ThermalApplicationData& out);
     // Factories
     static std::unique_ptr<CDM::EnvironmentActionData> factory(const SEEnvironmentAction*);
+
 
     //-----------------------------------------------------------------------------
     static void Copy(const SEEnvironmentAction& in, SEEnvironmentAction& out);
@@ -61,21 +62,21 @@ namespace io {
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void EnvironmentActions::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void EnvironmentActions::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Invalidate();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void EnvironmentActions::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void EnvironmentActions::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 } // Namespace IO
-} //Namespace Biogears
+} // Namespace Biogears

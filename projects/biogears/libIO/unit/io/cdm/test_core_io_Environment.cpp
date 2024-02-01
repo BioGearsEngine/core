@@ -146,8 +146,8 @@ TEST_F(TEST_FIXTURE_NAME, EnvironmentalConditions)
   source.AddAmbientAerosol(*sarin, biogears::SEScalarMassPerVolume { 33, biogears::MassPerVolumeUnit::g_Per_L });
   EXPECT_NE(source, sink);
 
-  Environment::UnMarshall(source, data);
-  Environment::Marshall(data, sink);
+  Environment::Marshall(source, data);
+  Environment::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -174,8 +174,8 @@ TEST_F(TEST_FIXTURE_NAME, ActiveHeating)
 
   EXPECT_NE(source, sink);
 
-  Environment::UnMarshall(source, data);
-  Environment::Marshall(data, sink);
+  Environment::Marshall(source, data);
+  Environment::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -202,8 +202,8 @@ TEST_F(TEST_FIXTURE_NAME, ActiveCooling)
 
   EXPECT_NE(source, sink);
 
-  Environment::UnMarshall(source, data);
-  Environment::Marshall(data, sink);
+  Environment::Marshall(source, data);
+  Environment::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -231,8 +231,8 @@ TEST_F(TEST_FIXTURE_NAME, AppliedTemperature)
 
   EXPECT_NE(source, sink);
 
-  Environment::UnMarshall(source, data);
-  Environment::Marshall(data, sink);
+  Environment::Marshall(source, data);
+  Environment::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -297,8 +297,8 @@ TEST_F(TEST_FIXTURE_NAME, Environment)
 
   EXPECT_NE(source, sink);
 
-  Environment::UnMarshall(source, data);
-  Environment::Marshall(data, sink);
+  Environment::Marshall(source, data);
+  Environment::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

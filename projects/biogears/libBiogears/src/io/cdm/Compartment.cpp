@@ -30,32 +30,32 @@
 namespace biogears {
 namespace io {
   //class SECompartment
-  void Compartment::Marshall(const CDM::CompartmentData& in, SECompartment& out)
+  void Compartment::UnMarshall(const CDM::CompartmentData& in, SECompartment& out)
   {
     out.Clear();
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(const SECompartment& in, CDM::CompartmentData& out)
+  void Compartment::Marshall(const SECompartment& in, CDM::CompartmentData& out)
   {
     out.Name(in.m_Name);
   }
   //----------------------------------------------------------------------------------
   //class SECompartmentLink
-  void Compartment::Marshall(const CDM::CompartmentLinkData& in, SECompartmentLink& out)
+  void Compartment::UnMarshall(const CDM::CompartmentLinkData& in, SECompartmentLink& out)
   {
     out.Clear();
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(const SECompartmentLink& in, CDM::CompartmentLinkData& out)
+  void Compartment::Marshall(const SECompartmentLink& in, CDM::CompartmentLinkData& out)
   {
     out.Name(in.m_Name);
   }
   //----------------------------------------------------------------------------------
   //class SEFluidCompartment
   template <FLUID_COMPARTMENT_TEMPLATE>
-  void Compartment::Marshall(const CDM::FluidCompartmentData& in, SEFluidCompartment<FLUID_COMPARTMENT_TYPES>& out, SECircuitManager* circuits)
+  void Compartment::UnMarshall(const CDM::FluidCompartmentData& in, SEFluidCompartment<FLUID_COMPARTMENT_TYPES>& out, SECircuitManager* circuits)
   {
-    Marshall(static_cast<const CDM::CompartmentData&>(in), static_cast<SECompartment&>(out));
+    UnMarshall(static_cast<const CDM::CompartmentData&>(in), static_cast<SECompartment&>(out));
     if (!in.Child().empty())
       return;
     else if (!in.Node().empty()) {
@@ -71,19 +71,19 @@ namespace io {
       }
     } else { // Only load these if you don't have children or nodes
       if (in.Pressure().present()) {
-        io::Property::Marshall(in.Pressure(), out.GetPressure());
+        io::Property::UnMarshall(in.Pressure(), out.GetPressure());
       }
       if (in.Volume().present()) {
-        io::Property::Marshall(in.Volume(), out.GetVolume());
+        io::Property::UnMarshall(in.Volume(), out.GetVolume());
       }
     }
   }
   //----------------------------------------------------------------------------------
   template <FLUID_COMPARTMENT_TEMPLATE>
-  void Compartment::UnMarshall(const SEFluidCompartment<FLUID_COMPARTMENT_TYPES>& in, CDM::FluidCompartmentData& out)
+  void Compartment::Marshall(const SEFluidCompartment<FLUID_COMPARTMENT_TYPES>& in, CDM::FluidCompartmentData& out)
   {
 
-   UnMarshall(static_cast<const SECompartment&>(in), static_cast<CDM::CompartmentData&>(out));
+   Marshall(static_cast<const SECompartment&>(in), static_cast<CDM::CompartmentData&>(out));
     for (auto child : in.m_FluidChildren) {
       out.Child().push_back(child->GetName());
     }
@@ -92,25 +92,25 @@ namespace io {
     }
     // Even if you have children or nodes, I am unloading everything, this makes the xml actually usefull...
     if (in.HasInFlow()) {
-      io::Property::UnMarshall(const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>&>(in).GetInFlow(), out.InFlow());
+      io::Property::Marshall(const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>&>(in).GetInFlow(), out.InFlow());
     }
     if (in.HasOutFlow()) {
-      io::Property::UnMarshall(const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>&>(in).GetOutFlow(), out.OutFlow());
+      io::Property::Marshall(const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>&>(in).GetOutFlow(), out.OutFlow());
     }
     if (in.HasPressure()) {
-      io::Property::UnMarshall(const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>&>(in).GetPressure(), out.Pressure());
+      io::Property::Marshall(const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>&>(in).GetPressure(), out.Pressure());
     }
     if (in.HasVolume()) {
-      io::Property::UnMarshall(const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>&>(in).GetVolume(), out.Volume());
+      io::Property::Marshall(const_cast<SEFluidCompartment<FLUID_COMPARTMENT_TYPES>&>(in).GetVolume(), out.Volume());
     }
   }
   //----------------------------------------------------------------------------------
   //class SEFluidCompartmentLink
 
   template <FLUID_COMPARTMENT_LINK_TEMPLATE>
-  void Compartment::Marshall(const CDM::FluidCompartmentLinkData& in, SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>& out, SECircuitManager* circuits)
+  void Compartment::UnMarshall(const CDM::FluidCompartmentLinkData& in, SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>& out, SECircuitManager* circuits)
   {
-    Marshall(static_cast<const CDM::CompartmentLinkData&>(in), static_cast<SECompartmentLink&>(out));
+    UnMarshall(static_cast<const CDM::CompartmentLinkData&>(in), static_cast<SECompartmentLink&>(out));
     if (in.Path().present()) {
       if (circuits == nullptr) {
         throw CommonDataModelException("Link is mapped to circuit path, " + std::string { in.Path().get() } + ", but no circuit manager was provided, cannot load");
@@ -122,62 +122,62 @@ namespace io {
       out.MapPath(*path);
     } else {
       if (in.Flow().present())
-        io::Property::Marshall(in.Flow(), out.GetFlow());
+        io::Property::UnMarshall(in.Flow(), out.GetFlow());
     }
   }
   //----------------------------------------------------------------------------------
   template <FLUID_COMPARTMENT_LINK_TEMPLATE>
-  void Compartment::UnMarshall(const SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>& in, CDM::FluidCompartmentLinkData& out)
+  void Compartment::Marshall(const SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>& in, CDM::FluidCompartmentLinkData& out)
   {
-    UnMarshall(static_cast<const SECompartmentLink&>(in), static_cast<CDM::CompartmentLinkData&>(out));
+    Marshall(static_cast<const SECompartmentLink&>(in), static_cast<CDM::CompartmentLinkData&>(out));
     out.SourceCompartment(in.m_SourceCmpt.GetName());
     out.TargetCompartment(in.m_TargetCmpt.GetName());
     if (in.m_Path != nullptr)
       out.Path(in.m_Path->GetName());
     // Even if you have a path, I am unloading everything, this makes the xml actually usefull...
     if (in.HasFlow())
-      io::Property::UnMarshall(const_cast<SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>&>(in).GetFlow(), out.Flow());
+      io::Property::Marshall(const_cast<SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>&>(in).GetFlow(), out.Flow());
   }
   //----------------------------------------------------------------------------------
   //class SEGasCompartment
-  void Compartment::Marshall(const CDM::GasCompartmentData& in, SEGasCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits)
+  void Compartment::UnMarshall(const CDM::GasCompartmentData& in, SEGasCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits)
   {
-    Marshall<>(static_cast<const CDM::FluidCompartmentData>(in), static_cast<SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity>&>(out), circuits);
+    UnMarshall(static_cast<const CDM::FluidCompartmentData>(in), static_cast<SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity>&>(out), circuits);
     if (in.Child().empty()) {
       for (const CDM::GasSubstanceQuantityData& d : in.SubstanceQuantity()) {
         SESubstance* sub = subMgr.GetSubstance(d.Substance());
         if (sub == nullptr) {
           throw CommonDataModelException("Could not find a substance for " + std::string { d.Substance() });
         }
-        io::SubstanceQuantity::Marshall(d, out.CreateSubstanceQuantity(*sub));
+        io::SubstanceQuantity::UnMarshall(d, out.CreateSubstanceQuantity(*sub));
         ;
       }
     }
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(const SEGasCompartment& in, CDM::GasCompartmentData& out)
+  void Compartment::Marshall(const SEGasCompartment& in, CDM::GasCompartmentData& out)
   {
-    UnMarshall<>(static_cast<const SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity>&>(in), static_cast<CDM::FluidCompartmentData&>(out));
+    Marshall(static_cast<const SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity>&>(in), static_cast<CDM::FluidCompartmentData&>(out));
     for (SEGasSubstanceQuantity* subQ : in.m_SubstanceQuantities) {
       auto gsqData = CDM::GasSubstanceQuantityData();
-      io::SubstanceQuantity::UnMarshall(*subQ, gsqData);
+      io::SubstanceQuantity::Marshall(*subQ, gsqData);
       out.SubstanceQuantity().push_back(gsqData);
     }
   }
   //----------------------------------------------------------------------------------
   //class SEGasCompartmentLink
-  void Compartment::Marshall(const CDM::GasCompartmentLinkData& in, SEGasCompartmentLink& out)
+  void Compartment::UnMarshall(const CDM::GasCompartmentLinkData& in, SEGasCompartmentLink& out)
   {
-    Marshall(static_cast<const CDM::CompartmentLinkData&>(in), static_cast<SECompartmentLink&>(out));
+    UnMarshall(static_cast<const CDM::CompartmentLinkData&>(in), static_cast<SECompartmentLink&>(out));
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(const SEGasCompartmentLink& in, CDM::GasCompartmentLinkData& out)
+  void Compartment::Marshall(const SEGasCompartmentLink& in, CDM::GasCompartmentLinkData& out)
   {
-    UnMarshall(static_cast<const SECompartmentLink&>(in), static_cast<CDM::GasCompartmentLinkData&>(out));
+    Marshall(static_cast<const SECompartmentLink&>(in), static_cast<CDM::GasCompartmentLinkData&>(out));
   }
   //----------------------------------------------------------------------------------
   //class SEGasCompartmentGraph
-  void Compartment::Marshall(const CDM::GasCompartmentGraphData& in, SEGasCompartmentGraph& out, SECompartmentManager& cmptMgr)
+  void Compartment::UnMarshall(const CDM::GasCompartmentGraphData& in, SEGasCompartmentGraph& out, SECompartmentManager& cmptMgr)
   {
     out.m_Name = in.Name();
     for (auto name : in.Compartment()) {
@@ -196,7 +196,7 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(const SEGasCompartmentGraph& in, CDM::GasCompartmentGraphData& out)
+  void Compartment::Marshall(const SEGasCompartmentGraph& in, CDM::GasCompartmentGraphData& out)
   {
     out.Name(in.m_Name);
     for (SEGasCompartment* cmpt : in.m_Compartments)
@@ -206,56 +206,56 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
   //class SELiquidCompartment
-  void Compartment::Marshall(const CDM::LiquidCompartmentData& in, SELiquidCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits)
+  void Compartment::UnMarshall(const CDM::LiquidCompartmentData& in, SELiquidCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits)
   {
 
-    Marshall(static_cast<const CDM::FluidCompartmentData&>(in), static_cast<SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity>&>(out), circuits);
+    UnMarshall(static_cast<const CDM::FluidCompartmentData&>(in), static_cast<SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity>&>(out), circuits);
     if (in.Child().empty()) {
       for (const CDM::LiquidSubstanceQuantityData& d : in.SubstanceQuantity()) {
         SESubstance* sub = subMgr.GetSubstance(d.Substance());
         if (sub == nullptr) {
           throw CommonDataModelException("Could not find a substance for " + std::string { d.Substance() });
         }
-        io::SubstanceQuantity::Marshall(d, out.CreateSubstanceQuantity(*sub));
+        io::SubstanceQuantity::UnMarshall(d, out.CreateSubstanceQuantity(*sub));
       }
       if (in.pH().present()) {
-        io::Property::Marshall(in.pH(), out.GetPH());
+        io::Property::UnMarshall(in.pH(), out.GetPH());
       }
       if (in.WaterVolumeFraction().present()) {
-        io::Property::Marshall(in.WaterVolumeFraction(), out.GetWaterVolumeFraction());
+        io::Property::UnMarshall(in.WaterVolumeFraction(), out.GetWaterVolumeFraction());
       }
     }
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(const SELiquidCompartment& in, CDM::LiquidCompartmentData& out)
+  void Compartment::Marshall(const SELiquidCompartment& in, CDM::LiquidCompartmentData& out)
   {
-    UnMarshall(static_cast<const SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity>&>(in), static_cast<CDM::FluidCompartmentData&>(out));
+    Marshall(static_cast<const SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity>&>(in), static_cast<CDM::FluidCompartmentData&>(out));
     for (SELiquidSubstanceQuantity* subQ : in.m_SubstanceQuantities) {
       auto lqsData = CDM::LiquidSubstanceQuantityData();
-      io::SubstanceQuantity::UnMarshall(*subQ, lqsData);
+      io::SubstanceQuantity::Marshall(*subQ, lqsData);
       out.SubstanceQuantity().push_back(lqsData);
     }
     if (in.HasPH()) {
-      io::Property::UnMarshall(in.GetPH(), out.pH());
+      io::Property::Marshall(in.GetPH(), out.pH());
     }
     if (in.HasWaterVolumeFraction()) {
-      io::Property::UnMarshall(in.GetWaterVolumeFraction(), out.WaterVolumeFraction());
+      io::Property::Marshall(in.GetWaterVolumeFraction(), out.WaterVolumeFraction());
     }
   }
   //----------------------------------------------------------------------------------
   //class SELiquidCompartmentLink
-  void Compartment::Marshall(const CDM::LiquidCompartmentLinkData& in, SELiquidCompartmentLink& out)
+  void Compartment::UnMarshall(const CDM::LiquidCompartmentLinkData& in, SELiquidCompartmentLink& out)
   {
-    Marshall(static_cast<const CDM::FluidCompartmentLinkData&>(in), static_cast<SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment>&>(out));
+    UnMarshall(static_cast<const CDM::FluidCompartmentLinkData&>(in), static_cast<SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment>&>(out));
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(const SELiquidCompartmentLink& in, CDM::LiquidCompartmentLinkData& out)
+  void Compartment::Marshall(const SELiquidCompartmentLink& in, CDM::LiquidCompartmentLinkData& out)
   {
-    UnMarshall(static_cast<const SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment>&>(in), static_cast<CDM::FluidCompartmentLinkData&>(out));
+    Marshall(static_cast<const SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment>&>(in), static_cast<CDM::FluidCompartmentLinkData&>(out));
   }
   //----------------------------------------------------------------------------------
   //class SELiquidCompartmentGraph
-  void Compartment::Marshall(const CDM::LiquidCompartmentGraphData& in, SELiquidCompartmentGraph& out, SECompartmentManager& cmptMgr)
+  void Compartment::UnMarshall(const CDM::LiquidCompartmentGraphData& in, SELiquidCompartmentGraph& out, SECompartmentManager& cmptMgr)
   {
     out.m_Name = in.Name();
     for (auto name : in.Compartment()) {
@@ -274,7 +274,7 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(const SELiquidCompartmentGraph& in, CDM::LiquidCompartmentGraphData& out)
+  void Compartment::Marshall(const SELiquidCompartmentGraph& in, CDM::LiquidCompartmentGraphData& out)
   {
     out.Name(in.m_Name);
     for (SELiquidCompartment* cmpt : in.m_Compartments)
@@ -284,54 +284,54 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
   //class SETissueCompartment
-  void Compartment::Marshall(const CDM::TissueCompartmentData& in, SETissueCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits)
+  void Compartment::UnMarshall(const CDM::TissueCompartmentData& in, SETissueCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits)
   {
-    Marshall(static_cast<const CDM::CompartmentData&>(in), static_cast<SECompartment&>(out));
+    UnMarshall(static_cast<const CDM::CompartmentData&>(in), static_cast<SECompartment&>(out));
 
-    io::Property::Marshall(in.AcidicPhospohlipidConcentration(), out.GetAcidicPhospohlipidConcentration());
-    io::Property::Marshall(in.MatrixVolume(), out.GetMatrixVolume());
-    io::Property::Marshall(in.MembranePotential(), out.GetMembranePotential());
-    io::Property::Marshall(in.NeutralLipidsVolumeFraction(), out.GetNeutralLipidsVolumeFraction());
-    io::Property::Marshall(in.NeutralPhospholipidsVolumeFraction(), out.GetNeutralPhospholipidsVolumeFraction());
-    io::Property::Marshall(in.ReflectionCoefficient(), out.GetReflectionCoefficient());
-    io::Property::Marshall(in.TissueToPlasmaAlbuminRatio(), out.GetTissueToPlasmaAlbuminRatio());
-    io::Property::Marshall(in.TissueToPlasmaAlphaAcidGlycoproteinRatio(), out.GetTissueToPlasmaAlphaAcidGlycoproteinRatio());
-    io::Property::Marshall(in.TissueToPlasmaLipoproteinRatio(), out.GetTissueToPlasmaLipoproteinRatio());
-    io::Property::Marshall(in.TotalMass(), out.GetTotalMass());
+    io::Property::UnMarshall(in.AcidicPhospohlipidConcentration(), out.GetAcidicPhospohlipidConcentration());
+    io::Property::UnMarshall(in.MatrixVolume(), out.GetMatrixVolume());
+    io::Property::UnMarshall(in.MembranePotential(), out.GetMembranePotential());
+    io::Property::UnMarshall(in.NeutralLipidsVolumeFraction(), out.GetNeutralLipidsVolumeFraction());
+    io::Property::UnMarshall(in.NeutralPhospholipidsVolumeFraction(), out.GetNeutralPhospholipidsVolumeFraction());
+    io::Property::UnMarshall(in.ReflectionCoefficient(), out.GetReflectionCoefficient());
+    io::Property::UnMarshall(in.TissueToPlasmaAlbuminRatio(), out.GetTissueToPlasmaAlbuminRatio());
+    io::Property::UnMarshall(in.TissueToPlasmaAlphaAcidGlycoproteinRatio(), out.GetTissueToPlasmaAlphaAcidGlycoproteinRatio());
+    io::Property::UnMarshall(in.TissueToPlasmaLipoproteinRatio(), out.GetTissueToPlasmaLipoproteinRatio());
+    io::Property::UnMarshall(in.TotalMass(), out.GetTotalMass());
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(const SETissueCompartment& in, CDM::TissueCompartmentData& out)
+  void Compartment::Marshall(const SETissueCompartment& in, CDM::TissueCompartmentData& out)
   {
 
-    UnMarshall(static_cast<const SECompartment&>(in), static_cast<CDM::CompartmentData&>(out));
+    Marshall(static_cast<const SECompartment&>(in), static_cast<CDM::CompartmentData&>(out));
     if (in.HasAcidicPhospohlipidConcentration())
-      io::Property::UnMarshall(*in.m_AcidicPhospohlipidConcentration, out.AcidicPhospohlipidConcentration());
+      io::Property::Marshall(*in.m_AcidicPhospohlipidConcentration, out.AcidicPhospohlipidConcentration());
     if (in.HasMatrixVolume())
-      io::Property::UnMarshall(*in.m_MatrixVolume, out.MatrixVolume());
+      io::Property::Marshall(*in.m_MatrixVolume, out.MatrixVolume());
     if (in.HasMembranePotential())
-      io::Property::UnMarshall(*in.m_MembranePotential, out.MembranePotential());
+      io::Property::Marshall(*in.m_MembranePotential, out.MembranePotential());
     if (in.HasNeutralLipidsVolumeFraction())
-      io::Property::UnMarshall(*in.m_NeutralLipidsVolumeFraction, out.NeutralLipidsVolumeFraction());
+      io::Property::Marshall(*in.m_NeutralLipidsVolumeFraction, out.NeutralLipidsVolumeFraction());
     if (in.HasNeutralPhospholipidsVolumeFraction())
-      io::Property::UnMarshall(*in.m_NeutralPhospholipidsVolumeFraction, out.NeutralPhospholipidsVolumeFraction());
+      io::Property::Marshall(*in.m_NeutralPhospholipidsVolumeFraction, out.NeutralPhospholipidsVolumeFraction());
     if (in.HasReflectionCoefficient())
-      io::Property::UnMarshall(*in.m_ReflectionCoefficient, out.ReflectionCoefficient());
+      io::Property::Marshall(*in.m_ReflectionCoefficient, out.ReflectionCoefficient());
     if (in.HasTissueToPlasmaAlbuminRatio())
-      io::Property::UnMarshall(*in.m_TissueToPlasmaAlbuminRatio, out.TissueToPlasmaAlbuminRatio());
+      io::Property::Marshall(*in.m_TissueToPlasmaAlbuminRatio, out.TissueToPlasmaAlbuminRatio());
     if (in.HasTissueToPlasmaAlbuminRatio())
-      io::Property::UnMarshall(*in.m_TissueToPlasmaAlbuminRatio, out.TissueToPlasmaAlbuminRatio());
+      io::Property::Marshall(*in.m_TissueToPlasmaAlbuminRatio, out.TissueToPlasmaAlbuminRatio());
     if (in.HasTissueToPlasmaAlphaAcidGlycoproteinRatio())
-      io::Property::UnMarshall(*in.m_TissueToPlasmaAlphaAcidGlycoproteinRatio, out.TissueToPlasmaAlphaAcidGlycoproteinRatio());
+      io::Property::Marshall(*in.m_TissueToPlasmaAlphaAcidGlycoproteinRatio, out.TissueToPlasmaAlphaAcidGlycoproteinRatio());
     if (in.HasTissueToPlasmaLipoproteinRatio())
-      io::Property::UnMarshall(*in.m_TissueToPlasmaLipoproteinRatio, out.TissueToPlasmaLipoproteinRatio());
+      io::Property::Marshall(*in.m_TissueToPlasmaLipoproteinRatio, out.TissueToPlasmaLipoproteinRatio());
     if (in.HasTotalMass())
-      io::Property::UnMarshall(*in.m_TotalMass, out.TotalMass());
+      io::Property::Marshall(*in.m_TotalMass, out.TotalMass());
   }
   //----------------------------------------------------------------------------------
   //class SEThermalCompartment
-  void Compartment::Marshall(const CDM::ThermalCompartmentData& in, SEThermalCompartment& out, SECircuitManager* circuits)
+  void Compartment::UnMarshall(const CDM::ThermalCompartmentData& in, SEThermalCompartment& out, SECircuitManager* circuits)
   {
-    Marshall(static_cast<const CDM::CompartmentData&>(in), static_cast<SECompartment&>(out));
+    UnMarshall(static_cast<const CDM::CompartmentData&>(in), static_cast<SECompartment&>(out));
     // Not Loading In/Out HeatTransferRate, those are calculated on demand
     if (!in.Child().empty())
       return;
@@ -347,34 +347,34 @@ namespace io {
         out.MapNode(*node);
       }
     } else { // Only load these if you don't have children or nodes
-      io::Property::Marshall(in.Heat(), out.GetHeat());
-      io::Property::Marshall(in.Temperature(), out.GetTemperature());
+      io::Property::UnMarshall(in.Heat(), out.GetHeat());
+      io::Property::UnMarshall(in.Temperature(), out.GetTemperature());
     }
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(SEThermalCompartment& in, CDM::ThermalCompartmentData& out)
+  void Compartment::Marshall(SEThermalCompartment& in, CDM::ThermalCompartmentData& out)
   {
-    UnMarshall(static_cast<const SECompartment&>(in), static_cast<CDM::CompartmentData&>(out));
+    Marshall(static_cast<const SECompartment&>(in), static_cast<CDM::CompartmentData&>(out));
     for (SEThermalCompartment* child : in.m_Children)
       out.Child().push_back(child->GetName());
     for (SEThermalCircuitNode* nodes : in.m_Nodes.GetNodes())
       out.Node().push_back(nodes->GetName());
     // Even if you have children or nodes, I am unloading everything, this makes the xml actually usefull...
     if (in.HasHeatTransferRateIn())
-      io::Property::UnMarshall(in.GetHeatTransferRateIn(), out.HeatTransferRateIn());
+      io::Property::Marshall(in.GetHeatTransferRateIn(), out.HeatTransferRateIn());
     if (in.HasHeatTransferRateOut())
-      io::Property::UnMarshall(in.GetHeatTransferRateOut(), out.HeatTransferRateOut());
+      io::Property::Marshall(in.GetHeatTransferRateOut(), out.HeatTransferRateOut());
     if (in.HasHeat())
-      io::Property::UnMarshall(in.GetHeat(), out.Heat());
+      io::Property::Marshall(in.GetHeat(), out.Heat());
     if (in.HasTemperature())
-      io::Property::UnMarshall(in.GetTemperature(), out.Temperature());
+      io::Property::Marshall(in.GetTemperature(), out.Temperature());
   }
   //----------------------------------------------------------------------------------
   //class SEThermalCompartmentLink
-  void Compartment::Marshall(const CDM::ThermalCompartmentLinkData& in, SEThermalCompartmentLink& out, SECircuitManager* circuits)
+  void Compartment::UnMarshall(const CDM::ThermalCompartmentLinkData& in, SEThermalCompartmentLink& out, SECircuitManager* circuits)
   {
 
-    Marshall(static_cast<const CDM::CompartmentLinkData&>(in), static_cast<SECompartmentLink&>(out));
+    UnMarshall(static_cast<const CDM::CompartmentLinkData&>(in), static_cast<SECompartmentLink&>(out));
     if (in.Path().present()) {
       if (circuits == nullptr) {
         throw CommonDataModelException("Link is mapped to circuit path, " + std::string { in.Path().get() } + ", but no circuit manager was provided, cannot load");
@@ -386,32 +386,32 @@ namespace io {
       out.MapPath(*path);
     } else {
       if (in.HeatTransferRate().present()) {
-        io::Property::Marshall(in.HeatTransferRate(), out.GetHeatTransferRate());
+        io::Property::UnMarshall(in.HeatTransferRate(), out.GetHeatTransferRate());
       }
     }
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(const SEThermalCompartmentLink& in, CDM::ThermalCompartmentLinkData& out)
+  void Compartment::Marshall(const SEThermalCompartmentLink& in, CDM::ThermalCompartmentLinkData& out)
   {
-    UnMarshall(static_cast<const SECompartmentLink&>(in), static_cast<CDM::CompartmentLinkData&>(out));
+    Marshall(static_cast<const SECompartmentLink&>(in), static_cast<CDM::CompartmentLinkData&>(out));
     out.SourceCompartment(in.m_SourceCmpt.GetName());
     out.TargetCompartment(in.m_TargetCmpt.GetName());
     if (in.m_Path != nullptr)
       out.Path(in.m_Path->GetName());
     // Even if you have a path, I am unloading everything, this makes the xml actually usefull...
     if (in.HasHeatTransferRate()) {
-      io::Property::UnMarshall(*in.m_HeatTransferRate, out.HeatTransferRate());
+      io::Property::Marshall(*in.m_HeatTransferRate, out.HeatTransferRate());
     }
   }
 
 #define LOAD_COMPARTMENT(type)                                                            \
   for (auto& cData : in.type##Compartment()) {                                            \
-    Marshall(cData, out.Create##type##Compartment(cData.Name()), out.m_subMgr, circuits); \
+    UnMarshall(cData, out.Create##type##Compartment(cData.Name()), out.m_subMgr, circuits); \
   }
 
 #define LOAD_THERMAL_COMPARTMENT(type)                                      \
   for (auto& cData : in.type##Compartment()) {                              \
-    Marshall(cData, out.Create##type##Compartment(cData.Name()), circuits); \
+    UnMarshall(cData, out.Create##type##Compartment(cData.Name()), circuits); \
   }
 
 #define LOAD_LINK(type)                                                                                                                                       \
@@ -424,7 +424,7 @@ namespace io {
     if (src == nullptr) {                                                                                                                                     \
       throw CommonDataModelException("Unable to find target compartment " + std::string { cData.TargetCompartment() } + " for link " + cData.Name().c_str()); \
     }                                                                                                                                                         \
-    Marshall(cData, out.Create##type##Link(*src, *tgt, cData.Name()), circuits);                                                                              \
+    UnMarshall(cData, out.Create##type##Link(*src, *tgt, cData.Name()), circuits);                                                                              \
   }
 
 #define LOAD_HIERARCHY(type)                                                                                             \
@@ -441,7 +441,7 @@ namespace io {
 
 #define LOAD_GRAPH(type)                                         \
   for (auto& cData : in.type##Graph()) {                         \
-    Marshall(cData, out.Create##type##Graph(cData.Name()), out); \
+    UnMarshall(cData, out.Create##type##Graph(cData.Name()), out); \
   }
 
 #define LOAD_SUBSTANCE(type)                                                                 \
@@ -455,7 +455,7 @@ namespace io {
 
   //----------------------------------------------------------------------------------
   //class SECompartmentManager
-  void Compartment::Marshall(CDM::CompartmentManagerData& in, SECompartmentManager& out, SECircuitManager* circuits)
+  void Compartment::UnMarshall(CDM::CompartmentManagerData& in, SECompartmentManager& out, SECircuitManager* circuits)
   {
     out.Clear();
 
@@ -480,21 +480,21 @@ namespace io {
     out.StateChange();
   }
   //----------------------------------------------------------------------------------
-  void Compartment::UnMarshall(const SECompartmentManager& in, CDM::CompartmentManagerData& out)
+  void Compartment::Marshall(const SECompartmentManager& in, CDM::CompartmentManagerData& out)
   {
     for (SELiquidCompartment* cmpt : in.m_LiquidCompartments) {
       auto lcData = CDM::LiquidCompartmentData();
-      UnMarshall(*cmpt, lcData);
+      Marshall(*cmpt, lcData);
       out.LiquidCompartment().push_back(lcData);
     }
     for (SELiquidCompartmentLink* link : in.m_LiquidLinks) {
       auto lclData = CDM::LiquidCompartmentLinkData();
-      UnMarshall(*link, lclData);
+      Marshall(*link, lclData);
       out.LiquidLink().push_back(lclData);
     }
     for (SELiquidCompartmentGraph* graph : in.m_LiquidGraphs) {
       auto lcGData = CDM::LiquidCompartmentGraphData();
-      UnMarshall(*graph, lcGData);
+      Marshall(*graph, lcGData);
       out.LiquidGraph().push_back(lcGData);
     }
     for (SESubstance* sub : in.m_LiquidSubstances) {
@@ -503,17 +503,17 @@ namespace io {
 
     for (SEGasCompartment* cmpt : in.m_GasCompartments) {
       auto gcData = CDM::GasCompartmentData();
-      UnMarshall(*cmpt, gcData);
+      Marshall(*cmpt, gcData);
       out.GasCompartment().push_back(gcData);
     }
     for (SEGasCompartmentLink* link : in.m_GasLinks) {
       auto gclData = CDM::GasCompartmentLinkData();
-      UnMarshall(*link, gclData);
+      Marshall(*link, gclData);
       out.GasLink().push_back(gclData);
     }
     for (SEGasCompartmentGraph* graph : in.m_GasGraphs) {
       auto gcgData = CDM::GasCompartmentGraphData();
-      UnMarshall(*graph, gcgData);
+      Marshall(*graph, gcgData);
       out.GasGraph().push_back(gcgData);
     }
     for (SESubstance* sub : in.m_GasSubstances)
@@ -521,18 +521,18 @@ namespace io {
 
     for (SEThermalCompartment* cmpt : in.m_ThermalCompartments) {
       auto tcData = CDM::ThermalCompartmentData();
-      UnMarshall(*cmpt, tcData);
+      Marshall(*cmpt, tcData);
       out.ThermalCompartment().push_back(tcData);
     }
     for (SEThermalCompartmentLink* link : in.m_ThermalLinks) {
       auto tclData = CDM::ThermalCompartmentLinkData();
-      UnMarshall(*link, tclData);
+      Marshall(*link, tclData);
       out.ThermalLink().push_back(tclData);
     }
 
     for (SETissueCompartment* cmpt : in.m_TissueCompartments) {
       auto tcData = CDM::TissueCompartmentData();
-      UnMarshall(*cmpt, tcData);
+      Marshall(*cmpt, tcData);
       out.TissueCompartment().push_back(tcData);
     }
   }

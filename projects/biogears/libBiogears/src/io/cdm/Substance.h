@@ -18,15 +18,15 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Substance.hxx>
 
-#define CDM_SUBSTANCE_UNMARSHAL_HELPER(in, out, func)                                 \
+#define CDM_SUBSTANCE_MARSHALL_HELPER(in, out, func)                                 \
   if (in.m_##func && in.m_##func->IsValid()) {                                       \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Substance::UnMarshall(*in.m_##func, out.func());                              \
+    io::Substance::Marshall(*in.m_##func, out.func());                              \
   }
 
-#define CDM_OPTIONAL_SUBSTANCE_UNMARSHAL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_SUBSTANCE_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func && in.m_##func->IsValid()) {                \
-    io::Substance::UnMarshall(*in.m_##func, out.func());       \
+    io::Substance::Marshall(*in.m_##func, out.func());       \
   }
 
 namespace biogears {
@@ -55,42 +55,43 @@ namespace io {
     //class enumSubstanceClass;
     //template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
     //class SESubstanceAerosolization
-    static void Marshall(const CDM::SubstanceAerosolizationData& in, SESubstanceAerosolization& out);
-    static void UnMarshall(const SESubstanceAerosolization& in, CDM::SubstanceAerosolizationData& out);
+    static void UnMarshall(const CDM::SubstanceAerosolizationData& in, SESubstanceAerosolization& out);
+    static void Marshall(const SESubstanceAerosolization& in, CDM::SubstanceAerosolizationData& out);
     //class SESubstancePharmacokinetics
-    static void Marshall(const CDM::SubstancePharmacokineticsData& in, SESubstancePharmacokinetics& out);
-    static void UnMarshall(const SESubstancePharmacokinetics& in, CDM::SubstancePharmacokineticsData& out);
+    static void UnMarshall(const CDM::SubstancePharmacokineticsData& in, SESubstancePharmacokinetics& out);
+    static void Marshall(const SESubstancePharmacokinetics& in, CDM::SubstancePharmacokineticsData& out);
     //class SESubstancePhysicochemical
-    static void Marshall(const CDM::SubstancePhysicochemicalData& in, SESubstancePhysicochemical& out);
-    static void UnMarshall(const SESubstancePhysicochemical& in, CDM::SubstancePhysicochemicalData& out);
+
+    static void UnMarshall(const CDM::SubstancePhysicochemicalData& in, SESubstancePhysicochemical& out);
+    static void Marshall(const SESubstancePhysicochemical& in, CDM::SubstancePhysicochemicalData& out);
     //class SESubstanceTissuePharmacokinetics
-    static void Marshall(const CDM::SubstanceTissuePharmacokineticsData& in, SESubstanceTissuePharmacokinetics& out);
-    static void UnMarshall(const SESubstanceTissuePharmacokinetics& in, CDM::SubstanceTissuePharmacokineticsData& out);
+    static void UnMarshall(const CDM::SubstanceTissuePharmacokineticsData& in, SESubstanceTissuePharmacokinetics& out);
+    static void Marshall(const SESubstanceTissuePharmacokinetics& in, CDM::SubstanceTissuePharmacokineticsData& out);
     //class SESubstancePharmacodynamics
-    static void Marshall(const CDM::SubstancePharmacodynamicsData& in, SESubstancePharmacodynamics& out);
-    static void UnMarshall(const SESubstancePharmacodynamics& in, CDM::SubstancePharmacodynamicsData& out);
+    static void UnMarshall(const CDM::SubstancePharmacodynamicsData& in, SESubstancePharmacodynamics& out);
+    static void Marshall(const SESubstancePharmacodynamics& in, CDM::SubstancePharmacodynamicsData& out);
     //class SESubstanceClearance
-    static void Marshall(const CDM::SubstanceClearanceData& in, SESubstanceClearance& out);
-    static void UnMarshall(const SESubstanceClearance& in, CDM::SubstanceClearanceData& out);
+    static void UnMarshall(const CDM::SubstanceClearanceData& in, SESubstanceClearance& out);
+    static void Marshall(const SESubstanceClearance& in, CDM::SubstanceClearanceData& out);
     //class SESubstance
-    static void Marshall(const CDM::SubstanceData& in, SESubstance& out);
-    static void UnMarshall(const SESubstance& in, CDM::SubstanceData& out);
+    static void UnMarshall(const CDM::SubstanceData& in, SESubstance& out);
+    static void Marshall(const SESubstance& in, CDM::SubstanceData& out);
     //class SESubstanceCompound
-    static void Marshall(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr, SESubstanceCompound& out);
-    static void UnMarshall(const SESubstanceCompound& in, CDM::SubstanceCompoundData& out);
+    static void UnMarshall(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr, SESubstanceCompound& out);
+    static void Marshall(const SESubstanceCompound& in, CDM::SubstanceCompoundData& out);
     //class SESubstanceFraction
-    static void Marshall(const CDM::SubstanceFractionData& in, SESubstanceFraction& out);
-    static void UnMarshall(const SESubstanceFraction& in, CDM::SubstanceFractionData& out);
+    static void UnMarshall(const CDM::SubstanceFractionData& in, SESubstanceFraction& out);
+    static void Marshall(const SESubstanceFraction& in, CDM::SubstanceFractionData& out);
     //class SESubstanceConcentration
-    static void Marshall(const CDM::SubstanceConcentrationData& in, SESubstanceConcentration& out);
-    static void UnMarshall(const SESubstanceConcentration& in, CDM::SubstanceConcentrationData& out);
+    static void UnMarshall(const CDM::SubstanceConcentrationData& in, SESubstanceConcentration& out);
+    static void Marshall(const SESubstanceConcentration& in, CDM::SubstanceConcentrationData& out);
     //class SEPharmacodynamicModifier
-    static void Marshall(const CDM::PharmacodynamicModifierData& in, SEPharmacodynamicModifier& out);
-    static void UnMarshall(const SEPharmacodynamicModifier& in, CDM::PharmacodynamicModifierData& out);
+    static void UnMarshall(const CDM::PharmacodynamicModifierData& in, SEPharmacodynamicModifier& out);
+    static void Marshall(const SEPharmacodynamicModifier& in, CDM::PharmacodynamicModifierData& out);
 
     static void Copy(const SESubstanceClearance& in, SESubstanceClearance& out);
     static void Copy(const SESubstance& in, SESubstance& out);
@@ -100,20 +101,20 @@ namespace io {
   };    
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void Substance::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void Substance::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Clear();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void Substance::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void Substance::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 

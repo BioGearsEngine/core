@@ -91,8 +91,8 @@ TEST_F(TEST_FIXTURE_NAME, EnvironmentChange)
 
   //EXPECT_NE(source, sink);
 
-  EnvironmentActions::UnMarshall(source, data);
-  EnvironmentActions::Marshall(data, sink);
+  EnvironmentActions::Marshall(source, data);
+  EnvironmentActions::UnMarshall(data, sink);
 
   //EXPECT_EQ(source, sink);
 }
@@ -115,8 +115,8 @@ TEST_F(TEST_FIXTURE_NAME, ThermalApplication)
 
   //EXPECT_NE(source, sink);
 
-  EnvironmentActions::UnMarshall(source, data);
-  EnvironmentActions::Marshall(data, sink);
+  EnvironmentActions::Marshall(source, data);
+  EnvironmentActions::UnMarshall(data, sink);
 
   //EXPECT_EQ(source, sink);
 }

@@ -101,8 +101,8 @@ TEST_F(TEST_FIXTURE_NAME, ChronicVentricularSystolicDysfunction)
 
   EXPECT_NE(source, sink);
 
-  PatientConditions::UnMarshall(source, data);
-  PatientConditions::Marshall(data, sink);
+  PatientConditions::Marshall(source, data);
+  PatientConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -128,8 +128,8 @@ TEST_F(TEST_FIXTURE_NAME, ChronicObstructivePulmonaryDisease)
 
   EXPECT_NE(source, sink);
 
-  PatientConditions::UnMarshall(source, data);
-  PatientConditions::Marshall(data, sink);
+  PatientConditions::Marshall(source, data);
+  PatientConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -155,8 +155,8 @@ TEST_F(TEST_FIXTURE_NAME, ChronicPericardialEffusion)
 
   EXPECT_NE(source, sink);
 
-  PatientConditions::UnMarshall(source, data);
-  PatientConditions::Marshall(data, sink);
+  PatientConditions::Marshall(source, data);
+  PatientConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -182,8 +182,8 @@ TEST_F(TEST_FIXTURE_NAME, ChronicRenalStenosis)
 
   EXPECT_NE(source, sink);
 
-  PatientConditions::UnMarshall(source, data);
-  PatientConditions::Marshall(data, sink);
+  PatientConditions::Marshall(source, data);
+  PatientConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -209,8 +209,8 @@ TEST_F(TEST_FIXTURE_NAME, Dehydration)
 
   EXPECT_NE(source, sink);
 
-  PatientConditions::UnMarshall(source, data);
-  PatientConditions::Marshall(data, sink);
+  PatientConditions::Marshall(source, data);
+  PatientConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -235,8 +235,8 @@ TEST_F(TEST_FIXTURE_NAME, DiabetesType1)
 
   EXPECT_NE(source, sink);
 
-  PatientConditions::UnMarshall(source, data);
-  PatientConditions::Marshall(data, sink);
+  PatientConditions::Marshall(source, data);
+  PatientConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -262,8 +262,8 @@ TEST_F(TEST_FIXTURE_NAME, DiabetesType2)
 
   EXPECT_NE(source, sink);
 
-  PatientConditions::UnMarshall(source, data);
-  PatientConditions::Marshall(data, sink);
+  PatientConditions::Marshall(source, data);
+  PatientConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -289,8 +289,8 @@ TEST_F(TEST_FIXTURE_NAME, ImpairedAlveolarExchange)
 
   EXPECT_NE(source, sink);
 
-  PatientConditions::UnMarshall(source, data);
-  PatientConditions::Marshall(data, sink);
+  PatientConditions::Marshall(source, data);
+  PatientConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -317,8 +317,8 @@ TEST_F(TEST_FIXTURE_NAME, LobarPneumonia)
 
   EXPECT_NE(source, sink);
 
-  PatientConditions::UnMarshall(source, data);
-  PatientConditions::Marshall(data, sink);
+  PatientConditions::Marshall(source, data);
+  PatientConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -343,8 +343,8 @@ TEST_F(TEST_FIXTURE_NAME, Starvation)
 
   EXPECT_NE(source, sink);
 
-  PatientConditions::UnMarshall(source, data);
-  PatientConditions::Marshall(data, sink);
+  PatientConditions::Marshall(source, data);
+  PatientConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

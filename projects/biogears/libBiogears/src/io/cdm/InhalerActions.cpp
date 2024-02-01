@@ -11,31 +11,31 @@
 namespace biogears {
 namespace io {
   //class SEInhalerAction
-  void InhalerActions::Marshall(const CDM::InhalerActionData& in, SEInhalerAction& out)
+  void InhalerActions::UnMarshall(const CDM::InhalerActionData& in, SEInhalerAction& out)
   {
-    io::Scenario::Marshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
+    io::Scenario::UnMarshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
   }
   //----------------------------------------------------------------------------------
-  void InhalerActions::UnMarshall(const SEInhalerAction& in, CDM::InhalerActionData& out)
+  void InhalerActions::Marshall(const SEInhalerAction& in, CDM::InhalerActionData& out)
   {
-    io::Scenario::UnMarshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
+    io::Scenario::Marshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
   }
   //----------------------------------------------------------------------------------
   //class SEInhalerConfiguration
-  void InhalerActions::Marshall(const CDM::InhalerConfigurationData& in, SEInhalerConfiguration& out)
+  void InhalerActions::UnMarshall(const CDM::InhalerConfigurationData& in, SEInhalerConfiguration& out)
   {
-    io::Scenario::Marshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
+    io::Scenario::UnMarshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
     if (in.ConfigurationFile().present()) {
       out.SetConfigurationFile(in.ConfigurationFile().get());
     }
-    io::Inhaler::Marshall(in.Configuration(), out.GetConfiguration());
+    io::Inhaler::UnMarshall(in.Configuration(), out.GetConfiguration());
   }
   //----------------------------------------------------------------------------------
-  void InhalerActions::UnMarshall(const SEInhalerConfiguration& in, CDM::InhalerConfigurationData& out)
+  void InhalerActions::Marshall(const SEInhalerConfiguration& in, CDM::InhalerConfigurationData& out)
   {
-    io::Scenario::UnMarshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
+    io::Scenario::Marshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
     if (in.HasConfiguration()) {
-      io::Inhaler::UnMarshall(*in.m_Configuration, out.Configuration());
+      io::Inhaler::Marshall(*in.m_Configuration, out.Configuration());
     } else if (in.HasConfigurationFile()) {
       out.ConfigurationFile(in.m_ConfigurationFile);
     }
@@ -46,7 +46,7 @@ namespace io {
   {
     if (auto inhalerConfiguration = dynamic_cast<SEInhalerConfiguration const*>(inhalerAction); inhalerConfiguration) {
       auto inhalerConfigurationData = std::make_unique<CDM::InhalerConfigurationData>();
-      UnMarshall(*inhalerConfiguration, *inhalerConfigurationData);
+      Marshall(*inhalerConfiguration, *inhalerConfigurationData);
       return std::move(inhalerConfigurationData);
     }
     throw biogears::CommonDataModelException("InhalerActions::factory does not support the derived SEInhalerAction. If you are not a developer contact upstream for support.");

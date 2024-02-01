@@ -18,15 +18,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-#define CDM_SCENARIO_UNMARSHAL_HELPER(in, out, func)                                 \
+#define CDM_SCENARIO_MARSHALL_HELPER(in, out, func)                                 \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Scenario::UnMarshall(*in.m_##func, out.func());                              \
+    io::Scenario::Marshall(*in.m_##func, out.func());                              \
   }
 
-#define CDM_OPTIONAL_SCENARIO_UNMARSHAL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_SCENARIO_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                          \
-    io::Scenario::UnMarshall(*in.m_##func, out.func());       \
+    io::Scenario::Marshall(*in.m_##func, out.func());       \
   }
 namespace biogears {
 
@@ -64,69 +64,69 @@ namespace io {
 
     //template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
     //class SECondition;
-    static void Marshall(const CDM::ConditionData& in, SECondition& out);
-    static void UnMarshall(const SECondition& in, CDM::ConditionData& out);
+    static void UnMarshall(const CDM::ConditionData& in, SECondition& out);
+    static void Marshall(const SECondition& in, CDM::ConditionData& out);
     //class SEAction;
-    static void Marshall(const CDM::ActionData& in, SEAction& out);
-    static void UnMarshall(const SEAction& in, CDM::ActionData& out);
+    static void UnMarshall(const CDM::ActionData& in, SEAction& out);
+    static void Marshall(const SEAction& in, CDM::ActionData& out);
     //class SEDataRequestManager
-    static void Marshall(const CDM::DataRequestManagerData& in, const SESubstanceManager& subMgr, SEDataRequestManager& out);
-    static void UnMarshall(const SEDataRequestManager& in, CDM::DataRequestManagerData& out);
+    static void UnMarshall(const CDM::DataRequestManagerData& in, const SESubstanceManager& subMgr, SEDataRequestManager& out);
+    static void Marshall(const SEDataRequestManager& in, CDM::DataRequestManagerData& out);
     //class SEDataRequest;
-    static void Marshall(const CDM::DataRequestData& in, SEDataRequest& out);
-    static void UnMarshall(const SEDataRequest& in, CDM::DataRequestData& out);
+    static void UnMarshall(const CDM::DataRequestData& in, SEDataRequest& out);
+    static void Marshall(const SEDataRequest& in, CDM::DataRequestData& out);
     //class SEPatientDataRequest;
-    static void Marshall(const CDM::PatientDataRequestData& in, SEPatientDataRequest& out);
-    static void UnMarshall(const SEPatientDataRequest& in, CDM::PatientDataRequestData& out);
+    static void UnMarshall(const CDM::PatientDataRequestData& in, SEPatientDataRequest& out);
+    static void Marshall(const SEPatientDataRequest& in, CDM::PatientDataRequestData& out);
     //class SEPhysiologyDataRequest;
-    static void Marshall(const CDM::PhysiologyDataRequestData& in, SEPhysiologyDataRequest& out);
-    static void UnMarshall(const SEPhysiologyDataRequest& in, CDM::PhysiologyDataRequestData& out);
+    static void UnMarshall(const CDM::PhysiologyDataRequestData& in, SEPhysiologyDataRequest& out);
+    static void Marshall(const SEPhysiologyDataRequest& in, CDM::PhysiologyDataRequestData& out);
     //class SEEnvironmentDataRequest;
-    static void Marshall(const CDM::EnvironmentDataRequestData& in, SEEnvironmentDataRequest& out);
-    static void UnMarshall(const SEEnvironmentDataRequest& in, CDM::EnvironmentDataRequestData& out);
+    static void UnMarshall(const CDM::EnvironmentDataRequestData& in, SEEnvironmentDataRequest& out);
+    static void Marshall(const SEEnvironmentDataRequest& in, CDM::EnvironmentDataRequestData& out);
     //class SEEquipmentDataRequest;
-    static void Marshall(const CDM::EquipmentDataRequestData& in, SEEquipmentDataRequest& out);
-    static void UnMarshall(const SEEquipmentDataRequest& in, CDM::EquipmentDataRequestData& out);
+    static void UnMarshall(const CDM::EquipmentDataRequestData& in, SEEquipmentDataRequest& out);
+    static void Marshall(const SEEquipmentDataRequest& in, CDM::EquipmentDataRequestData& out);
     //class SECompartmentDataRequest;
-    static void Marshall(const CDM::CompartmentDataRequestData& in, SECompartmentDataRequest& out);
-    static void UnMarshall(const SECompartmentDataRequest& in, CDM::CompartmentDataRequestData& out);
+    static void UnMarshall(const CDM::CompartmentDataRequestData& in, SECompartmentDataRequest& out);
+    static void Marshall(const SECompartmentDataRequest& in, CDM::CompartmentDataRequestData& out);
     //class SECompartmentSubstanceDataRequest;
-    static void Marshall(const CDM::CompartmentSubstanceDataRequestData& in, SESubstanceManager const& substances, SECompartmentSubstanceDataRequest& out);
-    static void UnMarshall(const SECompartmentSubstanceDataRequest& in, CDM::CompartmentSubstanceDataRequestData& out);
+    static void UnMarshall(const CDM::CompartmentSubstanceDataRequestData& in, SESubstanceManager const& substances, SECompartmentSubstanceDataRequest& out);
+    static void Marshall(const SECompartmentSubstanceDataRequest& in, CDM::CompartmentSubstanceDataRequestData& out);
     //class SEGasCompartmentDataRequest;
-    static void Marshall(const CDM::GasCompartmentDataRequestData& in, SESubstanceManager const& substances, SEGasCompartmentDataRequest& out);
-    static void UnMarshall(const SEGasCompartmentDataRequest& in, CDM::GasCompartmentDataRequestData& out);
+    static void UnMarshall(const CDM::GasCompartmentDataRequestData& in, SESubstanceManager const& substances, SEGasCompartmentDataRequest& out);
+    static void Marshall(const SEGasCompartmentDataRequest& in, CDM::GasCompartmentDataRequestData& out);
     //class SELiquidCompartmentDataRequest;
-    static void Marshall(const CDM::LiquidCompartmentDataRequestData& in, SESubstanceManager const& substances, SELiquidCompartmentDataRequest& out);
-    static void UnMarshall(const SELiquidCompartmentDataRequest& in, CDM::LiquidCompartmentDataRequestData& out);
+    static void UnMarshall(const CDM::LiquidCompartmentDataRequestData& in, SESubstanceManager const& substances, SELiquidCompartmentDataRequest& out);
+    static void Marshall(const SELiquidCompartmentDataRequest& in, CDM::LiquidCompartmentDataRequestData& out);
     //class SEThermalCompartmentDataRequest;
-    static void Marshall(const CDM::ThermalCompartmentDataRequestData& in, SEThermalCompartmentDataRequest& out);
-    static void UnMarshall(const SEThermalCompartmentDataRequest& in, CDM::ThermalCompartmentDataRequestData& out);
+    static void UnMarshall(const CDM::ThermalCompartmentDataRequestData& in, SEThermalCompartmentDataRequest& out);
+    static void Marshall(const SEThermalCompartmentDataRequest& in, CDM::ThermalCompartmentDataRequestData& out);
     //class SETissueCompartmentDataRequest;
-    static void Marshall(const CDM::TissueCompartmentDataRequestData& in, SETissueCompartmentDataRequest& out);
-    static void UnMarshall(const SETissueCompartmentDataRequest& in, CDM::TissueCompartmentDataRequestData& out);
+    static void UnMarshall(const CDM::TissueCompartmentDataRequestData& in, SETissueCompartmentDataRequest& out);
+    static void Marshall(const SETissueCompartmentDataRequest& in, CDM::TissueCompartmentDataRequestData& out);
     //class SESubstanceDataRequest;
-    static void Marshall(const CDM::SubstanceDataRequestData& in, SESubstanceManager const& substances, SESubstanceDataRequest& out);
-    static void UnMarshall(const SESubstanceDataRequest& in, CDM::SubstanceDataRequestData& out);
+    static void UnMarshall(const CDM::SubstanceDataRequestData& in, SESubstanceManager const& substances, SESubstanceDataRequest& out);
+    static void Marshall(const SESubstanceDataRequest& in, CDM::SubstanceDataRequestData& out);
     //class SEScenario;
-    static void Marshall(const CDM::ScenarioData& in, SEScenario& out);
-    static void UnMarshall(const SEScenario& in, CDM::ScenarioData& out);
+    static void UnMarshall(const CDM::ScenarioData& in, SEScenario& out);
+    static void Marshall(const SEScenario& in, CDM::ScenarioData& out);
     //class SEScenarioInitialParameters;
-    static void Marshall(const CDM::ScenarioInitialParametersData& in, SEScenarioInitialParameters& out);
-    static void UnMarshall(const SEScenarioInitialParameters& in, CDM::ScenarioInitialParametersData& out);
+    static void UnMarshall(const CDM::ScenarioInitialParametersData& in, SEScenarioInitialParameters& out);
+    static void Marshall(const SEScenarioInitialParameters& in, CDM::ScenarioInitialParametersData& out);
     //class SEScenarioAutoSerialization;
-    static void Marshall(const CDM::ScenarioAutoSerializationData& in, SEScenarioAutoSerialization& out);
-    static void UnMarshall(const SEScenarioAutoSerialization& in, CDM::ScenarioAutoSerializationData& out);
+    static void UnMarshall(const CDM::ScenarioAutoSerializationData& in, SEScenarioAutoSerialization& out);
+    static void Marshall(const SEScenarioAutoSerialization& in, CDM::ScenarioAutoSerializationData& out);
     //class SEAdvanceTime;
-    static void Marshall(const CDM::AdvanceTimeData& in, SEAdvanceTime& out);
-    static void UnMarshall(const SEAdvanceTime& in, CDM::AdvanceTimeData& out);
+    static void UnMarshall(const CDM::AdvanceTimeData& in, SEAdvanceTime& out);
+    static void Marshall(const SEAdvanceTime& in, CDM::AdvanceTimeData& out);
     //class SESerializeState;
-    static void Marshall(const CDM::SerializeStateData& in, SESerializeState& out);
-    static void UnMarshall(const SESerializeState& in, CDM::SerializeStateData& out);
+    static void UnMarshall(const CDM::SerializeStateData& in, SESerializeState& out);
+    static void Marshall(const SESerializeState& in, CDM::SerializeStateData& out);
 
     static std::unique_ptr<SEDataRequest> factory(const CDM::DataRequestData& in, SESubstanceManager const& substances,  SEDecimalFormat const* df = nullptr);
 
@@ -136,20 +136,20 @@ namespace io {
 
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void Scenario::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void Scenario::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Clear();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void Scenario::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void Scenario::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 }

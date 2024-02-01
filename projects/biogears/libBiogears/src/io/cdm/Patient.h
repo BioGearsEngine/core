@@ -18,15 +18,15 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Patient.hxx>
 
-#define CDM_PATIENT_UNMARSHAL_HELPER(in, out, func)                                  \
+#define CDM_PATIENT_MARSHALL_HELPER(in, out, func)                                   \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Patient::UnMarshall(*in.m_##func, out.func());                               \
+    io::Patient::Marshall(*in.m_##func, out.func());                               \
   }
 
-#define CDM_OPTIONAL_PATIENT_UNMARSHAL_HELPER(in, out, func) \
-  if (in.m_##func) {                                         \
-    io::Patient::UnMarshall(*in.m_##func, out.func());       \
+#define CDM_OPTIONAL_PATIENT_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func) {                                        \
+    io::Patient::Marshall(*in.m_##func, out.func());      \
   }
 
 namespace biogears {
@@ -35,32 +35,32 @@ class SEPatient;
 namespace io {
   class BIOGEARS_PRIVATE_API Patient {
   public:
-    //template <typename SE, typename XSD>  option
+    // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
-    //class SEPatient
-    static void Marshall(const CDM::PatientData& in, SEPatient& out);
-    static void UnMarshall(const SEPatient& in, CDM::PatientData& out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    // class SEPatient
+    static void UnMarshall(const CDM::PatientData& in, SEPatient& out);
+    static void Marshall(const SEPatient& in, CDM::PatientData& out);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void Patient::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void Patient::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Clear();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void Patient::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void Patient::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 } // Namespace IO
-} //Namespace Biogears
+} // Namespace Biogears

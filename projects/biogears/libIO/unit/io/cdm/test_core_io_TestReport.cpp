@@ -118,8 +118,8 @@ TEST_F(TEST_FIXTURE_NAME, TestErrorStatistics)
 
   EXPECT_NE(source, sink);
 
-  TestReport::UnMarshall(source, data);
-  TestReport::Marshall(data, sink);
+  TestReport::Marshall(source, data);
+  TestReport::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -162,8 +162,8 @@ TEST_F(TEST_FIXTURE_NAME, TestCase)
   
   EXPECT_NE(source, sink);
 
-  TestReport::UnMarshall(source, data);
-  TestReport::Marshall(data, sink);
+  TestReport::Marshall(source, data);
+  TestReport::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -234,8 +234,8 @@ TEST_F(TEST_FIXTURE_NAME, TestSuite)
 
   EXPECT_NE(source, sink);
 
-  TestReport::UnMarshall(source, data);
-  TestReport::Marshall(data, sink);
+  TestReport::Marshall(source, data);
+  TestReport::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -304,8 +304,8 @@ TEST_F(TEST_FIXTURE_NAME, TestReport)
 
   EXPECT_NE(source, sink);
 
-  TestReport::UnMarshall(source, data);
-  TestReport::Marshall(data, sink);
+  TestReport::Marshall(source, data);
+  TestReport::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

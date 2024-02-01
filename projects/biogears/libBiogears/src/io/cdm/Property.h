@@ -20,30 +20,31 @@ specific language governing permissions and limitations under the License.
 
 // Question: To Serialize Invalid units or not to Serialize?
 //           TO Throw an exception when a member is invalid?
-#define CDM_PROPERTY_UNMARSHAL_HELPER(in, out, func)                                        \
+#define CDM_PROPERTY_MARSHALL_HELPER(in, out, func)                                          \
+  if (in.m_##func && in.m_##func->IsValid()) {                                               \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>());         \
+    io::Property::Marshall(*in.m_##func, out.func());                                        \
+  } /* else if (in.m_##func) {                                                               \
+     throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
+   }*/
+
+#define CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, func)                                \
   if (in.m_##func && in.m_##func->IsValid()) {                                              \
-    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>());        \
-    io::Property::UnMarshall(*in.m_##func, out.func());                                     \
-  }/* else if (in.m_##func) {                                                                 \
+    io::Property::Marshall(*in.m_##func, out.func());                                       \
+  } /*else if (in.m_##func) {                                                               \
     throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
   }*/
 
-#define CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, func)                               \
-  if (in.m_##func && in.m_##func->IsValid()) {                                              \
-    io::Property::UnMarshall(*in.m_##func, out.func());                                     \
-  } /*else if (in.m_##func) {                                                                 \
-    throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
-  }*/
-
-#define CDM_ENUM_UNMARSHAL_HELPER(in, out, func) \
-  if (in.Has##func()) {                          \
-    out.func(in.m_##func);                       \
+#define CDM_ENUM_MARSHALL_HELPER(in, out, func) \
+  if (in.Has##func()) {                         \
+    out.func(in.m_##func);                      \
   }
 
 namespace biogears {
 class RunningAverage;
 
 class SEDecimalFormat;
+
 template <typename T>
 class SEScalarQuantity;
 class SEFunctionElectricPotentialVsTime;
@@ -120,226 +121,226 @@ namespace io {
   public:
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
     // template <typename SE, typename XSD>  option
-    static void Marshall(xsd::cxx::tree::optional<CDM::DecimalFormatData> const& option_in, SEDecimalFormat& out);
-    static void UnMarshall(const SEDecimalFormat& in, xsd::cxx::tree::optional<CDM::DecimalFormatData>& option_out);
+    static void UnMarshall(xsd::cxx::tree::optional<CDM::DecimalFormatData> const& option_in, SEDecimalFormat& out);
+    static void Marshall(const SEDecimalFormat& in, xsd::cxx::tree::optional<CDM::DecimalFormatData>& option_out);
     // template <typename T> class SEScalarQuantity;
     template <typename Unit>
-    static void Marshall(const CDM::ScalarData& in, SEScalarQuantity<Unit>& out);
+    static void UnMarshall(const CDM::ScalarData& in, SEScalarQuantity<Unit>& out);
     template <typename Unit>
-    static void UnMarshall(const SEScalarQuantity<Unit>& in, CDM::ScalarData& out);
+    static void Marshall(const SEScalarQuantity<Unit>& in, CDM::ScalarData& out);
     // class SEDecimalFormat;
-    static void Marshall(const CDM::DecimalFormatData& in, SEDecimalFormat& out);
-    static void UnMarshall(const SEDecimalFormat& in, CDM::DecimalFormatData& out);
+    static void UnMarshall(const CDM::DecimalFormatData& in, SEDecimalFormat& out);
+    static void Marshall(const SEDecimalFormat& in, CDM::DecimalFormatData& out);
     // class SEFunctionElectricPotentialVsTime;
-    static void Marshall(const CDM::FunctionElectricPotentialVsTimeData& in, SEFunctionElectricPotentialVsTime& out);
-    static void UnMarshall(const SEFunctionElectricPotentialVsTime& in, CDM::FunctionElectricPotentialVsTimeData& out);
+    static void UnMarshall(const CDM::FunctionElectricPotentialVsTimeData& in, SEFunctionElectricPotentialVsTime& out);
+    static void Marshall(const SEFunctionElectricPotentialVsTime& in, CDM::FunctionElectricPotentialVsTimeData& out);
     // class SEFunction;
-    static void Marshall(const CDM::FunctionData& in, SEFunction& out);
-    static void UnMarshall(const SEFunction& in, CDM::FunctionData& out);
+    static void UnMarshall(const CDM::FunctionData& in, SEFunction& out);
+    static void Marshall(const SEFunction& in, CDM::FunctionData& out);
     // class SEFunctionVolumeVsTime;
-    static void Marshall(const CDM::FunctionVolumeVsTimeData& in, SEFunctionVolumeVsTime& out);
-    static void UnMarshall(const SEFunctionVolumeVsTime& in, CDM::FunctionVolumeVsTimeData& out);
+    static void UnMarshall(const CDM::FunctionVolumeVsTimeData& in, SEFunctionVolumeVsTime& out);
+    static void Marshall(const SEFunctionVolumeVsTime& in, CDM::FunctionVolumeVsTimeData& out);
     // class SEHistogramFractionVsLength;
-    static void Marshall(const CDM::HistogramFractionVsLengthData& in, SEHistogramFractionVsLength& out);
-    static void UnMarshall(const SEHistogramFractionVsLength& in, CDM::HistogramFractionVsLengthData& out);
+    static void UnMarshall(const CDM::HistogramFractionVsLengthData& in, SEHistogramFractionVsLength& out);
+    static void Marshall(const SEHistogramFractionVsLength& in, CDM::HistogramFractionVsLengthData& out);
     // class SEHistogram;
-    static void Marshall(const CDM::HistogramData& in, SEHistogram& out);
-    static void UnMarshall(const SEHistogram& in, CDM::HistogramData& out);
+    static void UnMarshall(const CDM::HistogramData& in, SEHistogram& out);
+    static void Marshall(const SEHistogram& in, CDM::HistogramData& out);
     // class SEScalar0To1;
-    static void Marshall(const CDM::Scalar0To1Data& in, SEScalar0To1& out);
-    static void UnMarshall(const SEScalar0To1& in, CDM::Scalar0To1Data& out);
+    static void UnMarshall(const CDM::Scalar0To1Data& in, SEScalar0To1& out);
+    static void Marshall(const SEScalar0To1& in, CDM::Scalar0To1Data& out);
     // class SEScalarAmount;
-    static void Marshall(const CDM::ScalarAmountData& in, SEScalarAmount& out);
-    static void UnMarshall(const SEScalarAmount& in, CDM::ScalarAmountData& out);
+    static void UnMarshall(const CDM::ScalarAmountData& in, SEScalarAmount& out);
+    static void Marshall(const SEScalarAmount& in, CDM::ScalarAmountData& out);
     // class SEScalarAmountPerMass;
-    static void Marshall(const CDM::ScalarAmountPerMassData& in, SEScalarAmountPerMass& out);
-    static void UnMarshall(const SEScalarAmountPerMass& in, CDM::ScalarAmountPerMassData& out);
+    static void UnMarshall(const CDM::ScalarAmountPerMassData& in, SEScalarAmountPerMass& out);
+    static void Marshall(const SEScalarAmountPerMass& in, CDM::ScalarAmountPerMassData& out);
     // class SEScalarAmountPerTime;
-    static void Marshall(const CDM::ScalarAmountPerTimeData& in, SEScalarAmountPerTime& out);
-    static void UnMarshall(const SEScalarAmountPerTime& in, CDM::ScalarAmountPerTimeData& out);
+    static void UnMarshall(const CDM::ScalarAmountPerTimeData& in, SEScalarAmountPerTime& out);
+    static void Marshall(const SEScalarAmountPerTime& in, CDM::ScalarAmountPerTimeData& out);
     // class SEScalarAmountPerVolume;
-    static void Marshall(const CDM::ScalarAmountPerVolumeData& in, SEScalarAmountPerVolume& out);
-    static void UnMarshall(const SEScalarAmountPerVolume& in, CDM::ScalarAmountPerVolumeData& out);
+    static void UnMarshall(const CDM::ScalarAmountPerVolumeData& in, SEScalarAmountPerVolume& out);
+    static void Marshall(const SEScalarAmountPerVolume& in, CDM::ScalarAmountPerVolumeData& out);
     // class SEScalarArea;
-    static void Marshall(const CDM::ScalarAreaData& in, SEScalarArea& out);
-    static void UnMarshall(const SEScalarArea& in, CDM::ScalarAreaData& out);
+    static void UnMarshall(const CDM::ScalarAreaData& in, SEScalarArea& out);
+    static void Marshall(const SEScalarArea& in, CDM::ScalarAreaData& out);
     // class SEScalarAreaPerTimePressure;
-    static void Marshall(const CDM::ScalarAreaPerTimePressureData& in, SEScalarAreaPerTimePressure& out);
-    static void UnMarshall(const SEScalarAreaPerTimePressure& in, CDM::ScalarAreaPerTimePressureData& out);
+    static void UnMarshall(const CDM::ScalarAreaPerTimePressureData& in, SEScalarAreaPerTimePressure& out);
+    static void Marshall(const SEScalarAreaPerTimePressure& in, CDM::ScalarAreaPerTimePressureData& out);
     // class SEScalarElectricCapacitance;
-    static void Marshall(const CDM::ScalarElectricCapacitanceData& in, SEScalarElectricCapacitance& out);
-    static void UnMarshall(const SEScalarElectricCapacitance& in, CDM::ScalarElectricCapacitanceData& out);
+    static void UnMarshall(const CDM::ScalarElectricCapacitanceData& in, SEScalarElectricCapacitance& out);
+    static void Marshall(const SEScalarElectricCapacitance& in, CDM::ScalarElectricCapacitanceData& out);
     // class SEScalarElectricCharge;
-    static void Marshall(const CDM::ScalarElectricChargeData& in, SEScalarElectricCharge& out);
-    static void UnMarshall(const SEScalarElectricCharge& in, CDM::ScalarElectricChargeData& out);
+    static void UnMarshall(const CDM::ScalarElectricChargeData& in, SEScalarElectricCharge& out);
+    static void Marshall(const SEScalarElectricCharge& in, CDM::ScalarElectricChargeData& out);
     // class SEScalarElectricCurrent;
-    static void Marshall(const CDM::ScalarElectricCurrentData& in, SEScalarElectricCurrent& out);
-    static void UnMarshall(const SEScalarElectricCurrent& in, CDM::ScalarElectricCurrentData& out);
+    static void UnMarshall(const CDM::ScalarElectricCurrentData& in, SEScalarElectricCurrent& out);
+    static void Marshall(const SEScalarElectricCurrent& in, CDM::ScalarElectricCurrentData& out);
     // class SEScalarElectricInductance;
-    static void Marshall(const CDM::ScalarElectricInductanceData& in, SEScalarElectricInductance& out);
-    static void UnMarshall(const SEScalarElectricInductance& in, CDM::ScalarElectricInductanceData& out);
+    static void UnMarshall(const CDM::ScalarElectricInductanceData& in, SEScalarElectricInductance& out);
+    static void Marshall(const SEScalarElectricInductance& in, CDM::ScalarElectricInductanceData& out);
     // class SEScalarElectricPotential;
-    static void Marshall(const CDM::ScalarElectricPotentialData& in, SEScalarElectricPotential& out);
-    static void UnMarshall(const SEScalarElectricPotential& in, CDM::ScalarElectricPotentialData& out);
+    static void UnMarshall(const CDM::ScalarElectricPotentialData& in, SEScalarElectricPotential& out);
+    static void Marshall(const SEScalarElectricPotential& in, CDM::ScalarElectricPotentialData& out);
     // class SEScalarElectricResistance;
-    static void Marshall(const CDM::ScalarElectricResistanceData& in, SEScalarElectricResistance& out);
-    static void UnMarshall(const SEScalarElectricResistance& in, CDM::ScalarElectricResistanceData& out);
+    static void UnMarshall(const CDM::ScalarElectricResistanceData& in, SEScalarElectricResistance& out);
+    static void Marshall(const SEScalarElectricResistance& in, CDM::ScalarElectricResistanceData& out);
     // class SEScalarEnergy;
-    static void Marshall(const CDM::ScalarEnergyData& in, SEScalarEnergy& out);
-    static void UnMarshall(const SEScalarEnergy& in, CDM::ScalarEnergyData& out);
+    static void UnMarshall(const CDM::ScalarEnergyData& in, SEScalarEnergy& out);
+    static void Marshall(const SEScalarEnergy& in, CDM::ScalarEnergyData& out);
     // class SEScalarEnergyPerAmount;
-    static void Marshall(const CDM::ScalarEnergyPerAmountData& in, SEScalarEnergyPerAmount& out);
-    static void UnMarshall(const SEScalarEnergyPerAmount& in, CDM::ScalarEnergyPerAmountData& out);
+    static void UnMarshall(const CDM::ScalarEnergyPerAmountData& in, SEScalarEnergyPerAmount& out);
+    static void Marshall(const SEScalarEnergyPerAmount& in, CDM::ScalarEnergyPerAmountData& out);
     // class SEScalarEnergyPerMass;
-    static void Marshall(const CDM::ScalarEnergyPerMassData& in, SEScalarEnergyPerMass& out);
-    static void UnMarshall(const SEScalarEnergyPerMass& in, CDM::ScalarEnergyPerMassData& out);
+    static void UnMarshall(const CDM::ScalarEnergyPerMassData& in, SEScalarEnergyPerMass& out);
+    static void Marshall(const SEScalarEnergyPerMass& in, CDM::ScalarEnergyPerMassData& out);
     // class SEScalarFlowCompliance;
-    static void Marshall(const CDM::ScalarFlowComplianceData& in, SEScalarFlowCompliance& out);
-    static void UnMarshall(const SEScalarFlowCompliance& in, CDM::ScalarFlowComplianceData& out);
+    static void UnMarshall(const CDM::ScalarFlowComplianceData& in, SEScalarFlowCompliance& out);
+    static void Marshall(const SEScalarFlowCompliance& in, CDM::ScalarFlowComplianceData& out);
     // class SEScalarFlowElastance;
-    static void Marshall(const CDM::ScalarFlowElastanceData& in, SEScalarFlowElastance& out);
-    static void UnMarshall(const SEScalarFlowElastance& in, CDM::ScalarFlowElastanceData& out);
+    static void UnMarshall(const CDM::ScalarFlowElastanceData& in, SEScalarFlowElastance& out);
+    static void Marshall(const SEScalarFlowElastance& in, CDM::ScalarFlowElastanceData& out);
     // class SEScalarFlowInertance;
-    static void Marshall(const CDM::ScalarFlowInertanceData& in, SEScalarFlowInertance& out);
-    static void UnMarshall(const SEScalarFlowInertance& in, CDM::ScalarFlowInertanceData& out);
+    static void UnMarshall(const CDM::ScalarFlowInertanceData& in, SEScalarFlowInertance& out);
+    static void Marshall(const SEScalarFlowInertance& in, CDM::ScalarFlowInertanceData& out);
     // class SEScalarFlowResistance;
-    static void Marshall(const CDM::ScalarFlowResistanceData& in, SEScalarFlowResistance& out);
-    static void UnMarshall(const SEScalarFlowResistance& in, CDM::ScalarFlowResistanceData& out);
+    static void UnMarshall(const CDM::ScalarFlowResistanceData& in, SEScalarFlowResistance& out);
+    static void Marshall(const SEScalarFlowResistance& in, CDM::ScalarFlowResistanceData& out);
     // class SEScalarForce;
-    static void Marshall(const CDM::ScalarForceData& in, SEScalarForce& out);
-    static void UnMarshall(const SEScalarForce& in, CDM::ScalarForceData& out);
+    static void UnMarshall(const CDM::ScalarForceData& in, SEScalarForce& out);
+    static void Marshall(const SEScalarForce& in, CDM::ScalarForceData& out);
     // class SEScalarFraction;
-    static void Marshall(const CDM::ScalarFractionData& in, SEScalarFraction& out);
-    static void UnMarshall(const SEScalarFraction& in, CDM::ScalarFractionData& out);
+    static void UnMarshall(const CDM::ScalarFractionData& in, SEScalarFraction& out);
+    static void Marshall(const SEScalarFraction& in, CDM::ScalarFractionData& out);
     // class SEScalarFrequency;
-    static void Marshall(const CDM::ScalarFrequencyData& in, SEScalarFrequency& out);
-    static void UnMarshall(const SEScalarFrequency& in, CDM::ScalarFrequencyData& out);
+    static void UnMarshall(const CDM::ScalarFrequencyData& in, SEScalarFrequency& out);
+    static void Marshall(const SEScalarFrequency& in, CDM::ScalarFrequencyData& out);
     // class SEScalar;
-    static void Marshall(const CDM::ScalarData& in, SEScalar& out);
-    static void UnMarshall(const SEScalar& in, CDM::ScalarData& out);
+    static void UnMarshall(const CDM::ScalarData& in, SEScalar& out);
+    static void Marshall(const SEScalar& in, CDM::ScalarData& out);
     // class SEScalarHeatCapacitance;
-    static void Marshall(const CDM::ScalarHeatCapacitanceData& in, SEScalarHeatCapacitance& out);
-    static void UnMarshall(const SEScalarHeatCapacitance& in, CDM::ScalarHeatCapacitanceData& out);
+    static void UnMarshall(const CDM::ScalarHeatCapacitanceData& in, SEScalarHeatCapacitance& out);
+    static void Marshall(const SEScalarHeatCapacitance& in, CDM::ScalarHeatCapacitanceData& out);
     // class SEScalarHeatCapacitancePerAmount;
-    static void Marshall(const CDM::ScalarHeatCapacitancePerAmountData& in, SEScalarHeatCapacitancePerAmount& out);
-    static void UnMarshall(const SEScalarHeatCapacitancePerAmount& in, CDM::ScalarHeatCapacitancePerAmountData& out);
+    static void UnMarshall(const CDM::ScalarHeatCapacitancePerAmountData& in, SEScalarHeatCapacitancePerAmount& out);
+    static void Marshall(const SEScalarHeatCapacitancePerAmount& in, CDM::ScalarHeatCapacitancePerAmountData& out);
     // class SEScalarHeatCapacitancePerMass;
-    static void Marshall(const CDM::ScalarHeatCapacitancePerMassData& in, SEScalarHeatCapacitancePerMass& out);
-    static void UnMarshall(const SEScalarHeatCapacitancePerMass& in, CDM::ScalarHeatCapacitancePerMassData& out);
+    static void UnMarshall(const CDM::ScalarHeatCapacitancePerMassData& in, SEScalarHeatCapacitancePerMass& out);
+    static void Marshall(const SEScalarHeatCapacitancePerMass& in, CDM::ScalarHeatCapacitancePerMassData& out);
     // class SEScalarHeatConductance;
-    static void Marshall(const CDM::ScalarHeatConductanceData& in, SEScalarHeatConductance& out);
-    static void UnMarshall(const SEScalarHeatConductance& in, CDM::ScalarHeatConductanceData& out);
+    static void UnMarshall(const CDM::ScalarHeatConductanceData& in, SEScalarHeatConductance& out);
+    static void Marshall(const SEScalarHeatConductance& in, CDM::ScalarHeatConductanceData& out);
     // class SEScalarHeatConductancePerArea;
-    static void Marshall(const CDM::ScalarHeatConductancePerAreaData& in, SEScalarHeatConductancePerArea& out);
-    static void UnMarshall(const SEScalarHeatConductancePerArea& in, CDM::ScalarHeatConductancePerAreaData& out);
+    static void UnMarshall(const CDM::ScalarHeatConductancePerAreaData& in, SEScalarHeatConductancePerArea& out);
+    static void Marshall(const SEScalarHeatConductancePerArea& in, CDM::ScalarHeatConductancePerAreaData& out);
     // class SEScalarHeatInductance;
-    static void Marshall(const CDM::ScalarHeatInductanceData& in, SEScalarHeatInductance& out);
-    static void UnMarshall(const SEScalarHeatInductance& in, CDM::ScalarHeatInductanceData& out);
+    static void UnMarshall(const CDM::ScalarHeatInductanceData& in, SEScalarHeatInductance& out);
+    static void Marshall(const SEScalarHeatInductance& in, CDM::ScalarHeatInductanceData& out);
     // class SEScalarHeatResistanceArea;
-    static void Marshall(const CDM::ScalarHeatResistanceAreaData& in, SEScalarHeatResistanceArea& out);
-    static void UnMarshall(const SEScalarHeatResistanceArea& in, CDM::ScalarHeatResistanceAreaData& out);
+    static void UnMarshall(const CDM::ScalarHeatResistanceAreaData& in, SEScalarHeatResistanceArea& out);
+    static void Marshall(const SEScalarHeatResistanceArea& in, CDM::ScalarHeatResistanceAreaData& out);
     // class SEScalarHeatResistance;
-    static void Marshall(const CDM::ScalarHeatResistanceData& in, SEScalarHeatResistance& out);
-    static void UnMarshall(const SEScalarHeatResistance& in, CDM::ScalarHeatResistanceData& out);
+    static void UnMarshall(const CDM::ScalarHeatResistanceData& in, SEScalarHeatResistance& out);
+    static void Marshall(const SEScalarHeatResistance& in, CDM::ScalarHeatResistanceData& out);
     // class SEScalarInversePressure;
-    static void Marshall(const CDM::ScalarInversePressureData& in, SEScalarInversePressure& out);
-    static void UnMarshall(const SEScalarInversePressure& in, CDM::ScalarInversePressureData& out);
+    static void UnMarshall(const CDM::ScalarInversePressureData& in, SEScalarInversePressure& out);
+    static void Marshall(const SEScalarInversePressure& in, CDM::ScalarInversePressureData& out);
     // class SEScalarInverseVolume;
-    static void Marshall(const CDM::ScalarInverseVolumeData& in, SEScalarInverseVolume& out);
-    static void UnMarshall(const SEScalarInverseVolume& in, CDM::ScalarInverseVolumeData& out);
+    static void UnMarshall(const CDM::ScalarInverseVolumeData& in, SEScalarInverseVolume& out);
+    static void Marshall(const SEScalarInverseVolume& in, CDM::ScalarInverseVolumeData& out);
     // class SEScalarLength;
-    static void Marshall(const CDM::ScalarLengthData& in, SEScalarLength& out);
-    static void UnMarshall(const SEScalarLength& in, CDM::ScalarLengthData& out);
+    static void UnMarshall(const CDM::ScalarLengthData& in, SEScalarLength& out);
+    static void Marshall(const SEScalarLength& in, CDM::ScalarLengthData& out);
     // class SEScalarLengthPerTime;
-    static void Marshall(const CDM::ScalarLengthPerTimeData& in, SEScalarLengthPerTime& out);
-    static void UnMarshall(const SEScalarLengthPerTime& in, CDM::ScalarLengthPerTimeData& out);
+    static void UnMarshall(const CDM::ScalarLengthPerTimeData& in, SEScalarLengthPerTime& out);
+    static void Marshall(const SEScalarLengthPerTime& in, CDM::ScalarLengthPerTimeData& out);
     // class SEScalarLengthPerTimePressure;
-    static void Marshall(const CDM::ScalarLengthPerTimePressureData& in, SEScalarLengthPerTimePressure& out);
-    static void UnMarshall(const SEScalarLengthPerTimePressure& in, CDM::ScalarLengthPerTimePressureData& out);
+    static void UnMarshall(const CDM::ScalarLengthPerTimePressureData& in, SEScalarLengthPerTimePressure& out);
+    static void Marshall(const SEScalarLengthPerTimePressure& in, CDM::ScalarLengthPerTimePressureData& out);
     // class SEScalarMass;
-    static void Marshall(const CDM::ScalarMassData& in, SEScalarMass& out);
-    static void UnMarshall(const SEScalarMass& in, CDM::ScalarMassData& out);
+    static void UnMarshall(const CDM::ScalarMassData& in, SEScalarMass& out);
+    static void Marshall(const SEScalarMass& in, CDM::ScalarMassData& out);
     // class SEScalarMassPerAmount;
-    static void Marshall(const CDM::ScalarMassPerAmountData& in, SEScalarMassPerAmount& out);
-    static void UnMarshall(const SEScalarMassPerAmount& in, CDM::ScalarMassPerAmountData& out);
+    static void UnMarshall(const CDM::ScalarMassPerAmountData& in, SEScalarMassPerAmount& out);
+    static void Marshall(const SEScalarMassPerAmount& in, CDM::ScalarMassPerAmountData& out);
     // class SEScalarMassPerAreaTime;
-    static void Marshall(const CDM::ScalarMassPerAreaTimeData& in, SEScalarMassPerAreaTime& out);
-    static void UnMarshall(const SEScalarMassPerAreaTime& in, CDM::ScalarMassPerAreaTimeData& out);
+    static void UnMarshall(const CDM::ScalarMassPerAreaTimeData& in, SEScalarMassPerAreaTime& out);
+    static void Marshall(const SEScalarMassPerAreaTime& in, CDM::ScalarMassPerAreaTimeData& out);
     // class SEScalarMassPerMass;
-    static void Marshall(const CDM::ScalarMassPerMassData& in, SEScalarMassPerMass& out);
-    static void UnMarshall(const SEScalarMassPerMass& in, CDM::ScalarMassPerMassData& out);
+    static void UnMarshall(const CDM::ScalarMassPerMassData& in, SEScalarMassPerMass& out);
+    static void Marshall(const SEScalarMassPerMass& in, CDM::ScalarMassPerMassData& out);
     // class SEScalarMassPerTime;
-    static void Marshall(const CDM::ScalarMassPerTimeData& in, SEScalarMassPerTime& out);
-    static void UnMarshall(const SEScalarMassPerTime& in, CDM::ScalarMassPerTimeData& out);
+    static void UnMarshall(const CDM::ScalarMassPerTimeData& in, SEScalarMassPerTime& out);
+    static void Marshall(const SEScalarMassPerTime& in, CDM::ScalarMassPerTimeData& out);
     // class SEScalarMassPerVolume;
-    static void Marshall(const CDM::ScalarMassPerVolumeData& in, SEScalarMassPerVolume& out);
-    static void UnMarshall(const SEScalarMassPerVolume& in, CDM::ScalarMassPerVolumeData& out);
+    static void UnMarshall(const CDM::ScalarMassPerVolumeData& in, SEScalarMassPerVolume& out);
+    static void Marshall(const SEScalarMassPerVolume& in, CDM::ScalarMassPerVolumeData& out);
     // class SEScalarNeg1To1;
-    static void Marshall(const CDM::ScalarNeg1To1Data& in, SEScalarNeg1To1& out);
-    static void UnMarshall(const SEScalarNeg1To1& in, CDM::ScalarNeg1To1Data& out);
+    static void UnMarshall(const CDM::ScalarNeg1To1Data& in, SEScalarNeg1To1& out);
+    static void Marshall(const SEScalarNeg1To1& in, CDM::ScalarNeg1To1Data& out);
     // class SEScalarOsmolality;
-    static void Marshall(const CDM::ScalarOsmolalityData& in, SEScalarOsmolality& out);
-    static void UnMarshall(const SEScalarOsmolality& in, CDM::ScalarOsmolalityData& out);
+    static void UnMarshall(const CDM::ScalarOsmolalityData& in, SEScalarOsmolality& out);
+    static void Marshall(const SEScalarOsmolality& in, CDM::ScalarOsmolalityData& out);
     // class SEScalarOsmolarity;
-    static void Marshall(const CDM::ScalarOsmolarityData& in, SEScalarOsmolarity& out);
-    static void UnMarshall(const SEScalarOsmolarity& in, CDM::ScalarOsmolarityData& out);
+    static void UnMarshall(const CDM::ScalarOsmolarityData& in, SEScalarOsmolarity& out);
+    static void Marshall(const SEScalarOsmolarity& in, CDM::ScalarOsmolarityData& out);
     // class SEScalarPower;
-    static void Marshall(const CDM::ScalarPowerData& in, SEScalarPower& out);
-    static void UnMarshall(const SEScalarPower& in, CDM::ScalarPowerData& out);
+    static void UnMarshall(const CDM::ScalarPowerData& in, SEScalarPower& out);
+    static void Marshall(const SEScalarPower& in, CDM::ScalarPowerData& out);
     // class SEScalarPowerPerAreaTemperatureToTheFourth;
-    static void Marshall(const CDM::ScalarPowerPerAreaTemperatureToTheFourthData& in, SEScalarPowerPerAreaTemperatureToTheFourth& out);
-    static void UnMarshall(const SEScalarPowerPerAreaTemperatureToTheFourth& in, CDM::ScalarPowerPerAreaTemperatureToTheFourthData& out);
+    static void UnMarshall(const CDM::ScalarPowerPerAreaTemperatureToTheFourthData& in, SEScalarPowerPerAreaTemperatureToTheFourth& out);
+    static void Marshall(const SEScalarPowerPerAreaTemperatureToTheFourth& in, CDM::ScalarPowerPerAreaTemperatureToTheFourthData& out);
     // class SEScalarPressure;
-    static void Marshall(const CDM::ScalarPressureData& in, SEScalarPressure& out);
-    static void UnMarshall(const SEScalarPressure& in, CDM::ScalarPressureData& out);
+    static void UnMarshall(const CDM::ScalarPressureData& in, SEScalarPressure& out);
+    static void Marshall(const SEScalarPressure& in, CDM::ScalarPressureData& out);
     // class SEScalarPressurePerVolume;
-    static void Marshall(const CDM::ScalarPressurePerVolumeData& in, SEScalarPressurePerVolume& out);
-    static void UnMarshall(const SEScalarPressurePerVolume& in, CDM::ScalarPressurePerVolumeData& out);
+    static void UnMarshall(const CDM::ScalarPressurePerVolumeData& in, SEScalarPressurePerVolume& out);
+    static void Marshall(const SEScalarPressurePerVolume& in, CDM::ScalarPressurePerVolumeData& out);
     // class SEScaMlarPressureTimePerArea;
-    static void Marshall(const CDM::ScalarPressureTimePerAreaData& in, SEScalarPressureTimePerArea& out);
-    static void UnMarshall(const SEScalarPressureTimePerArea& in, CDM::ScalarPressureTimePerAreaData& out);
+    static void UnMarshall(const CDM::ScalarPressureTimePerAreaData& in, SEScalarPressureTimePerArea& out);
+    static void Marshall(const SEScalarPressureTimePerArea& in, CDM::ScalarPressureTimePerAreaData& out);
     // class SEScalarPressureTimePerVolumeArea;
-    static void Marshall(const CDM::ScalarPressureTimePerVolumeAreaData& in, SEScalarPressureTimePerVolumeArea& out);
-    static void UnMarshall(const SEScalarPressureTimePerVolumeArea& in, CDM::ScalarPressureTimePerVolumeAreaData& out);
+    static void UnMarshall(const CDM::ScalarPressureTimePerVolumeAreaData& in, SEScalarPressureTimePerVolumeArea& out);
+    static void Marshall(const SEScalarPressureTimePerVolumeArea& in, CDM::ScalarPressureTimePerVolumeAreaData& out);
     // class SEScalarTemperature;
-    static void Marshall(const CDM::ScalarTemperatureData& in, SEScalarTemperature& out);
-    static void UnMarshall(const SEScalarTemperature& in, CDM::ScalarTemperatureData& out);
+    static void UnMarshall(const CDM::ScalarTemperatureData& in, SEScalarTemperature& out);
+    static void Marshall(const SEScalarTemperature& in, CDM::ScalarTemperatureData& out);
     // class SEScalarTime;
-    static void Marshall(const CDM::ScalarTimeData& in, SEScalarTime& out);
-    static void UnMarshall(const SEScalarTime& in, CDM::ScalarTimeData& out);
+    static void UnMarshall(const CDM::ScalarTimeData& in, SEScalarTime& out);
+    static void Marshall(const SEScalarTime& in, CDM::ScalarTimeData& out);
     // class SEScalarVolume;
-    static void Marshall(const CDM::ScalarVolumeData& in, SEScalarVolume& out);
-    static void UnMarshall(const SEScalarVolume& in, CDM::ScalarVolumeData& out);
+    static void UnMarshall(const CDM::ScalarVolumeData& in, SEScalarVolume& out);
+    static void Marshall(const SEScalarVolume& in, CDM::ScalarVolumeData& out);
     // class SEScalarVolumePerPressure;
-    static void Marshall(const CDM::ScalarVolumePerPressureData& in, SEScalarVolumePerPressure& out);
-    static void UnMarshall(const SEScalarVolumePerPressure& in, CDM::ScalarVolumePerPressureData& out);
+    static void UnMarshall(const CDM::ScalarVolumePerPressureData& in, SEScalarVolumePerPressure& out);
+    static void Marshall(const SEScalarVolumePerPressure& in, CDM::ScalarVolumePerPressureData& out);
     // class SEScalarVolumePerTimeArea;
-    static void Marshall(const CDM::ScalarVolumePerTimeAreaData& in, SEScalarVolumePerTimeArea& out);
-    static void UnMarshall(const SEScalarVolumePerTimeArea& in, CDM::ScalarVolumePerTimeAreaData& out);
+    static void UnMarshall(const CDM::ScalarVolumePerTimeAreaData& in, SEScalarVolumePerTimeArea& out);
+    static void Marshall(const SEScalarVolumePerTimeArea& in, CDM::ScalarVolumePerTimeAreaData& out);
     // class SEScalarVolumePerTime;
-    static void Marshall(const CDM::ScalarVolumePerTimeData& in, SEScalarVolumePerTime& out);
-    static void UnMarshall(const SEScalarVolumePerTime& in, CDM::ScalarVolumePerTimeData& out);
+    static void UnMarshall(const CDM::ScalarVolumePerTimeData& in, SEScalarVolumePerTime& out);
+    static void Marshall(const SEScalarVolumePerTime& in, CDM::ScalarVolumePerTimeData& out);
     // class SEScalarVolumePerTimeMass;
-    static void Marshall(const CDM::ScalarVolumePerTimeMassData& in, SEScalarVolumePerTimeMass& out);
-    static void UnMarshall(const SEScalarVolumePerTimeMass& in, CDM::ScalarVolumePerTimeMassData& out);
+    static void UnMarshall(const CDM::ScalarVolumePerTimeMassData& in, SEScalarVolumePerTimeMass& out);
+    static void Marshall(const SEScalarVolumePerTimeMass& in, CDM::ScalarVolumePerTimeMassData& out);
     // class SEScalarVolumePerTimePressureArea;
-    static void Marshall(const CDM::ScalarVolumePerTimePressureAreaData& in, SEScalarVolumePerTimePressureArea& out);
-    static void UnMarshall(const SEScalarVolumePerTimePressureArea& in, CDM::ScalarVolumePerTimePressureAreaData& out);
+    static void UnMarshall(const CDM::ScalarVolumePerTimePressureAreaData& in, SEScalarVolumePerTimePressureArea& out);
+    static void Marshall(const SEScalarVolumePerTimePressureArea& in, CDM::ScalarVolumePerTimePressureAreaData& out);
     // class SEScalarVolumePerTimePressure;
-    static void Marshall(const CDM::ScalarVolumePerTimePressureData& in, SEScalarVolumePerTimePressure& out);
-    static void UnMarshall(const SEScalarVolumePerTimePressure& in, CDM::ScalarVolumePerTimePressureData& out);
+    static void UnMarshall(const CDM::ScalarVolumePerTimePressureData& in, SEScalarVolumePerTimePressure& out);
+    static void Marshall(const SEScalarVolumePerTimePressure& in, CDM::ScalarVolumePerTimePressureData& out);
     // class SERunningAverage
-    static void Marshall(const CDM::RunningAverageData& in, RunningAverage& out);
-    static void UnMarshall(const RunningAverage& in, CDM::RunningAverageData& out);
+    static void UnMarshall(const CDM::RunningAverageData& in, RunningAverage& out);
+    static void Marshall(const RunningAverage& in, CDM::RunningAverageData& out);
   };
 
   //-------------------------------------------------------------------------------
   template <typename Unit>
-  void Property::Marshall(const CDM::ScalarData& in, SEScalarQuantity<Unit>& out)
+  void Property::UnMarshall(const CDM::ScalarData& in, SEScalarQuantity<Unit>& out)
   {
     out.Clear();
     if (in.unit().present()) {
@@ -351,7 +352,7 @@ namespace io {
   }
   //-------------------------------------------------------------------------------
   template <typename Unit>
-  void Property::UnMarshall(const SEScalarQuantity<Unit>& in, CDM::ScalarData& out)
+  void Property::Marshall(const SEScalarQuantity<Unit>& in, CDM::ScalarData& out)
   {
     out.value(in.m_value);
     out.unit(in.m_unit->GetString());
@@ -359,20 +360,20 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void Property::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void Property::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Invalidate();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void Property::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void Property::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 }

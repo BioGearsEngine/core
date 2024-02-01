@@ -9,8 +9,8 @@
 namespace biogears {
 namespace io {
   //----------------------------------------------------------------------------------
-  // class SEPatient
-  void Patient::Marshall(const CDM::PatientData& in, SEPatient& out)
+  //class SEPatient
+  void Patient::UnMarshall(const CDM::PatientData& in, SEPatient& out)
   {
     out.Clear();
 
@@ -22,55 +22,55 @@ namespace io {
     if (in.Sex().present()) {
       out.m_Gender = in.Sex().get();
     }
-    io::Property::Marshall(in.Age(), out.GetAge());
-    io::Property::Marshall(in.Weight(), out.GetWeight());
-    io::Property::Marshall(in.Height(), out.GetHeight());
-    io::Property::Marshall(in.AlveoliSurfaceArea(), out.GetAlveoliSurfaceArea());
-    io::Property::Marshall(in.BasalMetabolicRate(), out.GetBasalMetabolicRate());
+    io::Property::UnMarshall(in.Age(), out.GetAge());
+    io::Property::UnMarshall(in.Weight(), out.GetWeight());
+    io::Property::UnMarshall(in.Height(), out.GetHeight());
+    io::Property::UnMarshall(in.AlveoliSurfaceArea(), out.GetAlveoliSurfaceArea());
+    io::Property::UnMarshall(in.BasalMetabolicRate(), out.GetBasalMetabolicRate());
     if (in.BloodTypeRh().present()) {
       out.m_BloodRh = in.BloodTypeRh().get();
     }
     if (in.BloodTypeABO().present()) {
       out.m_BloodType = in.BloodTypeABO().get();
     }
-    io::Property::Marshall(in.BloodVolumeBaseline(), out.GetBloodVolumeBaseline());
-    io::Property::Marshall(in.BodyDensity(), out.GetBodyDensity());
-    io::Property::Marshall(in.BodyFatFraction(), out.GetBodyFatFraction());
-    io::Property::Marshall(in.DiastolicArterialPressureBaseline(), out.GetDiastolicArterialPressureBaseline());
-    io::Property::Marshall(in.ExpiratoryReserveVolume(), out.GetExpiratoryReserveVolume());
-    io::Property::Marshall(in.FunctionalResidualCapacity(), out.GetFunctionalResidualCapacity());
-    io::Property::Marshall(in.HeartRateBaseline(), out.GetHeartRateBaseline());
-    io::Property::Marshall(in.HeartRateMaximum(), out.GetHeartRateMaximum());
-    io::Property::Marshall(in.HeartRateMinimum(), out.GetHeartRateMinimum());
-    io::Property::Marshall(in.Hyperhidrosis(), out.GetHyperhidrosis());
-    io::Property::Marshall(in.InspiratoryCapacity(), out.GetInspiratoryCapacity());
-    io::Property::Marshall(in.InspiratoryReserveVolume(), out.GetInspiratoryReserveVolume());
-    io::Property::Marshall(in.LeanBodyMass(), out.GetLeanBodyMass());
-    io::Property::Marshall(in.MaxWorkRate(), out.GetMaxWorkRate());
-    io::Property::Marshall(in.MuscleMass(), out.GetMuscleMass());
-    io::Property::Marshall(in.MeanArterialPressureBaseline(), out.GetMeanArterialPressureBaseline());
-    io::Property::Marshall(in.PainSusceptibility(), out.GetPainSusceptibility());
-    io::Property::Marshall(in.ResidualVolume(), out.GetResidualVolume());
-    io::Property::Marshall(in.RespirationRateBaseline(), out.GetRespirationRateBaseline());
-    io::Property::Marshall(in.RespiratoryDriverAmplitudeBaseline(), out.GetRespiratoryDriverAmplitudeBaseline());
-    io::Property::Marshall(in.RightLungRatio(), out.GetRightLungRatio());
-    io::Property::Marshall(in.SkinSurfaceArea(), out.GetSkinSurfaceArea());
-    io::Property::Marshall(in.SleepAmount(), out.GetSleepAmount());
-    io::Property::Marshall(in.SystolicArterialPressureBaseline(), out.GetSystolicArterialPressureBaseline());
-    io::Property::Marshall(in.TotalVentilationBaseline(), out.GetTotalVentilationBaseline());
-    io::Property::Marshall(in.TidalVolumeBaseline(), out.GetTidalVolumeBaseline());
-    io::Property::Marshall(in.TotalLungCapacity(), out.GetTotalLungCapacity());
-    io::Property::Marshall(in.VitalCapacity(), out.GetVitalCapacity());
+    io::Property::UnMarshall(in.BloodVolumeBaseline(), out.GetBloodVolumeBaseline());
+    io::Property::UnMarshall(in.BodyDensity(), out.GetBodyDensity());
+    io::Property::UnMarshall(in.BodyFatFraction(), out.GetBodyFatFraction());
+    io::Property::UnMarshall(in.DiastolicArterialPressureBaseline(), out.GetDiastolicArterialPressureBaseline());
+    io::Property::UnMarshall(in.ExpiratoryReserveVolume(), out.GetExpiratoryReserveVolume());
+    io::Property::UnMarshall(in.FunctionalResidualCapacity(), out.GetFunctionalResidualCapacity());
+    io::Property::UnMarshall(in.HeartRateBaseline(), out.GetHeartRateBaseline());
+    io::Property::UnMarshall(in.HeartRateMaximum(), out.GetHeartRateMaximum());
+    io::Property::UnMarshall(in.HeartRateMinimum(), out.GetHeartRateMinimum());
+    io::Property::UnMarshall(in.Hyperhidrosis(), out.GetHyperhidrosis());
+    io::Property::UnMarshall(in.InspiratoryCapacity(), out.GetInspiratoryCapacity());
+    io::Property::UnMarshall(in.InspiratoryReserveVolume(), out.GetInspiratoryReserveVolume());
+    io::Property::UnMarshall(in.LeanBodyMass(), out.GetLeanBodyMass());
+    io::Property::UnMarshall(in.MaxWorkRate(), out.GetMaxWorkRate());
+    io::Property::UnMarshall(in.MuscleMass(), out.GetMuscleMass());
+    io::Property::UnMarshall(in.MeanArterialPressureBaseline(), out.GetMeanArterialPressureBaseline());
+    io::Property::UnMarshall(in.PainSusceptibility(), out.GetPainSusceptibility());
+    io::Property::UnMarshall(in.ResidualVolume(), out.GetResidualVolume());
+    io::Property::UnMarshall(in.RespirationRateBaseline(), out.GetRespirationRateBaseline());
+    io::Property::UnMarshall(in.RespiratoryDriverAmplitudeBaseline(), out.GetRespiratoryDriverAmplitudeBaseline());
+    io::Property::UnMarshall(in.RightLungRatio(), out.GetRightLungRatio());
+    io::Property::UnMarshall(in.SkinSurfaceArea(), out.GetSkinSurfaceArea());
+    io::Property::UnMarshall(in.SleepAmount(), out.GetSleepAmount());
+    io::Property::UnMarshall(in.SystolicArterialPressureBaseline(), out.GetSystolicArterialPressureBaseline());
+    io::Property::UnMarshall(in.TotalVentilationBaseline(), out.GetTotalVentilationBaseline());
+    io::Property::UnMarshall(in.TidalVolumeBaseline(), out.GetTidalVolumeBaseline());
+    io::Property::UnMarshall(in.TotalLungCapacity(), out.GetTotalLungCapacity());
+    io::Property::UnMarshall(in.VitalCapacity(), out.GetVitalCapacity());
 
     SEScalarTime time;
     for (auto e : in.ActiveEvent()) {
-      io::Property::Marshall(e.Duration(), time);
+      io::Property::UnMarshall(e.Duration(), time);
       out.m_EventState[e.Event()] = true;
       out.m_EventDuration_s[e.Event()] = time.GetValue(TimeUnit::s);
     }
   }
   //----------------------------------------------------------------------------------
-  void Patient::UnMarshall(const SEPatient& in, CDM::PatientData& out)
+  void Patient::Marshall(const SEPatient& in, CDM::PatientData& out)
   {
     if (in.HasName()) {
       out.Name(in.m_Name);
@@ -82,45 +82,45 @@ namespace io {
       out.Sex(in.m_Gender);
     }
 
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Age);
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Weight)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Height)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, AlveoliSurfaceArea)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, BasalMetabolicRate)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Age);
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Weight)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Height)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AlveoliSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BasalMetabolicRate)
     if (in.HasBloodRh()) {
       out.BloodTypeRh(in.m_BloodRh);
     }
     if (in.HasBloodType()) {
       out.BloodTypeABO(in.m_BloodType);
     }
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, BloodVolumeBaseline)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, BodyDensity)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, BodyFatFraction)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, DiastolicArterialPressureBaseline)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ExpiratoryReserveVolume)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, FunctionalResidualCapacity)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, HeartRateBaseline)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, HeartRateMaximum)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, HeartRateMinimum)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Hyperhidrosis)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, InspiratoryCapacity)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, InspiratoryReserveVolume)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, LeanBodyMass)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MaxWorkRate)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MuscleMass)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MeanArterialPressureBaseline)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PainSusceptibility)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ResidualVolume)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RespirationRateBaseline)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RespiratoryDriverAmplitudeBaseline)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RightLungRatio)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SkinSurfaceArea)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SleepAmount)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, SystolicArterialPressureBaseline)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TotalVentilationBaseline)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TidalVolumeBaseline)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, TotalLungCapacity)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, VitalCapacity)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BloodVolumeBaseline)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BodyDensity)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BodyFatFraction)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DiastolicArterialPressureBaseline)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExpiratoryReserveVolume)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, FunctionalResidualCapacity)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartRateBaseline)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartRateMaximum)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartRateMinimum)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Hyperhidrosis)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryCapacity)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryReserveVolume)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeanBodyMass)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MaxWorkRate)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MuscleMass)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanArterialPressureBaseline)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PainSusceptibility)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ResidualVolume)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespirationRateBaseline)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespiratoryDriverAmplitudeBaseline)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightLungRatio)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SkinSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SleepAmount)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SystolicArterialPressureBaseline)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalVentilationBaseline)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TidalVolumeBaseline)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalLungCapacity)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VitalCapacity)
 
     SEScalarTime time;
     for (auto itr : in.m_EventState) {
@@ -138,7 +138,7 @@ namespace io {
       CDM::ActivePatientEventData* eData = new CDM::ActivePatientEventData();
       eData->Event(itr.first);
 
-      io::Property::UnMarshall(time, eData->Duration());
+      io::Property::Marshall(time, eData->Duration());
       ;
       out.ActiveEvent().push_back(std::unique_ptr<CDM::ActivePatientEventData>(eData));
     }

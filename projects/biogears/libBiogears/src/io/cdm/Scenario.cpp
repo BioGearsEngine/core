@@ -52,37 +52,37 @@
 
 namespace biogears {
 namespace io {
-  void Scenario::Marshall(const CDM::ConditionData& in, SECondition& out)
+  void Scenario::UnMarshall(const CDM::ConditionData& in, SECondition& out)
   {
     out.Clear();
     if (in.Comment().present()) {
       out.m_Comment = in.Comment().get();
     }
   }
-  void Scenario::UnMarshall(const SECondition& in, CDM::ConditionData& out)
+  void Scenario::Marshall(const SECondition& in, CDM::ConditionData& out)
   {
     if (in.HasComment()) {
       out.Comment(in.m_Comment);
     }
   }
   //-----------------------------------------------------------------------------
-  // class SEAction
-  void Scenario::Marshall(const CDM::ActionData& in, SEAction& out)
+  //class SEAction
+  void Scenario::UnMarshall(const CDM::ActionData& in, SEAction& out)
   {
     out.Clear();
     if (in.Comment().present()) {
       out.m_Comment = in.Comment().get();
     }
   }
-  void Scenario::UnMarshall(const SEAction& in, CDM::ActionData& out)
+  void Scenario::Marshall(const SEAction& in, CDM::ActionData& out)
   {
     if (in.HasComment()) {
       out.Comment(in.m_Comment);
     }
   }
   //-----------------------------------------------------------------------------
-  // class SEDataRequestManager
-  void Scenario::Marshall(const CDM::DataRequestManagerData& in, const SESubstanceManager& subMgr, SEDataRequestManager& out)
+  //class SEDataRequestManager
+  void Scenario::UnMarshall(const CDM::DataRequestManagerData& in, const SESubstanceManager& subMgr, SEDataRequestManager& out)
   {
     out.Clear();
     if (in.Filename().present())
@@ -92,9 +92,9 @@ namespace io {
     if (in.SamplesPerSecond().present())
       out.m_SamplesPerSecond = in.SamplesPerSecond().get();
     if (in.DefaultDecimalFormatting().present())
-      io::Property::Marshall(in.DefaultDecimalFormatting(), out.GetDefaultDecimalFormatting());
+      io::Property::UnMarshall(in.DefaultDecimalFormatting(), out.GetDefaultDecimalFormatting());
     if (in.OverrideDecimalFormatting().present())
-      io::Property::Marshall(in.OverrideDecimalFormatting(), out.GetOverrideDecimalFormatting());
+      io::Property::UnMarshall(in.OverrideDecimalFormatting(), out.GetOverrideDecimalFormatting());
 
     for (auto& request : in.DataRequest()) {
       auto dr = factory(request, subMgr, out.m_DefaultDecimalFormatting);
@@ -105,7 +105,7 @@ namespace io {
       }
     }
   }
-  void Scenario::UnMarshall(const SEDataRequestManager& in, CDM::DataRequestManagerData& out)
+  void Scenario::Marshall(const SEDataRequestManager& in, CDM::DataRequestManagerData& out)
   {
     out.SamplesPerSecond(in.m_SamplesPerSecond);
     if (in.HasResultsFilename())
@@ -113,27 +113,28 @@ namespace io {
     if (in.HasWorkingDir())
       out.WorkingDir(in.m_WorkingDir);
     if (in.HasDefaultDecimalFormatting())
-      io::Property::UnMarshall(*in.m_DefaultDecimalFormatting, out.DefaultDecimalFormatting());
+      io::Property::Marshall(*in.m_DefaultDecimalFormatting, out.DefaultDecimalFormatting());
     if (in.HasOverrideDecimalFormatting())
-      io::Property::UnMarshall(*in.m_OverrideDecimalFormatting, out.OverrideDecimalFormatting());
+      io::Property::Marshall(*in.m_OverrideDecimalFormatting, out.OverrideDecimalFormatting());
     for (auto* dr : in.m_Requests) {
       CDM::DataRequestData data;
       out.DataRequest().push_back(io::Scenario::factory(dr));
     }
   }
   //-----------------------------------------------------------------------------
-  // class SEDataRequest
-  void Scenario::Marshall(const CDM::DataRequestData& in, SEDataRequest& out)
+  //class SEDataRequest
+  void Scenario::UnMarshall(const CDM::DataRequestData& in, SEDataRequest& out)
   {
-    io::Property::Marshall(static_cast<CDM::DecimalFormatData const&>(in), static_cast<SEDecimalFormat&>(out));
+    io::Property::UnMarshall(static_cast<CDM::DecimalFormatData const&>(in), static_cast<SEDecimalFormat&>(out));
     out.m_Name = in.Name();
     if (in.Unit().present()) {
       out.m_RequestedUnit = in.Unit().get();
     }
   }
-  void Scenario::UnMarshall(const SEDataRequest& in, CDM::DataRequestData& out)
+  //-----------------------------------------------------------------------------
+  void Scenario::Marshall(const SEDataRequest& in, CDM::DataRequestData& out)
   {
-    io::Property::UnMarshall(static_cast<SEDecimalFormat const&>(in), static_cast<CDM::DecimalFormatData&>(out));
+    io::Property::Marshall(static_cast<SEDecimalFormat const&>(in), static_cast<CDM::DecimalFormatData&>(out));
     out.Name(in.m_Name);
     if (in.HasUnit()) {
       out.Unit(in.m_Unit->GetString());
@@ -143,130 +144,129 @@ namespace io {
     }
   }
   //-----------------------------------------------------------------------------
-  // class SEPatientDataRequest
-  void Scenario::Marshall(const CDM::PatientDataRequestData& in, SEPatientDataRequest& out)
+  //class SEPatientDataRequest
+  void Scenario::UnMarshall(const CDM::PatientDataRequestData& in, SEPatientDataRequest& out)
   {
-    io::Scenario::Marshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
+    io::Scenario::UnMarshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
   }
-  void Scenario::UnMarshall(const SEPatientDataRequest& in, CDM::PatientDataRequestData& out)
+  void Scenario::Marshall(const SEPatientDataRequest& in, CDM::PatientDataRequestData& out)
   {
-    io::Scenario::UnMarshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
-  }
-  //-----------------------------------------------------------------------------
-  // class SEPhysiologyDataRequest
-  void Scenario::Marshall(const CDM::PhysiologyDataRequestData& in, SEPhysiologyDataRequest& out)
-  {
-    io::Scenario::Marshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
-  }
-  void Scenario::UnMarshall(const SEPhysiologyDataRequest& in, CDM::PhysiologyDataRequestData& out)
-  {
-    io::Scenario::UnMarshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
+    io::Scenario::Marshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
   }
   //-----------------------------------------------------------------------------
-  // class SEEnvironmentDataRequest
-  void Scenario::Marshall(const CDM::EnvironmentDataRequestData& in, SEEnvironmentDataRequest& out)
+  //class SEPhysiologyDataRequest
+  void Scenario::UnMarshall(const CDM::PhysiologyDataRequestData& in, SEPhysiologyDataRequest& out)
   {
-    io::Scenario::Marshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
+    io::Scenario::UnMarshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
   }
-  void Scenario::UnMarshall(const SEEnvironmentDataRequest& in, CDM::EnvironmentDataRequestData& out)
+  void Scenario::Marshall(const SEPhysiologyDataRequest& in, CDM::PhysiologyDataRequestData& out)
   {
-    io::Scenario::UnMarshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
+    io::Scenario::Marshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
   }
   //-----------------------------------------------------------------------------
-  // class SEEquipmentDataRequest
-  void Scenario::Marshall(const CDM::EquipmentDataRequestData& in, SEEquipmentDataRequest& out)
+  //class SEEnvironmentDataRequest
+  void Scenario::UnMarshall(const CDM::EnvironmentDataRequestData& in, SEEnvironmentDataRequest& out)
   {
-    io::Scenario::Marshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
+    io::Scenario::UnMarshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
+  }
+  void Scenario::Marshall(const SEEnvironmentDataRequest& in, CDM::EnvironmentDataRequestData& out)
+  {
+    io::Scenario::Marshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
+  }
+  //-----------------------------------------------------------------------------
+  //class SEEquipmentDataRequest
+  void Scenario::UnMarshall(const CDM::EquipmentDataRequestData& in, SEEquipmentDataRequest& out)
+  {
+    io::Scenario::UnMarshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
     out.SetType(in.Type());
   }
-  void Scenario::UnMarshall(const SEEquipmentDataRequest& in, CDM::EquipmentDataRequestData& out)
+  void Scenario::Marshall(const SEEquipmentDataRequest& in, CDM::EquipmentDataRequestData& out)
   {
-    io::Scenario::UnMarshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
+    io::Scenario::Marshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
     if (in.HasType()) {
       out.Type(in.m_Type);
     }
   }
   //-----------------------------------------------------------------------------
-  // class SECompartmentDataRequest
-  void Scenario::Marshall(const CDM::CompartmentDataRequestData& in, SECompartmentDataRequest& out)
+  //class SECompartmentDataRequest
+  void Scenario::UnMarshall(const CDM::CompartmentDataRequestData& in, SECompartmentDataRequest& out)
   {
-    io::Scenario::Marshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
+    io::Scenario::UnMarshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
     out.SetCompartment(in.Compartment());
   }
-  void Scenario::UnMarshall(const SECompartmentDataRequest& in, CDM::CompartmentDataRequestData& out)
+  void Scenario::Marshall(const SECompartmentDataRequest& in, CDM::CompartmentDataRequestData& out)
   {
-    io::Scenario::UnMarshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
+    io::Scenario::Marshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
     out.Compartment(in.m_Compartment);
   }
   //-----------------------------------------------------------------------------
-  // class SECompartmentSubstanceDataRequest
-  void Scenario::Marshall(const CDM::CompartmentSubstanceDataRequestData& in, SESubstanceManager const& substances, SECompartmentSubstanceDataRequest& out)
+  //class SECompartmentSubstanceDataRequest
+  void Scenario::UnMarshall(const CDM::CompartmentSubstanceDataRequestData& in, SESubstanceManager const& substances, SECompartmentSubstanceDataRequest& out)
   {
-    io::Scenario::Marshall(static_cast<CDM::CompartmentDataRequestData const&>(in), static_cast<SECompartmentDataRequest&>(out));
+    io::Scenario::UnMarshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
     if (in.Substance().present()) {
       out.SetSubstance(substances.GetSubstance(in.Substance().get()));
     }
   }
-
-  void Scenario::UnMarshall(const SECompartmentSubstanceDataRequest& in, CDM::CompartmentSubstanceDataRequestData& out)
+  void Scenario::Marshall(const SECompartmentSubstanceDataRequest& in, CDM::CompartmentSubstanceDataRequestData& out)
   {
-    io::Scenario::UnMarshall(static_cast<SECompartmentDataRequest const&>(in), static_cast<CDM::CompartmentDataRequestData&>(out));
+    io::Scenario::Marshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
     if (in.HasSubstance()) {
       out.Substance(in.m_Substance->GetName());
     }
   }
   //-----------------------------------------------------------------------------
-  // class SEGasCompartmentDataRequest
-  void Scenario::Marshall(const CDM::GasCompartmentDataRequestData& in, SESubstanceManager const& substances, SEGasCompartmentDataRequest& out)
+  //class SEGasCompartmentDataRequest
+  void Scenario::UnMarshall(const CDM::GasCompartmentDataRequestData& in, SESubstanceManager const& substances, SEGasCompartmentDataRequest& out)
   {
-    io::Scenario::Marshall(static_cast<CDM::CompartmentSubstanceDataRequestData const&>(in), substances, static_cast<SECompartmentSubstanceDataRequest&>(out));
+    io::Scenario::UnMarshall(static_cast<CDM::CompartmentSubstanceDataRequestData const&>(in), substances, static_cast<SECompartmentSubstanceDataRequest&>(out));
   }
-  void Scenario::UnMarshall(const SEGasCompartmentDataRequest& in, CDM::GasCompartmentDataRequestData& out)
+  void Scenario::Marshall(const SEGasCompartmentDataRequest& in, CDM::GasCompartmentDataRequestData& out)
   {
-    io::Scenario::UnMarshall(static_cast<SECompartmentSubstanceDataRequest const&>(in), static_cast<CDM::CompartmentSubstanceDataRequestData&>(out));
-  }
-  //-----------------------------------------------------------------------------
-  // class SELiquidCompartmentDataRequest0
-  void Scenario::Marshall(const CDM::LiquidCompartmentDataRequestData& in, SESubstanceManager const& substances, SELiquidCompartmentDataRequest& out)
-  {
-    io::Scenario::Marshall(static_cast<CDM::CompartmentSubstanceDataRequestData const&>(in), substances, static_cast<SECompartmentSubstanceDataRequest&>(out));
-  }
-  void Scenario::UnMarshall(const SELiquidCompartmentDataRequest& in, CDM::LiquidCompartmentDataRequestData& out)
-  {
-    io::Scenario::UnMarshall(static_cast<SECompartmentSubstanceDataRequest const&>(in), static_cast<CDM::CompartmentSubstanceDataRequestData&>(out));
+    io::Scenario::Marshall(static_cast<SECompartmentSubstanceDataRequest const&>(in), static_cast<CDM::CompartmentSubstanceDataRequestData&>(out));
   }
   //-----------------------------------------------------------------------------
-  // class SEThermalCompartmentDataRequest
-  void Scenario::Marshall(const CDM::ThermalCompartmentDataRequestData& in, SEThermalCompartmentDataRequest& out)
+  //class SELiquidCompartmentDataRequest0
+  void Scenario::UnMarshall(const CDM::LiquidCompartmentDataRequestData& in, SESubstanceManager const& substances, SELiquidCompartmentDataRequest& out)
   {
-    io::Scenario::Marshall(static_cast<CDM::CompartmentDataRequestData const&>(in), static_cast<SECompartmentDataRequest&>(out));
+    io::Scenario::UnMarshall(static_cast<CDM::CompartmentSubstanceDataRequestData const&>(in), substances, static_cast<SECompartmentSubstanceDataRequest&>(out));
   }
-  void Scenario::UnMarshall(const SEThermalCompartmentDataRequest& in, CDM::ThermalCompartmentDataRequestData& out)
+  void Scenario::Marshall(const SELiquidCompartmentDataRequest& in, CDM::LiquidCompartmentDataRequestData& out)
   {
-    io::Scenario::UnMarshall(static_cast<SECompartmentDataRequest const&>(in), static_cast<CDM::CompartmentDataRequestData&>(out));
+    io::Scenario::Marshall(static_cast<SECompartmentSubstanceDataRequest const&>(in), static_cast<CDM::CompartmentSubstanceDataRequestData&>(out));
   }
   //-----------------------------------------------------------------------------
-  // class SETissueCompartmentDataRequest
-  void Scenario::Marshall(const CDM::TissueCompartmentDataRequestData& in, SETissueCompartmentDataRequest& out)
+  //class SEThermalCompartmentDataRequest
+  void Scenario::UnMarshall(const CDM::ThermalCompartmentDataRequestData& in, SEThermalCompartmentDataRequest& out)
   {
-    io::Scenario::Marshall(static_cast<CDM::CompartmentDataRequestData const&>(in), static_cast<SECompartmentDataRequest&>(out));
+    io::Scenario::UnMarshall(static_cast<CDM::CompartmentDataRequestData const&>(in), static_cast<SECompartmentDataRequest&>(out));
   }
-  void Scenario::UnMarshall(const SETissueCompartmentDataRequest& in, CDM::TissueCompartmentDataRequestData& out)
+  void Scenario::Marshall(const SEThermalCompartmentDataRequest& in, CDM::ThermalCompartmentDataRequestData& out)
   {
-    io::Scenario::UnMarshall(static_cast<SECompartmentDataRequest const&>(in), static_cast<CDM::CompartmentDataRequestData&>(out));
+    io::Scenario::Marshall(static_cast<SECompartmentDataRequest const&>(in), static_cast<CDM::CompartmentDataRequestData&>(out));
   }
-  // class SESubstanceDataRequest
-  void Scenario::Marshall(const CDM::SubstanceDataRequestData& in, SESubstanceManager const& substances, SESubstanceDataRequest& out)
+  //-----------------------------------------------------------------------------
+  //class SETissueCompartmentDataRequest
+  void Scenario::UnMarshall(const CDM::TissueCompartmentDataRequestData& in, SETissueCompartmentDataRequest& out)
   {
-    io::Scenario::Marshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
+    io::Scenario::UnMarshall(static_cast<CDM::CompartmentDataRequestData const&>(in), static_cast<SECompartmentDataRequest&>(out));
+  }
+  void Scenario::Marshall(const SETissueCompartmentDataRequest& in, CDM::TissueCompartmentDataRequestData& out)
+  {
+    io::Scenario::Marshall(static_cast<SECompartmentDataRequest const&>(in), static_cast<CDM::CompartmentDataRequestData&>(out));
+  }
+  //class SESubstanceDataRequest
+  void Scenario::UnMarshall(const CDM::SubstanceDataRequestData& in, SESubstanceManager const& substances, SESubstanceDataRequest& out)
+  {
+    io::Scenario::UnMarshall(static_cast<CDM::DataRequestData const&>(in), static_cast<SEDataRequest&>(out));
     if (in.Compartment().present()) {
       out.SetCompartment(in.Compartment().get());
     }
     out.SetSubstance(substances.GetSubstance(in.Substance()));
   }
-  void Scenario::UnMarshall(const SESubstanceDataRequest& in, CDM::SubstanceDataRequestData& out)
+  void Scenario::Marshall(const SESubstanceDataRequest& in, CDM::SubstanceDataRequestData& out)
   {
-    io::Scenario::UnMarshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
+    io::Scenario::Marshall(static_cast<SEDataRequest const&>(in), static_cast<CDM::DataRequestData&>(out));
     if (in.HasCompartment()) {
       out.Compartment(in.m_Compartment);
     }
@@ -275,8 +275,8 @@ namespace io {
     }
   }
   //-----------------------------------------------------------------------------
-  // class SEScenario
-  void Scenario::Marshall(const CDM::ScenarioData& in, SEScenario& out)
+  //class SEScenario
+  void Scenario::UnMarshall(const CDM::ScenarioData& in, SEScenario& out)
   {
     out.Clear();
     if (in.Name().present()) {
@@ -288,15 +288,15 @@ namespace io {
     if (in.EngineStateFile().present()) {
       out.SetEngineStateFile(in.EngineStateFile().get());
     } else if (in.InitialParameters().present()) {
-      Marshall(in.InitialParameters(), out.GetInitialParameters());
+      UnMarshall(in.InitialParameters(), out.GetInitialParameters());
     } else {
       throw CommonDataModelException("No State or Initial Parameters provided");
     }
     if (in.AutoSerialization().present()) {
-      Marshall(in.AutoSerialization(), out.GetAutoSerialization());
+      UnMarshall(in.AutoSerialization(), out.GetAutoSerialization());
     }
     if (in.DataRequests().present()) {
-      Scenario::Marshall(in.DataRequests().get(), out.m_SubMgr, out.m_DataRequestMgr);
+      Scenario::UnMarshall(in.DataRequests().get(), out.m_SubMgr, out.m_DataRequestMgr);
     }
     if (in.Actions().ActionFile().present()) {
       biogears::filesystem::path actionFile = in.Actions().ActionFile().get();
@@ -326,10 +326,10 @@ namespace io {
       }
     }
     if (!out.IsValid()) {
-      throw CommonDataModelException("Unable Marshall SEScenario from ScenarioData");
+      throw CommonDataModelException("Unable UnMarshall SEScenario from ScenarioData");
     }
   }
-  void Scenario::UnMarshall(const SEScenario& in, CDM::ScenarioData& out)
+  void Scenario::Marshall(const SEScenario& in, CDM::ScenarioData& out)
   {
     out.Name(in.m_Name);
     out.Description(in.m_Description);
@@ -337,11 +337,11 @@ namespace io {
       out.EngineStateFile(in.m_EngineStateFile);
     } else if (in.HasInitialParameters()) {
       out.InitialParameters(std::make_unique<CDM::ScenarioInitialParametersData>());
-      UnMarshall(*in.m_InitialParameters, out.InitialParameters());
+      Marshall(*in.m_InitialParameters, out.InitialParameters());
     }
     if (in.HasAutoSerialization()) {
       out.AutoSerialization(std::make_unique<CDM::ScenarioAutoSerializationData>());
-      UnMarshall(*in.m_AutoSerialization, out.AutoSerialization());
+      Marshall(*in.m_AutoSerialization, out.AutoSerialization());
     }
     out.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(in.m_DataRequestMgr.Unload()));
 
@@ -353,14 +353,14 @@ namespace io {
     } else {
       for (auto* action : in.m_Actions) {
         CDM::ActionData data;
-        Scenario::UnMarshall(*action, data);
+        Scenario::Marshall(*action, data);
         out.Actions().Action().push_back(data);
       }
     }
   }
   //-----------------------------------------------------------------------------
   // class SEScenarioInitialParameters
-  void Scenario::Marshall(const CDM::ScenarioInitialParametersData& in, SEScenarioInitialParameters& out)
+  void Scenario::UnMarshall(const CDM::ScenarioInitialParametersData& in, SEScenarioInitialParameters& out)
   {
     out.Clear();
 
@@ -380,39 +380,41 @@ namespace io {
     }
 
     if (!out.IsValid()) {
-      throw CommonDataModelException("Unable Marshall SEScenarioInitialParamaters from ScenarioInitialParamatersData");
+      throw CommonDataModelException("Unable UnMarshall SEScenarioInitialParamaters from ScenarioInitialParamatersData");
     }
   }
-  void Scenario::UnMarshall(const SEScenarioInitialParameters& in, CDM::ScenarioInitialParametersData& out)
+  void Scenario::Marshall(const SEScenarioInitialParameters& in, CDM::ScenarioInitialParametersData& out)
   {
     if (in.HasPatientFile()) {
       out.PatientFile(in.m_PatientFile);
     } else if (in.HasPatient()) {
-      Patient::UnMarshall(*in.m_Patient, out.Patient());
+      Patient::Marshall(*in.m_Patient, out.Patient());
     }
     for (SECondition* condition : in.m_Conditions) {
+
       auto conditionData = PatientConditions::factory(condition);
       out.Condition().push_back(std::move(conditionData));
     }
     if (in.HasConfiguration()) {
-      EngineConfiguration::UnMarshall(*in.m_Configuration, out.Configuration());
+      EngineConfiguration::Marshall(*in.m_Configuration, out.Configuration());
     }
   }
   //-----------------------------------------------------------------------------
-  // class SEScenarioAutoSerialization
-  void Scenario::Marshall(const CDM::ScenarioAutoSerializationData& in, SEScenarioAutoSerialization& out)
+  //class SEScenarioAutoSerialization
+  void Scenario::UnMarshall(const CDM::ScenarioAutoSerializationData& in, SEScenarioAutoSerialization& out)
   {
     out.Clear();
-    io::Property::Marshall(in.Period(), out.GetPeriod());
+    io::Property::UnMarshall(in.Period(), out.GetPeriod());
     out.SetPeriodTimeStamps(in.PeriodTimeStamps());
     out.SetAfterActions(in.AfterActions());
     out.SetReloadState(in.ReloadState());
     out.SetDirectory(in.Directory());
     out.SetFileName(in.FileName());
   }
-  void Scenario::UnMarshall(const SEScenarioAutoSerialization& in, CDM::ScenarioAutoSerializationData& out)
+
+  void Scenario::Marshall(const SEScenarioAutoSerialization& in, CDM::ScenarioAutoSerializationData& out)
   {
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Period)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, Period)
 
     if (in.HasPeriodTimeStamps()) {
       out.PeriodTimeStamps(in.m_PeriodTimeStamps);
@@ -431,28 +433,29 @@ namespace io {
     }
   }
   //-----------------------------------------------------------------------------
-  // class SEAdvanceTime
-  void Scenario::Marshall(const CDM::AdvanceTimeData& in, SEAdvanceTime& out)
+  //class SEAdvanceTime
+  void Scenario::UnMarshall(const CDM::AdvanceTimeData& in, SEAdvanceTime& out)
   {
-    Marshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
-    io::Property::Marshall(in.Time(), out.GetTime());
+    UnMarshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
+    io::Property::UnMarshall(in.Time(), out.GetTime());
   }
-  void Scenario::UnMarshall(const SEAdvanceTime& in, CDM::AdvanceTimeData& out)
+  void Scenario::Marshall(const SEAdvanceTime& in, CDM::AdvanceTimeData& out)
   {
-    UnMarshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, Time)
+    Marshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, Time)
   }
   //-----------------------------------------------------------------------------
   // class SESerializeState
-  void Scenario::Marshall(const CDM::SerializeStateData& in, SESerializeState& out)
+  void Scenario::UnMarshall(const CDM::SerializeStateData& in, SESerializeState& out)
+
   {
-    Marshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
+    UnMarshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
     out.SetType(in.Type());
     out.SetFilename(in.Filename());
   }
-  void Scenario::UnMarshall(const SESerializeState& in, CDM::SerializeStateData& out)
+  void Scenario::Marshall(const SESerializeState& in, CDM::SerializeStateData& out)
   {
-    UnMarshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
+    Marshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
     if (in.HasFilename()) {
       out.Filename(in.m_Filename);
     }
@@ -467,55 +470,55 @@ namespace io {
     const CDM::PhysiologyDataRequestData* physSysData = dynamic_cast<const CDM::PhysiologyDataRequestData*>(drData);
     if (physSysData != nullptr) {
       auto sys = std::make_unique<SEPhysiologyDataRequest>(df);
-      Scenario::Marshall(*physSysData, *sys);
+      Scenario::UnMarshall(*physSysData, *sys);
       return sys;
     }
     const CDM::GasCompartmentDataRequestData* gasData = dynamic_cast<const CDM::GasCompartmentDataRequestData*>(drData);
     if (gasData != nullptr) {
       auto Comp = std::make_unique<SEGasCompartmentDataRequest>(df);
-      Scenario::Marshall(*gasData, substances, *Comp);
+      Scenario::UnMarshall(*gasData, substances, *Comp);
       return Comp;
     }
     const CDM::LiquidCompartmentDataRequestData* liquidData = dynamic_cast<const CDM::LiquidCompartmentDataRequestData*>(drData);
     if (liquidData != nullptr) {
       auto Comp = std::make_unique<SELiquidCompartmentDataRequest>(df);
-      Scenario::Marshall(*liquidData, substances, *Comp);
+      Scenario::UnMarshall(*liquidData, substances, *Comp);
       return Comp;
     }
     const CDM::ThermalCompartmentDataRequestData* thermData = dynamic_cast<const CDM::ThermalCompartmentDataRequestData*>(drData);
     if (thermData != nullptr) {
       auto Comp = std::make_unique<SEThermalCompartmentDataRequest>(df);
-      Scenario::Marshall(*thermData, *Comp);
+      Scenario::UnMarshall(*thermData, *Comp);
       return Comp;
     }
     const CDM::TissueCompartmentDataRequestData* tissueData = dynamic_cast<const CDM::TissueCompartmentDataRequestData*>(drData);
     if (tissueData != nullptr) {
       auto Comp = std::make_unique<SETissueCompartmentDataRequest>(df);
-      Scenario::Marshall(*tissueData, *Comp);
+      Scenario::UnMarshall(*tissueData, *Comp);
       return Comp;
     }
     const CDM::PatientDataRequestData* patData = dynamic_cast<const CDM::PatientDataRequestData*>(drData);
     if (patData != nullptr) {
       auto sys = std::make_unique<SEPatientDataRequest>(df);
-      Scenario::Marshall(*patData, *sys);
+      Scenario::UnMarshall(*patData, *sys);
       return sys;
     }
     const CDM::SubstanceDataRequestData* subData = dynamic_cast<const CDM::SubstanceDataRequestData*>(drData);
     if (subData != nullptr) {
       auto sub = std::make_unique<SESubstanceDataRequest>(df);
-      Scenario::Marshall(*subData, substances, *sub);
+      Scenario::UnMarshall(*subData, substances, *sub);
       return sub;
     }
     const CDM::EnvironmentDataRequestData* envData = dynamic_cast<const CDM::EnvironmentDataRequestData*>(drData);
     if (envData != nullptr) {
       auto env = std::make_unique<SEEnvironmentDataRequest>(df);
-      Scenario::Marshall(*envData, *env);
+      Scenario::UnMarshall(*envData, *env);
       return env;
     }
     const CDM::EquipmentDataRequestData* equipSysData = dynamic_cast<const CDM::EquipmentDataRequestData*>(drData);
     if (equipSysData != nullptr) {
       auto sys = std::make_unique<SEEquipmentDataRequest>(df);
-      Scenario::Marshall(*equipSysData, *sys);
+      Scenario::UnMarshall(*equipSysData, *sys);
       return sys;
     }
 
@@ -530,55 +533,55 @@ namespace io {
     auto physSysData = dynamic_cast<const SEPhysiologyDataRequest*>(in);
     if (physSysData != nullptr) {
       auto sys = std::make_unique<CDM::PhysiologyDataRequestData>();
-      Scenario::UnMarshall(*physSysData, *sys);
+      Scenario::Marshall(*physSysData, *sys);
       return sys;
     }
     auto gasData = dynamic_cast<const SEGasCompartmentDataRequest*>(in);
     if (gasData != nullptr) {
       auto Comp = std::make_unique<CDM::GasCompartmentDataRequestData>();
-      Scenario::UnMarshall(*gasData, *Comp);
+      Scenario::Marshall(*gasData, *Comp);
       return Comp;
     }
     auto liquidData = dynamic_cast<const SELiquidCompartmentDataRequest*>(in);
     if (liquidData != nullptr) {
       auto Comp = std::make_unique<CDM::LiquidCompartmentDataRequestData>();
-      Scenario::UnMarshall(*liquidData, *Comp);
+      Scenario::Marshall(*liquidData, *Comp);
       return Comp;
     }
     auto thermData = dynamic_cast<const SEThermalCompartmentDataRequest*>(in);
     if (thermData != nullptr) {
       auto Comp = std::make_unique<CDM::ThermalCompartmentDataRequestData>();
-      Scenario::UnMarshall(*thermData, *Comp);
+      Scenario::Marshall(*thermData, *Comp);
       return Comp;
     }
     auto tissueData = dynamic_cast<const SETissueCompartmentDataRequest*>(in);
     if (tissueData != nullptr) {
       auto Comp = std::make_unique<CDM::TissueCompartmentDataRequestData>();
-      Scenario::UnMarshall(*tissueData, *Comp);
+      Scenario::Marshall(*tissueData, *Comp);
       return Comp;
     }
     auto patData = dynamic_cast<const SEPatientDataRequest*>(in);
     if (patData != nullptr) {
       auto sys = std::make_unique<CDM::PatientDataRequestData>();
-      Scenario::UnMarshall(*patData, *sys);
+      Scenario::Marshall(*patData, *sys);
       return sys;
     }
     auto subData = dynamic_cast<const SESubstanceDataRequest*>(in);
     if (subData != nullptr) {
       auto sub = std::make_unique<CDM::SubstanceDataRequestData>();
-      Scenario::UnMarshall(*subData, *sub);
+      Scenario::Marshall(*subData, *sub);
       return sub;
     }
     auto envData = dynamic_cast<const SEEnvironmentDataRequest*>(in);
     if (envData != nullptr) {
       auto env = std::make_unique<CDM::EnvironmentDataRequestData>();
-      Scenario::UnMarshall(*envData, *env);
+      Scenario::Marshall(*envData, *env);
       return env;
     }
     auto equipSysData = dynamic_cast<const SEEquipmentDataRequest*>(in);
     if (equipSysData != nullptr) {
       auto sys = std::make_unique<CDM::EquipmentDataRequestData>();
-      Scenario::UnMarshall(*equipSysData, *sys);
+      Scenario::Marshall(*equipSysData, *sys);
       return sys;
     }
 
@@ -594,13 +597,13 @@ namespace io {
     
     if (auto advanceTimeAction = dynamic_cast<biogears::SEAdvanceTime const*>(action);advanceTimeAction) {
       auto advanceTimeData = std::make_unique<CDM::AdvanceTimeData>();
-      Scenario::UnMarshall(*advanceTimeAction, *advanceTimeData);
+      Scenario::Marshall(*advanceTimeAction, *advanceTimeData);
       return std::move(advanceTimeData);
     }
     
     if (auto serilizeAction = dynamic_cast<biogears::SESerializeState const*>(action);serilizeAction) {
       auto serilizeActionData = std::make_unique<CDM::AdvanceTimeData>();
-      Scenario::UnMarshall(*serilizeAction, *serilizeActionData);
+      Scenario::Marshall(*serilizeAction, *serilizeActionData);
       return std::move(serilizeActionData);
     }
     

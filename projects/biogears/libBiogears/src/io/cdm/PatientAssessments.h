@@ -18,15 +18,15 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
-#define CDM_PATIENT_ASSESSMENTS_UNMARSHAL_HELPER(in, out, func)                      \
+#define CDM_PATIENT_ASSESSMENTS_MARSHALL_HELPER(in, out, func)                      \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::PatientAssessments::UnMarshall(*in.m_##func, out.func());                    \
+    io::PatientAssessments::Marshall(*in.m_##func, out.func());                    \
   }
 
-#define CDM_OPTIONAL_PATIENT_ASSESSMENTS_UNMARSHAL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_PATIENT_ASSESSMENTS_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                                     \
-    io::PatientAssessments::UnMarshall(*in.m_##func, out.func());        \
+    io::PatientAssessments::Marshall(*in.m_##func, out.func());        \
   }
 
 
@@ -46,63 +46,62 @@ class SEUrinalysisMicroscopic;
 // SEPsychomotorVigilanceTask.h
 // SESequentialOrganFailureAssessment.h
 
-
 namespace io {
   class BIOGEARS_PRIVATE_API PatientAssessments {
   public:
     //template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
     //class SEPatientAssessment
-    static void Marshall(const CDM::PatientAssessmentData& in, SEPatientAssessment& out);
-    static void UnMarshall(const SEPatientAssessment& in, CDM::PatientAssessmentData& out);
+    static void UnMarshall(const CDM::PatientAssessmentData& in, SEPatientAssessment& out);
+    static void Marshall(const SEPatientAssessment& in, CDM::PatientAssessmentData& out);
     //class SEArterialBloodGasAnalysis
-    static void Marshall(const CDM::ArterialBloodGasAnalysisData& in, SEArterialBloodGasAnalysis& out);
-    static void UnMarshall(const SEArterialBloodGasAnalysis& in, CDM::ArterialBloodGasAnalysisData& out);
+    static void UnMarshall(const CDM::ArterialBloodGasAnalysisData& in, SEArterialBloodGasAnalysis& out);
+    static void Marshall(const SEArterialBloodGasAnalysis& in, CDM::ArterialBloodGasAnalysisData& out);
     //class SEPulmonaryFunctionTest
-    static void Marshall(const CDM::PulmonaryFunctionTestData& in, SEPulmonaryFunctionTest& out);
-    static void UnMarshall(const SEPulmonaryFunctionTest& in, CDM::PulmonaryFunctionTestData& out);
+    static void UnMarshall(const CDM::PulmonaryFunctionTestData& in, SEPulmonaryFunctionTest& out);
+    static void Marshall(const SEPulmonaryFunctionTest& in, CDM::PulmonaryFunctionTestData& out);
     //class SECompleteBloodCount
-    static void Marshall(const CDM::CompleteBloodCountData& in, SECompleteBloodCount& out);
-    static void UnMarshall(const SECompleteBloodCount& in, CDM::CompleteBloodCountData& out);
+    static void UnMarshall(const CDM::CompleteBloodCountData& in, SECompleteBloodCount& out);
+    static void Marshall(const SECompleteBloodCount& in, CDM::CompleteBloodCountData& out);
     //class SEComprehensiveMetabolicPanel
-    static void Marshall(const CDM::ComprehensiveMetabolicPanelData& in, SEComprehensiveMetabolicPanel& out);
-    static void UnMarshall(const SEComprehensiveMetabolicPanel& in, CDM::ComprehensiveMetabolicPanelData& out);
+    static void UnMarshall(const CDM::ComprehensiveMetabolicPanelData& in, SEComprehensiveMetabolicPanel& out);
+    static void Marshall(const SEComprehensiveMetabolicPanel& in, CDM::ComprehensiveMetabolicPanelData& out);
     //class SEUrinalysis
-    static void Marshall(const CDM::UrinalysisData& in, SEUrinalysis& out);
-    static void UnMarshall(const SEUrinalysis& in, CDM::UrinalysisData& out);
+    static void UnMarshall(const CDM::UrinalysisData& in, SEUrinalysis& out);
+    static void Marshall(const SEUrinalysis& in, CDM::UrinalysisData& out);
     //class SEUrinalysisMicroscopic
-    static void Marshall(const CDM::UrinalysisMicroscopicData& in, SEUrinalysisMicroscopic& out);
-    static void UnMarshall(const SEUrinalysisMicroscopic& in, CDM::UrinalysisMicroscopicData& out);
+    static void UnMarshall(const CDM::UrinalysisMicroscopicData& in, SEUrinalysisMicroscopic& out);
+    static void Marshall(const SEUrinalysisMicroscopic& in, CDM::UrinalysisMicroscopicData& out);
     //class SEProthrombinTime.h
-    static void Marshall(const CDM::ProthrombinTimeData& in, SEProthrombinTime& out);
-    static void UnMarshall(const SEProthrombinTime& in, CDM::ProthrombinTimeData& out);
+    static void UnMarshall(const CDM::ProthrombinTimeData& in, SEProthrombinTime& out);
+    static void Marshall(const SEProthrombinTime& in, CDM::ProthrombinTimeData& out);
     //class SEPsychomotorVigilanceTask.h
-    static void Marshall(const CDM::PsychomotorVigilanceTaskData& in, SEPsychomotorVigilanceTask& out);
-    static void UnMarshall(const SEPsychomotorVigilanceTask& in, CDM::PsychomotorVigilanceTaskData& out);
+    static void UnMarshall(const CDM::PsychomotorVigilanceTaskData& in, SEPsychomotorVigilanceTask& out);
+    static void Marshall(const SEPsychomotorVigilanceTask& in, CDM::PsychomotorVigilanceTaskData& out);
     //class SESequentialOrganFailureAssessment.h
-    static void Marshall(const CDM::SequentialOrganFailureAssessmentData& in, SESequentialOrganFailureAssessment& out);
-    static void UnMarshall(const SESequentialOrganFailureAssessment& in, CDM::SequentialOrganFailureAssessmentData& out);
+    static void UnMarshall(const CDM::SequentialOrganFailureAssessmentData& in, SESequentialOrganFailureAssessment& out);
+    static void Marshall(const SESequentialOrganFailureAssessment& in, CDM::SequentialOrganFailureAssessmentData& out);
 
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void PatientAssessments::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void PatientAssessments::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Clear();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void PatientAssessments::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void PatientAssessments::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 } // Namespace IO

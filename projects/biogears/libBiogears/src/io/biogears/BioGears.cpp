@@ -9,7 +9,7 @@ namespace biogears {
 namespace io {
 
   // BioGears
-  void BioGears::Marshall(const CDM::BioGearsStateData& in, BioGearsEngine& out, const SEScalarTime* simTime)
+  void BioGears::UnMarshall(const CDM::BioGearsStateData& in, BioGearsEngine& out, const SEScalarTime* simTime)
   {
     auto requests = out.GetEngineTrack()->GetDataRequestManager().GetDataRequests();
     auto resultsFile = out.GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
@@ -128,7 +128,7 @@ namespace io {
     }
   }
 
-  void BioGears::UnMarshall(const BioGearsEngine& in, CDM::BioGearsStateData& out)
+  void BioGears::Marshall(const BioGearsEngine& in, CDM::BioGearsStateData& out)
   {
 
 

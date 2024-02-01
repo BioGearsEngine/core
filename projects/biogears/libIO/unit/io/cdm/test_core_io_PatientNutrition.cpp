@@ -95,8 +95,8 @@ TEST_F(TEST_FIXTURE_NAME, Nutrition)
 
   EXPECT_NE(source, sink);
 
-  PatientNutrition::UnMarshall(source, data);
-  PatientNutrition::Marshall(data, sink);
+  PatientNutrition::Marshall(source, data);
+  PatientNutrition::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

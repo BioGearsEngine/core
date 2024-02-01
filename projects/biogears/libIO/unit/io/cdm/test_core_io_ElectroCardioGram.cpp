@@ -100,8 +100,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGram)
 
   EXPECT_NE(source, sink);
 
-  ElectroCardioGram::UnMarshall(source, data);
-  ElectroCardioGram::Marshall(data, sink);
+  ElectroCardioGram::Marshall(source, data);
+  ElectroCardioGram::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -148,8 +148,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramInterpolationWaveform)
 
   EXPECT_NE(source, sink);
 
-  ElectroCardioGram::UnMarshall(source, data);
-  ElectroCardioGram::Marshall(data, sink);
+  ElectroCardioGram::Marshall(source, data);
+  ElectroCardioGram::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -175,8 +175,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramWaveformLeadNumber)
 
   EXPECT_NE(source, sink);
 
-  ElectroCardioGram::UnMarshall(source, data);
-  ElectroCardioGram::Marshall(data, sink);
+  ElectroCardioGram::Marshall(source, data);
+  ElectroCardioGram::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -227,8 +227,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramInterpolator)
 
   EXPECT_NE(source, sink);
 
-  ElectroCardioGram::UnMarshall(source, data);
-  ElectroCardioGram::Marshall(data, sink);
+  ElectroCardioGram::Marshall(source, data);
+  ElectroCardioGram::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

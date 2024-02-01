@@ -111,8 +111,8 @@ TEST_F(TEST_FIXTURE_NAME, PatientDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -138,8 +138,8 @@ TEST_F(TEST_FIXTURE_NAME, PhysiologyDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -166,8 +166,8 @@ TEST_F(TEST_FIXTURE_NAME, EnvironmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -192,8 +192,8 @@ TEST_F(TEST_FIXTURE_NAME, EquipmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -230,8 +230,8 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -256,8 +256,8 @@ TEST_F(TEST_FIXTURE_NAME, LiquidCompartmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -282,8 +282,8 @@ TEST_F(TEST_FIXTURE_NAME, ThermalCompartmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -308,8 +308,8 @@ TEST_F(TEST_FIXTURE_NAME, TissueCompartmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -335,8 +335,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, mgr, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, mgr, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -367,8 +367,8 @@ TEST_F(TEST_FIXTURE_NAME, DataRequestManager)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, mgr, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, mgr, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -492,8 +492,8 @@ TEST_F(TEST_FIXTURE_NAME, Scenario)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -603,8 +603,8 @@ TEST_F(TEST_FIXTURE_NAME, ScenarioInitialParameters)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -637,8 +637,8 @@ TEST_F(TEST_FIXTURE_NAME, ScenarioAutoSerialization)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -664,8 +664,8 @@ TEST_F(TEST_FIXTURE_NAME, AdvanceTime)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -693,8 +693,8 @@ TEST_F(TEST_FIXTURE_NAME, SerializeState)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
