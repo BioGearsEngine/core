@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
 
+// Private Includes
+#include <io/cdm/Circuit.h>
+
 namespace biogears {
 SEThermalCircuitPath::SEThermalCircuitPath(SEThermalCircuitNode& src, SEThermalCircuitNode& tgt, const char* name)
   :SEThermalCircuitPath(src, tgt, std::string{name})
@@ -36,43 +39,7 @@ void SEThermalCircuitPath::Clear()
 //-------------------------------------------------------------------------------
 bool SEThermalCircuitPath::Load(const CDM::ThermalCircuitPathData& in)
 {
-  SECircuitPath::Load(in);
-  if (in.Resistance().present())
-    GetResistance().Load(in.Resistance().get());
-  if (in.NextResistance().present())
-    GetNextResistance().Load(in.NextResistance().get());
-  if (in.ResistanceBaseline().present())
-    GetResistanceBaseline().Load(in.ResistanceBaseline().get());
-  if (in.Capacitance().present())
-    GetCapacitance().Load(in.Capacitance().get());
-  if (in.NextCapacitance().present())
-    GetNextCapacitance().Load(in.NextCapacitance().get());
-  if (in.CapacitanceBaseline().present())
-    GetCapacitanceBaseline().Load(in.CapacitanceBaseline().get());
-  if (in.Inductance().present())
-    GetInductance().Load(in.Inductance().get());
-  if (in.NextInductance().present())
-    GetNextInductance().Load(in.NextInductance().get());
-  if (in.InductanceBaseline().present())
-    GetInductanceBaseline().Load(in.InductanceBaseline().get());
-  if (in.HeatTransferRate().present())
-    GetHeatTransferRate().Load(in.HeatTransferRate().get());
-  if (in.NextHeatTransferRate().present())
-    GetNextHeatTransferRate().Load(in.NextHeatTransferRate().get());
-  if (in.HeatSource().present())
-    GetHeatSource().Load(in.HeatSource().get());
-  if (in.NextHeatSource().present())
-    GetNextHeatSource().Load(in.NextHeatSource().get());
-  if (in.HeatSourceBaseline().present())
-    GetHeatSourceBaseline().Load(in.HeatSourceBaseline().get());
-  if (in.TemperatureSource().present())
-    GetTemperatureSource().Load(in.TemperatureSource().get());
-  if (in.NextTemperatureSource().present())
-    GetNextTemperatureSource().Load(in.NextTemperatureSource().get());
-  if (in.TemperatureSourceBaseline().present())
-    GetTemperatureSourceBaseline().Load(in.TemperatureSourceBaseline().get());
-  if (in.ValveBreakdownTemperature().present())
-    GetValveBreakdownTemperature().Load(in.ValveBreakdownTemperature().get());
+  io::Circuit::UnMarshall(in, *this);
 
   return HasValidElements();
 }
@@ -86,43 +53,7 @@ CDM::ThermalCircuitPathData* SEThermalCircuitPath::Unload() const
 //-------------------------------------------------------------------------------
 void SEThermalCircuitPath::Unload(CDM::ThermalCircuitPathData& data) const
 {
-  SECircuitPath::Unload(data);
-  if (HasResistance())
-    data.Resistance(std::unique_ptr<CDM::ScalarHeatResistanceData>(m_Resistance->Unload()));
-  if (HasNextResistance())
-    data.NextResistance(std::unique_ptr<CDM::ScalarHeatResistanceData>(m_NextResistance->Unload()));
-  if (HasResistanceBaseline())
-    data.ResistanceBaseline(std::unique_ptr<CDM::ScalarHeatResistanceData>(m_ResistanceBaseline->Unload()));
-  if (HasCapacitance())
-    data.Capacitance(std::unique_ptr<CDM::ScalarHeatCapacitanceData>(m_Capacitance->Unload()));
-  if (HasNextCapacitance())
-    data.NextCapacitance(std::unique_ptr<CDM::ScalarHeatCapacitanceData>(m_NextCapacitance->Unload()));
-  if (HasCapacitanceBaseline())
-    data.CapacitanceBaseline(std::unique_ptr<CDM::ScalarHeatCapacitanceData>(m_CapacitanceBaseline->Unload()));
-  if (HasInductance())
-    data.Inductance(std::unique_ptr<CDM::ScalarHeatInductanceData>(m_Inductance->Unload()));
-  if (HasNextInductance())
-    data.NextInductance(std::unique_ptr<CDM::ScalarHeatInductanceData>(m_NextInductance->Unload()));
-  if (HasInductanceBaseline())
-    data.InductanceBaseline(std::unique_ptr<CDM::ScalarHeatInductanceData>(m_InductanceBaseline->Unload()));
-  if (HasHeatTransferRate())
-    data.HeatTransferRate(std::unique_ptr<CDM::ScalarPowerData>(m_Flux->Unload()));
-  if (HasNextHeatTransferRate())
-    data.NextHeatTransferRate(std::unique_ptr<CDM::ScalarPowerData>(m_NextFlux->Unload()));
-  if (HasHeatSource())
-    data.HeatSource(std::unique_ptr<CDM::ScalarPowerData>(m_FluxSource->Unload()));
-  if (HasNextHeatSource())
-    data.NextHeatSource(std::unique_ptr<CDM::ScalarPowerData>(m_NextFluxSource->Unload()));
-  if (HasHeatSourceBaseline())
-    data.HeatSourceBaseline(std::unique_ptr<CDM::ScalarPowerData>(m_FluxSourceBaseline->Unload()));
-  if (HasTemperatureSource())
-    data.TemperatureSource(std::unique_ptr<CDM::ScalarTemperatureData>(m_PotentialSource->Unload()));
-  if (HasNextTemperatureSource())
-    data.NextTemperatureSource(std::unique_ptr<CDM::ScalarTemperatureData>(m_NextPotentialSource->Unload()));
-  if (HasTemperatureSourceBaseline())
-    data.TemperatureSourceBaseline(std::unique_ptr<CDM::ScalarTemperatureData>(m_PotentialSourceBaseline->Unload()));
-  if (HasValveBreakdownTemperature())
-    data.ValveBreakdownTemperature(std::unique_ptr<CDM::ScalarTemperatureData>(m_ValveBreakdownPotential->Unload()));
+  io::Circuit::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 

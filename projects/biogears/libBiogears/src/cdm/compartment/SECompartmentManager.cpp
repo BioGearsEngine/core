@@ -19,6 +19,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+//Private Includes
+#include <io/cdm/Compartment.h>
+
 namespace std {
   template class vector<biogears::SEGasCompartment*> ;
   template class map<string, biogears::SEGasCompartment*> ;
@@ -96,81 +99,11 @@ void SECompartmentManager::Clear()
   m_TissueName2Compartments.clear();
 }
 
-#define LOAD_COMPARTMENT(type)                                                    \
-  for (auto& cData : in.type##Compartment()) {                                    \
-    if (!Create##type##Compartment(cData.Name()).Load(cData, m_subMgr, circuits)) \
-      return false;                                                               \
-  }
-#define LOAD_THERMAL_COMPARTMENT(type)                                  \
-  for (auto& cData : in.type##Compartment()) {                          \
-    if (!Create##type##Compartment(cData.Name()).Load(cData, circuits)) \
-      return false;                                                     \
-  }
-#define LOAD_LINK(type)                                                                                                              \
-  for (auto& cData : in.type##Link()) {                                                                                              \
-    auto* src = Get##type##Compartment(cData.SourceCompartment());                                                                   \
-    if (src == nullptr) {                                                                                                            \
-      Error("Unable to find source compartment " + std::string { cData.SourceCompartment() } + " for link " + cData.Name().c_str()); \
-      return false;                                                                                                                  \
-    }                                                                                                                                \
-    auto* tgt = Get##type##Compartment(cData.TargetCompartment());                                                                   \
-    if (src == nullptr) {                                                                                                            \
-      Error("Unable to find target compartment " + std::string { cData.TargetCompartment() } + " for link " + cData.Name().c_str()); \
-      return false;                                                                                                                  \
-    }                                                                                                                                \
-    if (!Create##type##Link(*src, *tgt, cData.Name()).Load(cData, circuits))                                                         \
-      return false;                                                                                                                  \
-  }
-#define LOAD_HIERARCHY(type)                                                                    \
-  for (auto& cData : in.type##Compartment()) {                                                  \
-    auto* cmpt = Get##type##Compartment(cData.Name());                                          \
-    for (auto name : cData.Child()) {                                                           \
-      auto* child = Get##type##Compartment(name);                                               \
-      if (child == nullptr) {                                                                   \
-        Error("Could not find child " + std::string { name } + " for node " + cmpt->GetName()); \
-        return false;                                                                           \
-      }                                                                                         \
-      cmpt->AddChild(*child);                                                                   \
-    }                                                                                           \
-  }
-#define LOAD_GRAPH(type)                                       \
-  for (auto& cData : in.type##Graph()) {                       \
-    if (!Create##type##Graph(cData.Name()).Load(cData, *this)) \
-      return false;                                            \
-  }
-#define LOAD_SUBSTANCE(type)                                        \
-  for (auto subName : in.type##Substance()) {                       \
-    SESubstance* sub = m_subMgr.GetSubstance(subName);              \
-    if (sub == nullptr) {                                           \
-      Error("Could not find substance " + std::string { subName }); \
-      return false;                                                 \
-    }                                                               \
-    Add##type##CompartmentSubstance(*sub);                          \
-  }
+
 
 bool SECompartmentManager::Load(const CDM::CompartmentManagerData& in, SECircuitManager* circuits)
 {
-  Clear();
-
-  LOAD_COMPARTMENT(Gas);
-  LOAD_LINK(Gas);
-  LOAD_HIERARCHY(Gas);
-  LOAD_SUBSTANCE(Gas);
-  LOAD_GRAPH(Gas);
-
-  LOAD_COMPARTMENT(Liquid);
-  LOAD_LINK(Liquid);
-  LOAD_HIERARCHY(Liquid);
-  LOAD_SUBSTANCE(Liquid);
-  LOAD_GRAPH(Liquid);
-
-  LOAD_THERMAL_COMPARTMENT(Thermal);
-  LOAD_LINK(Thermal);
-  LOAD_HIERARCHY(Thermal);
-
-  LOAD_COMPARTMENT(Tissue);
-
-  StateChange();
+  io::Compartment::UnMarshall(in, *this, circuits);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -183,31 +116,7 @@ CDM::CompartmentManagerData* SECompartmentManager::Unload() const
 //-------------------------------------------------------------------------------
 void SECompartmentManager::Unload(CDM::CompartmentManagerData& data) const
 {
-  for (SELiquidCompartment* cmpt : m_LiquidCompartments)
-    data.LiquidCompartment().push_back(std::unique_ptr<CDM::LiquidCompartmentData>(cmpt->Unload()));
-  for (SELiquidCompartmentLink* link : m_LiquidLinks)
-    data.LiquidLink().push_back(std::unique_ptr<CDM::LiquidCompartmentLinkData>(link->Unload()));
-  for (SELiquidCompartmentGraph* graph : m_LiquidGraphs)
-    data.LiquidGraph().push_back(std::unique_ptr<CDM::LiquidCompartmentGraphData>(graph->Unload()));
-  for (SESubstance* sub : m_LiquidSubstances)
-    data.LiquidSubstance().push_back(sub->GetName());
-
-  for (SEGasCompartment* cmpt : m_GasCompartments)
-    data.GasCompartment().push_back(std::unique_ptr<CDM::GasCompartmentData>(cmpt->Unload()));
-  for (SEGasCompartmentLink* link : m_GasLinks)
-    data.GasLink().push_back(std::unique_ptr<CDM::GasCompartmentLinkData>(link->Unload()));
-  for (SEGasCompartmentGraph* graph : m_GasGraphs)
-    data.GasGraph().push_back(std::unique_ptr<CDM::GasCompartmentGraphData>(graph->Unload()));
-  for (SESubstance* sub : m_GasSubstances)
-    data.GasSubstance().push_back(sub->GetName());
-
-  for (SEThermalCompartment* cmpt : m_ThermalCompartments)
-    data.ThermalCompartment().push_back(std::unique_ptr<CDM::ThermalCompartmentData>(cmpt->Unload()));
-  for (SEThermalCompartmentLink* link : m_ThermalLinks)
-    data.ThermalLink().push_back(std::unique_ptr<CDM::ThermalCompartmentLinkData>(link->Unload()));
-
-  for (SETissueCompartment* cmpt : m_TissueCompartments)
-    data.TissueCompartment().push_back(std::unique_ptr<CDM::TissueCompartmentData>(cmpt->Unload()));
+  io::Compartment::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SECompartmentManager::HasCompartment(CDM::enumCompartmentType::value type, const char* name) const

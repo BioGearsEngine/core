@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
 
+//Private Includes
+#include <io/cdm/Circuit.h>
+
 namespace biogears {
 SEElectricalCircuitNode::SEElectricalCircuitNode(const char* name, Logger* logger)
   : SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>(name, logger)
@@ -34,17 +37,7 @@ void SEElectricalCircuitNode::Clear()
 //-------------------------------------------------------------------------------
 bool SEElectricalCircuitNode::Load(const CDM::ElectricalCircuitNodeData& in)
 {
-  SECircuitNode::Load(in);
-  if (in.Voltage().present())
-    GetVoltage().Load(in.Voltage().get());
-  if (in.NextVoltage().present())
-    GetNextVoltage().Load(in.NextVoltage().get());
-  if (in.Charge().present())
-    GetCharge().Load(in.Charge().get());
-  if (in.NextCharge().present())
-    GetNextCharge().Load(in.NextCharge().get());
-  if (in.ChargeBaseline().present())
-    GetChargeBaseline().Load(in.ChargeBaseline().get());
+  io::Circuit::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -57,17 +50,7 @@ CDM::ElectricalCircuitNodeData* SEElectricalCircuitNode::Unload() const
 //-------------------------------------------------------------------------------
 void SEElectricalCircuitNode::Unload(CDM::ElectricalCircuitNodeData& data) const
 {
-  SECircuitNode::Unload(data);
-  if (HasVoltage())
-    data.Voltage(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Potential->Unload()));
-  if (HasNextVoltage())
-    data.NextVoltage(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_NextPotential->Unload()));
-  if (HasCharge())
-    data.Charge(std::unique_ptr<CDM::ScalarElectricChargeData>(m_Quantity->Unload()));
-  if (HasNextCharge())
-    data.NextCharge(std::unique_ptr<CDM::ScalarElectricChargeData>(m_NextQuantity->Unload()));
-  if (HasChargeBaseline())
-    data.ChargeBaseline(std::unique_ptr<CDM::ScalarElectricChargeData>(m_QuantityBaseline->Unload()));
+  io::Circuit::Marshall(*this, data);
 }
 
 //-------------------------------------------------------------------------------

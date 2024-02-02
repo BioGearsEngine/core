@@ -23,6 +23,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
 
+// Private Includes
+#include <io/cdm/SubstanceQuantity.h>
+
 namespace biogears {
 SELiquidSubstanceQuantity::SELiquidSubstanceQuantity(SESubstance& sub, SELiquidCompartment& compartment)
   : SESubstanceQuantity(sub)
@@ -95,25 +98,7 @@ void SELiquidSubstanceQuantity::Clear()
 //-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::Load(const CDM::LiquidSubstanceQuantityData& in)
 {
-  SESubstanceQuantity::Load(in);
-  if (!m_Compartment.HasChildren()) {
-    if (in.Concentration().present())
-      GetConcentration().Load(in.Concentration().get());
-    if (in.Mass().present())
-      GetMass().Load(in.Mass().get());
-    if (in.MassCleared().present())
-      GetMassCleared().Load(in.MassCleared().get());
-    if (in.MassDeposited().present())
-      GetMassDeposited().Load(in.MassDeposited().get());
-    if (in.MassExcreted().present())
-      GetMassExcreted().Load(in.MassExcreted().get());
-    if (in.Molarity().present())
-      GetMolarity().Load(in.Molarity().get());
-    if (in.PartialPressure().present())
-      GetPartialPressure().Load(in.PartialPressure().get());
-    if (in.Saturation().present())
-      GetSaturation().Load(in.Saturation().get());
-  }
+  io::SubstanceQuantity::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -126,24 +111,7 @@ CDM::LiquidSubstanceQuantityData* SELiquidSubstanceQuantity::Unload()
 //-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::Unload(CDM::LiquidSubstanceQuantityData& data)
 {
-  SESubstanceQuantity::Unload(data);
-  // Even if you have children, I am unloading everything, this makes the xml actually usefull...
-  if (HasConcentration())
-    data.Concentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(GetConcentration().Unload()));
-  if (HasMass())
-    data.Mass(std::unique_ptr<CDM::ScalarMassData>(GetMass().Unload()));
-  if (m_MassCleared != nullptr)
-    data.MassCleared(std::unique_ptr<CDM::ScalarMassData>(m_MassCleared->Unload()));
-  if (m_MassDeposited != nullptr)
-    data.MassDeposited(std::unique_ptr<CDM::ScalarMassData>(m_MassDeposited->Unload()));
-  if (m_MassExcreted != nullptr)
-    data.MassExcreted(std::unique_ptr<CDM::ScalarMassData>(m_MassExcreted->Unload()));
-  if (HasMolarity())
-    data.Molarity(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(GetMolarity().Unload()));
-  if (HasPartialPressure())
-    data.PartialPressure(std::unique_ptr<CDM::ScalarPressureData>(GetPartialPressure().Unload()));
-  if (HasSaturation())
-    data.Saturation(std::unique_ptr<CDM::ScalarFractionData>(GetSaturation().Unload()));
+  io::SubstanceQuantity::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::SetToZero()

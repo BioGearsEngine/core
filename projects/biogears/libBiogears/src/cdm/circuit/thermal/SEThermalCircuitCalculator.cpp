@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitCalculator.h>
 
+// Private Includes
+#include <io/cdm/Circuit.h>
+
 namespace biogears {
   template class SECircuitCalculator<SEThermalCircuit, SEThermalCircuitNode, SEThermalCircuitPath, HeatCapacitanceUnit, PowerUnit, HeatInductanceUnit, TemperatureUnit, EnergyUnit, HeatResistanceUnit>;
 SEThermalCircuitCalculator::SEThermalCircuitCalculator(Logger* logger)

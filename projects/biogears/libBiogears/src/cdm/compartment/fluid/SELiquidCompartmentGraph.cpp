@@ -19,6 +19,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+// Private Includes
+#include <io/cdm/Compartment.h>
+
 namespace std {
 template class vector<biogears::SELiquidTransportVertex*>;
 template class vector<biogears::SELiquidTransportEdge*>;
@@ -37,23 +40,7 @@ SELiquidCompartmentGraph::~SELiquidCompartmentGraph() { }
 
 bool SELiquidCompartmentGraph::Load(const CDM::LiquidCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {
-  m_Name = in.Name();
-  for (auto name : in.Compartment()) {
-    SELiquidCompartment* cmpt = cmptMgr.GetLiquidCompartment(name);
-    if (cmpt == nullptr) {
-      Error("Could not find compartment " + std::string { name } + " for graph " + m_Name);
-      return false;
-    }
-    AddCompartment(*cmpt);
-  }
-  for (auto name : in.Link()) {
-    SELiquidCompartmentLink* link = cmptMgr.GetLiquidLink(name);
-    if (link == nullptr) {
-      Error("Could not find link " + std::string { name } + " for graph " + m_Name);
-      return false;
-    }
-    AddLink(*link);
-  }
+  io::Compartment::UnMarshall(in, *this, cmptMgr);
   return true;
 }
 CDM::LiquidCompartmentGraphData* SELiquidCompartmentGraph::Unload()
@@ -64,11 +51,7 @@ CDM::LiquidCompartmentGraphData* SELiquidCompartmentGraph::Unload()
 }
 void SELiquidCompartmentGraph::Unload(CDM::LiquidCompartmentGraphData& data)
 {
-  data.Name(m_Name);
-  for (SELiquidCompartment* cmpt : m_Compartments)
-    data.Compartment().push_back(cmpt->GetName());
-  for (SELiquidCompartmentLink* link : m_CompartmentLinks)
-    data.Link().push_back(link->GetName());
+  io::Compartment::Marshall(*this, data);
 }
 
 void SELiquidCompartmentGraph::BalanceByIntensive()

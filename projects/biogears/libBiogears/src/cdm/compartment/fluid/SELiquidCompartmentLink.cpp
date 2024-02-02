@@ -18,6 +18,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.inl>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+// Private Includes
+#include <io/cdm/Compartment.h>
+
 namespace biogears {
 SELiquidCompartmentLink::SELiquidCompartmentLink(SELiquidCompartment& src, SELiquidCompartment& tgt, const char* name)
   : SELiquidCompartmentLink(src, tgt, std::string { name })
@@ -33,10 +36,15 @@ SELiquidCompartmentLink::~SELiquidCompartmentLink()
 {
 }
 //-------------------------------------------------------------------------------
+void SELiquidCompartmentLink::Load(CDM::LiquidCompartmentLinkData const& in)
+{
+  io::Compartment::UnMarshall(in, *this);
+}
+//-------------------------------------------------------------------------------
 CDM::LiquidCompartmentLinkData* SELiquidCompartmentLink::Unload()
 {
   CDM::LiquidCompartmentLinkData* data = new CDM::LiquidCompartmentLinkData();
-  SEFluidCompartmentLink::Unload(*data);
+  io::Compartment::Marshall(*this, *data);
   return data;
 }
 //-------------------------------------------------------------------------------

@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 
+// Private Includes
+#include <io/cdm/Circuit.h>
+
 namespace biogears {
 SEFluidCircuitNode::SEFluidCircuitNode(const char* name, Logger* logger)
   : SECircuitNode<SEScalarPressure, SEScalarVolume>(std::string{ name }, logger)
@@ -35,17 +38,7 @@ void SEFluidCircuitNode::Clear()
 //-----------------------------------------------------------------------------
 bool SEFluidCircuitNode::Load(const CDM::FluidCircuitNodeData& in)
 {
-  SECircuitNode::Load(in);
-  if (in.Pressure().present())
-    GetPressure().Load(in.Pressure().get());
-  if (in.NextPressure().present())
-    GetNextPressure().Load(in.NextPressure().get());
-  if (in.Volume().present())
-    GetVolume().Load(in.Volume().get());
-  if (in.NextVolume().present())
-    GetNextVolume().Load(in.NextVolume().get());
-  if (in.VolumeBaseline().present())
-    GetVolumeBaseline().Load(in.VolumeBaseline().get());
+  io::Circuit::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -58,17 +51,7 @@ CDM::FluidCircuitNodeData* SEFluidCircuitNode::Unload() const
 //-----------------------------------------------------------------------------
 void SEFluidCircuitNode::Unload(CDM::FluidCircuitNodeData& data) const
 {
-  SECircuitNode::Unload(data);
-  if (HasPressure())
-    data.Pressure(std::unique_ptr<CDM::ScalarPressureData>(m_Potential->Unload()));
-  if (HasNextPressure())
-    data.NextPressure(std::unique_ptr<CDM::ScalarPressureData>(m_NextPotential->Unload()));
-  if (HasVolume())
-    data.Volume(std::unique_ptr<CDM::ScalarVolumeData>(m_Quantity->Unload()));
-  if (HasNextVolume())
-    data.NextVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_NextQuantity->Unload()));
-  if (HasVolumeBaseline())
-    data.VolumeBaseline(std::unique_ptr<CDM::ScalarVolumeData>(m_QuantityBaseline->Unload()));
+  io::Circuit::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEFluidCircuitNode::HasPressure() const

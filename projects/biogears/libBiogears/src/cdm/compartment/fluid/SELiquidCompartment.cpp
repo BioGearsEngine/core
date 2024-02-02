@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+//Private Includes
+#include <io/cdm/Compartment.h>
 namespace biogears {
 
 SELiquidCompartment::SELiquidCompartment(const char* name, Logger* logger)
@@ -46,23 +48,8 @@ void SELiquidCompartment::Clear()
 //-----------------------------------------------------------------------------
 bool SELiquidCompartment::Load(const CDM::LiquidCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits)
 {
-  if (!SEFluidCompartment::Load(in, circuits))
-    return false;
-  if (in.Child().empty()) {
-    for (const CDM::LiquidSubstanceQuantityData& d : in.SubstanceQuantity()) {
-      SESubstance* sub = subMgr.GetSubstance(d.Substance());
-      if (sub == nullptr) {
-        Error("Could not find a substance for " + std::string { d.Substance() });
-        return false;
-      }
-      CreateSubstanceQuantity(*sub).Load(d);
-      ;
-    }
-    if (in.pH().present())
-      GetPH().Load(in.pH().get());
-    if (in.WaterVolumeFraction().present())
-      GetWaterVolumeFraction().Load(in.WaterVolumeFraction().get());
-  }
+
+  io::Compartment::UnMarshall(in, *this, subMgr, circuits);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -75,13 +62,7 @@ CDM::LiquidCompartmentData* SELiquidCompartment::Unload()
 //-----------------------------------------------------------------------------
 void SELiquidCompartment::Unload(CDM::LiquidCompartmentData& data)
 {
-  SEFluidCompartment::Unload(data);
-  for (SELiquidSubstanceQuantity* subQ : m_SubstanceQuantities)
-    data.SubstanceQuantity().push_back(std::unique_ptr<CDM::LiquidSubstanceQuantityData>(subQ->Unload()));
-  if (HasPH())
-    data.pH(std::unique_ptr<CDM::ScalarData>(GetPH().Unload()));
-  if (HasWaterVolumeFraction())
-    data.WaterVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(GetWaterVolumeFraction().Unload()));
+  io::Compartment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SELiquidCompartment::GetScalar(const char* name)

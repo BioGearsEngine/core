@@ -18,6 +18,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+//Private Includes
+#include <io/cdm/Compartment.h>
+
 namespace biogears {
 SEGasCompartment::SEGasCompartment(const char* name, Logger* logger)
   : SEGasCompartment(std::string { name }, logger)
@@ -35,19 +38,7 @@ SEGasCompartment::~SEGasCompartment()
 //-------------------------------------------------------------------------------
 bool SEGasCompartment::Load(const CDM::GasCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits)
 {
-  if (!SEFluidCompartment::Load(in, circuits))
-    return false;
-  if (in.Child().empty()) {
-    for (const CDM::GasSubstanceQuantityData& d : in.SubstanceQuantity()) {
-      SESubstance* sub = subMgr.GetSubstance(d.Substance());
-      if (sub == nullptr) {
-        Error("Could not find a substance for " + std::string { d.Substance() });
-        return false;
-      }
-      CreateSubstanceQuantity(*sub).Load(d);
-      ;
-    }
-  }
+  io::Compartment::UnMarshall(in, *this, subMgr, circuits);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -60,9 +51,7 @@ CDM::GasCompartmentData* SEGasCompartment::Unload()
 //-------------------------------------------------------------------------------
 void SEGasCompartment::Unload(CDM::GasCompartmentData& data)
 {
-  SEFluidCompartment::Unload(data);
-  for (SEGasSubstanceQuantity* subQ : m_SubstanceQuantities)
-    data.SubstanceQuantity().push_back(std::unique_ptr<CDM::GasSubstanceQuantityData>(subQ->Unload()));
+  io::Compartment::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SEGasCompartment::StateChange()

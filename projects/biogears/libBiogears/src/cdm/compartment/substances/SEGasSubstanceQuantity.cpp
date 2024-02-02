@@ -19,6 +19,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
+// Private Include
+#include <io/cdm/SubstanceQuantity.h>
+
 namespace biogears {
 SEGasSubstanceQuantity::SEGasSubstanceQuantity(SESubstance& sub, SEGasCompartment& compartment)
   : SESubstanceQuantity(sub)
@@ -57,15 +60,7 @@ void SEGasSubstanceQuantity::Clear()
 //-------------------------------------------------------------------------------
 bool SEGasSubstanceQuantity::Load(const CDM::GasSubstanceQuantityData& in)
 {
-  SESubstanceQuantity::Load(in);
-  if (!m_Compartment.HasChildren()) {
-    if (in.PartialPressure().present())
-      GetPartialPressure().Load(in.PartialPressure().get());
-    if (in.Volume().present())
-      GetVolume().Load(in.Volume().get());
-    if (in.VolumeFraction().present())
-      GetVolumeFraction().Load(in.VolumeFraction().get());
-  }
+  io::SubstanceQuantity::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -78,14 +73,7 @@ CDM::GasSubstanceQuantityData* SEGasSubstanceQuantity::Unload()
 //-------------------------------------------------------------------------------
 void SEGasSubstanceQuantity::Unload(CDM::GasSubstanceQuantityData& data)
 {
-  SESubstanceQuantity::Unload(data);
-  // Even if you have children, I am unloading everything, this makes the xml actually usefull...
-  if (HasPartialPressure())
-    data.PartialPressure(std::unique_ptr<CDM::ScalarPressureData>(GetPartialPressure().Unload()));
-  if (HasVolume())
-    data.Volume(std::unique_ptr<CDM::ScalarVolumeData>(GetVolume().Unload()));
-  if (HasVolumeFraction())
-    data.VolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(GetVolumeFraction().Unload()));
+  io::SubstanceQuantity::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SEGasSubstanceQuantity::SetToZero()

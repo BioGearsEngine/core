@@ -21,6 +21,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/Logger.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+// Private Include
+#include <io/cdm/Compartment.h>
+
 namespace std {
 template class vector<biogears::SEGasTransportVertex*>;
 template class vector<biogears::SEGasTransportEdge*>;
@@ -45,23 +48,7 @@ SEGasCompartmentGraph::~SEGasCompartmentGraph()
 //-----------------------------------------------------------------------------
 bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {
-  m_Name = in.Name();
-  for (auto name : in.Compartment()) {
-    SEGasCompartment* cmpt = cmptMgr.GetGasCompartment(name);
-    if (cmpt == nullptr) {
-      Error("Could not find compartment " + std::string { name } + " for graph " + m_Name);
-      return false;
-    }
-    AddCompartment(*cmpt);
-  }
-  for (auto name : in.Link()) {
-    SEGasCompartmentLink* link = cmptMgr.GetGasLink(name);
-    if (link == nullptr) {
-      Error("Could not find link " + std::string { name } + " for graph " + m_Name);
-      return false;
-    }
-    AddLink(*link);
-  }
+  io::Compartment::UnMarshall(in, *this, cmptMgr);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -74,11 +61,7 @@ CDM::GasCompartmentGraphData* SEGasCompartmentGraph::Unload()
 //-----------------------------------------------------------------------------
 void SEGasCompartmentGraph::Unload(CDM::GasCompartmentGraphData& data)
 {
-  data.Name(m_Name);
-  for (SEGasCompartment* cmpt : m_Compartments)
-    data.Compartment().push_back(cmpt->GetName());
-  for (SEGasCompartmentLink* link : m_CompartmentLinks)
-    data.Link().push_back(link->GetName());
+  io::Compartment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 void SEGasCompartmentGraph::BalanceByIntensive()
@@ -97,11 +80,11 @@ void SEGasCompartmentGraph::BalanceByIntensive()
       }
       continue;
     } else {
-      //Adjust to keep the volume fractions making sense
-      //Make it a little more sensitive than the error check later just to be safe
+      // Adjust to keep the volume fractions making sense
+      // Make it a little more sensitive than the error check later just to be safe
       if (std::abs(1.0 - totalVolumeFraction) > (ZERO_APPROX / 10.0)) {
         for (SEGasSubstanceQuantity* subQ : cmpt->GetSubstanceQuantities()) {
-          //Adjust everything the same amount to make sure the volume fraction is 1.0
+          // Adjust everything the same amount to make sure the volume fraction is 1.0
           double volumeFractionErrorFraction = 1.0 / totalVolumeFraction; //<1 = too high; >1 = too low
           subQ->GetVolumeFraction().SetValue(subQ->GetVolumeFraction().GetValue() * volumeFractionErrorFraction);
         }

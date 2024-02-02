@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+//Private Include
+#include <io/cdm/Compartment.h>
+
 namespace biogears {
 SECompartment::SECompartment(const char* name, Logger* logger)
   : SECompartment(std::string{ name }, logger)
@@ -33,17 +36,6 @@ SECompartment::~SECompartment()
 //-----------------------------------------------------------------------------
 void SECompartment::Clear()
 {
-}
-//-----------------------------------------------------------------------------
-bool SECompartment::Load(const CDM::CompartmentData& in, SECircuitManager* circuits)
-{
-  Clear();
-  return true;
-}
-//-----------------------------------------------------------------------------
-void SECompartment::Unload(CDM::CompartmentData& data)
-{
-  data.Name(m_Name);
 }
 //-----------------------------------------------------------------------------
 std::string SECompartment::GetName() const

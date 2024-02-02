@@ -40,7 +40,7 @@ public:
   virtual ~SEGasCompartment();
 
   virtual bool Load(const CDM::GasCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-  virtual CDM::GasCompartmentData* Unload() override;
+  virtual CDM::GasCompartmentData* Unload();
 
   bool operator==(SEGasCompartment const&) const;
   bool operator!=(SEGasCompartment const&) const;

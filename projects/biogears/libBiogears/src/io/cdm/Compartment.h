@@ -57,59 +57,62 @@ class SEThermalCompartmentLink;
 class SECompartmentManager;
 
 namespace io {
-  class BIOGEARS_PRIVATE_API Compartment {
+  class Compartment {
   public:
-    //template <typename SE, typename XSD>  option
+    // class SECompartment
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::CompartmentData& in, SECompartment& out);
+    static void BIOGEARS_PRIVATE_API Marshall(const SECompartment& in, CDM::CompartmentData& out);
+    // class SECompartmentLink
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::CompartmentLinkData& in, SECompartmentLink& out);
+    static void BIOGEARS_PRIVATE_API Marshall(const SECompartmentLink& in, CDM::CompartmentLinkData& out);
+
+    // class SEGasCompartment
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::GasCompartmentData& in, SEGasCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
+    static void BIOGEARS_PRIVATE_API Marshall(const SEGasCompartment& in, CDM::GasCompartmentData& out);
+    // class SEGasCompartmentLink
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::GasCompartmentLinkData& in, SEGasCompartmentLink& out);
+    static void BIOGEARS_PRIVATE_API Marshall(const SEGasCompartmentLink& in, CDM::GasCompartmentLinkData& out);
+    // class SEGasCompartmentGraph
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::GasCompartmentGraphData& in, SEGasCompartmentGraph& out, SECompartmentManager& cmptMgr);
+    static void BIOGEARS_PRIVATE_API Marshall(const SEGasCompartmentGraph& in, CDM::GasCompartmentGraphData& out);
+    // class SELiquidCompartment
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::LiquidCompartmentData& in, SELiquidCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits);
+    static void BIOGEARS_PRIVATE_API Marshall(const SELiquidCompartment& in, CDM::LiquidCompartmentData& out);
+    // class SELiquidCompartmentLink
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::LiquidCompartmentLinkData& in, SELiquidCompartmentLink& out);
+    static void BIOGEARS_PRIVATE_API Marshall(const SELiquidCompartmentLink& in, CDM::LiquidCompartmentLinkData& out);
+    // class SELiquidCompartmentGraph
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::LiquidCompartmentGraphData& in, SELiquidCompartmentGraph& out, SECompartmentManager& cmptMgr);
+    static void BIOGEARS_PRIVATE_API Marshall(const SELiquidCompartmentGraph& in, CDM::LiquidCompartmentGraphData& out);
+    // class SETissueCompartment
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::TissueCompartmentData& in, SETissueCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
+    static void BIOGEARS_PRIVATE_API Marshall(const SETissueCompartment& in, CDM::TissueCompartmentData& out);
+    // class SEThermalCompartment
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::ThermalCompartmentData& in, SEThermalCompartment& out, SECircuitManager* circuits = nullptr);
+    static void BIOGEARS_PRIVATE_API Marshall(SEThermalCompartment& in, CDM::ThermalCompartmentData& out);
+    // class SEThermalCompartmentLink
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::ThermalCompartmentLinkData& in, SEThermalCompartmentLink& out, SECircuitManager* circuits = nullptr);
+    static void BIOGEARS_PRIVATE_API Marshall(const SEThermalCompartmentLink& in, CDM::ThermalCompartmentLinkData& out);
+    // class SECompartmentManager
+    static void BIOGEARS_PRIVATE_API UnMarshall(const CDM::CompartmentManagerData& in, SECompartmentManager& out, SECircuitManager* circuits = nullptr);
+    static void BIOGEARS_PRIVATE_API Marshall(const SECompartmentManager& in, CDM::CompartmentManagerData& out);
+
+  private:
+    // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
     static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
-    //class SECompartment
-    static void UnMarshall(const CDM::CompartmentData& in, SECompartment& out);
-    static void Marshall(const SECompartment& in, CDM::CompartmentData& out);
-    //class SECompartmentLink
-    static void UnMarshall(const CDM::CompartmentLinkData& in, SECompartmentLink& out);
-    static void Marshall(const SECompartmentLink& in, CDM::CompartmentLinkData& out);
-    //class SEFluidCompartment
+    // class SEFluidCompartment
     template <FLUID_COMPARTMENT_TEMPLATE>
     static void UnMarshall(const CDM::FluidCompartmentData& in, SEFluidCompartment<FLUID_COMPARTMENT_TYPES>& out, SECircuitManager* circuits = nullptr);
     template <FLUID_COMPARTMENT_TEMPLATE>
     static void Marshall(const SEFluidCompartment<FLUID_COMPARTMENT_TYPES>& in, CDM::FluidCompartmentData& out);
-    //class SEFluidCompartmentLink
+    // class SEFluidCompartmentLink
     template <FLUID_COMPARTMENT_LINK_TEMPLATE>
     static void UnMarshall(const CDM::FluidCompartmentLinkData& in, SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>& out, SECircuitManager* circuits = nullptr);
     template <FLUID_COMPARTMENT_LINK_TEMPLATE>
     static void Marshall(const SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>& in, CDM::FluidCompartmentLinkData& out);
-    //class SEGasCompartment
-    static void UnMarshall(const CDM::GasCompartmentData& in, SEGasCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-    static void Marshall(const SEGasCompartment& in, CDM::GasCompartmentData& out);
-    //class SEGasCompartmentLink
-    static void UnMarshall(const CDM::GasCompartmentLinkData& in, SEGasCompartmentLink& out);
-    static void Marshall(const SEGasCompartmentLink& in, CDM::GasCompartmentLinkData& out);
-    //class SEGasCompartmentGraph
-    static void UnMarshall(const CDM::GasCompartmentGraphData& in, SEGasCompartmentGraph& out, SECompartmentManager& cmptMgr);
-    static void Marshall(const SEGasCompartmentGraph& in, CDM::GasCompartmentGraphData& out);
-    //class SELiquidCompartment
-    static void UnMarshall(const CDM::LiquidCompartmentData& in, SELiquidCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits);
-    static void Marshall(const SELiquidCompartment& in, CDM::LiquidCompartmentData& out);
-    //class SELiquidCompartmentLink
-    static void UnMarshall(const CDM::LiquidCompartmentLinkData& in, SELiquidCompartmentLink& out);
-    static void Marshall(const SELiquidCompartmentLink& in, CDM::LiquidCompartmentLinkData& out);
-    //class SELiquidCompartmentGraph
-    static void UnMarshall(const CDM::LiquidCompartmentGraphData& in, SELiquidCompartmentGraph& out, SECompartmentManager& cmptMgr);
-    static void Marshall(const SELiquidCompartmentGraph& in, CDM::LiquidCompartmentGraphData& out);
-    //class SETissueCompartment
-    static void UnMarshall(const CDM::TissueCompartmentData& in, SETissueCompartment& out, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-    static void Marshall(const SETissueCompartment& in, CDM::TissueCompartmentData& out);
-    //class SEThermalCompartment
-    static void UnMarshall(const CDM::ThermalCompartmentData& in, SEThermalCompartment& out, SECircuitManager* circuits = nullptr);
-    static void Marshall(SEThermalCompartment& in, CDM::ThermalCompartmentData& out);
-    //class SEThermalCompartmentLink
-    static void UnMarshall(const CDM::ThermalCompartmentLinkData& in, SEThermalCompartmentLink& out, SECircuitManager* circuits = nullptr);
-    static void Marshall(const SEThermalCompartmentLink& in, CDM::ThermalCompartmentLinkData& out);
-    //class SECompartmentManager
-    static void UnMarshall(CDM::CompartmentManagerData& in, SECompartmentManager& out, SECircuitManager* circuits = nullptr);
-    static void Marshall(const SECompartmentManager& in, CDM::CompartmentManagerData& out);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
@@ -131,4 +134,4 @@ namespace io {
   }
 
 } // Namespace IO
-} //Namespace Biogears
+} // Namespace Biogears

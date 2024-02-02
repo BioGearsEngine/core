@@ -29,9 +29,10 @@ protected:
   SEGasCompartmentLink(SEGasCompartment& src, SEGasCompartment& tgt, const std::string& name);
 
 public:
-  ~SEGasCompartmentLink();
+  virtual ~SEGasCompartmentLink() override;
 
-  virtual CDM::GasCompartmentLinkData* Unload() override;
+  void Load(CDM::GasCompartmentLinkData const& in);
+  CDM::GasCompartmentLinkData* Unload();
 };
 } //namespace bigoears
 

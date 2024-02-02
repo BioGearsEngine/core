@@ -49,11 +49,11 @@ public:
 
   void AddGraph(SEGasCompartmentGraph& graph);
 
-  virtual bool Load(const CDM::GasCompartmentGraphData& in, SECompartmentManager& cmptMgr);
-  virtual CDM::GasCompartmentGraphData* Unload();
+  bool Load(const CDM::GasCompartmentGraphData& in, SECompartmentManager& cmptMgr);
+  CDM::GasCompartmentGraphData* Unload();
 
 protected:
-  virtual void Unload(CDM::GasCompartmentGraphData& data);
+  void Unload(CDM::GasCompartmentGraphData& data);
 
 protected:
   void BalanceByIntensive() override;

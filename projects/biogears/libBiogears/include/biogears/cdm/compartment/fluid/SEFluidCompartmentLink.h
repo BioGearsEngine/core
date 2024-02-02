@@ -34,22 +34,15 @@ protected:
   SEFluidCompartmentLink(CompartmentType& src, CompartmentType& tgt, const std::string& name);
 
 public:
-  virtual ~SEFluidCompartmentLink();
+  virtual ~SEFluidCompartmentLink() override;
 
   virtual void Clear() override;
-
-  virtual bool Load(const CDM::FluidCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::FluidCompartmentLinkData* Unload() override = 0;
 
   bool operator==(const SEFluidCompartmentLink& rhs) const;
   bool operator!=(const SEFluidCompartmentLink& rhs) const;
   bool operator==(const SECompartmentLink& rhs) const final;
   bool operator!=(const SECompartmentLink& rhs) const final;
 
-protected:
-  virtual void Unload(CDM::FluidCompartmentLinkData& data);
-
-public:
   virtual const SEScalar* GetScalar(const char* name) override;
   virtual const SEScalar* GetScalar(const std::string& name) override;
 

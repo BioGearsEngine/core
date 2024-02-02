@@ -33,16 +33,9 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::CompartmentLinkData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::CompartmentLinkData* Unload() = 0;
-
   virtual bool operator==(const SECompartmentLink& rhs) const = 0;
   virtual bool operator!=(const SECompartmentLink& rhs) const = 0;
 
-protected:
-  virtual void Unload(CDM::CompartmentLinkData& data);
-
-public:
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;
 

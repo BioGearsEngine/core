@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitCalculator.h>
 
+// Private Includes
+#include <io/cdm/Circuit.h>
+
 namespace biogears {
 template class SECircuitCalculator<SEFluidCircuit, SEFluidCircuitNode, SEFluidCircuitPath, FlowComplianceUnit, VolumePerTimeUnit, FlowInertanceUnit, PressureUnit, VolumeUnit, FlowResistanceUnit>;
 SEFluidCircuitCalculator::SEFluidCircuitCalculator(Logger* logger)

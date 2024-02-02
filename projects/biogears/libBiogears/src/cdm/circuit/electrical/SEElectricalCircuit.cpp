@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 
+//Private Includes
+#include <io/cdm/Circuit.h>
+
 namespace std {
  template class vector<biogears::SEElectricalCircuitNode*>;
  template class vector<biogears::SEElectricalCircuitPath*>;

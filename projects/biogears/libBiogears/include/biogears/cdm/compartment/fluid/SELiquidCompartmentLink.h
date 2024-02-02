@@ -33,7 +33,8 @@ protected:
 public:
   ~SELiquidCompartmentLink() override;
 
-  virtual CDM::LiquidCompartmentLinkData* Unload() override;
+  void Load(CDM::LiquidCompartmentLinkData const& in);
+  CDM::LiquidCompartmentLinkData* Unload();
 };
 }    // namespace biogears
 

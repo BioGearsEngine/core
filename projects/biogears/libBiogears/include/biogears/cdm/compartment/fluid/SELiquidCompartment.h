@@ -48,7 +48,7 @@ public:
   virtual void Clear() override;
 
   virtual bool Load(const CDM::LiquidCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-  virtual CDM::LiquidCompartmentData* Unload() override;
+  virtual CDM::LiquidCompartmentData* Unload();
 
   bool operator==(SELiquidCompartment const&) const;
   bool operator!=(SELiquidCompartment const&) const;

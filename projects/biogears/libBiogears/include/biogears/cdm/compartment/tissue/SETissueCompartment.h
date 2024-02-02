@@ -52,7 +52,7 @@ public:
   virtual void Clear() override;
 
   virtual bool Load(const CDM::TissueCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-  virtual CDM::TissueCompartmentData* Unload() override;
+  virtual CDM::TissueCompartmentData* Unload();
 
 protected:
   virtual void Unload(CDM::TissueCompartmentData& data);
