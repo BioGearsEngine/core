@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/schema/cdm/EngineConfiguration.hxx>
 
+// Private Include
+#include <io/cdm/EngineConfiguration.h>
+
 namespace biogears {
 //-------------------------------------------------------------------------------
 PhysiologyEngineStabilization::PhysiologyEngineStabilization(Logger* logger)
@@ -40,19 +43,7 @@ void PhysiologyEngineStabilization::Clear()
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineStabilization::Load(const CDM::PhysiologyEngineStabilizationData& in)
 {
-  Clear();
-  if (in.Canceled().present()) {
-    m_Canceled = in.Canceled().get();
-  }
-  if (in.LogProgress().present()) {
-    m_LogProgress = in.LogProgress().get();
-  }
-  if (in.CurrentTime().present()) {
-    GetCurrentTime().Load(in.CurrentTime().get());
-  }
-  if (in.StabilizationDuration().present()) {
-    GetStabilizationDuration().Load(in.StabilizationDuration().get());
-  }
+  io::EngineConfiguration::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -65,16 +56,7 @@ CDM::PhysiologyEngineStabilizationData* PhysiologyEngineStabilization::Unload() 
 //-------------------------------------------------------------------------------
 void PhysiologyEngineStabilization::Unload(CDM::PhysiologyEngineStabilizationData& data) const
 {
-  data.Canceled(m_Canceled);
-  data.LogProgress(m_LogProgress);
-  if (HasCurrentTime()) {
-    data.CurrentTime(std::unique_ptr<CDM::ScalarTimeData>(m_currentTime->Unload()));
-  }
-  if (HasStabilizationDuration()) {
-    data.StabilizationDuration(std::unique_ptr<CDM::ScalarTimeData>(m_StabilizationDuration->Unload()));
-  }
-  data.CurrentTime();
-
+  io::EngineConfiguration::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void PhysiologyEngineStabilization::LogProgress(bool b)

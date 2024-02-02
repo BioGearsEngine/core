@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -22,6 +23,11 @@ specific language governing permissions and limitations under the License.
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/config.h>
 #endif
+
+
+// Private Include
+#include <io/cdm/EngineConfiguration.h>
+
 
 namespace biogears {
 PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
@@ -95,63 +101,7 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
 
 bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& in)
 {
-  if (!m_Merge)
-    Clear(); // Reset only if we are not merging
-
-  if (in.TimeStep().present())
-    GetTimeStep().Load(in.TimeStep().get());
-  if (in.WritePatientBaselineFile().present())
-    SetWritePatientBaselineFile(in.WritePatientBaselineFile().get());
-
-  if (in.ElectroCardioGramInterpolatorFile().present()) {
-    if (!GetECGInterpolator().LoadWaveforms(in.ElectroCardioGramInterpolatorFile().get())) {
-      Error("Unable to load ElectroCardioGram Waveforms file");
-      return false;
-    }
-  } else if (in.ElectroCardioGramInterpolator().present()) {
-    if (!GetECGInterpolator().Load(in.ElectroCardioGramInterpolator().get())) {
-      Error("Unable to load ElectroCardioGram Waveforms");
-      return false;
-    }
-  }
-
-  std::unique_ptr<CDM::ObjectData> sData;
-  const CDM::PhysiologyEngineTimedStabilizationData* tData = nullptr;
-  const CDM::PhysiologyEngineDynamicStabilizationData* dData = nullptr;
-  if (in.StabilizationCriteriaFile().present()) {
-    auto io = m_Logger->GetIoManager().lock();
-    auto possible_path = io->FindConfigFile(in.StabilizationCriteriaFile().get().c_str());
-    if (possible_path.empty()) {
-#ifdef BIOGEARS_IO_PRESENT
-      size_t content_size;
-      auto content = io::get_embedded_config_file(in.StabilizationCriteriaFile().get().c_str(), content_size);
-      sData = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
-#endif
-    } else {
-      sData = Serializer::ReadFile(possible_path, m_Logger);
-    }
-    if (sData == nullptr) {
-      Error("Unable to load Stabilization Criteria file");
-      return false;
-    }
-    tData = dynamic_cast<const CDM::PhysiologyEngineTimedStabilizationData*>(sData.get());
-    dData = dynamic_cast<const CDM::PhysiologyEngineDynamicStabilizationData*>(sData.get());
-  } else if (in.StabilizationCriteria().present()) {
-    tData = dynamic_cast<const CDM::PhysiologyEngineTimedStabilizationData*>(&in.StabilizationCriteria().get());
-    dData = dynamic_cast<const CDM::PhysiologyEngineDynamicStabilizationData*>(&in.StabilizationCriteria().get());
-  }
-  if (tData != nullptr) {
-    if (!GetTimedStabilizationCriteria().Load(*tData)) {
-      Error("Unable to load Stabilization Criteria");
-      return false;
-    }
-  } else if (dData != nullptr) {
-    if (!GetDynamicStabilizationCriteria().Load(*dData)) {
-      Error("Unable to load Stabilization Criteria");
-      return false;
-    }
-  }
-
+  io::EngineConfiguration::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------

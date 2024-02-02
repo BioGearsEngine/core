@@ -49,6 +49,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
+//Private Include
+#include <io/cdm/EngineConfiguration.h>
+
 namespace std {
 template class vector<biogears::SESystem*>;
 template class map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;

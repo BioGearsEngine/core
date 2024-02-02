@@ -19,9 +19,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/cdm/utils/TimingProfile.h>
 #include <biogears/io/io-manager.h>
+
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/config.h>
 #endif
+
+//Private Include
+#include <io/cdm/EngineConfiguration.h>
 
 namespace biogears {
 bool PhysiologyEngineTimedStabilization::StabilizeRestingState(PhysiologyEngine& engine)
@@ -140,15 +144,7 @@ void PhysiologyEngineTimedStabilization::Clear()
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const CDM::PhysiologyEngineTimedStabilizationData& in)
 {
-  PhysiologyEngineStabilization::Load(in);
-  GetRestingStabilizationTime().Load(in.RestingStabilizationTime());
-  if (in.FeedbackStabilizationTime().present())
-    GetFeedbackStabilizationTime().Load(in.FeedbackStabilizationTime().get());
-  for (auto cc : in.ConditionStabilization()) {
-    PhysiologyEngineTimedStabilizationCriteria* sc = new PhysiologyEngineTimedStabilizationCriteria(nullptr);
-    sc->Load(cc);
-    m_ConditionCriteria.push_back(sc);
-  }
+  io::EngineConfiguration::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
