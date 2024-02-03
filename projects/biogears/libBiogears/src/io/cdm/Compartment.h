@@ -56,6 +56,7 @@ class SEThermalCompartment;
 class SEThermalCompartmentLink;
 class SECompartmentManager;
 
+
 namespace io {
   class Compartment {
   public:

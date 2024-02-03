@@ -35,6 +35,7 @@ class SESubstanceQuantity;
 class SEGasSubstanceQuantity;
 class SELiquidSubstanceQuantity;
 
+
 namespace io {
   class BIOGEARS_PRIVATE_API SubstanceQuantity {
   public:

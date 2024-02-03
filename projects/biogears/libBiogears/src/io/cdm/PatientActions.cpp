@@ -367,6 +367,7 @@ namespace io {
     Scenario::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
   }
+
   //----------------------------------------------------------------------------------
   // class SEAirwayObstruction
   void PatientActions::UnMarshall(const CDM::AirwayObstructionData& in, SEAirwayObstruction& out)
@@ -380,8 +381,10 @@ namespace io {
   void PatientActions::Marshall(const SEAirwayObstruction& in, CDM::AirwayObstructionData& out)
   {
     Scenario::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
+
     CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
   }
+
   //----------------------------------------------------------------------------------
   // class SEApnea
   void PatientActions::UnMarshall(const CDM::ApneaData& in, SEApnea& out)
@@ -396,8 +399,10 @@ namespace io {
   void PatientActions::Marshall(const SEApnea& in, CDM::ApneaData& out)
   {
     Scenario::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
+
     CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
   }
+
   //----------------------------------------------------------------------------------
   // class SEAsthmaAttack
   void PatientActions::UnMarshall(const CDM::AsthmaAttackData& in, SEAsthmaAttack& out)
@@ -413,6 +418,7 @@ namespace io {
     Scenario::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
   }
+
   //----------------------------------------------------------------------------------
   // class SEBrainInjury
   void PatientActions::UnMarshall(const CDM::BrainInjuryData& in, SEBrainInjury& out)
@@ -445,6 +451,7 @@ namespace io {
     PatientActions::Marshall(static_cast<const SEConsciousRespirationCommand&>(in), static_cast<CDM::ConsciousRespirationCommandData&>(out));
     CDM_PROPERTY_MARSHALL_HELPER(in, out, Period)
   }
+
   //----------------------------------------------------------------------------------
   // class SEBronchoconstriction
   void PatientActions::UnMarshall(const CDM::BronchoconstrictionData& in, SEBronchoconstriction& out)
@@ -460,6 +467,7 @@ namespace io {
     Scenario::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
   }
+
   //----------------------------------------------------------------------------------
   // class SEBurnWound
   void PatientActions::UnMarshall(const CDM::BurnWoundData& in, SEBurnWound& out)
@@ -489,6 +497,7 @@ namespace io {
       }
     }
   }
+
   //----------------------------------------------------------------------------------
   // class SECardiacArrest
   void PatientActions::UnMarshall(const CDM::CardiacArrestData& in, SECardiacArrest& out)
@@ -504,6 +513,7 @@ namespace io {
     Scenario::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     out.State(in.m_State);
   }
+
   //----------------------------------------------------------------------------------
   // class SEChestCompression
   void PatientActions::UnMarshall(const CDM::ChestCompressionData& in, SEChestCompression& out)
@@ -516,6 +526,7 @@ namespace io {
   {
     Scenario::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
   }
+
   //----------------------------------------------------------------------------------
   // class SEChestCompressionForce
   void PatientActions::UnMarshall(const CDM::ChestCompressionForceData& in, SEChestCompressionForce& out)
@@ -531,6 +542,7 @@ namespace io {
     Scenario::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     CDM_PROPERTY_MARSHALL_HELPER(in, out, Force)
   }
+
   //----------------------------------------------------------------------------------
   // class SEChestCompressionForceScale
   void PatientActions::UnMarshall(const CDM::ChestCompressionForceScaleData& in, SEChestCompressionForceScale& out)
@@ -550,6 +562,7 @@ namespace io {
     CDM_PROPERTY_MARSHALL_HELPER(in, out, ForceScale)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ForcePeriod)
   }
+
   //----------------------------------------------------------------------------------
   // class SEChestOcclusiveDressing
   void PatientActions::UnMarshall(const CDM::ChestOcclusiveDressingData& in, SEChestOcclusiveDressing& out)
@@ -782,7 +795,7 @@ namespace io {
       io::UnMarshall(in.StrengthExercise().get(), out.GetStrengthExercise());
     }
   }
-  //----------------------------------------------------------------------------------
+
   void Marshall(const SEExercise::SEGeneric& in, CDM::GenericExerciseData& out)
   {
     if (in.Intensity.IsValid()) {
@@ -886,6 +899,7 @@ namespace io {
     CDM_ENUM_MARSHALL_HELPER(in, out, Severity)
     CDM_PROPERTY_MARSHALL_HELPER(in, out, MinimumInhibitoryConcentration)
   }
+
   //----------------------------------------------------------------------------------
   // class SEIntubation
   void PatientActions::UnMarshall(const CDM::IntubationData& in, SEIntubation& out)
@@ -1459,7 +1473,7 @@ namespace io {
     CDM_PROPERTY_MARSHALL_HELPER(in, out, Concentration)
     out.Substance(in.m_Substance.GetName());
   }
-//----------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------
   // class SESleep
   void PatientActions::UnMarshall(const CDM::SleepData& in, SESleep& out)
   {

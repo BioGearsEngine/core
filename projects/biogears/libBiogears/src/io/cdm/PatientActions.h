@@ -76,6 +76,9 @@ class SESubstanceAdministration;
 class SESubstanceBolus;
 class SESubstanceBolusState;
 class SESubstanceCompoundInfusion;
+class SESubstanceOralDose;
+class SESubstanceNasalDose;
+class SENasalState;
 class SESubstanceInfusion;
 class SESubstanceNasalDose;
 class SESubstanceOralDose;
@@ -83,6 +86,7 @@ class SETourniquet;
 class SETransmucosalState;
 class SEUrinate;
 class SEOverride;
+
 
 namespace io {
   class BIOGEARS_PRIVATE_API PatientActions {

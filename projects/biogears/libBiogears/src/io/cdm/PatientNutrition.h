@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 
+
 #define CDM_PATIENT_NUTRITION_MARSHALL_HELPER(in, out, func)                        \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \

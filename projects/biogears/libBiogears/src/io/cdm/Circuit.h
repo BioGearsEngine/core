@@ -50,6 +50,7 @@ class SEThermalCircuitNode;
 class SEThermalCircuitPath;
 class SECircuitManager;
 
+
 namespace io {
   class BIOGEARS_PRIVATE_API Circuit {
   public:

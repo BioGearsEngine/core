@@ -46,6 +46,7 @@ class SEUrinalysisMicroscopic;
 // SEPsychomotorVigilanceTask.h
 // SESequentialOrganFailureAssessment.h
 
+
 namespace io {
   class BIOGEARS_PRIVATE_API PatientAssessments {
   public:

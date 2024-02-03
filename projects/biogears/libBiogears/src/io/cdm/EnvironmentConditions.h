@@ -33,6 +33,7 @@ namespace biogears {
 class SEEnvironmentCondition;
 class SEInitialEnvironment;
 
+
 namespace io {
   class BIOGEARS_PRIVATE_API EnvironmentConditions {
   public:

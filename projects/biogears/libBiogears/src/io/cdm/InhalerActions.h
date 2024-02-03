@@ -33,6 +33,7 @@ namespace biogears {
 class SEInhalerAction;
 class SEInhalerConfiguration;
 
+
 namespace io {
   class BIOGEARS_PRIVATE_API InhalerActions {
   public:

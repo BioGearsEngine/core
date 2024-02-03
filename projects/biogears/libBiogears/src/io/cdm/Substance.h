@@ -44,6 +44,7 @@ class SESubstanceFraction;
 class SESubstanceConcentration;
 class SEPharmacodynamicModifier;
 
+
 namespace io {
   class BIOGEARS_PRIVATE_API Substance {
   public:

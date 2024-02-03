@@ -47,6 +47,7 @@ class SEImpairedAlveolarExchange;
 class SELobarPneumonia;
 class SEStarvation;
 
+
 namespace io {
   class BIOGEARS_PRIVATE_API PatientConditions {
   public:

@@ -52,6 +52,7 @@ class SEScenarioInitialParameters;
 class SEScenarioAutoSerialization;
 class SEAdvanceTime;
 class SESerializeState;
+
 class SEAnesthesiaMachineActionCollection;
 class SEEnvironmentActionCollection;
 class SEInhalerActionCollection;

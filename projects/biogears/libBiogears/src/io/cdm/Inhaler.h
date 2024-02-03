@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEInhaler;
 
+
 namespace io {
   class BIOGEARS_PRIVATE_API Inhaler {
 

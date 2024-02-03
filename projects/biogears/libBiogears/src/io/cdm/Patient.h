@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEPatient;
 
+
 namespace io {
   class BIOGEARS_PRIVATE_API Patient {
   public:

@@ -12,10 +12,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Properties.hxx>
-
 // Private Includes
 #include <io/cdm/PatientActions.h>
-
 namespace biogears {
 SESubstanceOralDose::SESubstanceOralDose(const SESubstance& substance)
   : SESubstanceAdministration()
@@ -36,7 +34,6 @@ void SESubstanceOralDose::Clear()
   m_AdminRoute = (CDM::enumOralAdministration::value)-1;
   SAFE_DELETE(m_Dose);
 }
-//-------------------------------------------------------------------------------
 // The oral model requires physiochemical properties
 bool SESubstanceOralDose::IsValid() const
 {
@@ -132,6 +129,7 @@ SETransmucosalState::SETransmucosalState(const SESubstance& sub)
 {
   m_MouthSolidMass = nullptr;
   m_SalivaConcentration = nullptr;
+
 }
 //-------------------------------------------------------------------------------
 SETransmucosalState::~SETransmucosalState()
