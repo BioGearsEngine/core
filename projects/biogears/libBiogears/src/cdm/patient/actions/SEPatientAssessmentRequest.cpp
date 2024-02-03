@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SEPatientAssessmentRequest::SEPatientAssessmentRequest()
   : SEPatientAction()
@@ -42,8 +45,7 @@ bool SEPatientAssessmentRequest::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEPatientAssessmentRequest::Load(const CDM::PatientAssessmentRequestData& in)
 {
-  SEPatientAction::Load(in);
-  m_Type = in.Type();
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -56,9 +58,7 @@ CDM::PatientAssessmentRequestData* SEPatientAssessmentRequest::Unload() const
 //-------------------------------------------------------------------------------
 void SEPatientAssessmentRequest::Unload(CDM::PatientAssessmentRequestData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (HasType())
-    data.Type(m_Type);
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 CDM::enumPatientAssessment::value SEPatientAssessmentRequest::GetType() const

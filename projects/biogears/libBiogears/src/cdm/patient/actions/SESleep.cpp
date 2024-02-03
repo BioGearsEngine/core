@@ -10,6 +10,9 @@ specific language governing permissions and limitations under the License.
 
 #include "biogears/cdm/patient/actions/SESleep.h"
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears
 {
   SESleep::SESleep()
@@ -41,8 +44,7 @@ namespace biogears
   //-------------------------------------------------------------------------------
   bool SESleep::Load(const CDM::SleepData& in)
   {
-    SEPatientAction::Load(in);
-    m_SleepState = in.Sleep();
+    io::PatientActions::UnMarshall(in, *this);
     return true;
   }
   //-------------------------------------------------------------------------------
@@ -55,9 +57,7 @@ namespace biogears
   //-------------------------------------------------------------------------------
   void SESleep::Unload(CDM::SleepData& data) const
   {
-    SEPatientAction::Unload(data);
-    if (HasSleepState())
-      data.Sleep(m_SleepState);
+    io::PatientActions::Marshall(*this, data);
   }
   //-------------------------------------------------------------------------------
   CDM::enumOnOff SESleep::GetSleepState() const

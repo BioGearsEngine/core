@@ -12,153 +12,147 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
-namespace biogears
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
+namespace biogears {
+SEInfection::SEInfection()
+  : SEPatientAction()
 {
-  SEInfection::SEInfection()
-    : SEPatientAction()
-  {
-    m_Location = ""; //User input, location of infection
-    m_Severity = (CDM::enumInfectionSeverity::value)-1;
-    m_MinimumInhibitoryConcentration = nullptr;
-  }
-  //-------------------------------------------------------------------------------
-  SEInfection::~SEInfection()
-  {
-    Clear();
-  }
-  //-------------------------------------------------------------------------------
-  void SEInfection::Clear()
-  {
-    SEPatientAction::Clear();
-    m_Location = "";
-    m_Severity = (CDM::enumInfectionSeverity::value)-1;
-    SAFE_DELETE(m_MinimumInhibitoryConcentration);
-  }
-  //-------------------------------------------------------------------------------
-  bool SEInfection::IsValid() const
-  {
-    return SEPatientAction::IsValid() && HasLocation() && HasSeverity() && HasMinimumInhibitoryConcentration();
-  }
-  //-------------------------------------------------------------------------------
-  bool SEInfection::IsActive() const
-  {
-    return m_Severity == CDM::enumInfectionSeverity::Eliminated ? false : true;
-  }
-  //-------------------------------------------------------------------------------
-  bool SEInfection::Load(const CDM::InfectionData& in)
-  {
-    SEPatientAction::Load(in);
-    m_Location = in.Location();
-    m_Severity = in.Severity();
-    GetMinimumInhibitoryConcentration().Load(in.MinimumInhibitoryConcentration());
-    return true;
-  }
-  //-------------------------------------------------------------------------------
-  CDM::InfectionData* SEInfection::Unload() const
-  {
-    CDM::InfectionData* data(new CDM::InfectionData());
-    Unload(*data);
-    return data;
-  }
-  //-------------------------------------------------------------------------------
-  void SEInfection::Unload(CDM::InfectionData& data) const
-  {
-    SEPatientAction::Unload(data);
-    if (HasLocation())
-      data.Location(m_Location);
-    if (HasSeverity())
-      data.Severity(m_Severity);
-    if (m_MinimumInhibitoryConcentration != nullptr)
-      data.MinimumInhibitoryConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_MinimumInhibitoryConcentration->Unload()));
-  }
-  //-------------------------------------------------------------------------------
-  const char* SEInfection::GetLocation_cStr() const
-  {
-    return m_Location.c_str();
-  }
-  //-------------------------------------------------------------------------------
-  std::string SEInfection::GetLocation() const
-  {
-    return m_Location;
-  }
-  //-------------------------------------------------------------------------------
-  bool SEInfection::HasLocation() const
-  {
-    return !m_Location.empty();
-  }
-  //-------------------------------------------------------------------------------
-  void SEInfection::InvalidateLocation()
-  {
-    m_Location = "";
-  }
-  //-------------------------------------------------------------------------------
-  void SEInfection::SetLocation(const char* name)
-  {
-    return SetLocation(std::string{ name });
-  }
-  //-------------------------------------------------------------------------------
-  void SEInfection::SetLocation(const std::string& name)
-  {
-    m_Location = name;
-  }
-  //-------------------------------------------------------------------------------
-  CDM::enumInfectionSeverity::value SEInfection::GetSeverity() const
-  {
-    return m_Severity;
-  }
-  //-------------------------------------------------------------------------------
-  void SEInfection::SetSeverity(CDM::enumInfectionSeverity::value t)
-  {
-    m_Severity = t;
-  }
-  //-------------------------------------------------------------------------------
-  bool SEInfection::HasSeverity() const
-  {
-    return m_Severity == ((CDM::enumInfectionSeverity::value)-1) ? false : true;
-  }
-  //-------------------------------------------------------------------------------
-  void SEInfection::InvalidateSeverity()
-  {
-    m_Severity = (CDM::enumInfectionSeverity::value)-1;
-  }
-  //-----------------------------------------------------------------------------
-  bool SEInfection::HasMinimumInhibitoryConcentration() const
-  {
-    return m_MinimumInhibitoryConcentration == nullptr ? false : true;
-  }
-  //-----------------------------------------------------------------------------
-  SEScalarMassPerVolume& SEInfection::GetMinimumInhibitoryConcentration()
-  {
-    if (m_MinimumInhibitoryConcentration == nullptr)
-      m_MinimumInhibitoryConcentration = new SEScalarMassPerVolume();
-    return *m_MinimumInhibitoryConcentration;
-  }
-  //-------------------------------------------------------------------------------
-  void SEInfection::ToString(std::ostream & str) const
-  {
-    str << "Patient Action : Infection";
-    if (HasComment())
-      str << "\n\tComment: " << m_Comment;
-    str << "\n\tSeverity:  ";
-    str << m_Severity;
-    str << "\n\tMinimum Inhibitory Concentration: ";
-    str << *m_MinimumInhibitoryConcentration;
-    str << "\n\tLocation: ";
-    HasLocation() ? str << GetLocation() : str << "No Location Set";
-    str << std::flush;
-  }
-  //-------------------------------------------------------------------------------
-bool SEInfection::operator==( const SEInfection& rhs) const
+  m_Location = ""; // User input, location of infection
+  m_Severity = (CDM::enumInfectionSeverity::value)-1;
+  m_MinimumInhibitoryConcentration = nullptr;
+}
+//-------------------------------------------------------------------------------
+SEInfection::~SEInfection()
 {
-bool equivilant = m_Comment == rhs.m_Comment;
-  equivilant &= m_Location == rhs.m_Location;
-  equivilant &= m_Severity == rhs.m_Severity;
-  equivilant &= (m_MinimumInhibitoryConcentration && rhs.m_MinimumInhibitoryConcentration) ? m_MinimumInhibitoryConcentration->operator==(*rhs.m_MinimumInhibitoryConcentration) 
-    : m_MinimumInhibitoryConcentration == rhs.m_MinimumInhibitoryConcentration;
+  Clear();
+}
+//-------------------------------------------------------------------------------
+void SEInfection::Clear()
+{
+  SEPatientAction::Clear();
+  m_Location = "";
+  m_Severity = (CDM::enumInfectionSeverity::value)-1;
+  SAFE_DELETE(m_MinimumInhibitoryConcentration);
+}
+//-------------------------------------------------------------------------------
+bool SEInfection::IsValid() const
+{
+  return SEPatientAction::IsValid() && HasLocation() && HasSeverity() && HasMinimumInhibitoryConcentration();
+}
+//-------------------------------------------------------------------------------
+bool SEInfection::IsActive() const
+{
+  return m_Severity == CDM::enumInfectionSeverity::Eliminated ? false : true;
+}
+//-------------------------------------------------------------------------------
+bool SEInfection::Load(const CDM::InfectionData& in)
+{
+  io::PatientActions::UnMarshall(in, *this);
+  return true;
+}
+//-------------------------------------------------------------------------------
+CDM::InfectionData* SEInfection::Unload() const
+{
+  CDM::InfectionData* data(new CDM::InfectionData());
+  Unload(*data);
+  return data;
+}
+//-------------------------------------------------------------------------------
+void SEInfection::Unload(CDM::InfectionData& data) const
+{
+  io::PatientActions::Marshall(*this, data);
+}
+//-------------------------------------------------------------------------------
+const char* SEInfection::GetLocation_cStr() const
+{
+  return m_Location.c_str();
+}
+//-------------------------------------------------------------------------------
+std::string SEInfection::GetLocation() const
+{
+  return m_Location;
+}
+//-------------------------------------------------------------------------------
+bool SEInfection::HasLocation() const
+{
+  return !m_Location.empty();
+}
+//-------------------------------------------------------------------------------
+void SEInfection::InvalidateLocation()
+{
+  m_Location = "";
+}
+//-------------------------------------------------------------------------------
+void SEInfection::SetLocation(const char* name)
+{
+  return SetLocation(std::string { name });
+}
+//-------------------------------------------------------------------------------
+void SEInfection::SetLocation(const std::string& name)
+{
+  m_Location = name;
+}
+//-------------------------------------------------------------------------------
+CDM::enumInfectionSeverity::value SEInfection::GetSeverity() const
+{
+  return m_Severity;
+}
+//-------------------------------------------------------------------------------
+void SEInfection::SetSeverity(CDM::enumInfectionSeverity::value t)
+{
+  m_Severity = t;
+}
+//-------------------------------------------------------------------------------
+bool SEInfection::HasSeverity() const
+{
+  return m_Severity == ((CDM::enumInfectionSeverity::value)-1) ? false : true;
+}
+//-------------------------------------------------------------------------------
+void SEInfection::InvalidateSeverity()
+{
+  m_Severity = (CDM::enumInfectionSeverity::value)-1;
+}
+//-----------------------------------------------------------------------------
+bool SEInfection::HasMinimumInhibitoryConcentration() const
+{
+  return m_MinimumInhibitoryConcentration == nullptr ? false : true;
+}
+//-----------------------------------------------------------------------------
+SEScalarMassPerVolume& SEInfection::GetMinimumInhibitoryConcentration()
+{
+  if (m_MinimumInhibitoryConcentration == nullptr)
+    m_MinimumInhibitoryConcentration = new SEScalarMassPerVolume();
+  return *m_MinimumInhibitoryConcentration;
+}
+//-------------------------------------------------------------------------------
+void SEInfection::ToString(std::ostream& str) const
+{
+  str << "Patient Action : Infection";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << "\n\tSeverity:  ";
+  str << m_Severity;
+  str << "\n\tMinimum Inhibitory Concentration: ";
+  str << *m_MinimumInhibitoryConcentration;
+  str << "\n\tLocation: ";
+  HasLocation() ? str << GetLocation() : str << "No Location Set";
+  str << std::flush;
+}
+//-------------------------------------------------------------------------------
+bool SEInfection::operator==(const SEInfection& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant = m_Location == rhs.m_Location;
+  equivilant = m_Severity == rhs.m_Severity;
+  equivilant &= (m_MinimumInhibitoryConcentration && rhs.m_MinimumInhibitoryConcentration) ? m_MinimumInhibitoryConcentration->operator==(*rhs.m_MinimumInhibitoryConcentration)
+                                                                                           : m_MinimumInhibitoryConcentration == rhs.m_MinimumInhibitoryConcentration;
+
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEInfection::operator!=( const SEInfection& rhs) const
+bool SEInfection::operator!=(const SEInfection& rhs) const
 {
   return !(*this == rhs);
 }

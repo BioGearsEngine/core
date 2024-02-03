@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SEUseInhaler::SEUseInhaler()
   : SEConsciousRespirationCommand()
@@ -42,7 +45,7 @@ bool SEUseInhaler::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEUseInhaler::Load(const CDM::UseInhalerData& in)
 {
-  SEConsciousRespirationCommand::Load(in);
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -53,9 +56,8 @@ CDM::UseInhalerData* SEUseInhaler::Unload() const
   return data;
 }
 //-------------------------------------------------------------------------------
-void SEUseInhaler::Unload(CDM::UseInhalerData& data) const
-{
-  SEConsciousRespirationCommand::Unload(data);
+void SEUseInhaler::Unload(CDM::UseInhalerData& data) const {
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SEUseInhaler::ToString(std::ostream& str) const
@@ -66,13 +68,13 @@ void SEUseInhaler::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
-bool SEUseInhaler::operator==( const SEUseInhaler& rhs) const
+bool SEUseInhaler::operator==(const SEUseInhaler& rhs) const
 {
-  bool equivilant  = m_Comment == rhs.m_Comment;
+  bool equivilant = m_Comment == rhs.m_Comment;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEUseInhaler::operator!=( const SEUseInhaler& rhs) const
+bool SEUseInhaler::operator!=(const SEUseInhaler& rhs) const
 {
   return !(*this == rhs);
 }

@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears
 {
 SEEbola::SEEbola()
@@ -44,8 +47,7 @@ SEEbola::SEEbola()
   //-------------------------------------------------------------------------------
   bool SEEbola::Load(const CDM::EbolaData& in)
   {
-    SEPatientAction::Load(in);
-    m_Severity = in.Severity();
+    io::PatientActions::UnMarshall(in, *this);
     return true;
   }
   //-------------------------------------------------------------------------------
@@ -58,9 +60,7 @@ SEEbola::SEEbola()
   //-------------------------------------------------------------------------------
   void SEEbola::Unload(CDM::EbolaData& data) const
   {
-    SEPatientAction::Unload(data);
-    if (HasSeverity())
-      data.Severity(m_Severity);
+    io::PatientActions::Marshall(*this, data);
   }
   //-------------------------------------------------------------------------------
   CDM::enumInfectionSeverity::value SEEbola::GetSeverity() const

@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SEPericardialEffusion::SEPericardialEffusion()
   : SEPatientAction()
@@ -44,8 +47,7 @@ bool SEPericardialEffusion::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEPericardialEffusion::Load(const CDM::PericardialEffusionData& in)
 {
-  SEPatientAction::Load(in);
-  GetEffusionRate().Load(in.EffusionRate());
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -58,9 +60,7 @@ CDM::PericardialEffusionData* SEPericardialEffusion::Unload() const
 //-------------------------------------------------------------------------------
 void SEPericardialEffusion::Unload(CDM::PericardialEffusionData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (m_EffusionRate != nullptr)
-    data.EffusionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_EffusionRate->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEPericardialEffusion::HasEffusionRate() const

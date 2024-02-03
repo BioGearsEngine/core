@@ -14,6 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Properties.hxx>
+// Private Includes
+#include <io/cdm/PatientActions.h>
 
 namespace biogears {
 SESubstanceBolus::SESubstanceBolus(const SESubstance& substance)
@@ -53,13 +55,7 @@ bool SESubstanceBolus::IsActive() const
 //-------------------------------------------------------------------------------
 bool SESubstanceBolus::Load(const CDM::SubstanceBolusData& in)
 {
-  SESubstanceAdministration::Load(in);
-  if (in.AdminTime().present()) {
-    GetAdminTime().Load(in.AdminTime().get());
-  }
-  GetDose().Load(in.Dose());
-  GetConcentration().Load(in.Concentration());
-  m_AdminRoute = in.AdminRoute();
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -72,16 +68,7 @@ CDM::SubstanceBolusData* SESubstanceBolus::Unload() const
 //-------------------------------------------------------------------------------
 void SESubstanceBolus::Unload(CDM::SubstanceBolusData& data) const
 {
-  SESubstanceAdministration::Unload(data);
-  if (m_Dose != nullptr)
-    data.Dose(std::unique_ptr<CDM::ScalarVolumeData>(m_Dose->Unload()));
-  if (m_Concentration != nullptr)
-    data.Concentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Concentration->Unload()));
-  if (HasAdminRoute())
-    data.AdminRoute(m_AdminRoute);
-  if (HasAdminTime())
-    data.AdminTime(std::unique_ptr<CDM::ScalarTimeData>(m_AdminTime->Unload()));
-  data.Substance(m_Substance.GetName());
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceBolus::HasAdminTime() const

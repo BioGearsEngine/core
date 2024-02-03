@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SETourniquet.h>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SETourniquet::SETourniquet()
   : SEPatientAction()
@@ -45,10 +48,7 @@ bool SETourniquet::IsActive() const
 }//-----------------------------------------------------------------------------
 bool SETourniquet::Load(const CDM::TourniquetData& in)
 {
-  SEPatientAction::Load(in);
-  m_TourniquetLevel = in.TourniquetLevel();
-  m_Compartment = in.Compartment();
-
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -61,11 +61,7 @@ CDM::TourniquetData* SETourniquet::Unload() const
 //-----------------------------------------------------------------------------
 void SETourniquet::Unload(CDM::TourniquetData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (HasCompartment())
-    data.Compartment(m_Compartment);
-  if (HasTourniquetLevel())
-    data.TourniquetLevel(m_TourniquetLevel);
+  io::PatientActions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 const char* SETourniquet::GetCompartment_cStr() const

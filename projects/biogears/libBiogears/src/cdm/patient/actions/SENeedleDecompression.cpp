@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SENeedleDecompression::SENeedleDecompression()
   : SEPatientAction()
@@ -49,9 +52,7 @@ void SENeedleDecompression::SetActive(bool b)
 //-------------------------------------------------------------------------------
 bool SENeedleDecompression::Load(const CDM::NeedleDecompressionData& in)
 {
-  SEPatientAction::Load(in);
-  m_Side = in.Side();
-  m_State = in.State();
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -64,10 +65,8 @@ CDM::NeedleDecompressionData* SENeedleDecompression::Unload() const
 //-------------------------------------------------------------------------------
 void SENeedleDecompression::Unload(CDM::NeedleDecompressionData& data) const
 {
-  SEPatientAction::Unload(data);
-  data.State(m_State);
-  if (HasSide())
-    data.Side(m_Side);
+  io::PatientActions::Marshall(*this, data);
+  ;
 }
 //-------------------------------------------------------------------------------
 CDM::enumSide::value SENeedleDecompression::GetSide() const

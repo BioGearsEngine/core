@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
   SEConsumeNutrients::SEConsumeNutrients()
     : SEPatientAction()
@@ -47,11 +50,7 @@ namespace biogears {
   //-----------------------------------------------------------------------------
   bool SEConsumeNutrients::Load(const CDM::ConsumeNutrientsData& in)
   {
-    SEPatientAction::Load(in);
-    if (in.Nutrition().present())
-      GetNutrition().Load(in.Nutrition().get());
-    else if (in.NutritionFile().present())
-      SetNutritionFile(in.NutritionFile().get());
+    io::PatientActions::UnMarshall(in, *this);
     return true;
   }
   //-----------------------------------------------------------------------------
@@ -64,11 +63,7 @@ namespace biogears {
   //-----------------------------------------------------------------------------
   void SEConsumeNutrients::Unload(CDM::ConsumeNutrientsData& data) const
   {
-    SEPatientAction::Unload(data);
-    if (HasNutrition())
-      data.Nutrition(std::unique_ptr<CDM::NutritionData>(m_Nutrition->Unload()));
-    if (HasNutritionFile())
-      data.NutritionFile(m_NutritionFile);
+    io::PatientActions::Marshall(*this, data);
   }
   //-----------------------------------------------------------------------------
   bool SEConsumeNutrients::HasNutrition() const

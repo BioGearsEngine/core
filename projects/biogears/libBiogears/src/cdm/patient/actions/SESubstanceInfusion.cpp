@@ -17,6 +17,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SESubstanceInfusion::SESubstanceInfusion(const SESubstance& substance)
   : SESubstanceAdministration()
@@ -50,9 +53,7 @@ bool SESubstanceInfusion::IsActive() const
 //-------------------------------------------------------------------------------
 bool SESubstanceInfusion::Load(const CDM::SubstanceInfusionData& in)
 {
-  SESubstanceAdministration::Load(in);
-  GetRate().Load(in.Rate());
-  GetConcentration().Load(in.Concentration());
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -65,12 +66,7 @@ CDM::SubstanceInfusionData* SESubstanceInfusion::Unload() const
 //-------------------------------------------------------------------------------
 void SESubstanceInfusion::Unload(CDM::SubstanceInfusionData& data) const
 {
-  SESubstanceAdministration::Unload(data);
-  if (m_Rate != nullptr)
-    data.Rate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_Rate->Unload()));
-  if (m_Concentration != nullptr)
-    data.Concentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Concentration->Unload()));
-  data.Substance(m_Substance.GetName());
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceInfusion::HasRate() const

@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SEChestCompressionForceScale::SEChestCompressionForceScale()
   : SEChestCompression()
@@ -46,10 +49,7 @@ bool SEChestCompressionForceScale::IsActive() const
 
 bool SEChestCompressionForceScale::Load(const CDM::ChestCompressionForceScaleData& in)
 {
-  SEChestCompression::Load(in);
-  GetForceScale().Load(in.ForceScale());
-  if (in.ForcePeriod().present())
-    GetForcePeriod().Load(in.ForcePeriod().get());
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 
@@ -62,11 +62,7 @@ CDM::ChestCompressionForceScaleData* SEChestCompressionForceScale::Unload() cons
 
 void SEChestCompressionForceScale::Unload(CDM::ChestCompressionForceScaleData& data) const
 {
-  SEChestCompression::Unload(data);
-  if (m_ForceScale != nullptr)
-    data.ForceScale(std::unique_ptr<CDM::Scalar0To1Data>(m_ForceScale->Unload()));
-  if (m_ForcePeriod != nullptr)
-    data.ForcePeriod(std::unique_ptr<CDM::ScalarTimeData>(m_ForcePeriod->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 
 bool SEChestCompressionForceScale::HasForceScale() const

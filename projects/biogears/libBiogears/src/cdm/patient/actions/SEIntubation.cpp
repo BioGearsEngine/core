@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SEIntubation::SEIntubation()
   : SEPatientAction()
@@ -42,8 +45,7 @@ bool SEIntubation::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEIntubation::Load(const CDM::IntubationData& in)
 {
-  SEPatientAction::Load(in);
-  m_Type = in.Type();
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -56,9 +58,7 @@ CDM::IntubationData* SEIntubation::Unload() const
 //-------------------------------------------------------------------------------
 void SEIntubation::Unload(CDM::IntubationData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (HasType())
-    data.Type(m_Type);
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 CDM::enumIntubationType::value SEIntubation::GetType() const

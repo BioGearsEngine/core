@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SECardiacArrest::SECardiacArrest()
   : SEPatientAction()
@@ -47,8 +50,7 @@ void SECardiacArrest::SetActive(bool b)
 //-------------------------------------------------------------------------------
 bool SECardiacArrest::Load(const CDM::CardiacArrestData& in)
 {
-  SEPatientAction::Load(in);
-  m_State = in.State();
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -61,8 +63,7 @@ CDM::CardiacArrestData* SECardiacArrest::Unload() const
 //-------------------------------------------------------------------------------
 void SECardiacArrest::Unload(CDM::CardiacArrestData& data) const
 {
-  SEPatientAction::Unload(data);
-  data.State(m_State);
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SECardiacArrest::ToString(std::ostream& str) const

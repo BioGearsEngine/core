@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SERadiationAbsorbedDose::SERadiationAbsorbedDose()
   : SEPatientAction()
@@ -45,8 +48,7 @@ bool SERadiationAbsorbedDose::IsActive() const
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::Load(const CDM::RadiationAbsorbedDoseData& in)
 {
-  SEPatientAction::Load(in);
-  GetDose().Load(in.RadiationDose());
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -59,9 +61,7 @@ CDM::RadiationAbsorbedDoseData* SERadiationAbsorbedDose::Unload() const
 //-------------------------------------------------------------------------------
 void SERadiationAbsorbedDose::Unload(CDM::RadiationAbsorbedDoseData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (m_RadiationDose != nullptr)
-    data.RadiationDose(std::unique_ptr<CDM::ScalarEnergyPerMassData>(m_RadiationDose->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::HasDose() const

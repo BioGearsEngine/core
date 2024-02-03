@@ -20,6 +20,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 
 namespace biogears {
 SEMechanicalVentilation::SEMechanicalVentilation()
@@ -83,36 +86,7 @@ bool SEMechanicalVentilation::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEMechanicalVentilation::Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr)
 {
-  SEPatientAction::Clear();
-  SetState(in.State());
-  if (in.Flow().present())
-    GetFlow().Load(in.Flow().get());
-  else
-    GetFlow().Invalidate();
-  if (in.Pressure().present())
-    GetPressure().Load(in.Pressure().get());
-  else
-    GetPressure().Invalidate();
-
-  m_GasFractions.clear();
-  m_cGasFractions.clear();
-  SESubstance* sub;
-  for (const CDM::SubstanceFractionData& sfData : in.GasFraction()) {
-    sub = subMgr.GetSubstance(sfData.Name());
-    if (sub == nullptr) {
-      Error("Substance not found : " + sfData.Name());
-      return false;
-    }
-    if (sub->GetState() != CDM::enumSubstanceState::Gas) {
-      Error("Substance not gas : " + sfData.Name());
-      return false;
-    }
-    SESubstanceFraction* sf = new SESubstanceFraction(*sub);
-    sf->Load(sfData);
-    m_GasFractions.push_back(sf);
-    m_cGasFractions.push_back(sf);
-  }
-
+  io::PatientActions::UnMarshall(in, *this);
   return IsValid();
 }
 //-------------------------------------------------------------------------------
@@ -125,16 +99,7 @@ CDM::MechanicalVentilationData* SEMechanicalVentilation::Unload() const
 //-------------------------------------------------------------------------------
 void SEMechanicalVentilation::Unload(CDM::MechanicalVentilationData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (HasState())
-    data.State(m_State);
-  if (HasFlow())
-    data.Flow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_Flow->Unload()));
-  if (HasPressure())
-    data.Pressure(std::unique_ptr<CDM::ScalarPressureData>(m_Pressure->Unload()));
-
-  for (SESubstanceFraction* sf : m_GasFractions)
-    data.GasFraction().push_back(std::unique_ptr<CDM::SubstanceFractionData>(sf->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 CDM::enumOnOff::value SEMechanicalVentilation::GetState() const

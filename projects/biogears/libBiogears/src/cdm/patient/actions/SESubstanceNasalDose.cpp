@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SESubstanceNasalDose::SESubstanceNasalDose(const SESubstance& substance)
   : SESubstanceAdministration()
@@ -46,8 +49,7 @@ bool SESubstanceNasalDose::IsActive() const
 //-------------------------------------------------------------------------------
 bool SESubstanceNasalDose::Load(const CDM::SubstanceNasalDoseData& in)
 {
-  SESubstanceAdministration::Load(in);
-  GetDose().Load(in.Dose());
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------

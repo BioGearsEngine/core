@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 
 SEBurnWound::SEBurnWound()
@@ -58,34 +61,7 @@ bool SEBurnWound::IsActive() const
 //-----------------------------------------------------------------------------
 bool SEBurnWound::Load(const CDM::BurnWoundData& in)
 {
-  SEPatientAction::Load(in);
-  SetTotalBodySurfaceArea(0.);
-  // The degree modifier is a v1.0 methodology for scaling burn response based on instantiated degree of burn specific to the minimal physiology response of first degree as compared to second and third.
-  // Minimal validation data exists differentiating the physiology of the three in the hours following a burn, so inital values for second and third are tuned to mimic TBSA data of both.
-
-  if (in.DegreeOfBurn().present()) {
-    SetDegreeOfBurn(in.DegreeOfBurn().get());
-  } else {
-    SetDegreeOfBurn(CDM::enumBurnDegree::Third);
-  }
-
-  if (in.BurnInitiationTime().present()) {
-    SetTimeOfBurn(in.BurnInitiationTime().get());
-  }
-
-  m_compartmentsAffected.clear();
-  std::string compt;
-  for (const std::string compData : in.Compartments()) {
-    AddCompartment(compData);
-  }
-
-  if (!HasCompartment()) {
-    Warning("No compartment declared for burn. BioGears will assume primarily trunk burn.");
-    m_compartmentsAffected.push_back("Trunk");
-  }
-
-  SetTotalBodySurfaceArea(in.TotalBodySurfaceArea().value());
-
+  io::PatientActions::UnMarshall(in, *this);
 
   return true;
 }
@@ -99,17 +75,7 @@ CDM::BurnWoundData* SEBurnWound::Unload() const
 //-----------------------------------------------------------------------------
 void SEBurnWound::Unload(CDM::BurnWoundData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (m_TBSA != nullptr)
-    data.TotalBodySurfaceArea(std::unique_ptr<CDM::Scalar0To1Data>(m_TBSA->Unload()));
-  if (HasDegreeOfBurn())
-    data.DegreeOfBurn(m_DegreeOfBurn);
-  if (m_burnInitiationTime != 0.) {
-    data.BurnInitiationTime(m_burnInitiationTime);
-  }
-  for (std::string compData : m_compartmentsAffected) {
-    data.Compartments().push_back(compData);
-  }
+  io::PatientActions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEBurnWound::HasTotalBodySurfaceArea() const

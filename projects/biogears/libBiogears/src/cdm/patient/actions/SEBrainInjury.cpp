@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SEBrainInjury::SEBrainInjury()
   : SEPatientAction()
@@ -47,9 +50,7 @@ bool SEBrainInjury::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEBrainInjury::Load(const CDM::BrainInjuryData& in)
 {
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity());
-  m_Type = in.Type();
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -62,11 +63,7 @@ CDM::BrainInjuryData* SEBrainInjury::Unload() const
 //-------------------------------------------------------------------------------
 void SEBrainInjury::Unload(CDM::BrainInjuryData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
-  if (HasType())
-    data.Type(m_Type);
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEBrainInjury::HasSeverity() const

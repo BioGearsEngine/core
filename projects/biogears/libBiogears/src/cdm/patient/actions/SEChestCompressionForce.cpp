@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarForce.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SEChestCompressionForce::SEChestCompressionForce()
   : SEChestCompression()
@@ -44,8 +47,7 @@ bool SEChestCompressionForce::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEChestCompressionForce::Load(const CDM::ChestCompressionForceData& in)
 {
-  SEChestCompression::Load(in);
-  GetForce().Load(in.Force());
+io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -58,9 +60,7 @@ CDM::ChestCompressionForceData* SEChestCompressionForce::Unload() const
 //-------------------------------------------------------------------------------
 void SEChestCompressionForce::Unload(CDM::ChestCompressionForceData& data) const
 {
-  SEChestCompression::Unload(data);
-  if (m_Force != nullptr)
-    data.Force(std::unique_ptr<CDM::ScalarForceData>(m_Force->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEChestCompressionForce::HasForce() const

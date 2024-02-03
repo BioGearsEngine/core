@@ -16,6 +16,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SESubstanceCompoundInfusion::SESubstanceCompoundInfusion(const SESubstanceCompound& compound)
   : SESubstanceAdministration()
@@ -40,9 +43,7 @@ void SESubstanceCompoundInfusion::Clear()
 //-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::Load(const CDM::SubstanceCompoundInfusionData& in)
 {
-  SESubstanceAdministration::Load(in);
-  GetRate().Load(in.Rate());
-  GetBagVolume().Load(in.BagVolume());
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -65,12 +66,7 @@ CDM::SubstanceCompoundInfusionData* SESubstanceCompoundInfusion::Unload() const
 //-------------------------------------------------------------------------------
 void SESubstanceCompoundInfusion::Unload(CDM::SubstanceCompoundInfusionData& data) const
 {
-  SESubstanceAdministration::Unload(data);
-  if (m_Rate != nullptr)
-    data.Rate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_Rate->Unload()));
-  if (m_BagVolume != nullptr)
-    data.BagVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_BagVolume->Unload()));
-  data.SubstanceCompound(m_Compound.GetName());
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::HasRate() const

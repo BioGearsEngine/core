@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SEAirwayObstruction::SEAirwayObstruction()
   : SEPatientAction()
@@ -45,8 +48,7 @@ bool SEAirwayObstruction::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEAirwayObstruction::Load(const CDM::AirwayObstructionData& in)
 {
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity());
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -59,9 +61,7 @@ CDM::AirwayObstructionData* SEAirwayObstruction::Unload() const
 //-------------------------------------------------------------------------------
 void SEAirwayObstruction::Unload(CDM::AirwayObstructionData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEAirwayObstruction::HasSeverity() const

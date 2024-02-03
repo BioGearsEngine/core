@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SESubstanceOralDose::SESubstanceOralDose(const SESubstance& substance)
   : SESubstanceAdministration()
@@ -48,9 +51,7 @@ bool SESubstanceOralDose::IsActive() const
 //-------------------------------------------------------------------------------
 bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in)
 {
-  SESubstanceAdministration::Load(in);
-  GetDose().Load(in.Dose());
-  m_AdminRoute = in.AdminRoute();
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -63,12 +64,7 @@ CDM::SubstanceOralDoseData* SESubstanceOralDose::Unload() const
 //-------------------------------------------------------------------------------
 void SESubstanceOralDose::Unload(CDM::SubstanceOralDoseData& data) const
 {
-  SESubstanceAdministration::Unload(data);
-  if (m_Dose != nullptr)
-    data.Dose(std::unique_ptr<CDM::ScalarMassData>(m_Dose->Unload()));
-  if (HasAdminRoute())
-    data.AdminRoute(m_AdminRoute);
-  data.Substance(m_Substance.GetName());
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 CDM::enumOralAdministration::value SESubstanceOralDose::GetAdminRoute() const

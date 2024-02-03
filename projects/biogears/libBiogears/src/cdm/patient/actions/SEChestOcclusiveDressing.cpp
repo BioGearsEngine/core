@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>
 
+// Private Includes
+#include <io/cdm/PatientActions.h>
+
 namespace biogears {
 SEChestOcclusiveDressing::SEChestOcclusiveDressing()
   : SEPatientAction()
@@ -49,9 +52,7 @@ void SEChestOcclusiveDressing::SetActive(bool b)
 //-------------------------------------------------------------------------------
 bool SEChestOcclusiveDressing::Load(const CDM::ChestOcclusiveDressingData& in)
 {
-  SEPatientAction::Load(in);
-  m_Side = in.Side();
-  m_State = in.State();
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -64,12 +65,9 @@ CDM::ChestOcclusiveDressingData* SEChestOcclusiveDressing::Unload() const
 //-------------------------------------------------------------------------------
 void SEChestOcclusiveDressing::Unload(CDM::ChestOcclusiveDressingData& data) const
 {
-  SEPatientAction::Unload(data);
-  data.State(m_State);
-  if (HasSide())
-    data.Side(m_Side);
+  io::PatientActions::Marshall(*this, data);
 }
-//-------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------
 CDM::enumSide::value SEChestOcclusiveDressing::GetSide() const
 {
   return m_Side;
