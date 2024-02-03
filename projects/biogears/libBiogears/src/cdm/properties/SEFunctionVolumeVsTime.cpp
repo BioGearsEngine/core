@@ -14,11 +14,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 SEFunctionVolumeVsTime::SEFunctionVolumeVsTime()
   : SEFunction()
-  ,m_TimeUnit(nullptr)
-  ,m_VolumeUnit(nullptr)
+  , m_TimeUnit(nullptr)
+  , m_VolumeUnit(nullptr)
 {
 }
 
@@ -36,10 +39,7 @@ void SEFunctionVolumeVsTime::Clear()
 
 bool SEFunctionVolumeVsTime::Load(const CDM::FunctionVolumeVsTimeData& in)
 {
-  if (!SEFunction::Load(in))
-    return false;
-  m_TimeUnit = &TimeUnit::GetCompoundUnit(in.IndependentUnit().get());
-  m_VolumeUnit = &VolumeUnit::GetCompoundUnit(in.DependentUnit().get());
+  io::Property::UnMarshall(in, *this);
   return IsValid();
 }
 
@@ -54,9 +54,7 @@ CDM::FunctionVolumeVsTimeData* SEFunctionVolumeVsTime::Unload() const
 
 void SEFunctionVolumeVsTime::Unload(CDM::FunctionVolumeVsTimeData& data) const
 {
-  SEFunction::Unload(data);
-  data.IndependentUnit(m_TimeUnit->GetString());
-  data.DependentUnit(m_VolumeUnit->GetString());
+  io::Property::Marshall(*this, data);
 }
 
 double SEFunctionVolumeVsTime::GetTimeValue(unsigned int index, const TimeUnit& unit)

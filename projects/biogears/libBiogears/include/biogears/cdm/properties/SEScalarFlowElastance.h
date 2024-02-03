@@ -22,9 +22,6 @@ public:
 
   virtual ~FlowElastanceUnit();
 
-  bool operator==(const FlowElastanceUnit&) const;
-  bool operator!=(const FlowElastanceUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const FlowElastanceUnit& GetCompoundUnit(const char* unit);
@@ -46,5 +43,11 @@ public:
 
   using SEScalarQuantity<FlowElastanceUnit>::SetValue;
   using SEScalarQuantity<FlowElastanceUnit>::GetValue;
+
+  bool Load(const CDM::ScalarFlowElastanceData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarFlowElastanceData& data) const;
+
 };
 }

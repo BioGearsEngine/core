@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTime.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 #pragma push_macro("Time")
 #undef min
@@ -46,13 +49,23 @@ SEScalarTime::~SEScalarTime()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarTime::Load(const CDM::ScalarTimeData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarTimeData* SEScalarTime::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarTimeData* data(new CDM::ScalarTimeData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarTime::Unload(CDM::ScalarTimeData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool TimeUnit::IsValidUnit(const char* unit)
@@ -96,15 +109,6 @@ const TimeUnit& TimeUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool TimeUnit::operator==(const TimeUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool TimeUnit::operator!=(const TimeUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

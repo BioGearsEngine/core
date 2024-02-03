@@ -32,5 +32,9 @@ public:
   double GetValue(const NoUnit& unitless) const;
   using SEScalar::SetValue;
   void SetValue(double d, const NoUnit& unitless);
+  bool Load(const CDM::ScalarFractionData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarFractionData& data) const;
 };
 }

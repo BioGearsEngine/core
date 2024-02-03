@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const MassPerTimeUnit MassPerTimeUnit::g_Per_s("g/s");
 const MassPerTimeUnit MassPerTimeUnit::g_Per_min("g/min");
@@ -46,13 +49,24 @@ SEScalarMassPerTime::~SEScalarMassPerTime()
 {
 }
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEScalarMassPerTime::Load(const CDM::ScalarMassPerTimeData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarMassPerTimeData* SEScalarMassPerTime::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarMassPerTimeData* data(new CDM::ScalarMassPerTimeData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarMassPerTime::Unload(CDM::ScalarMassPerTimeData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool MassPerTimeUnit::IsValidUnit(const char* unit)
@@ -108,15 +122,6 @@ const MassPerTimeUnit& MassPerTimeUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool MassPerTimeUnit::operator==(const MassPerTimeUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool MassPerTimeUnit::operator!=(const MassPerTimeUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

@@ -11,6 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
+
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::J_Per_K_kg("J/K kg");
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kJ_Per_K_kg("kJ/K kg");
@@ -41,13 +45,23 @@ SEScalarHeatCapacitancePerMass::~SEScalarHeatCapacitancePerMass()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarHeatCapacitancePerMass::Load(const CDM::ScalarHeatCapacitancePerMassData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarHeatCapacitancePerMassData* SEScalarHeatCapacitancePerMass::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarHeatCapacitancePerMassData* data(new CDM::ScalarHeatCapacitancePerMassData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarHeatCapacitancePerMass::Unload(CDM::ScalarHeatCapacitancePerMassData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool HeatCapacitancePerMassUnit::IsValidUnit(const char* unit)
@@ -87,15 +101,6 @@ const HeatCapacitancePerMassUnit& HeatCapacitancePerMassUnit::GetCompoundUnit(co
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool HeatCapacitancePerMassUnit::operator==(const HeatCapacitancePerMassUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool HeatCapacitancePerMassUnit::operator!=(const HeatCapacitancePerMassUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

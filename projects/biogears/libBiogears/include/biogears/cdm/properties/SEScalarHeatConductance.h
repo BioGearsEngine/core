@@ -22,9 +22,6 @@ public:
 
   virtual ~HeatConductanceUnit();    
 
-  bool operator==(const HeatConductanceUnit&) const;
-  bool operator!=(const HeatConductanceUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const HeatConductanceUnit& GetCompoundUnit(const char* unit);
@@ -47,6 +44,12 @@ public:
 
   using SEScalarQuantity<HeatConductanceUnit>::SetValue;
   using SEScalarQuantity<HeatConductanceUnit>::GetValue;
+
+
+  bool Load(const CDM::ScalarHeatConductanceData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarHeatConductanceData& data) const;
 
 };
 }

@@ -22,9 +22,6 @@ public:
 
   virtual ~InversePressureUnit();
 
-  bool operator==(const InversePressureUnit&) const;
-  bool operator!=(const InversePressureUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const InversePressureUnit& GetCompoundUnit(const char* unit);
@@ -47,5 +44,12 @@ public:
 
   using SEScalarQuantity<InversePressureUnit>::SetValue;
   using SEScalarQuantity<InversePressureUnit>::GetValue;
+
+
+  bool Load(const CDM::ScalarInversePressureData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarInversePressureData& data) const;
+
 };
 }

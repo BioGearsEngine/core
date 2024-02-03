@@ -22,8 +22,6 @@ public:
 
   virtual ~PressureTimePerAreaUnit(); 
 
-  bool operator==(const PressureTimePerAreaUnit&) const;
-  bool operator!=(const PressureTimePerAreaUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -45,5 +43,11 @@ public:
 
   using SEScalarQuantity<PressureTimePerAreaUnit>::SetValue;
   using SEScalarQuantity<PressureTimePerAreaUnit>::GetValue;
+
+  bool Load(const CDM::ScalarPressureTimePerAreaData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarPressureTimePerAreaData& data) const;
+
 };
 }

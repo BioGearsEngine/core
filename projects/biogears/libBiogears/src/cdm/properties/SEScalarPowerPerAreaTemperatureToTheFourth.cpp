@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarPowerPerAreaTemperatureToTheFourth.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const PowerPerAreaTemperatureToTheFourthUnit PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4("W/ m^2 K^4");
 
@@ -39,13 +42,24 @@ SEScalarPowerPerAreaTemperatureToTheFourth::~SEScalarPowerPerAreaTemperatureToTh
 {
 }
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEScalarPowerPerAreaTemperatureToTheFourth::Load(const CDM::ScalarPowerPerAreaTemperatureToTheFourthData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarPowerPerAreaTemperatureToTheFourthData* SEScalarPowerPerAreaTemperatureToTheFourth::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarPowerPerAreaTemperatureToTheFourthData* data(new CDM::ScalarPowerPerAreaTemperatureToTheFourthData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarPowerPerAreaTemperatureToTheFourth::Unload(CDM::ScalarPowerPerAreaTemperatureToTheFourthData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool PowerPerAreaTemperatureToTheFourthUnit::IsValidUnit(const char* unit)
@@ -73,15 +87,6 @@ const PowerPerAreaTemperatureToTheFourthUnit& PowerPerAreaTemperatureToTheFourth
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool PowerPerAreaTemperatureToTheFourthUnit::operator==(const PowerPerAreaTemperatureToTheFourthUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool PowerPerAreaTemperatureToTheFourthUnit::operator!=(const PowerPerAreaTemperatureToTheFourthUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

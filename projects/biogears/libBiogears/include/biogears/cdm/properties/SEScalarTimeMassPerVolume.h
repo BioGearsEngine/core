@@ -22,8 +22,6 @@ public:
 
   virtual ~TimeMassPerVolumeUnit();   
 
-  bool operator==(const TimeMassPerVolumeUnit&) const;
-  bool operator!=(const TimeMassPerVolumeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -49,5 +47,11 @@ public:
 
   using SEScalarQuantity<TimeMassPerVolumeUnit>::SetValue;
   using SEScalarQuantity<TimeMassPerVolumeUnit>::GetValue;
+
+  bool Load(const CDM::ScalarTimeMassPerVolumeData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarTimeMassPerVolumeData& data) const;
+
 };
 }

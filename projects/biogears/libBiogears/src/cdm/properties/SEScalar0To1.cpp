@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 SEScalar0To1::SEScalar0To1()
   : SEScalar()
@@ -22,13 +25,23 @@ SEScalar0To1::~SEScalar0To1()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalar0To1::Load(const CDM::Scalar0To1Data& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::Scalar0To1Data* SEScalar0To1::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::Scalar0To1Data* data(new CDM::Scalar0To1Data());
-  SEScalar::Unload(*data);
+  Unload(*data);
   return data;
+}//-------------------------------------------------------------------------------
+void SEScalar0To1::Unload(CDM::Scalar0To1Data& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SEScalar0To1::SetValue(double d)

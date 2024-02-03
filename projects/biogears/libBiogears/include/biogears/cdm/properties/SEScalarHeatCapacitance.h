@@ -20,10 +20,7 @@ public:
   HeatCapacitanceUnit(const char* u);
   HeatCapacitanceUnit(const std::string& u);
 
-  virtual ~HeatCapacitanceUnit();       
-
-  bool operator==(const HeatCapacitanceUnit&) const;
-  bool operator!=(const HeatCapacitanceUnit&) const;
+  virtual ~HeatCapacitanceUnit(); 
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -48,5 +45,10 @@ public:
   using SEScalarQuantity<HeatCapacitanceUnit>::SetValue;
   using SEScalarQuantity<HeatCapacitanceUnit>::GetValue;
 
+
+  bool Load(const CDM::ScalarHeatCapacitanceData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarHeatCapacitanceData& data) const;
 };
 }

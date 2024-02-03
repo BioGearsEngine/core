@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const LengthPerTimeUnit LengthPerTimeUnit::m_Per_s("m/s");
 const LengthPerTimeUnit LengthPerTimeUnit::cm_Per_s("cm/s");
@@ -44,13 +47,23 @@ SEScalarLengthPerTime::~SEScalarLengthPerTime()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarLengthPerTime::Load(const CDM::ScalarLengthPerTimeData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarLengthPerTimeData* SEScalarLengthPerTime::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarLengthPerTimeData* data(new CDM::ScalarLengthPerTimeData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarLengthPerTime::Unload(CDM::ScalarLengthPerTimeData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool LengthPerTimeUnit::IsValidUnit(const char* unit)
@@ -97,16 +110,6 @@ const LengthPerTimeUnit& LengthPerTimeUnit::GetCompoundUnit(const char* unit)
 const LengthPerTimeUnit& LengthPerTimeUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
-}
-//-------------------------------------------------------------------------------
-bool LengthPerTimeUnit::operator==(const LengthPerTimeUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool LengthPerTimeUnit::operator!=(const LengthPerTimeUnit& obj) const
-{
-  return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
 }

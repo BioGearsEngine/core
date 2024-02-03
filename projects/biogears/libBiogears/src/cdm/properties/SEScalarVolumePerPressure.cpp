@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolumePerPressure.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const VolumePerPressureUnit VolumePerPressureUnit::L_Per_Pa("L/Pa");
 const VolumePerPressureUnit VolumePerPressureUnit::L_Per_cmH2O("L/cmH2O");
@@ -42,13 +45,23 @@ SEScalarVolumePerPressure::~SEScalarVolumePerPressure()
 
 }
 //-------------------------------------------------------------------------------
+bool SEScalarVolumePerPressure::Load(const CDM::ScalarVolumePerPressureData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarVolumePerPressureData* SEScalarVolumePerPressure::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarVolumePerPressureData* data(new CDM::ScalarVolumePerPressureData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarVolumePerPressure::Unload(CDM::ScalarVolumePerPressureData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool VolumePerPressureUnit::IsValidUnit(const char* unit)
@@ -80,15 +93,6 @@ const VolumePerPressureUnit& VolumePerPressureUnit::GetCompoundUnit(const std::s
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool VolumePerPressureUnit::operator==(const VolumePerPressureUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool VolumePerPressureUnit::operator!=(const VolumePerPressureUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

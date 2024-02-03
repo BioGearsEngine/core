@@ -22,9 +22,6 @@ public:
 
   virtual ~ElectricResistanceUnit();
 
-  bool operator==(const ElectricResistanceUnit&) const;
-  bool operator!=(const ElectricResistanceUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const ElectricResistanceUnit& GetCompoundUnit(const char* unit);
@@ -47,5 +44,9 @@ public:
 
   bool operator==(const SEScalarElectricResistance&) const;
   bool operator!=(const SEScalarElectricResistance&) const;
+  bool Load(const CDM::ScalarElectricResistanceData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarElectricResistanceData& data) const;
 };
 }

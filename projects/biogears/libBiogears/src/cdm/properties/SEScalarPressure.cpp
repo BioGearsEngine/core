@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarPressure.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const PressureUnit PressureUnit::Pa("Pa");
 const PressureUnit PressureUnit::mmHg("mmHg");
@@ -43,13 +46,23 @@ SEScalarPressure::~SEScalarPressure()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarPressure::Load(const CDM::ScalarPressureData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarPressureData* SEScalarPressure::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarPressureData* data(new CDM::ScalarPressureData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarPressure::Unload(CDM::ScalarPressureData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool PressureUnit::IsValidUnit(const char* unit)
@@ -93,15 +106,7 @@ const PressureUnit& PressureUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool PressureUnit::operator==(const PressureUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool PressureUnit::operator!=(const PressureUnit& obj) const
-{
-  return !(*this == obj);
-}
+
+
 //-------------------------------------------------------------------------------
 }

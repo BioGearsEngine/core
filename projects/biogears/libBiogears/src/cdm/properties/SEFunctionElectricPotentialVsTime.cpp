@@ -16,11 +16,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/utils/Logger.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 SEFunctionElectricPotentialVsTime::SEFunctionElectricPotentialVsTime()
   : SEFunction()
-  ,m_TimeUnit(nullptr)
-  ,m_ElectricPotentialUnit(nullptr)
+  , m_TimeUnit(nullptr)
+  , m_ElectricPotentialUnit(nullptr)
 {
 }
 
@@ -38,10 +41,7 @@ void SEFunctionElectricPotentialVsTime::Clear()
 
 bool SEFunctionElectricPotentialVsTime::Load(const CDM::FunctionElectricPotentialVsTimeData& in)
 {
-  if (!SEFunction::Load(in))
-    return false;
-  m_TimeUnit = &TimeUnit::GetCompoundUnit(in.IndependentUnit().get());
-  m_ElectricPotentialUnit = &ElectricPotentialUnit::GetCompoundUnit(in.DependentUnit().get());
+  io::Property::UnMarshall(in, *this);
   return IsValid();
 }
 
@@ -132,8 +132,8 @@ SEFunctionElectricPotentialVsTime* SEFunctionElectricPotentialVsTime::Interpolat
     fTime.push_back(t);
   newFunction->SetTimeUnit(unit);
 
-  //m_Independent;// Original X (Time)
-  //m_Dependent;// Original Y (ElectricPotential)
+  // m_Independent;// Original X (Time)
+  // m_Dependent;// Original Y (ElectricPotential)
   double x1, x2, y1, y2, xPrime, yPrime;
   unsigned int newTimeIterator = 0;
   for (unsigned int i = 0; i < m_Independent.size(); i++) {

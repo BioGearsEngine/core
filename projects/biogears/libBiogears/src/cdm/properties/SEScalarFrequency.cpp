@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const FrequencyUnit FrequencyUnit::Per_min("1/min");
 const FrequencyUnit FrequencyUnit::Per_s("1/s");
@@ -42,13 +45,23 @@ SEScalarFrequency::~SEScalarFrequency()
 {
 }
 //-----------------------------------------------------------------------------
+bool SEScalarFrequency::Load(const CDM::ScalarFrequencyData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarFrequencyData* SEScalarFrequency::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarFrequencyData* data(new CDM::ScalarFrequencyData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarFrequency::Unload(CDM::ScalarFrequencyData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool FrequencyUnit::IsValidUnit(const char* unit)
@@ -90,14 +103,5 @@ const FrequencyUnit& FrequencyUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
-bool FrequencyUnit::operator==(const FrequencyUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool FrequencyUnit::operator!=(const FrequencyUnit& obj) const
-{
-  return !(*this == obj);
-}
-//-------------------------------------------------------------------------------
+
 }

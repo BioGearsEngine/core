@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFlowInertance.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const FlowInertanceUnit FlowInertanceUnit::mmHg_s2_Per_mL("mmHg s^2/mL");
 const FlowInertanceUnit FlowInertanceUnit::mmHg_s2_Per_L("mmHg s^2/L");
@@ -43,13 +46,23 @@ SEScalarFlowInertance::~SEScalarFlowInertance()
 {
 }
 //-----------------------------------------------------------------------------
+bool SEScalarFlowInertance::Load(const CDM::ScalarFlowInertanceData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarFlowInertanceData* SEScalarFlowInertance::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarFlowInertanceData* data(new CDM::ScalarFlowInertanceData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarFlowInertance::Unload(CDM::ScalarFlowInertanceData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool FlowInertanceUnit::IsValidUnit(const char* unit)
@@ -93,15 +106,6 @@ const FlowInertanceUnit& FlowInertanceUnit::GetCompoundUnit(const std::string& u
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-----------------------------------------------------------------------------
-bool FlowInertanceUnit::operator==(const FlowInertanceUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool FlowInertanceUnit::operator!=(const FlowInertanceUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

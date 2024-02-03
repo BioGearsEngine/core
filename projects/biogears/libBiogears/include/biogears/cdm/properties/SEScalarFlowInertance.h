@@ -22,9 +22,6 @@ public:
 
   virtual ~FlowInertanceUnit();
 
-  bool operator==(const FlowInertanceUnit&) const;
-  bool operator!=(const FlowInertanceUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const FlowInertanceUnit& GetCompoundUnit(const char* unit);
@@ -48,5 +45,11 @@ public:
 
   using SEScalarQuantity<FlowInertanceUnit>::SetValue;
   using SEScalarQuantity<FlowInertanceUnit>::GetValue;
+
+  bool Load(const CDM::ScalarFlowInertanceData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarFlowInertanceData& data) const;
+
 };
 }

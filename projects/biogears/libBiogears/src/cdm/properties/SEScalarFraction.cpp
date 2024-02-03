@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 SEScalarFraction::SEScalarFraction( double value, bool readOnly)
   : SEScalar(value, readOnly)
@@ -26,13 +29,23 @@ SEScalarFraction::SEScalarFraction()
 SEScalarFraction::~SEScalarFraction() {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarFraction::Load(const CDM::ScalarFractionData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarFractionData* SEScalarFraction::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarFractionData* data(new CDM::ScalarFractionData());
-  SEScalar::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarFraction::Unload(CDM::ScalarFractionData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 //double SEScalarFraction::GetValue() const {

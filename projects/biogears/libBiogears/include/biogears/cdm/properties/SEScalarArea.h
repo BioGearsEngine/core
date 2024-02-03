@@ -20,10 +20,7 @@ public:
   AreaUnit(const char* u);
   AreaUnit(const std::string& u);
 
-  virtual ~AreaUnit();     
-
-  bool operator==(const AreaUnit&) const;
-  bool operator!=(const AreaUnit&) const;
+  virtual ~AreaUnit();
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -46,5 +43,9 @@ public:
   using SEScalarQuantity<AreaUnit>::SetValue;
   using SEScalarQuantity<AreaUnit>::GetValue;
 
+  bool Load(const CDM::ScalarAreaData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarAreaData& data) const;
 };
 }

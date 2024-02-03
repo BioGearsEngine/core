@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -11,6 +12,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarVolumePerTimeArea.h>
+
+// Private Includes
+#include <io/cdm/Property.h>
 
 namespace biogears {
 const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::mL_Per_min_m2("mL/min m^2");
@@ -43,13 +47,23 @@ SEScalarVolumePerTimeArea::~SEScalarVolumePerTimeArea()
 
 }
 //-------------------------------------------------------------------------------
+bool SEScalarVolumePerTimeArea::Load(const CDM::ScalarVolumePerTimeAreaData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarVolumePerTimeAreaData* SEScalarVolumePerTimeArea::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarVolumePerTimeAreaData* data(new CDM::ScalarVolumePerTimeAreaData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarVolumePerTimeArea::Unload(CDM::ScalarVolumePerTimeAreaData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool VolumePerTimeAreaUnit::IsValidUnit(const char* unit)
@@ -85,16 +99,6 @@ const VolumePerTimeAreaUnit& VolumePerTimeAreaUnit::GetCompoundUnit(const std::s
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
 
-bool VolumePerTimeAreaUnit::operator==(const VolumePerTimeAreaUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool VolumePerTimeAreaUnit::operator!=(const VolumePerTimeAreaUnit& obj) const
-{
-  return !(*this == obj);
-}
 //-------------------------------------------------------------------------------
 }

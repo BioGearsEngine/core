@@ -22,9 +22,6 @@ public:
 
   virtual ~FlowResistanceUnit();
 
-  bool operator==(const FlowResistanceUnit&) const;
-  bool operator!=(const FlowResistanceUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const FlowResistanceUnit& GetCompoundUnit(const char* unit);
@@ -48,5 +45,10 @@ public:
 
   using SEScalarQuantity<FlowResistanceUnit>::SetValue;
   using SEScalarQuantity<FlowResistanceUnit>::GetValue;
+
+  bool Load(const CDM::ScalarFlowResistanceData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarFlowResistanceData& data) const;
 };
 }

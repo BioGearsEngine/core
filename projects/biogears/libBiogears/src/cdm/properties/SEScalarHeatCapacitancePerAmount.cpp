@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerAmount.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const HeatCapacitancePerAmountUnit HeatCapacitancePerAmountUnit::J_Per_K_mol("J/K mol");
 
@@ -39,13 +42,23 @@ SEScalarHeatCapacitancePerAmount::~SEScalarHeatCapacitancePerAmount()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarHeatCapacitancePerAmount::Load(const CDM::ScalarHeatCapacitancePerAmountData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarHeatCapacitancePerAmountData* SEScalarHeatCapacitancePerAmount::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarHeatCapacitancePerAmountData* data(new CDM::ScalarHeatCapacitancePerAmountData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarHeatCapacitancePerAmount::Unload(CDM::ScalarHeatCapacitancePerAmountData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool HeatCapacitancePerAmountUnit::IsValidUnit(const char* unit)
@@ -73,15 +86,6 @@ const HeatCapacitancePerAmountUnit& HeatCapacitancePerAmountUnit::GetCompoundUni
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool HeatCapacitancePerAmountUnit::operator==(const HeatCapacitancePerAmountUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool HeatCapacitancePerAmountUnit::operator!=(const HeatCapacitancePerAmountUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

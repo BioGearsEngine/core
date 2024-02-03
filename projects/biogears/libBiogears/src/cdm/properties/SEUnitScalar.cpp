@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEUnitScalar.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 SEUnitScalar::SEUnitScalar(bool ro)
   : SEScalar(NaN,ro)

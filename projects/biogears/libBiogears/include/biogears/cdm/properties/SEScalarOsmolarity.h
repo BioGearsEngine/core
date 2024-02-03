@@ -22,8 +22,6 @@ public:
 
   virtual ~OsmolarityUnit();   
 
-  bool operator==(const OsmolarityUnit&) const;
-  bool operator!=(const OsmolarityUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -45,5 +43,10 @@ public:
 
   using SEScalarQuantity<OsmolarityUnit>::SetValue;
   using SEScalarQuantity<OsmolarityUnit>::GetValue;
+  bool Load(const CDM::ScalarOsmolarityData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarOsmolarityData& data) const;
+
 };
 }

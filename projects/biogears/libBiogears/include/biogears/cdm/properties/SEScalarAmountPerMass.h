@@ -22,9 +22,6 @@ public:
 
   virtual ~AmountPerMassUnit();
 
-  bool operator==(const AmountPerMassUnit&) const;
-  bool operator!=(const AmountPerMassUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const AmountPerMassUnit& GetCompoundUnit(const char* unit);
@@ -47,5 +44,9 @@ public:
 
   CDM::ScalarAmountPerMassData* Unload() const override;    
 
+  bool Load(const CDM::ScalarAmountPerMassData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarAmountPerMassData& data) const;
 };
 }

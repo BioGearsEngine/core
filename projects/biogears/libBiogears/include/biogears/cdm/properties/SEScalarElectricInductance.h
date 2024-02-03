@@ -22,9 +22,6 @@ public:
 
   virtual ~ElectricInductanceUnit();
 
-  bool operator==(const ElectricInductanceUnit&) const;
-  bool operator!=(const ElectricInductanceUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const ElectricInductanceUnit& GetCompoundUnit(const char* unit);
@@ -45,5 +42,9 @@ public:
   using SEScalarQuantity<ElectricInductanceUnit>::SetValue;
   using SEScalarQuantity<ElectricInductanceUnit>::GetValue;
 
+  bool Load(const CDM::ScalarElectricInductanceData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarElectricInductanceData& data) const;
 };
 }

@@ -22,9 +22,6 @@ public:
 
   virtual ~VolumePerTimeUnit();
 
-  bool operator==(const VolumePerTimeUnit&) const;
-  bool operator!=(const VolumePerTimeUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const VolumePerTimeUnit& GetCompoundUnit(const char* unit);
@@ -51,5 +48,11 @@ public:
 
   using SEScalarQuantity<VolumePerTimeUnit>::SetValue;
   using SEScalarQuantity<VolumePerTimeUnit>::GetValue;
+
+  bool Load(const CDM::ScalarVolumePerTimeData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarVolumePerTimeData& data) const;
+
 };
 }

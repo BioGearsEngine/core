@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 AmountPerTimeUnit AmountPerTimeUnit::mol_Per_day("mol/day");
 AmountPerTimeUnit AmountPerTimeUnit::mol_Per_s("mol/s");
@@ -45,13 +48,23 @@ SEScalarAmountPerTime::~SEScalarAmountPerTime()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarAmountPerTime::Load(const CDM::ScalarAmountPerTimeData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarAmountPerTimeData* SEScalarAmountPerTime::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarAmountPerTimeData* data(new CDM::ScalarAmountPerTimeData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarAmountPerTime::Unload(CDM::ScalarAmountPerTimeData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool AmountPerTimeUnit::IsValidUnit(const char* unit)
@@ -98,16 +111,6 @@ const AmountPerTimeUnit& AmountPerTimeUnit::GetCompoundUnit(const char* unit)
 const AmountPerTimeUnit& AmountPerTimeUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
-}
-//-------------------------------------------------------------------------------
-bool AmountPerTimeUnit::operator==(const AmountPerTimeUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool AmountPerTimeUnit::operator!=(const AmountPerTimeUnit& obj) const
-{
-  return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
 }

@@ -19,6 +19,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/GeneralMath.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 double SEScalar::NaN = std::numeric_limits<double>::quiet_NaN();
 
@@ -69,37 +72,23 @@ void SEScalar::Clear()
 }
 
 //-------------------------------------------------------------------------------
-void SEScalar::Load(const CDM::ScalarData& in)
+bool SEScalar::Load(const CDM::ScalarData& in)
 {
-  Clear();
-  SEProperty::Load(in);
-  SetValue(in.value());
-  if (in.unit().present()) {
-    std::string u = in.unit().get();
-    if (!("unitless" == u || "" == u || u.empty())) {
-      throw CommonDataModelException("CDM::Scalar API is intended to be unitless, You are trying to load a ScalarData with a unit defined");
-    }
-  }
-  m_readOnly = in.readOnly();
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
 }
-
 //-------------------------------------------------------------------------------
 CDM::ScalarData* SEScalar::Unload() const
 {
-  if (!IsValid()) {
+  if (!IsValid())
     return nullptr;
-  }
   CDM::ScalarData* data(new CDM::ScalarData());
   Unload(*data);
   return data;
-}
-
-//-------------------------------------------------------------------------------
+} //-------------------------------------------------------------------------------
 void SEScalar::Unload(CDM::ScalarData& data) const
 {
-  SEProperty::Unload(data);
-  data.value(m_value);
-  data.readOnly(m_readOnly);
+  io::Property::Marshall(*this, data);
 }
 
 //-------------------------------------------------------------------------------

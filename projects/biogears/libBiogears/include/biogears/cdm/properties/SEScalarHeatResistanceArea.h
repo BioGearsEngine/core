@@ -22,9 +22,6 @@ public:
 
   virtual ~HeatResistanceAreaUnit(); 
 
-  bool operator==(const HeatResistanceAreaUnit&) const;
-  bool operator!=(const HeatResistanceAreaUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const HeatResistanceAreaUnit& GetCompoundUnit(const char* unit);
@@ -47,6 +44,12 @@ public:
 
   using SEScalarQuantity<HeatResistanceAreaUnit>::SetValue;
   using SEScalarQuantity<HeatResistanceAreaUnit>::GetValue;
+
+
+  bool Load(const CDM::ScalarHeatResistanceAreaData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarHeatResistanceAreaData& data) const;
 
 };
 }

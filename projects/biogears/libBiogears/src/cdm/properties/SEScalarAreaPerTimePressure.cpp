@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarAreaPerTimePressure.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const AreaPerTimePressureUnit AreaPerTimePressureUnit::m2_Per_s_mmHg("m^2/s mmHg");
 const AreaPerTimePressureUnit AreaPerTimePressureUnit::cm2_Per_s_mmHg("cm^2/s mmHg");
@@ -43,13 +46,23 @@ SEScalarAreaPerTimePressure::~SEScalarAreaPerTimePressure()
 {
 }
 //-----------------------------------------------------------------------------
+bool SEScalarAreaPerTimePressure::Load(const CDM::ScalarAreaPerTimePressureData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarAreaPerTimePressureData* SEScalarAreaPerTimePressure::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarAreaPerTimePressureData* data(new CDM::ScalarAreaPerTimePressureData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarAreaPerTimePressure::Unload(CDM::ScalarAreaPerTimePressureData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool AreaPerTimePressureUnit::IsValidUnit(const char* unit)
@@ -88,16 +101,6 @@ const AreaPerTimePressureUnit& AreaPerTimePressureUnit::GetCompoundUnit(const ch
 const AreaPerTimePressureUnit& AreaPerTimePressureUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
-}
-//-----------------------------------------------------------------------------
-bool AreaPerTimePressureUnit::operator==(const AreaPerTimePressureUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool AreaPerTimePressureUnit::operator!=(const AreaPerTimePressureUnit& obj) const
-{
-  return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
 }

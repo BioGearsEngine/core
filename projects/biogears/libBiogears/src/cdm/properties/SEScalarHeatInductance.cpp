@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatInductance.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const HeatInductanceUnit HeatInductanceUnit::K_s_Per_W("K s/W");
 
@@ -39,13 +42,23 @@ SEScalarHeatInductance::~SEScalarHeatInductance()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarHeatInductance::Load(const CDM::ScalarHeatInductanceData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarHeatInductanceData* SEScalarHeatInductance::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarHeatInductanceData* data(new CDM::ScalarHeatInductanceData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarHeatInductance::Unload(CDM::ScalarHeatInductanceData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool HeatInductanceUnit::IsValidUnit(const char* unit)
@@ -73,15 +86,6 @@ const HeatInductanceUnit& HeatInductanceUnit::GetCompoundUnit(const std::string&
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool HeatInductanceUnit::operator==(const HeatInductanceUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool HeatInductanceUnit::operator!=(const HeatInductanceUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

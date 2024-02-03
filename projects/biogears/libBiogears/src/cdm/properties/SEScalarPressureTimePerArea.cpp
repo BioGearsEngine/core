@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarPressureTimePerArea.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const PressureTimePerAreaUnit PressureTimePerAreaUnit::mmHg_Per_mL_m2("mmHg/mL m^2");
 const PressureTimePerAreaUnit PressureTimePerAreaUnit::cmH2O_Per_mL_m2("cmH2O/mL m^2");
@@ -40,13 +43,23 @@ SEScalarPressureTimePerArea::~SEScalarPressureTimePerArea()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarPressureTimePerArea::Load(const CDM::ScalarPressureTimePerAreaData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarPressureTimePerAreaData* SEScalarPressureTimePerArea::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarPressureTimePerAreaData* data(new CDM::ScalarPressureTimePerAreaData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarPressureTimePerArea::Unload(CDM::ScalarPressureTimePerAreaData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool PressureTimePerAreaUnit::IsValidUnit(const char* unit)
@@ -78,15 +91,6 @@ const PressureTimePerAreaUnit& PressureTimePerAreaUnit::GetCompoundUnit(const st
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool PressureTimePerAreaUnit::operator==(const PressureTimePerAreaUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool PressureTimePerAreaUnit::operator!=(const PressureTimePerAreaUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

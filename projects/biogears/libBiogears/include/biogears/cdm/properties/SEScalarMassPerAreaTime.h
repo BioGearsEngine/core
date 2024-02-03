@@ -22,8 +22,6 @@ public:
 
   virtual ~MassPerAreaTimeUnit();
 
-  bool operator==(const MassPerAreaTimeUnit&) const;
-  bool operator!=(const MassPerAreaTimeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -45,5 +43,9 @@ public:
   using SEScalarQuantity<MassPerAreaTimeUnit>::SetValue;
   using SEScalarQuantity<MassPerAreaTimeUnit>::GetValue;
 
+  bool Load(const CDM::ScalarMassPerAreaTimeData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarMassPerAreaTimeData& data) const;
 };
 }

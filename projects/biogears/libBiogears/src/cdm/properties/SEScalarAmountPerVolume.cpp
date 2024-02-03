@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 AmountPerVolumeUnit AmountPerVolumeUnit::mol_Per_L("mol/L");
 AmountPerVolumeUnit AmountPerVolumeUnit::mol_Per_mL("mol/mL");
@@ -43,13 +46,23 @@ SEScalarAmountPerVolume::~SEScalarAmountPerVolume()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarAmountPerVolume::Load(const CDM::ScalarAmountPerVolumeData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarAmountPerVolumeData* SEScalarAmountPerVolume::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarAmountPerVolumeData* data(new CDM::ScalarAmountPerVolumeData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarAmountPerVolume::Unload(CDM::ScalarAmountPerVolumeData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool AmountPerVolumeUnit::IsValidUnit(const char* unit)
@@ -96,16 +109,6 @@ const AmountPerVolumeUnit& AmountPerVolumeUnit::GetCompoundUnit(const char* unit
 const AmountPerVolumeUnit& AmountPerVolumeUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
-}
-//-------------------------------------------------------------------------------
-bool AmountPerVolumeUnit::operator==(const AmountPerVolumeUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool AmountPerVolumeUnit::operator!=(const AmountPerVolumeUnit& obj) const
-{
-  return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
 }

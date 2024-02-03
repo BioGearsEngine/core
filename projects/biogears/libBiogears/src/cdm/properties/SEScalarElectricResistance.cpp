@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const ElectricResistanceUnit ElectricResistanceUnit::Ohm("ohm");
 
@@ -39,13 +42,24 @@ SEScalarElectricResistance::~SEScalarElectricResistance()
 {
 }
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEScalarElectricResistance::Load(const CDM::ScalarElectricResistanceData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarElectricResistanceData* SEScalarElectricResistance::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarElectricResistanceData* data(new CDM::ScalarElectricResistanceData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarElectricResistance::Unload(CDM::ScalarElectricResistanceData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool ElectricResistanceUnit::IsValidUnit(const char* unit)
@@ -72,16 +86,6 @@ const ElectricResistanceUnit& ElectricResistanceUnit::GetCompoundUnit(const char
 const ElectricResistanceUnit& ElectricResistanceUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
-}
-//-------------------------------------------------------------------------------
-bool ElectricResistanceUnit::operator==(const ElectricResistanceUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool ElectricResistanceUnit::operator!=(const ElectricResistanceUnit& obj) const
-{
-  return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
 

@@ -22,8 +22,6 @@ public:
 
   virtual ~PowerPerAreaTemperatureToTheFourthUnit();  
 
-  bool operator==(const PowerPerAreaTemperatureToTheFourthUnit&) const;
-  bool operator!=(const PowerPerAreaTemperatureToTheFourthUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -44,5 +42,11 @@ public:
 
   using SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::SetValue;
   using SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::GetValue;
+
+  bool Load(const CDM::ScalarPowerPerAreaTemperatureToTheFourthData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarPowerPerAreaTemperatureToTheFourthData& data) const;
+
 };
 }

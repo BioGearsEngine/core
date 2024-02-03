@@ -22,8 +22,6 @@ public:
 
   virtual ~VolumePerPressureUnit();
 
-  bool operator==(const VolumePerPressureUnit&) const;
-  bool operator!=(const VolumePerPressureUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -45,5 +43,11 @@ public:
 
   using SEScalarQuantity<VolumePerPressureUnit>::SetValue;
   using SEScalarQuantity<VolumePerPressureUnit>::GetValue;
+
+  bool Load(const CDM::ScalarVolumePerPressureData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarVolumePerPressureData& data) const;
+
 };
 }

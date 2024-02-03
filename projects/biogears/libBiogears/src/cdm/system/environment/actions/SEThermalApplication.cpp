@@ -122,7 +122,7 @@ void SEThermalApplication::Unload(CDM::ThermalApplicationData& data) const
     data.AppliedTemperature(std::unique_ptr<CDM::AppliedTemperatureData>(m_AppliedTemperature->Unload()));
   }
   //NOTE: It might be better to always serialize thermal applications to false and allow users to set this in for
-  //      Load commands. The problem is we use Load/UnLoad for cloning in BioGears so if keeping this state data for
+  //      Load commands. The problem is we use Load/Unload for cloning in BioGears so if keeping this state data for
   //      Serialization is bad then we need to patch all the ProcessAction functions which clone a AppliedTemperatureData and ensure
   //      it is retained after the clone through caching.
   data.AppendToPrevious(m_AppendToPrevious);

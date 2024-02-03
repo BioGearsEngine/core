@@ -22,9 +22,6 @@ public:
 
   virtual ~EnergyPerMassUnit(); 
 
-  bool operator==(const EnergyPerMassUnit&) const;
-  bool operator!=(const EnergyPerMassUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const EnergyPerMassUnit& GetCompoundUnit(const char* unit);
@@ -47,5 +44,11 @@ public:
 
   using SEScalarQuantity<EnergyPerMassUnit>::SetValue;
   using SEScalarQuantity<EnergyPerMassUnit>::GetValue;
+
+  bool Load(const CDM::ScalarEnergyPerMassData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarEnergyPerMassData& data) const;
+
 };
 }

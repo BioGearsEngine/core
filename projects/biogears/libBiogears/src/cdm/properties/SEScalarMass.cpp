@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMass.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const MassUnit MassUnit::g("g");
 const MassUnit MassUnit::ug("ug");
@@ -49,13 +52,23 @@ SEScalarMass::~SEScalarMass()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarMass::Load(const CDM::ScalarMassData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarMassData* SEScalarMass::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarMassData* data(new CDM::ScalarMassData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarMass::Unload(CDM::ScalarMassData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool MassUnit::IsValidUnit(const char* unit)
@@ -99,15 +112,6 @@ const MassUnit& MassUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool MassUnit::operator==(const MassUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool MassUnit::operator!=(const MassUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

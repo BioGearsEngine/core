@@ -22,9 +22,6 @@ public:
 
   virtual ~FrequencyUnit();
 
-  bool operator==(const FrequencyUnit&) const;
-  bool operator!=(const FrequencyUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const FrequencyUnit& GetCompoundUnit(const char* unit);
@@ -47,5 +44,11 @@ public:
 
   using SEScalarQuantity<FrequencyUnit>::SetValue;
   using SEScalarQuantity<FrequencyUnit>::GetValue;
+
+  bool Load(const CDM::ScalarFrequencyData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarFrequencyData& data) const;
+
 };
 }

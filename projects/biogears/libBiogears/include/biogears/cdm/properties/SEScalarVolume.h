@@ -22,8 +22,6 @@ public:
 
   virtual ~VolumeUnit();   
 
-  bool operator==(const VolumeUnit&) const;
-  bool operator!=(const VolumeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -48,5 +46,11 @@ public:
 
   using SEScalarQuantity<VolumeUnit>::SetValue;
   using SEScalarQuantity<VolumeUnit>::GetValue;
+
+  bool Load(const CDM::ScalarVolumeData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarVolumeData& data) const;
+
 };
 }

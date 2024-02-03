@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarAmountPerMass.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 AmountPerMassUnit AmountPerMassUnit::ct_Per_g("ct/g");
 AmountPerMassUnit AmountPerMassUnit::ct_Per_ug("ct/ug");
@@ -41,13 +44,23 @@ SEScalarAmountPerMass::~SEScalarAmountPerMass()
 {
 }
 //-----------------------------------------------------------------------------
+bool SEScalarAmountPerMass::Load(const CDM::ScalarAmountPerMassData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarAmountPerMassData* SEScalarAmountPerMass::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarAmountPerMassData* data(new CDM::ScalarAmountPerMassData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarAmountPerMass::Unload(CDM::ScalarAmountPerMassData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool AmountPerMassUnit::IsValidUnit(const char* unit)
@@ -84,14 +97,4 @@ const AmountPerMassUnit& AmountPerMassUnit::GetCompoundUnit(const std::string& u
   throw CommonDataModelException(err.str());
 }
 //-----------------------------------------------------------------------------
-bool AmountPerMassUnit::operator==(const AmountPerMassUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool AmountPerMassUnit::operator!=(const AmountPerMassUnit& obj) const
-{
-  return !(*this == obj);
-}
-//-------------------------------------------------------------------------------
 }

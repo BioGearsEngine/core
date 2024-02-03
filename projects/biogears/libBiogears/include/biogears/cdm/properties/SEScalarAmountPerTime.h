@@ -22,9 +22,6 @@ public:
 
   virtual ~AmountPerTimeUnit() override;
 
-  bool operator==(const AmountPerTimeUnit&) const;
-  bool operator!=(const AmountPerTimeUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const AmountPerTimeUnit& GetCompoundUnit(const char* unit);
@@ -50,5 +47,10 @@ public:
 
   using SEScalarQuantity<AmountPerTimeUnit>::SetValue;
   using SEScalarQuantity<AmountPerTimeUnit>::GetValue;
+
+  bool Load(const CDM::ScalarAmountPerTimeData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarAmountPerTimeData& data) const;
 };
 }

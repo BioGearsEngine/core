@@ -50,6 +50,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/directories/config.h>
 #endif
 
+// PRivate Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 
 BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
@@ -234,7 +237,7 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_PulmonaryVentilationRateMaximum);
   SAFE_DELETE(m_VentilatoryOcclusionPressure);
 
-  //Tissue
+  // Tissue
   m_TissueEnabled = CDM::enumOnOff::value(-1);
 }
 
@@ -247,9 +250,9 @@ void BioGearsConfiguration::Initialize()
   GetECGInterpolator().LoadWaveforms("StandardECG.xml");
   GetTimeStep().SetValue(1.0 / 50.0, TimeUnit::s);
   GetDynamicStabilizationCriteria().Load("DynamicStabilization.xml");
-  //GetTimedStabilizationCriteria().Load("TimedStabilization.xml");
+  // GetTimedStabilizationCriteria().Load("TimedStabilization.xml");
 
-  //Blood Chemistry
+  // Blood Chemistry
   GetMeanCorpuscularVolume().SetValue(9.e-8, VolumeUnit::uL); // Guyton p419
   GetMeanCorpuscularHemoglobin().SetValue(29, MassPerAmountUnit::pg_Per_ct);
   GetStandardDiffusionDistance().SetValue(0.0006, LengthUnit::mm);
@@ -278,8 +281,8 @@ void BioGearsConfiguration::Initialize()
 
   // Constants
   GetOxygenMetabolicConstant().SetValue(9.0);
-  GetStefanBoltzmann().SetValue(5.670367E-8, PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4); //http://physics.nist.gov/cuu/Constants/
-  GetUniversalGasConstant().SetValue(8.3144621, HeatCapacitancePerAmountUnit::J_Per_K_mol); //http://physics.nist.gov/cuu/Constants/
+  GetStefanBoltzmann().SetValue(5.670367E-8, PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4); // http://physics.nist.gov/cuu/Constants/
+  GetUniversalGasConstant().SetValue(8.3144621, HeatCapacitancePerAmountUnit::J_Per_K_mol); // http://physics.nist.gov/cuu/Constants/
 
   // Drugs
   m_PDEnabled = CDM::enumOnOff::On;
@@ -290,7 +293,7 @@ void BioGearsConfiguration::Initialize()
   GetCoreTemperatureLow().SetValue(36.8, TemperatureUnit::C);
   GetCoreTemperatureHigh().SetValue(37.1, TemperatureUnit::C);
   GetDeltaCoreTemperatureLow().SetValue(1.8, TemperatureUnit::C);
-  GetEnergyPerATP().SetValue(52, EnergyPerAmountUnit::kJ_Per_mol); //Under standard conditions, 30.5 kJ/mol, but cellular conditions shift this to 52 kJ/mol (Lehninger-Principles of BioChem)
+  GetEnergyPerATP().SetValue(52, EnergyPerAmountUnit::kJ_Per_mol); // Under standard conditions, 30.5 kJ/mol, but cellular conditions shift this to 52 kJ/mol (Lehninger-Principles of BioChem)
   GetSweatHeatTransfer().SetValue(0.20833, HeatConductanceUnit::kcal_Per_K_s);
   GetVaporizationEnergy().SetValue(2260.0, EnergyPerMassUnit::kJ_Per_kg);
   GetVaporSpecificHeat().SetValue(1.890, HeatCapacitancePerMassUnit::kJ_Per_K_kg);
@@ -301,7 +304,7 @@ void BioGearsConfiguration::Initialize()
   GetMolarMassOfDryAir().SetValue(0.028964, MassPerAmountUnit::kg_Per_mol);
   GetMolarMassOfWaterVapor().SetValue(0.018016, MassPerAmountUnit::kg_Per_mol);
   GetInitialEnvironmentalConditions().Load("StandardEnvironment.xml");
-  GetWaterDensity().SetValue(1000, MassPerVolumeUnit::kg_Per_m3); //Because water density changes with temperature, and this refers to room temperature water, you should use GeneralMath::CalculateWaterDensity() instead
+  GetWaterDensity().SetValue(1000, MassPerVolumeUnit::kg_Per_m3); // Because water density changes with temperature, and this refers to room temperature water, you should use GeneralMath::CalculateWaterDensity() instead
 
   // Gastrointestinal
   GetCalciumAbsorptionFraction().SetValue(0.25); // Net fractional calcium absorption is 24.9 ± 12.4% (Hunt and Johnson 2007)
@@ -325,19 +328,19 @@ void BioGearsConfiguration::Initialize()
   GetLeftGlomerularFilteringSurfaceAreaBaseline().SetValue(2.0, AreaUnit::m2);
   GetLeftTubularReabsorptionFluidPermeabilityBaseline().SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
   GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline().SetValue(2.5, AreaUnit::m2);
-  GetMaximumAfferentResistance().SetValue(11.2, FlowResistanceUnit::mmHg_s_Per_mL); //11.2
-  GetMinimumAfferentResistance().SetValue(2.2, FlowResistanceUnit::mmHg_s_Per_mL); //2.1
+  GetMaximumAfferentResistance().SetValue(11.2, FlowResistanceUnit::mmHg_s_Per_mL); // 11.2
+  GetMinimumAfferentResistance().SetValue(2.2, FlowResistanceUnit::mmHg_s_Per_mL); // 2.1
   GetRightGlomerularFluidPermeabilityBaseline().SetValue(3.67647, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
   GetRightGlomerularFilteringSurfaceAreaBaseline().SetValue(2.0, AreaUnit::m2);
   GetRightTubularReabsorptionFluidPermeabilityBaseline().SetValue(2.91747, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
-  //GetRightTubularReabsorptionFluidPermeabilityBaseline().SetValue(1.0, VolumePerTimePressureAreaUnit::mL_Per_min_Per_mmHg_Per_m2);
+  // GetRightTubularReabsorptionFluidPermeabilityBaseline().SetValue(1.0, VolumePerTimePressureAreaUnit::mL_Per_min_Per_mmHg_Per_m2);
   GetRightTubularReabsorptionFilteringSurfaceAreaBaseline().SetValue(2.5, AreaUnit::m2);
   GetTargetSodiumDelivery().SetValue(0.201, MassPerTimeUnit::g_Per_min);
 
   // Respiratory
   GetPleuralComplianceSensitivity().SetValue(5.0, InverseVolumeUnit::Inverse_L);
   GetPulmonaryVentilationRateMaximum().SetValue(150.0, VolumePerTimeUnit::L_Per_min);
-  GetVentilatoryOcclusionPressure().SetValue(0.75, PressureUnit::cmH2O); //This increases the absolute max driver pressure
+  GetVentilatoryOcclusionPressure().SetValue(0.75, PressureUnit::cmH2O); // This increases the absolute max driver pressure
 
   // Tissue
   m_TissueEnabled = CDM::enumOnOff::On;
@@ -462,7 +465,7 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   if (in.ConstantsConfiguration().present()) {
     const CDM::ConstantsConfigurationData& config = in.ConstantsConfiguration().get();
     if (config.OxygenMetabolicConstant().present())
-      GetOxygenMetabolicConstant().Load(config.OxygenMetabolicConstant().get());
+      io::Property::UnMarshall(config.OxygenMetabolicConstant(), GetOxygenMetabolicConstant());
     if (config.StefanBoltzmann().present())
       GetStefanBoltzmann().Load(config.StefanBoltzmann().get());
     if (config.UniversalGasConstant().present())
@@ -766,15 +769,16 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
   if (HasEnableRenal())
     renal->EnableRenal(m_RenalEnabled);
   if (HasPlasmaSodiumConcentrationSetPoint())
-    renal->PlasmaSodiumConcentrationSetPoint(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_PlasmaSodiumConcentrationSetPoint->Unload()));
+    renal->PlasmaSodiumConcentrationSetPoint(std::move(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_PlasmaSodiumConcentrationSetPoint->Unload())));
   if (HasLeftGlomerularFilteringSurfaceAreaBaseline())
     renal->LeftGlomerularFilteringSurfaceAreaBaseline(std::unique_ptr<CDM::ScalarAreaData>(m_LeftGlomerularFilteringSurfaceAreaBaseline->Unload()));
-  if (HasLeftGlomerularFluidPermeabilityBaseline())
-    renal->LeftGlomerularFluidPermeabilityBaseline(std::unique_ptr<CDM::ScalarData>(m_LeftGlomerularFluidPermeabilityBaseline->Unload()));
+  if (HasLeftGlomerularFluidPermeabilityBaseline()) {
+    renal->LeftGlomerularFluidPermeabilityBaseline(std::move(std::unique_ptr<CDM::ScalarVolumePerTimePressureAreaData>(m_LeftGlomerularFluidPermeabilityBaseline->Unload())));
+  }
   if (HasLeftTubularReabsorptionFilteringSurfaceAreaBaseline())
     renal->LeftTubularReabsorptionFilteringSurfaceAreaBaseline(std::unique_ptr<CDM::ScalarAreaData>(m_LeftTubularReabsorptionFilteringSurfaceAreaBaseline->Unload()));
   if (HasLeftTubularReabsorptionFluidPermeabilityBaseline())
-    renal->LeftTubularReabsorptionFluidPermeabilityBaseline(std::unique_ptr<CDM::ScalarData>(m_LeftTubularReabsorptionFluidPermeabilityBaseline->Unload()));
+    renal->LeftTubularReabsorptionFluidPermeabilityBaseline(std::unique_ptr<CDM::ScalarVolumePerTimePressureAreaData>(m_LeftTubularReabsorptionFluidPermeabilityBaseline->Unload()));
 
   if (HasMaximumAfferentResistance())
     renal->MaximumAfferentResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_MaximumAfferentResistance->Unload()));
@@ -784,11 +788,11 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
   if (HasRightGlomerularFilteringSurfaceAreaBaseline())
     renal->RightGlomerularFilteringSurfaceAreaBaseline(std::unique_ptr<CDM::ScalarAreaData>(m_RightGlomerularFilteringSurfaceAreaBaseline->Unload()));
   if (HasRightGlomerularFluidPermeabilityBaseline())
-    renal->RightGlomerularFluidPermeabilityBaseline(std::unique_ptr<CDM::ScalarData>(m_RightGlomerularFluidPermeabilityBaseline->Unload()));
+    renal->RightGlomerularFluidPermeabilityBaseline(std::unique_ptr<CDM::ScalarVolumePerTimePressureAreaData>(m_RightGlomerularFluidPermeabilityBaseline->Unload()));
   if (HasRightTubularReabsorptionFilteringSurfaceAreaBaseline())
     renal->RightTubularReabsorptionFilteringSurfaceAreaBaseline(std::unique_ptr<CDM::ScalarAreaData>(m_RightTubularReabsorptionFilteringSurfaceAreaBaseline->Unload()));
   if (HasRightTubularReabsorptionFluidPermeabilityBaseline())
-    renal->RightTubularReabsorptionFluidPermeabilityBaseline(std::unique_ptr<CDM::ScalarData>(m_RightTubularReabsorptionFluidPermeabilityBaseline->Unload()));
+    renal->RightTubularReabsorptionFluidPermeabilityBaseline(std::unique_ptr<CDM::ScalarVolumePerTimePressureAreaData>(m_RightTubularReabsorptionFluidPermeabilityBaseline->Unload()));
   data.RenalConfiguration(std::unique_ptr<CDM::RenalConfigurationData>(renal));
 
   // Respiratory

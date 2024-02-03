@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const VolumePerTimeUnit VolumePerTimeUnit::L_Per_s("L/s");
 const VolumePerTimeUnit VolumePerTimeUnit::mL_Per_s("mL/s");
@@ -46,13 +49,23 @@ SEScalarVolumePerTime::~SEScalarVolumePerTime()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarVolumePerTime::Load(const CDM::ScalarVolumePerTimeData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarVolumePerTimeData* SEScalarVolumePerTime::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarVolumePerTimeData* data(new CDM::ScalarVolumePerTimeData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarVolumePerTime::Unload(CDM::ScalarVolumePerTimeData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool VolumePerTimeUnit::IsValidUnit(const char* unit)
@@ -108,15 +121,6 @@ const VolumePerTimeUnit& VolumePerTimeUnit::GetCompoundUnit(const std::string& u
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool VolumePerTimeUnit::operator==(const VolumePerTimeUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool VolumePerTimeUnit::operator!=(const VolumePerTimeUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

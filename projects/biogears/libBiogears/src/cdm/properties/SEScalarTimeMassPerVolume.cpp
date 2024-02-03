@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTimeMassPerVolume.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::s_g_Per_L("s g/L");
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::min_g_Per_L("min g/L");
@@ -44,13 +47,23 @@ SEScalarTimeMassPerVolume::~SEScalarTimeMassPerVolume()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarTimeMassPerVolume::Load(const CDM::ScalarTimeMassPerVolumeData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarTimeMassPerVolumeData* SEScalarTimeMassPerVolume::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarTimeMassPerVolumeData* data(new CDM::ScalarTimeMassPerVolumeData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarTimeMassPerVolume::Unload(CDM::ScalarTimeMassPerVolumeData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool TimeMassPerVolumeUnit::IsValidUnit(const char* unit)
@@ -98,15 +111,7 @@ const TimeMassPerVolumeUnit& TimeMassPerVolumeUnit::GetCompoundUnit(const std::s
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool TimeMassPerVolumeUnit::operator==(const TimeMassPerVolumeUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool TimeMassPerVolumeUnit::operator!=(const TimeMassPerVolumeUnit& obj) const
-{
-  return !(*this == obj);
-}
+
+
 //-------------------------------------------------------------------------------
 }

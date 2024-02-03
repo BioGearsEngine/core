@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::W_Per_m2_K("W/m^2 K");
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::W_Per_m2_C("W/m^2 degC");
@@ -41,13 +44,23 @@ SEScalarHeatConductancePerArea::~SEScalarHeatConductancePerArea()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarHeatConductancePerArea::Load(const CDM::ScalarHeatConductancePerAreaData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarHeatConductancePerAreaData* SEScalarHeatConductancePerArea::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarHeatConductancePerAreaData* data(new CDM::ScalarHeatConductancePerAreaData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarHeatConductancePerArea::Unload(CDM::ScalarHeatConductancePerAreaData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool HeatConductancePerAreaUnit::IsValidUnit(const char* unit)
@@ -83,15 +96,6 @@ const HeatConductancePerAreaUnit& HeatConductancePerAreaUnit::GetCompoundUnit(co
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool HeatConductancePerAreaUnit::operator==(const HeatConductancePerAreaUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool HeatConductancePerAreaUnit::operator!=(const HeatConductancePerAreaUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

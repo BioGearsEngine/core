@@ -22,9 +22,6 @@ public:
 
   virtual ~ElectricCapacitanceUnit();
 
-  bool operator==(const ElectricCapacitanceUnit&) const;
-  bool operator!=(const ElectricCapacitanceUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const ElectricCapacitanceUnit& GetCompoundUnit(const char* unit);
@@ -44,5 +41,10 @@ public:
 
   using SEScalarQuantity<ElectricCapacitanceUnit>::SetValue;
   using SEScalarQuantity<ElectricCapacitanceUnit>::GetValue;
+
+  bool Load(const CDM::ScalarElectricCapacitanceData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarElectricCapacitanceData& data) const;
 };
 }

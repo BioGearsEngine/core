@@ -22,9 +22,6 @@ public:
 
   virtual ~LengthUnit();
 
-  bool operator==(const LengthUnit&) const;
-  bool operator!=(const LengthUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const LengthUnit& GetCompoundUnit(const char* unit);
@@ -49,5 +46,10 @@ public:
 
   using SEScalarQuantity<LengthUnit>::SetValue;
   using SEScalarQuantity<LengthUnit>::GetValue;
+
+  bool Load(const CDM::ScalarLengthData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarLengthData& data) const;
 };
 }

@@ -38,8 +38,6 @@ public:
   void Invalidate() override;
   bool IsValid() const override;
 
-  virtual void Load(const CDM::ScalarData& in) override;
-  virtual CDM::ScalarData* Unload() const override;
 
   virtual bool Set(const SEScalarQuantity<Unit>& s);
   void Copy(const SEScalarQuantity<Unit>& s);
@@ -93,9 +91,6 @@ public:
 
   const Unit* GetCompoundUnit(const char* unit) const override;
   const Unit* GetCompoundUnit(const std::string& unit) const override;
-
-protected:
-  virtual void Unload(CDM::ScalarData& s) const override;
 
 protected:
   const Unit* m_unit;

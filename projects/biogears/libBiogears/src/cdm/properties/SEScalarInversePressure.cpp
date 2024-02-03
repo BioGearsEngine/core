@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarInversePressure.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const InversePressureUnit InversePressureUnit::Inverse_Pa("1/Pa");
 const InversePressureUnit InversePressureUnit::Inverse_mmHg("1/mmHg");
@@ -41,13 +44,23 @@ SEScalarInversePressure::~SEScalarInversePressure()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarInversePressure::Load(const CDM::ScalarInversePressureData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarInversePressureData* SEScalarInversePressure::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarInversePressureData* data(new CDM::ScalarInversePressureData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarInversePressure::Unload(CDM::ScalarInversePressureData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool InversePressureUnit::IsValidUnit(const char* unit)
@@ -87,15 +100,6 @@ const InversePressureUnit& InversePressureUnit::GetCompoundUnit(const std::strin
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool InversePressureUnit::operator==(const InversePressureUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool InversePressureUnit::operator!=(const InversePressureUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

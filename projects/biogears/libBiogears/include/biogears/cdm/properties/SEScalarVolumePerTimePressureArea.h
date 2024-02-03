@@ -30,8 +30,6 @@ public:
   static const VolumePerTimePressureAreaUnit mL_Per_min_mmHg_m2;
   static const VolumePerTimePressureAreaUnit mL_Per_s_mmHg_m2;
 
-  bool operator==(const VolumePerTimePressureAreaUnit&) const;
-  bool operator!=(const VolumePerTimePressureAreaUnit&) const;
 };
 
 BG_EXT template class BIOGEARS_API SEScalarQuantity<VolumePerTimePressureAreaUnit>;
@@ -45,5 +43,10 @@ public:
 
   using SEScalarQuantity<VolumePerTimePressureAreaUnit>::SetValue;
   using SEScalarQuantity<VolumePerTimePressureAreaUnit>::GetValue;
+
+  bool Load(const CDM::ScalarVolumePerTimePressureAreaData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarVolumePerTimePressureAreaData& data) const;
 };
 }

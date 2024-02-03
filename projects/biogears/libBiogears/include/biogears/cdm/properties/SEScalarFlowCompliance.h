@@ -22,9 +22,6 @@ public:
 
   virtual ~FlowComplianceUnit();
 
-  bool operator==(const FlowComplianceUnit&) const;
-  bool operator!=(const FlowComplianceUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const FlowComplianceUnit& GetCompoundUnit(const char* unit);
@@ -47,6 +44,11 @@ public:
 
   using SEScalarQuantity<FlowComplianceUnit>::SetValue;
   using SEScalarQuantity<FlowComplianceUnit>::GetValue;
+
+  bool Load(const CDM::ScalarFlowComplianceData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarFlowComplianceData& data) const;
 
 };
 }

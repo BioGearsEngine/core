@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const ElectricPotentialUnit ElectricPotentialUnit::V("V");
 const ElectricPotentialUnit ElectricPotentialUnit::mV("mV");
@@ -37,13 +40,24 @@ SEScalarElectricPotential::~SEScalarElectricPotential()
 {
 }
 //-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEScalarElectricPotential::Load(const CDM::ScalarElectricPotentialData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarElectricPotentialData* SEScalarElectricPotential::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarElectricPotentialData* data(new CDM::ScalarElectricPotentialData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarElectricPotential::Unload(CDM::ScalarElectricPotentialData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool ElectricPotentialUnit::IsValidUnit(const char* unit)
@@ -76,14 +90,4 @@ const ElectricPotentialUnit& ElectricPotentialUnit::GetCompoundUnit(const std::s
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
-bool ElectricPotentialUnit::operator==(const ElectricPotentialUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool ElectricPotentialUnit::operator!=(const ElectricPotentialUnit& obj) const
-{
-  return !(*this == obj);
-}
-//-------------------------------------------------------------------------------
 }

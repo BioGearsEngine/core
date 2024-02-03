@@ -22,9 +22,6 @@ public:
 
   virtual ~ElectricCurrentUnit();
 
-  bool operator==(const ElectricCurrentUnit&) const;
-  bool operator!=(const ElectricCurrentUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const ElectricCurrentUnit& GetCompoundUnit(const char* unit);
@@ -45,5 +42,9 @@ public:
   using SEScalarQuantity<ElectricCurrentUnit>::SetValue;
   using SEScalarQuantity<ElectricCurrentUnit>::GetValue;
 
+  bool Load(const CDM::ScalarElectricCurrentData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarElectricCurrentData& data) const;
 };
 }

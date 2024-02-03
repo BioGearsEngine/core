@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMassPerMass.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const MassPerMassUnit MassPerMassUnit::ug_Per_kg("ug/kg");
 const MassPerMassUnit MassPerMassUnit::mg_Per_g("mg/g");
@@ -39,13 +42,24 @@ SEScalarMassPerMass::~SEScalarMassPerMass()
 {
 }
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEScalarMassPerMass::Load(const CDM::ScalarMassPerMassData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarMassPerMassData* SEScalarMassPerMass::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarMassPerMassData* data(new CDM::ScalarMassPerMassData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarMassPerMass::Unload(CDM::ScalarMassPerMassData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool MassPerMassUnit::IsValidUnit(const char* unit)
@@ -77,15 +91,6 @@ const MassPerMassUnit& MassPerMassUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool MassPerMassUnit::operator==(const MassPerMassUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool MassPerMassUnit::operator!=(const MassPerMassUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

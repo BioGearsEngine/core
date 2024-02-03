@@ -169,17 +169,17 @@
           <xs:element name="PlasmaSodiumConcentrationSetPoint" type="ScalarMassPerVolumeData" minOccurs="0" maxOccurs="1"/>
 
           <xs:element name="LeftGlomerularFilteringSurfaceAreaBaseline" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="LeftGlomerularFluidPermeabilityBaseline" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="LeftGlomerularFluidPermeabilityBaseline" type="ScalarVolumePerTimePressureAreaData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="LeftTubularReabsorptionFilteringSurfaceAreaBaseline " type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="LeftTubularReabsorptionFluidPermeabilityBaseline" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="LeftTubularReabsorptionFluidPermeabilityBaseline" type="ScalarVolumePerTimePressureAreaData" minOccurs="0" maxOccurs="1"/>
 
           <xs:element name="MaximumAfferentResistance" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="MinimumAfferentResistance" type="ScalarFlowResistanceData" minOccurs="0" maxOccurs="1"/>
 
           <xs:element name="RightGlomerularFilteringSurfaceAreaBaseline" type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="RightGlomerularFluidPermeabilityBaseline" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="RightGlomerularFluidPermeabilityBaseline" type="ScalarVolumePerTimePressureAreaData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="RightTubularReabsorptionFilteringSurfaceAreaBaseline " type="ScalarAreaData" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="RightTubularReabsorptionFluidPermeabilityBaseline" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="RightTubularReabsorptionFluidPermeabilityBaseline" type="ScalarVolumePerTimePressureAreaData" minOccurs="0" maxOccurs="1"/>
           <xs:element name="TargetSodiumDelivery" type="ScalarMassPerTimeData" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>

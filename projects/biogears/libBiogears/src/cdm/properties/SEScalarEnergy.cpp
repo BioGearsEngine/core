@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarEnergy.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const EnergyUnit EnergyUnit::J("J");
 const EnergyUnit EnergyUnit::mJ("mJ");
@@ -43,13 +46,24 @@ SEScalarEnergy::~SEScalarEnergy()
 }
 
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEScalarEnergy::Load(const CDM::ScalarEnergyData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarEnergyData* SEScalarEnergy::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarEnergyData* data(new CDM::ScalarEnergyData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarEnergy::Unload(CDM::ScalarEnergyData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool EnergyUnit::IsValidUnit(const char* unit)
@@ -88,16 +102,6 @@ const EnergyUnit& EnergyUnit::GetCompoundUnit(const char* unit)
 const EnergyUnit& EnergyUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
-}
-//-------------------------------------------------------------------------------
-bool EnergyUnit::operator==(const EnergyUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool EnergyUnit::operator!=(const EnergyUnit& obj) const
-{
-  return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
 }

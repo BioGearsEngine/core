@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMassPerAmount.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const MassPerAmountUnit MassPerAmountUnit::g_Per_ct("g/ct");
 const MassPerAmountUnit MassPerAmountUnit::g_Per_mol("g/mol");
@@ -49,13 +52,23 @@ SEScalarMassPerAmount::~SEScalarMassPerAmount()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarMassPerAmount::Load(const CDM::ScalarMassPerAmountData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarMassPerAmountData* SEScalarMassPerAmount::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarMassPerAmountData* data(new CDM::ScalarMassPerAmountData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarMassPerAmount::Unload(CDM::ScalarMassPerAmountData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool MassPerAmountUnit::IsValidUnit(const char* unit)
@@ -122,16 +135,6 @@ const MassPerAmountUnit& MassPerAmountUnit::GetCompoundUnit(const char* unit)
 const MassPerAmountUnit& MassPerAmountUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
-}
-//-------------------------------------------------------------------------------
-bool MassPerAmountUnit::operator==(const MassPerAmountUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool MassPerAmountUnit::operator!=(const MassPerAmountUnit& obj) const
-{
-  return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
 }

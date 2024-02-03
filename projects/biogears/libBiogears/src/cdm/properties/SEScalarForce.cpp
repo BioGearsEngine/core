@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarForce.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const ForceUnit ForceUnit::N("N");
 const ForceUnit ForceUnit::lbf("lbf");
@@ -41,13 +44,23 @@ SEScalarForce::~SEScalarForce()
 {
 }
 //-----------------------------------------------------------------------------
+bool SEScalarForce::Load(const CDM::ScalarForceData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarForceData* SEScalarForce::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarForceData* data(new CDM::ScalarForceData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarForce::Unload(CDM::ScalarForceData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool ForceUnit::IsValidUnit(const char* unit)
@@ -84,14 +97,4 @@ const ForceUnit& ForceUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
-bool ForceUnit::operator==(const ForceUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool ForceUnit::operator!=(const ForceUnit& obj) const
-{
-  return !(*this == obj);
-}
-//-------------------------------------------------------------------------------
 }

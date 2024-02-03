@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const VolumeUnit VolumeUnit::L("L");
 const VolumeUnit VolumeUnit::dL("dL");
@@ -43,13 +46,23 @@ SEScalarVolume::~SEScalarVolume()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarVolume::Load(const CDM::ScalarVolumeData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarVolumeData* SEScalarVolume::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarVolumeData* data(new CDM::ScalarVolumeData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarVolume::Unload(CDM::ScalarVolumeData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool VolumeUnit::IsValidUnit(const char* unit)
@@ -93,15 +106,6 @@ const VolumeUnit& VolumeUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool VolumeUnit::operator==(const VolumeUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool VolumeUnit::operator!=(const VolumeUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

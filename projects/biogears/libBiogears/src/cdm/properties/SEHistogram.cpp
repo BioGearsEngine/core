@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar.h> //Utils
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 static std::stringstream err;
 
@@ -54,11 +57,7 @@ void SEHistogram::Invalidate()
 
 bool SEHistogram::Load(const CDM::HistogramData& in)
 {
-  Clear();
-  for (unsigned int i = 0; i < in.Dependent().DoubleList().size(); i++)
-    m_Dependent.push_back(in.Dependent().DoubleList()[i]);
-  for (unsigned int i = 0; i < in.Independent().DoubleList().size(); i++)
-    m_Independent.push_back(in.Independent().DoubleList()[i]);
+  io::Property::UnMarshall(in, *this);
   return IsValid();
 }
 

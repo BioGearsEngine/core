@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarLength.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const LengthUnit LengthUnit::m("m");
 const LengthUnit LengthUnit::cm("cm");
@@ -44,13 +47,23 @@ SEScalarLength::~SEScalarLength()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarLength::Load(const CDM::ScalarLengthData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarLengthData* SEScalarLength::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarLengthData* data(new CDM::ScalarLengthData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarLength::Unload(CDM::ScalarLengthData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool LengthUnit::IsValidUnit(const char* unit)
@@ -98,15 +111,6 @@ const LengthUnit& LengthUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool LengthUnit::operator==(const LengthUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool LengthUnit::operator!=(const LengthUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

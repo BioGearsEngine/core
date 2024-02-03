@@ -84,37 +84,6 @@ bool SEScalarQuantity<Unit>::IsValid() const
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
-void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in)
-{
-  this->Clear();
-  SEProperty::Load(in);
-  if (in.unit().present()) {
-    this->SetValue(in.value(), Unit::GetCompoundUnit(in.unit().get()));
-  } else
-    throw CommonDataModelException("ScalarQuantity attempted to load a ScalarData with no unit, must have a unit.");
-  m_readOnly = in.readOnly();
-}
-//-------------------------------------------------------------------------------
-template <typename Unit>
-CDM::ScalarData* SEScalarQuantity<Unit>::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarData* data = new CDM::ScalarData();
-  this->Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-template <typename Unit>
-void SEScalarQuantity<Unit>::Unload(CDM::ScalarData& data) const
-{
-  SEProperty::Unload(data);
-  data.value(m_value);
-  data.unit(m_unit->GetString());
-  data.readOnly(m_readOnly);
-}
-//-------------------------------------------------------------------------------
-template <typename Unit>
 bool SEScalarQuantity<Unit>::Set(const SEScalarQuantity<Unit>& s)
 {
   if (!s.IsValid()) {

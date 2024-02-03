@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarOsmolality.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const OsmolalityUnit OsmolalityUnit::Osm_Per_kg("Osm/kg");
 const OsmolalityUnit OsmolalityUnit::mOsm_Per_kg("mOsm/kg");
@@ -40,13 +43,23 @@ SEScalarOsmolality::~SEScalarOsmolality()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarOsmolality::Load(const CDM::ScalarOsmolalityData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarOsmolalityData* SEScalarOsmolality::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarOsmolalityData* data(new CDM::ScalarOsmolalityData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarOsmolality::Unload(CDM::ScalarOsmolalityData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool OsmolalityUnit::IsValidUnit(const char* unit)
@@ -78,15 +91,6 @@ const OsmolalityUnit& OsmolalityUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool OsmolalityUnit::operator==(const OsmolalityUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool OsmolalityUnit::operator!=(const OsmolalityUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

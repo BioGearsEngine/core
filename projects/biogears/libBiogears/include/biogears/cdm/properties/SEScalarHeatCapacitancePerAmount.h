@@ -22,9 +22,6 @@ public:
 
   virtual ~HeatCapacitancePerAmountUnit();     
 
-  bool operator==(const HeatCapacitancePerAmountUnit&) const;
-  bool operator!=(const HeatCapacitancePerAmountUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const HeatCapacitancePerAmountUnit& GetCompoundUnit(const char* unit);
@@ -44,5 +41,11 @@ public:
 
   using SEScalarQuantity<HeatCapacitancePerAmountUnit>::SetValue;
   using SEScalarQuantity<HeatCapacitancePerAmountUnit>::GetValue;
+
+  bool Load(const CDM::ScalarHeatCapacitancePerAmountData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarHeatCapacitancePerAmountData& data) const;
+
 };
 }

@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatResistance.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const HeatResistanceUnit HeatResistanceUnit::K_Per_W("K/W");
 const HeatResistanceUnit HeatResistanceUnit::C_Per_W("degC/W");
@@ -42,13 +45,23 @@ SEScalarHeatResistance::~SEScalarHeatResistance()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarHeatResistance::Load(const CDM::ScalarHeatResistanceData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarHeatResistanceData* SEScalarHeatResistance::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarHeatResistanceData* data(new CDM::ScalarHeatResistanceData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarHeatResistance::Unload(CDM::ScalarHeatResistanceData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool HeatResistanceUnit::IsValidUnit(const char* unit)
@@ -88,15 +101,6 @@ const HeatResistanceUnit& HeatResistanceUnit::GetCompoundUnit(const std::string&
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool HeatResistanceUnit::operator==(const HeatResistanceUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool HeatResistanceUnit::operator!=(const HeatResistanceUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

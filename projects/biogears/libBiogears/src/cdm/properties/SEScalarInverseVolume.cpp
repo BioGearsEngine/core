@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarInverseVolume.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const InverseVolumeUnit InverseVolumeUnit::Inverse_L("1/L");
 const InverseVolumeUnit InverseVolumeUnit::Inverse_mL("1/mL");
@@ -40,13 +43,23 @@ SEScalarInverseVolume::~SEScalarInverseVolume()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarInverseVolume::Load(const CDM::ScalarInverseVolumeData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarInverseVolumeData* SEScalarInverseVolume::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarInverseVolumeData* data(new CDM::ScalarInverseVolumeData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarInverseVolume::Unload(CDM::ScalarInverseVolumeData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool InverseVolumeUnit::IsValidUnit(const char* unit)
@@ -78,15 +91,6 @@ const InverseVolumeUnit& InverseVolumeUnit::GetCompoundUnit(const std::string& u
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool InverseVolumeUnit::operator==(const InverseVolumeUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool InverseVolumeUnit::operator!=(const InverseVolumeUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

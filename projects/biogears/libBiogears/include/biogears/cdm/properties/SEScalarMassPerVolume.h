@@ -22,8 +22,6 @@ public:
 
   virtual ~MassPerVolumeUnit();
 
-  bool operator==(const MassPerVolumeUnit&) const;
-  bool operator!=(const MassPerVolumeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -59,5 +57,9 @@ public:
 
   using SEScalarQuantity<MassPerVolumeUnit>::SetValue;
   using SEScalarQuantity<MassPerVolumeUnit>::GetValue;
+  bool Load(const CDM::ScalarMassPerVolumeData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarMassPerVolumeData& data) const;
 };
 }

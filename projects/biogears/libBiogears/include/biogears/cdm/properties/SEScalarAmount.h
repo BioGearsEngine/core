@@ -22,9 +22,6 @@ public:
 
   virtual ~AmountUnit();
 
-  bool operator==(const AmountUnit&) const;
-  bool operator!=(const AmountUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
 
@@ -47,5 +44,9 @@ public:
   using SEScalarQuantity<AmountUnit>::SetValue;
   using SEScalarQuantity<AmountUnit>::GetValue;
 
+  bool Load(const CDM::ScalarAmountData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarAmountData& data) const;
 };
 }

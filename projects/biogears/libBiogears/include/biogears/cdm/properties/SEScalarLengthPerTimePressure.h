@@ -22,9 +22,6 @@ public:
 
   virtual ~LengthPerTimePressureUnit();    
 
-  bool operator==(const LengthPerTimePressureUnit&) const;
-  bool operator!=(const LengthPerTimePressureUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const LengthPerTimePressureUnit& GetCompoundUnit(const char* unit);
@@ -47,5 +44,13 @@ public:
 
   using SEScalarQuantity<LengthPerTimePressureUnit>::SetValue;
   using SEScalarQuantity<LengthPerTimePressureUnit>::GetValue;
+
+  bool operator==(const SEScalarLengthPerTimePressure&) const;
+  bool operator!=(const SEScalarLengthPerTimePressure&) const;
+  bool Load(const CDM::ScalarLengthPerTimePressureData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarLengthPerTimePressureData& data) const;
+
 };
 }

@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::rsi("rsi");
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::clo("clo");
@@ -42,13 +45,23 @@ SEScalarHeatResistanceArea::~SEScalarHeatResistanceArea()
 }
 
 //-------------------------------------------------------------------------------
+bool SEScalarHeatResistanceArea::Load(const CDM::ScalarHeatResistanceAreaData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarHeatResistanceAreaData* SEScalarHeatResistanceArea::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarHeatResistanceAreaData* data(new CDM::ScalarHeatResistanceAreaData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarHeatResistanceArea::Unload(CDM::ScalarHeatResistanceAreaData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool HeatResistanceAreaUnit::IsValidUnit(const char* unit)
@@ -88,15 +101,6 @@ const HeatResistanceAreaUnit& HeatResistanceAreaUnit::GetCompoundUnit(const std:
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool HeatResistanceAreaUnit::operator==(const HeatResistanceAreaUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool HeatResistanceAreaUnit::operator!=(const HeatResistanceAreaUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

@@ -22,9 +22,6 @@ public:
 
   virtual ~LengthPerTimeUnit();
 
-  bool operator==(const LengthPerTimeUnit&) const;
-  bool operator!=(const LengthPerTimeUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const LengthPerTimeUnit& GetCompoundUnit(const char* unit);
@@ -48,5 +45,10 @@ public:
 
   using SEScalarQuantity<LengthPerTimeUnit>::SetValue;
   using SEScalarQuantity<LengthPerTimeUnit>::GetValue;
+  bool Load(const CDM::ScalarLengthPerTimeData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarLengthPerTimeData& data) const;
+
 };
 }

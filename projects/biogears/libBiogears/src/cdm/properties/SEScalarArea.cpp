@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarArea.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const AreaUnit AreaUnit::cm2("cm^2");
 const AreaUnit AreaUnit::m2("m^2");
@@ -39,13 +42,23 @@ SEScalarArea::~SEScalarArea()
 {
 }
 //-----------------------------------------------------------------------------
+bool SEScalarArea::Load(const CDM::ScalarAreaData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarAreaData* SEScalarArea::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarAreaData* data(new CDM::ScalarAreaData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarArea::Unload(CDM::ScalarAreaData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool AreaUnit::IsValidUnit(const char* unit)
@@ -78,14 +91,5 @@ const AreaUnit& AreaUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
-bool AreaUnit::operator==(const AreaUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool AreaUnit::operator!=(const AreaUnit& obj) const
-{
-  return !(*this == obj);
-}
-//-------------------------------------------------------------------------------
+
 }

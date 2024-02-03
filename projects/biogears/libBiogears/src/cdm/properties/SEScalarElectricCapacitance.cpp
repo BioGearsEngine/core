@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricCapacitance.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const ElectricCapacitanceUnit ElectricCapacitanceUnit::F("F");
 
@@ -37,13 +40,23 @@ SEScalarElectricCapacitance::SEScalarElectricCapacitance(){
 SEScalarElectricCapacitance::~SEScalarElectricCapacitance(){
 }
 //-----------------------------------------------------------------------------
+bool SEScalarElectricCapacitance::Load(const CDM::ScalarElectricCapacitanceData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarElectricCapacitanceData* SEScalarElectricCapacitance::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarElectricCapacitanceData* data(new CDM::ScalarElectricCapacitanceData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarElectricCapacitance::Unload(CDM::ScalarElectricCapacitanceData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool ElectricCapacitanceUnit::IsValidUnit(const char* unit)
@@ -72,14 +85,4 @@ const ElectricCapacitanceUnit& ElectricCapacitanceUnit::GetCompoundUnit(const st
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
-bool ElectricCapacitanceUnit::operator==(const ElectricCapacitanceUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool ElectricCapacitanceUnit::operator!=(const ElectricCapacitanceUnit& obj) const
-{
-  return !(*this == obj);
-}
-//-------------------------------------------------------------------------------
 }

@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarLengthPerTimePressure.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::m_Per_s_mmHg("m/s mmHg");
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::cm_Per_s_mmHg("cm/s mmHg");
@@ -42,13 +45,23 @@ SEScalarLengthPerTimePressure::~SEScalarLengthPerTimePressure()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarLengthPerTimePressure::Load(const CDM::ScalarLengthPerTimePressureData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarLengthPerTimePressureData* SEScalarLengthPerTimePressure::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarLengthPerTimePressureData* data(new CDM::ScalarLengthPerTimePressureData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarLengthPerTimePressure::Unload(CDM::ScalarLengthPerTimePressureData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool LengthPerTimePressureUnit::IsValidUnit(const char* unit)
@@ -88,15 +101,6 @@ const LengthPerTimePressureUnit& LengthPerTimePressureUnit::GetCompoundUnit(cons
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool LengthPerTimePressureUnit::operator==(const LengthPerTimePressureUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool LengthPerTimePressureUnit::operator!=(const LengthPerTimePressureUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

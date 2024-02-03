@@ -22,8 +22,6 @@ public:
 
   virtual ~TimeUnit();
 
-  bool operator==(const TimeUnit&) const;
-  bool operator!=(const TimeUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -48,5 +46,10 @@ public:
 
   using SEScalarQuantity<TimeUnit>::SetValue;
   using SEScalarQuantity<TimeUnit>::GetValue;
+  bool Load(const CDM::ScalarTimeData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarTimeData& data) const;
+
 };
 }

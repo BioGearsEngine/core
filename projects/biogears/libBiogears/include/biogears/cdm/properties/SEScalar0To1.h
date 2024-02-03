@@ -31,5 +31,9 @@ public:
   bool operator==(const SEScalar0To1&) const;
   bool operator!=(const SEScalar0To1&) const;
 
+  bool Load(const CDM::Scalar0To1Data& in);
+
+protected:
+  virtual void Unload(CDM::Scalar0To1Data& data) const;
 };
 }

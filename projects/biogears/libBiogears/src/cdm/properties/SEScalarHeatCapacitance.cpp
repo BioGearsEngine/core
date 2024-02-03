@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const HeatCapacitanceUnit HeatCapacitanceUnit::J_Per_K("J/K");
 const HeatCapacitanceUnit HeatCapacitanceUnit::kJ_Per_K("kJ/K");
@@ -42,13 +45,23 @@ SEScalarHeatCapacitance::~SEScalarHeatCapacitance()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarHeatCapacitance::Load(const CDM::ScalarHeatCapacitanceData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarHeatCapacitanceData* SEScalarHeatCapacitance::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarHeatCapacitanceData* data(new CDM::ScalarHeatCapacitanceData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarHeatCapacitance::Unload(CDM::ScalarHeatCapacitanceData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool HeatCapacitanceUnit::IsValidUnit(const char* unit)
@@ -88,15 +101,6 @@ const HeatCapacitanceUnit& HeatCapacitanceUnit::GetCompoundUnit(const std::strin
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
-bool HeatCapacitanceUnit::operator==(const HeatCapacitanceUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool HeatCapacitanceUnit::operator!=(const HeatCapacitanceUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

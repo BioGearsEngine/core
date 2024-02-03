@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const VolumePerTimePressureAreaUnit VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2("mL/min mmHg m^2");
 const VolumePerTimePressureAreaUnit VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2("mL/s mmHg m^2");
@@ -38,13 +41,23 @@ SEScalarVolumePerTimePressureArea::~SEScalarVolumePerTimePressureArea()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarVolumePerTimePressureArea::Load(const CDM::ScalarVolumePerTimePressureAreaData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarVolumePerTimePressureAreaData* SEScalarVolumePerTimePressureArea::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarVolumePerTimePressureAreaData* data(new CDM::ScalarVolumePerTimePressureAreaData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarVolumePerTimePressureArea::Unload(CDM::ScalarVolumePerTimePressureAreaData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool VolumePerTimePressureAreaUnit::IsValidUnit(const char* unit)
@@ -76,16 +89,6 @@ const VolumePerTimePressureAreaUnit& VolumePerTimePressureAreaUnit::GetCompoundU
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-------------------------------------------------------------------------------
 
-bool VolumePerTimePressureAreaUnit::operator==(const VolumePerTimePressureAreaUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool VolumePerTimePressureAreaUnit::operator!=(const VolumePerTimePressureAreaUnit& obj) const
-{
-  return !(*this == obj);
-}
 
 }

@@ -11,11 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 
-//Standard Includes
+// Standard Includes
 #include <fstream>
 #include <iomanip>
-//Project Includes
+// Project IncludesKO
 #include <biogears/schema/cdm/Properties.hxx>
+
+// Private Includes
+#include <io/cdm/Property.h>
 
 namespace std {
 template class map<string, biogears::SEDecimalFormat>;
@@ -48,17 +51,8 @@ void SEDecimalFormat::Set(const SEDecimalFormat& f)
 
 bool SEDecimalFormat::Load(const CDM::DecimalFormatData& in)
 {
-  Reset();
-  if (in.DecimalFormat().present()) {
-    if (in.DecimalFormat().get() == CDM::enumDecimalFormat::Default)
-      m_Notation = DecimalNotation::Default;
-    if (in.DecimalFormat().get() == CDM::enumDecimalFormat::FixedMantissa)
-      m_Notation = DecimalNotation::Fixed;
-    else if (in.DecimalFormat().get() == CDM::enumDecimalFormat::SignificantDigits)
-      m_Notation = DecimalNotation::Scientific;
-  }
-  if (in.Precision().present())
-    m_Precision = in.Precision().get();
+  io::Property::UnMarshall(in, *this);
+
   return true;
 }
 CDM::DecimalFormatData* SEDecimalFormat::Unload()
@@ -69,18 +63,7 @@ CDM::DecimalFormatData* SEDecimalFormat::Unload()
 }
 void SEDecimalFormat::Unload(CDM::DecimalFormatData& data) const
 {
-  data.Precision(static_cast<CDM::DecimalFormatData::Precision_type>(m_Precision));
-  switch (m_Notation) {
-  case DecimalNotation::Default:
-  case DecimalNotation::Fixed: {
-    data.DecimalFormat(CDM::enumDecimalFormat::FixedMantissa);
-    break;
-  }
-  case DecimalNotation::Scientific: {
-    data.DecimalFormat(CDM::enumDecimalFormat::SignificantDigits);
-    break;
-  }
-  }
+  io::Property::Marshall(*this, data);
 }
 
 void SEDecimalFormat::SetPrecision(std::streamsize p)

@@ -50,7 +50,7 @@ public:
   Note that this does not affect bounds
   */
   virtual void Invalidate();
-  virtual void Load(const CDM::ScalarData& in);
+  virtual bool Load(const CDM::ScalarData& in);
   virtual CDM::ScalarData* Unload() const;
 
   /**

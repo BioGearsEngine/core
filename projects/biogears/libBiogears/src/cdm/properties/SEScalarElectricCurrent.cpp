@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricCurrent.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const ElectricCurrentUnit ElectricCurrentUnit::A("A");
 
@@ -39,13 +42,23 @@ SEScalarElectricCurrent::~SEScalarElectricCurrent()
 {
 }
 //-----------------------------------------------------------------------------
+bool SEScalarElectricCurrent::Load(const CDM::ScalarElectricCurrentData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarElectricCurrentData* SEScalarElectricCurrent::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarElectricCurrentData* data(new CDM::ScalarElectricCurrentData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarElectricCurrent::Unload(CDM::ScalarElectricCurrentData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool ElectricCurrentUnit::IsValidUnit(const char* unit)
@@ -74,14 +87,4 @@ const ElectricCurrentUnit& ElectricCurrentUnit::GetCompoundUnit(const std::strin
   return GetCompoundUnit(unit.c_str());
 }
 //-----------------------------------------------------------------------------
-bool ElectricCurrentUnit::operator==(const ElectricCurrentUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool ElectricCurrentUnit::operator!=(const ElectricCurrentUnit& obj) const
-{
-  return !(*this == obj);
-}
-//-------------------------------------------------------------------------------
 }

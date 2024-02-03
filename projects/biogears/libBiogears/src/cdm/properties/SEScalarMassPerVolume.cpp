@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 
 const MassPerVolumeUnit MassPerVolumeUnit::g_Per_dL("g/dL");
@@ -45,13 +48,23 @@ MassPerVolumeUnit::~MassPerVolumeUnit()
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarMassPerVolume::Load(const CDM::ScalarMassPerVolumeData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarMassPerVolumeData* SEScalarMassPerVolume::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarMassPerVolumeData* data(new CDM::ScalarMassPerVolumeData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarMassPerVolume::Unload(CDM::ScalarMassPerVolumeData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool MassPerVolumeUnit::IsValidUnit(const char* unit)
@@ -148,15 +161,5 @@ SEScalarMassPerVolume::SEScalarMassPerVolume(double v, const MassPerVolumeUnit& 
 //-------------------------------------------------------------------------------
 SEScalarMassPerVolume::~SEScalarMassPerVolume()
 {
-}
-//-------------------------------------------------------------------------------
-bool MassPerVolumeUnit::operator==(const MassPerVolumeUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool MassPerVolumeUnit::operator!=(const MassPerVolumeUnit& obj) const
-{
-  return !(*this == obj);
 }
 }

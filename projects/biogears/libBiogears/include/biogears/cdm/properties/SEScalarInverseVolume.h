@@ -22,9 +22,6 @@ public:
 
   virtual ~InverseVolumeUnit();
 
-  bool operator==(const InverseVolumeUnit&) const;
-  bool operator!=(const InverseVolumeUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const InverseVolumeUnit& GetCompoundUnit(const char* unit);
@@ -42,5 +39,9 @@ public:
   virtual ~SEScalarInverseVolume();
 
   CDM::ScalarInverseVolumeData* Unload() const override;
+  bool Load(const CDM::ScalarInverseVolumeData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarInverseVolumeData& data) const;
 };
 }

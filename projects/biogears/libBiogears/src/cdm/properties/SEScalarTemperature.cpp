@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const TemperatureUnit TemperatureUnit::F("degF");
 const TemperatureUnit TemperatureUnit::C("degC");
@@ -33,13 +36,23 @@ TemperatureUnit::TemperatureUnit(const std::string& u)
 {
 }
 //-------------------------------------------------------------------------------
+bool SEScalarTemperature::Load(const CDM::ScalarTemperatureData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarTemperatureData* SEScalarTemperature::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarTemperatureData* data(new CDM::ScalarTemperatureData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarTemperature::Unload(CDM::ScalarTemperatureData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool TemperatureUnit::IsValidUnit(const char* unit)
@@ -90,16 +103,7 @@ double SEScalarTemperature::GetValue(const TemperatureUnit& unit) const
     return m_value;
   return Convert(m_value, *m_unit, unit);
 }
-//-------------------------------------------------------------------------------
-bool TemperatureUnit::operator==(const TemperatureUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool TemperatureUnit::operator!=(const TemperatureUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 SEScalarTemperature::SEScalarTemperature()
 :SEScalarQuantity()

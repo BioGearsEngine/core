@@ -22,8 +22,6 @@ public:
 
   virtual ~PressureUnit();
 
-  bool operator==(const PressureUnit&) const;
-  bool operator!=(const PressureUnit&) const;
 
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
@@ -48,5 +46,10 @@ public:
 
   using SEScalarQuantity<PressureUnit>::SetValue;
   using SEScalarQuantity<PressureUnit>::GetValue;
+  bool Load(const CDM::ScalarPressureData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarPressureData& data) const;
+
 };
 }

@@ -30,5 +30,9 @@ public:
   double GetValue(const NoUnit& unitless) const;
   void SetValue(double d) override;
   void SetValue(double d, const NoUnit& unitless);
+  bool Load(const CDM::ScalarNeg1To1Data& in);
+
+protected:
+  virtual void Unload(CDM::ScalarNeg1To1Data& data) const;
 };
 }

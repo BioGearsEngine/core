@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricInductance.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 
 namespace biogears {
 const ElectricInductanceUnit ElectricInductanceUnit::H("H");
@@ -39,13 +42,24 @@ SEScalarElectricInductance::~SEScalarElectricInductance()
 {
 }
 //-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SEScalarElectricInductance::Load(const CDM::ScalarElectricInductanceData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarElectricInductanceData* SEScalarElectricInductance::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarElectricInductanceData* data(new CDM::ScalarElectricInductanceData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarElectricInductance::Unload(CDM::ScalarElectricInductanceData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool ElectricInductanceUnit::IsValidUnit(const char* unit)
@@ -73,15 +87,4 @@ const ElectricInductanceUnit& ElectricInductanceUnit::GetCompoundUnit(const std:
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-----------------------------------------------------------------------------
-bool ElectricInductanceUnit::operator==(const ElectricInductanceUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool ElectricInductanceUnit::operator!=(const ElectricInductanceUnit& obj) const
-{
-  return !(*this == obj);
-}
-//-------------------------------------------------------------------------------
 }

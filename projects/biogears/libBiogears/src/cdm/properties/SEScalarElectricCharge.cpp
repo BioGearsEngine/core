@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarElectricCharge.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const ElectricChargeUnit ElectricChargeUnit::C("C");
 
@@ -39,13 +42,23 @@ SEScalarElectricCharge::~SEScalarElectricCharge(){
 
 }
 //-----------------------------------------------------------------------------
+bool SEScalarElectricCharge::Load(const CDM::ScalarElectricChargeData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarElectricChargeData* SEScalarElectricCharge::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarElectricChargeData* data(new CDM::ScalarElectricChargeData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarElectricCharge::Unload(CDM::ScalarElectricChargeData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool ElectricChargeUnit::IsValidUnit(const char* unit)
@@ -69,19 +82,13 @@ const ElectricChargeUnit& ElectricChargeUnit::GetCompoundUnit(const char* unit)
   throw CommonDataModelException(err.str());
 }
 //-----------------------------------------------------------------------------
-const ElectricChargeUnit& ElectricChargeUnit::GetCompoundUnit(const std::string& unit)
+const ElectricChargeUnit& ElectricChargeUnit::GetCompoundUnit(std::string const &  unit)
 {
-  return GetCompoundUnit(unit.c_str());
-}
-//-----------------------------------------------------------------------------
-bool ElectricChargeUnit::operator==(const ElectricChargeUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool ElectricChargeUnit::operator!=(const ElectricChargeUnit& obj) const
-{
-  return !(*this == obj);
+  if (C.GetString() == unit)
+    return C;
+  std::stringstream err;
+  err << unit << " is not a valid ElectricCharge unit";
+  throw CommonDataModelException(err.str());
 }
 //-------------------------------------------------------------------------------
 }

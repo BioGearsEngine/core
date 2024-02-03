@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarOsmolarity.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const OsmolarityUnit OsmolarityUnit::Osm_Per_L("Osm/L");
 const OsmolarityUnit OsmolarityUnit::mOsm_Per_L("mOsm/L");
@@ -38,15 +41,26 @@ OsmolarityUnit::~OsmolarityUnit()
   SEScalarOsmolarity::~SEScalarOsmolarity(){
   }
 //-------------------------------------------------------------------------------
-CDM::ScalarOsmolarityData* SEScalarOsmolarity::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarOsmolarityData* data(new CDM::ScalarOsmolarityData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------
+  bool SEScalarOsmolarity::Load(const CDM::ScalarOsmolarityData& in)
+  {
+    io::Property::UnMarshall(in, *this);
+    return IsValid();
+  }
+  //-------------------------------------------------------------------------------
+  CDM::ScalarOsmolarityData* SEScalarOsmolarity::Unload() const
+  {
+    if (!IsValid())
+      return nullptr;
+    CDM::ScalarOsmolarityData* data(new CDM::ScalarOsmolarityData());
+    Unload(*data);
+    return data;
+  } //-------------------------------------------------------------------------------
+  void SEScalarOsmolarity::Unload(CDM::ScalarOsmolarityData& data) const
+  {
+    io::Property::Marshall(*this, data);
+  }
+  //-------------------------------------------------------------------------------
 bool OsmolarityUnit::IsValidUnit(const char* unit)
 {
   if (strcmp(Osm_Per_L.GetString(), unit) == 0)
@@ -75,16 +89,6 @@ const OsmolarityUnit& OsmolarityUnit::GetCompoundUnit(const char* unit)
 const OsmolarityUnit& OsmolarityUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
-}
-//-------------------------------------------------------------------------------
-bool OsmolarityUnit::operator==(const OsmolarityUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool OsmolarityUnit::operator!=(const OsmolarityUnit& obj) const
-{
-  return !(*this == obj);
 }
 //-------------------------------------------------------------------------------
 }

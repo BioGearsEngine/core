@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 
+// Private Includes
+#include <io/cdm/Property.h>
+
 namespace biogears {
 const FlowComplianceUnit FlowComplianceUnit::L_Per_cmH2O("L/cmH2O");
 const FlowComplianceUnit FlowComplianceUnit::mL_Per_mmHg("mL/mmHg");
@@ -42,13 +45,23 @@ SEScalarFlowCompliance::~SEScalarFlowCompliance()
 {
 }
 //-----------------------------------------------------------------------------
+bool SEScalarFlowCompliance::Load(const CDM::ScalarFlowComplianceData& in)
+{
+  io::Property::UnMarshall(in, *this);
+  return IsValid();
+}
+//-------------------------------------------------------------------------------
 CDM::ScalarFlowComplianceData* SEScalarFlowCompliance::Unload() const
 {
   if (!IsValid())
     return nullptr;
   CDM::ScalarFlowComplianceData* data(new CDM::ScalarFlowComplianceData());
-  SEScalarQuantity::Unload(*data);
+  Unload(*data);
   return data;
+} //-------------------------------------------------------------------------------
+void SEScalarFlowCompliance::Unload(CDM::ScalarFlowComplianceData& data) const
+{
+  io::Property::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool FlowComplianceUnit::IsValidUnit(const char* unit)
@@ -88,15 +101,6 @@ const FlowComplianceUnit& FlowComplianceUnit::GetCompoundUnit(const std::string&
 {
   return GetCompoundUnit(unit.c_str());
 }
-//-----------------------------------------------------------------------------
-bool FlowComplianceUnit::operator==(const FlowComplianceUnit& obj) const
-{
-  return CCompoundUnit::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool FlowComplianceUnit::operator!=(const FlowComplianceUnit& obj) const
-{
-  return !(*this == obj);
-}
+
 //-------------------------------------------------------------------------------
 }

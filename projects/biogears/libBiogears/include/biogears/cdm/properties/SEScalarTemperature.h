@@ -22,9 +22,6 @@ public:
 
   virtual ~TemperatureUnit();
 
-  bool operator==(const TemperatureUnit&) const;
-  bool operator!=(const TemperatureUnit&) const;
-
   static bool IsValidUnit(const char* unit);
   static bool IsValidUnit(const std::string& unit);
   static const TemperatureUnit& GetCompoundUnit(const char* unit);
@@ -47,5 +44,10 @@ public:
 
   using SEScalarQuantity<TemperatureUnit>::SetValue;
   double GetValue(const TemperatureUnit& unit) const override; // Zero is not Zero for all units, gotta remove that logic for this scalar type    
+  bool Load(const CDM::ScalarTemperatureData& in);
+
+protected:
+  virtual void Unload(CDM::ScalarTemperatureData& data) const;
+
 };
 }
