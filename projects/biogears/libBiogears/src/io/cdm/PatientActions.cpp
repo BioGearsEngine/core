@@ -626,7 +626,7 @@ namespace io {
 
     out.AppendToPrevious(false);
     for (SEConsciousRespirationCommand* cmd : in.m_Commands) {
-      auto cmdData = std::unique_ptr<CDM::ConsciousRespirationCommandData>();
+      auto cmdData = std::make_unique<CDM::ConsciousRespirationCommandData>();
       PatientActions::Marshall(*cmd, *cmdData);
       out.Command().push_back(std::move(cmdData));
     }
