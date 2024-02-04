@@ -22,6 +22,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
 
+//Private Includes
+#include <io/cdm/Physiology.h>
+
 namespace biogears {
 constexpr char idCarbonDioxideProductionRate[] = "CarbonDioxideProductionRate";
 constexpr char idDehydrationFraction[] = "DehydrationFraction";
@@ -146,46 +149,7 @@ const SEScalar* SETissueSystem::GetScalar(const std::string& name)
 //-------------------------------------------------------------------------------
 bool SETissueSystem::Load(const CDM::TissueSystemData& in)
 {
-  SESystem::Load(in);
-  if (in.CarbonDioxideProductionRate().present())
-    GetCarbonDioxideProductionRate().Load(in.CarbonDioxideProductionRate().get());
-  if (in.DehydrationFraction().present())
-    GetDehydrationFraction().Load(in.DehydrationFraction().get());
-  if (in.ExtracellularFluidVolume().present())
-    GetExtracellularFluidVolume().Load(in.ExtracellularFluidVolume().get());
-  if (in.ExtravascularFluidVolume().present())
-    GetExtravascularFluidVolume().Load(in.ExtravascularFluidVolume().get());
-  if (in.IntracellularFluidPH().present())
-    GetIntracellularFluidPH().Load(in.IntracellularFluidPH().get());
-  if (in.IntracellularFluidVolume().present())
-    GetIntracellularFluidVolume().Load(in.IntracellularFluidVolume().get());
-  if (in.TotalBodyFluidVolume().present())
-    GetTotalBodyFluidVolume().Load(in.TotalBodyFluidVolume().get());
-  if (in.OxygenConsumptionRate().present())
-    GetOxygenConsumptionRate().Load(in.OxygenConsumptionRate().get());
-  if (in.RespiratoryExchangeRatio().present())
-    GetRespiratoryExchangeRatio().Load(in.RespiratoryExchangeRatio().get());
-  if (in.LiverInsulinSetPoint().present())
-    GetLiverInsulinSetPoint().Load(in.LiverInsulinSetPoint().get());
-  if (in.LiverGlucagonSetPoint().present())
-    GetLiverGlucagonSetPoint().Load(in.LiverGlucagonSetPoint().get());
-  if (in.MuscleInsulinSetPoint().present())
-    GetMuscleInsulinSetPoint().Load(in.MuscleInsulinSetPoint().get());
-  if (in.MuscleGlucagonSetPoint().present())
-    GetMuscleGlucagonSetPoint().Load(in.MuscleGlucagonSetPoint().get());
-  if (in.FatInsulinSetPoint().present())
-    GetFatInsulinSetPoint().Load(in.FatInsulinSetPoint().get());
-  if (in.FatGlucagonSetPoint().present())
-    GetFatGlucagonSetPoint().Load(in.FatGlucagonSetPoint().get());
-  if (in.LiverGlycogen().present())
-    GetLiverGlycogen().Load(in.LiverGlycogen().get());
-  if (in.MuscleGlycogen().present())
-    GetMuscleGlycogen().Load(in.MuscleGlycogen().get());
-  if (in.StoredProtein().present())
-    GetStoredProtein().Load(in.StoredProtein().get());
-  if (in.StoredFat().present())
-    GetStoredFat().Load(in.StoredFat().get());
-
+  io::Physiology::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -198,46 +162,7 @@ CDM::TissueSystemData* SETissueSystem::Unload() const
 //-------------------------------------------------------------------------------
 void SETissueSystem::Unload(CDM::TissueSystemData& data) const
 {
-  if (m_CarbonDioxideProductionRate != nullptr)
-    data.CarbonDioxideProductionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_CarbonDioxideProductionRate->Unload()));
-  if (m_DehydrationFraction != nullptr)
-    data.DehydrationFraction(std::unique_ptr<CDM::Scalar0To1Data>(m_DehydrationFraction->Unload()));
-  if (m_ExtracellularFluidVolume != nullptr)
-    data.ExtracellularFluidVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_ExtracellularFluidVolume->Unload()));
-  if (m_ExtravascularFluidVolume != nullptr)
-    data.ExtravascularFluidVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_ExtravascularFluidVolume->Unload()));
-  if (m_IntracellularFluidPH != nullptr)
-    data.IntracellularFluidPH(std::unique_ptr<CDM::ScalarData>(m_IntracellularFluidPH->Unload()));
-  if (m_IntracellularFluidVolume != nullptr)
-    data.IntracellularFluidVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_IntracellularFluidVolume->Unload()));
-  if (m_TotalBodyFluidVolume != nullptr)
-    data.TotalBodyFluidVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_TotalBodyFluidVolume->Unload()));
-  if (m_OxygenConsumptionRate != nullptr)
-    data.OxygenConsumptionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_OxygenConsumptionRate->Unload()));
-  if (m_RespiratoryExchangeRatio != nullptr)
-    data.RespiratoryExchangeRatio(std::unique_ptr<CDM::ScalarData>(m_RespiratoryExchangeRatio->Unload()));
-  if (m_LiverInsulinSetPoint != nullptr)
-    data.LiverInsulinSetPoint(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_LiverInsulinSetPoint->Unload()));
-  if (m_LiverGlucagonSetPoint != nullptr)
-    data.LiverGlucagonSetPoint(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_LiverGlucagonSetPoint->Unload()));
-  if (m_MuscleInsulinSetPoint != nullptr)
-    data.MuscleInsulinSetPoint(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_MuscleInsulinSetPoint->Unload()));
-  if (m_MuscleGlucagonSetPoint != nullptr)
-    data.MuscleGlucagonSetPoint(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_MuscleGlucagonSetPoint->Unload()));
-  if (m_FatInsulinSetPoint != nullptr)
-    data.FatInsulinSetPoint(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_FatInsulinSetPoint->Unload()));
-  if (m_FatGlucagonSetPoint != nullptr)
-    data.FatGlucagonSetPoint(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_FatGlucagonSetPoint->Unload()));
-  if (m_LiverGlycogen != nullptr)
-    data.LiverGlycogen(std::unique_ptr<CDM::ScalarMassData>(m_LiverGlycogen->Unload()));
-  if (m_MuscleGlycogen != nullptr)
-    data.MuscleGlycogen(std::unique_ptr<CDM::ScalarMassData>(m_MuscleGlycogen->Unload()));
-  if (m_StoredProtein != nullptr)
-    data.StoredProtein(std::unique_ptr<CDM::ScalarMassData>(m_StoredProtein->Unload()));
-  if (m_StoredFat != nullptr)
-    data.StoredFat(std::unique_ptr<CDM::ScalarMassData>(m_StoredFat->Unload()));
-
-  SESystem::Unload(data);
+  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SETissueSystem::HasCarbonDioxideProductionRate() const

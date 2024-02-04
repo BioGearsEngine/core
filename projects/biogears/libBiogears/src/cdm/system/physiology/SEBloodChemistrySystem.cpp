@@ -24,6 +24,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
 
+// Private Includes
+#include <io/cdm/Physiology.h>
+
 namespace biogears {
 constexpr char idArterialBloodPH[] = "ArterialBloodPH";
 constexpr char idArterialBloodPHBaseline[] = "ArterialBloodPHBaseline";
@@ -305,122 +308,7 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
 
 bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
 {
-  SESystem::Load(in);
-
-  if (in.ArterialBloodPH().present()) {
-    GetArterialBloodPH().Load(in.ArterialBloodPH().get());
-  }
-  if (in.ArterialBloodPHBaseline().present()) {
-    GetArterialBloodPHBaseline().Load(in.ArterialBloodPHBaseline().get());
-  }
-  if (in.BloodDensity().present()) {
-    GetBloodDensity().Load(in.BloodDensity().get());
-  }
-  if (in.BloodSpecificHeat().present()) {
-    GetBloodSpecificHeat().Load(in.BloodSpecificHeat().get());
-  }
-  if (in.BloodUreaNitrogenConcentration().present()) {
-    GetBloodUreaNitrogenConcentration().Load(in.BloodUreaNitrogenConcentration().get());
-  }
-  if (in.CarbonDioxideSaturation().present()) {
-    GetCarbonDioxideSaturation().Load(in.CarbonDioxideSaturation().get());
-  }
-  if (in.CarbonMonoxideSaturation().present()) {
-    GetCarbonMonoxideSaturation().Load(in.CarbonMonoxideSaturation().get());
-  }
-  if (in.Hematocrit().present()) {
-    GetHematocrit().Load(in.Hematocrit().get());
-  }
-  if (in.HemoglobinContent().present()) {
-    GetHemoglobinContent().Load(in.HemoglobinContent().get());
-  }
-  if (in.HemoglobinLostToUrine().present()) {
-    GetHemoglobinLostToUrine().Load(in.HemoglobinLostToUrine().get());
-  }
-  if (in.LymphocyteCellCount().present()) {
-    GetLymphocyteCellCount().Load(in.LymphocyteCellCount().get());
-  }
-  if (in.NeutrophilCellCount().present()) {
-    GetNeutrophilCellCount().Load(in.NeutrophilCellCount().get());
-  }
-  if (in.OxygenSaturation().present()) {
-    GetOxygenSaturation().Load(in.OxygenSaturation().get());
-  }
-  if (in.OxygenVenousSaturation().present()) {
-    GetOxygenVenousSaturation().Load(in.OxygenVenousSaturation().get());
-  }
-  if (in.Phosphate().present()) {
-    GetPhosphate().Load(in.Phosphate().get());
-  }
-  if (in.PlasmaVolume().present()) {
-    GetPlasmaVolume().Load(in.PlasmaVolume().get());
-  }
-  if (in.PulseOximetry().present()) {
-    GetPulseOximetry().Load(in.PulseOximetry().get());
-  }
-  if (in.RedBloodCellAcetylcholinesterase().present()) {
-    GetRedBloodCellAcetylcholinesterase().Load(in.RedBloodCellAcetylcholinesterase().get());
-  }
-  if (in.RedBloodCellCount().present()) {
-    GetRedBloodCellCount().Load(in.RedBloodCellCount().get());
-  }
-  if (in.RhTransfusionReactionVolume().present()) {
-    GetRhTransfusionReactionVolume().Load(in.RhTransfusionReactionVolume().get());
-  }
-  if (in.ShuntFraction().present()) {
-    GetShuntFraction().Load(in.ShuntFraction().get());
-  }
-  if (in.StrongIonDifference().present()) {
-    GetStrongIonDifference().Load(in.StrongIonDifference().get());
-  }
-  if (in.TotalBilirubin().present()) {
-    GetTotalBilirubin().Load(in.TotalBilirubin().get());
-  }
-  if (in.TotalProteinConcentration().present()) {
-    GetTotalProteinConcentration().Load(in.TotalProteinConcentration().get());
-  }
-  if (in.VenousBloodPH().present()) {
-    GetVenousBloodPH().Load(in.VenousBloodPH().get());
-  }
-  if (in.VolumeFractionNeutralPhospholipidInPlasma().present()) {
-    GetVolumeFractionNeutralPhospholipidInPlasma().Load(in.VolumeFractionNeutralPhospholipidInPlasma().get());
-  }
-  if (in.VolumeFractionNeutralLipidInPlasma().present()) {
-    GetVolumeFractionNeutralLipidInPlasma().Load(in.VolumeFractionNeutralLipidInPlasma().get());
-  }
-  if (in.WhiteBloodCellCount().present()) {
-    GetWhiteBloodCellCount().Load(in.WhiteBloodCellCount().get());
-  }
-  if (in.ArterialCarbonDioxidePressure().present()) {
-    GetArterialCarbonDioxidePressure().Load(in.ArterialCarbonDioxidePressure().get());
-  }
-  if (in.ArterialOxygenPressure().present()) {
-    GetArterialOxygenPressure().Load(in.ArterialOxygenPressure().get());
-  }
-  if (in.PulmonaryArterialCarbonDioxidePressure().present()) {
-    GetPulmonaryArterialCarbonDioxidePressure().Load(in.PulmonaryArterialCarbonDioxidePressure().get());
-  }
-  if (in.PulmonaryArterialOxygenPressure().present()) {
-    GetPulmonaryArterialOxygenPressure().Load(in.PulmonaryArterialOxygenPressure().get());
-  }
-  if (in.PulmonaryVenousOxygenPressure().present()) {
-    GetPulmonaryVenousOxygenPressure().Load(in.PulmonaryVenousOxygenPressure().get());
-  }
-  if (in.PulmonaryVenousCarbonDioxidePressure().present()) {
-    GetPulmonaryVenousCarbonDioxidePressure().Load(in.PulmonaryVenousCarbonDioxidePressure().get());
-  }
-  if (in.VenousCarbonDioxidePressure().present()) {
-    GetVenousCarbonDioxidePressure().Load(in.VenousCarbonDioxidePressure().get());
-  }
-  if (in.VenousOxygenPressure().present()) {
-    GetVenousOxygenPressure().Load(in.VenousOxygenPressure().get());
-  }
-  if (in.ViralLoad().present()) {
-    GetViralLoad().Load(in.ViralLoad().get());
-  }
-  if (in.InflammatoryResponse().present()) {
-    GetInflammatoryResponse().Load(in.InflammatoryResponse().get());
-  }
+  io::Physiology::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -435,122 +323,7 @@ CDM::BloodChemistrySystemData* SEBloodChemistrySystem::Unload() const
 
 void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
 {
-  SESystem::Unload(data);
-
-  if (m_ArterialBloodPH != nullptr) {
-    data.ArterialBloodPH(std::unique_ptr<CDM::ScalarData>(m_ArterialBloodPH->Unload()));
-  }
-  if (m_ArterialBloodPHBaseline != nullptr) {
-    data.ArterialBloodPHBaseline(std::unique_ptr<CDM::ScalarData>(m_ArterialBloodPHBaseline->Unload()));
-  }
-  if (m_BloodDensity != nullptr) {
-    data.BloodDensity(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BloodDensity->Unload()));
-  }
-  if (m_BloodSpecificHeat != nullptr) {
-    data.BloodSpecificHeat(std::unique_ptr<CDM::ScalarHeatCapacitancePerMassData>(m_BloodSpecificHeat->Unload()));
-  }
-  if (m_BloodUreaNitrogenConcentration != nullptr) {
-    data.BloodUreaNitrogenConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BloodUreaNitrogenConcentration->Unload()));
-  }
-  if (m_CarbonDioxideSaturation != nullptr) {
-    data.CarbonDioxideSaturation(std::unique_ptr<CDM::ScalarFractionData>(m_CarbonDioxideSaturation->Unload()));
-  }
-  if (m_CarbonMonoxideSaturation != nullptr) {
-    data.CarbonMonoxideSaturation(std::unique_ptr<CDM::ScalarFractionData>(m_CarbonMonoxideSaturation->Unload()));
-  }
-  if (m_Hematocrit != nullptr) {
-    data.Hematocrit(std::unique_ptr<CDM::ScalarFractionData>(m_Hematocrit->Unload()));
-  }
-  if (m_HemoglobinContent != nullptr) {
-    data.HemoglobinContent(std::unique_ptr<CDM::ScalarMassData>(m_HemoglobinContent->Unload()));
-  }
-  if (m_HemoglobinLostToUrine != nullptr) {
-    data.HemoglobinLostToUrine(std::unique_ptr<CDM::ScalarMassData>(m_HemoglobinLostToUrine->Unload()));
-  }
-  if (m_LymphocyteCellCount != nullptr) {
-    data.LymphocyteCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_LymphocyteCellCount->Unload()));
-  }
-  if (m_NeutrophilCellCount != nullptr) {
-    data.NeutrophilCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_NeutrophilCellCount->Unload()));
-  }
-  if (m_OxygenSaturation != nullptr) {
-    data.OxygenSaturation(std::unique_ptr<CDM::ScalarFractionData>(m_OxygenSaturation->Unload()));
-  }
-  if (m_OxygenVenousSaturation != nullptr) {
-    data.OxygenVenousSaturation(std::unique_ptr<CDM::ScalarFractionData>(m_OxygenVenousSaturation->Unload()));
-  }
-  if (m_Phosphate != nullptr) {
-    data.Phosphate(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_Phosphate->Unload()));
-  }
-  if (m_PlasmaVolume != nullptr) {
-    data.PlasmaVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_PlasmaVolume->Unload()));
-  }
-  if (m_PulseOximetry != nullptr) {
-    data.PulseOximetry(std::unique_ptr<CDM::ScalarFractionData>(m_PulseOximetry->Unload()));
-  }
-  if (m_RedBloodCellAcetylcholinesterase != nullptr) {
-    data.RedBloodCellAcetylcholinesterase(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_RedBloodCellAcetylcholinesterase->Unload()));
-  }
-  if (m_RedBloodCellCount != nullptr) {
-    data.RedBloodCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_RedBloodCellCount->Unload()));
-  }
-  if (m_RhTransfusionReactionVolume != nullptr) {
-    data.RhTransfusionReactionVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_RhTransfusionReactionVolume->Unload()));
-  }
-  if (m_ShuntFraction != nullptr) {
-    data.ShuntFraction(std::unique_ptr<CDM::ScalarFractionData>(m_ShuntFraction->Unload()));
-  }
-  if (m_StrongIonDifference != nullptr) {
-    data.StrongIonDifference(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_StrongIonDifference->Unload()));
-  }
-  if (m_TotalBilirubin != nullptr) {
-    data.TotalBilirubin(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TotalBilirubin->Unload()));
-  }
-  if (m_TotalProteinConcentration != nullptr) {
-    data.TotalProteinConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TotalProteinConcentration->Unload()));
-  }
-  if (m_VolumeFractionNeutralPhospholipidInPlasma != nullptr) {
-    data.VolumeFractionNeutralPhospholipidInPlasma(std::unique_ptr<CDM::ScalarFractionData>(m_VolumeFractionNeutralPhospholipidInPlasma->Unload()));
-  }
-  if (m_VolumeFractionNeutralLipidInPlasma != nullptr) {
-    data.VolumeFractionNeutralLipidInPlasma(std::unique_ptr<CDM::ScalarFractionData>(m_VolumeFractionNeutralLipidInPlasma->Unload()));
-  }
-  if (m_WhiteBloodCellCount != nullptr) {
-    data.WhiteBloodCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_WhiteBloodCellCount->Unload()));
-  }
-  if (m_ArterialCarbonDioxidePressure != nullptr) {
-    data.ArterialCarbonDioxidePressure(std::unique_ptr<CDM::ScalarPressureData>(m_ArterialCarbonDioxidePressure->Unload()));
-  }
-  if (m_ArterialOxygenPressure != nullptr) {
-    data.ArterialOxygenPressure(std::unique_ptr<CDM::ScalarPressureData>(m_ArterialOxygenPressure->Unload()));
-  }
-  if (m_PulmonaryArterialCarbonDioxidePressure != nullptr) {
-    data.PulmonaryArterialCarbonDioxidePressure(std::unique_ptr<CDM::ScalarPressureData>(m_PulmonaryArterialCarbonDioxidePressure->Unload()));
-  }
-  if (m_PulmonaryArterialOxygenPressure != nullptr) {
-    data.PulmonaryArterialOxygenPressure(std::unique_ptr<CDM::ScalarPressureData>(m_PulmonaryArterialOxygenPressure->Unload()));
-  }
-  if (m_PulmonaryVenousCarbonDioxidePressure != nullptr) {
-    data.PulmonaryVenousCarbonDioxidePressure(std::unique_ptr<CDM::ScalarPressureData>(m_PulmonaryVenousCarbonDioxidePressure->Unload()));
-  }
-  if (m_PulmonaryVenousOxygenPressure != nullptr) {
-    data.PulmonaryVenousOxygenPressure(std::unique_ptr<CDM::ScalarPressureData>(m_PulmonaryVenousOxygenPressure->Unload()));
-  }
-  if (m_VenousCarbonDioxidePressure != nullptr) {
-    data.VenousCarbonDioxidePressure(std::unique_ptr<CDM::ScalarPressureData>(m_VenousCarbonDioxidePressure->Unload()));
-  }
-  if (m_VenousBloodPH != nullptr) {
-    data.VenousBloodPH(std::unique_ptr<CDM::ScalarData>(m_VenousBloodPH->Unload()));
-  }
-  if (m_VenousOxygenPressure != nullptr) {
-    data.VenousOxygenPressure(std::unique_ptr<CDM::ScalarPressureData>(m_VenousOxygenPressure->Unload()));
-  }
-  if (m_ViralLoad != nullptr) {
-    data.ViralLoad(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_ViralLoad->Unload()));
-  }
-  if (m_InflammatoryResponse != nullptr) {
-    data.InflammatoryResponse(std::unique_ptr<CDM::InflammatoryResponseData>(m_InflammatoryResponse->Unload()));
-  }
+  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 

@@ -19,6 +19,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Includes
+#include <io/cdm/Physiology.h>
+
 namespace std {
 template class map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
 }
@@ -74,12 +77,7 @@ const SEScalar* SEGastrointestinalSystem::GetScalar(const std::string& name)
 //-------------------------------------------------------------------------------
 bool SEGastrointestinalSystem::Load(const CDM::GastrointestinalSystemData& in)
 {
-  SESystem::Load(in);
-  if (in.ChymeAbsorptionRate().present())
-    GetChymeAbsorptionRate().Load(in.ChymeAbsorptionRate().get());
-  if (in.StomachContents().present())
-    GetStomachContents().Load(in.StomachContents().get());
-
+  io::Physiology::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -92,15 +90,7 @@ CDM::GastrointestinalSystemData* SEGastrointestinalSystem::Unload() const
 //-------------------------------------------------------------------------------
 void SEGastrointestinalSystem::Unload(CDM::GastrointestinalSystemData& data) const
 {
-  SESystem::Unload(data);
-  if (m_ChymeAbsorptionRate != nullptr)
-    data.ChymeAbsorptionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_ChymeAbsorptionRate->Unload()));
-  if (m_StomachContents != nullptr)
-    data.StomachContents(std::unique_ptr<CDM::NutritionData>(m_StomachContents->Unload()));
-  for (auto itr : m_DrugTransitStates) {
-    if (itr.second != nullptr)
-      data.DrugTransitStates().push_back(std::unique_ptr<CDM::DrugTransitStateData>(itr.second->Unload()));
-  }
+  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEGastrointestinalSystem::HasChymeAbsorptionRate() const
@@ -434,5 +424,5 @@ bool SEDrugTransitState::operator!=(SEDrugTransitState const& rhs) const
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
-
-};
+}
+;

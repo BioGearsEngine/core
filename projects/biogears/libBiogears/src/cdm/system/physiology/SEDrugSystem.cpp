@@ -24,6 +24,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
 
+// Private Includes
+#include <io/cdm/Physiology.h>
+
 namespace biogears {
 constexpr char idAntibioticActivity[] = "AntibioticActivity";
 constexpr char idBronchodilationLevel[] = "BronchodilationLevel";
@@ -90,37 +93,7 @@ void SEDrugSystem::Clear()
 
 bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
 {
-  SESystem::Load(in);
-
-  if (in.AntibioticActivity().present())
-    GetAntibioticActivity().Load(in.AntibioticActivity().get());
-  if (in.BronchodilationLevel().present())
-    GetBronchodilationLevel().Load(in.BronchodilationLevel().get());
-  if (in.FeverChange().present())
-    GetFeverChange().Load(in.FeverChange().get());
-  if (in.HeartRateChange().present())
-    GetHeartRateChange().Load(in.HeartRateChange().get());
-  if (in.HemorrhageChange().present())
-    GetHemorrhageChange().Load(in.HemorrhageChange().get());
-  if (in.MeanBloodPressureChange().present())
-    GetMeanBloodPressureChange().Load(in.MeanBloodPressureChange().get());
-  if (in.NeuromuscularBlockLevel().present())
-    GetNeuromuscularBlockLevel().Load(in.NeuromuscularBlockLevel().get());
-  if (in.PainToleranceChange().present())
-    GetPainToleranceChange().Load(in.PainToleranceChange().get());
-  if (in.PulsePressureChange().present())
-    GetPulsePressureChange().Load(in.PulsePressureChange().get());
-  if (in.RespirationRateChange().present())
-    GetRespirationRateChange().Load(in.RespirationRateChange().get());
-  if (in.SedationLevel().present())
-    GetSedationLevel().Load(in.SedationLevel().get());
-  if (in.TidalVolumeChange().present())
-    GetTidalVolumeChange().Load(in.TidalVolumeChange().get());
-  if (in.TubularPermeabilityChange().present())
-    GetTubularPermeabilityChange().Load(in.TubularPermeabilityChange().get());
-  if (in.CentralNervousResponse().present())
-    GetCentralNervousResponse().Load(in.CentralNervousResponse().get());
-
+  io::Physiology::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -174,36 +147,7 @@ CDM::DrugSystemData* SEDrugSystem::Unload() const
 
 void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
 {
-  SESystem::Unload(data);
-
-  if (m_AntibioticActivity != nullptr)
-    data.AntibioticActivity(std::unique_ptr<CDM::ScalarData>(m_AntibioticActivity->Unload()));
-  if (m_BronchodilationLevel != nullptr)
-    data.BronchodilationLevel(std::unique_ptr<CDM::ScalarFractionData>(m_BronchodilationLevel->Unload()));
-  if (m_FeverChange != nullptr)
-    data.FeverChange(std::unique_ptr<CDM::ScalarTemperatureData>(m_FeverChange->Unload()));
-  if (m_HeartRateChange != nullptr)
-    data.HeartRateChange(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateChange->Unload()));
-  if (m_HemorrhageChange != nullptr)
-    data.HemorrhageChange(std::unique_ptr<CDM::ScalarFractionData>(m_HemorrhageChange->Unload()));
-  if (m_MeanBloodPressureChange != nullptr)
-    data.MeanBloodPressureChange(std::unique_ptr<CDM::ScalarPressureData>(m_MeanBloodPressureChange->Unload()));
-  if (m_NeuromuscularBlockLevel != nullptr)
-    data.NeuromuscularBlockLevel(std::unique_ptr<CDM::ScalarFractionData>(m_NeuromuscularBlockLevel->Unload()));
-  if (m_PainToleranceChange != nullptr)
-    data.PainToleranceChange(std::unique_ptr<CDM::ScalarFractionData>(m_PainToleranceChange->Unload()));
-  if (m_PulsePressureChange != nullptr)
-    data.PulsePressureChange(std::unique_ptr<CDM::ScalarPressureData>(m_PulsePressureChange->Unload()));
-  if (m_RespirationRateChange != nullptr)
-    data.RespirationRateChange(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRateChange->Unload()));
-  if (m_SedationLevel != nullptr)
-    data.SedationLevel(std::unique_ptr<CDM::ScalarFractionData>(m_SedationLevel->Unload()));
-  if (m_TidalVolumeChange != nullptr)
-    data.TidalVolumeChange(std::unique_ptr<CDM::ScalarVolumeData>(m_TidalVolumeChange->Unload()));
-  if (m_TubularPermeabilityChange != nullptr)
-    data.TubularPermeabilityChange(std::unique_ptr<CDM::ScalarFractionData>(m_TubularPermeabilityChange->Unload()));
-  if (m_CentralNervousResponse != nullptr)
-    data.CentralNervousResponse(std::unique_ptr<CDM::ScalarFractionData>(m_CentralNervousResponse->Unload()));
+  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 
