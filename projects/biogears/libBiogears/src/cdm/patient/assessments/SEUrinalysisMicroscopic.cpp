@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarAmount.h>
 
+//Private Include
+#include <io/cdm/PatientAssessments.h>
+
 namespace biogears {
 SEUrinalysisMicroscopic::SEUrinalysisMicroscopic()
 
@@ -63,7 +66,7 @@ void SEUrinalysisMicroscopic::Reset()
 //-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::Load(const CDM::UrinalysisMicroscopicData& in)
 {
-  SEPatientAssessment::Load(in);
+  io::PatientAssessments::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -76,24 +79,7 @@ CDM::UrinalysisMicroscopicData* SEUrinalysisMicroscopic::Unload()
 //-------------------------------------------------------------------------------
 void SEUrinalysisMicroscopic::Unload(CDM::UrinalysisMicroscopicData& data)
 {
-  if (HasObservationType())
-    data.ObservationType(m_ObservationType);
-  if (HasRedBloodCellsResult())
-    data.RedBloodCells(std::unique_ptr<CDM::ScalarAmountData>(m_RedBloodCells->Unload()));
-  if (HasWhiteBloodCellsResult())
-    data.WhiteBloodCells(std::unique_ptr<CDM::ScalarAmountData>(m_WhiteBloodCells->Unload()));
-  if (HasEpithelialCellsResult())
-    data.EpithelialCells(m_EpithelialCells);
-  if (HasCastsResult())
-    data.Casts(std::unique_ptr<CDM::ScalarAmountData>(m_Casts->Unload()));
-  if (HasCrystalsResult())
-    data.Crystals(m_Crystals);
-  if (HasBacteriaResult())
-    data.Bacteria(m_Bacteria);
-  if (HasTrichomonadsResult())
-    data.Trichomonads(m_Trichomonads);
-  if (HasYeastResult())
-    data.Yeast(m_Yeast);
+  io::PatientAssessments::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::HasRedBloodCellsResult() const

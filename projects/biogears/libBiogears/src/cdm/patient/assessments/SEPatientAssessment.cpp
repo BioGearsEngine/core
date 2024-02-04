@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
+// Private Include
+#include <io/cdm/PatientAssessments.h>
+
 namespace biogears {
 SEPatientAssessment::SEPatientAssessment()
 {
@@ -33,6 +36,7 @@ void SEPatientAssessment::Reset()
 
 bool SEPatientAssessment::Load(const CDM::PatientAssessmentData& in)
 {
+  io::PatientAssessments::UnMarshall(in, *this);
   return true;
 }
 
@@ -45,5 +49,6 @@ CDM::PatientAssessmentData* SEPatientAssessment::Unload()
 
 void SEPatientAssessment::Unload(CDM::PatientAssessmentData& data)
 {
+  io::PatientAssessments::Marshall(*this, data);
 }
 }

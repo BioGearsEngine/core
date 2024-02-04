@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
+// Private Include
+#include <io/cdm/PatientAssessments.h>
+
 namespace biogears {
 SEUrinalysis::SEUrinalysis()
 {
@@ -79,7 +82,7 @@ void SEUrinalysis::Reset()
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::Load(const CDM::UrinalysisData& in)
 {
-  SEPatientAssessment::Load(in);
+  io::PatientAssessments::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -92,34 +95,7 @@ CDM::UrinalysisData* SEUrinalysis::Unload()
 //-------------------------------------------------------------------------------
 void SEUrinalysis::Unload(CDM::UrinalysisData& data)
 {
-  SEPatientAssessment::Unload(data);
-  if (HasColorResult())
-    data.Color(m_Color);
-  if (HasAppearanceResult())
-    data.Appearance(m_Appearance);
-  if (HasGlucoseResult())
-    data.Glucose(m_Glucose);
-  if (HasKetoneResult())
-    data.Ketone(m_Ketone);
-  if (HasBilirubinResult())
-    data.Bilirubin(std::unique_ptr<CDM::ScalarData>(m_Bilirubin->Unload()));
-  if (HasSpecificGravityResult())
-    data.SpecificGravity(std::unique_ptr<CDM::ScalarData>(m_SpecificGravity->Unload()));
-  if (HasBloodResult())
-    data.Blood(m_Blood);
-  if (HasPHResult())
-    data.pH(std::unique_ptr<CDM::ScalarData>(m_pH->Unload()));
-  if (HasProteinResult())
-    data.Protein(m_Protein);
-  if (HasUrobilinogenResult())
-    data.Urobilinogen(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Urobilinogen->Unload()));
-  if (HasNitriteResult())
-    data.Nitrite(m_Nitrite);
-  if (HasLeukocyteEsteraseResult())
-    data.LeukocyteEsterase(m_LeukocyteEsterase);
-
-  if (HasMicroscopicResult())
-    data.Microscopic(std::unique_ptr<CDM::UrinalysisMicroscopicData>(m_Microscopic->Unload()));
+  io::PatientAssessments::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasColorResult() const

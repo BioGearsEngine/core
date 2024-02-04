@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Include
+#include <io/cdm/PatientAssessments.h>
+
 namespace biogears {
 SEProthrombinTime::SEProthrombinTime()
 {
@@ -40,10 +43,7 @@ void SEProthrombinTime::Reset()
 //-------------------------------------------------------------------------------
 bool SEProthrombinTime::Load(const CDM::ProthrombinTimeData& in)
 {
-  SEPatientAssessment::Load(in);
-  if (in.InternationalNormalizedRatio().present()) {
-    GetInternationalNormalizedRatio().Load(in.InternationalNormalizedRatio().get());
-  }
+  io::PatientAssessments::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -56,9 +56,7 @@ CDM::ProthrombinTimeData* SEProthrombinTime::Unload()
 //-------------------------------------------------------------------------------
 void SEProthrombinTime::Unload(CDM::ProthrombinTimeData& data)
 {
-  SEPatientAssessment::Unload(data);
-  if (m_InternationalNormalizedRatio != nullptr)
-    data.InternationalNormalizedRatio(std::unique_ptr<CDM::ScalarData>(m_InternationalNormalizedRatio->Unload()));
+  io::PatientAssessments::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEProthrombinTime::HasInternationalNormalizedRatio()
