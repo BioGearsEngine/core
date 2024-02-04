@@ -22,6 +22,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/directories/nutrition.h>
 #endif
 
+//Private Includes
+#include <io/cdm/PatientNutrition.h>
+
 namespace biogears {
 SENutrition::SENutrition(Logger* logger)
   : Loggable(logger)
@@ -77,25 +80,7 @@ void SENutrition::Increment(const SENutrition& from)
 //-----------------------------------------------------------------------------
 bool SENutrition::Load(const CDM::NutritionData& in)
 {
-  Clear();
-
-  if (in.Name().present()) {
-    m_Name = in.Name().get();
-  } else {
-    m_Name = "Standard Meal";
-  }
-  if (in.Carbohydrate().present())
-    GetCarbohydrate().Load(in.Carbohydrate().get());
-  if (in.Fat().present())
-    GetFat().Load(in.Fat().get());
-  if (in.Protein().present())
-    GetProtein().Load(in.Protein().get());
-  if (in.Calcium().present())
-    GetCalcium().Load(in.Calcium().get());
-  if (in.Sodium().present())
-    GetSodium().Load(in.Sodium().get());
-  if (in.Water().present())
-    GetWater().Load(in.Water().get());
+  io::PatientNutrition::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -108,21 +93,7 @@ CDM::NutritionData* SENutrition::Unload() const
 //-----------------------------------------------------------------------------
 void SENutrition::Unload(CDM::NutritionData& data) const
 {
-  if (!m_Name.empty()) {
-    data.Name(m_Name);
-  }
-  if (m_Carbohydrate != nullptr)
-    data.Carbohydrate(std::unique_ptr<CDM::ScalarMassData>(m_Carbohydrate->Unload()));
-  if (m_Fat != nullptr)
-    data.Fat(std::unique_ptr<CDM::ScalarMassData>(m_Fat->Unload()));
-  if (m_Protein != nullptr)
-    data.Protein(std::unique_ptr<CDM::ScalarMassData>(m_Protein->Unload()));
-  if (m_Calcium != nullptr)
-    data.Calcium(std::unique_ptr<CDM::ScalarMassData>(m_Calcium->Unload()));
-  if (m_Sodium != nullptr)
-    data.Sodium(std::unique_ptr<CDM::ScalarMassData>(m_Sodium->Unload()));
-  if (m_Water != nullptr)
-    data.Water(std::unique_ptr<CDM::ScalarVolumeData>(m_Water->Unload()));
+  io::PatientNutrition::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SENutrition::GetScalar(const char* name)
