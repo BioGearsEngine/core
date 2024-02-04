@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+// Private Includes
+#include <io/cdm/Anesthesia.h>
+
 namespace biogears {
 SEAnesthesiaMachineChamber::SEAnesthesiaMachineChamber(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())
@@ -42,19 +45,7 @@ void SEAnesthesiaMachineChamber::Clear()
 
 bool SEAnesthesiaMachineChamber::Load(const CDM::AnesthesiaMachineChamberData& in)
 {
-  if (in.State().present())
-    SetState(in.State().get());
-  if (in.SubstanceFraction().present())
-    GetSubstanceFraction().Load(in.SubstanceFraction().get());
-  if (in.Substance().present()) {
-    m_Substance = m_Substances.GetSubstance(in.Substance().get());
-    if (m_Substance == nullptr) {
-      std::stringstream ss;
-      ss << "Do not have substance : " << in.Substance().get();
-      Error(ss);
-      return false;
-    }
-  }
+  io::Anesthesia::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -69,12 +60,7 @@ CDM::AnesthesiaMachineChamberData* SEAnesthesiaMachineChamber::Unload() const
 
 void SEAnesthesiaMachineChamber::Unload(CDM::AnesthesiaMachineChamberData& data) const
 {
-  if (HasState())
-    data.State(m_State);
-  if (m_SubstanceFraction != nullptr)
-    data.SubstanceFraction(std::unique_ptr<CDM::ScalarFractionData>(m_SubstanceFraction->Unload()));
-  if (HasSubstance())
-    data.Substance(m_Substance->GetName());
+  io::Anesthesia::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 
