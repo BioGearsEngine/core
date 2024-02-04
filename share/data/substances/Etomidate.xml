@@ -12,9 +12,6 @@
       <RenalClearance readOnly="false" unit="mL/min kg" value="25.0"/>
       <SystemicClearance readOnly="false" unit="mL/min kg" value="6.0"/>
     </Systemic>
-    <RenalDynamics>
-      <Clearance readOnly="false" unit="mL/min kg" value="0"/>
-    </RenalDynamics>
   </Clearance>
   <Pharmacokinetics>
     <Physicochemicals>
