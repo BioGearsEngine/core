@@ -18,6 +18,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 
+// Private Includes
+#include <io/cdm/InhalerActions.h>
+
 namespace biogears {
 SEInhalerConfiguration::SEInhalerConfiguration(SESubstanceManager& substances)
   : SEInhalerAction()
@@ -46,11 +49,7 @@ bool SEInhalerConfiguration::IsValid() const
 //-----------------------------------------------------------------------------
 bool SEInhalerConfiguration::Load(const CDM::InhalerConfigurationData& in)
 {
-  SEInhalerAction::Load(in);
-  if (in.ConfigurationFile().present())
-    SetConfigurationFile(in.ConfigurationFile().get());
-  if (in.Configuration().present())
-    GetConfiguration().Load(in.Configuration().get());
+  io::InhalerActions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -63,11 +62,7 @@ CDM::InhalerConfigurationData* SEInhalerConfiguration::Unload() const
 //-----------------------------------------------------------------------------
 void SEInhalerConfiguration::Unload(CDM::InhalerConfigurationData& data) const
 {
-  SEInhalerAction::Unload(data);
-  if (HasConfiguration())
-    data.Configuration(std::unique_ptr<CDM::InhalerData>(m_Configuration->Unload()));
-  else if (HasConfigurationFile())
-    data.ConfigurationFile(m_ConfigurationFile);
+  io::InhalerActions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEInhalerConfiguration::HasConfiguration() const
@@ -100,7 +95,7 @@ std::string SEInhalerConfiguration::GetConfigurationFile() const
 //-----------------------------------------------------------------------------
 void SEInhalerConfiguration::SetConfigurationFile(const char* fileName)
 {
-  SetConfigurationFile(std::string{ fileName });
+  SetConfigurationFile(std::string { fileName });
 }
 //-----------------------------------------------------------------------------
 void SEInhalerConfiguration::SetConfigurationFile(const std::string& fileName)
