@@ -10,42 +10,46 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
+
+// Prviate Includes
+#include <io/cdm/EnvironmentConditions.h>
+
 namespace biogears {
-	SEEnvironmentCondition::SEEnvironmentCondition()
-		: SECondition()
-	{
-	}
-  //-----------------------------------------------------------------------------
-	SEEnvironmentCondition::~SEEnvironmentCondition()
-	{
-		Clear();
-	}
-  //-----------------------------------------------------------------------------
-	void SEEnvironmentCondition::Clear()
-	{
-		SECondition::Clear();
-	}
-  //-----------------------------------------------------------------------------
-	bool SEEnvironmentCondition::IsValid() const
-	{
-		return SECondition::IsValid();
-	}
-  //-----------------------------------------------------------------------------
-	bool SEEnvironmentCondition::Load(const CDM::EnvironmentConditionData& in)
-	{
-		SECondition::Load(in);
-		return true;
-	}
-  //-----------------------------------------------------------------------------
-	CDM::EnvironmentConditionData* SEEnvironmentCondition::Unload() const
-	{
-		CDM::EnvironmentConditionData* data = new CDM::EnvironmentConditionData();
-		Unload(*data);
-		return data;
-	}
-  //-----------------------------------------------------------------------------
-	void SEEnvironmentCondition::Unload(CDM::EnvironmentConditionData& data) const
-	{
-		SECondition::Unload(data);
-	}
+SEEnvironmentCondition::SEEnvironmentCondition()
+  : SECondition()
+{
+}
+
+SEEnvironmentCondition::~SEEnvironmentCondition()
+{
+  Clear();
+}
+
+void SEEnvironmentCondition::Clear()
+{
+  SECondition::Clear();
+}
+
+bool SEEnvironmentCondition::IsValid() const
+{
+  return SECondition::IsValid();
+}
+
+bool SEEnvironmentCondition::Load(const CDM::EnvironmentConditionData& in)
+{
+  io::EnvironmentConditions::UnMarshall(in, *this);
+  return true;
+}
+
+CDM::EnvironmentConditionData* SEEnvironmentCondition::Unload() const
+{
+  CDM::EnvironmentConditionData* data = new CDM::EnvironmentConditionData();
+  Unload(*data);
+  return data;
+}
+
+void SEEnvironmentCondition::Unload(CDM::EnvironmentConditionData& data) const
+{
+  io::EnvironmentConditions::Marshall(*this, data);
+}
 }

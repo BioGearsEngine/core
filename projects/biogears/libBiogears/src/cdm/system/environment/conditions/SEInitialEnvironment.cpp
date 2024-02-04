@@ -23,6 +23,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+// Prviate Includes
+#include <io/cdm/EnvironmentConditions.h>
+
 namespace biogears {
 SEInitialEnvironment::SEInitialEnvironment(SESubstanceManager& substances)
   : SEEnvironmentCondition()
@@ -51,11 +54,7 @@ bool SEInitialEnvironment::IsValid() const
 //-----------------------------------------------------------------------------
 bool SEInitialEnvironment::Load(const CDM::InitialEnvironmentData& in)
 {
-  SEEnvironmentCondition::Load(in);
-  if (in.ConditionsFile().present())
-    SetConditionsFile(in.ConditionsFile().get());
-  if (in.Conditions().present())
-    GetConditions().Load(in.Conditions().get());
+  io::EnvironmentConditions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -68,11 +67,7 @@ CDM::InitialEnvironmentData* SEInitialEnvironment::Unload() const
 //-----------------------------------------------------------------------------
 void SEInitialEnvironment::Unload(CDM::InitialEnvironmentData& data) const
 {
-  SEEnvironmentCondition::Unload(data);
-  if (HasConditions())
-    data.Conditions(std::unique_ptr<CDM::EnvironmentalConditionsData>(m_Conditions->Unload()));
-  else if (HasConditionsFile())
-    data.ConditionsFile(m_ConditionsFile);
+  io::EnvironmentConditions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEInitialEnvironment::HasConditions() const
@@ -198,4 +193,5 @@ bool SEInitialEnvironment::operator!=(SECondition const& rhs) const
   return !(*this == rhs);
 }
 //-------------------------------------------------------------------------------
+
 }
