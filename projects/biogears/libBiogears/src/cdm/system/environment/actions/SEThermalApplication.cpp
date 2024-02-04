@@ -19,6 +19,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEActiveHeating.h>
 #include <biogears/cdm/system/environment/SEAppliedTemperature.h>
 
+// Private Include
+#include <io/cdm/EnvironmentActions.h>
+
 namespace biogears {
 SEThermalApplication::SEThermalApplication()
   : SEEnvironmentAction()
@@ -60,45 +63,7 @@ bool SEThermalApplication::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEThermalApplication::Load(const CDM::ThermalApplicationData& in)
 {
-  // Set this before our super class tells us to Clear if the action wants us to keep our current data
-  CDM::ActiveHeatingData* ah = HasActiveHeating() ? GetActiveHeating().Unload() : nullptr;
-  CDM::ActiveCoolingData* ac = HasActiveCooling() ? GetActiveCooling().Unload() : nullptr;
-  CDM::AppliedTemperatureData* at = HasAppliedTemperature() ? GetAppliedTemperature().Unload() : nullptr;
-
-  SEEnvironmentAction::Load(in);
-
-  if (in.AppendToPrevious()) {
-    //NOTE: Appending does not merge with the previous action if it has overlapping components.
-    //      If a ActiveHeating and ActiveCooling had previously applied and the incoming data had a
-    //      all ActiveHeating with an AppliedTemperature component. Append would add the ApliedTemperature
-    //      and overwrite the previous ActiveHeating with the inbound. While not appending would clear ActiveCooling.
-
-    if (ah) {
-      GetActiveHeating().Load(*ah);
-    }
-    if (ac) {
-      GetActiveCooling().Load(*ac);
-    }
-    if (at) {
-      GetAppliedTemperature().Load(*at);
-    }
-  }
-  if (in.ActiveHeating().present()) {
-    GetActiveHeating().Load(in.ActiveHeating().get());
-  }
-  if (in.ActiveCooling().present()) {
-    GetActiveCooling().Load(in.ActiveCooling().get());
-  }
-  if (in.AppliedTemperature().present()) {
-    GetAppliedTemperature().Load(in.AppliedTemperature().get());
-  }
-
-  m_AppendToPrevious = in.AppendToPrevious();
-
-  SAFE_DELETE(ah);
-  SAFE_DELETE(ac);
-  SAFE_DELETE(at);
-
+  io::EnvironmentActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -111,21 +76,7 @@ CDM::ThermalApplicationData* SEThermalApplication::Unload() const
 //-------------------------------------------------------------------------------
 void SEThermalApplication::Unload(CDM::ThermalApplicationData& data) const
 {
-  SEEnvironmentAction::Unload(data);
-  if (HasActiveHeating()) {
-    data.ActiveHeating(std::unique_ptr<CDM::ActiveHeatingData>(m_ActiveHeating->Unload()));
-  }
-  if (HasActiveCooling()) {
-    data.ActiveCooling(std::unique_ptr<CDM::ActiveCoolingData>(m_ActiveCooling->Unload()));
-  }
-  if (HasAppliedTemperature()) {
-    data.AppliedTemperature(std::unique_ptr<CDM::AppliedTemperatureData>(m_AppliedTemperature->Unload()));
-  }
-  //NOTE: It might be better to always serialize thermal applications to false and allow users to set this in for
-  //      Load commands. The problem is we use Load/Unload for cloning in BioGears so if keeping this state data for
-  //      Serialization is bad then we need to patch all the ProcessAction functions which clone a AppliedTemperatureData and ensure
-  //      it is retained after the clone through caching.
-  data.AppendToPrevious(m_AppendToPrevious);
+  io::EnvironmentActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEThermalApplication::HasActiveHeating() const

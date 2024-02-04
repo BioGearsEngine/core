@@ -23,6 +23,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+// Private Include
+#include <io/cdm/EnvironmentActions.h>
+
 namespace biogears {
 SEEnvironmentChange::SEEnvironmentChange(SESubstanceManager& substances)
   : SEEnvironmentAction()
@@ -51,11 +54,7 @@ bool SEEnvironmentChange::IsValid() const
 //-----------------------------------------------------------------------------
 bool SEEnvironmentChange::Load(const CDM::EnvironmentChangeData& in)
 {
-  SEEnvironmentAction::Load(in);
-  if (in.ConditionsFile().present())
-    SetConditionsFile(in.ConditionsFile().get());
-  else if (in.Conditions().present())
-    GetConditions().Load(in.Conditions().get());
+  io::EnvironmentActions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -68,11 +67,7 @@ CDM::EnvironmentChangeData* SEEnvironmentChange::Unload() const
 //-----------------------------------------------------------------------------
 void SEEnvironmentChange::Unload(CDM::EnvironmentChangeData& data) const
 {
-  SEEnvironmentAction::Unload(data);
-  if (HasConditions())
-    data.Conditions(std::unique_ptr<CDM::EnvironmentalConditionsData>(m_Conditions->Unload()));
-  else if (HasConditionsFile())
-    data.ConditionsFile(m_ConditionsFile);
+  io::EnvironmentActions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEEnvironmentChange::HasConditions() const
