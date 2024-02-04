@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
+// Private Include
+#include <io/cdm/PatientConditions.h>
+
 namespace biogears {
 SEChronicRenalStenosis::SEChronicRenalStenosis()
   : SEPatientCondition()
@@ -40,11 +43,7 @@ bool SEChronicRenalStenosis::IsValid() const
 //-------------------------------------------------------------------------------
 bool SEChronicRenalStenosis::Load(const CDM::ChronicRenalStenosisData& in)
 {
-  SEPatientCondition::Load(in);
-  if (in.LeftKidneySeverity().present())
-    GetLeftKidneySeverity().Load(in.LeftKidneySeverity().get());
-  if (in.RightKidneySeverity().present())
-    GetRightKidneySeverity().Load(in.RightKidneySeverity().get());
+  io::PatientConditions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -57,11 +56,7 @@ CDM::ChronicRenalStenosisData* SEChronicRenalStenosis::Unload() const
 //-------------------------------------------------------------------------------
 void SEChronicRenalStenosis::Unload(CDM::ChronicRenalStenosisData& data) const
 {
-  SEPatientCondition::Unload(data);
-  if (HasLeftKidneySeverity())
-    data.LeftKidneySeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_LeftKidneySeverity->Unload()));
-  if (HasRightKidneySeverity())
-    data.RightKidneySeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_RightKidneySeverity->Unload()));
+  io::PatientConditions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEChronicRenalStenosis::HasLeftKidneySeverity() const

@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEChronicVentricularSystolicDysfunction.h>
 
 
+// Private Include
+#include <io/cdm/PatientConditions.h>
+
 namespace biogears {
 SEChronicVentricularSystolicDysfunction::SEChronicVentricularSystolicDysfunction()
   : SEChronicHeartFailure()
@@ -35,7 +38,7 @@ bool SEChronicVentricularSystolicDysfunction::IsValid() const
 //-----------------------------------------------------------------------------
 bool SEChronicVentricularSystolicDysfunction::Load(const CDM::ChronicVentricularSystolicDysfunctionData& in)
 {
-  SEChronicHeartFailure::Load(in);
+  io::PatientConditions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -48,7 +51,7 @@ CDM::ChronicVentricularSystolicDysfunctionData* SEChronicVentricularSystolicDysf
 //-----------------------------------------------------------------------------
 void SEChronicVentricularSystolicDysfunction::Unload(CDM::ChronicVentricularSystolicDysfunctionData& data) const
 {
-  SEChronicHeartFailure::Unload(data);
+  io::PatientConditions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 void SEChronicVentricularSystolicDysfunction::ToString(std::ostream& str) const

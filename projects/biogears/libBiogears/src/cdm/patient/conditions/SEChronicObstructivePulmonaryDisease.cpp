@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
+// Private Include
+#include <io/cdm/PatientConditions.h>
+
 namespace biogears {
 SEChronicObstructivePulmonaryDisease::SEChronicObstructivePulmonaryDisease()
   : SEPatientCondition()
@@ -40,9 +43,7 @@ bool SEChronicObstructivePulmonaryDisease::IsValid() const
 //-----------------------------------------------------------------------------
 bool SEChronicObstructivePulmonaryDisease::Load(const CDM::ChronicObstructivePulmonaryDiseaseData& in)
 {
-  SEPatientCondition::Load(in);
-  GetBronchitisSeverity().Load(in.BronchitisSeverity());
-  GetEmphysemaSeverity().Load(in.EmphysemaSeverity());
+  io::PatientConditions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -55,11 +56,7 @@ CDM::ChronicObstructivePulmonaryDiseaseData* SEChronicObstructivePulmonaryDiseas
 //-----------------------------------------------------------------------------
 void SEChronicObstructivePulmonaryDisease::Unload(CDM::ChronicObstructivePulmonaryDiseaseData& data) const
 {
-  SEPatientCondition::Unload(data);
-  if (m_BronchitisSeverity != nullptr)
-    data.BronchitisSeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_BronchitisSeverity->Unload()));
-  if (m_EmphysemaSeverity != nullptr)
-    data.EmphysemaSeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_EmphysemaSeverity->Unload()));
+  io::PatientConditions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEChronicObstructivePulmonaryDisease::HasBronchitisSeverity() const

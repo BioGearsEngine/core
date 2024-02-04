@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
+//Private Include
+#include <io/cdm/PatientConditions.h>
+
 namespace biogears {
 SEChronicAnemia::SEChronicAnemia()
   : SEPatientCondition()
@@ -38,8 +41,7 @@ bool SEChronicAnemia::IsValid() const
 //-------------------------------------------------------------------------------
 bool SEChronicAnemia::Load(const CDM::ChronicAnemiaData& in)
 {
-  SEPatientCondition::Load(in);
-  GetReductionFactor().Load(in.ReductionFactor());
+  io::PatientConditions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -52,9 +54,7 @@ CDM::ChronicAnemiaData* SEChronicAnemia::Unload() const
 //-------------------------------------------------------------------------------
 void SEChronicAnemia::Unload(CDM::ChronicAnemiaData& data) const
 {
-  SEPatientCondition::Unload(data);
-  if (m_ReductionFactor != nullptr)
-    data.ReductionFactor(std::unique_ptr<CDM::Scalar0To1Data>(m_ReductionFactor->Unload()));
+  io::PatientConditions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEChronicAnemia::HasReductionFactor() const
