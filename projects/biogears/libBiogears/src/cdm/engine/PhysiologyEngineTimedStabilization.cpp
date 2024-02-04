@@ -157,13 +157,7 @@ CDM::PhysiologyEngineTimedStabilizationData* PhysiologyEngineTimedStabilization:
 //-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilization::Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const
 {
-  PhysiologyEngineStabilization::Unload(data);
-  data.RestingStabilizationTime(std::unique_ptr<CDM::ScalarTimeData>(m_RestingStabilizationTime.Unload()));
-  if (HasFeedbackStabilizationTime())
-    data.FeedbackStabilizationTime(std::unique_ptr<CDM::ScalarTimeData>(m_FeedbackStabilizationTime->Unload()));
-  for (auto cc : m_ConditionCriteria) {
-    data.ConditionStabilization().push_back(std::unique_ptr<CDM::PhysiologyEngineTimedConditionStabilizationData>(cc->Unload()));
-  }
+  io::EngineConfiguration::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const char* file)

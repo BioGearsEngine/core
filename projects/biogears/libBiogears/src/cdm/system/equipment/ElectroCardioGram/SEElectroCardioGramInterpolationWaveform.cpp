@@ -16,6 +16,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Physiology.hxx>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
+//Private Includes
+#include <io/cdm/ElectroCardioGram.h>
+
 namespace biogears {
 SEElectroCardioGramInterpolationWaveform::SEElectroCardioGramInterpolationWaveform(Logger* logger)
   : Loggable(logger)
@@ -42,16 +45,7 @@ void SEElectroCardioGramInterpolationWaveform::Clear()
 //-----------------------------------------------------------------------------
 bool SEElectroCardioGramInterpolationWaveform::Load(const CDM::ElectroCardioGramInterpolationWaveformData& in)
 {
-  Clear();
-  m_Rhythm = in.Rhythm();
-  m_LeadNumber = in.Lead();
-  GetData().Load(in.Data());
-  if (in.TimeStep().present())
-    GetTimeStep().Load(in.TimeStep().get());
-  if (in.ActiveIndicies().present()) {
-    for (size_t i = 0; i < in.ActiveIndicies().get().IntegerList().size(); i++)
-      m_ActiveIndicies.push_back(in.ActiveIndicies().get().IntegerList()[i]);
-  }
+  io::ElectroCardioGram::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -64,19 +58,7 @@ CDM::ElectroCardioGramInterpolationWaveformData* SEElectroCardioGramInterpolatio
 //-----------------------------------------------------------------------------
 void SEElectroCardioGramInterpolationWaveform::Unload(CDM::ElectroCardioGramInterpolationWaveformData& data) const
 {
-  if (HasRhythm())
-    data.Rhythm(m_Rhythm);
-  if (HasLeadNumber())
-    data.Lead(m_LeadNumber);
-  if (HasData()) {
-    data.Data(std::unique_ptr<CDM::FunctionElectricPotentialVsTimeData>(m_Data->Unload()));
-    data.ActiveIndicies(std::unique_ptr<CDM::IntegerArray>(new CDM::IntegerArray()));
-    data.ActiveIndicies().get().IntegerList(std::unique_ptr<CDM::IntegerList>(new CDM::IntegerList()));
-    for (int i : m_ActiveIndicies)
-      data.ActiveIndicies().get().IntegerList().push_back(i);
-  }
-  if (HasTimeStep())
-    data.TimeStep(std::unique_ptr<CDM::ScalarTimeData>(m_TimeStep->Unload()));
+  io::ElectroCardioGram::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 CDM::ElectroCardioGramWaveformLeadNumberData SEElectroCardioGramInterpolationWaveform::GetLeadNumber() const

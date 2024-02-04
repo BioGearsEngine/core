@@ -114,14 +114,7 @@ CDM::PhysiologyEngineConfigurationData* PhysiologyEngineConfiguration::Unload() 
 //-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::Unload(CDM::PhysiologyEngineConfigurationData& data) const
 {
-  if (HasECGInterpolator())
-    data.ElectroCardioGramInterpolator(std::unique_ptr<CDM::ElectroCardioGramInterpolatorData>(m_ECGInterpolator->Unload()));
-  if (HasStabilizationCriteria())
-    data.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(m_StabilizationCriteria->Unload()));
-  if (HasTimeStep())
-    data.TimeStep(std::unique_ptr<CDM::ScalarTimeData>(m_TimeStep->Unload()));
-  if (HasWritePatientBaselineFile())
-    data.WritePatientBaselineFile(m_WritePatientBaselineFile);
+  io::EngineConfiguration::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::HasECGInterpolator() const

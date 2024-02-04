@@ -21,6 +21,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/directories/ecg.h>
 #endif
 
+// Private Includes
+#include <io/cdm/ElectroCardioGram.h>
+
 namespace std {
 template class map<CDM::enumHeartRhythm, biogears::SEElectroCardioGramInterpolationWaveform*>;
 template class map<CDM::ElectroCardioGramWaveformLeadNumberData, biogears::SEScalarElectricPotential*>;
@@ -96,15 +99,7 @@ bool SEElectroCardioGramInterpolator::LoadWaveforms(const std::string& given_pat
 //-------------------------------------------------------------------------------
 bool SEElectroCardioGramInterpolator::Load(const CDM::ElectroCardioGramInterpolatorData& in)
 {
-  Clear();
-  for (auto& w : in.Waveform()) {
-    SEElectroCardioGramInterpolationWaveform* waveform = new SEElectroCardioGramInterpolationWaveform(GetLogger());
-    if (!waveform->Load(w)) {
-      Error("Unable to load waveform");
-      return false;
-    } else
-      m_Waveforms[waveform->GetLeadNumber()][waveform->GetRhythm()] = waveform;
-  }
+  io::ElectroCardioGram::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -117,9 +112,7 @@ CDM::ElectroCardioGramInterpolatorData* SEElectroCardioGramInterpolator::Unload(
 //-------------------------------------------------------------------------------
 void SEElectroCardioGramInterpolator::Unload(CDM::ElectroCardioGramInterpolatorData& data) const
 {
-  for (auto i : m_Waveforms)
-    for (auto j : i.second)
-      data.Waveform().push_back(std::unique_ptr<CDM::ElectroCardioGramInterpolationWaveformData>(j.second->Unload()));
+  io::ElectroCardioGram::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SEElectroCardioGramInterpolator::Interpolate(const SEScalarTime& timeStep)

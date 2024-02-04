@@ -386,16 +386,7 @@ CDM::PhysiologyEngineDynamicStabilizationData* PhysiologyEngineDynamicStabilizat
 //-----------------------------------------------------------------------------
 void PhysiologyEngineDynamicStabilization::Unload(CDM::PhysiologyEngineDynamicStabilizationData& data) const
 {
-  PhysiologyEngineStabilization::Unload(data);
-  data.RestingStabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineDynamicStabilizationCriteriaData>(GetRestingCriteria().Unload()));
-  if (HasFeedbackCriteria())
-    data.FeedbackStabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineDynamicStabilizationCriteriaData>(GetFeedbackCriteria()->Unload()));
-  for (auto& c : m_ConditionCriteria) {
-    std::unique_ptr<CDM::PhysiologyEngineDynamicConditionStabilizationData> csData(new CDM::PhysiologyEngineDynamicConditionStabilizationData());
-    csData->Criteria(std::unique_ptr<CDM::PhysiologyEngineDynamicStabilizationCriteriaData>(c->Unload()));
-    csData->Name(c->GetName());
-    data.ConditionStabilization().push_back(*csData);
-  }
+  io::EngineConfiguration::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineDynamicStabilization::Load(const char* file)
