@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/scenario/requests/SEPhysiologyDataRequest.h>
 
+// Private Include
+#include <io/cdm/Scenario.h>
+
 namespace biogears {
 SEPhysiologyDataRequest::SEPhysiologyDataRequest(const SEDecimalFormat* dfault)
   : SEDataRequest(dfault)
@@ -30,7 +33,7 @@ void SEPhysiologyDataRequest::Clear()
 
 bool SEPhysiologyDataRequest::Load(const CDM::PhysiologyDataRequestData& in)
 {
-  SEDataRequest::Load(in);
+  io::Scenario::UnMarshall(in, *this);
   return true;
 }
 
@@ -43,7 +46,7 @@ CDM::PhysiologyDataRequestData* SEPhysiologyDataRequest::Unload() const
 
 void SEPhysiologyDataRequest::Unload(CDM::PhysiologyDataRequestData& data) const
 {
-  SEDataRequest::Unload(data);
+  io::Scenario::Marshall(*this, data);
 }
 
 size_t SEPhysiologyDataRequest::HashCode() const

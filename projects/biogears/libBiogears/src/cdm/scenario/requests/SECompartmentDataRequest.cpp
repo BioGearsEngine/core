@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
 
+// Private Include
+#include <io/cdm/Scenario.h>
+
 namespace biogears {
 SECompartmentDataRequest::SECompartmentDataRequest(const SEDecimalFormat* dfault)
   : SEDataRequest(dfault)
@@ -41,15 +44,13 @@ size_t SECompartmentDataRequest::HashCode() const
 //-------------------------------------------------------------------------------
 bool SECompartmentDataRequest::Load(const CDM::CompartmentDataRequestData& in)
 {
-  SEDataRequest::Load(in);
-  SetCompartment(in.Compartment());
+  io::Scenario::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
 void SECompartmentDataRequest::Unload(CDM::CompartmentDataRequestData& data) const
 {
-  SEDataRequest::Unload(data);
-  data.Compartment(m_Compartment);
+  io::Scenario::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 const char* SECompartmentDataRequest::GetCompartment() const

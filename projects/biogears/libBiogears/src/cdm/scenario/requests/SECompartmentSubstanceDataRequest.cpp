@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
 
+// Private Include
+#include <io/cdm/Scenario.h>
+
 namespace biogears {
 SECompartmentSubstanceDataRequest::SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault)
   : SECompartmentDataRequest(dfault)
@@ -47,17 +50,13 @@ size_t SECompartmentSubstanceDataRequest::HashCode() const
 //-----------------------------------------------------------------------------
 bool SECompartmentSubstanceDataRequest::Load(const CDM::CompartmentSubstanceDataRequestData& in, const SESubstanceManager& substances)
 {
-  SECompartmentDataRequest::Load(in);
-  if (in.Substance().present())
-    SetSubstance(substances.GetSubstance(in.Substance().get()));
+  io::Scenario::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
 void SECompartmentSubstanceDataRequest::Unload(CDM::CompartmentSubstanceDataRequestData& data) const
 {
-  SECompartmentDataRequest::Unload(data);
-  if (HasSubstance())
-    data.Substance(m_Substance->GetName());
+  io::Scenario::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 SESubstance* SECompartmentSubstanceDataRequest::GetSubstance() const
