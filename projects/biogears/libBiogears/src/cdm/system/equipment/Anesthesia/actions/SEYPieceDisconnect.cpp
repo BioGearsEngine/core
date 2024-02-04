@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+//Private Include
+#include <io/cdm/AnesthesiaActions.h>
+
 namespace biogears {
 SEYPieceDisconnect::SEYPieceDisconnect()
   : SEAnesthesiaMachineAction()
@@ -44,8 +47,7 @@ bool SEYPieceDisconnect::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEYPieceDisconnect::Load(const CDM::YPieceDisconnectData& in)
 {
-  SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity());
+  io::AnesthesiaActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -58,9 +60,7 @@ CDM::YPieceDisconnectData* SEYPieceDisconnect::Unload() const
 //-------------------------------------------------------------------------------
 void SEYPieceDisconnect::Unload(CDM::YPieceDisconnectData& data) const
 {
-  SEAnesthesiaMachineAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
+  io::AnesthesiaActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEYPieceDisconnect::HasSeverity() const

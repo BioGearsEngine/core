@@ -22,6 +22,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 
+// Private Include
+#include <io/cdm/AnesthesiaActions.h>
+
 namespace biogears {
 SEAnesthesiaMachineConfiguration::SEAnesthesiaMachineConfiguration(SESubstanceManager& substances)
   : SEAnesthesiaMachineAction()
@@ -50,11 +53,7 @@ bool SEAnesthesiaMachineConfiguration::IsValid() const
 //-----------------------------------------------------------------------------
 bool SEAnesthesiaMachineConfiguration::Load(const CDM::AnesthesiaMachineConfigurationData& in)
 {
-  SEAnesthesiaMachineAction::Load(in);
-  if (in.ConfigurationFile().present())
-    SetConfigurationFile(in.ConfigurationFile().get());
-  if (in.Configuration().present())
-    GetConfiguration().Load(in.Configuration().get());
+  io::AnesthesiaActions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -67,11 +66,7 @@ CDM::AnesthesiaMachineConfigurationData* SEAnesthesiaMachineConfiguration::Unloa
 //-----------------------------------------------------------------------------
 void SEAnesthesiaMachineConfiguration::Unload(CDM::AnesthesiaMachineConfigurationData& data) const
 {
-  SEAnesthesiaMachineAction::Unload(data);
-  if (HasConfiguration())
-    data.Configuration(std::unique_ptr<CDM::AnesthesiaMachineData>(m_Configuration->Unload()));
-  else if (HasConfigurationFile())
-    data.ConfigurationFile(m_ConfigurationFile);
+  io::AnesthesiaActions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEAnesthesiaMachineConfiguration::HasConfiguration() const

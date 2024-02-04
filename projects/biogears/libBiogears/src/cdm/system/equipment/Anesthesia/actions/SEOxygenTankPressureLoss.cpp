@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Include
+#include <io/cdm/AnesthesiaActions.h>
+
 namespace biogears {
 SEOxygenTankPressureLoss::SEOxygenTankPressureLoss()
   : SEAnesthesiaMachineAction()
@@ -49,8 +52,7 @@ void SEOxygenTankPressureLoss::SetActive(bool b)
 //-------------------------------------------------------------------------------
 bool SEOxygenTankPressureLoss::Load(const CDM::OxygenTankPressureLossData& in)
 {
-  SEAnesthesiaMachineAction::Load(in);
-  SetActive(in.State() == CDM::enumOnOff::On ? true : false);
+  io::AnesthesiaActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -63,8 +65,7 @@ CDM::OxygenTankPressureLossData* SEOxygenTankPressureLoss::Unload() const
 //-------------------------------------------------------------------------------
 void SEOxygenTankPressureLoss::Unload(CDM::OxygenTankPressureLossData& data) const
 {
-  SEAnesthesiaMachineAction::Unload(data);
-  data.State(IsActive() ? CDM::enumOnOff::On : CDM::enumOnOff::Off);
+  io::AnesthesiaActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SEOxygenTankPressureLoss::ToString(std::ostream& str) const
