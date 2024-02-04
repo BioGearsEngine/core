@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/schema/cdm/TestReport.hxx>
 
+// Private Include
+#include <io/cdm/TestReport.h>
+
 namespace biogears {
 SETestCase::SETestCase(Logger* logger)
   : Loggable(logger)
@@ -48,26 +51,7 @@ void SETestCase::Reset()
 //-----------------------------------------------------------------------------
 bool SETestCase::Load(const CDM::TestCaseData& in)
 {
-  Reset();
-
-  m_Name = in.Name();
-  GetDuration().Load(in.Duration());
-
-  SETestErrorStatistics* ex;
-  CDM::TestErrorStatisticsData* eData;
-  for (unsigned int i = 0; i < in.CaseEqualError().size(); i++) {
-    eData = (CDM::TestErrorStatisticsData*)&in.CaseEqualError().at(i);
-    if (eData != nullptr) {
-      ex = new SETestErrorStatistics(GetLogger());
-      ex->Load(*eData);
-    }
-    m_CaseEqualsErrors.push_back(ex);
-  }
-
-  for (unsigned int i = 0; i < in.Failure().size(); i++) {
-    m_Failure.push_back(in.Failure().at(i));
-  }
-
+  io::TestReport::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -80,17 +64,7 @@ std::unique_ptr<CDM::TestCaseData> SETestCase::Unload() const
 //-----------------------------------------------------------------------------
 void SETestCase::Unload(CDM::TestCaseData& data) const
 {
-  data.Name(m_Name);
-
-  data.Duration(std::unique_ptr<CDM::ScalarTimeData>(m_Duration.Unload()));
-
-  for (unsigned int i = 0; i < m_Failure.size(); i++) {
-    data.Failure().push_back(m_Failure.at(i));
-  }
-
-  for (unsigned int i = 0; i < m_CaseEqualsErrors.size(); i++) {
-    data.CaseEqualError().push_back(*m_CaseEqualsErrors.at(i)->Unload());
-  }
+  io::TestReport::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 void SETestCase::SetName(const std::string& Name)

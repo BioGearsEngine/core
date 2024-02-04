@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/SESystem.h>
 
+//Private Include
+#include <io/cdm/System.h>
+
 namespace biogears {
 
 SESystem::SESystem(Logger* logger)
@@ -29,12 +32,13 @@ void SESystem::Clear()
 //-------------------------------------------------------------------------------
 bool SESystem::Load(const CDM::SystemData& in)
 {
-  Clear();
+  io::System::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
 void SESystem::Unload(CDM::SystemData& data) const
 {
+  io::System::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SESystem::GetScalar(const std::string& name, std::vector<SESystem*>* systems)

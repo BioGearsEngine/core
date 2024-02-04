@@ -19,6 +19,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/TestReport.hxx>
 
+// Private Include
+#include <io/cdm/TestReport.h>
+
 namespace biogears {
 SETestReport::SETestReport(Logger* logger)
   : Loggable(logger)
@@ -42,19 +45,7 @@ void SETestReport::Reset()
 //-------------------------------------------------------------------------------
 bool SETestReport::Load(const CDM::TestReportData& in)
 {
-  Reset();
-
-  SETestSuite* sx;
-  CDM::TestSuiteData* sData;
-  for (unsigned int i = 0; i < in.TestSuite().size(); i++) {
-    sData = (CDM::TestSuiteData*)&in.TestSuite().at(i);
-    if (sData != nullptr) {
-      sx = new SETestSuite(GetLogger());
-      sx->Load(*sData);
-    }
-    m_testSuite.push_back(sx);
-  }
-
+  io::TestReport::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -67,9 +58,7 @@ std::unique_ptr<CDM::TestReportData> SETestReport::Unload() const
 //-------------------------------------------------------------------------------
 void SETestReport::Unload(CDM::TestReportData& data) const
 {
-  for (unsigned int i = 0; i < m_testSuite.size(); i++) {
-    data.TestSuite().push_back(*m_testSuite.at(i)->Unload());
-  }
+  io::TestReport::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SETestReport::WriteFile(const std::string& fileName)
