@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
+// Private Include
+#include <io/cdm/Substance.h>
+
 namespace std {
 template class map<string, biogears::SESubstanceTissuePharmacokinetics*>;
 }
@@ -61,19 +64,7 @@ const SEScalar* SESubstancePharmacokinetics::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacokinetics::Load(const CDM::SubstancePharmacokineticsData& in)
 {
-  Clear();
-
-  if (in.Physicochemicals().present())
-    GetPhysicochemicals().Load(in.Physicochemicals().get());
-
-  SESubstanceTissuePharmacokinetics* fx;
-  const CDM::SubstanceTissuePharmacokineticsData* fxData;
-  for (unsigned int i = 0; i < in.TissueKinetics().size(); i++) {
-    fxData = &in.TissueKinetics().at(i);
-    fx = new SESubstanceTissuePharmacokinetics(fxData->Name(), GetLogger());
-    fx->Load(*fxData);
-    m_TissueKinetics[fx->GetName()] = (fx);
-  }
+  io::Substance::UnMarshall(in, *this);
 
   return true;
 }
@@ -89,12 +80,7 @@ CDM::SubstancePharmacokineticsData* SESubstancePharmacokinetics::Unload() const
 //-----------------------------------------------------------------------------
 void SESubstancePharmacokinetics::Unload(CDM::SubstancePharmacokineticsData& data) const
 {
-  if (HasPhysicochemicals())
-    data.Physicochemicals(std::unique_ptr<CDM::SubstancePhysicochemicalData>(m_Physicochemicals->Unload()));
-
-  for (auto itr : m_TissueKinetics) {
-    data.TissueKinetics().push_back(std::unique_ptr<CDM::SubstanceTissuePharmacokineticsData>(itr.second->Unload()));
-  }
+  io::Substance::Marshall(*this, data);
 };
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacokinetics::HasPhysicochemicals() const

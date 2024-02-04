@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+// Private Include
+#include <io/cdm/Substance.h>
+
 namespace biogears {
 SESubstanceCompound::SESubstanceCompound(const std::string& name, Logger* logger)
   : Loggable(logger)
@@ -49,30 +52,7 @@ void SESubstanceCompound::Clear()
 //-----------------------------------------------------------------------------
 bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr)
 {
-  Clear();
-  m_Name = in.Name();
-  if (in.Classification().present())
-    m_Classification = in.Classification().get();
-  if (in.BloodRHFactor().present())
-    m_RhFactor = in.BloodRHFactor().get();
-
-  std::string err;
-
-  SESubstance* substance = nullptr;
-  CDM::SubstanceConcentrationData* ccData;
-  for (unsigned int i = 0; i < in.Component().size(); i++) {
-    ccData = (CDM::SubstanceConcentrationData*)&in.Component().at(i);
-    substance = subMgr.GetSubstance(ccData->Name());
-    if (substance == nullptr) {
-      /// \error Could not load find substance compound component for specified substance
-      err = "Could not load find substance compound component : ";
-      err += ccData->Name();
-      Error(err, "SESubstanceCompound::Load");
-      return false;
-    }
-    m_Components.emplace_back(*substance);
-    m_Components.back().Load(*ccData);
-  }
+  io::Substance::UnMarshall(in, subMgr ,* this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -85,16 +65,7 @@ CDM::SubstanceCompoundData* SESubstanceCompound::Unload() const
 //-----------------------------------------------------------------------------
 void SESubstanceCompound::Unload(CDM::SubstanceCompoundData& data) const
 {
-  if (HasName())
-    data.Name(m_Name);
-  if (HasClassification())
-    data.Classification(m_Classification);
-  if (HasRhFactor())
-    data.BloodRHFactor(m_RhFactor);
-
-  for (auto& component : m_Components) {
-    data.Component().push_back(*component.Unload());
-  }
+  io::Substance::Marshall(*this, data);
 };
 //-----------------------------------------------------------------------------
 std::string SESubstanceCompound::GetName() const

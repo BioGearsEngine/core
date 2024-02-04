@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+// Private Include
+#include <io/cdm/Substance.h>
+
 namespace biogears {
 SESubstanceFraction::SESubstanceFraction(SESubstance const& substance)
   : m_Substance(substance)
@@ -40,7 +43,7 @@ void SESubstanceFraction::Clear()
 //-------------------------------------------------------------------------------
 bool SESubstanceFraction::Load(const CDM::SubstanceFractionData& in)
 {
-  GetFractionAmount().Load(in.FractionAmount());
+  io::Substance::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -53,9 +56,7 @@ CDM::SubstanceFractionData* SESubstanceFraction::Unload() const
 //-------------------------------------------------------------------------------
 void SESubstanceFraction::Unload(CDM::SubstanceFractionData& data) const
 {
-  data.Name(m_Substance.GetName());
-  if (HasFractionAmount())
-    data.FractionAmount(std::unique_ptr<CDM::ScalarFractionData>(m_FractionAmount->Unload()));
+  io::Substance::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceFraction::HasFractionAmount() const

@@ -25,6 +25,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/directories/substances.h>
 #endif
 
+// Private Include
+#include <io/cdm/Substance.h>
+
 namespace std {
 template class map<biogears::SESubstance*, const CDM::SubstanceData*>;
 template class map<biogears::SESubstanceCompound*, const CDM::SubstanceCompoundData*>;

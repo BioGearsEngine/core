@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePhysicochemical.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
+// Private Include
+#include <io/cdm/Substance.h>
+
 namespace biogears {
 SESubstancePhysicochemical::SESubstancePhysicochemical(Logger* logger)
   : Loggable(logger)
@@ -89,22 +92,7 @@ const SEScalar* SESubstancePhysicochemical::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SESubstancePhysicochemical::Load(const CDM::SubstancePhysicochemicalData& in)
 {
-  Clear();
-
-  for (auto pKa : in.AcidDissociationConstant()) {
-    SEScalar* pKScalar = new SEScalar();
-    pKScalar->Load(pKa);
-    m_AcidDissociationConstants.push_back(pKScalar);
-  }
-  m_BindingProtein = in.BindingProtein();
-  GetBloodPlasmaRatio().Load(in.BloodPlasmaRatio());
-  GetFractionUnboundInPlasma().Load(in.FractionUnboundInPlasma());
-  SetIonicState(in.IonicState());
-  GetLogP().Load(in.LogP());
-  if (in.HydrogenBondCount().present())
-    GetHydrogenBondCount().Load(in.HydrogenBondCount().get());
-  if (in.PolarSurfaceArea().present())
-    GetPolarSurfaceArea().Load(in.PolarSurfaceArea().get());
+  io::Substance::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -119,23 +107,7 @@ CDM::SubstancePhysicochemicalData* SESubstancePhysicochemical::Unload() const
 //-----------------------------------------------------------------------------
 void SESubstancePhysicochemical::Unload(CDM::SubstancePhysicochemicalData& data) const
 {
-  for (auto pKa : m_AcidDissociationConstants) {
-    data.AcidDissociationConstant().push_back(std::unique_ptr<CDM::ScalarData>(pKa->Unload()));
-  }
-  if (HasBindingProtein())
-    data.BindingProtein(m_BindingProtein);
-  if (HasBloodPlasmaRatio())
-    data.BloodPlasmaRatio(std::unique_ptr<CDM::ScalarData>(m_BloodPlasmaRatio->Unload()));
-  if (HasFractionUnboundInPlasma())
-    data.FractionUnboundInPlasma(std::unique_ptr<CDM::ScalarFractionData>(m_FractionUnboundInPlasma->Unload()));
-  if (HasIonicState())
-    data.IonicState(m_IonicState);
-  if (HasLogP())
-    data.LogP(std::unique_ptr<CDM::ScalarData>(m_LogP->Unload()));
-  if (HasHydrogenBondCount())
-    data.HydrogenBondCount(std::unique_ptr<CDM::ScalarData>(m_HydrogenBondCount->Unload()));
-  if (HasPolarSurfaceArea())
-    data.PolarSurfaceArea(std::unique_ptr<CDM::ScalarData>(m_PolarSurfaceArea->Unload()));
+  io::Substance::Marshall(*this, data);
 };
 //-----------------------------------------------------------------------------
 bool SESubstancePhysicochemical::HasPrimaryPKA() const

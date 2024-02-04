@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/substance/SESubstanceTransport.h>
 
+// Private Include
+#include <io/cdm/Substance.h>
+
 namespace biogears {
 
 template class SESubstanceTransportAmount<SEScalarVolume, SEScalarFraction>;

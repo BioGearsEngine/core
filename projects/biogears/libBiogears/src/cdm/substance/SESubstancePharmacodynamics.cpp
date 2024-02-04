@@ -17,6 +17,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/cdm/Substance.hxx>
 
+// Private Include
+#include <io/cdm/Substance.h>
+
 namespace std {
 template class map<string, biogears::SEPharmacodynamicModifier*>;
 }
@@ -165,43 +168,7 @@ const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData& in)
 {
-  GetBronchodilation().Load(in.Bronchodilation());
-  GetDiastolicPressureModifier().Load(in.DiastolicPressureModifier());
-  GetEMaxShapeParameter().Load(in.EMaxShapeParameter());
-  GetFeverModifier().Load(in.FeverModifier());
-  GetHeartRateModifier().Load(in.HeartRateModifier());
-  GetHemorrhageModifier().Load(in.HemorrhageModifier());
-  GetNeuromuscularBlock().Load(in.NeuromuscularBlock());
-  GetPainModifier().Load(in.PainModifier());
-  GetPupilReactivityModifier().Load(in.PupilReactivityModifier());
-  GetPupilSizeModifier().Load(in.PupilSizeModifier());
-  GetRespirationRateModifier().Load(in.RespirationRateModifier());
-  GetSedation().Load(in.Sedation());
-  GetSystolicPressureModifier().Load(in.SystolicPressureModifier());
-  GetTidalVolumeModifier().Load(in.TidalVolumeModifier());
-  GetTubularPermeabilityModifier().Load(in.TubularPermeabilityModifier());
-  GetCentralNervousModifier().Load(in.CentralNervousModifier());
-  GetAntibacterialEffect().Load(in.AntibacterialEffect());
-  GetEffectSiteRateConstant().Load(in.EffectSiteRateConstant());
-
-  // Set up map (Antibiotic effect not added to modifier list because it is implemented different from other modifiers)
-  m_Modifiers.clear();
-  m_Modifiers["Bronchodilation"] = m_Bronchodilation;
-  m_Modifiers["CentralNervous"] = m_CentralNervousModifier;
-  m_Modifiers["DiastolicPressure"] = m_DiastolicPressureModifier;
-  m_Modifiers["Fever"] = m_FeverModifier;
-  m_Modifiers["HeartRate"] = m_HeartRateModifier;
-  m_Modifiers["Hemorrhage"] = m_HemorrhageModifier;
-  m_Modifiers["NeuromuscularBlock"] = m_NeuromuscularBlock;
-  m_Modifiers["Pain"] = m_PainModifier;
-  m_Modifiers["PupilReactivity"] = m_PupilReactivityModifier;
-  m_Modifiers["PupilSize"] = m_PupilSizeModifier;
-  m_Modifiers["RespirationRate"] = m_RespirationRateModifier;
-  m_Modifiers["Sedation"] = m_Sedation;
-  m_Modifiers["SystolicPressure"] = m_SystolicPressureModifier;
-  m_Modifiers["TidalVolume"] = m_TidalVolumeModifier;
-  m_Modifiers["TubularPermeability"] = m_TubularPermeabilityModifier;
-
+  io::Substance::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -216,42 +183,7 @@ CDM::SubstancePharmacodynamicsData* SESubstancePharmacodynamics::Unload() const
 //-----------------------------------------------------------------------------
 void SESubstancePharmacodynamics::Unload(CDM::SubstancePharmacodynamicsData& data) const
 {
-  if (HasBronchodilation())
-    data.Bronchodilation(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_Bronchodilation->Unload()));
-  if (HasDiastolicPressureModifier())
-    data.DiastolicPressureModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_DiastolicPressureModifier->Unload()));
-  if (HasEMaxShapeParameter())
-    data.EMaxShapeParameter(std::unique_ptr<CDM::ScalarData>(m_EMaxShapeParameter->Unload()));
-  if (HasFeverModifier())
-    data.FeverModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_FeverModifier->Unload()));
-  if (HasHeartRateModifier())
-    data.HeartRateModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_HeartRateModifier->Unload()));
-  if (HasHemorrhageModifier())
-    data.HemorrhageModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_HemorrhageModifier->Unload()));
-  if (HasNeuromuscularBlock())
-    data.NeuromuscularBlock(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_NeuromuscularBlock->Unload()));
-  if (HasPainModifier())
-    data.PainModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_PainModifier->Unload()));
-  if (HasPupilReactivityModifier())
-    data.PupilReactivityModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_PupilReactivityModifier->Unload()));
-  if (HasPupilSizeModifier())
-    data.PupilSizeModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_PupilReactivityModifier->Unload()));
-  if (HasRespirationRateModifier())
-    data.RespirationRateModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_RespirationRateModifier->Unload()));
-  if (HasSedation())
-    data.Sedation(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_Sedation->Unload()));
-  if (HasSystolicPressureModifier())
-    data.SystolicPressureModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_SystolicPressureModifier->Unload()));
-  if (HasTidalVolumeModifier())
-    data.TidalVolumeModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_TidalVolumeModifier->Unload()));
-  if (HasTubularPermeabilityModifier())
-    data.TubularPermeabilityModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_TubularPermeabilityModifier->Unload()));
-  if (HasCentralNervousModifier())
-    data.CentralNervousModifier(std::unique_ptr<CDM::PharmacodynamicModifierData>(m_CentralNervousModifier->Unload()));
-  if (HasAntibacterialEffect())
-    data.AntibacterialEffect(std::unique_ptr<CDM::ScalarFrequencyData>(m_AntibacterialEffect->Unload()));
-  if (HasEffectSiteRateConstant())
-    data.EffectSiteRateConstant(std::unique_ptr<CDM::ScalarFrequencyData>(m_EffectSiteRateConstant->Unload()));
+  io::Substance::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasAntibacterialEffect() const
