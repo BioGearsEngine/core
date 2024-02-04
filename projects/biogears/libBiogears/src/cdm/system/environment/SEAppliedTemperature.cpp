@@ -17,6 +17,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+// Private Include
+#include <io/cdm/Environment.h>
+
 namespace biogears {
 SEAppliedTemperature::SEAppliedTemperature(Logger* logger)
   : Loggable(logger)
@@ -58,15 +61,7 @@ const SEScalar* SEAppliedTemperature::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SEAppliedTemperature::Load(const CDM::AppliedTemperatureData& in)
 {
-  Clear();
-  if (in.State().present())
-    m_State = in.State().get();
-  if (in.Temperature().present())
-    GetTemperature().Load(in.Temperature().get());
-  if (in.SurfaceArea().present())
-    GetSurfaceArea().Load(in.SurfaceArea().get());
-  if (in.SurfaceAreaFraction().present())
-    GetSurfaceAreaFraction().Load(in.SurfaceAreaFraction().get());
+  io::Environment::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -79,13 +74,7 @@ CDM::AppliedTemperatureData* SEAppliedTemperature::Unload() const
 //-----------------------------------------------------------------------------
 void SEAppliedTemperature::Unload(CDM::AppliedTemperatureData& data) const
 {
-  if (HasTemperature())
-    data.Temperature(std::unique_ptr<CDM::ScalarTemperatureData>(m_Temperature->Unload()));
-  if (HasSurfaceArea())
-    data.SurfaceArea(std::unique_ptr<CDM::ScalarAreaData>(m_SurfaceArea->Unload()));
-  if (HasSurfaceAreaFraction())
-    data.SurfaceAreaFraction(std::unique_ptr<CDM::ScalarFractionData>(m_SurfaceAreaFraction->Unload()));
-  data.State(m_State);
+  io::Environment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEAppliedTemperature::HasTemperature() const

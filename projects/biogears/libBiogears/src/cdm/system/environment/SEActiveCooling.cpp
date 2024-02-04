@@ -17,6 +17,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+//Private Include
+#include <io/cdm/Environment.h>
+
 namespace biogears {
 SEActiveCooling::SEActiveCooling(Logger* logger)
   : Loggable(logger)
@@ -61,11 +64,7 @@ const SEScalar* SEActiveCooling::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SEActiveCooling::Load(const CDM::ActiveCoolingData& in)
 {
-  GetPower().Load(in.Power());
-  if (in.SurfaceArea().present())
-    GetSurfaceArea().Load(in.SurfaceArea().get());
-  if (in.SurfaceAreaFraction().present())
-    GetSurfaceAreaFraction().Load(in.SurfaceAreaFraction().get());
+  io::Environment::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -78,12 +77,7 @@ CDM::ActiveCoolingData* SEActiveCooling::Unload() const
 //-----------------------------------------------------------------------------
 void SEActiveCooling::Unload(CDM::ActiveCoolingData& data) const
 {
-  if (HasPower())
-    data.Power(std::unique_ptr<CDM::ScalarPowerData>(m_Power->Unload()));
-  if (HasSurfaceArea())
-    data.SurfaceArea(std::unique_ptr<CDM::ScalarAreaData>(m_SurfaceArea->Unload()));
-  if (HasSurfaceAreaFraction())
-    data.SurfaceAreaFraction(std::unique_ptr<CDM::ScalarFractionData>(m_SurfaceAreaFraction->Unload()));
+  io::Environment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEActiveCooling::HasPower() const
