@@ -21,6 +21,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 #include <biogears/io/io-manager.h>
 
+// Private Include
+#include <io/cdm/Inhaler.h>
+
 namespace biogears {
 SEInhaler::SEInhaler(SESubstanceManager& substances)
   : SESystem(substances.GetLogger())
@@ -54,18 +57,7 @@ void SEInhaler::Clear()
 
 bool SEInhaler::Load(const CDM::InhalerData& in)
 {
-  Clear();
-  if (in.State().present())
-    SetState(in.State().get());
-  if (in.MeteredDose().present())
-    GetMeteredDose().Load(in.MeteredDose().get());
-  if (in.NozzleLoss().present())
-    GetNozzleLoss().Load(in.NozzleLoss().get());
-  if (in.SpacerVolume().present())
-    GetSpacerVolume().Load(in.SpacerVolume().get());
-  if (in.Substance().present())
-    SetSubstance(m_Substances.GetSubstance(in.Substance().get()));
-  StateChange();
+  io::Inhaler::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -80,16 +72,7 @@ CDM::InhalerData* SEInhaler::Unload() const
 
 void SEInhaler::Unload(CDM::InhalerData& data) const
 {
-  if (HasState())
-    data.State(m_State);
-  if (HasMeteredDose())
-    data.MeteredDose(std::unique_ptr<CDM::ScalarMassData>(m_MeteredDose->Unload()));
-  if (HasNozzleLoss())
-    data.NozzleLoss(std::unique_ptr<CDM::ScalarFractionData>(m_NozzleLoss->Unload()));
-  if (HasSpacerVolume())
-    data.SpacerVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_SpacerVolume->Unload()));
-  if (HasSubstance())
-    data.Substance(m_Substance->GetName());
+  io::Inhaler::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEInhaler::GetScalar(const char* name)
