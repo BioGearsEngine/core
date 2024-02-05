@@ -108,6 +108,7 @@ void PopulationGenerator::Generate()
   std::mt19937 gen { rd() };
   static int total_population_count = 1;
   std::string unit_str = "";
+  std::string patientFilename = "";
   std::string population_pool_dir = std::string("population_") + dateString();
 
   for (auto& run : _runs) {
@@ -119,6 +120,15 @@ void PopulationGenerator::Generate()
     try {
       auto population = CDM::PopulationProfile(config_file);
       for (auto i = 0; i < population_size; ++i) {
+        patientFilename.clear();
+        // This naming structure is currently specific to the VTC project. Future work should expand out naming options.
+        if (i < 10) {
+          patientFilename.append("id00" + std::to_string(i) + "_");
+        } else if (i < 100) {
+          patientFilename.append("id0" + std::to_string(i) + "_");
+        } else {
+          patientFilename.append("id" + std::to_string(i) + "_");
+        }
         CDM::PatientData patient;
         std::normal_distribution<> standard_distribution { 5, 2 };
         std::binomial_distribution<> binomial_distribution { 1, population->Heterogametic_SexDistribution() };
@@ -148,6 +158,7 @@ void PopulationGenerator::Generate()
           _girl_names[name_index] = std::move(_girl_names.back());
           _girl_names.pop_back();
         }
+        patientFilename.append(patient.Sex().get() + "_");
 
         if (!population->AgeDistribution().empty()) {
           unit_str = population->AgeDistribution()[0].unit();
@@ -165,7 +176,7 @@ void PopulationGenerator::Generate()
           patient.Age(standard_distribution(gen));
           patient.Age()->unit(unit_str);
         }
-
+        patientFilename.append(std::to_string(int(patient.Age().get().value())) + "_");
 
         if (!population->WeightDistribution().empty()) {
           unit_str = population->WeightDistribution()[0].unit();
@@ -527,12 +538,12 @@ void PopulationGenerator::Generate()
 #endif
 
         try {
-          std::string out_file = std::string("patients/") + population_pool_dir.c_str() + "/" + patient.Name() + ".xml";
+          std::string out_file = std::string("patients/") + population_pool_dir.c_str() + "/" + patientFilename + patient.Name() + ".xml";
           std::ofstream file;
           file.open(out_file.c_str());
           if (file.is_open()) {
             mil::tatrc::physiology::datamodel::Patient(file, patient, info);
-            std::cout << std::string("Saved patients/") + population_pool_dir.c_str() + "/"+ patient.Name() + ".xml"
+            std::cout << std::string("Saved patients/") + population_pool_dir.c_str() + "/" + patientFilename + patient.Name() + ".xml"
                     << "\n";
           }
           file.close();
