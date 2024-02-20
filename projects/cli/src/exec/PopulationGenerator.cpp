@@ -201,8 +201,18 @@ void PopulationGenerator::Generate()
           if (unit_str.empty()) {
             unit_str = "kg";
           }
-          patient.Weight(standard_distribution(gen));
-          patient.Weight()->unit(unit_str);
+          double weightMaximum = standard_distribution.max();
+          double weightMinimum = standard_distribution.min();
+          if (population->WeightDistribution()[0].maximum().present()) {
+            weightMaximum = population->WeightDistribution()[0].maximum().get();
+          }
+          if (population->WeightDistribution()[0].minimum().present()) {
+            weightMinimum = population->WeightDistribution()[0].minimum().get();
+          }
+          while (!patient.Weight().present() || patient.Weight().get().value() > weightMaximum || patient.Weight().get().value() < weightMinimum) {
+            patient.Weight(standard_distribution(gen));
+            patient.Weight()->unit(unit_str);
+          }
         }
         if (!population->HeightDistribution().empty()) {
           unit_str = population->HeightDistribution()[0].unit();
@@ -217,8 +227,18 @@ void PopulationGenerator::Generate()
           if (unit_str.empty()) {
             unit_str = "cm";
           }
-          patient.Height(standard_distribution(gen));
-          patient.Height()->unit(unit_str);
+          double heightMaximum = standard_distribution.max();
+          double heightMinimum = standard_distribution.min();
+          if (population->HeightDistribution()[0].maximum().present()) {
+            heightMaximum = population->HeightDistribution()[0].maximum().get();
+          }
+          if (population->HeightDistribution()[0].minimum().present()) {
+            heightMinimum = population->HeightDistribution()[0].minimum().get();
+          }
+          while (!patient.Height().present() || patient.Height().get().value() > heightMaximum || patient.Height().get().value() < heightMinimum) {
+            patient.Height(standard_distribution(gen));
+            patient.Height()->unit(unit_str);
+          }
         }
         if ((!population->BMIDistribution().empty() && population->WeightDistribution().empty()) || (!population->BMIDistribution().empty() && population->HeightDistribution().empty())) {
           unit_str = population->BMIDistribution()[0].unit();
