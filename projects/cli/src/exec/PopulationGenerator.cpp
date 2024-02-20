@@ -173,8 +173,18 @@ void PopulationGenerator::Generate()
           if (unit_str.empty()) {
             unit_str = "yr";
           }
-          patient.Age(standard_distribution(gen));
-          patient.Age()->unit(unit_str);
+          double ageMaximum = standard_distribution.max();
+          double ageMinimum = standard_distribution.min();
+          if (population->AgeDistribution()[0].maximum().present()) {
+            ageMaximum = population->AgeDistribution()[0].maximum().get();
+          }
+          if (population->AgeDistribution()[0].minimum().present()) {
+            ageMinimum = population->AgeDistribution()[0].minimum().get();
+          }
+          while (!patient.Age().present() || patient.Age().get().value() > ageMaximum || patient.Age().get().value() < ageMinimum) {
+            patient.Age(standard_distribution(gen));
+            patient.Age()->unit(unit_str);
+          }
         }
         patientFilename.append(std::to_string(int(patient.Age().get().value())) + "_");
 
@@ -209,6 +219,29 @@ void PopulationGenerator::Generate()
           }
           patient.Height(standard_distribution(gen));
           patient.Height()->unit(unit_str);
+        }
+        if ((!population->BMIDistribution().empty() && population->WeightDistribution().empty()) || (!population->BMIDistribution().empty() && population->HeightDistribution().empty())) {
+          unit_str = population->BMIDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->BMIDistribution()[0].mean(),
+                                                             population->BMIDistribution()[0].diviation());
+          for (auto& distribution : population->BMIDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          double bmiMaximum = standard_distribution.max();
+          double bmiMinimum = standard_distribution.min();
+          if (population->BMIDistribution()[0].maximum().present()) {
+            bmiMaximum = population->BMIDistribution()[0].maximum().get();
+          }
+          if (population->BMIDistribution()[0].minimum().present()) {
+            bmiMinimum = population->BMIDistribution()[0].minimum().get();
+          }
+          while (!patient.BMI().present() || patient.BMI().get().value() > bmiMaximum || patient.BMI().get().value() < bmiMinimum) {
+            patient.BMI(standard_distribution(gen));
+            patient.BMI()->unit(unit_str);
+          }
         }
 
         if (!population->BodyFatFractionDistribution().empty()) {

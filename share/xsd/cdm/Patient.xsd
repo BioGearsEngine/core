@@ -316,6 +316,8 @@ specific language governing permissions and limitations under the License.
     </xs:annotation>
     <xs:attribute name="mean" type="xs:double" default="1.0"/>
     <xs:attribute name="diviation" type="xs:double" default="0.1"/>
+	<xs:attribute name="minimum" type="xs:double" use = "optional"/>
+	<xs:attribute name="maximum" type="xs:double" use = "optional"/>
     <xs:attribute name="unit" type="xs:string" default=""/>
     <xs:attribute name="group" type="xs:string" default=""/>
   </xs:complexType>
@@ -365,6 +367,7 @@ specific language governing permissions and limitations under the License.
       <xs:element name="AgeDistribution"                             type="NormalDistributionRangeData" minOccurs="0"  maxOccurs="2"/>
       <xs:element name="WeightDistribution"                          type="NormalDistributionRangeData" minOccurs="0"  maxOccurs="2"/>
       <xs:element name="HeightDistribution"                          type="NormalDistributionRangeData" minOccurs="0"  maxOccurs="2"/>
+	  <xs:element name="BMIDistribution"                          	 type="NormalDistributionRangeData" minOccurs="0"  maxOccurs="2"/>
       <!-- BodyDensity CANNOT be set by the user. It is determined using body fat fraction -->
       <xs:element name="BodyFatFractionDistribution"                 type="NormalDistributionRangeData" minOccurs="0" maxOccurs="2"/>
       <!-- LeanBodyMass CANNOT be set by the user. It is determined using weight and body fat fraction -->
