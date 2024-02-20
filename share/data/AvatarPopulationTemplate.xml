@@ -246,9 +246,9 @@
   </Groups>
   
   <!-- Can we add a lower bound (16?) and upper bound (65?) -->
-  <AgeDistribution group="YoungAdult" mean="23.5" diviation="3.75" unit="yr"/>
-  <AgeDistribution group="Adult" mean="40.0" diviation="3.75" unit="yr"/>
-  <AgeDistribution group="MiddleAge" mean="57" diviation="3.75" unit="yr"/> 
+  <AgeDistribution group="YoungAdult" mean="23.5" minimum="16" maximum="31" diviation="3.75" unit="yr"/>
+  <AgeDistribution group="Adult" mean="40.0" minimum="32" maximum="47" diviation="3.75" unit="yr"/>
+  <AgeDistribution group="MiddleAge" mean="57" minimum="48" maximum="64" diviation="3.75" unit="yr"/> 
   
   <!-- May want to update data for height given it is now sub-distributions as opposed to random sampling -->
   <HeightDistribution  group="Male;Short"  mean="64" diviation="1.0" unit="in"/>
@@ -260,9 +260,9 @@
   <HeightDistribution  group="Female;Tall"  mean="70.5" diviation="1.0" unit="in"/>
   
   <!-- Need to add a patient parameter for BMI which back calculates weight using BMI sample and height -->
-  <BMIDistribution group="Underweight"   mean="18.5" diviation="1.0" unit="unitless"/>
-  <BMIDistribution group="Healthyweight"   mean="21.5" diviation="1.0" unit="unitless"/>
-  <BMIDistribution group="Overweight"   mean="25.0" diviation="1.0" unit="unitless"/>
+  <BMIDistribution group="Underweight"   mean="15.5" minimum="12" maximum="18.5" diviation="1.5" unit="unitless"/>
+  <BMIDistribution group="Healthyweight"   mean="21.5" diviation="1.5" unit="unitless"/>
+  <BMIDistribution group="Overweight"   mean="27.5" minimum="24.5" maximum="42" diviation="1.5" unit="unitless"/>
   
   <!-- Populational variance can be added through distributions in other patient parameters below -->
   
