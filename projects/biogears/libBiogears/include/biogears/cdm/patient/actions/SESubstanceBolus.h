@@ -35,7 +35,7 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceBolusData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::SubstanceBolusData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::SubstanceBolusData* Unload() const;
 
 public:
@@ -78,7 +78,7 @@ public:
   SESubstanceBolusState(const SESubstance& sub);
   ~SESubstanceBolusState();
 
-  virtual bool Load(const CDM::SubstanceBolusStateData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::SubstanceBolusStateData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::SubstanceBolusStateData* Unload() const;
 
   SEScalarTime& GetElapsedTime() { return m_ElapsedTime; }

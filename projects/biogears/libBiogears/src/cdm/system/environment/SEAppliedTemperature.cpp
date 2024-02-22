@@ -56,7 +56,7 @@ const SEScalar* SEAppliedTemperature::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SEAppliedTemperature::Load(const CDM::AppliedTemperatureData& in, std::random_device *rd)
+bool SEAppliedTemperature::Load(const CDM::AppliedTemperatureData& in, std::default_random_engine *rd)
 {
   Clear();
   if (in.State().present())

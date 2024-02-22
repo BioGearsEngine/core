@@ -42,7 +42,7 @@ bool SEYPieceDisconnect::IsActive() const
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEYPieceDisconnect::Load(const CDM::YPieceDisconnectData& in, std::random_device* rd)
+bool SEYPieceDisconnect::Load(const CDM::YPieceDisconnectData& in, std::default_random_engine *rd)
 {
   SEAnesthesiaMachineAction::Load(in);
   GetSeverity().Load(in.Severity(), rd);

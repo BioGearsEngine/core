@@ -39,7 +39,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::TourniquetData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::TourniquetData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::TourniquetData* Unload() const override;
 
 protected:

@@ -124,6 +124,9 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
       if (scenario == nullptr) {
         throw std::runtime_error("Unable to load " + ex.Scenario());
       }
+      if (scenario->Actions().RandomSeed().present()) {
+        std::cout << "Using seed=" << scenario->Actions().RandomSeed() << std::endl;
+      }
     } catch (std::runtime_error e) {
       std::cout << e.what() << std::endl;
       return static_cast<int>(ExecutionErrors::SCENARIO_PARSE_ERROR);

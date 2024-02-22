@@ -45,7 +45,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr, std::default_random_engine *rd = nullptr);
   virtual CDM::MechanicalVentilationData* Unload() const override;
 
   virtual CDM::enumOnOff::value GetState() const;

@@ -37,7 +37,7 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceOralDoseData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::SubstanceOralDoseData* Unload() const;
 
   virtual CDM::enumOralAdministration::value GetAdminRoute() const;
@@ -71,7 +71,7 @@ public:
   ~SETransmucosalState();
   virtual void Clear();
 
-  virtual bool Load(const CDM::TransmucosalStateData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::TransmucosalStateData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::TransmucosalStateData* Unload() const;
 
   bool Initialize(SEScalarMass& dose);

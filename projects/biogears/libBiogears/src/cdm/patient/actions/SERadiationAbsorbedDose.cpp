@@ -43,7 +43,7 @@ bool SERadiationAbsorbedDose::IsActive() const
   return IsValid() ? !m_RadiationDose->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SERadiationAbsorbedDose::Load(const CDM::RadiationAbsorbedDoseData& in, std::random_device *rd)
+bool SERadiationAbsorbedDose::Load(const CDM::RadiationAbsorbedDoseData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   GetDose().Load(in.RadiationDose(), rd);

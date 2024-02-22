@@ -42,7 +42,7 @@ bool SEInspiratoryValveLeak::IsActive() const
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEInspiratoryValveLeak::Load(const CDM::InspiratoryValveLeakData& in, std::random_device* rd)
+bool SEInspiratoryValveLeak::Load(const CDM::InspiratoryValveLeakData& in, std::default_random_engine *rd)
 {
   SEAnesthesiaMachineAction::Load(in);
   GetSeverity().Load(in.Severity(), rd);

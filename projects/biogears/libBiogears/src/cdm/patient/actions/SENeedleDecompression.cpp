@@ -47,7 +47,7 @@ void SENeedleDecompression::SetActive(bool b)
   m_State = b ? CDM::enumOnOff::On : CDM::enumOnOff::Off;
 }
 //-------------------------------------------------------------------------------
-bool SENeedleDecompression::Load(const CDM::NeedleDecompressionData& in, std::random_device* rd)
+bool SENeedleDecompression::Load(const CDM::NeedleDecompressionData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_Side = in.Side();

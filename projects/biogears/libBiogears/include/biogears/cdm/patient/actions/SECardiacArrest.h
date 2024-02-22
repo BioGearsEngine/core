@@ -36,7 +36,7 @@ public:
   virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
-  virtual bool Load(const CDM::CardiacArrestData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::CardiacArrestData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::CardiacArrestData* Unload() const override;
 
   virtual void ToString(std::ostream& str) const override;

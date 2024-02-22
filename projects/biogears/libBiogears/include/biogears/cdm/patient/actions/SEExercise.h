@@ -84,7 +84,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ExerciseData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::ExerciseData& in, std::default_random_engine *rd = nullptr);
 
   virtual bool HasGenericExercise() const;
   virtual bool HasCyclingExercise() const;
@@ -116,10 +116,10 @@ public:
 
 protected:
   virtual void Unload(CDM::ExerciseData& data) const;
-  virtual bool LoadGeneric(const CDM::GenericExerciseData& in, std::random_device* rd = nullptr);
-  virtual bool LoadCycling(const CDM::CyclingExerciseData& in, std::random_device* rd = nullptr);
-  virtual bool LoadRunning(const CDM::RunningExerciseData& in, std::random_device* rd = nullptr);
-  virtual bool LoadStrength(const CDM::StrengthExerciseData& in, std::random_device* rd = nullptr);
+  virtual bool LoadGeneric(const CDM::GenericExerciseData& in, std::default_random_engine *rd = nullptr);
+  virtual bool LoadCycling(const CDM::CyclingExerciseData& in, std::default_random_engine *rd = nullptr);
+  virtual bool LoadRunning(const CDM::RunningExerciseData& in, std::default_random_engine *rd = nullptr);
+  virtual bool LoadStrength(const CDM::StrengthExerciseData& in, std::default_random_engine *rd = nullptr);
 
 private:
   ExerciseType m_mode;

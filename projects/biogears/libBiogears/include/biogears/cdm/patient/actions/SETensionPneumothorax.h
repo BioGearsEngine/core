@@ -36,7 +36,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::TensionPneumothoraxData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::TensionPneumothoraxData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::TensionPneumothoraxData* Unload() const override;
 
   virtual CDM::enumPneumothoraxType::value GetType() const;

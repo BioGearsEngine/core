@@ -37,7 +37,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::PainStimulusData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::PainStimulusData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::PainStimulusData* Unload() const override;
 
   virtual bool HasSeverity() const;

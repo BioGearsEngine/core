@@ -42,7 +42,7 @@ bool SESodaLimeFailure::IsActive() const
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SESodaLimeFailure::Load(const CDM::SodaLimeFailureData& in, std::random_device* rd)
+bool SESodaLimeFailure::Load(const CDM::SodaLimeFailureData& in, std::default_random_engine *rd)
 {
   SEAnesthesiaMachineAction::Load(in);
   GetSeverity().Load(in.Severity(), rd);

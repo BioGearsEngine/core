@@ -39,7 +39,7 @@ namespace biogears
     return m_SleepState == CDM::enumOnOff::Off ? false : true;
   }
   //-------------------------------------------------------------------------------
-  bool SESleep::Load(const CDM::SleepData& in, std::random_device *rd)
+  bool SESleep::Load(const CDM::SleepData& in, std::default_random_engine *rd)
   {
     SEPatientAction::Load(in);
     m_SleepState = in.Sleep();

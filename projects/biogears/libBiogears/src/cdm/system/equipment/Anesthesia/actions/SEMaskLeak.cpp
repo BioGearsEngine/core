@@ -42,7 +42,7 @@ bool SEMaskLeak::IsActive() const
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEMaskLeak::Load(const CDM::MaskLeakData& in, std::random_device* rd)
+bool SEMaskLeak::Load(const CDM::MaskLeakData& in, std::default_random_engine *rd)
 {
   SEAnesthesiaMachineAction::Load(in);
   GetSeverity().Load(in.Severity(), rd);

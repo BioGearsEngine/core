@@ -33,7 +33,7 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::ChestCompressionForceScaleData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::ChestCompressionForceScaleData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::ChestCompressionForceScaleData* Unload() const;
 
   virtual bool HasForceScale() const;

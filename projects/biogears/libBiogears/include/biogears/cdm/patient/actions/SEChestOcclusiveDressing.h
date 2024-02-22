@@ -35,7 +35,7 @@ public:
   virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
-  virtual bool Load(const CDM::ChestOcclusiveDressingData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::ChestOcclusiveDressingData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::ChestOcclusiveDressingData* Unload() const override;
 
   virtual CDM::enumSide::value GetSide() const;

@@ -98,7 +98,7 @@ bool SEExercise::IsActive() const
   }
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::Load(const CDM::ExerciseData& in, std::random_device* rd)
+bool SEExercise::Load(const CDM::ExerciseData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   if (in.GenericExercise().present()) {
@@ -118,7 +118,7 @@ SEExercise::ExerciseType SEExercise::GetExerciseType() const
   return m_mode;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in, std::random_device* rd)
+bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_mode = GENERIC;
@@ -130,7 +130,7 @@ bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in, std::random_dev
   return true;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::LoadCycling(const CDM::CyclingExerciseData& in, std::random_device* rd)
+bool SEExercise::LoadCycling(const CDM::CyclingExerciseData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_mode = CYCLING;
@@ -144,7 +144,7 @@ bool SEExercise::LoadCycling(const CDM::CyclingExerciseData& in, std::random_dev
   return true;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::LoadRunning(const CDM::RunningExerciseData& in, std::random_device* rd)
+bool SEExercise::LoadRunning(const CDM::RunningExerciseData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_mode = RUNNING;
@@ -158,7 +158,7 @@ bool SEExercise::LoadRunning(const CDM::RunningExerciseData& in, std::random_dev
   return true;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::LoadStrength(const CDM::StrengthExerciseData& in, std::random_device* rd)
+bool SEExercise::LoadStrength(const CDM::StrengthExerciseData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_mode = STRENGTH_TRAINING;

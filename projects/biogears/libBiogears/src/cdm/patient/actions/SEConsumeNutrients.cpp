@@ -45,7 +45,7 @@ namespace biogears {
     return IsValid();
   }
   //-----------------------------------------------------------------------------
-  bool SEConsumeNutrients::Load(const CDM::ConsumeNutrientsData& in, std::random_device* rd)
+  bool SEConsumeNutrients::Load(const CDM::ConsumeNutrientsData& in, std::default_random_engine *rd)
   {
     SEPatientAction::Load(in);
     if (in.Nutrition().present())

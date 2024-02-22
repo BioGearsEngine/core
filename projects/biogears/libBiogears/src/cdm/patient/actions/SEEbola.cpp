@@ -42,7 +42,7 @@ SEEbola::SEEbola()
     return m_Severity == CDM::enumInfectionSeverity::Eliminated ? false : true;
   }
   //-------------------------------------------------------------------------------
-  bool SEEbola::Load(const CDM::EbolaData& in, std::random_device* rd)
+  bool SEEbola::Load(const CDM::EbolaData& in, std::default_random_engine *rd)
   {
     SEPatientAction::Load(in);
     m_Severity = in.Severity();

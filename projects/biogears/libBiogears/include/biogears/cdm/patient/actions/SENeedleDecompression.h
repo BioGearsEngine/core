@@ -36,7 +36,7 @@ public:
   virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
-  virtual bool Load(const CDM::NeedleDecompressionData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::NeedleDecompressionData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::NeedleDecompressionData* Unload() const override;
 
   virtual CDM::enumSide::value GetSide() const;

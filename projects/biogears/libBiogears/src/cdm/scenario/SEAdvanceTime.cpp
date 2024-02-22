@@ -36,7 +36,7 @@ bool SEAdvanceTime::IsValid() const
   return HasTime() && m_Time->IsValid();
 }
 //-----------------------------------------------------------------------------
-bool SEAdvanceTime::Load(const CDM::AdvanceTimeData& in, std::random_device* rd)
+bool SEAdvanceTime::Load(const CDM::AdvanceTimeData& in, std::default_random_engine *rd)
 {
   SEAction::Load(in);
   GetTime().Load(in.Time(), rd);

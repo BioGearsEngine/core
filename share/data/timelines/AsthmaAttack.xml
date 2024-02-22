@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Actions xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_8.0.0" xsi:schemaLocation="">
+  <RandomSeed>
+    <seed>1</seed>
+    <seed>2</seed>
+    <seed>3</seed>
+    <seed>4</seed>
+    <seed>5</seed>
+  </RandomSeed>
   <Action xsi:type="AdvanceTimeData">
     <Time value="1" unit="min" deviation="0.45"/>
   </Action>

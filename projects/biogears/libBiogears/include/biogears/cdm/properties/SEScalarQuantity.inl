@@ -84,7 +84,7 @@ bool SEScalarQuantity<Unit>::IsValid() const
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
-void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in, std::random_device* rd)
+void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in, std::default_random_engine *rd)
 {
   this->Clear();
   SEProperty::Load(in);

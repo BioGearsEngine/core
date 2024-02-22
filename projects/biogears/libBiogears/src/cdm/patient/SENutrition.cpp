@@ -75,7 +75,7 @@ void SENutrition::Increment(const SENutrition& from)
     GetWater().Increment(*from.m_Water);
 }
 //-----------------------------------------------------------------------------
-bool SENutrition::Load(const CDM::NutritionData& in, std::random_device* rd)
+bool SENutrition::Load(const CDM::NutritionData& in, std::default_random_engine *rd)
 {
   Clear();
 

@@ -35,7 +35,7 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::ForcedExhaleData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::ForcedExhaleData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::ForcedExhaleData* Unload() const;
 
 protected:

@@ -37,7 +37,7 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceNasalDoseData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::SubstanceNasalDoseData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::SubstanceNasalDoseData* Unload() const;
 
   virtual bool HasDose() const;
@@ -66,7 +66,7 @@ public:
   ~SENasalState();
   virtual void Clear();
 
-  virtual bool Load(const CDM::NasalStateData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::NasalStateData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::NasalStateData* Unload() const;
 
   bool Initialize(SEScalarMass& dose);

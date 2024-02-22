@@ -40,7 +40,7 @@ public:
   void Invalidate() override;
   bool IsValid() const override;
 
-  virtual void Load(const CDM::ScalarData& in, std::random_device* rd = nullptr) override;
+  virtual void Load(const CDM::ScalarData& in, std::default_random_engine *rd = nullptr) override;
   virtual CDM::ScalarData* Unload() const override;
 
   virtual bool Set(const SEScalarQuantity<Unit>& s);

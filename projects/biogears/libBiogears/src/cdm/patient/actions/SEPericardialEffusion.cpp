@@ -42,7 +42,7 @@ bool SEPericardialEffusion::IsActive() const
   return IsValid() ? !m_EffusionRate->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEPericardialEffusion::Load(const CDM::PericardialEffusionData& in, std::random_device *rd)
+bool SEPericardialEffusion::Load(const CDM::PericardialEffusionData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   GetEffusionRate().Load(in.EffusionRate(), rd);
