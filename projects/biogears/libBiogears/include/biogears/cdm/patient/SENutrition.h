@@ -42,7 +42,7 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::NutritionData& in, std::random_device* = nullptr);
+  virtual bool Load(const CDM::NutritionData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::NutritionData* Unload() const;
 
 public:

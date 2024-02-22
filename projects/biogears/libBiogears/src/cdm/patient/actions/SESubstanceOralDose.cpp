@@ -46,7 +46,7 @@ bool SESubstanceOralDose::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in, std::random_device *rd)
+bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine *rd)
 {
   SESubstanceAdministration::Load(in);
   GetDose().Load(in.Dose(), rd);
@@ -162,7 +162,7 @@ bool SETransmucosalState::Initialize(SEScalarMass& dose)
   return (bucSet && subSet);
 }
 //-------------------------------------------------------------------------------
-bool SETransmucosalState::Load(const CDM::TransmucosalStateData& in, std::random_device* rd)
+bool SETransmucosalState::Load(const CDM::TransmucosalStateData& in, std::default_random_engine *rd)
 {
 
   GetMouthSolidMass().Load(in.MouthSolidMass());

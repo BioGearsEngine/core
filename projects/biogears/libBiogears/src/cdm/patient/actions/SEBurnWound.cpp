@@ -56,7 +56,7 @@ bool SEBurnWound::IsActive() const
   return IsValid() ? !(m_TBSA->GetValue() < ZERO_APPROX) : false;
 }
 //-----------------------------------------------------------------------------
-bool SEBurnWound::Load(const CDM::BurnWoundData& in, std::random_device* rd)
+bool SEBurnWound::Load(const CDM::BurnWoundData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   SetTotalBodySurfaceArea(0.);

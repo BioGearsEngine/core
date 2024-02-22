@@ -45,7 +45,7 @@ public:
   *  This method will encapsulate that logic in a single function */
   virtual bool IsActive() const { return IsValid(); }
 
-  static SEAction* newFromBind(const CDM::ActionData& action, SESubstanceManager& substances, std::random_device* = nullptr);
+  static SEAction* newFromBind(const CDM::ActionData& action, SESubstanceManager& substances, std::default_random_engine *rd = nullptr);
 
   virtual bool Load(const CDM::ActionData& in);
   virtual CDM::ActionData* Unload() const;

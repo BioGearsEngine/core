@@ -58,7 +58,7 @@ bool SEThermalApplication::IsActive() const
   return false;
 }
 //-------------------------------------------------------------------------------
-bool SEThermalApplication::Load(const CDM::ThermalApplicationData& in, std::random_device* rd)
+bool SEThermalApplication::Load(const CDM::ThermalApplicationData& in, std::default_random_engine *rd)
 {
   // Set this before our super class tells us to Clear if the action wants us to keep our current data
   CDM::ActiveHeatingData* ah = HasActiveHeating() ? GetActiveHeating().Unload() : nullptr;

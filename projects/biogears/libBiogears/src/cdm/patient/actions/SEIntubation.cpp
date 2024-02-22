@@ -40,7 +40,7 @@ bool SEIntubation::IsActive() const
   return HasType() && GetType() != CDM::enumIntubationType::Off;
 }
 //-------------------------------------------------------------------------------
-bool SEIntubation::Load(const CDM::IntubationData& in, std::random_device* rd)
+bool SEIntubation::Load(const CDM::IntubationData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_Type = in.Type();

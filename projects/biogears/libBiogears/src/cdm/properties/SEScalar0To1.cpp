@@ -22,7 +22,7 @@ SEScalar0To1::~SEScalar0To1()
 {
 }
 //-------------------------------------------------------------------------------
-void SEScalar0To1::Load(const CDM::ScalarData& in, std::random_device* rd)
+void SEScalar0To1::Load(const CDM::ScalarData& in, std::default_random_engine *rd)
 {
   Clear();
   SEProperty::Load(in);

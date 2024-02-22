@@ -22,7 +22,7 @@ public:
   SEScalar0To1();
   virtual ~SEScalar0To1();
 
-  void Load(const CDM::ScalarData& in, std::random_device* rd = nullptr) override;
+  void Load(const CDM::ScalarData& in, std::default_random_engine *rd = nullptr) override;
   CDM::Scalar0To1Data* Unload() const;
 
   double GetValue() const { return SEScalar::GetValue(); }

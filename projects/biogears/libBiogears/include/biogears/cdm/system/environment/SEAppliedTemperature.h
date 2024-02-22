@@ -33,7 +33,7 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::AppliedTemperatureData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::AppliedTemperatureData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::AppliedTemperatureData* Unload() const;
 
   bool operator==(SEAppliedTemperature const&) const;

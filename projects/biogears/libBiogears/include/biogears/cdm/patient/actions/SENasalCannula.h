@@ -36,7 +36,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::NasalCannulaData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::NasalCannulaData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::NasalCannulaData* Unload() const override;
 
   virtual bool HasFlowRate() const;

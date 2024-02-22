@@ -38,7 +38,7 @@ bool SESerializeState::IsValid() const
   return HasFilename() && HasType();
 }
 //-----------------------------------------------------------------------------
-bool SESerializeState::Load(const CDM::SerializeStateData& in, std::random_device* rd)
+bool SESerializeState::Load(const CDM::SerializeStateData& in, std::default_random_engine *rd)
 {
 
   SEAction::Load(in);

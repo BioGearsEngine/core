@@ -45,7 +45,7 @@ namespace biogears
     return m_Severity == CDM::enumInfectionSeverity::Eliminated ? false : true;
   }
   //-------------------------------------------------------------------------------
-  bool SEInfection::Load(const CDM::InfectionData& in, std::random_device * rd)
+  bool SEInfection::Load(const CDM::InfectionData& in, std::default_random_engine * rd)
   {
     SEPatientAction::Load(in);
     m_Location = in.Location();

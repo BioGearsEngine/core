@@ -38,7 +38,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::SleepData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::SleepData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::SleepData* Unload() const override;
 
   virtual bool HasSleepState() const;

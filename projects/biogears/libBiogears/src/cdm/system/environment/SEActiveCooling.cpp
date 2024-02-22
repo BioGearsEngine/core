@@ -59,7 +59,7 @@ const SEScalar* SEActiveCooling::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SEActiveCooling::Load(const CDM::ActiveCoolingData& in, std::random_device *rd)
+bool SEActiveCooling::Load(const CDM::ActiveCoolingData& in, std::default_random_engine *rd)
 {
   GetPower().Load(in.Power(), rd);
   if (in.SurfaceArea().present())

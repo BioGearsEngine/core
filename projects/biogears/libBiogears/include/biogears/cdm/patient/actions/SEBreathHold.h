@@ -36,7 +36,7 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::BreathHoldData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::BreathHoldData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::BreathHoldData* Unload() const;
 
   virtual bool HasPeriod() const;

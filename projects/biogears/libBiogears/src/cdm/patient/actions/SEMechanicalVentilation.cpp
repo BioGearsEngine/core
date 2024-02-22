@@ -81,7 +81,7 @@ bool SEMechanicalVentilation::IsActive() const
   return GetState() == CDM::enumOnOff::On;
 }
 //-------------------------------------------------------------------------------
-bool SEMechanicalVentilation::Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr, std::random_device* rd)
+bool SEMechanicalVentilation::Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr, std::default_random_engine *rd)
 {
   SEPatientAction::Clear();
   SetState(in.State());

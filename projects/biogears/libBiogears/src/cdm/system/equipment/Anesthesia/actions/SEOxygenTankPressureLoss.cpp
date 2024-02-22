@@ -47,7 +47,7 @@ void SEOxygenTankPressureLoss::SetActive(bool b)
   m_State = b ? CDM::enumOnOff::On : CDM::enumOnOff::Off;
 }
 //-------------------------------------------------------------------------------
-bool SEOxygenTankPressureLoss::Load(const CDM::OxygenTankPressureLossData& in, std::random_device* rd)
+bool SEOxygenTankPressureLoss::Load(const CDM::OxygenTankPressureLossData& in, std::default_random_engine *rd)
 {
   SEAnesthesiaMachineAction::Load(in);
   SetActive(in.State() == CDM::enumOnOff::On ? true : false);

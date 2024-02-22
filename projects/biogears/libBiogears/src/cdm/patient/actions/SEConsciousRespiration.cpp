@@ -52,7 +52,7 @@ bool SEConsciousRespiration::IsActive() const
 }
 //-------------------------------------------------------------------------------
 
-bool SEConsciousRespiration::Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances, std::random_device* rd)
+bool SEConsciousRespiration::Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances, std::default_random_engine *rd)
 {
   // Set this before our super class tells us to Clear if the action wants us to keep our current data
   m_ClearCommands = !in.AppendToPrevious();

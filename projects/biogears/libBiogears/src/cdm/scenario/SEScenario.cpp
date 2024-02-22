@@ -56,17 +56,28 @@ bool SEScenario::Load(const CDM::ScenarioData& in)
   auto loadActions = [](SEScenario& scenario, CDM::ActionListData const* actionList) {
     std::unique_ptr<std::seed_seq> seed;
     std::random_device random_device;
+    std::unique_ptr<std::default_random_engine> default_random_engine;
 
     if (actionList->RandomSeed().present() && actionList->RandomSeed().get().seed().size() != 0) {
       auto seeds = actionList->RandomSeed().get().seed();
       seed = std::make_unique<std::seed_seq>(seeds.begin(), seeds.end());
+      default_random_engine = std::make_unique<std::default_random_engine>(*seed);
+
+      std::stringstream ss;
+      ss << "Using seed={";
+      for (auto& seed : actionList->RandomSeed().get().seed() ) {
+        ss << seed << ", " ;
+      }
+      ss.seekp(-2, ss.cur);
+      ss << "}" << std::endl;
+      scenario.m_Logger->Warning(ss.str());
     } else {
-      auto seed_vec = std::vector<unsigned int> { random_device(), random_device(), random_device(), random_device(), random_device() };
-      seed = std::make_unique<std::seed_seq>(seed_vec.begin(), seed_vec.end());
+      seed.reset(new std::seed_seq { random_device(), random_device(), random_device(), random_device(), random_device() });
+      default_random_engine = std::make_unique<std::default_random_engine>(*seed);
     }
 
     for (auto& action : actionList->Action()) {
-      auto new_action = SEAction::newFromBind(action, scenario.m_SubMgr, &random_device);
+      auto new_action = SEAction::newFromBind(action, scenario.m_SubMgr, default_random_engine.get());
       if (new_action != nullptr) {
         scenario.m_Actions.push_back(new_action);
       }
@@ -100,12 +111,15 @@ bool SEScenario::Load(const CDM::ScenarioData& in)
         // We are ignoring recursive ActionListData where an ActionListData has an ActionFile reference
         loadActions(*this, actionList);
       } else {
-        m_Logger->Error(asprintf("Can not find %s", actionFile.ToString().c_str()), "SEScenario");
+        m_Logger->Error(asprintf("Unable to load %s. File is not formated properly.", actionFile.ToString().c_str()), "SEScenario");
       }
     } else {
-      loadActions(*this, &in.Actions());
+      m_Logger->Error(asprintf("Can not find %s", actionFile.ToString().c_str()), "SEScenario");
     }
+  } else {
+    loadActions(*this, &in.Actions());
   }
+
   return IsValid();
 }
 //-----------------------------------------------------------------------------
@@ -144,8 +158,7 @@ void SEScenario::Unload(CDM::ScenarioData& data) const
   }
   data.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(m_DataRequestMgr.Unload()));
   data.Actions(std::make_unique<CDM::ActionListData>());
-  if (HasActionFile()) {
-
+  if (m_Actions.empty() && m_ActionFile.size()) {
     ::xml_schema::string item = m_ActionFile;
     data.Actions().ActionFile().set(item);
 

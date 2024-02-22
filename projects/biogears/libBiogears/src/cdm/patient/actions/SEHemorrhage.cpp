@@ -63,7 +63,7 @@ bool SEHemorrhage::IsActive() const
   return IsValid() ? !(m_InitialRate->GetValue(VolumePerTimeUnit::mL_Per_min) <= ZERO_APPROX) : false;
 }
 //-----------------------------------------------------------------------------
-bool SEHemorrhage::Load(const CDM::HemorrhageData& in, std::random_device *rd)
+bool SEHemorrhage::Load(const CDM::HemorrhageData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_Compartment = in.Compartment();

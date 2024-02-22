@@ -39,7 +39,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances, std::default_random_engine *rd = nullptr);
   virtual CDM::ConsciousRespirationData* Unload() const override;
 
   // Get the active command

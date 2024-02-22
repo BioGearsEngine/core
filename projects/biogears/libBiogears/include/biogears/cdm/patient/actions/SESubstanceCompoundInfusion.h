@@ -35,7 +35,7 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceCompoundInfusionData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::SubstanceCompoundInfusionData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::SubstanceCompoundInfusionData* Unload() const;
 
   virtual bool HasBagVolume() const;

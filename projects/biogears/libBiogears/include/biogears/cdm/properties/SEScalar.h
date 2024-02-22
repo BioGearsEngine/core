@@ -52,7 +52,7 @@ public:
   Note that this does not affect bounds
   */
   virtual void Invalidate();
-  virtual void Load(const CDM::ScalarData& in, std::random_device* rd = nullptr);
+  virtual void Load(const CDM::ScalarData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::ScalarData* Unload() const;
 
   /**

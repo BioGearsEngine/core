@@ -37,7 +37,7 @@ public:
   virtual bool IsActive() const override;
   
 
-  virtual bool Load(const CDM::IntubationData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::IntubationData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::IntubationData* Unload() const override;
   
   virtual CDM::enumIntubationType::value GetType() const;

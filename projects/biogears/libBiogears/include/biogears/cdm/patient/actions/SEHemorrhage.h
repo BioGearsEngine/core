@@ -45,7 +45,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::HemorrhageData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::HemorrhageData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::HemorrhageData* Unload() const override;
 
   virtual const char* GetCompartment_cStr() const;

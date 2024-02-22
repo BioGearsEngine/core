@@ -36,7 +36,7 @@ void SETensionPneumothorax::Clear()
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
-bool SETensionPneumothorax::Load(const CDM::TensionPneumothoraxData& in, std::random_device *rd)
+bool SETensionPneumothorax::Load(const CDM::TensionPneumothoraxData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   GetSeverity().Load(in.Severity(), rd);

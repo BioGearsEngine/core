@@ -47,7 +47,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::BurnWoundData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::BurnWoundData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::BurnWoundData* Unload() const override;
 
   bool HasTotalBodySurfaceArea() const;

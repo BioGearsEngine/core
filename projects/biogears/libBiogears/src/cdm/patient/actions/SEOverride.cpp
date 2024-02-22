@@ -196,7 +196,7 @@ bool SEOverride::IsActive() const
   return (GetOverrideState() == CDM::enumOnOff::On);
 }
 //-------------------------------------------------------------------------------
-bool SEOverride::Load(const CDM::OverrideData& in, std::random_device* rd)
+bool SEOverride::Load(const CDM::OverrideData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Clear();
   SetOverrideState(in.State());

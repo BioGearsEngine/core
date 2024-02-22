@@ -38,7 +38,7 @@ public:
   virtual void Clear();
   virtual void Reset();
 
-  virtual bool Load(const CDM::ActiveHeatingData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::ActiveHeatingData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::ActiveHeatingData* Unload() const;
 
   bool operator==(SEActiveHeating const&) const;

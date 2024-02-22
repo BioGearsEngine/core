@@ -32,7 +32,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::MaskLeakData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::MaskLeakData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::MaskLeakData* Unload() const override;
 
   bool operator==(SEMaskLeak const& rhs) const;

@@ -69,7 +69,7 @@ void SEScalar::Clear()
 }
 
 //-------------------------------------------------------------------------------
-void SEScalar::Load(const CDM::ScalarData& in, std::random_device* rd)
+void SEScalar::Load(const CDM::ScalarData& in, std::default_random_engine *rd)
 {
   Clear();
   SEProperty::Load(in);

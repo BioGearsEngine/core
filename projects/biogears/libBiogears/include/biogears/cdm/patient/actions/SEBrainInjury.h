@@ -36,7 +36,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::BrainInjuryData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::BrainInjuryData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::BrainInjuryData* Unload() const override;
 
   virtual bool HasSeverity() const;

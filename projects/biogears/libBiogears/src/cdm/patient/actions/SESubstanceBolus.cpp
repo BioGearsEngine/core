@@ -51,7 +51,7 @@ bool SESubstanceBolus::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceBolus::Load(const CDM::SubstanceBolusData& in, std::random_device *rd)
+bool SESubstanceBolus::Load(const CDM::SubstanceBolusData& in, std::default_random_engine *rd)
 {
   SESubstanceAdministration::Load(in);
   if (in.AdminTime().present()) {
@@ -172,7 +172,7 @@ SESubstanceBolusState::~SESubstanceBolusState()
 {
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceBolusState::Load(const CDM::SubstanceBolusStateData& in, std::random_device* rd)
+bool SESubstanceBolusState::Load(const CDM::SubstanceBolusStateData& in, std::default_random_engine *rd)
 {
   m_ElapsedTime.Load(in.ElapsedTime(), rd);
   m_AdministeredDose.Load(in.AdministeredDose(), rd);

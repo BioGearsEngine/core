@@ -42,7 +42,7 @@ bool SEChestCompressionForce::IsActive() const
   return IsValid() ? !m_Force->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEChestCompressionForce::Load(const CDM::ChestCompressionForceData& in, std::random_device* rd)
+bool SEChestCompressionForce::Load(const CDM::ChestCompressionForceData& in, std::default_random_engine *rd)
 {
   SEChestCompression::Load(in);
   GetForce().Load(in.Force(), rd);

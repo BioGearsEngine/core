@@ -38,7 +38,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::InfectionData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::InfectionData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::InfectionData* Unload() const override;
 
   virtual const char* GetLocation_cStr() const;

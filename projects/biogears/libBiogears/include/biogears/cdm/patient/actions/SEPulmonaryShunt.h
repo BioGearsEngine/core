@@ -36,7 +36,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::PulmonaryShuntData& in, std::random_device* rd = nullptr);
+  virtual bool Load(const CDM::PulmonaryShuntData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::PulmonaryShuntData* Unload() const override;
 
 protected:

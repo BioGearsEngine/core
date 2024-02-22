@@ -42,7 +42,7 @@ bool SEVaporizerFailure::IsActive() const
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEVaporizerFailure::Load(const CDM::VaporizerFailureData& in, std::random_device* rd)
+bool SEVaporizerFailure::Load(const CDM::VaporizerFailureData& in, std::default_random_engine *rd)
 {
   SEAnesthesiaMachineAction::Load(in);
   GetSeverity().Load(in.Severity(), rd);

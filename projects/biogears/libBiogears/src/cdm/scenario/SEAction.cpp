@@ -92,7 +92,7 @@ void SEAction::Clear()
   m_Comment = "";
 }
 //-----------------------------------------------------------------------------
-SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager& substances, std::random_device* rd)
+SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager& substances, std::default_random_engine *rd)
 {
   std::stringstream ss;
   SESubstance* substance;
