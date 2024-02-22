@@ -68,11 +68,12 @@ We have made available to the medical simulation community a large set of burn i
 
 Programmatics
 ===============
-BioGears was originally developed under the TATRC funded project: W81XWH-13-2-0068  
-BioGears has additionally been developed under the following contracts:
-  - W81XWH-17-C-0172
-  - W911NF-17-D-0006
-  - W81XWH-18-C-0169
+BioGears is partially funded through DARPA under   HR0011-23-C-0129
+Originally developed under the TATRC funded project: W81XWH-13-2-0068
+it has additionally been developed under the following contracts:
+ - W81XWH-17-C-0172
+ - W911NF-17-D-0006
+ - W81XWH-18-C-0169
 
 Disclaimer:
 
