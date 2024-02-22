@@ -32,7 +32,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::VentilatorPressureLossData& in);
+  virtual bool Load(const CDM::VentilatorPressureLossData& in, std::random_device* rd = nullptr);
   virtual CDM::VentilatorPressureLossData* Unload() const override;
 
 protected:

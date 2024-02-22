@@ -44,7 +44,7 @@ bool SEEscharotomy::IsActive() const
   return IsValid();
 }
 
-bool SEEscharotomy::Load(const CDM::EscharotomyData& in)
+bool SEEscharotomy::Load(const CDM::EscharotomyData& in, std::random_device* rd)
 {
   SEPatientAction::Load(in);
   m_Location = in.Location();

@@ -75,7 +75,7 @@ void SENutrition::Increment(const SENutrition& from)
     GetWater().Increment(*from.m_Water);
 }
 //-----------------------------------------------------------------------------
-bool SENutrition::Load(const CDM::NutritionData& in)
+bool SENutrition::Load(const CDM::NutritionData& in, std::random_device* rd)
 {
   Clear();
 
@@ -85,17 +85,17 @@ bool SENutrition::Load(const CDM::NutritionData& in)
     m_Name = "Standard Meal";
   }
   if (in.Carbohydrate().present())
-    GetCarbohydrate().Load(in.Carbohydrate().get());
+    GetCarbohydrate().Load(in.Carbohydrate().get(), rd);
   if (in.Fat().present())
-    GetFat().Load(in.Fat().get());
+    GetFat().Load(in.Fat().get(), rd);
   if (in.Protein().present())
-    GetProtein().Load(in.Protein().get());
+    GetProtein().Load(in.Protein().get(), rd);
   if (in.Calcium().present())
-    GetCalcium().Load(in.Calcium().get());
+    GetCalcium().Load(in.Calcium().get(), rd);
   if (in.Sodium().present())
-    GetSodium().Load(in.Sodium().get());
+    GetSodium().Load(in.Sodium().get(), rd);
   if (in.Water().present())
-    GetWater().Load(in.Water().get());
+    GetWater().Load(in.Water().get(), rd);
   return true;
 }
 //-----------------------------------------------------------------------------

@@ -58,7 +58,7 @@ bool SEThermalApplication::IsActive() const
   return false;
 }
 //-------------------------------------------------------------------------------
-bool SEThermalApplication::Load(const CDM::ThermalApplicationData& in)
+bool SEThermalApplication::Load(const CDM::ThermalApplicationData& in, std::random_device* rd)
 {
   // Set this before our super class tells us to Clear if the action wants us to keep our current data
   CDM::ActiveHeatingData* ah = HasActiveHeating() ? GetActiveHeating().Unload() : nullptr;
@@ -74,23 +74,23 @@ bool SEThermalApplication::Load(const CDM::ThermalApplicationData& in)
     //      and overwrite the previous ActiveHeating with the inbound. While not appending would clear ActiveCooling.
 
     if (ah) {
-      GetActiveHeating().Load(*ah);
+      GetActiveHeating().Load(*ah, rd);
     }
     if (ac) {
-      GetActiveCooling().Load(*ac);
+      GetActiveCooling().Load(*ac, rd);
     }
     if (at) {
       GetAppliedTemperature().Load(*at);
     }
   }
   if (in.ActiveHeating().present()) {
-    GetActiveHeating().Load(in.ActiveHeating().get());
+    GetActiveHeating().Load(in.ActiveHeating().get(), rd);
   }
   if (in.ActiveCooling().present()) {
-    GetActiveCooling().Load(in.ActiveCooling().get());
+    GetActiveCooling().Load(in.ActiveCooling().get(), rd);
   }
   if (in.AppliedTemperature().present()) {
-    GetAppliedTemperature().Load(in.AppliedTemperature().get());
+    GetAppliedTemperature().Load(in.AppliedTemperature().get(), rd);
   }
 
   m_AppendToPrevious = in.AppendToPrevious();

@@ -42,10 +42,10 @@ bool SEVentilatorPressureLoss::IsActive() const
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEVentilatorPressureLoss::Load(const CDM::VentilatorPressureLossData& in)
+bool SEVentilatorPressureLoss::Load(const CDM::VentilatorPressureLossData& in, std::random_device* rd)
 {
   SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity());
+  GetSeverity().Load(in.Severity(), rd);
   return true;
 }
 //-------------------------------------------------------------------------------

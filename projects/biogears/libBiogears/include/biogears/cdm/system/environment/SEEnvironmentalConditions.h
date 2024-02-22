@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/Environment.hxx>
 
+#include <random>
+
 CDM_BIND_DECL(EnvironmentalConditionsData)
 
 namespace biogears {

@@ -40,7 +40,7 @@ bool SEUseInhaler::IsActive() const
   return SEConsciousRespirationCommand::IsActive();
 }
 //-------------------------------------------------------------------------------
-bool SEUseInhaler::Load(const CDM::UseInhalerData& in)
+bool SEUseInhaler::Load(const CDM::UseInhalerData& in, std::random_device* rd)
 {
   SEConsciousRespirationCommand::Load(in);
   return true;

@@ -16,6 +16,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+#include <random>
+
 namespace biogears {
 class SESubstance;
 class SETransmucosalState;
@@ -35,7 +37,7 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceOralDoseData& in);
+  virtual bool Load(const CDM::SubstanceOralDoseData& in, std::random_device* rd = nullptr);
   virtual CDM::SubstanceOralDoseData* Unload() const;
 
   virtual CDM::enumOralAdministration::value GetAdminRoute() const;
@@ -69,7 +71,7 @@ public:
   ~SETransmucosalState();
   virtual void Clear();
 
-  virtual bool Load(const CDM::TransmucosalStateData& in);
+  virtual bool Load(const CDM::TransmucosalStateData& in, std::random_device* rd = nullptr);
   virtual CDM::TransmucosalStateData* Unload() const;
 
   bool Initialize(SEScalarMass& dose);

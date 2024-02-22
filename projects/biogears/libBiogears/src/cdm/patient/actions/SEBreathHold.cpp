@@ -43,10 +43,10 @@ bool SEBreathHold::IsActive() const
   return SEConsciousRespirationCommand::IsActive();
 }
 //-------------------------------------------------------------------------------
-bool SEBreathHold::Load(const CDM::BreathHoldData& in)
+bool SEBreathHold::Load(const CDM::BreathHoldData& in, std::random_device* rd)
 {
   SEConsciousRespirationCommand::Load(in);
-  GetPeriod().Load(in.Period());
+  GetPeriod().Load(in.Period(), rd);
   return true;
 }
 //-------------------------------------------------------------------------------

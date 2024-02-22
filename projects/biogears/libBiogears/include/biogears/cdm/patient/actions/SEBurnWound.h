@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+#include <random>
+
 namespace biogears {
 class SEScalar0To1;
 class SEScalar;
@@ -45,7 +47,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::BurnWoundData& in);
+  virtual bool Load(const CDM::BurnWoundData& in, std::random_device* rd = nullptr);
   virtual CDM::BurnWoundData* Unload() const override;
 
   bool HasTotalBodySurfaceArea() const;

@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+#include <random>
+
 namespace biogears {
 class Serializer;
 class SESubstance;
@@ -43,7 +45,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr);
+  virtual bool Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr, std::random_device* rd = nullptr);
   virtual CDM::MechanicalVentilationData* Unload() const override;
 
   virtual CDM::enumOnOff::value GetState() const;

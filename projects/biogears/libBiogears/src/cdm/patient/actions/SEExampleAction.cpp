@@ -43,10 +43,10 @@ bool SEExampleAction::IsActive() const
   return IsValid() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEExampleAction::Load(const CDM::ExampleActionData& in)
+bool SEExampleAction::Load(const CDM::ExampleActionData& in, std::random_device* rd)
 {
   SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity());
+  GetSeverity().Load(in.Severity(), rd);
   return true;
 }
 //-------------------------------------------------------------------------------

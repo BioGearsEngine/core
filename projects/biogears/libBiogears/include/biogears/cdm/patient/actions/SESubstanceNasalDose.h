@@ -18,6 +18,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+#include <random>
+
 namespace biogears {
 class SESubstance;
 namespace io {
@@ -35,7 +37,7 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceNasalDoseData& in);
+  virtual bool Load(const CDM::SubstanceNasalDoseData& in, std::random_device* rd = nullptr);
   virtual CDM::SubstanceNasalDoseData* Unload() const;
 
   virtual bool HasDose() const;
@@ -64,7 +66,7 @@ public:
   ~SENasalState();
   virtual void Clear();
 
-  virtual bool Load(const CDM::NasalStateData& in);
+  virtual bool Load(const CDM::NasalStateData& in, std::random_device* rd = nullptr);
   virtual CDM::NasalStateData* Unload() const;
 
   bool Initialize(SEScalarMass& dose);

@@ -32,7 +32,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::TubeCuffLeakData& in);
+  virtual bool Load(const CDM::TubeCuffLeakData& in, std::random_device* rd = nullptr);
   virtual CDM::TubeCuffLeakData* Unload() const override;
 
 protected:

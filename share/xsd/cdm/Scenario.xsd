@@ -43,6 +43,15 @@ specific language governing permissions and limitations under the License.
         <xs:choice>
           <xs:element name="ActionFile" type="xs:string" minOccurs="1" maxOccurs="1"/>
           <xs:sequence>
+
+            <xs:element name = "RandomSeed"  minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name = "seed" type = "xs:int" minOccurs="1" maxOccurs="5"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+
             <xs:element name="Action" type="ActionData" minOccurs="1" maxOccurs="unbounded"/>
           </xs:sequence>
         </xs:choice>

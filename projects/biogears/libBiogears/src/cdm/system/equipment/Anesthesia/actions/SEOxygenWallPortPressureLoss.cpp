@@ -47,7 +47,7 @@ void SEOxygenWallPortPressureLoss::SetActive(bool b)
   m_State = b ? CDM::enumOnOff::On : CDM::enumOnOff::Off;
 }
 //-------------------------------------------------------------------------------
-bool SEOxygenWallPortPressureLoss::Load(const CDM::OxygenWallPortPressureLossData& in)
+bool SEOxygenWallPortPressureLoss::Load(const CDM::OxygenWallPortPressureLossData& in, std::random_device* rd)
 {
   SEAnesthesiaMachineAction::Load(in);
   SetActive(in.State() == CDM::enumOnOff::On ? true : false);

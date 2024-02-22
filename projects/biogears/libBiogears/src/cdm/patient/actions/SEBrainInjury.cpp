@@ -45,10 +45,10 @@ bool SEBrainInjury::IsActive() const
   return IsValid() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEBrainInjury::Load(const CDM::BrainInjuryData& in)
+bool SEBrainInjury::Load(const CDM::BrainInjuryData& in, std::random_device* rd)
 {
   SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity());
+  GetSeverity().Load(in.Severity(), rd);
   m_Type = in.Type();
   return true;
 }

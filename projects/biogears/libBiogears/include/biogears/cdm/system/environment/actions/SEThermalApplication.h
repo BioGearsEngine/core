@@ -35,7 +35,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ThermalApplicationData& in);
+  virtual bool Load(const CDM::ThermalApplicationData& in, std::random_device* rd = nullptr);
   virtual CDM::ThermalApplicationData* Unload() const override;
 
 protected:

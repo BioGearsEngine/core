@@ -45,10 +45,10 @@ bool SENasalCannula::IsActive() const
   return IsValid() ? ! (m_FlowRate->GetValue(VolumePerTimeUnit::mL_Per_min) <= ZERO_APPROX) : false;
 }
 //-------------------------------------------------------------------------------
-bool SENasalCannula::Load(const CDM::NasalCannulaData& in)
+bool SENasalCannula::Load(const CDM::NasalCannulaData& in, std::random_device *rd)
 {
   SEPatientAction::Load(in);
-  GetFlowRate().Load(in.FlowRate());
+  GetFlowRate().Load(in.FlowRate(), rd);
   return true;
 }
 //-------------------------------------------------------------------------------

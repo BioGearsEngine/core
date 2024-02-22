@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+#include <random>
+
 namespace biogears {
 class BIOGEARS_API SEUrinate : public SEPatientAction {
 public:
@@ -29,7 +31,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::UrinateData& in);
+  virtual bool Load(const CDM::UrinateData& in, std::random_device* rd = nullptr);
   virtual CDM::UrinateData* Unload() const override;
 
   virtual void ToString(std::ostream& str) const override;

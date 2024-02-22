@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/Environment.hxx>
 
+#include <random>
+
 namespace biogears {
 class SEScalar;
 class SEScalarFraction;
@@ -34,7 +36,7 @@ public:
   virtual void Clear();
   virtual void Reset();
 
-  virtual bool Load(const CDM::ActiveCoolingData& in);
+  virtual bool Load(const CDM::ActiveCoolingData& in, std::random_device* rd = nullptr);
   virtual CDM::ActiveCoolingData* Unload() const;
 
   bool operator==(SEActiveCooling const&) const;

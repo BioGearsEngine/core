@@ -69,11 +69,17 @@ void SEScalar::Clear()
 }
 
 //-------------------------------------------------------------------------------
-void SEScalar::Load(const CDM::ScalarData& in)
+void SEScalar::Load(const CDM::ScalarData& in, std::random_device* rd)
 {
   Clear();
   SEProperty::Load(in);
-  SetValue(in.value());
+
+  if (in.deviation().present() && rd) {
+    auto nd = std::normal_distribution(in.value(), in.deviation().get());
+    SetValue( nd(*rd) );
+  } else {
+    SetValue(in.value()); 
+  }
   if (in.unit().present()) {
     std::string u = in.unit().get();
     if (!("unitless" == u || "" == u || u.empty())) {

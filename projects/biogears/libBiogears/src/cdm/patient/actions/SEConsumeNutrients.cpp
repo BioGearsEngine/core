@@ -45,11 +45,11 @@ namespace biogears {
     return IsValid();
   }
   //-----------------------------------------------------------------------------
-  bool SEConsumeNutrients::Load(const CDM::ConsumeNutrientsData& in)
+  bool SEConsumeNutrients::Load(const CDM::ConsumeNutrientsData& in, std::random_device* rd)
   {
     SEPatientAction::Load(in);
     if (in.Nutrition().present())
-      GetNutrition().Load(in.Nutrition().get());
+      GetNutrition().Load(in.Nutrition().get(), rd);
     else if (in.NutritionFile().present())
       SetNutritionFile(in.NutritionFile().get());
     return true;

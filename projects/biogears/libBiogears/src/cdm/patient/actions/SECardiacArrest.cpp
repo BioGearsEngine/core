@@ -45,7 +45,7 @@ void SECardiacArrest::SetActive(bool b)
   m_State = b ? CDM::enumOnOff::On : CDM::enumOnOff::Off;
 }
 //-------------------------------------------------------------------------------
-bool SECardiacArrest::Load(const CDM::CardiacArrestData& in)
+bool SECardiacArrest::Load(const CDM::CardiacArrestData& in, std::random_device* rd)
 {
   SEPatientAction::Load(in);
   m_State = in.State();

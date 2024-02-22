@@ -74,7 +74,7 @@ public:
   //!        UnLoad as the serialization file treats the two as a choice.
   //!	     A second Unload and Load have been added to this class
   //!        to allow generation of ActionList files
-  //! 
+  //!
   virtual const char* GetActionFile() const;
   virtual void SetActionFile(const char* ActionFile);
   virtual void SetActionFile(const std::string& ActionFile);

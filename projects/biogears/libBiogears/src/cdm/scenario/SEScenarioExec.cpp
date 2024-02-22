@@ -29,6 +29,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
+#include <algorithm>
+#include <random>
+#include <vector>
 namespace biogears {
 SEScenarioExec::SEScenarioExec(PhysiologyEngine& engine)
   : Loggable(engine.GetLogger())
@@ -53,9 +56,9 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const char* resultsFile
 //-----------------------------------------------------------------------------
 bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resultsFile, SEScenarioCustomExec* cExec)
 {
-
   auto scenarioData = std::unique_ptr<CDM::ScenarioData>(scenario.Unload());
   auto memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
+
   if (!memory_safe_scenario->Load(*scenarioData)) {
     return false;
   }
@@ -66,11 +69,11 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
     if (scenarioData->EngineStateFile().present()) {
       m_Engine.LoadState(scenarioData->EngineStateFile().get());
 
-      //SEScenario is a flawed design that requires the memory state of a
-      //Physiology Engine to remain constant over the scenario and makes
-      //State loading a nightmare. The class needs to be depricated this entire
-      //Driver could just read from the Serial layer and standup Actions and DataRequest
-      //When we know the physiolgoy engine is good to go and not try to cashe state.
+      // SEScenario is a flawed design that requires the memory state of a
+      // Physiology Engine to remain constant over the scenario and makes
+      // State loading a nightmare. The class needs to be depricated this entire
+      // Driver could just read from the Serial layer and standup Actions and DataRequest
+      // When we know the physiolgoy engine is good to go and not try to cashe state.
 
       memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
       if (!memory_safe_scenario->Load(*scenarioData)) {
@@ -82,13 +85,13 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
       CDM::DataRequestManagerData* drData = memory_safe_scenario->GetDataRequestManager().Unload();
       m_Engine.GetEngineTrack()->GetDataRequestManager().Load(*drData, m_Engine.GetSubstanceManager());
       delete drData;
-      //if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
+      // if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
       m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
     } else if (scenarioData->InitialParameters().present()) {
 
       m_Engine.GetEngineTrack()->GetDataRequestManager().Load(scenarioData->DataRequests().get(), m_Engine.GetSubstanceManager());
 
-      //if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
+      // if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
       m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
 
       auto& params = memory_safe_scenario->GetInitialParameters();
@@ -133,9 +136,14 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
   } catch (...) {
     Error("Caught unknown exception, ending simulation");
   }
-  return false;
-};
 
+  if (scenarioData->Actions().RandomSeed().present()) {
+    std::stringstream ss;
+    ss << "Random Seed Detected " << scenarioData->Actions().RandomSeed().get();
+    Info(ss.str());
+  }
+  return true;
+};
 //-----------------------------------------------------------------------------
 bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string& resultsFile, SEScenarioCustomExec* cExec)
 {
@@ -191,7 +199,6 @@ bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string&
   }
   return false;
 }
-
 //-----------------------------------------------------------------------------
 void SEScenarioExec::Cancel()
 {
@@ -206,13 +213,13 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
   double dT_s = m_Engine.GetTimeStep(TimeUnit::s);
   double scenarioTime_s;
   double statusTime_s = 0; // Current time of this status cycle
-  double statusStep_s = 60; //How long did it take to simulate this much time
+  double statusStep_s = 60; // How long did it take to simulate this much time
 
   double sampleTime_s = scenario.GetDataRequestManager().GetSamplesPerSecond();
   if (sampleTime_s != 0) {
     sampleTime_s = 1 / sampleTime_s;
   }
-  double currentSampleTime_s = sampleTime_s; //Sample the first step
+  double currentSampleTime_s = sampleTime_s; // Sample the first step
 
   // Auto serialization
   bool serializeAction = false;
@@ -242,6 +249,7 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
 
   bool err = false;
   SEAdvanceTime* adv;
+
   for (SEAction* a : scenario.GetActions()) {
     if (m_Cancel) {
       break;
