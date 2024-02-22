@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+#include <random>
+
 namespace biogears {
 class SEScalar;
 namespace io {
@@ -82,7 +84,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ExerciseData& in);
+  virtual bool Load(const CDM::ExerciseData& in, std::random_device* rd = nullptr);
 
   virtual bool HasGenericExercise() const;
   virtual bool HasCyclingExercise() const;
@@ -114,10 +116,10 @@ public:
 
 protected:
   virtual void Unload(CDM::ExerciseData& data) const;
-  virtual bool LoadGeneric(const CDM::GenericExerciseData& in);
-  virtual bool LoadCycling(const CDM::CyclingExerciseData& in);
-  virtual bool LoadRunning(const CDM::RunningExerciseData& in);
-  virtual bool LoadStrength(const CDM::StrengthExerciseData& in);
+  virtual bool LoadGeneric(const CDM::GenericExerciseData& in, std::random_device* rd = nullptr);
+  virtual bool LoadCycling(const CDM::CyclingExerciseData& in, std::random_device* rd = nullptr);
+  virtual bool LoadRunning(const CDM::RunningExerciseData& in, std::random_device* rd = nullptr);
+  virtual bool LoadStrength(const CDM::StrengthExerciseData& in, std::random_device* rd = nullptr);
 
 private:
   ExerciseType m_mode;

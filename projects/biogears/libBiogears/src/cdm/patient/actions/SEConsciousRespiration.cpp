@@ -52,7 +52,7 @@ bool SEConsciousRespiration::IsActive() const
 }
 //-------------------------------------------------------------------------------
 
-bool SEConsciousRespiration::Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances)
+bool SEConsciousRespiration::Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances, std::random_device* rd)
 {
   // Set this before our super class tells us to Clear if the action wants us to keep our current data
   m_ClearCommands = !in.AppendToPrevious();
@@ -64,25 +64,25 @@ bool SEConsciousRespiration::Load(const CDM::ConsciousRespirationData& in, const
 
     CDM::BreathHoldData* bh = dynamic_cast<CDM::BreathHoldData*>(command);
     if (bh != nullptr) {
-      AddBreathHold().Load(*bh);
+      AddBreathHold().Load(*bh, rd);
       continue;
     }
 
     CDM::ForcedInhaleData* fi = dynamic_cast<CDM::ForcedInhaleData*>(command);
     if (fi != nullptr) {
-      AddForcedInhale().Load(*fi);
+      AddForcedInhale().Load(*fi, rd);
       continue;
     }
 
     CDM::ForcedExhaleData* fe = dynamic_cast<CDM::ForcedExhaleData*>(command);
     if (fe != nullptr) {
-      AddForcedExhale().Load(*fe);
+      AddForcedExhale().Load(*fe, rd);
       continue;
     }
 
     CDM::UseInhalerData* si = dynamic_cast<CDM::UseInhalerData*>(command);
     if (si != nullptr) {
-      AddUseInhaler().Load(*si);
+      AddUseInhaler().Load(*si, rd);
       continue;
     }
   }

@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
 
+#include <random>
+
 namespace biogears {
 class BIOGEARS_API SEScalar0To1 : public SEScalar {
 
@@ -20,6 +22,7 @@ public:
   SEScalar0To1();
   virtual ~SEScalar0To1();
 
+  void Load(const CDM::ScalarData& in, std::random_device* rd = nullptr) override;
   CDM::Scalar0To1Data* Unload() const;
 
   double GetValue() const { return SEScalar::GetValue(); }

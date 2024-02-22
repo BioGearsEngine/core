@@ -14,6 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+#include <random>
+
 namespace biogears {
 class SEScalarVolume;
 class SEScalarVolumePerTime;
@@ -33,7 +35,7 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceCompoundInfusionData& in);
+  virtual bool Load(const CDM::SubstanceCompoundInfusionData& in, std::random_device* rd = nullptr);
   virtual CDM::SubstanceCompoundInfusionData* Unload() const;
 
   virtual bool HasBagVolume() const;

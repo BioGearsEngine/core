@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #else
 #define DEBUGOUT(x)
 #endif
+
 namespace mil {
 namespace tatrc {
   namespace physiology {

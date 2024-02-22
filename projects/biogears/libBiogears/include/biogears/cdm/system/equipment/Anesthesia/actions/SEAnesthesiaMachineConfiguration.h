@@ -29,7 +29,7 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::AnesthesiaMachineConfigurationData& in);
+  virtual bool Load(const CDM::AnesthesiaMachineConfigurationData& in, std::random_device* rd = nullptr);
   virtual CDM::AnesthesiaMachineConfigurationData* Unload() const override;
 
 protected:

@@ -19,6 +19,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/io-manager.h>
 #include <biogears/string/manipulation.h>
 
+#include <algorithm>
+#include <random>
+
 namespace biogears {
 SEScenario::SEScenario(SESubstanceManager& subMgr)
   : Loggable(subMgr.GetLogger())
@@ -49,6 +52,27 @@ void SEScenario::Clear()
 bool SEScenario::Load(const CDM::ScenarioData& in)
 {
   Clear();
+
+  auto loadActions = [](SEScenario& scenario, CDM::ActionListData const* actionList) {
+    std::unique_ptr<std::seed_seq> seed;
+    std::random_device random_device;
+
+    if (actionList->RandomSeed().present() && actionList->RandomSeed().get().seed().size() != 0) {
+      auto seeds = actionList->RandomSeed().get().seed();
+      seed = std::make_unique<std::seed_seq>(seeds.begin(), seeds.end());
+    } else {
+      auto seed_vec = std::vector<unsigned int> { random_device(), random_device(), random_device(), random_device(), random_device() };
+      seed = std::make_unique<std::seed_seq>(seed_vec.begin(), seed_vec.end());
+    }
+
+    for (auto& action : actionList->Action()) {
+      auto new_action = SEAction::newFromBind(action, scenario.m_SubMgr, &random_device);
+      if (new_action != nullptr) {
+        scenario.m_Actions.push_back(new_action);
+      }
+    }
+  };
+
   if (in.Name().present())
     m_Name = in.Name().get();
   if (in.Description().present())
@@ -74,25 +98,14 @@ bool SEScenario::Load(const CDM::ScenarioData& in)
       auto sData = Serializer::ReadFile(actionFile.ToString(), GetLogger());
       if (auto actionList = dynamic_cast<CDM::ActionListData*>(sData.get())) {
         // We are ignoring recursive ActionListData where an ActionListData has an ActionFile reference
-        for (auto& action : actionList->Action()) {
-          auto new_action = SEAction::newFromBind(action, m_SubMgr);
-          if (new_action != nullptr) {
-            m_Actions.push_back(new_action);
-          }
-        }
+        loadActions(*this, actionList);
+      } else {
+        m_Logger->Error(asprintf("Can not find %s", actionFile.ToString().c_str()), "SEScenario");
       }
     } else {
-      m_Logger->Error(asprintf("Can not find %s", actionFile.ToString().c_str()), "SEScenario");
-    }
-  } else {
-    for (auto& action : in.Actions().Action()) {
-      auto new_action = SEAction::newFromBind(action, m_SubMgr);
-      if (new_action != nullptr) {
-        m_Actions.push_back(new_action);
-      }
+      loadActions(*this, &in.Actions());
     }
   }
-
   return IsValid();
 }
 //-----------------------------------------------------------------------------
@@ -193,7 +206,6 @@ bool SEScenario::IsValid() const
   return true;
 }
 //-----------------------------------------------------------------------------
-
 std::string SEScenario::GetName() const
 {
   return m_Name;
@@ -327,7 +339,6 @@ void SEScenario::InvalidateEngineStateFile()
 {
   m_EngineStateFile = "";
 }
-
 //-----------------------------------------------------------------------------
 SEScenarioInitialParameters& SEScenario::GetInitialParameters()
 {
@@ -351,7 +362,6 @@ void SEScenario::InvalidateInitialParameters()
 {
   SAFE_DELETE(m_InitialParameters);
 }
-
 //-----------------------------------------------------------------------------
 bool SEScenario::HasAutoSerialization() const
 {
@@ -374,7 +384,6 @@ void SEScenario::RemoveAutoSerialization()
 {
   SAFE_DELETE(m_AutoSerialization);
 }
-
 //-----------------------------------------------------------------------------
 void SEScenario::AddAction(const SEAction& a)
 {
@@ -419,13 +428,13 @@ bool SEScenario::operator==(SEScenario const& rhs) const
   equivilant &= ((m_AutoSerialization && rhs.m_AutoSerialization) ? m_AutoSerialization->operator==(*rhs.m_AutoSerialization) : m_AutoSerialization == rhs.m_AutoSerialization);
   equivilant &= m_DataRequestMgr.operator==(rhs.m_DataRequestMgr);
 
-  //NOTE: SLOW_COMPARISON
-  // Ok, This is going to be really ugly if we are actually comparing polymorphic downclasses
-  //      Our ToString implementation caches, but its still uglier then other things.
-  //      We can likely vTable lookup operator== against SEAction const& and then return false
-  //      if dynamic cast fails else proceed for a faster runtimes. This pattern 
-  //      is all over Biogears so we need to investigate teh cost. That said we only 
-  //      do equality comparisons in unittest really
+  // NOTE: SLOW_COMPARISON
+  //  Ok, This is going to be really ugly if we are actually comparing polymorphic downclasses
+  //       Our ToString implementation caches, but its still uglier then other things.
+  //       We can likely vTable lookup operator== against SEAction const& and then return false
+  //       if dynamic cast fails else proceed for a faster runtimes. This pattern
+  //       is all over Biogears so we need to investigate teh cost. That said we only
+  //       do equality comparisons in unittest really
   if (m_Actions.size() == rhs.m_Actions.size()) {
     for (auto idx = 0; idx < m_Actions.size(); ++idx) {
       if (0 == strcmp(m_Actions[idx]->classname(), rhs.m_Actions[idx]->classname())) {

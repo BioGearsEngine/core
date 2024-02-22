@@ -75,7 +75,7 @@ function(add_howto name)
 
     list(APPEND ${EXAMPLE_NAME}_LIBS
       Biogears::libbiogears
-	  Biogears::libbiogears_common
+      Biogears::libbiogears_common
       ${CMAKE_THREAD_LIBS_INIT}
       Threads::Threads
       howto::common
@@ -175,10 +175,10 @@ if(NOT (CMAKE_CROSSCOMPILING OR APPLE))
     list(APPEND THIRD_PARTY_LIB \${_dir}/lib)
     list(APPEND THIRD_PARTY_BIN \${_dir}/bin)
     endforeach()
-		
-	FILE(TO_CMAKE_PATH   \"\${CMAKE_INSTALL_PREFIX}\"  INSTALL_PATH)
+        
+    FILE(TO_CMAKE_PATH   \"\${CMAKE_INSTALL_PREFIX}\"  INSTALL_PATH)
 
-	set( Biogears_RUNTIME_DESTINATION \"\${INSTALL_PATH}/bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
+    set( Biogears_RUNTIME_DESTINATION \"\${INSTALL_PATH}/bin/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
     set( Biogears_LIBRARY_DESTINATION \"\${INSTALL_PATH}/${LIBRARY_INSTALL_DIR}/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
     set( Biogears_ARCHIVE_DESTINATION \"\${INSTALL_PATH}/lib/${Biogears_PLATFORM_PREFIX}$<$<BOOL:${Biogears_BREAKOUT_INSTALL}>:/$<CONFIG>>\" )
 

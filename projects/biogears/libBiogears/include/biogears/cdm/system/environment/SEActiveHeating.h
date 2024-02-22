@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 
+#include <random>
+
 CDM_BIND_DECL(ActiveHeatingData)
 
 namespace biogears {
@@ -36,7 +38,7 @@ public:
   virtual void Clear();
   virtual void Reset();
 
-  virtual bool Load(const CDM::ActiveHeatingData& in);
+  virtual bool Load(const CDM::ActiveHeatingData& in, std::random_device* rd = nullptr);
   virtual CDM::ActiveHeatingData* Unload() const;
 
   bool operator==(SEActiveHeating const&) const;

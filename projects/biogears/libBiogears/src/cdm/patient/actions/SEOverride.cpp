@@ -196,94 +196,94 @@ bool SEOverride::IsActive() const
   return (GetOverrideState() == CDM::enumOnOff::On);
 }
 //-------------------------------------------------------------------------------
-bool SEOverride::Load(const CDM::OverrideData& in)
+bool SEOverride::Load(const CDM::OverrideData& in, std::random_device* rd)
 {
   SEPatientAction::Clear();
   SetOverrideState(in.State());
   SetOverrideConformance(in.Conformant());
   if (in.ArterialBloodPHOverride().present()) {
-    GetArterialPHOverride().Load(in.ArterialBloodPHOverride().get());
+    GetArterialPHOverride().Load(in.ArterialBloodPHOverride().get(), rd);
   } else {
     GetArterialPHOverride().Invalidate();
   }
   if (in.VenousBloodPHOverride().present()) {
-    GetVenousPHOverride().Load(in.VenousBloodPHOverride().get());
+    GetVenousPHOverride().Load(in.VenousBloodPHOverride().get(), rd);
   } else {
     GetVenousPHOverride().Invalidate();
   }
   if (in.CarbonDioxideSaturationOverride().present()) {
-    GetCO2SaturationOverride().Load(in.CarbonDioxideSaturationOverride().get());
+    GetCO2SaturationOverride().Load(in.CarbonDioxideSaturationOverride().get(), rd);
   } else {
     GetCO2SaturationOverride().Invalidate();
   }
   if (in.CarbonMonoxideSaturationOverride().present()) {
-    GetCOSaturationOverride().Load(in.CarbonMonoxideSaturationOverride().get());
+    GetCOSaturationOverride().Load(in.CarbonMonoxideSaturationOverride().get(), rd);
   } else {
     GetCOSaturationOverride().Invalidate();
   }
   if (in.OxygenSaturationOverride().present()) {
-    GetO2SaturationOverride().Load(in.OxygenSaturationOverride().get());
+    GetO2SaturationOverride().Load(in.OxygenSaturationOverride().get(), rd);
   } else {
     GetO2SaturationOverride().Invalidate();
   }
   if (in.PhosphateOverride().present()) {
-    GetPhosphateOverride().Load(in.PhosphateOverride().get());
+    GetPhosphateOverride().Load(in.PhosphateOverride().get(), rd);
   } else {
     GetPhosphateOverride().Invalidate();
   }
   if (in.WhiteBloodCellCountOverride().present()) {
-    GetWBCCountOverride().Load(in.WhiteBloodCellCountOverride().get());
+    GetWBCCountOverride().Load(in.WhiteBloodCellCountOverride().get(), rd);
   } else {
     GetWBCCountOverride().Invalidate();
   }
   if (in.TotalBilirubinOverride().present()) {
-    GetTotalBilirubinOverride().Load(in.TotalBilirubinOverride().get());
+    GetTotalBilirubinOverride().Load(in.TotalBilirubinOverride().get(), rd);
   } else {
     GetTotalBilirubinOverride().Invalidate();
   }
   if (in.CalciumConcentrationOverride().present()) {
-    GetCalciumConcentrationOverride().Load(in.CalciumConcentrationOverride().get());
+    GetCalciumConcentrationOverride().Load(in.CalciumConcentrationOverride().get(), rd);
   } else {
     GetCalciumConcentrationOverride().Invalidate();
   }
   if (in.GlucoseConcentrationOverride().present()) {
-    GetGlucoseConcentrationOverride().Load(in.GlucoseConcentrationOverride().get());
+    GetGlucoseConcentrationOverride().Load(in.GlucoseConcentrationOverride().get(), rd);
   } else {
     GetGlucoseConcentrationOverride().Invalidate();
   }
   if (in.LactateConcentrationOverride().present()) {
-    GetLactateConcentrationOverride().Load(in.LactateConcentrationOverride().get());
+    GetLactateConcentrationOverride().Load(in.LactateConcentrationOverride().get(), rd);
   } else {
     GetLactateConcentrationOverride().Invalidate();
   }
   if (in.PotassiumConcentrationOverride().present()) {
-    GetPotassiumConcentrationOverride().Load(in.PotassiumConcentrationOverride().get());
+    GetPotassiumConcentrationOverride().Load(in.PotassiumConcentrationOverride().get(), rd);
   } else {
     GetPotassiumConcentrationOverride().Invalidate();
   }
   if (in.SodiumConcentrationOverride().present()) {
-    GetSodiumConcentrationOverride().Load(in.SodiumConcentrationOverride().get());
+    GetSodiumConcentrationOverride().Load(in.SodiumConcentrationOverride().get(), rd);
   } else {
     GetSodiumConcentrationOverride().Invalidate();
   }
   if (in.BloodVolumeOverride().present()) {
-    GetBloodVolumeOverride().Load(in.BloodVolumeOverride().get());
+    GetBloodVolumeOverride().Load(in.BloodVolumeOverride().get(), rd);
   } else {
     GetBloodVolumeOverride().Invalidate();
   }
   if (in.CardiacOutputOverride().present()) {
-    GetCardiacOutputOverride().Load(in.CardiacOutputOverride().get());
+    GetCardiacOutputOverride().Load(in.CardiacOutputOverride().get(), rd);
   } else {
     GetCardiacOutputOverride().Invalidate();
   }
   if (in.DiastolicArterialPressureOverride().present()) {
-    GetDiastolicArterialPressureOverride().Load(in.DiastolicArterialPressureOverride().get());
+    GetDiastolicArterialPressureOverride().Load(in.DiastolicArterialPressureOverride().get(), rd);
   } else {
     GetDiastolicArterialPressureOverride().Invalidate();
   }
   if (in.MeanArterialPressureOverride().present()) {
     if (!in.DiastolicArterialPressureOverride().present() || !in.SystolicArterialPressureOverride().present()) {
-      GetMAPOverride().Load(in.MeanArterialPressureOverride().get());
+      GetMAPOverride().Load(in.MeanArterialPressureOverride().get(), rd);
     } else {
       Warning("If overriding systolic or diastolic pressures, the mean arterial pressure will change according to those changes.");
       GetMAPOverride().Invalidate();
@@ -292,237 +292,237 @@ bool SEOverride::Load(const CDM::OverrideData& in)
     GetMAPOverride().Invalidate();
   }
   if (in.HeartRateOverride().present()) {
-    GetHeartRateOverride().Load(in.HeartRateOverride().get());
+    GetHeartRateOverride().Load(in.HeartRateOverride().get(), rd);
   } else {
     GetHeartRateOverride().Invalidate();
   }
   if (in.HeartStrokeVolumeOverride().present()) {
-    GetHeartStrokeVolumeOverride().Load(in.HeartStrokeVolumeOverride().get());
+    GetHeartStrokeVolumeOverride().Load(in.HeartStrokeVolumeOverride().get(), rd);
   } else {
     GetHeartStrokeVolumeOverride().Invalidate();
   }
   if (in.SystolicArterialPressureOverride().present()) {
-    GetSystolicArterialPressureOverride().Load(in.SystolicArterialPressureOverride().get());
+    GetSystolicArterialPressureOverride().Load(in.SystolicArterialPressureOverride().get(), rd);
   } else {
     GetSystolicArterialPressureOverride().Invalidate();
   }
   if (in.InsulinSynthesisRateOverride().present()) {
-    GetInsulinSynthesisRateOverride().Load(in.InsulinSynthesisRateOverride().get());
+    GetInsulinSynthesisRateOverride().Load(in.InsulinSynthesisRateOverride().get(), rd);
   } else {
     GetInsulinSynthesisRateOverride().Invalidate();
   }
   if (in.GlucagonSynthesisRateOverride().present()) {
-    GetGlucagonSynthesisRateOverride().Load(in.GlucagonSynthesisRateOverride().get());
+    GetGlucagonSynthesisRateOverride().Load(in.GlucagonSynthesisRateOverride().get(), rd);
   } else {
     GetGlucagonSynthesisRateOverride().Invalidate();
   }
   if (in.AchievedExerciseLevelOverride().present()) {
-    GetAchievedExerciseLevelOverride().Load(in.AchievedExerciseLevelOverride().get());
+    GetAchievedExerciseLevelOverride().Load(in.AchievedExerciseLevelOverride().get(), rd);
   } else {
     GetAchievedExerciseLevelOverride().Invalidate();
   }
   if (in.CoreTemperatureOverride().present()) {
-    GetCoreTemperatureOverride().Load(in.CoreTemperatureOverride().get());
+    GetCoreTemperatureOverride().Load(in.CoreTemperatureOverride().get(), rd);
   } else {
     GetCoreTemperatureOverride().Invalidate();
   }
   if (in.CreatinineProductionRateOverride().present()) {
-    GetCreatinineProductionRateOverride().Load(in.CreatinineProductionRateOverride().get());
+    GetCreatinineProductionRateOverride().Load(in.CreatinineProductionRateOverride().get(), rd);
   } else {
     GetCreatinineProductionRateOverride().Invalidate();
   }
   if (in.ExerciseMeanArterialPressureDeltaOverride().present()) {
-    GetExerciseMeanArterialPressureDeltaOverride().Load(in.ExerciseMeanArterialPressureDeltaOverride().get());
+    GetExerciseMeanArterialPressureDeltaOverride().Load(in.ExerciseMeanArterialPressureDeltaOverride().get(), rd);
   } else {
     GetExerciseMeanArterialPressureDeltaOverride().Invalidate();
   }
   if (in.FatigueLevelOverride().present()) {
-    GetFatigueLevelOverride().Load(in.FatigueLevelOverride().get());
+    GetFatigueLevelOverride().Load(in.FatigueLevelOverride().get(), rd);
   } else {
     GetFatigueLevelOverride().Invalidate();
   }
   if (in.LactateProductionRateOverride().present()) {
-    GetLactateProductionRateOverride().Load(in.LactateProductionRateOverride().get());
+    GetLactateProductionRateOverride().Load(in.LactateProductionRateOverride().get(), rd);
   } else {
     GetLactateProductionRateOverride().Invalidate();
   }
   if (in.SkinTemperatureOverride().present()) {
-    GetSkinTemperatureOverride().Load(in.SkinTemperatureOverride().get());
+    GetSkinTemperatureOverride().Load(in.SkinTemperatureOverride().get(), rd);
   } else {
     GetSkinTemperatureOverride().Invalidate();
   }
   if (in.SweatRateOverride().present()) {
-    GetSweatRateOverride().Load(in.SweatRateOverride().get());
+    GetSweatRateOverride().Load(in.SweatRateOverride().get(), rd);
   } else {
     GetSweatRateOverride().Invalidate();
   }
   if (in.TotalMetabolicRateOverride().present()) {
-    GetTotalMetabolicOverride().Load(in.TotalMetabolicRateOverride().get());
+    GetTotalMetabolicOverride().Load(in.TotalMetabolicRateOverride().get(), rd);
   } else {
     GetTotalMetabolicOverride().Invalidate();
   }
   if (in.TotalWorkRateLevelOverride().present()) {
-    GetTotalWorkRateLevelOverride().Load(in.TotalWorkRateLevelOverride().get());
+    GetTotalWorkRateLevelOverride().Load(in.TotalWorkRateLevelOverride().get(), rd);
   } else {
     GetTotalWorkRateLevelOverride().Invalidate();
   }
   if (in.SodiumLostToSweatOverride().present()) {
-    GetSodiumLostToSweatOverride().Load(in.SodiumLostToSweatOverride().get());
+    GetSodiumLostToSweatOverride().Load(in.SodiumLostToSweatOverride().get(), rd);
   } else {
     GetSodiumLostToSweatOverride().Invalidate();
   }
   if (in.PotassiumLostToSweatOverride().present()) {
-    GetPotassiumLostToSweatOverride().Load(in.PotassiumLostToSweatOverride().get());
+    GetPotassiumLostToSweatOverride().Load(in.PotassiumLostToSweatOverride().get(), rd);
   } else {
     GetPotassiumLostToSweatOverride().Invalidate();
   }
   if (in.ChlorideLostToSweatOverride().present()) {
-    GetChlorideLostToSweatOverride().Load(in.ChlorideLostToSweatOverride().get());
+    GetChlorideLostToSweatOverride().Load(in.ChlorideLostToSweatOverride().get(), rd);
   } else {
     GetChlorideLostToSweatOverride().Invalidate();
   }
   if (in.LeftAfferentArterioleResistanceOverride().present()) {
-    GetLeftAfferentArterioleResistanceOverride().Load(in.LeftAfferentArterioleResistanceOverride().get());
+    GetLeftAfferentArterioleResistanceOverride().Load(in.LeftAfferentArterioleResistanceOverride().get(), rd);
   } else {
     GetLeftAfferentArterioleResistanceOverride().Invalidate();
   }
   if (in.LeftGlomerularFiltrationRateOverride().present()) {
-    GetLeftGlomerularFiltrationRateOverride().Load(in.LeftGlomerularFiltrationRateOverride().get());
+    GetLeftGlomerularFiltrationRateOverride().Load(in.LeftGlomerularFiltrationRateOverride().get(), rd);
   } else {
     GetLeftGlomerularFiltrationRateOverride().Invalidate();
   }
   if (in.LeftReabsorptionRateOverride().present()) {
-    GetLeftReaborptionRateOverride().Load(in.LeftReabsorptionRateOverride().get());
+    GetLeftReaborptionRateOverride().Load(in.LeftReabsorptionRateOverride().get(), rd);
   } else {
     GetLeftReaborptionRateOverride().Invalidate();
   }
   if (in.RenalBloodFlowOverride().present()) {
-    GetRenalBloodFlowOverride().Load(in.RenalBloodFlowOverride().get());
+    GetRenalBloodFlowOverride().Load(in.RenalBloodFlowOverride().get(), rd);
   } else {
     GetRenalBloodFlowOverride().Invalidate();
   }
   if (in.RenalPlasmaFlowOverride().present()) {
-    GetRenalPlasmaFlowOverride().Load(in.RenalPlasmaFlowOverride().get());
+    GetRenalPlasmaFlowOverride().Load(in.RenalPlasmaFlowOverride().get(), rd);
   } else {
     GetRenalPlasmaFlowOverride().Invalidate();
   }
   if (in.RightAfferentArterioleResistanceOverride().present()) {
-    GetRightAfferentArterioleResistanceOverride().Load(in.RightAfferentArterioleResistanceOverride().get());
+    GetRightAfferentArterioleResistanceOverride().Load(in.RightAfferentArterioleResistanceOverride().get(), rd);
   } else {
     GetRightAfferentArterioleResistanceOverride().Invalidate();
   }
   if (in.RightGlomerularFiltrationRateOverride().present()) {
-    GetRightGlomerularFiltrationRateOverride().Load(in.RightGlomerularFiltrationRateOverride().get());
+    GetRightGlomerularFiltrationRateOverride().Load(in.RightGlomerularFiltrationRateOverride().get(), rd);
   } else {
     GetRightGlomerularFiltrationRateOverride().Invalidate();
   }
   if (in.RightReabsorptionRateOverride().present()) {
-    GetRightReaborptionRateOverride().Load(in.RightReabsorptionRateOverride().get());
+    GetRightReaborptionRateOverride().Load(in.RightReabsorptionRateOverride().get(), rd);
   } else {
     GetRightReaborptionRateOverride().Invalidate();
   }
   if (in.UrinationRateOverride().present()) {
-    GetUrinationRateOverride().Load(in.UrinationRateOverride().get());
+    GetUrinationRateOverride().Load(in.UrinationRateOverride().get(), rd);
   } else {
     GetUrinationRateOverride().Invalidate();
   }
   if (in.UrineProductionRateOverride().present()) {
-    GetUrineProductionRateOverride().Load(in.UrineProductionRateOverride().get());
+    GetUrineProductionRateOverride().Load(in.UrineProductionRateOverride().get(), rd);
   } else {
     GetUrineProductionRateOverride().Invalidate();
   }
   if (in.UrineOsmolalityOverride().present()) {
-    GetUrineOsmolalityOverride().Load(in.UrineOsmolalityOverride().get());
+    GetUrineOsmolalityOverride().Load(in.UrineOsmolalityOverride().get(), rd);
   } else {
     GetUrineOsmolalityOverride().Invalidate();
   }
   if (in.UrineVolumeOverride().present()) {
-    GetUrineVolumeOverride().Load(in.UrineVolumeOverride().get());
+    GetUrineVolumeOverride().Load(in.UrineVolumeOverride().get(), rd);
   } else {
     GetUrineVolumeOverride().Invalidate();
   }
   if (in.UrineUreaNitrogenConcentrationOverride().present()) {
-    GetUrineUreaNitrogenConcentrationOverride().Load(in.UrineUreaNitrogenConcentrationOverride().get());
+    GetUrineUreaNitrogenConcentrationOverride().Load(in.UrineUreaNitrogenConcentrationOverride().get(), rd);
   } else {
     GetUrineUreaNitrogenConcentrationOverride().Invalidate();
   }
   if (in.ExpiratoryFlowOverride().present()) {
-    GetExpiratoryFlowOverride().Load(in.ExpiratoryFlowOverride().get());
+    GetExpiratoryFlowOverride().Load(in.ExpiratoryFlowOverride().get(), rd);
   } else {
     GetExpiratoryFlowOverride().Invalidate();
   }
   if (in.InspiratoryFlowOverride().present()) {
-    GetInspiratoryFlowOverride().Load(in.InspiratoryFlowOverride().get());
+    GetInspiratoryFlowOverride().Load(in.InspiratoryFlowOverride().get(), rd);
   } else {
     GetInspiratoryFlowOverride().Invalidate();
   }
   if (in.PulmonaryComplianceOverride().present()) {
-    GetPulmonaryComplianceOverride().Load(in.PulmonaryComplianceOverride().get());
+    GetPulmonaryComplianceOverride().Load(in.PulmonaryComplianceOverride().get(), rd);
   } else {
     GetPulmonaryComplianceOverride().Invalidate();
   }
   if (in.PulmonaryResistanceOverride().present()) {
-    GetPulmonaryResistanceOverride().Load(in.PulmonaryResistanceOverride().get());
+    GetPulmonaryResistanceOverride().Load(in.PulmonaryResistanceOverride().get(), rd);
   } else {
     GetPulmonaryResistanceOverride().Invalidate();
   }
   if (in.RespirationRateOverride().present()) {
-    GetRespirationRateOverride().Load(in.RespirationRateOverride().get());
+    GetRespirationRateOverride().Load(in.RespirationRateOverride().get(), rd);
   } else {
     GetRespirationRateOverride().Invalidate();
   }
   if (in.TidalVolumeOverride().present()) {
-    GetTidalVolumeOverride().Load(in.TidalVolumeOverride().get());
+    GetTidalVolumeOverride().Load(in.TidalVolumeOverride().get(), rd);
   } else {
     GetTidalVolumeOverride().Invalidate();
   }
   if (in.TargetPulmonaryVentilationOverride().present()) {
-    GetTargetPulmonaryVentilationOverride().Load(in.TargetPulmonaryVentilationOverride().get());
+    GetTargetPulmonaryVentilationOverride().Load(in.TargetPulmonaryVentilationOverride().get(), rd);
   } else {
     GetTargetPulmonaryVentilationOverride().Invalidate();
   }
   if (in.TotalAlveolarVentilationOverride().present()) {
-    GetTotalAlveolarVentilationOverride().Load(in.TotalAlveolarVentilationOverride().get());
+    GetTotalAlveolarVentilationOverride().Load(in.TotalAlveolarVentilationOverride().get(), rd);
   } else {
     GetTotalAlveolarVentilationOverride().Invalidate();
   }
   if (in.TotalLungVolumeOverride().present()) {
-    GetTotalLungVolumeOverride().Load(in.TotalLungVolumeOverride().get());
+    GetTotalLungVolumeOverride().Load(in.TotalLungVolumeOverride().get(), rd);
   } else {
     GetTotalLungVolumeOverride().Invalidate();
   }
   if (in.TotalPulmonaryVentilationOverride().present()) {
-    GetTotalPulmonaryVentilationOverride().Load(in.TotalPulmonaryVentilationOverride().get());
+    GetTotalPulmonaryVentilationOverride().Load(in.TotalPulmonaryVentilationOverride().get(), rd);
   } else {
     GetTotalPulmonaryVentilationOverride().Invalidate();
   }
   if (in.ExtravascularFluidVolumeOverride().present()) {
-    GetExtravascularFluidVolumeOverride().Load(in.ExtravascularFluidVolumeOverride().get());
+    GetExtravascularFluidVolumeOverride().Load(in.ExtravascularFluidVolumeOverride().get(), rd);
   } else {
     GetExtravascularFluidVolumeOverride().Invalidate();
   }
   if (in.IntracellularFluidVolumeOverride().present()) {
-    GetIntracellularFluidVolumeOverride().Load(in.IntracellularFluidVolumeOverride().get());
+    GetIntracellularFluidVolumeOverride().Load(in.IntracellularFluidVolumeOverride().get(), rd);
   } else {
     GetIntracellularFluidVolumeOverride().Invalidate();
   }
   if (in.LiverGlycogenOverride().present()) {
-    GetLiverGlycogenOverride().Load(in.LiverGlycogenOverride().get());
+    GetLiverGlycogenOverride().Load(in.LiverGlycogenOverride().get(), rd);
   } else {
     GetLiverGlycogenOverride().Invalidate();
   }
   if (in.MuscleGlycogenOverride().present()) {
-    GetMuscleGlycogenOverride().Load(in.MuscleGlycogenOverride().get());
+    GetMuscleGlycogenOverride().Load(in.MuscleGlycogenOverride().get(), rd);
   } else {
     GetMuscleGlycogenOverride().Invalidate();
   }
   if (in.StoredProteinOverride().present()) {
-    GetStoredProteinOverride().Load(in.StoredProteinOverride().get());
+    GetStoredProteinOverride().Load(in.StoredProteinOverride().get(), rd);
   } else {
     GetStoredProteinOverride().Invalidate();
   }
   if (in.StoredFatOverride().present()) {
-    GetStoredFatOverride().Load(in.StoredFatOverride().get());
+    GetStoredFatOverride().Load(in.StoredFatOverride().get(), rd);
   } else {
     GetStoredFatOverride().Invalidate();
   }

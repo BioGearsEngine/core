@@ -43,7 +43,7 @@ bool SETourniquet::IsActive() const
 {
   return IsValid() ? !(m_TourniquetLevel == (CDM::enumTourniquetApplicationLevel::None)) : false;
 }//-----------------------------------------------------------------------------
-bool SETourniquet::Load(const CDM::TourniquetData& in)
+bool SETourniquet::Load(const CDM::TourniquetData& in, std::random_device* rd)
 {
   SEPatientAction::Load(in);
   m_TourniquetLevel = in.TourniquetLevel();

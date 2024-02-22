@@ -49,7 +49,7 @@ bool SEEnvironmentChange::IsValid() const
   return SEEnvironmentAction::IsValid() && (HasConditions() || HasConditionsFile());
 }
 //-----------------------------------------------------------------------------
-bool SEEnvironmentChange::Load(const CDM::EnvironmentChangeData& in)
+bool SEEnvironmentChange::Load(const CDM::EnvironmentChangeData& in, std::random_device* rd)
 {
   SEEnvironmentAction::Load(in);
   if (in.ConditionsFile().present())

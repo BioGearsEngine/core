@@ -44,11 +44,12 @@ bool SEForcedExhale::IsActive() const
   return SEConsciousRespirationCommand::IsActive();
 }
 
-bool SEForcedExhale::Load(const CDM::ForcedExhaleData& in)
+bool SEForcedExhale::Load(const CDM::ForcedExhaleData& in, std::random_device* rd)
 {
   SEConsciousRespirationCommand::Load(in);
-  GetExpiratoryReserveVolumeFraction().Load(in.ExpiratoryReserveVolumeFraction());
-  GetPeriod().Load(in.Period());
+  
+  GetExpiratoryReserveVolumeFraction().Load(in.ExpiratoryReserveVolumeFraction(), rd);
+  GetPeriod().Load(in.Period(), rd);
   return true;
 }
 

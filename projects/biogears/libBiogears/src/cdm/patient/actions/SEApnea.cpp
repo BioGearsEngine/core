@@ -43,10 +43,10 @@ bool SEApnea::IsActive() const
   return IsValid() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEApnea::Load(const CDM::ApneaData& in)
+bool SEApnea::Load(const CDM::ApneaData& in, std::random_device* rd)
 {
   SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity());
+  GetSeverity().Load(in.Severity(), rd);
   return true;
 }
 //-------------------------------------------------------------------------------

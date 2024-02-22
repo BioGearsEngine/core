@@ -44,10 +44,10 @@ bool SESubstanceNasalDose::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceNasalDose::Load(const CDM::SubstanceNasalDoseData& in)
+bool SESubstanceNasalDose::Load(const CDM::SubstanceNasalDoseData& in, std::random_device *rd)
 {
   SESubstanceAdministration::Load(in);
-  GetDose().Load(in.Dose());
+  GetDose().Load(in.Dose(), rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -140,20 +140,20 @@ bool SENasalState::Initialize(SEScalarMass& dose)
   return (unrelSet && relSet);
 }
 //-------------------------------------------------------------------------------
-bool SENasalState::Load(const CDM::NasalStateData& in)
+bool SENasalState::Load(const CDM::NasalStateData& in, std::random_device* rd)
 {
 
   GetTotalNasalDose().Load(in.TotalNasalDose());
   m_UnreleasedDrugMasses.clear();
   for (auto umData : in.UnreleasedDrugMasses()) {
     SEScalarMass unrelMass;
-    unrelMass.Load(umData);
+    unrelMass.Load(umData, rd);
     m_UnreleasedDrugMasses.push_back(unrelMass);
   }
   m_ReleasedDrugMasses.clear();
   for (auto rmData : in.ReleasedDrugMasses()) {
     SEScalarMass relMass;
-    relMass.Load(rmData);
+    relMass.Load(rmData, rd);
     m_ReleasedDrugMasses.push_back(relMass);
   }
   return true;

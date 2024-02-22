@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 
+#include <random>
+
 CDM_BIND_DECL(NutritionData)
 
 namespace biogears {
@@ -40,7 +42,7 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::NutritionData& in);
+  virtual bool Load(const CDM::NutritionData& in, std::random_device* = nullptr);
   virtual CDM::NutritionData* Unload() const;
 
 public:

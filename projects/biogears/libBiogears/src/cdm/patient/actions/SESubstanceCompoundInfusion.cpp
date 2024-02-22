@@ -38,11 +38,11 @@ void SESubstanceCompoundInfusion::Clear()
   // m_Compound=nullptr; Keeping mapping!!
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceCompoundInfusion::Load(const CDM::SubstanceCompoundInfusionData& in)
+bool SESubstanceCompoundInfusion::Load(const CDM::SubstanceCompoundInfusionData& in, std::random_device* rd)
 {
   SESubstanceAdministration::Load(in);
-  GetRate().Load(in.Rate());
-  GetBagVolume().Load(in.BagVolume());
+  GetRate().Load(in.Rate(), rd);
+  GetBagVolume().Load(in.BagVolume(), rd);
   return true;
 }
 //-------------------------------------------------------------------------------

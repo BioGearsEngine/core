@@ -84,12 +84,18 @@ bool SEScalarQuantity<Unit>::IsValid() const
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
-void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in)
+void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in, std::random_device* rd)
 {
   this->Clear();
   SEProperty::Load(in);
   if (in.unit().present()) {
-    this->SetValue(in.value(), Unit::GetCompoundUnit(in.unit().get()));
+    if (in.deviation().present() && rd) {
+      auto nd = std::normal_distribution(in.value(), in.deviation().get());
+      this->SetValue(nd(*rd), Unit::GetCompoundUnit(in.unit().get()));
+    } else {
+      this->SetValue(in.value(), Unit::GetCompoundUnit(in.unit().get()));
+    }
+
   } else
     throw CommonDataModelException("ScalarQuantity attempted to load a ScalarData with no unit, must have a unit.");
   m_readOnly = in.readOnly();
@@ -432,14 +438,14 @@ bool SEScalarQuantity<Unit>::operator!=(const SEScalarQuantity& rhs) const
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
-bool SEScalarQuantity<Unit>::operator==(const SEUnitScalar& rhs) const 
+bool SEScalarQuantity<Unit>::operator==(const SEUnitScalar& rhs) const
 {
   auto rhs_ptr = dynamic_cast<decltype(this)>(&rhs);
   return (rhs_ptr) ? this->operator==(*rhs_ptr) : false;
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
-bool SEScalarQuantity<Unit>::operator!=(const SEUnitScalar& rhs) const 
+bool SEScalarQuantity<Unit>::operator!=(const SEUnitScalar& rhs) const
 {
   return !this->operator==(rhs);
 }

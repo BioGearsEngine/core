@@ -42,10 +42,10 @@ bool SETubeCuffLeak::IsActive() const
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SETubeCuffLeak::Load(const CDM::TubeCuffLeakData& in)
+bool SETubeCuffLeak::Load(const CDM::TubeCuffLeakData& in, std::random_device* rd)
 {
   SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity());
+  GetSeverity().Load(in.Severity(), rd);
   return true;
 }
 //-------------------------------------------------------------------------------

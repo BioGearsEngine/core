@@ -42,10 +42,10 @@ bool SEExpiratoryValveObstruction::IsActive() const
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEExpiratoryValveObstruction::Load(const CDM::ExpiratoryValveObstructionData& in)
+bool SEExpiratoryValveObstruction::Load(const CDM::ExpiratoryValveObstructionData& in, std::random_device* rd)
 {
   SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity());
+  GetSeverity().Load(in.Severity(), rd);
   return true;
 }
 //-------------------------------------------------------------------------------
