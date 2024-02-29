@@ -567,7 +567,7 @@ void Energy::CalculateMetabolicHeatGeneration()
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W); /// \cite mallet2002hypothermia
   } else if (coreTemperature_degC >= 34.0 && coreTemperature_degC < 36.8) //Patient is increasing heat generation via shivering. This caps out at the summit metabolism
   {
-    //Todo: Add an event for shivering
+    m_Patient->SetEvent(CDM::enumPatientEvent::Shivering, true, m_data.GetSimulationTime());
     double basalMetabolicRate_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W);
     totalMetabolicRateNew_W = basalMetabolicRate_W + (summitMetabolism_W - basalMetabolicRate_W) * (coreTemperatureLow_degC - coreTemperature_degC) / coreTemperatureLowDelta_degC;
     totalMetabolicRateNew_W = std::min(totalMetabolicRateNew_W, summitMetabolism_W); //Bounded at the summit metabolism so further heat generation doesn't continue for continue drops below 34 C.

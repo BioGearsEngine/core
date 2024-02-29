@@ -179,6 +179,8 @@ specific language governing permissions and limitations under the License.
       <!--<< @brief weakness due to exposure to CBRNE, mild ~ 40% RBCACE. -->
       <xs:enumeration value="Seizures"/>
       <!--<< @brief patient seizures. (RBCACE > 40% bound)-->
+      <xs:enumeration value="Shivering"/>
+      <!--<< @brief weakness due to exposure to CBRNE, mild ~ 40% RBCACE. -->
       <xs:enumeration value="StartOfCardiacCycle"/>
       <!--<< @brief The Patient is starting a new heart beat. -->
       <xs:enumeration value="StartOfExhale"/>
