@@ -442,27 +442,43 @@ void Energy::CalculateVitalSigns()
   std::stringstream ss;
 
   //Hypothermia check
-  double coreTempIrreversible_degC = 20.0; /// \cite Stocks2004HumanPhysiologicalResponseCold
-  if (coreTemperature_degC < 35.0) /// \cite mallet2001hypothermia
+  double coreTempIrreversible_degC = 15.0; /// \cite Stocks2004HumanPhysiologicalResponseCold
+
+  if (coreTemperature_degC > 32.0 && coreTemperature_degC < 35.0 ) /// \cite mallet2001hypothermia
   {
     /// \event Patient: Core temperature has fallen below 35 degrees Celsius. Patient is hypothermic.
-    m_Patient->SetEvent(CDM::enumPatientEvent::Hypothermia, true, m_data.GetSimulationTime());
-
-    /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
-    if (coreTemperature_degC < coreTempIrreversible_degC) {
-      ss << "Core temperature is " << coreTemperature_degC << ". This is below 20 degrees C, patient is experiencing extreme hypothermia.";
-      Warning(ss);
-      if (!m_PatientActions->HasOverride()) {
+    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, true, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, false, m_data.GetSimulationTime());
+  }
+  if (coreTemperature_degC > 28.2 && coreTemperature_degC < 31.5) /// \cite mallet2001hypothermia
+  {
+    /// \event Patient: Core temperature has fallen below 35 degrees Celsius. Patient is hypothermic.
+    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, true, m_data.GetSimulationTime());
+  } 
+  if (coreTemperature_degC < 28.0) /// \cite mallet2001hypothermia
+  {
+    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, true, m_data.GetSimulationTime());
+  } 
+      /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
+  if (coreTemperature_degC < coreTempIrreversible_degC) {
+    ss << "Core temperature is " << coreTemperature_degC << ". This is below 20 degrees C, patient is experiencing extreme hypothermia.";
+    Warning(ss);
+    if (!m_PatientActions->HasOverride()) {
+      m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+    } else {
+      if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
         m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
-      } else {
-        if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
-        }
       }
     }
-
-  } else if (m_Patient->IsEventActive(CDM::enumPatientEvent::Hypothermia) && coreTemperature_degC > 35.2) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::Hypothermia, false, m_data.GetSimulationTime());
+  } 
+  
+  if (m_Patient->IsEventActive(CDM::enumPatientEvent::MildHypothermia) && coreTemperature_degC > 35.2) {
+    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
   }
   //Hyperthermia check
   if (coreTemperature_degC > 38.8) // Note: Hyperthermia threshold varies; we'll use 38.8

@@ -628,8 +628,14 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::HypoglycemicComa:
         m_ss << " Patient has fallen into Hypoglycemic Coma";
         break;
-      case CDM::enumPatientEvent::Hypothermia:
-        m_ss << " Patient is Hypothermic";
+      case CDM::enumPatientEvent::MildHypothermia:
+        m_ss << " Patient is mildly Hypothermic";
+        break;
+      case CDM::enumPatientEvent::ModerateHypothermia:
+        m_ss << " Patient is moderately Hypothermic";
+        break;
+      case CDM::enumPatientEvent::SevereHypothermia:
+        m_ss << " Patient is Severely Hypothermic";
         break;
       case CDM::enumPatientEvent::Hypoxia:
         m_ss << " Patient has Hypoxia";
@@ -821,8 +827,14 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
       case CDM::enumPatientEvent::HypoglycemicComa:
         m_ss << " Patient is no longer in a Hypoglycemic Coma";
         break;
-      case CDM::enumPatientEvent::Hypothermia:
-        m_ss << " Patient is no longer has Hypothermic";
+      case CDM::enumPatientEvent::MildHypothermia:
+        m_ss << " Patient is no longer Mildly Hypothermic";
+        break;
+      case CDM::enumPatientEvent::ModerateHypothermia:
+        m_ss << " Patient is no longer Moderately Hypothermic";
+        break;
+      case CDM::enumPatientEvent::SevereHypothermia:
+        m_ss << " Patient is no longer Severely Hypothermic";
         break;
       case CDM::enumPatientEvent::Hypoxia:
         m_ss << " Patient no longer has Hypoxia";
