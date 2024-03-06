@@ -585,7 +585,8 @@ void Energy::CalculateMetabolicHeatGeneration()
   {
     m_Patient->SetEvent(CDM::enumPatientEvent::Shivering, true, m_data.GetSimulationTime());
     double basalMetabolicRate_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W);
-    totalMetabolicRateNew_W = basalMetabolicRate_W + (summitMetabolism_W - basalMetabolicRate_W) * (coreTemperatureLow_degC - coreTemperature_degC) / coreTemperatureLowDelta_degC;
+    double scaleMR = 0.3;
+    totalMetabolicRateNew_W = basalMetabolicRate_W + (summitMetabolism_W - basalMetabolicRate_W) * scaleMR * (coreTemperatureLow_degC - coreTemperature_degC) / coreTemperatureLowDelta_degC;
     totalMetabolicRateNew_W = std::min(totalMetabolicRateNew_W, summitMetabolism_W); //Bounded at the summit metabolism so further heat generation doesn't continue for continue drops below 34 C.
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W);
   } else if (coreTemperature_degC >= 36.8 && coreTemperature_degC < 40 && !m_PatientActions->HasExercise()) //Basic Metabolic rate
