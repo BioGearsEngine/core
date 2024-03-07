@@ -654,7 +654,7 @@ bool BioGearsEngine::InitializeEngine(const std::vector<const SECondition*>* con
   AtSteadyState(EngineState::AtInitialStableState);
 
   //for debugging, if you change the blood/gases then uncomment this line and update the biogeassubstances file
-  m_Substances->WriteBloodGases();
+  //m_Substances->WriteBloodGases();
 
   m_State = EngineState::SecondaryStabilization;
   // Apply conditions and anything else to the physiology
