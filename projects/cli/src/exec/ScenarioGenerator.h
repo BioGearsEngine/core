@@ -1,6 +1,5 @@
-#ifndef BIOGEARS_POPULATION_GENERATOR_H
-#define BIOGEARS_POPULATION_GENERATOR_H
-
+#ifndef  BIOGEARS_SCENARIO_GENERATOR_H
+#define BIOGEARS_SCENARIO_GENERATOR_H
 //**********************************************************************************
 //Copyright 2015 Applied Research Associates, Inc.
 //Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -17,30 +16,22 @@
 
 namespace biogears
 {
-  class PopulationGenerator 
+  class ScenarioGenerator 
   {
   public:
-    PopulationGenerator(std::vector<std::string> params);
-    PopulationGenerator( const PopulationGenerator&) = delete;
-    PopulationGenerator(PopulationGenerator&&) = default;
-    ~PopulationGenerator() = default;
+    ScenarioGenerator(std::vector<std::string> params);
+    ScenarioGenerator( const ScenarioGenerator&) = delete;
+    ScenarioGenerator(ScenarioGenerator&&) = default;
+    ~ScenarioGenerator() = default;
 
     void Generate();
 
-    void SetGirlNames(std::vector<std::string>&& names);
-    void SetBoyNames(std::vector<std::string>&& names);
-
-    void AddBoyName(std::string);
-    void AddGirlName(std::string);
-
-    void ClearBoyNames();
-    void ClearGirlNames();
-
   private:
-    std::vector<std::pair<std::string, int>> _runs;
-    std::vector<std::string> _boy_names;
-    std::vector<std::string> _girl_names;
+    std::vector<std::string> _runs;
+    std::vector<unsigned char> _buffer; // 5MBs of read buffer state
+    std::size_t _buffer_size = 5 * 1024 * 1024;
+
   };
 } //namespace biogears
 
-#endif //BIOGEARS_POPULATION_GENERATOR_H
+#endif //BIOGEARS_SCENARIO_GENERATOR_H

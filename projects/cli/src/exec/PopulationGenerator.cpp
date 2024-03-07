@@ -37,7 +37,7 @@ namespace tatrc {
 }
 namespace CDM = mil::tatrc::physiology::datamodel;
 
-std::string dateString()
+static std::string dateString()
 {
   std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
@@ -96,7 +96,7 @@ void PopulationGenerator::ClearGirlNames()
 {
   _girl_names.clear();
 }
-//-------------------------------------------------------------------------------
+
 //-------------------------------------------------------------------------------
 //!
 //! \brief Iterates through patientFiles, creates a lambda function for each item, and passes those functions to a thread pool
