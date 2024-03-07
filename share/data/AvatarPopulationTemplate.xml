@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PopulationProfile xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel xsd/BioGearsDataModel.xsd">
+
+  <Groups>
+      <!-- sexratio for male:female where 1.0 = ALL Male and 0.0 = All Female -->
+	  <!-- Avatar #1 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Short_YoungAdult_Underweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Short</Tag>
+            <Tag>YoungAdult</Tag>
+            <Tag>Underweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #2 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Average_Adult_Healthyweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Average</Tag>
+            <Tag>Adult</Tag>
+            <Tag>Healthyweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #3 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Tall_MiddleAge_Overweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Tall</Tag>
+            <Tag>MiddleAge</Tag>
+            <Tag>Overweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #4 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Tall_YoungAdult_Healthyweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Tall</Tag>
+            <Tag>YoungAdult</Tag>
+            <Tag>Healthyweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #5 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Short_Adult_Overweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Short</Tag>
+            <Tag>Adult</Tag>
+            <Tag>Overweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #6 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Average_MiddleAge_Underweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Average</Tag>
+            <Tag>MiddleAge</Tag>
+            <Tag>Underweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #7 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Average_YoungAdult_Overweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Average</Tag>
+            <Tag>YoungAdult</Tag>
+            <Tag>Overweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #8 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Tall_Adult_Underweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Tall</Tag>
+            <Tag>Adult</Tag>
+            <Tag>Underweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #9 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Short_MiddleAge_Healthyweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Short</Tag>
+            <Tag>MiddleAge</Tag>
+            <Tag>Healthyweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #10 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Short_YoungAdult_Underweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Short</Tag>
+            <Tag>YoungAdult</Tag>
+            <Tag>Underweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #11 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Average_Adult_Healthyweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Average</Tag>
+            <Tag>Adult</Tag>
+            <Tag>Healthyweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #12 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Tall_MiddleAge_Overweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Tall</Tag>
+            <Tag>MiddleAge</Tag>
+            <Tag>Overweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #13 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Tall_YoungAdult_Underweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Tall</Tag>
+            <Tag>YoungAdult</Tag>
+            <Tag>Underweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #14 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Short_Adult_Healthyweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Short</Tag>
+            <Tag>Adult</Tag>
+            <Tag>Healthyweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #15 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Short_MiddleAge_Underweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Short</Tag>
+            <Tag>MiddleAge</Tag>
+            <Tag>Underweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #16 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Short_YoungAdult_Overweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Short</Tag>
+            <Tag>YoungAdult</Tag>
+            <Tag>Overweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #17 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Average_Adult_Underweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Average</Tag>
+            <Tag>Adult</Tag>
+            <Tag>Underweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #18 -->
+	  <Group sexratio="1" weight="1">
+         <Name>Male_Tall_MiddleAge_Healthyweight</Name>
+         <Tags>
+            <Tag>Male</Tag>
+            <Tag>Tall</Tag>
+            <Tag>MiddleAge</Tag>
+            <Tag>Healthyweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #19 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Average_YoungAdult_Healthyweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Average</Tag>
+            <Tag>YoungAdult</Tag>
+            <Tag>Healthyweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #20 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Average_Adult_Overweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Average</Tag>
+            <Tag>Adult</Tag>
+            <Tag>Overweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #21 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Average_MiddleAge_Healthyweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Average</Tag>
+            <Tag>MiddleAge</Tag>
+            <Tag>Healthyweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #22 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Tall_YoungAdult_Overweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Tall</Tag>
+            <Tag>YoungAdult</Tag>
+            <Tag>Overweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #23 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Tall_Adult_Healthyweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Tall</Tag>
+            <Tag>Adult</Tag>
+            <Tag>Healthyweight</Tag>
+         </Tags>
+      </Group>
+	  <!-- Avatar #24 -->
+	  <Group sexratio="0" weight="1">
+         <Name>Female_Short_MiddleAge_Overweight</Name>
+         <Tags>
+            <Tag>Female</Tag>
+            <Tag>Short</Tag>
+            <Tag>MiddleAge</Tag>
+            <Tag>Overweight</Tag>
+         </Tags>
+      </Group>
+  </Groups>
+  
+  <!-- Can we add a lower bound (16?) and upper bound (65?) -->
+  <AgeDistribution group="YoungAdult" mean="23.5" minimum="16" maximum="31" diviation="3.75" unit="yr"/>
+  <AgeDistribution group="Adult" mean="40.0" minimum="32" maximum="47" diviation="3.75" unit="yr"/>
+  <AgeDistribution group="MiddleAge" mean="57" minimum="48" maximum="64" diviation="3.75" unit="yr"/> 
+  
+  <!-- May want to update data for height given it is now sub-distributions as opposed to random sampling -->
+  <HeightDistribution  group="Male;Short"  mean="64" diviation="1.0" unit="in"/>
+  <HeightDistribution  group="Male;Average"  mean="70" diviation="1.0" unit="in"/>
+  <HeightDistribution  group="Male;Tall"  mean="76" diviation="1.0" unit="in"/>
+  
+  <HeightDistribution  group="Female;Short"  mean="61.5" diviation="1.0" unit="in"/>
+  <HeightDistribution  group="Female;Average"  mean="65.5" diviation="1.0" unit="in"/>
+  <HeightDistribution  group="Female;Tall"  mean="70.5" diviation="1.0" unit="in"/>
+  
+  <!-- Need to add a patient parameter for BMI which back calculates weight using BMI sample and height -->
+  <BMIDistribution group="Underweight"   mean="15.5" minimum="12" maximum="18.5" diviation="1.5" unit="unitless"/>
+  <BMIDistribution group="Healthyweight"   mean="21.5" diviation="1.5" unit="unitless"/>
+  <BMIDistribution group="Overweight"   mean="27.5" minimum="24.5" maximum="42" diviation="1.5" unit="unitless"/>
+  
+  <!-- Populational variance can be added through distributions in other patient parameters below -->
+  
+
+</PopulationProfile>

@@ -271,6 +271,17 @@ bool SEPatient::Load(const CDM::PatientData& in)
   if (in.Height().present()) {
     GetHeight().Load(in.Height().get());
   }
+  if (in.BMI().present()) {
+    if (!in.Weight().present() && in.Height().present()) {
+      CalculateWeightByBMI(in.BMI().get());
+    } else if (in.Weight().present()  && !in.Height().present()) {
+      CalculateHeightByBMI(in.BMI().get());
+    } else {
+      std::stringstream ss;
+      ss << "BMI as an input must be provided with height OR weight (and not neither/both). BMI input value is not being used and default inputs will be used." << std::endl;
+      Warning(ss);
+    }
+  }
   if (in.AlveoliSurfaceArea().present()) {
     GetAlveoliSurfaceArea().Load(in.AlveoliSurfaceArea().get());
   }
@@ -1099,6 +1110,34 @@ double SEPatient::GetHeight(const LengthUnit& unit) const
     return SEScalar::dNaN();
   }
   return m_Height->GetValue(unit);
+}
+//-----------------------------------------------------------------------------
+void SEPatient::CalculateWeightByBMI(const CDM::ScalarData& bmi)
+{
+  if (!HasWeight()) {
+    m_Weight = new SEScalarMass();
+    double height_m = GetHeight(LengthUnit::m);
+    double weightByBMI_kg = bmi.value() * std::pow(height_m, 2.);
+
+    m_Weight->SetValue(weightByBMI_kg, MassUnit::kg);
+    std::stringstream ss;
+    ss << "Based on BMI input, the patient weight is being set at " << weightByBMI_kg << "kg." << std::endl;
+    Info(ss);
+  }
+}
+//-----------------------------------------------------------------------------
+void SEPatient::CalculateHeightByBMI(const CDM::ScalarData& bmi)
+{
+  if (!HasHeight()) {
+    m_Height = new SEScalarLength();
+    double weight_kg = GetWeight(MassUnit::kg);
+    double heightByBMI_m = std::sqrt(weight_kg / bmi.value());
+
+    m_Height->SetValue(heightByBMI_m, LengthUnit::m);
+    std::stringstream ss;
+    ss << "Based on BMI input, the patient height is being set at " << heightByBMI_m << "m." << std::endl;
+    Info(ss);
+  }
 }
 //-----------------------------------------------------------------------------
 bool SEPatient::HasAlveoliSurfaceArea() const

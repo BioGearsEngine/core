@@ -108,6 +108,7 @@ void PopulationGenerator::Generate()
   std::mt19937 gen { rd() };
   static int total_population_count = 1;
   std::string unit_str = "";
+  std::string patientFilename = "";
   std::string population_pool_dir = std::string("population_") + dateString();
 
   for (auto& run : _runs) {
@@ -119,6 +120,15 @@ void PopulationGenerator::Generate()
     try {
       auto population = CDM::PopulationProfile(config_file);
       for (auto i = 0; i < population_size; ++i) {
+        patientFilename.clear();
+        // This naming structure is currently specific to the VTC project. Future work should expand out naming options.
+        if (i < 10) {
+          patientFilename.append("id00" + std::to_string(i) + "_");
+        } else if (i < 100) {
+          patientFilename.append("id0" + std::to_string(i) + "_");
+        } else {
+          patientFilename.append("id" + std::to_string(i) + "_");
+        }
         CDM::PatientData patient;
         std::normal_distribution<> standard_distribution { 5, 2 };
         std::binomial_distribution<> binomial_distribution { 1, population->Heterogametic_SexDistribution() };
@@ -148,6 +158,7 @@ void PopulationGenerator::Generate()
           _girl_names[name_index] = std::move(_girl_names.back());
           _girl_names.pop_back();
         }
+        patientFilename.append(patient.Sex().get() + "_");
 
         if (!population->AgeDistribution().empty()) {
           unit_str = population->AgeDistribution()[0].unit();
@@ -162,10 +173,20 @@ void PopulationGenerator::Generate()
           if (unit_str.empty()) {
             unit_str = "yr";
           }
-          patient.Age(standard_distribution(gen));
-          patient.Age()->unit(unit_str);
+          double ageMaximum = standard_distribution.max();
+          double ageMinimum = standard_distribution.min();
+          if (population->AgeDistribution()[0].maximum().present()) {
+            ageMaximum = population->AgeDistribution()[0].maximum().get();
+          }
+          if (population->AgeDistribution()[0].minimum().present()) {
+            ageMinimum = population->AgeDistribution()[0].minimum().get();
+          }
+          while (!patient.Age().present() || patient.Age().get().value() > ageMaximum || patient.Age().get().value() < ageMinimum) {
+            patient.Age(standard_distribution(gen));
+            patient.Age()->unit(unit_str);
+          }
         }
-
+        patientFilename.append(std::to_string(int(patient.Age().get().value())) + "_");
 
         if (!population->WeightDistribution().empty()) {
           unit_str = population->WeightDistribution()[0].unit();
@@ -180,8 +201,18 @@ void PopulationGenerator::Generate()
           if (unit_str.empty()) {
             unit_str = "kg";
           }
-          patient.Weight(standard_distribution(gen));
-          patient.Weight()->unit(unit_str);
+          double weightMaximum = standard_distribution.max();
+          double weightMinimum = standard_distribution.min();
+          if (population->WeightDistribution()[0].maximum().present()) {
+            weightMaximum = population->WeightDistribution()[0].maximum().get();
+          }
+          if (population->WeightDistribution()[0].minimum().present()) {
+            weightMinimum = population->WeightDistribution()[0].minimum().get();
+          }
+          while (!patient.Weight().present() || patient.Weight().get().value() > weightMaximum || patient.Weight().get().value() < weightMinimum) {
+            patient.Weight(standard_distribution(gen));
+            patient.Weight()->unit(unit_str);
+          }
         }
         if (!population->HeightDistribution().empty()) {
           unit_str = population->HeightDistribution()[0].unit();
@@ -196,8 +227,41 @@ void PopulationGenerator::Generate()
           if (unit_str.empty()) {
             unit_str = "cm";
           }
-          patient.Height(standard_distribution(gen));
-          patient.Height()->unit(unit_str);
+          double heightMaximum = standard_distribution.max();
+          double heightMinimum = standard_distribution.min();
+          if (population->HeightDistribution()[0].maximum().present()) {
+            heightMaximum = population->HeightDistribution()[0].maximum().get();
+          }
+          if (population->HeightDistribution()[0].minimum().present()) {
+            heightMinimum = population->HeightDistribution()[0].minimum().get();
+          }
+          while (!patient.Height().present() || patient.Height().get().value() > heightMaximum || patient.Height().get().value() < heightMinimum) {
+            patient.Height(standard_distribution(gen));
+            patient.Height()->unit(unit_str);
+          }
+        }
+        if ((!population->BMIDistribution().empty() && population->WeightDistribution().empty()) || (!population->BMIDistribution().empty() && population->HeightDistribution().empty())) {
+          unit_str = population->BMIDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->BMIDistribution()[0].mean(),
+                                                             population->BMIDistribution()[0].diviation());
+          for (auto& distribution : population->BMIDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          double bmiMaximum = standard_distribution.max();
+          double bmiMinimum = standard_distribution.min();
+          if (population->BMIDistribution()[0].maximum().present()) {
+            bmiMaximum = population->BMIDistribution()[0].maximum().get();
+          }
+          if (population->BMIDistribution()[0].minimum().present()) {
+            bmiMinimum = population->BMIDistribution()[0].minimum().get();
+          }
+          while (!patient.BMI().present() || patient.BMI().get().value() > bmiMaximum || patient.BMI().get().value() < bmiMinimum) {
+            patient.BMI(standard_distribution(gen));
+            patient.BMI()->unit(unit_str);
+          }
         }
 
         if (!population->BodyFatFractionDistribution().empty()) {
@@ -527,12 +591,12 @@ void PopulationGenerator::Generate()
 #endif
 
         try {
-          std::string out_file = std::string("patients/") + population_pool_dir.c_str() + "/" + patient.Name() + ".xml";
+          std::string out_file = std::string("patients/") + population_pool_dir.c_str() + "/" + patientFilename + patient.Name() + ".xml";
           std::ofstream file;
           file.open(out_file.c_str());
           if (file.is_open()) {
             mil::tatrc::physiology::datamodel::Patient(file, patient, info);
-            std::cout << std::string("Saved patients/") + population_pool_dir.c_str() + "/"+ patient.Name() + ".xml"
+            std::cout << std::string("Saved patients/") + population_pool_dir.c_str() + "/" + patientFilename + patient.Name() + ".xml"
                     << "\n";
           }
           file.close();
