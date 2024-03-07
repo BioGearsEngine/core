@@ -249,4 +249,50 @@ specific language governing permissions and limitations under the License.
     </xs:complexContent>
   </xs:complexType>
 
+<xs:complexType name="WeightedItemData">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="weight" type="xs:double"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="NormalDistributionData">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+         <xs:attribute name="mean" type="xs:double" use="required"/>
+         <xs:attribute name="divation" type="xs:double" use="required"/>
+         <xs:attribute name="min" type="xs:double" />
+         <xs:attribute name="max" type="xs:double"/>
+        </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="WeightedDistributionData">
+    <xs:sequence>      
+        <xs:element name="Value" type="WeightedItemData" minOccurs="1" maxOccurs="unbounded"/>      
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="file" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="ScenarioTemplateData">
+    <xs:sequence minOccurs="1">
+      <xs:choice>
+        <xs:element name="NormalDistribution" type="NormalDistributionData"/>
+        <xs:element name="WieghtedDistribution" type="WeightedDistributionData"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="count" type="xs:int" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="file" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="ScenarioTemplateListData">
+       <xs:sequence>
+         <xs:element name="Template" type="ScenarioTemplateData" minOccurs="1" maxOccurs="unbounded"/>
+       </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="ScenarioTemplate" type="ScenarioTemplateListData"/>
 </xs:schema>
