@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Patient xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGearsDataModel.xsd">
-  <Name>Hassan</Name>
+  <Name>Male_28_Normal_hr109_rr18</Name>
   <Sex>Male</Sex>
   <Age readOnly="false" unit="yr" value="28"/>
   <Weight readOnly="false" unit="lb" value="185"/>

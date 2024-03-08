@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Patient xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_7.5" xsi:schemaLocation="">
-    <Name>Tristan</Name>
+    <Name>Male_24_Normal_hidrosis2</Name>
     <Sex>Male</Sex>
     <Age value="24.0" unit="yr"/>
     <Weight value="67.0" unit="kg"/>
