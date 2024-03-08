@@ -745,7 +745,7 @@ void Environment::CalculateEvaporation()
 
     for (SEThermalCircuitPath* envSkinToGround : m_EnvironmentSkinToGroundPaths) {
       double dClothingResistance_clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo) * m_cloSegmentation[index];
-      double dClothingResistance_m2_kPa_Per_W = clo_To_m2_K_Per_W * dClothingResistance_clo / (iCl * dLewisRelation_K_Per_kPa);
+      double dClothingResistance_m2_kPa_Per_W = 1000*clo_To_m2_K_Per_W * dClothingResistance_clo / (iCl * dLewisRelation_K_Per_kPa);
       double fCl = 1.0 + 0.3 * dClothingResistance_clo;
       double skinWettednessDiffusion = 0.06;
 
