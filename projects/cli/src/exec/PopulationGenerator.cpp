@@ -23,6 +23,8 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <format>
+#include <chrono>
 
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/string/manipulation.h>
@@ -108,8 +110,7 @@ void PopulationGenerator::Generate()
   std::mt19937 gen { rd() };
   static int total_population_count = 1;
   std::string unit_str = "";
-  std::string patientFilename = "";
-  std::string population_pool_dir = std::string("population_") + dateString();
+  std::string population_pool_dir = std::format("population_{}",dateString().c_str());
 
   for (auto& run : _runs) {
     auto const& config_file = run.first;

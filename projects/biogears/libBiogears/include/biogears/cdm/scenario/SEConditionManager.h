@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEStarvation.h>
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 
-#include <biogears/schema/cdm/Scenario.hxx>
+#include <biogears/schema/cdm/DataRequests.hxx>
 CDM_BIND_DECL(ConditionData);
 
 namespace biogears {

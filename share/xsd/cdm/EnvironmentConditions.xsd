@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
 
   <xs:include schemaLocation="Environment.xsd"/>
-  <xs:include schemaLocation="Scenario.xsd"/>
+  <xs:include schemaLocation="Conditions.xsd"/>
 
   <!-- @brief Base environmental condition type -->
   <xs:complexType name="EnvironmentConditionData" >

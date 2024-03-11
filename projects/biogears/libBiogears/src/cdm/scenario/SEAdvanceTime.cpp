@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/schema/cdm/Actions.hxx>
 
 namespace biogears {
 SEAdvanceTime::SEAdvanceTime()

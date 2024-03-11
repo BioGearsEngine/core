@@ -35,7 +35,7 @@ void SEActionExample::Clear()
 //-------------------------------------------------------------------------------
 bool SEActionExample::IsValid() const
 {
-  return SEActionExample::IsValid() && HasSeverity();
+  return HasSeverity();
 }
 //-------------------------------------------------------------------------------
 bool SEActionExample::IsActive() const
