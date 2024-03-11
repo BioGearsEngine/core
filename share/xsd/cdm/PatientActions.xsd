@@ -12,9 +12,9 @@ specific language governing permissions and limitations under the License.
 <!-- @brief Actions able to be performed to change the patient  -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
 
-  <xs:include schemaLocation="Scenario.xsd"/>
   <xs:include schemaLocation="PatientNutrition.xsd"/>
   <xs:include schemaLocation="Substance.xsd"/>
+  <xs:include schemaLocation="Actions.xsd"/>
 
   <!-- @brief Base Patient Action type -->
   <xs:complexType name="PatientActionData" >

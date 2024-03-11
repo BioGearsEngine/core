@@ -1,0 +1,79 @@
+<!--
+Copyright 2015 Applied Research Associates, Inc.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the License
+at:
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+-->
+<!-- @brief A collection of data and instructions to be executed by a physiology engine  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+ <xs:include schemaLocation="Properties.xsd"/>
+
+  <xs:complexType name="ActionData">
+    <xs:sequence>
+      <xs:element name="Comment"  type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Occurs"   type="xs:double" minOccurs="0" maxOccurs="1"/>
+      <!-- @brief When this event occurs in the scenario (currently not supported)-->
+      <xs:element name="Duration" type="xs:double" minOccurs="0" maxOccurs="1"/>
+      <!-- @brief Length of time before event ends (currently not supported)  -->
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="ActionListData">
+    <xs:complexContent>
+      <xs:extension base="ObjectData">
+        <xs:choice>
+          <xs:element name="ActionFile" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:sequence>
+
+            <xs:element name = "RandomSeed"  minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name = "seed" type = "xs:int" minOccurs="1" maxOccurs="5"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Action" type="ActionData" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Actions" type="ActionListData" />
+  
+    <!-- @brief Execute the engine for the specified amount of time -->
+  <xs:complexType name="AdvanceTimeData">
+    <xs:complexContent>
+      <xs:extension base="ActionData">
+        <xs:sequence>
+          <xs:element name="Time" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="enumSerializationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Load"/>
+      <xs:enumeration value="Save"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- @brief Save state of the engine to a file -->
+  <xs:complexType name="SerializeStateData">
+    <xs:complexContent>
+      <xs:extension base="ActionData">
+        <xs:sequence>
+          <xs:element name="Filename" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="Type" type="enumSerializationType" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+</xs:schema>

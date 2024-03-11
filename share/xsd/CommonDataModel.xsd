@@ -3,6 +3,7 @@
 
   <xs:include schemaLocation="cdm/Properties.xsd"/>
   <xs:include schemaLocation="cdm/EngineState.xsd"/>
+  <xs:include schemaLocation="cdm/Actions.xsd"/>
   <xs:include schemaLocation="cdm/Scenario.xsd"/>
   <xs:include schemaLocation="cdm/Patient.xsd"/>
   <xs:include schemaLocation="cdm/PatientActions.xsd"/>
