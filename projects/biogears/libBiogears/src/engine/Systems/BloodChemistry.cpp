@@ -947,7 +947,7 @@ void BloodChemistry::CheckBloodSubstanceLevels()
           }
         }
       }
-    } else if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) > 25.0) {
+    } else if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) > 23.0) {
       /// \event Patient: End Brain Oxygen Deficit Event. The oxygen partial pressure has risen above 25 mmHg in the brain. If this occurs when the patient has a brain oxygen deficit event, it will reverse the event.
       /// The brain is getting oxygen.
       patient.SetEvent(CDM::enumPatientEvent::BrainOxygenDeficit, false, m_data.GetSimulationTime());

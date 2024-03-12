@@ -576,12 +576,20 @@ void Energy::CalculateMetabolicHeatGeneration()
   double summitMetabolism_W = 21.0 * std::pow(m_Patient->GetWeight(MassUnit::kg), 0.75); /// \cite herman2008physics
   double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
+  double basalMetabolicRate_W = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::W);
 
   if (coreTemperature_degC < 34.0) //Hypothermic state inducing metabolic depression (decline of metabolic heat generation)
   {
     double tot_W = GetTotalMetabolicRate().GetValue(PowerUnit::W);
-    double scaleMR = 0.0001;    // need the scaling factor to reduce the rate of decrease 
+    double scaleMR = 0.00001;    // need the scaling factor to reduce the rate of decrease 
     totalMetabolicRateNew_W = tot_W - tot_W * scaleMR * (1 - std::pow(0.94, 34.0 - coreTemperature_degC));
+
+    // if we are below basal rate, then the rate of decrease needs to dimish much slower
+    if (totalMetabolicRateNew_W < basalMetabolicRate_W) {
+      scaleMR = 0.0000001;
+      totalMetabolicRateNew_W = tot_W - tot_W * scaleMR * (1 - std::pow(0.94, 34.0 - coreTemperature_degC));
+    }
+
     //tot_W *= std::pow(0.94, 34.0 - coreTemperature_degC);
     //totalMetabolicRateNew_W = summitMetabolism_W * std::pow(0.94, 34.0 - coreTemperature_degC); //The metabolic heat generated will drop by 6% for every degree below 34 C
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W); /// \cite mallet2002hypothermia
@@ -589,7 +597,7 @@ void Energy::CalculateMetabolicHeatGeneration()
   {
     m_Patient->SetEvent(CDM::enumPatientEvent::Shivering, true, m_data.GetSimulationTime());
     double basalMetabolicRate_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W);
-    double scaleMR = 0.2;   //scaling factor to validate metabolic rate during shivering, the old model was far too rapid
+    double scaleMR = 0.1;   //scaling factor to validate metabolic rate during shivering, the old model was far too rapid
     totalMetabolicRateNew_W = basalMetabolicRate_W + (summitMetabolism_W - basalMetabolicRate_W) * scaleMR * (coreTemperatureLow_degC - coreTemperature_degC) / coreTemperatureLowDelta_degC;
     totalMetabolicRateNew_W = std::min(totalMetabolicRateNew_W, summitMetabolism_W); //Bounded at the summit metabolism so further heat generation doesn't continue for continue drops below 34 C.
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W);

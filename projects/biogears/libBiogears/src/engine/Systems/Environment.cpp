@@ -640,6 +640,9 @@ void Environment::CalculateRadiation()
 
     auto max_result = std::max(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
     auto clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo);
+    if (clo < 0.1) {
+      clo = 0.1; //something stupid to lock in clo
+    }
     m_ClothingToEnclosurePath->GetNextResistance().SetValue(clo * max_result, HeatResistanceUnit::K_Per_W);
 
     //Set the source
@@ -699,9 +702,10 @@ void Environment::CalculateConvection()
 
   auto max_result = std::max(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
   auto clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo);
-
+  if (clo < 0.1) {
+    clo = 0.1;  //something stupid to lock in clo
+  }
   m_ClothingToEnvironmentPath->GetNextResistance().SetValue(clo*max_result, HeatResistanceUnit::K_Per_W);
-
   //Set the source
   double dAmbientTemperature_K = GetConditions().GetAmbientTemperature(TemperatureUnit::K);
   m_GroundToEnvironmentPath->GetNextTemperatureSource().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
