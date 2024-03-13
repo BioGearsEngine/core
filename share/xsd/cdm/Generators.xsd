@@ -1,0 +1,292 @@
+<!--
+Copyright 2015 Applied Research Associates, Inc.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the License
+at:
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+-->
+<!-- @brief A collection of data and instructions to be executed by a physiology engine  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="uri:/mil/tatrc/physiology/datamodel" xmlns="uri:/mil/tatrc/physiology/datamodel" elementFormDefault="qualified">
+
+  <xs:include schemaLocation="Properties.xsd"/>
+
+  <xs:complexType name="SequenceData">
+    <xs:annotation>
+      <xs:documentation>
+        Used for generating a monotonic increasing sequence of numbers for enumeration.  Typically used as a way of keeping track
+        of the number of times something has been run.
+      </xs:documentation>
+    </xs:annotation>
+    <!-- @brief Declares a value with a occurence equal weight / Sum of all weights in the sequiance. -->
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="start" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="SelectionCycleData">
+    <xs:annotation>
+      <xs:documentation>
+        Starting at the initial value in the sequence each occurance will produce the next number in the sequence. Once all N values have been produced
+        the next value will be the 0th value.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Value" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="NormalDistributionData">
+    <!-- @brief Generates a value with in the gaussian function which a mean an divation equal to the given Min and Max values can be provided to clamp the results. -->
+    <xs:annotation>
+      <xs:documentation>
+        Parameters for defining a normal distribution for the range of a
+        Population Template.
+
+        mean = The Population Mean
+        diviation = The Standard Diviation from the mean
+        unit = What unit will the generate range be recorded in
+        group = Decides what heterogametic sex group the range will apply to.  All groups default to using the "" or "Male" group unles another one exist
+        [min,max] = Decides the clamp values of distribution. Useful for preventing issues when generating Scalar0To1 values.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="mean" type="xs:double" use="required"/>
+        <xs:attribute name="deviation" type="xs:double" use="required"/>
+        <xs:attribute name="min" type="xs:double" />
+        <!-- @brief When present all values generated will be clamped to [min,v]. -->
+        <xs:attribute name="max" type="xs:double"/>
+        <!-- @brief When present all values will be clamped to [v,max] -->
+        <xs:attribute name="unit" type="xs:string" default=""/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="WeightedItemData">
+    <!-- @brief Declares a value with a occurence equal weight / Sum of all weights in the sequiance. -->
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="weight" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="WeightedDistributionData">
+    <xs:annotation>
+      <xs:documentation>
+        Parameters for defining a discrete distribution for enum selection each weight will be used as
+        a probility for numbers [0..N) based on W_i/sum(W)
+      </xs:documentation>
+    </xs:annotation>
+    <!-- @brief Creates a custom descreate distribution. Each possible value can be weighted and the proability of any individual event is weight / sum of weights. -->
+    <xs:sequence>
+      <xs:element name="Value" type="WeightedItemData" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name ="BernoulliDistributionData">
+    <xs:annotation>
+      <xs:documentation>
+        Parameters for defining a Bernoulli  distribution  of {0,1} with p(0) = weight
+      </xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="p" type="xs:int" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="ContinuousUniformDistributionData">
+    <xs:annotation>
+      <xs:documentation>
+        Parameters for defining a continuous distribution for the interval of [a..b)
+      </xs:documentation>
+    </xs:annotation>
+    <!-- @brief Generates a value [a,b) such that all values have an equal probability of occuring. -->
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="a" type="xs:double" use="required" />
+        <xs:attribute name="b" type="xs:double" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="DiscreteUniformDistributionData">
+    <xs:annotation>
+      <xs:documentation>
+        Parameters for defining a discrete distribution on the interval [a..b] such that based on P(x) = 1 / abs(b-a)
+      </xs:documentation>
+    </xs:annotation>
+    <!-- @brief Generates a value [a,b] such that all integer values have an equal probability of occuring. -->
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="a" type="xs:int" use="required" />
+        <xs:attribute name="b" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name ="DistributionCollectionData">
+    <xs:annotation>
+      <xs:documentation>
+        Sequence of Choices of avaliable distributions.
+
+        ScenarioGenerator
+        During Scenario generation a single DistributionCollection should contain one entry for each PLACEHOLDER contained in the TIMELINE TEMPLATE.
+        The value of the xs:string or the name attribute will be used inside the regex @VALUE@ an a replacment value will be pulled from the population described.
+
+        Population Generator
+        During population generation each patient property has a DistributionCollection. The author should use the xs:string value or the name= attribute to key in
+        a list of simi-colon delimited property values that apply to a specific Population. The generator will find the best matching distribution and generate a value based
+        on the properties provided. Best match is defined as the distribution with the most matching property values such that all properties in the distribution are also found
+        in the population's list. If no match is found and a distribution with no name exist the geneator will favor this distribution as a default else no tag will be generated for
+        the patient paramater.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:choice>
+        <xs:element name="NormalDistribution" type="NormalDistributionData"/>
+        <xs:element name="WeightedDistribution" type="WeightedDistributionData"/>
+        <xs:element name="ContinuousUniformDistribution" type="ContinuousUniformDistributionData"/>
+        <xs:element name="DiscreteUniformDistribution" type="DiscreteUniformDistributionData"/>
+        <xs:element name="BernoulliDistribution" type="BernoulliDistributionData"/>
+        <xs:element name="Sequence" type="SequenceData"/>
+        <xs:element name="SelectionCycle" type="SelectionCycleData"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="ScenarioProfileData">
+    <xs:annotation>
+      <xs:documentation>
+        Each Scenario Profile is used to create N (count) Scenario files named Name_XX based on the Template Scenario.
+
+        Each Profile contain a sequence of choices which is one of the following value replacment functions
+        - NormalDistribution
+        - WeightedDistribution
+        - ContinuousUniformDistribution
+        - DiscreteUniformDistribution
+        - BernoulliDistribution
+        - Sequence
+        - SelectionCycle
+
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="DistributionCollectionData">
+        <xs:attribute name="count" type="xs:int" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="templateFile" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ScenarioGeneratorData">
+    <xs:annotation>
+      <xs:documentation>
+        Series of Scenario Profiles used to convert Scenario Tempaltes in to viable working ScenarioAutoSerializationData
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ScenarioProfile" type="ScenarioProfileData" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ScenarioGenerator" type="ScenarioGeneratorData"/>
+
+  <xs:complexType name ="PopulationProfileData">
+    <xs:annotation>
+      <xs:documentation></xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Property" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="count" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name ="PopulationProfileCollectionData">
+    <xs:annotation>
+      <xs:documentation></xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Population" type="PopulationProfileData" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name ="PopulationSampleCollectionData">
+    <xs:annotation>
+      <xs:documentation></xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <!-- Physical Characteristics -->
+      <xs:element name="Heterogametic-SexDistribution" type="DistributionCollectionData" minOccurs="0"/>
+      <xs:element name="AgeDistribution"                             type="DistributionCollectionData" minOccurs="0" />
+      <xs:element name="WeightDistribution"                          type="DistributionCollectionData" minOccurs="0" />
+      <xs:element name="HeightDistribution"                          type="DistributionCollectionData" minOccurs="0" />
+      <!-- BodyDensity CANNOT be set by the user. It is determined using body fat fraction -->
+      <xs:element name="BodyFatFractionDistribution"                 type="DistributionCollectionData" minOccurs="0"/>
+      <!-- LeanBodyMass CANNOT be set by the user. It is determined using weight and body fat fraction -->
+      <xs:element name="MaxWorkRateDistribution"                     type="DistributionCollectionData" minOccurs="0"/>
+      <!-- MuscleMass CANNOT be set by the user -->
+      <xs:element name="BloodTypeABODistribution"                    type="DistributionCollectionData" minOccurs="0"/>
+      <xs:element name="BloodTypeRhDistribution"                     type="DistributionCollectionData" minOccurs="0" />
+      <xs:element name="AlveoliSurfaceAreaDistribution"              type="DistributionCollectionData" minOccurs="0"/>
+      <xs:element name="HyperhidrosisDistribution"                   type="DistributionCollectionData" minOccurs="0"/>
+      <xs:element name="RightLungRatioDistribution"                  type="DistributionCollectionData" minOccurs="0" />
+      <xs:element name="SkinSurfaceAreaDistribution"                 type="DistributionCollectionData" minOccurs="0" />
+      <xs:element name="SleepAmountDistribution"                     type="DistributionCollectionData" minOccurs="0" />
+      <xs:element name="PainSusceptibilityDistribution"              type="DistributionCollectionData" minOccurs="0"/>
+      <xs:element name="BasalMetabolicRateDistribution"              type="DistributionCollectionData" minOccurs="0"/>
+      <xs:element name="BloodVolumeBaselineDistribution"             type="DistributionCollectionData" minOccurs="0" />
+      <xs:element name="DiastolicArterialPressureBaselineDistribution" type="DistributionCollectionData" minOccurs="0" />
+      <xs:element name="HeartRateBaselineDistribution"                type="DistributionCollectionData" minOccurs="0" />
+      <!-- MeanArterialPressureBaseline CANNOT be set by the user -->
+      <xs:element name="RespirationRateBaselineDistribution"          type="DistributionCollectionData" minOccurs="0" />
+      <xs:element name="SystolicArterialPressureBaselineDistribution" type="DistributionCollectionData" minOccurs="0" />
+      <!-- TidalVolumeBaseline CANNOT be set by the user -->
+      <xs:element name="HeartRateMaximumDistribution" type="DistributionCollectionData" minOccurs="0" />
+      <xs:element name="HeartRateMinimumDistribution" type="DistributionCollectionData" minOccurs="0" />
+      <!-- ExpiratoryReserveVolume CANNOT be set by the user -->
+      <xs:element name="FunctionalResidualCapacityDistribution" type="DistributionCollectionData" minOccurs="0" />
+      <!-- InspiratoryCapacity CANNOT be set by the user -->
+      <!-- InspiratoryReserveVolume CANNOT be set by the user -->
+      <xs:element name="ResidualVolumeDistribution" type="DistributionCollectionData" minOccurs="0" />
+      <xs:element name="TotalLungCapacityDistribution" type="DistributionCollectionData" minOccurs="0" />
+      <!-- VitalCapacity CANNOT be set by the user -->
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name ="PopulationGeneratorData">
+    <xs:annotation>
+      <xs:documentation>
+        Patient template  data is a way of defining the ranges of input parmeters for a group of patients. It is used as the development.  All entries can occur twice except
+        Heterogametic-SexDistribution". For now Heterogametic-SexDistribution is a binomal distribution [0,1] where you give the probability. 0 = Male ; 1 = Female
+        Future support for other group classifications maybe introduced but at this time. using the group field of any distribution allows you to mark
+        poulation distirbution diferences between Heterogametic-Male and Heterogametic-Female members of the population. I would like to Addtional varability introduced
+        but it is not supported at this time. Instead prefer multiple PopulatioData pools being used to generate.
+
+        Each field in this data type represents the possible population distribtuion for a line item in PatientData. Some fields are missing
+        As they are not intended as input for a patient, but are instead generated by stabilization
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Populations" type="PopulationProfileCollectionData"/>
+      <xs:element name="Sampling "   type="PopulationSampleCollectionData"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="PopulationProfile" type="PopulationGeneratorData"/>
+
+</xs:schema>

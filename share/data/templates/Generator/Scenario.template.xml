@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ScenarioGenerator xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel xsd/BioGearsDataModel.xsd">
 
-<ScenarioTemplate name="SkinyWhiteMales" 
+<ScenarioTemplate name="Tall_Underweight_Middleage_Male" 
                   timeline="timelines/AsthmaAttack.xml.in" 
-                  count="10">
+                  count="6">
+
   <NormalDistribution mean="120" deviation="7">BODYWIEGHT</NormalDistribution>
   <NormalDistribution mean="180" deviation="10">BLOOD_PRESSURE</NormalDistribution>
   <NormalDistribution mean="76" deviation="6">HEIGHT</NormalDistribution>
   
   <NormalDistribution mean="5" deviation="1">DURATION</NormalDistribution>
   <NormalDistribution mean=".5" deviation=".06" min="0.0" max="1.0">SEVERITY</NormalDistribution>
-  <NormalDistribution mean="200" deviation="6">INTERVENTION</NormalDistribution> 
   
+  <NormalDistribution mean="200" deviation="0">INTERVENTION</NormalDistribution>   
   <WeightedDistribution name="BLOOD_TYPE" >
     <Value weight="20">AB</Value>
     <Value weight="80">A</Value>
