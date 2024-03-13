@@ -37,9 +37,7 @@ namespace biogears
     void ClearGirlNames();
 
   private:
-    std::vector<std::pair<std::string, int>> _runs;
-    std::vector<std::string> _boy_names;
-    std::vector<std::string> _girl_names;
+    std::vector<std::string> _runs;
   };
 } //namespace biogears
 

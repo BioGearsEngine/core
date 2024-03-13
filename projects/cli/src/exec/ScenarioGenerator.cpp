@@ -13,6 +13,7 @@
 #include "ScenarioGenerator.h"
 
 #include <biogears/io/io-manager.h>
+#include <biogears/schema/cdm/Generators.hxx>
 #include <biogears/schema/cdm/Scenario.hxx>
 
 #ifdef _WIN32
@@ -48,8 +49,6 @@ namespace tatrc {
 namespace CDM = mil::tatrc::physiology::datamodel;
 
 namespace biogears {
-std::vector<std::string> generate_boy_names();
-std::vector<std::string> generate_girl_names();
 //-------------------------------------------------------------------------------
 // Class Scenario Template
 struct ScenarioTemplate {
@@ -67,16 +66,15 @@ public:
   std::map<std::string, CDM::WeightedDistributionData> weighted_descrete_values;
 };
 //-------------------------------------------------------------------------------
-static ScenarioTemplate process_template(CDM::ScenarioTemplateData data)
+static ScenarioTemplate process_template(CDM::ScenarioProfileData data)
 {
 
   ScenarioTemplate result;
 
   result.name = data.name();
-  result.timeline_file = data.timeline();
+  result.timeline_file = data.templateFile();
 
   for (auto nDistribuition : data.NormalDistribution()) {
-    // result.normalDistributions.insert(nDistribuition);
     result.normals[nDistribuition] = std::normal_distribution<double>(nDistribuition.mean(), nDistribuition.deviation());
 
     auto a = nDistribuition.min().present() ? nDistribuition.min().get() : std::numeric_limits<double>::min();
@@ -85,20 +83,15 @@ static ScenarioTemplate process_template(CDM::ScenarioTemplateData data)
   }
 
   for (auto nDistribuition : data.DiscreteUniformDistribution()) {
-    // result.normalDistributions.insert(nDistribuition);
     result.discrete_uniforms[nDistribuition] = std::uniform_int_distribution<int>(nDistribuition.a(), nDistribuition.b());
   }
 
   for (auto nDistribuition : data.ContinuousUniformDistribution()) {
-    // result.normalDistributions.insert(nDistribuition);
     result.continuous_uniforms[nDistribuition] = std::uniform_real_distribution<double>(nDistribuition.a(), nDistribuition.b());
   }
 
   for (auto nDistribuition : data.WeightedDistribution()) {
     std::vector<double> weights;
-
-    // result.discreteDistributions.emplace( nDistribuition.name());
-
     for (auto& weight : nDistribuition.Value()) {
       weights.push_back(weight.weight());
     }
@@ -185,7 +178,7 @@ void ScenarioGenerator::Generate()
       auto scenarioGenerator = CDM::ScenarioGenerator(content_stream);
 
       // STEP 2: For Each ScenarioGenerator Data iterate over the ScenarioTemplateData elements
-      for (auto& scenarioTemplate : scenarioGenerator->ScenarioTemplate()) {
+      for (auto& scenarioTemplate : scenarioGenerator->ScenarioProfile()) {
 
         auto processed_template = process_template(scenarioTemplate);
         ;
@@ -199,22 +192,22 @@ void ScenarioGenerator::Generate()
         //        Relative -> [ Folder(run) + timeline(), timeline(), timeline/ + timeline(), scenario/ + timeline()
 
         size_t master_timeline_content_size = 0;
-        auto path_to_timeline = std::filesystem::path(scenarioTemplate.timeline().c_str());
+        auto path_to_timeline = std::filesystem::path(scenarioTemplate.templateFile().c_str());
         if (!path_to_timeline.is_absolute()) {
-          path_to_timeline = std::filesystem::path(run.c_str()).parent_path() / std::filesystem::path(scenarioTemplate.timeline().c_str());
+          path_to_timeline = std::filesystem::path(run.c_str()).parent_path() / std::filesystem::path(scenarioTemplate.templateFile().c_str());
         }
         if (!std::filesystem::exists(path_to_timeline)) {
-          path_to_timeline = std::filesystem::path(scenarioTemplate.timeline().c_str());
+          path_to_timeline = std::filesystem::path(scenarioTemplate.templateFile().c_str());
           if (!std::filesystem::exists(path_to_timeline)) {
-            path_to_timeline = std::filesystem::path("timeline/") / std::filesystem::path(scenarioTemplate.timeline().c_str());
+            path_to_timeline = std::filesystem::path("timeline/") / std::filesystem::path(scenarioTemplate.templateFile().c_str());
             if (!std::filesystem::exists(path_to_timeline)) {
-              path_to_timeline = std::filesystem::path("scenario/") / std::filesystem::path(scenarioTemplate.timeline().c_str());
+              path_to_timeline = std::filesystem::path("scenario/") / std::filesystem::path(scenarioTemplate.templateFile().c_str());
             }
           }
         }
 
         if (!std::filesystem::exists(path_to_timeline)) {
-          std::cerr << std::format("Unable to find {}", scenarioTemplate.timeline().c_str());
+          std::cerr << std::format("Unable to find {}", scenarioTemplate.templateFile().c_str());
           continue;
         }
 
@@ -239,8 +232,8 @@ void ScenarioGenerator::Generate()
           for (auto& [key, distribution] : processed_template.normals) {
             std::string regex = std::format("@{}@", key);
             const std::regex re(regex);
-            auto clmaped_value = std::max( processed_template.limits_of_normals[key].first, 
-                std::min(processed_template.limits_of_normals[key].second, distribution(gen)));
+            auto clmaped_value = std::max(processed_template.limits_of_normals[key].first,
+                                          std::min(processed_template.limits_of_normals[key].second, distribution(gen)));
             modified_scenario_contents = std::regex_replace(modified_scenario_contents, re, std::format("{}", clmaped_value));
           }
 

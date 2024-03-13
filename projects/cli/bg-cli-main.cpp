@@ -84,8 +84,8 @@ void print_help(int rc)
   std::cout << "\n         data                       : Generates xml resource files from various csv templtes in the RUNTIME directory";
   std::cout << "\n         states                     : Generates a stabalized patient state for each known patient";
   std::cout << "\n         sepsis                     : Generates several septic patient sates based on GenSepsisStates.config";
-  std::cout << "\n         population [template N]..| N : Generates a population of N patients for each patient template file";
-  std::cout << "\n         scenarios  [template       : Generates a seris of senarios as describe in a SenarioTemplate file";
+  std::cout << "\n         population [template]      : Generates a population patients for the patient template file";
+  std::cout << "\n         scenarios  [template]      : Generates a seris of senarios as described in a SenarioTemplate file";
   std::cout << "\n         tables html|md|xml|web|all : Generates data tables based on prior run validation for patients and systems in one of the requested formats";
   std::cout << "\nValidate [mode]...                  : Runs preexisting BioGears scenarios with the linked engine to validate agianst baseline results";
   std::cout << "\n         patient                    : Equivilant to bg-cli CONFIG config/ValidationPatient.config";
