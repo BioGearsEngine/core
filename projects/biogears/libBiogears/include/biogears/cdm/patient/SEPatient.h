@@ -270,6 +270,9 @@ public:
 protected:
   virtual void Unload(CDM::PatientData& data) const;
 
+  virtual void CalculateWeightByBMI(const CDM::ScalarData& bmi);
+  virtual void CalculateHeightByBMI(const CDM::ScalarData& bmi);
+
 protected:
   std::stringstream m_ss;
   mutable SEEventHandler* m_EventHandler;

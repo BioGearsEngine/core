@@ -199,6 +199,7 @@ static const std::string Heterogametic_Sex = "Heterogametic-Sex";
 static const std::string Age = "Age";
 static const std::string Weight = "Weight";
 static const std::string Height = "Height";
+static const std::string BodyMassIndex = "BodyMassIndex";
 static const std::string BodyFatFraction = "BodyFatFraction";
 static const std::string MaxWorkRate = "MaxWorkRate";
 static const std::string BloodTypeABO = "BloodTypeABO";
@@ -236,6 +237,9 @@ static std::map<std::string const, DistributionCollection> translate_distributio
   }
   if (samples.HeightDistribution().present()) {
     distributions[Height] = process_distribution_collection(samples.HeightDistribution().get());
+  }
+  if (samples.BodyMassIndexDistribution().present()) {
+    distributions[BodyMassIndex] = process_distribution_collection(samples.BodyMassIndexDistribution().get());
   }
   if (samples.BodyFatFractionDistribution().present()) {
     distributions[BodyFatFraction] = process_distribution_collection(samples.BodyFatFractionDistribution().get());
@@ -320,7 +324,21 @@ numeric_type sample_population(std::set<std::string> key, DistributionCollection
     auto roll_value = distribution(rd);
     double min_value = (collection.normals[key].min().present()) ? collection.normals[key].min().get() : std::numeric_limits<double>::min();
     double max_value = (collection.normals[key].max().present()) ? collection.normals[key].max().get() : std::numeric_limits<double>::max();
-    auto clmaped_value = std::max(min_value, std::min(max_value, roll_value));
+    if (collection.normals[key].strategy() == "clamp") {
+      //Strategy Clamp
+      return std::max(min_value, std::min(max_value, roll_value));
+    }
+    else {
+      //Strategy Resample - Lets limit ourselves to 1 second of resample to prevent livelock 
+      //                    when the user gives a bad min and max
+      std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+      std::chrono::steady_clock::time_point now   = begin;
+      while (roll_value < min_value || roll_value > max_value && 
+         std::chrono::duration_cast<std::chrono::seconds>(now - begin).count() < 1) {
+         roll_value = distribution(rd);
+         now = std::chrono::steady_clock::now();
+      }
+    }
     return roll_value;
   }
 
@@ -462,7 +480,7 @@ void PopulationGenerator::Generate()
         for (auto i = 0; i < profile.count; ++i) {
           CDM::PatientData patient;
 
-          patient.Name(std::format("{}_{:03}", profile.name, i));
+          patient.Name(std::format("id{1:03}_{0}", profile.name, i+1));
           if (distributions.find(Heterogametic_Sex) != distributions.end()) {
             auto [best_match, unit] = find_best_match(profile.tags, distributions[Heterogametic_Sex]);
             if (best_match.size() != 0) {
@@ -491,6 +509,14 @@ void PopulationGenerator::Generate()
             if (best_match.size() != 0) {
               patient.Height(sample_population<double>(best_match, distributions[Height], gen));
               patient.Height().get().unit(unit);
+            }
+          }
+
+          if (distributions.find(BodyMassIndex) != distributions.end()) {
+            auto [best_match, unit] = find_best_match(profile.tags, distributions[BodyMassIndex]);
+            if (best_match.size() != 0) {
+              patient.BodyMassIndex(sample_population<double>(best_match, distributions[BodyMassIndex], gen));
+              patient.BodyMassIndex().get().unit(unit);
             }
           }
 

@@ -43,14 +43,14 @@ specific language governing permissions and limitations under the License.
     <xs:attribute name="unit" type="xs:string" default=""/>
   </xs:complexType>
   <xs:complexType name="NormalDistributionData">
-    <!-- @brief Generates a value with in the gaussian function which a mean an divation equal to the given Min and Max values can be provided to clamp the results. -->
+    <!-- @brief Generates a value with in the gaussian function which a mean an deviation equal to the given Min and Max values can be provided to clamp the results. -->
     <xs:annotation>
       <xs:documentation>
         Parameters for defining a normal distribution for the range of a
         Population Template.
 
         mean = The Population Mean
-        deviation = The Standard Diviation from the mean
+        deviation = The standard deviation from the mean
         unit = What unit will the generate range be recorded in
         group = Decides what heterogametic sex group the range will apply to.  All groups default to using the "" or "Male" group unles another one exist
         [min,max] = Decides the clamp values of distribution. Useful for preventing issues when generating Scalar0To1 values.
@@ -65,6 +65,14 @@ specific language governing permissions and limitations under the License.
         <xs:attribute name="max" type="xs:double"/>
         <!-- @brief When present all values will be clamped to [v,max] -->
         <xs:attribute name="unit" type="xs:string" default=""/>
+        <xs:attribute name="strategy"  default="resample" >
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="resample"/>
+              <xs:enumeration value="clamp"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
@@ -157,7 +165,7 @@ specific language governing permissions and limitations under the License.
         the patient paramater.
       </xs:documentation>
     </xs:annotation>
-    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
       <xs:choice>
         <xs:element name="NormalDistribution" type="NormalDistributionData"/>
         <xs:element name="WeightedDistribution" type="WeightedDistributionData"/>
@@ -209,7 +217,13 @@ specific language governing permissions and limitations under the License.
 
   <xs:complexType name ="PopulationProfileData">
     <xs:annotation>
-      <xs:documentation></xs:documentation>
+      <xs:documentation>
+        Each profile will generate ${count} files of idXXX_${name}. Tags for the files will be generated
+        from the best fit distirbution whose Name is a strict subset of the property list for the population.
+        if a population contains three tags Robot;Silver;Bipedal then a AgeDistribution with a name of Robot:Bipdal
+        would win over one with the name Silver. A Distribution with the name Huminoid;Robot;Silver;Bipedal would be rejected
+        as Huminoid is not in the populations tags depsite all of its tags being part of the distributions name.
+      </xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element name="Property" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
@@ -236,6 +250,7 @@ specific language governing permissions and limitations under the License.
       <xs:element name="WeightDistribution"                          type="DistributionCollectionData" minOccurs="0" />
       <xs:element name="HeightDistribution"                          type="DistributionCollectionData" minOccurs="0" />
       <!-- BodyDensity CANNOT be set by the user. It is determined using body fat fraction -->
+      <xs:element name="BodyMassIndexDistribution"                 	 type="DistributionCollectionData" minOccurs="0" />
       <xs:element name="BodyFatFractionDistribution"                 type="DistributionCollectionData" minOccurs="0"/>
       <!-- LeanBodyMass CANNOT be set by the user. It is determined using weight and body fat fraction -->
       <xs:element name="MaxWorkRateDistribution"                     type="DistributionCollectionData" minOccurs="0"/>
