@@ -25,11 +25,10 @@ specific language governing permissions and limitations under the License.
     <xs:simpleContent>
       <xs:extension base="xs:string">
         <xs:attribute name="start" type="xs:int" use="required" />
+        <xs:attribute name="unit" type="xs:string" default=""/>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
-
-
   <xs:complexType name="SelectionCycleData">
     <xs:annotation>
       <xs:documentation>
@@ -41,8 +40,8 @@ specific language governing permissions and limitations under the License.
       <xs:element name="Value" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="unit" type="xs:string" default=""/>
   </xs:complexType>
-
   <xs:complexType name="NormalDistributionData">
     <!-- @brief Generates a value with in the gaussian function which a mean an divation equal to the given Min and Max values can be provided to clamp the results. -->
     <xs:annotation>
@@ -51,7 +50,7 @@ specific language governing permissions and limitations under the License.
         Population Template.
 
         mean = The Population Mean
-        diviation = The Standard Diviation from the mean
+        deviation = The Standard Diviation from the mean
         unit = What unit will the generate range be recorded in
         group = Decides what heterogametic sex group the range will apply to.  All groups default to using the "" or "Male" group unles another one exist
         [min,max] = Decides the clamp values of distribution. Useful for preventing issues when generating Scalar0To1 values.
@@ -69,8 +68,6 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
-
-
   <xs:complexType name="WeightedItemData">
     <!-- @brief Declares a value with a occurence equal weight / Sum of all weights in the sequiance. -->
     <xs:simpleContent>
@@ -79,7 +76,6 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
-
   <xs:complexType name="WeightedDistributionData">
     <xs:annotation>
       <xs:documentation>
@@ -92,8 +88,8 @@ specific language governing permissions and limitations under the License.
       <xs:element name="Value" type="WeightedItemData" minOccurs="1" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="unit" type="xs:string" default=""/>
   </xs:complexType>
-
   <xs:complexType name ="BernoulliDistributionData">
     <xs:annotation>
       <xs:documentation>
@@ -102,12 +98,18 @@ specific language governing permissions and limitations under the License.
     </xs:annotation>
     <xs:simpleContent>
       <xs:extension base="xs:string">
-        <xs:attribute name="p" type="xs:int" use="required"/>
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="p" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:double">
+              <xs:minInclusive value="0.0"/>
+              <xs:maxInclusive value="1.0"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="unit" type="xs:string" default=""/>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
-
   <xs:complexType name="ContinuousUniformDistributionData">
     <xs:annotation>
       <xs:documentation>
@@ -119,10 +121,10 @@ specific language governing permissions and limitations under the License.
       <xs:extension base="xs:string">
         <xs:attribute name="a" type="xs:double" use="required" />
         <xs:attribute name="b" type="xs:double" use="required" />
+        <xs:attribute name="unit" type="xs:string" default=""/>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
-
   <xs:complexType name="DiscreteUniformDistributionData">
     <xs:annotation>
       <xs:documentation>
@@ -134,10 +136,10 @@ specific language governing permissions and limitations under the License.
       <xs:extension base="xs:string">
         <xs:attribute name="a" type="xs:int" use="required" />
         <xs:attribute name="b" type="xs:int" use="required" />
+        <xs:attribute name="unit" type="xs:string" default=""/>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
-
   <xs:complexType name ="DistributionCollectionData">
     <xs:annotation>
       <xs:documentation>
@@ -167,8 +169,6 @@ specific language governing permissions and limitations under the License.
       </xs:choice>
     </xs:sequence>
   </xs:complexType>
-
-
   <xs:complexType name="ScenarioProfileData">
     <xs:annotation>
       <xs:documentation>
@@ -204,6 +204,7 @@ specific language governing permissions and limitations under the License.
       <xs:element name="ScenarioProfile" type="ScenarioProfileData" minOccurs="1" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
+
   <xs:element name="ScenarioGenerator" type="ScenarioGeneratorData"/>
 
   <xs:complexType name ="PopulationProfileData">
@@ -216,7 +217,6 @@ specific language governing permissions and limitations under the License.
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="count" type="xs:int" use="required"/>
   </xs:complexType>
-
   <xs:complexType name ="PopulationProfileCollectionData">
     <xs:annotation>
       <xs:documentation></xs:documentation>
@@ -225,7 +225,6 @@ specific language governing permissions and limitations under the License.
       <xs:element name="Population" type="PopulationProfileData" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
-  
   <xs:complexType name ="PopulationSampleCollectionData">
     <xs:annotation>
       <xs:documentation></xs:documentation>
@@ -287,6 +286,5 @@ specific language governing permissions and limitations under the License.
     </xs:sequence>
   </xs:complexType>
 
-  <xs:element name="PopulationProfile" type="PopulationGeneratorData"/>
-
+  <xs:element name="PopulationGenerator" type="PopulationGeneratorData"/>
 </xs:schema>

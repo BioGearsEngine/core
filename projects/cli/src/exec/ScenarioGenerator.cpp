@@ -14,6 +14,7 @@
 
 #include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/Generators.hxx>
+#include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/Scenario.hxx>
 
 #ifdef _WIN32
@@ -35,7 +36,6 @@
 #include <vector>
 
 #include <biogears/cdm/Serializer.h>
-#include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/string/manipulation.h>
 
 namespace mil {
@@ -159,7 +159,7 @@ void ScenarioGenerator::Generate()
   std::string unit_str = "";
 
   auto const time = std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
-  std::string template_directory = std::format("Templates_{:%Y%m%dT%H%M}/", time);
+  std::string template_directory = std::format("Templates_{:%Y%m%dT%H%M}", time);
 
   // STEP 1 : Iterate over command arguments of CDM::ScenarioGeneratorData
   for (auto& run : _runs) {
@@ -257,7 +257,7 @@ void ScenarioGenerator::Generate()
             std::string value = intended_values[intermediate_value];
             modified_scenario_contents = std::regex_replace(modified_scenario_contents, re, std::format("{}", value));
           }
-          std::string output_name = std::format("{}_{}.xml", processed_template.name, template_count);
+          std::string output_name = std::format("{}_{:02}.xml", processed_template.name, template_count + 1);
           WriteScenarioFile(template_directory, output_name, modified_scenario_contents);
         }
       }
