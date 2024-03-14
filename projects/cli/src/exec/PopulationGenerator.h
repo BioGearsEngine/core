@@ -38,6 +38,8 @@ namespace biogears
 
   private:
     std::vector<std::string> _runs;
+    std::vector<unsigned char> _buffer; // 5MBs of read buffer state
+    std::size_t _buffer_size = 5 * 1024 * 1024;
   };
 } //namespace biogears
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ScenarioGenerator xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel xsd/BioGearsDataModel.xsd">
 
-<ScenarioTemplate name="Tall_Underweight_Middleage_Male" 
-                  timeline="timelines/AsthmaAttack.xml.in" 
+<ScenarioProfile name="Tall_Underweight_Middleage_Male" 
+                  templateFile="timelines/AsthmaAttack.xml.in" 
                   count="6">
 
   <NormalDistribution mean="120" deviation="7">BODYWIEGHT</NormalDistribution>
@@ -23,11 +23,11 @@
     <Value weight="10">false</Value>
   </WeightedDistribution>
 
-</ScenarioTemplate>
+</ScenarioProfile>
 
-<ScenarioTemplate name="OverweightWhiteFemales" 
-                  timeline="timelines/AsthmaAttack.xml.in" 
-                  count="10">
+<ScenarioProfile name="OverweightWhiteFemales" 
+                templateFile="timelines/AsthmaAttack.xml.in" 
+                count="10">
   <NormalDistribution mean="180" deviation="12">BODYWIEGHT</NormalDistribution>
   <NormalDistribution mean="200" deviation="10">BLOOD_PRESSURE</NormalDistribution>
   <NormalDistribution mean="68" deviation="6">HEIGHT</NormalDistribution>
@@ -45,5 +45,5 @@
     <Value weight="50">false</Value>
   </WeightedDistribution>
 
-  </ScenarioTemplate>
+  </ScenarioProfile>
 </ScenarioGenerator>
