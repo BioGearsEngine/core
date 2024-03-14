@@ -82,7 +82,6 @@ struct DistributionCollection {
 
 static const std::string default_key = "__default__";
 
-#pragma optimize("", off)
 std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::string> properties, DistributionCollection const& collection)
 {
   std::pair<std::set<std::string>, std::string> result = { {}, "" };
@@ -96,7 +95,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   }
 
   for (auto const& [key, distribution] : collection.weighted_discretes) {
-    if (result.first.size() < key.size() 
+    if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
             || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
@@ -104,7 +103,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   }
 
   for (auto const& [key, distribution] : collection.continuous_uniforms) {
-    if (result.first.size() < key.size() 
+    if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
             || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
@@ -112,7 +111,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   }
 
   for (auto const& [key, distribution] : collection.discrete_uniforms) {
-    if (result.first.size() < key.size() 
+    if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
             || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
@@ -128,7 +127,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   }
 
   for (auto const& [key, distribution] : collection.sequences) {
-    if (result.first.size() < key.size() 
+    if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
             || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
@@ -136,7 +135,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   }
 
   for (auto const& [key, distribution] : collection.cycles) {
-    if (result.first.size() < key.size() 
+    if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
             || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
@@ -145,18 +144,16 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
 
   return result;
 }
-#pragma optimize("", on)
 
 std::set<std::string> string_to_set(std::string input)
 {
   std::stringstream input_strean(input);
   std::string property;
-  std::set<std::string> result, default_set{ default_key };
+  std::set<std::string> result, default_set { default_key };
   while (getline(input_strean, property, ';'))
     result.insert(property);
   return (result.empty()) ? default_set : result;
 }
-#pragma optimize("", off)
 
 DistributionCollection process_distribution_collection(CDM::DistributionCollectionData const& collection)
 {
@@ -197,8 +194,6 @@ DistributionCollection process_distribution_collection(CDM::DistributionCollecti
 
   return result;
 }
-
-#pragma optimize("", on)
 
 static const std::string Heterogametic_Sex = "Heterogametic-Sex";
 static const std::string Age = "Age";
@@ -314,7 +309,7 @@ PopulationGenerator::PopulationGenerator(std::vector<std::string> params)
   _runs = params;
 }
 //-------------------------------------------------------------------------------
-#pragma optimize("", off)
+
 template <typename numeric_type>
   requires std::integral<numeric_type> || std::floating_point<numeric_type>
 numeric_type sample_population(std::set<std::string> key, DistributionCollection& collection, std::mt19937 rd)
@@ -325,7 +320,7 @@ numeric_type sample_population(std::set<std::string> key, DistributionCollection
     auto roll_value = distribution(rd);
     double min_value = (collection.normals[key].min().present()) ? collection.normals[key].min().get() : std::numeric_limits<double>::min();
     double max_value = (collection.normals[key].max().present()) ? collection.normals[key].max().get() : std::numeric_limits<double>::max();
-    auto clmaped_value = std::max(min_value,std::min(max_value, roll_value));
+    auto clmaped_value = std::max(min_value, std::min(max_value, roll_value));
     return roll_value;
   }
 
@@ -370,9 +365,9 @@ numeric_type sample_population(std::set<std::string> key, DistributionCollection
 
   return 0;
 }
-#pragma optimize("", on)
+
 //-------------------------------------------------------------------------------
-#pragma optimize("", off)
+
 template <typename eType>
 eType generate_cdm_enum(std::set<std::string> key, DistributionCollection& collection, std::mt19937 rd)
 {
@@ -425,12 +420,12 @@ eType generate_cdm_enum(std::set<std::string> key, DistributionCollection& colle
 
   return eType::value(0);
 }
-#pragma optimize("", on)
+
 //-------------------------------------------------------------------------------
 //!
 //! \brief Iterates through patientFiles, creates a lambda function for each item, and passes those functions to a thread pool
 //
-#pragma optimize("", off)
+
 void PopulationGenerator::Generate()
 {
 
@@ -658,8 +653,8 @@ void PopulationGenerator::Generate()
           }
 
           if (distributions.find(TotalLungCapacity) != distributions.end()) {
-              auto [best_match, unit] = find_best_match(profile.tags, distributions[TotalLungCapacity]);
-             if (best_match.size() != 0) {
+            auto [best_match, unit] = find_best_match(profile.tags, distributions[TotalLungCapacity]);
+            if (best_match.size() != 0) {
               patient.TotalLungCapacity(sample_population<double>(best_match, distributions[TotalLungCapacity], gen));
               patient.TotalLungCapacity().get().unit(unit);
             }
@@ -699,6 +694,6 @@ void PopulationGenerator::Generate()
     }
   }
 }
-#pragma optimize("", on)
+
 //-------------------------------------------------------------------------------
 } // namespace biogears
