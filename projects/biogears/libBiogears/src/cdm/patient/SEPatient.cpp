@@ -271,14 +271,14 @@ bool SEPatient::Load(const CDM::PatientData& in)
   if (in.Height().present()) {
     GetHeight().Load(in.Height().get());
   }
-  if (in.BMI().present()) {
+  if (in.BodyMassIndex().present()) {
     if (!in.Weight().present() && in.Height().present()) {
-      CalculateWeightByBMI(in.BMI().get());
+      CalculateWeightByBMI(in.BodyMassIndex().get());
     } else if (in.Weight().present()  && !in.Height().present()) {
-      CalculateHeightByBMI(in.BMI().get());
+      CalculateHeightByBMI(in.BodyMassIndex().get());
     } else {
       std::stringstream ss;
-      ss << "BMI as an input must be provided with height OR weight (and not neither/both). BMI input value is not being used and default inputs will be used." << std::endl;
+      ss << "BodyMassIndex as an input must be provided with height OR weight (and not neither/both). BMI input value is not being used and default inputs will be used." << std::endl;
       Warning(ss);
     }
   }
@@ -1826,66 +1826,66 @@ bool SEPatient::operator==(SEPatient const& rhs) const
           : m_Height == rhs.m_Height)
     && ((m_BodyDensity && rhs.m_BodyDensity)
           ? m_BodyDensity->operator==(*rhs.m_BodyDensity)
-          : m_BodyDensity == rhs.m_BodyDensity)    
+          : m_BodyDensity == rhs.m_BodyDensity)
     && ((m_BodyFatFraction && rhs.m_BodyFatFraction)
           ? m_BodyFatFraction->operator==(*rhs.m_BodyFatFraction)
-          : m_BodyFatFraction == rhs.m_BodyFatFraction)    
+          : m_BodyFatFraction == rhs.m_BodyFatFraction)
     && ((m_LeanBodyMass && rhs.m_LeanBodyMass)
           ? m_LeanBodyMass->operator==(*rhs.m_LeanBodyMass)
-          : m_LeanBodyMass == rhs.m_LeanBodyMass)    
+          : m_LeanBodyMass == rhs.m_LeanBodyMass)
     && ((m_MaxWorkRate && rhs.m_MaxWorkRate)
           ? m_MaxWorkRate->operator==(*rhs.m_MaxWorkRate)
-          : m_MaxWorkRate == rhs.m_MaxWorkRate)    
+          : m_MaxWorkRate == rhs.m_MaxWorkRate)
     && ((m_MuscleMass && rhs.m_MuscleMass)
           ? m_MuscleMass->operator==(*rhs.m_MuscleMass)
-          : m_MuscleMass == rhs.m_MuscleMass)    
-    &&  m_BloodType == rhs.m_BloodType
-    &&  m_BloodRh == rhs.m_BloodRh    
+          : m_MuscleMass == rhs.m_MuscleMass)
+    && m_BloodType == rhs.m_BloodType
+    && m_BloodRh == rhs.m_BloodRh
     && ((m_AlveoliSurfaceArea && rhs.m_AlveoliSurfaceArea)
           ? m_AlveoliSurfaceArea->operator==(*rhs.m_AlveoliSurfaceArea)
-          : m_AlveoliSurfaceArea == rhs.m_AlveoliSurfaceArea)    
+          : m_AlveoliSurfaceArea == rhs.m_AlveoliSurfaceArea)
     && ((m_RightLungRatio && rhs.m_RightLungRatio)
           ? m_RightLungRatio->operator==(*rhs.m_RightLungRatio)
-          : m_RightLungRatio == rhs.m_RightLungRatio)    
+          : m_RightLungRatio == rhs.m_RightLungRatio)
     && ((m_SkinSurfaceArea && rhs.m_SkinSurfaceArea)
           ? m_SkinSurfaceArea->operator==(*rhs.m_SkinSurfaceArea)
-          : m_SkinSurfaceArea == rhs.m_SkinSurfaceArea)    
+          : m_SkinSurfaceArea == rhs.m_SkinSurfaceArea)
     && ((m_BasalMetabolicRate && rhs.m_BasalMetabolicRate)
           ? m_BasalMetabolicRate->operator==(*rhs.m_BasalMetabolicRate)
-          : m_BasalMetabolicRate == rhs.m_BasalMetabolicRate)    
+          : m_BasalMetabolicRate == rhs.m_BasalMetabolicRate)
     && ((m_BloodVolumeBaseline && rhs.m_BloodVolumeBaseline)
           ? m_BloodVolumeBaseline->operator==(*rhs.m_BloodVolumeBaseline)
-          : m_BloodVolumeBaseline == rhs.m_BloodVolumeBaseline)    
+          : m_BloodVolumeBaseline == rhs.m_BloodVolumeBaseline)
     && ((m_DiastolicArterialPressureBaseline && rhs.m_DiastolicArterialPressureBaseline)
           ? m_DiastolicArterialPressureBaseline->operator==(*rhs.m_DiastolicArterialPressureBaseline)
-          : m_DiastolicArterialPressureBaseline == rhs.m_DiastolicArterialPressureBaseline)    
+          : m_DiastolicArterialPressureBaseline == rhs.m_DiastolicArterialPressureBaseline)
     && ((m_HeartRateBaseline && rhs.m_HeartRateBaseline)
           ? m_HeartRateBaseline->operator==(*rhs.m_HeartRateBaseline)
-          : m_HeartRateBaseline == rhs.m_HeartRateBaseline)    
+          : m_HeartRateBaseline == rhs.m_HeartRateBaseline)
     && ((m_Hyperhidrosis && rhs.m_Hyperhidrosis)
           ? m_Hyperhidrosis->operator==(*rhs.m_Hyperhidrosis)
-          : m_Hyperhidrosis == rhs.m_Hyperhidrosis)    
+          : m_Hyperhidrosis == rhs.m_Hyperhidrosis)
     && ((m_MeanArterialPressureBaseline && rhs.m_MeanArterialPressureBaseline)
           ? m_MeanArterialPressureBaseline->operator==(*rhs.m_MeanArterialPressureBaseline)
-          : m_MeanArterialPressureBaseline == rhs.m_MeanArterialPressureBaseline)      
+          : m_MeanArterialPressureBaseline == rhs.m_MeanArterialPressureBaseline)
     && ((m_PainSusceptibility && rhs.m_PainSusceptibility)
           ? m_PainSusceptibility->operator==(*rhs.m_PainSusceptibility)
-          : m_PainSusceptibility == rhs.m_PainSusceptibility)    
+          : m_PainSusceptibility == rhs.m_PainSusceptibility)
     && ((m_RespirationRateBaseline && rhs.m_RespirationRateBaseline)
           ? m_RespirationRateBaseline->operator==(*rhs.m_RespirationRateBaseline)
-          : m_RespirationRateBaseline == rhs.m_RespirationRateBaseline)    
+          : m_RespirationRateBaseline == rhs.m_RespirationRateBaseline)
     && ((m_RespiratoryDriverAmplitudeBaseline && rhs.m_RespiratoryDriverAmplitudeBaseline)
           ? m_RespiratoryDriverAmplitudeBaseline->operator==(*rhs.m_RespiratoryDriverAmplitudeBaseline)
-          : m_RespiratoryDriverAmplitudeBaseline == rhs.m_RespiratoryDriverAmplitudeBaseline)    
+          : m_RespiratoryDriverAmplitudeBaseline == rhs.m_RespiratoryDriverAmplitudeBaseline)
     && ((m_SleepAmount && rhs.m_SleepAmount)
           ? m_SleepAmount->operator==(*rhs.m_SleepAmount)
-          : m_SleepAmount == rhs.m_SleepAmount)    
+          : m_SleepAmount == rhs.m_SleepAmount)
     && ((m_SystolicArterialPressureBaseline && rhs.m_SystolicArterialPressureBaseline)
           ? m_SystolicArterialPressureBaseline->operator==(*rhs.m_SystolicArterialPressureBaseline)
-          : m_SystolicArterialPressureBaseline == rhs.m_SystolicArterialPressureBaseline)    
+          : m_SystolicArterialPressureBaseline == rhs.m_SystolicArterialPressureBaseline)
     && ((m_TotalVentilationBaseline && rhs.m_TotalVentilationBaseline)
           ? m_TotalVentilationBaseline->operator==(*rhs.m_TotalVentilationBaseline)
-          : m_TotalVentilationBaseline == rhs.m_TotalVentilationBaseline)    
+          : m_TotalVentilationBaseline == rhs.m_TotalVentilationBaseline)
     && ((m_TidalVolumeBaseline && rhs.m_TidalVolumeBaseline)
           ? m_TidalVolumeBaseline->operator==(*rhs.m_TidalVolumeBaseline)
           : m_TidalVolumeBaseline == rhs.m_TidalVolumeBaseline)
@@ -1906,13 +1906,13 @@ bool SEPatient::operator==(SEPatient const& rhs) const
           : m_InspiratoryCapacity == rhs.m_InspiratoryCapacity)
     && ((m_InspiratoryReserveVolume && rhs.m_InspiratoryReserveVolume)
           ? m_InspiratoryReserveVolume->operator==(*rhs.m_InspiratoryReserveVolume)
-          : m_InspiratoryReserveVolume == rhs.m_InspiratoryReserveVolume)    
+          : m_InspiratoryReserveVolume == rhs.m_InspiratoryReserveVolume)
     && ((m_ResidualVolume && rhs.m_ResidualVolume)
           ? m_ResidualVolume->operator==(*rhs.m_ResidualVolume)
           : m_ResidualVolume == rhs.m_ResidualVolume)
     && ((m_TotalLungCapacity && rhs.m_TotalLungCapacity)
           ? m_TotalLungCapacity->operator==(*rhs.m_TotalLungCapacity)
-          : m_TotalLungCapacity == rhs.m_TotalLungCapacity)    
+          : m_TotalLungCapacity == rhs.m_TotalLungCapacity)
     && ((m_VitalCapacity && rhs.m_VitalCapacity)
           ? m_VitalCapacity->operator==(*rhs.m_VitalCapacity)
           : m_VitalCapacity == rhs.m_VitalCapacity)

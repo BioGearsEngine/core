@@ -222,6 +222,8 @@ specific language governing permissions and limitations under the License.
           <!--<< @brief Patient age. -->
           <xs:element name="Weight" type="ScalarMassData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief Patient weight. -->
+          <xs:element name="BodyMassIndex" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Patient body mass index (BMI). -->
           <xs:element name="Height" type="ScalarLengthData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief Patient height. -->
 		  <xs:element name="BMI" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
