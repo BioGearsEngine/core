@@ -316,7 +316,7 @@ PopulationGenerator::PopulationGenerator(std::vector<std::string> params)
 
 template <typename numeric_type>
   requires std::integral<numeric_type> || std::floating_point<numeric_type>
-numeric_type sample_population(std::set<std::string> key, DistributionCollection& collection, std::mt19937 rd)
+numeric_type sample_population(std::set<std::string> key, DistributionCollection& collection, std::mt19937& rd)
 {
 
   if (auto ptr = collection.normal_distributions.find(key); ptr != collection.normal_distributions.end()) {
@@ -387,7 +387,7 @@ numeric_type sample_population(std::set<std::string> key, DistributionCollection
 //-------------------------------------------------------------------------------
 
 template <typename eType>
-eType generate_cdm_enum(std::set<std::string> key, DistributionCollection& collection, std::mt19937 rd)
+eType generate_cdm_enum(std::set<std::string> key, DistributionCollection& collection, std::mt19937& rd)
 {
 
   if (auto ptr = collection.normal_distributions.find(key); ptr != collection.normal_distributions.end()) {
@@ -433,6 +433,7 @@ eType generate_cdm_enum(std::set<std::string> key, DistributionCollection& colle
   if (auto ptr = collection.cycles_positions.find(key); ptr != collection.cycles_positions.end()) {
     auto& [key, index] = *ptr;
     auto& v = collection.cycles[key].Value()[index];
+    index = ++index % collection.cycles[key].Value().size();
     return eType(v);
   }
 
@@ -469,6 +470,7 @@ void PopulationGenerator::Generate()
 
       std::map<std::string const, DistributionCollection> distributions = translate_distributions(population->Sampling());
 
+      size_t file_count = 0;
       for (auto population : population->Populations().Population()) {
         PopulationProfile profile;
         profile.count = population.count();
@@ -480,7 +482,7 @@ void PopulationGenerator::Generate()
         for (auto i = 0; i < profile.count; ++i) {
           CDM::PatientData patient;
 
-          patient.Name(std::format("id{1:03}_{0}", profile.name, i+1));
+          patient.Name(std::format("id{1:03}_{0}", profile.name, ++file_count));
           if (distributions.find(Heterogametic_Sex) != distributions.end()) {
             auto [best_match, unit] = find_best_match(profile.tags, distributions[Heterogametic_Sex]);
             if (best_match.size() != 0) {
@@ -537,14 +539,14 @@ void PopulationGenerator::Generate()
           }
 
           if (distributions.find(BloodTypeABO) != distributions.end()) {
-            auto [best_match, unit] = find_best_match(profile.tags, distributions[Heterogametic_Sex]);
+            auto [best_match, unit] = find_best_match(profile.tags, distributions[BloodTypeABO]);
             if (best_match.size() != 0) {
               patient.BloodTypeABO(generate_cdm_enum<CDM::enumBloodType>(best_match, distributions[BloodTypeABO], gen));
             }
           }
 
           if (distributions.find(BloodTypeRh) != distributions.end()) {
-            auto [best_match, unit] = find_best_match(profile.tags, distributions[Heterogametic_Sex]);
+            auto [best_match, unit] = find_best_match(profile.tags, distributions[BloodTypeRh]);
             if (best_match.size() != 0) {
               patient.BloodTypeRh(sample_population<int>(best_match, distributions[BloodTypeRh], gen));
             }

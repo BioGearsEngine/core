@@ -237,7 +237,7 @@
 
     <BloodTypeRhDistribution>
        <!--When self closed a tag will be the default if no other matches are found-->
-       <BernoulliDistribution p="1.0"/>
+       <BernoulliDistribution p="0.5"/>
     </BloodTypeRhDistribution>
 
     <AlveoliSurfaceAreaDistribution>
