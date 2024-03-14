@@ -150,8 +150,10 @@ std::set<std::string> string_to_set(std::string input)
   std::stringstream input_strean(input);
   std::string property;
   std::set<std::string> result, default_set { default_key };
-  while (getline(input_strean, property, ';'))
+  while (getline(input_strean, property, ';')) {
+    std::transform(property.begin(), property.end(), property.begin(), ::tolower);
     result.insert(property);
+  }
   return (result.empty()) ? default_set : result;
 }
 
@@ -325,18 +327,16 @@ numeric_type sample_population(std::set<std::string> key, DistributionCollection
     double min_value = (collection.normals[key].min().present()) ? collection.normals[key].min().get() : std::numeric_limits<double>::min();
     double max_value = (collection.normals[key].max().present()) ? collection.normals[key].max().get() : std::numeric_limits<double>::max();
     if (collection.normals[key].strategy() == "clamp") {
-      //Strategy Clamp
+      // Strategy Clamp
       return std::max(min_value, std::min(max_value, roll_value));
-    }
-    else {
-      //Strategy Resample - Lets limit ourselves to 1 second of resample to prevent livelock 
-      //                    when the user gives a bad min and max
+    } else {
+      // Strategy Resample - Lets limit ourselves to 1 second of resample to prevent livelock
+      //                     when the user gives a bad min and max
       std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-      std::chrono::steady_clock::time_point now   = begin;
-      while (roll_value < min_value || roll_value > max_value && 
-         std::chrono::duration_cast<std::chrono::seconds>(now - begin).count() < 1) {
-         roll_value = distribution(rd);
-         now = std::chrono::steady_clock::now();
+      std::chrono::steady_clock::time_point now = begin;
+      while (roll_value < min_value || roll_value > max_value && std::chrono::duration_cast<std::chrono::seconds>(now - begin).count() < 1) {
+        roll_value = distribution(rd);
+        now = std::chrono::steady_clock::now();
       }
     }
     return roll_value;
@@ -471,11 +471,12 @@ void PopulationGenerator::Generate()
       std::map<std::string const, DistributionCollection> distributions = translate_distributions(population->Sampling());
 
       size_t file_count = 0;
-      for (auto population : population->Populations().Population()) {
+      for (auto& population : population->Populations().Population()) {
         PopulationProfile profile;
         profile.count = population.count();
         profile.name = population.name();
-        for (auto tag : population.Property()) {
+        for (auto& tag : population.Property()) {
+          std::transform(tag.begin(), tag.end(), tag.begin(), ::tolower);
           profile.tags.insert(tag);
         }
 
