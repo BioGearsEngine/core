@@ -202,11 +202,11 @@
 
     <BodyMassIndexDistribution>
       <NormalDistribution strategy="clamp" mean="15.5" deviation="1.5" 
-                          min="12" max="18.5"  unit="unitless">Underweight</NormalDistribution>
+                          min="12" max="18.5"  unit="unitless">UnderWeight</NormalDistribution>
       <NormalDistribution strategy="clamp" mean="21.5" deviation="1.5" 
-                                                       unit="unitless">Healthyweight</NormalDistribution>
+                                                       unit="unitless">HealthyWeight</NormalDistribution>
       <NormalDistribution strategy="clamp" mean="27.5" deviation="1.5"  
-                          min="24.5" max="42"  unit="unitless">Overweight</NormalDistribution>
+                          min="24.5" max="42"  unit="unitless">OverWeight</NormalDistribution>
     </BodyMassIndexDistribution>
 
     <BodyFatFractionDistribution>
