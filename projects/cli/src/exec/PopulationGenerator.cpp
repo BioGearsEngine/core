@@ -80,7 +80,7 @@ struct DistributionCollection {
   std::map<std::set<std::string> const, int> cycles_positions;
 };
 
-static const std::string fallback = "default";
+static const std::string default_key = "__default__";
 
 #pragma optimize("", off)
 std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::string> properties, DistributionCollection const& collection)
@@ -88,44 +88,57 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   std::pair<std::set<std::string>, std::string> result = { {}, "" };
 
   for (auto const& [key, distribution] : collection.normals) {
-    if (result.first.size() < key.size()
-        && std::includes(properties.begin(), properties.end(), key.begin(), key.end())) {
+    if (result.first.size() <= key.size()
+        && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
+            || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
     }
   }
 
   for (auto const& [key, distribution] : collection.weighted_discretes) {
-    if (result.first.size() < key.size() && std::includes(properties.begin(), properties.end(), key.begin(), key.end())) {
+    if (result.first.size() < key.size() 
+        && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
+            || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
     }
   }
 
   for (auto const& [key, distribution] : collection.continuous_uniforms) {
-    if (result.first.size() < key.size() && std::includes(properties.begin(), properties.end(), key.begin(), key.end())) {
+    if (result.first.size() < key.size() 
+        && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
+            || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
     }
   }
 
   for (auto const& [key, distribution] : collection.discrete_uniforms) {
-    if (result.first.size() < key.size() && std::includes(properties.begin(), properties.end(), key.begin(), key.end())) {
+    if (result.first.size() < key.size() 
+        && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
+            || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
     }
   }
 
   for (auto const& [key, distribution] : collection.bernoullis) {
-    if (result.first.size() < key.size() && std::includes(properties.begin(), properties.end(), key.begin(), key.end())) {
+    if (result.first.size() < key.size()
+        && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
+            || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
     }
   }
 
   for (auto const& [key, distribution] : collection.sequences) {
-    if (result.first.size() < key.size() && std::includes(properties.begin(), properties.end(), key.begin(), key.end())) {
+    if (result.first.size() < key.size() 
+        && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
+            || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
     }
   }
 
   for (auto const& [key, distribution] : collection.cycles) {
-    if (result.first.size() < key.size() && std::includes(properties.begin(), properties.end(), key.begin(), key.end())) {
+    if (result.first.size() < key.size() 
+        && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
+            || key.size() == 1 && key.contains(default_key))) {
       result = { key, distribution.unit() };
     }
   }
@@ -138,20 +151,21 @@ std::set<std::string> string_to_set(std::string input)
 {
   std::stringstream input_strean(input);
   std::string property;
-  std::set<std::string> result;
+  std::set<std::string> result, default_set{ default_key };
   while (getline(input_strean, property, ';'))
     result.insert(property);
-  return result;
+  return (result.empty()) ? default_set : result;
 }
+#pragma optimize("", off)
 
 DistributionCollection process_distribution_collection(CDM::DistributionCollectionData const& collection)
 {
   DistributionCollection result;
-  for (auto& distribution : collection.NormalDistribution()) {
+  for (CDM::NormalDistributionData const& distribution : collection.NormalDistribution()) {
     result.normal_distributions[string_to_set(distribution)] = std::normal_distribution(distribution.mean(), distribution.deviation());
     result.normals[string_to_set(distribution)] = distribution;
   }
-  for (auto& distribution : collection.WeightedDistribution()) {
+  for (CDM::WeightedDistributionData const& distribution : collection.WeightedDistribution()) {
     std::vector<double> weights;
     for (auto& weight : distribution.Value()) {
       weights.push_back(weight.weight());
@@ -159,30 +173,32 @@ DistributionCollection process_distribution_collection(CDM::DistributionCollecti
     result.weighted_discrete_distributions[string_to_set(distribution.name())] = std::discrete_distribution<int>(weights.begin(), weights.end());
     result.weighted_discretes[string_to_set(distribution.name())] = distribution;
   }
-  for (auto& distribution : collection.ContinuousUniformDistribution()) {
+  for (CDM::ContinuousUniformDistributionData const& distribution : collection.ContinuousUniformDistribution()) {
     result.continuous_uniform_distributions[string_to_set(distribution)] = std::uniform_real_distribution(distribution.a(), distribution.b());
     result.continuous_uniforms[string_to_set(distribution)] = distribution;
   }
-  for (auto& distribution : collection.DiscreteUniformDistribution()) {
+  for (CDM::DiscreteUniformDistributionData const& distribution : collection.DiscreteUniformDistribution()) {
     result.discrete_uniform_distributions[string_to_set(distribution)] = std::uniform_int_distribution<int>(distribution.a(), distribution.b());
     result.discrete_uniforms[string_to_set(distribution)] = distribution;
   }
-  for (auto& distribution : collection.BernoulliDistribution()) {
+  for (CDM::BernoulliDistributionData const& distribution : collection.BernoulliDistribution()) {
     result.bernoulli_distributions[string_to_set(distribution)] = std::bernoulli_distribution(distribution.p());
     result.bernoullis[string_to_set(distribution)] = distribution;
   }
-  for (auto& sequence : collection.Sequence()) {
+  for (CDM::SequenceData const& sequence : collection.Sequence()) {
     result.sequence_values[string_to_set(sequence)] = sequence.start();
     result.sequences[string_to_set(sequence)] = sequence;
   }
 
-  for (auto& cycle : collection.SelectionCycle()) {
+  for (CDM::SelectionCycleData const& cycle : collection.SelectionCycle()) {
     result.cycles_positions[string_to_set(cycle.name())] = 0;
     result.cycles[string_to_set(cycle.name())] = cycle;
   }
 
   return result;
 }
+
+#pragma optimize("", on)
 
 static const std::string Heterogametic_Sex = "Heterogametic-Sex";
 static const std::string Age = "Age";
@@ -307,7 +323,9 @@ numeric_type sample_population(std::set<std::string> key, DistributionCollection
   if (auto ptr = collection.normal_distributions.find(key); ptr != collection.normal_distributions.end()) {
     auto& [key, distribution] = *ptr;
     auto roll_value = distribution(rd);
-
+    double min_value = (collection.normals[key].min().present()) ? collection.normals[key].min().get() : std::numeric_limits<double>::min();
+    double max_value = (collection.normals[key].max().present()) ? collection.normals[key].max().get() : std::numeric_limits<double>::max();
+    auto clmaped_value = std::max(min_value,std::min(max_value, roll_value));
     return roll_value;
   }
 

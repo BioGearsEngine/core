@@ -34,7 +34,7 @@
 
     <HeightDistribution>
       <NormalDistribution  mean="185" deviation="7.0" unit="cm">Male</NormalDistribution>
-      <NormalDistribution  mean="170" deviation="7.0" unit="cm">Femle</NormalDistribution>
+      <NormalDistribution  mean="170" deviation="7.0" unit="cm">Female</NormalDistribution>
     </HeightDistribution>
 
     <BodyFatFractionDistribution>
