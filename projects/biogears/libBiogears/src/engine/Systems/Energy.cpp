@@ -735,10 +735,19 @@ void Energy::UpdateHeatResistance()
     if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
       SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
       std::vector<std::string> burnComptVector = burnAction->GetCompartments();
+      double burnTemperature = GetSkinTemperature(TemperatureUnit::C);
+      double weightedAvgSegmentedTemperature_C = GetSkinTemperature(TemperatureUnit::C);
+      double timeSinceBurn = m_data.GetSimulationTime().GetValue() - burnAction->GetTimeOfBurn();
+      if (timeSinceBurn != 0.0) {
+        double t = timeSinceBurn;
+        burnTemperature = (30.3 * std::exp(-1.0 * std::pow(t - 7.81, 2) / 11.7)) + GetSkinTemperature(TemperatureUnit::C);
+      }
       // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
       if (index == 0 && burnAction->HasCompartment("Trunk")) {
         isBurnWound = true;
         burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getTrunkBurnIntensity();
+        weightedAvgSegmentedTemperature_C = ((burnSurfaceAreaFraction / 0.37) * burnTemperature) + (((0.37 - burnSurfaceAreaFraction) / 0.37) * GetSkinTemperature(TemperatureUnit::C));
+        m_skinNodes[index]->GetNextTemperature().SetValue(weightedAvgSegmentedTemperature_C, TemperatureUnit::C);
       } else if (index == 2 && burnAction->HasCompartment("LeftArm")) {
         isBurnWound = true;
         burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getLeftArmBurnIntensity();
