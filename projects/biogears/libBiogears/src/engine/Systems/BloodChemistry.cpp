@@ -301,7 +301,7 @@ void BloodChemistry::SetUp()
   m_aortaCO2 = m_aorta->GetSubstanceQuantity(m_data.GetSubstances().GetCO2());
   m_aortaBicarbonate = m_aorta->GetSubstanceQuantity(m_data.GetSubstances().GetHCO3());
 
-  m_brainO2 = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Brain)->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
+  m_brainO2 = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::CerebralArteries)->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
   m_myocardiumO2 = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Myocardium)->GetSubstanceQuantity(m_data.GetSubstances().GetO2());
 
   m_venaCava = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava);
@@ -906,7 +906,7 @@ void BloodChemistry::CheckBloodSubstanceLevels()
     // If the oxygen tension in the brain remains below the thresholds for the specified amount of time, the body
     // will go into an irreversible state. The threshold values are chosen based on empirical data reviewed in summary in @cite dhawan2011neurointensive
     // and from data presented in @cite purins2012brain and @cite doppenberg1998determination.
-    if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) < 21.0) {
+    if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) < 19.0) {
       /// \event Patient: Brain Oxygen Deficit Event. The oxygen partial pressure in the brain has dropped to a dangerously low level.
       patient.SetEvent(CDM::enumPatientEvent::BrainOxygenDeficit, true, m_data.GetSimulationTime());
 

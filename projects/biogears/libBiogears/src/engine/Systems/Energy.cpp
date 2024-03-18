@@ -466,7 +466,7 @@ void Energy::CalculateVitalSigns()
   } 
       /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
   if (coreTemperature_degC < coreTempIrreversible_degC) {
-    ss << "Core temperature is " << coreTemperature_degC << ". This is below 20 degrees C, patient is experiencing extreme hypothermia.";
+    ss << "Core temperature is " << coreTemperature_degC << ". This is below 15 degrees C, patient is experiencing extreme hypothermia.";
     Warning(ss);
     if (!m_PatientActions->HasOverride()) {
       m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
