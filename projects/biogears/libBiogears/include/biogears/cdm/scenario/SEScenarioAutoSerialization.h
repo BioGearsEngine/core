@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/schema/cdm/Scenario.hxx>
+#include <biogears/schema/cdm/DataRequests.hxx>
 
 CDM_BIND_DECL(ScenarioAutoSerializationData)
 namespace biogears {

@@ -12,9 +12,15 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/cdm/Scenario.hxx>
+#include <biogears/schema/cdm/DataRequests.hxx>
+#include <biogears/schema/cdm/Actions.hxx>
+
+//#include <random>
+
+CDM_BIND_DECL(AdvanceTimeData)
 
 namespace biogears {
+
 class TimeUnit;
 namespace io {
   class Scenario;
@@ -33,7 +39,7 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::AdvanceTimeData& in);
+  virtual bool Load(const CDM::AdvanceTimeData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::AdvanceTimeData* Unload() const override;
 
   bool operator==(SEAdvanceTime const&) const;

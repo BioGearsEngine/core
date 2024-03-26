@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.3.0-beta" xsi:schemaLocation="">
+    <Name>AsthmaAttack</Name>
+    <Description>Showcase scenario: Patient is afflicted with an severe acute asthma attack. Albuterol is administered.</Description>
+    <InitialParameters>
+		<Patient xmlns="uri:/mil/tatrc/physiology/datamodel">
+            <Name>Cynthia</Name>
+            <Sex>Female</Sex>
+            <Age readOnly="false" unit="yr" value="30"/>
+            <Weight readOnly="false" unit="lb" value="@BODYWIEGHT@"/>
+            <Height readOnly="false" unit="in" value="@HEIGHT@"/>
+            <BodyFatFraction readOnly="false" value="0.18"/>
+            <BloodTypeABO>@BLOOD_TYPE@</BloodTypeABO>
+            <BloodTypeRh>@BLOOD_TYPE_RH@</BloodTypeRh>
+            <DiastolicArterialPressureBaseline readOnly="false" unit="mmHg" value="@BLOOD_PRESSURE@"/>
+            <HeartRateBaseline readOnly="false" unit="1/min" value="72"/>
+            <RespirationRateBaseline readOnly="false" unit="1/min" value="18"/>
+            <SystolicArterialPressureBaseline readOnly="false" unit="mmHg" value="114"/>
+        </Patient>
+	</InitialParameters>
+
+	<!-- Base system data required for asthma attack showcase scenario -->
+  <DataRequests SamplesPerSecond="50">
+    <DataRequestFile>DataRequests/Standard.xml</DataRequestFile>  
+  </DataRequests>
+  
+<Actions xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_8.0.0" xsi:schemaLocation="">
+  <RandomSeed>
+    <seed>1</seed>
+    <seed>2</seed>
+    <seed>3</seed>
+    <seed>4</seed>
+    <seed>5</seed>
+  </RandomSeed>
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="min" />
+  </Action>
+
+  <Action xsi:type="AsthmaAttackData">
+    <Comment>Insult: Severe acute asthma attack</Comment>
+    <Severity value="@SEVERITY@" />
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="@DURATION@" unit="min" />
+  </Action>
+
+  <Action xsi:type="InhalerConfigurationData">
+    <Comment>Intervention: Administer bronchodilator (albuterol) through inhaler</Comment>
+    <Configuration>
+      <Substance>Albuterol</Substance>
+      <MeteredDose value="@INTERVENTION@" unit="ug" />
+      <NozzleLoss value="0.04" />
+      <SpacerVolume value="500.0" unit="mL" />
+    </Configuration>
+  </Action>
+
+  <Action xsi:type="ConsciousRespirationData" AppendToPrevious="true">
+    <Command xsi:type="ForcedExhaleData">
+      <ExpiratoryReserveVolumeFraction value="0.99" />
+      <Period value="3.0" unit="s" />
+    </Command>
+    <Command xsi:type="UseInhalerData"/>
+    <Command xsi:type="ForcedInhaleData">
+      <InspiratoryCapacityFraction value="1.0" />
+      <Period value="5.0" unit="s"  />
+    </Command>
+    <Command xsi:type="BreathHoldData">
+      <Period value="10.0" unit="s"  />
+    </Command>
+    <Command xsi:type="ForcedExhaleData">
+      <ExpiratoryReserveVolumeFraction value="0.01"  />
+      <Period value="3.0" unit="s"  />
+    </Command>
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="5" unit="min"  />
+  </Action>
+
+  <Action xsi:type="PatientAssessmentRequestData" Type="PulmonaryFunctionTest">
+    <Comment>Assessment: Pulmonary function test</Comment>
+  </Action>
+
+  <Action xsi:type="AdvanceTimeData">
+    <Time value="1" unit="min"  />
+  </Action>		
+  </Actions>
+</Scenario>

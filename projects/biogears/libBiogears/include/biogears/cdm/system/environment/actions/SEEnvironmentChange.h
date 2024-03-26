@@ -31,7 +31,7 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::EnvironmentChangeData& in);
+  virtual bool Load(const CDM::EnvironmentChangeData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::EnvironmentChangeData* Unload() const override;
 
 protected:

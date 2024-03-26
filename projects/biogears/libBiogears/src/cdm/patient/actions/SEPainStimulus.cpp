@@ -45,12 +45,12 @@ bool SEPainStimulus::IsActive() const
   return IsValid() ? !m_Severity->IsZero() : false;
 }
 //-----------------------------------------------------------------------------
-bool SEPainStimulus::Load(const CDM::PainStimulusData& in)
+bool SEPainStimulus::Load(const CDM::PainStimulusData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity());
+  GetSeverity().Load(in.Severity(), rd);
   if (in.HalfLife().present()) {
-    GetHalfLife().Load(in.HalfLife().get());
+    GetHalfLife().Load(in.HalfLife().get(), rd);
   } else {
     GetHalfLife().Invalidate();
   }

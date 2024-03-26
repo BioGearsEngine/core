@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTime.h>
 
+#include <biogears/schema/cdm/Scenario.hxx>
+
 namespace biogears {
 SEScenarioAutoSerialization::SEScenarioAutoSerialization(Logger* logger)
   : Loggable(logger)

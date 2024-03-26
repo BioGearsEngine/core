@@ -14,6 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEProperty.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
 
+#include <random>
+
 CDM_BIND_DECL(ScalarData)
 
 namespace biogears {
@@ -50,7 +52,7 @@ public:
   Note that this does not affect bounds
   */
   virtual void Invalidate();
-  virtual void Load(const CDM::ScalarData& in);
+  virtual void Load(const CDM::ScalarData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::ScalarData* Unload() const;
 
   /**

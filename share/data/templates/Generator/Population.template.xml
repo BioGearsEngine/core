@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PopulationGenerator xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel xsd/BioGearsDataModel.xsd">
+  <Populations>
+	  <!-- Avatar #1 -->
+	  <Population name="Male_Short_YoungAdult_UnderWeight" count="3">
+         
+            <Property>Male</Property>
+            <Property>Short</Property>
+            <Property>YoungAdult</Property>
+            <Property>UnderWeight</Property>
+      </Population>
+	  <!-- Avatar #2 -->
+	  <Population name="Male_Average_Adult_HealthyWeight" count="3">    
+            <Property>Male</Property>
+            <Property>Average</Property>
+            <Property>Adult</Property>
+            <Property>HealthyWeight</Property>
+      </Population>
+	  <!-- Avatar #3 -->
+	  <Population name="Male_Tall_MiddleAge_OverWeight" count="3">    
+            <Property>Male</Property>
+            <Property>Tall</Property>
+            <Property>MiddleAge</Property>
+            <Property>OverWeight</Property>
+      </Population>
+	  <!-- Avatar #4 -->
+	  <Population name="Male_Tall_YoungAdult_HealthyWeight" count="3">    
+            <Property>Male</Property>
+            <Property>Tall</Property>
+            <Property>YoungAdult</Property>
+            <Property>HealthyWeight</Property>
+      </Population>
+	  <!-- Avatar #5 -->
+	  <Population name="Male_Short_Adult_OverWeight" count="3">    
+            <Property>Male</Property>
+            <Property>Short</Property>
+            <Property>Adult</Property>
+            <Property>OverWeight</Property>
+      </Population>
+	  <!-- Avatar #6 -->
+	  <Population name="Male_Average_MiddleAge_UnderWeight" count="3">    
+            <Property>Male</Property>
+            <Property>Average</Property>
+            <Property>MiddleAge</Property>
+            <Property>UnderWeight</Property>
+      </Population>
+	  <!-- Avatar #7 -->
+	  <Population name="Female_Average_YoungAdult_OverWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Average</Property>
+            <Property>YoungAdult</Property>
+            <Property>OverWeight</Property>
+      </Population>
+	  <!-- Avatar #8 -->
+	  <Population name="Female_Tall_Adult_UnderWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Tall</Property>
+            <Property>Adult</Property>
+            <Property>UnderWeight</Property>
+      </Population>
+	  <!-- Avatar #9 -->
+	  <Population name="Female_Short_MiddleAge_HealthyWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Short</Property>
+            <Property>MiddleAge</Property>
+            <Property>HealthyWeight</Property>
+      </Population>
+	  <!-- Avatar #10 -->
+	  <Population name="Female_Short_YoungAdult_UnderWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Short</Property>
+            <Property>YoungAdult</Property>
+            <Property>UnderWeight</Property>
+      </Population>
+	  <!-- Avatar #11 -->
+	  <Population name="Female_Average_Adult_HealthyWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Average</Property>
+            <Property>Adult</Property>
+            <Property>HealthyWeight</Property>
+      </Population>
+	  <!-- Avatar #12 -->
+	  <Population name="Female_Tall_MiddleAge_OverWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Tall</Property>
+            <Property>MiddleAge</Property>
+            <Property>OverWeight</Property>
+      </Population>
+	  <!-- Avatar #13 -->
+	  <Population name="Male_Tall_YoungAdult_UnderWeight" count="3">    
+            <Property>Male</Property>
+            <Property>Tall</Property>
+            <Property>YoungAdult</Property>
+            <Property>UnderWeight</Property>
+      </Population>
+	  <!-- Avatar #14 -->
+	  <Population name="Male_Short_Adult_HealthyWeight" count="3">    
+            <Property>Male</Property>
+            <Property>Short</Property>
+            <Property>Adult</Property>
+            <Property>HealthyWeight</Property>
+      </Population>
+	  <!-- Avatar #15 -->
+	  <Population name="Male_Short_MiddleAge_UnderWeight" count="3">    
+            <Property>Male</Property>
+            <Property>Short</Property>
+            <Property>MiddleAge</Property>
+            <Property>UnderWeight</Property>
+      </Population>
+	  <!-- Avatar #16 -->
+	  <Population name="Male_Short_YoungAdult_OverWeight" count="3">    
+            <Property>Male</Property>
+            <Property>Short</Property>
+            <Property>YoungAdult</Property>
+            <Property>OverWeight</Property>
+      </Population>
+	  <!-- Avatar #17 -->
+	  <Population name="Male_Average_Adult_UnderWeight" count="3">    
+            <Property>Male</Property>
+            <Property>Average</Property>
+            <Property>Adult</Property>
+            <Property>UnderWeight</Property>
+      </Population>
+	  <!-- Avatar #18 -->
+	  <Population name="Male_Tall_MiddleAge_HealthyWeight" count="3">    
+            <Property>Male</Property>
+            <Property>Tall</Property>
+            <Property>MiddleAge</Property>
+            <Property>HealthyWeight</Property>
+      </Population>
+	  <!-- Avatar #19 -->
+	  <Population name="Female_Average_YoungAdult_HealthyWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Average</Property>
+            <Property>YoungAdult</Property>
+            <Property>HealthyWeight</Property>
+      </Population>
+	  <!-- Avatar #20 -->
+	  <Population name="Female_Average_Adult_OverWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Average</Property>
+            <Property>Adult</Property>
+            <Property>OverWeight</Property>
+      </Population>
+	  <!-- Avatar #21 -->
+	  <Population name="Female_Average_MiddleAge_HealthyWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Average</Property>
+            <Property>MiddleAge</Property>
+            <Property>HealthyWeight</Property>
+      </Population>
+	  <!-- Avatar #22 -->
+	  <Population name="Female_Tall_YoungAdult_OverWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Tall</Property>
+            <Property>YoungAdult</Property>
+            <Property>OverWeight</Property>
+      </Population>
+	  <!-- Avatar #23 -->
+	  <Population name="Female_Tall_Adult_HealthyWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Tall</Property>
+            <Property>Adult</Property>
+            <Property>HealthyWeight</Property>
+      </Population>
+	  <!-- Avatar #24 -->
+	  <Population name="Female_Short_MiddleAge_OverWeight" count="3">    
+            <Property>Female</Property>
+            <Property>Short</Property>
+            <Property>MiddleAge</Property>
+            <Property>OverWeight</Property>
+      </Population>
+  </Populations>
+
+  <Sampling>
+    <Heterogametic-SexDistribution>
+      <BernoulliDistribution p="0.0">Male</BernoulliDistribution>
+      <BernoulliDistribution p="1.0" >Female</BernoulliDistribution>
+    </Heterogametic-SexDistribution>
+
+    <AgeDistribution>
+      <NormalDistribution strategy="resample" mean="23.5"  deviation="3.75"  
+                          min="16" max="31" unit="yr">YoungAdult</NormalDistribution>
+      <NormalDistribution strategy="resample" mean="40.0" deviation="3.75" 
+                           min="32" max="47" unit="yr">Adult</NormalDistribution>
+      <NormalDistribution strategy="resample" mean="57"  deviation="3.75"  
+                           min="48" max="64" unit="yr">MiddleAge</NormalDistribution> 
+      </AgeDistribution>
+
+    <WeightDistribution>
+    </WeightDistribution>
+
+    <HeightDistribution>
+        <NormalDistribution  mean="64" deviation="1.0" unit="in">Male;Short</NormalDistribution>
+        <NormalDistribution  mean="70" deviation="1.0" unit="in">Male;Average</NormalDistribution>
+        <NormalDistribution  mean="76" deviation="1.0" unit="in">Male;Tall</NormalDistribution>
+
+        <NormalDistribution  mean="58.5" deviation="1.0" unit="in">Female;Short</NormalDistribution>
+        <NormalDistribution  mean="65.5" deviation="1.0" unit="in">Female;Average</NormalDistribution>
+        <NormalDistribution  mean="70.5" deviation="1.0" unit="in">Female;Tall</NormalDistribution>
+    </HeightDistribution>
+
+    <BodyMassIndexDistribution>
+      <NormalDistribution strategy="clamp" mean="15.5" deviation="1.5" 
+                          min="12" max="18.5"  unit="unitless">UnderWeight</NormalDistribution>
+      <NormalDistribution strategy="clamp" mean="21.5" deviation="1.5" 
+                                                       unit="unitless">HealthyWeight</NormalDistribution>
+      <NormalDistribution strategy="clamp" mean="27.5" deviation="1.5"  
+                          min="24.5" max="42"  unit="unitless">OverWeight</NormalDistribution>
+    </BodyMassIndexDistribution>
+
+    <BodyFatFractionDistribution>
+    </BodyFatFractionDistribution>
+
+    <MaxWorkRateDistribution>
+    </MaxWorkRateDistribution>
+
+    <BloodTypeABODistribution>
+    <!-- Enum values like CDM::enumBloodType can be auto converted by value or string
+         The generator isn't the best at handling rouge values, but it will show validation
+         fails when trying to write out the file
+    -->
+    <DiscreteUniformDistribution a="0" b="3"/>
+    <WeightedDistribution name="Male">
+        <Value weight="40">A</Value>
+        <Value weight="10">AB</Value>
+        <Value weight="40">B</Value>
+        <Value weight="20">O</Value>
+      </WeightedDistribution>
+      <SelectionCycle name="Female">
+        <Value>O</Value>
+        <Value>A</Value>
+        <Value>B</Value>
+        <Value>AB</Value>
+      </SelectionCycle> 
+    </BloodTypeABODistribution>
+
+    <BloodTypeRhDistribution>
+       <!--When self closed a tag will be the default if no other matches are found-->
+       <BernoulliDistribution p="0.5"/>
+    </BloodTypeRhDistribution>
+
+    <AlveoliSurfaceAreaDistribution>
+    </AlveoliSurfaceAreaDistribution>
+
+    <HyperhidrosisDistribution>
+    </HyperhidrosisDistribution>
+
+    <RightLungRatioDistribution>
+       <ContinuousUniformDistribution a="0.3" b="0.6" unit="unitless"/>
+    </RightLungRatioDistribution>
+
+    <SkinSurfaceAreaDistribution>
+
+    </SkinSurfaceAreaDistribution>
+
+    <SleepAmountDistribution>
+    </SleepAmountDistribution>
+
+    <PainSusceptibilityDistribution>
+    </PainSusceptibilityDistribution>
+
+    <BasalMetabolicRateDistribution>
+    </BasalMetabolicRateDistribution>
+
+    <BloodVolumeBaselineDistribution>
+    </BloodVolumeBaselineDistribution>
+
+    <DiastolicArterialPressureBaselineDistribution>
+    </DiastolicArterialPressureBaselineDistribution>
+
+    <HeartRateBaselineDistribution>
+    </HeartRateBaselineDistribution>
+
+    <RespirationRateBaselineDistribution>
+    </RespirationRateBaselineDistribution>
+
+    <SystolicArterialPressureBaselineDistribution>
+    </SystolicArterialPressureBaselineDistribution>
+
+    <HeartRateMaximumDistribution>
+    </HeartRateMaximumDistribution>
+
+    <HeartRateMinimumDistribution>
+    </HeartRateMinimumDistribution>
+
+    <FunctionalResidualCapacityDistribution>
+    </FunctionalResidualCapacityDistribution>
+
+    <ResidualVolumeDistribution>
+    </ResidualVolumeDistribution>
+
+    <TotalLungCapacityDistribution>
+    </TotalLungCapacityDistribution>
+  </Sampling>
+</PopulationGenerator>

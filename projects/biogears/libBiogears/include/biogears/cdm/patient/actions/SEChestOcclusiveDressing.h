@@ -14,6 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+#include <random>
+
 namespace biogears {
 namespace io {
   class PatientActions;
@@ -33,7 +35,7 @@ public:
   virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
-  virtual bool Load(const CDM::ChestOcclusiveDressingData& in);
+  virtual bool Load(const CDM::ChestOcclusiveDressingData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::ChestOcclusiveDressingData* Unload() const override;
 
   virtual CDM::enumSide::value GetSide() const;

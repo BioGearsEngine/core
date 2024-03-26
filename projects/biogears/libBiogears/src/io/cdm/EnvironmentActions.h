@@ -18,6 +18,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/EnvironmentActions.hxx>
 
+#include <random>
+
 namespace biogears {
 class SEEnvironmentAction;
 class SEEnvironmentChange;

@@ -32,7 +32,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::SodaLimeFailureData& in);
+  virtual bool Load(const CDM::SodaLimeFailureData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::SodaLimeFailureData* Unload() const override;
 
 protected:

@@ -43,10 +43,10 @@ bool SEAcuteStress::IsActive() const
   return IsValid() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEAcuteStress::Load(const CDM::AcuteStressData& in)
+bool SEAcuteStress::Load(const CDM::AcuteStressData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity());
+  GetSeverity().Load(in.Severity(), rd);
   return true;
 }
 //-------------------------------------------------------------------------------

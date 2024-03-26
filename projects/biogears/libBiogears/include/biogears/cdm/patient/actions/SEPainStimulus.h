@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
+#include <random>
+
 namespace biogears {
 namespace io {
   class PatientActions;
@@ -35,7 +37,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::PainStimulusData& in);
+  virtual bool Load(const CDM::PainStimulusData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::PainStimulusData* Unload() const override;
 
   virtual bool HasSeverity() const;

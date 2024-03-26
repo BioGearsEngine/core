@@ -59,13 +59,13 @@ const SEScalar* SEActiveCooling::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SEActiveCooling::Load(const CDM::ActiveCoolingData& in)
+bool SEActiveCooling::Load(const CDM::ActiveCoolingData& in, std::default_random_engine *rd)
 {
-  GetPower().Load(in.Power());
+  GetPower().Load(in.Power(), rd);
   if (in.SurfaceArea().present())
-    GetSurfaceArea().Load(in.SurfaceArea().get());
+    GetSurfaceArea().Load(in.SurfaceArea().get(), rd);
   if (in.SurfaceAreaFraction().present())
-    GetSurfaceAreaFraction().Load(in.SurfaceAreaFraction().get());
+    GetSurfaceAreaFraction().Load(in.SurfaceAreaFraction().get(), rd);
   return true;
 }
 //-----------------------------------------------------------------------------

@@ -18,6 +18,7 @@
 #include <thread>
 
 #include "exec/Driver.h"
+#include "exec/ScenarioGenerator.h"
 #include "exec/PopulationGenerator.h"
 
 #include "data/CompoundGenerator.h"
@@ -50,12 +51,14 @@ bool g_run_generate_tables = false;
 bool g_run_generate_sepsis_states = false;
 bool g_run_generate_patient_states = false;
 bool g_run_generate_populations = false;
+bool g_run_generate_scenarios = false;
 bool g_run_generate_runtime_directory = false;
 bool g_run_generate_data = false;
 
 biogears::Arguments::KeywordValue g_runtime_directory;
 biogears::Arguments::MultiwordValue g_requested_table_formats;
 biogears::Arguments::MultiwordValue g_patient_population_args;
+biogears::Arguments::MultiwordValue g_patient_scenarios_args;
 
 constexpr int BG_CLI_SUCCESS = 0;
 constexpr int BG_CLI_PARSE_ERROR = 1;
@@ -81,7 +84,8 @@ void print_help(int rc)
   std::cout << "\n         data                       : Generates xml resource files from various csv templtes in the RUNTIME directory";
   std::cout << "\n         states                     : Generates a stabalized patient state for each known patient";
   std::cout << "\n         sepsis                     : Generates several septic patient sates based on GenSepsisStates.config";
-  std::cout << "\n         patients [template N]..| N : Generates a population of N patients for each patient tempalte file";
+  std::cout << "\n         population [template]      : Generates a population patients for the patient template file";
+  std::cout << "\n         scenarios  [template]      : Generates a seris of senarios as described in a SenarioTemplate file";
   std::cout << "\n         tables html|md|xml|web|all : Generates data tables based on prior run validation for patients and systems in one of the requested formats";
   std::cout << "\nValidate [mode]...                  : Runs preexisting BioGears scenarios with the linked engine to validate agianst baseline results";
   std::cout << "\n         patient                    : Equivilant to bg-cli CONFIG config/ValidationPatient.config";
@@ -119,22 +123,42 @@ bool genRuntime(std::string pathName)
 //  the command
 void parse_generate_arguments
 
-(biogears::Arguments::MultiwordValue&& args)
+  (biogears::Arguments::MultiwordValue&& args)
 {
 
-  auto is_keyword = [](const std::string& v) { return v == "data" || v == "patients" || v == "runtime" || v == "states" || v == "sepsis" || v == "tables"; };
+  auto is_keyword = [](const std::string& v) { return v == "data" || v == "population" || v == "scenarios"
+                                                 || v == "runtime" || v == "states" || v == "sepsis"
+                                                 || v == "tables"; };
 
   auto current = args.begin();
   auto end = args.end();
   for (; current != end; ++current) {
     const auto& arg = *current;
     std::transform(current->begin(), current->end(), current->begin(), ::tolower);
-    
+
     if (arg == "data") {
       g_run_generate_data = true;
-    } else if (arg == "patients") {
+    } 
+    else if (arg == "scenarios") 
+    {
       if (current + 1 != end && is_keyword(*(current + 1))) {
-        std::cout << "GENERATE patients requires at least one argument.\n";
+        std::cout << "GENERATE scenarios requires at least one argument.\n";
+        print_help(BG_CLI_MISSING_ARGUMENT);
+      };
+      g_run_generate_scenarios = true;
+      while (current + 1 != end) {
+        ++current;
+        std::transform(current->begin(), current->end(), current->begin(), ::tolower);
+        if (is_keyword(*current)) {
+          break;
+        }
+        g_patient_scenarios_args.push_back(*current);
+      }
+    }
+    else if (arg == "population") 
+    {
+      if (current + 1 != end && is_keyword(*(current + 1))) {
+        std::cout << "GENERATE population requires at least one argument.\n";
         print_help(BG_CLI_MISSING_ARGUMENT);
       };
       g_run_generate_populations = true;
@@ -146,7 +170,9 @@ void parse_generate_arguments
         }
         g_patient_population_args.push_back(*current);
       }
-    } else if (arg == "runtime") {
+    } 
+    else if (arg == "runtime")
+    {
       if (current + 1 != end && is_keyword(*(current + 1))) {
         std::cout << "GENERATE runtime requires at destination\n";
         print_help(BG_CLI_MISSING_ARGUMENT);
@@ -202,16 +228,16 @@ void parse_generate_arguments
 int main(int argc, char** argv)
 {
   biogears::Arguments args(
-    { "H", "HELP", "GENDATA", "GENSEPSIS", "GENSTATES", "VERIFY", "V", "VERSION" }, /*Options*/
+    { "H", "HELP", "VERIFY", "V", "VERSION" }, /*Options*/
     { "J", "JOBS" }, /*Keywords*/
-    { "TEST", "CONFIG", "SCENARIO", "VALIDATE", "GENTABLES", "GENPATIENTS", "GENERATE", "GEN" } /*MultiWords*/
+    { "TEST", "CONFIG", "SCENARIO", "VALIDATE", "GENERATE", "GEN" } /*MultiWords*/
   );
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
   args.append_options({ "THREADED", "T" });
 #endif
 #if defined(BIOGEARS_IO_PRESENT)
-  args.append_keywords({ "SHA1", "GENRUNTIME" });
+  args.append_keywords({ "SHA1" });
 #endif
 
   unsigned int thread_count = (std::thread::hardware_concurrency() > 2) ? std::thread::hardware_concurrency() - 2 : 1;
@@ -257,7 +283,7 @@ int main(int argc, char** argv)
     auto path = args.Keyword("SHA1");
     auto sha1 = iom.calculate_sha1(path.c_str());
     if (sha1.empty()) {
-      std::cout << "Failed to calculate SHA1: Unable to read " << args.Keyword("GENRUNTIME") << std::endl;
+      std::cout << "Failed to calculate SHA1: Unable to read " << args.Keyword("SHA1") << std::endl;
       exit(BG_CLI_SHA_FAILURE);
     }
     std::cout << path << " : " << sha1;
@@ -300,29 +326,6 @@ int main(int argc, char** argv)
   if (args.MultiWordFound("GEN")) {
     parse_generate_arguments(args.MultiWord("GEN"));
   }
-  if (args.Option("GENSTATES")) {
-    g_run_generate_patient_states = true;
-  }
-  if (args.Option("GENSEPSIS")) {
-    g_run_generate_sepsis_states = true;
-  }
-  if (args.MultiWordFound("GENPATIENTS")) {
-    g_run_generate_populations = true;
-    g_patient_population_args = args.MultiWord("GENPATIENTS");
-  }
-  if (args.MultiWordFound("GENTABLES")) {
-    g_run_generate_tables = true;
-    g_requested_table_formats = args.MultiWord("GENTABLES");
-  }
-  if (args.Option("GENDATA")) {
-    g_run_generate_data = true;
-  }
-#ifdef BIOGEARS_IO_PRESENT
-  if (args.KeywordFound("GENRUNTIME")) {
-    g_run_generate_runtime_directory = true;
-    g_runtime_directory = args.Keyword("GENRUNTIME");
-  }
-#endif
 //
 //  Generation routines
 //
@@ -341,6 +344,10 @@ int main(int argc, char** argv)
   if (g_run_generate_sepsis_states) {
     const biogears::Config runs { "config/GenSepsisStates.config" };
     driver.queue(runs, as_subprocess);
+  }
+  if (g_run_generate_scenarios) {
+    biogears::ScenarioGenerator generator { g_patient_scenarios_args };
+    generator.Generate();
   }
   if (g_run_generate_populations) {
     biogears::PopulationGenerator generator { g_patient_population_args };

@@ -1,5 +1,6 @@
-#ifndef BIOGEARS_STATE_GENERATOR_H
-#define BIOGEARS_STATE_GENERATOR_H
+#ifndef BIOGEARS_POPULATION_GENERATOR_H
+#define BIOGEARS_POPULATION_GENERATOR_H
+
 //**********************************************************************************
 //Copyright 2015 Applied Research Associates, Inc.
 //Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -36,10 +37,10 @@ namespace biogears
     void ClearGirlNames();
 
   private:
-    std::vector<std::pair<std::string, int>> _runs;
-    std::vector<std::string> _boy_names;
-    std::vector<std::string> _girl_names;
+    std::vector<std::string> _runs;
+    std::vector<unsigned char> _buffer; // 5MBs of read buffer state
+    std::size_t _buffer_size = 5 * 1024 * 1024;
   };
 } //namespace biogears
 
-#endif //BIOGEARS_STATE_GENERATOR_H
+#endif //BIOGEARS_POPULATION_GENERATOR_H

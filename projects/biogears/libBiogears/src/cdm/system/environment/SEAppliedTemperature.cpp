@@ -56,17 +56,17 @@ const SEScalar* SEAppliedTemperature::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SEAppliedTemperature::Load(const CDM::AppliedTemperatureData& in)
+bool SEAppliedTemperature::Load(const CDM::AppliedTemperatureData& in, std::default_random_engine *rd)
 {
   Clear();
   if (in.State().present())
     m_State = in.State().get();
   if (in.Temperature().present())
-    GetTemperature().Load(in.Temperature().get());
+    GetTemperature().Load(in.Temperature().get(), rd);
   if (in.SurfaceArea().present())
-    GetSurfaceArea().Load(in.SurfaceArea().get());
+    GetSurfaceArea().Load(in.SurfaceArea().get(), rd);
   if (in.SurfaceAreaFraction().present())
-    GetSurfaceAreaFraction().Load(in.SurfaceAreaFraction().get());
+    GetSurfaceAreaFraction().Load(in.SurfaceAreaFraction().get(), rd);
   return true;
 }
 //-----------------------------------------------------------------------------

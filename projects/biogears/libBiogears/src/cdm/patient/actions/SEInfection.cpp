@@ -1,4 +1,4 @@
-/**************************************************************************************Copyright 2015 Applied Research Associates, Inc.Licensed under the Apache License, Version 2.0(the "License"); you may not use
+ /**************************************************************************************Copyright 2015 Applied Research Associates, Inc.Licensed under the Apache License, Version 2.0(the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the License
 at:
 http://www.apache.org/licenses/LICENSE-2.0
@@ -45,12 +45,12 @@ namespace biogears
     return m_Severity == CDM::enumInfectionSeverity::Eliminated ? false : true;
   }
   //-------------------------------------------------------------------------------
-  bool SEInfection::Load(const CDM::InfectionData& in)
+  bool SEInfection::Load(const CDM::InfectionData& in, std::default_random_engine * rd)
   {
     SEPatientAction::Load(in);
     m_Location = in.Location();
     m_Severity = in.Severity();
-    GetMinimumInhibitoryConcentration().Load(in.MinimumInhibitoryConcentration());
+    GetMinimumInhibitoryConcentration().Load(in.MinimumInhibitoryConcentration(), rd);
     return true;
   }
   //-------------------------------------------------------------------------------

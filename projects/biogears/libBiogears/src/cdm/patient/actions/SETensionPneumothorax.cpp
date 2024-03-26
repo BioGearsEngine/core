@@ -1,4 +1,4 @@
-/**************************************************************************************
+ /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the License
@@ -36,10 +36,10 @@ void SETensionPneumothorax::Clear()
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
-bool SETensionPneumothorax::Load(const CDM::TensionPneumothoraxData& in)
+bool SETensionPneumothorax::Load(const CDM::TensionPneumothoraxData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity());
+  GetSeverity().Load(in.Severity(), rd);
   m_Type = in.Type();
   m_Side = in.Side();
   return true;

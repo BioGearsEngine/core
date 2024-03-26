@@ -40,7 +40,7 @@ bool SEPatientAssessmentRequest::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SEPatientAssessmentRequest::Load(const CDM::PatientAssessmentRequestData& in)
+bool SEPatientAssessmentRequest::Load(const CDM::PatientAssessmentRequestData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_Type = in.Type();

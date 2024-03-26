@@ -12,7 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/Scenario.hxx>
+#include <biogears/schema/cdm/Actions.hxx>
+
+#include <random>
 
 namespace biogears {
 class SEScalar0To1;
@@ -34,7 +36,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::PulmonaryShuntData& in);
+  virtual bool Load(const CDM::PulmonaryShuntData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::PulmonaryShuntData* Unload() const override;
 
 protected:

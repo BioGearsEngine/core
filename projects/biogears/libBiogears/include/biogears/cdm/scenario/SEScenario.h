@@ -18,7 +18,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/exports.h>
+
 #include <biogears/schema/cdm/Scenario.hxx>
+#include <biogears/schema/cdm/DataRequests.hxx>
+#include <biogears/schema/cdm/Actions.hxx>
 
 namespace biogears {
 
@@ -74,7 +77,7 @@ public:
   //!        UnLoad as the serialization file treats the two as a choice.
   //!	     A second Unload and Load have been added to this class
   //!        to allow generation of ActionList files
-  //! 
+  //!
   virtual const char* GetActionFile() const;
   virtual void SetActionFile(const char* ActionFile);
   virtual void SetActionFile(const std::string& ActionFile);

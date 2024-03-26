@@ -313,6 +313,9 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     if (scenario == nullptr) {
       throw std::runtime_error(exec.Scenario() + " is not a valid Scenario file.");
     }
+    if (scenario->Actions().RandomSeed().present()) {
+      std::cout << "Using seed=" << scenario->Actions().RandomSeed() << std::endl;
+    }
   } catch (std::runtime_error e) {
     std::cout << "Error while processing " << exec.Scenario() << "\n";
     std::cout << e.what() << "\n\n";
@@ -824,6 +827,9 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
       if (scenario == nullptr) {
         throw std::runtime_error(ex.Scenario() + " is not a valid Scenario file.");
+      }
+      if (scenario->Actions().RandomSeed().present()) {
+        std::cout << "Using seed=" << scenario->Actions().RandomSeed() << std::endl;
       }
     } catch (std::runtime_error e) {
       std::cout << "Error while processing " << ex.Scenario() << "\n";

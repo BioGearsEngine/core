@@ -32,7 +32,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::VaporizerFailureData& in);
+  virtual bool Load(const CDM::VaporizerFailureData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::VaporizerFailureData* Unload() const override;
 
 protected:

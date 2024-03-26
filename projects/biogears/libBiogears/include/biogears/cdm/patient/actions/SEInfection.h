@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+#include <random>
+
 namespace biogears {
 class SEScalarMassPerVolume;
 namespace io {
@@ -36,7 +38,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::InfectionData& in);
+  virtual bool Load(const CDM::InfectionData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::InfectionData* Unload() const override;
 
   virtual const char* GetLocation_cStr() const;

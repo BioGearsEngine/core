@@ -98,17 +98,17 @@ bool SEExercise::IsActive() const
   }
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::Load(const CDM::ExerciseData& in)
+bool SEExercise::Load(const CDM::ExerciseData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   if (in.GenericExercise().present()) {
-    LoadGeneric(in.GenericExercise().get());
+    LoadGeneric(in.GenericExercise().get(), rd);
   } else if (in.CyclingExercise().present()) {
-    LoadCycling(in.CyclingExercise().get());
+    LoadCycling(in.CyclingExercise().get(), rd);
   } else if (in.RunningExercise().present()) {
-    LoadRunning(in.RunningExercise().get());
+    LoadRunning(in.RunningExercise().get(), rd);
   } else if (in.StrengthExercise().present()) {
-    LoadStrength(in.StrengthExercise().get());
+    LoadStrength(in.StrengthExercise().get(), rd);
   }
   return true;
 }
@@ -118,7 +118,7 @@ SEExercise::ExerciseType SEExercise::GetExerciseType() const
   return m_mode;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in)
+bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_mode = GENERIC;
@@ -130,40 +130,40 @@ bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in)
   return true;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::LoadCycling(const CDM::CyclingExerciseData& in)
+bool SEExercise::LoadCycling(const CDM::CyclingExerciseData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_mode = CYCLING;
-  m_cyclingExercise.CadenceCycle.Load(in.Cadence());
-  m_cyclingExercise.PowerCycle.Load(in.Power());
+  m_cyclingExercise.CadenceCycle.Load(in.Cadence(), rd);
+  m_cyclingExercise.PowerCycle.Load(in.Power(), rd);
   if (in.AddedWeight().present()) {
-    m_cyclingExercise.AddedWeight.Load(in.AddedWeight().get());
+    m_cyclingExercise.AddedWeight.Load(in.AddedWeight().get(), rd);
   } else {
     m_cyclingExercise.AddedWeight.SetValue(0, MassUnit::kg);
   }
   return true;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::LoadRunning(const CDM::RunningExerciseData& in)
+bool SEExercise::LoadRunning(const CDM::RunningExerciseData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_mode = RUNNING;
-  m_runningExercise.SpeedRun.Load(in.Speed());
-  m_runningExercise.InclineRun.Load(in.Incline());
+  m_runningExercise.SpeedRun.Load(in.Speed(), rd);
+  m_runningExercise.InclineRun.Load(in.Incline(), rd);
   if (in.AddedWeight().present()) {
-    m_runningExercise.AddedWeight.Load(in.AddedWeight().get());
+    m_runningExercise.AddedWeight.Load(in.AddedWeight().get(), rd);
   } else {
     m_runningExercise.AddedWeight.SetValue(0, MassUnit::kg);
   }
   return true;
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::LoadStrength(const CDM::StrengthExerciseData& in)
+bool SEExercise::LoadStrength(const CDM::StrengthExerciseData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_mode = STRENGTH_TRAINING;
-  m_strengthExercise.WeightStrength.Load(in.Weight());
-  m_strengthExercise.RepsStrength.Load(in.Repetitions());
+  m_strengthExercise.WeightStrength.Load(in.Weight(), rd);
+  m_strengthExercise.RepsStrength.Load(in.Repetitions(), rd);
   return true;
 }
 //-------------------------------------------------------------------------------

@@ -38,7 +38,7 @@ bool SEUrinate::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SEUrinate::Load(const CDM::UrinateData& in)
+bool SEUrinate::Load(const CDM::UrinateData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   return true;

@@ -14,6 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+#include <random>
+
 namespace biogears {
 class SEScalar0To1;
 class SEConsciousRespiration;
@@ -33,7 +35,7 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::ForcedExhaleData& in);
+  virtual bool Load(const CDM::ForcedExhaleData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::ForcedExhaleData* Unload() const;
 
 protected:

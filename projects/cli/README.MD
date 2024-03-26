@@ -1,9 +1,10 @@
 # Biogears Comand LIne Iterface
 ```
-bg-cli [HELP, GENDATA, GENSTATES, GENSEPSIS, VERIFY, VERSION, THREADED]
+bg-cli [HELP, VERIFY, VERSION, THREADED]
         [JOBS N]
         [CONFIG [FILE]...], [SCENARIO [FILE]...], [TEST cdm|bge], [VALIDATE patient|drug|system|all]
-        [GENTABLES html|md|xml|web|all]
+        [GENTERATE [TABLES html|md|xml|web|all] [data] [states] [sepsis [population [template N]...] | N]
+                   [Validate patient | drug | system | all] [Verify] [Test cdm | bge]]
 
   Flags:
   -v   : Print Version
@@ -16,13 +17,19 @@ This project is a command line implementation of BioGears for processing Scenari
 
 **HELP**: Print out help dialog.
  
-**GENDATA**: Generate data XMLs from CSV files located in the runtime directory.
+**Generate Data**: Generate data XMLs from CSV files located in the runtime directory.
 
-**GENSTATES**: Generate stabilized patient states for all patients.
+**Generate Patients**: Generate stabilized patient states for all patients.
 
-**GENSEPSIS**: Generate stabilized sepsis states at various levels of infection and progression.
+**Generate Sepsis**: Generate stabilized sepsis states at various levels of infection and progression.
 
-**VERIFY**: Run VerificationScenarios.config.
+**Generate Verify**: Run VerificationScenarios.config.
+
+**Generate Tables**: Generate validation tables for BioGears documentation. Inputs are html, md, xml, web, or all.
+
+**Generate Population**: Generate a population of Patient files which meet the requirments listed in the template. Review patient.template.xml for more info.
+
+**Generate Scenarios**: Generate a collection of Scenario files that meet the template details. Review Scenario.template.xml for additonal information.
 
 **VERSION**: Print out version string.
 
@@ -38,7 +45,6 @@ This project is a command line implementation of BioGears for processing Scenari
 
 **VALIDATE** Run one ore more validate senarios arguments include drug,patient,system or all. Where `VALIDATE all` is the same as providing the following `VALIDATE drug patient system VERIFY`.
 
-**GENTABLES**: Generate validation tables for BioGears documentation. Inputs are html, md, xml, web, or all.
 
 The system will execute as many command line arguments as you give in a predetermined order. HELP or VERSION however will immediately stop a run if they are included in the arguments.
 

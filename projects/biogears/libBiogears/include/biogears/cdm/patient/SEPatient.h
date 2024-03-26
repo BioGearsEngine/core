@@ -134,9 +134,6 @@ public:
   virtual SEScalarLength& GetHeight();
   virtual double GetHeight(const LengthUnit& unit) const;
 
-  virtual void CalculateWeightByBMI(const CDM::ScalarData& bmi);
-  virtual void CalculateHeightByBMI(const CDM::ScalarData& bmi);
-
   virtual bool HasAlveoliSurfaceArea() const;
   virtual SEScalarArea& GetAlveoliSurfaceArea();
   virtual double GetAlveoliSurfaceArea(const AreaUnit& unit) const;
@@ -272,6 +269,9 @@ public:
 
 protected:
   virtual void Unload(CDM::PatientData& data) const;
+
+  virtual void CalculateWeightByBMI(const CDM::ScalarData& bmi);
+  virtual void CalculateHeightByBMI(const CDM::ScalarData& bmi);
 
 protected:
   std::stringstream m_ss;

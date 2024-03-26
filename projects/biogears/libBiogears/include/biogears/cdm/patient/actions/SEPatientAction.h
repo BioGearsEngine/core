@@ -12,8 +12,10 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/cdm/Scenario.hxx>
+#include <biogears/schema/cdm/Actions.hxx>
 #include <biogears/schema/cdm/PatientActions.hxx>
+
+#include <random>
 
 namespace biogears {
 class BIOGEARS_API SEPatientAction : public SEAction {

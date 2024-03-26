@@ -43,10 +43,10 @@ bool SEPulmonaryShunt::IsActive() const
   return IsValid() ? !m_FlowRateScaling->IsZero() : false;
 }
 
-bool SEPulmonaryShunt::Load(const CDM::PulmonaryShuntData& in)
+bool SEPulmonaryShunt::Load(const CDM::PulmonaryShuntData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
-  GetFlowRateScale().Load(in.FlowRateScaling());
+  GetFlowRateScale().Load(in.FlowRateScaling(), rd);
   return true;
 }
 

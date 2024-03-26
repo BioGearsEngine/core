@@ -14,6 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
+#include <random>
+
 namespace biogears {
 class SEScalarForce;
 namespace io {
@@ -31,7 +33,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ChestCompressionForceData& in);
+  virtual bool Load(const CDM::ChestCompressionForceData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::ChestCompressionForceData* Unload() const override;
 
   virtual bool HasForce() const;

@@ -324,7 +324,11 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, s
     /// \error Error reading xml file
     err << "Error reading data from buffer\n"
         << eh.getError() << std::endl;
-    logger->Error(err.str());
+    if (logger) {
+      logger->Error(err.str());
+    } else {
+      std::cerr << err.str();
+    }
     return std::unique_ptr<CDM::ObjectData>();
   }
   // Let's see what kind of object this is
@@ -367,7 +371,11 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, s
 
   /// \error Unsupported root tag
   err << "Unsupported root tag " << name << " found in buffer" << std::ends;
-  logger->Error(err.str());
+  if (logger) {
+    logger->Error(err.str());
+  } else {
+    std::cerr << err.str();
+  }
   return obj;
 }
 

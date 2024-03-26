@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEUnitScalar.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 
+#include <random>
+
 CDM_BIND_DECL(ScalarData)
 
 namespace biogears {
@@ -38,7 +40,7 @@ public:
   void Invalidate() override;
   bool IsValid() const override;
 
-  virtual void Load(const CDM::ScalarData& in) override;
+  virtual void Load(const CDM::ScalarData& in, std::default_random_engine *rd = nullptr) override;
   virtual CDM::ScalarData* Unload() const override;
 
   virtual bool Set(const SEScalarQuantity<Unit>& s);

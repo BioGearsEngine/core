@@ -32,7 +32,7 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ExpiratoryValveObstructionData& in);
+  virtual bool Load(const CDM::ExpiratoryValveObstructionData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::ExpiratoryValveObstructionData* Unload() const override;
 
   bool operator==(SEExpiratoryValveObstruction const& rhs) const;

@@ -14,7 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <string>
 
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/cdm/Scenario.hxx>
+#include <biogears/schema/cdm/DataRequests.hxx>
+#include <biogears/schema/cdm/Actions.hxx>
 
 namespace biogears {
 namespace io {
@@ -34,7 +35,7 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::SerializeStateData& in);
+  virtual bool Load(const CDM::SerializeStateData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::SerializeStateData* Unload() const override;
 
   bool operator==(SESerializeState const&) const;

@@ -44,7 +44,7 @@ bool SEInhalerConfiguration::IsValid() const
   return SEInhalerAction::IsValid() && (HasConfiguration() || HasConfigurationFile());
 }
 //-----------------------------------------------------------------------------
-bool SEInhalerConfiguration::Load(const CDM::InhalerConfigurationData& in)
+bool SEInhalerConfiguration::Load(const CDM::InhalerConfigurationData& in, std::default_random_engine *rd)
 {
   SEInhalerAction::Load(in);
   if (in.ConfigurationFile().present())

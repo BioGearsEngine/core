@@ -47,7 +47,7 @@ void SEChestOcclusiveDressing::SetActive(bool b)
   m_State = b ? CDM::enumOnOff::On : CDM::enumOnOff::Off;
 }
 //-------------------------------------------------------------------------------
-bool SEChestOcclusiveDressing::Load(const CDM::ChestOcclusiveDressingData& in)
+bool SEChestOcclusiveDressing::Load(const CDM::ChestOcclusiveDressingData& in, std::default_random_engine *rd)
 {
   SEPatientAction::Load(in);
   m_Side = in.Side();

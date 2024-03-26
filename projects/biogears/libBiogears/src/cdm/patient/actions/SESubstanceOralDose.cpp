@@ -46,10 +46,10 @@ bool SESubstanceOralDose::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in)
+bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine *rd)
 {
   SESubstanceAdministration::Load(in);
-  GetDose().Load(in.Dose());
+  GetDose().Load(in.Dose(), rd);
   m_AdminRoute = in.AdminRoute();
   return true;
 }
@@ -162,7 +162,7 @@ bool SETransmucosalState::Initialize(SEScalarMass& dose)
   return (bucSet && subSet);
 }
 //-------------------------------------------------------------------------------
-bool SETransmucosalState::Load(const CDM::TransmucosalStateData& in)
+bool SETransmucosalState::Load(const CDM::TransmucosalStateData& in, std::default_random_engine *rd)
 {
 
   GetMouthSolidMass().Load(in.MouthSolidMass());
@@ -170,13 +170,13 @@ bool SETransmucosalState::Load(const CDM::TransmucosalStateData& in)
   m_BuccalConcentrations.clear();
   for (auto brData : in.BuccalConcentrations()) {
     SEScalarMassPerVolume buc;
-    buc.Load(brData);
+    buc.Load(brData, rd);
     m_BuccalConcentrations.push_back(buc);
   }
   m_SublingualConcentrations.clear();
   for (auto slData : in.SublingualConcentrations()) {
     SEScalarMassPerVolume sl;
-    sl.Load(slData);
+    sl.Load(slData, rd);
     m_SublingualConcentrations.push_back(sl);
   }
   return true;

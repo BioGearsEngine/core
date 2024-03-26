@@ -48,7 +48,7 @@ bool SEAnesthesiaMachineConfiguration::IsValid() const
   return SEAnesthesiaMachineAction::IsValid() && (HasConfiguration() || HasConfigurationFile());
 }
 //-----------------------------------------------------------------------------
-bool SEAnesthesiaMachineConfiguration::Load(const CDM::AnesthesiaMachineConfigurationData& in)
+bool SEAnesthesiaMachineConfiguration::Load(const CDM::AnesthesiaMachineConfigurationData& in, std::default_random_engine *rd)
 {
   SEAnesthesiaMachineAction::Load(in);
   if (in.ConfigurationFile().present())
