@@ -905,8 +905,8 @@ void Cardiovascular::CalculateVitalSigns()
 
       /// \event Patient: blood loss below 60%, irreversible state enacted
       // @cite champion2003profile
-      if (GetBloodVolume().GetValue(VolumeUnit::mL) <= 0.5 * m_patient->GetBloodVolumeBaseline(VolumeUnit::mL)) {
-        m_ss << "50% of the patient's blood volume has been lost. The patient is now in an irreversible state.";
+      if (GetBloodVolume().GetValue(VolumeUnit::mL) <= 0.4 * m_patient->GetBloodVolumeBaseline(VolumeUnit::mL)) {
+        m_ss << "40% of the patient's blood volume has been lost. The patient is now in an irreversible state.";
         Warning(m_ss);
         /// \irreversible Over half the patients blood volume has been lost.
         if (!m_PatientActions->HasOverride()) {

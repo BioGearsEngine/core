@@ -112,7 +112,7 @@ public:
     double totalCO2_mM = CO2_mM + HCO3_mM + 4.0 * HbCO2_mM + 4.0 * HbO2CO2_mM;
     double totalO2_mM = O2_mM + 4.0 * HbO2_mM + 4.0 * HbO2CO2_mM;
 
-    double f0 = m_SatCalc.m_StrongIonDifference_mmol_Per_L - bicarb_mM - m_SatCalc.m_albumin_g_per_L * (0.123 * pH - 0.631) - m_SatCalc.m_Phosphate_mmol_Per_L * (0.309 * pH - 0.469);
+    double f0 = m_SatCalc.m_StrongIonDifference_mmol_Per_L - bicarb_mM - (m_SatCalc.m_albumin_g_per_L * (0.123 * pH - 0.631)) - m_SatCalc.m_Phosphate_mmol_Per_L * (0.309 * pH - 0.469);
     double f1 = totalCO2_mM - co2_mM - bicarb_mM - 4.0 * CarbonDioxideSaturation * totalHemoglobin_mM;
     double f2 = totalO2_mM - o2_mM - 4.0 * OxygenSaturation * totalHemoglobin_mM;
 

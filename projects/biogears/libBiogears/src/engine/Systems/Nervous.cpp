@@ -149,7 +149,8 @@ void Nervous::Initialize()
   //m_data.GetDataTrack().Probe("m_PeripheralPressureDelta_cmH2O ", m_PeripheralPressureDelta_cmH2O);
   //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorHeart ", m_OxygenAutoregulatorHeart);
   //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorMuscle ", m_OxygenAutoregulatorMuscle);
-
+  //m_data.GetDataTrack().Probe("m_AfferentBaroreceptorAortic_Hz ", m_AfferentBaroreceptorAortic_Hz);
+  //m_data.GetDataTrack().Probe("m_AfferentBaroreceptorCarotid_Hz ", m_AfferentBaroreceptorCarotid_Hz);
 }
 
 bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
@@ -710,7 +711,9 @@ void Nervous::BaroreceptorFeedback()
   m_AfferentBaroreceptorCarotid_Hz = (fBaroMin + fBaroMax * carotidExponent) / (1.0 + carotidExponent);
   const double aorticExponent = std::exp((aorticStrainSignal - baselineStrainSignal) / kBaro);
   m_AfferentBaroreceptorAortic_Hz = (fBaroMin + fBaroMax * aorticExponent) / (1.0 + aorticExponent);
-
+  //m_data.GetDataTrack().Probe("m_AfferentBaroreceptorAortic_Hz ", m_AfferentBaroreceptorAortic_Hz);
+  //m_data.GetDataTrack().Probe("m_AfferentBaroreceptorCarotid_Hz ", m_AfferentBaroreceptorCarotid_Hz);
+  // 
   //Cardiopulmonary (or low pressure) receptors are sensitive to the volume of blood being return to heart
   //Since they are located by the heart, they are also effected by changes in transmural pressure.
   //This model for cardiopulmonary receptors is based on Lim2013Cardiovascular
