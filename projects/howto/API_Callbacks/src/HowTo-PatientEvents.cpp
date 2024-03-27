@@ -165,8 +165,8 @@ public:
     case CDM::enumPatientEvent::HypoglycemicComa:
       event = "HypoglycemicComa";
       break;
-    case CDM::enumPatientEvent::Hypothermia:
-      event = "Hypothermia";
+    case CDM::enumPatientEvent::MildHypothermia:
+      event = "MildHypothermia";
       break;
     case CDM::enumPatientEvent::MildHypokalemia:
       event = "MildHypokalemia";

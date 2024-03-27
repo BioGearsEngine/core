@@ -34,10 +34,10 @@ constexpr char idCentralVenousPressure[] = "CentralVenousPressure";
 constexpr char idCerebralBloodFlow[] = "CerebralBloodFlow";
 constexpr char idCerebralPerfusionPressure[] = "CerebralPerfusionPressure";
 constexpr char idDiastolicArterialPressure[] = "DiastolicArterialPressure";
-constexpr char idExtremityPressureLeftArm[] = "ExtremityPressure-LeftArm";
-constexpr char idExtremityPressureLeftLeg[] = "ExtremityPressure-LeftLeg";
-constexpr char idExtremityPressureRightArm[] = "ExtremityPressure-RightArm";
-constexpr char idExtremityPressureRightLeg[] = "ExtremityPressure-RightLeg";
+constexpr char idExtremityPressureLeftArm[] = "ExtremityPressureLeftArm";
+constexpr char idExtremityPressureLeftLeg[] = "ExtremityPressureLeftLeg";
+constexpr char idExtremityPressureRightArm[] = "ExtremityPressureRightArm";
+constexpr char idExtremityPressureRightLeg[] = "ExtremityPressureRightLeg";
 constexpr char idHeartEjectionFraction[] = "HeartEjectionFraction";
 constexpr char idHeartRate[] = "HeartRate";
 constexpr char idHeartStrokeVolume[] = "HeartStrokeVolume";
@@ -1068,6 +1068,10 @@ Tree<const char*> SECardiovascularSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idCerebralBloodFlow)
     .emplace_back(idCerebralPerfusionPressure)
     .emplace_back(idDiastolicArterialPressure)
+    .emplace_back(idExtremityPressureLeftArm)
+    .emplace_back(idExtremityPressureLeftLeg)
+    .emplace_back(idExtremityPressureRightArm)
+    .emplace_back(idExtremityPressureRightLeg)
     .emplace_back(idHeartEjectionFraction)
     .emplace_back(idHeartRate)
     .emplace_back(idHeartStrokeVolume)

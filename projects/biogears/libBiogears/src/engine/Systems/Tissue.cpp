@@ -1558,13 +1558,13 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   fatigue = m_FatigueRunningAverage.Sample(fatigue);
 
   /// \event Patient: Fatigue - Energy stores are sub-maximal, skip if beginning of cardiac cycle.
-  if (!m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
-    if (fatigue > 0.0035) {
-      m_Patient->SetEvent(CDM::enumPatientEvent::Fatigue, true, m_data.GetSimulationTime());
-    } else if (fatigue < 0.000001) {
-      m_Patient->SetEvent(CDM::enumPatientEvent::Fatigue, false, m_data.GetSimulationTime());
-    }
-  }
+  //if (!m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  //  if (fatigue > 0.0035) {
+  //    m_Patient->SetEvent(CDM::enumPatientEvent::Fatigue, true, m_data.GetSimulationTime());
+  //  } else if (fatigue < 0.000001) {
+  //    m_Patient->SetEvent(CDM::enumPatientEvent::Fatigue, false, m_data.GetSimulationTime());
+  //  }
+  //}
 
   m_energy->GetFatigueLevel().SetValue(fatigue);
 

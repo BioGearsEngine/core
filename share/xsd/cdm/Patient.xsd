@@ -113,8 +113,12 @@ specific language governing permissions and limitations under the License.
       <!--<< @brief Very low glucose in the bloodstream (< 50 mg/dL). -->
       <xs:enumeration value="HypoglycemicComa"/>
       <!--<< @brief Dangerously low glucose in the bloodstream (< 20 mg/dL). -->
-      <xs:enumeration value="Hypothermia"/>
-      <!--<< @brief The condition of having a body temperature greatly below normal (< 35° C). -->
+      <xs:enumeration value="MildHypothermia"/>
+      <!--<< @brief Low core temp (32 < temp < 35). -->
+      <xs:enumeration value="ModerateHypothermia"/>
+      <!--<< @brief moderate low core temp (28 < temp < 32). -->
+      <xs:enumeration value="SevereHypothermia"/>
+      <!--<< @brief The condition of having a body temperature greatly below normal (< 28° C). -->
       <xs:enumeration value="MildHypokalemia"/>
       <!--<<@brief An deficit of potassium in the bloodstream (<3.2 mM). -->
       <xs:enumeration value="SevereHypokalemia"/>
@@ -179,6 +183,8 @@ specific language governing permissions and limitations under the License.
       <!--<< @brief weakness due to exposure to CBRNE, mild ~ 40% RBCACE. -->
       <xs:enumeration value="Seizures"/>
       <!--<< @brief patient seizures. (RBCACE > 40% bound)-->
+      <xs:enumeration value="Shivering"/>
+      <!--<< @brief weakness due to exposure to CBRNE, mild ~ 40% RBCACE. -->
       <xs:enumeration value="StartOfCardiacCycle"/>
       <!--<< @brief The Patient is starting a new heart beat. -->
       <xs:enumeration value="StartOfExhale"/>
