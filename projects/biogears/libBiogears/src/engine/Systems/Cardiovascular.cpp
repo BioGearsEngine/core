@@ -1168,7 +1168,6 @@ void Cardiovascular::Hemorrhage()
   double resistance = 0.0;
   double locationPressure_mmHg = 0.0;
   double TotalLossRate_mL_Per_s = 0.0;
-  double TotalLoss_mL = 0;
   double probabilitySurvival = 0.0;
   double bleedoutTime = 0.0;
   double bleedRate_mL_Per_s = 0.0;
@@ -1213,8 +1212,8 @@ void Cardiovascular::Hemorrhage()
     targetPath->GetNextResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
 
     TotalLossRate_mL_Per_s += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s);
-    TotalLoss_mL += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
-    GetTotalBloodVolumeLost().IncrementValue(TotalLoss_mL, VolumeUnit::mL);
+    double bloodLossIncrement_mL = targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
+    GetTotalBloodVolumeLost().IncrementValue(bloodLossIncrement_mL, VolumeUnit::mL);
     bleedoutTime = (bloodVolume_mL - (0.5 * baselineBloodVolume_mL)) / TotalLossRate_mL_Per_s * (1.0 / 60.0);
   }
 
