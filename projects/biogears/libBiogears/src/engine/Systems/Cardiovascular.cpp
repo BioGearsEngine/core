@@ -186,6 +186,7 @@ void Cardiovascular::Initialize()
 
   //Initialize system data based on patient file inputs
   GetBloodVolume().Set(m_patient->GetBloodVolumeBaseline());
+  GetTotalBloodVolumeLost().SetValue(0.0, VolumeUnit::mL);
   m_CardiacCycleAortaPressureHigh_mmHg = m_patient->GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
   m_CardiacCycleAortaPressureLow_mmHg = m_patient->GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
   GetMeanArterialPressure().SetValue((2. / 3. * m_CardiacCycleAortaPressureLow_mmHg) + (1. / 3. * m_CardiacCycleAortaPressureHigh_mmHg), PressureUnit::mmHg);
@@ -1213,6 +1214,7 @@ void Cardiovascular::Hemorrhage()
 
     TotalLossRate_mL_Per_s += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s);
     TotalLoss_mL += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
+    GetTotalBloodVolumeLost().IncrementValue(TotalLoss_mL, VolumeUnit::mL);
     bleedoutTime = (bloodVolume_mL - (0.5 * baselineBloodVolume_mL)) / TotalLossRate_mL_Per_s * (1.0 / 60.0);
   }
 

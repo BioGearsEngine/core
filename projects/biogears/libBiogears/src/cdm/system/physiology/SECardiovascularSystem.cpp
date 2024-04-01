@@ -59,6 +59,7 @@ constexpr char idPulmonaryVascularResistanceIndex[] = "PulmonaryVascularResistan
 constexpr char idPulsePressure[] = "PulsePressure";
 constexpr char idSystemicVascularResistance[] = "SystemicVascularResistance";
 constexpr char idSystolicArterialPressure[] = "SystolicArterialPressure";
+constexpr char idTotalBloodVolumeLost[] = "TotalBloodVolumeLost";
 
 SECardiovascularSystem::SECardiovascularSystem(Logger* logger)
   : SESystem(logger)
@@ -97,6 +98,7 @@ SECardiovascularSystem::SECardiovascularSystem(Logger* logger)
   m_PulsePressure = nullptr;
   m_SystemicVascularResistance = nullptr;
   m_SystolicArterialPressure = nullptr;
+  m_TotalBloodVolumeLost = nullptr;
 }
 //-------------------------------------------------------------------------------
 
@@ -144,6 +146,7 @@ void SECardiovascularSystem::Clear()
   SAFE_DELETE(m_PulsePressure);
   SAFE_DELETE(m_SystemicVascularResistance);
   SAFE_DELETE(m_SystolicArterialPressure);
+  SAFE_DELETE(m_TotalBloodVolumeLost);
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SECardiovascularSystem::GetScalar(const char* name)
@@ -219,6 +222,8 @@ const SEScalar* SECardiovascularSystem::GetScalar(const std::string& name)
     return &GetSystemicVascularResistance();
   if (name.compare(idSystolicArterialPressure) == 0)
     return &GetSystolicArterialPressure();
+  if (name.compare(idTotalBloodVolumeLost) == 0)
+    return &GetTotalBloodVolumeLost();
   return nullptr;
 }
 //-------------------------------------------------------------------------------
@@ -295,6 +300,8 @@ bool SECardiovascularSystem::Load(const CDM::CardiovascularSystemData& in)
     GetSystemicVascularResistance().Load(in.SystemicVascularResistance().get());
   if (in.SystolicArterialPressure().present())
     GetSystolicArterialPressure().Load(in.SystolicArterialPressure().get());
+  if (in.TotalBloodVolumeLost().present())
+    GetTotalBloodVolumeLost().Load(in.TotalBloodVolumeLost().get());
 
   return true;
 }
@@ -380,6 +387,8 @@ void SECardiovascularSystem::Unload(CDM::CardiovascularSystemData& data) const
     data.SystemicVascularResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_SystemicVascularResistance->Unload()));
   if (m_SystolicArterialPressure != nullptr)
     data.SystolicArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_SystolicArterialPressure->Unload()));
+  if (m_TotalBloodVolumeLost != nullptr)
+    data.TotalBloodVolumeLost(std::unique_ptr<CDM::ScalarVolumeData>(m_TotalBloodVolumeLost->Unload()));
 }
 //-------------------------------------------------------------------------------
 
@@ -1037,7 +1046,6 @@ double SECardiovascularSystem::GetPulsePressure(const PressureUnit& unit) const
   return m_PulsePressure->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-
 bool SECardiovascularSystem::HasSystolicArterialPressure() const
 {
   return m_SystolicArterialPressure == nullptr ? false : m_SystolicArterialPressure->IsValid();
@@ -1055,6 +1063,25 @@ double SECardiovascularSystem::GetSystolicArterialPressure(const PressureUnit& u
   if (m_SystolicArterialPressure == nullptr)
     return SEScalar::dNaN();
   return m_SystolicArterialPressure->GetValue(unit);
+}
+//-------------------------------------------------------------------------------
+bool SECardiovascularSystem::HasTotalBloodVolumeLost() const
+{
+  return m_TotalBloodVolumeLost == nullptr ? false : m_TotalBloodVolumeLost->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarVolume& SECardiovascularSystem::GetTotalBloodVolumeLost()
+{
+  if (m_TotalBloodVolumeLost == nullptr)
+    m_TotalBloodVolumeLost = new SEScalarVolume();
+  return *m_TotalBloodVolumeLost;
+}
+//-------------------------------------------------------------------------------
+double SECardiovascularSystem::GetTotalBloodVolumeLost(const VolumeUnit& unit) const
+{
+  if (m_TotalBloodVolumeLost == nullptr)
+    return SEScalar::dNaN();
+  return m_TotalBloodVolumeLost->GetValue(unit);
 }
 //-------------------------------------------------------------------------------
 Tree<const char*> SECardiovascularSystem::GetPhysiologyRequestGraph() const
@@ -1092,7 +1119,8 @@ Tree<const char*> SECardiovascularSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idPulmonaryVascularResistanceIndex)
     .emplace_back(idPulsePressure)
     .emplace_back(idSystemicVascularResistance)
-    .emplace_back(idSystolicArterialPressure);
+    .emplace_back(idSystolicArterialPressure)
+    .emplace_back(idTotalBloodVolumeLost);
 }
 //-------------------------------------------------------------------------------
 bool SECardiovascularSystem::operator==(SECardiovascularSystem const& rhs) const
@@ -1126,7 +1154,8 @@ bool SECardiovascularSystem::operator==(SECardiovascularSystem const& rhs) const
    ;equivilant &= ((m_PulsePressure && rhs.m_PulsePressure) ? m_PulsePressure->operator==(*rhs.m_PulsePressure) : m_PulsePressure == rhs.m_PulsePressure)
    ;equivilant &= ((m_SystolicArterialPressure && rhs.m_SystolicArterialPressure) ? m_SystolicArterialPressure->operator==(*rhs.m_SystolicArterialPressure) : m_SystolicArterialPressure == rhs.m_SystolicArterialPressure)
    ;equivilant &= ((m_PulmonaryVascularResistanceIndex && rhs.m_PulmonaryVascularResistanceIndex) ? m_PulmonaryVascularResistanceIndex->operator==(*rhs.m_PulmonaryVascularResistanceIndex) : m_PulmonaryVascularResistanceIndex == rhs.m_PulmonaryVascularResistanceIndex)
-   ;equivilant &= ((m_BloodVolume && rhs.m_BloodVolume) ? m_BloodVolume->operator==(*rhs.m_BloodVolume) : m_BloodVolume == rhs.m_BloodVolume)
+   ;equivilant &= ((m_BloodVolume && rhs.m_BloodVolume) ? m_BloodVolume->operator==(*rhs.m_BloodVolume) : m_BloodVolume == rhs.m_BloodVolume);
+   ;equivilant &= ((m_TotalBloodVolumeLost && rhs.m_TotalBloodVolumeLost) ? m_TotalBloodVolumeLost->operator==(*rhs.m_TotalBloodVolumeLost) : m_TotalBloodVolumeLost == rhs.m_TotalBloodVolumeLost)
    ;equivilant &= ((m_HeartStrokeVolume && rhs.m_HeartStrokeVolume) ? m_HeartStrokeVolume->operator==(*rhs.m_HeartStrokeVolume) : m_HeartStrokeVolume == rhs.m_HeartStrokeVolume)
    ;equivilant &= ((m_CardiacOutput && rhs.m_CardiacOutput) ? m_CardiacOutput->operator==(*rhs.m_CardiacOutput) : m_CardiacOutput == rhs.m_CardiacOutput)
    ;equivilant &= ((m_CerebralBloodFlow && rhs.m_CerebralBloodFlow) ? m_CerebralBloodFlow->operator==(*rhs.m_CerebralBloodFlow) : m_CerebralBloodFlow == rhs.m_CerebralBloodFlow)

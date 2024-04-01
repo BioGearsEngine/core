@@ -254,6 +254,8 @@ specific language governing permissions and limitations under the License.
           <!--<< @brief The resistance to blood flow through the entire systemic vasculature, not including the pulmonary circulation.-->
           <xs:element name="SystolicArterialPressure" type="ScalarPressureData" minOccurs="0"  maxOccurs="1"/>
           <!--<< @brief The maximum pressure in the aorta over the course of a cardiac cycle.-->
+		  <xs:element name="TotalBloodVolumeLost" type="ScalarVolumeData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief The volume of blood lost from the body due to hemorrhage.-->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
