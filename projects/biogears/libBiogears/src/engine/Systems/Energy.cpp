@@ -732,34 +732,61 @@ void Energy::UpdateHeatResistance()
     double alphaScale = 0.42; // Scaling factor for convective heat transfer from core to skin (35 seems to be near the upper limit before non-stabilization)
     bool isBurnWound = false;
     double burnSurfaceAreaFraction = 0.0;
+    double burnIntensityFraction = 0.0;
+    double normalSkinTemperature_C = 33.; // For the legs
+    double weightedAvgSegmentedTemperature_C = normalSkinTemperature_C;
+    double burnTemperature = GetBurnSkinTemperature().GetValue(TemperatureUnit::C);
+    SEThermalCircuitPath* metabolicHeatPath;
     if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
       SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
       std::vector<std::string> burnComptVector = burnAction->GetCompartments();
       // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
       if (index == 0 && burnAction->HasCompartment("Trunk")) {
         isBurnWound = true;
-        burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getTrunkBurnIntensity();
+        burnSurfaceAreaFraction = burnAction->getTrunkSA();
+        burnIntensityFraction = burnAction->getTrunkBurnIntensity();
+        metabolicHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalTorsoSkin);
+        normalSkinTemperature_C = 34.4;
+        weightedAvgSegmentedTemperature_C = ((burnSurfaceAreaFraction / 0.37) * burnTemperature) + (((0.37 - burnSurfaceAreaFraction) / 0.37) * normalSkinTemperature_C);
       } else if (index == 2 && burnAction->HasCompartment("LeftArm")) {
         isBurnWound = true;
-        burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getLeftArmBurnIntensity();
+        burnSurfaceAreaFraction = burnAction->getLeftArmSA();
+        burnIntensityFraction = burnAction->getLeftArmBurnIntensity();
+        metabolicHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalLeftArmSkin);
+        normalSkinTemperature_C = 33.6;
+        weightedAvgSegmentedTemperature_C = ((burnSurfaceAreaFraction / 0.09) * burnTemperature) + (((0.09 - burnSurfaceAreaFraction) / 0.09) * normalSkinTemperature_C);
       } else if (index == 3 && burnAction->HasCompartment("RightArm")) {
         isBurnWound = true;
-        burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getRightArmBurnIntensity();
+        burnSurfaceAreaFraction = burnAction->getRightArmSA();
+        burnIntensityFraction = burnAction->getRightArmBurnIntensity();
+        metabolicHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalRightArmSkin);
+        normalSkinTemperature_C = 33.6;
+        weightedAvgSegmentedTemperature_C = ((burnSurfaceAreaFraction / 0.09) * burnTemperature) + (((0.09 - burnSurfaceAreaFraction) / 0.09) * normalSkinTemperature_C);
       } else if (index == 4 && burnAction->HasCompartment("LeftLeg")) {
         isBurnWound = true;
-        burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getLeftLegBurnIntensity();
+        burnSurfaceAreaFraction = burnAction->getLeftLegSA();
+        burnIntensityFraction = burnAction->getLeftLegBurnIntensity();
+        metabolicHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalLeftLegSkin);
+        weightedAvgSegmentedTemperature_C = ((burnSurfaceAreaFraction / 0.18) * burnTemperature) + (((0.18 - burnSurfaceAreaFraction) / 0.18) * normalSkinTemperature_C);
       } else if (index == 5 && burnAction->HasCompartment("RightLeg")) {
         isBurnWound = true;
-        burnSurfaceAreaFraction = m_data.GetActions().GetPatientActions().GetBurnWound()->getRightLegBurnIntensity();
+        burnSurfaceAreaFraction = burnAction->getRightLegSA();
+        burnIntensityFraction = burnAction->getRightLegBurnIntensity();
+        metabolicHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalRightLegSkin);
+        weightedAvgSegmentedTemperature_C = ((burnSurfaceAreaFraction / 0.18) * burnTemperature) + (((0.18 - burnSurfaceAreaFraction) / 0.18) * normalSkinTemperature_C);
       }
-    }
-    if (isBurnWound) {
-      isAnySegmentBurned = true;
-      const double resInput = std::min(2.0 * burnSurfaceAreaFraction, 1.0); // Make >50% burn the worse case scenario
-      const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 20.0, resInput);
-      const double lastAlpha = 1.0 / (coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W) * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * segmentedSkinBloodFlows[index]);
-      const double rampGain = 1.0e-5;
-      alphaScale = lastAlpha + rampGain * (targetAlpha - lastAlpha);
+      if (isBurnWound) {
+        isAnySegmentBurned = true;
+        double lastSkinTemp_K = m_skinNodes[index]->GetTemperature().GetValue(TemperatureUnit::K);
+        double percentChangeTemperature = ((weightedAvgSegmentedTemperature_C + 273.15)) / lastSkinTemp_K;
+        double currentHeat = metabolicHeatPath->GetHeatSource().GetValue(PowerUnit::J_Per_s);
+        metabolicHeatPath->GetNextHeatSource().IncrementValue(currentHeat * percentChangeTemperature, PowerUnit::J_Per_s);
+        const double resInput = std::min(2.0 * burnIntensityFraction / 0.02, 1.0); // Make >50% burn the worse case scenario
+        const double targetAlpha = GeneralMath::LinearInterpolator(0.0, resInput, alphaScale, 20.0, resInput);
+        const double lastAlpha = 1.0 / (coreToSkinPath->GetResistance(HeatResistanceUnit::K_Per_W) * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * segmentedSkinBloodFlows[index]);
+        const double rampGain = 1.0e-5;
+        alphaScale = lastAlpha + rampGain * (targetAlpha - lastAlpha);
+      }
     }
 
     // The heat transfer resistance from the core to the skin is inversely proportional to the skin blood flow.
@@ -771,7 +798,7 @@ void Energy::UpdateHeatResistance()
     coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
     index += 1;
   }
-  if (isAnySegmentBurned) {
+  if (isAnySegmentBurned) { // Tracking the burned skin temperature as a function of time after burn initiated
     SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
     double timeSinceBurn = m_data.GetSimulationTime().GetValue()  - burnAction->GetTimeOfBurn();
     if (timeSinceBurn != 0.0) {
